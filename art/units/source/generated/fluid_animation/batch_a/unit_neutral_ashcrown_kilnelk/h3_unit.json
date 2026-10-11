@@ -2,57 +2,138 @@
   "unit_id": "unit_neutral_ashcrown_kilnelk",
   "identity": "ONE original volcanic elk, the Ashcrown Kilnelk, facing screen right in elevated three-quarter side view. Keep the powerful four-legged elk body of charcoal rock hide split by glowing orange molten cracks, the shaggy ember-orange mane on the neck and chest, the huge pale cream branching antlers with faint glowing veins, the dark cloven hooves rimmed with orange glow and the short tail. Exactly four legs, two antlers and one tail. Preserve the antler shape, the molten cracks, the mane and the tall elk proportions.",
   "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep every antler tip and all four hooves within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, flames, smoke, sparks, embers flying off, magic, particles or extra limbs; the cracks keep only their steady orange glow. Articulate joints naturally with physical planted-hoof support; the antlers stay rigid and attached.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.43,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026102600,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["attack_0", "cast_1"],
-      "guides": [[62, 1]],
+      "references": [
+        "attack_0",
+        "cast_1"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A proud, smouldering idle that loops. The chest breathes slowly, the head lifts a little and turns, the ember mane stirs, one forehoof paws the ground once and the ears flick, then everything returns smoothly to the original stance. The other hooves stay planted. No walking and no attack."
     },
     "move_h3_v1": {
       "clip": "move",
-      "references": ["move_0", "move_4"],
-      "guides": [[31, 1], [62, 0], [93, 1]],
+      "references": [
+        "move_0",
+        "move_4"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
       "last": 0,
       "action": "Trot in place through two complete reciprocal cycles with high proud steps. Diagonal pairs of legs alternate through reach, contact, push and lift; the knees and hocks articulate and each hoof alternates taking weight and swinging. The body stays centred for engine-driven travel, the head and antlers bob gently and the mane swings. Finish in the original gait phase."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["attack_0", "attack_2", "attack_4"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "attack_0",
+        "attack_2",
+        "attack_4"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE antler ram toward screen right. The elk compresses its shoulders and lowers its antlers toward screen right as the hind legs brace, then drives forward with the forelegs thrusting and rams the antlers low to full reach at screen right, draws the forelegs back under the chest, raises its head and returns to the original stance. One ram only."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["attack_0", "hit_1"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "One brief impact recoil and complete recovery. The shoulders jolt backward, the neck recoils and the antlers tilt back as the knees flex, then the front hoof replants, the head comes forward and the elk returns to the same stance. The impact is shown only by the body; nothing flies in and the blue background never flashes or changes colour."
+      "references": [
+        "hit_1",
+        "attack_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "Start rocked back in a flinch, then recover completely. The shoulders jolt backward, the neck recoils and the antlers tilt back as the knees flex, then the front hoof replants, the head comes forward and the elk returns to the same stance. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["attack_0", "defend_1", "defend_2"],
-      "guides": [[34, 1]],
+      "references": [
+        "attack_0",
+        "defend_1",
+        "defend_2"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Spread the front hooves and lower the neck, then sink into a deep brace with the antlers held low toward screen right like a barrier and the weight pressed back into the hindquarters, and hold the guard on all four planted hooves. No attack and no return to the relaxed stance."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["attack_0", "cast_4"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "attack_0",
+        "cast_4"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A silent bellow. The elk inhales, lifts its chin and stretches the neck upward with the jaw open wide in a bellow, the chest expanded, holds it briefly, then closes the mouth and lowers the head back to the original stance. The four hooves stay planted. A physical gesture only: no fire, rays or spell effects."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["attack_0", "death_7"],
-      "guides": [[90, 1]],
+      "references": [
+        "attack_0",
+        "death_7"
+      ],
+      "guides": [
+        [
+          90,
+          1
+        ]
+      ],
       "last": 1,
       "action": "Collapse slowly and heavily from standing: the legs buckle, the elk sinks down onto its chest and folded legs, then rolls onto its side and lies down, finishing lying motionless on its side with the antlered head resting on the ground and the glow of the cracks dimmed. The body never leaves the ground; no recovery, no fire and no disappearing body."
     }

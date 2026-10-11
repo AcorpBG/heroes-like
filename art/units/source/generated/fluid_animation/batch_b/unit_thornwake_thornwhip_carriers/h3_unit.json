@@ -2,57 +2,143 @@
   "unit_id": "unit_thornwake_thornwhip_carriers",
   "identity": "ONE original human forest warrior, the Thornwhip Carrier, facing screen right in elevated three-quarter view. Keep the long brown hair, the green scarf and ragged green leaf skirt, the bone-white forearm and knee armour, the leather harness and boots, the small amber flask at the belt, and the round pack of coiled thorny vine on the back. Exactly two arms, two hands and two legs. ONE hand holds the wooden handle of ONE long red-brown thorn-vine whip whose length hangs in loose loops. Preserve the whip, the coiled vine pack, the bone armour and the adult proportions.",
   "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole whip including its tip, the pack, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, motion trails, crack flashes, falling leaves, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the whip stays one continuous vine attached to its handle.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.44,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026103850,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["idle_00", "idle_04"],
-      "guides": [[62, 1]],
+      "references": [
+        "idle_00",
+        "idle_04"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A ready, restless idle that loops. The carrier breathes, the shoulders rise and fall, the whip hand gathers a loop of the thorn vine and lets it slip again so the loops sway, the head turns slightly to watch, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no attack."
     },
     "move_h3_v1": {
       "clip": "move",
-      "references": ["move_repaired_move_contacts_v1_0", "move_repaired_move_contacts_v1_1"],
-      "guides": [[31, 1], [62, 0], [93, 1]],
+      "references": [
+        "move_repaired_move_contacts_v1_0",
+        "move_repaired_move_contacts_v1_1"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
       "last": 0,
       "action": "Walk in place through two complete reciprocal cycles with steady steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The whip loops swing from the hand and the leaf skirt swings with the legs. Finish in the original gait phase."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["attack_00", "attack_02", "attack_04"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "attack_00",
+        "attack_02",
+        "attack_04"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE whip lash toward screen right. The carrier turns the shoulder back and raises the whip arm high so the thorn vine swings in a loop overhead, then steps forward and whips the arm down and out so the vine snaps out straight to its full length at screen right, the vine falls back into loose loops as the arm pulls back, and the carrier settles into the original stance. One lash only."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["attack_00", "hit_01"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "The carrier flinches from an unseen blow and recovers completely. The head and shoulders hunch and twist away and the knees flex while the hand keeps hold of the whip handle, then the carrier straightens, rebalances on both boots and returns to the same stance. Nothing is seen hitting: no projectile, spark or flash. The blue background never flashes or changes colour."
+      "references": [
+        "hit_01",
+        "attack_00"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "The carrier starts rocked back in a flinch and recovers from it. The head and shoulders hunch and twist away and the knees flex while the hand keeps hold of the whip handle, then the carrier straightens, rebalances on both boots and returns to the same stance. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["attack_00", "defend_05", "defend_06"],
-      "guides": [[34, 1]],
+      "references": [
+        "attack_00",
+        "defend_05",
+        "defend_06"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Crouch low on bent knees, raise the bone-armoured forearms crossed in front of the face and wrap the thorn vine in loops around the arms as a guard, then hold the braced guard on both planted boots. No attack and no return to the relaxed stance."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["attack_00", "cast_04"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "attack_00",
+        "cast_04"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A rallying call. The carrier raises the free hand high with the palm open and calls out, the whip held low in the other hand, holds the pose briefly, then lowers the arm back to the original stance. A physical gesture only: no spell, glow or aura."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["attack_00", "death_02", "death_07"],
-      "guides": [[48, 1], [96, 2]],
+      "references": [
+        "attack_00",
+        "death_02",
+        "death_07"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
       "last": 2,
       "action": "Collapse slowly from standing. The carrier doubles over and sinks onto the knees with the whip slipping loose, stays kneeling a moment, then slumps forward onto the side and lies down, finishing motionless with the head at screen left and the boots at screen right, the thorn whip lying in loops on the ground. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
     }

@@ -2,64 +2,163 @@
   "unit_id": "unit_brasshollow_gaugefire_arbalists_veteran",
   "identity": "ONE original slim tall human marksman, the Datumline Piercer veteran, facing screen right in elevated three-quarter view. Keep the dark hood, the closed beaked brass helmet with a long upright two-prong tuning-fork crest, the brass pauldrons and gauntlets, the charcoal split tabard with a thin gold survey reticle, the dark leather boots with brass knee and toe armour, and the small cylinder backpack. Exactly two arms, two hands and two legs. Both hands hold ONE long brass mechanical arbalest across the waist pointing to screen right, with a round crank near the stock, two parallel upper rails, a curved lower brace, a cylindrical muzzle with a tall two-prong sight and one hanging pointed plumb bob. Preserve the arbalest, the crested helmet and the slim adult proportions.",
   "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole arbalest including the muzzle and plumb bob, the crest, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, bolts in flight, muzzle flash, smoke, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the arbalest.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.44,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026104200,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["idle_0", "idle_4"],
-      "guides": [[62, 1]],
+      "references": [
+        "idle_0",
+        "idle_4"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A precise, watchful idle that loops. The marksman breathes, the shoulders rise and fall, one hand turns the crank a little, the arbalest lifts slightly so the plumb bob swings, the crested helmet turns to sight along the line, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no shooting."
     },
     "move_h3_v1": {
       "clip": "move",
-      "references": ["move_48", "move_52"],
-      "guides": [[31, 1], [62, 0], [93, 1]],
+      "references": [
+        "move_48",
+        "move_52"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
       "last": 0,
       "action": "Walk in place through two complete reciprocal cycles with long, measured strides. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The arbalest is carried across the waist with the plumb bob swinging; the tabard swings with the legs. Finish in the original gait phase."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["idle_0", "attack_10", "attack_12"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "idle_0",
+        "attack_10",
+        "attack_12"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE arbalest shove toward screen right. The marksman braces the knees and draws the arbalest back toward the chest, then lunges forward deeply and drives the weapon out horizontally with both arms to full reach at screen right, draws back and settles into the original stance. One shove only; nothing is fired."
     },
     "ranged_h3_v1": {
       "clip": "ranged",
-      "references": ["idle_0", "ranged_18", "ranged_20"],
-      "guides": [[30, 1], [56, 2]],
+      "references": [
+        "idle_0",
+        "ranged_18",
+        "ranged_20"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          56,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Shoot ONE bolt toward screen right. The marksman raises the arbalest to the shoulder and sights through the two-prong sight at screen right, holds steady, then the arbalest kicks up and back in recoil and the shoulders rock back, holds a moment, and the marksman lowers it across the waist in the original stance. One shot only; the bolt is not shown, with no flash, smoke or trail."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["idle_0", "hit_25"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "The marksman flinches from an unseen blow and recovers completely. The helmet and shoulders hunch and twist away and the knees flex deep while both hands keep hold of the arbalest, then the marksman straightens, rebalances on both boots and returns to the same stance. Nothing is seen hitting: no projectile, spark or flash. The blue background never flashes or changes colour."
+      "references": [
+        "hit_25",
+        "idle_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "The marksman starts rocked back in a flinch and recovers from it. The helmet and shoulders hunch and twist away and the knees flex deep while both hands keep hold of the arbalest, then the marksman straightens, rebalances on both boots and returns to the same stance. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["idle_0", "defend_29", "defend_30"],
-      "guides": [[34, 1]],
+      "references": [
+        "idle_0",
+        "defend_29",
+        "defend_30"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Crouch low on bent knees and raise the arbalest diagonally in front of the helmet as a guard, the shoulder turned in, then hold the braced guard on both planted boots. No attack and no return to the relaxed stance."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["idle_0", "cast_36"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "idle_0",
+        "cast_36"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A measuring signal. The marksman releases one hand from the arbalest and raises it high with the palm flat, as if sighting a mark, holding the weapon low in the other hand, holds the pose briefly, then returns the hand to the arbalest in the original stance. A physical gesture only: no spell, glow or aura."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["idle_0", "death_42", "death_47"],
-      "guides": [[48, 1], [96, 2]],
+      "references": [
+        "idle_0",
+        "death_42",
+        "death_47"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
       "last": 2,
       "action": "Collapse slowly from standing. The marksman doubles over and sinks onto the knees with the arbalest dropping, stays kneeling a moment, then slumps forward and lies down flat, finishing motionless with the helmet at screen right and the boots at screen left, the arbalest lying on the ground beside the body. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
     }

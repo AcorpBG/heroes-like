@@ -234,6 +234,41 @@
       ],
       "last": 2,
       "action": "Collapse slowly. Her knees buckle and she sinks down onto her knees and one hand with the longbow dropping, stays there a moment, then slumps forward and lies flat on her front, finishing motionless with her head at screen right, the cape spread over her back and the longbow lying on the ground beside her. The longbow keeps its shape and its dark wood the whole time. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    },
+    "hit_h3_v3": {
+      "clip": "hit",
+      "references": [
+        "hit_25",
+        "idle_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "She starts rocked back in a flinch, head and shoulders thrown back, knees bent and the free arm flung out behind her, and recovers from it: she straightens up, brings the head forward, settles her weight on both boots and returns to the original upright stance, then stands still breathing quietly. She keeps hold of the longbow throughout. Only her body moves; nothing else appears in the frame."
+    },
+    "attack_h3_v3": {
+      "clip": "attack",
+      "references": [
+        "idle_0",
+        "attack_10",
+        "attack_12"
+      ],
+      "guides": [
+        [
+          26,
+          1
+        ],
+        [
+          46,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE close strike toward screen right in one continuous movement. She draws the free fist back to her chest as the knees bend, then steps forward with the front boot and lunges, driving the free fist out to full reach at screen right while the bow arm braces forward beside it, then at once steps back and settles into the original stance and stands still. The feet always move by stepping, never by jumping or snapping. One strike only; the bow stays in the screen-right hand. No sword, no arrow and no second strike."
     }
   }
 }

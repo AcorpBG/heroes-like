@@ -1,0 +1,104 @@
+{
+  "unit_id": "unit_thornwake_canopy_rammers",
+  "identity": "ONE original massive bark-and-root forest golem, the Canopy Rammer, facing screen right in elevated three-quarter view. Keep its two huge wooden arms with big fists, the two thick root legs with spread woody toes, the rhino-like branching horn crown, the glowing amber seams, the vines, the moss and the white lichen plates. Exactly two arms and two legs. Preserve the horn crown, the fists and the massive proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole horn crown, both fists, both legs and feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, falling leaves, dust, glow bursts, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the horns keep their count and length.",
+  "canvas": [
+    960,
+    640
+  ],
+  "scale": 0.38,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026106300,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": [
+        "attack_v1_00",
+        "attack_v1_07"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A heavy, breathing idle that loops. The golem's chest swells and settles, the shoulders roll, the fists open and close a little, the horned head turns slightly and the vines stir, then everything returns smoothly to the original stance. Both root feet stay planted. No walking and no attack."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": [
+        "attack_v1_00",
+        "attack_v1_03",
+        "attack_v1_04"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE punch toward screen right. The golem draws one huge fist back as the knees bend, then lunges forward and drives the fist out to full reach at screen right, pulls back and settles into the original stance. One punch only; no dust or effect at contact."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": [
+        "hit_defend_v1_01",
+        "attack_v1_00"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "The golem starts rocked back in a flinch and recovers from it. The horned head and shoulders twist back and the knees flex, then it steadies on both root feet and returns to the same stance. Only the body moves; nothing else appears in the frame."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": [
+        "attack_v1_00",
+        "hit_defend_v1_05",
+        "hit_defend_v1_06"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
+      "last": 2,
+      "action": "Cross both huge arms in front of the chest as a guard and hunch the horned head down behind them, knees bent, then hold the braced guard on both planted feet. No attack and no return to the relaxed stance."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": [
+        "attack_v1_00",
+        "death_v1_02",
+        "death_v1_07"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
+      "last": 2,
+      "action": "Collapse slowly and heavily. The golem sinks onto its knees and fists, stays there a moment with the head bowed, then topples forward and lies flat, finishing motionless with the horn crown at screen right. The body never rises again; no recovery and no disappearing body."
+    }
+  }
+}

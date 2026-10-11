@@ -2,57 +2,138 @@
   "unit_id": "unit_mireclaw_ferrychain_lashers_veteran",
   "identity": "ONE original muscular marsh fighter, the Blackwater Chainmaster, facing screen right in elevated three-quarter view. Keep the man with long swept-back dark hair and a dark beard, the olive-grey ragged reed-and-feather cloak, bare tattooed upper arms, wrapped dark bracers, a layered riveted grey leather kilt, muddy green leg wraps and dark boots, and an iron chain slung diagonally across the torso. Exactly two arms, two hands and two legs. Each hand grips ONE large iron anchor-shaped hook with a long shaft and one curved pointed fluke, held low at either side; ONE thick iron chain joins the two hook grips and droops in a U between them. Preserve the two hooks, the chains, the cloak and the heavy adult proportions.",
   "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, both hooks, the chain, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, third hook, magic, glow, motion trails, particles or extra limbs. The chain stays attached to both grips. Articulate joints naturally with physical planted-foot support; do not morph the hooks.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.47,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026102300,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["idle_0", "idle_4"],
-      "guides": [[62, 1]],
+      "references": [
+        "idle_0",
+        "idle_4"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A heavy, menacing idle that loops. He breathes deeply, the shoulders rise and fall, he lifts the far hook a little and turns it so the chain between the grips swings, his head turns slightly, then everything returns smoothly to the original stance. Both boots stay planted; the cloak stirs gently. No walking and no attack."
     },
     "move_h3_v1": {
       "clip": "move",
-      "references": ["move_40", "move_44"],
-      "guides": [[31, 1], [62, 0], [93, 1]],
+      "references": [
+        "move_40",
+        "move_44"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
       "last": 0,
       "action": "Walk in place through two complete reciprocal cycles with heavy steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. Both hooks are held low at the sides with the chain swinging between them; the cloak swings with the stride. Finish in the original gait phase."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["idle_0", "attack_10", "attack_11"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "idle_0",
+        "attack_10",
+        "attack_11"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE hooking swing toward screen right. He raises the near hook high over his shoulder as the knees load, then lunges forward and swings it down and out to full reach at screen right with the arm extended, the other hook held low at the belt, follows through low ahead of the front knee, then draws back and settles into the original stance. One strike only; both hooks stay in his hands and joined by the chain."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["idle_0", "hit_16"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "One brief impact recoil and complete recovery. The head snaps back and the torso leans away as the arms spread and the knees flex, both hands keeping hold of the hooks, then he rebalances on both boots and returns to the same stance. The impact is shown only by the body; the blue background never flashes or changes colour."
+      "references": [
+        "hit_16",
+        "idle_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "Start rocked back in a flinch, then recover completely. The head snaps back and the torso leans away as the arms spread and the knees flex, both hands keeping hold of the hooks, then he rebalances on both boots and returns to the same stance. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["idle_0", "defend_21", "defend_23"],
-      "guides": [[34, 1]],
+      "references": [
+        "idle_0",
+        "defend_21",
+        "defend_23"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Bend both elbows and raise the two hooks in front of the chest with the flukes facing outward and the chain hanging slack between them, then sink into a deep crouch with the shoulder braced forward and hold the guard on both planted boots. No attack and no return to the relaxed stance."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["idle_0", "cast_28"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "idle_0",
+        "cast_28"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A rallying call. He raises the near hook above his shoulder, then spreads both arms wide at shoulder height with the hooks held outward and the chain stretched beneath, raises his chin and shouts, holds it briefly, then lowers his arms back to the original stance. A physical gesture only: no spell, glow or aura."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["idle_0", "death_39"],
-      "guides": [[90, 1]],
+      "references": [
+        "idle_0",
+        "death_39"
+      ],
+      "guides": [
+        [
+          90,
+          1
+        ]
+      ],
       "last": 1,
       "action": "Collapse continuously from standing: he sags, sinks onto one knee with the hooks dragging, falls forward onto his hands and slumps flat, finishing lying motionless face down with the head at screen right and the boots at screen left, both hooks and the chain lying on the ground in front of him. No recovery, no floating equipment and no disappearing body."
     }

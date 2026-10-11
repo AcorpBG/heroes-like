@@ -2,57 +2,143 @@
   "unit_id": "unit_veilmourn_fogbound_leviathan_veteran",
   "identity": "ONE original heavy four-legged sea lizard, the Fogbound Leviathan veteran, facing screen right in elevated three-quarter side view. Keep the black-blue scaled hide, the long crocodile-like snout with small teeth, the row of cream curved spikes along the back and the long tail that curls up high behind the body, the small dark webbed fin-wings at the shoulders, the rope harness across the chest hung with brass bells and glowing amber lantern gourds, and EXACTLY FOUR thick legs with webbed clawed feet. No rider and no extra legs. Preserve the harness with bells and lanterns, the spiked crest, the curled tail and the heavy proportions.",
   "plate": "Locked orthographic camera, fixed scale and centred body. Keep the snout, the whole curled tail and all four feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, water, fog, sparks, motion trails, particles or extra legs; the lantern gourds keep only their steady amber glow. Articulate joints naturally with physical planted-foot support; the harness, bells and lanterns stay attached.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.4,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026104700,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["idle_0", "idle_4"],
-      "guides": [[62, 1]],
+      "references": [
+        "idle_0",
+        "idle_4"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A slow, watchful idle that loops. The beast breathes so the flanks rise and fall, the head lifts and turns slightly, the jaw parts a little and closes, the bells and lanterns sway on the harness and the curled tail flexes, then everything returns smoothly to the original stance. All four feet stay planted. No walking and no attack."
     },
     "move_h3_v1": {
       "clip": "move",
-      "references": ["move_0", "move_4"],
-      "guides": [[31, 1], [62, 0], [93, 1]],
+      "references": [
+        "move_0",
+        "move_4"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
       "last": 0,
       "action": "Crawl in place on four legs through two complete cycles with a heavy sprawling lizard gait. Diagonal pairs of legs alternate lifting, swinging forward and planting their webbed feet while the others bear the weight, the body flexing side to side. The body stays centred for engine-driven travel, the bells swinging and the tail swaying. Exactly four legs at all times. Finish in the original gait phase."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["idle_0", "attack_3", "attack_4"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "idle_0",
+        "attack_3",
+        "attack_4"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE lunging bite toward screen right. The beast raises its head and opens the jaws wide, then lunges forward low and snaps the jaws shut at full reach toward screen right, the bells swinging, then draws back and settles into the original stance. One bite only; no water, spray or effect."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["idle_0", "hit_1"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "One heavy recoil and complete recovery. The beast throws its head up and back with the jaw open and the front legs lifting slightly, the bells jangling, then drops back onto all four feet and returns to the same stance. Nothing is seen hitting it: no projectile, spark or flash. The blue background never flashes or changes colour."
+      "references": [
+        "hit_1",
+        "idle_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "Start rocked back in a flinch, then recover completely. The beast throws its head up and back with the jaw open and the front legs lifting slightly, the bells jangling, then drops back onto all four feet and returns to the same stance. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["idle_0", "defend_1", "defend_2"],
-      "guides": [[34, 1]],
+      "references": [
+        "idle_0",
+        "defend_1",
+        "defend_2"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Hunker down: the beast lowers its belly and head close to the ground, raises the spiked back crest, curls the tail tighter and braces all four legs wide, then holds the low guarded crouch. No attack and no return to the standing stance."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["idle_0", "cast_3"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "idle_0",
+        "cast_3"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A tolling call. The beast rears up on its hind legs with one front leg raised, the head lifted high and the shoulder fins flared, so the bells on the harness swing, holds the pose briefly, then drops back onto all four feet in the original stance. Only the lanterns glow a little brighter; no sound waves, fog or spell effect."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["idle_0", "death_3", "death_7"],
-      "guides": [[48, 1], [96, 2]],
+      "references": [
+        "idle_0",
+        "death_3",
+        "death_7"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
       "last": 2,
       "action": "Collapse slowly and heavily. The legs buckle and the beast sinks down onto its belly with the head lowering, stays a moment, then slumps flat with the head resting on the ground at screen right and the tail lying stretched out to screen left, the lanterns dimmed and the bells lying still. The same body throughout: no dissolving and no disappearing."
     }

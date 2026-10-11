@@ -2,57 +2,143 @@
   "unit_id": "unit_sunvault_mirror_duelists_veteran",
   "identity": "ONE original slim athletic masked duelist, the Parallax Blade veteran, facing screen right in elevated three-quarter view. No exposed face, skin or hair: a full ivory helmet with a narrow dark eye slit and two swept tall points, blue enamel on the screen-left side and lavender on the screen-right side. Keep the navy undersuit, the angular ivory armour edged in antique gold, the asymmetrical shoulder mantles and long divided cloth tails, blue on the near side and lavender on the far side, with fine gold scrollwork and small hanging diamond gems, and the ivory and gold shin armour and boots. Exactly two arms, two hands and two legs. The near screen-LEFT hand grips ONE LONG curved blue crystal sabre with an ornate gold hilt; the far screen-RIGHT hand grips ONE SHORTER curved violet crystal sabre with an ornate gold hilt. The blades never swap hands or colours. Preserve both sabres, the helmet and the slim adult proportions.",
   "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep both sabre blades, the helmet points, the cloth tails, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, motion trails, slash arcs, sparks, particles or extra limbs; the crystal blades keep only their steady glow. Articulate joints naturally with physical planted-foot support; do not morph or swap the sabres.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.46,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026103050,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["idle_0", "idle_5"],
-      "guides": [[62, 1]],
+      "references": [
+        "idle_0",
+        "idle_5"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A poised, coiled idle that loops. The duelist breathes, the shoulders rise and fall, the wrists roll so both curved blades turn a little, the helmeted head tilts to watch and the cloth tails stir, then everything returns smoothly to the original low guard with both blades held out to the sides. Both boots stay planted. No walking and no attack."
     },
     "move_h3_v1": {
       "clip": "move",
-      "references": ["move_40", "move_44"],
-      "guides": [[31, 1], [62, 0], [93, 1]],
+      "references": [
+        "move_40",
+        "move_44"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
       "last": 0,
       "action": "Walk in place through two complete reciprocal cycles with light, stalking steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. Both sabres are held low out to the sides; the cloth tails swing with the legs. Finish in the original gait phase."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["idle_0", "attack_10", "attack_12"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "idle_0",
+        "attack_10",
+        "attack_12"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE sabre slash toward screen right. The duelist raises the long blue sabre high over the helmet as the knees bend, then lunges forward and slashes it down and out to full reach at screen right while the short violet sabre stays back at the hip, draws the blade back and returns to the original low guard. One slash only; the body stays in front three-quarter view."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["idle_0", "hit_17"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "The duelist flinches from an unseen blow and recovers completely. The torso jerks back and twists, the knees flex and both blades swing wide while the hands keep their grip, then the duelist rebalances on both boots and returns to the same guard. Nothing is seen hitting: no blade, projectile, spark or flash. The blue background never flashes or changes colour."
+      "references": [
+        "hit_17",
+        "idle_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "The duelist starts rocked back in a flinch and recovers from it. The torso jerks back and twists, the knees flex and both blades swing wide while the hands keep their grip, then the duelist rebalances on both boots and returns to the same guard. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["idle_0", "defend_21", "defend_22"],
-      "guides": [[34, 1]],
+      "references": [
+        "idle_0",
+        "defend_21",
+        "defend_22"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Cross both sabres in an X in front of the helmet, bend the knees deep and crouch behind the crossed blades, then hold the braced guard on both planted boots. No attack and no return to the relaxed stance."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["idle_0", "cast_28"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "idle_0",
+        "cast_28"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A blade salute. The duelist draws the long blue sabre up diagonally across the chest with the point raised high, the short violet sabre lowered out to the side, holds the salute briefly, then lowers both blades back to the original low guard. A physical gesture only: no spell or aura."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["idle_0", "death_34", "death_39"],
-      "guides": [[48, 1], [96, 2]],
+      "references": [
+        "idle_0",
+        "death_34",
+        "death_39"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
       "last": 2,
       "action": "Collapse slowly from standing. The duelist doubles over and sinks onto the knees with both blades dropping to the ground, stays kneeling a moment, then tips onto the side and lies down, finishing lying motionless with the helmet at screen left and the boots at screen right, both sabres lying on the ground beside the body. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
     }

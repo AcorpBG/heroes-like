@@ -2,64 +2,158 @@
   "unit_id": "unit_mireclaw_mudglass_slingers_veteran",
   "identity": "ONE original slender athletic marsh slinger, the Mudglass Slinger veteran, facing screen right in elevated three-quarter view. Keep the pallid skin, the dark swept-back tied reed hair, the pale green carved bone face mask with eye holes and an exposed mouth, the dark olive scarf, small bronze and reed shoulder plates, fitted brown and green leather armour, ragged split moss-cloth belt tails, TWO small corked glass jars at the near hip, and wrapped leather leggings and boots. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE flexible doubled-cord sling with a small leather pouch hanging low; the screen-RIGHT hand holds ONE small amber-green glass ball. Preserve the mask, sling, jars, glass ball and slender adult proportions.",
   "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, sling cords, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the sling or mask.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.48,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026102450,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["idle_0", "idle_4"],
-      "guides": [[62, 1]],
+      "references": [
+        "idle_0",
+        "idle_4"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A poised, alert idle that loops. The slinger breathes, the shoulders rise and fall, the masked head turns a little, the free hand tosses the glass ball gently and catches it while the sling sways from the other hand, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no throwing."
     },
     "move_h3_v1": {
       "clip": "move",
-      "references": ["move_49", "move_53"],
-      "guides": [[31, 1], [62, 0], [93, 1]],
+      "references": [
+        "move_49",
+        "move_53"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
       "last": 0,
       "action": "Walk in place through two complete reciprocal cycles with quick light steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The sling swings from the screen-left hand and the glass ball is held in the other; the belt tails swing with the legs. Finish in the original gait phase."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["idle_0", "attack_10", "attack_12"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "idle_0",
+        "attack_10",
+        "attack_12"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE close-range punch toward screen right. The slinger wraps the sling around the fist, steps forward with the front boot and drives the fist straight out to full reach at screen right with the pouch dangling below it, pulls the arm back, comes upright and settles into the original stance. One punch only; the glass ball stays in the other hand."
     },
     "ranged_h3_v1": {
       "clip": "ranged",
-      "references": ["idle_0", "ranged_19", "ranged_20"],
-      "guides": [[30, 1], [56, 2]],
+      "references": [
+        "idle_0",
+        "ranged_19",
+        "ranged_20"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          56,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE sling shot toward screen right. The slinger loads the glass ball into the pouch, steps into a wide stance and whirls the sling once overhead in a big loop, then whips the arm forward and releases toward screen right so the cords snap out level, follows through as the empty pouch swings down, takes a fresh ball from the hip jars and settles back into the original stance. One shot only; no visible projectile trail."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["idle_0", "hit_26"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "One brief impact recoil and complete recovery. The slinger hunches over as the shoulders jerk and the knees flex, keeping hold of the sling and the ball, then straightens, rebalances on both boots and returns to the same stance. The impact is shown only by the body; the blue background never flashes or changes colour."
+      "references": [
+        "hit_26",
+        "idle_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "Start rocked back in a flinch, then recover completely. The slinger hunches over as the shoulders jerk and the knees flex, keeping hold of the sling and the ball, then straightens, rebalances on both boots and returns to the same stance. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["idle_0", "defend_30", "defend_31"],
-      "guides": [[34, 1]],
+      "references": [
+        "idle_0",
+        "defend_30",
+        "defend_31"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Gather the sling into the fist, bend the knees and lift the wrapped forearm diagonally in front of the mask while the other hand shelters the glass ball at the chest, then hold the braced guard on both planted boots. No attack and no return to the relaxed stance."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["idle_0", "cast_37"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "idle_0",
+        "cast_37"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A proud salute. The slinger lifts the sling hand beside the mask, then raises the fist high above the head with the pouch dangling below it and the chest proud, holds it briefly, then lowers the arm back to the original stance. A physical gesture only: no spell, glow or aura."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["idle_0", "death_48"],
-      "guides": [[90, 1]],
+      "references": [
+        "idle_0",
+        "death_48"
+      ],
+      "guides": [
+        [
+          90,
+          1
+        ]
+      ],
       "last": 1,
       "action": "Collapse continuously from standing: the slinger clutches the middle, sinks onto the knees, catches the fall on one hand and slumps forward onto the ground, finishing lying motionless face down with the head at screen right and the boots at screen left, the sling and the glass ball lying on the ground by the hand. No recovery, no floating equipment and no disappearing body."
     }

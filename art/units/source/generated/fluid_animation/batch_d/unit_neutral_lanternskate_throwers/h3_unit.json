@@ -2,64 +2,157 @@
   "unit_id": "unit_neutral_lanternskate_throwers",
   "identity": "ONE original young adult ice skater, the Lanternskate Thrower, facing screen right in elevated three-quarter view. Keep the teal quilted hooded coat with white fur trim, the long white knitted scarf, the brown hair braid, the dark gloves, the grey-blue padded trousers with dark knee wraps, the brown boots with steel ice-skate blades, and the belt hung with small glowing amber lanterns. Exactly two arms, two hands and two legs. Preserve the hood, scarf, skates, lantern belt and slim proportions.",
   "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full hood, scarf, hands, skates and lanterns within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, ice, floor shadow, camera motion, zoom, snow, sparks, motion trails, particles or extra limbs; the lanterns keep only their steady amber glow. Articulate joints naturally with physical skate-blade support.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.44,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026105150,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["cast_00"],
+      "references": [
+        "cast_00"
+      ],
       "guides": [],
       "last": 0,
       "action": "A light, ready idle that loops. The skater breathes, shifts weight from blade to blade, rolls the shoulders, turns the hooded head to watch and lets the scarf ends stir, then everything returns smoothly to the original stance. Both skates stay in place. No skating off and no attack."
     },
     "move_h3_v1": {
       "clip": "move",
-      "references": ["move_00", "move_04"],
-      "guides": [[31, 1], [62, 0], [93, 1]],
+      "references": [
+        "move_00",
+        "move_04"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
       "last": 0,
       "action": "Skate in place through two complete reciprocal stride cycles. Each leg alternately pushes out to the side and back with the blade, then glides and returns, while the arms swing in rhythm and the body leans forward; the torso stays centred for engine-driven travel and the scarf streams back. Finish in the original stride phase."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["cast_00", "attack_02", "attack_04"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "cast_00",
+        "attack_02",
+        "attack_04"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE punch toward screen right. The skater draws one fist back as the knees bend and the torso winds, then glides forward into a lunge and drives the fist straight out to full reach at screen right, retracts it and settles into the original stance. One punch only; no effect at contact."
     },
     "ranged_h3_v1": {
       "clip": "ranged",
-      "references": ["cast_00", "ranged_01", "ranged_04"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "cast_00",
+        "ranged_01",
+        "ranged_04"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Throw ONE small lantern toward screen right. The skater unhooks a lantern from the belt and swings it back high over the shoulder, then glides forward and whips the arm through overhand toward screen right; at the release the hand opens and the lantern is gone at once, never shown in flight. The skater recovers and settles into the original stance. One throw only; no flash, sparks or trail."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["cast_00", "hit_00"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "The skater reels from an unseen blow and recovers completely. The head snaps back, both arms fly out for balance and the skates slide a little, then the skater regains balance on both blades and returns to the same stance. Nothing is seen hitting the skater: no projectile, spark or flash. The blue background never flashes or changes colour."
+      "references": [
+        "hit_00",
+        "cast_00"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "The skater starts rocked back in a flinch and recovers from it. The head snaps back, both arms fly out for balance and the skates slide a little, then the skater regains balance on both blades and returns to the same stance. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["cast_00", "defend_01", "defend_02"],
-      "guides": [[34, 1]],
+      "references": [
+        "cast_00",
+        "defend_01",
+        "defend_02"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Crouch low on bent knees and cross both forearms in front of the face as a guard, the scarf pulled in, then hold the guarded crouch on both skates. No attack and no return to the relaxed stance."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["cast_00", "cast_04"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "cast_00",
+        "cast_04"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A signal. The skater raises one lantern high overhead and thrusts the other hand forward with the palm out toward screen right, holds the pose briefly while the raised lantern glows a little warmer, then lowers both arms back to the original stance. Only the lantern brightens; no beam or spell effect."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["cast_00", "death_02", "death_07"],
-      "guides": [[48, 1], [96, 2]],
+      "references": [
+        "cast_00",
+        "death_02",
+        "death_07"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
       "last": 2,
       "action": "Collapse slowly. The skater's blades slip and the knees buckle, sinking down onto the knees and hands, stays there a moment, then slumps down and lies flat on the ground on the front, finishing motionless with the head at screen right, the scarf spread out and the lanterns dimmed. The body never leaves the ground; no recovery and no disappearing body."
     }

@@ -2,57 +2,143 @@
   "unit_id": "unit_thornwake_thornwhip_carriers_veteran",
   "identity": "ONE original bearded man, the Vinebraid Lashkeeper veteran, facing screen right in elevated three-quarter view. Keep his brown swept hair and beard, the olive scarf, the green leather pointed tabard, the pale ivory branching-root bracers and greaves, brown boots, and the long layered cloak of green leaves trailing behind him to screen left. Exactly two arms, two hands and two legs. His screen-RIGHT hand holds ONE continuous braided thorn-vine whip hanging in long loose loops to the ground; the screen-left hand is free. Preserve the whip, the leaf cloak, the root bracers and the adult proportions.",
   "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole whip including its tip, the leaf cloak, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, motion trails, crack flashes, falling leaves, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the whip stays one continuous vine in the screen-right hand.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.54,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026103900,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["idle_0", "idle_4"],
-      "guides": [[62, 1]],
+      "references": [
+        "idle_0",
+        "idle_4"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A patient, menacing idle that loops. He breathes, the shoulders rise and fall, he rolls the whip wrist so the vine loops sway and drag a little, the free hand flexes, the head turns slightly to watch and the leaf cloak stirs, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no attack."
     },
     "move_h3_v1": {
       "clip": "move",
-      "references": ["move_0", "move_4"],
-      "guides": [[31, 1], [62, 0], [93, 1]],
+      "references": [
+        "move_0",
+        "move_4"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
       "last": 0,
       "action": "Walk in place through two complete reciprocal cycles with long, steady strides. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The whip loops swing from his hand and the leaf cloak sways behind. Finish in the original gait phase."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["idle_0", "attack_2", "attack_4"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "idle_0",
+        "attack_2",
+        "attack_4"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE whip lash toward screen right. He turns his shoulder back and raises the whip arm high so the braided vine swings in a wide loop overhead, then steps forward and whips the arm down and out so the vine snaps out straight to its full length at screen right, the vine falls back into loose loops as he pulls the arm back, and he settles into the original stance. One lash only."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["idle_0", "hit_1"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "He flinches from an unseen blow and recovers completely. The head and shoulders hunch and twist away, the free hand clutches the chest and the knees flex while he keeps hold of the whip, then he straightens, rebalances on both boots and returns to the same stance. Nothing is seen hitting him: no projectile, spark or flash. The blue background never flashes or changes colour."
+      "references": [
+        "hit_1",
+        "idle_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "He starts rocked back in a flinch and recovers from it. The head and shoulders hunch and twist away, the free hand clutches the chest and the knees flex while he keeps hold of the whip, then he straightens, rebalances on both boots and returns to the same stance. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["idle_0", "defend_2", "defend_3"],
-      "guides": [[34, 1]],
+      "references": [
+        "idle_0",
+        "defend_2",
+        "defend_3"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Bend the knees and draw the whip in, raising the root-armoured forearm in front of the face while pulling the leaf cloak around the body, then hold the braced guard on both planted boots. No attack and no return to the relaxed stance."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["idle_0", "cast_4"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "idle_0",
+        "cast_4"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A rallying call. He raises the free hand high with the palm open and calls out, the whip held low in the other hand, holds the pose briefly, then lowers the arm back to the original stance. A physical gesture only: no spell, glow or aura."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["idle_0", "death_2", "death_7"],
-      "guides": [[48, 1], [96, 2]],
+      "references": [
+        "idle_0",
+        "death_2",
+        "death_7"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
       "last": 2,
       "action": "Collapse slowly from standing. He doubles over and sinks onto his knees with the whip slipping from his hand, stays kneeling a moment, then slumps forward and lies down flat on his front, finishing motionless with the head at screen right and the boots at screen left, the leaf cloak spread over him and the thorn whip lying in loops on the ground. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
     }

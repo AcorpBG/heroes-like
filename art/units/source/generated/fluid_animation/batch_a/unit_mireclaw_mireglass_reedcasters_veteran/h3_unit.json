@@ -2,64 +2,158 @@
   "unit_id": "unit_mireclaw_mireglass_reedcasters_veteran",
   "identity": "ONE original slender pale marsh spellcaster, the Mireglass Dissonant, facing screen right in elevated three-quarter view. Keep the straight black hair under an olive-gold pointed hood crowned with tall dry reeds, the layered ragged olive and blue-grey reed coat with a long split hanging skirt, dark leggings, bronze-wrapped knee-high boots, engraved forearm bracers and a round turquoise glass medallion at the belt. Exactly two arms, two hands and two legs. The screen-RIGHT hand grips ONE long crooked wooden reed staff, held upright, whose forked crown holds exactly three turquoise glass lenses with slender glass chimes dangling below; the screen-LEFT hand is free. Preserve the staff, lenses, chimes, hood and slender adult proportions.",
   "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full hood reeds, the staff crown, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, large magic effects, projectiles, particles or extra limbs; the lenses keep only a small turquoise glint. Articulate joints naturally with physical planted-foot support; do not morph the staff.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.48,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026102400,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["idle_0", "idle_4"],
-      "guides": [[62, 1]],
+      "references": [
+        "idle_0",
+        "idle_4"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A brooding, attentive idle that loops. The caster breathes, the shoulders rise and fall, the free hand lifts and turns its fingers as if feeling the air while the staff rocks slightly so the glass chimes sway, the hooded head tilts, then everything returns smoothly to the original stance. Both boots stay planted; the reed coat stirs gently. No walking and no attack."
     },
     "move_h3_v1": {
       "clip": "move",
-      "references": ["move_48", "move_52"],
-      "guides": [[31, 1], [62, 0], [93, 1]],
+      "references": [
+        "move_48",
+        "move_52"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
       "last": 0,
       "action": "Walk in place through two complete reciprocal cycles with steady steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The staff is planted and lifted in rhythm in the screen-right hand and the free arm swings; the coat skirts swing with the legs. Finish in the original gait phase."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["idle_0", "attack_10", "attack_12"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "idle_0",
+        "attack_10",
+        "attack_12"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE staff thrust toward screen right. The caster grips the staff with both hands and draws it back across the body as the knees bend, then lunges forward and drives the staff crown out to full reach at screen right at chest height, pulls it back toward the chest, returns it upright to one hand and settles into the original stance. One thrust only; no spell effects."
     },
     "ranged_h3_v1": {
       "clip": "ranged",
-      "references": ["idle_0", "ranged_19", "ranged_20"],
-      "guides": [[30, 1], [56, 2]],
+      "references": [
+        "idle_0",
+        "ranged_19",
+        "ranged_20"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          56,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Release ONE spell toward screen right. The caster draws the free hand back to the chest gathering power, then thrusts the arm out at full extension toward screen right with the palm open as the three staff lenses glint briefly brighter turquoise, holds a moment, then the arm recoils and lowers and the caster returns to the original stance. The spell itself is not shown: no projectile, beam or particle cloud."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["idle_0", "hit_25"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "One brief impact recoil and complete recovery. The caster doubles over as the shoulders jerk and the knees flex, keeping hold of the staff, then straightens, rebalances on both boots and returns to the same stance. The impact is shown only by the body; the blue background never flashes or changes colour."
+      "references": [
+        "hit_25",
+        "idle_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "Start rocked back in a flinch, then recover completely. The caster doubles over as the shoulders jerk and the knees flex, keeping hold of the staff, then straightens, rebalances on both boots and returns to the same stance. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["idle_0", "defend_29", "defend_30"],
-      "guides": [[34, 1]],
+      "references": [
+        "idle_0",
+        "defend_29",
+        "defend_30"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Bring the free hand to the staff and hold the shaft diagonally across the chest with both hands, then sink into a low brace guarding behind the wooden shaft and hold it on both planted boots. No attack and no return to the relaxed stance."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["idle_0", "cast_36"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "idle_0",
+        "cast_36"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "An invocation. The caster raises the free arm high above the shoulder with the palm toward the sky and the head tilted up, the fingers making a precise sign while the staff lifts slightly and its lenses glint turquoise, holds it briefly, then sweeps the hand down across the chest and returns to the original stance. No large spell effect or particles."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["idle_0", "death_47"],
-      "guides": [[90, 1]],
+      "references": [
+        "idle_0",
+        "death_47"
+      ],
+      "guides": [
+        [
+          90,
+          1
+        ]
+      ],
       "last": 1,
       "action": "Collapse continuously from standing: the caster clutches the chest, sinks onto the knees leaning on the staff, then slumps forward onto the ground, finishing lying motionless face down with the hood at screen right and the boots at screen left, the staff lying on the ground beside the body. No recovery, no floating staff and no disappearing body."
     }

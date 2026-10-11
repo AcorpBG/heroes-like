@@ -2,57 +2,143 @@
   "unit_id": "unit_sunvault_aurora_ballistae",
   "identity": "ONE original four-legged crystal mechanical guardian, the Aurora Bastion, facing screen right in elevated three-quarter side view. Keep the ivory metal armour plates with gold edging, the row of tall violet-blue crystal spires along the back, the round blue crystal joint lenses, EXACTLY FOUR articulated piston legs with broad angular ivory feet, the huge gold-framed ivory and crystal tower shield forming the front at screen right with a violet gem at its top, and the long crystal blade arm on the screen-left flank. No head, no rider, no humanoid arms. Preserve the four legs, the shield, the blade arm, the spires and the heavy machine proportions.",
   "plate": "Locked orthographic camera, fixed scale and centred body. Keep every crystal spire, the blade arm tip, the shield and all four feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, flashes, beams, sparks, motion trails, particles or extra legs; the crystals keep only their steady glow. The machine moves only at its joints and pistons; the armour plates, spires and shield stay rigid and never bend or morph.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.52,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026102850,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["attack_v3_0", "move_v2_4"],
-      "guides": [[62, 1]],
+      "references": [
+        "attack_v3_0",
+        "move_v2_4"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A heavy mechanical idle that loops. The knee pistons compress and extend slowly as the chassis rises and settles, the shield shifts a little on its hinge, the blade arm lifts slightly and lowers, then everything returns smoothly to the original stance. All four feet stay planted. No walking and no attack."
     },
     "move_h3_v1": {
       "clip": "move",
-      "references": ["move_v2_0", "move_v2_4"],
-      "guides": [[31, 1], [62, 0], [93, 1]],
+      "references": [
+        "move_v2_0",
+        "move_v2_4"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
       "last": 0,
       "action": "Walk in place on four legs through two complete cycles with heavy deliberate steps. Diagonal pairs of legs alternate lifting at the knee pistons, swinging forward and planting their broad feet while the others bear the weight. The chassis stays centred for engine-driven travel, the shield held upright in front and the spires steady. Exactly four legs at all times. Finish in the original gait phase."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["attack_v3_0", "attack_v3_2", "attack_v3_5"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "attack_v3_0",
+        "attack_v3_2",
+        "attack_v3_5"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE shield ram toward screen right. The knee pistons compress and the chassis loads back onto the rear legs as the shield draws in, then the rear legs extend and drive the body forward so the massive tower shield shoves out to full reach at screen right with the front feet braced wide, the knees absorb the impact, and the chassis retracts into the original stance. One ram only; no flash or effect at contact."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["attack_v3_0", "reactions_v3_0"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "One heavy impact recoil and complete recovery. The shield rocks backward and the front knee pistons fold, the chassis leans back onto the compressed rear legs, then the hinges correct and the machine returns to the same supported stance. Nothing is seen hitting it: no projectile, spark or flash. The blue background never flashes or changes colour."
+      "references": [
+        "reactions_v3_0",
+        "attack_v3_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "Start rocked back in a flinch, then recover completely. The shield rocks backward and the front knee pistons fold, the chassis leans back onto the compressed rear legs, then the hinges correct and the machine returns to the same supported stance. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["attack_v3_0", "reactions_v2_4", "reactions_v2_5"],
-      "guides": [[34, 1]],
+      "references": [
+        "attack_v3_0",
+        "reactions_v2_4",
+        "reactions_v2_5"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Bend all four knees and draw the shield toward the body, then lower the chassis deep behind the high tower shield with the feet spread and the pistons compressed, the shield leaned toward screen right, and hold the anchored brace. No attack and no return to the ready height."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["attack_v3_0", "cast_v2_4"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "attack_v3_0",
+        "cast_v2_4"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A mechanical salute. The crystal blade arm unlocks at its hinge and rises steeply into a raised salute while the shield stays upright and the rear legs brace, holds it with the body leaning forward a little, then lowers the blade arm back to its low resting angle in the original stance. A physical gesture only: no spell, beam or aura."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["attack_v3_0", "death_v2_3", "death_v2_7"],
-      "guides": [[48, 1], [96, 2]],
+      "references": [
+        "attack_v3_0",
+        "death_v2_3",
+        "death_v2_7"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
       "last": 2,
       "action": "Shut down and collapse. The knee pistons unlock and the chassis lowers, the rear knees fold and the shield slips lower, the belly settles onto the ground, then the body rolls slightly onto its side with the legs folding, the shield lying along the front and the blade arm on the ground, finishing as a still, low grounded wreck with the crystal spires dark. The same body throughout: no explosion, no shrinking and no disappearing."
     }

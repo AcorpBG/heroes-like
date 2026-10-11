@@ -2,64 +2,149 @@
   "unit_id": "unit_embercourt_lockglass_writcasters_veteran",
   "identity": "ONE original woman mage, the Prismwrit Adjudicator, facing screen right in elevated three-quarter view. Keep her black hair in a bun, the burgundy robe with cream-lined wide sleeves and long front panels with gold embroidery, the engraved brass collar, the brass belt with a fan of hanging brass tablets at the far hip, dark trousers and brown boots. Exactly two arms, two hands and two legs. The screen-RIGHT hand holds ONE amber diamond-shaped prism crystal up in front of the body; the screen-LEFT hand is free. Preserve the prism, the robe, the collar and adult proportions.",
   "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, prism, robe, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, weapons, large magic effects, particles or extra limbs; the prism keeps only its small warm amber glow. Articulate joints naturally with physical planted-foot support; do not morph the equipment.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.47,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026101800,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["idle_0", "idle_3"],
-      "guides": [[62, 1]],
+      "references": [
+        "idle_0",
+        "idle_3"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A composed, thoughtful idle that loops. She breathes, the shoulders rise and fall, her free hand lifts in a small explaining gesture and lowers again while she turns the prism slightly in the other hand, then everything returns smoothly to the original stance. Both boots stay planted; the robe and sleeves stir gently. No walking and no attack."
     },
     "move_h3_v1": {
       "clip": "move",
-      "references": ["move_4"],
-      "guides": [[62, 0]],
+      "references": [
+        "move_4"
+      ],
+      "guides": [
+        [
+          62,
+          0
+        ]
+      ],
       "last": 0,
       "action": "Walk in place through two complete reciprocal cycles with brisk steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate under the robe and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The prism is held up in the screen-right hand and the free arm swings; the robe swings with the legs. Finish in the original gait phase."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["idle_0", "attack_2", "attack_4"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "idle_0",
+        "attack_2",
+        "attack_4"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE close-range strike toward screen right. She draws the prism hand back beside the shoulder as the knees bend, then steps in and thrusts the prism hand straight out at chest height to full reach toward screen right, then draws back and settles into the original stance. One strike only; the prism stays in her hand and is never thrown."
     },
     "ranged_h3_v1": {
       "clip": "ranged",
-      "references": ["idle_0", "ranged_02", "ranged_04"],
-      "guides": [[30, 1], [56, 2]],
+      "references": [
+        "idle_0",
+        "ranged_02",
+        "ranged_04"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          56,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Focus ONE ray of light toward screen right. She raises the amber prism before her face and gathers herself, then thrusts it out at arm's length toward screen right as it flares with a brief bright amber glint at its tip, holds the pose a moment, then lowers it back to the original stance. The prism stays in her hand; the glint stays small at the prism."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["idle_0", "hit_01"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "One brief impact recoil and complete recovery. The head and shoulders snap backward, the free arm flies out and the knees flex while she keeps hold of the prism, then she rebalances on both boots and returns to the same stance. Remain standing with the prism held. The impact is shown only by the body; the blue background never flashes or changes colour."
+      "references": [
+        "hit_01",
+        "idle_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "Start rocked back in a flinch, then recover completely. The head and shoulders snap backward, the free arm flies out and the knees flex while she keeps hold of the prism, then she rebalances on both boots and returns to the same stance. Remain standing with the prism held. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["idle_0", "defend_01", "defend_03"],
-      "guides": [[34, 1]],
+      "references": [
+        "idle_0",
+        "defend_01",
+        "defend_03"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Raise the free palm up and out in front of the face in a warding gesture while drawing the prism close to the chest and bending the knees, then hold the warding stance on both planted boots. No attack and no return to the relaxed stance."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["idle_0", "cast_04"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "idle_0",
+        "cast_04"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "An invocation. She sweeps the free hand up high above her head with the fingers spread while the prism is held up in the other hand, holds the raised pose briefly, then lowers the hand back to the original stance. Only small amber glints at her raised fingertips; no large spell effect."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["idle_0", "death_07"],
-      "guides": [[90, 1]],
+      "references": [
+        "idle_0",
+        "death_07"
+      ],
+      "guides": [
+        [
+          90,
+          1
+        ]
+      ],
       "last": 1,
       "action": "Collapse continuously from standing: she clutches her chest, sinks onto her knees with the robe pooling around her and slumps forward onto the ground, finishing lying motionless face down with the head at screen right and the boots at screen left, the robe spread out and the prism lying by her head. No recovery, no floating equipment and no disappearing body."
     }

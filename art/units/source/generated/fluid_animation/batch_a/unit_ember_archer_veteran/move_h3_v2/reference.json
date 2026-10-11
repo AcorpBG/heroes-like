@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_ember_archer_veteran",
+  "guides": [
+    {
+      "frame": "move_48",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/move_v1.png",
+      "source_sha256": "43f1c3ecb393d13fc6cf187984b04f1e17897541d806443327ba8b1d20fb27aa",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "dab7bf317e8ebe78abc48167966e3f614a3b26803a347c5e2a84376179bb896e"
+    },
+    {
+      "frame": "move_52",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/move_near_v1.png",
+      "source_sha256": "d1d6cf4d43a116f897759e166b9c5342285aa26a14bf63ea9b82d550a95bf9e8",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "5486287653b126b65128a82ad4d3f88cd08e33196a9568eb7e785f06735a6e50"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    465,
+    547
+  ],
+  "output_scale": 0.5,
+  "free_pixels_left_top_right_bottom": [
+    243,
+    54,
+    243,
+    54
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

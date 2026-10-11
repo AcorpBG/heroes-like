@@ -2,57 +2,143 @@
   "unit_id": "unit_veilmourn_wakeglass_navigators",
   "identity": "ONE original robed adult seer, the Wakeglass Navigator, facing screen right in elevated three-quarter view. Keep the deep dark blue hood with a smooth pale mask face, the long layered dark blue robes with bronze embroidery, the many ragged trailing robe tatters in dark blue and pale teal, and the small glowing teal gem charms hanging on the chest and robe. Exactly two arms and two hands. The screen-RIGHT hand holds ONE tall carved wooden staff topped by a bronze crescent-horned frame around ONE glowing teal compass orb, with a long pale teal ribbon hanging from the head; the screen-LEFT hand is free. Preserve the staff and compass orb, the mask, the robes and the tall proportions.",
   "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole staff with the orb and ribbon, the hood, the robe hem and all tatters within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, beams, bursts, sparks, particles or extra limbs; glow stays only inside the compass orb and the small gem charms. Articulate the body naturally beneath the robes; the staff stays straight and rigid and never morphs.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.47,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026104950,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["idle_0", "idle_4"],
-      "guides": [[62, 1]],
+      "references": [
+        "idle_0",
+        "idle_4"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A calm, watchful idle that loops. The seer breathes, the shoulders rise and fall, the masked head turns slightly, the free hand lifts a little and lowers, the staff ribbon and the robe tatters drift gently, then everything returns smoothly to the original stance. The feet stay planted beneath the robe. No walking and no attack."
     },
     "move_h3_v1": {
       "clip": "move",
-      "references": ["move_0", "move_4"],
-      "guides": [[31, 1], [62, 0], [93, 1]],
+      "references": [
+        "move_0",
+        "move_4"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
       "last": 0,
       "action": "Walk in place through two complete reciprocal cycles with slow gliding steps beneath the long robe. The legs alternate under the robe so the hem sways with each step; the torso stays centred for engine-driven travel, the staff planted and lifted in rhythm in the right hand and the robe tatters trailing. Finish in the original gait phase."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["idle_0", "attack_3", "attack_4"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "idle_0",
+        "attack_3",
+        "attack_4"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE staff thrust toward screen right. The seer draws the staff back as the body leans away, then steps forward and drives the staff head out with both hands to full reach at screen right, the robe tatters streaming, draws back and settles into the original stance. One thrust only; no beam, burst or effect from the orb."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["idle_0", "hit_1"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "The seer reels from an unseen blow and recovers completely. The masked head and shoulders hunch and turn away and the body sways back while the hand keeps hold of the staff, then the seer straightens and returns to the same stance. Nothing is seen hitting the seer: no projectile, spark or flash. The blue background never flashes or changes colour."
+      "references": [
+        "hit_1",
+        "idle_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "The seer starts rocked back in a flinch and recovers from it. The masked head and shoulders hunch and turn away and the body sways back while the hand keeps hold of the staff, then the seer straightens and returns to the same stance. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["idle_0", "defend_1", "defend_2"],
-      "guides": [[34, 1]],
+      "references": [
+        "idle_0",
+        "defend_1",
+        "defend_2"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Draw back and raise the free hand with the palm out toward screen right as a ward, holding the staff close in front of the body, then hold the guarded pose. No attack, no spell effect and no return to the relaxed stance."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["idle_0", "cast_3"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "idle_0",
+        "cast_3"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A reading of the stars. The seer lifts the free hand to the compass orb with the fingers spread while the orb glows brighter inside its frame, holds the pose briefly, then lowers the hand back to the original stance. Only the orb brightens; no beam, burst or spell effect leaves it."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["idle_0", "death_3", "death_7"],
-      "guides": [[48, 1], [96, 2]],
+      "references": [
+        "idle_0",
+        "death_3",
+        "death_7"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
       "last": 2,
       "action": "Collapse slowly. The seer bows forward and sinks down onto the knees leaning on the staff, stays a moment, then slumps forward and lies flat on the ground, finishing motionless with the robes spread out, the mask at screen right and the staff lying on the ground with the orb dimmed. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
     }

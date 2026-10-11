@@ -2,64 +2,163 @@
   "unit_id": "unit_sunvault_resonant_choristers_veteran",
   "identity": "ONE original tall slim robed precentor, the Harmonic Precentor veteran, facing screen right in elevated three-quarter view. Keep the flowing floor-length ivory robes with blue and gold vertical tabards, gilded gauntlets and gold pointed boots, the closed smooth gold and ivory angular mask with narrow violet eyes and a tall blue-violet crystal crest, the large rounded open gold chime halo framing the head with hanging blue-violet crystals, and the small gold collar ring. No hood and no bare face. Exactly two arms, two hands and two legs. Both hands hold ONE long gold staff diagonally, a crystal pommel at the lower screen-left end and a large U-shaped two-pronged tuning fork with a prismatic crystal between the prongs and short hanging gold chimes at the upper screen-right end. Preserve the staff, the chime halo, the mask and the slim adult proportions.",
   "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full staff, the tuning fork, the halo and crest, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, beams, sound waves, rings, projectiles, sparks, motion trails, particles or extra limbs; the crystals keep only their steady glow, and only the fork crystal may brighten where the action says so. Articulate joints naturally with physical planted-foot support; do not morph the staff or halo.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.47,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026103200,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["idle_0", "idle_4"],
-      "guides": [[62, 1]],
+      "references": [
+        "idle_0",
+        "idle_4"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A serene, swaying idle that loops. The precentor breathes, the shoulders rise and fall, the staff is lifted a little so the hanging chimes sway, the masked head tilts as if listening to a tone and the halo crystals swing gently, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no casting."
     },
     "move_h3_v1": {
       "clip": "move",
-      "references": ["move_48", "move_52"],
-      "guides": [[31, 1], [62, 0], [93, 1]],
+      "references": [
+        "move_48",
+        "move_52"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
       "last": 0,
       "action": "Walk in place through two complete reciprocal cycles with measured, gliding steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate under the robes and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The staff is carried diagonally in both hands with the chimes swaying; the robes swing with the legs. Finish in the original gait phase."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["idle_0", "attack_10", "attack_12"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "idle_0",
+        "attack_10",
+        "attack_12"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE staff thrust toward screen right. The precentor draws the staff back as the knees bend, then lunges forward into a wide stance and drives the tuning fork head out level to full reach at screen right, draws it back and returns to the original diagonal stance. One thrust only; no flash or effect at contact."
     },
     "ranged_h3_v1": {
       "clip": "ranged",
-      "references": ["idle_0", "ranged_18", "ranged_20"],
-      "guides": [[30, 1], [56, 2]],
+      "references": [
+        "idle_0",
+        "ranged_18",
+        "ranged_20"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          56,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Sound ONE resonant note toward screen right. The precentor braces and swings the staff forward level with the tuning fork pointing at screen right, the prongs quiver and the crystal between them flares bright for a moment while the chimes shake, holds, then the glow fades back, the staff lowers and the precentor settles into the original stance. The note itself is not shown: no beam, wave, ring or projectile."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["idle_0", "hit_25"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "The precentor flinches from an unseen blow and recovers completely. The shoulders hunch and twist away, the masked head ducks and the knees flex while both hands keep hold of the staff, then the precentor straightens, rebalances on both boots and returns to the same stance. Nothing is seen hitting: no projectile, spark or flash. The blue background never flashes or changes colour."
+      "references": [
+        "hit_25",
+        "idle_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "The precentor starts rocked back in a flinch and recovers from it. The shoulders hunch and twist away, the masked head ducks and the knees flex while both hands keep hold of the staff, then the precentor straightens, rebalances on both boots and returns to the same stance. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["idle_0", "defend_29", "defend_30"],
-      "guides": [[34, 1]],
+      "references": [
+        "idle_0",
+        "defend_29",
+        "defend_30"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Raise the staff horizontally in both hands in front of the chest as a barrier, bend the knees wide and crouch behind it with the masked head lowered, then hold the braced guard on both planted boots. No attack and no return to the relaxed stance."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["idle_0", "cast_34"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "idle_0",
+        "cast_34"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A conducting gesture. The precentor releases one hand from the staff and sweeps it up and outward, palm open, as if leading a choir, while the fork crystal glows a little warmer, holds the gesture briefly, then returns the hand to the staff in the original stance. Only the fork crystal brightens; no aura, wave or spell effect."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["idle_0", "death_43", "death_47"],
-      "guides": [[48, 1], [96, 2]],
+      "references": [
+        "idle_0",
+        "death_43",
+        "death_47"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
       "last": 2,
       "action": "Collapse slowly from standing. The precentor sags, leans on the staff and sinks onto the knees, stays kneeling a moment, then slumps forward onto the side and lies down, finishing motionless flat on the ground with the masked head and halo at screen right and the boots at screen left, the staff lying beside the body. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
     }

@@ -2,50 +2,120 @@
   "unit_id": "unit_neutral_rimebell_skyrakers",
   "identity": "ONE original flying ice bird-creature, the Rimebell Skyraker, facing screen LEFT in elevated three-quarter view. Keep its ice-white and cobalt-blue feather armour, the swept narrow beaked crest, the shadowed face, the blue chest and ONE long tapering feathered ice-white tail trailing to screen right. Exactly FOUR feathered wings: two large upper wings at the shoulders and two smaller lower wings along the flanks, and exactly TWO curled rake talons beneath the chest. Preserve the four wings, the two talons, the crest and the tail.",
   "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the crest, all wing tips, both talons and the whole tail within frame. The background is perfectly flat saturated GREEN throughout, no gradients or changes of hue. The green background stays the same flat saturated green in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, snow, frost clouds, ice shards, glow bursts, sparks, motion trails, particles, extra wings or extra limbs. The wings, talons and tail stay attached to the same body and never merge or multiply.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.48,
-  "key_rgb": [0, 255, 0],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
   "seed": 2026106050,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["attack_00", "cast_05"],
-      "guides": [[62, 1]],
+      "references": [
+        "attack_00",
+        "cast_05"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "Fly in place, a hovering idle that loops. The upper wings beat slowly down and up, the lower wings follow with smaller delayed strokes, the body bobs gently, the talons flex and the tail sways, then everything returns smoothly to the original hovering pose. The body stays in place. No attack."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["attack_00", "attack_01", "attack_04"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "attack_00",
+        "attack_01",
+        "attack_04"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE talon strike toward screen LEFT. The creature rears back and lifts its wings high, drawing the talons in, then lunges toward screen left and rakes both talons forward to full reach at screen left, pulls back and settles into the original hovering pose. One strike only; no ice, sparks or effect at contact."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["attack_00", "hit_01"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "The creature reels from an unseen blow and recovers completely. The head and chest are thrown back toward screen right, the wings flare and the talons clench, then it steadies its wingbeat and returns to the same hovering pose. Nothing is seen hitting it: no projectile, spark or flash. The green background never flashes or changes colour."
+      "references": [
+        "hit_01",
+        "attack_00"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "The creature starts rocked back in a flinch and recovers from it. The head and chest are thrown back toward screen right, the wings flare and the talons clench, then it steadies its wingbeat and returns to the same hovering pose. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["attack_00", "defend_01", "defend_02"],
-      "guides": [[34, 1]],
+      "references": [
+        "attack_00",
+        "defend_01",
+        "defend_02"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Curl up and wrap the wings forward around the body like a feathered shield, the head tucked behind them and the tail hanging below, then hold the wrapped guard. No attack and no return to the open hovering pose."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["attack_00", "cast_04"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "attack_00",
+        "cast_04"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A rallying display. The creature rears up and spreads all four wings wide, the crest raised, holds the pose briefly, then folds back into the original hovering pose. A physical gesture only: no spell, frost, glow or aura."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["attack_00", "death_03", "death_07"],
-      "guides": [[48, 1], [96, 2]],
+      "references": [
+        "attack_00",
+        "death_03",
+        "death_07"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
       "last": 2,
       "action": "Fall and collapse slowly. The wings falter and fold as the creature sinks down to the ground, crouches there a moment with its head bowed, then slumps forward and lies flat, finishing motionless with the wings folded over the body, the head at screen left and the tail stretched out to screen right. The body never rises again; no recovery and no disappearing body."
     }

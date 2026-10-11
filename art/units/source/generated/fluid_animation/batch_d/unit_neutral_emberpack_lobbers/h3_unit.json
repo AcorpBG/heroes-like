@@ -2,57 +2,140 @@
   "unit_id": "unit_neutral_emberpack_lobbers",
   "identity": "ONE original hooded man, the Emberpack Lobber, facing screen right in elevated three-quarter view. Keep his hooded face, the perforated brass forehead plate, the dark hood and leather coat, the orange scarf and split orange coat tails, the dark trousers, the belts and brass belt cases, the wrapped forearms and the tall brown boots, and the ONE rigid strapped wicker-and-brass ember basket on his back with its glowing coals. Exactly two arms, two hands and two legs. The screen-LEFT hand holds the gathered straps of ONE sling whose glowing ember pouch hangs beside the knee; the screen-RIGHT hand is empty. Preserve the basket, the sling, the hood and the proportions.",
   "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full hood, the whole basket, the sling with its pouch even at full swing, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, fire, flame trails, smoke, sparks, motion trails, particles or extra limbs; the coals keep only their steady contained glow. Articulate joints naturally with physical planted-foot support; the sling stays one strap attached to the hand and the pouch.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.41,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026105750,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["idle_v1_01", "idle_v1_05"],
-      "guides": [[62, 1]],
+      "references": [
+        "idle_v1_01",
+        "idle_v1_05"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A ready, smouldering idle that loops. He breathes, the shoulders rise and fall under the basket, the sling pouch sways gently beside his knee, his head turns a little to scan and the orange coat tails stir, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no throwing."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["idle_v1_01", "attack_v1_03", "attack_v1_05"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "idle_v1_01",
+        "attack_v1_03",
+        "attack_v1_05"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE sling-pouch strike toward screen right. He swings the ember pouch up over his shoulder as the knees bend, then lunges forward and lashes it out on its strap to full reach at screen right, swings it back down and settles into the original stance. One strike only; the pouch stays on its strap with no fire, trail or effect."
     },
     "ranged_h3_v1": {
       "clip": "ranged",
-      "references": ["idle_v1_01", "ranged_v1_03", "ranged_v1_06"],
-      "guides": [[30, 1], [56, 2]],
+      "references": [
+        "idle_v1_01",
+        "ranged_v1_03",
+        "ranged_v1_06"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          56,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE sling throw toward screen right. He whirls the sling overhead once, then steps forward and snaps his arm out toward screen right so the strap goes loose at the end of the throw, holds the follow-through a moment, then lets the sling drop back to hang beside his knee in the original stance. Nothing is shown flying across the frame: no ember in flight, fire, smoke or trail."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["idle_v1_01", "hit_defend_v1_02"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "He reels from an unseen blow and recovers completely. His hooded head snaps back, the shoulders twist under the basket and the knees flex while the hand keeps hold of the sling, then he steadies on both boots and returns to the same stance. Nothing is seen hitting him: no projectile, spark or flash. The blue background never flashes or changes colour."
+      "references": [
+        "hit_defend_v1_02",
+        "idle_v1_01"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "He starts rocked back in a flinch and recovers from it. His hooded head snaps back, the shoulders twist under the basket and the knees flex while the hand keeps hold of the sling, then he steadies on both boots and returns to the same stance. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["idle_v1_01", "hit_defend_v1_06", "hit_defend_v1_07"],
-      "guides": [[34, 1]],
+      "references": [
+        "idle_v1_01",
+        "hit_defend_v1_06",
+        "hit_defend_v1_07"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Hunch down and turn a shoulder forward, raising the empty forearm across the face as a guard with the sling held close, then hold the hunched guard on both planted boots. No throwing and no return to the relaxed stance."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["idle_v1_01", "support_v1_05"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "idle_v1_01",
+        "support_v1_05"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A rallying signal. He raises his empty fist forward and up toward screen right, holds the pose briefly, then lowers it back to the original stance. A physical gesture only: no spell, glow change or aura."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["idle_v1_01", "death_v1_03", "death_v1_08"],
-      "guides": [[48, 1], [96, 2]],
+      "references": [
+        "idle_v1_01",
+        "death_v1_03",
+        "death_v1_08"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
       "last": 2,
       "action": "Collapse slowly. He sinks down onto his knees under the weight of the basket with the sling dropping, stays there a moment, then slumps forward and lies flat on his front, finishing motionless with his head at screen right, the basket still strapped on his back and the sling pouch on the ground beside him. The body never leaves the ground; no fire, no recovery and no disappearing body."
     }

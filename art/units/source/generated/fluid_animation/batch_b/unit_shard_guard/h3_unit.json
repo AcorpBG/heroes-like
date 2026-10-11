@@ -1,0 +1,108 @@
+{
+  "unit_id": "unit_shard_guard",
+  "identity": "ONE original armoured knight, the Shard Guard, facing screen right in elevated three-quarter view. Keep the rigid white ivory plate armour with polished gold edges and blue crystal inlays, the closed gold and blue visored helmet with a tall angular gold crown crest, the white embroidered tabard, the belt and the gold boots; no face is visible. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE short rigid blue crystal sword with a gold hilt, angled down to screen left; the screen-RIGHT arm carries ONE large tall kite shield with blue and white radial crystal panels, a gold rim and a central boss. Preserve the sword, the shield, the crest and the proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full crest, the whole sword, the whole shield, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, glow bursts, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the sword and the shield stay rigid and never morph.",
+  "canvas": [
+    960,
+    640
+  ],
+  "scale": 0.46,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026106150,
+  "takes": {
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": [
+        "attack_00",
+        "attack_02",
+        "attack_04"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE sword thrust toward screen right. The knight raises the crystal sword high beside the helmet as the knees bend, then lunges forward past the shield and thrusts the blade out to full reach at screen right, draws back and settles into the original stance. One thrust only; no sparks or effect at contact."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": [
+        "hit_01",
+        "attack_00"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "The knight starts rocked back in a flinch and recovers from it. The helmet and shoulders twist back behind the shield and the knees flex while both hands keep hold of the sword and the shield, then the knight steadies on both boots and returns to the same stance. Only the body moves; nothing else appears in the frame."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": [
+        "attack_00",
+        "defend_01",
+        "defend_03"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
+      "last": 2,
+      "action": "Crouch behind the tall kite shield, setting it forward in front of the body with the helmet lowered behind its rim and the sword held low, then hold the braced guard on both planted boots. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": [
+        "attack_00",
+        "cast_03"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A knightly salute. The knight raises the crystal sword upright in front of the visor, the shield held steady, holds the salute briefly, then lowers the blade back to the original stance. A physical gesture only: no spell, glow or aura."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": [
+        "attack_00",
+        "death_02",
+        "death_07"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
+      "last": 2,
+      "action": "Collapse slowly and heavily. The knight sinks onto both knees leaning on the shield, stays kneeling a moment, then topples forward and lies flat, finishing motionless with the helmet at screen left, the shield lying across the body and the sword on the ground beside it. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    }
+  }
+}

@@ -2,57 +2,138 @@
   "unit_id": "unit_embercourt_sluicefire_lindworms_veteran",
   "identity": "ONE original legless serpent dragon, the Floodpyre Lindworm, facing screen right in elevated three-quarter side view. Keep the long blue-black scaled body with a pale scaled belly, the spiky dorsal ridge and finned tail tip, the swept bronze horns and nose horn, the glowing orange throat vents down the front of the neck, the bronze barred collar around the neck and the bronze gridded flank harness joined to it by hanging chains. The neck rises in an S-curve from the coiled body and the tail trails off to screen left. NO legs, NO arms and NO wings. Preserve the horns, harness, chains, throat vents and the long serpent proportions.",
   "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, horns, harness and tail tip within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, fire, breath, smoke, magic, particles, legs or wings; the throat vents keep only their small steady orange glow. The body bends smoothly along its whole length and the chains follow it; do not morph the harness.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.5,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026101850,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["idle_00", "idle_04"],
-      "guides": [[62, 1]],
+      "references": [
+        "idle_00",
+        "idle_04"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A watchful serpent idle that loops. The neck sways slowly side to side, the head tilts and the jaw parts a little as it tastes the air, a slow wave runs down the coils and the tail tip flicks, then everything returns smoothly to the original pose. The body stays in place. No attack and no fire."
     },
     "move_h3_v1": {
       "clip": "move",
-      "references": ["move_00", "move_04"],
-      "guides": [[31, 1], [62, 0], [93, 1]],
+      "references": [
+        "move_00",
+        "move_04"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
       "last": 0,
       "action": "Slither in place through two complete cycles. Waves of lateral S-curves travel from the neck down the whole body to the tail, the belly coils push against the ground and the head bobs gently forward with each push while staying upright. The body stays centred for engine-driven travel; the chains swing with the coils. Finish in the original pose."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["idle_00", "attack_01", "attack_04"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "idle_00",
+        "attack_01",
+        "attack_04"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE striking bite toward screen right. The neck draws back and compresses into a tight S-coil, the jaws open wide, then the head lunges forward to full reach at screen right and the jaws snap shut, then the neck retracts and returns to the original pose. One bite only; no fire and no breath."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["idle_00", "hit_01"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "One brief impact recoil and complete recovery. The head jerks back and drops low against the coiled neck and the tail curls in tight, then the neck rises again and the body returns to the same pose. The impact is shown only by the body; the blue background never flashes or changes colour."
+      "references": [
+        "hit_01",
+        "idle_00"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "Start rocked back in a flinch, then recover completely. The head jerks back and drops low against the coiled neck and the tail curls in tight, then the neck rises again and the body returns to the same pose. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["idle_00", "defend_01", "defend_02"],
-      "guides": [[34, 1]],
+      "references": [
+        "idle_00",
+        "defend_01",
+        "defend_02"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Lower the head toward the bronze collar while the body draws into a compact coil and the tail curls around it, the head tucked low behind the horns, then hold the coiled guard. No attack and no return to the upright pose."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["idle_00", "cast_03"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "idle_00",
+        "cast_03"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A ritual bow. The neck lowers in a slow deep bow until the head nearly touches the ground while the throat vents glow a little brighter, holds the bow briefly, then rises back to the original upright pose. No fire, beam or spell effect."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["idle_00", "death_07"],
-      "guides": [[90, 1]],
+      "references": [
+        "idle_00",
+        "death_07"
+      ],
+      "guides": [
+        [
+          90,
+          1
+        ]
+      ],
       "last": 1,
       "action": "Collapse continuously: the neck buckles, the head sinks lower and lower, the coils go slack and the whole body slumps flat onto the ground, finishing stretched out motionless along the ground with the head resting at screen right and the tail at screen left. The throat vents dim. No recovery, no floating harness and no disappearing body."
     }

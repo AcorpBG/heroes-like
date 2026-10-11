@@ -2,57 +2,143 @@
   "unit_id": "unit_thornwake_seedcutters_veteran",
   "identity": "ONE original sturdy woman harvester, the Seedcutter veteran, facing screen right in elevated three-quarter view. Keep her brown hair in a bun with small white flowers, pointed ear, cream scarf, green quilted tunic with layered leaf-bark shoulders, brown trousers with leaf-bark greaves and boots, and the wicker basket on her back full of white seed pods and orange fruit. Exactly two arms, two hands and two legs. EACH hand holds its own separate short wooden-handled sickle with a glossy amber crescent hook blade. Preserve both sickles, the basket, her face and sturdy adult proportions; no bow, staff or projectile.",
   "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep both sickle blades, the basket, the hair bun, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, slash arcs, motion trails, falling fruit, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the sickles.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.52,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026103700,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["idle_0", "idle_4"],
-      "guides": [[62, 1]],
+      "references": [
+        "idle_0",
+        "idle_4"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A ready, watchful idle that loops. She breathes, the shoulders rise and fall, she twirls one sickle once in her fingers and catches the grip, the other sickle hangs ready, the head turns slightly and the basket shifts on her back, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no attack."
     },
     "move_h3_v1": {
       "clip": "move",
-      "references": ["move_0", "move_4"],
-      "guides": [[31, 1], [62, 0], [93, 1]],
+      "references": [
+        "move_0",
+        "move_4"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
       "last": 0,
       "action": "Walk in place through two complete reciprocal cycles with brisk steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. Both sickles are carried low in each hand with the arms swinging; the basket bounces on her back. Finish in the original gait phase."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["idle_0", "attack_2", "attack_4"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "idle_0",
+        "attack_2",
+        "attack_4"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE double sickle sweep toward screen right. She loads the knees and turns back, raising the near sickle beside her shoulder while the far one guards the ribs, then steps into a lunge and sweeps both sickles forward so the hooked blades reach full extension at screen right, draws them back and settles into the original stance. One sweep only; each hand keeps its own sickle."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["idle_0", "hit_2"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "She flinches from an unseen blow and recovers completely. The head snaps back, the shoulders twist away and the arms swing wide while she keeps hold of both sickles, the knees flex, then she rebalances on both boots and returns to the same stance. Nothing is seen hitting her: no blade, projectile, spark or flash. The blue background never flashes or changes colour."
+      "references": [
+        "hit_2",
+        "idle_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "She starts rocked back in a flinch and recovers from it. The head snaps back, the shoulders twist away and the arms swing wide while she keeps hold of both sickles, the knees flex, then she rebalances on both boots and returns to the same stance. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["idle_0", "defend_2", "defend_3"],
-      "guides": [[34, 1]],
+      "references": [
+        "idle_0",
+        "defend_2",
+        "defend_3"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Cross both sickles in front of the chest with the hooked blades raised, bend the knees and duck the head behind them, then hold the braced guard on both planted boots. No attack and no return to the relaxed stance."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["idle_0", "cast_4"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "idle_0",
+        "cast_4"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A harvest cheer. She spreads her arms out and raises both sickles high overhead with the blades curving outward, chin lifted, holds the pose briefly, then lowers both arms back to the original stance. A physical gesture only: no spell, glow or aura."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["idle_0", "death_3", "death_8"],
-      "guides": [[48, 1], [96, 2]],
+      "references": [
+        "idle_0",
+        "death_3",
+        "death_8"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
       "last": 2,
       "action": "Collapse slowly from standing. She doubles over and sinks onto her knees with the sickles dropping, stays kneeling a moment, then slumps forward and lies down flat on her front, finishing motionless with the head at screen right and the boots at screen left, the basket still on her back and both sickles on the ground by her hands. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
     }

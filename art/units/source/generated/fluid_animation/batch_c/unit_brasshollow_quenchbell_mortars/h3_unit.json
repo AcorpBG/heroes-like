@@ -2,64 +2,163 @@
   "unit_id": "unit_brasshollow_quenchbell_mortars",
   "identity": "ONE original squat biped furnace automaton, the Quenchbell Mortar, facing screen LEFT in elevated three-quarter view. Keep the dark iron and worn brass riveted body, the round furnace belly with a glowing orange barred grille, the coiled brass pipes and small canisters, the ONE giant short wide mortar barrel mounted on top with a glowing orange rim, its mouth pointing up toward screen left, the ONE jointed loading arm ending in a round dark shell ball with glowing orange seams, held out toward screen left, and EXACTLY TWO thick jointed legs with wide splayed brass feet. No crew and no extra legs or arms. Preserve the mortar, the shell arm, the furnace belly and the squat proportions.",
   "plate": "Locked orthographic camera, fixed scale and centred body. Keep the whole mortar barrel, the shell arm and both feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, muzzle flash, fire, smoke clouds, sparks, shells in flight, motion trails, particles or extra limbs; only faint steam wisps at the back pipes, and the grille, rim and shell seams keep only their steady glow. The machine moves only at its joints; the barrel stays rigid.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.42,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026104300,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["idle_0", "idle_4"],
-      "guides": [[62, 1]],
+      "references": [
+        "idle_0",
+        "idle_4"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A rumbling mechanical idle that loops. The body rises and settles on its legs as the furnace breathes, the shell arm sways slightly, the mortar tilts a few degrees and back, then everything returns smoothly to the original stance. Both feet stay planted. No walking and no firing."
     },
     "move_h3_v1": {
       "clip": "move",
-      "references": ["move_0", "move_4"],
-      "guides": [[31, 1], [62, 0], [93, 1]],
+      "references": [
+        "move_0",
+        "move_4"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
       "last": 0,
       "action": "Stomp in place through two complete reciprocal cycles with heavy mechanical steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each splayed foot alternates taking weight and swinging. The body stays centred for engine-driven travel, still facing screen left, with the mortar held steady and the shell arm swinging a little. Finish in the original gait phase."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["idle_0", "attack_1", "attack_5"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "idle_0",
+        "attack_1",
+        "attack_5"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE shell-arm smash toward screen left. The automaton draws the shell arm back and curls it in as the knees bend, then lunges forward toward screen left and swings the heavy shell ball out and down to full reach at screen left, pulls the arm back and settles into the original stance. One smash only; no sparks or effect at contact."
     },
     "ranged_h3_v1": {
       "clip": "ranged",
-      "references": ["idle_0", "ranged_2", "ranged_6"],
-      "guides": [[30, 1], [56, 2]],
+      "references": [
+        "idle_0",
+        "ranged_2",
+        "ranged_6"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          56,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Fire ONE mortar shot toward upper screen left. The legs brace, the shell arm lifts and the mortar tilts up to aim, then the barrel kicks back in recoil and the whole body squats down hard on its legs, holds a moment, then rises and the mortar lowers back into the original stance. One shot only; no flash, fire, smoke or shell is shown."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["idle_0", "hit_1"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "One sudden jolt and complete recovery. The body rocks back toward screen right and tilts, the shell arm flies up and the leg joints compress, then the machine rebalances on both feet and returns to the same stance. Nothing is seen hitting it: no projectile, spark or flash. The blue background never flashes or changes colour."
+      "references": [
+        "hit_1",
+        "idle_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "Start rocked back in a flinch, then recover completely. The body rocks back toward screen right and tilts, the shell arm flies up and the leg joints compress, then the machine rebalances on both feet and returns to the same stance. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["idle_0", "defend_1", "defend_2"],
-      "guides": [[34, 1]],
+      "references": [
+        "idle_0",
+        "defend_1",
+        "defend_2"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Hunker down: the legs spread and bend, lowering the furnace belly close to the ground, the mortar levels out and the shell arm tucks in against the body, then hold the low braced crouch. No firing and no return to the ready height."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["idle_0", "cast_4"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "idle_0",
+        "cast_4"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A mechanical signal. The automaton raises the shell arm high overhead and holds it up briefly while the furnace glows a little warmer, then lowers the arm back to the original stance. Only the glow brightens slightly; no flames, beam or spell effect."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["idle_0", "death_3", "death_7"],
-      "guides": [[48, 1], [96, 2]],
+      "references": [
+        "idle_0",
+        "death_3",
+        "death_7"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
       "last": 2,
       "action": "Shut down and collapse. The glow dims, the legs buckle and the body sinks down with the mortar tipping forward, stays there a moment, then it slumps flat onto the ground with the mortar barrel lying on its side pointing to screen left and the shell arm resting on the ground, finishing as a still wreck with the grille dark. The same body throughout: no explosion, no fire and no disappearing."
     }

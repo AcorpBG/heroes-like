@@ -2,57 +2,138 @@
   "unit_id": "unit_embercourt_lantern_sappers_veteran",
   "identity": "ONE original stocky woman engineer, the Flarepot Engineer, facing screen right in elevated three-quarter view. Keep the dark hair tucked under a faded burgundy headscarf, round brass goggles over the eyes, rolled burgundy sleeves, a grey neck scarf, the long weathered brown leather apron over a burgundy padded tunic and trousers, a broad buckled tool belt, dark work gloves and sturdy brown knee-high boots. ONE tall cylindrical brass tank is strapped on her back with a black corrugated hose looping to the belt, and small round orange clay flarepots sit in holders at the near hip. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE small round orange clay flarepot; the screen-RIGHT hand carries ONE round brass shutter lantern with an orange grille by its top loop handle. Preserve the tank, pots, lantern, costume and stocky adult proportions.",
   "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, tank, lantern, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, fire, explosions, magic, particles or extra limbs; the lantern keeps only its small steady glow. Articulate joints naturally with physical planted-foot support; do not morph the equipment.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.5,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026101750,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["idle_0", "idle_3"],
-      "guides": [[62, 1]],
+      "references": [
+        "idle_0",
+        "idle_3"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A busy, alert idle that loops. She breathes, the shoulders rise and fall, she lifts the lantern a little to look at it and weighs the flarepot in her other hand, then everything returns smoothly to the original stance. Both boots stay planted; the apron stirs gently. No walking and no throwing."
     },
     "move_h3_v1": {
       "clip": "move",
-      "references": ["move_40", "move_44"],
-      "guides": [[31, 1], [62, 0], [93, 1]],
+      "references": [
+        "move_40",
+        "move_44"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
       "last": 0,
       "action": "Walk in place through two complete reciprocal cycles with short sturdy steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The flarepot and the lantern swing slightly in her hands and the tank stays on her back. Finish in the original gait phase."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["idle_0", "attack_10", "attack_12"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "idle_0",
+        "attack_10",
+        "attack_12"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Lob ONE flarepot at close range toward screen right. Raise the clay pot high behind the shoulder as the knees load, then step forward and throw it overhand so it flies off toward screen right, follow through with the arm stretched forward, then take a fresh flarepot from the belt and settle back into the original stance. One throw only; the lantern stays in the screen-right hand. No fire and no explosion."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["idle_0", "hit_17"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "One brief impact recoil and complete recovery. The head and shoulders rock backward and the knees flex while she keeps hold of the flarepot and the lantern, then she rebalances on both boots and returns to the same stance. Remain standing with all equipment held. The impact is shown only by the body; the blue background never flashes or changes colour."
+      "references": [
+        "hit_17",
+        "idle_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "Start rocked back in a flinch, then recover completely. The head and shoulders rock backward and the knees flex while she keeps hold of the flarepot and the lantern, then she rebalances on both boots and returns to the same stance. Remain standing with all equipment held. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["idle_0", "defend_21", "defend_23"],
-      "guides": [[34, 1]],
+      "references": [
+        "idle_0",
+        "defend_21",
+        "defend_23"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Hunch down into a low crouch and hold the brass lantern up in front of the face like a small shield, the flarepot tucked against the body, then hold the crouch on both planted boots. No attack and no return to the relaxed stance."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["idle_0", "cast_28"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "idle_0",
+        "cast_28"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A signal to her crew. Raise the brass lantern high above the head at arm's length and swing it once, hold it up briefly, then lower it back to the original stance. A physical gesture only: no spell, flash or emitted light beyond the lantern's steady glow."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["idle_0", "death_39"],
-      "guides": [[90, 1]],
+      "references": [
+        "idle_0",
+        "death_39"
+      ],
+      "guides": [
+        [
+          90,
+          1
+        ]
+      ],
       "last": 1,
       "action": "Collapse continuously from standing: she doubles over, sinks onto her knees and falls forward onto her front under the weight of the tank, finishing lying motionless face down with the head at screen right and the boots at screen left, the brass tank on her back and the lantern lying on the ground beyond her head. No recovery, no fire, no floating equipment and no disappearing body."
     }

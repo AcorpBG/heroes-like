@@ -199,15 +199,16 @@ def measure(guides, order):
     return max(0, int(worst) + UNMIX_MARGIN), max(6, math.ceil(p999) + EDGE_MARGIN), {"bluest_opaque": worst, "blue_minus_green_p999": p999}
 
 
-def prepare(unit, names):
+def prepare(unit, names, refresh=False):
+    """refresh: prepare again, from the current h3_unit.json, takes the runner has not submitted yet."""
     anchor, room = unit.layout()
     for n, name in enumerate(unit.takes(names)):
         out = unit.dir / name
-        if (out / "config.json").exists():
+        if (out / "config.json").exists() and (not refresh or (out / "sampling_submission.json").exists()):
             continue
         started = time.monotonic()
         spec = unit.cfg["takes"][name]
-        out.mkdir()
+        out.mkdir(exist_ok=True)
         w, h = unit.canvas
         guides, refs = [], []
         for i, frame_name in enumerate(spec["references"]):
@@ -816,6 +817,7 @@ def main():
                         help="generate: also every prepared take of these units, in the same run")
     parser.add_argument("--frames", type=frame_list, help="sheets: close-up of these frames, e.g. 28-40,88")
     parser.add_argument("--join", action="store_true", help="enqueue: add the takes to the group the runner is sampling")
+    parser.add_argument("--refresh", action="store_true", help="prepare: rewrite takes that are queued but not yet submitted")
     parser.add_argument("--poll", type=float, default=10, help="run: seconds between looks at an empty queue")
     parser.add_argument("--archive-dir", type=Path, help="survey: newest source-art snapshot, for archived paintings")
     args = parser.parse_args()
@@ -828,7 +830,7 @@ def main():
         return survey(str(args.unit_dir), args.archive_dir)
     unit = Unit(args.unit_dir)
     if args.verb == "prepare":
-        prepare(unit, args.takes)
+        prepare(unit, args.takes, args.refresh)
     elif args.verb == "generate":
         generate([(unit, args.takes)] + [(Unit(d), None) for d in args.batch])
     elif args.verb == "enqueue":

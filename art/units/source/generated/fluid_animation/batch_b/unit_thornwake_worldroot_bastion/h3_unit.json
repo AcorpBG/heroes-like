@@ -1,0 +1,123 @@
+{
+  "unit_id": "unit_thornwake_worldroot_bastion",
+  "identity": "ONE original massive living wooden fortress, the Worldroot Bastion, facing screen right in elevated three-quarter view, standing on thick root legs. Keep the green leaf-patterned doorway at its centre, the ivory birch armour, the red thorn bindings, the glowing amber lantern nodules, the tall amber crown, the three small red-roofed turrets, the wooden bridges and the foliage, and the large red and ivory leaf shields on its root limbs. Keep all the architecture rigid and identical. Preserve the doorway, the turrets, the leaf shields and the massive proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole crown, every turret, all the leaf shields and all the root feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, falling leaves, dust, glow bursts, sparks, motion trails, particles or extra limbs. The towers never multiply, the roof never morphs and the door never opens; the root limbs bend naturally with planted-foot support.",
+  "canvas": [
+    960,
+    640
+  ],
+  "scale": 0.42,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026106350,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": [
+        "attack_00",
+        "attack_07"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A slow, living idle that loops. The bastion's trunk sways gently, the root limbs shift and the leaf shields rock a little, the lantern nodules keep their steady glow, then everything returns smoothly to the original stance. The root feet stay planted. No walking and no attack."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": [
+        "attack_00",
+        "attack_02",
+        "attack_04"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE sweeping blow toward screen right. The bastion lifts its leaf-shielded root limbs high, then leans forward and sweeps them down and out to full reach at screen right, draws them back and settles into the original stance. One blow only; no dust or effect at contact."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": [
+        "hit_01",
+        "attack_00"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "The bastion starts rocked back in a flinch and recovers from it. The whole fortress rocks back, the leaf shields swing out and the root limbs flex, then it settles on its root feet and returns to the same stance. Only the body moves; nothing else appears in the frame."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": [
+        "attack_00",
+        "defend_05",
+        "defend_06"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
+      "last": 2,
+      "action": "Draw the leaf shields together in front of the doorway as a wall, the root limbs braced low, then hold the guarded stance. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": [
+        "attack_00",
+        "cast_04"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A rallying display. The bastion spreads its leaf-shielded root limbs wide to both sides, holds the pose briefly, then lowers them back to the original stance. A physical gesture only: no spell, glow change or aura."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": [
+        "attack_00",
+        "death_03",
+        "death_07"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
+      "last": 2,
+      "action": "Collapse slowly and heavily. The root legs give way and the fortress sinks and tilts, settling lower and lower as its limbs fold, then it crumbles into a low heap of roots, leaf shields and broken turrets that lies motionless. Nothing flies away; no recovery and no disappearing body."
+    }
+  }
+}

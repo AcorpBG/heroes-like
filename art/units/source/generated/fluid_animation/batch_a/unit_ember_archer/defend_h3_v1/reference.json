@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_ember_archer",
+  "guides": [
+    {
+      "frame": "cast_00",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_v1.png",
+      "source_sha256": "fead6f294e78fdfaf188bf10d606109bbd96a71336f3751ee465a6ca5ac262aa",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "1c87d2ac563bac8fcd67a378577b70b3aa6a0101ce6de86a697e03a4adecc50e"
+    },
+    {
+      "frame": "defend_01",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/reactions_v1.png",
+      "source_sha256": "92bd62b952998e6243baaca69fb62224e0bff34e1c8745db653f308e02524f37",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "fff769de640d768a64a79271eafa70c522ccf7cb4b2e7d66d4f934c80fd2f203"
+    },
+    {
+      "frame": "defend_03",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/reactions_v1.png",
+      "source_sha256": "92bd62b952998e6243baaca69fb62224e0bff34e1c8745db653f308e02524f37",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "54ae975fd2f3ea2d9e7fc05658b67c46611674704f827d292daf0cc3518ddb4e"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    500,
+    578
+  ],
+  "output_scale": 0.47,
+  "free_pixels_left_top_right_bottom": [
+    231,
+    62,
+    230,
+    62
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -2,57 +2,138 @@
   "unit_id": "unit_mireclaw_gorefen_rippers_veteran",
   "identity": "ONE original heavy reptilian marsh predator, the Gorefen Packlord, facing screen right in elevated three-quarter side view. Keep the hunched four-legged body with dark charcoal crocodile scales, the long crocodile muzzle with ivory teeth and amber eyes, the rust-red reed mane along the head and back, the long curled scaly tail with a red tuft, ragged olive marsh reeds hanging from its harness, tan wraps on all four legs, the huge ivory branching antler trophies mounted on its shoulders and back (not growing from the head), weathered skull trinkets and one round green-bronze shoulder medallion. Exactly four clawed legs and one tail. Preserve the trophies, skulls, medallion and the broad heavy proportions.",
   "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full muzzle, trophies, claws and tail within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, weapons, magic, glow, sound marks, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the trophies stay fixed to the back; do not morph the harness.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.58,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026102350,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["idle_0", "idle_3"],
-      "guides": [[62, 1]],
+      "references": [
+        "idle_0",
+        "idle_3"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A heavy, grumbling idle that loops. The ribcage breathes, the neck lifts and the jaws part in a low snarl, the near forepaw flexes its claws and the tail curls, then everything returns smoothly to the original stance. All four feet stay planted. No walking and no attack."
     },
     "move_h3_v1": {
       "clip": "move",
-      "references": ["move_40", "move_44"],
-      "guides": [[31, 1], [62, 0], [93, 1]],
+      "references": [
+        "move_40",
+        "move_44"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
       "last": 0,
       "action": "Lumber in place through two complete reciprocal cycles with a heavy prowling gait. Diagonal pairs of legs alternate through reach, contact, push and lift; the elbows and knees articulate and each clawed foot alternates taking weight and swinging. The body stays centred for engine-driven travel, the shoulders roll under the trophies and the tail sways. Finish in the original gait phase."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["idle_0", "attack_10", "attack_12"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "idle_0",
+        "attack_10",
+        "attack_12"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE lunging bite toward screen right. The beast rears its head back with the jaws gaping, then lunges forward low with the neck stretched out to full reach at screen right, the near forepaw advancing, and snaps the jaws shut, then retracts the neck, pushes up on the forelegs and settles into the original stance. One bite only."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["idle_0", "hit_17"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "One brief impact recoil and complete recovery. The head jerks back with the jaw open and the shoulders drop low as the forelegs bend, then the forepaws reset and the beast returns to the same stance. The impact is shown only by the body; the blue background never flashes or changes colour."
+      "references": [
+        "hit_17",
+        "idle_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "Start rocked back in a flinch, then recover completely. The head jerks back with the jaw open and the shoulders drop low as the forelegs bend, then the forepaws reset and the beast returns to the same stance. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["idle_0", "defend_21", "defend_23"],
-      "guides": [[34, 1]],
+      "references": [
+        "idle_0",
+        "defend_21",
+        "defend_23"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Lower the head, spread the forepaws wider and draw the neck in behind the shoulder trophies, then sink into a low braced crouch with the jaw closed, the snout low and the tail curled near the haunches, and hold it on all four planted feet. No attack and no return to the relaxed stance."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["idle_0", "cast_28"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "idle_0",
+        "cast_28"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A pack-calling roar. The beast lifts the near forepaw and raises its chest, stretches the neck up and roars with the snout tilted skyward and the jaws wide, holds the roar briefly, then lowers the paw, closes the jaw and returns to the original stance. The hind feet stay planted. A physical gesture only: no spell, glow or sound marks."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["idle_0", "death_39"],
-      "guides": [[90, 1]],
+      "references": [
+        "idle_0",
+        "death_39"
+      ],
+      "guides": [
+        [
+          90,
+          1
+        ]
+      ],
       "last": 1,
       "action": "Collapse continuously from standing: the legs buckle, the beast sinks onto its belly, the muzzle drops to the ground and the tail goes limp, finishing lying flat and motionless on its belly with the snout at screen right and the tail at screen left, the trophies still on its back. No recovery and no disappearing body."
     }

@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_ember_archer",
+  "guides": [
+    {
+      "frame": "cast_00",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_v1.png",
+      "source_sha256": "fead6f294e78fdfaf188bf10d606109bbd96a71336f3751ee465a6ca5ac262aa",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "1c87d2ac563bac8fcd67a378577b70b3aa6a0101ce6de86a697e03a4adecc50e"
+    },
+    {
+      "frame": "cast_04",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_v1.png",
+      "source_sha256": "fead6f294e78fdfaf188bf10d606109bbd96a71336f3751ee465a6ca5ac262aa",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "b7951fdf963765aebff411e6f6a6812ffa988b834664944f8270069602118c6a"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    500,
+    578
+  ],
+  "output_scale": 0.47,
+  "free_pixels_left_top_right_bottom": [
+    231,
+    62,
+    230,
+    62
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

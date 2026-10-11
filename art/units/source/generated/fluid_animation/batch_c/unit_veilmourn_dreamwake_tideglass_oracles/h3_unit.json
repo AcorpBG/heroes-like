@@ -1,0 +1,138 @@
+{
+  "unit_id": "unit_veilmourn_dreamwake_tideglass_oracles",
+  "identity": "ONE original pale adult woman, the Tideglass Oracle, facing screen right in elevated three-quarter view. Keep her long dark braided hair, the blue cloak with trailing pale ribbons, the ivory layered long robe, the silver-blue shoulder scales, the belt trinkets, the black gloves and the two dark armoured boots. Exactly two arms, two hands and two legs. The screen-LEFT hand grips ONE tall rigid dark staff topped by a silver crescent moon around ONE blue glass sphere; the screen-RIGHT hand holds ONE shallow round gold-rimmed blue scrying bowl. Preserve the staff, the bowl and the slender proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole staff with its crescent, the bowl, the cloak and ribbons, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, water splashes, glow bursts, mist, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the staff and the bowl stay rigid, never change hands and never morph.",
+  "canvas": [
+    960,
+    640
+  ],
+  "scale": 0.52,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026106400,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": [
+        "attack_0",
+        "attack_7"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A calm, dreaming idle that loops. She breathes, the head tilts as she gazes into the bowl, the staff rocks slightly and the cloak and ribbons stir, then everything returns smoothly to the original stance. Both boots stay planted. No walking, no attack and no effect."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": [
+        "attack_0",
+        "attack_1",
+        "attack_4"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE staff strike toward screen right. She swings the staff up high behind her as the knees bend, then lunges forward and thrusts the crescent end out to full reach at screen right, draws back and settles into the original stance. One strike only; no water, glow or effect at contact."
+    },
+    "ranged_h3_v1": {
+      "clip": "ranged",
+      "references": [
+        "attack_0",
+        "ranged_1"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE casting thrust toward screen right. She draws the scrying bowl in to her chest, then sweeps her arm forward and thrusts the bowl out toward screen right, holds it out a moment, then draws it back to the original stance. Nothing comes out of the bowl: no water, glow or projectile."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": [
+        "hit_1",
+        "attack_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "She starts rocked back in a flinch and recovers from it. Her head and shoulders are thrown back, the cloak and ribbons swing and the knees flex while both hands keep hold of the staff and the bowl, then she steadies on both boots and returns to the same stance. Only the body moves; nothing else appears in the frame."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": [
+        "attack_0",
+        "defend_1",
+        "defend_2"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
+      "last": 2,
+      "action": "Crouch slightly and raise the staff diagonally across the body as a guard, the bowl drawn in close, then hold the guarded stance on both planted boots. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": [
+        "attack_0",
+        "cast_2"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A divination. She raises the scrying bowl forward and looks deep into it, holds the pose briefly, then lowers it back to the original stance. A physical gesture only: no water, glow or spell effect."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": [
+        "attack_0",
+        "death_2",
+        "death_7"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
+      "last": 2,
+      "action": "Collapse slowly. She sinks down onto her knees with the staff and the bowl dropping, stays there a moment, then slumps onto her side and lies flat, finishing motionless with her head at screen left, the staff and the bowl on the ground beside her. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    }
+  }
+}

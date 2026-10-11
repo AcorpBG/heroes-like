@@ -1,0 +1,123 @@
+{
+  "unit_id": "unit_thornwake_barkmantle_rams",
+  "identity": "ONE original heavy quadruped ram made of living wood, the Barkmantle Ram, facing screen right in elevated three-quarter view. Keep its barrel torso, the ivory birch-bark plates, the amber sap nodules, the moss, the red vine bindings and patterned ribbons, and the rigid horned wooden head with curled ivory horns. EXACTLY FOUR legs ending in root paws, attached at their original joints. Preserve the horns, the bark plates and the massive proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole head with both horns, the tail, all four legs and paws within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, dust, falling leaves, glow bursts, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-paw support; legs never grow longer and paws keep their size.",
+  "canvas": [
+    960,
+    640
+  ],
+  "scale": 0.44,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026106250,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": [
+        "attack_v1_00",
+        "cast_v1_07"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A heavy, breathing idle that loops. The ram's barrel chest swells and settles, the horned head lowers a little and lifts, it shifts its weight from one side to the other and the ribbons stir, then everything returns smoothly to the original stance. All four paws stay planted. No walking and no attack."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": [
+        "attack_v1_00",
+        "attack_v1_02",
+        "attack_v1_04"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE headbutt toward screen right. The ram rocks back onto its hind legs and lowers the horned head, then lunges forward and drives the horns out to full reach at screen right, pulls back and settles into the original stance. One headbutt only; the paws step, never slide, and no effect appears at contact."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": [
+        "hit_defend_v1_01",
+        "attack_v1_00"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "The ram starts rocked back in a flinch and recovers from it. Its head jerks up and back, the body rocks onto the hind legs and the bark plates shake, then it settles back onto all four paws and returns to the same stance. Only the body moves; nothing else appears in the frame."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": [
+        "attack_v1_00",
+        "hit_defend_v1_05",
+        "hit_defend_v1_06"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
+      "last": 2,
+      "action": "Brace low: the ram lowers its horned head forward and crouches on all four legs with the shoulders hunched, then holds the braced stance. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": [
+        "attack_v1_00",
+        "cast_v1_05"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A defiant display. The ram rears up on its front legs and lifts the horned head high, holds the pose briefly, then lowers back to the original stance. A physical gesture only: no spell, glow or aura."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": [
+        "attack_v1_00",
+        "death_v1_03",
+        "death_v1_07"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
+      "last": 2,
+      "action": "Collapse slowly and heavily. The ram's legs buckle and it sinks down onto its belly, stays there a moment with the head drooping, then slumps onto its side and lies motionless with the horned head at screen right. The body never rises again; no recovery and no disappearing body."
+    }
+  }
+}

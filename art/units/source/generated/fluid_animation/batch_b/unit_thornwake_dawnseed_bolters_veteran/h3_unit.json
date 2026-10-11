@@ -2,64 +2,163 @@
   "unit_id": "unit_thornwake_dawnseed_bolters_veteran",
   "identity": "ONE original hooded forest marksman, the Dawnburst Arbalist veteran, facing screen right in elevated three-quarter view. Keep the deep green hood over a dark wooden mask with green eyes, the long layered leafy cloak dotted with small white flowers, the twisted branch on the shoulder, the bark and vine legs, the pale birch-bark forearm bracers and brown boots. Exactly two arms, two hands and two legs. Both hands hold ONE long branch crossbow with gnarled wooden limbs, THREE glowing amber seed pods along the stock and a pointed golden bolt tip, held low and angled toward screen right. Preserve the crossbow, the hood, the leaf cloak and the adult proportions.",
   "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full crossbow, the hood, the cloak, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, bolts in flight, muzzle flash, falling leaves, magic, motion trails, particles or extra limbs; the amber pods keep only their steady glow. Articulate joints naturally with physical planted-foot support; do not morph the crossbow.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.49,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026103550,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["idle_v1_00", "idle_v1_03"],
-      "guides": [[62, 1]],
+      "references": [
+        "idle_v1_00",
+        "idle_v1_03"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A watchful marksman idle that loops. The arbalist breathes, the shoulders rise and fall, the crossbow is lifted a little and sighted briefly toward screen right then lowered, the hooded head turns slightly and the leaf cloak stirs, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no shooting."
     },
     "move_h3_v1": {
       "clip": "move",
-      "references": ["move_0", "move_4"],
-      "guides": [[31, 1], [62, 0], [93, 1]],
+      "references": [
+        "move_0",
+        "move_4"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
       "last": 0,
       "action": "Walk in place through two complete reciprocal cycles with quiet, steady steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The crossbow is carried level in both hands; the leaf cloak swings with the legs. Finish in the original gait phase."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["idle_v1_00", "attack_v1_02", "attack_v1_04"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "idle_v1_00",
+        "attack_v1_02",
+        "attack_v1_04"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE crossbow stock shove toward screen right. The arbalist braces the knees and draws the crossbow toward the chest, twists the shoulders back, then lunges forward and drives the crossbow out horizontally with both arms to full reach at screen right, draws the elbows back and settles into the original stance. One shove only; nothing is fired."
     },
     "ranged_h3_v1": {
       "clip": "ranged",
-      "references": ["idle_v1_00", "ranged_v1_03", "ranged_v1_05"],
-      "guides": [[30, 1], [56, 2]],
+      "references": [
+        "idle_v1_00",
+        "ranged_v1_03",
+        "ranged_v1_05"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          56,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Shoot ONE bolt toward screen right. The arbalist raises the crossbow to the shoulder and sights along it at screen right, holds steady, then the crossbow kicks back in recoil against the shoulder, holds a moment, and the arbalist lowers it and settles into the original stance. One shot only; the bolt is not shown, with no flash, trail or sparks."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["idle_v1_00", "hit_v1_01"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "The arbalist flinches from an unseen blow and recovers completely. The hooded head and shoulders hunch and twist away and the knees flex while both hands keep hold of the crossbow, then the arbalist straightens, rebalances on both boots and returns to the same stance. Nothing is seen hitting: no projectile, spark or flash. The blue background never flashes or changes colour."
+      "references": [
+        "hit_v1_01",
+        "idle_v1_00"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "The arbalist starts rocked back in a flinch and recovers from it. The hooded head and shoulders hunch and twist away and the knees flex while both hands keep hold of the crossbow, then the arbalist straightens, rebalances on both boots and returns to the same stance. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["idle_v1_00", "defend_v1_02", "defend_v1_03"],
-      "guides": [[34, 1]],
+      "references": [
+        "idle_v1_00",
+        "defend_v1_02",
+        "defend_v1_03"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Crouch low on bent knees and raise the crossbow diagonally in front of the hooded head as a guard, drawing the leaf cloak around the body, then hold the low covered guard on both planted boots. No attack and no return to the relaxed stance."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["idle_v1_00", "cast_v2_04"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "idle_v1_00",
+        "cast_v2_04"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A signal salute. The arbalist lifts the crossbow upright before the hooded face with the bolt tip pointing to the sky, holds it there briefly, then lowers it back to the original low stance. A physical gesture only: no spell, glow change or aura."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["idle_v1_00", "death_v1_02", "death_v1_06"],
-      "guides": [[48, 1], [96, 2]],
+      "references": [
+        "idle_v1_00",
+        "death_v1_02",
+        "death_v1_06"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
       "last": 2,
       "action": "Collapse slowly from standing. The arbalist doubles over and sinks onto the knees with the crossbow dropping, stays kneeling a moment, then slumps forward and lies down flat, finishing motionless with the hooded head at screen right and the boots at screen left, the leaf cloak spread over the body and the crossbow on the ground beside it. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
     }

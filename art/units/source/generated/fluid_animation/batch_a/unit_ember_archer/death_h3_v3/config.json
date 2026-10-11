@@ -1,0 +1,56 @@
+{
+  "unit_id": "unit_ember_archer",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    500,
+    578
+  ],
+  "scale": 0.47,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026101313,
+  "references": [
+    "cast_00",
+    "death_02",
+    "death_03",
+    "death_07"
+  ],
+  "guides": [
+    [
+      34,
+      1
+    ],
+    [
+      66,
+      2
+    ],
+    [
+      100,
+      3
+    ]
+  ],
+  "last": 3,
+  "prompt": "ONE original young woman archer, the Ember Archer, facing screen right in elevated three-quarter view. Keep her brown hair tied back in a braid, the orange and charcoal layered tunic with ragged orange tails, brown leather shoulder guards, chest straps and belt pouches, brown leather bracers with white wraps, dark trousers and tall brown boots, and the quiver of red-fletched arrows on her back. Exactly two arms, two hands and two legs. The screen-RIGHT hand holds ONE wooden recurve bow; the screen-LEFT hand is free. She carries no sword or other weapon. Preserve the bow size, the quiver, the costume and adult proportions. Collapse slowly and continuously from standing. Her knees buckle and she sinks down onto both knees with her head bowed, then leans forward and catches herself on her hands, then lowers herself down onto her front and lies still, finishing motionless with her head at screen left and her boots at screen right, the bow lying on the ground beside her. Every movement is slow and heavy; her face stays the same face throughout. The body never leaves the ground: no falling backward, no rolling over, no kicking or raised legs, no recovery, no floating equipment and no disappearing body. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, bow, quiver, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the equipment. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour.",
+  "protected_foreground_chroma": 9,
+  "edge_threshold": 10,
+  "palette_measurement": {
+    "bluest_opaque": 7.0,
+    "blue_minus_green_p999": 4.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

@@ -2,57 +2,143 @@
   "unit_id": "unit_veilmourn_gloamkeel_bulwarks_veteran",
   "identity": "ONE original tall armoured warrior, the Gloamkeel Bulwark veteran, facing screen right in elevated three-quarter view. Keep the blackened scale and plate armour, the tall narrow finned helmet with a pale streaked face guard, the long tattered dark navy cloak and tabard strips streaked with pale grey, the belted waist and the dark armoured boots. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE curved single-edged saber; the screen-RIGHT arm carries ONE large black kite shield with dark bronze trim, an anchor emblem, an iron ring and a round glowing amber lantern porthole near its top. Preserve the saber, the shield with its lantern, the finned helmet and the tall proportions.",
   "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full helmet, saber, shield, cloak, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, sparks, motion trails, particles or extra limbs; the lantern keeps only its steady glow. Articulate joints naturally with physical planted-foot support; the shield stays rigid and never morphs.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.45,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026104750,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["idle_00", "idle_04"],
-      "guides": [[62, 1]],
+      "references": [
+        "idle_00",
+        "idle_04"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A grim, watchful idle that loops. The warrior breathes, the shoulders rise and fall, the saber turns a little in the low hand, the shield settles on the arm, the helmet turns slightly to scan and the cloak strips stir, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no attack."
     },
     "move_h3_v1": {
       "clip": "move",
-      "references": ["move_00", "move_04"],
-      "guides": [[31, 1], [62, 0], [93, 1]],
+      "references": [
+        "move_00",
+        "move_04"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
       "last": 0,
       "action": "March in place through two complete reciprocal cycles with measured heavy steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The shield stays upright on the arm, the saber swings a little at the side and the cloak strips trail. Finish in the original gait phase."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["idle_00", "attack_02", "attack_04"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "idle_00",
+        "attack_02",
+        "attack_04"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE saber strike toward screen right. The warrior raises the saber high above the helmet as the knees bend, then steps into a long lunge and slashes down into a straight thrust with the blade at full reach toward screen right, the shield held close, draws back and settles into the original stance. One strike only; no sparks or trail."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["idle_00", "hit_01"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "The warrior reels from an unseen blow and recovers completely. The helmet and shoulders double forward and twist behind the shield and the knees flex deep while both hands keep hold of the saber and the shield, then the warrior straightens, rebalances on both boots and returns to the same stance. Nothing is seen hitting the warrior: no projectile, spark or flash. The blue background never flashes or changes colour."
+      "references": [
+        "hit_01",
+        "idle_00"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "The warrior starts rocked back in a flinch and recovers from it. The helmet and shoulders double forward and twist behind the shield and the knees flex deep while both hands keep hold of the saber and the shield, then the warrior straightens, rebalances on both boots and returns to the same stance. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["idle_00", "defend_01", "defend_02"],
-      "guides": [[34, 1]],
+      "references": [
+        "idle_00",
+        "defend_01",
+        "defend_02"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Crouch low behind the kite shield, setting it forward in front of the body with the shoulder braced against it and the saber drawn back ready, then hold the braced guard on both planted boots. No attack and no return to the relaxed stance."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["idle_00", "cast_03"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "idle_00",
+        "cast_03"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A solemn salute. The warrior raises the saber upright in front of the helmet with the blade pointing straight up, holds the salute briefly, then lowers it back to the original stance. A physical gesture only: no spell, glow change or aura."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["idle_00", "death_03", "death_07"],
-      "guides": [[48, 1], [96, 2]],
+      "references": [
+        "idle_00",
+        "death_03",
+        "death_07"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
       "last": 2,
       "action": "Collapse slowly and heavily from standing. The warrior doubles over and sinks onto both knees, leaning on the shield, stays kneeling a moment, then topples forward and lies flat on the ground, finishing motionless with the helmet at screen right, the shield lying flat and the saber on the ground beside the body, the lantern dimmed. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
     }

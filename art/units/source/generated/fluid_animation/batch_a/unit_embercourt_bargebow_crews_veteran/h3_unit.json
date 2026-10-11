@@ -2,69 +2,158 @@
   "unit_id": "unit_embercourt_bargebow_crews_veteran",
   "identity": "ONE original stocky crossbowman, the Winchbow Arbalest, facing screen right in elevated three-quarter view. Keep the adult man with swept-back dark brown hair and a short full beard, ONE short brass monocular goggle over his eye, the burgundy tunic with rolled sleeves, an ivory neck scarf, the worn brown leather long apron split at the legs, small tarnished bronze shoulder plates, brown fingerless gloves and bracers, belt pouches with a brass ring and brown leather boots. Exactly two arms, two hands and two legs. Both hands hold ONE oversized heavy horizontal steel and wood crossbow at the waist, its bow limbs and bolt pointing at screen right, with a brass sight and ONE round winch crank on the near side. Preserve the crossbow size and shape, the goggle, the costume and the stocky adult proportions.",
   "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, crossbow, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the equipment. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.52,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026101500,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["idle_0", "idle_4"],
-      "guides": [[62, 1]],
+      "references": [
+        "idle_0",
+        "idle_4"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A steady, watchful idle that loops. He breathes, the shoulders rise and fall, his head turns slightly, he shifts the heavy crossbow in both hands and checks the winch with his thumb, then everything returns smoothly to the original stance. Both boots stay planted; the apron stirs gently. No walking and no shooting."
     },
     "move_h3_v1": {
       "clip": "move",
-      "references": ["move_48", "move_52"],
-      "guides": [[31, 1],
-        [62, 0],
-        [93, 1]],
+      "references": [
+        "move_48",
+        "move_52"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
       "last": 0,
       "action": "Walk in place through two complete reciprocal cycles. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The crossbow stays held level at the waist in both hands; the apron swings with the legs. Finish in the original gait phase."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["idle_0", "attack_10", "attack_12"],
-      "guides": [[30, 1],
-        [54, 2]],
+      "references": [
+        "idle_0",
+        "attack_10",
+        "attack_12"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE close bash toward screen right. Pull the heavy crossbow back against the chest as the knees load, then lunge forward on the front leg and ram the crossbow straight out with both arms toward screen right, then draw back and settle into the original stance. One bash only; both hands keep the crossbow. No shot and no second strike."
     },
     "ranged_h3_v1": {
       "clip": "ranged",
-      "references": ["idle_0", "ranged_16", "ranged_20"],
-      "guides": [[26, 1],
-        [60, 2]],
+      "references": [
+        "idle_0",
+        "ranged_16",
+        "ranged_20"
+      ],
+      "guides": [
+        [
+          26,
+          1
+        ],
+        [
+          60,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Shoot ONE bolt toward screen right. Turn the winch crank with the near hand to span the crossbow, then raise the crossbow to the shoulder and aim level toward screen right, squeeze the trigger so the bolt flies straight off toward screen right and the crossbow kicks back slightly, then lower it to the waist in the original stance. One bolt only; the crossbow stays in both hands."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["idle_0", "hit_25"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "One brief impact recoil and complete recovery. The head and shoulders rock backward and the knees flex while both hands keep hold of the crossbow, then he rebalances on both boots and returns to the same stance. Remain standing with the crossbow held. The impact is shown only by the body; the blue background never flashes or changes colour."
+      "references": [
+        "hit_25",
+        "idle_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "Start rocked back in a flinch, then recover completely. The head and shoulders rock backward and the knees flex while both hands keep hold of the crossbow, then he rebalances on both boots and returns to the same stance. Remain standing with the crossbow held. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["idle_0", "defend_30", "defend_31"],
-      "guides": [[34, 1]],
+      "references": [
+        "idle_0",
+        "defend_30",
+        "defend_31"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Drop into a wide low crouch, raise the crossbow to the shoulder and brace behind it with the head tucked down behind the stock, then hold the braced crouch on both planted boots. No shot and no return to the relaxed stance."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["idle_0", "cast_35"],
-      "guides": [[44, 1],
-        [70, 1]],
+      "references": [
+        "idle_0",
+        "cast_35"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A physical signal to his crew. Take the far hand off the crossbow and raise it high above the head with the palm open, waving once, while the near hand holds the crossbow at the waist, then return the hand to the crossbow and the original stance. A physical gesture only: no spell, glow or emitted effect."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["idle_0", "death_47"],
-      "guides": [[90, 1]],
+      "references": [
+        "idle_0",
+        "death_47"
+      ],
+      "guides": [
+        [
+          90,
+          1
+        ]
+      ],
       "last": 1,
       "action": "Collapse continuously from standing: he doubles over, the knees buckle onto the ground and he falls forward onto his front over the crossbow, finishing lying motionless face down with the head at screen right and the boots at screen left, the crossbow lying on the ground beneath and in front of him. No recovery, no floating equipment and no disappearing body."
     }

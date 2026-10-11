@@ -2,57 +2,138 @@
   "unit_id": "unit_mireclaw_drowned_antler_sovereign_veteran",
   "identity": "ONE original regal swamp quadruped, the Crown of the Drowned Fen, facing screen right in elevated three-quarter side view. Keep the muscular grey-green reptilian and deer-like body with a bark and reed mane and moss streamers, the long crocodilian deer muzzle, the enormous wide curved branching antler crown hung with tiny brass bells, weathered ornate metal plates on the shoulders and forelegs, large dark cloven hooves, and the long leaf and reed fringed tail sweeping back to screen left. Exactly four animal legs and one tail; no arms, wings or rider. Preserve the antler crown, bells, shoulder armour, hooves and massive body proportions.",
   "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep every antler tip, the hooves and the tail tip within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, weapons, magic, glow, sparks, impact effects, particles or extra limbs. Articulate joints naturally with physical planted-hoof support; the bells swing as secondary motion; do not morph the antlers or armour.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.54,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026102150,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["idle_0", "idle_4"],
-      "guides": [[62, 1]],
+      "references": [
+        "idle_0",
+        "idle_4"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A regal, watchful idle that loops. The ribcage breathes, the neck lowers slightly and the muzzle dips so the antler bells sway, the near foreleg lifts its hoof a little and sets it down again and the tail curves gently, then everything returns smoothly to the original stance on all four hooves. No walking and no attack."
     },
     "move_h3_v1": {
       "clip": "move",
-      "references": ["move_40", "move_44"],
-      "guides": [[31, 1], [62, 0], [93, 1]],
+      "references": [
+        "move_40",
+        "move_44"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
       "last": 0,
       "action": "Walk in place through two complete reciprocal cycles with a long stately stride. Diagonal pairs of legs alternate through reach, contact, push and lift; the knees and hocks articulate and each hoof alternates taking weight and swinging. The body stays centred for engine-driven travel, the head bobs gently, the bells swing and the tail sways. Finish in the original gait phase."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["idle_0", "attack_10", "attack_12"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "idle_0",
+        "attack_10",
+        "attack_12"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE lunging antler strike toward screen right. The beast lowers its crown and compresses the hind legs, then pushes forward with the near forehoof reaching ahead and thrusts the neck and antlers out to full reach at screen right with the jaw snapping open, follows through low as the foreknees absorb the impact, then steps back and raises the crown into the original stance. One strike only."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["idle_0", "hit_17"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "One brief impact recoil and complete recovery. The chest compresses down with the foreknees bent deeply and the crown dips, then the neck lifts, the near forehoof replants and the beast returns to the same stance on all four hooves. The impact is shown only by the body; the blue background never flashes or changes colour."
+      "references": [
+        "hit_17",
+        "idle_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "Start rocked back in a flinch, then recover completely. The chest compresses down with the foreknees bent deeply and the crown dips, then the neck lifts, the near forehoof replants and the beast returns to the same stance on all four hooves. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["idle_0", "defend_21", "defend_23"],
-      "guides": [[34, 1]],
+      "references": [
+        "idle_0",
+        "defend_21",
+        "defend_23"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Lower the broad antler crown toward screen right and spread the forehooves, then sink into a deep braced foreleg crouch with the face shielded behind the antler tips and the tail low, and hold the guard on all four planted hooves. No attack and no return to the relaxed stance."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["idle_0", "cast_28"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "idle_0",
+        "cast_28"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A resonant call. The near forehoof lifts and hovers forward while the neck stretches upward and the jaw opens wide in a long call, the antler bells swinging, holds the call briefly, then the hoof lowers, the jaw closes and the beast returns to the original stance. The other three hooves stay planted. A physical gesture only: no spell, glow or sound waves."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["idle_0", "death_39"],
-      "guides": [[90, 1]],
+      "references": [
+        "idle_0",
+        "death_39"
+      ],
+      "guides": [
+        [
+          90,
+          1
+        ]
+      ],
       "last": 1,
       "action": "Collapse continuously from standing: the legs buckle, the beast sinks onto its belly, the heavy antlered head sags to the ground and the tail goes limp, finishing lying motionless on its belly with the legs folded under it, the head and antler crown resting on the ground at screen right and the tail at screen left. No recovery, no floating bells and no disappearing body."
     }

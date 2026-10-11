@@ -2,64 +2,163 @@
   "unit_id": "unit_neutral_mireglass_belltoads",
   "identity": "ONE original giant marsh toad, the Mireglass Belltoad, facing screen right in elevated three-quarter side view. Keep the dark green-black warty skin with a pale belly, the frill of golden-brown spines around the head and down the back, the row of small glowing teal glass bubbles along the back, the large golden eye, and the huge translucent glowing teal throat sac hanging below the jaw like a glass bell. EXACTLY FOUR legs with webbed orange-toed feet. No rider and no extra legs. Preserve the glass throat sac, the back bubbles, the spine frill and the squat proportions.",
   "plate": "Locked orthographic camera, fixed scale and centred body. Keep the whole throat sac, the spines and all four feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, water, floor shadow, camera motion, zoom, spit, bubbles in flight, sound rings, sparks, motion trails, particles or extra legs; glow stays only inside the throat sac and the back bubbles. Articulate joints naturally with physical planted-foot support.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.4,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026105200,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["idle_00", "idle_04"],
-      "guides": [[62, 1]],
+      "references": [
+        "idle_00",
+        "idle_04"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A heavy, croaking idle that loops. The toad breathes so the glowing throat sac swells and shrinks slowly, the head lifts slightly, the eye blinks and the spine frill twitches, then everything returns smoothly to the original squat stance. All four feet stay planted. No hopping and no attack."
     },
     "move_h3_v1": {
       "clip": "move",
-      "references": ["move_00", "move_04"],
-      "guides": [[31, 1], [62, 0], [93, 1]],
+      "references": [
+        "move_00",
+        "move_04"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
       "last": 0,
       "action": "Hop in place through two complete hops. The toad crouches, pushes off with the hind legs and stretches forward with the front legs reaching, lands on the front feet and draws the hind legs back under into the squat, while the body stays centred for engine-driven travel and the throat sac swings. Finish in the original squat."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["idle_00", "attack_01", "attack_03"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "idle_00",
+        "attack_01",
+        "attack_03"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE lunging bite toward screen right. The toad crouches low and gathers its hind legs, then lunges forward with the mouth gaping wide and snaps it shut at full reach toward screen right, then settles back into the original squat. One bite only; no tongue lash, spit or effect."
     },
     "ranged_h3_v1": {
       "clip": "ranged",
-      "references": ["idle_00", "ranged_03", "ranged_05"],
-      "guides": [[30, 1], [56, 2]],
+      "references": [
+        "idle_00",
+        "ranged_03",
+        "ranged_05"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          56,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE booming croak toward screen right. The toad rises on its front legs and inflates the glowing throat sac to full size, then opens the mouth wide as the sac contracts sharply and the whole body jolts, holds a moment, then the sac refills to normal and the toad settles into the original squat. Nothing leaves the mouth: no spit, bubbles, rings or projectile."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["idle_00", "hit_01"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "One sudden recoil and complete recovery. The toad rears up and back with the front legs flung out and the mouth open, the throat sac wobbling, then drops back onto all four feet and returns to the same squat. Nothing is seen hitting it: no projectile, spark or flash. The blue background never flashes or changes colour."
+      "references": [
+        "hit_01",
+        "idle_00"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "Start rocked back in a flinch, then recover completely. The toad rears up and back with the front legs flung out and the mouth open, the throat sac wobbling, then drops back onto all four feet and returns to the same squat. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["idle_00", "defend_01", "defend_02"],
-      "guides": [[34, 1]],
+      "references": [
+        "idle_00",
+        "defend_01",
+        "defend_02"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Hunker down: the toad flattens itself close to the ground, pulls the head down so the throat sac rests on the ground, raises the spine frill and tucks the legs in, then holds the low flattened guard. No attack and no return to the raised squat."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["idle_00", "cast_04"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "idle_00",
+        "cast_04"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A tolling call. The toad rises tall on its front legs, raises the spine frill and swells the throat sac huge with the mouth open as the sac glows brighter inside, holds the pose briefly, then deflates and settles back into the original squat. Only the sac brightens; no rings, beams or spell effect."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["idle_00", "death_03", "death_07"],
-      "guides": [[48, 1], [96, 2]],
+      "references": [
+        "idle_00",
+        "death_03",
+        "death_07"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
       "last": 2,
       "action": "Collapse slowly. The glow fades, the legs give way and the toad sinks down onto its belly, the throat sac sagging, stays a moment, then slumps flat with the deflated sac lying on the ground, the head resting at screen right and the legs splayed, finishing motionless. The same body throughout: no bursting and no disappearing."
     }

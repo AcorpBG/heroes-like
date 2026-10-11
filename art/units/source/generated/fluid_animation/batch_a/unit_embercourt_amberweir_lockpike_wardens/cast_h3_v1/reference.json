@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_embercourt_amberweir_lockpike_wardens",
+  "guides": [
+    {
+      "frame": "idle_00",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_amberweir_lockpike_wardens/idle_v1.png",
+      "source_sha256": "2abf236012168bead3aa9675cbeea5af173150fe452367eb17ee61527f8dcee3",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "8e30db1d1b2ac8a446818c3112541b3059989119c4cf4db4af6f76328c928cfb"
+    },
+    {
+      "frame": "cast_04",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_amberweir_lockpike_wardens/cast_v1.png",
+      "source_sha256": "d497e9164c4c00577f742dcdf985b3f3e0405bd8aadab312410925ac5ebd56a1",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "ba85748a7c36b1e1c0aec6a0940aa3bad4ed40f85a07c4e1d81bda8cc6b53a5a"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    420,
+    594
+  ],
+  "output_scale": 0.45,
+  "free_pixels_left_top_right_bottom": [
+    146,
+    45,
+    145,
+    46
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

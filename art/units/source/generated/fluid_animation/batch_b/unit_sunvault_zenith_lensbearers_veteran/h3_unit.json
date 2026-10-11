@@ -2,64 +2,163 @@
   "unit_id": "unit_sunvault_zenith_lensbearers_veteran",
   "identity": "ONE original tall armoured humanoid, the Horizon Arbiter veteran, facing screen right in elevated three-quarter view. Keep the ivory and gold streamlined beaked helmet with a horizontal blue visor, the black faceless undersuit at the neck, the white and gold shoulder and forearm plates, golden greaves and boots, the long split ivory coat over a dark blue star-chart tabard with gold linework, and the lavender-blue cape with gold trim. A LARGE round blue lens in a spiked brass ring is fixed on a harness behind the screen-left shoulder, with a gold orbital arc above the helmet; it never detaches. Exactly two arms, two black-gloved hands and two legs. Both hands hold ONE long gold staff angled toward screen right, tipped with ONE large round blue lens in a brass ring and a dangling faceted blue crystal below it. Preserve the back lens, the staff lens, the helmet and the tall adult proportions.",
   "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full staff and its lens, the back lens, the arc, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, beams, projectiles, sparks, motion trails, particles or extra limbs; the lenses keep only their steady glow, and only the staff lens may brighten where the action says so. Articulate joints naturally with physical planted-foot support; do not morph the staff or lenses.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.5,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026103350,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["idle_0", "idle_4"],
-      "guides": [[62, 1]],
+      "references": [
+        "idle_0",
+        "idle_4"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A composed, observant idle that loops. The arbiter breathes, the shoulders rise and fall, the staff is lifted a little so the lens tilts and the crystal pendant swings, the helmeted head turns slightly as if sighting the horizon, the coat stirs, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no casting."
     },
     "move_h3_v1": {
       "clip": "move",
-      "references": ["move_48", "move_52"],
-      "guides": [[31, 1], [62, 0], [93, 1]],
+      "references": [
+        "move_48",
+        "move_52"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
       "last": 0,
       "action": "Walk in place through two complete reciprocal cycles with measured strides. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel with the back lens steady. The staff is carried angled forward in both hands; the coat and cape swing with the legs. Finish in the original gait phase."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["idle_0", "attack_9", "attack_12"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "idle_0",
+        "attack_9",
+        "attack_12"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE staff thrust toward screen right. The arbiter draws the staff back as the knees bend, then lunges forward into a deep stance and drives the lens head out level to full reach at screen right, draws it back and returns to the original stance. One thrust only; no flash or effect at contact."
     },
     "ranged_h3_v1": {
       "clip": "ranged",
-      "references": ["idle_0", "ranged_18", "ranged_20"],
-      "guides": [[30, 1], [56, 2]],
+      "references": [
+        "idle_0",
+        "ranged_18",
+        "ranged_20"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          56,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Focus ONE burst of light toward screen right. The arbiter braces and levels the staff at screen right, sighting along it, as the staff lens flares bright for a moment, holds, then the glow fades back to its steady light, the staff lowers and the arbiter settles into the original stance. The light stays inside the lens: no beam, ray or projectile leaves it."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["idle_0", "hit_25"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "The arbiter flinches from an unseen blow and recovers completely. The shoulders hunch and twist away, the helmet ducks and the knees flex while both hands keep hold of the staff, then the arbiter straightens, rebalances on both boots and returns to the same stance. Nothing is seen hitting: no projectile, spark or flash. The blue background never flashes or changes colour."
+      "references": [
+        "hit_25",
+        "idle_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "The arbiter starts rocked back in a flinch and recovers from it. The shoulders hunch and twist away, the helmet ducks and the knees flex while both hands keep hold of the staff, then the arbiter straightens, rebalances on both boots and returns to the same stance. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["idle_0", "defend_29", "defend_30"],
-      "guides": [[34, 1]],
+      "references": [
+        "idle_0",
+        "defend_29",
+        "defend_30"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Bring the staff upright across the front of the body in both hands, bend the knees and crouch behind it with the helmet lowered, then hold the braced guard on both planted boots. No attack and no return to the relaxed stance."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["idle_0", "cast_36"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "idle_0",
+        "cast_36"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "An invocation. The arbiter raises the staff high overhead toward the sky with both hands, the staff lens glowing a little brighter, holds it there briefly, then lowers the staff back to the original stance. Only the staff lens brightens; no beam, aura or spell effect."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["idle_0", "death_42", "death_47"],
-      "guides": [[48, 1], [96, 2]],
+      "references": [
+        "idle_0",
+        "death_42",
+        "death_47"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
       "last": 2,
       "action": "Collapse slowly from standing. The arbiter sags, leans on the staff and sinks onto the knees, stays kneeling a moment, then slumps forward onto the side and lies down, finishing motionless flat on the ground with the back lens still on the harness and the staff lying beside the body. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
     }

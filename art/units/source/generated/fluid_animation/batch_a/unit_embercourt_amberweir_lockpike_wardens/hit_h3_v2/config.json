@@ -1,0 +1,46 @@
+{
+  "unit_id": "unit_embercourt_amberweir_lockpike_wardens",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    420,
+    594
+  ],
+  "scale": 0.45,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026101407,
+  "references": [
+    "hit_00",
+    "idle_00"
+  ],
+  "guides": [
+    [
+      40,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "ONE original young infantry soldier, the Lockpike Warden, facing screen right in elevated three-quarter view. Keep the youthful face with short brown hair, the rust-orange scarf and tabard over dark quilted armour, polished brass shoulder and knee guards, a belt with brass fittings and tall dark brown boots. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE long pike with a dark shaft and a gold two-pronged fork head; the screen-RIGHT arm carries ONE tall rectangular dark wooden shield with brass trim and a vertical brass emblem, held in front of the body. Preserve the pike length, the two-pronged head, the shield size and markings, the armour and adult proportions. She starts rocked back in a flinch, head and shoulders thrown back and knees bent behind the shield, and recovers from it: she straightens up, brings the head forward, settles her weight on both boots and returns to the original stance, then stands still breathing quietly. She keeps hold of the spear and the shield throughout. Only her body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, pike, shield, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the equipment. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour.",
+  "protected_foreground_chroma": 11,
+  "edge_threshold": 10,
+  "palette_measurement": {
+    "bluest_opaque": 9.0,
+    "blue_minus_green_p999": 4.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

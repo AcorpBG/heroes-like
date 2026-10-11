@@ -2,57 +2,143 @@
   "unit_id": "unit_neutral_fenhound_runners",
   "identity": "ONE original lean marsh hound, the Fenhound Runner, facing screen right in elevated three-quarter side view. Keep the tawny brown fur with teal-blue stripe markings on the flanks, legs and bushy tail, the pale chest, the long narrow muzzle and tall pointed ears, the brown leather harness with brass rings and a small bundle of green reeds strapped on the back, and the brass medallion hanging at the collar. EXACTLY FOUR slender legs and one bushy tail. No rider and no extra legs. Preserve the harness, the stripe markings and the lean proportions.",
   "plate": "Locked orthographic camera, fixed scale and centred body. Keep the muzzle, ears, tail and all four paws within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, water splashes, dust, motion trails, particles or extra legs. Articulate joints naturally with physical planted-paw support; the harness stays attached.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.38,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026105050,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["idle_v1_01", "idle_v1_05"],
-      "guides": [[62, 1]],
+      "references": [
+        "idle_v1_01",
+        "idle_v1_05"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "An alert hunting idle that loops. The hound pants and breathes, the ears swivel, the head turns to sniff the air, one forepaw lifts briefly and sets down and the tail wags slowly, then everything returns smoothly to the original stance. The paws stay in place. No running and no attack."
     },
     "move_h3_v1": {
       "clip": "move",
-      "references": ["move_v1_01", "move_v1_05"],
-      "guides": [[31, 1], [62, 0], [93, 1]],
+      "references": [
+        "move_v1_01",
+        "move_v1_05"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
       "last": 0,
       "action": "Trot in place on four legs through two complete cycles with a quick light gait. Diagonal pairs of legs alternate lifting, reaching forward and planting their paws while the others bear the weight. The body stays centred for engine-driven travel with the head level and the tail streaming back. Exactly four legs at all times. Finish in the original gait phase."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["idle_v1_01", "attack_v1_02", "attack_v1_04"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "idle_v1_01",
+        "attack_v1_02",
+        "attack_v1_04"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE leaping bite toward screen right. The hound crouches low and gathers its hind legs, then springs forward with the jaws open and snaps at full reach toward screen right, lands on its forepaws and draws back into the original stance. One bite only; the body stays close to the ground and no effect appears."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["idle_v1_01", "hit_defend_v1_01"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "One sudden flinch and complete recovery. The hound jerks its head back and twists away, the ears flatten and the hind legs bunch, then it shakes itself, steadies on all four paws and returns to the same stance. Nothing is seen hitting it: no projectile, spark or flash. The blue background never flashes or changes colour."
+      "references": [
+        "hit_defend_v1_01",
+        "idle_v1_01"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "Start rocked back in a flinch, then recover completely. The hound jerks its head back and twists away, the ears flatten and the hind legs bunch, then it shakes itself, steadies on all four paws and returns to the same stance. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["idle_v1_01", "hit_defend_v1_06", "hit_defend_v1_07"],
-      "guides": [[34, 1]],
+      "references": [
+        "idle_v1_01",
+        "hit_defend_v1_06",
+        "hit_defend_v1_07"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Crouch low and snarl: the hound drops its chest toward the ground, flattens the ears, bares its teeth with the head low toward screen right and braces all four legs, then holds the low guarded crouch. No attack and no return to the standing stance."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["idle_v1_01", "support_v1_05"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "idle_v1_01",
+        "support_v1_05"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A rallying howl. The hound sits back slightly, raises its muzzle high and howls with the throat stretched, holds the pose briefly, then lowers the head back to the original stance. A physical gesture only: no sound waves, glow or effect."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["idle_v1_01", "death_v1_03", "death_v1_08"],
-      "guides": [[48, 1], [96, 2]],
+      "references": [
+        "idle_v1_01",
+        "death_v1_03",
+        "death_v1_08"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
       "last": 2,
       "action": "Collapse slowly. The hound staggers, the legs buckle and it sinks down onto its belly with the head drooping, stays a moment, then rolls onto its side and lies flat with the legs stretched out, the head at screen right and the tail at screen left, finishing motionless. The body never leaves the ground; no recovery and no disappearing."
     }

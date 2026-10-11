@@ -5,1349 +5,5092 @@
       "unit_id": "unit_ember_archer",
       "reference_height": 256,
       "source_facing": "right",
-      "alpha_noise_cutoff": 8,
       "frames": [
         {
-          "name": "move_00",
+          "name": "idle_h3_v1_000",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "idle_h3_v1_002",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_002.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 2,
+          "video_time_seconds": 0.0833
+        },
+        {
+          "name": "idle_h3_v1_004",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.1667
+        },
+        {
+          "name": "idle_h3_v1_006",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "idle_h3_v1_008",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333
+        },
+        {
+          "name": "idle_h3_v1_010",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4167
+        },
+        {
+          "name": "idle_h3_v1_012",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "idle_h3_v1_014",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833
+        },
+        {
+          "name": "idle_h3_v1_016",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6667
+        },
+        {
+          "name": "idle_h3_v1_018",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "idle_h3_v1_020",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333
+        },
+        {
+          "name": "idle_h3_v1_022",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9167
+        },
+        {
+          "name": "idle_h3_v1_024",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "idle_h3_v1_026",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833
+        },
+        {
+          "name": "idle_h3_v1_028",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1667
+        },
+        {
+          "name": "idle_h3_v1_030",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "idle_h3_v1_032",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333
+        },
+        {
+          "name": "idle_h3_v1_034",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4167
+        },
+        {
+          "name": "idle_h3_v1_036",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "idle_h3_v1_038",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833
+        },
+        {
+          "name": "idle_h3_v1_040",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6667
+        },
+        {
+          "name": "idle_h3_v1_042",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "idle_h3_v1_044",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333
+        },
+        {
+          "name": "idle_h3_v1_046",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9167
+        },
+        {
+          "name": "idle_h3_v1_048",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "idle_h3_v1_050",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833
+        },
+        {
+          "name": "idle_h3_v1_052",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1667
+        },
+        {
+          "name": "idle_h3_v1_054",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "idle_h3_v1_056",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333
+        },
+        {
+          "name": "idle_h3_v1_058",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4167
+        },
+        {
+          "name": "idle_h3_v1_060",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "idle_h3_v1_062",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833
+        },
+        {
+          "name": "idle_h3_v1_064",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6667
+        },
+        {
+          "name": "idle_h3_v1_066",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "idle_h3_v1_068",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333
+        },
+        {
+          "name": "idle_h3_v1_070",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9167
+        },
+        {
+          "name": "idle_h3_v1_072",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "idle_h3_v1_074",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833
+        },
+        {
+          "name": "idle_h3_v1_076",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1667
+        },
+        {
+          "name": "idle_h3_v1_078",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "idle_h3_v1_080",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333
+        },
+        {
+          "name": "idle_h3_v1_082",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4167
+        },
+        {
+          "name": "idle_h3_v1_084",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "idle_h3_v1_086",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833
+        },
+        {
+          "name": "idle_h3_v1_088",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6667
+        },
+        {
+          "name": "idle_h3_v1_090",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "idle_h3_v1_092",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333
+        },
+        {
+          "name": "idle_h3_v1_094",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9167
+        },
+        {
+          "name": "idle_h3_v1_096",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "idle_h3_v1_098",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.0833
+        },
+        {
+          "name": "idle_h3_v1_100",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.1667
+        },
+        {
+          "name": "idle_h3_v1_102",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "idle_h3_v1_104",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.3333
+        },
+        {
+          "name": "idle_h3_v1_106",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_106.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 106,
+          "video_time_seconds": 4.4167
+        },
+        {
+          "name": "idle_h3_v1_108",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "idle_h3_v1_110",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_110.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 110,
+          "video_time_seconds": 4.5833
+        },
+        {
+          "name": "idle_h3_v1_112",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_112.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.6667
+        },
+        {
+          "name": "idle_h3_v1_114",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_114.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 114,
+          "video_time_seconds": 4.75
+        },
+        {
+          "name": "idle_h3_v1_116",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_116.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 116,
+          "video_time_seconds": 4.8333
+        },
+        {
+          "name": "idle_h3_v1_118",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_118.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 118,
+          "video_time_seconds": 4.9167
+        },
+        {
+          "name": "idle_h3_v1_120",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_120.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 120,
+          "video_time_seconds": 5.0
+        },
+        {
+          "name": "idle_h3_v1_122",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte/rgba_122.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 122,
+          "video_time_seconds": 5.0833
+        },
+        {
+          "name": "move_h3_v3_000",
           "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_v2.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_000.png",
           "rects": [
             [
-              134,
-              18,
-              346,
-              407
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            226,
-            407
+            500,
+            578
           ],
-          "scale": 0.565
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
         },
         {
-          "name": "move_01",
+          "name": "move_h3_v3_002",
           "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_v2.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_002.png",
           "rects": [
             [
-              606,
-              18,
-              812,
-              406
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            696,
-            406
+            500,
+            578
           ],
-          "scale": 0.565
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 2,
+          "video_time_seconds": 0.0833
         },
         {
-          "name": "move_02",
+          "name": "move_h3_v3_004",
           "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_v2.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_004.png",
           "rects": [
             [
-              1067,
-              18,
-              1270,
-              405
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            1156,
-            405
+            500,
+            578
           ],
-          "scale": 0.565
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.1667
         },
         {
-          "name": "move_03",
+          "name": "move_h3_v3_006",
           "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_v2.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_006.png",
           "rects": [
             [
-              1538,
-              19,
-              1738,
-              406
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            1633,
-            406
+            500,
+            578
           ],
-          "scale": 0.565
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
         },
         {
-          "name": "move_04",
+          "name": "move_h3_v3_008",
           "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_v2.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_008.png",
           "rects": [
             [
-              138,
-              440,
-              339,
-              821
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            226,
-            821
+            500,
+            578
           ],
-          "scale": 0.565
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333
         },
         {
-          "name": "move_05",
+          "name": "move_h3_v3_010",
           "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_v2.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_010.png",
           "rects": [
             [
-              608,
-              441,
-              815,
-              822
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            696,
-            822
+            500,
+            578
           ],
-          "scale": 0.565
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4167
         },
         {
-          "name": "move_06",
+          "name": "move_h3_v3_012",
           "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_v2.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_012.png",
           "rects": [
             [
-              1069,
-              439,
-              1276,
-              818
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            1156,
-            818
+            500,
+            578
           ],
-          "scale": 0.565
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
         },
         {
-          "name": "move_07",
+          "name": "move_h3_v3_014",
           "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_v2.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_014.png",
           "rects": [
             [
-              1537,
-              439,
-              1750,
-              825
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            1633,
-            825
+            500,
+            578
           ],
-          "scale": 0.565
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833
         },
         {
-          "name": "ranged_00",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_v1.png",
+          "name": "move_h3_v3_016",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_016.png",
           "rects": [
             [
-              201,
-              15,
-              398,
-              365
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            291,
-            365
+            500,
+            578
           ],
-          "scale": 0.625
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6667
         },
         {
-          "name": "ranged_01",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_v1.png",
+          "name": "move_h3_v3_018",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_018.png",
           "rects": [
             [
-              615,
-              4,
-              844,
-              365
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            735,
-            365
+            500,
+            578
           ],
-          "scale": 0.625
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
         },
         {
-          "name": "ranged_02",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_v1.png",
+          "name": "move_h3_v3_020",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_020.png",
           "rects": [
             [
-              199,
-              391,
-              443,
-              747
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            291,
-            747
+            500,
+            578
           ],
-          "scale": 0.625
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333
         },
         {
-          "name": "ranged_03",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_v1.png",
+          "name": "move_h3_v3_022",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_022.png",
           "rects": [
             [
-              619,
-              374,
-              897,
-              749
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            735,
-            749
+            500,
+            578
           ],
-          "scale": 0.625
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9167
         },
         {
-          "name": "ranged_04",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_v1.png",
+          "name": "move_h3_v3_024",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_024.png",
           "rects": [
             [
-              163,
-              747,
-              451,
-              1135
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            291,
-            1135
+            500,
+            578
           ],
-          "scale": 0.625
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
         },
         {
-          "name": "ranged_05",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_v1.png",
+          "name": "move_h3_v3_026",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_026.png",
           "rects": [
             [
-              610,
-              758,
-              873,
-              1137
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            735,
-            1137
+            500,
+            578
           ],
-          "scale": 0.625
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833
         },
         {
-          "name": "ranged_06",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_v1.png",
+          "name": "move_h3_v3_028",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_028.png",
           "rects": [
             [
-              195,
-              1154,
-              415,
-              1509
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            291,
-            1509
+            500,
+            578
           ],
-          "scale": 0.625
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1667
         },
         {
-          "name": "ranged_07",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_v1.png",
+          "name": "move_h3_v3_030",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_030.png",
           "rects": [
             [
-              645,
-              1149,
-              843,
-              1509
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            735,
-            1509
+            500,
+            578
           ],
-          "scale": 0.625
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
         },
         {
-          "name": "death_00",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_v1.png",
+          "name": "move_h3_v3_032",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_032.png",
           "rects": [
             [
-              120,
-              23,
-              409,
-              472
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            280,
-            472
+            500,
+            578
           ],
-          "scale": 0.49
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333
         },
         {
-          "name": "death_01",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_v1.png",
+          "name": "move_h3_v3_034",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_034.png",
           "rects": [
             [
-              620,
-              71,
-              907,
-              472
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            780,
-            472
+            500,
+            578
           ],
-          "scale": 0.49
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4167
         },
         {
-          "name": "death_02",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_v1.png",
+          "name": "move_h3_v3_036",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_036.png",
           "rects": [
             [
-              102,
-              515,
-              448,
-              873
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            280,
-            873
+            500,
+            578
           ],
-          "scale": 0.49
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
         },
         {
-          "name": "death_03",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_v1.png",
+          "name": "move_h3_v3_038",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_038.png",
           "rects": [
             [
-              575,
-              601,
-              967,
-              885
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            780,
-            885
+            500,
+            578
           ],
-          "scale": 0.49
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833
         },
         {
-          "name": "death_04",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_v1.png",
+          "name": "move_h3_v3_040",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_040.png",
           "rects": [
             [
-              104,
-              953,
-              484,
-              1188
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            280,
-            1188
+            500,
+            578
           ],
-          "scale": 0.49
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6667
         },
         {
-          "name": "death_05",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_v1.png",
+          "name": "move_h3_v3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_042.png",
           "rects": [
             [
-              551,
-              1016,
-              990,
-              1186
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            780,
-            1186
+            500,
+            578
           ],
-          "scale": 0.49
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
         },
         {
-          "name": "death_06",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_v1.png",
+          "name": "move_h3_v3_044",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_044.png",
           "rects": [
             [
-              31,
-              1320,
-              499,
-              1482
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            280,
-            1482
+            500,
+            578
           ],
-          "scale": 0.49
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333
         },
         {
-          "name": "death_07",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_v1.png",
+          "name": "move_h3_v3_046",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_046.png",
           "rects": [
             [
-              522,
-              1338,
-              1001,
-              1481
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            780,
-            1481
+            500,
+            578
           ],
-          "scale": 0.49
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9167
         },
         {
-          "name": "attack_00",
+          "name": "move_h3_v3_048",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "move_h3_v3_050",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833
+        },
+        {
+          "name": "move_h3_v3_052",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1667
+        },
+        {
+          "name": "move_h3_v3_054",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "move_h3_v3_056",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333
+        },
+        {
+          "name": "move_h3_v3_058",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4167
+        },
+        {
+          "name": "move_h3_v3_060",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "attack_h3_v1_016",
           "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/matte/rgba_016.png",
           "rects": [
             [
-              174,
-              2,
-              411,
-              387
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            282,
-            387
+            500,
+            578
           ],
-          "scale": 0.57
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6667
         },
         {
-          "name": "attack_01",
+          "name": "attack_h3_v1_023",
           "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/matte/rgba_023.png",
           "rects": [
             [
-              628,
-              28,
-              912,
-              386
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            770,
-            386
+            500,
+            578
           ],
-          "scale": 0.57
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583
         },
         {
-          "name": "attack_02",
+          "name": "attack_h3_v1_030",
           "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/matte/rgba_030.png",
           "rects": [
             [
-              145,
-              393,
-              455,
-              770
-            ],
-            [
-              324,
-              770,
-              455,
-              771
-            ],
-            [
-              145,
-              770,
-              315,
-              771
-            ],
-            [
-              330,
-              771,
-              455,
-              772
-            ],
-            [
-              145,
-              771,
-              310,
-              772
-            ],
-            [
-              145,
-              772,
-              307,
-              773
-            ],
-            [
-              332,
-              772,
-              455,
-              773
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            290,
-            773
+            500,
+            578
           ],
-          "scale": 0.57
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
         },
         {
-          "name": "attack_03",
+          "name": "attack_h3_v1_031",
           "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/matte/rgba_031.png",
           "rects": [
             [
-              614,
-              397,
-              936,
-              774
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            775,
-            774
+            500,
+            578
           ],
-          "scale": 0.57
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2917
         },
         {
-          "name": "attack_04",
+          "name": "attack_h3_v1_036",
           "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/matte/rgba_036.png",
           "rects": [
             [
-              127,
-              770,
-              149,
-              771
-            ],
-            [
-              176,
-              770,
-              467,
-              771
-            ],
-            [
-              127,
-              771,
-              152,
-              772
-            ],
-            [
-              174,
-              771,
-              467,
-              772
-            ],
-            [
-              166,
-              772,
-              467,
-              773
-            ],
-            [
-              158,
-              772,
-              165,
-              773
-            ],
-            [
-              127,
-              772,
-              157,
-              773
-            ],
-            [
-              127,
-              773,
-              467,
-              1147
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            280,
-            1147
+            500,
+            578
           ],
-          "scale": 0.57
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
         },
         {
-          "name": "attack_05",
+          "name": "attack_h3_v1_040",
           "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/matte/rgba_040.png",
           "rects": [
             [
-              637,
-              775,
-              917,
-              1134
-            ],
-            [
-              637,
-              1134,
-              763,
-              1135
-            ],
-            [
-              770,
-              1134,
-              917,
-              1135
-            ],
-            [
-              778,
-              1135,
-              917,
-              1136
-            ],
-            [
-              637,
-              1135,
-              759,
-              1136
-            ],
-            [
-              780,
-              1136,
-              917,
-              1137
-            ],
-            [
-              637,
-              1136,
-              755,
-              1137
-            ],
-            [
-              637,
-              1137,
-              753,
-              1138
-            ],
-            [
-              782,
-              1137,
-              917,
-              1138
-            ],
-            [
-              784,
-              1138,
-              917,
-              1139
-            ],
-            [
-              637,
-              1138,
-              751,
-              1139
-            ],
-            [
-              785,
-              1139,
-              917,
-              1140
-            ],
-            [
-              637,
-              1139,
-              749,
-              1140
-            ],
-            [
-              786,
-              1140,
-              917,
-              1141
-            ],
-            [
-              637,
-              1140,
-              748,
-              1141
-            ],
-            [
-              637,
-              1141,
-              747,
-              1142
-            ],
-            [
-              787,
-              1141,
-              917,
-              1142
-            ],
-            [
-              637,
-              1142,
-              746,
-              1143
-            ],
-            [
-              788,
-              1142,
-              917,
-              1143
-            ],
-            [
-              637,
-              1143,
-              744,
-              1144
-            ],
-            [
-              790,
-              1143,
-              917,
-              1144
-            ],
-            [
-              791,
-              1144,
-              917,
-              1145
-            ],
-            [
-              637,
-              1144,
-              743,
-              1145
-            ],
-            [
-              637,
-              1145,
-              742,
-              1146
-            ],
-            [
-              792,
-              1145,
-              917,
-              1146
-            ],
-            [
-              637,
-              1146,
-              740,
-              1147
-            ],
-            [
-              793,
-              1146,
-              917,
-              1148
-            ],
-            [
-              637,
-              1147,
-              739,
-              1148
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            770,
-            1148
+            500,
+            578
           ],
-          "scale": 0.57
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6667
         },
         {
-          "name": "attack_06",
+          "name": "attack_h3_v1_041",
           "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/matte/rgba_041.png",
           "rects": [
             [
-              153,
-              1147,
-              441,
-              1527
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            288,
-            1527
+            500,
+            578
           ],
-          "scale": 0.57
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083
         },
         {
-          "name": "attack_07",
+          "name": "attack_h3_v1_042",
           "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/matte/rgba_042.png",
           "rects": [
             [
-              671,
-              1134,
-              871,
-              1135
-            ],
-            [
-              907,
-              1134,
-              912,
-              1135
-            ],
-            [
-              670,
-              1135,
-              872,
-              1136
-            ],
-            [
-              906,
-              1135,
-              912,
-              1136
-            ],
-            [
-              670,
-              1136,
-              875,
-              1137
-            ],
-            [
-              903,
-              1136,
-              912,
-              1137
-            ],
-            [
-              900,
-              1137,
-              912,
-              1138
-            ],
-            [
-              669,
-              1137,
-              879,
-              1138
-            ],
-            [
-              894,
-              1138,
-              912,
-              1139
-            ],
-            [
-              669,
-              1138,
-              886,
-              1139
-            ],
-            [
-              670,
-              1139,
-              912,
-              1142
-            ],
-            [
-              669,
-              1142,
-              912,
-              1144
-            ],
-            [
-              668,
-              1144,
-              912,
-              1145
-            ],
-            [
-              667,
-              1145,
-              912,
-              1528
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            778,
-            1528
+            500,
+            578
           ],
-          "scale": 0.57
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
         },
         {
-          "name": "cast_00",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_v1.png",
+          "name": "attack_h3_v1_043",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/matte/rgba_043.png",
           "rects": [
             [
-              189,
-              9,
-              384,
-              367
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            280,
-            367
+            500,
+            578
           ],
-          "scale": 0.61
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7917
         },
         {
-          "name": "cast_01",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_v1.png",
+          "name": "attack_h3_v1_051",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/matte/rgba_051.png",
           "rects": [
             [
-              647,
-              9,
-              836,
-              368
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            735,
-            368
+            500,
+            578
           ],
-          "scale": 0.61
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
         },
         {
-          "name": "cast_02",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_v1.png",
+          "name": "attack_h3_v1_063",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/matte/rgba_063.png",
           "rects": [
             [
-              189,
-              391,
-              381,
-              751
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            280,
-            751
+            500,
+            578
           ],
-          "scale": 0.61
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 63,
+          "video_time_seconds": 2.625
         },
         {
-          "name": "cast_03",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_v1.png",
+          "name": "attack_h3_v1_075",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/matte/rgba_075.png",
           "rects": [
             [
-              647,
-              389,
-              846,
-              753
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            735,
-            753
+            500,
+            578
           ],
-          "scale": 0.61
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
         },
         {
-          "name": "cast_04",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_v1.png",
+          "name": "attack_h3_v1_086",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/matte/rgba_086.png",
           "rects": [
             [
-              187,
-              761,
-              385,
-              1143
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            280,
-            1143
+            500,
+            578
           ],
-          "scale": 0.61
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833
         },
         {
-          "name": "cast_05",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_v1.png",
+          "name": "attack_h3_v1_087",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/matte/rgba_087.png",
           "rects": [
             [
-              644,
-              777,
-              846,
-              1143
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            735,
-            1143
+            500,
+            578
           ],
-          "scale": 0.61
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 87,
+          "video_time_seconds": 3.625
         },
         {
-          "name": "cast_06",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_v1.png",
+          "name": "attack_h3_v1_088",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/matte/rgba_088.png",
           "rects": [
             [
-              189,
-              1162,
-              388,
-              1522
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            280,
-            1522
+            500,
+            578
           ],
-          "scale": 0.61
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6667
         },
         {
-          "name": "cast_07",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_v1.png",
+          "name": "attack_h3_v1_089",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/matte/rgba_089.png",
           "rects": [
             [
-              645,
-              1163,
-              845,
-              1523
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            735,
-            1523
+            500,
+            578
           ],
-          "scale": 0.61
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 89,
+          "video_time_seconds": 3.7083
         },
         {
-          "name": "hit_00",
+          "name": "attack_h3_v1_090",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "attack_h3_v1_091",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/matte/rgba_091.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 91,
+          "video_time_seconds": 3.7917
+        },
+        {
+          "name": "attack_h3_v1_092",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333
+        },
+        {
+          "name": "attack_h3_v1_099",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/matte/rgba_099.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 99,
+          "video_time_seconds": 4.125
+        },
+        {
+          "name": "ranged_h3_v2_033",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "ranged_h3_v2_035",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583
+        },
+        {
+          "name": "ranged_h3_v2_037",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5417
+        },
+        {
+          "name": "ranged_h3_v2_039",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "ranged_h3_v2_041",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083
+        },
+        {
+          "name": "ranged_h3_v2_043",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7917
+        },
+        {
+          "name": "ranged_h3_v2_045",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "ranged_h3_v2_047",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte/rgba_047.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 47,
+          "video_time_seconds": 1.9583
+        },
+        {
+          "name": "ranged_h3_v2_049",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte/rgba_049.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 49,
+          "video_time_seconds": 2.0417
+        },
+        {
+          "name": "ranged_h3_v2_051",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "ranged_h3_v2_053",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte/rgba_053.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 53,
+          "video_time_seconds": 2.2083
+        },
+        {
+          "name": "ranged_h3_v2_055",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte/rgba_055.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.2917
+        },
+        {
+          "name": "ranged_h3_v2_057",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte/rgba_057.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 57,
+          "video_time_seconds": 2.375
+        },
+        {
+          "name": "ranged_h3_v2_059",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte/rgba_059.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 59,
+          "video_time_seconds": 2.4583
+        },
+        {
+          "name": "ranged_h3_v2_061",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte/rgba_061.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 61,
+          "video_time_seconds": 2.5417
+        },
+        {
+          "name": "ranged_h3_v2_063",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte/rgba_063.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 63,
+          "video_time_seconds": 2.625
+        },
+        {
+          "name": "ranged_h3_v2_065",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte/rgba_065.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 65,
+          "video_time_seconds": 2.7083
+        },
+        {
+          "name": "ranged_h3_v2_067",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte/rgba_067.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 67,
+          "video_time_seconds": 2.7917
+        },
+        {
+          "name": "ranged_h3_v2_069",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte/rgba_069.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 69,
+          "video_time_seconds": 2.875
+        },
+        {
+          "name": "ranged_h3_v2_071",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte/rgba_071.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 71,
+          "video_time_seconds": 2.9583
+        },
+        {
+          "name": "ranged_h3_v2_073",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte/rgba_073.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 73,
+          "video_time_seconds": 3.0417
+        },
+        {
+          "name": "ranged_h3_v2_075",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "ranged_h3_v2_077",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte/rgba_077.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 77,
+          "video_time_seconds": 3.2083
+        },
+        {
+          "name": "ranged_h3_v2_079",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte/rgba_079.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 79,
+          "video_time_seconds": 3.2917
+        },
+        {
+          "name": "ranged_h3_v2_081",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte/rgba_081.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 81,
+          "video_time_seconds": 3.375
+        },
+        {
+          "name": "ranged_h3_v2_083",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte/rgba_083.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 83,
+          "video_time_seconds": 3.4583
+        },
+        {
+          "name": "ranged_h3_v2_085",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte/rgba_085.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 85,
+          "video_time_seconds": 3.5417
+        },
+        {
+          "name": "ranged_h3_v2_087",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte/rgba_087.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 87,
+          "video_time_seconds": 3.625
+        },
+        {
+          "name": "hit_h3_v2_000",
           "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/reactions_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/matte/rgba_000.png",
           "rects": [
             [
-              183,
-              16,
-              447,
-              414
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            318,
-            414
+            500,
+            578
           ],
-          "scale": 0.515
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
         },
         {
-          "name": "hit_01",
+          "name": "hit_h3_v2_002",
           "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/reactions_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/matte/rgba_002.png",
           "rects": [
             [
-              592,
-              46,
-              849,
-              413
-            ],
-            [
-              731,
-              413,
-              849,
-              414
-            ],
-            [
-              592,
-              413,
-              724,
-              414
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            737,
-            414
+            500,
+            578
           ],
-          "scale": 0.515
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 2,
+          "video_time_seconds": 0.0833
         },
         {
-          "name": "hit_02",
+          "name": "hit_h3_v2_003",
           "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/reactions_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/matte/rgba_003.png",
           "rects": [
             [
-              194,
-              419,
-              467,
-              830
-            ],
-            [
-              194,
-              830,
-              328,
-              831
-            ],
-            [
-              331,
-              830,
-              467,
-              831
-            ],
-            [
-              335,
-              831,
-              467,
-              832
-            ],
-            [
-              194,
-              831,
-              321,
-              832
-            ],
-            [
-              194,
-              832,
-              315,
-              833
-            ],
-            [
-              341,
-              832,
-              467,
-              833
-            ],
-            [
-              343,
-              833,
-              467,
-              834
-            ],
-            [
-              194,
-              833,
-              313,
-              834
-            ],
-            [
-              344,
-              834,
-              467,
-              835
-            ],
-            [
-              194,
-              834,
-              311,
-              835
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            318,
-            835
+            500,
+            578
           ],
-          "scale": 0.515
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 3,
+          "video_time_seconds": 0.125
         },
         {
-          "name": "hit_03",
+          "name": "hit_h3_v2_004",
           "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/reactions_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/matte/rgba_004.png",
           "rects": [
             [
-              640,
-              413,
-              872,
-              414
-            ],
-            [
-              611,
-              413,
-              624,
-              414
-            ],
-            [
-              611,
-              414,
-              872,
-              837
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            737,
-            837
+            500,
+            578
           ],
-          "scale": 0.515
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.1667
         },
         {
-          "name": "defend_00",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/reactions_v1.png",
+          "name": "hit_h3_v2_005",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/matte/rgba_005.png",
           "rects": [
             [
-              446,
-              830,
-              467,
-              831
-            ],
-            [
-              229,
-              830,
-              413,
-              831
-            ],
-            [
-              195,
-              831,
-              196,
-              832
-            ],
-            [
-              228,
-              831,
-              415,
-              832
-            ],
-            [
-              442,
-              831,
-              467,
-              832
-            ],
-            [
-              227,
-              832,
-              421,
-              833
-            ],
-            [
-              436,
-              832,
-              467,
-              833
-            ],
-            [
-              195,
-              832,
-              197,
-              833
-            ],
-            [
-              195,
-              833,
-              200,
-              834
-            ],
-            [
-              225,
-              833,
-              467,
-              834
-            ],
-            [
-              195,
-              834,
-              207,
-              835
-            ],
-            [
-              220,
-              834,
-              467,
-              835
-            ],
-            [
-              195,
-              835,
-              467,
-              1200
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            318,
-            1200
+            500,
+            578
           ],
-          "scale": 0.515
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 5,
+          "video_time_seconds": 0.2083
         },
         {
-          "name": "defend_01",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/reactions_v1.png",
+          "name": "hit_h3_v2_006",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/matte/rgba_006.png",
           "rects": [
             [
-              613,
-              850,
-              883,
-              1200
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            737,
-            1200
+            500,
+            578
           ],
-          "scale": 0.515
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
         },
         {
-          "name": "defend_02",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/reactions_v1.png",
+          "name": "hit_h3_v2_008",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/matte/rgba_008.png",
           "rects": [
             [
-              195,
-              1219,
-              470,
-              1519
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            318,
-            1519
+            500,
+            578
           ],
-          "scale": 0.515
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333
         },
         {
-          "name": "defend_03",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/reactions_v1.png",
+          "name": "hit_h3_v2_009",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/matte/rgba_009.png",
           "rects": [
             [
-              613,
-              1223,
-              891,
-              1519
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            737,
-            1519
+            500,
+            578
           ],
-          "scale": 0.515
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 9,
+          "video_time_seconds": 0.375
+        },
+        {
+          "name": "hit_h3_v2_010",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4167
+        },
+        {
+          "name": "hit_h3_v2_012",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "hit_h3_v2_016",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6667
+        },
+        {
+          "name": "hit_h3_v2_019",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7917
+        },
+        {
+          "name": "hit_h3_v2_021",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "hit_h3_v2_022",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9167
+        },
+        {
+          "name": "hit_h3_v2_023",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583
+        },
+        {
+          "name": "hit_h3_v2_024",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "hit_h3_v2_025",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0417
+        },
+        {
+          "name": "hit_h3_v2_026",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833
+        },
+        {
+          "name": "hit_h3_v2_027",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "hit_h3_v2_029",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083
+        },
+        {
+          "name": "hit_h3_v2_039",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "defend_h3_v1_004",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.1667
+        },
+        {
+          "name": "defend_h3_v1_008",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333
+        },
+        {
+          "name": "defend_h3_v1_010",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4167
+        },
+        {
+          "name": "defend_h3_v1_011",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/matte/rgba_011.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 11,
+          "video_time_seconds": 0.4583
+        },
+        {
+          "name": "defend_h3_v1_013",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5417
+        },
+        {
+          "name": "defend_h3_v1_015",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "defend_h3_v1_018",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "defend_h3_v1_020",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333
+        },
+        {
+          "name": "defend_h3_v1_023",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583
+        },
+        {
+          "name": "defend_h3_v1_025",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0417
+        },
+        {
+          "name": "defend_h3_v1_027",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "defend_h3_v1_029",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083
+        },
+        {
+          "name": "defend_h3_v1_031",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2917
+        },
+        {
+          "name": "defend_h3_v1_032",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333
+        },
+        {
+          "name": "defend_h3_v1_034",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4167
+        },
+        {
+          "name": "defend_h3_v1_035",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583
+        },
+        {
+          "name": "defend_h3_v1_036",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "defend_h3_v1_038",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833
+        },
+        {
+          "name": "defend_h3_v1_039",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "defend_h3_v1_042",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "defend_h3_v1_044",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333
+        },
+        {
+          "name": "defend_h3_v1_048",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "cast_h3_v1_005",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_005.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 5,
+          "video_time_seconds": 0.2083
+        },
+        {
+          "name": "cast_h3_v1_008",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333
+        },
+        {
+          "name": "cast_h3_v1_009",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_009.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 9,
+          "video_time_seconds": 0.375
+        },
+        {
+          "name": "cast_h3_v1_011",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_011.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 11,
+          "video_time_seconds": 0.4583
+        },
+        {
+          "name": "cast_h3_v1_012",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "cast_h3_v1_013",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5417
+        },
+        {
+          "name": "cast_h3_v1_014",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833
+        },
+        {
+          "name": "cast_h3_v1_015",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "cast_h3_v1_016",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6667
+        },
+        {
+          "name": "cast_h3_v1_017",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083
+        },
+        {
+          "name": "cast_h3_v1_018",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "cast_h3_v1_019",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7917
+        },
+        {
+          "name": "cast_h3_v1_020",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333
+        },
+        {
+          "name": "cast_h3_v1_022",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9167
+        },
+        {
+          "name": "cast_h3_v1_023",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583
+        },
+        {
+          "name": "cast_h3_v1_025",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0417
+        },
+        {
+          "name": "cast_h3_v1_031",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2917
+        },
+        {
+          "name": "cast_h3_v1_038",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833
+        },
+        {
+          "name": "cast_h3_v1_045",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "cast_h3_v1_052",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1667
+        },
+        {
+          "name": "cast_h3_v1_062",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833
+        },
+        {
+          "name": "cast_h3_v1_069",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_069.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 69,
+          "video_time_seconds": 2.875
+        },
+        {
+          "name": "cast_h3_v1_075",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "cast_h3_v1_078",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "cast_h3_v1_081",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_081.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 81,
+          "video_time_seconds": 3.375
+        },
+        {
+          "name": "cast_h3_v1_083",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_083.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 83,
+          "video_time_seconds": 3.4583
+        },
+        {
+          "name": "cast_h3_v1_085",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_085.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 85,
+          "video_time_seconds": 3.5417
+        },
+        {
+          "name": "cast_h3_v1_087",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_087.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 87,
+          "video_time_seconds": 3.625
+        },
+        {
+          "name": "cast_h3_v1_090",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "cast_h3_v1_095",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte/rgba_095.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 95,
+          "video_time_seconds": 3.9583
+        },
+        {
+          "name": "death_h3_v3_011",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte/rgba_011.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 11,
+          "video_time_seconds": 0.4583
+        },
+        {
+          "name": "death_h3_v3_014",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833
+        },
+        {
+          "name": "death_h3_v3_015",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "death_h3_v3_016",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6667
+        },
+        {
+          "name": "death_h3_v3_017",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083
+        },
+        {
+          "name": "death_h3_v3_018",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "death_h3_v3_019",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7917
+        },
+        {
+          "name": "death_h3_v3_020",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333
+        },
+        {
+          "name": "death_h3_v3_022",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9167
+        },
+        {
+          "name": "death_h3_v3_029",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083
+        },
+        {
+          "name": "death_h3_v3_036",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "death_h3_v3_046",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9167
+        },
+        {
+          "name": "death_h3_v3_047",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte/rgba_047.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 47,
+          "video_time_seconds": 1.9583
+        },
+        {
+          "name": "death_h3_v3_049",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte/rgba_049.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 49,
+          "video_time_seconds": 2.0417
+        },
+        {
+          "name": "death_h3_v3_050",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833
+        },
+        {
+          "name": "death_h3_v3_051",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "death_h3_v3_052",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1667
+        },
+        {
+          "name": "death_h3_v3_053",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte/rgba_053.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 53,
+          "video_time_seconds": 2.2083
+        },
+        {
+          "name": "death_h3_v3_060",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "death_h3_v3_067",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte/rgba_067.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 67,
+          "video_time_seconds": 2.7917
+        },
+        {
+          "name": "death_h3_v3_079",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte/rgba_079.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 79,
+          "video_time_seconds": 3.2917
+        },
+        {
+          "name": "death_h3_v3_085",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte/rgba_085.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 85,
+          "video_time_seconds": 3.5417
+        },
+        {
+          "name": "death_h3_v3_088",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6667
+        },
+        {
+          "name": "death_h3_v3_089",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte/rgba_089.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 89,
+          "video_time_seconds": 3.7083
+        },
+        {
+          "name": "death_h3_v3_090",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "death_h3_v3_091",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte/rgba_091.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 91,
+          "video_time_seconds": 3.7917
+        },
+        {
+          "name": "death_h3_v3_096",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "death_h3_v3_123",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            500,
+            578
+          ],
+          "scale": 0.47,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
         }
       ],
       "clips": {
-        "move": {
+        "idle": {
           "indices": [
             0,
             1,
@@ -1356,14 +5099,7 @@
             4,
             5,
             6,
-            7
-          ],
-          "frame_msec": 100,
-          "loop": true,
-          "static_frame": 0
-        },
-        "ranged": {
-          "indices": [
+            7,
             8,
             9,
             10,
@@ -1371,15 +5107,7 @@
             12,
             13,
             14,
-            15
-          ],
-          "frame_msec": 100,
-          "loop": false,
-          "static_frame": 0,
-          "contact_frame": 5
-        },
-        "death": {
-          "indices": [
+            15,
             16,
             17,
             18,
@@ -1387,22 +5115,7 @@
             20,
             21,
             22,
-            23
-          ],
-          "frame_msec": 120,
-          "loop": false,
-          "static_frame": 0
-        },
-        "dead": {
-          "indices": [
-            23
-          ],
-          "frame_msec": 120,
-          "loop": false,
-          "static_frame": 0
-        },
-        "attack": {
-          "indices": [
+            23,
             24,
             25,
             26,
@@ -1410,15 +5123,7 @@
             28,
             29,
             30,
-            31
-          ],
-          "frame_msec": 100,
-          "loop": false,
-          "static_frame": 0,
-          "contact_frame": 4
-        },
-        "cast": {
-          "indices": [
+            31,
             32,
             33,
             34,
@@ -1426,53 +5131,628 @@
             36,
             37,
             38,
-            39
-          ],
-          "frame_msec": 100,
-          "loop": false,
-          "static_frame": 0,
-          "contact_frame": 4
-        },
-        "hit": {
-          "indices": [
+            39,
             40,
             41,
             42,
-            43
-          ],
-          "frame_msec": 100,
-          "loop": false,
-          "static_frame": 1
-        },
-        "defend": {
-          "indices": [
+            43,
             44,
             45,
             46,
-            47
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61
           ],
-          "frame_msec": 100,
+          "frame_msec": 60,
+          "loop": true,
+          "static_frame": 0
+        },
+        "move": {
+          "indices": [
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92
+          ],
+          "frame_msec": 50,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112
+          ],
+          "frame_msec": 42,
           "loop": false,
-          "static_frame": 3
+          "static_frame": 0,
+          "contact_frame": 7
+        },
+        "ranged": {
+          "indices": [
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 16
+        },
+        "hit": {
+          "indices": [
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156,
+            157,
+            158,
+            159,
+            160,
+            161
+          ],
+          "frame_msec": 35,
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            162,
+            163,
+            164,
+            165,
+            166,
+            167,
+            168,
+            169,
+            170,
+            171,
+            172,
+            173,
+            174,
+            175,
+            176,
+            177,
+            178,
+            179,
+            180,
+            181,
+            182,
+            183
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 21
+        },
+        "cast": {
+          "indices": [
+            184,
+            185,
+            186,
+            187,
+            188,
+            189,
+            190,
+            191,
+            192,
+            193,
+            194,
+            195,
+            196,
+            197,
+            198,
+            199,
+            200,
+            201,
+            202,
+            203,
+            204,
+            205,
+            206,
+            207,
+            208,
+            209,
+            210,
+            211,
+            212,
+            213
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 15
+        },
+        "death": {
+          "indices": [
+            214,
+            215,
+            216,
+            217,
+            218,
+            219,
+            220,
+            221,
+            222,
+            223,
+            224,
+            225,
+            226,
+            227,
+            228,
+            229,
+            230,
+            231,
+            232,
+            233,
+            234,
+            235,
+            236,
+            237,
+            238,
+            239,
+            240,
+            241
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 27
         }
       },
-      "accepted_clips": [],
-      "preserve_clips": [
-        "idle"
-      ],
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "Guides are the accepted paintings at their accepted scale; every video frame keeps one fixed extraction scale and anchor.",
+      "provenance": {
+        "idle_h3_v1/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/original_lossless.mkv",
+          "sha256": "c53176137105b775ecfab0ab0792a7ba032b49f79dc4a319af216384becff73c"
+        },
+        "idle_h3_v1/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/original.json",
+          "sha256": "e6ddcf8ffb3f0e81cf7f313350a04de534efc50cd7c9c860ae2ab68af1f665ab"
+        },
+        "idle_h3_v1/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/original.latent",
+          "sha256": "87d8d789c545034ff62bbcad50740e48dc686494e3461e32524e445ddb785f15"
+        },
+        "idle_h3_v1/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/sampling_workflow_api.json",
+          "sha256": "006571f38d9c9aaf1e1681a49932a9f513a84e81a5c9c96944775a4be1063172"
+        },
+        "idle_h3_v1/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/decode_workflow_api.json",
+          "sha256": "3ece9438fc571bec70ecbd4100bb061f8f91fccb56dbd0219581dc62f2424850"
+        },
+        "idle_h3_v1/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/sampling_history.json",
+          "sha256": "d9436e2066f074672318aa83dd63b41f3b0425fabc493f74ef3f6daad0d8ab5c"
+        },
+        "idle_h3_v1/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/generation_history.json",
+          "sha256": "fee48d2d0d0633d1fd36bef8db4b0bbeb6c58583583925e7d6d071a531d8d0de"
+        },
+        "idle_h3_v1/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/prompt.txt",
+          "sha256": "af15fa82c4201439a77ade5bf2dbeaf135dc0f56db07976340fc096d151aa122"
+        },
+        "idle_h3_v1/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/reference.json",
+          "sha256": "aa7f58b4402f33d18118bed225cba113c325941a62a2d20f73e0034ef64c4c85"
+        },
+        "idle_h3_v1/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/config.json",
+          "sha256": "72250f1b16bac242fe6719745bf02a32e5cd494b76fb20d1ef9638015e15db5e"
+        },
+        "idle_h3_v1/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/idle_h3_v1/matte.json",
+          "sha256": "a3f56141e9345571e85740529401eddbbba77ea290d87498349698699d3c16ef"
+        },
+        "move_h3_v3/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/original_lossless.mkv",
+          "sha256": "901bfedb279aa58e96aaa513d820d9783d164a14728e49dd5472de0aada90870"
+        },
+        "move_h3_v3/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/original.json",
+          "sha256": "57c58ef001d4fad31233c633d60dcefda717960e3bf1c479127c1f0302e6fed7"
+        },
+        "move_h3_v3/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/original.latent",
+          "sha256": "ff42d335a408fa89f6b9ce177d2d4be75fc5b3a930d05465101cffe3115d025d"
+        },
+        "move_h3_v3/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/sampling_workflow_api.json",
+          "sha256": "b93d73ac5405d8dd820e7b2e30b9b3c8c71dc44b31c126c0d24fb763a1470cf9"
+        },
+        "move_h3_v3/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/decode_workflow_api.json",
+          "sha256": "fcd5e2016a9e21dab61a883bf0cc174119007b586a138a0e9e0eab94ab6a50c4"
+        },
+        "move_h3_v3/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/sampling_history.json",
+          "sha256": "93ab430ae31ed4667739340cc101f6746522f87f10280e92f56bf0bf055ad78f"
+        },
+        "move_h3_v3/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/generation_history.json",
+          "sha256": "b3992ae5d07c279770e0c48c8d4557e4b1b59f41166e3c300c880cb6746d3a99"
+        },
+        "move_h3_v3/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/prompt.txt",
+          "sha256": "4a1c62e1bf234a1b48f6369dc3823f03a766a033f38d1bcf42faf3cd8f347e2a"
+        },
+        "move_h3_v3/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/reference.json",
+          "sha256": "ca1bcd7e7744435a92d3945ca1ff1c9b36785d27d3a457fb74a1ee664541ee4e"
+        },
+        "move_h3_v3/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/config.json",
+          "sha256": "de99292dfd56ae2542e81387d7937a366d8dd9375312a5ca6e124e4dbba1d6dc"
+        },
+        "move_h3_v3/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_h3_v3/matte.json",
+          "sha256": "527e2f7a8af232ed1a0988502211ebde140e17c883f9e8a5be097b768ae6ca83"
+        },
+        "attack_h3_v1/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/original_lossless.mkv",
+          "sha256": "bab9b3fb88ddb3ba25f8e2123ee7c3236df38a502af04fc3c7a1422b1d8c5c09"
+        },
+        "attack_h3_v1/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/original.json",
+          "sha256": "a9ebc5b75a605ce986c84d8355216d78649af16f42bd386c7d81a3695719e5f4"
+        },
+        "attack_h3_v1/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/original.latent",
+          "sha256": "51f22027bebbd23e2011c2cecb6dac32a84cf503a24f455f5d4d496daff8db15"
+        },
+        "attack_h3_v1/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/sampling_workflow_api.json",
+          "sha256": "17cd4145dd7414cce469c7b6d0873f187b62b08902cc3ea1817e678245bf4aa7"
+        },
+        "attack_h3_v1/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/decode_workflow_api.json",
+          "sha256": "f34a85c3fa7a63a8fc47374dc0681108786a0b200eda8fe7551ea11612ea432e"
+        },
+        "attack_h3_v1/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/sampling_history.json",
+          "sha256": "31487fb76360df32616616ec1cc8c7f18694d6f9af5ead9933acf3a9ee35b2c7"
+        },
+        "attack_h3_v1/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/generation_history.json",
+          "sha256": "ca99813bd48c8fcd644407f8eb04c51c155109ade0770e13d74a23b093618054"
+        },
+        "attack_h3_v1/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/prompt.txt",
+          "sha256": "885a83a815965feddfb4ad80e14efdd27c66dcac62b696ea0f28229f0baa74cd"
+        },
+        "attack_h3_v1/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/reference.json",
+          "sha256": "9fd167fe5a01a83f7b4ed715f038f1867ee8135f44d31e4d7be6cc0c9040a7bd"
+        },
+        "attack_h3_v1/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/config.json",
+          "sha256": "f4fe47dd7c07d4df268b27ea889b38920094f59c1b95a47e8bb87a259ad770f4"
+        },
+        "attack_h3_v1/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_h3_v1/matte.json",
+          "sha256": "51b781c95bf50596892d8f8ee765fef1e249bc9d442848577e4adf94a9a729c9"
+        },
+        "ranged_h3_v2/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/original_lossless.mkv",
+          "sha256": "cea2bcf264aeaba241c5028a68cfec4be326fa9bc2689d99e61568f792cebf86"
+        },
+        "ranged_h3_v2/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/original.json",
+          "sha256": "8a2c3fc7b9d96d7e8fd3094fe682aaf9aeba7651785fc6d2206ffd47d8138359"
+        },
+        "ranged_h3_v2/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/original.latent",
+          "sha256": "7f430085776796707ed8b3fa1a307f020a96086126ac59e504d5540fba979279"
+        },
+        "ranged_h3_v2/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/sampling_workflow_api.json",
+          "sha256": "7fe1352f3130603cae9208f50fc29d967059f3daa535fbca235696982734cc69"
+        },
+        "ranged_h3_v2/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/decode_workflow_api.json",
+          "sha256": "3dc79ff12428443bf9b00c0e775ebef7368b5d371e5ad92c726f7f7310ab0950"
+        },
+        "ranged_h3_v2/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/sampling_history.json",
+          "sha256": "6723e2be3cf1ef171eebdacefc84908d21fc81c2221c6cded4917c9b6539ac57"
+        },
+        "ranged_h3_v2/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/generation_history.json",
+          "sha256": "b5a87a48752072bf1a686e1c9e870bb7311ed53d165afd68de8524ef369e96ab"
+        },
+        "ranged_h3_v2/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/prompt.txt",
+          "sha256": "e642777e528335f64c93f95e0a941285b1a0b183f1c4240e9c23c3336d4fa14e"
+        },
+        "ranged_h3_v2/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/reference.json",
+          "sha256": "7f2cd5348ca97e62334477ed91c7cd9d3a9d7065e29e23cabae2cc49cf05d085"
+        },
+        "ranged_h3_v2/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/config.json",
+          "sha256": "b49f3e3b32e02c394df50c90d82fb6719a95e4fb7df6e87cbadf66b21e0c0c89"
+        },
+        "ranged_h3_v2/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_h3_v2/matte.json",
+          "sha256": "73f9074709236bcbc435e9fc39e82379ad8c3b415e833bbe506d3e06b7c29e7c"
+        },
+        "hit_h3_v2/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/original_lossless.mkv",
+          "sha256": "94e826a0b9b70eaa9a3307adbfcece7b1b268acf33989b1160fca99dcadc89fb"
+        },
+        "hit_h3_v2/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/original.json",
+          "sha256": "68d2b81a0c34931cdedd8642c750a22d3a0c8a727d7ddeab110c1f8ce705d7da"
+        },
+        "hit_h3_v2/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/original.latent",
+          "sha256": "952ce95416def02506baf8bcd6acfd227f5dc4085e05a33d84f807d61ffd8b22"
+        },
+        "hit_h3_v2/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/sampling_workflow_api.json",
+          "sha256": "2b9f816a16a6565aea2bda5905cab4d0aabd9bf19f57eb8686a9b466c733e45e"
+        },
+        "hit_h3_v2/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/decode_workflow_api.json",
+          "sha256": "46e6a4a92df365d1f32a8bf9ec9bd072e71702d21fc1f0154072b877157b8458"
+        },
+        "hit_h3_v2/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/sampling_history.json",
+          "sha256": "0972a8a9cdbfeb41526d13b2c9decebd1e1a1415824ea9d3abb630f2f234eb2f"
+        },
+        "hit_h3_v2/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/generation_history.json",
+          "sha256": "c69855ffefba7cd25a32d223a64d0622493931fa03c9cb83ad2777ca247d8929"
+        },
+        "hit_h3_v2/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/prompt.txt",
+          "sha256": "adefacdc246ae8f34734d96160e17fb8a918b65445f1c58d9b0a0946317dcbde"
+        },
+        "hit_h3_v2/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/reference.json",
+          "sha256": "bdf3b309000a75c948779eb4be5307b5294ae8414f243086fbe1d795ed07db63"
+        },
+        "hit_h3_v2/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/config.json",
+          "sha256": "058a870a25ec039c9f540d842d7cb948a999c4c898289678fd5a00f69c19a9db"
+        },
+        "hit_h3_v2/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/hit_h3_v2/matte.json",
+          "sha256": "38b37b0a8f314de7f499f880f7e44f5d179ca7b3a683f698ccc5f84be1b1d260"
+        },
+        "defend_h3_v1/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/original_lossless.mkv",
+          "sha256": "a54793e35060f18d6ab3f7842d1b0fabf5e737cb56be82db25fa8022b5388fa7"
+        },
+        "defend_h3_v1/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/original.json",
+          "sha256": "372d36d522ffc7767267449157fe66e588cc7a9402cee92c965124f6e8e49c84"
+        },
+        "defend_h3_v1/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/original.latent",
+          "sha256": "edf301c45398e202e1eb058a8375b9cbe0e2fa07e619ba8c62e6c2f7e57efca5"
+        },
+        "defend_h3_v1/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/sampling_workflow_api.json",
+          "sha256": "64e2425b9ee757f06220d7d32f3b0b40df6eff330f0f54370d6c6c156dc5bfb6"
+        },
+        "defend_h3_v1/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/decode_workflow_api.json",
+          "sha256": "99795fb080ec49a0cf9c1d4b88422c5721e46b9c3359c46e47cad1952b9afaa4"
+        },
+        "defend_h3_v1/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/sampling_history.json",
+          "sha256": "6bd4bc51ff564a0db9994dcee7891de0a7093158b3387526a8e5991f0ed8488d"
+        },
+        "defend_h3_v1/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/generation_history.json",
+          "sha256": "8b184211dffb7f2dff0d4bcb7b3ac3f3390165eeab62f8a06765d8af997ec80c"
+        },
+        "defend_h3_v1/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/prompt.txt",
+          "sha256": "11d59ccca49bc289cdc5d3e203b9c0c0c6b4ece6d109eddf31f0c76e809a2e84"
+        },
+        "defend_h3_v1/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/reference.json",
+          "sha256": "92ae8772a0c12b6ef8026cc6fabd4f26145290095c50ea1ced9c2a979ae003bd"
+        },
+        "defend_h3_v1/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/config.json",
+          "sha256": "dc09fbdcd4b0beabd824132001aff76ce2d1b6de01be9be92ad83715dbbebfc4"
+        },
+        "defend_h3_v1/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/defend_h3_v1/matte.json",
+          "sha256": "00228c935511dbeea500c4309e114b78c58c325b9f02ae5e40b90829953df01a"
+        },
+        "cast_h3_v1/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/original_lossless.mkv",
+          "sha256": "b92de706b1b5dc51225444965128428897360ef5329e5c56a8a7e4133a9fff20"
+        },
+        "cast_h3_v1/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/original.json",
+          "sha256": "05b5892e86e30bb939b2f29fad70d723855308163e089e53f4e95ac9aa251cac"
+        },
+        "cast_h3_v1/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/original.latent",
+          "sha256": "6293909894979b2d7f9f8fffd48f8fab9a6dd75b0514694c51048891b89b7a67"
+        },
+        "cast_h3_v1/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/sampling_workflow_api.json",
+          "sha256": "3dc070b02af33d9d8d736ada9bbff26259ed0677804a37a609795a9d23b5ffdc"
+        },
+        "cast_h3_v1/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/decode_workflow_api.json",
+          "sha256": "1c3c05d31f6f215a92ab18fa61cff9b817ea476714bc18718a939331e186afa9"
+        },
+        "cast_h3_v1/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/sampling_history.json",
+          "sha256": "4175ff52a85946bd60739f7270f84264ad9b657d7a24f178499dd08e84c94030"
+        },
+        "cast_h3_v1/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/generation_history.json",
+          "sha256": "1461e3b2f7342fe292553a2fb66c2d41b2869e18df5da0add04a2d81623eeb4d"
+        },
+        "cast_h3_v1/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/prompt.txt",
+          "sha256": "71d87f7758ca8988c28c977fd2693ca8c8f4060bc89045d2f9c4bd7f0c5c0306"
+        },
+        "cast_h3_v1/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/reference.json",
+          "sha256": "4a002815850d7503550b46532e325afc2b14a70293fa335af27edefe4c566303"
+        },
+        "cast_h3_v1/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/config.json",
+          "sha256": "cbfc63b3dda82c13d0c28ed78ff7b586d81773428979fdb44ad0d6a94fe2bbda"
+        },
+        "cast_h3_v1/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_h3_v1/matte.json",
+          "sha256": "895afcc73fd879a64066ad1187b669beebbecde2da919f7bbc883feda747f9c8"
+        },
+        "death_h3_v3/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/original_lossless.mkv",
+          "sha256": "0df4745c2dd3960a30d6a01195a11ff980b49ffd328ec0d011028bee81740a27"
+        },
+        "death_h3_v3/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/original.json",
+          "sha256": "e0deea9536d9c2e5f9b19028d318ab5ce059468e2f53ce56f6a1178db53b452b"
+        },
+        "death_h3_v3/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/original.latent",
+          "sha256": "2dd13c8f62dc6ea59017a598428acc118ced44ca019ee002c2ee2893eec66011"
+        },
+        "death_h3_v3/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/sampling_workflow_api.json",
+          "sha256": "5b10e3a1b5897a8f5c465667b4f379a07029366fc58ab35cdb61d0b31d5c0d50"
+        },
+        "death_h3_v3/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/decode_workflow_api.json",
+          "sha256": "3c5f72d43f2684b93211f7a45366b26fa3402a3f3802bca20487861e4e5f13bc"
+        },
+        "death_h3_v3/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/sampling_history.json",
+          "sha256": "c7b935fa3e0536e80bc20bdb3ead53f577d0d0c48e203d5f46b2ec2de101f862"
+        },
+        "death_h3_v3/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/generation_history.json",
+          "sha256": "3004bbd56e3916e34649b3c26bf616091d43ecc3128bbd929aae385e4afcb558"
+        },
+        "death_h3_v3/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/prompt.txt",
+          "sha256": "058a32f7f4dc42ca4ec17df594c02959bfd844034d3bb92dd1a155652fe257b8"
+        },
+        "death_h3_v3/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/reference.json",
+          "sha256": "ae6b18892cf622cc8da4c6aed14440e2f108b1445d7de36f0f6f678784118253"
+        },
+        "death_h3_v3/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/config.json",
+          "sha256": "dee8cfac345545c2a64039802d28a8cf1b417119c2955f01b731b322e11f1981"
+        },
+        "death_h3_v3/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_h3_v3/matte.json",
+          "sha256": "11c558413c17d921d3f499a94a708c7f8678bd89308ea7125918627667c754b6"
+        }
+      },
+      "preserved_accepted_clips": [],
       "visual_review": {
-        "status": "pending",
-        "artist_notes": "Existing eight-pose idle reviewed: bow-hand and elbow articulate through a coherent breathing/equipment loop. New originals have explicit gait, draw-release, physical salute, punch, hit/guard and grounded collapse. Isolated original connected components prevent close-gutter contamination. Coordinator motion/scale review required. Move_v2 now follows the reviewed opposite-contact skeleton guide, newly painted with archer identity. Root approved retained idle and attack/hit/defend/death/cast and ranged art; corrected gait awaits root review. Ranged contact is zero-based frame5 at empty-bow release."
-      },
-      "source_scale_by_image": {
-        "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_v2.png": 0.565,
-        "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_v1.png": 0.625,
-        "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_v1.png": 0.49,
-        "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_v1.png": 0.57,
-        "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_v1.png": 0.61,
-        "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/reactions_v1.png": 0.515
-      },
-      "source_scale_reason": "Each original sheet uses a different painted body height within its canvas. One fixed scale per entire original matches the existing 219-pixel upright anatomy; no frame-specific scaling. Death and crouched reaction poses retain their original collapse proportions."
+        "status": "accepted",
+        "notes": "Full sheets and close-ups reviewed. Idle, attack, defend and cast from v1; ranged v2 and hit v2 (starts rocked back); move v3 is one clean in-place gait cycle. Death v3 kneels, slumps onto her hands and falls to the painted corpse pose; frames 86-87 (smeared morph) are cut, so the fall is three frames. Death v4 lost four spans to a darkened plate and turned to a front view, so it is not used."
+      }
     }
   ]
 }

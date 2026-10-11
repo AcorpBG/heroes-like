@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_embercourt_amberweir_lockpike_wardens",
+  "guides": [
+    {
+      "frame": "idle_00",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_amberweir_lockpike_wardens/idle_v1.png",
+      "source_sha256": "2abf236012168bead3aa9675cbeea5af173150fe452367eb17ee61527f8dcee3",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "8e30db1d1b2ac8a446818c3112541b3059989119c4cf4db4af6f76328c928cfb"
+    },
+    {
+      "frame": "attack_02",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_amberweir_lockpike_wardens/attack_v1.png",
+      "source_sha256": "21648ce29c1260953c487be37d1b9385c5586598e9cc4f9410c93c7068e8082f",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "0e28f9b5783af7dd227568ea9a44a65a96ba6464947a1cb2b4bdacd9d0ad0fd8"
+    },
+    {
+      "frame": "attack_04",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_amberweir_lockpike_wardens/attack_v1.png",
+      "source_sha256": "21648ce29c1260953c487be37d1b9385c5586598e9cc4f9410c93c7068e8082f",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "21d1fa243734d964dccaf576b8568df4ed4bcd4b0ee77cdff02c60fb83265df6"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    420,
+    594
+  ],
+  "output_scale": 0.45,
+  "free_pixels_left_top_right_bottom": [
+    146,
+    45,
+    145,
+    46
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

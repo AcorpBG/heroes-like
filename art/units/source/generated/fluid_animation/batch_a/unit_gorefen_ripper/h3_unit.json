@@ -2,57 +2,138 @@
   "unit_id": "unit_gorefen_ripper",
   "identity": "ONE original reptilian predator, the Gorefen Ripper, facing screen right in elevated three-quarter side view. Keep the dark charcoal crocodilian quadruped with a long toothy snout and cyan eyes, muscular forelimbs ending in long curved ivory talons, powerful hind legs, a burnt-orange fin crest running down the neck and back, the long spiked tail curled up behind it with orange fins, and the olive reed ropes with brass rings wrapped around the body and legs. Exactly four legs and one tail. Preserve the talons, crest, reed ropes, rings and the long low body proportions.",
   "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full snout, talons, legs and tail within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, weapons, magic, glow, gore, slash effects, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the reed ropes or rings.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.48,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026101900,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["idle_00", "idle_04"],
-      "guides": [[62, 1]],
+      "references": [
+        "idle_00",
+        "idle_04"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A tense predator idle that loops. The ribcage breathes, the head lowers and lifts as it snaps its jaws once, the near forepaw flexes its talons on the ground and the tail sways, then everything returns smoothly to the original crouch. All four feet stay planted. No walking and no attack."
     },
     "move_h3_v1": {
       "clip": "move",
-      "references": ["move_00", "move_04"],
-      "guides": [[31, 1], [62, 0], [93, 1]],
+      "references": [
+        "move_00",
+        "move_04"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
       "last": 0,
       "action": "Stalk in place through two complete reciprocal cycles with a low prowling gait. Diagonal pairs of legs alternate through reach, contact, push and lift; the elbows and knees articulate and each clawed foot alternates taking weight and swinging. The body stays centred for engine-driven travel, the spine flexes side to side and the tail sways as counterweight. Finish in the original gait phase."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["idle_00", "attack_02", "attack_04"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "idle_00",
+        "attack_02",
+        "attack_04"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE claw-rake toward screen right. The beast shifts its weight back onto the hind legs and raises the near claw beside its head, then drives its shoulder forward and slashes the near forearm down and out to full reach at screen right with the talons spread, follows through low under the muzzle, then raises its chest and settles back into the original crouch. One strike only; the tail counterbalances."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["idle_00", "hit_01"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "One brief impact recoil and complete recovery. The neck snaps back and the chest twists up as the near forepaw lifts off the ground, then the paw comes down, the beast regains its footing and returns to the same crouch. The impact is shown only by the body; the blue background never flashes or changes colour."
+      "references": [
+        "hit_01",
+        "idle_00"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "Start rocked back in a flinch, then recover completely. The neck snaps back and the chest twists up as the near forepaw lifts off the ground, then the paw comes down, the beast regains its footing and returns to the same crouch. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["idle_00", "defend_01", "defend_02"],
-      "guides": [[34, 1]],
+      "references": [
+        "idle_00",
+        "defend_01",
+        "defend_02"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Widen the forepaws, tuck the muzzle down and bring the near forearm across the chest, then sink into a deep braced crouch with the forearms guarding the head and hold the low guard on all four planted feet. No attack and no return to the relaxed crouch."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["idle_00", "cast_04"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "idle_00",
+        "cast_04"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A rallying roar. The chest rises, the near forepaw lifts and reaches out toward screen right with the talons splayed as the jaws open wide in a roar, holds a moment, then the paw lowers to the ground, the jaw closes and the beast settles back into the original crouch. The hind feet stay planted. A physical gesture only: no spell, glow or aura."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["idle_00", "death_07"],
-      "guides": [[90, 1]],
+      "references": [
+        "idle_00",
+        "death_07"
+      ],
+      "guides": [
+        [
+          90,
+          1
+        ]
+      ],
       "last": 1,
       "action": "Collapse continuously from standing: the legs buckle, the beast sinks onto its chest and belly, the head drops to the ground and the tail goes limp, finishing lying flat and motionless on its belly with the snout at screen right and the tail stretched out at screen left. No recovery, no gore and no disappearing body."
     }

@@ -2,57 +2,140 @@
   "unit_id": "unit_neutral_ashdart_stalkers",
   "identity": "ONE original young woman scout, the Ashdart Stalker, facing screen right in elevated three-quarter view. Keep her black ponytail, the round brass goggles on the forehead, the orange scarf and ragged orange cape, the brown leather armour with straps, the metal knee guards and calf straps, the boots, and the quiver on her back. Exactly two arms, two hands and two legs. Both hands hold ONE long straight dark wooden blowpipe with brass bands and a hanging orange feather, pointing to screen right at waist height. Preserve the blowpipe, the goggles, the cape and the lithe proportions.",
   "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole blowpipe with its feather, the cape, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, darts in flight, smoke, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the blowpipe stays straight and rigid and never morphs.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.43,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026105500,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["attack_0", "attack_7"],
-      "guides": [[62, 1]],
+      "references": [
+        "attack_0",
+        "attack_7"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A tense, watchful idle that loops. She breathes in her low ready crouch, the shoulders rise and fall, the blowpipe dips a little and lifts as she resettles her grip, her head turns to scan and the cape and scarf stir, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no shooting."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["attack_0", "attack_2", "attack_4"],
-      "guides": [[30, 1], [54, 2]],
+      "references": [
+        "attack_0",
+        "attack_2",
+        "attack_4"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE blowpipe jab toward screen right. She draws the blowpipe back to her shoulder as the knees bend, then lunges forward and thrusts it straight out to full reach at screen right with both hands, draws back and settles into the original stance. One jab only; nothing is fired."
     },
     "ranged_h3_v1": {
       "clip": "ranged",
-      "references": ["attack_0", "ranged_2", "ranged_5"],
-      "guides": [[30, 1], [56, 2]],
+      "references": [
+        "attack_0",
+        "ranged_2",
+        "ranged_5"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          56,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Shoot ONE dart toward screen right. She raises the blowpipe to her lips and sights along it toward screen right, holds the aim, then her cheeks puff as she blows one sharp breath and the pipe kicks slightly, holds a moment, then she lowers the blowpipe back to waist height in the original stance. One shot only; the dart is never shown, with no smoke or trail."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["attack_0", "hit_0"],
-      "guides": [[40, 1]],
-      "last": 0,
-      "action": "She reels from an unseen blow and recovers completely. Her head and shoulders are thrown back, the cape whips and the knees buckle while both hands keep hold of the blowpipe, then she steadies on both boots and returns to the same crouch. Nothing is seen hitting her: no projectile, spark or flash. The blue background never flashes or changes colour."
+      "references": [
+        "hit_0",
+        "attack_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "She starts rocked back in a flinch and recovers from it. Her head and shoulders are thrown back, the cape whips and the knees buckle while both hands keep hold of the blowpipe, then she steadies on both boots and returns to the same crouch. Only the body moves; nothing else appears in the frame."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["attack_0", "defend_1", "defend_2"],
-      "guides": [[34, 1]],
+      "references": [
+        "attack_0",
+        "defend_1",
+        "defend_2"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Duck into a low crouch behind the raised blowpipe, holding it diagonally across her face with both hands and drawing the cape around her, then hold the guarded crouch on both planted boots. No attack and no return to the relaxed stance."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["attack_0", "cast_4"],
-      "guides": [[44, 1], [70, 1]],
+      "references": [
+        "attack_0",
+        "cast_4"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A rallying signal. She straightens up, holds the blowpipe low in one hand and raises the other fist high above her head, holds the pose briefly, then lowers the arm and returns to the original stance. A physical gesture only: no spell, glow or aura."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["attack_0", "death_2", "death_7"],
-      "guides": [[48, 1], [96, 2]],
+      "references": [
+        "attack_0",
+        "death_2",
+        "death_7"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
       "last": 2,
       "action": "Collapse slowly. She sinks down onto her knees and hands with the blowpipe dropping, stays there a moment, then slumps forward and lies flat on her front, finishing motionless with her head at screen left and her boots at screen right, the blowpipe lying on the ground beside her. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
     }

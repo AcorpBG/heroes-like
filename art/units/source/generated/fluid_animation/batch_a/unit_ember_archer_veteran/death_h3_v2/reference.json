@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_ember_archer_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/idle_v1.png",
+      "source_sha256": "86929d54230e83d44e6edc8efe4750cd872c19d965d5065acea44e84cc5ca513",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "ae64d5edd88001042085ea7b146e328c4b6142a788bd568b6536565eb3c23c80"
+    },
+    {
+      "frame": "death_42",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/death_v1.png",
+      "source_sha256": "e6823b1d146e92603d7f767108a682fdbeaf6d1070bb8ba5bffe2ef1ea62cd83",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "824496f118930600ec378b424d510dce8f5f1cd016b97e71b9877a2404629abd"
+    },
+    {
+      "frame": "death_47",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/death_v1.png",
+      "source_sha256": "e6823b1d146e92603d7f767108a682fdbeaf6d1070bb8ba5bffe2ef1ea62cd83",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "ddfe603b964b47e7848d0732973a226175241be4184de3335936c98b385edf7f"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    465,
+    547
+  ],
+  "output_scale": 0.5,
+  "free_pixels_left_top_right_bottom": [
+    243,
+    54,
+    243,
+    54
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

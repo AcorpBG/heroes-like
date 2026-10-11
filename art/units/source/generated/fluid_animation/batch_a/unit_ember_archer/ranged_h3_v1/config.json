@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_ember_archer",
+  "clip": "ranged",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    500,
+    578
+  ],
+  "scale": 0.47,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026101303,
+  "references": [
+    "cast_00",
+    "ranged_01",
+    "ranged_04"
+  ],
+  "guides": [
+    [
+      24,
+      1
+    ],
+    [
+      56,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original young woman archer, the Ember Archer, facing screen right in elevated three-quarter view. Keep her brown hair tied back in a braid, the orange and charcoal layered tunic with ragged orange tails, brown leather shoulder guards, chest straps and belt pouches, brown leather bracers with white wraps, dark trousers and tall brown boots, and the quiver of red-fletched arrows on her back. Exactly two arms, two hands and two legs. The screen-RIGHT hand holds ONE wooden recurve bow; the screen-LEFT hand is free. She carries no sword or other weapon. Preserve the bow size, the quiver, the costume and adult proportions. Shoot ONE arrow toward screen right. Reach the free hand back over the shoulder and draw one arrow from the quiver, nock it, raise the bow level toward screen right and pull the string fully back to the cheek, hold the aim briefly, release so the arrow flies straight off toward screen right, then lower the bow and settle back into the original stance. One arrow only; the bow stays in the screen-right hand. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, bow, quiver, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the equipment. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour.",
+  "protected_foreground_chroma": 12,
+  "edge_threshold": 11,
+  "palette_measurement": {
+    "bluest_opaque": 10.0,
+    "blue_minus_green_p999": 5.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}
