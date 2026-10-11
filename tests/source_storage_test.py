@@ -89,6 +89,15 @@ class SourceStorageTest(unittest.TestCase):
                 self.assertEqual(restore.main(args + ["--apply"]), 1)
             self.assertIn("CONFLICT", output.getvalue())
             self.assertEqual((root / "art/units/source/curated/b.png").read_bytes(), b"local edit")
+            # --remove deletes only restored copies identical to the archive; the local edit stays.
+            with redirect_stdout(io.StringIO()):
+                restore.main(args + ["--remove"])
+                self.assertTrue((root / "art/units/source/curated/a.png").exists(), "dry run must not delete")
+            with redirect_stdout(io.StringIO()) as output:
+                self.assertEqual(restore.main(args + ["--remove", "--apply"]), 1)
+            self.assertIn("KEPT", output.getvalue())
+            self.assertFalse((root / "art/units/source/curated/a.png").exists())
+            self.assertEqual((root / "art/units/source/curated/b.png").read_bytes(), b"local edit")
             with redirect_stdout(io.StringIO()):
                 self.assertEqual(restore.main(["--archive-dir", str(archive_dir), "--root", str(root), "--path", "art/units/source/curated/missing.png"]), 1)
             with self.assertRaises(ValueError):

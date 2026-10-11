@@ -16613,12 +16613,12 @@
   ],
   "currentNotes": "Actor-readability slice completed: 112 original paintings, full-size town visitors and cached alpha-edge contrast. Source/Linux/Windows rendered roster checks, Large movement/AI/fog, existing actor/scale reports, repository validation and official exports/parity pass. Removed 3.255 GB disposable outputs while preserving original art/provenance, caches/saves, RMG and unrelated files. No next slice selected; broader project remains in progress.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-blue-plate-edge-rematte-20261011",
-  "currentSliceId": "art-blue-plate-edge-rematte-20261011",
-  "currentSliceNotes": "COMPLETED 2026-10-11. See plannedSlices art-blue-plate-edge-rematte-20261011.",
+  "currentSlice": "tooling-source-material-archive-incremental-20261011",
+  "currentSliceId": "tooling-source-material-archive-incremental-20261011",
+  "currentSliceNotes": "COMPLETED 2026-10-11. See plannedSlices tooling-source-material-archive-incremental-20261011.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Clean purple edges on blue-backdrop creature clips",
-  "currentSliceUpdatedAt": "2026-10-11T19:00:00Z",
+  "currentSliceTitle": "Archive new art sources in an incremental snapshot",
+  "currentSliceUpdatedAt": "2026-10-11T15:05:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -115104,8 +115104,21 @@
         "docs/fluid-creature-animation.md"
       ],
       "notes": "Owner report 2026-10-11: the Stag-Knot Runners' antlers turn purple-pink in every clip, a background removal problem. Cause: the blue-plate matte in the per-unit produce.py scripts (and two early video-trial takes) measured backdrop as blue minus max(red, green); on red and orange edges red wins, so mixed-in blue counted as figure. tools/rematte_blue_plate.py reruns the script that keyed each take on its archived lossless original in a scratch folder (every per-take setting applies), requires a pixel-exact match with the archived matte for every published frame, then re-solves only the edge band. An edge pixel takes the colour of the nearest clean opaque pixel within 3 source px and only its opacity is solved; further out it is unmixed against the plate with blue measured against green and clamped above the unit's own palette (painted idle p99.9 + 6). Stripping the blue alone left a bright red rim (the generated video bleeds over-saturated colour into its edges), shown in a three-way comparison. Result: 5,175 frames in 160 takes of 30 units rebuilt into <take>/matte_blue_edges/ (ignored, about 0.8 GB, rebuilt exactly by the tool; SHA-256 in <take>/matte_blue_edges.json), changed clips republished with unchanged frames, timing, anchors and scale, register re-bound. Rootcrown Knotstags, Seedglass Cantors veteran and Worldroot Bastion veteran had blue idles: RIFE loops rebuilt (no flagged pairs) and integrated with an exact frame match. Two cyan-plate takes (Reedbarge Poles cast, Switchback Pikes move) show no purple fringe and stay unchanged. The publisher now writes JSON with LF on Windows. Checked: before/after video and zoom sheet for every unit, an in-engine render of the republished atlases through BattleUnitPose, the acceptance-register test, validate_repo and the core suite (15/15). The new frames are not in the 2026-10-03 source archive; include them in the next snapshot or rebuild them with the tool.",
-      "updatedAt": "2026-10-11T19:00:00Z",
-      "completedAt": "2026-10-11T19:00:00Z"
+      "updatedAt": "2026-10-11T14:31:21Z",
+      "completedAt": "2026-10-11T14:31:21Z"
+    },
+    {
+      "id": "tooling-source-material-archive-incremental-20261011",
+      "title": "Archive new art sources in an incremental snapshot",
+      "status": "completed",
+      "classification": "owner_requested_archive_operation",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/source-material-storage-map.md"
+      ],
+      "notes": "Owner request 2026-10-11: archive the blue-backdrop edge frames and update the catalogs and recovery tools. tools/archive_source_material.py --base writes an incremental snapshot: only art/*/source files whose path and SHA-256 the base chain lacks. N:/heroes-like-archives/source-art/2026-10-11-ca154fc4 extends 2026-10-03-ccc0d334: 19 ZIP64 archives, 10092 files, 1209813032 bytes (ZIPs 1032495086): the 5175 matte_blue_edges frames, 103 untracked sources made since 2026-10-03 (battlefields, terrain decals v4, creature dwellings and resource sites, hero specialties, town commands, pickups) and 4814 changed tracked recipe/provenance files as backup copies; 26135 local files were already archived. Every payload passed SHA-256/CRC read-back and the snapshot's standalone verifier. load_index follows each index's base (newest copy wins, rows carry the full ZIP path) for restore, idle in-betweens and rematte. restore_archived_source_material.py --remove deletes only untracked files identical to the archive and prunes emptied folders; rematte uses it after publishing. The local edge frames were removed after a byte check against the archive. Validation: tests/source_storage_test.py (4 OK, with chain and removal cases), core suite 15/15, a real restore of 152 frames plus a rematte rebuild of one take from the base video through the chain (22/22 frames match the recorded SHA-256), a restore/remove round trip on one take.",
+      "updatedAt": "2026-10-11T15:05:00Z",
+      "completedAt": "2026-10-11T15:05:00Z"
     }
   ],
   "project": "heroes-like",

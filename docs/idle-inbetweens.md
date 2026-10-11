@@ -21,12 +21,12 @@ python tools/idle_inbetweens.py --all --out DIR
 | `--inbetweens N` | `auto` | Frames added per pair. `auto` aims at about 60 ms per frame at the idle's own timing: `round(frame_msec / 60) - 1`. |
 | `--coarse auto\|always\|never` | `auto` | When to use the coarse flow pass (see "Method"). `auto` retries smeared pairs with it. |
 | `--flagged hold\|keep` | `hold` | What a pair that still smears plays. `hold` shows its two paintings and snaps halfway; `keep` leaves the in-betweens. |
-| `--archive-dir DIR` | `$HEROES_SOURCE_ARCHIVE` | Source-art snapshot, for source images that are not restored in the checkout. |
+| `--archive-dir DIR` | `$HEROES_SOURCE_ARCHIVE` | Newest source-art snapshot (its base chain is read too), for source images that are not restored in the checkout. |
 | `--weights FILE` | `$HEROES_RIFE_WEIGHTS`, else `~/.cache/heroes-like/rife_v4.26.safetensors` | The model weights. |
 | `--device` | `cuda` if available, else `cpu` | The torch device. |
 | `--review` | off | Also writes `review.mp4`. It shows the current idle above the new loop, at game size and zoomed 2x, on a battlefield. Needs `ffmpeg` on PATH. |
 
-Source images are read from the checkout if they are restored there. Otherwise they are read straight from the source-art archive (`N:/heroes-like-archives/source-art/2026-10-03-ccc0d334` on the owner's Windows machine; see `docs/source-material-storage-map.md`), and every payload is checked against the archive's SHA-256 manifest. Nothing is extracted into the repository.
+Source images are read from the checkout if they are restored there. Otherwise they are read straight from the source-art archive (`N:/heroes-like-archives/source-art/2026-10-11-ca154fc4` on the owner's Windows machine; see `docs/source-material-storage-map.md`), and every payload is checked against the archive's SHA-256 manifest. Nothing is extracted into the repository.
 
 The tool writes one folder per unit under `DIR/<unit_id>/`:
 

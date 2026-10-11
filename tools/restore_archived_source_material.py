@@ -5,8 +5,9 @@ Source-dependent authoring, repacking and art regression tests need originals
 that live in the external archive (see docs/source-material-storage-map.md).
 This restores only the requested repository-relative paths, checks every
 payload against the archive manifest SHA-256 and never overwrites a local
-file whose content differs. Remove restored files again with
-tools/remove_archived_source_material.py.
+file whose content differs. Remove restored files again with the same
+selection plus --remove: only files identical to their archived payload and
+not tracked by Git are deleted.
 
 A snapshot may extend an earlier one (its index names a sibling "base"
 directory; tools/archive_source_material.py --base writes these). Pass the
@@ -18,6 +19,7 @@ import hashlib
 import json
 import os
 from pathlib import Path, PurePosixPath
+import subprocess
 import sys
 import zipfile
 
@@ -112,6 +114,62 @@ def restore(root, rows, names, apply):
     return counts
 
 
+def tracked_files(root):
+    try:
+        listing = subprocess.run(["git", "-C", str(root), "ls-files", "-z"], capture_output=True, check=True).stdout
+    except (OSError, subprocess.CalledProcessError):
+        return set()
+    return set(listing.decode("utf-8").split("\0"))
+
+
+def payload_sha256(archive, name):
+    digest = hashlib.sha256()
+    with archive.open(name) as source:
+        for block in iter(lambda: source.read(1 << 20), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def remove(root, rows, names, apply):
+    """Delete restored copies: only untracked files identical to a payload the archive still holds."""
+    counts = {"removed": 0, "would_remove": 0, "absent": 0, "kept_tracked": 0, "kept_differs": 0}
+    tracked = tracked_files(root)
+    by_archive = {}
+    for name in names:
+        target = safe_target(root, name)
+        if not target.exists():
+            counts["absent"] += 1
+        elif name in tracked:
+            counts["kept_tracked"] += 1
+        elif not target.is_file() or file_sha256(target) != rows[name]["sha256"]:
+            counts["kept_differs"] += 1
+            print(f"KEPT local file differs from archive: {name}")
+        else:
+            by_archive.setdefault(rows[name]["archive"], []).append((name, target))
+    for archive_name, items in sorted(by_archive.items()):
+        if not apply:
+            counts["would_remove"] += len(items)
+            continue
+        with zipfile.ZipFile(archive_name) as archive:
+            for name, target in items:
+                if payload_sha256(archive, name) != rows[name]["sha256"]:
+                    raise RuntimeError(f"Archive payload failed SHA-256 check; local copy kept: {name}")
+                if file_sha256(target) != rows[name]["sha256"]:
+                    counts["kept_differs"] += 1
+                    print(f"KEPT local file changed during removal: {name}")
+                    continue
+                target.unlink()
+                counts["removed"] += 1
+                parent = target.parent  # prune folders this left empty, below art/<domain>/source
+                while len(parent.relative_to(root).parts) > 3:
+                    try:
+                        parent.rmdir()
+                    except OSError:
+                        break
+                    parent = parent.parent
+    return counts
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--archive-dir", required=True, type=Path, help="Newest snapshot directory (archive-index.json and ZIPs); its base chain is read too")
@@ -120,6 +178,7 @@ def main(argv=None):
     parser.add_argument("--paths-file", type=Path, help="Text file with one repository-relative path per line")
     parser.add_argument("--root", type=Path, default=ROOT, help="Repository root to restore into")
     parser.add_argument("--apply", action="store_true", help="Write files; without it only report what would be restored")
+    parser.add_argument("--remove", action="store_true", help="Delete restored copies of the selection instead (untracked files identical to the archive)")
     args = parser.parse_args(argv)
     paths = list(args.path)
     if args.paths_file:
@@ -130,6 +189,10 @@ def main(argv=None):
     names, unknown = select(rows, paths, args.prefix)
     for name in unknown:
         print(f"NOT_IN_ARCHIVE {name}")
+    if args.remove:
+        counts = remove(args.root.resolve(), rows, names, args.apply)
+        print("REMOVE " + " ".join(f"{k}={v}" for k, v in counts.items()) + f" not_in_archive={len(unknown)} apply={args.apply}")
+        return 1 if unknown or counts["kept_differs"] else 0
     counts = restore(args.root.resolve(), rows, names, args.apply)
     print("RESTORE " + " ".join(f"{k}={v}" for k, v in counts.items()) + f" not_in_archive={len(unknown)} apply={args.apply}")
     return 1 if unknown or counts["conflict"] else 0

@@ -52,6 +52,22 @@ python archive_source_material.py --destination <archive-directory> --verify-onl
 
 The snapshot includes current uncommitted/untracked sources; it is not an archive of every historical Git revision. The copy of this map inside the archive directory is the planning map used when the snapshot was created.
 
+## Incremental snapshot, 2026-10-11
+
+On 2026-10-11 (owner request), `tools/archive_source_material.py --base` wrote `N:\heroes-like-archives\source-art\2026-10-11-ca154fc4` from the owner's checkout at Git revision `ca154fc4cb3b10300607470b98b621f4c456ee7d`. It extends `2026-10-03-ccc0d334` and holds only the `art/*/source` files whose path and SHA-256 that snapshot lacks; 26,135 local source files were already archived unchanged.
+
+- 19 ZIP64 archives, 10,092 files, 1,209,813,032 bytes (1.127 GiB); the ZIPs total 1,032,495,086 bytes.
+- The 5,175 blue-backdrop edge frames (`<take>/matte_blue_edges/`, 805 MiB) from `tools/rematte_blue_plate.py`, which were in no archive.
+- 103 untracked sources made after 2026-10-03 (154 MiB): battlefields (2026-10-10), terrain decals v4, creature dwellings (2026-10-06) and other resource sites, hero specialties, town commands and pickups.
+- 4,814 tracked recipe and provenance files that changed since, as backup copies.
+- Every payload was read back against its SHA-256 and ZIP CRC, and the snapshot's standalone verifier passed again. The edge frames were then removed locally after a byte check against the archive; nothing else was removed.
+
+The index names its base, and `load_index` in `tools/restore_archived_source_material.py` follows that chain: tools take the newest snapshot, and the newest copy of a path wins. The snapshot carries standalone copies of the archive, inventory and restore tools. Write the next one with:
+
+```text
+python tools/archive_source_material.py --destination N:/heroes-like-archives/source-art/<date>-<revision> --base N:/heroes-like-archives/source-art/2026-10-11-ca154fc4
+```
+
 ## Tests never need archived sources
 
 The game and its tests need no archived source. Source paintings, trims and generation masters were used once to make the shipped art; since 2026-10-04 no test opens them. Tests check what a clone contains: content, scripts, shipped runtime art, tracked import settings and manifest metadata (recorded paths, hashes and prompts stay as provenance text).
@@ -70,10 +86,10 @@ Since 2026-10-10 the `.import` and `.uid` sidecars are tracked, apart from those
 The art-regeneration tools (`tools/prepare_overworld_*_cutouts.py`, `tools/prepare_spell_variety_assets.py` and similar) still need their sources when someone deliberately rebuilds art. Restore exactly what a rebuild needs (dry-run without `--apply`). Every payload is verified against the archive SHA-256 and a differing local file is never overwritten:
 
 ```text
-python tools/restore_archived_source_material.py --archive-dir N:/heroes-like-archives/source-art/2026-10-03-ccc0d334 --prefix art/units/source/curated/ --apply
+python tools/restore_archived_source_material.py --archive-dir N:/heroes-like-archives/source-art/2026-10-11-ca154fc4 --prefix art/units/source/curated/ --apply
 ```
 
-Restored media stays ignored by Git. Remove it again with `tools/remove_archived_source_material.py`.
+Pass the newest snapshot; its base chain is read too. Restored media stays ignored by Git. Remove it again with the same command plus `--remove`: it deletes only untracked files identical to their archived payload, and the folders that leaves empty. `tools/remove_archived_source_material.py` was the one-time 2026-10-03 cleanup; it needs that snapshot's exact local file set and no longer applies.
 
 ## Decision summary
 

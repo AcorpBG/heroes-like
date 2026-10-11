@@ -62,7 +62,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 from integrate_fluid_creature_animation import old_pose, read  # noqa: E402
-from restore_archived_source_material import load_index, restore  # noqa: E402
+from restore_archived_source_material import load_index, remove, restore  # noqa: E402
 
 MANIFEST = ROOT / "content/unit_animation_manifest.json"
 REGISTER = ROOT / "docs/battle-unit-animation-acceptance.json"
@@ -360,8 +360,7 @@ def publish_unit(uid, result, archive, log):
             publisher.publish(path, clips, note, handoff.get("preserved_accepted_clips", []))
         register(uid)
     finally:
-        for rel in missing:  # restored copies are byte-identical to the archive
-            (ROOT / rel).unlink(missing_ok=True)
+        remove(ROOT, archive.rows, missing, True)  # the restored copies, and the folders they leave empty
     log(f"  published {', '.join(clips)}; restored and removed {len(missing)} archived sources")
     if "idle" in clips:
         log("  the idle changed: its RIFE loop was dropped; rebuild it with tools/idle_inbetweens.py "
