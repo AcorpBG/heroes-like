@@ -126,7 +126,8 @@ def cutout(sheet, frame):
     image = Image.new("RGBA", (max(r[2] for r in rects) - x0, max(r[3] for r in rects) - y0))
     for left, top, right, bottom in rects:
         image.paste(sheet.crop((left, top, right, bottom)), (left - x0, top - y0))
-    return image, frame["anchor"][0] - x0, frame["anchor"][1] - y0
+    # Some recipes give sub-pixel anchors; the packer rounds after scaling too.
+    return image, round(frame["anchor"][0] - x0), round(frame["anchor"][1] - y0)
 
 
 def aligned_frames(recipe, sources):
@@ -218,6 +219,45 @@ def loop_with_inbetweens(frames, k, coarse_mode, interp):
                            "smear_ratio": round(r, 2), "flag": r > SMEAR_RATIO})
             out.append(m)
     return out, checks
+
+
+def fit_to_cell(frame, canvas, scale, frame_size, ground_margin):
+    """Clears the edge pixels of an in-between that the packer would draw outside
+    the game cell, and returns how many it cleared. Some idles reach within a
+    pixel of the cell edge; a soft in-between edge there can spill a pixel past
+    it once resized. Mirrors tools/pack_unit_pose_art's placement and check."""
+    cw, ch, ax, ay = canvas
+    fw, fh = frame_size
+    px, py = round(fw / 2 - ax * scale), round(fh - ground_margin - ay * scale)
+    ys, xs = np.nonzero(frame[..., 3] * 255 + 0.5 >= 1)
+    if not len(xs):
+        return 0
+    # Lanczos spills at most 3 output pixels, so a frame this far inside the cell fits.
+    margin = 4
+    if (px + xs.min() * scale >= margin and py + ys.min() * scale >= margin
+            and px + (xs.max() + 1) * scale <= fw - margin and py + (ys.max() + 1) * scale <= fh - margin):
+        return 0
+    cleared = 0
+    for _ in range(32):
+        image = Image.fromarray((frame * 255 + 0.5).astype(np.uint8), "RGBA")
+        b = image.resize((max(1, round(cw * scale)), max(1, round(ch * scale))), Image.LANCZOS).getchannel("A").getbbox()
+        over = {"left": -(px + b[0]), "top": -(py + b[1]), "right": px + b[2] - fw, "bottom": py + b[3] - fh}
+        if max(over.values()) <= 0:
+            return cleared
+        ys, xs = np.nonzero(frame[..., 3] * 255 + 0.5 >= 1)
+        step = lambda o: max(1, int(np.ceil(o / scale)))
+        region = np.zeros(frame.shape[:2], bool)
+        if over["left"] > 0:
+            region[:, :xs.min() + step(over["left"])] = True
+        if over["right"] > 0:
+            region[:, xs.max() + 1 - step(over["right"]):] = True
+        if over["top"] > 0:
+            region[:ys.min() + step(over["top"]), :] = True
+        if over["bottom"] > 0:
+            region[ys.max() + 1 - step(over["bottom"]):, :] = True
+        cleared += int((region & (frame[..., 3] > 0)).sum())
+        frame[region] = 0
+    raise ValueError("in-between still overflows its game cell")
 
 
 def write_loop(uid, recipe, out, canvas, scale, unit_dir):
@@ -334,6 +374,9 @@ def run_unit(row, args, sources, interp, weights_sha):
     clock = time.perf_counter()
     out, checks = loop_with_inbetweens(frames, k, args.coarse, interp)
     seconds["rife"] = time.perf_counter() - clock
+    for i, check in enumerate(checks):  # the source frames already fit; trim only in-betweens
+        index = (i // k) * (k + 1) + i % k + 1
+        check["cell_clipped_px"] = fit_to_cell(out[index], canvas, scale, recipe["frame_size"], recipe["ground_margin"])
 
     clock = time.perf_counter()
     unit_dir = args.out / uid
@@ -395,23 +438,37 @@ def main(argv=None):
     interp = Interpolator(args.weights, device)
     sources = Sources(args.archive_dir)
     args.out.mkdir(parents=True, exist_ok=True)
-    done, skipped = [], {}
-    for uid in (sorted(rows) if args.all else args.unit_ids):
+    done, skipped, failed = [], {}, {}
+    ran = sorted(rows) if args.all else args.unit_ids
+    for uid in ran:
         try:
             report = run_unit(rows[uid], args, sources, interp, weights_sha)
         except SkipUnit as reason:
             skipped[uid] = str(reason)
             print(f"SKIP {uid}: {reason}")
             continue
+        except Exception as error:  # a batch records the failure and goes on
+            if not args.all:
+                raise
+            failed[uid] = f"{type(error).__name__}: {error}"
+            print(f"FAIL {uid}: {failed[uid]}")
+            continue
         done.append({key: report[key] for key in ("unit_id", "source_frames", "frames", "frame_msec", "flagged_pairs")})
         flags = ", ".join(report["flagged_pairs"]) or "none"
         print(f"OK {uid}: {report['source_frames']} -> {report['frames']} frames at {report['frame_msec']} ms, "
               f"RIFE {report['seconds']['rife']} s, flagged pairs: {flags}")
-    summary = {"device": device, "weights_sha256": weights_sha, "units": done, "skipped": skipped}
-    (args.out / "summary.json").write_text(json.dumps(summary, indent=1) + "\n", encoding="utf-8")
+    # The summary covers every unit in the folder; a later run updates the units it redid.
+    summary_path = args.out / "summary.json"
+    summary = json.loads(summary_path.read_text(encoding="utf-8")) if summary_path.is_file() else {}
+    units = {u["unit_id"]: u for u in summary.get("units", []) if u["unit_id"] not in ran}
+    units.update({u["unit_id"]: u for u in done})
+    keep = lambda old, new: dict(sorted({**{u: r for u, r in old.items() if u not in ran}, **new}.items()))
+    summary = {"device": device, "weights_sha256": weights_sha, "units": [units[u] for u in sorted(units)],
+               "skipped": keep(summary.get("skipped", {}), skipped), "failed": keep(summary.get("failed", {}), failed)}
+    summary_path.write_text(json.dumps(summary, indent=1) + "\n", encoding="utf-8")
     flagged = sum(1 for u in done if u["flagged_pairs"])
-    print(f"IDLE_INBETWEENS done={len(done)} flagged_units={flagged} skipped={len(skipped)} out={args.out}")
-    return 1 if skipped and not args.all else 0
+    print(f"IDLE_INBETWEENS done={len(done)} flagged_units={flagged} skipped={len(skipped)} failed={len(failed)} out={args.out}")
+    return 1 if failed or (skipped and not args.all) else 0
 
 
 if __name__ == "__main__":
