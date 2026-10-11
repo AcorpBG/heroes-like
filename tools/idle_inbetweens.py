@@ -8,7 +8,8 @@ For each unit:
 1. Reads its accepted idle frames: the 8 paintings of
    art/animation/source/poses/<unit>/idle-v2/hands-packing.json, or the idle
    clip of art/animation/source/fluid/<unit>/reviewed_handoff.json (fluid
-   batches and video idles). Source images come from the checkout when they
+   batches and video idles), or the paintings an idle-v2/generation.json
+   record appended to the unit's packing.json. Source images come from the checkout when they
    are restored there, otherwise straight from the source-art archive, checked
    against its SHA-256 manifest.
 2. Aligns the frames on their ground anchors on one canvas.
@@ -107,16 +108,28 @@ def idle_recipe(row):
         return {"frame_size": spec["frame_size"], "ground_margin": spec["ground_margin"], "frames": frames,
                 "from": hands.relative_to(ROOT).as_posix(), "msec": idle["frame_msec"]}
     handoff = ROOT / f"art/animation/source/fluid/{uid}/reviewed_handoff.json"
-    if not handoff.is_file():
-        raise SkipUnit("no idle-v2 paintings or fluid handoff")
-    entry = next((u for u in json.loads(handoff.read_text(encoding="utf-8"))["units"] if u["unit_id"] == uid), None)
+    entry = None
+    if handoff.is_file():
+        entry = next((u for u in json.loads(handoff.read_text(encoding="utf-8"))["units"] if u["unit_id"] == uid), None)
     indices = (entry or {}).get("clips", {}).get("idle", {}).get("indices", [])
     frames = [entry["frames"][i] for i in indices]
-    if not frames or any(f.get("clip") != "idle" for f in frames):
-        raise SkipUnit("the idle is kept from an older recipe, not listed in the fluid handoff")
-    size = [row["pose_frame_size"]["width"], row["pose_frame_size"]["height"]]
-    return {"frame_size": size, "ground_margin": row["pose_ground_margin"], "frames": frames,
-            "from": handoff.relative_to(ROOT).as_posix(), "msec": idle["frame_msec"]}
+    if frames and all(f.get("clip") == "idle" for f in frames):
+        size = [row["pose_frame_size"]["width"], row["pose_frame_size"]["height"]]
+        return {"frame_size": size, "ground_margin": row["pose_ground_margin"], "frames": frames,
+                "from": handoff.relative_to(ROOT).as_posix(), "msec": idle["frame_msec"]}
+    # The 2026-09-19 idle expansion appended its paintings to the unit's packing
+    # recipe; a fluid handoff that keeps ("preserves") that idle does not list them.
+    generation = ROOT / f"art/animation/source/poses/{uid}/idle-v2/generation.json"
+    if generation.is_file() and idle["frames"] == 8:
+        record = json.loads(generation.read_text(encoding="utf-8"))
+        packing = (generation.parent / record["packing_recipe"]).resolve()
+        spec = json.loads(packing.read_text(encoding="utf-8"))
+        folder = packing.parent.relative_to(ROOT).as_posix()
+        frames = [dict(spec["frames"][i], source=f"{folder}/{spec['frames'][i]['source']}") for i in record["packed_indices"]]
+        return {"frame_size": spec["frame_size"], "ground_margin": spec["ground_margin"], "frames": frames,
+                "from": f"{packing.relative_to(ROOT).as_posix()} frames {record['packed_indices'][0]}-{record['packed_indices'][-1]}",
+                "msec": idle["frame_msec"]}
+    raise SkipUnit("no idle recipe found (idle-v2 paintings, fluid handoff or idle generation record)")
 
 
 def cutout(sheet, frame):
@@ -314,12 +327,12 @@ def write_review(row, unit_dir, frame_size, ground_margin, cells, step, path):
     # Draw the figure as tall as the game's own idle frame draws it.
     atlas = Image.open(ROOT / row["pose_sheet"].removeprefix("res://")).convert("RGBA")
     pw, ph = row["pose_frame_size"]["width"], row["pose_frame_size"]["height"]
-    regions = row.get("pose_region_anchors") or {}
-    if regions:  # packed regions: idle frame 0 sits at the origin, up to the next region
-        nxt = [int(key.split(",")[0]) for key in regions if key.endswith(",0") and int(key.split(",")[0]) > 0]
-        cell = (0, 0, min([pw] + nxt), ph)
-    else:  # grid: the idle's first index, which is not always cell 0
-        i, cols = row["pose_clips"]["idle"]["indices"][0], row["pose_columns"]
+    i = row["pose_clips"]["idle"]["indices"][0]  # not always frame 0
+    if row.get("pose_frame_rects"):  # packed atlas: every frame's rectangle is listed
+        x, y, w, h = row["pose_frame_rects"][i]
+        cell = (x, y, x + w, y + h)
+    else:
+        cols = row["pose_columns"]
         cell = ((i % cols) * pw, (i // cols) * ph, (i % cols + 1) * pw, (i // cols + 1) * ph)
     solid = lambda img: img.getchannel("A").point(lambda v: 255 if v > 8 else 0).getbbox()
     game_box, own_box = solid(atlas.crop(cell)), solid(old[0])

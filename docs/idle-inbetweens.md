@@ -71,7 +71,10 @@ For each unit, the tool uses the idle clip that `content/unit_animation_manifest
 - **148 units** have 8 paintings in `art/animation/source/poses/<unit>/idle-v2/hands-packing.json`. The tool uses them when the manifest idle has 8 frames.
 - **62 fluid-batch units** list their idle frames in `art/animation/source/fluid/<unit>/reviewed_handoff.json`, under `clips.idle`.
 - **20 units** have video idles, with 16–50 frames from the same handoff file. These frames carry `alpha_noise_cutoff`, which the tool applies. Seven of these units also have an 8-painting sheet, but the manifest plays the video, and so does the tool.
-- **2 units are skipped:** `unit_neutral_sunscale_lanternmoths` and `unit_neutral_fenmirror_gallowshells`. Their idle is kept from an older recipe that no handoff lists.
+- **2 units** (`unit_neutral_sunscale_lanternmoths`, `unit_neutral_fenmirror_gallowshells`) still play the 8 paintings of the 2026-09-19 idle expansion.
+  - Their fluid handoff keeps ("preserves") that idle rather than listing it.
+  - `poses/<unit>/idle-v2/generation.json` names where the paintings were appended (`packing_recipe`, `packed_indices`), and the tool reads them from there.
+  - All 16 frames match the game's current idle pixel for pixel.
 
 Three fluid units mix scales within their idle frames:
 - `unit_river_guard_veteran`
@@ -93,9 +96,9 @@ For these, the tool brings every frame to the largest scale, so frames are only 
 4. **Fit the cell.** Some idles, mostly video idles, reach within a pixel of their game cell's edge. A soft in-between edge there can spill a pixel past the cell once the packer shrinks the frame, and the packer refuses that. The tool simulates the packer's resize and clears only the in-between pixels that would land outside the cell. The accepted frames are never touched. `cell_clipped_px` in `report.json` counts the cleared pixels at source resolution; in the full roster run, only Bellwake Oars veteran needed this (two in-betweens, 43 and 79 pixels).
 5. **Pack.** The game's packer turns the loop into cells at the unit's frame size, ground margin and scale.
 
-In the first full roster run (2026-10-11), 230 units took about 20 minutes and produced 1.9 GB of output. 32 units had a flagged pair: 18 painted units and 14 fluid units.
+In the first full roster run (2026-10-11), all 232 units took about 20 minutes and produced 1.9 GB of output. 33 units had a flagged pair: 19 painted units and 14 fluid units.
 - Most only just crossed the threshold (ratio 1.6–1.9) and look fine.
-- The worst, such as Gaugeplate Bailiffs (3.05), have a very large move between two paintings. There, the hammer goes from the hip to over the shoulder, and RIFE cross-fades a ghost hammer instead of moving it.
+- The worst, such as Gaugeplate Bailiffs (3.05), have a very large move between two paintings. There, the hammer goes from the hip to over the shoulder, and RIFE cross-fades a ghost hammer instead of moving it. Sunscale Lanternmoths shows the same with its wing beats: four pairs show a doubled wing.
 
 Known limits:
 - Big moves of fine detail can leave thin dark rims; this comes from the black/white matting.
