@@ -1,0 +1,49 @@
+{
+  "unit_id": "unit_citadel_pikeward_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/idle_v1.png",
+      "source_sha256": "7f8b177bf38cdf321ceed4b4e3a115911be5d2c237eff430b66c81d8d565aed1",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "d7fc4ab04214122038d5d3ef259f17b734ef2eae3563b48d77897a7d8ea7c44e"
+    },
+    {
+      "frame": "death_34",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/death_v1.png",
+      "source_sha256": "44d07cab6b5d0572eae3c114bfa02e7cd5620d596380cab0fc2781a5d8ec4c07",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "6ba078d1e4f3bb71ea78b351f161ac7ed37269c87b8585812ef31dd3e9d93e0e"
+    },
+    {
+      "frame": "death_36",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/death_v1.png",
+      "source_sha256": "44d07cab6b5d0572eae3c114bfa02e7cd5620d596380cab0fc2781a5d8ec4c07",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "30b376902a989ee781afc9da547cfc334cf68c94d0b09ef9870ab0e23c08a2df"
+    },
+    {
+      "frame": "death_39",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/death_v1.png",
+      "source_sha256": "44d07cab6b5d0572eae3c114bfa02e7cd5620d596380cab0fc2781a5d8ec4c07",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "ebaadf697c7bf3139ce5617ca628d3f7daf94bb5d00176fa21c8f9add5a5bf3c"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    368,
+    549
+  ],
+  "output_scale": 0.5,
+  "free_pixels_left_top_right_bottom": [
+    135,
+    89,
+    136,
+    89
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

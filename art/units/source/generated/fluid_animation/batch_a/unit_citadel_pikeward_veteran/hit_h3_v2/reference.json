@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_citadel_pikeward_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/idle_v1.png",
+      "source_sha256": "7f8b177bf38cdf321ceed4b4e3a115911be5d2c237eff430b66c81d8d565aed1",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "d7fc4ab04214122038d5d3ef259f17b734ef2eae3563b48d77897a7d8ea7c44e"
+    },
+    {
+      "frame": "hit_17",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/reactions_v1.png",
+      "source_sha256": "f6144c67555c00dc8c47fe48fe83eb9b3d7d2ed30e830e91255c6a91e183cdd0",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "a6882d44888f98a7f0aa6696a7945988335c1b69d299ae4e661c0ef1e1b38efa"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    368,
+    549
+  ],
+  "output_scale": 0.5,
+  "free_pixels_left_top_right_bottom": [
+    135,
+    89,
+    136,
+    89
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

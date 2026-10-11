@@ -91,7 +91,8 @@ def publish(handoff, clips, note, preserved=()):
         patch = pack_unit(combined, baseline, ROOT / 'art/animation/runtime/fluid')
         row = patch['animation']
         # A derived idle loop (tools/integrate_idle_inbetweens.py) lives on its own
-        # sheet: keep it while its accepted frames stay; a newly delivered idle drops it.
+        # sheet: keep it while its accepted frames stay; a newly delivered idle drops it
+        # and deletes the sheet, which nothing references any more.
         loop = rows[uid]['pose_clips'].get('idle', {})
         if loop.get('sheet') and 'idle' not in clips:
             atlas_idle = row['pose_clips']['idle']
@@ -100,6 +101,9 @@ def publish(handoff, clips, note, preserved=()):
             row['pose_clips']['idle'] = dict(loop, from_atlas={
                 'indices': atlas_idle['indices'], 'frame_msec': atlas_idle['frame_msec'],
                 'static_frame': atlas_idle.get('static_frame', 0)})
+        elif loop.get('sheet'):
+            for stale in (ROOT / loop['sheet'].removeprefix('res://'), ROOT / (loop['sheet'].removeprefix('res://') + '.import')):
+                stale.unlink(missing_ok=True)
         row['pose_provenance'] = uri(source_dir / 'provenance.json')
         row['pose_review_status'] = 'accepted_selected_fluid_clips'
         row['pose_accepted_clips'] = combined['accepted_clips']

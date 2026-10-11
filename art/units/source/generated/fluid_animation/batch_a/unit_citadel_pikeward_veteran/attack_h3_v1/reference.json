@@ -1,0 +1,49 @@
+{
+  "unit_id": "unit_citadel_pikeward_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/idle_v1.png",
+      "source_sha256": "7f8b177bf38cdf321ceed4b4e3a115911be5d2c237eff430b66c81d8d565aed1",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "d7fc4ab04214122038d5d3ef259f17b734ef2eae3563b48d77897a7d8ea7c44e"
+    },
+    {
+      "frame": "attack_10",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/attack_v1.png",
+      "source_sha256": "742515617f7028e85a5ff95948803864ed6dd2363556dc85465cc9e01b24f13f",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "2fe4288cc509181c9dd4cbbd8605e3abcb753962ad9510d139de5084c6298a0d"
+    },
+    {
+      "frame": "attack_12",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/attack_v1.png",
+      "source_sha256": "742515617f7028e85a5ff95948803864ed6dd2363556dc85465cc9e01b24f13f",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "91cee3d14f8a90761f9060ab38ae4c66523397145bb39ac7410ee99a9a443491"
+    },
+    {
+      "frame": "attack_14",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/attack_v1.png",
+      "source_sha256": "742515617f7028e85a5ff95948803864ed6dd2363556dc85465cc9e01b24f13f",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "e68611c97ac29c98761a6dccc1dc2c3f0b76cead3b291ac81744f528fedadf40"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    368,
+    549
+  ],
+  "output_scale": 0.5,
+  "free_pixels_left_top_right_bottom": [
+    135,
+    89,
+    136,
+    89
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
