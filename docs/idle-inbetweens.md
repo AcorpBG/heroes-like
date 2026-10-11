@@ -20,6 +20,7 @@ python tools/idle_inbetweens.py --all --out DIR
 | --- | --- | --- |
 | `--inbetweens N` | `auto` | Frames added per pair. `auto` aims at about 60 ms per frame at the idle's own timing: `round(frame_msec / 60) - 1`. |
 | `--coarse auto\|always\|never` | `auto` | When to use the coarse flow pass (see "Method"). `auto` retries smeared pairs with it. |
+| `--flagged hold\|keep` | `hold` | What a pair that still smears plays. `hold` shows its two paintings and snaps halfway; `keep` leaves the in-betweens. |
 | `--archive-dir DIR` | `$HEROES_SOURCE_ARCHIVE` | Source-art snapshot, for source images that are not restored in the checkout. |
 | `--weights FILE` | `$HEROES_RIFE_WEIGHTS`, else `~/.cache/heroes-like/rife_v4.26.safetensors` | The model weights. |
 | `--device` | `cuda` if available, else `cpu` | The torch device. |
@@ -35,7 +36,7 @@ The tool writes one folder per unit under `DIR/<unit_id>/`:
 | `idle_recipe.json` | A `tools/pack_unit_pose_art` recipe for that sheet. |
 | `idle_runtime.png` | The packed game cells, at the unit's frame size, ground margin and scale. |
 | `report.json` | Source recipe, frame counts, the new `frame_msec`, timings, the weights' SHA-256, and the smear ratio of every in-between. |
-| `flagged.jpg` | Each flagged pair with its in-betweens at 2x. Written only when a pair is flagged. |
+| `flagged.jpg` | Each flagged pair as it plays (held or kept), at 2x. Written only when a pair is flagged. |
 | `review.mp4` | The review video. Written only with `--review`. |
 
 `DIR/summary.json` lists every unit in the folder, its flagged pairs, and every unit skipped with the reason. A later run into the same folder updates only the units it redid. In an `--all` run, a unit that fails is listed under `failed`, and the run goes on to the next unit.
@@ -93,12 +94,20 @@ For these, the tool brings every frame to the largest scale, so frames are only 
 3. **Check for smear.** For each in-between, the tool counts see-through pixels (alpha between 0.08 and 0.85) and divides by the larger count of the two frames around it. Above 1.6, the pair is smeared.
    - A smeared pair is redone with the coarse flow pass (`scale 0.5`: flow estimated from 1/32 of the size instead of 1/16), which follows large motions better.
    - The tool keeps whichever result smears less. If it still smears, the pair is flagged in `report.json` and `flagged.jpg`.
+   - By default a flagged pair is held. Its in-between slots show the nearer painting, so the move snaps halfway through the pair, as the 8-painting loop does, instead of showing a ghost. `held` in `report.json` marks those slots.
 4. **Fit the cell.** Some idles, mostly video idles, reach within a pixel of their game cell's edge. A soft in-between edge there can spill a pixel past the cell once the packer shrinks the frame, and the packer refuses that. The tool simulates the packer's resize and clears only the in-between pixels that would land outside the cell. The accepted frames are never touched. `cell_clipped_px` in `report.json` counts the cleared pixels at source resolution; in the full roster run, only Bellwake Oars veteran needed this (two in-betweens, 43 and 79 pixels).
 5. **Pack.** The game's packer turns the loop into cells at the unit's frame size, ground margin and scale.
 
 In the first full roster run (2026-10-11), all 232 units took about 20 minutes and produced 1.9 GB of output. 33 units had a flagged pair: 19 painted units and 14 fluid units.
 - Most only just crossed the threshold (ratio 1.6–1.9) and look fine.
 - The worst, such as Gaugeplate Bailiffs (3.05), have a very large move between two paintings. There, the hammer goes from the hip to over the shoulder, and RIFE cross-fades a ghost hammer instead of moving it. Sunscale Lanternmoths shows the same with its wing beats: four pairs show a doubled wing.
+
+The owner compared three ways to handle flagged pairs (2026-10-11):
+- **Keep:** leave the ghost.
+- **Hold:** snap at the big move.
+- **Middle pose:** add a newly generated painting halfway through each big move.
+
+Hold was chosen for every flagged pair. It costs no extra art, and the rest of the loop stays smooth. Middle poses stay possible later, unit by unit, where a snap bothers the owner.
 
 Known limits:
 - Big moves of fine detail can leave thin dark rims; this comes from the black/white matting.

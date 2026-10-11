@@ -18,8 +18,9 @@ For each unit:
    recovered from the two results.
 4. Checks every in-between for smear: see-through pixels inside the figure,
    against the two frames around it. A smeared pair is redone with flow
-   estimated from a coarser start, keeping whichever smears less; pairs that
-   still smear are flagged for review.
+   estimated from a coarser start, keeping whichever smears less. A pair that
+   still smears is flagged and, by default, holds its two paintings and snaps
+   halfway (--flagged keep leaves the in-betweens).
 5. Packs the loop with tools/pack_unit_pose_art, the game's packer.
 
 The accepted frames pass through unchanged as every (in-betweens + 1)-th frame.
@@ -212,7 +213,7 @@ class Interpolator:
         return out
 
 
-def loop_with_inbetweens(frames, k, coarse_mode, interp):
+def loop_with_inbetweens(frames, k, coarse_mode, flagged_mode, interp):
     out, checks = [], []
     n = len(frames)
     for i in range(n):
@@ -226,10 +227,15 @@ def loop_with_inbetweens(frames, k, coarse_mode, interp):
             retry_ratios = [see_through(m) / base for m in retry]
             if max(retry_ratios) < max(ratios):
                 mids, ratios, coarse = retry, retry_ratios, True
+        # Owner decision 2026-10-11: a pair that still smears holds its paintings
+        # and snaps halfway, as the 8-painting loop does, instead of showing a ghost.
+        held = flagged_mode == "hold" and bool(ratios) and max(ratios) > SMEAR_RATIO
+        if held:
+            mids = [(a if (j + 1) / (k + 1) < 0.5 else b).copy() for j in range(k)]
         out.append(a)
         for j, (m, r) in enumerate(zip(mids, ratios)):
             checks.append({"pair": f"{i}->{(i + 1) % n}", "inbetween": j + 1, "coarse": coarse,
-                           "smear_ratio": round(r, 2), "flag": r > SMEAR_RATIO})
+                           "smear_ratio": round(r, 2), "flag": r > SMEAR_RATIO, "held": held})
             out.append(m)
     return out, checks
 
@@ -298,7 +304,7 @@ def runtime_cells(unit_dir, frame_size, count):
 
 
 def write_flagged_strip(unit_dir, frame_size, cells, flagged, k):
-    """Each flagged pair with its in-betweens, at 2x, for review."""
+    """Each flagged pair as it plays (held or kept), at 2x, for review."""
     fw, fh = frame_size
     strip = Image.new("RGBA", (fw * (k + 2), fh * len(flagged)), (50, 54, 46, 255))
     for row, pair in enumerate(flagged):
@@ -385,7 +391,7 @@ def run_unit(row, args, sources, interp, weights_sha):
     k = max(0, round(recipe["msec"] / TARGET_MSEC) - 1) if args.inbetweens == "auto" else int(args.inbetweens)
 
     clock = time.perf_counter()
-    out, checks = loop_with_inbetweens(frames, k, args.coarse, interp)
+    out, checks = loop_with_inbetweens(frames, k, args.coarse, args.flagged, interp)
     seconds["rife"] = time.perf_counter() - clock
     for i, check in enumerate(checks):  # the source frames already fit; trim only in-betweens
         index = (i // k) * (k + 1) + i % k + 1
@@ -409,7 +415,8 @@ def run_unit(row, args, sources, interp, weights_sha):
 
     report = {"unit_id": uid, "source": recipe["from"], "source_frames": len(frames), "source_msec": recipe["msec"],
               "inbetweens_per_pair": k, "frames": len(out), "frame_msec": round(recipe["msec"] / (k + 1), 1),
-              "canvas": list(canvas[:2]), "coarse_mode": args.coarse, "weights_sha256": weights_sha,
+              "canvas": list(canvas[:2]), "coarse_mode": args.coarse, "flagged_handling": args.flagged,
+              "weights_sha256": weights_sha,
               "seconds": {key: round(v, 2) for key, v in seconds.items()},
               "flagged_pairs": flagged, "inbetweens": checks}
     (unit_dir / "report.json").write_text(json.dumps(report, indent=1) + "\n", encoding="utf-8")
@@ -423,6 +430,8 @@ def main(argv=None):
     parser.add_argument("--out", type=Path, required=True, help="output directory; one folder per unit")
     parser.add_argument("--inbetweens", default="auto",
                         help=f"frames added per pair, or auto: about {TARGET_MSEC} ms per frame at the idle's timing")
+    parser.add_argument("--flagged", default="hold", choices=["hold", "keep"],
+                        help="pairs that still smear: hold the paintings and snap halfway (default), or keep the in-betweens")
     parser.add_argument("--coarse", default="auto", choices=["auto", "always", "never"],
                         help="coarse flow start: auto retries smeared pairs with it")
     parser.add_argument("--archive-dir", type=Path, default=os.environ.get("HEROES_SOURCE_ARCHIVE") or None,
@@ -469,14 +478,15 @@ def main(argv=None):
         done.append({key: report[key] for key in ("unit_id", "source_frames", "frames", "frame_msec", "flagged_pairs")})
         flags = ", ".join(report["flagged_pairs"]) or "none"
         print(f"OK {uid}: {report['source_frames']} -> {report['frames']} frames at {report['frame_msec']} ms, "
-              f"RIFE {report['seconds']['rife']} s, flagged pairs: {flags}")
+              f"RIFE {report['seconds']['rife']} s, flagged pairs ({args.flagged}): {flags}")
     # The summary covers every unit in the folder; a later run updates the units it redid.
     summary_path = args.out / "summary.json"
     summary = json.loads(summary_path.read_text(encoding="utf-8")) if summary_path.is_file() else {}
     units = {u["unit_id"]: u for u in summary.get("units", []) if u["unit_id"] not in ran}
     units.update({u["unit_id"]: u for u in done})
     keep = lambda old, new: dict(sorted({**{u: r for u, r in old.items() if u not in ran}, **new}.items()))
-    summary = {"device": device, "weights_sha256": weights_sha, "units": [units[u] for u in sorted(units)],
+    summary = {"device": device, "weights_sha256": weights_sha, "flagged_handling": args.flagged,
+               "units": [units[u] for u in sorted(units)],
                "skipped": keep(summary.get("skipped", {}), skipped), "failed": keep(summary.get("failed", {}), failed)}
     summary_path.write_text(json.dumps(summary, indent=1) + "\n", encoding="utf-8")
     flagged = sum(1 for u in done if u["flagged_pairs"])
