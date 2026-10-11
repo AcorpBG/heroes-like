@@ -94,6 +94,31 @@ class SourceStorageTest(unittest.TestCase):
             with self.assertRaises(ValueError):
                 restore.safe_target(root, "art/units/source/../../escape.png")
 
+    def test_restore_reads_an_incremental_snapshot_and_its_base(self):
+        with tempfile.TemporaryDirectory() as temp:
+            parent, root = Path(temp), Path(temp) / "repo"
+
+            def snapshot(name, payloads, base=None):
+                folder = parent / name
+                folder.mkdir()
+                with zipfile.ZipFile(folder / "art.zip", "w") as archive:
+                    for path, data in payloads.items():
+                        archive.writestr(path, data)
+                rows = [{"path": n, "bytes": len(d), "sha256": hashlib.sha256(d).hexdigest()} for n, d in payloads.items()]
+                (folder / "art.zip.manifest.json").write_text(json.dumps({"files": rows}), encoding="utf-8")
+                index = {"archives": [{"archive": "art.zip", "manifest": "art.zip.manifest.json"}]}
+                (folder / "archive-index.json").write_text(json.dumps({**index, **({"base": base} if base else {})}), encoding="utf-8")
+                return folder
+
+            snapshot("old", {"art/units/source/a.png": b"old a", "art/units/source/b.png": b"bravo"})
+            newest = snapshot("new", {"art/units/source/a.png": b"new a", "art/units/source/c.png": b"charlie"}, base="old")
+            with redirect_stdout(io.StringIO()):
+                self.assertEqual(restore.main(["--archive-dir", str(newest), "--root", str(root),
+                                               "--prefix", "art/units/source/", "--apply"]), 0)
+            # The base supplies b.png; the newer snapshot's copy of a.png wins.
+            self.assertEqual({p.name: p.read_bytes() for p in (root / "art/units/source").iterdir()},
+                             {"a.png": b"new a", "b.png": b"bravo", "c.png": b"charlie"})
+
 
 if __name__ == "__main__":
     unittest.main()

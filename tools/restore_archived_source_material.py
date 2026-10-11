@@ -7,6 +7,10 @@ This restores only the requested repository-relative paths, checks every
 payload against the archive manifest SHA-256 and never overwrites a local
 file whose content differs. Remove restored files again with
 tools/remove_archived_source_material.py.
+
+A snapshot may extend an earlier one (its index names a sibling "base"
+directory; tools/archive_source_material.py --base writes these). Pass the
+newest snapshot: the whole chain is read, and the newest copy of a path wins.
 """
 from __future__ import annotations
 import argparse
@@ -33,12 +37,17 @@ def safe_target(root, name):
 
 
 def load_index(archive_dir):
+    """Every archived path in this snapshot and its base chain; "archive" is the ZIP's full path."""
+    archive_dir = Path(archive_dir)
     index = json.loads((archive_dir / "archive-index.json").read_text(encoding="utf-8"))
-    rows = {}
+    base = index.get("base")
+    if base and Path(base).name != base:
+        raise ValueError(f"Base snapshot must be a sibling directory name: {base}")
+    rows = load_index(archive_dir.parent / base) if base else {}
     for entry in index["archives"]:
         manifest = json.loads((archive_dir / entry["manifest"]).read_text(encoding="utf-8"))
         for row in manifest["files"]:
-            rows[row["path"]] = {**row, "archive": entry["archive"]}
+            rows[row["path"]] = {**row, "archive": archive_dir / entry["archive"]}
     return rows
 
 
@@ -63,7 +72,7 @@ def file_sha256(path):
     return digest.hexdigest()
 
 
-def restore(root, archive_dir, rows, names, apply):
+def restore(root, rows, names, apply):
     counts = {"restored": 0, "would_restore": 0, "present": 0, "conflict": 0}
     by_archive = {}
     for name in names:
@@ -80,7 +89,7 @@ def restore(root, archive_dir, rows, names, apply):
         if not apply:
             counts["would_restore"] += len(items)
             continue
-        with zipfile.ZipFile(archive_dir / archive_name) as archive:
+        with zipfile.ZipFile(archive_name) as archive:
             for name, target in items:
                 row = rows[name]
                 target.parent.mkdir(parents=True, exist_ok=True)
@@ -105,7 +114,7 @@ def restore(root, archive_dir, rows, names, apply):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--archive-dir", required=True, type=Path, help="Snapshot directory holding archive-index.json and the ZIPs")
+    parser.add_argument("--archive-dir", required=True, type=Path, help="Newest snapshot directory (archive-index.json and ZIPs); its base chain is read too")
     parser.add_argument("--path", action="append", default=[], help="Repository-relative source path to restore (repeatable)")
     parser.add_argument("--prefix", action="append", default=[], help="Restore every archived path starting with this prefix (repeatable)")
     parser.add_argument("--paths-file", type=Path, help="Text file with one repository-relative path per line")
@@ -121,7 +130,7 @@ def main(argv=None):
     names, unknown = select(rows, paths, args.prefix)
     for name in unknown:
         print(f"NOT_IN_ARCHIVE {name}")
-    counts = restore(args.root.resolve(), args.archive_dir, rows, names, args.apply)
+    counts = restore(args.root.resolve(), rows, names, args.apply)
     print("RESTORE " + " ".join(f"{k}={v}" for k, v in counts.items()) + f" not_in_archive={len(unknown)} apply={args.apply}")
     return 1 if unknown or counts["conflict"] else 0
 

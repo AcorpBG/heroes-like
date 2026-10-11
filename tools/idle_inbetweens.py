@@ -89,7 +89,7 @@ class Sources:
         if row is None:
             raise SkipUnit(f"{rel} is neither restored nor in the archive")
         if row["archive"] not in self.zips:
-            self.zips[row["archive"]] = zipfile.ZipFile(self.archive_dir / row["archive"])
+            self.zips[row["archive"]] = zipfile.ZipFile(row["archive"])
         data = self.zips[row["archive"]].read(rel)
         if hashlib.sha256(data).hexdigest() != row["sha256"]:
             raise RuntimeError(f"Archive payload failed its SHA-256 check: {rel}")

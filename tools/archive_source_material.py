@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Create and verify external ZIP64 snapshots; never remove or modify sources."""
+"""Create and verify external ZIP64 snapshots; never remove or modify sources.
+
+With --base the snapshot is incremental: it holds only the source files whose
+path and SHA-256 are not already archived in the base chain, and its index
+names the base so tools/restore_archived_source_material.py reads both.
+"""
 from __future__ import annotations
 
 import argparse
@@ -19,6 +24,7 @@ import zipfile
 
 sys.dont_write_bytecode = True
 import source_material_inventory as inventory
+from restore_archived_source_material import file_sha256, load_index
 
 CHUNK = 4 * 1024 * 1024
 MANIFEST_MEMBER = "__source_archive__/manifest.json"
@@ -79,6 +85,11 @@ def collect(root):
     if not rows:
         raise ValueError("No art source files found")
     return rows
+
+
+def archived(root, row, known):
+    """True when the base chain already holds this exact file."""
+    return bool(known) and known["bytes"] == row["bytes"] and file_sha256(root / row["path"]) == known["sha256"]
 
 
 def verify_archive(archive, expected):
@@ -164,6 +175,7 @@ def main():
     parser.add_argument("--root", type=Path, default=inventory.ROOT)
     parser.add_argument("--destination", type=Path, required=True)
     parser.add_argument("--verify-only", action="store_true")
+    parser.add_argument("--base", type=Path, help="Earlier snapshot next to --destination; archive only what it lacks")
     args = parser.parse_args()
     root = args.root.resolve()
     destination = args.destination.resolve()
@@ -178,7 +190,16 @@ def main():
         return
     if destination.is_relative_to(root) or root.is_relative_to(destination):
         raise ValueError("Archive destination must be outside the repository")
-    rows = collect(root)
+    full = collect(root)
+    rows, base = full, None
+    if args.base:
+        base = args.base.resolve()
+        if base.parent != destination.parent:
+            raise ValueError("The base snapshot must sit next to the new one")
+        known = load_index(base)
+        rows = [row for row in full if not archived(root, row, known.get(row["path"]))]
+        if not rows:
+            raise ValueError("Nothing new since the base snapshot")
     total_bytes = sum(row["bytes"] for row in rows)
     ancestor = destination.parent
     while not ancestor.exists():
@@ -194,6 +215,11 @@ def main():
              "created_utc": dt.datetime.now(dt.timezone.utc).isoformat(), "git_head": revision,
              "source_root": str(root), "scope": "All regular files in art/*/source, including provenance, editor exceptions, sidecars and small existing caches. No runtime folders or Git history.",
              "source_files": len(rows), "source_bytes": total_bytes, "archives": []}
+    if base:
+        index["base"] = base.name
+        index["scope"] = ("Incremental on the base snapshot: the regular files in art/*/source whose path and "
+                          "SHA-256 the base chain lacks, including provenance, sidecars and small caches.")
+        index["base_files_unchanged"] = len(full) - len(rows)
     index_path = destination / "archive-index.json"
     index_path.write_bytes(json_bytes(index))
     emit("inventory_ready", destination=str(destination), files=len(rows), bytes=total_bytes, archives=len(groups))
@@ -203,14 +229,17 @@ def main():
     for row in rows:
         unchanged(root, row)
     after = collect(root)
-    if [(r["path"], r["bytes"], r["mtime_ns"]) for r in rows] != [(r["path"], r["bytes"], r["mtime_ns"]) for r in after]:
+    if [(r["path"], r["bytes"], r["mtime_ns"]) for r in full] != [(r["path"], r["bytes"], r["mtime_ns"]) for r in after]:
         raise ValueError("Source file set changed during archival")
-    for name in ("archive_source_material.py", "source_material_inventory.py"):
+    for name in ("archive_source_material.py", "source_material_inventory.py", "restore_archived_source_material.py"):
         shutil.copyfile(root / "tools" / name, destination / name)
     shutil.copyfile(root / "docs/source-material-storage-map.md", destination / "source-material-storage-map.md")
     (destination / "README.txt").write_text(
         "Heroes-like art source snapshot\n\n"
-        "Each ZIP preserves repository-relative paths. Extract selected ZIPs into a chosen repository root to restore those source groups. Review existing files before overwriting.\n"
+        + (f"Incremental on {base.name}: it holds only the source files that were new or changed since that snapshot. "
+           "Restore with: python restore_archived_source_material.py --archive-dir <this directory> --root <repository> --prefix <path> [--apply]; it reads the base chain too.\n"
+           if base else "")
+        + "Each ZIP preserves repository-relative paths. Extract selected ZIPs into a chosen repository root to restore those source groups. Review existing files before overwriting.\n"
         "Original source files were retained. Metadata/editor sources/caches in these ZIPs are backup copies, not removal candidates. The per-file category preserves the mapped distinction.\n"
         "Every member was read back and its SHA-256 compared with the original source stream; ZIP CRCs and exact entry sets were checked.\n"
         "Reverify on Windows or Linux: python archive_source_material.py --destination <this directory> --verify-only\n"

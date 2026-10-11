@@ -100,7 +100,7 @@ class Archive:
         if row is None:
             raise FileNotFoundError(f"{rel} is not in the source archive")
         if row["archive"] not in self.zips:
-            self.zips[row["archive"]] = zipfile.ZipFile(self.directory / row["archive"])
+            self.zips[row["archive"]] = zipfile.ZipFile(row["archive"])
         data = self.zips[row["archive"]].read(rel)
         if sha(data) != row["sha256"]:
             raise RuntimeError(f"archive payload failed its SHA-256 check: {rel}")
@@ -347,7 +347,7 @@ def publish_unit(uid, result, archive, log):
     needed = sorted({f["source"].removeprefix("res://") for f in handoff["frames"]} - set(result["new_sources"].values())
                     | {f"art/animation/source/fluid/{uid}/baseline.png"})
     missing = [p for p in needed if not (ROOT / p).exists()]
-    counts = restore(ROOT, archive.directory, archive.rows, missing, True)
+    counts = restore(ROOT, archive.rows, missing, True)
     if counts["conflict"] or counts["restored"] != len(missing):
         raise RuntimeError(f"restore failed: {counts}")
     try:
