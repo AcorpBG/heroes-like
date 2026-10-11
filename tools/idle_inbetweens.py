@@ -1,0 +1,418 @@
+#!/usr/bin/env python3
+"""Smoother creature idle loops: RIFE in-betweens between the accepted frames.
+
+  python tools/idle_inbetweens.py UNIT_ID [UNIT_ID ...] --out DIR [options]
+  python tools/idle_inbetweens.py --all --out DIR
+
+For each unit:
+1. Reads its accepted idle frames: the 8 paintings of
+   art/animation/source/poses/<unit>/idle-v2/hands-packing.json, or the idle
+   clip of art/animation/source/fluid/<unit>/reviewed_handoff.json (fluid
+   batches and video idles). Source images come from the checkout when they
+   are restored there, otherwise straight from the source-art archive, checked
+   against its SHA-256 manifest.
+2. Aligns the frames on their ground anchors on one canvas.
+3. Adds RIFE in-betweens to every neighbouring pair, last to first included.
+   Each pair runs over black and over white, and colour and alpha are
+   recovered from the two results.
+4. Checks every in-between for smear: see-through pixels inside the figure,
+   against the two frames around it. A smeared pair is redone with flow
+   estimated from a coarser start, keeping whichever smears less; pairs that
+   still smear are flagged for review.
+5. Packs the loop with tools/pack_unit_pose_art, the game's packer.
+
+The accepted frames pass through unchanged as every (in-betweens + 1)-th frame.
+Nothing in the game changes; the output is a candidate for review. Needs torch,
+safetensors, numpy and Pillow, and ffmpeg for --review. See
+docs/idle-inbetweens.md for the environment and the model weights.
+
+Writes, per unit, under DIR/<unit_id>/: idle_frames.png (aligned canvas
+sheet), idle_recipe.json, idle_runtime.png (game cells), report.json,
+flagged.jpg when a pair is flagged, review.mp4 with --review; and
+DIR/summary.json for the whole run.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import io
+import json
+import os
+import shutil
+import subprocess
+import sys
+import time
+import zipfile
+from pathlib import Path
+
+import numpy as np
+from PIL import Image, ImageDraw, ImageFont
+
+sys.dont_write_bytecode = True
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
+
+from pack_unit_pose_art import pack  # noqa: E402
+from restore_archived_source_material import load_index  # noqa: E402
+
+MANIFEST = ROOT / "content" / "unit_animation_manifest.json"
+DEFAULT_WEIGHTS = Path.home() / ".cache" / "heroes-like" / "rife_v4.26.safetensors"
+WEIGHTS_URL = "https://huggingface.co/Comfy-Org/frame_interpolation/resolve/main/frame_interpolation/rife_v4.26.safetensors"
+TARGET_MSEC = 60      # --inbetweens auto aims at about this many ms per frame
+SMEAR_RATIO = 1.6     # see-through pixels in an in-between vs the frames around it
+COLUMNS = 8
+
+
+class SkipUnit(Exception):
+    pass
+
+
+class Sources:
+    """Source images by repository-relative path: the checkout first, then the archive."""
+
+    def __init__(self, archive_dir):
+        self.archive_dir = archive_dir
+        self.rows = None
+        self.zips = {}
+
+    def image(self, rel):
+        local = ROOT / rel
+        if local.is_file():
+            return Image.open(local).convert("RGBA")
+        if self.archive_dir is None:
+            raise SkipUnit(f"{rel} is not restored here; pass --archive-dir or set HEROES_SOURCE_ARCHIVE")
+        if self.rows is None:
+            self.rows = load_index(self.archive_dir)
+        row = self.rows.get(rel)
+        if row is None:
+            raise SkipUnit(f"{rel} is neither restored nor in the archive")
+        if row["archive"] not in self.zips:
+            self.zips[row["archive"]] = zipfile.ZipFile(self.archive_dir / row["archive"])
+        data = self.zips[row["archive"]].read(rel)
+        if hashlib.sha256(data).hexdigest() != row["sha256"]:
+            raise RuntimeError(f"Archive payload failed its SHA-256 check: {rel}")
+        return Image.open(io.BytesIO(data)).convert("RGBA")
+
+
+def idle_recipe(row):
+    """The unit's accepted idle as {frame_size, ground_margin, frames, from, msec}
+    with repository-relative frame sources."""
+    uid, idle = row["unit_id"], row["pose_clips"]["idle"]
+    hands = ROOT / f"art/animation/source/poses/{uid}/idle-v2/hands-packing.json"
+    # Video idles replaced the 8 paintings of some units; the manifest says which plays.
+    if hands.is_file() and idle["frames"] == 8:
+        spec = json.loads(hands.read_text(encoding="utf-8"))
+        folder = hands.parent.relative_to(ROOT).as_posix()
+        frames = [dict(f, source=f"{folder}/{f['source']}") for f in spec["frames"]]
+        return {"frame_size": spec["frame_size"], "ground_margin": spec["ground_margin"], "frames": frames,
+                "from": hands.relative_to(ROOT).as_posix(), "msec": idle["frame_msec"]}
+    handoff = ROOT / f"art/animation/source/fluid/{uid}/reviewed_handoff.json"
+    if not handoff.is_file():
+        raise SkipUnit("no idle-v2 paintings or fluid handoff")
+    entry = next((u for u in json.loads(handoff.read_text(encoding="utf-8"))["units"] if u["unit_id"] == uid), None)
+    indices = (entry or {}).get("clips", {}).get("idle", {}).get("indices", [])
+    frames = [entry["frames"][i] for i in indices]
+    if not frames or any(f.get("clip") != "idle" for f in frames):
+        raise SkipUnit("the idle is kept from an older recipe, not listed in the fluid handoff")
+    size = [row["pose_frame_size"]["width"], row["pose_frame_size"]["height"]]
+    return {"frame_size": size, "ground_margin": row["pose_ground_margin"], "frames": frames,
+            "from": handoff.relative_to(ROOT).as_posix(), "msec": idle["frame_msec"]}
+
+
+def cutout(sheet, frame):
+    """The frame's rectangles on one image, as tools/pack_unit_pose_art cuts them."""
+    rects = frame["rects"]
+    x0, y0 = min(r[0] for r in rects), min(r[1] for r in rects)
+    image = Image.new("RGBA", (max(r[2] for r in rects) - x0, max(r[3] for r in rects) - y0))
+    for left, top, right, bottom in rects:
+        image.paste(sheet.crop((left, top, right, bottom)), (left - x0, top - y0))
+    return image, frame["anchor"][0] - x0, frame["anchor"][1] - y0
+
+
+def aligned_frames(recipe, sources):
+    """Every frame on one canvas with its ground anchor at the same point, at the
+    largest scale any frame uses (a few recipes mix scales), so frames are only
+    ever reduced. Canvas sides are multiples of 128, which the coarse flow pass needs."""
+    sheets = {s: sources.image(s) for s in sorted({f["source"] for f in recipe["frames"]})}
+    scale = max(f.get("scale", 1.0) for f in recipe["frames"])
+    pieces = []
+    for f in recipe["frames"]:
+        image, fx, fy = cutout(sheets[f["source"]], f)
+        ratio = f.get("scale", 1.0) / scale
+        if ratio != 1.0:
+            image = image.resize((max(1, round(image.width * ratio)), max(1, round(image.height * ratio))), Image.LANCZOS)
+            fx, fy = round(fx * ratio), round(fy * ratio)
+        pieces.append((image, fx, fy, f.get("alpha_noise_cutoff", 0)))
+    half = max(max(fx, image.width - fx) for image, fx, _, _ in pieces)
+    top = max(fy for _, _, fy, _ in pieces)
+    bottom = max(image.height - fy for image, _, fy, _ in pieces)
+    up = lambda v: (v + 127) // 128 * 128
+    cw, ch = up(2 * half + 8), up(top + bottom + 8)
+    ax, ay = cw // 2, ch - bottom - 4
+    frames = []
+    for image, fx, fy, cutoff in pieces:
+        canvas = Image.new("RGBA", (cw, ch))
+        canvas.paste(image, (ax - fx, ay - fy))
+        arr = np.asarray(canvas).astype(np.float32) / 255.0
+        if cutoff:
+            arr[arr[..., 3] * 255 <= cutoff] = 0
+        frames.append(arr)
+    return frames, (cw, ch, ax, ay), scale
+
+
+def see_through(rgba):
+    """Pixels that are neither solid nor clear."""
+    a = rgba[..., 3]
+    return int(((a > 0.08) & (a < 0.85)).sum())
+
+
+class Interpolator:
+    def __init__(self, weights, device):
+        import torch
+        import rife_ifnet
+
+        self.torch = torch
+        self.device = device
+        self.model = rife_ifnet.load(weights, device)
+
+    def inbetweens(self, a, b, count, coarse):
+        """count frames between a and b (RGBA float arrays), straight alpha."""
+        torch = self.torch
+        scale = 0.5 if coarse else 1.0
+
+        def over(rgba, bg):
+            rgb = rgba[..., :3] * rgba[..., 3:4] + bg * (1 - rgba[..., 3:4])
+            return torch.from_numpy(np.ascontiguousarray(rgb)).permute(2, 0, 1)[None].to(self.device)
+
+        out = []
+        with torch.no_grad():
+            pairs = {bg: (over(a, bg), over(b, bg)) for bg in (0.0, 1.0)}
+            for j in range(1, count + 1):
+                t = j / (count + 1)
+                on_black, on_white = (self.model(*pairs[bg], t, scale).clamp(0, 1)[0].permute(1, 2, 0).cpu().numpy()
+                                      for bg in (0.0, 1.0))
+                alpha = np.clip(1.0 - (on_white - on_black).mean(2, keepdims=True), 0, 1)
+                alpha[alpha < 0.02] = 0
+                rgb = np.where(alpha > 0, on_black / np.maximum(alpha, 1e-4), 0)
+                out.append(np.concatenate([np.clip(rgb, 0, 1), alpha], 2))
+        return out
+
+
+def loop_with_inbetweens(frames, k, coarse_mode, interp):
+    out, checks = [], []
+    n = len(frames)
+    for i in range(n):
+        a, b = frames[i], frames[(i + 1) % n]
+        base = max(see_through(a), see_through(b), 1)
+        mids = interp.inbetweens(a, b, k, coarse_mode == "always") if k else []
+        ratios = [see_through(m) / base for m in mids]
+        coarse = coarse_mode == "always"
+        if coarse_mode == "auto" and ratios and max(ratios) > SMEAR_RATIO:
+            retry = interp.inbetweens(a, b, k, True)
+            retry_ratios = [see_through(m) / base for m in retry]
+            if max(retry_ratios) < max(ratios):
+                mids, ratios, coarse = retry, retry_ratios, True
+        out.append(a)
+        for j, (m, r) in enumerate(zip(mids, ratios)):
+            checks.append({"pair": f"{i}->{(i + 1) % n}", "inbetween": j + 1, "coarse": coarse,
+                           "smear_ratio": round(r, 2), "flag": r > SMEAR_RATIO})
+            out.append(m)
+    return out, checks
+
+
+def write_loop(uid, recipe, out, canvas, scale, unit_dir):
+    cw, ch, ax, ay = canvas
+    rows = (len(out) + COLUMNS - 1) // COLUMNS
+    sheet = np.zeros((rows * ch, COLUMNS * cw, 4), np.float32)
+    for i, frame in enumerate(out):
+        sheet[(i // COLUMNS) * ch:(i // COLUMNS + 1) * ch, (i % COLUMNS) * cw:(i % COLUMNS + 1) * cw] = frame
+    Image.fromarray((sheet * 255 + 0.5).astype(np.uint8), "RGBA").save(unit_dir / "idle_frames.png")
+    packing = {"unit_id": uid, "frame_size": recipe["frame_size"], "columns": COLUMNS,
+               "ground_margin": recipe["ground_margin"],
+               "frames": [{"name": f"idle_{i:02d}", "source": "idle_frames.png",
+                           "rects": [[(i % COLUMNS) * cw, (i // COLUMNS) * ch, (i % COLUMNS + 1) * cw, (i // COLUMNS + 1) * ch]],
+                           "anchor": [(i % COLUMNS) * cw + ax, (i // COLUMNS) * ch + ay], "scale": scale}
+                          for i in range(len(out))]}
+    (unit_dir / "idle_recipe.json").write_text(json.dumps(packing, indent=1) + "\n", encoding="utf-8")
+    pack(unit_dir / "idle_recipe.json", unit_dir / "idle_runtime.png")
+
+
+def runtime_cells(unit_dir, frame_size, count):
+    fw, fh = frame_size
+    atlas = Image.open(unit_dir / "idle_runtime.png").convert("RGBA")
+    return [atlas.crop(((i % COLUMNS) * fw, (i // COLUMNS) * fh, (i % COLUMNS + 1) * fw, (i // COLUMNS + 1) * fh))
+            for i in range(count)]
+
+
+def write_flagged_strip(unit_dir, frame_size, cells, flagged, k):
+    """Each flagged pair with its in-betweens, at 2x, for review."""
+    fw, fh = frame_size
+    strip = Image.new("RGBA", (fw * (k + 2), fh * len(flagged)), (50, 54, 46, 255))
+    for row, pair in enumerate(flagged):
+        start = int(pair.split("->")[0]) * (k + 1)
+        for d in range(k + 2):
+            strip.alpha_composite(cells[(start + d) % len(cells)], (d * fw, row * fh))
+    strip = strip.resize((strip.width * 2, strip.height * 2), Image.LANCZOS)
+    strip.convert("RGB").save(unit_dir / "flagged.jpg", quality=90)
+
+
+def write_review(row, unit_dir, frame_size, ground_margin, cells, step, path):
+    """The current idle above the new loop, at game size (left) and 2x (right),
+    on a 2560x1440 battlefield, 14 s at 30 fps."""
+    ffmpeg = shutil.which("ffmpeg")
+    if not ffmpeg:
+        raise SystemExit("--review needs ffmpeg on PATH")
+    width, height, fps, seconds = 2560, 1440, 30, 14.0
+    game_scale = 241.0 / 256.0  # atlas pixels to screen pixels at 1440p
+    msec = row["pose_clips"]["idle"]["frame_msec"]
+    fw, fh = frame_size
+    new, old = cells, cells[0::step]
+    boxes = [c.getchannel("A").getbbox() for c in cells]
+    union = (min(b[0] for b in boxes), min(b[1] for b in boxes), max(b[2] for b in boxes), max(b[3] for b in boxes))
+    new, old = [c.crop(union) for c in new], [c.crop(union) for c in old]
+
+    # Draw the figure as tall as the game's own idle frame draws it.
+    atlas = Image.open(ROOT / row["pose_sheet"].removeprefix("res://")).convert("RGBA")
+    pw, ph = row["pose_frame_size"]["width"], row["pose_frame_size"]["height"]
+    regions = row.get("pose_region_anchors") or {}
+    if regions:  # packed regions: idle frame 0 sits at the origin, up to the next region
+        nxt = [int(key.split(",")[0]) for key in regions if key.endswith(",0") and int(key.split(",")[0]) > 0]
+        cell = (0, 0, min([pw] + nxt), ph)
+    else:  # grid: the idle's first index, which is not always cell 0
+        i, cols = row["pose_clips"]["idle"]["indices"][0], row["pose_columns"]
+        cell = ((i % cols) * pw, (i // cols) * ph, (i % cols + 1) * pw, (i // cols + 1) * ph)
+    solid = lambda img: img.getchannel("A").point(lambda v: 255 if v > 8 else 0).getbbox()
+    game_box, own_box = solid(atlas.crop(cell)), solid(old[0])
+    base_scale = (game_box[3] - game_box[1]) / (own_box[3] - own_box[1]) * game_scale
+
+    big, small = ImageFont.load_default(40), ImageFont.load_default(28)
+    bg = Image.open(ROOT / "art/battle/runtime/battlefields/forest.png").convert("RGBA").resize((width, height), Image.LANCZOS)
+    bg.alpha_composite(Image.new("RGBA", (width, height), (0, 0, 0, 70)))
+    draw = ImageDraw.Draw(bg)
+    draw.rectangle((width // 2 - 4, 0, width // 2 + 4, height), fill=(18, 16, 14, 255))
+    draw.rectangle((0, 718, width, 724), fill=(18, 16, 14, 160))
+    text = dict(fill=(255, 235, 185), anchor="mt", stroke_width=4, stroke_fill=(0, 0, 0))
+    draw.text((width / 4, 18), f"{row['name']}: game size", font=big, **text)
+    draw.text((3 * width / 4, 18), "Zoomed 2x", font=big, **text)
+    ground = (690, 1380)
+    for cx in (width / 4, 3 * width / 4):
+        draw.text((cx, ground[0] + 6), f"Now: {len(old)} frames, {msec} ms each", font=small, **text)
+        draw.text((cx, ground[1] + 6), f"New: {len(new)} frames, {msec / step:.0f} ms each", font=small, **text)
+    views = []
+    for cx, zoom in ((width / 4, 1.0), (3 * width / 4, 2.0)):
+        s = base_scale * zoom
+        sized = [[c.resize((max(1, round(c.width * s)), max(1, round(c.height * s))), Image.LANCZOS) for c in seq]
+                 for seq in (old, new)]
+        views.append((cx, s, sized))
+    proc = subprocess.Popen([ffmpeg, "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24",
+                             "-s", f"{width}x{height}", "-r", str(fps), "-i", "-", "-c:v", "libx264",
+                             "-pix_fmt", "yuv420p", "-crf", "18", str(path)], stdin=subprocess.PIPE)
+    for f in range(int(seconds * fps)):
+        t_ms = f * 1000.0 / fps
+        frame = bg.copy()
+        for cx, s, (o, n) in views:
+            for r, (seq, frame_ms) in enumerate(((o, msec), (n, msec / step))):
+                img = seq[int(t_ms / frame_ms) % len(seq)]
+                x = round(cx - (fw / 2 - union[0]) * s)
+                y = round(ground[r] - 10 - (fh - ground_margin - union[1]) * s)
+                frame.alpha_composite(img, (max(0, x), max(0, y)))
+        proc.stdin.write(frame.convert("RGB").tobytes())
+    proc.stdin.close()
+    if proc.wait():
+        raise RuntimeError(f"ffmpeg failed writing {path}")
+
+
+def run_unit(row, args, sources, interp, weights_sha):
+    uid = row["unit_id"]
+    seconds = {}
+    clock = time.perf_counter()
+    recipe = idle_recipe(row)
+    frames, canvas, scale = aligned_frames(recipe, sources)
+    seconds["read_and_align"] = time.perf_counter() - clock
+    k = max(0, round(recipe["msec"] / TARGET_MSEC) - 1) if args.inbetweens == "auto" else int(args.inbetweens)
+
+    clock = time.perf_counter()
+    out, checks = loop_with_inbetweens(frames, k, args.coarse, interp)
+    seconds["rife"] = time.perf_counter() - clock
+
+    clock = time.perf_counter()
+    unit_dir = args.out / uid
+    unit_dir.mkdir(parents=True, exist_ok=True)
+    for stale in ("flagged.jpg", "review.mp4"):
+        (unit_dir / stale).unlink(missing_ok=True)
+    write_loop(uid, recipe, out, canvas, scale, unit_dir)
+    cells = runtime_cells(unit_dir, recipe["frame_size"], len(out))
+    flagged = sorted({c["pair"] for c in checks if c["flag"]}, key=lambda p: int(p.split("->")[0]))
+    if flagged:
+        write_flagged_strip(unit_dir, recipe["frame_size"], cells, flagged, k)
+    seconds["pack"] = time.perf_counter() - clock
+    if args.review:
+        clock = time.perf_counter()
+        write_review(row, unit_dir, recipe["frame_size"], recipe["ground_margin"], cells, k + 1, unit_dir / "review.mp4")
+        seconds["review"] = time.perf_counter() - clock
+
+    report = {"unit_id": uid, "source": recipe["from"], "source_frames": len(frames), "source_msec": recipe["msec"],
+              "inbetweens_per_pair": k, "frames": len(out), "frame_msec": round(recipe["msec"] / (k + 1), 1),
+              "canvas": list(canvas[:2]), "coarse_mode": args.coarse, "weights_sha256": weights_sha,
+              "seconds": {key: round(v, 2) for key, v in seconds.items()},
+              "flagged_pairs": flagged, "inbetweens": checks}
+    (unit_dir / "report.json").write_text(json.dumps(report, indent=1) + "\n", encoding="utf-8")
+    return report
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("unit_ids", nargs="*", help="unit ids from content/unit_animation_manifest.json")
+    parser.add_argument("--all", action="store_true", help="every unit in the animation manifest")
+    parser.add_argument("--out", type=Path, required=True, help="output directory; one folder per unit")
+    parser.add_argument("--inbetweens", default="auto",
+                        help=f"frames added per pair, or auto: about {TARGET_MSEC} ms per frame at the idle's timing")
+    parser.add_argument("--coarse", default="auto", choices=["auto", "always", "never"],
+                        help="coarse flow start: auto retries smeared pairs with it")
+    parser.add_argument("--archive-dir", type=Path, default=os.environ.get("HEROES_SOURCE_ARCHIVE") or None,
+                        help="source-art snapshot for sources not restored here (default: $HEROES_SOURCE_ARCHIVE)")
+    parser.add_argument("--weights", type=Path, default=os.environ.get("HEROES_RIFE_WEIGHTS") or DEFAULT_WEIGHTS,
+                        help=f"RIFE v4.26 safetensors (default: $HEROES_RIFE_WEIGHTS or {DEFAULT_WEIGHTS})")
+    parser.add_argument("--device", default=None, help="torch device (default: cuda when available, else cpu)")
+    parser.add_argument("--review", action="store_true", help="also write review.mp4: current idle above the new loop")
+    args = parser.parse_args(argv)
+    if args.inbetweens != "auto" and not args.inbetweens.isdigit():
+        parser.error("--inbetweens takes a whole number or auto")
+    if bool(args.unit_ids) == args.all:
+        parser.error("give unit ids or --all")
+    rows = {r["unit_id"]: r for r in json.loads(MANIFEST.read_text(encoding="utf-8"))["items"]}
+    unknown = [u for u in args.unit_ids if u not in rows]
+    if unknown:
+        parser.error("not in the animation manifest: " + ", ".join(unknown))
+    if not args.weights.is_file():
+        raise SystemExit(f"RIFE weights not found at {args.weights}.\nDownload {WEIGHTS_URL}\n"
+                         "and put it there, or pass --weights. See docs/idle-inbetweens.md.")
+
+    import torch
+
+    device = args.device or ("cuda" if torch.cuda.is_available() else "cpu")
+    weights_sha = hashlib.sha256(args.weights.read_bytes()).hexdigest()
+    interp = Interpolator(args.weights, device)
+    sources = Sources(args.archive_dir)
+    args.out.mkdir(parents=True, exist_ok=True)
+    done, skipped = [], {}
+    for uid in (sorted(rows) if args.all else args.unit_ids):
+        try:
+            report = run_unit(rows[uid], args, sources, interp, weights_sha)
+        except SkipUnit as reason:
+            skipped[uid] = str(reason)
+            print(f"SKIP {uid}: {reason}")
+            continue
+        done.append({key: report[key] for key in ("unit_id", "source_frames", "frames", "frame_msec", "flagged_pairs")})
+        flags = ", ".join(report["flagged_pairs"]) or "none"
+        print(f"OK {uid}: {report['source_frames']} -> {report['frames']} frames at {report['frame_msec']} ms, "
+              f"RIFE {report['seconds']['rife']} s, flagged pairs: {flags}")
+    summary = {"device": device, "weights_sha256": weights_sha, "units": done, "skipped": skipped}
+    (args.out / "summary.json").write_text(json.dumps(summary, indent=1) + "\n", encoding="utf-8")
+    flagged = sum(1 for u in done if u["flagged_pairs"])
+    print(f"IDLE_INBETWEENS done={len(done)} flagged_units={flagged} skipped={len(skipped)} out={args.out}")
+    return 1 if skipped and not args.all else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
