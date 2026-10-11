@@ -236,5 +236,34 @@
   ],
   "baseline_atlas_sha256": "2f085feadb874aa80f2183e718a5da99c9dadf6640632a282ff240c4c81f609b",
   "atlas_sha256": "d81a787348b3ebd93b5c4f9d3fc36f09c112a858d016d2899ebabae6741b9814",
-  "texture_bytes_rgba": 42346496
+  "texture_bytes_rgba": 42346496,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_neutral_noonshard_prism_kites/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 200,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 2,
+    "frames": 24,
+    "frame_msec": 67,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_noonshard_prism_kites.png",
+    "sheet_sha256": "d50c7e7a4dd5d7fdfb80f34b82dac32913faf7fdbe3c0423ec1fdd58d8a69a11",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

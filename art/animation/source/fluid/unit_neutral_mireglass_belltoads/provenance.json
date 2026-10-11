@@ -29,5 +29,34 @@
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "bbba9b3d9225fc585b2da28f5c4dcc2bad81acbaf3426a7081f76a18f754d988",
   "atlas_sha256": "4dc00f6bd5a5812e02614315429d82f016229ac8adf37a967350f8e42d197d52",
-  "texture_bytes_rgba": 17817600
+  "texture_bytes_rgba": 17817600,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_neutral_mireglass_belltoads/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 2,
+    "frames": 24,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_mireglass_belltoads.png",
+    "sheet_sha256": "8f746c87885be135474e6b98d51f19cb95a642f366036c6920801f9e0083f42c",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

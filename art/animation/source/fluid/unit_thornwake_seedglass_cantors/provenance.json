@@ -340,5 +340,34 @@
   ],
   "baseline_atlas_sha256": "5e4c47834757f7bc16ae6ee7abe45a52ed5e5f45686ed889914a77d98c048dff",
   "atlas_sha256": "9283d6f85ee7a56031597d7085da1cc634340e8ae4e9bc9fd8c56d4e886b84ad",
-  "texture_bytes_rgba": 47124480
+  "texture_bytes_rgba": 47124480,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_thornwake_seedglass_cantors.png",
+    "sheet_sha256": "8597ee99924db69aa62f2736110556584670b2e9920748d01212cfa186ef6cd7",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

@@ -269,5 +269,34 @@
   ],
   "baseline_atlas_sha256": "2e058386a53ee4e38629910f6cc3e81afdb9abf972074b8e063808d66931a800",
   "atlas_sha256": "bc21a534f24ac924f6b30ce5166878ac84d222d91797e1eb6f643b97a8c6a81a",
-  "texture_bytes_rgba": 38467008
+  "texture_bytes_rgba": 38467008,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_neutral_orchard_halberds/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_orchard_halberds.png",
+    "sheet_sha256": "dd19480ac37e9b6d9e1fb4e81378cfbae6fbb3e0b6a7bcd21c2e511dd050a3df",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

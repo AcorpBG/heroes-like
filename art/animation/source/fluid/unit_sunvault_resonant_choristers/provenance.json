@@ -247,5 +247,34 @@
   ],
   "baseline_atlas_sha256": "4821a6e445a0c64d88b70c2e13fe914267ab7f6e62fcd13732c655d4d411563c",
   "atlas_sha256": "247247aeb792c5748cf1b9491497f5521814af60e8779c6391cd01e3732eb782",
-  "texture_bytes_rgba": 41524992
+  "texture_bytes_rgba": 41524992,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_sunvault_resonant_choristers.png",
+    "sheet_sha256": "2aaa594465e308c402e2212002d10708f8e1d92adf1475368c3d6cc9e631dd0c",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

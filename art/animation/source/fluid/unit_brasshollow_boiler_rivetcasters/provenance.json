@@ -258,5 +258,34 @@
   ],
   "baseline_atlas_sha256": "7905885d400be800760611d62770c758a33157f9b79b1fc30415f6ec0108b660",
   "atlas_sha256": "1fdb1b5d5c9612bc97404af89dfb0894210dd1cca9c0bb51bec97e3abfd2124b",
-  "texture_bytes_rgba": 54620160
+  "texture_bytes_rgba": 54620160,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_brasshollow_boiler_rivetcasters/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 65,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_brasshollow_boiler_rivetcasters.png",
+    "sheet_sha256": "48e5b99688964f472ae60b8c69d0395e3ab6ec439f8c3b970e5b856fd6cd46bc",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

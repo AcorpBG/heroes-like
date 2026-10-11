@@ -271,5 +271,34 @@
   ],
   "baseline_atlas_sha256": "1a9887d6d7a0d9e9ebd989bbdb7914c77eea6ffe681913e7713f3285837bbdcf",
   "atlas_sha256": "54db14dc79694689770f6f3be6f5ad9a70a2543549ea0bdb7f9a7d4ea1c37b4a",
-  "texture_bytes_rgba": 38707200
+  "texture_bytes_rgba": 38707200,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_neutral_icehook_trappers/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_icehook_trappers.png",
+    "sheet_sha256": "07d09ffc8caf4bd143ca5e897c80faa8d01c3337bf26e5e5dd95798ea337ccfa",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

@@ -77,5 +77,34 @@
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "eb18c3900ab9f6da0cedf629535e6a408a2a2348b18b4ec601594ce26d8ef43c",
   "atlas_sha256": "8b35972abce3b256bcd3f3d9fc47dd03407cde06215c726915a3e1efc11eafd8",
-  "texture_bytes_rgba": 35443200
+  "texture_bytes_rgba": 35443200,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_thornwake_dawnseed_bolters_veteran/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "frame_msec": 125,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 1,
+    "frames": 16,
+    "frame_msec": 62,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_thornwake_dawnseed_bolters_veteran.png",
+    "sheet_sha256": "2976ae48a11b8f40b7cbb2a977388f355dc783738fd685a833497313db8376b6",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

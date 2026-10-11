@@ -218,5 +218,34 @@
   ],
   "baseline_atlas_sha256": "b5855e857cf8279a950d603a178950ebd92e0f763f02f37c2cbea204558781bd",
   "atlas_sha256": "a1a0868cbcda339fe170b47dba1e6feba43be3db2e85d96c34bd18ffb323bc7e",
-  "texture_bytes_rgba": 54442496
+  "texture_bytes_rgba": 54442496,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 65,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_mireclaw_moonbite_mirehorn_breakers.png",
+    "sheet_sha256": "04c4c2cbf109c1910af4554832f141743c43bbbbb6974d6a72dcd18e1237b0f6",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

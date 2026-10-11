@@ -27,5 +27,34 @@
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "56d6ee515ed56b897341a40e2d568da52d16bb95bd592b4718a31b06bdde15b0",
   "atlas_sha256": "a0743aa8029585cda6a8d4aaeca616b8bc8ca9ff765b64501ad4000785d2ce12",
-  "texture_bytes_rgba": 29390592
+  "texture_bytes_rgba": 29390592,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_mireclaw_drowned_antler_sovereign_veteran/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "frame_msec": 160,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 2,
+    "frames": 24,
+    "frame_msec": 53,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_mireclaw_drowned_antler_sovereign_veteran.png",
+    "sheet_sha256": "d286bbd01c3e80eaabbdc64a3cd3f03f566de1cd185c2c30e50334391253715c",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

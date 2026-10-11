@@ -30,5 +30,34 @@
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "672b4254f7dd2d2d492705e8371afde2003b16fe3ec3f57a328a660c7f8a912d",
   "atlas_sha256": "b279f9c019ef140fcd3beed9bd0491ab41a477f344c1f03e6eb6378f6c25a77b",
-  "texture_bytes_rgba": 22986240
+  "texture_bytes_rgba": 22986240,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_thornwake_graft_matriarchs_veteran/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "frame_msec": 160,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 2,
+    "frames": 24,
+    "frame_msec": 53,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_thornwake_graft_matriarchs_veteran.png",
+    "sheet_sha256": "73e6a700a9882f6ad8edef387c360ebc6eef53652a127a62d9c71680cbd51f64",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

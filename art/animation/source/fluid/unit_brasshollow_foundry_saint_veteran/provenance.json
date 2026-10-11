@@ -28,5 +28,34 @@
   },
   "atlas_sha256": "428f4685c01de19c3688d769f3cc3cd03cfc256ab90308dd4c47eadfbc526090",
   "texture_bytes_rgba": 15943424,
-  "baseline_atlas_sha256": "16227a0219b52078bf7555f9bc395d306d41f4216ca8bf78334c02f08b620766"
+  "baseline_atlas_sha256": "16227a0219b52078bf7555f9bc395d306d41f4216ca8bf78334c02f08b620766",
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_brasshollow_foundry_saint_veteran/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "frame_msec": 125,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 1,
+    "frames": 16,
+    "frame_msec": 62,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_brasshollow_foundry_saint_veteran.png",
+    "sheet_sha256": "a5c1f49818442e90c7f71e2b74c73b6db830ad14cfe585d8939fb033a76ce2ee",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

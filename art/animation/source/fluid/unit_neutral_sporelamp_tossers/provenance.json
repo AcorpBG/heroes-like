@@ -72,5 +72,34 @@
   ],
   "baseline_atlas_sha256": "cdbeb708a38c7e15ddef1bfb4c6ca0e4f21e8673a3d1aaa229d32d57f0046873",
   "atlas_sha256": "1c1a5c0a72d1c001a18b26e87c681002c5e948de713da82c15e0ee1332401183",
-  "texture_bytes_rgba": 16588800
+  "texture_bytes_rgba": 16588800,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_neutral_sporelamp_tossers/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_sporelamp_tossers.png",
+    "sheet_sha256": "1ab473c50c685db81307a5dc11cf74e2d03326a02984777af8ecb3cfe7c1bc5c",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

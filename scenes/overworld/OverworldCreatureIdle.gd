@@ -1,5 +1,6 @@
 extends RefCounted
-## Original pose playback only. Clocks and ground anchors never enter game state.
+## Original pose playback, with the RIFE in-betweens of docs/idle-inbetweens.md where a
+## unit has them. Clocks and ground anchors never enter game state.
 
 const IdleShader = preload("res://scenes/overworld/OverworldCreatureIdle.gdshader")
 var units: Dictionary = {}
@@ -25,7 +26,9 @@ func still_frame(unit_id: String) -> Texture2D:
 	if image.is_compressed():
 		image.decompress()
 	var frame_size := Vector2i(int(entry.frame_size[0]), int(entry.frame_size[1]))
-	var frame := ImageTexture.create_from_image(image.get_region(Rect2i(Vector2i(int(entry.static_frame) * frame_size.x, 0), frame_size)))
+	var columns := maxi(1, int(entry.get("columns", entry.frames)))
+	var cell := Vector2i(int(entry.static_frame) % columns, int(entry.static_frame) / columns)
+	var frame := ImageTexture.create_from_image(image.get_region(Rect2i(cell * frame_size, frame_size)))
 	_still_frames[unit_id] = frame
 	return frame
 
@@ -47,6 +50,7 @@ static func material(pose: Dictionary, phase_key: String, enabled: bool) -> Shad
 	var result := ShaderMaterial.new()
 	result.shader = IdleShader
 	result.set_shader_parameter("frame_count", float(entry.frames))
+	result.set_shader_parameter("frame_columns", float(entry.get("columns", entry.frames)))
 	result.set_shader_parameter("frame_seconds", float(entry.frame_msec) / 1000.0)
 	result.set_shader_parameter("static_frame", float(entry.static_frame))
 	result.set_shader_parameter("motion_enabled", enabled)

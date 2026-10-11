@@ -60,5 +60,34 @@
   ],
   "baseline_atlas_sha256": "e38ab9d9c0b303b5361aa4eb66da7250d93396585d8467cd488d30ca35e755af",
   "atlas_sha256": "2988768a83ec794a5de457a158ae515bf6777fbd79f97c11f6c27a1c36ec7a26",
-  "texture_bytes_rgba": 42434560
+  "texture_bytes_rgba": 42434560,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_veilmourn_dreamwake_tideglass_oracles/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_veilmourn_dreamwake_tideglass_oracles.png",
+    "sheet_sha256": "d4fbd833c11e89848163c5c6cef745e389f304429abf535021a8ce8d6169be9e",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

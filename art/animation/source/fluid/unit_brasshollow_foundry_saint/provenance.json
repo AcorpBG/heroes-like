@@ -174,5 +174,34 @@
   ],
   "baseline_atlas_sha256": "0ae5eca55dfd66d0b50a81300010061a1a53f42939a11aa41bd0c05c9932c379",
   "atlas_sha256": "40f47fa21f2f0be0d38c4473ccda4d36e027e417f0fc0f51929cf4bbb8a1e8cd",
-  "texture_bytes_rgba": 60211200
+  "texture_bytes_rgba": 60211200,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_brasshollow_foundry_saint/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 65,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_brasshollow_foundry_saint.png",
+    "sheet_sha256": "f2890fe182e725b8116a37a128ecb595ae2396541592e3ce2c037855733fe179",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

@@ -183,5 +183,34 @@
   ],
   "baseline_atlas_sha256": "9a51cab9481dfb813c56905e8eb05e316f6ea30bb5a3b69c40e70058a9fd7e0e",
   "atlas_sha256": "87470e228635aa94ca155a6e974ef0f591a547fcad815ad692ecd1d68200f088",
-  "texture_bytes_rgba": 46448640
+  "texture_bytes_rgba": 46448640,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_neutral_flaremast_crews/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_flaremast_crews.png",
+    "sheet_sha256": "4580a0b9f0583bea7a664e841f24e340707af1e4dc1b695894f120840e0e337e",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

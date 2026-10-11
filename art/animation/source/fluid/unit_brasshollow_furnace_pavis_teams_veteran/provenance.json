@@ -27,5 +27,34 @@
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "a02a84374e9419192eedc09f8846ef877ca2608ef50f21539369d0b1fcc6cde2",
   "atlas_sha256": "8e39c796909cbea50872132cb8ac05775796d3fd51219b8828c9914df56b46ae",
-  "texture_bytes_rgba": 22177792
+  "texture_bytes_rgba": 22177792,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_brasshollow_furnace_pavis_teams_veteran/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "frame_msec": 160,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 2,
+    "frames": 24,
+    "frame_msec": 53,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_brasshollow_furnace_pavis_teams_veteran.png",
+    "sheet_sha256": "a5c8f14e997c8b37f6ef3ce8a6da65475904b5e0538d416fe21f95de43ccc91c",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

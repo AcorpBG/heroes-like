@@ -251,5 +251,34 @@
     "continuous_video_playback": false,
     "manual_game_session": false,
     "notes": "Personally reviewed every212 imported live native128px pose, all eight real Normal Strike captures including first closure and recovery, and all eight original shader/map-idle phases plus reduced-motion/static output. Six legs/two pincer arms and attached arch/rings remain coherent, fixed body scale, ground contacts and grounded persistent corpse. Full recovery returns to original ready. No alpha clipping/foreign pixels. Eight accepted original idle drawings and270ms timing preserved exactly. Focused live716 assertions pass; exact Godot-import RGBA equality confirmed; no full suite or Linux/manual/continuous-video claim."
+  },
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/packing.json frames 12-19",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 270,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 68,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_fenmirror_gallowshells.png",
+    "sheet_sha256": "21f8771347f47767517b430f3ba3e2773b024bb255862c26e38763595cf97fa6",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
   }
 }

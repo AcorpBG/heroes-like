@@ -28,5 +28,34 @@
   ],
   "baseline_atlas_sha256": "7a3cde55c267364076770b8694ee9301e7321f7fb8ede25da0bc0067dc3e206d",
   "atlas_sha256": "1dbbc24a6f9af11c8e8dacc85569fcd181e0bdab6a31b6cd6e5bc0a6438dcac3",
-  "texture_bytes_rgba": 15128064
+  "texture_bytes_rgba": 15128064,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 65,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_veilmourn_fogbound_leviathan.png",
+    "sheet_sha256": "ec58293531d783c9590ff782be78fef2b042b1b69747a5905edea39d8877c6d6",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

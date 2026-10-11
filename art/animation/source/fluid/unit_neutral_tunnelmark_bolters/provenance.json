@@ -358,5 +358,34 @@
   ],
   "baseline_atlas_sha256": "b2fb8f312cb034c0ee95a75c1c2ee58b6a1612e222cbb68b50690cf6649959ab",
   "atlas_sha256": "50020ae264bfc142b978d4fcc9aefa02686af0936cd5f3bf3915b94672adeff3",
-  "texture_bytes_rgba": 49197184
+  "texture_bytes_rgba": 49197184,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_tunnelmark_bolters.png",
+    "sheet_sha256": "5ddf3a1b03d2a2621422f7be5af86f281717cde39cf8fe4f974c9f8231d98b68",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

@@ -63,5 +63,34 @@
   ],
   "baseline_atlas_sha256": "7e2a40cfdfd1ca0af62ea2c9f0e33f27c9bf044f2eeb1ba2c5906ef8964d9783",
   "atlas_sha256": "6f4b37757df6e04428659be1316ec733dc666e58811c43cd76d651c1d1d2f8c8",
-  "texture_bytes_rgba": 13221376
+  "texture_bytes_rgba": 13221376,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_neutral_ashcrown_kilnelk/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 65,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_ashcrown_kilnelk.png",
+    "sheet_sha256": "50888b05e8b02441df56c5b8b5baf248c8474b28edf85ac70bdfe05b4eb484ff",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

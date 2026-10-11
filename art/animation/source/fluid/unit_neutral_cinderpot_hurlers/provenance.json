@@ -247,5 +247,34 @@
   ],
   "baseline_atlas_sha256": "6c1728143577ae2f9e2fd07cfd426cbe38ca60cc2073a8e837a45ba21bd275bb",
   "atlas_sha256": "59624160a0e857dae0b93c386594b2cb55619704ba5fb0e3ac68306c6649691e",
-  "texture_bytes_rgba": 28724672
+  "texture_bytes_rgba": 28724672,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_cinderpot_hurlers.png",
+    "sheet_sha256": "4ae4e346d4894913357b4a8b5b16874a323f78af9ac2d1bf4539f3d0c774c21e",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

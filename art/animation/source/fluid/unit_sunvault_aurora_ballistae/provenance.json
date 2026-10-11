@@ -29,5 +29,36 @@
   ],
   "baseline_atlas_sha256": "e368be39378843be24c42418f9f5aab63128f2638c017419613e3cd6ee4cefc4",
   "atlas_sha256": "a0b1adc5d7b376f08077f4bcc96e264d2018cbcdad20f2f7badcec7737d7827e",
-  "texture_bytes_rgba": 28512000
+  "texture_bytes_rgba": 28512000,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_sunvault_aurora_ballistae/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 65,
+    "flagged_handling": "hold",
+    "held_pairs": [
+      "2->3"
+    ],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_sunvault_aurora_ballistae.png",
+    "sheet_sha256": "8771b9bf162b6331c68f049bade2d41eedad9638f8a6cf5ab41d572953b32e96",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

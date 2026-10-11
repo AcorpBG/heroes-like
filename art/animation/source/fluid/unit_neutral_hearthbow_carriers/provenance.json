@@ -211,5 +211,34 @@
   ],
   "baseline_atlas_sha256": "942a724af4085b450900364b6780ee99a797c2cb4dc695012a40e1541b35a95b",
   "atlas_sha256": "2c4d8090122b345a32b6f073354d91eb689ab295af19d6e079e58d0eefd031ab",
-  "texture_bytes_rgba": 57772800
+  "texture_bytes_rgba": 57772800,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_neutral_hearthbow_carriers/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_hearthbow_carriers.png",
+    "sheet_sha256": "12986b694bbccdfec4851bba5d36a9b90e636530018dffefd80278cafcc7fc71",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

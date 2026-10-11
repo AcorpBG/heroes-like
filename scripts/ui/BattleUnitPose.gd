@@ -72,11 +72,13 @@ static func timed_frame(spec: Dictionary, elapsed: int) -> int:
 		time -= duration
 	return count - 1
 
-static func grounded_rect(ground: Vector2, height: float, region: Rect2, animation: Dictionary = {}, flipped: bool = false) -> Rect2:
+static func grounded_rect(ground: Vector2, height: float, region: Rect2, animation: Dictionary = {}, flipped: bool = false, spec: Dictionary = {}) -> Rect2:
 	# Expanded transparent action envelopes retain the accepted creature scale.
 	# The reference height describes its original canvas, not its painted bounds.
 	var reference_height := maxf(1.0, float(animation.get("pose_reference_height", region.size.y)))
-	var anchors: Dictionary = animation.get("pose_region_anchors", {})
+	# A clip on its own sheet carries its own grid and ground line (see sheet_path).
+	var own_sheet := spec.has("sheet")
+	var anchors: Dictionary = {} if own_sheet else animation.get("pose_region_anchors", {})
 	var region_key := "%d,%d" % [int(region.position.x), int(region.position.y)]
 	if anchors.has(region_key):
 		var authored: Array = anchors[region_key]
@@ -92,11 +94,11 @@ static func grounded_rect(ground: Vector2, height: float, region: Rect2, animati
 	# margin. Anchor that authored line, not the canvas edge or alpha bounds:
 	# raised feet, flying bodies and prone silhouettes must keep their motion.
 	# Legacy layouts without this optional metadata retain their original rect.
-	var margin := clampf(float(animation.get("pose_ground_margin", 0.0)), 0.0, maxf(0.0, region.size.y - 1.0))
+	var margin := clampf(float(spec.get("ground_margin", 0.0) if own_sheet else animation.get("pose_ground_margin", 0.0)), 0.0, maxf(0.0, region.size.y - 1.0))
 	var ground_offset := height * margin / maxf(1.0, region.size.y)
 	# Dense atlases may trim unused horizontal padding around a long lunge.
 	# Reflect the anatomical anchor with the art, including persistent corpses.
-	var anchor_x := float(animation.get("pose_anchor_x", region.size.x * 0.5))
+	var anchor_x := float(spec.get("anchor_x", region.size.x * 0.5) if own_sheet else animation.get("pose_anchor_x", region.size.x * 0.5))
 	if flipped: anchor_x = region.size.x - anchor_x
 	return Rect2(Vector2(ground.x - width * anchor_x / maxf(1.0, region.size.x), ground.y - height + ground_offset), Vector2(width, height))
 
@@ -109,10 +111,17 @@ static func clip(animation: Dictionary, state: String, dead: bool = false) -> Di
 	name = String(aliases.get(name, name))
 	return clips.get(name, {})
 
+## Derived idle loops (tools/integrate_idle_inbetweens.py) live on their own
+## sheet with their own grid and ground line, so a later re-layout of the action
+## atlas cannot misplace them. Every other clip uses the row's atlas.
+static func sheet_path(animation: Dictionary, state: String, dead: bool = false) -> String:
+	return String(clip(animation, state, dead).get("sheet", animation.get("pose_sheet", "")))
+
 static func region(animation: Dictionary, state: String, progress: float, elapsed_msec: int, reduced_motion: bool, dead: bool = false) -> Rect2:
 	var spec := clip(animation, state, dead)
 	if spec.is_empty(): return Rect2()
-	var size: Dictionary = animation.get("pose_frame_size", {})
+	var own_sheet := spec.has("sheet")
+	var size: Dictionary = spec.get("frame_size", {}) if own_sheet else animation.get("pose_frame_size", {})
 	var width := maxi(1, int(size.get("width", 256)))
 	var height := maxi(1, int(size.get("height", 256)))
 	var count := maxi(1, int(spec.get("frames", 1)))
@@ -128,9 +137,9 @@ static func region(animation: Dictionary, state: String, progress: float, elapse
 		frame = clampi(int(spec.get("static_frame", 0)), 0, count - 1)
 	var indices: Array = spec.get("indices", [])
 	if not indices.is_empty():
-		var columns := maxi(1, int(animation.get("pose_columns", 1)))
+		var columns := maxi(1, int(spec.get("columns", 1) if own_sheet else animation.get("pose_columns", 1)))
 		var index := int(indices[clampi(frame, 0, indices.size() - 1)])
-		var packed: Array = animation.get("pose_frame_rects", [])
+		var packed: Array = [] if own_sheet else animation.get("pose_frame_rects", [])
 		if not packed.is_empty():
 			var rect: Array = packed[index]
 			return Rect2(float(rect[0]), float(rect[1]), float(rect[2]), float(rect[3]))

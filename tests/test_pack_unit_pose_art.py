@@ -52,6 +52,12 @@ class PosePackingTests(unittest.TestCase):
                 self.assertEqual(row['pose_review_evidence'], 'docs/battle-unit-animation-acceptance.json')
                 atlas = ROOT / row['pose_sheet'].removeprefix('res://')
                 self.assertEqual(hashlib.sha256(atlas.read_bytes()).hexdigest(), accepted[row['unit_id']]['atlas_sha256'])
+                # A clip on its own sheet (derived idle loops) is registered by its own hash.
+                for name, clip in row['pose_clips'].items():
+                    if 'sheet' in clip:
+                        sheet = ROOT / clip['sheet'].removeprefix('res://')
+                        self.assertEqual(hashlib.sha256(sheet.read_bytes()).hexdigest(),
+                                         accepted[row['unit_id']].get('clip_sheet_sha256', {}).get(name))
                 # Clip, ground-anchor or facing changes invalidate review even
                 # when atlas pixels are unchanged. Never auto-certify new art.
                 pose = {key: value for key, value in row.items()

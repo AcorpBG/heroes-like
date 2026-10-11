@@ -31,5 +31,34 @@
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "331e1f5a11533636e34ea1ef622e18088181934c28b4f8fb56048626e83c2cf1",
   "atlas_sha256": "9ebedc8b54d0b4df80b87a1e03cd760a007400bbd3fc24dca7243029baaecd27",
-  "texture_bytes_rgba": 22118400
+  "texture_bytes_rgba": 22118400,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_brasshollow_gaugefire_arbalists_veteran/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "frame_msec": 160,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 2,
+    "frames": 24,
+    "frame_msec": 53,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_brasshollow_gaugefire_arbalists_veteran.png",
+    "sheet_sha256": "bf63edaa4dfcc5a8d882271a01f0bd4bd74e61d27c75bbd045aaa42537ee3e46",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

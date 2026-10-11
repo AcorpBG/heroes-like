@@ -248,5 +248,34 @@
   ],
   "baseline_atlas_sha256": "d730e9c803fead3adfdb1e6fe2b9c4a4ec591bae0c41f879c236ba925b2550a1",
   "atlas_sha256": "dccba822e9bf91f963e1c38c5a474f1f98c406a1729293b3f45bb817b3e7912b",
-  "texture_bytes_rgba": 43700224
+  "texture_bytes_rgba": 43700224,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_veilmourn_obituary_scribes.png",
+    "sheet_sha256": "7dbbf562e75a49db5c36ce609934fa385c2c5d6e46fd2e770036c50f9200c81c",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

@@ -58,5 +58,34 @@
   ],
   "baseline_atlas_sha256": "ec76809aa1d8dc067a7a3586dc466fe7851e1e4077fe5afab8b432b7224ef497",
   "atlas_sha256": "45431af852a454276287ef55b3f62ed0b81c2d4a65cac23c070d45b6940f6057",
-  "texture_bytes_rgba": 25878528
+  "texture_bytes_rgba": 25878528,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 65,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_mireclaw_bogplate_maulers.png",
+    "sheet_sha256": "d890a1c1f50bf9a61017837aceeddfd6ef8ce0185500dcdee2f889424a6f4f99",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

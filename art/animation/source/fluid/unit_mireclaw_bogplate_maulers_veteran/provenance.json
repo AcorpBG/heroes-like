@@ -28,5 +28,34 @@
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "426a1a185305f9468c3090a3dc4372f6d5cad475a0e14be801dd19ffe8220e25",
   "atlas_sha256": "439459890ed40fbc496fd83e023be86d942c97c6daa4fcd420fc6f8d68240651",
-  "texture_bytes_rgba": 24598784
+  "texture_bytes_rgba": 24598784,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_mireclaw_bogplate_maulers_veteran/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "frame_msec": 155,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 2,
+    "frames": 24,
+    "frame_msec": 52,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_mireclaw_bogplate_maulers_veteran.png",
+    "sheet_sha256": "315f5c4a9a6d48a201a12daae9dd0781dc2dd096257501e17fdaa3bb07b874cf",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

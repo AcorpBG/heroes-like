@@ -31,5 +31,34 @@
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "7c0583390b0ab5c6160380c40d5bf3c104368c4f36e54c77bd0a72785049b21a",
   "atlas_sha256": "18cdd7d77fb7bdad29c975fd31c98125318d6fa51fccda5be09e4e35b293399f",
-  "texture_bytes_rgba": 17902080
+  "texture_bytes_rgba": 17902080,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_embercourt_lockglass_writcasters_veteran/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40
+      ],
+      "frame_msec": 140,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 1,
+    "frames": 16,
+    "frame_msec": 70,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_embercourt_lockglass_writcasters_veteran.png",
+    "sheet_sha256": "c0490774eddcfa852b838c984894fb4ab6a04298100607baa102ca5cc1e708d4",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

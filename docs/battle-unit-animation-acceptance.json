@@ -22,7 +22,7 @@
     {
       "unit_id": "unit_river_guard",
       "atlas_sha256": "7c99eb2c61fd217c9b2deeb12b2828d0f622f6a8e3d6874882753e5bfd898a9f",
-      "pose_metadata_sha256": "06a83de52743931220f37a55d0bc0494175f0929e317c62b96dedabb10d5ad02",
+      "pose_metadata_sha256": "e4ad9240a4561c9211ec07983a1553a8ae03993ef8c045a3502ce911ef9c7b85",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_river_guard/provenance.json",
       "accepted_clips": [
@@ -33,12 +33,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "0f2e99280c3c995f96118e41931401af8e0c08716d97969fc24c311a2b8353cc"
+      }
     },
     {
       "unit_id": "unit_ember_archer",
       "atlas_sha256": "f4aada5ce210087c1abc85bd05eec4fcbb9cf386f2aa1228349d7d6916fe934c",
-      "pose_metadata_sha256": "415d27469a1a08070b0034d9ad06f1f5997dcce4a7b66f0228fd731f54f834f2",
+      "pose_metadata_sha256": "f1aa88e6e580040a80a76795b2d9ce3a1e6df45ce332332ea9f9ec74e63242ac",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_ember_archer/provenance.json",
       "accepted_clips": [
@@ -50,12 +53,15 @@
         "death",
         "cast",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "f0e3e4b310cc48ffa03415909cdb3ae9d82cb2dd0351bc9d52e071613f4d7ac9"
+      }
     },
     {
       "unit_id": "unit_citadel_pikeward",
       "atlas_sha256": "9d30c1fb230199efa84ecbcd9a48d2ac731e02c0d846a6cbf35aaeea69bf924d",
-      "pose_metadata_sha256": "855b64a896d7498f31760229b2e3194cb935c8d559b63fbe0ed52f30f10b2bd5",
+      "pose_metadata_sha256": "4e6e74d3ec963ec124161dbacf443e7eb42f4513c6ef3fa6df7f0df9144df0fb",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_citadel_pikeward/provenance.json",
       "accepted_clips": [
@@ -66,12 +72,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "ec8a855408c8f58722d8a2feb6009d80c884697b1cc61b28a09b94c3d5ee921d"
+      }
     },
     {
       "unit_id": "unit_blackbranch_cutthroat",
       "atlas_sha256": "1c7ba0c3bd71c0475a73d4586472fe73382cfb6aa069bdfc28db5b5fc73c10f0",
-      "pose_metadata_sha256": "48b1251a297248d966a8627b7f0bcad4a2b835b578ef4f61837063489c4b70be",
+      "pose_metadata_sha256": "ef8d95bec72aed8443bc3e97d95fe23aab005c467cfe10151c4180f4acdb1c28",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_blackbranch_cutthroat/provenance.json",
       "accepted_clips": [
@@ -82,12 +91,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "2d6895ac49137ba538d4abfa4571845998f78e01e0ac926d562b41d25e02c065"
+      }
     },
     {
       "unit_id": "unit_mire_slinger",
       "atlas_sha256": "46305b574483845def71298498831dd90fba4821b95fd41ced9adac6e9e7ba47",
-      "pose_metadata_sha256": "9c2c23646b9544475c8df730b355cb28d355ae3437e342eb220437b1a32312d4",
+      "pose_metadata_sha256": "16a9f4394cc9207cb1202b0dbc78cb79b75cee1e35e9a0e7dcbf65bc09966cc0",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_mire_slinger/provenance.json",
       "accepted_clips": [
@@ -99,12 +111,15 @@
         "death",
         "cast",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "82c78d0cdb13817bd83d190eb887f3612662e577b200cc7f944f83aac16c6958"
+      }
     },
     {
       "unit_id": "unit_bog_brute",
       "atlas_sha256": "d76ca139f334fa708d98650861ed55eadabdaeeaa2dfc1634128b745a751175a",
-      "pose_metadata_sha256": "94e66d04ac00583e683f0a145bcd40984dd6b452e558e62e6155e30a751d336b",
+      "pose_metadata_sha256": "5a8b52bfadc0c0b6b967d8768d3661bcf647017f5a36255a2191e2fad9231beb",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_bog_brute/provenance.json",
       "accepted_clips": [
@@ -115,12 +130,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "cda67a27f9106298226c0baab494bb6cf211a357abdfe48948c423d7d11dd1ed"
+      }
     },
     {
       "unit_id": "unit_gorefen_ripper",
       "atlas_sha256": "e15e21922c70ab466e6992e387d379c5e87f2db34b763cd8bb0fa0a57eae8b7b",
-      "pose_metadata_sha256": "fb4e11422781e09aba32c55a292b71cc3c5f1b5f6518f78bc06c7973af522774",
+      "pose_metadata_sha256": "dcd04f66eb67a7499f36056a9249cba570e7f414963cc37f3f6969fcd2f66bf0",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_gorefen_ripper/provenance.json",
       "accepted_clips": [
@@ -131,7 +149,10 @@
         "defend",
         "death",
         "cast"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "847c98a6f8efeb7716a0b681e9655ba27b915137d537ac251f08960a0473f844"
+      }
     },
     {
       "unit_id": "unit_shard_guard",
@@ -152,7 +173,7 @@
     {
       "unit_id": "unit_prism_adept",
       "atlas_sha256": "88d7016e3cb5f92a4d7d50a61fbd06ced14c2ff9d3c609de4d97a0a554182b8e",
-      "pose_metadata_sha256": "496d91775ad10e19d09cd46f05c161782922d08e19457740f79eb44aa332f883",
+      "pose_metadata_sha256": "b8bd8874d175af1f8dfc607c6ccd6933bdee920e3caa7991ef9340e98fac6194",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_prism_adept/provenance.json",
       "accepted_clips": [
@@ -164,12 +185,15 @@
         "move",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "ed083acb9d4090ff2dfe46c4884dade3cf6e146b838841e15843d46b43dff1c7"
+      }
     },
     {
       "unit_id": "unit_mirror_duelist",
       "atlas_sha256": "21995eb79c0a66e4b76ef5f65f3fa8f264a032dc84f6e3eeb530cf710af883b0",
-      "pose_metadata_sha256": "606d768ebd77d0f2253652446b9c1ceedb9ce85dd1b9ef96f8d969a19f13a722",
+      "pose_metadata_sha256": "2fe04804405dc46345464ec7fa58ddb4f184ed5aaece04ea778ca0c02f6b0c64",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_mirror_duelist/provenance.json",
       "accepted_clips": [
@@ -180,12 +204,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "45edae5df04fd27ca02339610bc9674c6abbff2561655a4327305ed2badd8720"
+      }
     },
     {
       "unit_id": "unit_aurora_ballista",
       "atlas_sha256": "def11d86177a78e37842c75ef9ef37cff591b0188650fa3a78a2fecc3cd24a37",
-      "pose_metadata_sha256": "847bdd38f6343cc1098ae9ef9bc675689f0c696f86e66ed23760bdc0be23513b",
+      "pose_metadata_sha256": "3984e629cc14d720ccf8c2b20874d6412ae71410bd1546ba51375dd102f5d11f",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_aurora_ballista/provenance.json",
       "accepted_clips": [
@@ -197,12 +224,15 @@
         "death",
         "move",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "8177ca16adbecf295c5c3db207833cf8542ad83a8d806658b2c72008e0e315eb"
+      }
     },
     {
       "unit_id": "unit_embercourt_fordhook_cadets",
       "atlas_sha256": "33ebb499d519b702d96e165e0ddbc95b01d40d154f69d79031de302f7bb75d8d",
-      "pose_metadata_sha256": "61b2dc39fd3e5df90f08b8d492e0e3ad8fd218c11705fa3f83af751ab3535b30",
+      "pose_metadata_sha256": "8882acd2244e4572d50a6daa00531773fd49a638a52cd34b57e0facd9e0793d4",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_embercourt_fordhook_cadets/provenance.json",
       "accepted_clips": [
@@ -213,12 +243,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "ab62e4c421bed77630348b8bd5d10354f024c612299ec0b3231ee20605f971b3"
+      }
     },
     {
       "unit_id": "unit_embercourt_lantern_sappers",
       "atlas_sha256": "af8017ff6a4fd2dd1054b9605e93c89aaa125bf13fcfed3ac9b0bdb9178aa31b",
-      "pose_metadata_sha256": "318edefe7e7aca091939051d12575b1c7d66d042d601c50565e72657ee27d5f2",
+      "pose_metadata_sha256": "efe4e40d22acdd6619092bca24f55d5efe32bc3e0b39d7753598373f47301793",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_embercourt_lantern_sappers/provenance.json",
       "accepted_clips": [
@@ -229,12 +262,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "352159c5290a076096a64f85b230b8ce98e023a1dae23094a57531dbec839bef"
+      }
     },
     {
       "unit_id": "unit_embercourt_bargebow_crews",
       "atlas_sha256": "fcfea4efe5fa9fb9954c574101cca6aa52a4723df872ad2b2df35d076c878b82",
-      "pose_metadata_sha256": "d44967fc8be1039816cfb9f65bb5f2bf12bfd388ebaf57baa3dbfbc0709a1dba",
+      "pose_metadata_sha256": "fbfc049d30cb1d2e5dc826685a2fbfcc79ab2aa6050157c7a1aca3777d6da904",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_embercourt_bargebow_crews/provenance.json",
       "accepted_clips": [
@@ -246,12 +282,15 @@
         "ranged",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "2a8c485b1da5eddfbec5b8e1f64c5f3062c889204a859227c4e2859e93996409"
+      }
     },
     {
       "unit_id": "unit_embercourt_ash_oath_bailiffs",
       "atlas_sha256": "5c9c9ea36e988439305f0550425a8778c45b7d7bf43b2fa7ff133d83f4371586",
-      "pose_metadata_sha256": "ada6eeca50d8635e2fa6da821b7f9bea664c9c6180e0890574b4f024edf880dd",
+      "pose_metadata_sha256": "41c96dc0d3b3b7d8c58a05c4a535e018b3be3d4b52fb6a359d2975596ff118ca",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_embercourt_ash_oath_bailiffs/provenance.json",
       "accepted_clips": [
@@ -262,12 +301,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "cf4718164508df054b2223da3898d3cb3272ea02fda557020d54055035e66e33"
+      }
     },
     {
       "unit_id": "unit_embercourt_beacon_lectors",
       "atlas_sha256": "73f73b40f0cb87b5d4be363e8213b458774b3c93f71f66f33708e5eff3bf5d16",
-      "pose_metadata_sha256": "215560a0a84cb78a848dbe89b00b5894cd44960b16d9910f8d34ccf98dfb42eb",
+      "pose_metadata_sha256": "e5e0bbe68890660b5a915b53bc155ddf0534eb07e7dfab24015da48e104980cd",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_embercourt_beacon_lectors/provenance.json",
       "accepted_clips": [
@@ -279,12 +321,15 @@
         "hit",
         "attack",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "c3d33634a4f46c9be4c3f45b2c0bfd9fc995d00b77f60471b50520d5ef343420"
+      }
     },
     {
       "unit_id": "unit_embercourt_sluicefire_lindworms",
       "atlas_sha256": "ebac015297e86665372feb3c25eaff7ed8d41f263e1e520e667caf60a199c92f",
-      "pose_metadata_sha256": "d799718f29a311156c726271eb517dd96f55634515c35b51a1fba710dee66de2",
+      "pose_metadata_sha256": "b492249567adf477a9102c249b5bbd77718a45b1b43e16f2c6cdde7643846c7d",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_embercourt_sluicefire_lindworms/provenance.json",
       "accepted_clips": [
@@ -295,12 +340,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "e7904bd7b69c41f4f7509edf791747acde1354e739d9238cfb88aa462e1abaa2"
+      }
     },
     {
       "unit_id": "unit_embercourt_charter_colossus",
       "atlas_sha256": "f219c2d8bbb640f6ef93a5e038b35195ae33db061f1f47e42d1c2858abcb5045",
-      "pose_metadata_sha256": "f76a1a2be344e938103d7f9a64eb87ec60319a2e615c3d5f753a0cf79a24a45a",
+      "pose_metadata_sha256": "979ab68b6e2a299ed238b2297683491d814f2f129eba29280b0b2d4bcacb2e2f",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_embercourt_charter_colossus/provenance.json",
       "accepted_clips": [
@@ -311,12 +359,15 @@
         "cast",
         "death",
         "attack"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "a50334e4aba27ea1c99afdb806e1cc8441d62cc1087768d62ef09656c92a1a6d"
+      }
     },
     {
       "unit_id": "unit_mireclaw_reedsnare_kin",
       "atlas_sha256": "64f9e3bce7ae266409da7db7943117732ff6f4492c1ea0286cc5808b12684f78",
-      "pose_metadata_sha256": "12998915d59e67bd505dc1d5ee4dac7a692c7ed896a8f5723f40ef82ac0baad0",
+      "pose_metadata_sha256": "48227751ed1da36b96ae80950cce8fec65356a59b3b71666c4e707fc8770fe63",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_mireclaw_reedsnare_kin/provenance.json",
       "accepted_clips": [
@@ -327,12 +378,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "6c14f0eaecc6a92bb238e33335192b4f63eac710deb22cd5a39279bafc661016"
+      }
     },
     {
       "unit_id": "unit_mireclaw_mudglass_slingers",
       "atlas_sha256": "bd00b1d5a40afbcbdd2180fcc9907c672d4bf685ff8504c8d0f094fc661350d2",
-      "pose_metadata_sha256": "490175e72933e08c6567c65c44f6a606dc7d91e1b245ae71a8ecd4cc3bdac065",
+      "pose_metadata_sha256": "f8f8b367f035736c00beb12ae82b91123a7b34c0f36d91e1108248c59b14c64f",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_mireclaw_mudglass_slingers/provenance.json",
       "accepted_clips": [
@@ -344,12 +398,15 @@
         "ranged",
         "defend",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "6695f4426b11a477251b5129b6fdcea1c7cd05202ce9db56eb99e31475930e0b"
+      }
     },
     {
       "unit_id": "unit_mireclaw_bogplate_maulers",
       "atlas_sha256": "45431af852a454276287ef55b3f62ed0b81c2d4a65cac23c070d45b6940f6057",
-      "pose_metadata_sha256": "a56fdc103f8730e5cf57ec30c612714c5c5f5d94ab9a49941dffbc1c9f1fb83d",
+      "pose_metadata_sha256": "83516caa9c32230de0e7953ce1d0ad4a3ed856d038b7e93f3076dca29514c8b7",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_mireclaw_bogplate_maulers/provenance.json",
       "accepted_clips": [
@@ -360,12 +417,15 @@
         "cast",
         "move",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "d890a1c1f50bf9a61017837aceeddfd6ef8ce0185500dcdee2f889424a6f4f99"
+      }
     },
     {
       "unit_id": "unit_mireclaw_ferrychain_lashers",
       "atlas_sha256": "aa926d3e60bef4c33c9935ad6c3146adedc8f30900fb4b123ac0e8b02026ea56",
-      "pose_metadata_sha256": "7d55f208aecefd865c2f5db902d8570c96c843d9840afa74d3146a37965fb34d",
+      "pose_metadata_sha256": "a5dfc1346807cc46f63858e859953b4861e9e3aaeb025c4cdf6bf5047b5aec20",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_mireclaw_ferrychain_lashers/provenance.json",
       "accepted_clips": [
@@ -376,12 +436,15 @@
         "cast",
         "move",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "c47e9b34874bc3a273596af9eae4008ce974f9909a6e5658591a3255c197dfe9"
+      }
     },
     {
       "unit_id": "unit_mireclaw_sporewake_chanters",
       "atlas_sha256": "3c46465ec4179093420ac1ed7b45a9ec1742827e5589abbdafeafd0ef07d34a8",
-      "pose_metadata_sha256": "1c35e4abae1d7654601eade3c88d58a8c40071552eae6ff5ac4f44c5dad3ed4a",
+      "pose_metadata_sha256": "78b9dbc984aad8119d0e99b7b4ae1f6f0f65a30f96d7adb5dce791e5e427fb09",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_mireclaw_sporewake_chanters/provenance.json",
       "accepted_clips": [
@@ -393,12 +456,15 @@
         "death",
         "cast",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "f95e1b62cb6655d49975d30537233222febbebf0707cb752c714551edf581d37"
+      }
     },
     {
       "unit_id": "unit_mireclaw_gorefen_rippers",
       "atlas_sha256": "800a0ab4a194bab6c1f07c29864fb3625727529dc3c115a346007f5db63fb77b",
-      "pose_metadata_sha256": "a23113d930229d616ef5021f9c0e2abf19ddb4f1315eac5ee3308d072ddf3d57",
+      "pose_metadata_sha256": "a42fe43b6020cc57b6324da9d6dc8aab827061c83c6f19825aac87f477a24a64",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_mireclaw_gorefen_rippers/provenance.json",
       "accepted_clips": [
@@ -409,12 +475,15 @@
         "attack",
         "hit",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "cd4bec019cf35124ab65d6055a153aa1ca97727614d28c0bd7cc902127325753"
+      }
     },
     {
       "unit_id": "unit_mireclaw_drowned_antler_sovereign",
       "atlas_sha256": "9a836e2dc1793efd776c8c9fa146fd9b81098cb7411ab21458b6492fda988c33",
-      "pose_metadata_sha256": "7a3256235774dc4ddfe1285819fd229999255d0ea8f1b217395cb1f6dadaf5a2",
+      "pose_metadata_sha256": "06809adf0c13f24f75ad086d24fd41e00bbaf4cfbfa3fd9f69962c46beee1827",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_mireclaw_drowned_antler_sovereign/provenance.json",
       "accepted_clips": [
@@ -425,12 +494,15 @@
         "death",
         "cast",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "fe0f360f9c7034aff48fa65c93243426daff7c523c0abf855e6016bb9ebe18ae"
+      }
     },
     {
       "unit_id": "unit_sunvault_shard_wardens",
       "atlas_sha256": "5135489a05cd72d2c0af8c9a0de8fabb1a59af3ba2da4d1b9bb0ab620e552b54",
-      "pose_metadata_sha256": "bb2aaa234cd97c198cd39b5068954411a1c35fed8e9219240a3a0a71a939e4f1",
+      "pose_metadata_sha256": "e0fd353d387790d39ed20d0024ba36f516312faf4c1005fa82a90c9309f55f02",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_sunvault_shard_wardens/provenance.json",
       "accepted_clips": [
@@ -441,12 +513,15 @@
         "death",
         "attack",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "013ddfba9f5ed36bc37485fb5d2c077b819ee80b21c9e2e20d4597410570529b"
+      }
     },
     {
       "unit_id": "unit_sunvault_prism_adepts",
       "atlas_sha256": "1a576c247c3cde207fdcef0125f7acdc01019086b9c34a27bd5c509429328686",
-      "pose_metadata_sha256": "c2a06a2168de9d1c65fe6a5cfdef439f6755fd4805f7dde68aba24b0e10d0576",
+      "pose_metadata_sha256": "5574d426979cb9b568495ce925c3092b438b28700a5392d52f484253b51c78ab",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_sunvault_prism_adepts/provenance.json",
       "accepted_clips": [
@@ -458,12 +533,15 @@
         "attack",
         "ranged",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "2afcede7777afe41b4f33a9bbf5b1e31978da87276c2b095f4102ede4d663100"
+      }
     },
     {
       "unit_id": "unit_sunvault_mirror_duelists",
       "atlas_sha256": "05e36bf22336ae4febdc4d548a9bb7ac295effc8990f968d862ad4d7c2df7f02",
-      "pose_metadata_sha256": "6b93f1a232383e13e44e47bd4b7f43486c7ec340e6eda637d796db5c0a1bde46",
+      "pose_metadata_sha256": "fd9478c43cf315239db74f5e611d7548380b9e93fefb4e2d823e628c8d86a945",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_sunvault_mirror_duelists/provenance.json",
       "accepted_clips": [
@@ -474,12 +552,15 @@
         "cast",
         "move",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "27e94ca9b410c92d5ecaac7ca9dc7104912af0f2d793a8a0db544860b10c6c5d"
+      }
     },
     {
       "unit_id": "unit_sunvault_resonant_choristers",
       "atlas_sha256": "247247aeb792c5748cf1b9491497f5521814af60e8779c6391cd01e3732eb782",
-      "pose_metadata_sha256": "cbeb438b26e207eddf4a21971aa7858fccee4136babd1ad76baaa96e605dfee0",
+      "pose_metadata_sha256": "a8431c9ea5d8453963544e88db573ea8963a12ce839fd55079984380238cf875",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_sunvault_resonant_choristers/provenance.json",
       "accepted_clips": [
@@ -491,12 +572,15 @@
         "attack",
         "ranged",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "2aaa594465e308c402e2212002d10708f8e1d92adf1475368c3d6cc9e631dd0c"
+      }
     },
     {
       "unit_id": "unit_sunvault_solar_array_striders",
       "atlas_sha256": "974183aaec3928d12dbff2c743a5fa885c62563b8ca2402a0362aaca11ff1818",
-      "pose_metadata_sha256": "7fe8f59931a3c47e557dbe115c53e7e834e232b4bb148b4a9b7f84f6ce9a8452",
+      "pose_metadata_sha256": "a38336a0d51b100898e57e87e8c1d3c1b28df40a8207e08f559e2562db0253bb",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_sunvault_solar_array_striders/provenance.json",
       "accepted_clips": [
@@ -507,12 +591,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "93f5c104c1a979c4e3d89409b4b6ea99ee359a745a8ff1c612dd065b0f9d886a"
+      }
     },
     {
       "unit_id": "unit_sunvault_aurora_ballistae",
       "atlas_sha256": "a0b1adc5d7b376f08077f4bcc96e264d2018cbcdad20f2f7badcec7737d7827e",
-      "pose_metadata_sha256": "95334d506b84c9045a26061375dffcbb6df9e3d55024ef55c2384ea9e44b9b4c",
+      "pose_metadata_sha256": "2cc259a2b3aa36a8242591e8862df1be553b8ab3a7f16dd3ca8ddb4fd8f2656d",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_sunvault_aurora_ballistae/provenance.json",
       "accepted_clips": [
@@ -523,12 +610,15 @@
         "cast",
         "move",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "8771b9bf162b6331c68f049bade2d41eedad9638f8a6cf5ab41d572953b32e96"
+      }
     },
     {
       "unit_id": "unit_sunvault_daybreak_colossus",
       "atlas_sha256": "14b89bf05bb6710ddfd4fadb4a07e963cc54a31d174e7c13091ad35bbe65f3a6",
-      "pose_metadata_sha256": "106eaea1817ef043d9985d46ef7e9cbbb3c96aa86b454bb64a9dc1e745c4c3db",
+      "pose_metadata_sha256": "f170bb85a99ae709517c02e5a3d30fdebd2be92e11c863595b2df288aacec51d",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_sunvault_daybreak_colossus/provenance.json",
       "accepted_clips": [
@@ -540,12 +630,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "133a41165f954c560453e31d3b518b4c29c62803e17893a5253096a372414d97"
+      }
     },
     {
       "unit_id": "unit_thornwake_seedcutters",
       "atlas_sha256": "e8b15861fd4a973523b0db893b933e1fb9ceeb984258ff11fd11087346ce1bec",
-      "pose_metadata_sha256": "f8f5b53c7ac06382d297bdc4da011e2477e27720f8a6522e8e8bb81d90035913",
+      "pose_metadata_sha256": "e656645361d6d65013629ef0217451e00bf4bc5b2a235711e93103d68bdc2394",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_thornwake_seedcutters/provenance.json",
       "accepted_clips": [
@@ -556,12 +649,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "7e48f7850b3fbd289a4a011f0b6922532af8a76814b2147567064dbd998a38a7"
+      }
     },
     {
       "unit_id": "unit_thornwake_thornwhip_carriers",
       "atlas_sha256": "287cddbb01230aa6579892c1f33f7ddd00a47009f0159982bedd46df689068d1",
-      "pose_metadata_sha256": "83bd4605f50eac67925adc509f42ede580f1b0f0579673545110e6b702443ac6",
+      "pose_metadata_sha256": "6ba8ce96e1e66b99a7ef40d43269e9e4e4b2ad0cda10209b9d29de98024b174d",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_thornwake_thornwhip_carriers/provenance.json",
       "accepted_clips": [
@@ -572,12 +668,15 @@
         "cast",
         "idle",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "e9d46ad0cad78253026e1dbfc4cab38ea254a3d49f2dbcf372b93fba2e16f798"
+      }
     },
     {
       "unit_id": "unit_thornwake_sporeglass_menders",
       "atlas_sha256": "9f0fef7464c61c69aa039ea5aa2f2a07ff7c267cea5bbe26d9c80e0513ec3407",
-      "pose_metadata_sha256": "a6f845672eb665557848d9e25d374f6270fae82665917f865434ddfdc0455707",
+      "pose_metadata_sha256": "32fe79dd40361738c86f39238b6f1801e4e0007a197f6c37b7d16172ee747626",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_thornwake_sporeglass_menders/provenance.json",
       "accepted_clips": [
@@ -589,12 +688,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "c826ca40d9859ea812d2c499a62cc13420888a9588da73d8892676654efe25ea"
+      }
     },
     {
       "unit_id": "unit_thornwake_barkmantle_rams",
       "atlas_sha256": "8cb824d7c67270674c5c30065b2fb90155c53c6ecd730bfea8e82ba85a2036a6",
-      "pose_metadata_sha256": "70a5e9af787bdac46b264a714dbc2a17bd2c582a3d700077b7543479734b4275",
+      "pose_metadata_sha256": "d71417155a8b13bc149c4dd51e1bce813321a76179230529586752a002f826e4",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_thornwake_barkmantle_rams/provenance.json",
       "accepted_clips": [
@@ -605,12 +707,15 @@
         "cast",
         "move",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "87245b9cef2d838c744f578d597d47173b5d45e52f17b410ec2c319612d7a551"
+      }
     },
     {
       "unit_id": "unit_thornwake_stagknot_runners",
       "atlas_sha256": "054f59f086b7ae0c9327238bd7048c5778fafe51425ebe57130947ef2fbfbd0d",
-      "pose_metadata_sha256": "983f7bf35dd97a13f0effb127063b0288b4c42faa9377d32854c6c7343331865",
+      "pose_metadata_sha256": "0e6d795e27f3adb636b1be24fbe659bcd678fb00c98f09c97ddb1907139083cd",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_thornwake_stagknot_runners/provenance.json",
       "accepted_clips": [
@@ -621,12 +726,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "67aaefcd27f41f2dc19ea2d82b7268b02683d07dd15c3ecdffcc8c636a5ebc72"
+      }
     },
     {
       "unit_id": "unit_thornwake_graft_matriarchs",
       "atlas_sha256": "0659a0720bba76041334fe7dee64064faa0ca9d06edd6adabc1469b5a420005e",
-      "pose_metadata_sha256": "8c9cdda7d6f3516219749ad03a7a692336f595ba0c67dfc9515c67d2c09e9418",
+      "pose_metadata_sha256": "70fa6910b1d5a44b6638a6886ea961ba87db30a7c8721d676cc226744cd0c6f8",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_thornwake_graft_matriarchs/provenance.json",
       "accepted_clips": [
@@ -638,12 +746,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "7c7bce0cfaebbc87a77902b737870473530d904eae53bc17736e2b2e96f27962"
+      }
     },
     {
       "unit_id": "unit_thornwake_worldroot_bastion",
       "atlas_sha256": "a3ec392790c81f57b7219d8ec961d43fd573750bca373c83256f475f269dab3c",
-      "pose_metadata_sha256": "5dc4f9632e68be9442badc9931e432711b80ebd350b0fd42d54ac308d52c5eff",
+      "pose_metadata_sha256": "e21df6431f676341ca2fabcf7f7c2b5f7119c7df27e2f666919f206b387a7570",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_thornwake_worldroot_bastion/provenance.json",
       "accepted_clips": [
@@ -654,12 +765,15 @@
         "cast",
         "move",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "44aeaca23fc7f6620766b9f2ae6f60fbf711c39b256964166484fa7402c88faa"
+      }
     },
     {
       "unit_id": "unit_brasshollow_scrip_haulers",
       "atlas_sha256": "c85ed2531de0fcca69c60c52f6b13322bac22e991332c0d02251a92d323d342b",
-      "pose_metadata_sha256": "a5b177495bc7975ea2fae54de1b4109aab0f83e848dc4e16dffb968d01feb678",
+      "pose_metadata_sha256": "634f259e420a42456a8af3afca5532081d4e0a79c14d7c3e5de6c3e096d6b642",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_brasshollow_scrip_haulers/provenance.json",
       "accepted_clips": [
@@ -670,12 +784,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "a414eee99c46b0c32d565fabcecbbc679bd4ac784485e619a08c9e3440351d20"
+      }
     },
     {
       "unit_id": "unit_brasshollow_rivet_hounds",
       "atlas_sha256": "1de1b5eff7d213898f7baca00f1ac79abe5b1b92dc539d119501803105fbeb7b",
-      "pose_metadata_sha256": "b0201c6ffd73b3a7facc7433b525fb7f0d3cb292c3a7bac03d41afb12619bea4",
+      "pose_metadata_sha256": "8f9b1905c7ae97063cce8bb16e91334f432adc342a531bb40b9b99b1be0c9b31",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_brasshollow_rivet_hounds/provenance.json",
       "accepted_clips": [
@@ -686,12 +803,15 @@
         "defend",
         "death",
         "cast"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "a7c4073ae7ba3bff9bfde91a87f7e1c6840758863837721721bca12d8b4835c5"
+      }
     },
     {
       "unit_id": "unit_brasshollow_furnace_pavis_teams",
       "atlas_sha256": "75f069b258abd8e2becb7627d7d79475fd39294aeba1f0da60bc84aff9da5335",
-      "pose_metadata_sha256": "49705bb99b04a10de296e0c8f98298da0e814167e3c231266fe9bd60e9c832db",
+      "pose_metadata_sha256": "ddf008d66f0a6b2522b7edf8d80eb51a1d2fadf269e666c24b4b5debad4ae335",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_brasshollow_furnace_pavis_teams/provenance.json",
       "accepted_clips": [
@@ -702,12 +822,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "065f230d12f5a3e83b8eb7fc35a8f60c3a618ac92a0c4cc18ded416f4ffb8881"
+      }
     },
     {
       "unit_id": "unit_brasshollow_boiler_rivetcasters",
       "atlas_sha256": "1fdb1b5d5c9612bc97404af89dfb0894210dd1cca9c0bb51bec97e3abfd2124b",
-      "pose_metadata_sha256": "8139f6613cf54df0bcb486841d046ad846c63376089ec31e06a657f95491eb23",
+      "pose_metadata_sha256": "d5534e07cb23a281ac431599ccd65e9235401ae008a3f58e20a7aca99dc6e5ae",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_brasshollow_boiler_rivetcasters/provenance.json",
       "accepted_clips": [
@@ -719,12 +842,15 @@
         "hit",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "48e5b99688964f472ae60b8c69d0395e3ab6ec439f8c3b970e5b856fd6cd46bc"
+      }
     },
     {
       "unit_id": "unit_brasshollow_debt_engine_exactors",
       "atlas_sha256": "ccd69388f329e90a4d86d112bcd02bec0fc68eb108f527c280f666f6b7111cb6",
-      "pose_metadata_sha256": "41ee45874edf9d4cd764d1149593ec291ebb19df0f23674b7511630ab5b75dc2",
+      "pose_metadata_sha256": "b2253a78cf946f264809d6aa1fdf55951a645413df5aef02ab266f127c97b092",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_brasshollow_debt_engine_exactors/provenance.json",
       "accepted_clips": [
@@ -735,12 +861,15 @@
         "hit",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "53f747bdffada1e2646cd8579051dff4a08cc643cb5bb1d861469884ae5cf595"
+      }
     },
     {
       "unit_id": "unit_brasshollow_crucible_crawlers",
       "atlas_sha256": "2bea90725af375d54cd224cac2a17099d87da5098627586a673fb6b2a9085e5b",
-      "pose_metadata_sha256": "bd89844efbff112057a846e8aad94c6442b23cfc8b89b92c9a0c45cfe42fc2ad",
+      "pose_metadata_sha256": "64e0db1a8b185079154750873949f18145c4915d667d621bfbd0940b048fc991",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_brasshollow_crucible_crawlers/provenance.json",
       "accepted_clips": [
@@ -752,12 +881,15 @@
         "hit",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "8d3eb12d213f58db8cb0e309dae3ba6231a971bc911c336d9b4a23c2623b5d96"
+      }
     },
     {
       "unit_id": "unit_brasshollow_foundry_saint",
       "atlas_sha256": "40f47fa21f2f0be0d38c4473ccda4d36e027e417f0fc0f51929cf4bbb8a1e8cd",
-      "pose_metadata_sha256": "6ac5c6d9abb4035a3dba3fa40b472c761efae6c68d0290900d67969dd81bdf0c",
+      "pose_metadata_sha256": "2d6d39f5372918553c4fb43b561c649fce10945073d783d91a140c5757829bc3",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_brasshollow_foundry_saint/provenance.json",
       "accepted_clips": [
@@ -768,12 +900,15 @@
         "hit",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "f2890fe182e725b8116a37a128ecb595ae2396541592e3ce2c037855733fe179"
+      }
     },
     {
       "unit_id": "unit_veilmourn_bellwake_oars",
       "atlas_sha256": "ecb9cf78426853b46613a0d3a417f5d661ddbab80640d7ca959079954101138f",
-      "pose_metadata_sha256": "a074f6c16fc5752d7e1e9ee58a2e5d7f25bec059a63ae6f5a4d0c17f29dd0a1a",
+      "pose_metadata_sha256": "c6c69680680dd777843cba17ae030999c3c1d269a0bc4e9065d5616cd9cc7c6c",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_veilmourn_bellwake_oars/provenance.json",
       "accepted_clips": [
@@ -784,12 +919,15 @@
         "hit",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "4efc8ed309415101decbefcd95c51f14d555ef0d79325b11d15d02e2772bea36"
+      }
     },
     {
       "unit_id": "unit_veilmourn_mourning_lanterns",
       "atlas_sha256": "c7e9e5ad30606ea8c7125b55fe8dab3c0e5c99bd3fbb84de50344f9fac8c307f",
-      "pose_metadata_sha256": "f46035757beb8bb76eb098c0f802c70bf5dedb0330d242ffa365dbae841ffc37",
+      "pose_metadata_sha256": "669fc896e9615373dcbb04028d60c4934dac50d007bae8f9d87c3d59e83ee361",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_veilmourn_mourning_lanterns/provenance.json",
       "accepted_clips": [
@@ -801,12 +939,15 @@
         "hit",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "b4b13363e2b1ba9adf19fcc40a57442a480208171474b5e7905dd3b603921523"
+      }
     },
     {
       "unit_id": "unit_veilmourn_maskglass_corsairs",
       "atlas_sha256": "e25179d5dd51f695bee0afb01e8384fb7b27e57503baf13292d6eadbd14aa2e9",
-      "pose_metadata_sha256": "8cf72c64f648d648bc75b325fc723e0fa34c8a07a663bb03a71bcfa18650bc79",
+      "pose_metadata_sha256": "6485650a882fa43b5f2ce8d9141d5e1c7c6427e80761ea692927f39906f78014",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_veilmourn_maskglass_corsairs/provenance.json",
       "accepted_clips": [
@@ -817,12 +958,15 @@
         "hit",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "610c29127c4d6a9ff9eaaebb9069a25bee87a6ba6cb6f47f07ffacf7cfc8062b"
+      }
     },
     {
       "unit_id": "unit_veilmourn_undertow_harpooners",
       "atlas_sha256": "db5b082b8eb5b01b3846d165a9bd7cb82357785fe9e59c4759a4d1e3e892fabf",
-      "pose_metadata_sha256": "b5553db3f08ce5aaf333b0aa9405390af0601ab8b2d2b6a3e08626f8126d091a",
+      "pose_metadata_sha256": "ed42bac956a36f3a535879a1464e64fd219cfe0ba35989f932a1686f92d4118a",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_veilmourn_undertow_harpooners/provenance.json",
       "accepted_clips": [
@@ -834,12 +978,15 @@
         "hit",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "e12ae7632e7dde50ea7e36b5cc71ad200c66fa037f6e359aa2cf885cd7c8f4bf"
+      }
     },
     {
       "unit_id": "unit_veilmourn_obituary_scribes",
       "atlas_sha256": "dccba822e9bf91f963e1c38c5a474f1f98c406a1729293b3f45bb817b3e7912b",
-      "pose_metadata_sha256": "0d8b4231ffc68bb7a431ca6a46eac72174cad4a19f25b9824e79f38fb0055a1a",
+      "pose_metadata_sha256": "140da188cb39a3cdfb83a06752d9db7c525a561129a801e021d24add09f671f1",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_veilmourn_obituary_scribes/provenance.json",
       "accepted_clips": [
@@ -851,7 +998,10 @@
         "hit",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "7dbbf562e75a49db5c36ce609934fa385c2c5d6e46fd2e770036c50f9200c81c"
+      }
     },
     {
       "unit_id": "unit_veilmourn_mirrorkeel_reavers",
@@ -872,7 +1022,7 @@
     {
       "unit_id": "unit_veilmourn_fogbound_leviathan",
       "atlas_sha256": "1dbbc24a6f9af11c8e8dacc85569fcd181e0bdab6a31b6cd6e5bc0a6438dcac3",
-      "pose_metadata_sha256": "faa74c1938a754e886d3ce90efe83815f1e43a7c8de14b1d1d22807122a5035b",
+      "pose_metadata_sha256": "02bd7e96e0df7a1f51fdd988e444bf0ba61b7a77005fec0d0d3ce4da95ea3cd1",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_veilmourn_fogbound_leviathan/provenance.json",
       "accepted_clips": [
@@ -883,12 +1033,15 @@
         "death",
         "cast",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "ec58293531d783c9590ff782be78fef2b042b1b69747a5905edea39d8877c6d6"
+      }
     },
     {
       "unit_id": "unit_embercourt_cinderseal_bombardiers",
       "atlas_sha256": "81b5de85b5ebbc34bd58b990c7fe8e9263397d5f519898107c8d34f8b8c5791d",
-      "pose_metadata_sha256": "8020e0c769cfa44650d95264e14c6a3a0f242d60526185ec716e0b618017f1c1",
+      "pose_metadata_sha256": "e7426fe5c8891a72cf925059c91f83059a238c76d47fb1474b6a6395b0f3a01c",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_embercourt_cinderseal_bombardiers/provenance.json",
       "accepted_clips": [
@@ -900,12 +1053,15 @@
         "hit",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "9e3a9e1135d43b4c1e0fef887fe10d9ec6127f178329f07912e069a8a1ea9f24"
+      }
     },
     {
       "unit_id": "unit_mireclaw_mireglass_reedcasters",
       "atlas_sha256": "ac6b229df6fc7eeb08fc75cd98e53a885760d2f2e7ec20db1b61f4b6568a9f2f",
-      "pose_metadata_sha256": "274da79aa9db63c0521f55c5464e0184a55367f26d3fc1b05f5b232b2f96087c",
+      "pose_metadata_sha256": "8028052d3a15aa3c5e6225948f5e6fa917c3ddae351558e67d14f3658e6c753e",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_mireclaw_mireglass_reedcasters/provenance.json",
       "accepted_clips": [
@@ -917,12 +1073,15 @@
         "hit",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "577b294b458469c86e02805bed9cfbbed92b848ece2afcf098e789859ef4eb4d"
+      }
     },
     {
       "unit_id": "unit_sunvault_noonfacet_sentinels",
       "atlas_sha256": "0e7e97870c4b74c70486fc14ff13e27bf2051e087d51ef61ebedbc7233ef8fb2",
-      "pose_metadata_sha256": "84702d096382270cf5b9871adc4e99b8229a50cd6ee05082a463959118c82062",
+      "pose_metadata_sha256": "a0b75ae8e78f794f1cc32b16fec3361b55cd0f092f32129b852cc6c71c59c3ac",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_sunvault_noonfacet_sentinels/provenance.json",
       "accepted_clips": [
@@ -933,12 +1092,15 @@
         "hit",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "345b708d2e3e30f2770412600118bec9c9951adcd156908c63458029d26d15b9"
+      }
     },
     {
       "unit_id": "unit_thornwake_dawnseed_bolters",
       "atlas_sha256": "0361f69860e16561e15cfd6c9619628c76cc192d8f46698bbfdc290fa5c7449a",
-      "pose_metadata_sha256": "4c8664a95b20c4a1be7c62a414033b29691edc701b6ab33026d44da6b0e837e8",
+      "pose_metadata_sha256": "80fa68b60a71078cfad6d97f08fb1a63b9f1746002a7c9fbdf1438e6812cd4d7",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_thornwake_dawnseed_bolters/provenance.json",
       "accepted_clips": [
@@ -950,12 +1112,15 @@
         "cast",
         "attack",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "6219bd45327bcc31bf065617d11ee4ab7ab1d32b1d4a55a3e0c81744364cdf44"
+      }
     },
     {
       "unit_id": "unit_brasshollow_gaugeplate_bailiffs",
       "atlas_sha256": "4ab30f602d8ee69f9085dda6c8f5b3d33dcd150aa21aaf0e26d93498ce048e0c",
-      "pose_metadata_sha256": "ae576af3079d93e9b33abad940054e6e85ebf188ca99e6069f6535aff26bee74",
+      "pose_metadata_sha256": "83226c150367e463f1a5fac2cb183cb0959e5a7d4fe6038f7cd5277a0caf6938",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_brasshollow_gaugeplate_bailiffs/provenance.json",
       "accepted_clips": [
@@ -966,12 +1131,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "669e6229132ee179cfefae16674d01e40c08ac587a658095ed6c036134211801"
+      }
     },
     {
       "unit_id": "unit_veilmourn_tidehook_deckhands",
       "atlas_sha256": "3b3c8019e37d74909e52c1fe512320f244cf99f427f553f1af479190270620d6",
-      "pose_metadata_sha256": "f272607068dbc3439dce7fd409b872fea16e97a207af000a64642bd353ab5b12",
+      "pose_metadata_sha256": "0855c7d0c2880507817c0ff5c62fede36fe1ac81c4466b38743610e9f6a78bc5",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_veilmourn_tidehook_deckhands/provenance.json",
       "accepted_clips": [
@@ -982,12 +1150,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "39135b1e93b0ca2affd73f222a122bd2c53d25482297dfe5adb88c19ef16cd05"
+      }
     },
     {
       "unit_id": "unit_neutral_roadwardens",
       "atlas_sha256": "715569578cc31277f4fe0db278687cc4fb2a420df8b346ec42e32441079eba9e",
-      "pose_metadata_sha256": "1fd7f6dc544da7e4a5923e59887a99827f75b26ba0530abc74ce7e0268afebbc",
+      "pose_metadata_sha256": "61ac133ab34f3486ee5d6a1319e88f480ee151591bbe29527ea668131e158c01",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_roadwardens/provenance.json",
       "accepted_clips": [
@@ -998,12 +1169,15 @@
         "death",
         "attack",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "551498aa72bc262aadbd86b88ae779cdb4ea49401f99530e5a7deacd730b19f1"
+      }
     },
     {
       "unit_id": "unit_neutral_hearthbow_carriers",
       "atlas_sha256": "2c4d8090122b345a32b6f073354d91eb689ab295af19d6e079e58d0eefd031ab",
-      "pose_metadata_sha256": "c049b6d1df434b6f47f67d8068d382f6ad2619f6e7b1d7a4d35ceb3f245da22f",
+      "pose_metadata_sha256": "755e2f3922dc79282ed000d32be6224c8936a5548c475712ed0b0bad618b5c87",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_hearthbow_carriers/provenance.json",
       "accepted_clips": [
@@ -1015,12 +1189,15 @@
         "death",
         "ranged",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "12986b694bbccdfec4851bba5d36a9b90e636530018dffefd80278cafcc7fc71"
+      }
     },
     {
       "unit_id": "unit_neutral_fenhound_runners",
       "atlas_sha256": "9c5a3df9d867b03359b4385a717c8acc5f9243ffb9de275bfb6eaeabe61b81e0",
-      "pose_metadata_sha256": "bc0a36016e7aab63591c2469a1cd86f36cc086e2c8c631959f38e15c9e3dd8ff",
+      "pose_metadata_sha256": "7c653601bf2bb81ce860321afd875e4a1481a02db25869eb00792c3897c41aa2",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_fenhound_runners/provenance.json",
       "accepted_clips": [
@@ -1031,12 +1208,15 @@
         "defend",
         "death",
         "cast"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "6bd59e2b7a4364d4ada2cc683aa330123ff7a2374420f68b44c869b6f0ac5b2b"
+      }
     },
     {
       "unit_id": "unit_neutral_mossglass_sentinels",
       "atlas_sha256": "08090aa76fe4f4f1820d56b1222da514d2cd8651eda8e5b6fd529374b31cc260",
-      "pose_metadata_sha256": "b1a346bc464f48d2ce8792b99c6b4ca5e9866cc0323623167f82ae05dff1d06e",
+      "pose_metadata_sha256": "b33c663f2d1737f06ec833001e8756fba5fcfacc2ea62cc745c7587d3a2a4e51",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_mossglass_sentinels/provenance.json",
       "accepted_clips": [
@@ -1047,12 +1227,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "6796bc6c5953268a27e5067bf354645d534cb0a534699feff89fc21888ed613d"
+      }
     },
     {
       "unit_id": "unit_neutral_cliffhawk_wardens",
       "atlas_sha256": "e3d9cf5f54676acf78cdafd945bceeb1838a781e7b0e8c7f60b93865e819e3cf",
-      "pose_metadata_sha256": "58f98f5d4912448cbdda0178cf605d86576c1ddbb90938c168a458239e5882cf",
+      "pose_metadata_sha256": "efa61665bbec2ddea465afb8e55d8c6ef0b3d9512bb60e60497b1f4a34268c06",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_cliffhawk_wardens/provenance.json",
       "accepted_clips": [
@@ -1063,12 +1246,15 @@
         "hit",
         "cast",
         "death"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "7685ab47438b9a99224503c8a6462034b4a310a77a600879cafaf927c4f315e9"
+      }
     },
     {
       "unit_id": "unit_neutral_windglass_slingers",
       "atlas_sha256": "ddeaa4da7d089e29030ed56d27d90a3edc068bc5a3049c25307a5379f4dc0439",
-      "pose_metadata_sha256": "97058b2a215c2fe3cd974ff4a7fa4e839c26afaf143ca19b67de92e15886e610",
+      "pose_metadata_sha256": "b04bcf286a243bebd05047ecfc15289121d460a1f5fa8df9405e890b1da42d7c",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_windglass_slingers/provenance.json",
       "accepted_clips": [
@@ -1080,12 +1266,15 @@
         "cast",
         "death",
         "ranged"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "5f4ac006f52710e8ef9e58c62db6da29c9186046198c5f69d19931d43d6c2a39"
+      }
     },
     {
       "unit_id": "unit_neutral_reedbarge_poles",
       "atlas_sha256": "f7a0926ee467508bc689600ae3c950ec27979998722072c73a5bcb524fb7f1ec",
-      "pose_metadata_sha256": "8589c5817d27306f20d10263e2a2dbfd08a457e2245871ba760ec1dae5113fb0",
+      "pose_metadata_sha256": "525452e289091c08e0d697d09099a1f7eb00f85cc9b090e2583cf24f0c2a9cb3",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_reedbarge_poles/provenance.json",
       "accepted_clips": [
@@ -1096,12 +1285,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "cfadf1580d2c51780b21103f4b2f6b4e7a2737df2f78a9041e606563f1dfd939"
+      }
     },
     {
       "unit_id": "unit_neutral_lanternet_throwers",
       "atlas_sha256": "83e56f799abfd1f4fd2168e98db544fbd9b41667adcd313da7d8824940e40b5f",
-      "pose_metadata_sha256": "7dac2c55072da8800676a7139b2abcf1a3b35914e685a00b1317d53805090864",
+      "pose_metadata_sha256": "11af01ac85e7ec96cc4b57c18692b83c188979bb022fca3a59c5ddafebec15cc",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_lanternet_throwers/provenance.json",
       "accepted_clips": [
@@ -1113,12 +1305,15 @@
         "death",
         "ranged",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "ec04a052a2ff6662bf75a16aa86ec7037e55aedb566fc3726b817c9cb2152eab"
+      }
     },
     {
       "unit_id": "unit_neutral_glowcap_bulwarks",
       "atlas_sha256": "ffd8279c479f5817ed87abe1c1ed590bc36853c6a70bdd6d3bcf85212a320c01",
-      "pose_metadata_sha256": "37996bf089103e4e87240690be579d835951f08b85aa319167004d6ae6aecbda",
+      "pose_metadata_sha256": "367d264f8a48644c03497704a2c5ddfc82294fe6961626d1aa7917ed94551c40",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_glowcap_bulwarks/provenance.json",
       "accepted_clips": [
@@ -1129,12 +1324,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "4160de79d182166aa153743e533848b0d2244ebc58be42e036d664b7c6c5805b"
+      }
     },
     {
       "unit_id": "unit_neutral_sporelamp_tossers",
       "atlas_sha256": "1c1a5c0a72d1c001a18b26e87c681002c5e948de713da82c15e0ee1332401183",
-      "pose_metadata_sha256": "925b21748069403b28f2309627c56fcd9a4469f733a905a9d10f77752be9c56d",
+      "pose_metadata_sha256": "a79d0d9ab959057d777ec9190dbdb6d3a36e223f8bdd9cb9ab49489bfd1a3cce",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_sporelamp_tossers/provenance.json",
       "accepted_clips": [
@@ -1146,12 +1344,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "1ab473c50c685db81307a5dc11cf74e2d03326a02984777af8ecb3cfe7c1bc5c"
+      }
     },
     {
       "unit_id": "unit_neutral_dustjack_blades",
       "atlas_sha256": "dd74e27434551cf009f7144ef8d87e6e77f71a4eed74ad26520ab27e00fc4c8e",
-      "pose_metadata_sha256": "3655842fe1e215d520449456ffcd09327f10aa90a7537afd37e26e465e7c77a1",
+      "pose_metadata_sha256": "bfc28705316813a5fc60abb5336bffd35f017fee2c9e49df5f708e6b68723ba1",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_dustjack_blades/provenance.json",
       "accepted_clips": [
@@ -1162,12 +1363,15 @@
         "death",
         "cast",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "b48cde9534e4d0e6c37e78994d11b961fdac11ea9a5f4945ab4db8b7a09a4828"
+      }
     },
     {
       "unit_id": "unit_neutral_scrapbow_teams",
       "atlas_sha256": "f221f3da9f82434703ab196d926f7a9fdb79f9533d2b8c6b220bf41cbb1e37ed",
-      "pose_metadata_sha256": "7beeed92b8d5bc4179d0f9b49753fb7bf46623e3fbb67f1002998c2d0a39bf02",
+      "pose_metadata_sha256": "4560dcceb087323fc326f8625c34cc958d451af18fb221a8e8d9beab45dbf474",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_scrapbow_teams/provenance.json",
       "accepted_clips": [
@@ -1179,12 +1383,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "3dfd32b04291faf0cf83d836b47ca8ca1c3f53837f252b911c2f9980ba50c2dc"
+      }
     },
     {
       "unit_id": "unit_neutral_kilnward_mallets",
       "atlas_sha256": "e5126de0035fcdb411feb63ab9f17dab776500895b998d2afaea6105086d05c5",
-      "pose_metadata_sha256": "ca29284e5422ee8fb52ec533c30dda7c2b4b3252fe53c31623673c5b0976a563",
+      "pose_metadata_sha256": "7cea7986b1eab95abe08a6403df3470bb26c0ba5c72fb98d997e6d8059bd410b",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_kilnward_mallets/provenance.json",
       "accepted_clips": [
@@ -1195,12 +1402,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "5d4babd7cbdd6822054d24992da2cdcd76854a8eccfad1bf11a0aef697a7353f"
+      }
     },
     {
       "unit_id": "unit_neutral_cinderpot_hurlers",
       "atlas_sha256": "59624160a0e857dae0b93c386594b2cb55619704ba5fb0e3ac68306c6649691e",
-      "pose_metadata_sha256": "878dd1965daf846b95dd2183e19a3435e0c9eb16634a2a190ae5c1c5ed35a163",
+      "pose_metadata_sha256": "121e3bb9c2cc828985ff239f834b8b6e4245fcebfd5e59edb9aa46946b1aa8c1",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_cinderpot_hurlers/provenance.json",
       "accepted_clips": [
@@ -1212,12 +1422,15 @@
         "death",
         "ranged",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "4ae4e346d4894913357b4a8b5b16874a323f78af9ac2d1bf4539f3d0c774c21e"
+      }
     },
     {
       "unit_id": "unit_neutral_frostbeacon_pikes",
       "atlas_sha256": "ef4b430ec0db7780a72348050e161f8aad70a7dc93a8fbaee62ee37e00a74834",
-      "pose_metadata_sha256": "08347a7307ea91f020999ae461f7a0116ac5e7779f272bdd7d7775ef2c77fbb8",
+      "pose_metadata_sha256": "cc723fbcfa0f7bd53820f5d0c8583634a682691a58c820de191e0c853983fd98",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_frostbeacon_pikes/provenance.json",
       "accepted_clips": [
@@ -1228,12 +1441,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "d31f734d820542be982397318b14965e909a0d22d9e34fdde7ae5a7f80b0127e"
+      }
     },
     {
       "unit_id": "unit_neutral_snowglass_markers",
       "atlas_sha256": "a417971ea425ec0a77dd353d5e3d2e94a52171affefc5868da1703ea2abbb2e1",
-      "pose_metadata_sha256": "a863f173e15c06aaa795332be0ef3bddb7f86a78cf3e284d911e8b23cc8678ac",
+      "pose_metadata_sha256": "bf019e5fe4a226019634acc8611e70040dfd39058be3a9e8092a4b2dea25038c",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_snowglass_markers/provenance.json",
       "accepted_clips": [
@@ -1245,12 +1461,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "2f26791752dbdb12b137ea43b607a9621fd326335643c48ac054723fbc6c2a2f"
+      }
     },
     {
       "unit_id": "unit_neutral_orchard_halberds",
       "atlas_sha256": "bc21a534f24ac924f6b30ce5166878ac84d222d91797e1eb6f643b97a8c6a81a",
-      "pose_metadata_sha256": "934d2400751be10c58c9822cc2d2c74149ec3b89cb01cefddcadb6320205e259",
+      "pose_metadata_sha256": "47b735100a205f390534c6fecd1240da7677711d6667ad6bc033cd7d47574b28",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_orchard_halberds/provenance.json",
       "accepted_clips": [
@@ -1261,12 +1480,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "dd19480ac37e9b6d9e1fb4e81378cfbae6fbb3e0b6a7bcd21c2e511dd050a3df"
+      }
     },
     {
       "unit_id": "unit_neutral_millstone_slingers",
       "atlas_sha256": "0029bf4d7048e8f9ca95435c4d69ca85f8f3e8fb93aeece01275c8c75d6cd3ef",
-      "pose_metadata_sha256": "80695ef49116929b4ef96a8a289c26e197efe815df472d9217f125533daa7cef",
+      "pose_metadata_sha256": "e6567549950357ebe87362d229c6e8e59f106ed2216438677467ce86cec6efc4",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_millstone_slingers/provenance.json",
       "accepted_clips": [
@@ -1278,12 +1500,15 @@
         "cast",
         "ranged",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "5b2934172f3885fb9a4c67700d4a42f085609dca02ea0127e26b6bb6a2144846"
+      }
     },
     {
       "unit_id": "unit_neutral_hedgehook_watch",
       "atlas_sha256": "a3cbac0b3e587985fe61c7692e27eec22befa251046e9e6d14d0c164a61433db",
-      "pose_metadata_sha256": "6a95a3fbd652d5999d13f8bce69a63275d7590c04d043c864761e34184ba1526",
+      "pose_metadata_sha256": "91651681bd95e5a1b475c2849b022261e01634290b343ebfc4ffe31e993bbd1a",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_hedgehook_watch/provenance.json",
       "accepted_clips": [
@@ -1294,12 +1519,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "2e228ade65d253b4080b17a40a0e14f410f01664e4feb9fe4d093fb75a478aa9"
+      }
     },
     {
       "unit_id": "unit_neutral_thornbow_scouts",
       "atlas_sha256": "f594ffb4cc484549044b28b0f27442322f910afd89ec5c4a82fb2188c2b674ab",
-      "pose_metadata_sha256": "40389fb4dcaaeba5b632bae8fa8e42a4eebb7d8c0bb6502032385dcacd165246",
+      "pose_metadata_sha256": "668e5cb6aa13a56351c8019d39b10f2932ad4b3652b1bef09c3d48720725356e",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_thornbow_scouts/provenance.json",
       "accepted_clips": [
@@ -1311,12 +1539,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "a8c45dac2c5679641aa4eea7bc1ab6b0b28e82cfb1d8764ea57fe7a631f4bad5"
+      }
     },
     {
       "unit_id": "unit_neutral_tidepool_cutters",
       "atlas_sha256": "d2c1313c4385c30823773bf7d30af1fa9e8e839567158e0b0dcafe9069cc2111",
-      "pose_metadata_sha256": "265edf8ea9fa2f454a151077769bc0ae6a165e23a7ac1cddc079049e3f15f0e4",
+      "pose_metadata_sha256": "c2a3eec57e86b2ee77c5086a635662627b8fba44d56312c07f96f0bbbf9d86b4",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_tidepool_cutters/provenance.json",
       "accepted_clips": [
@@ -1327,12 +1558,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "39a53a3fcfc1c26110f9801992eef42d10ce1ef64f5c4e431fe02f89e1b13094"
+      }
     },
     {
       "unit_id": "unit_neutral_reefbolt_crews",
       "atlas_sha256": "bbd6c0a7a6fc74302293330332b8b5ec01a5c679763337743cf4701d939e7949",
-      "pose_metadata_sha256": "6cad5662b5381887c4f18a478a26419d3238be16c55c17ebfc6d5a0a673383ea",
+      "pose_metadata_sha256": "e8d5278414e4b4903586e1a7edd54e15811fd998ab8444acc9a7800203708bd1",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_reefbolt_crews/provenance.json",
       "accepted_clips": [
@@ -1344,12 +1578,15 @@
         "death",
         "cast",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "d38581418051ce7a48490179ea4348686e957fb5db75602ae71028caba30d946"
+      }
     },
     {
       "unit_id": "unit_neutral_switchback_pikes",
       "atlas_sha256": "d678de5c992efff728c9794a444b7d7d5a066e920833fb0dc1593b144bda50c1",
-      "pose_metadata_sha256": "96dea14cfcfa234f28f6cd118dadd91af68dbaa211b704a32caff55818600a7d",
+      "pose_metadata_sha256": "f43871c65307826ce647c7652404c70659281003d621824f39a9bf6da25e2411",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_switchback_pikes/provenance.json",
       "accepted_clips": [
@@ -1360,12 +1597,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "53eec3621da7fd1c9843206e12d49b850d25d03ace66a00096c203e15d8261cc"
+      }
     },
     {
       "unit_id": "unit_neutral_cairnshield_porters",
       "atlas_sha256": "960a1aeb477d2782b21a120bd0f2b513578d8a84037edff05eff46d7490f5de9",
-      "pose_metadata_sha256": "734230531d7eea7781fa15d3b35cf2884e0e037308d92a1dea96eb1be7fdf745",
+      "pose_metadata_sha256": "b8671b383fd70fe3185e701f1279afafa656f7c39243ed53ca6b280ba9392f2c",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_cairnshield_porters/provenance.json",
       "accepted_clips": [
@@ -1376,12 +1616,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "6b8c3789dde1cabd13fabb1a7d3c11c76135438dc9842a6df18367d25dc27d70"
+      }
     },
     {
       "unit_id": "unit_neutral_saltpan_bucklers",
       "atlas_sha256": "c6acb269e70a1db61da4295d9d83802ea026529f676cd0da5fd177e8129725f2",
-      "pose_metadata_sha256": "9f0b18b9cb6802826472baefcf6b816ef838385a8d44d9b2ef432e3f04ab4686",
+      "pose_metadata_sha256": "efdce5ac0b8b6245ffc87cab39a7a7def55ac66294da25de9f6ec3b75c0a9bd1",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_saltpan_bucklers/provenance.json",
       "accepted_clips": [
@@ -1392,12 +1635,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "148784d7a2f0309029a73a1a454f4cfbd646f3bf9d0126ab8207fb0cb108c12c"
+      }
     },
     {
       "unit_id": "unit_neutral_suncrack_throwers",
       "atlas_sha256": "b0180a3b1954238be067986c0ff4bd19e968700e865613d53e28d4ef350054e4",
-      "pose_metadata_sha256": "a75a2382d909f1d98b4259d9f3aa9548866f4b915a0817d8c048a52c4aa0ee26",
+      "pose_metadata_sha256": "c8e0d85a88fb5caff078cb75a6bfbb03c5b296b56e97b6104b0c2115493fe6b4",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_suncrack_throwers/provenance.json",
       "accepted_clips": [
@@ -1409,12 +1655,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "e2bc158ac356c8738d08da4b8f222f2e6ecdfc86e6a2716b2d5f84275519230a"
+      }
     },
     {
       "unit_id": "unit_neutral_sumpstone_guards",
       "atlas_sha256": "30c7fe8a4309b218838484e2a2e82ecf49f53848b5908a9db4d5993a173d6ae4",
-      "pose_metadata_sha256": "7417fad56fa02be4f7f97658afed44cf23b6d736799e5ac8cc6f9c25c08d1636",
+      "pose_metadata_sha256": "71de6528c026f4c2451a0e5a91eead895ad594bd197d53037d374eafd02c29b4",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_sumpstone_guards/provenance.json",
       "accepted_clips": [
@@ -1425,7 +1674,10 @@
         "cast",
         "move",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "9116a443979fc32272cae5db6f0ccbc1e9fb24dff68082820c214fefe0f220e5"
+      }
     },
     {
       "unit_id": "unit_neutral_echodart_casts",
@@ -1447,7 +1699,7 @@
     {
       "unit_id": "unit_neutral_icehook_trappers",
       "atlas_sha256": "54db14dc79694689770f6f3be6f5ad9a70a2543549ea0bdb7f9a7d4ea1c37b4a",
-      "pose_metadata_sha256": "93325484b7c1edc2b89a28e334986642a006d365aef03009d4badf8edc736311",
+      "pose_metadata_sha256": "712ba03784bb7179f7c1958a62b538856e18ac287ab407f7403947df432bc674",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_icehook_trappers/provenance.json",
       "accepted_clips": [
@@ -1458,12 +1710,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "07d09ffc8caf4bd143ca5e897c80faa8d01c3337bf26e5e5dd95798ea337ccfa"
+      }
     },
     {
       "unit_id": "unit_neutral_whitepike_keepers",
       "atlas_sha256": "d7b34a3ef35544e4e077c029e67cdc399dce625d20ff71d62b5df79d9b4b7c1e",
-      "pose_metadata_sha256": "4036dd651aded18537f59f2acdbaae58b216b528ddb260ff5cc13036e62673bb",
+      "pose_metadata_sha256": "25ff82f6e26ee38ac45eba04c3a990a795ab0c70d48b40f6ee22bb38212d76fd",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_whitepike_keepers/provenance.json",
       "accepted_clips": [
@@ -1474,12 +1729,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "7b474e9c7998ae2cc30f9bcb12b47c1350f2ab02ad72549679b98becd7712ad1"
+      }
     },
     {
       "unit_id": "unit_neutral_scarshield_veterans",
       "atlas_sha256": "dac7f1767b480f9bc9421230e60abf455559ff6239b5dc72d3dab4c5b1133c57",
-      "pose_metadata_sha256": "faba58be44e9a395acdf239a7c1429b7ddf952d867c90ceeb63c1058a83f5c45",
+      "pose_metadata_sha256": "5da9c8e83600a9a5ec82e20971fa69f3165a27fd32ed1cbf1e76c7eea496b0fc",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_scarshield_veterans/provenance.json",
       "accepted_clips": [
@@ -1490,12 +1748,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "c9c0b009ab77efc2f2f5837bacb1205adffc26dd242b5da977eecf4f30833350"
+      }
     },
     {
       "unit_id": "unit_neutral_ashdart_stalkers",
       "atlas_sha256": "c5d2ae397f8cfa78287990e92ac3dcd4832a4a501ed3a06a2e1d55c880f639f6",
-      "pose_metadata_sha256": "486f5b6a18b7433dbd8ee85d25d1a2b6be25eb8050b79f31da2490d1c4312348",
+      "pose_metadata_sha256": "80dd9925188953c32dd1c6a876a8b4b9fa5c118336ce401c7c3e58c6dc13cafe",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_ashdart_stalkers/provenance.json",
       "accepted_clips": [
@@ -1507,12 +1768,15 @@
         "cast",
         "move",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "68cd8c5240bf4cd91945d363284e4c95ca60243c0b395cad9f48b4fa50e3a052"
+      }
     },
     {
       "unit_id": "unit_neutral_greenbranch_cudgels",
       "atlas_sha256": "f6b7e0fe0f177e811829c0a8ab51d768a463bae392614ea898793db9920c6b00",
-      "pose_metadata_sha256": "084c3dec18f1598e6fd4c931919bbddbe75bf5417db3fb82f29b625acefaf163",
+      "pose_metadata_sha256": "2fc20e8178f2c417a1212dd9e07eb77fdb37b4a1c4eb206b801633e609c6fa5e",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_greenbranch_cudgels/provenance.json",
       "accepted_clips": [
@@ -1523,12 +1787,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "17d61a299a61f402ca338de0ee911efa81d52a322ff6a1a257d851d0aed252c1"
+      }
     },
     {
       "unit_id": "unit_neutral_sapwhistle_callers",
       "atlas_sha256": "4a1fb6e4b499f85124ad07e72449ba153bea1f494173a16839ed35d67754c09f",
-      "pose_metadata_sha256": "d663e648b843def18f7265c0f0bf97b0bc1be36d9774b7435a65a46493fe8487",
+      "pose_metadata_sha256": "2bcaeb901fb905641b424f54c1ff2663586ff8af0c19e78e968cc9a97d77cff9",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_sapwhistle_callers/provenance.json",
       "accepted_clips": [
@@ -1540,12 +1807,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "c19f36cf401cacd46772729436dcb0445f73eb97873442dfccb48c0b53bceb12"
+      }
     },
     {
       "unit_id": "unit_neutral_harbor_polearms",
       "atlas_sha256": "fdfe39ff6b1112ec08862980b95f5e0a2d4e660c4d14a9ab3960840c99bdf3c3",
-      "pose_metadata_sha256": "2f8d56b2aa709836a7095a2ba14ebd4091800d51608bf09209ae7b136a47b4a7",
+      "pose_metadata_sha256": "0ef265bdf103f02c28792ec20856af5225df8a26145582be9198890535630692",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_harbor_polearms/provenance.json",
       "accepted_clips": [
@@ -1556,12 +1826,15 @@
         "attack",
         "move",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "3b8c5775c2413619c5b8ad2624c4d17d9adfb9b09119ca07141f6796698e2bf7"
+      }
     },
     {
       "unit_id": "unit_neutral_flaremast_crews",
       "atlas_sha256": "87470e228635aa94ca155a6e974ef0f591a547fcad815ad692ecd1d68200f088",
-      "pose_metadata_sha256": "2ad2ce0ab5fcf8e2aff2564c31b07d0edc85729d45435d135981f5c48781e1c5",
+      "pose_metadata_sha256": "4d4a98ce9dd8c47e30f0be6299e7d56e6aa102ff37b27281c6929f02eeead814",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_flaremast_crews/provenance.json",
       "accepted_clips": [
@@ -1573,12 +1846,15 @@
         "ranged",
         "hit",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "4580a0b9f0583bea7a664e841f24e340707af1e4dc1b695894f120840e0e337e"
+      }
     },
     {
       "unit_id": "unit_neutral_kitehook_runners",
       "atlas_sha256": "8c745552a855ffd50d183ab06a635ac14f086d420747129e068837a67870d562",
-      "pose_metadata_sha256": "486776a7f5745380573ad1c5c3c3ca928fe01c59ce63e6b93b7c5dbba2ad9cc9",
+      "pose_metadata_sha256": "f5c5ba7230fc39780ff32ef6a82c7d64e1eb484d47ed69e28c818018079ea1c7",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_kitehook_runners/provenance.json",
       "accepted_clips": [
@@ -1589,12 +1865,15 @@
         "hit",
         "move",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "e274ea552137d3bf54d67cceddc36cd69d135a74b57ea705a9bbae34667d8d37"
+      }
     },
     {
       "unit_id": "unit_neutral_ridgeflare_shots",
       "atlas_sha256": "19b5813cdbe523c36240506d1d8c1dbce565c2826bd3ae62fa43d4e12081774c",
-      "pose_metadata_sha256": "3c6b04262fa3ddbf875ad4f1767fbf2ab84b6b112aeba62fb11c6fd3ee6467f4",
+      "pose_metadata_sha256": "e4699c571578e4468ad201b540566ffad44d10c397ff2825e4e9d32f5013c735",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_ridgeflare_shots/provenance.json",
       "accepted_clips": [
@@ -1606,12 +1885,15 @@
         "cast",
         "move",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "b813ed6fee0b6905d46a0220ba4dafb8b5d14a9ed3c672083ab3f9ab6b7cbf48"
+      }
     },
     {
       "unit_id": "unit_neutral_tunnel_lanterns",
       "atlas_sha256": "1a2d7cf356b90fcb3dff085dcfbc6147bf92ffd3306b6458df38e553bd65a1e4",
-      "pose_metadata_sha256": "6a4d74917c2b3716cad6bb88a839a0e5775b413e8206a574fe9f6fdb8536706b",
+      "pose_metadata_sha256": "e2ada1bf56d7cb6dd1b1d88d326550dfdae08e8788d9ad636510657ebc02fa56",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_tunnel_lanterns/provenance.json",
       "accepted_clips": [
@@ -1622,12 +1904,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "a3eed253c39c717bfeeabd4f134b01939dcdf86ee2cc0f46b80881a1ef19c9ce"
+      }
     },
     {
       "unit_id": "unit_neutral_glimmercap_needlers",
       "atlas_sha256": "8154f68c6afcc91f3d3d6d56480c3a30d68c6edf4784b5c2c724fbe1e06dfe5a",
-      "pose_metadata_sha256": "1a11ca46b2237ae73e68a98f2c39eb152a99a21190d1e2ae0c37d20616cd231d",
+      "pose_metadata_sha256": "2cd337b3fbe43f54c496394f81ab29bcdade3bdb6099ec05e68b4f83a5a8ae72",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_glimmercap_needlers/provenance.json",
       "accepted_clips": [
@@ -1639,12 +1924,15 @@
         "death",
         "ranged",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "3c239d103632eaa23dac217bc74a7057cd78a8e9d5340408eebe3ba4e01ef175"
+      }
     },
     {
       "unit_id": "unit_neutral_bogbell_mauls",
       "atlas_sha256": "6c744532500fa53fb6c88865bf43869627923a9f68d31f58eacc9ffdb2f9f99f",
-      "pose_metadata_sha256": "b92b17aba8362d0a799cc7a159910ab480e72bed1be8a9e1325c5996c2cd6f00",
+      "pose_metadata_sha256": "7eeee1cb54b6d85e7571a12bf8de89d28bc849db8502e8b25af06611d5f89364",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_bogbell_mauls/provenance.json",
       "accepted_clips": [
@@ -1655,12 +1943,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "b6b67342d0b9ae1f11c1036723bf23a1ff2d73f11b5cc003145902223c5c68d6"
+      }
     },
     {
       "unit_id": "unit_neutral_peatflare_jarriers",
       "atlas_sha256": "dc8a559408e419c29162113c6f57d1919f1bffa95b589e9a51dfe8cfa131c9a9",
-      "pose_metadata_sha256": "40e8be000343cd823af098953c144bcb5405000af93d6ea637f4329dacf52faf",
+      "pose_metadata_sha256": "5e3cee4f47e047bb10e90cad640065a3f42f76b708ca482ed802bdc2c57c9748",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_peatflare_jarriers/provenance.json",
       "accepted_clips": [
@@ -1672,12 +1963,15 @@
         "death",
         "ranged",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "769e04e2373af21a6cec813db2cd22e8737c7d6505b129c6ee57144c1d9c3ba7"
+      }
     },
     {
       "unit_id": "unit_neutral_milestone_bucklers",
       "atlas_sha256": "38972c93461cc0f60ddf9731af5ddb692848924f0fd69932885409b40b238ca2",
-      "pose_metadata_sha256": "eae31132a190d2d62f9ed06a357607166c8edb34722656f2c1c2024b2b590707",
+      "pose_metadata_sha256": "120a8c636d731a2a5a16423f397b3b8240333fbbb1a16be0f475b21420eca303",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_milestone_bucklers/provenance.json",
       "accepted_clips": [
@@ -1688,12 +1982,15 @@
         "move",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "25c8af9c5a08b3baf3c42bca0621c7933d8e7c3a97a8aedd18491058e5b2143a"
+      }
     },
     {
       "unit_id": "unit_neutral_cartbow_tenders",
       "atlas_sha256": "cf2e90cc69a75ea82996dde6268bfa01979b716d5826f369e484d2835e34e0bb",
-      "pose_metadata_sha256": "c4229b0a226b3872e1a802e8b21dff84fcb0f3a25cc322c5fe37334217a5d90d",
+      "pose_metadata_sha256": "c28116a42a7edf6b2dfabefbb170c437c6430510d4d6d8031b6fb19b8720bd8b",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_cartbow_tenders/provenance.json",
       "accepted_clips": [
@@ -1705,12 +2002,15 @@
         "death",
         "ranged",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "765be9aa0fd230650250324695994c482b0afa444392f9e2090ef883e942f86a"
+      }
     },
     {
       "unit_id": "unit_neutral_frostwharf_cutters",
       "atlas_sha256": "77f55f9cf3f978821a63a7b0c4177a83b9bdfdb4c0bb20a62d09468099b5edb8",
-      "pose_metadata_sha256": "4cddc80b17cfa610d44344d4d018e89b4d4518c5fb4617db38b5f893894ae56e",
+      "pose_metadata_sha256": "e246da65e538bc18671c437960b02d96f00bbbe1c4718e11ef8a4c2bd2b80d4d",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_frostwharf_cutters/provenance.json",
       "accepted_clips": [
@@ -1721,12 +2021,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "cb5e40a425da261d23dc78b9f63cecffbbab7f95dd7ea651aba3c38b0afc0e98"
+      }
     },
     {
       "unit_id": "unit_neutral_lanternskate_throwers",
       "atlas_sha256": "01f4e263a12441e3068fdd307c0d24f68ab1818db65e27c5a022f6f6b32d63ec",
-      "pose_metadata_sha256": "42bbdf9c08570a6b14d100e47b95f763311e47f50cf95e818fee0dd68ce95599",
+      "pose_metadata_sha256": "1e7ed487408564c5852a58c474b64256cd24c6e2507d6db3b2b79dfb9952d1ce",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_lanternskate_throwers/provenance.json",
       "accepted_clips": [
@@ -1738,12 +2041,15 @@
         "death",
         "cast",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "f6da81f73e16fad6563b6f63604bf00f19707089c2e8f57284192ba9d32d0665"
+      }
     },
     {
       "unit_id": "unit_neutral_charcoal_mauls",
       "atlas_sha256": "4208bfa9247d3bd30834988c2f29bd3cd1815aacb8fc23616e3613fb31ef7b25",
-      "pose_metadata_sha256": "176ee541fd98628d34fb269a537882bab9eb385c560a6a72b9a3bdb1cde7c8be",
+      "pose_metadata_sha256": "f9bd0f0385d97f3a4c296a71ec671542c0a239c0b071182c6c04c73b45fd2cce",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_charcoal_mauls/provenance.json",
       "accepted_clips": [
@@ -1754,12 +2060,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "fee7f6849ad4592058e20a5a87de440211c4e5d5f1dac26b9b519e25ca529149"
+      }
     },
     {
       "unit_id": "unit_neutral_emberpack_lobbers",
       "atlas_sha256": "147445175c97aaf2f179e548261bc0960be7e84bdc54ab1a3b39359c68f374a5",
-      "pose_metadata_sha256": "af0183aa9b3edc18483c7d1e1a7d0a17bf3b65a9941936f1f8c8131a4407428c",
+      "pose_metadata_sha256": "f22bbd33799370e3456f25adbce21d366df270f9d8fc8d274edd8c00aa3b2095",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_emberpack_lobbers/provenance.json",
       "accepted_clips": [
@@ -1771,12 +2080,15 @@
         "cast",
         "ranged",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "839655c9a17b1b2938d56812531fa43626b917fe9cb611b50fcdd6635cb849b5"
+      }
     },
     {
       "unit_id": "unit_neutral_basalt_wardens",
       "atlas_sha256": "9f1c9c55bc25462ab6d594d7239045cbae71f73c77579983cca34202e971e850",
-      "pose_metadata_sha256": "ab83d25b075184915a46277466c9a307c9402bc1fbb3e759a300b2dc91fbabc8",
+      "pose_metadata_sha256": "c9042a661a7b5fd6ed4bb851a44a2266633e87be3a2f3813859ff2439f9d356e",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_basalt_wardens/provenance.json",
       "accepted_clips": [
@@ -1787,12 +2099,15 @@
         "cast",
         "move",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "8bd8005738f03085026e51298974baba5e6232db8228fa2edf7978a3d993badf"
+      }
     },
     {
       "unit_id": "unit_neutral_tunnelmark_bolters",
       "atlas_sha256": "50020ae264bfc142b978d4fcc9aefa02686af0936cd5f3bf3915b94672adeff3",
-      "pose_metadata_sha256": "44bd6c240f34e3f969e3fcf3bd3eb0f75608b1fd7d0bbfb3f75641ec7e5ea140",
+      "pose_metadata_sha256": "a391221aea4b3ce5b133d1be807f579fed1d3c4965ab757f83e9042cb4b881d5",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_tunnelmark_bolters/provenance.json",
       "accepted_clips": [
@@ -1804,12 +2119,15 @@
         "death",
         "ranged",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "5ddf3a1b03d2a2621422f7be5af86f281717cde39cf8fe4f974c9f8231d98b68"
+      }
     },
     {
       "unit_id": "unit_thornwake_canopy_rammers",
       "atlas_sha256": "06a8b4697bf9db09431ea77fdf62f6b6941ed79635e6f9ed45c6432689058d81",
-      "pose_metadata_sha256": "4628df9af485ca915172fa4e2a3f36002feb417be55a556279b161c2302ce4e8",
+      "pose_metadata_sha256": "8e5b72b30181045ff459bc7b0abb6aa3235c75cb387717b88f2efd55a6f783ba",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_thornwake_canopy_rammers/provenance.json",
       "accepted_clips": [
@@ -1820,12 +2138,15 @@
         "cast",
         "move",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "99b70cf9f788027b4c28255f128347c28cd6a0f64d77cf298110af6776f8ac85"
+      }
     },
     {
       "unit_id": "unit_brasshollow_pressure_lancers",
       "atlas_sha256": "dfd837f3f90eb667aeeab8a3f1b29c7d2f70d4578b5c0a10ab29f28a8f206aa6",
-      "pose_metadata_sha256": "c979bbfd6fe9da952d0165dbf01aec90312770c510037acb6b8805b7c1162bcd",
+      "pose_metadata_sha256": "4dd76e2afe6d07ec3aa338babe2685d06f768b6ff982f2c2076b87fe1fb0b2d5",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_brasshollow_pressure_lancers/provenance.json",
       "accepted_clips": [
@@ -1836,12 +2157,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "5b92c8d9eb06540c6716b808e1828f055c63d39328322c19659dbe74f824b12e"
+      }
     },
     {
       "unit_id": "unit_veilmourn_wakeglass_navigators",
       "atlas_sha256": "982e61a2c25c66213127ef9a39c63ab2850a5da9e588d1cbdc8632a5b7887ed6",
-      "pose_metadata_sha256": "efb3597d7445f31bd9b6c9eea978fb681abb1dc49f8aa0def0f7f315b4a587d9",
+      "pose_metadata_sha256": "e587ade6080463e045d5a1c7c0139945e57c27de991bf17f412427a069984155",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_veilmourn_wakeglass_navigators/provenance.json",
       "accepted_clips": [
@@ -1852,12 +2176,15 @@
         "defend",
         "cast",
         "death"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "7991758843264da88802716770caf1d2bcf97848f7a734a580c852c24aebc70d"
+      }
     },
     {
       "unit_id": "unit_embercourt_beaconline_writguard",
       "atlas_sha256": "e0c084dc60de5855797ec78391e95a24662c211a43d796b34c37d1842b11cf9a",
-      "pose_metadata_sha256": "6d230d5f7f17ba3cb8143b7fa939e8771c54868ba6362d5d852ca5c6ac3866be",
+      "pose_metadata_sha256": "8c921beb3851563e1062eca96b2c1081a40599228f57839e8b96d6768def6b95",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_embercourt_beaconline_writguard/provenance.json",
       "accepted_clips": [
@@ -1868,12 +2195,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "45c5fa725f13bbeb257ec08764d7200c3f91ca2afcd6ea48be360df0745818cd"
+      }
     },
     {
       "unit_id": "unit_mireclaw_fenbell_chainstalkers",
       "atlas_sha256": "69d57cb6e5d7a19f91da8fc161f2ff355b6eec03a6787f15b437e4695778fcb3",
-      "pose_metadata_sha256": "9235320b3eddc740f41b61421b0bb55fb5b0ac9843093327737ea177e48a38c7",
+      "pose_metadata_sha256": "2f89362996ecd5ef29785410dee9d248379d1ad5acc21812766df46735cfae29",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_mireclaw_fenbell_chainstalkers/provenance.json",
       "accepted_clips": [
@@ -1884,12 +2214,15 @@
         "cast",
         "move",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "bc5a726f338cb512a24f4843434aadc2be16df055b2dcbf99a41c2e747689202"
+      }
     },
     {
       "unit_id": "unit_sunvault_zenith_lensbearers",
       "atlas_sha256": "b87f0b1544fd3c5495b3ba5254037fa4e2a1e2eb4ab0d9ae6cfeedd16da79256",
-      "pose_metadata_sha256": "d632f458286735602bbaec65d6291aaa3e222ec9898ed8106afa382c581a7342",
+      "pose_metadata_sha256": "38aad34fd5b4022080a1c6fd26450e51e57fad4e8475cd146f0e9e159519310f",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_sunvault_zenith_lensbearers/provenance.json",
       "accepted_clips": [
@@ -1901,12 +2234,15 @@
         "cast",
         "move",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "12623e2144c4f02ef56b8c469fe23256a40375b68075ecc6e7449266e0f510c0"
+      }
     },
     {
       "unit_id": "unit_neutral_cinderwake_aurochs",
       "atlas_sha256": "76adc56422f804b42e0624408a3f958386288f938e91a6a3b6f0a45f178ae93f",
-      "pose_metadata_sha256": "5c7092cb05d5b013f1c294c29e6172986b82a43406ea256956e8c7565edd962b",
+      "pose_metadata_sha256": "e2c8d7045b82c90d697731c78cf2a3e659e88ada407dc0ba4efde32c9baad17b",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_cinderwake_aurochs/provenance.json",
       "accepted_clips": [
@@ -1917,12 +2253,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "36582ea2c94fb901af54dd318f7b1f532f2734bdc46d70e5b23d1d980bb37f3b"
+      }
     },
     {
       "unit_id": "unit_neutral_tideglass_skyrays",
       "atlas_sha256": "42fe87059056faa5a2f92c53a77faf755951d5f963dd424c452a3e210d7eae1f",
-      "pose_metadata_sha256": "3b08b69a658fff66a244b23a3b3945eb7d8e8db42cfb768dc33ca41134305961",
+      "pose_metadata_sha256": "25692cd44ceaacd4aea8f8e12752f97023601a9048da6fad46b6ad3b8a7df621",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_tideglass_skyrays/provenance.json",
       "accepted_clips": [
@@ -1934,12 +2273,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "621d053220291c416b3af108753e170bd2040ad39dbd91a9ce8349d326a17d9f"
+      }
     },
     {
       "unit_id": "unit_neutral_brambleback_knucklebears",
       "atlas_sha256": "955061eb1efe46063d68ae608701878af00b50150af7be53133d72aaa001c061",
-      "pose_metadata_sha256": "6c8b8094d3d4ba7d5bc1df4c6a8f4aa1d11d3fe215b078ac2abded1a971e690f",
+      "pose_metadata_sha256": "17be33906843c68becdeef8c9f844cbe311b95d22c9f5f58bf6d14fe5c7946d8",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_brambleback_knucklebears/provenance.json",
       "accepted_clips": [
@@ -1950,12 +2292,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "3bde87b9e86102a810adba8043363e8440fb1ffe34db85174db0e987a8e87481"
+      }
     },
     {
       "unit_id": "unit_neutral_mireglass_belltoads",
       "atlas_sha256": "4dc00f6bd5a5812e02614315429d82f016229ac8adf37a967350f8e42d197d52",
-      "pose_metadata_sha256": "5b38e80d43abcf560ef9005cd7a8be9382776144564d77774ad47a6275a0716d",
+      "pose_metadata_sha256": "6e956ba1e99cc14e8bcab6524cb7b4de849a91dbebf40df36dff901d97af2a76",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_mireglass_belltoads/provenance.json",
       "accepted_clips": [
@@ -1967,7 +2312,10 @@
         "defend",
         "death",
         "cast"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "8f746c87885be135474e6b98d51f19cb95a642f366036c6920801f9e0083f42c"
+      }
     },
     {
       "unit_id": "unit_neutral_galehorn_striders",
@@ -1988,7 +2336,7 @@
     {
       "unit_id": "unit_neutral_sunscale_lanternmoths",
       "atlas_sha256": "0c8cfdf6768d1b090285f5d337b1197ef7b154220f6119d990f29295d333b2df",
-      "pose_metadata_sha256": "68bdf0434cafc9f23d93e838ca4e5756bcc7338b6b57c9a1077a33edc4bb95db",
+      "pose_metadata_sha256": "eb500d96b61077ee76bf2902bdfeb2509abb61a1392a705fc2a6e22e79488066",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_sunscale_lanternmoths/provenance.json",
       "accepted_clips": [
@@ -2000,12 +2348,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "91ca49026c8242299b3783c557c5fb469c87089f885cc0dd69e369b57aa7227f"
+      }
     },
     {
       "unit_id": "unit_neutral_rimebell_skyrakers",
       "atlas_sha256": "701076822d2f8ccfe69afa2270f8738191b0cfde1223f0fdd237c137408856b4",
-      "pose_metadata_sha256": "e2a562c5fae69ead1999a9d44664bf5c8e39b264c5d7252bd7c0a3b1735f22bd",
+      "pose_metadata_sha256": "cba79b2ad3ca7bd00c2f9551ab80b2ebf95fb3ff16259b383d18f4cd96c2883c",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_rimebell_skyrakers/provenance.json",
       "accepted_clips": [
@@ -2016,12 +2367,15 @@
         "cast",
         "move",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "583e20a122976397d313a838a453c6d407a8c388ddc6add547ac83ebd74871a1"
+      }
     },
     {
       "unit_id": "unit_neutral_deepforge_vaultwyrms",
       "atlas_sha256": "018304990f9c4d95c1f44282601ce4c67be1c19fec255fdf8ec601438543ef07",
-      "pose_metadata_sha256": "6069b5de7449be61720bc64113dfd8f0008719ecbf9a73de5ec1ce11b0d4975c",
+      "pose_metadata_sha256": "0b8c6a1d7d253fe9364014c174da7642a92c3542bbf44af802df02902962562e",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_deepforge_vaultwyrms/provenance.json",
       "accepted_clips": [
@@ -2032,12 +2386,15 @@
         "hit",
         "defend",
         "cast"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "2e153b1680e93bfe962baf9c1a92fff820e1613192bc938ea40fa9aaa0aaf3a1"
+      }
     },
     {
       "unit_id": "unit_thornwake_seedglass_cantors",
       "atlas_sha256": "9283d6f85ee7a56031597d7085da1cc634340e8ae4e9bc9fd8c56d4e886b84ad",
-      "pose_metadata_sha256": "4f0123410d8144200b36e0f0bfc2f58dcd3d4b2ea6691d8fe0d840c2ede1d3a2",
+      "pose_metadata_sha256": "ba6837959bd54ec269e6e5e882ada705d52937252c1fdb463d523fdc3436ea21",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_thornwake_seedglass_cantors/provenance.json",
       "accepted_clips": [
@@ -2049,12 +2406,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "8597ee99924db69aa62f2736110556584670b2e9920748d01212cfa186ef6cd7"
+      }
     },
     {
       "unit_id": "unit_brasshollow_quenchbell_mortars",
       "atlas_sha256": "ba9b6c67641c02c06f4971f2f27c3ca07cb956a5a066cee6bb0262159030f577",
-      "pose_metadata_sha256": "93a421bc240be0a717ed3bf288923b755a53383c4fea8f7e73dcfe35a7d034bf",
+      "pose_metadata_sha256": "04edbefac7701656d21254a9b37c01c0b40c59eb1ab55c6670308324fa6bb908",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_brasshollow_quenchbell_mortars/provenance.json",
       "accepted_clips": [
@@ -2066,12 +2426,15 @@
         "defend",
         "death",
         "cast"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "4b6a419a703d4fab3a7ade38c7dd43d6dc95d99925bfb4d35d96b66201e83b52"
+      }
     },
     {
       "unit_id": "unit_veilmourn_saltwake_eulogists",
       "atlas_sha256": "92b358e800eb75c4dd33cd192658f6fda1a5be03ecc0a925c8bc46ef77fdc952",
-      "pose_metadata_sha256": "75d802d3dd2a94d25ee0c2ad3291c121f68b0e0e88b01b023186e6b9a23467c6",
+      "pose_metadata_sha256": "9ae8941cca234bbe645be90eb626bab678d69ddcfe3a40cb41777cf1b5d09256",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_veilmourn_saltwake_eulogists/provenance.json",
       "accepted_clips": [
@@ -2083,12 +2446,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "c8dde5e9eab5f4117832e75a9489bd18ebbc9d80685a2456d2b1a0b37cc374f7"
+      }
     },
     {
       "unit_id": "unit_thornwake_seedshield_wardens",
       "atlas_sha256": "eafcb34efaa69c674b780d16149853cef9f1efabe0821025ff10fa8da45552b8",
-      "pose_metadata_sha256": "3843471537be0b15b8d15331d4da51845584f5d225fc5b304a0237289a173653",
+      "pose_metadata_sha256": "98e68ebf31a150559e3aab89e26004473fb666a96ea6877cbbeb0f5c4cece0e6",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_thornwake_seedshield_wardens/provenance.json",
       "accepted_clips": [
@@ -2099,12 +2465,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "40ea7c8be58f37e6ff317144c84e39839f00077adc3aafadb302ca0249c208e6"
+      }
     },
     {
       "unit_id": "unit_brasshollow_gaugefire_arbalists",
       "atlas_sha256": "ca1cb6d142fb012225a2a31938a3fc4efa114453e914068d21a05b184cc50d58",
-      "pose_metadata_sha256": "68ccc98ab13e9c08c08ec4804c186a2abdbde95656fa3840c2c406cda8239961",
+      "pose_metadata_sha256": "2887af53458a8a5a4faa9b26ddc6499f65c917ffb6efa651ebf22c2ab9c0af90",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_brasshollow_gaugefire_arbalists/provenance.json",
       "accepted_clips": [
@@ -2116,12 +2485,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "3f14125ef6406591153a091564dd27eb1a60fe3ed2e502a0db766340231811a3"
+      }
     },
     {
       "unit_id": "unit_veilmourn_wakechain_boarders",
       "atlas_sha256": "330f61b5b4a93e2bd3e059643c15fada5ae1c87f07c7ea3bcf5174a2f1840ffa",
-      "pose_metadata_sha256": "b66a2835344408ba73b37334e9ad3b790d11dd85192268ad8f61fd032496ff87",
+      "pose_metadata_sha256": "1ba3bd4874e5c5e4542c3977e45abfc635e9e0825b7036c9e59d12b1588bb9ea",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_veilmourn_wakechain_boarders/provenance.json",
       "accepted_clips": [
@@ -2132,12 +2504,15 @@
         "defend",
         "death",
         "cast"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "087b2884d2b317d2e4b574bb427a588cd2f491be76ba373197a502613aae94e6"
+      }
     },
     {
       "unit_id": "unit_thornwake_bramblekite_needlers",
       "atlas_sha256": "28515839d7cab664df12abc76db9297700b970cb74751670f1c2c5aef6de0809",
-      "pose_metadata_sha256": "f624106c9d580345092a0ba151e0ecbf61c89ae02056a38c7828280ee8e08d9d",
+      "pose_metadata_sha256": "8b6a15952799bd482bf3991627a634498a6a4a22e4f6c0479730a636dc993db7",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_thornwake_bramblekite_needlers/provenance.json",
       "accepted_clips": [
@@ -2149,12 +2524,15 @@
         "ranged",
         "cast",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "639323b48f7fb2e584a5fd91a396a29128a17fef68115d2d1033f2d266ab947e"
+      }
     },
     {
       "unit_id": "unit_brasshollow_quenchspool_slingers",
       "atlas_sha256": "8e879118d1ab13e59d3251651d31304701ff3fd25a10883a313889807cdee8a1",
-      "pose_metadata_sha256": "8023095576b52ba07b5343cc5dfe44548b527f8d3d4d6fb001bd57646e1e8548",
+      "pose_metadata_sha256": "27a322540c5426abb78f6b57f6d1acac00ecfaadc5c93eca9f52ea886419de28",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_brasshollow_quenchspool_slingers/provenance.json",
       "accepted_clips": [
@@ -2166,12 +2544,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "a7cab4860acbbffa3b05d479a9ca721ca5cc040d0beecbe55518ee61f1fe759f"
+      }
     },
     {
       "unit_id": "unit_veilmourn_saltbell_casters",
       "atlas_sha256": "93f4a2c0d7663425cad5af9a7ae2d4d4c895c6cae84e694424b63379b290a12a",
-      "pose_metadata_sha256": "ce7df2952979fbfdeccc5900eee9aae7513a3b5310909df34ba53819279edd3f",
+      "pose_metadata_sha256": "68eca60c6d0aff07612f5c9fb74c4ddded0c4e491b1f62410b86f1548e19e283",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_veilmourn_saltbell_casters/provenance.json",
       "accepted_clips": [
@@ -2183,12 +2564,15 @@
         "ranged",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "15635ae84bcd124d51e75f9c3a8f9833809a5fa03afa15f24c9088d09a324d95"
+      }
     },
     {
       "unit_id": "unit_embercourt_lockglass_writcasters",
       "atlas_sha256": "47b1063535802df7bf0ce34ed33ab137cc0db2fca691381fb477232f9dc864b5",
-      "pose_metadata_sha256": "a3dfb5cde7f1fa7c6047c91b27f21dc4773043fbc5bd612efa59879ab834a364",
+      "pose_metadata_sha256": "414989a429bf9ff577ca5c80494cc7cdb91cfaafe14da60a6e3fdf114177a6e6",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_embercourt_lockglass_writcasters/provenance.json",
       "accepted_clips": [
@@ -2200,12 +2584,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "54702c6c56dc9e40b94ccca66c9b7c41cbfc4e38968b0d6a118e28790d7449bd"
+      }
     },
     {
       "unit_id": "unit_thornwake_pollenhook_whistlers",
       "atlas_sha256": "d1e516b54f493578efd2492d80f5731243a054e689850a72889e8f1314461df6",
-      "pose_metadata_sha256": "67975f0ce2393a64b4097b08cb6949e3d6c4fe0a3baf5426de1afc87bdee1863",
+      "pose_metadata_sha256": "288eb058e040a292224ee7234a6af4339b9d3f2adefb18afdcf88cb623d0003d",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_thornwake_pollenhook_whistlers/provenance.json",
       "accepted_clips": [
@@ -2217,12 +2604,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "1ad769b95863277421b975de9e5eb69be066e8a52608e021cf0f21d119636fd2"
+      }
     },
     {
       "unit_id": "unit_brasshollow_tallyspring_throwers",
       "atlas_sha256": "e2124d7a6bd5e334f67bebf559322ea5d07d4376328159bed8077046fa344c27",
-      "pose_metadata_sha256": "3dcf859059d5eaf0555655b2bd51882ce8ab51f9210a1c6ea5e35bb4db03ef53",
+      "pose_metadata_sha256": "d4cb67a243326c245f500deb419274fb7a707df55d0d41b17c3ae0d158a551cd",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_brasshollow_tallyspring_throwers/provenance.json",
       "accepted_clips": [
@@ -2234,12 +2624,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "0ea2b2bf04ca2a9724b9a3906393c69eb897176881ab421c97d32d921e1b0dfe"
+      }
     },
     {
       "unit_id": "unit_veilmourn_gloamkeel_bulwarks",
       "atlas_sha256": "4439feca868628dd2b3d593380f68d7af31a7a645642d74aa63ff902aa4083a4",
-      "pose_metadata_sha256": "060979c4e2a784fdbcbe35a2273762820b770badebc4de77409a42a845df92d5",
+      "pose_metadata_sha256": "b0e1f3f8c3c8591cddb4fdfa885eed4b5b6adaf19a2a5f273cbe75f9bc308fa6",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_veilmourn_gloamkeel_bulwarks/provenance.json",
       "accepted_clips": [
@@ -2250,12 +2643,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "22f93e648a43e33ca3affa3e2b165a56796a8be4e45d757dc4a656fb313060a2"
+      }
     },
     {
       "unit_id": "unit_neutral_ashcrown_kilnelk",
       "atlas_sha256": "6f4b37757df6e04428659be1316ec733dc666e58811c43cd76d651c1d1d2f8c8",
-      "pose_metadata_sha256": "6fb60fe96c5191f55b5af54c4cc4ae9d48f820b03952c20034a29a8e340aacd7",
+      "pose_metadata_sha256": "6f07107ab9fa389bec12350922eb4edf9d5e50e027f59e08bb599e3b16fcece6",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_ashcrown_kilnelk/provenance.json",
       "accepted_clips": [
@@ -2266,12 +2662,15 @@
         "death",
         "cast",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "50888b05e8b02441df56c5b8b5baf248c8474b28edf85ac70bdfe05b4eb484ff"
+      }
     },
     {
       "unit_id": "unit_neutral_miremoon_crownmaws",
       "atlas_sha256": "c3dfe0c6b0319dbaf4b9da642d1c0327b5a05894a945d63c991eff024e0c980d",
-      "pose_metadata_sha256": "165d4acaeca05fd703c3b4cf14f74f4c087c10e407ca9cd3b5eee77a17ebf10f",
+      "pose_metadata_sha256": "10b75148e34a433a26a5834353f2e3e2e3d2e8cb7e6631391675023fef890754",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_miremoon_crownmaws/provenance.json",
       "accepted_clips": [
@@ -2282,12 +2681,15 @@
         "defend",
         "death",
         "cast"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "26f538ae05afb9e6f85e8108b5178eeb9640208b57b9afb3d4ffda9a6d670e35"
+      }
     },
     {
       "unit_id": "unit_neutral_noonshard_prism_kites",
       "atlas_sha256": "d81a787348b3ebd93b5c4f9d3fc36f09c112a858d016d2899ebabae6741b9814",
-      "pose_metadata_sha256": "1366ca0f7fac0712532c81d6b71bb16959dd360718b1390c01578de0209e5bac",
+      "pose_metadata_sha256": "6f13a426ef84d74ef287817f8fbf5a2fc2d317ebc371e8f2919e5f9d2225b4c6",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_noonshard_prism_kites/provenance.json",
       "accepted_clips": [
@@ -2299,12 +2701,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "d50c7e7a4dd5d7fdfb80f34b82dac32913faf7fdbe3c0423ec1fdd58d8a69a11"
+      }
     },
     {
       "unit_id": "unit_neutral_rootvault_barkhulks",
       "atlas_sha256": "e9e8b0e4360b9df1f114bb14798d5fef69b65e9d4b2c133f3a798e4268285d1e",
-      "pose_metadata_sha256": "19ea09b1906a07e1e4063c5d917b99cb501e104658f504ba126f6ec438a03150",
+      "pose_metadata_sha256": "97a913109786981f43560d59118ecfce557e4051d72759270a86c180b08bebd1",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_rootvault_barkhulks/provenance.json",
       "accepted_clips": [
@@ -2315,12 +2720,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "066cd61dedecf0c4270b533de2716eedc527137b0d244618625b4280d137c6d9"
+      }
     },
     {
       "unit_id": "unit_neutral_quenchbell_ironbacks",
       "atlas_sha256": "75f4ebc26d8cd2f02006fe8933ecd1e4cc4bad3de1a13a071086809f512209e8",
-      "pose_metadata_sha256": "c5c2feebe8a35d28f2e69e84ad60e6121ab100016905e884126e406a54638bf6",
+      "pose_metadata_sha256": "2510000ce7aff91a66dd61d70193aa0559ed7c12dcca12cc61ec6af30ef8e2e6",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_quenchbell_ironbacks/provenance.json",
       "accepted_clips": [
@@ -2331,12 +2739,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "43b425016a0e4b263712272f81999cc054e598c48d9d80ce59ca2d5c7d94919e"
+      }
     },
     {
       "unit_id": "unit_neutral_saltwake_bellwhales",
       "atlas_sha256": "c9df9d982572e90bafc6c03bfe74f25b306fda2e9ed6796fa0e4418ed38d1e47",
-      "pose_metadata_sha256": "8937169198f80ec2c37a9e4619a9be3c6ad4fe4de539479ee4d3f14aa7587e8e",
+      "pose_metadata_sha256": "ff8461e19b27297697dc0e9e35e2f318e6e572935b79a0d5612ebf0ac0635304",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_saltwake_bellwhales/provenance.json",
       "accepted_clips": [
@@ -2348,12 +2759,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "9daad2fe4240b867bb9e0f9c4e8c6673e4bb9bc25a8f32a178f5bcf2ebef40e8"
+      }
     },
     {
       "unit_id": "unit_embercourt_amberweir_lockpike_wardens",
       "atlas_sha256": "f90cfa37c022e5f02f8f189cb56714e9c78bb29e6f5802764326242ca3d9aa23",
-      "pose_metadata_sha256": "02efc20b9f5dbf89af907ba9d1635c94122691f3049551e55a825eb2e5e3eb90",
+      "pose_metadata_sha256": "019e5c803966ab1d5b370ce9cc15a8f10012283e3925d8b935e0d894a2752ae2",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_embercourt_amberweir_lockpike_wardens/provenance.json",
       "accepted_clips": [
@@ -2364,12 +2778,15 @@
         "defend",
         "death",
         "cast"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "a5d54d8d7b2b4fcee8c9a22e6f2f203eb8338d942a1b34bbee6870fac9cb7000"
+      }
     },
     {
       "unit_id": "unit_mireclaw_moonbite_votive_drummers",
       "atlas_sha256": "896b28fcd73154d0f4c9676ec6aec1619a4fa67ac45d3a715e40cd97d2c524bc",
-      "pose_metadata_sha256": "6a9b8a0037c1a7351b6f98068a025b50136aad4c2d238345d5a50ffc44f6036e",
+      "pose_metadata_sha256": "a81bffe71bbdb7e4756171ae0874408772f52c46f00c26d292514a5523f5d307",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_mireclaw_moonbite_votive_drummers/provenance.json",
       "accepted_clips": [
@@ -2381,12 +2798,15 @@
         "ranged",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "138ea8ddacd15a3c6a0ff95a16c268555d1e96c700f2fbb8e0ce68a5eeb59f86"
+      }
     },
     {
       "unit_id": "unit_sunvault_splitprism_parallax_fencers",
       "atlas_sha256": "42c9ddca6274c5518755649059843f392d10673a1e696e3e215c917c7fb6e200",
-      "pose_metadata_sha256": "acc5eec43125320019ea315f984bdb580ebe2eac0c600c731151471e682da535",
+      "pose_metadata_sha256": "205a3e78b58734a548be5f7907c79808f981bef923be7f41e11957e15adc324f",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_sunvault_splitprism_parallax_fencers/provenance.json",
       "accepted_clips": [
@@ -2397,12 +2817,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "493f17daf1070627067f2e7092bbd574b733664659401e0086b30f402e51192e"
+      }
     },
     {
       "unit_id": "unit_thornwake_woundroot_hearthseed_slingers",
       "atlas_sha256": "2549c09b0c4ba8e640ea8473a1127a52adabc3039019877a02090923488c3c9b",
-      "pose_metadata_sha256": "5a8a87c68fe7f30288d533dec5e887c0d39ded7706159df4b95b6a8b406f253a",
+      "pose_metadata_sha256": "6a4335b6d3963c1c56e331d7c15834dd2d5a70c0841a1e0cb17e067a12bbe3bd",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_thornwake_woundroot_hearthseed_slingers/provenance.json",
       "accepted_clips": [
@@ -2414,12 +2837,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "2ff68273058d2290f06a3fa3af2d9a5d0ea6ecdda120ee0ad7fa468062b8a890"
+      }
     },
     {
       "unit_id": "unit_brasshollow_whitegauge_datum_lancers",
       "atlas_sha256": "bb2b7b975c32e84bd5402d11ec13d45e92d1f69999ff0c87cde144959966e3aa",
-      "pose_metadata_sha256": "3bd6507a767aa754470572249ec4433d0f98c5785c816cb4b532d168970784ed",
+      "pose_metadata_sha256": "c1019a85dfe98e3de2c38b5a25c24988d951131333bf7d1ed84d7c4c5c398d2c",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_brasshollow_whitegauge_datum_lancers/provenance.json",
       "accepted_clips": [
@@ -2430,12 +2856,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "db3e871a8311cd532cb2ecb02197482211e7cb6a432523054257612f22375165"
+      }
     },
     {
       "unit_id": "unit_veilmourn_dreamwake_tideglass_oracles",
       "atlas_sha256": "2988768a83ec794a5de457a158ae515bf6777fbd79f97c11f6c27a1c36ec7a26",
-      "pose_metadata_sha256": "800e3b095a62865fa50b91c4ed79e0b9d4c4169709024f3f327ce8349a0297cb",
+      "pose_metadata_sha256": "23cd76c3d14c2194b881b7bc672612abd7f4c40f8ca1869c353882462d06be12",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_veilmourn_dreamwake_tideglass_oracles/provenance.json",
       "accepted_clips": [
@@ -2447,12 +2876,15 @@
         "cast",
         "move",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "d4fbd833c11e89848163c5c6cef745e389f304429abf535021a8ce8d6169be9e"
+      }
     },
     {
       "unit_id": "unit_embercourt_amberweir_sluicebrand_mangonels",
       "atlas_sha256": "309d7fa00ebb5a1fa9c6df3661931e4dc053b65c7ac7ceaf8f29420b8c43cfda",
-      "pose_metadata_sha256": "ec982cb1ad6a871f5d40d59801a4efbc2a40f99cffe90685d5d320b71cde96de",
+      "pose_metadata_sha256": "923b1d3fd19096793647e8659f531fae6a8a80a64a0090f9afb4a37a4d98c1c3",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_embercourt_amberweir_sluicebrand_mangonels/provenance.json",
       "accepted_clips": [
@@ -2464,12 +2896,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "db4f1ba1ce083d897ab746c348119890e199f674c4e927a8555d0ddd79185df6"
+      }
     },
     {
       "unit_id": "unit_mireclaw_moonbite_mirehorn_breakers",
       "atlas_sha256": "a1a0868cbcda339fe170b47dba1e6feba43be3db2e85d96c34bd18ffb323bc7e",
-      "pose_metadata_sha256": "355a637391a632998dfd71e2e9498f7b946bf5d0c628dd6989f8045a63c4e2af",
+      "pose_metadata_sha256": "9f005ab08337ab23d3511680453f3d0e28cf94a856afa5cedb1b2104162d739b",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_mireclaw_moonbite_mirehorn_breakers/provenance.json",
       "accepted_clips": [
@@ -2480,12 +2915,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "04c4c2cbf109c1910af4554832f141743c43bbbbb6974d6a72dcd18e1237b0f6"
+      }
     },
     {
       "unit_id": "unit_sunvault_splitprism_heliograph_ballistae",
       "atlas_sha256": "c6f6443509c15a7489c0bede537871687acdbbc4db391e6474911017f29c3875",
-      "pose_metadata_sha256": "821d11a78d2968d1b1b1d24ee879f180d4ce0c901ac78e6fccf0efeb88b1898c",
+      "pose_metadata_sha256": "3a0a22f047620c91bc05de44644c45277d1ea9a0d394f12714a3bc36ddc97c8e",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_sunvault_splitprism_heliograph_ballistae/provenance.json",
       "accepted_clips": [
@@ -2497,12 +2935,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "ed2be02a5c43a81db5c1d3b784e9deef1e55e7bd47ec84129ca8ed45693fb357"
+      }
     },
     {
       "unit_id": "unit_thornwake_woundroot_rootmaul_behemoths",
       "atlas_sha256": "96df1864176ec18f143f03d22a8d0215a9596d7e671e30d5cb04df08bbbceda6",
-      "pose_metadata_sha256": "9fe9f97b4b4268b79d490449f29803fb6fe1a9de7b0ff889a8bec6561cca6560",
+      "pose_metadata_sha256": "eebef46068913be38b274d68ced76349a26e049817d84f4b329751ef9659378d",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_thornwake_woundroot_rootmaul_behemoths/provenance.json",
       "accepted_clips": [
@@ -2513,12 +2954,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "c79a34fc58a13e13cbd2036b4d26a5936dcdc7cb841809f2e8e6963675aca317"
+      }
     },
     {
       "unit_id": "unit_brasshollow_whitegauge_datum_breach_cannons",
       "atlas_sha256": "2fd9c04b65f322b9444173bcc344c5821d12e03da2e2a8767b3def2d9ddd768b",
-      "pose_metadata_sha256": "d9ccdad116e2f3c86fae0196deda08cfde08d2e2faea83dd60a4fdd7c22c2861",
+      "pose_metadata_sha256": "c03479ba42d7a978d401ba8e63e62faa5d6920a9a20bcb16d2ed39597d9f7e7a",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_brasshollow_whitegauge_datum_breach_cannons/provenance.json",
       "accepted_clips": [
@@ -2530,12 +2974,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "63c8d65c3afe3423a16340719e1c8cffa229c013cd64d28b2282d169569927b7"
+      }
     },
     {
       "unit_id": "unit_veilmourn_dreamwake_foganchor_colossi",
       "atlas_sha256": "4ac2a2fd4842f49bddfe6af6a2a49081331df3627595f748e4e95d64b17b990a",
-      "pose_metadata_sha256": "b6a78f5af3587173c6a6f98050c18471c9f96154d82f07d5a759a97cca2a7219",
+      "pose_metadata_sha256": "7b0f5aef62c40bc6909ae8f9e8423db39f1bfdd89e454e8435fd6f4491b4a967",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_veilmourn_dreamwake_foganchor_colossi/provenance.json",
       "accepted_clips": [
@@ -2546,12 +2993,15 @@
         "death",
         "cast",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "b39e30318089e5dd83aac4a2c6638d2d62906a6abee0e9446eb12b9ab37b91e1"
+      }
     },
     {
       "unit_id": "unit_neutral_cindervane_censerwings",
       "atlas_sha256": "0a0487c36147fdef37f9bb2f5fdd1085b7adc248aebb5dd5cdc4c020f99027ce",
-      "pose_metadata_sha256": "470959ede8009b658c6ffbde097daabb9cbb7cde79551d863e2764360aa36ab1",
+      "pose_metadata_sha256": "19d6275fb3994b7f68607e0e985c8b28540d2c6d1e85b08e333f734b1bc203c2",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_cindervane_censerwings/provenance.json",
       "accepted_clips": [
@@ -2563,12 +3013,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "e6ea8d6b442e4158940a55785a1dba3cf54509c91abb3c81c583fe8a36c5f5c1"
+      }
     },
     {
       "unit_id": "unit_neutral_fenmirror_gallowshells",
       "atlas_sha256": "96b7f3dc49298c5b9e9bf69b4c68b331e267e834661f22048d57b2dfaec1feb8",
-      "pose_metadata_sha256": "8e6f3628f6578f2612ba52119e4e78c54b40825a745dd14b817931e852ac3922",
+      "pose_metadata_sha256": "ef471d537957a6ea4a20bbe681f46919bf8ec9243c2be463ff1cdf3e51965602",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_fenmirror_gallowshells/provenance.json",
       "accepted_clips": [
@@ -2579,12 +3032,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "21f8771347f47767517b430f3ba3e2773b024bb255862c26e38763595cf97fa6"
+      }
     },
     {
       "unit_id": "unit_neutral_prismwake_raylings",
       "atlas_sha256": "852ba0b8c9effc53dba1c3357c462e456f76bbb849215307e8a9c0713bee8da3",
-      "pose_metadata_sha256": "b28b476547b025f6856d453ddd83ce02777c341548ae67e052165573c2414397",
+      "pose_metadata_sha256": "b7cbc02f47d74dda7cc2378afdf9be24e9cfedeb509c19a2fa3e764e71413d30",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_prismwake_raylings/provenance.json",
       "accepted_clips": [
@@ -2596,12 +3052,15 @@
         "ranged",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "f2c94eaec5a9bd4625df3e5c42129f8eba24afd240287b04dde1a12cc9ce03d4"
+      }
     },
     {
       "unit_id": "unit_neutral_rootcrown_knotstags",
       "atlas_sha256": "daf15c5ee622ab90397ea35dd0607b64b41a1a27bc5a1dabe560d0304f54ce68",
-      "pose_metadata_sha256": "eda8de7e545bac6e8582ac406b5e25096829bac0968055ab41c874cb99a66dfa",
+      "pose_metadata_sha256": "00fdf7e5a5a15b11df528bfcd878cfafb40155ce5e065130a896763de3b96593",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_rootcrown_knotstags/provenance.json",
       "accepted_clips": [
@@ -2612,12 +3071,15 @@
         "defend",
         "cast",
         "death"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "682beb94d4efb7e74073da2d194ce1042a38ea469c91fd34a8dc34c88aab1a89"
+      }
     },
     {
       "unit_id": "unit_neutral_gaugecoil_orewyrms",
       "atlas_sha256": "d5b163b559404339e0771f06f9c2bd8162e93b7fa085fa7bae7e935c2e9a8c1b",
-      "pose_metadata_sha256": "38779a4c6ec2e27d5f8bda6ca8ca183398b755b547ea48ea4796165e4e5610da",
+      "pose_metadata_sha256": "612ffaaa36e8023d2a85eea6cd4df04e4e698da0f1f3b05e1bde08880fd82e63",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_gaugecoil_orewyrms/provenance.json",
       "accepted_clips": [
@@ -2628,12 +3090,15 @@
         "cast",
         "death",
         "idle"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "a3d7b0271494921bd151ce4e4a01a0c8bef2f53fa7fb57d555a1199180e62d2d"
+      }
     },
     {
       "unit_id": "unit_neutral_gloambell_wake_mantas",
       "atlas_sha256": "478adff6d500697cf0a38a7b91a7838cdbf87635b0f1576d4a1eca6e27ab39a1",
-      "pose_metadata_sha256": "f9f4f10c834b427c01ba87b879cf9926302717bcc263174e2036c24cdbeb2ecb",
+      "pose_metadata_sha256": "5744ac3cc6c871b6e779b86f30c675288f2ab7e53ecb4c54dc7ee23c8fb508d2",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_neutral_gloambell_wake_mantas/provenance.json",
       "accepted_clips": [
@@ -2645,12 +3110,15 @@
         "defend",
         "death",
         "cast"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "d0612c93b813d30894a124c7490b61242a010fc311f59f1044cc4d65abb795df"
+      }
     },
     {
       "unit_id": "unit_river_guard_veteran",
       "atlas_sha256": "29e4b235a1dedba74b9c1cdcdfbd2856a51b95e3150d9492d8326c91443c5278",
-      "pose_metadata_sha256": "bdc79932360365ddcc2de468267e9ac91f51fc2e6a86087b72f54708f61bcdac",
+      "pose_metadata_sha256": "a84c7c110e1cd05a79e0fc3f1e256a2560f8eb7f876db71f3e637bd4fee2f189",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_river_guard_veteran/provenance.json",
       "accepted_clips": [
@@ -2661,12 +3129,15 @@
         "death",
         "cast",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "a5bbcb46423fc3fb8cebe35ecb261d52d085d8eb20dd63937667bd443a718e54"
+      }
     },
     {
       "unit_id": "unit_embercourt_fordhook_cadets_veteran",
       "atlas_sha256": "02d4858b1aa4ddc4ca46626703911b561d9592c7dd901543e5256990663c479f",
-      "pose_metadata_sha256": "8eaf653e8d696b0a40c97eb61d9ae71df37cf10f0c169beaedd901676ff05c62",
+      "pose_metadata_sha256": "75799ed568d7c4deabe68756c8508aced2b03d58579a573f7cd0f348c26a0634",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_embercourt_fordhook_cadets_veteran/provenance.json",
       "accepted_clips": [
@@ -2677,12 +3148,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "4af6165dd9754066ddf0557278cb7493feb3567a5322e341df1db692f0dddae4"
+      }
     },
     {
       "unit_id": "unit_ember_archer_veteran",
       "atlas_sha256": "a95427e946542bf9087fa127c284898b0b5ef78a0fcd18138b5b3bde54635bca",
-      "pose_metadata_sha256": "4f0b1729db1390722e2ee748f4042298e6a16a8b08cbb176ca1959e7a2ac32e7",
+      "pose_metadata_sha256": "04911bb1de7361e623e4eece06d1ad8ded778099751af7407d14c1765789969a",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_ember_archer_veteran/provenance.json",
       "accepted_clips": [
@@ -2694,12 +3168,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "71e66ebbc134fafc25dc1dd6f78473deccda632260d20fc536ee8c192a72851f"
+      }
     },
     {
       "unit_id": "unit_embercourt_lantern_sappers_veteran",
       "atlas_sha256": "e54ef9119e4bcf5d81609a558ca500ad8864013460f80ec4ce56a6e93823ca5f",
-      "pose_metadata_sha256": "faf3476922b8c8cba0f72223f9a43757e2831b9ec4b24bf3e0ff546544dc8004",
+      "pose_metadata_sha256": "f10a16d3ced49672287f882627c50ad4e16614bcadfb06ba926692d599fd9ef4",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_embercourt_lantern_sappers_veteran/provenance.json",
       "accepted_clips": [
@@ -2710,12 +3187,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "e06320024efcd993ca3ed509e3845b4481ab85af13410c14d235001dc46d92cf"
+      }
     },
     {
       "unit_id": "unit_citadel_pikeward_veteran",
       "atlas_sha256": "b6fc769c28d33b824e6e6246ebd9c25e06ce2eeacb528642bd89d14beda90582",
-      "pose_metadata_sha256": "354c6e183206df23975de5d2f22e638eb2374e06d4f56b2bfaec49b0af334eb5",
+      "pose_metadata_sha256": "6439fc1be82a819323edec7dee63b7386d57425e83fe2c8fb697e7ca1d3a9ea1",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_citadel_pikeward_veteran/provenance.json",
       "accepted_clips": [
@@ -2726,12 +3206,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "6291ad45231693f5c60a65b6edb27e5f894c43f3495266730ab35f5592e9941a"
+      }
     },
     {
       "unit_id": "unit_embercourt_bargebow_crews_veteran",
       "atlas_sha256": "30cec2c44877013dbfd07649039731214d22b454650e6242d7f1805cdf7311c9",
-      "pose_metadata_sha256": "c434e69e1b8f4d34137ba86c20a3eb1debd1d16d980633ac4cc030bd2201d0de",
+      "pose_metadata_sha256": "5e50dd955c5be03cf96ce48aaa5745d64361b11fbf4c3593af09a3c1d1380524",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_embercourt_bargebow_crews_veteran/provenance.json",
       "accepted_clips": [
@@ -2743,12 +3226,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "28e6de01897eb029877fa779c9169445a6c63749a3f8848af6e424c46fd8b1b5"
+      }
     },
     {
       "unit_id": "unit_embercourt_ash_oath_bailiffs_veteran",
       "atlas_sha256": "755dd75c6118b9b7cc86b6e2ce888b03a3353b515084849becdd5129beb555bf",
-      "pose_metadata_sha256": "94c9a5be04d6f36f1af976040a0760a401cdddebf4a747967680b624bf9048d1",
+      "pose_metadata_sha256": "0c6e260a0eb10680d9ba32e699e6e90aa723f4da0c7fab30a6735248a27dfb2b",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_embercourt_ash_oath_bailiffs_veteran/provenance.json",
       "accepted_clips": [
@@ -2759,12 +3245,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "f6b60c1f882a32a1c64737ec3698356edf946c2f55820de6622fa76b5d281bcb"
+      }
     },
     {
       "unit_id": "unit_embercourt_lockglass_writcasters_veteran",
       "atlas_sha256": "18cdd7d77fb7bdad29c975fd31c98125318d6fa51fccda5be09e4e35b293399f",
-      "pose_metadata_sha256": "cf8686fa38f6a23e8e4dba15e1c6f65a49363b192d033d3fc5e1d85d63e4ff78",
+      "pose_metadata_sha256": "53b020f94ea44b1a42584d75d736913dbfbe5910589ea9af0ef2ab3f7db4dc11",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_embercourt_lockglass_writcasters_veteran/provenance.json",
       "accepted_clips": [
@@ -2776,12 +3265,15 @@
         "idle",
         "move",
         "attack"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "c0490774eddcfa852b838c984894fb4ab6a04298100607baa102ca5cc1e708d4"
+      }
     },
     {
       "unit_id": "unit_embercourt_beacon_lectors_veteran",
       "atlas_sha256": "c362320d6b666d31fdc1a4416aed15b900f58e8d8b3e07164245c6825db28d39",
-      "pose_metadata_sha256": "ec399023095b33d9952aae01f340e38bc974e690f6ec25900858906671368570",
+      "pose_metadata_sha256": "190ac11d14e5c42522f010e095e7d2eee4e1852be8494620777536368a56a9bc",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_embercourt_beacon_lectors_veteran/provenance.json",
       "accepted_clips": [
@@ -2793,12 +3285,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "ef8fe0d3e8b732571606c7e349574ad40b6cc2f261ce7008de5ccb2287c5df3f"
+      }
     },
     {
       "unit_id": "unit_embercourt_beaconline_writguard_veteran",
       "atlas_sha256": "3e87d8e783229ead743b96d48b4bd0d46a8f2527f16935c8ab323de7f9c1f0c6",
-      "pose_metadata_sha256": "95978ae4df8973fddcc62359520bf8c11d9cc5353daa631e17ec6879dd5090a3",
+      "pose_metadata_sha256": "6fa139f480aad440a110c4b6997896b75afe64cfb353577658b1be0e2f5f23e0",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_embercourt_beaconline_writguard_veteran/provenance.json",
       "accepted_clips": [
@@ -2809,12 +3304,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "7ca8e91f2a11619c9a794e52d85ef153d538f64106e18c19221122df55392cab"
+      }
     },
     {
       "unit_id": "unit_embercourt_sluicefire_lindworms_veteran",
       "atlas_sha256": "41174b77715f2f76fa2c0b3a3a72f86b96d1c98d82fd9ffe76922c0a516b84c2",
-      "pose_metadata_sha256": "a691e8b2fdf18cc8c795b320af77c90577fb1228b5c16107b235bad53049eeee",
+      "pose_metadata_sha256": "7c9a837c58a447cac9107db66445dac52195b1b99268585ae70005f60c0a589b",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_embercourt_sluicefire_lindworms_veteran/provenance.json",
       "accepted_clips": [
@@ -2825,12 +3323,15 @@
         "defend",
         "death",
         "cast"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "2bad94201883caa3627b1fd5661883e8a22a1706bd02022e8adb7cc0fcaead4a"
+      }
     },
     {
       "unit_id": "unit_embercourt_charter_colossus_veteran",
       "atlas_sha256": "959ed21c8a7f6f13d497ccae57052e57ec82fffaadbd01684cde52b0af549c40",
-      "pose_metadata_sha256": "9989a6b1589588958921dad62092b66df02775f7c4b5f4824a8d9466441fc012",
+      "pose_metadata_sha256": "51a875d66f5aebae49281aef6a6dd0e38521868ab7771fb2b76f1d9f1f6d00fd",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_embercourt_charter_colossus_veteran/provenance.json",
       "accepted_clips": [
@@ -2841,12 +3342,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "349d93aec48e1f87fff39bc4ca2cf26ac8f98bb6eaa9c9e3fb5dea96df43a551"
+      }
     },
     {
       "unit_id": "unit_blackbranch_cutthroat_veteran",
       "atlas_sha256": "e21d061c3ce70250880eb30a56ce97cdff0d47f66077460189224ec574d60b17",
-      "pose_metadata_sha256": "5696b8add7ea61b5838cc3b77442ffc77a131738cef0bbaa665bad901ea49fc4",
+      "pose_metadata_sha256": "4b5b217761b2aad87b93093f786628cfd25d52fc7d3c9cff972dc2ab01389634",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_blackbranch_cutthroat_veteran/provenance.json",
       "accepted_clips": [
@@ -2857,12 +3361,15 @@
         "defend",
         "death",
         "cast"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "3f9928750a75172020db2266e11c77534a6f3ba2f45203a56721539c99e0341c"
+      }
     },
     {
       "unit_id": "unit_mireclaw_reedsnare_kin_veteran",
       "atlas_sha256": "5fc64ff5e8de0c8f9eedb9b46b5f02505df3e88d2e62930727529833a95e5aa6",
-      "pose_metadata_sha256": "eb8209231f349ca6fc26ffb31577681a8801c080652da6b1afd7617cb527c0d5",
+      "pose_metadata_sha256": "76bd68048344b91de268e3ca2e99049bfc4da1573e72b586d3a34c03a5de931c",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_mireclaw_reedsnare_kin_veteran/provenance.json",
       "accepted_clips": [
@@ -2873,12 +3380,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "e0a9720e1b9be329a4189357bbc7f77d17ea1b4903330e51aa29c073f1c1211d"
+      }
     },
     {
       "unit_id": "unit_bog_brute_veteran",
       "atlas_sha256": "11a3a831427384713dbc7e2674f8132086031f48a0c65da6c396889327c9fe5c",
-      "pose_metadata_sha256": "df54c387275a53fd223e4f374ecba0d88bfc60be86b3a5ec0bda2de24663c707",
+      "pose_metadata_sha256": "a0902ed8f317ca2848238fc795d132a91b30747c40f2951fc2e1796a49cef45e",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_bog_brute_veteran/provenance.json",
       "accepted_clips": [
@@ -2889,12 +3399,15 @@
         "death",
         "cast",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "9c12f2d32bba61b5596e4d0bd5022c9906a668eaaa45c791633882320b86a234"
+      }
     },
     {
       "unit_id": "unit_mireclaw_mudglass_slingers_veteran",
       "atlas_sha256": "2619f422e5f1f8ded5c01a9126d52b8ef6d83e0fa7fdbb1c079e60a540f18efe",
-      "pose_metadata_sha256": "d9e64740971620ad3ab884140123cc166a496cddaf681d59808446314b2d53d9",
+      "pose_metadata_sha256": "81e987687d75502e96257052510aeaddc3cbe0394afb8830038e383f1394f2a6",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_mireclaw_mudglass_slingers_veteran/provenance.json",
       "accepted_clips": [
@@ -2906,12 +3419,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "bb90e2d55c652ab491b1ad90a4da3ebb6e1980824a5cb26d2c948820c24f871a"
+      }
     },
     {
       "unit_id": "unit_gorefen_ripper_veteran",
       "atlas_sha256": "0a241a9a5fb0eb5bceafac58050b661a433360955d79fb6fe009db0bfb4b07fb",
-      "pose_metadata_sha256": "7b34ed7f71f35e30249534d87b62266ab400bf5bd69167e2921f4185bb465d95",
+      "pose_metadata_sha256": "b6f558ee8831fbef91ea5a1457ef847bdf0a57fff9845740bc66ba001925664c",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_gorefen_ripper_veteran/provenance.json",
       "accepted_clips": [
@@ -2922,12 +3438,15 @@
         "defend",
         "death",
         "cast"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "ceb9429eee335677af505cabd00aaf8a48cdeb0f113a8fc5f8303e3d567541a6"
+      }
     },
     {
       "unit_id": "unit_mireclaw_bogplate_maulers_veteran",
       "atlas_sha256": "439459890ed40fbc496fd83e023be86d942c97c6daa4fcd420fc6f8d68240651",
-      "pose_metadata_sha256": "fe38b260260395317e85362df17c2b9760a19b468c83b523d6fb00c29e5cd65d",
+      "pose_metadata_sha256": "4ad7053e838735a064023ff7cb3b39e852c09cd93ad857cb3d81ad8a8386cff9",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_mireclaw_bogplate_maulers_veteran/provenance.json",
       "accepted_clips": [
@@ -2938,12 +3457,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "315f5c4a9a6d48a201a12daae9dd0781dc2dd096257501e17fdaa3bb07b874cf"
+      }
     },
     {
       "unit_id": "unit_mireclaw_ferrychain_lashers_veteran",
       "atlas_sha256": "2c51e80fb88f6fd82fa25bec7eb2d7a25d673ebaaf09ec58efa915545d1dd357",
-      "pose_metadata_sha256": "cd948ad7fa7edeeb667e82b74747bde0d0ba2119dcd2e7c3634a1f74ad6338c1",
+      "pose_metadata_sha256": "d4d74fc68cb74cd5edf0950b9f64ec020bffafbedb96c6112cd1ea838a19a64d",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_mireclaw_ferrychain_lashers_veteran/provenance.json",
       "accepted_clips": [
@@ -2954,12 +3476,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "a5c3681ebb2d2acc0a6754164872db224611d03f8d3a7d1d90c6ea0984971e69"
+      }
     },
     {
       "unit_id": "unit_mireclaw_mireglass_reedcasters_veteran",
       "atlas_sha256": "08ca52e8e1c54618fd5d585edbac62c165c922fcba3cdbb5cbe8a537d7eda3bf",
-      "pose_metadata_sha256": "04e58322cc6382dcf9bb148eefd20b3878ccb19dc34e87f94f8d9670681ea686",
+      "pose_metadata_sha256": "c6e2067ca315daea5cbf0348b478ed975aff7120cedd7ccd58ec4d78c2f79401",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_mireclaw_mireglass_reedcasters_veteran/provenance.json",
       "accepted_clips": [
@@ -2971,12 +3496,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "344dced193e8f7197d243ede1566f1b7bc304824e496e5ea8c2b1b67f1b2b515"
+      }
     },
     {
       "unit_id": "unit_mireclaw_sporewake_chanters_veteran",
       "atlas_sha256": "4dd2e15f58cc5117464f2ba6fec4706a60837aaaa3378cbfd0e8b84d87a7ae4e",
-      "pose_metadata_sha256": "75a9819b85099c328e9194a4a8f6fe68ca5bbb6e8e9e20e0afa0ed64044bb4e6",
+      "pose_metadata_sha256": "0f5cbf1d6ea5d68194c93ae07b19b046c1cc3e070fafe2a045b5bc93cb07a9d5",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_mireclaw_sporewake_chanters_veteran/provenance.json",
       "accepted_clips": [
@@ -2988,12 +3516,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "f91832568c0b0575d73bdeef344f57e9641f25619b966f93c8c63735bdf849cb"
+      }
     },
     {
       "unit_id": "unit_mireclaw_fenbell_chainstalkers_veteran",
       "atlas_sha256": "5547b701582804b71018eb2f792736b0edaa5f82f058cb317d06b1607703e511",
-      "pose_metadata_sha256": "e8d3d04aaa63d661168ca39267f3f2ddc08a853c56b1966fb08d351e2dae795b",
+      "pose_metadata_sha256": "50fe1c908b0a06e8124b49c9b53055ab27127536751c6736a8ccdefe4ad1ebcb",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_mireclaw_fenbell_chainstalkers_veteran/provenance.json",
       "accepted_clips": [
@@ -3004,12 +3535,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "806651a13f6a4d4e291e21b7313dde172f13a501e90df23d1ad649546a0d2612"
+      }
     },
     {
       "unit_id": "unit_mireclaw_gorefen_rippers_veteran",
       "atlas_sha256": "ebb41e19c904a1eb92115400e19d0096735979493d2e99ac82a929f58581d687",
-      "pose_metadata_sha256": "68800fb158731f4c60f16521783b9180b1287679d35e3fe380ee392bb9e2938f",
+      "pose_metadata_sha256": "0c072f935c0b245dc39b5add998a304c3e0fae3f539244e0ea126cfa0f97f392",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_mireclaw_gorefen_rippers_veteran/provenance.json",
       "accepted_clips": [
@@ -3020,12 +3554,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "8c0ffae922dd18f4eae51a9b86032b21b21027af3578e9b2503e2b76efb59e5c"
+      }
     },
     {
       "unit_id": "unit_mireclaw_drowned_antler_sovereign_veteran",
       "atlas_sha256": "a0743aa8029585cda6a8d4aaeca616b8bc8ca9ff765b64501ad4000785d2ce12",
-      "pose_metadata_sha256": "aa6d462eddd34f702675ba61a5bb4579da60ce768846e891ac753fa38ad23205",
+      "pose_metadata_sha256": "b80abb6af123a220659a3a9cd90137a76bb204431f62c7aa6afea24d40c799d8",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_mireclaw_drowned_antler_sovereign_veteran/provenance.json",
       "accepted_clips": [
@@ -3036,12 +3573,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "d286bbd01c3e80eaabbdc64a3cd3f03f566de1cd185c2c30e50334391253715c"
+      }
     },
     {
       "unit_id": "unit_shard_guard_veteran",
       "atlas_sha256": "b24d6560aa7b653b6698219827ceced10df0dffd4dfec7c06f0baf5233c4c377",
-      "pose_metadata_sha256": "dd8b47ff08a18fdd6a41139f9c38c881adfd0c853dd622388edb9573e5241f3f",
+      "pose_metadata_sha256": "17659a6e60152c3f4430f06563125aae85544dcd987f7ec0f43fbf36a15d6f4f",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_shard_guard_veteran/provenance.json",
       "accepted_clips": [
@@ -3052,12 +3592,15 @@
         "death",
         "idle",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "124f9188a32d3786c81d8ffb7a0fc22c155431fd3f0945d4e101cd8f5d04b042"
+      }
     },
     {
       "unit_id": "unit_sunvault_shard_wardens_veteran",
       "atlas_sha256": "232f33478612f782dbeac709d062ba57178273f059a5b6d903d2b63669e24b9f",
-      "pose_metadata_sha256": "102dde5d34f641300258916734f4636b0ed1b715410dcc16c715fc81cabfa3e8",
+      "pose_metadata_sha256": "3260134010600b14210f58148382de9a471d924f550d46df456825b282ce47c6",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_sunvault_shard_wardens_veteran/provenance.json",
       "accepted_clips": [
@@ -3068,12 +3611,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "f6b5831a20e1939060a69caddeeffb0fa7f7e4f0d554187c7424d2e5c64c8ace"
+      }
     },
     {
       "unit_id": "unit_prism_adept_veteran",
       "atlas_sha256": "40d0053550048fd846af60d9e175934dc0175ca7cbcbc29733c1d5d3034bc5a1",
-      "pose_metadata_sha256": "21d86b3cc3a04b0918d451066db0c98432fe1c49af327977f666909d63182718",
+      "pose_metadata_sha256": "7a86cc6d4dd7959cf36834eca475508ac1396b3e9d03fbcbeaf4928ac763e8cf",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_prism_adept_veteran/provenance.json",
       "accepted_clips": [
@@ -3085,12 +3631,15 @@
         "death",
         "move",
         "ranged"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "03f9aafe1261916420f34561b40f697ab54eca444d477470f4b0b8a254f07f63"
+      }
     },
     {
       "unit_id": "unit_sunvault_prism_adepts_veteran",
       "atlas_sha256": "eef37332d72f15d0122cb1665642bcb9822af1343503ffb7c5346cc6965baa9e",
-      "pose_metadata_sha256": "c44474fe5c769e902dceea99d9babadd8f4e4b732d9cc6a51da2bc6d7aef7667",
+      "pose_metadata_sha256": "d523031b20d798c618451277a10ea92539d02d58d00271bedde08be5facf6c7c",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_sunvault_prism_adepts_veteran/provenance.json",
       "accepted_clips": [
@@ -3102,12 +3651,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "833ea76e486008c518af3b92e6486477a892dfed1d9dbee9a0927d2e7742c605"
+      }
     },
     {
       "unit_id": "unit_aurora_ballista_veteran",
       "atlas_sha256": "c4308af6f86d76ffec7b769eba50e45c68edfe2d39986cb8b67dc54e92bd0467",
-      "pose_metadata_sha256": "d7c0660e49ecffae8a91b9a9e2b6f508c1c228dec371fc164a80a1a24593443e",
+      "pose_metadata_sha256": "ce4a568c3bb722912ce7fc33d8762157e400418b1d33ab77e5ed4b853c549dba",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_aurora_ballista_veteran/provenance.json",
       "accepted_clips": [
@@ -3119,12 +3671,15 @@
         "defend",
         "death",
         "cast"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "d32ecf89d96c77de3779affeb34075e18e272eca02b50203a4b50b529ed587a8"
+      }
     },
     {
       "unit_id": "unit_sunvault_mirror_duelists_veteran",
       "atlas_sha256": "45a5b30a3f2b88cba71cc9997e10557d347ef82f91d9fe91045c850f9417d196",
-      "pose_metadata_sha256": "bb652f87777b7c8a7d25a5ad822e94db219897899a5074b57adf635253a28786",
+      "pose_metadata_sha256": "b291fa9cd2a34424e58609ee0e56d16544f036770ee6968f7af0ec697e6aa9d3",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_sunvault_mirror_duelists_veteran/provenance.json",
       "accepted_clips": [
@@ -3135,12 +3690,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "92587d93e75d03b9f268fd9e8b49d3883a8599f428dcaa5380a5dbb9cf91b225"
+      }
     },
     {
       "unit_id": "unit_sunvault_resonant_choristers_veteran",
       "atlas_sha256": "0935a6913e2ef3e0c04f57cc814bbde17eed33fdce4bda0eaaf3bb9b5c403ff5",
-      "pose_metadata_sha256": "5354420dee724f8c6b6fd517e9792da382818659e809c552fa11752aeaceaa1f",
+      "pose_metadata_sha256": "693474dff9ace64e170a682ddf1b4aedfaf6ad14cc2f4e061c0207e2a170aaec",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_sunvault_resonant_choristers_veteran/provenance.json",
       "accepted_clips": [
@@ -3152,12 +3710,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "916f3a1c18eb725f6a76967f75bfd4cf0dc605a841691744458e48b33d75d1db"
+      }
     },
     {
       "unit_id": "unit_sunvault_noonfacet_sentinels_veteran",
       "atlas_sha256": "7c268a96f76e71e927b9595e4066dd9cc6860fa13cc66dffdab50d5e8abf94e1",
-      "pose_metadata_sha256": "52c5bd97d7c0b79ae4a3717428e94f748de82cedef82bf8efc225645cb0472c8",
+      "pose_metadata_sha256": "d3dbadef0adaddfaaeeb7df50b382b5f473faba74dddb46c2c28ab51f6d50c58",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_sunvault_noonfacet_sentinels_veteran/provenance.json",
       "accepted_clips": [
@@ -3168,12 +3729,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "64d1e3edfe88052f8d48e9d83dd75593a3b8f5e23149fb52d463b6415b091e54"
+      }
     },
     {
       "unit_id": "unit_sunvault_solar_array_striders_veteran",
       "atlas_sha256": "c37e43bdb7203a8fa798527ef6a5526e91fbb42fa06d7d786b3503c15dacf5d7",
-      "pose_metadata_sha256": "9003af6e59bf890147a9dd1e09793e54b08200d283212b449337569e4d0fb07e",
+      "pose_metadata_sha256": "c6ef6173e0ca995b32470a8f46864105e30e1e73509989d13aac98b84e5c2d31",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_sunvault_solar_array_striders_veteran/provenance.json",
       "accepted_clips": [
@@ -3184,12 +3748,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "e7a8fe34d46898d95179eb38e63d883a3d8bf885dfb2803cb63069c6618a5604"
+      }
     },
     {
       "unit_id": "unit_sunvault_zenith_lensbearers_veteran",
       "atlas_sha256": "d78c8108ad9781cf8e6c4cd127a26b2cb16339bed2c334667dc230e39b2eb66c",
-      "pose_metadata_sha256": "7435728544a6a0af225d05c713bc46b8beacc4a5d79b96eb688d89cd0c9bb96b",
+      "pose_metadata_sha256": "a5d01140c909b40f7062790fb405ca7f2b4a5086384a0c2f76f3dafade9d69e9",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_sunvault_zenith_lensbearers_veteran/provenance.json",
       "accepted_clips": [
@@ -3201,12 +3768,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "f96bd5a9fc72a4d46e23a51678d59354d7c49ad8b73acdd8d18bcb5eeb5739ab"
+      }
     },
     {
       "unit_id": "unit_sunvault_aurora_ballistae_veteran",
       "atlas_sha256": "f8925293709c7b1cee41f4ace51d9325cc681dad56376ce224017dd821f6f517",
-      "pose_metadata_sha256": "c97cba2d1630cbbdcf2e6bfe2b8f13cddf289fd76de00a876793c518016340ce",
+      "pose_metadata_sha256": "7798b3b9b47505e90698ce507bb34786db33d7a97866dbc5b09454aae5e6f274",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_sunvault_aurora_ballistae_veteran/provenance.json",
       "accepted_clips": [
@@ -3217,12 +3787,15 @@
         "defend",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "ef1ec18b35ab47803cf6f898657ca33b76d5f70f5e3311c0e365d42154fb1046"
+      }
     },
     {
       "unit_id": "unit_sunvault_daybreak_colossus_veteran",
       "atlas_sha256": "3807d0f355673a27b0ba23709e71c9d0624cd2f6c3aff60cd1d512e844f9824c",
-      "pose_metadata_sha256": "f1f8670ba99a7fdc00a33514bf9281a804295f28c2c61cd2ae3e5b663ac3fb66",
+      "pose_metadata_sha256": "9bbc68eb9a1ed6501022e645c1b6b918823235045ea7f0995251c8b43d7d092d",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_sunvault_daybreak_colossus_veteran/provenance.json",
       "accepted_clips": [
@@ -3234,12 +3807,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "e151cf62a48deef51d9dca292dd8275e72a7e199bea1b583f2bf2ee0683ee503"
+      }
     },
     {
       "unit_id": "unit_thornwake_seedcutters_veteran",
       "atlas_sha256": "e98e07ebe13a923afc6c43eb3567e49f0a606938dd538f4174c9fe98f0075860",
-      "pose_metadata_sha256": "283e0c1a32dbc7fb6887bbbc1bfd5c861fc6a1ff558499f3494d27cf0d21c5d5",
+      "pose_metadata_sha256": "7f743cebb06057adf1f9ea83f98958f64a4a6520b5766fa05f37639f2d8f8884",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_thornwake_seedcutters_veteran/provenance.json",
       "accepted_clips": [
@@ -3250,12 +3826,15 @@
         "defend",
         "cast",
         "death"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "cec16bcd300f945a041891ae4e44e359a454d320a381f0645988bb196dd3e5e1"
+      }
     },
     {
       "unit_id": "unit_thornwake_pollenhook_whistlers_veteran",
       "atlas_sha256": "251dc3631726d8225c68a8b3d2e4d104dc8ae020c985b445c513a8cdb6d2f052",
-      "pose_metadata_sha256": "af3e055aa5bce94073c9b747b52971ec2f3361e14e43e8804a585c933c4ead79",
+      "pose_metadata_sha256": "912092bfbe61b7a8d96672d1631ca5d0b95cba5889f197c2927ab9218745d5e6",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_thornwake_pollenhook_whistlers_veteran/provenance.json",
       "accepted_clips": [
@@ -3267,12 +3846,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "37e4bc9b66d3e9a8ae67a7e632b91a364b317a060edeabe2e7edeb7986858a81"
+      }
     },
     {
       "unit_id": "unit_thornwake_thornwhip_carriers_veteran",
       "atlas_sha256": "88b00261a28c34606b674724c4d6e55a13b6a572df0b3b82915379f0e9c2c31e",
-      "pose_metadata_sha256": "27f12834d2ff623a55208aff303531102fbbbb0e2212205c1930a0dc436e24f6",
+      "pose_metadata_sha256": "35110e8a4c0d00d7e77e0d4f287410d1dc90ec643a5d19e1c5eb782843c54425",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_thornwake_thornwhip_carriers_veteran/provenance.json",
       "accepted_clips": [
@@ -3283,12 +3865,15 @@
         "defend",
         "cast",
         "death"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "d4c0476f1784347e8ea0619a1ce85e35f67447d13604b287bba6f6c3b7e91c69"
+      }
     },
     {
       "unit_id": "unit_thornwake_bramblekite_needlers_veteran",
       "atlas_sha256": "f24dccb9d865bee6ab966732780779dbe32aab0cf2e45835d0ad154d3aefabbd",
-      "pose_metadata_sha256": "1338d95ca2b33fb35f625e107763eed27dd8a23685ca05104121a9fe6a2c6b0b",
+      "pose_metadata_sha256": "693970b19cef01938e24694111f7fc5943d7fd0693d2953533c6bc18c764334f",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_thornwake_bramblekite_needlers_veteran/provenance.json",
       "accepted_clips": [
@@ -3300,12 +3885,15 @@
         "defend",
         "death",
         "cast"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "4afe172cc3ee7d80cab8c9cb60856801af80c103625d7116d408f487e658be10"
+      }
     },
     {
       "unit_id": "unit_thornwake_sporeglass_menders_veteran",
       "atlas_sha256": "daf1bdf0f261721201d4041fe199d55bc9e61cd458899125638e3c5fb463047e",
-      "pose_metadata_sha256": "aea2582ae54099dfb7999a5dbb9e95fb942ca669e09c6abae1727bc44b328d78",
+      "pose_metadata_sha256": "044d54ebe38b021245c299ceefe87d7c2f60b085a41ecb521c796432a41802ff",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_thornwake_sporeglass_menders_veteran/provenance.json",
       "accepted_clips": [
@@ -3317,12 +3905,15 @@
         "defend",
         "cast",
         "death"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "c5e43f8deef124e2c62ae4496ff7c3d921d4980a5c7d68157bd297b10134e02b"
+      }
     },
     {
       "unit_id": "unit_thornwake_seedshield_wardens_veteran",
       "atlas_sha256": "46afe0eb02ff8d4a95c9c152582f7d8b0ba3ff3a938f131121b966fcb113bc82",
-      "pose_metadata_sha256": "f8b635c74f64f61ef77ed5864e35fb2843645da9885a8ff855c5de08b03bac93",
+      "pose_metadata_sha256": "7a839cfeeed10cd148df9c2581620fbfdbc78b9ae9771fa5d3886240f08e3c46",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_thornwake_seedshield_wardens_veteran/provenance.json",
       "accepted_clips": [
@@ -3333,12 +3924,15 @@
         "defend",
         "cast",
         "death"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "88d35d91e913c0b94d3105b6492422878f42ac45e93fad68ebb728bfa6711e51"
+      }
     },
     {
       "unit_id": "unit_thornwake_barkmantle_rams_veteran",
       "atlas_sha256": "5e739428d8f805390f83afccea903091096905539ea53286de252cf7d1fe1d9c",
-      "pose_metadata_sha256": "2eb26b2d21cd7015d2cb1b253e0b5da7893823a3dba8e24a8b07a5ffd9d53183",
+      "pose_metadata_sha256": "2827129a1dc2c8639d5ba0dcf016f7f8a910b63b9341ccb20670bccfb6ab516b",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_thornwake_barkmantle_rams_veteran/provenance.json",
       "accepted_clips": [
@@ -3349,12 +3943,15 @@
         "defend",
         "death",
         "cast"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "b393a9cad936d159b66d799e3cc7b3f4bc93626c116847128b50c9eea3795256"
+      }
     },
     {
       "unit_id": "unit_thornwake_dawnseed_bolters_veteran",
       "atlas_sha256": "8b35972abce3b256bcd3f3d9fc47dd03407cde06215c726915a3e1efc11eafd8",
-      "pose_metadata_sha256": "4948fe01c3e43f3c79fafdbc9d8a1332ba4ec0647c468aee305c4d4e62a8dd57",
+      "pose_metadata_sha256": "0a628767828cfe537bfef33f4a644780d257a6824986295715f7a7cd078ae7f6",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_thornwake_dawnseed_bolters_veteran/provenance.json",
       "accepted_clips": [
@@ -3366,12 +3963,15 @@
         "death",
         "cast",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "2976ae48a11b8f40b7cbb2a977388f355dc783738fd685a833497313db8376b6"
+      }
     },
     {
       "unit_id": "unit_thornwake_stagknot_runners_veteran",
       "atlas_sha256": "745312d1260abe5e9122a5ea0dc515d6cd890424c405c7987025f500916f7195",
-      "pose_metadata_sha256": "e77da2f35ca0a2bbc6d13f66b4d8fd105eb9fd31589599f1ca4402d63a08ffb0",
+      "pose_metadata_sha256": "e8a2b2322dea98fe88cc3a3c3fbd34a311ead6024072bfd2a714736e7f6ce11f",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_thornwake_stagknot_runners_veteran/provenance.json",
       "accepted_clips": [
@@ -3382,12 +3982,15 @@
         "defend",
         "death",
         "cast"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "b771d990fd4a16857a30496ac7d938d585250a8cd161b1f4f53f2e1c60904491"
+      }
     },
     {
       "unit_id": "unit_thornwake_seedglass_cantors_veteran",
       "atlas_sha256": "67e924d2301556d8892968fba895bcdda9ce9e07c2d2a8e8b059becf89ab8d78",
-      "pose_metadata_sha256": "5ab8dcd89c1785d54d8126187415652b417a4ee2b02f1ac04037630c7dcf9abd",
+      "pose_metadata_sha256": "62a34483136db02543a91a38715c2bbc0e7edc0c0d03bd05b6b0726cdccd7217",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_thornwake_seedglass_cantors_veteran/provenance.json",
       "accepted_clips": [
@@ -3399,12 +4002,15 @@
         "defend",
         "cast",
         "death"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "4b7c078c2992eec20ac0e2e2ec54acf1892050c29cacb63db4d43fbee71c9017"
+      }
     },
     {
       "unit_id": "unit_thornwake_graft_matriarchs_veteran",
       "atlas_sha256": "b279f9c019ef140fcd3beed9bd0491ab41a477f344c1f03e6eb6378f6c25a77b",
-      "pose_metadata_sha256": "b2904b7256f6b77f52966898174715f1a1858bdbe0bb69cd520a4c250e5796fb",
+      "pose_metadata_sha256": "85d7749e3a089eb90927f995b94be7a39da46d7938e47f6ae74f68218398d896",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_thornwake_graft_matriarchs_veteran/provenance.json",
       "accepted_clips": [
@@ -3416,12 +4022,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "73e6a700a9882f6ad8edef387c360ebc6eef53652a127a62d9c71680cbd51f64"
+      }
     },
     {
       "unit_id": "unit_thornwake_worldroot_bastion_veteran",
       "atlas_sha256": "f18e84b307f4ad8e66156d9d62bcd06ade8eccb72ca18545271a823c646fee18",
-      "pose_metadata_sha256": "1d4c364eb27fe4e73086658dd5dc8c2407a2e843ea15cd58e5c3f597635e9a66",
+      "pose_metadata_sha256": "716da3db2f704c799f928b642adcf167a71aba3ed3b7f00c20b7e68ae16b8da6",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_thornwake_worldroot_bastion_veteran/provenance.json",
       "accepted_clips": [
@@ -3432,12 +4041,15 @@
         "defend",
         "cast",
         "death"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "2394c9bdbadf0edee18ff74ee31f937f96facb84443ded0f5c6bd9d528134889"
+      }
     },
     {
       "unit_id": "unit_brasshollow_scrip_haulers_veteran",
       "atlas_sha256": "d8ffa958663749ef1c394fe29ef9bac0a3c89d6cf6901b780632bb4df9319c05",
-      "pose_metadata_sha256": "0d9fe5cf8a6537262c99257a347c2786bb664964a4ae1e47d5c550284f1e1313",
+      "pose_metadata_sha256": "0bedd1cfb3be9b8488b5f54025f1afe02bd1ea8debf7fe364ccde9cefd5203f2",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_brasshollow_scrip_haulers_veteran/provenance.json",
       "accepted_clips": [
@@ -3448,12 +4060,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "3acf6af0418cf9a792d51ffc82a01bb7a07d5e31a31d38e747c4df6fd1d21d2a"
+      }
     },
     {
       "unit_id": "unit_brasshollow_tallyspring_throwers_veteran",
       "atlas_sha256": "0b8fc8fb84fc2ad711ebe08f7679abd1bed85f6da038fe06bf0f92562420e344",
-      "pose_metadata_sha256": "3f61d6e3dfa4011a0b84bb31f597a2a43d3d48d6be2788af522b509217979d13",
+      "pose_metadata_sha256": "fdce83b662c661c38eca54d807b8ffbd82bd75d065c532af9676d5ea57103b0d",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_brasshollow_tallyspring_throwers_veteran/provenance.json",
       "accepted_clips": [
@@ -3465,12 +4080,15 @@
         "defend",
         "cast",
         "death"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "9d552c45000916b3c42dec7601f6e0987b5fd1678106c9cad66da99637743adc"
+      }
     },
     {
       "unit_id": "unit_brasshollow_rivet_hounds_veteran",
       "atlas_sha256": "4a0f8f4439b9f4e8a6ea6f53e59cb149b706b9d6456942592078b802315391a5",
-      "pose_metadata_sha256": "64a94472be813cf892ea8680554592080d46564169ff5154267807d56bb9d08a",
+      "pose_metadata_sha256": "a0ddfe6ca599858f2109ccaf157236dc553dc10fa7c623fd38de4a549188a901",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_brasshollow_rivet_hounds_veteran/provenance.json",
       "accepted_clips": [
@@ -3481,12 +4099,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "33fa186119a7d824fbb5f6ede7692f657d767c0bade65a526511c4903994f6cd"
+      }
     },
     {
       "unit_id": "unit_brasshollow_quenchspool_slingers_veteran",
       "atlas_sha256": "f9417ca6b9e8f8281f5e0484ec330a49eef0b78d58572f7558526bff9587c0d6",
-      "pose_metadata_sha256": "f4299d390f54f8ff7b23eef84d3b8cfd6b98b30c892af385ddfa108af2049a9b",
+      "pose_metadata_sha256": "d564b3cfede80dab12f1d9b4b486331d54ab8bb11749951c8612477588f6ee4d",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_brasshollow_quenchspool_slingers_veteran/provenance.json",
       "accepted_clips": [
@@ -3498,12 +4119,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "5f3fb2abc1366b0d61ce684cb4ce2a059f54bdf6e0db88aa3fed56a540ded711"
+      }
     },
     {
       "unit_id": "unit_brasshollow_furnace_pavis_teams_veteran",
       "atlas_sha256": "8e39c796909cbea50872132cb8ac05775796d3fd51219b8828c9914df56b46ae",
-      "pose_metadata_sha256": "623a27a29f2179cced9627ce2a13ad070891aa4646e9d6e8d21bc1c506804f3d",
+      "pose_metadata_sha256": "3937b3ecc3b432a639ccf5a6c70aeef762dba3c13c056b1062f4b0b23c18a69c",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_brasshollow_furnace_pavis_teams_veteran/provenance.json",
       "accepted_clips": [
@@ -3514,12 +4138,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "a5c8f14e997c8b37f6ef3ce8a6da65475904b5e0538d416fe21f95de43ccc91c"
+      }
     },
     {
       "unit_id": "unit_brasshollow_gaugefire_arbalists_veteran",
       "atlas_sha256": "9ebedc8b54d0b4df80b87a1e03cd760a007400bbd3fc24dca7243029baaecd27",
-      "pose_metadata_sha256": "e61adcf12fbca2a1b34f12a6b9f8532137d60260135d6f932089232fc9827733",
+      "pose_metadata_sha256": "b331a9bf7d17622669b162e4eef3454e05f883485d244d7b39e59c07d9c6baa3",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_brasshollow_gaugefire_arbalists_veteran/provenance.json",
       "accepted_clips": [
@@ -3531,12 +4158,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "bf63edaa4dfcc5a8d882271a01f0bd4bd74e61d27c75bbd045aaa42537ee3e46"
+      }
     },
     {
       "unit_id": "unit_brasshollow_boiler_rivetcasters_veteran",
       "atlas_sha256": "49e2ce7b435cf9b8c5516ab5c79ec7035aaa30eea8eeecb1883dc322b2b0950b",
-      "pose_metadata_sha256": "2fca5a9ef45c99baf2c7ef1d64d54217c88af8241f97be7ae832902f582673a0",
+      "pose_metadata_sha256": "807e6fa8bc200f6d3f4f60fa50a16c13eb0c790973720c934196631f260b622f",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_brasshollow_boiler_rivetcasters_veteran/provenance.json",
       "accepted_clips": [
@@ -3548,12 +4178,15 @@
         "death",
         "cast",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "bdbc7f6af754691646a3e82f661a40a87b939017a2180e9f1ec6c0a4f9f4c461"
+      }
     },
     {
       "unit_id": "unit_brasshollow_gaugeplate_bailiffs_veteran",
       "atlas_sha256": "d9aac4f5dc0a8533fc5864a41d431427629b1eacdb811b7bc8dbe8aa9e5830a4",
-      "pose_metadata_sha256": "a4f0b1214722fc3707c971f0c811e937dd5b95f9f3b2b16463e72e57dd8ef919",
+      "pose_metadata_sha256": "7c7e7108390d600f92450104456b2855cf04bb328d4fa8246b838740a878dbbe",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_brasshollow_gaugeplate_bailiffs_veteran/provenance.json",
       "accepted_clips": [
@@ -3564,12 +4197,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "399fd835c6219674e4feade09360b0abc7d5cc9e5ab458a035164024479797ee"
+      }
     },
     {
       "unit_id": "unit_brasshollow_debt_engine_exactors_veteran",
       "atlas_sha256": "db9ab102d84e60723d2f7acf95cbc39935c405f5c9fcc302c045bf24029acbe9",
-      "pose_metadata_sha256": "7e6a22c90c3bd3b7ff192c72f28a86dd7231c5f103e3c62ba9b0a6cd06ed5968",
+      "pose_metadata_sha256": "a43d738b2d4766950c41b0e0d240018fb8a97caaaa8111a743703bc9e1632e91",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_brasshollow_debt_engine_exactors_veteran/provenance.json",
       "accepted_clips": [
@@ -3580,12 +4216,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "f8ab468451ecb3aa7b995292f0fd39c2bf0dafd794f8be2e58349841c84c9ead"
+      }
     },
     {
       "unit_id": "unit_brasshollow_quenchbell_mortars_veteran",
       "atlas_sha256": "f6b9d54b82b9f5db5ae425cacd30213b9163bb3c357faf12319bfa149a94b4b8",
-      "pose_metadata_sha256": "310c08c46916197636627135c012cf39c293c3146fe6c232a759ce3bee297b0a",
+      "pose_metadata_sha256": "8838c984bfb33bab1ea9c6ad36634817fd83a2f7620e62c98ad34a3e943dcf5c",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_brasshollow_quenchbell_mortars_veteran/provenance.json",
       "accepted_clips": [
@@ -3597,12 +4236,15 @@
         "cast",
         "death",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "0467a19d5eae6b3ac91ffcb92229c1e05b616316454d504dc6755415f9f66d91"
+      }
     },
     {
       "unit_id": "unit_brasshollow_crucible_crawlers_veteran",
       "atlas_sha256": "982570cd99f04a3bd98c80c2f95831fe718bba0a19f2e237833a22458abeb139",
-      "pose_metadata_sha256": "012084efbeeb0f0f33dc75168677c30dfd96016e2ed9b5fd1f6eafeb843561c3",
+      "pose_metadata_sha256": "a1cf11a362056abb304ac5f681d2eb1ffde06094b40678667a411cb2570ebbc6",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_brasshollow_crucible_crawlers_veteran/provenance.json",
       "accepted_clips": [
@@ -3614,12 +4256,15 @@
         "death",
         "attack",
         "hit"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "23a17cb996a28dbe4f171aeedb4f9227491f857db0aaa400b87c9bd5cb07c204"
+      }
     },
     {
       "unit_id": "unit_brasshollow_foundry_saint_veteran",
       "atlas_sha256": "428f4685c01de19c3688d769f3cc3cd03cfc256ab90308dd4c47eadfbc526090",
-      "pose_metadata_sha256": "1cb6253e74ca6e6d419a84d05db37f293a755b88971ef00fb41767c2da6b229a",
+      "pose_metadata_sha256": "6a2a586dc1ed015cbdb040bd1660887cf8579c7a79a5beb8d21ff2fe8e329ee5",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_brasshollow_foundry_saint_veteran/provenance.json",
       "accepted_clips": [
@@ -3630,12 +4275,15 @@
         "defend",
         "death",
         "cast"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "a5c1f49818442e90c7f71e2b74c73b6db830ad14cfe585d8939fb033a76ce2ee"
+      }
     },
     {
       "unit_id": "unit_veilmourn_bellwake_oars_veteran",
       "atlas_sha256": "04f4378429c368bd7934e3ffe59dce5f166c943629cd79551089c7008f2376e2",
-      "pose_metadata_sha256": "3a41379bee1f8de3c81299fddf0ac5f491bdb34c5719bc006b295718a84cbd63",
+      "pose_metadata_sha256": "eabb87b1a0be9043edcc5d6f699b777c9775fe942340b391b76bf2a9e8baec37",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_veilmourn_bellwake_oars_veteran/provenance.json",
       "accepted_clips": [
@@ -3646,12 +4294,15 @@
         "cast",
         "death",
         "attack"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "c708900b65e0907b38d9485be6e29958e90c28ab0d6a870ad1985fda7703562b"
+      }
     },
     {
       "unit_id": "unit_veilmourn_saltbell_casters_veteran",
       "atlas_sha256": "f32e67f783b4a6b8e319ae51613d199d640ec9abe2e2575dc8d56d43b984e6a0",
-      "pose_metadata_sha256": "95d85b2f769ce8171d8d947afa78d55aaeaad17183c1f14042dbf4f9fdb9e795",
+      "pose_metadata_sha256": "1fc5c8091c34c80281c08ec300b63c19d64e89ee1aedf222899c23435d0b3679",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_veilmourn_saltbell_casters_veteran/provenance.json",
       "accepted_clips": [
@@ -3663,12 +4314,15 @@
         "cast",
         "death",
         "ranged"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "8b8f9e3e117a4ad3d5e64a41606fc72ef100bcf8a1741de4953709b8b1cb30bf"
+      }
     },
     {
       "unit_id": "unit_veilmourn_mourning_lanterns_veteran",
       "atlas_sha256": "3bef3dc198ccaf903c58f39b082d25ed4e68971a9208fd1b4c575211071eac30",
-      "pose_metadata_sha256": "f22a6ebb255dfe1b8ef0b366f27cf6e055a33c4090f91f80e42449082d05e436",
+      "pose_metadata_sha256": "edfa0922ea45ff3aa004ad32856b73679fef2c156a1d1b056998f44da06b56bd",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_veilmourn_mourning_lanterns_veteran/provenance.json",
       "accepted_clips": [
@@ -3680,12 +4334,15 @@
         "death",
         "ranged",
         "hit"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "b2b69710e0c1f4f86772ee837c549993f72e6a274628d1fb56c895c7e9185c72"
+      }
     },
     {
       "unit_id": "unit_veilmourn_tidehook_deckhands_veteran",
       "atlas_sha256": "738f8ba8249596e779cf42fa81360de91feb7180752f7e68acdecaa0674fbda6",
-      "pose_metadata_sha256": "8699355ad56e02395b742e7e3bf61aa24527eac47fb5b0ccdfd7fee09bbc3133",
+      "pose_metadata_sha256": "0575bc50b206d9a969771cfb49a1fbe11c55f3a55dccdb57cc254b9eacb3c55c",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_veilmourn_tidehook_deckhands_veteran/provenance.json",
       "accepted_clips": [
@@ -3696,12 +4353,15 @@
         "defend",
         "cast",
         "death"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "0485ec26459371455a23dfd0ede28f7db89d509cfd453d1090fa1e6b878926ed"
+      }
     },
     {
       "unit_id": "unit_veilmourn_maskglass_corsairs_veteran",
       "atlas_sha256": "bb4f0377296574620f01b254fd938f4efac75c2c2d82fb3ea83ba862f01d9bdb",
-      "pose_metadata_sha256": "35f68aa63393c0b8a04028c292d25c4759e68307775302b96704e9ab459fdbc3",
+      "pose_metadata_sha256": "34c05713f7469c37984edef48d479f86585499d593286ff9ae2cf43405b5fcb3",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_veilmourn_maskglass_corsairs_veteran/provenance.json",
       "accepted_clips": [
@@ -3712,12 +4372,15 @@
         "death",
         "cast",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "390107577700ee528b3eeb925c7d4209b6df48b4d6f13d9bb8c297f0e83d684e"
+      }
     },
     {
       "unit_id": "unit_veilmourn_wakechain_boarders_veteran",
       "atlas_sha256": "79e87d3fdc03ef50042b5c3fd1cf4690620121463070531dac63e16f6eb64702",
-      "pose_metadata_sha256": "4fa5441215ce767278b30f4d577c0bb1560706ddec83a0c1e351cf4447af65cf",
+      "pose_metadata_sha256": "eed92accf22ed8f2565607eaa5121dd3e4af20de1e5ea9e0b62509db6fdf76d9",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_veilmourn_wakechain_boarders_veteran/provenance.json",
       "accepted_clips": [
@@ -3728,12 +4391,15 @@
         "defend",
         "cast",
         "death"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "e3d07aef53355da51642214e98164e1f0ad010ea9ab71492bbdf581d9b26afef"
+      }
     },
     {
       "unit_id": "unit_veilmourn_undertow_harpooners_veteran",
       "atlas_sha256": "ffa30c7708a2ba273c1d792e327bb34b5ff5010f92b14ade1c184c97318ffa3b",
-      "pose_metadata_sha256": "4c0ee0953769efce67e0b443f7d450239b241e31899f570906908291df574c70",
+      "pose_metadata_sha256": "ec654d27fb9d374ed7001ef22ba1533ca3075155c5de3b520155c0b385d0687b",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_veilmourn_undertow_harpooners_veteran/provenance.json",
       "accepted_clips": [
@@ -3745,12 +4411,15 @@
         "defend",
         "cast",
         "death"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "a3814960b787d3c5eecf10de79c49a87aca5517d116b07e7fe9b1714bdda5068"
+      }
     },
     {
       "unit_id": "unit_veilmourn_gloamkeel_bulwarks_veteran",
       "atlas_sha256": "ae7dfb46e3511c601e50d95b0f6395945f9565dccfe8abf1f1c0d813bd95ecc2",
-      "pose_metadata_sha256": "9f5826c569ed94d531dc72c76cae829825095e5a1deb8bee8d4deaab2a0bb0ca",
+      "pose_metadata_sha256": "ec278a9d33f69b5cecd2c76d81a1b602ad35ce3135cfde456365dbd61d073589",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_veilmourn_gloamkeel_bulwarks_veteran/provenance.json",
       "accepted_clips": [
@@ -3761,12 +4430,15 @@
         "death",
         "cast",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "0bfbdc59cc0f82977a1bd2ab5bf0217a2d2cb147633fde601ac6a17142d155e0"
+      }
     },
     {
       "unit_id": "unit_veilmourn_obituary_scribes_veteran",
       "atlas_sha256": "cb13d746d3bd2f715edf54e448e5586a7338d02de8f72d483054740d90d5a541",
-      "pose_metadata_sha256": "8648067579582c37b85e511bbcf285fcd53fcdeaa2ad01b80e8c1b2c4fc94f80",
+      "pose_metadata_sha256": "0976786c82ce851bb4a85641062d2194755ca03c0b1622c14c06ffb0d939a87d",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_veilmourn_obituary_scribes_veteran/provenance.json",
       "accepted_clips": [
@@ -3778,12 +4450,15 @@
         "defend",
         "cast",
         "death"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "be4b9025350718285375f90af579b3d3b9739ef093f1111beac9d1b734a291ec"
+      }
     },
     {
       "unit_id": "unit_veilmourn_wakeglass_navigators_veteran",
       "atlas_sha256": "f2a573567e1df0cd79901f8236ace2c9d3daf87ba1523cc775993f2a2b83c429",
-      "pose_metadata_sha256": "040a917272fcffa0925959172b7a4615fcda7cc14032b9c12fbdfe2463efbfc1",
+      "pose_metadata_sha256": "8b3d7b70728d9d2d41c76d090d2e97264f94fa2c7292a0185fecc4dfd8d19c91",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_veilmourn_wakeglass_navigators_veteran/provenance.json",
       "accepted_clips": [
@@ -3794,12 +4469,15 @@
         "defend",
         "cast",
         "death"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "17c299a5b81c66886bf2e546a44a4dc30f3b1201011065ce81277cdd8993d76a"
+      }
     },
     {
       "unit_id": "unit_veilmourn_mirrorkeel_reavers_veteran",
       "atlas_sha256": "6ddbe07f1b9fb15022bada9e2cc4df3beb57654b0d55348dec06ae25c84d38fe",
-      "pose_metadata_sha256": "80231d9cc56cafcd1831552f10edf60e6b9372e2daedfa8d6341489d8da31d6a",
+      "pose_metadata_sha256": "853d7a501d324cac9f1ee546dccf4fb3219d61cb38622aafbba1003fde75c566",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_veilmourn_mirrorkeel_reavers_veteran/provenance.json",
       "accepted_clips": [
@@ -3810,12 +4488,15 @@
         "death",
         "idle",
         "move"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "654e56c61fe85fef344e2b2bde001e9831595797706db719b74a5eb266b87ac6"
+      }
     },
     {
       "unit_id": "unit_veilmourn_fogbound_leviathan_veteran",
       "atlas_sha256": "9ece7f4055c53b613ec89779b76dbad434140ba05029f9f11542c08e043d41c7",
-      "pose_metadata_sha256": "3a14a18f2785818209c345ef1070ddd451ad33467a3e514599ff4ba6a6c11db5",
+      "pose_metadata_sha256": "27027189be69cf148d92512f786dd1fbe603ad6a4b6fe328b6a033cdb4308712",
       "review_status": "accepted_selected_fluid_clips",
       "unit_review": "res://art/animation/source/fluid/unit_veilmourn_fogbound_leviathan_veteran/provenance.json",
       "accepted_clips": [
@@ -3826,7 +4507,10 @@
         "defend",
         "death",
         "cast"
-      ]
+      ],
+      "clip_sheet_sha256": {
+        "idle": "40f9e1c8c2153744d30269f9e2a382edceb7f51cd5d734cb3547d5fdd97cb3b7"
+      }
     }
   ]
 }

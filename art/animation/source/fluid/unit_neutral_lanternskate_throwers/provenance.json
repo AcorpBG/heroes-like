@@ -30,5 +30,36 @@
   ],
   "baseline_atlas_sha256": "c87bb7b95be0e263a4edda0c1e3f286db3ebf57fdd59b1146c9fc9d224fad3a2",
   "atlas_sha256": "01f4e263a12441e3068fdd307c0d24f68ab1818db65e27c5a022f6f6b32d63ec",
-  "texture_bytes_rgba": 18186240
+  "texture_bytes_rgba": 18186240,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_neutral_lanternskate_throwers/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [
+      "0->1"
+    ],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_lanternskate_throwers.png",
+    "sheet_sha256": "f6da81f73e16fad6563b6f63604bf00f19707089c2e8f57284192ba9d32d0665",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

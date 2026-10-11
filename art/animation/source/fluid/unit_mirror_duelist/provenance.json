@@ -153,5 +153,34 @@
   ],
   "baseline_atlas_sha256": "6f0febaf1f4cea04c4519d45d60ffc76298ca53ff2b410a77451bd53deaba420",
   "atlas_sha256": "21995eb79c0a66e4b76ef5f65f3fa8f264a032dc84f6e3eeb530cf710af883b0",
-  "texture_bytes_rgba": 59136000
+  "texture_bytes_rgba": 59136000,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_mirror_duelist/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_mirror_duelist.png",
+    "sheet_sha256": "45edae5df04fd27ca02339610bc9674c6abbff2561655a4327305ed2badd8720",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

@@ -46,5 +46,36 @@
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "8ad6db39c52f23e9eb457a71569c36cf4c1b4f5aeb6c573f7862a6500e335e20",
   "atlas_sha256": "dd74e27434551cf009f7144ef8d87e6e77f71a4eed74ad26520ab27e00fc4c8e",
-  "texture_bytes_rgba": 13547520
+  "texture_bytes_rgba": 13547520,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_neutral_dustjack_blades/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "frame_msec": 120,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 1,
+    "frames": 16,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [
+      "3->4"
+    ],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_dustjack_blades.png",
+    "sheet_sha256": "b48cde9534e4d0e6c37e78994d11b961fdac11ea9a5f4945ab4db8b7a09a4828",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

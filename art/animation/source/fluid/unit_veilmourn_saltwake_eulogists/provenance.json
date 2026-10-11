@@ -329,5 +329,34 @@
   ],
   "baseline_atlas_sha256": "645da96bf45bf5ab57e3504c7d72bd3b673527046f807b2c75a6530e89d4ddfe",
   "atlas_sha256": "92b358e800eb75c4dd33cd192658f6fda1a5be03ecc0a925c8bc46ef77fdc952",
-  "texture_bytes_rgba": 54574080
+  "texture_bytes_rgba": 54574080,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_veilmourn_saltwake_eulogists.png",
+    "sheet_sha256": "c8dde5e9eab5f4117832e75a9489bd18ebbc9d80685a2456d2b1a0b37cc374f7",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

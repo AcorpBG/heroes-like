@@ -81,5 +81,34 @@
   ],
   "baseline_atlas_sha256": "9816fea1ec06e7aab0cf75cc3c827c96b0642ddbb058b3222d9d04e45f662765",
   "atlas_sha256": "06a8b4697bf9db09431ea77fdf62f6b6941ed79635e6f9ed45c6432689058d81",
-  "texture_bytes_rgba": 23755776
+  "texture_bytes_rgba": 23755776,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_thornwake_canopy_rammers/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 65,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_thornwake_canopy_rammers.png",
+    "sheet_sha256": "99b70cf9f788027b4c28255f128347c28cd6a0f64d77cf298110af6776f8ac85",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

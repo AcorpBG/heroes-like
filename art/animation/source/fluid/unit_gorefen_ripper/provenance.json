@@ -26,5 +26,34 @@
   },
   "atlas_sha256": "e15e21922c70ab466e6992e387d379c5e87f2db34b763cd8bb0fa0a57eae8b7b",
   "texture_bytes_rgba": 23030784,
-  "baseline_atlas_sha256": "75c57af319225e4adcc207580a5a3587780008fab837b72dc2179d7c7413202c"
+  "baseline_atlas_sha256": "75c57af319225e4adcc207580a5a3587780008fab837b72dc2179d7c7413202c",
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_gorefen_ripper/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "frame_msec": 120,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 1,
+    "frames": 16,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_gorefen_ripper.png",
+    "sheet_sha256": "847c98a6f8efeb7716a0b681e9655ba27b915137d537ac251f08960a0473f844",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

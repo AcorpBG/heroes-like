@@ -246,5 +246,34 @@
   ],
   "baseline_atlas_sha256": "bdfc046dbe1d2cbb1014b15fa553cf95489b4b6acff52d883800bde8437fddc0",
   "atlas_sha256": "ac6b229df6fc7eeb08fc75cd98e53a885760d2f2e7ec20db1b61f4b6568a9f2f",
-  "texture_bytes_rgba": 33572224
+  "texture_bytes_rgba": 33572224,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_mireclaw_mireglass_reedcasters.png",
+    "sheet_sha256": "577b294b458469c86e02805bed9cfbbed92b848ece2afcf098e789859ef4eb4d",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

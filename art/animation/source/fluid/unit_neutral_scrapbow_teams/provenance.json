@@ -227,5 +227,34 @@
   ],
   "baseline_atlas_sha256": "0fcd937c91beef478772f4d6f5024e42cb714d0e8ef326be40a3660c99063f28",
   "atlas_sha256": "f221f3da9f82434703ab196d926f7a9fdb79f9533d2b8c6b220bf41cbb1e37ed",
-  "texture_bytes_rgba": 53278720
+  "texture_bytes_rgba": 53278720,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_scrapbow_teams.png",
+    "sheet_sha256": "3dfd32b04291faf0cf83d836b47ca8ca1c3f53837f252b911c2f9980ba50c2dc",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

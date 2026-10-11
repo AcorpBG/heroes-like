@@ -7,7 +7,7 @@ Owner direction, 2026-10-11, after comparing approaches on real units:
 - Optical-flow blending (OpenCV DIS and Farneback) ghosted on large motions of thin parts such as spears, wings and ballista arms.
 - RIFE kept the motion of the paintings and was accepted as the workflow.
 
-The tool only writes candidates; nothing in the game changes (see "Not yet in the game").
+The tool writes candidates into a folder; `tools/integrate_idle_inbetweens.py` puts them into the game (see "In the game").
 
 ## Running it
 
@@ -67,22 +67,20 @@ The network code, `tools/rife_ifnet.py`, follows Practical-RIFE and HolyWu's vs-
 
 ## Which frames it reads
 
-For each unit, the tool uses the idle clip that `content/unit_animation_manifest.json` plays:
+For each unit, the tool reads the idle the game plays, the way `tools/publish_fluid_creature_animation.py` built the unit's atlas:
 
-- **148 units** have 8 paintings in `art/animation/source/poses/<unit>/idle-v2/hands-packing.json`. The tool uses them when the manifest idle has 8 frames.
-- **62 fluid-batch units** list their idle frames in `art/animation/source/fluid/<unit>/reviewed_handoff.json`, under `clips.idle`.
-- **20 units** have video idles, with 16–50 frames from the same handoff file. These frames carry `alpha_noise_cutoff`, which the tool applies. Seven of these units also have an 8-painting sheet, but the manifest plays the video, and so does the tool.
-- **2 units** (`unit_neutral_sunscale_lanternmoths`, `unit_neutral_fenmirror_gallowshells`) still play the 8 paintings of the 2026-09-19 idle expansion.
-  - Their fluid handoff keeps ("preserves") that idle rather than listing it.
-  - `poses/<unit>/idle-v2/generation.json` names where the paintings were appended (`packing_recipe`, `packed_indices`), and the tool reads them from there.
-  - All 16 frames match the game's current idle pixel for pixel.
+- **97 units:** the idle clip of `art/animation/source/fluid/<unit>/reviewed_handoff.json`, when the handoff has one. 20 of these are video idles with 16–50 frames; their frames carry `alpha_noise_cutoff`, which the tool applies before any resize, as the game's packer does. Two handoffs (`unit_neutral_echodart_casts`, `unit_neutral_deepforge_vaultwyrms`) are drawn facing the other way, and the game mirrors them; so does the tool.
+- **135 units:** the frames of `art/animation/source/poses/<unit>/packing.json` that the fluid `baseline.json` plays as idle. These are the 8 `idle-v2` paintings, or, for `unit_neutral_sunscale_lanternmoths` and `unit_neutral_fenmirror_gallowshells`, the paintings of the 2026-09-19 idle expansion.
 
-Three fluid units mix scales within their idle frames:
+The first roster run read the older `idle-v2` paintings for 15 units whose handoff had since replaced them with an 8-frame painted idle, and it did not mirror the two handoffs. The integration's frame check (see "In the game") caught this; those 16 units were rerun on 2026-10-11.
+
+Four units mix scales within their idle frames:
 - `unit_river_guard_veteran`
 - `unit_embercourt_beaconline_writguard_veteran`
 - `unit_mireclaw_fenbell_chainstalkers_veteran`
+- `unit_neutral_reefbolt_crews`
 
-For these, the tool brings every frame to the largest scale, so frames are only ever reduced, and the figure keeps its size through the loop.
+For these, the tool brings every frame to the largest scale, so frames are only ever reduced, and the figure keeps its size through the loop. The game shrinks such a frame in one step, which averages faint source noise (alpha 1–2) away. The tool's extra step would leave specks, so it clears alpha of 2 or less after it.
 
 ## Method
 
@@ -98,7 +96,7 @@ For these, the tool brings every frame to the largest scale, so frames are only 
 4. **Fit the cell.** Some idles, mostly video idles, reach within a pixel of their game cell's edge. A soft in-between edge there can spill a pixel past the cell once the packer shrinks the frame, and the packer refuses that. The tool simulates the packer's resize and clears only the in-between pixels that would land outside the cell. The accepted frames are never touched. `cell_clipped_px` in `report.json` counts the cleared pixels at source resolution; in the full roster run, only Bellwake Oars veteran needed this (two in-betweens, 43 and 79 pixels).
 5. **Pack.** The game's packer turns the loop into cells at the unit's frame size, ground margin and scale.
 
-In the first full roster run (2026-10-11), all 232 units took about 20 minutes and produced 1.9 GB of output. 33 units had a flagged pair: 19 painted units and 14 fluid units.
+In the first full roster run (2026-10-11), all 232 units took about 20 minutes and produced 1.9 GB of output. After the 16 corrected units were rerun, 34 units have a flagged pair: 19 painted units and 15 fluid units.
 - Most only just crossed the threshold (ratio 1.6–1.9) and look fine.
 - The worst, such as Gaugeplate Bailiffs (3.05), have a very large move between two paintings. There, the hammer goes from the hip to over the shoulder, and RIFE cross-fades a ghost hammer instead of moving it. Sunscale Lanternmoths shows the same with its wing beats: four pairs show a doubled wing.
 
@@ -113,11 +111,37 @@ Known limits:
 - Big moves of fine detail can leave thin dark rims; this comes from the black/white matting.
 - Painted detail that differs between two paintings morphs between them instead of popping, so painted units still "boil" a little, only more smoothly.
 
-## Not yet in the game
+## In the game
 
-Playing these loops in the game is a separate step that has not been built. It needs:
+`tools/integrate_idle_inbetweens.py` puts the loops into the game:
 
-- `tools/integrate_unit_idle_poses.py` accepts exactly 8 idle frames; fluid units publish through `tools/publish_fluid_creature_animation.py`.
-- The manifest's `pose_clips.idle` (`indices`, `frames`, `frame_msec`) must describe the longer loop. The idle area of each battle atlas grows about 3x.
-- `art/overworld/creature_idle.json` reuses the battle idle frames, so the overworld idle strips must be repacked too.
-- Changed idle pixels need re-registration in `docs/battle-unit-animation-acceptance.json`.
+```text
+python tools/integrate_idle_inbetweens.py --all --from DIR [--check]
+python tools/integrate_idle_inbetweens.py UNIT_ID [UNIT_ID ...] --from DIR
+```
+
+It needs only Pillow and numpy, no GPU. For each unit with in-betweens, it:
+
+1. **Checks the accepted frames.** Every painting in the new loop must match the frame the game plays now: alpha mass within 3%, and alpha difference under 20% of the frame's alpha after the best shift of up to 3 px. A stale candidate, or one made from the wrong frames, fails, and that unit keeps its idle. The roster passed with at most 5%; the differences are edge resampling, because the loop's frames are all resampled on one grid.
+2. **Places the loop.** The whole loop moves by the median offset of its paintings, so it stands where the old idle stood, within a pixel.
+3. **Writes an idle sheet**, `art/animation/runtime/idle/<unit>.png`. All frames share one crop around the figure and the ground anchor, with 8 px of transparent margin, in an even grid of at most 4096 px a side.
+4. **Points the manifest idle clip at it.** The clip gets `sheet`, `columns`, `frame_size`, `ground_margin` and `anchor_x`. `scripts/ui/BattleUnitPose.gd` (`sheet_path`, `region`, `grounded_rect`) draws such a clip from its own sheet with its own ground line. Every other clip still plays from the action atlas, whose pixels are not touched. The clip also keeps `from_atlas`: the atlas idle the loop was made from. With it, the tool can run again and check against the same paintings. `frame_msec` becomes the source timing divided by (in-betweens + 1), and `static_frame` (reduced motion) stays on the same painting.
+5. **Points the overworld idle at the same sheet.** In `art/overworld/creature_idle.json`, the entry gets `columns`, and the unit's old strip is removed. `scenes/overworld/OverworldCreatureIdle.gdshader` reads grid sheets.
+6. **Registers the sheet.** `clip_sheet_sha256` goes into `docs/battle-unit-animation-acceptance.json`, which `tests/test_pack_unit_pose_art.py` checks, and an `idle_inbetweens` record goes into the unit's `art/animation/source/fluid/<unit>/provenance.json`.
+
+A unit is changed only once everything for it has been checked and built, so a failure leaves it as it was. Running the tool again on the same folder gives the same result.
+
+State on 2026-10-11:
+- 228 units play their RIFE loop in battle and on the map.
+- `unit_shard_guard`, `unit_veilmourn_mirrorkeel_reavers`, `unit_neutral_echodart_casts` and `unit_neutral_galehorn_striders` already play at 65–83 ms. They get no in-betweens and keep their idle.
+- The sheets take 409 MB on disk. Uncompressed, they take 1,275 MB in all, about 5.6 MB per unit; Godot loads a unit's sheet when it appears.
+- The overworld strips they replace took 457 MB uncompressed.
+
+**Republishing a unit** with `tools/publish_fluid_creature_animation.py` keeps its idle loop and provenance record, unless the publish delivers a new idle. A new idle plays from the atlas, without in-betweens, until both tools run again for that unit:
+
+```text
+H:\ai\envs\trellis2\python.exe -I -B tools/idle_inbetweens.py UNIT_ID --out DIR
+python tools/integrate_idle_inbetweens.py UNIT_ID --from DIR
+```
+
+Rerun only the units whose idle changed; the loop is made once per idle.

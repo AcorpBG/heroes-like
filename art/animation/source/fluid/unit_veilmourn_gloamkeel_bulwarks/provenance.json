@@ -232,5 +232,34 @@
   ],
   "baseline_atlas_sha256": "31b1b6daa612132fb6fc3c28adccbf11e558f7c5038e2e3b1abc7d0e3b20440b",
   "atlas_sha256": "4439feca868628dd2b3d593380f68d7af31a7a645642d74aa63ff902aa4083a4",
-  "texture_bytes_rgba": 36550080
+  "texture_bytes_rgba": 36550080,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_veilmourn_gloamkeel_bulwarks.png",
+    "sheet_sha256": "22f93e648a43e33ca3affa3e2b165a56796a8be4e45d757dc4a656fb313060a2",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

@@ -249,5 +249,34 @@
   ],
   "baseline_atlas_sha256": "85ae1326aa2b40a98a9b305ca1507b7fc20e4c61c37e19e7e67cdd48179ab9e5",
   "atlas_sha256": "955061eb1efe46063d68ae608701878af00b50150af7be53133d72aaa001c061",
-  "texture_bytes_rgba": 46370240
+  "texture_bytes_rgba": 46370240,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_neutral_brambleback_knucklebears/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 65,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_brambleback_knucklebears.png",
+    "sheet_sha256": "3bde87b9e86102a810adba8043363e8440fb1ffe34db85174db0e987a8e87481",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

@@ -2515,7 +2515,12 @@ static func art_texture_paths_for_battle(battle: Dictionary) -> PackedStringArra
 			continue
 		var animation := ContentService.get_unit_animation(unit_id)
 		var art := ContentService.get_unit_art(unit_id)
-		for path in [String(animation.get("pose_sheet", animation.get("sprite_sheet", ""))), String(art.get("battle_standee", "")), String(art.get("battle_icon", ""))]:
+		var sheet_paths := [String(animation.get("pose_sheet", animation.get("sprite_sheet", ""))), String(art.get("battle_standee", "")), String(art.get("battle_icon", ""))]
+		var clips: Variant = animation.get("pose_clips", {})
+		for spec in (clips.values() if clips is Dictionary else []):
+			if spec is Dictionary and spec.has("sheet"):
+				sheet_paths.append(String(spec.get("sheet", "")))
+		for path in sheet_paths:
 			if path != "" and not paths.has(path):
 				paths.append(path)
 	for side in ["player", "enemy"]:
@@ -2616,8 +2621,9 @@ func _unit_animation_sheet_texture(path: String) -> Texture2D:
 	_unit_animation_sheet_missing[path] = true
 	return null
 
-func _animation_frame_region_for_stack(stack: Dictionary) -> Rect2:
-	var state_name := _animation_state_for_stack(stack)
+func _animation_frame_region_for_stack(stack: Dictionary, state_name: String = "") -> Rect2:
+	if state_name == "":
+		state_name = _animation_state_for_stack(stack)
 	var animation := ContentService.get_unit_animation(String(stack.get("unit_id", "")))
 	if BattleUnitPose.has_authored_poses(animation):
 		var preferences := AnimationCueCatalogScript.normalize_animation_preferences(_animation_preferences())
@@ -3278,11 +3284,15 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 		var battle_icon: Texture2D = _unit_battle_icon_for_stack(stack)
 		if art_source == "event_animation_sheet":
 			var frame_size := _stack_standee_size(radius, stack).y
-			var frame_region := _animation_frame_region_for_stack(stack)
 			var animation := ContentService.get_unit_animation(String(stack.get("unit_id", "")))
+			# One state for sheet, region and ground line: a derived idle loop has its own sheet.
+			var state_name := _animation_state_for_stack(stack)
+			var frame_region := _animation_frame_region_for_stack(stack, state_name)
+			var clip_sheet := _unit_animation_sheet_texture(BattleUnitPose.sheet_path(animation, state_name))
 			var flip := BattleUnitPose.facing_flip(animation, side)
-			var frame_rect := BattleUnitPose.grounded_rect(ground_center, frame_size, frame_region, animation, flip)
-			_draw_stack_art_region(animation_sheet, frame_rect, frame_region, flip, Color(1.0, 1.0, 1.0, 0.96 * art_alpha))
+			var frame_rect := BattleUnitPose.grounded_rect(ground_center, frame_size, frame_region, animation, flip, BattleUnitPose.clip(animation, state_name))
+			if clip_sheet != null:
+				_draw_stack_art_region(clip_sheet, frame_rect, frame_region, flip, Color(1.0, 1.0, 1.0, 0.96 * art_alpha))
 		elif art_source == "resting_battle_standee":
 			_draw_stack_art(battle_standee, _stack_standee_rect(center, radius, stack), side == "enemy", Color(1.0, 1.0, 1.0, 0.99 * art_alpha))
 		elif art_source == "resting_battle_icon":

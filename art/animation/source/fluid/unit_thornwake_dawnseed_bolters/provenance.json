@@ -272,5 +272,34 @@
   ],
   "baseline_atlas_sha256": "f18bd41b14a5aa6120f970397135e8a7db7636fa81ccaa084ee2a1de4e75b2b0",
   "atlas_sha256": "0361f69860e16561e15cfd6c9619628c76cc192d8f46698bbfdc290fa5c7449a",
-  "texture_bytes_rgba": 48211968
+  "texture_bytes_rgba": 48211968,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_thornwake_dawnseed_bolters.png",
+    "sheet_sha256": "6219bd45327bcc31bf065617d11ee4ab7ab1d32b1d4a55a3e0c81744364cdf44",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

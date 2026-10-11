@@ -69,5 +69,34 @@
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "c063695e34e23a97b2e33e833370b358fc3563d7ebce41aa574d879bf8112ca5",
   "atlas_sha256": "982e61a2c25c66213127ef9a39c63ab2850a5da9e588d1cbdc8632a5b7887ed6",
-  "texture_bytes_rgba": 20045312
+  "texture_bytes_rgba": 20045312,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_veilmourn_wakeglass_navigators/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "frame_msec": 140,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 1,
+    "frames": 16,
+    "frame_msec": 70,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_veilmourn_wakeglass_navigators.png",
+    "sheet_sha256": "7991758843264da88802716770caf1d2bcf97848f7a734a580c852c24aebc70d",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

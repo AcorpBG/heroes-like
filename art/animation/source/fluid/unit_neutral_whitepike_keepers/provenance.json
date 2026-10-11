@@ -319,5 +319,34 @@
   ],
   "baseline_atlas_sha256": "b933d0728543f269ae049b2bceba7c774cdab25b637463be0a0d5358d46da398",
   "atlas_sha256": "d7b34a3ef35544e4e077c029e67cdc399dce625d20ff71d62b5df79d9b4b7c1e",
-  "texture_bytes_rgba": 48230400
+  "texture_bytes_rgba": 48230400,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_neutral_whitepike_keepers/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_whitepike_keepers.png",
+    "sheet_sha256": "7b474e9c7998ae2cc30f9bcb12b47c1350f2ab02ad72549679b98becd7712ad1",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

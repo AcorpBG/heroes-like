@@ -31,5 +31,37 @@
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "1d23636e49ff744d5349f4e3c6d518ee114d106d35f6634208b011378d4d553c",
   "atlas_sha256": "3807d0f355673a27b0ba23709e71c9d0624cd2f6c3aff60cd1d512e844f9824c",
-  "texture_bytes_rgba": 16972800
+  "texture_bytes_rgba": 16972800,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_sunvault_daybreak_colossus_veteran/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "frame_msec": 155,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 2,
+    "frames": 24,
+    "frame_msec": 52,
+    "flagged_handling": "hold",
+    "held_pairs": [
+      "4->5",
+      "5->6"
+    ],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_sunvault_daybreak_colossus_veteran.png",
+    "sheet_sha256": "e151cf62a48deef51d9dca292dd8275e72a7e199bea1b583f2bf2ee0683ee503",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

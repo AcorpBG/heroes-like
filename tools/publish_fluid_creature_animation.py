@@ -13,7 +13,7 @@ import shutil
 from pathlib import Path
 
 from integrate_fluid_creature_animation import ROOT, pack_unit, read, uri
-from pack_overworld_creature_idle import extract
+from pack_overworld_creature_idle import extract, write_strip
 
 
 def write(path, value, compact=False):
@@ -90,25 +90,37 @@ def publish(handoff, clips, note, preserved=()):
         combined['visual_review'] = {'status': 'accepted_selected_clips', 'notes': note}
         patch = pack_unit(combined, baseline, ROOT / 'art/animation/runtime/fluid')
         row = patch['animation']
+        # A derived idle loop (tools/integrate_idle_inbetweens.py) lives on its own
+        # sheet: keep it while its accepted frames stay; a newly delivered idle drops it.
+        loop = rows[uid]['pose_clips'].get('idle', {})
+        if loop.get('sheet') and 'idle' not in clips:
+            atlas_idle = row['pose_clips']['idle']
+            if len(atlas_idle['indices']) != len(loop['from_atlas']['indices']):
+                raise ValueError(f'{uid}: the idle loop was made from a different idle')
+            row['pose_clips']['idle'] = dict(loop, from_atlas={
+                'indices': atlas_idle['indices'], 'frame_msec': atlas_idle['frame_msec'],
+                'static_frame': atlas_idle.get('static_frame', 0)})
         row['pose_provenance'] = uri(source_dir / 'provenance.json')
         row['pose_review_status'] = 'accepted_selected_fluid_clips'
         row['pose_accepted_clips'] = combined['accepted_clips']
         row.pop('pose_review_evidence', None)
         # The legacy sprite_sheet is a separate fallback layout; do not relabel it.
         strip, idle_entry = extract(row)
-        strip_path = ROOT / idle_entry['path'].removeprefix('res://')
-        strip.save(strip_path, optimize=True)
-        idle_entry['sha256'] = hashlib.sha256(strip_path.read_bytes()).hexdigest()
+        write_strip(strip, idle_entry)
         idle['units'][uid] = idle_entry
         write(baseline_path, baseline)
         write(reviewed_path, {'schema_version': 1, 'units': [combined]})
-        write(source_dir / 'provenance.json', {
+        provenance_path = source_dir / 'provenance.json'
+        kept_loop = (read(provenance_path).get('idle_inbetweens')
+                     if row['pose_clips']['idle'].get('sheet') and provenance_path.exists() else None)
+        write(provenance_path, {
             'unit_id': uid, 'baseline': 'baseline.json', 'handoff': 'reviewed_handoff.json',
             'tool': 'tools/publish_fluid_creature_animation.py', 'sources': patch['sources'],
             'accepted_clips': combined['accepted_clips'], 'review': combined['visual_review'],
             'preserved_accepted_clips': sorted(retained),
             'baseline_atlas_sha256': hashlib.sha256(baseline_atlas.read_bytes()).hexdigest(),
-            'atlas_sha256': patch['atlas_sha256'], 'texture_bytes_rgba': patch['texture_bytes_rgba']})
+            'atlas_sha256': patch['atlas_sha256'], 'texture_bytes_rgba': patch['texture_bytes_rgba'],
+            **({'idle_inbetweens': kept_loop} if kept_loop else {})})
         rows[uid].clear()
         rows[uid].update(row)
         published.append({'unit_id': uid, 'clips': clips, 'texture_bytes_rgba': patch['texture_bytes_rgba']})

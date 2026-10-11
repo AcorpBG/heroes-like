@@ -16613,12 +16613,12 @@
   ],
   "currentNotes": "Actor-readability slice completed: 112 original paintings, full-size town visitors and cached alpha-edge contrast. Source/Linux/Windows rendered roster checks, Large movement/AI/fog, existing actor/scale reports, repository validation and official exports/parity pass. Removed 3.255 GB disposable outputs while preserving original art/provenance, caches/saves, RMG and unrelated files. No next slice selected; broader project remains in progress.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-idle-rife-inbetween-tool-20261011",
-  "currentSliceId": "art-idle-rife-inbetween-tool-20261011",
-  "currentSliceNotes": "COMPLETED 2026-10-11. See plannedSlices art-idle-rife-inbetween-tool-20261011.",
+  "currentSlice": "art-idle-rife-integration-20261011",
+  "currentSliceId": "art-idle-rife-integration-20261011",
+  "currentSliceNotes": "COMPLETED 2026-10-11. See plannedSlices art-idle-rife-integration-20261011.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "RIFE in-between tool for smoother creature idle loops",
-  "currentSliceUpdatedAt": "2026-10-11T11:00:00Z",
+  "currentSliceTitle": "RIFE idle loops in the game",
+  "currentSliceUpdatedAt": "2026-10-11T16:00:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -115079,6 +115079,19 @@
       "startedAt": "2026-10-11T09:00:00Z",
       "updatedAt": "2026-10-11T11:00:00Z",
       "completedAt": "2026-10-11T09:00:00Z"
+    },
+    {
+      "id": "art-idle-rife-integration-20261011",
+      "title": "RIFE idle loops in the game",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "content_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/idle-inbetweens.md",
+        "docs/fluid-creature-animation.md"
+      ],
+      "notes": "Owner request 2026-10-11: 'integrate this new idle animations in the game'. tools/integrate_idle_inbetweens.py checks each loop's paintings against the frames the game plays (alpha mass within 3%, alpha difference under 20% after a shift of up to 3 px; roster worst 5%), places the loop by the median offset of its paintings, and writes it as its own sheet art/animation/runtime/idle/<unit>.png (shared crop and ground anchor, even grid of at most 4096 px). The manifest idle clip plays that sheet (sheet, columns, frame_size, ground_margin, anchor_x; from_atlas keeps the atlas idle for reruns). BattleUnitPose.sheet_path/region/grounded_rect and the battle board draw a clip from its own sheet; the overworld idle plays the same sheet through a grid-aware OverworldCreatureIdle shader, and the replaced strips are removed. Action atlases are untouched (Git growth about 0.4 GB instead of about 2.4 GB for rewritten atlases). Registered in docs/battle-unit-animation-acceptance.json (clip_sheet_sha256, checked by tests/test_pack_unit_pose_art.py) and each unit's fluid provenance (idle_inbetweens). publish_fluid_creature_animation keeps a unit's loop and its provenance record unless it delivers a new idle. The frame check found that the first tool run had read superseded idle-v2 paintings for 15 units whose handoff has an 8-frame painted idle and had not mirrored 2 left-facing handoffs; tools/idle_inbetweens.py now follows the publish chain (handoff idle, else baseline idle from packing.json), applies alpha_noise_cutoff before resizing and clears two-step resize specks; those 16 units plus 3 mixed-scale veterans were rerun. Result: 228 units play the loops in battle and on the map; 4 units already at 65-83 ms keep their idle. Sheets 409 MB on disk, 1,275 MB uncompressed in all (about 5.6 MB per unit, loaded per unit); replaced strips were 457 MB uncompressed. Checked in game (isolated profile, 2560x1440) on 8 units incl. mirrored, held-pair, flying, mixed-scale, packed-atlas and 62-frame video idles: grounded, facing and size as before, frames animate, overworld grid sheets play; every painting sits within 3 px of its old ink box (faint-edge specks only, reefbolt crews excepted)."
     }
   ],
   "project": "heroes-like",

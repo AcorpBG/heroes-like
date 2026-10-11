@@ -312,5 +312,44 @@
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "3ab87e780edfaf67ba9c38e3a7d17fe76058dc295845ad0068c80a9bac621c0f",
   "atlas_sha256": "daf15c5ee622ab90397ea35dd0607b64b41a1a27bc5a1dabe560d0304f54ce68",
-  "texture_bytes_rgba": 49441792
+  "texture_bytes_rgba": 49441792,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_neutral_rootcrown_knotstags/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "frame_msec": 160,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 2,
+    "frames": 54,
+    "frame_msec": 53,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_rootcrown_knotstags.png",
+    "sheet_sha256": "682beb94d4efb7e74073da2d194ce1042a38ea469c91fd34a8dc34c88aab1a89",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

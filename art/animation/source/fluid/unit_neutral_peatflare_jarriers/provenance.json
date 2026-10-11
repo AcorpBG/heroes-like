@@ -315,5 +315,34 @@
   ],
   "baseline_atlas_sha256": "ef2fff188fae470a43b12df652b2d139cd2c46c89a03e2eda289e7f99c885d70",
   "atlas_sha256": "dc8a559408e419c29162113c6f57d1919f1bffa95b589e9a51dfe8cfa131c9a9",
-  "texture_bytes_rgba": 46116864
+  "texture_bytes_rgba": 46116864,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_peatflare_jarriers.png",
+    "sheet_sha256": "769e04e2373af21a6cec813db2cd22e8737c7d6505b129c6ee57144c1d9c3ba7",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

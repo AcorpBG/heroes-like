@@ -35,5 +35,37 @@
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "8d741e89446d5f50f477919e0fb0f0edde4266dcc2888f42f43dca7677b56ce4",
   "atlas_sha256": "eef37332d72f15d0122cb1665642bcb9822af1343503ffb7c5346cc6965baa9e",
-  "texture_bytes_rgba": 25966080
+  "texture_bytes_rgba": 25966080,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_sunvault_prism_adepts_veteran/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "frame_msec": 155,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 2,
+    "frames": 24,
+    "frame_msec": 52,
+    "flagged_handling": "hold",
+    "held_pairs": [
+      "2->3",
+      "3->4"
+    ],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_sunvault_prism_adepts_veteran.png",
+    "sheet_sha256": "833ea76e486008c518af3b92e6486477a892dfed1d9dbee9a0927d2e7742c605",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

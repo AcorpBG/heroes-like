@@ -245,5 +245,37 @@
   ],
   "baseline_atlas_sha256": "692f1dbd8897892322023b0f7418a4d2f2dc1426f91c972eda57325e262b2e2b",
   "atlas_sha256": "db5b082b8eb5b01b3846d165a9bd7cb82357785fe9e59c4759a4d1e3e892fabf",
-  "texture_bytes_rgba": 42467328
+  "texture_bytes_rgba": 42467328,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [
+      "2->3",
+      "3->4"
+    ],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_veilmourn_undertow_harpooners.png",
+    "sheet_sha256": "e12ae7632e7dde50ea7e36b5cc71ad200c66fa037f6e359aa2cf885cd7c8f4bf",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

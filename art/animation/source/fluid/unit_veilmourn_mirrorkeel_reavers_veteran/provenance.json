@@ -30,5 +30,34 @@
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "1e27fde9e9124b40b57b57d010619df5a058703f5cea9e6eac45e499ff372ca9",
   "atlas_sha256": "6ddbe07f1b9fb15022bada9e2cc4df3beb57654b0d55348dec06ae25c84d38fe",
-  "texture_bytes_rgba": 29102080
+  "texture_bytes_rgba": 29102080,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_veilmourn_mirrorkeel_reavers_veteran/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40
+      ],
+      "frame_msec": 125,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 1,
+    "frames": 16,
+    "frame_msec": 62,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_veilmourn_mirrorkeel_reavers_veteran.png",
+    "sheet_sha256": "654e56c61fe85fef344e2b2bde001e9831595797706db719b74a5eb266b87ac6",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

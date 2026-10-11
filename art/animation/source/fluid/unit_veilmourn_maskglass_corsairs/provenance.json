@@ -205,5 +205,34 @@
   ],
   "baseline_atlas_sha256": "e6c58a4d4f1b3c1887302b6f5ef96bc6b2e86a6915de7f2e41be82f9d793255b",
   "atlas_sha256": "e25179d5dd51f695bee0afb01e8384fb7b27e57503baf13292d6eadbd14aa2e9",
-  "texture_bytes_rgba": 60128640
+  "texture_bytes_rgba": 60128640,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_veilmourn_maskglass_corsairs.png",
+    "sheet_sha256": "610c29127c4d6a9ff9eaaebb9069a25bee87a6ba6cb6f47f07ffacf7cfc8062b",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

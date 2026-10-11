@@ -183,5 +183,34 @@
   ],
   "baseline_atlas_sha256": "bc99c41f39226b1b579abc7890d2b7507caf981bcd3c9322e73705f6a26f7161",
   "atlas_sha256": "5c9c9ea36e988439305f0550425a8778c45b7d7bf43b2fa7ff133d83f4371586",
-  "texture_bytes_rgba": 62473216
+  "texture_bytes_rgba": 62473216,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_embercourt_ash_oath_bailiffs.png",
+    "sheet_sha256": "cf4718164508df054b2223da3898d3cb3272ea02fda557020d54055035e66e33",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

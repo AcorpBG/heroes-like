@@ -153,5 +153,37 @@
   ],
   "baseline_atlas_sha256": "06167719c7d599dd426cecd918710f18174a33407fd0921da422226f6c787127",
   "atlas_sha256": "0029bf4d7048e8f9ca95435c4d69ca85f8f3e8fb93aeece01275c8c75d6cd3ef",
-  "texture_bytes_rgba": 59963904
+  "texture_bytes_rgba": 59963904,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_neutral_millstone_slingers/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [
+      "0->1",
+      "5->6"
+    ],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_millstone_slingers.png",
+    "sheet_sha256": "5b2934172f3885fb9a4c67700d4a42f085609dca02ea0127e26b6bb6a2144846",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

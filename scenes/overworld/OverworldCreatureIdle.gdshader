@@ -2,6 +2,8 @@ shader_type canvas_item;
 render_mode unshaded;
 
 uniform float frame_count = 2.0;
+// Frames per row; a long loop wraps into a grid. Zero keeps one row.
+uniform float frame_columns = 0.0;
 uniform float frame_seconds = 0.6;
 uniform float static_frame = 0.0;
 uniform float phase = 0.0;
@@ -15,10 +17,11 @@ void vertex() { paint_tint = COLOR; }
 // The built-in TEXTURE is sampled only in fragment(): Godot cannot pass it into a
 // user function on every renderer (the headless one reports a missing sampler).
 vec2 pose_uv(vec2 uv, float frame, vec2 pixel_size) {
-	vec2 half_pixel = pixel_size * vec2(frame_count, 1.0) * 0.5;
+	float columns = frame_columns > 0.0 ? frame_columns : frame_count;
+	vec2 cells = vec2(columns, ceil(frame_count / columns));
+	vec2 half_pixel = pixel_size * cells * 0.5;
 	vec2 sample_uv = clamp(uv, half_pixel, vec2(1.0) - half_pixel);
-	sample_uv.x = (sample_uv.x + frame) / frame_count;
-	return sample_uv;
+	return (sample_uv + vec2(mod(frame, columns), floor(frame / columns))) / cells;
 }
 
 float pose_inside(vec2 uv) {

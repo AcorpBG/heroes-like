@@ -30,5 +30,34 @@
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "41e56e3eeda3b1678b29405105abe1ff70fc4e40dcd892225d32c8dc8baeda8c",
   "atlas_sha256": "daf1bdf0f261721201d4041fe199d55bc9e61cd458899125638e3c5fb463047e",
-  "texture_bytes_rgba": 18754560
+  "texture_bytes_rgba": 18754560,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_thornwake_sporeglass_menders_veteran/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "frame_msec": 155,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 2,
+    "frames": 24,
+    "frame_msec": 52,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_thornwake_sporeglass_menders_veteran.png",
+    "sheet_sha256": "c5e43f8deef124e2c62ae4496ff7c3d921d4980a5c7d68157bd297b10134e02b",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

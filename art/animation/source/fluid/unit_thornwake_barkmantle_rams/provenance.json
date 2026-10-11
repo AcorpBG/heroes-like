@@ -58,5 +58,34 @@
   ],
   "baseline_atlas_sha256": "e054b07969e06d8736acfe3d3f356559b9526a2521712de0532e8d3e96d91bef",
   "atlas_sha256": "8cb824d7c67270674c5c30065b2fb90155c53c6ecd730bfea8e82ba85a2036a6",
-  "texture_bytes_rgba": 30081024
+  "texture_bytes_rgba": 30081024,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_thornwake_barkmantle_rams/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 65,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_thornwake_barkmantle_rams.png",
+    "sheet_sha256": "87245b9cef2d838c744f578d597d47173b5d45e52f17b410ec2c319612d7a551",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

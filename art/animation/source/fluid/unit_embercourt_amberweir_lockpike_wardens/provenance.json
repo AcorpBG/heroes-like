@@ -27,5 +27,34 @@
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "6edd086ef54ad86a154442555d5ab9e4c139a139c98eaac153cb63699f36e1b4",
   "atlas_sha256": "f90cfa37c022e5f02f8f189cb56714e9c78bb29e6f5802764326242ca3d9aa23",
-  "texture_bytes_rgba": 19041792
+  "texture_bytes_rgba": 19041792,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_embercourt_amberweir_lockpike_wardens/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "frame_msec": 125,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 1,
+    "frames": 16,
+    "frame_msec": 62,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_embercourt_amberweir_lockpike_wardens.png",
+    "sheet_sha256": "a5d54d8d7b2b4fcee8c9a22e6f2f203eb8338d942a1b34bbee6870fac9cb7000",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

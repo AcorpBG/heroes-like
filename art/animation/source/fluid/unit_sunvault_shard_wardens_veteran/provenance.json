@@ -29,5 +29,36 @@
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "4dee28a0a85658140e990a16eedffac75b8dc0c34268ffe24e6282288a3ff299",
   "atlas_sha256": "232f33478612f782dbeac709d062ba57178273f059a5b6d903d2b63669e24b9f",
-  "texture_bytes_rgba": 21011200
+  "texture_bytes_rgba": 21011200,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_sunvault_shard_wardens_veteran/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 1,
+    "frames": 16,
+    "frame_msec": 75,
+    "flagged_handling": "hold",
+    "held_pairs": [
+      "2->3"
+    ],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_sunvault_shard_wardens_veteran.png",
+    "sheet_sha256": "f6b5831a20e1939060a69caddeeffb0fa7f7e4f0d554187c7424d2e5c64c8ace",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

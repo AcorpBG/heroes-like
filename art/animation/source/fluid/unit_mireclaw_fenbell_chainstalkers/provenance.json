@@ -47,5 +47,34 @@
   ],
   "baseline_atlas_sha256": "578568efd7b218fd0da2bcb79891ad0d6b50b7044b56aef81413aada4094810f",
   "atlas_sha256": "69d57cb6e5d7a19f91da8fc161f2ff355b6eec03a6787f15b437e4695778fcb3",
-  "texture_bytes_rgba": 26457600
+  "texture_bytes_rgba": 26457600,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_mireclaw_fenbell_chainstalkers.png",
+    "sheet_sha256": "bc5a726f338cb512a24f4843434aadc2be16df055b2dcbf99a41c2e747689202",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

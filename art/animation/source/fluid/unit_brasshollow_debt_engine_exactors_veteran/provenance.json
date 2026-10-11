@@ -28,5 +28,34 @@
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "857d0724853f32c231385404324d5917b3e3667196f954213bb27c96977a126e",
   "atlas_sha256": "db9ab102d84e60723d2f7acf95cbc39935c405f5c9fcc302c045bf24029acbe9",
-  "texture_bytes_rgba": 18069632
+  "texture_bytes_rgba": 18069632,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_brasshollow_debt_engine_exactors_veteran/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "frame_msec": 160,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 2,
+    "frames": 24,
+    "frame_msec": 53,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_brasshollow_debt_engine_exactors_veteran.png",
+    "sheet_sha256": "f8ab468451ecb3aa7b995292f0fd39c2bf0dafd794f8be2e58349841c84c9ead",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

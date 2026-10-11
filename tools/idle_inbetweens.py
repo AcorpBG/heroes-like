@@ -5,13 +5,13 @@
   python tools/idle_inbetweens.py --all --out DIR
 
 For each unit:
-1. Reads its accepted idle frames: the 8 paintings of
-   art/animation/source/poses/<unit>/idle-v2/hands-packing.json, or the idle
-   clip of art/animation/source/fluid/<unit>/reviewed_handoff.json (fluid
-   batches and video idles), or the paintings an idle-v2/generation.json
-   record appended to the unit's packing.json. Source images come from the checkout when they
-   are restored there, otherwise straight from the source-art archive, checked
-   against its SHA-256 manifest.
+1. Reads the idle frames the game plays: the idle clip of
+   art/animation/source/fluid/<unit>/reviewed_handoff.json when it has one
+   (mirrored when the game mirrors it), otherwise the frames of the unit's
+   poses/<unit>/packing.json that its fluid baseline.json plays as idle.
+   Source images come from the checkout when they are restored there,
+   otherwise straight from the source-art archive, checked against its
+   SHA-256 manifest.
 2. Aligns the frames on their ground anchors on one canvas.
 3. Adds RIFE in-betweens to every neighbouring pair, last to first included.
    Each pair runs over black and over white, and colour and alpha are
@@ -24,7 +24,7 @@ For each unit:
 5. Packs the loop with tools/pack_unit_pose_art, the game's packer.
 
 The accepted frames pass through unchanged as every (in-betweens + 1)-th frame.
-Nothing in the game changes; the output is a candidate for review. Needs torch,
+The output is a candidate; tools/integrate_idle_inbetweens.py puts it into the game. Needs torch,
 safetensors, numpy and Pillow, and ffmpeg for --review. See
 docs/idle-inbetweens.md for the environment and the model weights.
 
@@ -97,40 +97,38 @@ class Sources:
 
 
 def idle_recipe(row):
-    """The unit's accepted idle as {frame_size, ground_margin, frames, from, msec}
-    with repository-relative frame sources."""
+    """The idle the game plays, as {frame_size, ground_margin, frames, flip, from,
+    msec} with repository-relative frame sources.
+
+    Follows how tools/publish_fluid_creature_animation built the unit's atlas: the
+    idle clip of the reviewed fluid handoff when it has one, otherwise the
+    baseline atlas's idle, which tools/pack_unit_pose_art packed from the unit's
+    packing.json."""
     uid, idle = row["unit_id"], row["pose_clips"]["idle"]
-    hands = ROOT / f"art/animation/source/poses/{uid}/idle-v2/hands-packing.json"
-    # Video idles replaced the 8 paintings of some units; the manifest says which plays.
-    if hands.is_file() and idle["frames"] == 8:
-        spec = json.loads(hands.read_text(encoding="utf-8"))
-        folder = hands.parent.relative_to(ROOT).as_posix()
-        frames = [dict(f, source=f"{folder}/{f['source']}") for f in spec["frames"]]
-        return {"frame_size": spec["frame_size"], "ground_margin": spec["ground_margin"], "frames": frames,
-                "from": hands.relative_to(ROOT).as_posix(), "msec": idle["frame_msec"]}
-    handoff = ROOT / f"art/animation/source/fluid/{uid}/reviewed_handoff.json"
+    folder = ROOT / f"art/animation/source/fluid/{uid}"
+    handoff, baseline = folder / "reviewed_handoff.json", folder / "baseline.json"
     entry = None
     if handoff.is_file():
         entry = next((u for u in json.loads(handoff.read_text(encoding="utf-8"))["units"] if u["unit_id"] == uid), None)
-    indices = (entry or {}).get("clips", {}).get("idle", {}).get("indices", [])
-    frames = [entry["frames"][i] for i in indices]
-    if frames and all(f.get("clip") == "idle" for f in frames):
+    if entry and "idle" in entry["clips"]:
+        cutoff = entry.get("alpha_noise_cutoff", 0)
+        frames = [dict(entry["frames"][i], alpha_noise_cutoff=entry["frames"][i].get("alpha_noise_cutoff", cutoff))
+                  for i in entry["clips"]["idle"]["indices"]]
         size = [row["pose_frame_size"]["width"], row["pose_frame_size"]["height"]]
-        return {"frame_size": size, "ground_margin": row["pose_ground_margin"], "frames": frames,
+        # The publisher mirrors a handoff drawn facing the other way.
+        flip = entry.get("source_facing", "right") != row.get("pose_source_facing", "right")
+        return {"frame_size": size, "ground_margin": row["pose_ground_margin"], "frames": frames, "flip": flip,
                 "from": handoff.relative_to(ROOT).as_posix(), "msec": idle["frame_msec"]}
-    # The 2026-09-19 idle expansion appended its paintings to the unit's packing
-    # recipe; a fluid handoff that keeps ("preserves") that idle does not list them.
-    generation = ROOT / f"art/animation/source/poses/{uid}/idle-v2/generation.json"
-    if generation.is_file() and idle["frames"] == 8:
-        record = json.loads(generation.read_text(encoding="utf-8"))
-        packing = (generation.parent / record["packing_recipe"]).resolve()
+    packing = ROOT / f"art/animation/source/poses/{uid}/packing.json"
+    if baseline.is_file() and packing.is_file():
+        indices = json.loads(baseline.read_text(encoding="utf-8"))["pose_clips"]["idle"]["indices"]
         spec = json.loads(packing.read_text(encoding="utf-8"))
-        folder = packing.parent.relative_to(ROOT).as_posix()
-        frames = [dict(spec["frames"][i], source=f"{folder}/{spec['frames'][i]['source']}") for i in record["packed_indices"]]
-        return {"frame_size": spec["frame_size"], "ground_margin": spec["ground_margin"], "frames": frames,
-                "from": f"{packing.relative_to(ROOT).as_posix()} frames {record['packed_indices'][0]}-{record['packed_indices'][-1]}",
+        poses = packing.parent.relative_to(ROOT).as_posix()
+        frames = [dict(spec["frames"][i], source=f"{poses}/{spec['frames'][i]['source']}") for i in indices]
+        return {"frame_size": spec["frame_size"], "ground_margin": spec["ground_margin"], "frames": frames, "flip": False,
+                "from": f"{packing.relative_to(ROOT).as_posix()} frames {indices[0]}-{indices[-1]}",
                 "msec": idle["frame_msec"]}
-    raise SkipUnit("no idle recipe found (idle-v2 paintings, fluid handoff or idle generation record)")
+    raise SkipUnit("no idle recipe found (reviewed fluid handoff idle, or baseline idle and packing.json)")
 
 
 def cutout(sheet, frame):
@@ -153,25 +151,30 @@ def aligned_frames(recipe, sources):
     pieces = []
     for f in recipe["frames"]:
         image, fx, fy = cutout(sheets[f["source"]], f)
+        cutoff = f.get("alpha_noise_cutoff", 0)
+        if cutoff:  # before any resize, as the game's packer does; resizing can lift noise past it
+            image.putalpha(image.getchannel("A").point(lambda a: 0 if a <= cutoff else a))
+        if recipe.get("flip"):
+            image, fx = image.transpose(Image.Transpose.FLIP_LEFT_RIGHT), image.width - fx
         ratio = f.get("scale", 1.0) / scale
         if ratio != 1.0:
             image = image.resize((max(1, round(image.width * ratio)), max(1, round(image.height * ratio))), Image.LANCZOS)
             fx, fy = round(fx * ratio), round(fy * ratio)
-        pieces.append((image, fx, fy, f.get("alpha_noise_cutoff", 0)))
-    half = max(max(fx, image.width - fx) for image, fx, _, _ in pieces)
-    top = max(fy for _, _, fy, _ in pieces)
-    bottom = max(image.height - fy for image, _, fy, _ in pieces)
+            # The game shrinks this frame in one step, which averages faint source
+            # noise (alpha 1-2) away; two steps leave specks that widen its bounds.
+            image.putalpha(image.getchannel("A").point(lambda a: 0 if a <= 2 else a))
+        pieces.append((image, fx, fy))
+    half = max(max(fx, image.width - fx) for image, fx, _ in pieces)
+    top = max(fy for _, _, fy in pieces)
+    bottom = max(image.height - fy for image, _, fy in pieces)
     up = lambda v: (v + 127) // 128 * 128
     cw, ch = up(2 * half + 8), up(top + bottom + 8)
     ax, ay = cw // 2, ch - bottom - 4
     frames = []
-    for image, fx, fy, cutoff in pieces:
+    for image, fx, fy in pieces:
         canvas = Image.new("RGBA", (cw, ch))
         canvas.paste(image, (ax - fx, ay - fy))
-        arr = np.asarray(canvas).astype(np.float32) / 255.0
-        if cutoff:
-            arr[arr[..., 3] * 255 <= cutoff] = 0
-        frames.append(arr)
+        frames.append(np.asarray(canvas).astype(np.float32) / 255.0)
     return frames, (cw, ch, ax, ay), scale
 
 
@@ -413,7 +416,8 @@ def run_unit(row, args, sources, interp, weights_sha):
         write_review(row, unit_dir, recipe["frame_size"], recipe["ground_margin"], cells, k + 1, unit_dir / "review.mp4")
         seconds["review"] = time.perf_counter() - clock
 
-    report = {"unit_id": uid, "source": recipe["from"], "source_frames": len(frames), "source_msec": recipe["msec"],
+    report = {"unit_id": uid, "source": recipe["from"], "mirrored": recipe["flip"], "source_frames": len(frames),
+              "source_msec": recipe["msec"],
               "inbetweens_per_pair": k, "frames": len(out), "frame_msec": round(recipe["msec"] / (k + 1), 1),
               "canvas": list(canvas[:2]), "coarse_mode": args.coarse, "flagged_handling": args.flagged,
               "weights_sha256": weights_sha,

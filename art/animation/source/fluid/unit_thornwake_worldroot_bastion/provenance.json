@@ -86,5 +86,38 @@
   ],
   "baseline_atlas_sha256": "a6e156254df12902a6a95446779c89cb5539646f4e689cc7e99142e90e34d41d",
   "atlas_sha256": "a3ec392790c81f57b7219d8ec961d43fd573750bca373c83256f475f269dab3c",
-  "texture_bytes_rgba": 23611392
+  "texture_bytes_rgba": 23611392,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_thornwake_worldroot_bastion/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 65,
+    "flagged_handling": "hold",
+    "held_pairs": [
+      "1->2",
+      "2->3",
+      "3->4"
+    ],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_thornwake_worldroot_bastion.png",
+    "sheet_sha256": "44aeaca23fc7f6620766b9f2ae6f60fbf711c39b256964166484fa7402c88faa",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

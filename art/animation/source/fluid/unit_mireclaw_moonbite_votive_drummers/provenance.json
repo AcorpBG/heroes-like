@@ -331,5 +331,34 @@
   ],
   "baseline_atlas_sha256": "7cc9c8127d29c8485dba68d24030af1f1937a93b263f8b844b99543bf24a1e68",
   "atlas_sha256": "896b28fcd73154d0f4c9676ec6aec1619a4fa67ac45d3a715e40cd97d2c524bc",
-  "texture_bytes_rgba": 42639360
+  "texture_bytes_rgba": 42639360,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_mireclaw_moonbite_votive_drummers.png",
+    "sheet_sha256": "138ea8ddacd15a3c6a0ff95a16c268555d1e96c700f2fbb8e0ce68a5eeb59f86",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

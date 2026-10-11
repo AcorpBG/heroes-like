@@ -286,5 +286,34 @@
   ],
   "baseline_atlas_sha256": "95b247592920698063eb3a35a0ebbbc584b887b47f32cf2e4504bd5e0f17d820",
   "atlas_sha256": "c6f6443509c15a7489c0bede537871687acdbbc4db391e6474911017f29c3875",
-  "texture_bytes_rgba": 51107840
+  "texture_bytes_rgba": 51107840,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_sunvault_splitprism_heliograph_ballistae.png",
+    "sheet_sha256": "ed2be02a5c43a81db5c1d3b784e9deef1e55e7bd47ec84129ca8ed45693fb357",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

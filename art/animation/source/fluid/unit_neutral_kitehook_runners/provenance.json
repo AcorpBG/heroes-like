@@ -152,5 +152,34 @@
   ],
   "baseline_atlas_sha256": "e1656d24ce5f771405f4b9afb3fce572458c233073cc1edb034fc1201eed8ce3",
   "atlas_sha256": "8c745552a855ffd50d183ab06a635ac14f086d420747129e068837a67870d562",
-  "texture_bytes_rgba": 43097600
+  "texture_bytes_rgba": 43097600,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_neutral_kitehook_runners/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_kitehook_runners.png",
+    "sheet_sha256": "e274ea552137d3bf54d67cceddc36cd69d135a74b57ea705a9bbae34667d8d37",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

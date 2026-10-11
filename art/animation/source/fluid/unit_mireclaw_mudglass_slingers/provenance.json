@@ -178,5 +178,34 @@
   ],
   "baseline_atlas_sha256": "6259c717159968690899b54c95a87b41881c86836581d8cba31f76b75948f464",
   "atlas_sha256": "bd00b1d5a40afbcbdd2180fcc9907c672d4bf685ff8504c8d0f094fc661350d2",
-  "texture_bytes_rgba": 27872256
+  "texture_bytes_rgba": 27872256,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_mireclaw_mudglass_slingers/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_mireclaw_mudglass_slingers.png",
+    "sheet_sha256": "6695f4426b11a477251b5129b6fdcea1c7cd05202ce9db56eb99e31475930e0b",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

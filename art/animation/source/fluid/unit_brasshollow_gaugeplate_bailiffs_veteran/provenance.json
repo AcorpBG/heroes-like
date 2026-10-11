@@ -28,5 +28,38 @@
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "80e603f6376228ebe93a03e9651e1f1024931b40d8f2a3b6ce65836adf12f277",
   "atlas_sha256": "d9aac4f5dc0a8533fc5864a41d431427629b1eacdb811b7bc8dbe8aa9e5830a4",
-  "texture_bytes_rgba": 17122560
+  "texture_bytes_rgba": 17122560,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_brasshollow_gaugeplate_bailiffs_veteran/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "frame_msec": 160,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 2,
+    "frames": 24,
+    "frame_msec": 53,
+    "flagged_handling": "hold",
+    "held_pairs": [
+      "1->2",
+      "3->4",
+      "4->5"
+    ],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_brasshollow_gaugeplate_bailiffs_veteran.png",
+    "sheet_sha256": "399fd835c6219674e4feade09360b0abc7d5cc9e5ab458a035164024479797ee",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

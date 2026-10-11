@@ -265,5 +265,34 @@
   ],
   "baseline_atlas_sha256": "87ff07aebf41af9bece73771baba218c3cd7cb90dd73fb8510cf489e44548655",
   "atlas_sha256": "a3cbac0b3e587985fe61c7692e27eec22befa251046e9e6d14d0c164a61433db",
-  "texture_bytes_rgba": 67108864
+  "texture_bytes_rgba": 67108864,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_neutral_hedgehook_watch/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_hedgehook_watch.png",
+    "sheet_sha256": "2e228ade65d253b4080b17a40a0e14f410f01664e4feb9fe4d093fb75a478aa9",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

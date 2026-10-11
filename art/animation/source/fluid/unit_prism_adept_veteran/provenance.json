@@ -64,5 +64,34 @@
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "50f7ed1baa05675b4c68b0675b85bf2383a41ef9c48603cde48a59d06bb46652",
   "atlas_sha256": "40d0053550048fd846af60d9e175934dc0175ca7cbcbc29733c1d5d3034bc5a1",
-  "texture_bytes_rgba": 21864960
+  "texture_bytes_rgba": 21864960,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_prism_adept_veteran/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "frame_msec": 135,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 1,
+    "frames": 16,
+    "frame_msec": 68,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_prism_adept_veteran.png",
+    "sheet_sha256": "03f9aafe1261916420f34561b40f697ab54eca444d477470f4b0b8a254f07f63",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

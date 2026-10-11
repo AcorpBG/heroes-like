@@ -15,7 +15,7 @@ import tempfile
 from PIL import Image
 
 from pack_unit_pose_art import pack
-from pack_overworld_creature_idle import extract
+from pack_overworld_creature_idle import extract, write_strip
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -90,9 +90,7 @@ def integrate(candidate_path, frame_msec, generation_path):
         'preserved_frames': first_index, 'status': 'candidate_requires_playback_review'}
     write_json(provenance_path, provenance)
     strip, entry = extract(row)
-    strip_path = ROOT / entry['path'].removeprefix('res://')
-    strip.save(strip_path, optimize=True)
-    entry['sha256'] = hashlib.sha256(strip_path.read_bytes()).hexdigest()
+    write_strip(strip, entry)
     map_path = ROOT / 'art/overworld/creature_idle.json'
     map_manifest = json.loads(map_path.read_text())
     map_manifest['units'][uid] = entry

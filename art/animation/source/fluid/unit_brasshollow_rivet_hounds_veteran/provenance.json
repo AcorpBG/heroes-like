@@ -27,5 +27,37 @@
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "c6ba922416abee7e79ae2723acab7ea012b7f024d42bf98769594e6c4deddac8",
   "atlas_sha256": "4a0f8f4439b9f4e8a6ea6f53e59cb149b706b9d6456942592078b802315391a5",
-  "texture_bytes_rgba": 18063360
+  "texture_bytes_rgba": 18063360,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_brasshollow_rivet_hounds_veteran/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "frame_msec": 160,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 2,
+    "frames": 24,
+    "frame_msec": 53,
+    "flagged_handling": "hold",
+    "held_pairs": [
+      "3->4",
+      "4->5"
+    ],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_brasshollow_rivet_hounds_veteran.png",
+    "sheet_sha256": "33fa186119a7d824fbb5f6ede7692f657d767c0bade65a526511c4903994f6cd",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

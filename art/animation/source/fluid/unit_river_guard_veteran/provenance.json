@@ -29,5 +29,34 @@
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "410f73b1ee584cd20dc6bad9e5bc327aab82a68e2aef10d7df5ff1c81c0c810e",
   "atlas_sha256": "29e4b235a1dedba74b9c1cdcdfbd2856a51b95e3150d9492d8326c91443c5278",
-  "texture_bytes_rgba": 23808512
+  "texture_bytes_rgba": 23808512,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_river_guard_veteran/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "frame_msec": 140,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 1,
+    "frames": 16,
+    "frame_msec": 70,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_river_guard_veteran.png",
+    "sheet_sha256": "a5bbcb46423fc3fb8cebe35ecb261d52d085d8eb20dd63937667bd443a718e54",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

@@ -2,7 +2,9 @@
 """Extract original idle poses without repainting, warping or resampling pixels.
 
 All frames share one crop and anatomical anchor. Independent per-frame trimming
-would turn breathing into foot sliding and change the creature's scale.
+would turn breathing into foot sliding and change the creature's scale. A unit
+whose idle plays a derived loop sheet (RIFE in-betweens, see
+tools/integrate_idle_inbetweens.py) uses that sheet directly.
 """
 import hashlib
 import json
@@ -13,11 +15,47 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / 'art/overworld/creature_idle.json'
 DESTINATION = ROOT / 'art/overworld/runtime/creature_idle'
+POLICY = ('Original painted idle poses on a shared crop/ground anchor; the RIFE in-betweens of '
+          'docs/idle-inbetweens.md where a unit has them; no other synthesized motion.')
+
+
+def shared_sheet(row):
+    """A derived idle loop (tools/integrate_idle_inbetweens.py) already sits on one
+    shared crop and ground anchor, so the map plays its sheet instead of a copy."""
+    spec = row['pose_clips']['idle']
+    path = ROOT / spec['sheet'].removeprefix('res://')
+    width, height = spec['frame_size']['width'], spec['frame_size']['height']
+    with Image.open(path) as sheet:
+        alpha = sheet.getchannel('A')
+        bounds = [alpha.crop((i % spec['columns'] * width, i // spec['columns'] * height,
+                              (i % spec['columns'] + 1) * width, (i // spec['columns'] + 1) * height)).getbbox()
+                  for i in spec['indices']]
+    assert all(bounds), row['id']
+    extent = max(max(b[2] for b in bounds) - min(b[0] for b in bounds), max(b[3] for b in bounds) - min(b[1] for b in bounds))
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    return {
+        'path': spec['sheet'], 'frame_size': [width, height], 'columns': spec['columns'],
+        'frames': spec['frames'], 'frame_msec': spec['frame_msec'], 'static_frame': spec.get('static_frame', 0),
+        'ground_anchor': [spec['anchor_x'], height - spec['ground_margin']], 'painted_extent': extent,
+        'source_sheet': spec['sheet'], 'source_indices': spec['indices'], 'source_crop': [0, 0, width, height],
+        'source_sha256': digest, 'source_provenance': row['pose_provenance'], 'sha256': digest,
+    }
+
+
+def write_strip(strip, entry):
+    """Saves an extracted strip and records its hash; a shared sheet needs neither."""
+    if strip is not None:
+        path = ROOT / entry['path'].removeprefix('res://')
+        strip.save(path, optimize=True)
+        entry['sha256'] = hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def extract(row):
-    source = ROOT / row['pose_sheet'].removeprefix('res://')
+    """(strip, entry) for the unit's map idle; strip is None when it plays a shared sheet."""
     spec = row['pose_clips']['idle']
+    if spec.get('sheet'):
+        return None, shared_sheet(row)
+    source = ROOT / row['pose_sheet'].removeprefix('res://')
     width, height = (row['pose_frame_size'][key] for key in ('width', 'height'))
     columns = row['pose_columns']
     indices = spec.get('indices', [spec.get('row', 0) * columns +
@@ -71,14 +109,12 @@ def main():
     units = {}
     for row in rows:
         strip, entry = extract(row)
-        path = ROOT / entry['path'].removeprefix('res://')
-        strip.save(path, optimize=True)
-        entry['sha256'] = hashlib.sha256(path.read_bytes()).hexdigest()
+        write_strip(strip, entry)
         units[row['unit_id']] = entry
     MANIFEST.write_text(json.dumps({
         'schema_id': 'overworld_creature_idle_v1',
         'preparation_tool': 'tools/pack_overworld_creature_idle.py',
-        'policy': 'Original painted idle poses; shared crop/ground anchor; no synthesized motion.',
+        'policy': POLICY,
         'units': units,
     }, indent=2) + '\n', encoding='utf-8')
     print(f'Packed {len(units)} creature idle strips; {sum(p.stat().st_size for p in DESTINATION.glob("*.png")):,} bytes.')

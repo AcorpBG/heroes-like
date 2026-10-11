@@ -30,5 +30,34 @@
   ],
   "baseline_atlas_sha256": "cee2cfa5b5b0d33be996d1c75f3547fb55b25a74cb72ff7309541eaa8e74b5d7",
   "atlas_sha256": "f4aada5ce210087c1abc85bd05eec4fcbb9cf386f2aa1228349d7d6916fe934c",
-  "texture_bytes_rgba": 16473600
+  "texture_bytes_rgba": 16473600,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_ember_archer/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_ember_archer.png",
+    "sheet_sha256": "f0e3e4b310cc48ffa03415909cdb3ae9d82cb2dd0351bc9d52e071613f4d7ac9",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

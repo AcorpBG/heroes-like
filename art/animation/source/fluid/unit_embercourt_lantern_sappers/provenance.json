@@ -154,5 +154,36 @@
   ],
   "baseline_atlas_sha256": "87a729e01c7ac44d276aeb28b121780f6b55c08387174797a1e2c5c412a33c41",
   "atlas_sha256": "af8017ff6a4fd2dd1054b9605e93c89aaa125bf13fcfed3ac9b0bdb9178aa31b",
-  "texture_bytes_rgba": 52398080
+  "texture_bytes_rgba": 52398080,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_embercourt_lantern_sappers/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [
+      "3->4"
+    ],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_embercourt_lantern_sappers.png",
+    "sheet_sha256": "352159c5290a076096a64f85b230b8ce98e023a1dae23094a57531dbec839bef",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

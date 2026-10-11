@@ -265,5 +265,34 @@
   ],
   "baseline_atlas_sha256": "f961f254156471081c01fb545025e7a7071432d32ac7bdfb1858370dc722d72f",
   "atlas_sha256": "77f55f9cf3f978821a63a7b0c4177a83b9bdfdb4c0bb20a62d09468099b5edb8",
-  "texture_bytes_rgba": 62980096
+  "texture_bytes_rgba": 62980096,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_neutral_frostwharf_cutters/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_frostwharf_cutters.png",
+    "sheet_sha256": "cb5e40a425da261d23dc78b9f63cecffbbab7f95dd7ea651aba3c38b0afc0e98",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

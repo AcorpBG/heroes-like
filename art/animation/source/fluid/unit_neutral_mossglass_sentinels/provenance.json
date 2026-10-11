@@ -216,5 +216,36 @@
   ],
   "baseline_atlas_sha256": "bf59820580592a75e09d933e14663f9379f3dc37f571c05cb7bec75e0a654c2d",
   "atlas_sha256": "08090aa76fe4f4f1820d56b1222da514d2cd8651eda8e5b6fd529374b31cc260",
-  "texture_bytes_rgba": 63866880
+  "texture_bytes_rgba": 63866880,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_neutral_mossglass_sentinels/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [
+      "0->1"
+    ],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_mossglass_sentinels.png",
+    "sheet_sha256": "6796bc6c5953268a27e5067bf354645d534cb0a534699feff89fc21888ed613d",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

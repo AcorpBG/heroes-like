@@ -233,5 +233,34 @@
   ],
   "baseline_atlas_sha256": "2a8a2cb4c714d0e4d01ab1a62dd454ff4597ae56b6082a186859af6b59696d62",
   "atlas_sha256": "9f0fef7464c61c69aa039ea5aa2f2a07ff7c267cea5bbe26d9c80e0513ec3407",
-  "texture_bytes_rgba": 56885248
+  "texture_bytes_rgba": 56885248,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_thornwake_sporeglass_menders/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_thornwake_sporeglass_menders.png",
+    "sheet_sha256": "c826ca40d9859ea812d2c499a62cc13420888a9588da73d8892676654efe25ea",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

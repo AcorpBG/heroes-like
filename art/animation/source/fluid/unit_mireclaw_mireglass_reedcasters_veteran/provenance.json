@@ -30,5 +30,34 @@
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "98878dfb4ee281bce9891ebb654bcb26cacde6a4b900248ef5f744cf3b8d829c",
   "atlas_sha256": "08ca52e8e1c54618fd5d585edbac62c165c922fcba3cdbb5cbe8a537d7eda3bf",
-  "texture_bytes_rgba": 28753920
+  "texture_bytes_rgba": 28753920,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_mireclaw_mireglass_reedcasters_veteran/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "frame_msec": 155,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 2,
+    "frames": 24,
+    "frame_msec": 52,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_mireclaw_mireglass_reedcasters_veteran.png",
+    "sheet_sha256": "344dced193e8f7197d243ede1566f1b7bc304824e496e5ea8c2b1b67f1b2b515",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

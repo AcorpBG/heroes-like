@@ -304,5 +304,34 @@
   ],
   "baseline_atlas_sha256": "2b564f7a15686a1d68b9ea238f0ef64c867429059f57681c6b2fe20f00846432",
   "atlas_sha256": "cf2e90cc69a75ea82996dde6268bfa01979b716d5826f369e484d2835e34e0bb",
-  "texture_bytes_rgba": 44277376
+  "texture_bytes_rgba": 44277376,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_neutral_cartbow_tenders/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_cartbow_tenders.png",
+    "sheet_sha256": "765be9aa0fd230650250324695994c482b0afa444392f9e2090ef883e942f86a",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

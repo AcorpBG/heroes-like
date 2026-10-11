@@ -45,5 +45,34 @@
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "945e485216ab8e0b3f99ab65abcaf5ac3c21d04e4144ea39e310cff9fa4175fa",
   "atlas_sha256": "8e879118d1ab13e59d3251651d31304701ff3fd25a10883a313889807cdee8a1",
-  "texture_bytes_rgba": 23248896
+  "texture_bytes_rgba": 23248896,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_brasshollow_quenchspool_slingers/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 1,
+    "frames": 16,
+    "frame_msec": 75,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_brasshollow_quenchspool_slingers.png",
+    "sheet_sha256": "a7cab4860acbbffa3b05d479a9ca721ca5cc040d0beecbe55518ee61f1fe759f",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

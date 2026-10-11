@@ -197,5 +197,34 @@
   ],
   "baseline_atlas_sha256": "03d9c908975e005f96edf821d489f7884b07e37c56317b79d3b170a5e38c31cb",
   "atlas_sha256": "054f59f086b7ae0c9327238bd7048c5778fafe51425ebe57130947ef2fbfbd0d",
-  "texture_bytes_rgba": 66060288
+  "texture_bytes_rgba": 66060288,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_thornwake_stagknot_runners/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 65,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_thornwake_stagknot_runners.png",
+    "sheet_sha256": "67aaefcd27f41f2dc19ea2d82b7268b02683d07dd15c3ecdffcc8c636a5ebc72",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

@@ -251,5 +251,34 @@
   ],
   "baseline_atlas_sha256": "e83acda385ba75f24bad9f264542ce49a7be5a4b6b939be82e21271607708c7a",
   "atlas_sha256": "81b5de85b5ebbc34bd58b990c7fe8e9263397d5f519898107c8d34f8b8c5791d",
-  "texture_bytes_rgba": 62908160
+  "texture_bytes_rgba": 62908160,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_embercourt_cinderseal_bombardiers/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_embercourt_cinderseal_bombardiers.png",
+    "sheet_sha256": "9e3a9e1135d43b4c1e0fef887fe10d9ec6127f178329f07912e069a8a1ea9f24",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

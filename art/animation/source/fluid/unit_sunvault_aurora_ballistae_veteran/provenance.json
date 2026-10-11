@@ -63,5 +63,37 @@
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "13a347c93f6dffa760e79862cf3c6daa24572df022084d01530a94e1285f2992",
   "atlas_sha256": "f8925293709c7b1cee41f4ace51d9325cc681dad56376ce224017dd821f6f517",
-  "texture_bytes_rgba": 14676480
+  "texture_bytes_rgba": 14676480,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_sunvault_aurora_ballistae_veteran/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "frame_msec": 135,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 1,
+    "frames": 16,
+    "frame_msec": 68,
+    "flagged_handling": "hold",
+    "held_pairs": [
+      "2->3",
+      "3->4"
+    ],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_sunvault_aurora_ballistae_veteran.png",
+    "sheet_sha256": "ef1ec18b35ab47803cf6f898657ca33b76d5f70f5e3311c0e365d42154fb1046",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

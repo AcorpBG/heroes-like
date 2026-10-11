@@ -69,5 +69,34 @@
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "b3ffa4e75ac5a526403b6b02c010a6219839846e1f69f7c2e33a16d89c98a27d",
   "atlas_sha256": "287cddbb01230aa6579892c1f33f7ddd00a47009f0159982bedd46df689068d1",
-  "texture_bytes_rgba": 23683072
+  "texture_bytes_rgba": 23683072,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_thornwake_thornwhip_carriers/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40
+      ],
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 1,
+    "frames": 16,
+    "frame_msec": 75,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_thornwake_thornwhip_carriers.png",
+    "sheet_sha256": "e9d46ad0cad78253026e1dbfc4cab38ea254a3d49f2dbcf372b93fba2e16f798",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

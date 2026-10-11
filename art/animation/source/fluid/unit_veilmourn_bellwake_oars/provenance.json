@@ -196,5 +196,34 @@
   ],
   "baseline_atlas_sha256": "0db6722acf2c97685f0bacf49347fa42861df68d6d887284c40905945ae2337d",
   "atlas_sha256": "ecb9cf78426853b46613a0d3a417f5d661ddbab80640d7ca959079954101138f",
-  "texture_bytes_rgba": 35305920
+  "texture_bytes_rgba": 35305920,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_veilmourn_bellwake_oars/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_veilmourn_bellwake_oars.png",
+    "sheet_sha256": "4efc8ed309415101decbefcd95c51f14d555ef0d79325b11d15d02e2772bea36",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

@@ -262,5 +262,34 @@
   ],
   "baseline_atlas_sha256": "60890c3297194e1e0124c4a4680ad39faee6e513111e54b682daa8420d0e3448",
   "atlas_sha256": "4208bfa9247d3bd30834988c2f29bd3cd1815aacb8fc23616e3613fb31ef7b25",
-  "texture_bytes_rgba": 36169536
+  "texture_bytes_rgba": 36169536,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_neutral_charcoal_mauls/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 65,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_charcoal_mauls.png",
+    "sheet_sha256": "fee7f6849ad4592058e20a5a87de440211c4e5d5f1dac26b9b519e25ca529149",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

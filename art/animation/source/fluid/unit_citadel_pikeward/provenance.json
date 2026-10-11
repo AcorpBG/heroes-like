@@ -137,5 +137,34 @@
   ],
   "baseline_atlas_sha256": "3ef1ed150e9ed0f53bd7eb65f2fafdecbd3a411e93571f47edab1bcf2c90e69d",
   "atlas_sha256": "9d30c1fb230199efa84ecbcd9a48d2ac731e02c0d846a6cbf35aaeea69bf924d",
-  "texture_bytes_rgba": 66063360
+  "texture_bytes_rgba": 66063360,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_citadel_pikeward/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_citadel_pikeward.png",
+    "sheet_sha256": "ec8a855408c8f58722d8a2feb6009d80c884697b1cc61b28a09b94c3d5ee921d",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

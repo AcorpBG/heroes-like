@@ -239,5 +239,39 @@
   ],
   "baseline_atlas_sha256": "e64084483947afaa118a64d6b0b7d019f4f37b576429d7a41190c8dfa196cda7",
   "atlas_sha256": "0c8cfdf6768d1b090285f5d337b1197ef7b154220f6119d990f29295d333b2df",
-  "texture_bytes_rgba": 37273600
+  "texture_bytes_rgba": 37273600,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_neutral_sunscale_lanternmoths/packing.json frames 16-23",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 130,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 1,
+    "frames": 16,
+    "frame_msec": 65,
+    "flagged_handling": "hold",
+    "held_pairs": [
+      "1->2",
+      "2->3",
+      "3->4",
+      "4->5"
+    ],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_sunscale_lanternmoths.png",
+    "sheet_sha256": "91ca49026c8242299b3783c557c5fb469c87089f885cc0dd69e369b57aa7227f",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

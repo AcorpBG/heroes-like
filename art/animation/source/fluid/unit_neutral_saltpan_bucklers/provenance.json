@@ -252,5 +252,36 @@
   ],
   "baseline_atlas_sha256": "45621452735af669e663bdb3db59b1fa883841162f3c1f37924cabdf39a14386",
   "atlas_sha256": "c6acb269e70a1db61da4295d9d83802ea026529f676cd0da5fd177e8129725f2",
-  "texture_bytes_rgba": 33804288
+  "texture_bytes_rgba": 33804288,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_neutral_saltpan_bucklers/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 60,
+    "flagged_handling": "hold",
+    "held_pairs": [
+      "5->6"
+    ],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_saltpan_bucklers.png",
+    "sheet_sha256": "148784d7a2f0309029a73a1a454f4cfbd646f3bf9d0126ab8207fb0cb108c12c",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

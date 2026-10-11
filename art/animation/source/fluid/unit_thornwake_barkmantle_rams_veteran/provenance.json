@@ -68,5 +68,34 @@
   },
   "atlas_sha256": "5e739428d8f805390f83afccea903091096905539ea53286de252cf7d1fe1d9c",
   "texture_bytes_rgba": 20697600,
-  "baseline_atlas_sha256": "7d7d74a22d4161d3b194898fe051388c2bc26c2214d7f74d137615495d446f18"
+  "baseline_atlas_sha256": "7d7d74a22d4161d3b194898fe051388c2bc26c2214d7f74d137615495d446f18",
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/fluid/unit_thornwake_barkmantle_rams_veteran/reviewed_handoff.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "frame_msec": 135,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 1,
+    "frames": 16,
+    "frame_msec": 68,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_thornwake_barkmantle_rams_veteran.png",
+    "sheet_sha256": "b393a9cad936d159b66d799e3cc7b3f4bc93626c116847128b50c9eea3795256",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

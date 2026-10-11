@@ -220,5 +220,34 @@
   ],
   "baseline_atlas_sha256": "565be2227ff202c07b7839da6c7e1e0ac06e5615b03616413ecd34496c582bf1",
   "atlas_sha256": "76adc56422f804b42e0624408a3f958386288f938e91a6a3b6f0a45f178ae93f",
-  "texture_bytes_rgba": 65221376
+  "texture_bytes_rgba": 65221376,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_neutral_cinderwake_aurochs/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 65,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_cinderwake_aurochs.png",
+    "sheet_sha256": "36582ea2c94fb901af54dd318f7b1f532f2734bdc46d70e5b23d1d980bb37f3b",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

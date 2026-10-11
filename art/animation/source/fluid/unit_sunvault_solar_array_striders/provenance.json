@@ -175,5 +175,34 @@
   ],
   "baseline_atlas_sha256": "50bb603b040f1ad0cb655ad7e1bcd7c2f92caf14aff517c79fcb5049b1b5345e",
   "atlas_sha256": "974183aaec3928d12dbff2c743a5fa885c62563b8ca2402a0362aaca11ff1818",
-  "texture_bytes_rgba": 55756800
+  "texture_bytes_rgba": 55756800,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_sunvault_solar_array_striders/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 3,
+    "frames": 32,
+    "frame_msec": 65,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_sunvault_solar_array_striders.png",
+    "sheet_sha256": "93f5c104c1a979c4e3d89409b4b6ea99ee359a745a8ff1c612dd065b0f9d886a",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }

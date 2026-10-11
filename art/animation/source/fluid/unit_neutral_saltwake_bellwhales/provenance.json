@@ -275,5 +275,34 @@
   ],
   "baseline_atlas_sha256": "637a5206242b8043133e6d36a65bcb14d71422f0a3275463c81962fdd37f7e38",
   "atlas_sha256": "c9df9d982572e90bafc6c03bfe74f25b306fda2e9ed6796fa0e4418ed38d1e47",
-  "texture_bytes_rgba": 64963584
+  "texture_bytes_rgba": 64963584,
+  "idle_inbetweens": {
+    "tool": "tools/idle_inbetweens.py",
+    "integration": "tools/integrate_idle_inbetweens.py",
+    "source": "art/animation/source/poses/unit_neutral_saltwake_bellwhales/idle-v2/hands-packing.json",
+    "mirrored": false,
+    "from_atlas": {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_msec": 200,
+      "static_frame": 0
+    },
+    "inbetweens_per_pair": 2,
+    "frames": 24,
+    "frame_msec": 67,
+    "flagged_handling": "hold",
+    "held_pairs": [],
+    "weights_sha256": "151874592c877740e5db11522f4514df569eeafb0a0fcb2696f16e9e8d317c94",
+    "sheet": "res://art/animation/runtime/idle/unit_neutral_saltwake_bellwhales.png",
+    "sheet_sha256": "9daad2fe4240b867bb9e0f9c4e8c6673e4bb9bc25a8f32a178f5bcf2ebef40e8",
+    "review": "Owner chose RIFE in-betweens and holding flagged pairs (2026-10-11); accepted frames checked against the game's before integration."
+  }
 }
