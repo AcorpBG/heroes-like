@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_embercourt_bargebow_crews_veteran",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    393,
+    538
+  ],
+  "scale": 0.52,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026101502,
+  "references": [
+    "idle_0",
+    "attack_10",
+    "attack_12"
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      54,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original stocky crossbowman, the Winchbow Arbalest, facing screen right in elevated three-quarter view. Keep the adult man with swept-back dark brown hair and a short full beard, ONE short brass monocular goggle over his eye, the burgundy tunic with rolled sleeves, an ivory neck scarf, the worn brown leather long apron split at the legs, small tarnished bronze shoulder plates, brown fingerless gloves and bracers, belt pouches with a brass ring and brown leather boots. Exactly two arms, two hands and two legs. Both hands hold ONE oversized heavy horizontal steel and wood crossbow at the waist, its bow limbs and bolt pointing at screen right, with a brass sight and ONE round winch crank on the near side. Preserve the crossbow size and shape, the goggle, the costume and the stocky adult proportions. Make ONE close bash toward screen right. Pull the heavy crossbow back against the chest as the knees load, then lunge forward on the front leg and ram the crossbow straight out with both arms toward screen right, then draw back and settle into the original stance. One bash only; both hands keep the crossbow. No shot and no second strike. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, crossbow, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the equipment. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour.",
+  "protected_foreground_chroma": 9,
+  "edge_threshold": 10,
+  "palette_measurement": {
+    "bluest_opaque": 7.0,
+    "blue_minus_green_p999": 4.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

@@ -727,16 +727,30 @@ def propose(unit, names):
             first = idx[max(0, int(np.searchsorted(cum, cum[-1] * (0.015 if clip == "death" else 0.02))) - 2)]
             last = idx[min(len(idx) - 1, int(np.searchsorted(cum, cum[-1] * CLIP_END[clip])) + 2)]
             span = [i for i in idx if first <= i <= last]
+            # Rejected plates can split the span; the pose jumps across a long gap, so keep the
+            # run that holds most of the motion and say so.
+            runs = [[span[0]]]
+            for i in span[1:]:
+                if i - runs[-1][-1] > 12:
+                    runs.append([])
+                runs[-1].append(i)
+            if len(runs) > 1:
+                span = max(runs, key=lambda r: sum(motion[idx.index(i)] for i in r[1:]))
+                print(f"{clip:7} {name:16} GAP: rejected plates split the action; kept video {span[0]}-{span[-1]}")
             cum = np.cumsum([0.0] + [motion[idx.index(i)] for i in span[1:]])
             picks = sorted({span[0], span[-1]} | {span[int(np.searchsorted(cum, cum[-1] * k / (CLIP_FRAMES[clip] - 1)))]
                                                   for k in range(1, CLIP_FRAMES[clip] - 1)})
             picked = [picks[0]]
             for p in picks[1:]:  # no gap longer than 12 video frames
                 while p - picked[-1] > 12:
-                    picked.append(next(i for i in span if i > picked[-1] + 6))
+                    fill = next(i for i in span if i > picked[-1] + 6)
+                    if fill >= p:
+                        break
+                    picked.append(fill)
                 picked.append(p)
-            if clip == "death" and idx[-1] not in picked:
-                picked.append(idx[-1])  # the corpse
+            rest = [i for i in idx if i >= span[-1]]
+            if clip == "death" and idx[-1] not in picked and all(b - a <= 12 for a, b in zip(rest, rest[1:])):
+                picked.append(idx[-1])  # the corpse, unless rejected plates lie between
         entry = {"segments": [{"take": name, "frames": picked}], "frame_msec": CLIP_MSEC[clip]}
         if clip in ("attack", "ranged"):  # contact: the figure reaches furthest toward screen right
             core = picked[len(picked) // 6: len(picked) * 5 // 6]

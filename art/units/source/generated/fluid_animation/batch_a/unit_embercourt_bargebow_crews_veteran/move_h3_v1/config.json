@@ -1,0 +1,54 @@
+{
+  "unit_id": "unit_embercourt_bargebow_crews_veteran",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    393,
+    538
+  ],
+  "scale": 0.52,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026101501,
+  "references": [
+    "move_48",
+    "move_52"
+  ],
+  "guides": [
+    [
+      31,
+      1
+    ],
+    [
+      62,
+      0
+    ],
+    [
+      93,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original stocky crossbowman, the Winchbow Arbalest, facing screen right in elevated three-quarter view. Keep the adult man with swept-back dark brown hair and a short full beard, ONE short brass monocular goggle over his eye, the burgundy tunic with rolled sleeves, an ivory neck scarf, the worn brown leather long apron split at the legs, small tarnished bronze shoulder plates, brown fingerless gloves and bracers, belt pouches with a brass ring and brown leather boots. Exactly two arms, two hands and two legs. Both hands hold ONE oversized heavy horizontal steel and wood crossbow at the waist, its bow limbs and bolt pointing at screen right, with a brass sight and ONE round winch crank on the near side. Preserve the crossbow size and shape, the goggle, the costume and the stocky adult proportions. Walk in place through two complete reciprocal cycles. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The crossbow stays held level at the waist in both hands; the apron swings with the legs. Finish in the original gait phase. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, crossbow, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the equipment. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour.",
+  "protected_foreground_chroma": 14,
+  "edge_threshold": 10,
+  "palette_measurement": {
+    "bluest_opaque": 12.0,
+    "blue_minus_green_p999": 4.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

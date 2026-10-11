@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_embercourt_bargebow_crews_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_bargebow_crews_veteran/idle_v1.png",
+      "source_sha256": "59180cb847b39dc6fa2813d72167e89b202a1fe7bd29a898583fd48c1e56ca6f",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "a8211dd365499e0baa7ba9e8d53eeabd9563e1bc9e141d97a37a7ca5ec0f72e2"
+    },
+    {
+      "frame": "defend_30",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_bargebow_crews_veteran/reactions_v1.png",
+      "source_sha256": "fa6b1751ffc973b13fb749d2de193967ea17b38f777492524f300c0a9c68bda3",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "7f89df7b90a61d45079e54b075056ecf3df4cb4d60c98e4a81f7b7be932a76d3"
+    },
+    {
+      "frame": "defend_31",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_bargebow_crews_veteran/reactions_v1.png",
+      "source_sha256": "fa6b1751ffc973b13fb749d2de193967ea17b38f777492524f300c0a9c68bda3",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "3d85347377f2a89ec09fdba842e1240e359143000a6921894cdf776f6e3c4102"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    393,
+    538
+  ],
+  "output_scale": 0.52,
+  "free_pixels_left_top_right_bottom": [
+    123,
+    43,
+    123,
+    43
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

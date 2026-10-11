@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_embercourt_bargebow_crews_veteran",
+  "guides": [
+    {
+      "frame": "move_48",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_bargebow_crews_veteran/move_near_v1.png",
+      "source_sha256": "73becaf7ecace189866332b176188ac441c892b82eebba2c96f30644b231fa92",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "3e3f932f220af0025c01ba43de265a5a50fd1faf7dd273afefc491abff2b4e70"
+    },
+    {
+      "frame": "move_52",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_bargebow_crews_veteran/move_near_v2.png",
+      "source_sha256": "0f323271d62c8eb487695625ca091fcee53391d9ea2b6a38d5635da5c028af4a",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "6fa70c129b7758918ffcb045d4ad0c2a1b994dcef84a6cbe035db7319c2f1e21"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    393,
+    538
+  ],
+  "output_scale": 0.52,
+  "free_pixels_left_top_right_bottom": [
+    123,
+    43,
+    123,
+    43
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

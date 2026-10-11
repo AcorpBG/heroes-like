@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_embercourt_bargebow_crews_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_bargebow_crews_veteran/idle_v1.png",
+      "source_sha256": "59180cb847b39dc6fa2813d72167e89b202a1fe7bd29a898583fd48c1e56ca6f",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "a8211dd365499e0baa7ba9e8d53eeabd9563e1bc9e141d97a37a7ca5ec0f72e2"
+    },
+    {
+      "frame": "idle_4",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_bargebow_crews_veteran/idle_v1.png",
+      "source_sha256": "59180cb847b39dc6fa2813d72167e89b202a1fe7bd29a898583fd48c1e56ca6f",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "72244c7e704d6e8200d3a6e86cce4ea909c8eba50b4c8c388270a39dfb937a60"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    393,
+    538
+  ],
+  "output_scale": 0.52,
+  "free_pixels_left_top_right_bottom": [
+    123,
+    43,
+    123,
+    43
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -1,0 +1,50 @@
+{
+  "unit_id": "unit_embercourt_ash_oath_bailiffs_veteran",
+  "clip": "cast",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    484,
+    570
+  ],
+  "scale": 0.56,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026101455,
+  "references": [
+    "idle_0",
+    "cast_28"
+  ],
+  "guides": [
+    [
+      44,
+      1
+    ],
+    [
+      70,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original armoured court enforcer, the Ashseal Justiciar, facing screen right in elevated three-quarter view. Keep the fully enclosed dark steel helmet with three vertical visor slots and a small flat crest, dark weathered steel plate armour with thin bronze trim, the long ash-grey split coat, the pale ivory front stole with fine seal designs, the rust-red waist sash trailing at screen right, round brass seals on the chest and belt and hanging parchment strips. No face is visible. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE heavy short-handled square black and bronze war gavel with a round brass seal in its head; the screen-RIGHT hand is empty. No shield and no other weapon. Preserve the gavel size, the helmet, the coat and the heavy adult proportions. A commanding physical gesture of judgement. Raise the empty hand high above the helmet with the palm open toward screen right, hold it there briefly while the gavel stays at the side, then lower the arm back to the original stance. A physical gesture only: no spell, glow or emitted effect. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full helmet, gavel, coat, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the equipment. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour.",
+  "protected_foreground_chroma": 9,
+  "edge_threshold": 11,
+  "palette_measurement": {
+    "bluest_opaque": 7.0,
+    "blue_minus_green_p999": 5.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

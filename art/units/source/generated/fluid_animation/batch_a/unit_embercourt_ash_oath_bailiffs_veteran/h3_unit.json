@@ -2,63 +2,171 @@
   "unit_id": "unit_embercourt_ash_oath_bailiffs_veteran",
   "identity": "ONE original armoured court enforcer, the Ashseal Justiciar, facing screen right in elevated three-quarter view. Keep the fully enclosed dark steel helmet with three vertical visor slots and a small flat crest, dark weathered steel plate armour with thin bronze trim, the long ash-grey split coat, the pale ivory front stole with fine seal designs, the rust-red waist sash trailing at screen right, round brass seals on the chest and belt and hanging parchment strips. No face is visible. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE heavy short-handled square black and bronze war gavel with a round brass seal in its head; the screen-RIGHT hand is empty. No shield and no other weapon. Preserve the gavel size, the helmet, the coat and the heavy adult proportions.",
   "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full helmet, gavel, coat, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the equipment. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour.",
-  "canvas": [960, 640],
+  "canvas": [
+    960,
+    640
+  ],
   "scale": 0.56,
-  "key_rgb": [0, 0, 255],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
   "seed": 2026101450,
   "takes": {
     "idle_h3_v1": {
       "clip": "idle",
-      "references": ["idle_0", "idle_2"],
-      "guides": [[62, 1]],
+      "references": [
+        "idle_0",
+        "idle_2"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A stern, steady idle that loops. The armoured chest rises and falls, the helmet turns slightly, the gavel hand lifts the gavel to the belt and lowers it again, the empty hand flexes, then everything returns smoothly to the original stance. Both boots stay planted; the coat, sash and parchment strips stir gently. No walking and no attack."
     },
     "move_h3_v1": {
       "clip": "move",
-      "references": ["move_40", "move_44"],
-      "guides": [[31, 1],
-        [62, 0],
-        [93, 1]],
+      "references": [
+        "move_40",
+        "move_44"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
       "last": 0,
       "action": "Stride in place through two complete reciprocal cycles with heavy armoured steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The gavel hangs low in the screen-left hand and the empty arm swings slightly; the coat swings with the legs. Finish in the original gait phase."
     },
     "attack_h3_v1": {
       "clip": "attack",
-      "references": ["idle_0", "attack_10", "attack_12"],
-      "guides": [[30, 1],
-        [54, 2]],
+      "references": [
+        "idle_0",
+        "attack_10",
+        "attack_12"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
       "last": 0,
       "action": "Make ONE crushing gavel blow toward screen right. Raise the gavel high overhead while the empty arm reaches forward for balance, then lunge forward and bring the gavel down hard in front of the body toward screen right, bending low at the end of the blow, then straighten and return to the original stance. One blow only; the gavel stays in the screen-left hand. No throw."
     },
     "hit_h3_v1": {
       "clip": "hit",
-      "references": ["idle_0", "hit_17"],
-      "guides": [[40, 1]],
+      "references": [
+        "idle_0",
+        "hit_17"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
       "last": 0,
       "action": "One brief impact recoil and complete recovery. The helmet and shoulders rock backward, the knees flex and the empty arm flies out while the gavel stays gripped, then he rebalances on both boots and returns to the same stance. Remain standing with the gavel held. The impact is shown only by the body; the blue background never flashes or changes colour."
     },
     "defend_h3_v1": {
       "clip": "defend",
-      "references": ["idle_0", "defend_21", "defend_23"],
-      "guides": [[34, 1]],
+      "references": [
+        "idle_0",
+        "defend_21",
+        "defend_23"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
       "last": 2,
       "action": "Crouch into a wide braced stance and raise the empty forearm across the visor as a guard, the gavel held low and ready at the side, then hold the braced guard on both planted boots. No attack and no return to the relaxed stance."
     },
     "cast_h3_v1": {
       "clip": "cast",
-      "references": ["idle_0", "cast_28"],
-      "guides": [[44, 1],
-        [70, 1]],
+      "references": [
+        "idle_0",
+        "cast_28"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
       "last": 0,
       "action": "A commanding physical gesture of judgement. Raise the empty hand high above the helmet with the palm open toward screen right, hold it there briefly while the gavel stays at the side, then lower the arm back to the original stance. A physical gesture only: no spell, glow or emitted effect."
     },
     "death_h3_v1": {
       "clip": "death",
-      "references": ["idle_0", "death_39"],
-      "guides": [[90, 1]],
+      "references": [
+        "idle_0",
+        "death_39"
+      ],
+      "guides": [
+        [
+          90,
+          1
+        ]
+      ],
       "last": 1,
       "action": "Collapse continuously from standing: the body doubles over, the knees buckle onto the ground and the armoured figure slumps down and falls onto its front, finishing lying motionless face down with the helmet at screen left and the boots at screen right, the coat and sash spread over the back and the gavel lying on the ground in front. No recovery, no floating equipment and no disappearing body."
+    },
+    "hit_h3_v2": {
+      "clip": "hit",
+      "references": [
+        "hit_17",
+        "idle_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "He starts rocked back in a flinch, helmet and shoulders tipped backward, knees flexed and the empty arm flung out while the gavel stays gripped, then he recovers from it, rebalances on both boots and returns to the same stance. Remain standing with the gavel held. Only the body moves; nothing else appears in the frame."
+    },
+    "defend_h3_v2": {
+      "clip": "defend",
+      "references": [
+        "idle_0",
+        "defend_21",
+        "defend_23"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
+      "last": 2,
+      "action": "Crouch into a wide braced stance and raise the empty forearm across the visor as a guard, the gavel held low and ready at the side, then hold the braced guard on both planted boots. No attack and no return to the relaxed stance."
     }
   }
 }

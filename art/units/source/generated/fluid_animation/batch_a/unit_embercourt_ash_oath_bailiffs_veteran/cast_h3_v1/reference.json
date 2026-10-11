@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_embercourt_ash_oath_bailiffs_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/idle_v1.png",
+      "source_sha256": "1589f2b6f1ef3c423e6f90ab7883c2bf0e90cd4f8422f7c3d985481fcf72ea43",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "608e11325888ff8db23be8e231146d13872c06980f0522e5c90ac2c1fdfb4e07"
+    },
+    {
+      "frame": "cast_28",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/cast_v1.png",
+      "source_sha256": "ee096565d52d1db0de5c269570fb15bb6189dac05b218efa882731e9639594ec",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "49c7b8cdd1d703bce6b11e4def89a85df39f10b8fcaabcffcd27225a2986292d"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    484,
+    570
+  ],
+  "output_scale": 0.56,
+  "free_pixels_left_top_right_bottom": [
+    268,
+    48,
+    267,
+    47
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
