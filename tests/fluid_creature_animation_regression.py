@@ -25,22 +25,37 @@ func capture()->Image:
 	for i in range(3):await get_tree().process_frame
 	await RenderingServer.frame_post_draw
 	return get_viewport().get_texture().get_image()
+# A RIFE idle loop plays from its own sheet (BattleUnitPose.sheet_path), as in battle.
+# Load every clip's sheet before drawing: a texture first loaded inside _draw is not
+# ready for that frame's capture and draws white.
+class Sheets:
+	static func load_all(row:Dictionary,atlas:Texture2D)->Dictionary:
+		var textures:Dictionary={String(row.pose_sheet):atlas}
+		for name in row.pose_clips:
+			var path:String=String(row.pose_clips[name].get("sheet",row.pose_sheet))
+			if not textures.has(path):textures[path]=load(path)
+		return textures
+	static func clip_texture(textures:Dictionary,row:Dictionary,state:String,dead:bool)->Texture2D:
+		return textures[Pose.sheet_path(row,state,dead)]
 class ContactSheet extends Control:
 	var row:Dictionary
 	var clip_name:String
 	var sheet:Texture2D
+	var textures:Dictionary
 	func _draw():
 		draw_rect(Rect2(0,0,1280,400),Color(.12,.16,.1))
 		var spec:Dictionary=row.pose_clips[clip_name]
 		var states:Dictionary={"idle":"idle_hold","attack":"melee_windup_release","move":"move_path_step","hit":"hit_stagger","death":"death_rout_remove","defend":"defend_brace","ranged":"ranged_aim_release","cast":"cast_support_anchor"}
+		var state:String=states.get(clip_name,"idle_hold")
+		var texture:Texture2D=Sheets.clip_texture(textures,row,state,clip_name=="dead")
 		var elapsed:=0
 		for i in range(spec.frames):
-			var region:Rect2=Pose.region(row,states.get(clip_name,"idle_hold"),float(i)/spec.frames,elapsed,false,clip_name=="dead")
+			var region:Rect2=Pose.region(row,state,float(i)/spec.frames,elapsed,false,clip_name=="dead")
 			for sample in range(2):
 				var ground:=Vector2(75+i*155,195+sample*135)
-				var rect:Rect2=Pose.grounded_rect(ground,128 if sample==0 else 64,region,row)
+				var rect:Rect2=Pose.grounded_rect(ground,128 if sample==0 else 64,region,row,false,Pose.clip(row,state,clip_name=="dead"))
 				draw_line(ground-Vector2(65,0),ground+Vector2(65,0),Color(.5,.5,.3))
-				draw_texture_rect_region(sheet,rect,region)
+				draw_texture_rect_region(texture,rect,region)
 				draw_string(ThemeDB.fallback_font,ground+Vector2(-30,23),str(i+1)+" / "+str(elapsed)+"ms",HORIZONTAL_ALIGNMENT_LEFT,-1,13)
 			elapsed+=int(spec.frame_durations_msec[i]) if spec.has("frame_durations_msec") else int(spec.frame_msec)
 		draw_string(ThemeDB.fallback_font,Vector2(10,22),row.unit_id+" / "+clip_name+" / battle128 and map64 ground scale",HORIZONTAL_ALIGNMENT_LEFT,-1,18)
@@ -48,6 +63,7 @@ class Overview extends Control:
 	var row:Dictionary
 	var names:Array
 	var sheet:Texture2D
+	var textures:Dictionary
 	var existing_idle:bool=false
 	func cell_width()->int:return maxi(155,ceili(float(row.pose_frame_size.width)*128.0/float(row.get("pose_reference_height",row.pose_frame_size.height)))+20)
 	func columns()->int:return 8 if cell_width()*8<=4096 else maxi(1,mini(4,4096/cell_width()))
@@ -62,13 +78,14 @@ class Overview extends Control:
 		var used_rows:=0
 		for r in range(names.size()):
 			var name:String=names[r];var spec:Dictionary=row.pose_clips[name];var elapsed:=0
+			var state:String=states.get(name,"idle_hold");var texture:Texture2D=Sheets.clip_texture(textures,row,state,name=="dead")
 			draw_string(ThemeDB.fallback_font,Vector2(10,48+used_rows*190),"idle (existing; review retention)" if name=="idle" and existing_idle else name,HORIZONTAL_ALIGNMENT_LEFT,-1,15)
 			for i in range(spec.frames):
 				var ground:=Vector2(cell_width()*.5+(i%columns())*cell_width(),185+(used_rows+i/columns())*190)
-				var region:Rect2=Pose.region(row,states.get(name,"idle_hold"),float(i)/spec.frames,elapsed,false,name=="dead")
-				var rect:Rect2=Pose.grounded_rect(ground,128,region,row)
+				var region:Rect2=Pose.region(row,state,float(i)/spec.frames,elapsed,false,name=="dead")
+				var rect:Rect2=Pose.grounded_rect(ground,128,region,row,false,Pose.clip(row,state,name=="dead"))
 				draw_line(ground-Vector2(65,0),ground+Vector2(65,0),Color(.5,.5,.3))
-				draw_texture_rect_region(sheet,rect,region)
+				draw_texture_rect_region(texture,rect,region)
 				draw_string(ThemeDB.fallback_font,ground+Vector2(-25,17),str(i+1)+" / "+str(elapsed),HORIZONTAL_ALIGNMENT_LEFT,-1,12)
 				elapsed+=int(spec.frame_durations_msec[i]) if spec.has("frame_durations_msec") else int(spec.frame_msec)
 			used_rows+=ceili(float(spec.frames)/columns())
@@ -91,6 +108,7 @@ func run():
 			var viewport:=SubViewport.new();viewport.size=overview.canvas_size();viewport.render_target_update_mode=SubViewport.UPDATE_ALWAYS
 			add_child(viewport)
 			overview.sheet=load(change.animation.pose_sheet) if OS.get_environment("FLUID_LIVE")=="1" else ImageTexture.create_from_image(Image.load_from_file(change.animation.pose_sheet))
+			overview.textures=Sheets.load_all(change.animation,overview.sheet)
 			viewport.add_child(overview)
 			await RenderingServer.frame_post_draw
 			viewport.get_texture().get_image().save_png(OS.get_environment("FLUID_OUTPUT").path_join(change.unit_id+"-overview.png"))
@@ -99,6 +117,7 @@ func run():
 			for name in change.replaced_clips:
 				var gallery:=ContactSheet.new();gallery.row=change.animation;gallery.clip_name=name
 				gallery.sheet=load(change.animation.pose_sheet) if OS.get_environment("FLUID_LIVE")=="1" else ImageTexture.create_from_image(Image.load_from_file(change.animation.pose_sheet))
+				gallery.textures=Sheets.load_all(change.animation,gallery.sheet)
 				add_child(gallery)
 				await RenderingServer.frame_post_draw
 				get_viewport().get_texture().get_image().save_png(OS.get_environment("FLUID_OUTPUT").path_join(change.unit_id+"-"+name+".png"))
@@ -259,9 +278,9 @@ func run():
 					var movement:Dictionary=attack.duplicate(true);movement.event_id="battle_unit_move";movement.state="move_path_step";movement.walk_path=[{"q":1,"r":1},{"q":2,"r":1},{"q":3,"r":1},{"q":4,"r":1}]
 					snap.playback_event=movement;snap.battle_animation_events=[movement];snap.stack_animation_states={movement.battle_id:movement}
 					board.set_battle_presentation_snapshot(snap)
-					var expected:int=Pose.clip_duration_msec(row.pose_clips.move)*3
+					var expected:int=Board.STACK_MOVE_HEX_MSEC*(movement.walk_path.size()-1)
 					if reduced:expected=mini(expected,260)
-					check(board._animation_playback_record_for_stack(movement.battle_id).base_duration_ms==expected,"multihex move does not loop one gait per step")
+					check(board._animation_playback_record_for_stack(movement.battle_id).base_duration_ms==expected,"multihex move does not take the board's time per hex")
 				board.finish_action_playback(session)
 				check(board._stack_animation_playback_records.is_empty(),"finish left contact clock active")
 		# Real committed actions remain exactly equivalent to nonpresented rules.
@@ -269,6 +288,8 @@ func run():
 		var direct=Store.new_session_data();direct.from_dict(presented.to_dict().duplicate(true))
 		var result:Dictionary=BattleRules.perform_presented_action(presented,"strike")
 		var plain:Dictionary=BattleRules.perform_player_action(direct,"strike")
+		# A presented action also counts the player's order (the Quick Resolve gate).
+		BattleRules.record_player_order(direct.battle,plain)
 		check(result.get("ok",false)==plain.get("ok",false) and presented.to_dict()==direct.to_dict(),"authored playback changed simulation")
 	board.queue_free()
 	if DisplayServer.get_name()!="headless" and not attack_id.is_empty() and OS.get_environment("FLUID_CONTACTS_ONLY")!="1":

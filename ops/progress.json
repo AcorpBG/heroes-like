@@ -115132,6 +115132,20 @@
       "notes": "Owner request 2026-10-11: convert one painted unit to MiniMax H3 video and profile every stage, to estimate the remaining painted units (about 84 painted, 24 mixed). Pilot unit: Gateward Phalanx (unit_citadel_pikeward_veteran), all 7 clips. New shared tool tools/h3_creature_animation.py replaces the per-unit produce.py/stage_video.py/prepare_handoff.py copies: one h3_unit.json per unit (prompts, painted reference frames, guide frames, append-only takes), prepare renders guides from the accepted paintings at their accepted anchor and scale, generate queues all samplings at once, frees the models once, decodes, keeps the FFV1 original, mattes with the blue-plate edge rule and draws review sheets (--batch adds other prepared units for unattended runs), sheets --frames draws close-ups, build writes the handoff from h3_selection.json, profile prints per-stage seconds from <take>/timing.json. Measured per take: sampling 160-194 s GPU (mean 171), decode 10-18 s, collect+matte+sheets about 16 s overlapping the next decode: about 3.2 min. First pass of 7 takes 23 min wall. Retakes: hit_h3_v1 plate drifted blue to red and black; death_h3_v1 turned the pike end over end because the painted death_36 and death_39 guides disagree on the pike; 9 generations for 7 clips (historical 1.45 per clip). Agent time about 20 min per unit (setup 5, review 7, retake review 3, selection/build/render/publish/import/live 6). Pilot wall clock 44 min including about 6 min of one-time fixes. Estimate: GPU 29-33 min per unit, about 47-53 GPU hours for 84 painted plus 24 half-done mixed units; about 70 h if run one unit at a time, about 2-3 days of GPU time if batches render overnight while review continues by day. Originals and mattes take about 0.7 GB per unit before archiving. Published with an idle of every second video frame at 60 ms (no RIFE loop needed); the publisher now deletes the orphaned RIFE idle sheet when a new idle is delivered. Checked: complete review sheets and close-ups of every fast passage and loop seam, candidate and live renders at 128 px battle and map scale, isolated Godot import. The fluid render check reports 3 failures (multihex move gait duration x2, authored playback changed simulation) that the live painted unit shows identically before this change; it is not a core test.",
       "updatedAt": "2026-10-11T16:10:00Z",
       "completedAt": "2026-10-11T16:10:00Z"
+    },
+    {
+      "id": "tests-fluid-render-check-stale-20261011",
+      "title": "Bring the fluid animation render check up to date",
+      "status": "completed",
+      "classification": "test_maintenance",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/fluid-creature-animation.md",
+        "docs/idle-inbetweens.md"
+      ],
+      "notes": "Found during the H3 pilot: tests/fluid_creature_animation_regression.py failed 3 checks on every unit, changed or not. The multihex move check still expected one walk clip per hex; since 94a08e18a a move takes STACK_MOVE_HEX_MSEC per hex, so it now expects that. 'authored playback changed simulation' differed only in battle.player_orders_given: perform_presented_action counts the player's order (the Quick Resolve gate), so the plain path now gets the same record_player_order before the exact comparison. The overview and contact sheets drew a RIFE idle by indexing the atlas; they now draw each clip from BattleUnitPose.sheet_path with its own ground line, loading the sheets before drawing (a texture first loaded inside _draw rendered white). Checked: live runs on Citadel Pikeward (RIFE idle) and its veteran (H3) pass with no failures, and every RIFE idle frame draws grounded; core suite 15/15.",
+      "updatedAt": "2026-10-11T16:45:00Z",
+      "completedAt": "2026-10-11T16:45:00Z"
     }
   ],
   "project": "heroes-like",
