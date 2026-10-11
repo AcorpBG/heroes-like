@@ -5,7 +5,8 @@ The shared form of the per-unit produce.py / stage_video.py / prepare.py copies.
 A unit is described by <unit_dir>/h3_unit.json:
 
   unit_id, identity (prompt text), plate (prompt text), canvas [w, h], scale (runtime px
-  per video px), key_rgb, seed, optional anchor [x, y] and tiled_decode, and "takes":
+  per video px), key_rgb ([0, 0, 255], or [0, 255, 0] for a palette full of blue), seed,
+  optional anchor [x, y] and tiled_decode, and "takes":
   {take_name: {clip, references: [painted frame names], guides: [[video_frame, ref]],
   last: ref, action: prompt text}}. Append new takes (retakes too) at the end: a take's
   seed is the unit seed plus its position.
@@ -16,14 +17,26 @@ painting at its accepted anchor and scale. One anchor and scale serve every take
 unit; prepare fits them once (h3_layout.json). Run with a Python that has Pillow, NumPy,
 SciPy and PyAV; the ComfyUI service is http://127.0.0.1:8189 unless --url says otherwise.
 
+  survey   UNIT_ID             before writing h3_unit.json: restore the painted sources
+                               (--archive-dir), draw every painted frame by clip with its
+                               name and suggest a scale
   prepare  UNIT_DIR [TAKE...]  guides, prompts and graphs for takes not prepared yet
   generate UNIT_DIR [TAKE...]  queue every sampling job, free the models, queue the decodes;
                                then collect lossless originals, matte and draw review sheets;
                                --batch UNIT_DIR... adds other prepared units to the same run
+  enqueue  UNIT_DIR [TAKE...]  prepare, then leave a request for the runner (--join: add to
+                               the group it is sampling, e.g. retakes)
+  run                          the runner: keeps the GPU busy across units. When a group's
+                               samplings are done it frees the models once, queues the
+                               group's decodes and the next group's samplings behind them,
+                               then collects, mattes and draws this group while the GPU
+                               samples the next. Prints READY <unit> for review.
   matte    UNIT_DIR TAKE...    matte again: blue-plate unmix plus the edge rule of
                                tools/rematte_blue_plate.py (no purple rim on red edges)
   sheets   UNIT_DIR TAKE...    chronological review sheets under .artifacts/h3/<unit>/;
                                --frames 28-40,88 draws a close-up sheet of just those frames
+  propose  UNIT_DIR [TAKE...]  a starting h3_selection.json from the motion in the matte
+                               frames; named takes update just their clips
   build    UNIT_DIR            candidate handoff.json from h3_selection.json
   profile  UNIT_DIR            stage timings of every take
 
@@ -37,6 +50,7 @@ import hashlib
 import io
 import json
 import math
+import re
 import sys
 import time
 import urllib.parse
@@ -63,6 +77,7 @@ MARGIN = 24          # free pixels every guide keeps from the canvas edge
 UNMIX_MARGIN = 2     # protected foreground chroma: bluest opaque guide pixel plus this
 EDGE_MARGIN = 6      # edge-rule threshold: guide blue-minus-green p99.9 plus this
 URL = "http://127.0.0.1:8189"
+QUEUE = ROOT / ".artifacts/h3/queue"
 
 
 def read(path):
@@ -161,11 +176,22 @@ class Unit:
         return anchor, room
 
 
-def measure(guides):
-    """Blue in the painted palette: the unmix guard band and the edge-rule threshold."""
+def key_order(key_rgb):
+    """Channel order that puts the plate's channel last, so the blue-plate rules key it.
+
+    A blue plate keeps RGB. A green plate, for a unit whose palette is full of blue (ice,
+    crystal), swaps green and blue: the unmix measures green against max(red, blue) and the
+    edge rule green against blue, which blue, cyan and violet parts never approach."""
+    order = {(0, 0, 255): [0, 1, 2], (0, 255, 0): [0, 2, 1]}.get(tuple(key_rgb))
+    assert order, f"key_rgb {key_rgb}: only a blue or a green plate is supported"
+    return order
+
+
+def measure(guides, order):
+    """Plate colour in the painted palette: the unmix guard band and the edge-rule threshold."""
     worst, values = 0.0, []
     for rgba in guides:
-        a = np.asarray(rgba).astype(float)
+        a = np.asarray(rgba).astype(float)[..., order + [3]]
         inner = binary_erosion(a[..., 3] > 240, iterations=3)
         worst = max(worst, float((a[..., 2] - np.maximum(a[..., 0], a[..., 1]))[inner].max()))
         values.append(a[..., 2][inner] - a[..., 1][inner])
@@ -196,7 +222,7 @@ def prepare(unit, names):
             source = unit.painted[frame_name]["source"].removeprefix("res://")
             refs.append({"frame": frame_name, "source": source, "source_sha256": sha(ROOT / source),
                          "input_file": f"guide_{i}_chroma.png", "input_sha256": sha(out / f"guide_{i}_chroma.png")})
-        protected, threshold, measured = measure(guides)
+        protected, threshold, measured = measure(guides, key_order(unit.cfg["key_rgb"]))
         prompt = unit.cfg["identity"] + " " + spec["action"] + " " + unit.cfg["plate"]
         seed = unit.cfg["seed"] + list(unit.cfg["takes"]).index(name)
         config = {"unit_id": unit.id, "clip": spec["clip"], "canvas": [w, h], "anchor": anchor, "scale": unit.scale,
@@ -243,19 +269,25 @@ def upload(name, path):
         return json.load(response)
 
 
+def history_of(prompt_id):
+    """The finished job's history, or None while it is queued or running."""
+    try:
+        history = call("/history/" + prompt_id)
+    except OSError as error:
+        print("OBSERVATION", type(error).__name__, flush=True)
+        return None
+    if prompt_id not in history:
+        return None
+    result = history[prompt_id]
+    if result["status"]["status_str"] != "success":
+        raise RuntimeError(f"job {prompt_id} failed: {result['status']}")
+    return result
+
+
 def wait(prompt_id):
-    while True:
-        try:
-            history = call("/history/" + prompt_id)
-        except OSError as error:
-            print("OBSERVATION", type(error).__name__, flush=True)
-            history = {}
-        if prompt_id in history:
-            result = history[prompt_id]
-            if result["status"]["status_str"] != "success":
-                raise RuntimeError(f"job {prompt_id} failed: {result['status']}")
-            return result
+    while (history := history_of(prompt_id)) is None:
         time.sleep(3)
+    return history
 
 
 def gpu_seconds(history):
@@ -276,11 +308,85 @@ def release_models():
     raise RuntimeError("models did not release 16 GB of VRAM")
 
 
+def unfinished(jobs):
+    """Prepared takes without a collected original, each once."""
+    jobs = {(unit.dir, name): (unit, name) for unit, name in jobs
+            if (unit.dir / name / "config.json").exists() and not (unit.dir / name / "original.json").exists()}
+    return list(jobs.values())
+
+
+def submit_sampling(unit, name):
+    out, started = unit.dir / name, time.monotonic()
+    if (out / "sampling_submission.json").exists():
+        return
+    graph = read(out / "sampling_workflow_api.json")
+    uploaded = {}
+    for key, item in graph.items():
+        if item["class_type"] == "LoadImage":
+            guide = out / f"guide_{int(key) - 30}_chroma.png"
+            result = upload(item["inputs"]["image"], guide)
+            item["inputs"]["image"] = "/".join(v for v in (result.get("subfolder", ""), result["name"]) if v)
+            uploaded[key] = dict(result, sha256=sha(guide))
+    write(out / "sampling_workflow_api.json", graph)
+    submitted = call("/prompt", {"prompt": graph, "client_id": "h3_creature_animation"})
+    write(out / "sampling_submission.json", dict(submitted, queued_unix=time.time(), url=URL, uploaded=uploaded))
+    timed(out, "upload_and_queue", time.monotonic() - started)
+    print(f"QUEUED sampling {unit.id}/{name} {submitted['prompt_id']}", flush=True)
+
+
+def store_latent(unit, name, history):
+    out, started = unit.dir / name, time.monotonic()
+    write(out / "sampling_history.json", history)
+    location = history["outputs"]["16"]["latents"][0]
+    (out / "original.latent").write_bytes(fetch(location))
+    write(out / "latent.json", {"output": location, "sha256": sha(out / "original.latent")})
+    timed(out, "sampling_gpu", gpu_seconds(history))
+    timed(out, "latent_fetch", time.monotonic() - started)
+    print(f"SAMPLED {unit.id}/{name} in {gpu_seconds(history)} s", flush=True)
+
+
+def submit_decode(unit, name, freed):
+    out = unit.dir / name
+    if (out / "decode_submission.json").exists():
+        return
+    location = read(out / "latent.json")["output"]
+    graph = {
+        "3": node("VAELoader", vae_name=VAE),
+        "10": node("LoadLatent", latent=f"{location['subfolder']}/{location['filename']} [output]".replace("\\", "/")),
+        "11": node("VAEDecodeTiled", samples=["10", 0], vae=["3", 0], **read(out / "config.json")["tiled_decode"]),
+        "13": node("CreateVideo", images=["11", 0], fps=FPS, bit_depth=8),
+        "14": node("SaveVideo", video=["13", 0], filename_prefix=f"h3/{unit.id}/{name}/original", **{"format": "mp4", "format.codec": "h264"}),
+        "15": node("SaveImage", images=["11", 0], filename_prefix=f"h3/{unit.id}/{name}/frames/decoded")}
+    write(out / "decode_workflow_api.json", graph)
+    submitted = call("/prompt", {"prompt": graph, "client_id": "h3_creature_animation"})
+    write(out / "decode_submission.json", dict(submitted, queued_unix=time.time(), url=URL, freed_vram_bytes=freed))
+
+
+def decode_group(jobs):
+    """Free the sampling models once, then queue every decode of the group."""
+    started = time.monotonic()
+    freed = release_models() if any(not (u.dir / n / "decode_submission.json").exists() for u, n in jobs) else None
+    for unit, name in jobs:
+        submit_decode(unit, name, freed)
+    if freed is not None:
+        for unit, name in jobs:
+            timed(unit.dir / name, "release_models_shared", (time.monotonic() - started) / len(jobs))
+
+
+def finish(unit, name):
+    """Wait for the decode, then keep the lossless original, matte it and draw the review sheets."""
+    out = unit.dir / name
+    history = wait(read(out / "decode_submission.json")["prompt_id"])
+    write(out / "generation_history.json", history)
+    timed(out, "decode_gpu", gpu_seconds(history))
+    collect(out, history)
+    matte(unit, name)
+    sheets(unit, name)
+
+
 def generate(jobs):
     """jobs: [(unit, take names)]; every take of every unit shares one sampling run and one decode run."""
-    jobs = {(unit.dir.resolve(), name): (unit, name) for unit, names in jobs for name in unit.takes(names)
-            if (unit.dir / name / "config.json").exists() and not (unit.dir / name / "original.json").exists()}
-    jobs = list(jobs.values())
+    jobs = unfinished([(unit, name) for unit, names in jobs for name in unit.takes(names)])
     if not jobs:
         return print("nothing to generate")
     queue = call("/queue")
@@ -289,63 +395,102 @@ def generate(jobs):
         raise SystemExit("the service is busy; nothing queued")
     # All sampling jobs go in at once: the service runs them back to back with the models loaded.
     for unit, name in pending:
-        out, started = unit.dir / name, time.monotonic()
-        graph = read(out / "sampling_workflow_api.json")
-        uploaded = {}
-        for key, item in graph.items():
-            if item["class_type"] == "LoadImage":
-                guide = out / f"guide_{int(key) - 30}_chroma.png"
-                result = upload(item["inputs"]["image"], guide)
-                item["inputs"]["image"] = "/".join(v for v in (result.get("subfolder", ""), result["name"]) if v)
-                uploaded[key] = dict(result, sha256=sha(guide))
-        write(out / "sampling_workflow_api.json", graph)
-        submitted = call("/prompt", {"prompt": graph, "client_id": "h3_creature_animation"})
-        write(out / "sampling_submission.json", dict(submitted, queued_unix=time.time(), url=URL, uploaded=uploaded))
-        timed(out, "upload_and_queue", time.monotonic() - started)
-        print(f"QUEUED sampling {unit.id}/{name} {submitted['prompt_id']}", flush=True)
+        submit_sampling(unit, name)
     for unit, name in jobs:
-        out = unit.dir / name
-        if (out / "original.latent").exists():
-            continue
-        job = read(out / "sampling_submission.json")
-        history = wait(job["prompt_id"])
-        write(out / "sampling_history.json", history)
-        started = time.monotonic()
-        location = history["outputs"]["16"]["latents"][0]
-        (out / "original.latent").write_bytes(fetch(location))
-        write(out / "latent.json", {"output": location, "sha256": sha(out / "original.latent")})
-        timed(out, "sampling_gpu", gpu_seconds(history))
-        timed(out, "latent_fetch", time.monotonic() - started)
-        print(f"SAMPLED {unit.id}/{name} in {gpu_seconds(history)} s", flush=True)
-    started = time.monotonic()
-    freed = release_models() if any(not (u.dir / n / "decode_submission.json").exists() for u, n in jobs) else None
-    for unit, name in jobs:
-        out = unit.dir / name
-        if (out / "decode_submission.json").exists():
-            continue
-        location = read(out / "latent.json")["output"]
-        graph = {
-            "3": node("VAELoader", vae_name=VAE),
-            "10": node("LoadLatent", latent=f"{location['subfolder']}/{location['filename']} [output]".replace("\\", "/")),
-            "11": node("VAEDecodeTiled", samples=["10", 0], vae=["3", 0], **read(out / "config.json")["tiled_decode"]),
-            "13": node("CreateVideo", images=["11", 0], fps=FPS, bit_depth=8),
-            "14": node("SaveVideo", video=["13", 0], filename_prefix=f"h3/{unit.id}/{name}/original", **{"format": "mp4", "format.codec": "h264"}),
-            "15": node("SaveImage", images=["11", 0], filename_prefix=f"h3/{unit.id}/{name}/frames/decoded")}
-        write(out / "decode_workflow_api.json", graph)
-        submitted = call("/prompt", {"prompt": graph, "client_id": "h3_creature_animation"})
-        write(out / "decode_submission.json", dict(submitted, queued_unix=time.time(), url=URL, freed_vram_bytes=freed))
-    if freed is not None:
-        for unit, name in jobs:
-            timed(unit.dir / name, "release_models_shared", (time.monotonic() - started) / len(jobs))
+        if not (unit.dir / name / "original.latent").exists():
+            store_latent(unit, name, wait(read(unit.dir / name / "sampling_submission.json")["prompt_id"]))
+    decode_group(jobs)
     # Decodes run on the GPU while finished takes are collected and matted here.
     for unit, name in jobs:
-        out = unit.dir / name
-        history = wait(read(out / "decode_submission.json")["prompt_id"])
-        write(out / "generation_history.json", history)
-        timed(out, "decode_gpu", gpu_seconds(history))
-        collect(out, history)
-        matte(unit, name)
-        sheets(unit, name)
+        finish(unit, name)
+
+
+def enqueue(unit, names, join):
+    """Prepare the takes and leave a request for the runner. A join request is added to the
+    sampling group on the GPU; any other request becomes a later group of its own."""
+    prepare(unit, names)
+    names = [name for _, name in unfinished([(unit, n) for n in unit.takes(names)])]
+    if not names:
+        return print("nothing to enqueue")
+    QUEUE.mkdir(parents=True, exist_ok=True)
+    path = QUEUE / f"{time.time_ns()}_{unit.id}.json"
+    write(path.with_suffix(".tmp"), {"unit_dir": rel(unit.dir), "takes": names, "join": join})
+    path.with_suffix(".tmp").replace(path)
+    print(f"ENQUEUED {unit.id}: {' '.join(names)}" + (" (joins the running group)" if join else ""), flush=True)
+
+
+def take_requests(join_only):
+    """Unfinished takes of the waiting join requests plus, unless join_only, the oldest other
+    request: one unit per group, so later requests wait as a buffer. Taken requests leave the queue."""
+    jobs, unit_taken = [], join_only
+    for path in sorted(QUEUE.glob("*.json")):
+        try:
+            request = read(path)
+            if not request.get("join"):
+                if unit_taken:
+                    continue
+                unit_taken = True
+            unit = Unit(ROOT / request["unit_dir"])
+            jobs += [(unit, name) for name in unit.takes(request["takes"])]
+            path.unlink()
+        except (OSError, ValueError, KeyError, SystemExit) as error:
+            print(f"BAD REQUEST {path.name}: {error!r}", flush=True)
+            path.replace(path.with_suffix(".bad"))
+    return unfinished(jobs)
+
+
+def run(poll):
+    """Keep the GPU busy across units. A group's samplings run back to back; when they are done
+    the models are freed once, the group's decodes are queued and the next group's samplings go
+    in right behind them, so the GPU samples the next group while this one is collected, matted
+    and drawn here. READY <unit> means its takes can be reviewed."""
+    print(f"RUNNER watching {rel(QUEUE)}", flush=True)
+    group = []
+    while True:
+        if not group:
+            group = take_requests(False)
+            if not group:
+                time.sleep(poll)
+                continue
+        for job in group:
+            submit_sampling(*job)
+        waiting = [job for job in group if not (job[0].dir / job[1] / "original.latent").exists()]
+        while waiting:
+            for unit, name in list(waiting):
+                try:
+                    history = history_of(read(unit.dir / name / "sampling_submission.json")["prompt_id"])
+                except RuntimeError as error:
+                    print(f"FAILED sampling {unit.id}/{name}: {error}", flush=True)
+                    waiting.remove((unit, name))
+                    group.remove((unit, name))
+                    continue
+                if history is not None:
+                    store_latent(unit, name, history)
+                    waiting.remove((unit, name))
+            running = {(u.dir, n) for u, n in group}
+            joining = [(u, n) for u, n in take_requests(True) if (u.dir, n) not in running]
+            for job in joining:
+                submit_sampling(*job)
+            group += joining
+            waiting += joining
+            if waiting:
+                time.sleep(3)
+        following = []
+        if group:
+            decode_group(group)
+        for unit, name in group:
+            # The next group's samplings queue behind these decodes.
+            for u, n in take_requests(bool(following)):
+                if (u.dir, n) not in {(v.dir, m) for v, m in following}:
+                    submit_sampling(u, n)
+                    following.append((u, n))
+            try:
+                finish(unit, name)
+            except Exception as error:  # one bad take must not stop the run
+                print(f"FAILED finish {unit.id}/{name}: {error!r}", flush=True)
+        for unit_id in dict.fromkeys(unit.id for unit, _ in group):
+            print(f"READY {unit_id}: " + " ".join(n for u, n in group if u.id == unit_id), flush=True)
+        group = following
 
 
 def collect(out, history):
@@ -386,8 +531,11 @@ def collect(out, history):
 
 
 def key_frame(job):
-    """Blue-plate unmix (the produce.py recipe), then the edge rule. Returns (RGBA bytes, detail)."""
-    rgb, protected, threshold = job
+    """Blue-plate unmix (the produce.py recipe), then the edge rule. Returns (RGBA bytes, detail).
+    A green plate runs the same rules with green and blue swapped (key_order) and swaps them back."""
+    rgb, protected, threshold, *order = job  # a runner started before key_order sends no order
+    order = order[0] if order else [0, 1, 2]
+    rgb = np.ascontiguousarray(rgb[..., order])
     a = rgb.astype(np.float32)
     tiles = [a[:24, :24], a[:24, -24:], a[-24:, :24], a[-24:, -24:]]
     medians = np.array([np.median(t.reshape(-1, 3), axis=0) for t in tiles])
@@ -412,7 +560,9 @@ def key_frame(job):
         image, stats = clean_edges(Image.fromarray(rgb), Image.fromarray(old, "RGBA"), threshold)
     except ValueError as error:  # a cyan plate: blue barely exceeds green
         return None, {"rejected": str(error)}
-    return image.tobytes(), dict(stats, background_rgb=bg.round(3).tolist(), corner_median_spread=round(spread, 3))
+    image = np.asarray(image)[..., order + [3]]
+    return np.ascontiguousarray(image).tobytes(), dict(stats, background_rgb=bg[order].round(3).tolist(),
+                                                       corner_median_spread=round(spread, 3))
 
 
 def matte(unit, name):
@@ -424,7 +574,8 @@ def matte(unit, name):
     (out / "matte").mkdir(exist_ok=True)
     hashes, details = [], []
     with concurrent.futures.ProcessPoolExecutor() as pool:
-        jobs = [(f, c["protected_foreground_chroma"], c["edge_threshold"]) for f in frames]
+        order = key_order(c["key_rgb"])
+        jobs = [(f, c["protected_foreground_chroma"], c["edge_threshold"], order) for f in frames]
         for i, (data, detail) in enumerate(pool.map(key_frame, jobs, chunksize=4)):
             if data is None:
                 hashes.append(None)
@@ -435,9 +586,11 @@ def matte(unit, name):
             details.append(detail)
     write(out / "matte.json", {"frames": FRAMES, "fps": FPS, "rgba_sha256": hashes, "frame_details": details,
                                "protected_foreground_chroma": c["protected_foreground_chroma"], "edge_threshold": c["edge_threshold"],
+                               "key_rgb": c["key_rgb"],
                                "recipe": "Flat blue plate (corner spread <= 10, separation >= 80): blue-minus-max(red, green) unmix with the "
                                          "measured guard band, edge-only despill, alpha>=8 regions kept when they hold an alpha>=128 pixel; "
-                                         "then the 2 px edge band re-solved by tools/rematte_blue_plate.py clean_edges. Geometry unchanged."})
+                                         "then the 2 px edge band re-solved by tools/rematte_blue_plate.py clean_edges. Geometry unchanged. "
+                                         "A green plate swaps green and blue before these rules and back after them."})
     timed(out, "matte", time.monotonic() - started)
     rejected = sum(h is None for h in hashes)
     print(f"MATTED {name}: {FRAMES - rejected} frames" + (f", {rejected} rejected plates" if rejected else ""), flush=True)
@@ -485,6 +638,121 @@ def sheets(unit, name, frames=None):
         sheet.save(target / f"{name}_{suffix}.png")
     if frames is None:
         timed(out, "sheets", time.monotonic() - started)
+
+
+def survey(unit_id, archive_dir):
+    """Before writing h3_unit.json: restore the unit's painted sources, draw every live painted
+    frame by clip with its name (.artifacts/h3/<unit>/painted.png) and suggest a scale."""
+    live = read(ROOT / "art/animation/source/fluid" / unit_id / "reviewed_handoff.json")["units"][0]
+    sources = sorted({f["source"].removeprefix("res://") for f in live["frames"]})
+    target = ROOT / ".artifacts/h3" / unit_id
+    target.mkdir(parents=True, exist_ok=True)
+    missing = [s for s in sources if not (ROOT / s).exists()]
+    if missing:
+        if not archive_dir:
+            raise SystemExit(f"{len(missing)} painted sources are archived; pass --archive-dir")
+        (target / "restore_paths.txt").write_text("\n".join(missing) + "\n", encoding="utf-8")
+        import subprocess
+        subprocess.run([sys.executable, "-B", str(ROOT / "tools/restore_archived_source_material.py"), "--archive-dir", str(archive_dir),
+                        "--paths-file", str(target / "restore_paths.txt"), "--apply"], cwd=ROOT, check=True)
+    poses = {f["name"]: source_pose(f, f.get("alpha_noise_cutoff", 0)) for f in live["frames"]}
+    left = min(x for _, (x, y) in poses.values())
+    top = min(y for _, (x, y) in poses.values())
+    w = max(x + p.width for p, (x, y) in poses.values()) - left
+    h = max(y + p.height for p, (x, y) in poses.values()) - top
+    # Video px = runtime px / scale; every painted frame fits with 40 px to spare per side.
+    scale = math.ceil(max(w / (960 - 80), h / (640 - 80)) * 100) / 100
+    rows = list(live["clips"].items())
+    # A long video clip (an earlier H3 move) would shrink every row; draw at most 8 of its frames.
+    shown = {clip: v["indices"] if len(v["indices"]) <= 8 else [v["indices"][round(k * (len(v["indices"]) - 1) / 7)] for k in range(8)]
+             for clip, v in rows}
+    cw = w + 8
+    sheet = Image.new("RGB", (cw * max(len(v) for v in shown.values()), (h + 22) * len(rows)), (52, 62, 52))
+    draw = ImageDraw.Draw(sheet)
+    for r, (clip, spec) in enumerate(rows):
+        for c, i in enumerate(shown[clip]):
+            name = live["frames"][i]["name"]
+            x0, y0 = c * cw, r * (h + 22)
+            if (r + c) % 2:
+                draw.rectangle((x0, y0, x0 + cw - 1, y0 + h + 21), fill=(196, 188, 168))
+            pose, (x, y) = poses[name]
+            sheet.paste(pose, (x0 + 4 + x - left, y0 + 18 + y - top), pose)
+            draw.text((x0 + 3, y0 + 2), name, fill=(200, 40, 30))
+    if sheet.width > 2400:
+        sheet = sheet.resize((2400, round(sheet.height * 2400 / sheet.width)), Image.Resampling.LANCZOS)
+    sheet.save(target / "painted.png")
+    print(f"UNIT_DIR {Path(sources[0]).parent.as_posix()}")
+    print("CLIPS " + ", ".join(f"{k} {len(v['indices'])}" for k, v in rows))
+    print(f"RUNTIME EXTENT {w}x{h} px; suggested scale {scale} (largest painting enlarged "
+          f"{max(f['scale'] for f in live['frames']) / scale:.2f}x); sheet {rel(target / 'painted.png')}")
+
+
+CLIP_MSEC = {"idle": 60, "move": 50, "attack": 42, "ranged": 42, "hit": 35, "defend": 42, "cast": 45, "death": 45}
+CLIP_FRAMES = {"attack": 34, "ranged": 36, "hit": 24, "defend": 22, "cast": 30, "death": 34}
+CLIP_END = {"attack": 0.97, "ranged": 0.97, "cast": 0.96, "hit": 0.93, "defend": 0.9, "death": 0.985}
+
+
+def propose(unit, names):
+    """A starting h3_selection.json from the motion in the matte frames: every second frame of
+    the idle, one gait cycle of the move, and for actions the moving span (quiet lead-in and
+    tail trimmed) sampled densely where the figure moves fast and sparsely where it is slow.
+    Named takes update just their clips in an existing selection; review before building."""
+    path = unit.dir / "h3_selection.json"
+    selection = read(path) if path.exists() else {"clips": {}, "preserved_accepted_clips": [],
+                                                   "visual_review": {"status": "pending", "notes": ""}}
+    if names:
+        chosen = {unit.cfg["takes"][n]["clip"]: n for n in unit.takes(names)}
+    elif selection["clips"]:
+        raise SystemExit(f"{rel(path)} exists; name the takes to propose again")
+    else:  # the latest matted take of each clip
+        chosen = {s["clip"]: n for n, s in unit.cfg["takes"].items() if (unit.dir / n / "matte.json").exists()}
+    for clip, name in chosen.items():
+        hashes = read(unit.dir / name / "matte.json")["rgba_sha256"]
+        frames = {}
+        for i, h in enumerate(hashes):
+            if h:
+                image = Image.open(unit.dir / name / "matte" / f"rgba_{i:03}.png")
+                frames[i] = np.asarray(image.resize((image.width // 4, image.height // 4), Image.Resampling.BILINEAR)).astype(np.float32)
+        idx = sorted(frames)
+        lit = {i: frames[i][..., :3] * frames[i][..., 3:] / 255 for i in idx}
+        motion = [0.0] + [float(np.abs(lit[b] - lit[a]).mean() + np.abs(frames[b][..., 3] - frames[a][..., 3]).mean() / 2)
+                          for a, b in zip(idx, idx[1:])]
+        if clip == "idle":
+            picked = [i for i in idx if i % 2 == 0]
+        elif clip == "move":
+            picked = [i for i in idx if i % 2 == 0 and i <= 60]
+        else:
+            cum = np.cumsum(motion)
+            first = idx[max(0, int(np.searchsorted(cum, cum[-1] * (0.015 if clip == "death" else 0.02))) - 2)]
+            last = idx[min(len(idx) - 1, int(np.searchsorted(cum, cum[-1] * CLIP_END[clip])) + 2)]
+            span = [i for i in idx if first <= i <= last]
+            cum = np.cumsum([0.0] + [motion[idx.index(i)] for i in span[1:]])
+            picks = sorted({span[0], span[-1]} | {span[int(np.searchsorted(cum, cum[-1] * k / (CLIP_FRAMES[clip] - 1)))]
+                                                  for k in range(1, CLIP_FRAMES[clip] - 1)})
+            picked = [picks[0]]
+            for p in picks[1:]:  # no gap longer than 12 video frames
+                while p - picked[-1] > 12:
+                    picked.append(next(i for i in span if i > picked[-1] + 6))
+                picked.append(p)
+            if clip == "death" and idx[-1] not in picked:
+                picked.append(idx[-1])  # the corpse
+        entry = {"segments": [{"take": name, "frames": picked}], "frame_msec": CLIP_MSEC[clip]}
+        if clip in ("attack", "ranged"):  # contact: the figure reaches furthest toward screen right
+            core = picked[len(picked) // 6: len(picked) * 5 // 6]
+            reach = {i: np.where(frames[i][..., 3].max(axis=0) > 128)[0].max(initial=0) for i in core}
+            entry["contact_frame"] = picked.index(max(core, key=reach.get))
+        elif clip == "cast":
+            entry["contact_frame"] = len(picked) // 2
+        selection["clips"][clip] = entry
+        print(f"{clip:7} {name:16} {len(picked):3} frames {len(picked) * CLIP_MSEC[clip] / 1000:.2f} s, video {picked[0]}-{picked[-1]}"
+              + (f", contact video {picked[entry['contact_frame']]}" if "contact_frame" in entry else "")
+              + (f", {124 - len(idx)} REJECTED plates" if len(idx) < 124 else ""))
+    order = ["idle", "move", "attack", "ranged", "hit", "defend", "cast", "death"]
+    selection["clips"] = dict(sorted(selection["clips"].items(), key=lambda kv: order.index(kv[0]) if kv[0] in order else 99))
+    text = json.dumps(selection, indent=2)
+    text = re.sub(r"\[\s+([\d,\s]+?)\s+\]", lambda m: "[" + " ".join(m.group(1).split()) + "]", text)
+    path.write_text(text + "\n", encoding="utf-8", newline="\n")
+    print(f"WROTE {rel(path)}")
 
 
 def build(unit):
@@ -540,26 +808,39 @@ def profile(unit):
 def main():
     global URL
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("verb", choices=["prepare", "generate", "matte", "sheets", "build", "profile"])
-    parser.add_argument("unit_dir", type=Path)
+    parser.add_argument("verb", choices=["survey", "prepare", "generate", "enqueue", "run", "matte", "sheets", "propose", "build", "profile"])
+    parser.add_argument("unit_dir", type=Path, nargs="?")
     parser.add_argument("takes", nargs="*")
     parser.add_argument("--url", default=URL)
     parser.add_argument("--batch", type=Path, nargs="+", default=[], metavar="UNIT_DIR",
                         help="generate: also every prepared take of these units, in the same run")
     parser.add_argument("--frames", type=frame_list, help="sheets: close-up of these frames, e.g. 28-40,88")
+    parser.add_argument("--join", action="store_true", help="enqueue: add the takes to the group the runner is sampling")
+    parser.add_argument("--poll", type=float, default=10, help="run: seconds between looks at an empty queue")
+    parser.add_argument("--archive-dir", type=Path, help="survey: newest source-art snapshot, for archived paintings")
     args = parser.parse_args()
     URL = args.url.rstrip("/")
+    if args.verb == "run":
+        return run(args.poll)
+    if args.unit_dir is None:
+        parser.error(f"{args.verb} needs a UNIT_DIR")
+    if args.verb == "survey":
+        return survey(str(args.unit_dir), args.archive_dir)
     unit = Unit(args.unit_dir)
     if args.verb == "prepare":
         prepare(unit, args.takes)
     elif args.verb == "generate":
         generate([(unit, args.takes)] + [(Unit(d), None) for d in args.batch])
+    elif args.verb == "enqueue":
+        enqueue(unit, args.takes, args.join)
     elif args.verb == "matte":
         for name in unit.takes(args.takes):
             matte(unit, name)
     elif args.verb == "sheets":
         for name in unit.takes(args.takes):
             sheets(unit, name, args.frames)
+    elif args.verb == "propose":
+        propose(unit, args.takes)
     elif args.verb == "build":
         build(unit)
     else:

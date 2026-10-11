@@ -1,0 +1,67 @@
+{
+  "unit_id": "unit_thornwake_bramblekite_needlers",
+  "identity": "ONE original slender winged living-wood humanoid, the Bramblekite Needler, facing screen right in elevated three-quarter view. Keep the pale bark body with a twig crown, amber eyes, the TWO large green leaf bat wings with wooden spars and golden edges, the layered leaf clothing, vine wrappings, small seed pods at the belt and root-clawed feet. Exactly two arms, two hands, two legs and two wings. Both hands hold ONE long wooden blowpipe level across the chest, the open end pointing to screen right. Preserve the blowpipe, the leaf wings, the twig crown and the slender proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep both wing tips, the blowpipe, the twig crown and both feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, darts in flight, falling leaves, magic, glow, motion trails, particles or extra limbs. Articulate joints naturally; do not morph the blowpipe or wings.",
+  "canvas": [960, 640],
+  "scale": 0.43,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026103450,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["attack_v1_frame_00", "hit_defend_v1_frame_03"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "An alert, twitchy idle that loops. The needler breathes, the half-folded wings flex open a little and fold again, the twig-crowned head tilts and the amber eyes scan, the blowpipe dips and lifts, then everything returns smoothly to the original stance. Both feet stay planted. No flying and no shooting."
+    },
+    "move_h3_v1": {
+      "clip": "move",
+      "references": ["move_v1_frame_00", "move_v1_frame_04"],
+      "guides": [[31, 1], [62, 0], [93, 1]],
+      "last": 0,
+      "action": "Fly in place through two complete wingbeat cycles, hovering just off the ground. Both leaf wings sweep fully up and open, then beat down and fold forward around the body, then rise again; the legs dangle and the body bobs slightly with each beat but stays centred for engine-driven travel. The blowpipe is held level in both hands. Finish in the original wing phase."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["attack_v1_frame_00", "attack_v1_frame_02", "attack_v1_frame_04"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE two-handed jab toward screen right. The needler draws the blowpipe back as the knees flex into a coil, then lunges forward and jabs the blowpipe end out with both arms almost straight to full reach at screen right, pulls it back and settles into the original stance. One jab only; nothing is fired."
+    },
+    "ranged_h3_v1": {
+      "clip": "ranged",
+      "references": ["attack_v1_frame_00", "ranged_v1_frame_03", "ranged_v1_frame_05"],
+      "guides": [[30, 1], [56, 2]],
+      "last": 0,
+      "action": "Shoot ONE dart toward screen right. The needler raises the blowpipe to its mouth and sights along it at screen right, the cheeks puff as it blows sharply and the pipe kicks slightly, holds a moment, then lowers the pipe and settles into the original stance. One shot only; the dart is not shown, with no trail, puff or flash."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["attack_v1_frame_00", "hit_defend_v1_frame_01"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "The needler flinches from an unseen blow and recovers completely. The body hunches and twists back, the wings jerk open and the knees flex while both hands keep hold of the blowpipe, then it rebalances on both feet and returns to the same stance. Nothing is seen hitting it: no projectile, spark or flash. The blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["attack_v1_frame_00", "defend_v2_frame_01", "defend_v2_frame_02"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Crouch low on bent knees and fold the leaf wings forward around the body like a cloak, with the blowpipe held across the chest behind them, then hold the covered guard on both planted feet. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["attack_v1_frame_00", "cast_3"],
+      "guides": [[44, 1], [70, 1]],
+      "last": 0,
+      "action": "A calling gesture. The needler releases one hand from the blowpipe and raises it high overhead with the fingers spread, the wings lifting a little, holds the pose briefly, then lowers the hand back to the blowpipe in the original stance. A physical gesture only: no spell, glow or aura."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["attack_v1_frame_00", "death_v1_frame_02", "death_v1_frame_07"],
+      "guides": [[48, 1], [96, 2]],
+      "last": 2,
+      "action": "Collapse slowly from standing. The needler sags, the wings droop and it sinks onto its knees, stays there a moment, then slumps forward and lies down flat, finishing motionless with the head at screen right and the feet at screen left, the wings spread limp over the body and the blowpipe on the ground beside it. The body never leaves the ground; no recovery, no flying and no disappearing body."
+    }
+  }
+}

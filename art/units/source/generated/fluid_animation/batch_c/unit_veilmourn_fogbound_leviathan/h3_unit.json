@@ -1,0 +1,60 @@
+{
+  "unit_id": "unit_veilmourn_fogbound_leviathan",
+  "identity": "ONE original hulking four-legged sea beast, the Fogbound Leviathan, facing screen LEFT in elevated three-quarter view. Keep the dark blue-black scaled hide with a pale grey belly, the pale bony beaked skull-like head with curved tusks and a toothed jaw, the row of glowing pale violet crest plates and dark webbed fin spines along the back, the small glowing violet orbs on the shoulders and flank, the long tail curling up high behind the body and ending in a small hanging violet gem lure, and EXACTLY FOUR thick legs with webbed clawed feet. No rider and no extra legs. Preserve the skull head, the glowing back crests, the curled tail with its lure and the hulking proportions.",
+  "plate": "Locked orthographic camera, fixed scale and centred body. Keep the head, the whole curled tail with the lure and all four feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, water, fog clouds, sparks, motion trails, particles or extra legs; the crests, orbs and lure keep only their steady glow. Articulate joints naturally with physical planted-foot support; the skull head stays rigid apart from the jaw.",
+  "canvas": [960, 640],
+  "scale": 0.46,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026104650,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["cast_0"],
+      "guides": [],
+      "last": 0,
+      "action": "A menacing, heavy idle that loops. The beast breathes deeply so the flanks rise and fall, the skull head lowers and lifts slightly, the jaw parts a little and closes, the curled tail sways so the lure swings, then everything returns smoothly to the original stance. All four feet stay planted. No walking and no attack."
+    },
+    "move_h3_v1": {
+      "clip": "move",
+      "references": ["move_0", "move_4"],
+      "guides": [[31, 1], [62, 0], [93, 1]],
+      "last": 0,
+      "action": "Lumber in place on four legs through two complete cycles with heavy steps. Diagonal pairs of legs alternate lifting, swinging forward and planting their webbed feet while the others bear the weight. The body stays centred for engine-driven travel, still facing screen left, with the head low and the curled tail swaying. Exactly four legs at all times. Finish in the original gait phase."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["cast_0", "attack_2", "attack_3"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE lunging bite toward screen left. The beast rears its head and forequarters up with the jaws gaping wide, then drives forward and down toward screen left, snapping the jaws shut at full reach, then draws back and settles into the original stance. One bite only; no water, spray or effect."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["cast_0", "hit_1"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "One heavy recoil and complete recovery. The beast rears up and back toward screen right with the head thrown high and the front legs lifting, then drops back onto all four feet and returns to the same stance. Nothing is seen hitting it: no projectile, spark or flash. The blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["cast_0", "defend_1", "defend_2"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Hunker down: the beast lowers its belly and the skull head close to the ground, raises the glowing back crests and fin spines, and braces all four legs wide, then holds the low guarded crouch. No attack and no return to the standing stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["cast_0", "cast_4"],
+      "guides": [[44, 1], [70, 1]],
+      "last": 0,
+      "action": "A dread call. The beast rears up on its hind legs with the front claws raised and the skull head lifted high, the back crests glowing a little brighter, holds the pose briefly, then drops back onto all four feet in the original stance. Only the crests brighten; no fog, beam or spell effect."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["cast_0", "death_3", "death_7"],
+      "guides": [[48, 1], [96, 2]],
+      "last": 2,
+      "action": "Collapse slowly and heavily. The glow dims, the legs buckle and the beast sinks down onto its belly, stays a moment, then slumps flat with the skull head resting on the ground at screen left and the tail lying stretched out to screen right, finishing motionless with the crests dark. The same body throughout: no dissolving and no disappearing."
+    }
+  }
+}

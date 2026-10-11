@@ -1,0 +1,60 @@
+{
+  "unit_id": "unit_brasshollow_foundry_saint_veteran",
+  "identity": "ONE original massive humanoid furnace automaton, the Saint of the Last Furnace veteran, facing slightly screen right in elevated three-quarter view. Keep the brass and dark iron body, the barred glowing orange furnace in the chest, the slotted cylindrical knight helmet, the huge articulated metal gauntlets, the brass shoulder domes, the battered dark apron plates and heavy block feet, and the curved overhead back framework carrying glowing crucible ladles with hanging chains and counterweights. Exactly two arms and two legs. Preserve the furnace chest, the back framework with its ladles and chains, the gauntlets and the massive proportions.",
+  "plate": "Locked orthographic camera, fixed scale and centred body. Keep the whole back framework, every hanging counterweight, both gauntlets and both feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, flames, pouring metal, smoke, sparks, motion trails, particles or extra limbs; the furnace and ladles keep only their steady glow. The automaton moves at its joints; the armour and framework stay rigid and never morph.",
+  "canvas": [960, 640],
+  "scale": 0.43,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026104100,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["idle_0", "idle_4"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "A heavy, solemn idle that loops. The furnace body rises and settles as if breathing, one great gauntlet lifts and opens slowly then closes, the helmet turns slightly, the hanging chains and counterweights sway gently, then everything returns smoothly to the original stance. Both feet stay planted. No walking and no attack."
+    },
+    "move_h3_v1": {
+      "clip": "move",
+      "references": ["move_0", "move_4"],
+      "guides": [[31, 1], [62, 0], [93, 1]],
+      "last": 0,
+      "action": "Stomp in place through two complete reciprocal cycles with slow, massive steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each block foot alternates taking weight and swinging. The body stays centred for engine-driven travel, the gauntlets swinging and the chains and counterweights swaying. Finish in the original gait phase."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["idle_0", "attack_2", "attack_4"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE heavy punch toward screen right. The automaton draws the far gauntlet back high beside the helmet as the knees bend and the torso twists, then steps into a wide lunge and drives the fist out to full reach at screen right, the chains swinging, pulls it back and settles into the original stance. One punch only; no flash or effect at contact."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["idle_0", "hit_1"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "One heavy impact recoil and complete recovery. The body rocks back and twists, one gauntlet flies up and open, the knees flex and the chains swing, then it rebalances on both feet and returns to the same stance. Nothing is seen hitting it: no projectile, spark or flash. The blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["idle_0", "defend_2", "defend_3"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Cross both great gauntlets over the furnace chest, bend the knees and lower the helmet behind them, then hold the braced guard on both planted feet. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["idle_0", "cast_4"],
+      "guides": [[44, 1], [70, 1]],
+      "last": 0,
+      "action": "A benediction. The automaton extends one great gauntlet forward with the palm open and turned up toward screen right while the furnace glows a little warmer, holds the gesture briefly, then lowers the arm back to the original stance. Only the furnace brightens; no flames, beam or spell effect."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["idle_0", "death_3", "death_7"],
+      "guides": [[48, 1], [96, 2]],
+      "last": 2,
+      "action": "Collapse slowly and heavily. The furnace dims, the knees buckle and the automaton sinks down onto its knees and gauntlets, stays there a moment, then topples over and lies flat on its side, finishing motionless with the helmet and framework at screen right, the ladles and chains resting on the ground and the furnace dark. The same body throughout: no explosion, no spilled metal and no disappearing."
+    }
+  }
+}

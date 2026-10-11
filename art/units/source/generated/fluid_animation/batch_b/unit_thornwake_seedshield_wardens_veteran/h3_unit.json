@@ -1,0 +1,60 @@
+{
+  "unit_id": "unit_thornwake_seedshield_wardens_veteran",
+  "identity": "ONE original tall living-wood warden, the Heartseed Warden veteran, facing screen right in elevated three-quarter view. Keep the pale bark-wood body armoured in layered dark green leaves, the antlered wooden head with a carved face, the small white flowers among the leaves and the root-clawed feet. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE straight wooden staff upright, topped by a glowing amber seed-bud tip with small leaves; the screen-RIGHT arm bears ONE heart-shaped shield framed in bark with a large glowing amber heart at its centre. Preserve the staff, the heart shield, the antlers and the tall proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full staff, the shield, the antlers, limbs and feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, falling leaves, beams, magic, motion trails, particles or extra limbs; the amber heart and seed-bud keep only their steady glow. Articulate joints naturally with physical planted-foot support; do not morph the staff or shield.",
+  "canvas": [960, 640],
+  "scale": 0.5,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026103750,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["idle_0", "idle_4"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "A steady guardian idle that loops. The warden breathes, the leaf armour rises and settles, the staff is lifted a little and replanted, the heart shield is resettled on the arm, the antlered head turns slightly to scan, then everything returns smoothly to the original stance. Both feet stay planted. No walking and no attack."
+    },
+    "move_h3_v1": {
+      "clip": "move",
+      "references": ["move_0", "move_4"],
+      "guides": [[31, 1], [62, 0], [93, 1]],
+      "last": 0,
+      "action": "Walk in place through two complete reciprocal cycles with firm, measured steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each foot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The staff is carried upright and the heart shield in front; the leaf armour sways with the legs. Finish in the original gait phase."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["idle_0", "attack_2", "attack_4"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE staff thrust toward screen right. The warden raises the staff level overhead and draws it back as the knees bend, then lunges forward on the front leg and drives the seed-bud tip out level to full reach at screen right past the shield, pulls it back and returns the staff upright to the original stance. One thrust only; the shield stays on the screen-right arm."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["idle_0", "hit_1"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "The warden flinches from an unseen blow and recovers completely. The antlered head and shoulders hunch and twist away, the staff tilts back and the knees flex while both hands keep hold of the staff and the shield, then it rebalances on both feet and returns to the same stance. Nothing is seen hitting it: no projectile, spark or flash. The blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["idle_0", "defend_1", "defend_2"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Raise the heart shield square in front of the chest and face, bend the knees and crouch behind it with the staff braced upright beside it, then hold the covered guard on both planted feet. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["idle_0", "cast_4"],
+      "guides": [[44, 1], [70, 1]],
+      "last": 0,
+      "action": "A warding salute. The warden lifts the staff diagonally high across the body with the seed-bud raised and pushes the heart shield forward, the amber heart glowing a little warmer, holds the pose briefly, then lowers both back to the original stance. Only the heart and seed-bud brighten; no beam, aura or spell effect."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["idle_0", "death_4", "death_9"],
+      "guides": [[48, 1], [96, 2]],
+      "last": 2,
+      "action": "Collapse slowly from standing. The warden's knees buckle and it sinks down behind the shield with the staff falling to the ground, stays crouched a moment, then slumps forward onto its side and lies down, finishing motionless flat on the ground with the antlered head at screen right, the shield beneath it and the staff lying in front, the amber heart dimmed. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    }
+  }
+}

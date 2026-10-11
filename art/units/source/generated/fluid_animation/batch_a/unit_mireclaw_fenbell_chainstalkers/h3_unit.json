@@ -1,0 +1,53 @@
+{
+  "unit_id": "unit_mireclaw_fenbell_chainstalkers",
+  "identity": "ONE original lean hunched masked stalker, the Fenbell Chainstalker, facing screen right in elevated three-quarter view. Keep the pale carved wooden mask with dark eye slits, the thick shaggy olive and yellow reed hood and mantle with teal strands, the brown leather wraps with red bindings, the rope belt and the wrapped boots. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE small bronze bell with a long rusty iron chain that ends in ONE bronze crescent hook; the screen-RIGHT hand holds a coil of spare chain. Preserve the mask, the reed mantle, the bell, the one hook and the lean proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole reed mantle, the bell, the full chain with its hook even at full swing, limbs and feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, sound rings, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the chain stays one unbroken line from the bell hand to the one hook.",
+  "canvas": [960, 640],
+  "scale": 0.45,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026105400,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["attack_00", "hit_03"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "A creeping, watchful idle that loops. The stalker breathes in a low crouch, the masked head tilts and turns to listen, the bell sways a little so the chain and hook swing gently, and the reeds stir, then everything returns smoothly to the original stance. Both feet stay planted. No walking and no attack."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["attack_00", "attack_02", "attack_04"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE chain-hook lash toward screen right. The stalker whirls the hook up over the head on its chain as the knees bend, then lunges forward and whips the chain out so the hook flies straight to full length at screen right, yanks it back and settles into the original stance. One lash only; the hook stays on its chain and no effect appears at contact."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["attack_00", "hit_00"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "The stalker reels from an unseen blow and recovers completely. The masked head jerks back, the reed mantle shakes and the knees buckle while both hands keep hold of the bell chain and the coil, then the stalker steadies on both feet and returns to the same crouch. Nothing is seen hitting them: no projectile, spark or flash. The blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["attack_00", "defend_01", "defend_02"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Pull the chain taut between both hands in front of the body as a guard, sink into a low crouch with the mask lowered behind the reeds, then hold the braced guard on both planted feet. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["attack_00", "cast_04"],
+      "guides": [[44, 1], [70, 1]],
+      "last": 0,
+      "action": "A ringing signal. The stalker raises the bronze bell high and shakes it so it swings, the chain and hook swaying beneath, holds the pose briefly, then lowers the bell back to the original stance. A physical gesture only: no sound rings, glow or spell effect."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["attack_00", "death_03", "death_07"],
+      "guides": [[48, 1], [96, 2]],
+      "last": 2,
+      "action": "Collapse slowly. The stalker sinks down onto the knees with the chain dropping, stays there a moment, then slumps forward and lies flat on the ground, finishing motionless with the mask at screen right, the reed mantle spread over the body and the bell, chain and hook lying beside it. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "unit_id": "unit_embercourt_amberweir_lockpike_wardens",
+  "identity": "ONE original young infantry soldier, the Lockpike Warden, facing screen right in elevated three-quarter view. Keep the youthful face with short brown hair, the rust-orange scarf and tabard over dark quilted armour, polished brass shoulder and knee guards, a belt with brass fittings and tall dark brown boots. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE long pike with a dark shaft and a gold two-pronged fork head; the screen-RIGHT arm carries ONE tall rectangular dark wooden shield with brass trim and a vertical brass emblem, held in front of the body. Preserve the pike length, the two-pronged head, the shield size and markings, the armour and adult proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, pike, shield, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the equipment. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour.",
+  "canvas": [960, 640],
+  "scale": 0.45,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026101400,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["idle_00", "idle_04"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "A calm guarded idle that loops. The soldier breathes, the shoulders rise and fall, the head turns slightly, the pike hand shifts its grip on the upright pike and the shield arm settles the shield, then everything returns smoothly to the original ready stance. Both boots stay planted with a slight knee flex; the scarf stirs gently. No walking and no attack."
+    },
+    "move_h3_v1": {
+      "clip": "move",
+      "references": ["move_00", "move_04"],
+      "guides": [[31, 1],
+        [62, 0],
+        [93, 1]],
+      "last": 0,
+      "action": "March in place through two complete reciprocal cycles. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The pike is carried upright in the screen-left hand and the shield stays in front of the body. Finish in the original gait phase."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["idle_00", "attack_02", "attack_04"],
+      "guides": [[30, 1],
+        [54, 2]],
+      "last": 0,
+      "action": "Make ONE powerful pike thrust toward screen right. Swing the pike down from upright until it is level at the hip with the fork head pointing at screen right and crouch behind the shield, then lunge forward with the front leg and drive the pike straight out to full reach past the shield, then draw it back and raise it upright into the original ready stance. One thrust only; the shield stays on the screen-right arm. No throw, no second strike."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["idle_00", "hit_00"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "One brief impact recoil and complete recovery. The head and shoulders yield backward, both knees flex and the pike tips back while the hands keep hold of the pike and shield, then the soldier rebalances on both boots and returns to the same ready stance. Remain standing with all equipment held. The impact is shown only by the body; the blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["idle_00", "defend_02", "defend_03"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Raise the tall shield and crouch low behind it, then brace with both knees bent and lay the pike forward over the shield edge with the fork head angled up toward screen right, holding the braced shield wall firmly on both planted boots. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["idle_00", "cast_04"],
+      "guides": [[44, 1],
+        [70, 1]],
+      "last": 0,
+      "action": "A rallying physical signal. Raise the pike high and tilt it forward overhead like a standard, the arm stretched up, hold it briefly while the shield stays in front, then lower the pike back to the upright ready stance. A physical gesture only: no spell, glow or emitted effect."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["idle_00", "death_07"],
+      "guides": [[90, 1]],
+      "last": 1,
+      "action": "Collapse continuously from standing: the head snaps back, the knees buckle onto the ground and the body slumps behind the shield, then topples over toward screen left and lies stretched out flat on the ground with the head at screen left and the boots at screen right, the shield lying on the body and the pike lying on the ground. No recovery, no floating equipment and no disappearing body."
+    }
+  }
+}

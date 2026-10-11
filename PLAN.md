@@ -40,6 +40,8 @@ Rules:
 
 `art-h3-painted-unit-pilot-20261011` (completed, owner request "pick one and do it with the fluid h3 way, profile what takes what time"): the Gateward Phalanx's seven painted clips were replaced with H3 video through the new shared `tools/h3_creature_animation.py` (one `h3_unit.json` per unit; prepare, generate with cross-unit `--batch`, close-up sheets, build, per-stage profile). A take costs about 3.2 min of GPU time, and a unit about 29-33 min with retakes (2 of 7 here: a plate colour drift, and painted death guides that disagreed on the pike), plus about 20 min of agent time. Estimate for the remaining 84 painted and 24 mixed units: about 47-53 GPU hours. An H3 idle needs no RIFE loop. See `docs/fluid-creature-animation.md`.
 
+`art-h3-painted-units-20261011` (in progress, owner request "keep going through the painted units", "H3 idle too"): every painted unit's clips, idle included, become H3 video. A pipelined runner (`tools/h3_creature_animation.py enqueue` / `run`) keeps the GPU sampling while finished units are matted and reviewed. Units are published one by one after visual review. Order: batch_a, b, c, d, e (86 painted), then the 24 mixed units. See `docs/fluid-creature-animation.md`.
+
 ### Gold-only unit recruitment costs
 
 `content-gold-only-unit-costs-20261006` (completed, owner-directed economy content): tier 1-6 units, base and upgraded, cost only gold; each faction's tier 7 costs gold plus its main rare resource, the only non-gold unit cost; no unit costs wood or ore, and neutral units follow the same tiers. Gold amounts are unchanged and faction resource pressure stays in building costs. `tests/validate_repo.py` enforces the rule. See `docs/economy-overhaul-foundation.md`.

@@ -1,0 +1,60 @@
+{
+  "unit_id": "unit_brasshollow_quenchspool_slingers",
+  "identity": "ONE original young woman engineer, the Quenchspool Slinger, facing screen right in elevated three-quarter view. Keep her brown hair in a high bun, the round brass goggles on her forehead, the black scarf, the brass shoulder plate and knee guards, the dark trousers, the ragged leather apron, the tall strapped boots with brass toes, the red rear cloth, and the small backpack pressure vessel with a round gauge and hose. Exactly two arms, two hands and two legs. Both hands carry ONE brass cable reel across her torso, the left hand on its crank knob; ONE flexible cable runs from the reel to ONE glowing orange cylindrical canister hanging low at screen left. Preserve the reel, the cable and canister, the goggles and the slim proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the reel, the whole cable and the canister even at full swing, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, fire, flame trails, smoke, sparks, motion trails, particles or extra limbs; the canister keeps only its steady orange glow inside. Articulate joints naturally with physical planted-foot support; the cable stays one unbroken line attached to the reel and the canister.",
+  "canvas": [960, 640],
+  "scale": 0.44,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026105600,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["idle_0", "idle_4"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "A ready, working idle that loops. She breathes, shifts her weight, turns the reel crank a little so the canister lifts and lowers on its cable, glances to the side and lets the rear cloth stir, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no attack."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["idle_0", "attack_1", "attack_3"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE canister lash toward screen right. She swings the canister back on its cable behind her as the knees bend, then lunges forward and whips it out so the cable pulls taut and the canister reaches full length at screen right, reels it back in and settles into the original stance. One lash only; the canister stays on its cable with no fire, trail or effect."
+    },
+    "ranged_h3_v1": {
+      "clip": "ranged",
+      "references": ["idle_0", "ranged_2", "ranged_6"],
+      "guides": [[30, 1], [56, 2]],
+      "last": 0,
+      "action": "Make ONE long sling cast toward screen right. She whirls the canister overhead on its cable, then steps forward and slings it straight out so the cable unreels to its full length toward screen right, holds a moment, cranks the reel to pull the canister back in and settles into the original stance. One cast only; the canister stays tied to the cable with no fire, trail or effect."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["idle_0", "hit_1"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "She reels from an unseen blow and recovers completely. Her head snaps back, the shoulders twist and the knees flex while both hands keep hold of the reel, the canister swinging, then she steadies on both boots and returns to the same stance. Nothing is seen hitting her: no projectile, spark or flash. The blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["idle_0", "defend_1", "defend_2"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Crouch low and hunch behind the brass reel, holding it up in front of her chest as a shield with the canister drawn in, then hold the braced guard on both planted boots. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["idle_0", "cast_4"],
+      "guides": [[44, 1], [70, 1]],
+      "last": 0,
+      "action": "A quick adjustment. She pulls the goggles down over her eyes with one hand and taps the backpack gauge, holds the pose briefly, then returns the hand to the reel crank in the original stance. A physical gesture only: no glow change, steam or effect."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["idle_0", "death_2", "death_7"],
+      "guides": [[48, 1], [96, 2]],
+      "last": 2,
+      "action": "Collapse slowly. She sinks down onto her knees with the reel dropping, stays there a moment, then slumps forward and lies flat on her front, finishing motionless with her head at screen right, the reel and the dimmed canister lying beside her. The body never leaves the ground; no fire, no recovery and no disappearing body."
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "unit_id": "unit_veilmourn_dreamwake_foganchor_colossi",
+  "identity": "ONE original towering spectral giant, the Dreamwake Foganchor Colossus, facing screen right in elevated three-quarter view. Keep the dark iron armour with a tall spiked crown helm, the pale glowing icy-blue face and hands, and the many long flowing ragged wisps of pale blue and white fog that stream from the shoulders, arms and robe like torn cloth. Exactly two arms, two hands and two legs. The screen-LEFT hand holds a heavy iron chain whose end carries ONE large ship anchor with curved flukes, hanging low beside the legs. Preserve the anchor and chain, the crown helm, the fog wisps and the massive proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole anchor and chain even at full swing, the crown, the fog wisps, limbs and feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, swirling trails, sparks, particles or extra limbs; the fog wisps stay attached to the body and drift gently, and the face and hands keep only their steady pale glow. Articulate joints naturally with physical planted-foot support; the anchor stays rigid and never morphs.",
+  "canvas": [960, 640],
+  "scale": 0.46,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026104600,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["cast_0"],
+      "guides": [],
+      "last": 0,
+      "action": "A brooding, ghostly idle that loops. The colossus breathes slowly, the shoulders rise and fall, the head turns slightly, the anchor sways a little on its chain and the fog wisps drift and ripple gently, then everything returns smoothly to the original stance. Both feet stay planted. No walking and no attack."
+    },
+    "move_h3_v1": {
+      "clip": "move",
+      "references": ["move_0", "move_4"],
+      "guides": [[31, 1], [62, 0], [93, 1]],
+      "last": 0,
+      "action": "Stride in place through two complete reciprocal cycles with slow, heavy steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each foot alternates taking weight and swinging. The body stays centred for engine-driven travel, the anchor dragging and swinging low on its chain and the fog wisps streaming back. Finish in the original gait phase."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["cast_0", "attack_2", "attack_4"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE anchor throw toward screen right. The colossus swings the anchor back and up over the shoulder on its chain as the knees bend, then steps into a deep lunge and hurls the anchor straight out on the chain to full reach at screen right, hauls it back in and settles into the original stance. One throw only; the anchor stays on the chain and no swirl or effect appears."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["cast_0", "hit_1"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "The colossus reels from an unseen blow and recovers completely. The head and shoulders rock back, the free arm flies up and the knees flex while the hand keeps hold of the chain, the fog wisps whipping, then it rebalances on both feet and returns to the same stance. Nothing is seen hitting it: no projectile, spark or flash. The blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["cast_0", "defend_1", "defend_2"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Raise the anchor up in front of the body by its chain as a guard, the free forearm across the chest, bend the knees and lower the crowned head behind it, then hold the braced guard on both planted feet. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["cast_0", "cast_4"],
+      "guides": [[44, 1], [70, 1]],
+      "last": 0,
+      "action": "A summoning gesture. The colossus raises the free hand high with the palm open while the fog wisps lift and billow upward around it, holds the pose briefly, then lowers the arm back to the original stance. Only the attached fog moves; no beam, orb or spell effect."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["cast_0", "death_3", "death_7"],
+      "guides": [[48, 1], [96, 2]],
+      "last": 2,
+      "action": "Collapse slowly and heavily. The colossus sinks down onto its knees with the head bowed, the anchor dropping to the ground, stays there a moment, then topples forward and lies flat on its front, finishing motionless with the head at screen right, the anchor and chain lying beside it and the fog wisps settling flat over the body. The same body throughout: no dissolving, no explosion and no disappearing."
+    }
+  }
+}

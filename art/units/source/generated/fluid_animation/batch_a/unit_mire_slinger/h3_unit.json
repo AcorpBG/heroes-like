@@ -1,0 +1,67 @@
+{
+  "unit_id": "unit_mire_slinger",
+  "identity": "ONE original lean young woman skirmisher, the Mire Slinger, facing screen right in elevated three-quarter view. Keep her dark braided hair in a bun with a green reed headband, the weathered olive-green sleeveless tunic with ragged green leaf-like cloak and skirt panels, yellow reed bindings, a cord necklace with small bone charms, leather wrapped bracers and boots, and a woven side pouch of sling stones at the belt. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE simple cord sling with a dark leather cradle hanging from it; the screen-RIGHT hand is free. Preserve the sling, pouch, costume and lean adult proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, sling cord, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the sling or costume.",
+  "canvas": [960, 640],
+  "scale": 0.45,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026102000,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["cast_00", "cast_02"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "A light, alert idle that loops. She breathes, the shoulders rise and fall, she glances around and her free hand touches the stone pouch at her belt while the sling sways a little from the other hand, then everything returns smoothly to the original stance. Both boots stay planted; the leaf panels stir gently. No walking and no throwing."
+    },
+    "move_h3_v1": {
+      "clip": "move",
+      "references": ["move_00", "move_04"],
+      "guides": [[31, 1], [62, 0], [93, 1]],
+      "last": 0,
+      "action": "Walk in place through two complete reciprocal cycles with quick light steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The sling hangs and swings from the screen-left hand and the free arm swings; the leaf panels swing with the legs. Finish in the original gait phase."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["cast_00", "attack_02", "attack_04"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE close-range punch toward screen right. She sinks into a wide stance and draws the free screen-right fist back to her chest while turning the shoulder, then drives the fist straight out to full reach at screen right, pulls it back and settles into the original stance. One punch only; the sling stays hanging from the other hand and no stone is thrown."
+    },
+    "ranged_h3_v1": {
+      "clip": "ranged",
+      "references": ["cast_00", "ranged_03", "ranged_04"],
+      "guides": [[30, 1], [56, 2]],
+      "last": 0,
+      "action": "Make ONE sling shot toward screen right. She loads a stone from the pouch, steps into a wide stance and whirls the sling once in a big loop over her head, then whips the arm forward and releases toward screen right so the cord snaps out level at full reach, follows through as the empty cradle swings down, then settles back into the original stance. One shot only; no visible projectile trail."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["cast_00", "hit_01"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "One brief impact recoil and complete recovery. She doubles over as the shoulders jerk and the knees flex, the free arm curling in, then she straightens, rebalances on both boots and returns to the same stance with the sling still in hand. The impact is shown only by the body; the blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["cast_00", "defend_01", "defend_02"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Sink into a wide low crouch and raise both forearms in front of the face, the bracers covering the head and the sling held against the body, then hold the guard on both planted boots. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["cast_00", "cast_04"],
+      "guides": [[44, 1], [70, 1]],
+      "last": 0,
+      "action": "A rallying signal. She lifts the free hand to her chest, then extends the arm and points forward toward screen right as an encouraging order, opens her fingers, then lowers the hand back to the original stance. Both boots stay planted. A physical gesture only: no spell, glow or aura."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["cast_00", "death_07"],
+      "guides": [[90, 1]],
+      "last": 1,
+      "action": "Collapse continuously from standing: she clutches her middle, sinks onto her knees, catches herself on one hand and slumps forward onto the ground, finishing lying motionless on her front with the head at screen right and the boots at screen left, the sling lying on the ground by her hand. No recovery, no floating equipment and no disappearing body."
+    }
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "unit_id": "unit_thornwake_graft_matriarchs_veteran",
+  "identity": "ONE original tall feminine living tree, the Orchardheart Matriarch veteran, facing screen right in slightly elevated three-quarter view. Keep the pale ivory carved wooden face with a pointed nose and dark eyes, the crown of branching twigs, the broad arched canopy of olive leaves and small white blossoms growing from the back and shoulders, the hanging pear-shaped golden-green seed lanterns and trailing pale moss under the canopy, the glowing amber heartwood gem in the chest, the gnarled grey-brown bark body with moss and white flowers, and the thick root legs spreading at the base. No clothing. EXACTLY FOUR wooden arms: the upper pair are free branch hands; the lower pair hold ONE curved living-branch bow across the waist with a bright green bowstring and one glowing seed pod at its centre. Preserve the four arms, the bow, the canopy, the heart gem and the tall proportions.",
+  "plate": "Locked orthographic camera, fixed scale and centred body. Keep the whole canopy, every hanging lantern, the bow and the root feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, falling petals or leaves, arrows in flight, beams, magic, motion trails, particles or extra arms; the lanterns and heart gem keep only their steady glow. Articulate the branch joints naturally; the canopy sways but never morphs.",
+  "canvas": [960, 640],
+  "scale": 0.5,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026103600,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["idle_0", "idle_4"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "A slow, swaying idle that loops. The matriarch breathes as the bark chest swells and settles, the canopy sways gently and the seed lanterns swing on their stems, an upper arm lifts and curls its twig fingers then lowers, the carved face turns slightly, then everything returns smoothly to the original stance. The roots stay planted. No walking and no shooting."
+    },
+    "move_h3_v1": {
+      "clip": "move",
+      "references": ["move_48", "move_52"],
+      "guides": [[31, 1], [62, 0], [93, 1]],
+      "last": 0,
+      "action": "Stride in place on the two thick root legs through two complete reciprocal cycles with slow, heavy steps. Each root leg lifts, swings forward with its root toes curling and plants again while the other bears the weight. The body stays centred for engine-driven travel, the canopy swaying and the lanterns swinging with each step; the bow stays held across the waist. Finish in the original gait phase."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["idle_0", "attack_9", "attack_11"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE branch lash toward screen right. The matriarch draws the near upper arm back across the body as the trunk twists and the roots brace, then whips that long branch arm forward and out to full reach at screen right with the twig fingers clawing, draws it back and settles into the original stance. One lash only; the lower arms keep the bow across the waist."
+    },
+    "ranged_h3_v1": {
+      "clip": "ranged",
+      "references": ["idle_0", "ranged_18", "ranged_19"],
+      "guides": [[30, 1], [56, 2]],
+      "last": 0,
+      "action": "Loose ONE seed arrow toward screen right. The lower arms raise the branch bow and turn it toward screen right while an upper hand draws the green bowstring back with the glowing seed pod nocked, holds, then releases so the string snaps forward and the drawing hand opens, then the bow lowers back across the waist in the original stance. One shot only; the arrow is not shown, with no trail, beam or flash."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["idle_0", "hit_25"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "One impact recoil and complete recovery. The trunk bends back and twists, the canopy whips and the lanterns swing, an upper hand clutches the chest, then the matriarch straightens and returns to the same stance with the bow still held. Nothing is seen hitting her: no projectile, spark or flash. The blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["idle_0", "defend_29", "defend_30"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Cross the upper branch arms in front of the face and chest gem, bend the root legs and lower the canopy forward over the body, then hold the braced guard with the bow still across the waist. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["idle_0", "cast_36"],
+      "guides": [[44, 1], [70, 1]],
+      "last": 0,
+      "action": "A blessing gesture. The matriarch lifts both upper arms wide and high with open twig hands, each cradling a hanging seed lantern as the lanterns and heart gem glow a little warmer, holds the pose briefly, then lowers the arms back to the original stance. Only the lanterns and heart brighten; no beam, aura or spell effect."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["idle_0", "death_42", "death_47"],
+      "guides": [[48, 1], [96, 2]],
+      "last": 2,
+      "action": "Collapse slowly like a falling tree. The roots buckle and the matriarch sinks down onto them, the canopy drooping, stays there a moment, then tips over and settles along the ground, finishing motionless as a fallen tree with the carved face at screen right, the canopy and lanterns spread on the ground and the bow lying beside it, the heart gem dimmed. The body never leaves the ground; no recovery and no disappearing body."
+    }
+  }
+}

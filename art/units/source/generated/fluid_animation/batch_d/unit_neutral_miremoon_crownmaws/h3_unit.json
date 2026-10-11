@@ -1,0 +1,60 @@
+{
+  "unit_id": "unit_neutral_miremoon_crownmaws",
+  "identity": "ONE original hulking four-legged swamp beast, the Miremoon Crownmaw, facing screen right in elevated three-quarter side view. Keep the dark blue-green scaled armour plates draped with hanging green moss, the many glowing blue crescent-moon markings on the plates and limbs, the pale belly, the wide toothy jaw with two upward tusks, the crown of large curved golden crescent horns sweeping up and back from the head, the short spiked tail curling up behind, and EXACTLY FOUR thick legs with golden claws. No rider and no extra legs. Preserve the crescent horn crown, the moss, the moon markings and the hulking proportions.",
+  "plate": "Locked orthographic camera, fixed scale and centred body. Keep the whole horn crown, the tail and all four feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, water, floor shadow, camera motion, zoom, mist, sparks, motion trails, particles or extra legs; the moon markings keep only their steady glow. Articulate joints naturally with physical planted-foot support; the horns stay rigid and never morph.",
+  "canvas": [960, 640],
+  "scale": 0.52,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026105250,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["idle_00", "idle_04"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "A heavy, brooding idle that loops. The beast breathes deeply so the flanks rise and fall, the horned head lowers and lifts slightly, the jaw parts a little and closes, the moss sways and the tail flexes, then everything returns smoothly to the original stance. All four feet stay planted. No walking and no attack."
+    },
+    "move_h3_v1": {
+      "clip": "move",
+      "references": ["move_00", "move_04"],
+      "guides": [[31, 1], [62, 0], [93, 1]],
+      "last": 0,
+      "action": "Lumber in place on four legs through two complete cycles with heavy steps. Diagonal pairs of legs alternate lifting, swinging forward and planting their clawed feet while the others bear the weight. The body stays centred for engine-driven travel with the horned head held low and the moss swaying. Exactly four legs at all times. Finish in the original gait phase."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["idle_00", "attack_01", "attack_03"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE goring lunge toward screen right. The beast lowers its horned head and draws back onto its hind legs, then charges forward a short way and thrusts the horns and gaping jaws to full reach at screen right, then draws back and settles into the original stance. One lunge only; no effect at contact."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["idle_00", "hit_00"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "One heavy recoil and complete recovery. The beast rears its head and forequarters up and back with the horns tossed high, the front legs lifting slightly, then drops back onto all four feet and returns to the same stance. Nothing is seen hitting it: no projectile, spark or flash. The blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["idle_00", "defend_01", "defend_02"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Lower the horns: the beast drops its head low with the crescent horn crown turned forward toward screen right like a shield, hunches the armoured back and braces all four legs wide, then holds the low guarded stance. No attack and no return to the raised stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["idle_00", "cast_04"],
+      "guides": [[44, 1], [70, 1]],
+      "last": 0,
+      "action": "A moon roar. The beast rears up on its hind legs with the horned head raised high and the jaws open wide, the moon markings glowing a little brighter, holds the pose briefly, then drops back onto all four feet in the original stance. Only the markings brighten; no beam, mist or spell effect."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["idle_00", "death_03", "death_07"],
+      "guides": [[48, 1], [96, 2]],
+      "last": 2,
+      "action": "Collapse slowly and heavily. The moon markings dim, the legs buckle and the beast sinks down onto its belly with the head lowering, stays a moment, then slumps flat with the horned head resting on the ground at screen right and the legs folded, finishing motionless with the markings dark. The same body throughout: no dissolving and no disappearing."
+    }
+  }
+}

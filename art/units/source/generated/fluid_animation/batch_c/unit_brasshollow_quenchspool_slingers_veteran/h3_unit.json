@@ -1,0 +1,67 @@
+{
+  "unit_id": "unit_brasshollow_quenchspool_slingers_veteran",
+  "identity": "ONE original stocky adult worker, the Quenchspool Slinger veteran, facing screen right in elevated three-quarter view. Keep the dark quilted coat with brass shoulder fittings, the dark hood with a brass-ringed gas mask and round goggles, the long cream canvas apron with hanging tools and brass canisters at the belt, the brass knee guards and heavy dark boots, and the ONE large brass-rimmed cable spool drum with a small crank handle carried on the back above the screen-right shoulder. Exactly two arms, two hands and two legs. The screen-LEFT hand holds a braided cable ending in ONE heavy copper cylinder weight; the screen-RIGHT hand steadies the spool. Preserve the spool, the cable and weight, the gas mask and the stocky proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole spool, the cable with its weight even at full swing, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, steam, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the spool stays rigid and the cable stays one unbroken line attached to the weight.",
+  "canvas": [960, 640],
+  "scale": 0.46,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026104400,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["idle_0", "idle_4"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "A patient working idle that loops. The slinger breathes, the shoulders rise and fall under the spool, the cable weight swings a little from the low hand, the masked head turns slightly to scan, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no attack."
+    },
+    "move_h3_v1": {
+      "clip": "move",
+      "references": ["move_48", "move_52"],
+      "guides": [[31, 1], [62, 0], [93, 1]],
+      "last": 0,
+      "action": "Trudge in place through two complete reciprocal cycles with short heavy steps under the spool. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel, the spool steady on the back and the cable weight swinging at the side; the apron swings with the legs. Finish in the original gait phase."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["idle_0", "attack_10", "attack_12"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE cable lash toward screen right. The slinger swings the copper weight back low behind the body as the knees bend, then lunges forward and whips the cable out so the weight snaps to full reach at screen right, reels it back in and settles into the original stance. One lash only; the weight stays on the cable and no effect appears at contact."
+    },
+    "ranged_h3_v1": {
+      "clip": "ranged",
+      "references": ["idle_0", "ranged_19", "ranged_20"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE long-range sling cast toward screen right. The slinger raises the low arm and whirls the cable weight in a circle above the head, then steps forward and slings the cable straight out so the weight flies to its full length toward screen right, holds a moment, reels the cable back in and settles into the original stance. One cast only; the weight stays tied to the cable and nothing else is thrown."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["idle_0", "hit_25"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "The slinger reels from an unseen blow and recovers completely. The masked head and shoulders hunch under the spool and the knees flex deep while both hands keep hold of the cable and the spool, then the slinger straightens, rebalances on both boots and returns to the same stance. Nothing is seen hitting them: no projectile, spark or flash. The blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["idle_0", "defend_29", "defend_30"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Crouch low and turn the spool toward screen right as a shield, raising both forearms in front of the gas mask with the cable gathered in, then hold the braced guard on both planted boots. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["idle_0", "cast_36"],
+      "guides": [[44, 1], [70, 1]],
+      "last": 0,
+      "action": "A halting signal. The slinger thrusts the free hand forward with the palm flat toward screen right, holds the gesture briefly, then lowers it back to the original stance. A physical gesture only: no spell, glow or aura."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["idle_0", "death_43", "death_47"],
+      "guides": [[48, 1], [96, 2]],
+      "last": 2,
+      "action": "Collapse slowly under the weight of the spool. The slinger staggers and sinks down to sit on the ground, stays there a moment, then topples backward and lies flat with the spool on the ground at screen left and the boots at screen right, the cable and weight lying beside the body. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    }
+  }
+}

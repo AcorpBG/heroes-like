@@ -1,0 +1,53 @@
+{
+  "unit_id": "unit_neutral_echodart_casts",
+  "identity": "ONE original adult woman crossbow scout, the Echodart Cast, facing screen LEFT in elevated three-quarter view. Keep her dark brown high ponytail, the blue crystal hair clasp, the grey scarf and the trailing torn grey cloth, the dark leather armour and boots with bronze trim and small cyan crystals, the belt pouches and the cyan bolts at the hip. Exactly two arms, two hands and two legs. Both hands hold ONE short rigid bronze-and-dark-wood crossbow with a cyan front tip, two rigid limbs and a string: one hand supports the front stock and the other holds the rear grip. Preserve the crossbow, the ponytail, the cloth and the lithe proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole crossbow, the ponytail, the trailing cloth, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, bolts in flight, glow bursts, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the crossbow stays rigid and never morphs.",
+  "canvas": [960, 640],
+  "scale": 0.39,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026105700,
+  "takes": {
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["attack_v1_01", "attack_v1_03", "attack_v1_05"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE crossbow bash toward screen LEFT. She pulls the crossbow back across her chest as the knees bend, then lunges toward screen left and jabs the front of the crossbow out to full reach at screen left with both hands, draws back and settles into the original aiming stance. One jab only; nothing is fired and no effect appears at contact."
+    },
+    "ranged_h3_v1": {
+      "clip": "ranged",
+      "references": ["attack_v1_01", "ranged_v1_03", "ranged_v1_06"],
+      "guides": [[30, 1], [56, 2]],
+      "last": 0,
+      "action": "Shoot ONE bolt toward screen LEFT. She raises the crossbow to her shoulder and sights along it toward screen left, holds the aim, then the string snaps forward and the crossbow kicks back against her shoulder, holds a moment, then she lowers it to the original ready stance. One shot only; the bolt is never shown in flight, with no glow, streak or trail."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["attack_v1_01", "hit_defend_v1_02"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "She reels from an unseen blow and recovers completely. Her head and shoulders are thrown back toward screen right, the ponytail whips and the knees buckle while both hands keep hold of the crossbow, then she steadies on both boots and returns to the same stance. Nothing is seen hitting her: no projectile, spark or flash. The blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["attack_v1_01", "hit_defend_v1_06", "hit_defend_v1_07"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Hunch down and raise the crossbow crosswise in front of the face with both hands as a guard, shoulders drawn in, then hold the guarded crouch on both planted boots. No shooting and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["attack_v1_01", "support_v1_04"],
+      "guides": [[44, 1], [70, 1]],
+      "last": 0,
+      "action": "A signal to her allies. She lowers the crossbow into one hand and raises the other open palm out toward screen left, holds the pose briefly, then returns the hand to the crossbow in the original stance. A physical gesture only: no spell, glow or aura."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["attack_v1_01", "death_v1_03", "death_v1_08"],
+      "guides": [[48, 1], [96, 2]],
+      "last": 2,
+      "action": "Collapse slowly. She sinks down onto her knees with the crossbow dropping, stays there a moment, then slumps forward and lies flat on her front, finishing motionless with her head at screen left and her boots at screen right, the crossbow lying on the ground beside her. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    }
+  }
+}

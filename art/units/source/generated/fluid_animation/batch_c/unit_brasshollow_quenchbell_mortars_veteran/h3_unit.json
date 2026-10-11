@@ -1,0 +1,67 @@
+{
+  "unit_id": "unit_brasshollow_quenchbell_mortars_veteran",
+  "identity": "ONE original hooded gunner with ONE wheeled bell mortar, the Staybell Bombardier veteran, facing screen right in elevated three-quarter view. The gunner stands at screen left: a stocky adult in a dark blue-grey hooded coat with brass trim, a blue tabard with a gold bell emblem, small brass bells at the belt, leather gauntlets and boots; exactly one person with two arms, two hands and two legs, both hands gripping ONE long iron lever that runs into the gun carriage. The gun stands at screen right: ONE dark iron two-wheeled carriage with spoked wheels carrying a tall dark blue riveted cylindrical canister with a gold finial on top, and ONE short wide bronze bell-mouthed mortar barrel with engraved bands pointing up toward screen right. Preserve the gunner, the canister, the bronze mortar, both wheels and the proportions.",
+  "plate": "Locked orthographic camera, fixed scale and centred group. Keep the whole gun including the mortar mouth, the finial, both wheels and the whole gunner within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, muzzle flash, fire, smoke, steam, sparks, shells in flight, motion trails, particles, a second person or extra limbs. Articulate the gunner naturally with planted-foot support; the gun carriage, canister and barrel stay rigid and never morph, and the wheels only turn.",
+  "canvas": [960, 640],
+  "scale": 0.5,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026104350,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["idle_0", "idle_4"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "A watchful crew idle that loops. The gunner breathes and shifts weight, resettles both hands on the lever, the hood turns slightly toward the target and the belt bells sway, while the gun stays still, then everything returns smoothly to the original stance. The gunner's boots stay planted. No walking and no firing."
+    },
+    "move_h3_v1": {
+      "clip": "move",
+      "references": ["move_48", "move_52"],
+      "guides": [[31, 1], [62, 0], [93, 1]],
+      "last": 0,
+      "action": "Push the gun in place through two complete reciprocal walking cycles. The gunner leans into the lever and steps with alternating legs through contact, weight loading, passing and lift, while the gun wheels turn steadily; the whole group stays centred for engine-driven travel and the gun stays upright and level. Finish in the original gait phase."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["idle_0", "attack_10", "attack_12"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE ramming shove toward screen right. The gunner crouches and grips the lever, then lunges forward low and heaves so the gun lurches a short way toward screen right on its wheels as a ram, then the gunner draws back, the gun rolls back to its place and everything settles into the original stance. One shove only; nothing is fired."
+    },
+    "ranged_h3_v1": {
+      "clip": "ranged",
+      "references": ["idle_0", "ranged_18", "ranged_19"],
+      "guides": [[26, 1], [44, 2]],
+      "last": 0,
+      "action": "Fire ONE mortar shot toward upper screen right. The gunner hauls the lever so the bronze barrel tilts up steeply to aim, then pulls it down hard; the barrel kicks back in recoil and the carriage jolts back a little on its wheels while the gunner braces, holds a moment, then the barrel lowers and everything settles into the original stance. One shot only; no flash, fire, smoke or shell is shown."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["idle_0", "hit_25"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "The gunner flinches from an unseen blow and recovers completely. The hood and shoulders hunch, the knees flex and the gunner staggers half a step while keeping hold of the lever, and the gun rocks slightly on its wheels, then the gunner straightens and returns to the same stance. Nothing is seen hitting them: no projectile, spark or flash. The blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["idle_0", "defend_29", "defend_30"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "The gunner ducks low behind the gun canister, shoulders hunched and one hand still on the lever, then holds the crouched cover on both planted boots while the gun stays still. No firing and no return to the upright stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["idle_0", "cast_36"],
+      "guides": [[44, 1], [70, 1]],
+      "last": 0,
+      "action": "A signal. The gunner lets go of the lever with one hand, takes a small brass hand bell from the belt and raises it high, shaking it as a signal, holds the pose briefly, then lowers it and returns the hand to the lever in the original stance. A physical gesture only: no glow, sound waves or effect."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["idle_0", "death_42", "death_47"],
+      "guides": [[48, 1], [96, 2]],
+      "last": 2,
+      "action": "The gunner collapses slowly while the gun stays standing. The gunner lets go of the lever, doubles over and sinks onto both knees, stays kneeling a moment, then slumps forward and lies flat on the ground at the foot of the gun, finishing motionless with the hood at screen left. The gun stays upright and unchanged. The body never leaves the ground; no recovery and no disappearing body."
+    }
+  }
+}

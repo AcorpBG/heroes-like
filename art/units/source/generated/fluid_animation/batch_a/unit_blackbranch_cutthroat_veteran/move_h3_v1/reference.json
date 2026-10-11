@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_blackbranch_cutthroat_veteran",
+  "guides": [
+    {
+      "frame": "move_00",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/move_contacts_v3.png",
+      "source_sha256": "6e1b15b36ecfec4b7d8534596a16d782c898198daa24c16a0d8473a5f5c632a4",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "6babb0bf07ca0227a7f287ef968754639bce7f202ad95e79c4615232dd1660a3"
+    },
+    {
+      "frame": "move_04",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/move_contacts_v3.png",
+      "source_sha256": "6e1b15b36ecfec4b7d8534596a16d782c898198daa24c16a0d8473a5f5c632a4",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "bf48a0905418a1bd24e43a0d2e7d6f261d7308ff88b5078c8f2b8eeff1b50037"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    450,
+    581
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    210,
+    53,
+    211,
+    53
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

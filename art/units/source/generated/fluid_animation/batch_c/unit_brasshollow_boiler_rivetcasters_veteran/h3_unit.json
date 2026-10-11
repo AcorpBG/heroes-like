@@ -1,0 +1,67 @@
+{
+  "unit_id": "unit_brasshollow_boiler_rivetcasters_veteran",
+  "identity": "ONE original stocky armoured gunner, the Twinboiler Fusilier veteran, facing screen right in slightly elevated three-quarter view. Keep the heavy segmented brass and dark iron armour, the slotted full helmet with two round amber eye lenses, the TWO large spherical brass pressure tanks with red valve wheels and a gauge on the back, the thick ribbed hoses, the dark red apron and heavy armoured boots. Exactly two arms, two gauntleted hands and two legs. Both hands hold ONE brass rivet gun with EXACTLY THREE parallel barrels, connected to the tanks by hoses, held at the hip pointing to screen right. Preserve the tanks, the hoses, the three-barrel gun and the stocky proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full gun, the tank tops, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, steam, smoke, muzzle flash, rivets in flight, sparks, motion trails, particles or extra limbs; the eye lenses keep only their steady glow. Articulate joints naturally with physical planted-foot support; do not morph the gun or tanks.",
+  "canvas": [960, 640],
+  "scale": 0.46,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026103950,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["idle_0", "idle_4"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "A heavy, steady idle that loops. The fusilier breathes, the shoulders and the back tanks rise and settle, the rivet gun is lifted a little and lowered, the helmeted head turns slightly to scan, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no firing."
+    },
+    "move_h3_v1": {
+      "clip": "move",
+      "references": ["move_0", "move_4"],
+      "guides": [[31, 1], [62, 0], [93, 1]],
+      "last": 0,
+      "action": "March in place through two complete reciprocal cycles with heavy, stomping steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The rivet gun is carried at the hip and the tanks sway slightly on the back. Finish in the original gait phase."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["idle_0", "attack_2", "attack_4"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE gun-butt ram toward screen right. The fusilier braces the knees and draws the rivet gun back to the chest, twists the shoulders back, then lunges forward and drives the barrels out with both arms to full reach at screen right like a ram, draws back and settles into the original stance. One ram only; nothing is fired."
+    },
+    "ranged_h3_v1": {
+      "clip": "ranged",
+      "references": ["idle_0", "ranged_3", "ranged_5"],
+      "guides": [[30, 1], [56, 2]],
+      "last": 0,
+      "action": "Fire ONE burst toward screen right. The fusilier braces wide, raises the rivet gun level at screen right and sights along it, then the three barrels jolt back in recoil and the whole body rocks back on its heels, holds a moment, and the fusilier lowers the gun to the hip in the original stance. One burst only; no muzzle flash, smoke, steam or rivets are shown."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["idle_0", "hit_1"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "The fusilier flinches from an unseen blow and recovers completely. The helmet and shoulders rock back and twist, the knees flex and the tanks jolt while both hands keep hold of the gun, then it rebalances on both boots and returns to the same stance. Nothing is seen hitting it: no projectile, spark or flash. The blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["idle_0", "defend_2", "defend_3"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Crouch low on bent knees, tuck the helmet down behind the armoured shoulders and hold the rivet gun close across the body, then hold the low braced guard on both planted boots. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["idle_0", "cast_4"],
+      "guides": [[44, 1], [70, 1]],
+      "last": 0,
+      "action": "A signal salute. The fusilier releases one gauntlet from the gun and raises it open beside the helmet, the gun held low in the other hand, holds the salute briefly, then returns the hand to the gun in the original stance. A physical gesture only: no spell, steam or glow."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["idle_0", "death_2", "death_7"],
+      "guides": [[48, 1], [96, 2]],
+      "last": 2,
+      "action": "Collapse slowly and heavily. The fusilier's knees buckle and it sinks onto one knee with the gun dropping, stays there a moment, then topples forward and lies flat on its front, finishing motionless with the helmet at screen right and the boots at screen left, the tanks still on the back and the gun on the ground beside it, the eye lenses dark. The body never leaves the ground; no explosion, no steam and no disappearing body."
+    }
+  }
+}

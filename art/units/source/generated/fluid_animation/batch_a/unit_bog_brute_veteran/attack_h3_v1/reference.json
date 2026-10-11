@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_bog_brute_veteran",
+  "guides": [
+    {
+      "frame": "idle_00",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_bog_brute_veteran/idle_v1.png",
+      "source_sha256": "87384d327ac360f108e1632a552fdbde1d6b4324df99c850be330458ae9d4be4",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "a06e280f31687d0143872e76b010eb345d201308c2f6e93eae1bff70d8d8e0c7"
+    },
+    {
+      "frame": "attack_02",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_bog_brute_veteran/attack_v2.png",
+      "source_sha256": "4c873bba582be50e6012415f8babced7c7e106f10167d66524efdbe74016cabf",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "94c7b42ff11ec22d8279a43700c3465cebe6a40ea6e5df7fe631e5f72959cf0c"
+    },
+    {
+      "frame": "attack_03",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_bog_brute_veteran/attack_v2.png",
+      "source_sha256": "4c873bba582be50e6012415f8babced7c7e106f10167d66524efdbe74016cabf",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "fb736c290d2cd14dfda1f16819e0f5eaea0a96eea5aa715685cac8be2a85070b"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    444,
+    566
+  ],
+  "output_scale": 0.45,
+  "free_pixels_left_top_right_bottom": [
+    170,
+    50,
+    170,
+    51
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_bog_brute_veteran",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    444,
+    566
+  ],
+  "scale": 0.45,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026101258,
+  "references": [
+    "idle_00",
+    "death_03",
+    "death_07"
+  ],
+  "guides": [
+    [
+      48,
+      1
+    ],
+    [
+      96,
+      2
+    ]
+  ],
+  "last": 2,
+  "prompt": "ONE original huge swamp warrior, the Ironfen Bulwark, facing screen right in elevated three-quarter view. Keep the large muscular bearded man with tied-back dark hair, battered black layered iron plate armour edged in worn brass, grey-brown reeds and tattered vegetation hanging from the shoulders and waist, dark trousers and heavy boots. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE heavy square stone maul bound with rope on a short wooden handle; the screen-RIGHT arm carries ONE tall splintered wooden plank tower shield with two iron bands, a round iron boss and reeds along its top, held in front of the body. Preserve the maul, the shield size and markings, the armour and the heavy adult proportions. Collapse slowly and heavily from standing. His knees buckle and he sinks down onto both knees, leaning on the shield, and stays kneeling for a moment. Then he tips forward slowly onto his hands and lies down on his front, the shield sliding over his back and the maul dropping out of his hand to lie on the ground in front of him. Finish lying motionless face down. The body never leaves the ground or flies; no recovery, no floating equipment and no disappearing body. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, maul, shield, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the equipment.",
+  "protected_foreground_chroma": 11,
+  "edge_threshold": 9,
+  "palette_measurement": {
+    "bluest_opaque": 9.0,
+    "blue_minus_green_p999": 3.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

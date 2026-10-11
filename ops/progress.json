@@ -115146,6 +115146,18 @@
       "notes": "Found during the H3 pilot: tests/fluid_creature_animation_regression.py failed 3 checks on every unit, changed or not. The multihex move check still expected one walk clip per hex; since 94a08e18a a move takes STACK_MOVE_HEX_MSEC per hex, so it now expects that. 'authored playback changed simulation' differed only in battle.player_orders_given: perform_presented_action counts the player's order (the Quick Resolve gate), so the plain path now gets the same record_player_order before the exact comparison. The overview and contact sheets drew a RIFE idle by indexing the atlas; they now draw each clip from BattleUnitPose.sheet_path with its own ground line, loading the sheets before drawing (a texture first loaded inside _draw rendered white). Checked: live runs on Citadel Pikeward (RIFE idle) and its veteran (H3) pass with no failures, and every RIFE idle frame draws grounded; core suite 15/15.",
       "updatedAt": "2026-10-11T16:45:00Z",
       "completedAt": "2026-10-11T16:45:00Z"
+    },
+    {
+      "id": "art-h3-painted-units-20261011",
+      "title": "Convert the painted creature clips to H3 video",
+      "status": "in_progress",
+      "classification": "art_production",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/fluid-creature-animation.md"
+      ],
+      "notes": "Owner request 2026-10-11 after the Gateward pilot: convert the remaining painted units to H3 video, idle included (every second video frame at 60 ms, no RIFE loop), keeping the GPU busy with a pipelined runner (tools/h3_creature_animation.py enqueue/run: one unit per group, the next unit's samplings queued right behind this unit's decodes, matte and sheets while the GPU samples). New verbs survey (restore archived paintings, named painted sheet, suggested scale) and propose (starting h3_selection.json from matte motion). Order: batch_a, then b, c, d, e; 86 painted units, 24 mixed after that. Publish each unit only after visual review. Published: Blackbranch Cutthroat Veteran, Bog Brute Veteran. Mixed units need takes only for their painted clips (the publisher keeps their H3 clips). Units painted in blue, cyan or violet use a green plate (key_rgb [0, 255, 0]; the matte swaps green and blue).",
+      "updatedAt": "2026-10-11T23:40:00Z"
     }
   ],
   "project": "heroes-like",

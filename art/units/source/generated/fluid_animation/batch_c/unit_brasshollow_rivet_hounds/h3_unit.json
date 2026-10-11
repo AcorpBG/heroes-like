@@ -1,0 +1,60 @@
+{
+  "unit_id": "unit_brasshollow_rivet_hounds",
+  "identity": "ONE original lean mechanical hound, the Rivet Hound, facing screen right in elevated three-quarter side view. Keep the dark iron and worn brass riveted armour plates, the blue steel piston joints, the glowing orange slit vents on the flank and the glowing orange eyes, the long narrow pointed snout ending in a small glowing orange spike tip, the two pointed ears, the long segmented tail with a spearhead tip, and EXACTLY FOUR jointed legs with clawed brass feet. No rider and no extra legs. Preserve the four legs, the snout, the tail and the lean proportions.",
+  "plate": "Locked orthographic camera, fixed scale and centred body. Keep the snout tip, the tail tip and all four feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, sparks, steam, motion trails, particles or extra legs; the vents and eyes keep only their steady glow. The hound moves only at its joints; the armour plates stay rigid and never morph.",
+  "canvas": [960, 640],
+  "scale": 0.38,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026104450,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["idle_0", "idle_4"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "A tense hunting idle that loops. The hound breathes, the body rises and settles on its legs, the head lowers and lifts slightly as it sniffs, the ears twitch and the tail sways slowly, then everything returns smoothly to the original crouched stance. All four feet stay planted. No walking and no attack."
+    },
+    "move_h3_v1": {
+      "clip": "move",
+      "references": ["move_0", "move_4"],
+      "guides": [[31, 1], [62, 0], [93, 1]],
+      "last": 0,
+      "action": "Stalk in place on four legs through two complete cycles with a low prowling gait. Diagonal pairs of legs alternate lifting, swinging forward and planting their clawed feet while the others bear the weight. The body stays centred for engine-driven travel with the head held low and level and the tail swaying. Exactly four legs at all times. Finish in the original gait phase."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["idle_0", "attack_2", "attack_4"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE lunging bite toward screen right. The hound crouches low and gathers its hind legs, then springs forward and stretches out long and flat so the snout spike drives to full reach at screen right, then draws back onto its legs and settles into the original stance. One lunge only; the feet stay near the ground and no effect appears at contact."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["idle_0", "hit_1"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "One sudden jolt and complete recovery. The hound rears its head and forequarters up and back, the front legs lift a little and the hind legs compress, then it drops back onto all four feet and returns to the same stance. Nothing is seen hitting it: no projectile, spark or flash. The blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["idle_0", "defend_1", "defend_2"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Hunker down: the hound drops its belly low, pulls its head in behind the armoured shoulders with the snout pointing at screen right, curls the tail in and braces all four legs wide, then holds the low guarded crouch. No attack and no return to the standing stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["idle_0", "cast_3"],
+      "guides": [[44, 1], [70, 1]],
+      "last": 0,
+      "action": "A rallying call. The hound raises its head high with the snout lifted and the ears up as if baying, the chest swelling, holds the pose briefly, then lowers the head back to the original stance. A physical gesture only: no sound waves, glow change or effect."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["idle_0", "death_3", "death_7"],
+      "guides": [[48, 1], [96, 2]],
+      "last": 2,
+      "action": "Shut down and collapse. The eyes and vents dim, the legs buckle one after another and the hound sinks down onto its belly, stays a moment, then slumps flat on the ground with the legs folded and the tail lying straight out to screen left, finishing as a still wreck with the vents dark. The same body throughout: no explosion, no sparks and no disappearing."
+    }
+  }
+}

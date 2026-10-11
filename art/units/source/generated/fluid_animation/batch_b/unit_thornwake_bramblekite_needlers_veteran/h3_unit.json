@@ -1,0 +1,67 @@
+{
+  "unit_id": "unit_thornwake_bramblekite_needlers_veteran",
+  "identity": "ONE original slim winged bark humanoid, the Sunspine Kite veteran, facing screen right in elevated three-quarter view. Keep the root-footed bark body clothed in olive leaves, the leafy crown, the ivory beaked mask with amber eyes, and the TWO large veined gold-green leaf wings with wooden spars ending in golden thorn tips. Exactly two arms, two hands, two legs and two wings. Both hands grip ONE organic wooden seed-launcher with gold bands and a flared gold muzzle, held low and angled toward screen right. Preserve the launcher, the leaf wings, the beaked mask and the slim proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep both wing tips, the launcher, the crown and both feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, seeds in flight, muzzle flash, smoke, falling leaves, magic, glow, motion trails, particles or extra limbs. Articulate joints naturally; do not morph the launcher or wings.",
+  "canvas": [960, 640],
+  "scale": 0.48,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026103500,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["idle_00", "idle_04"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "An alert idle that loops. The kite breathes, the wings flex open a little and settle, the masked head tilts and the amber eyes scan, the launcher lifts slightly and lowers, then everything returns smoothly to the original stance. Both feet stay planted. No flying and no shooting."
+    },
+    "move_h3_v1": {
+      "clip": "move",
+      "references": ["move_00", "move_04"],
+      "guides": [[31, 1], [62, 0], [93, 1]],
+      "last": 0,
+      "action": "Fly in place through two complete wingbeat cycles, hovering just off the ground. Both leaf wings sweep fully up and open, then beat down, then rise again; the legs dangle and the body bobs slightly with each beat but stays centred for engine-driven travel. The launcher is held forward in both hands. Finish in the original wing phase."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["idle_00", "attack_02", "attack_04"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE launcher strike toward screen right. The kite braces its knees and draws the launcher to the chest, twists the torso back, then lunges toward screen right and drives the launcher out horizontally in both hands to full reach as a shove, pulls the elbows back and settles into the original stance. One strike only; nothing is fired."
+    },
+    "ranged_h3_v1": {
+      "clip": "ranged",
+      "references": ["idle_00", "ranged_03", "ranged_05"],
+      "guides": [[30, 1], [56, 2]],
+      "last": 0,
+      "action": "Fire ONE seed toward screen right. The kite raises the launcher level and braces, sighting along it at screen right, then the launcher kicks back in recoil against the shoulder, holds a moment, and the kite lowers it and settles into the original stance. One shot only; the seed is not shown, with no flash, smoke or trail."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["idle_00", "hit_01"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "The kite flinches from an unseen blow and recovers completely. The body hunches down and twists, the wings jerk and the knees flex deep while both hands keep hold of the launcher, then it straightens, rebalances on both feet and returns to the same stance. Nothing is seen hitting it: no projectile, spark or flash. The blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["idle_00", "defend_02", "defend_03"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Crouch low on bent knees and fold the leaf wings forward around the body like a cloak, with the launcher held across the chest behind them, then hold the covered guard on both planted feet. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["idle_00", "cast_04"],
+      "guides": [[44, 1], [70, 1]],
+      "last": 0,
+      "action": "A signal salute. The kite lifts the launcher upright before its masked face with the muzzle pointing to the sky and spreads the wings a little, holds the pose briefly, then lowers the launcher back to the original stance. A physical gesture only: no spell, glow or aura."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["idle_00", "death_02", "death_07"],
+      "guides": [[48, 1], [96, 2]],
+      "last": 2,
+      "action": "Collapse slowly from standing. The kite sags, the wings droop and it sinks onto its knees, stays there a moment, then slumps forward and lies down flat, finishing motionless with the head at screen right and the feet at screen left, the wings spread limp over the body and the launcher on the ground beside it. The body never leaves the ground; no recovery, no flying and no disappearing body."
+    }
+  }
+}

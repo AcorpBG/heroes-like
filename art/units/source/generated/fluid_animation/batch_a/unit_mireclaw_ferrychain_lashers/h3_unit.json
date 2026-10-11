@@ -1,0 +1,60 @@
+{
+  "unit_id": "unit_mireclaw_ferrychain_lashers",
+  "identity": "ONE original athletic woman fighter, the Ferrychain Lasher, facing screen right in elevated three-quarter view. Keep her long loosely braided black hair, the olive reed-woven sleeveless tunic with ragged fringes, dark leather trousers, boots and bracers, and the moss and white shell-bone charms at the waist. Exactly two arms, two hands and two legs. Her weapon is ONE long dark iron linked chain with ONE large curved crescent hook and a reed tassel at one end; the screen-left hand gathers the slack coils at her waist and the chain runs down to the hook resting on the ground near her front foot. Preserve the single chain and hook, the costume and the athletic adult proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, the whole chain and hook, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, second hook, magic, glow, motion trails, particles or extra limbs. The chain stays one connected piece held in her hands. Articulate joints naturally with physical planted-foot support; do not morph the hook.",
+  "canvas": [960, 640],
+  "scale": 0.52,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026102250,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["cast_v1_0", "cast_v1_5"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "A ready, restless idle that loops. She breathes, the shoulders rise and fall, she rolls the chain coils in her hand and gives the chain a small flick so the hook twitches on the ground, glances toward screen right, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no attack."
+    },
+    "move_h3_v1": {
+      "clip": "move",
+      "references": ["move_v6_0", "move_v6_4"],
+      "guides": [[31, 1], [62, 0], [93, 1]],
+      "last": 0,
+      "action": "Walk in place through two complete reciprocal cycles with light athletic steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. Both hands hold the chain low across the body with the hook swinging just above the ground. Finish in the original gait phase."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["cast_v1_0", "attack_v1_2", "attack_v1_4"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE chain-hook lash toward screen right. She draws her arm back so the hook trails out behind her on the curving chain, winds up with the forearm beside the shoulder, then sweeps forward and flings the hook out on a taut chain to full reach at screen right, lets the hook arc down low ahead, then hauls the chain back under control while gathering the slack and settles into the original stance. One lash only; the hook stays on the chain."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["cast_v1_0", "reactions_v1_1"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "One brief impact recoil and complete recovery. The shoulders flinch and the torso recoils with the knees softening as the hands draw the chain close, then she regains her balance on both boots and returns to the same stance. The impact is shown only by the body; the blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["cast_v1_0", "reactions_v1_5", "reactions_v1_6"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Widen the feet and lift a taut span of chain across the chest between both hands, then sink into a low crouch with the forearms and chain protecting the face, the hook hanging beside the thigh, and hold the guard on both planted boots. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["cast_v1_0", "cast_v1_3"],
+      "guides": [[44, 1], [70, 1]],
+      "last": 0,
+      "action": "A rallying signal. She gathers the chain slack into one hand, lifts the free hand to her chest, then extends the arm and points forward toward screen right as an encouraging order, draws the hand back and returns it to the chain in the original stance. Both boots stay planted. A physical gesture only: no spell, glow or aura."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["cast_v1_0", "death_v1_7"],
+      "guides": [[90, 1]],
+      "last": 1,
+      "action": "Collapse continuously from standing: she staggers, sinks onto her knees with the chain slipping from her hands, then slumps over onto the ground, finishing lying motionless on her side with the head at screen right and the boots at screen left, the chain and hook lying on the ground beside her. No recovery, no floating equipment and no disappearing body."
+    }
+  }
+}

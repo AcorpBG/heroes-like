@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_blackbranch_cutthroat_veteran",
+  "guides": [
+    {
+      "frame": "idle_00",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/idle_v1.png",
+      "source_sha256": "1030bca552143cd9cee7d131a922a98fd4a2ca9da58bf9f374d87ed666e5bf43",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "3d67fe5c30380e7b229d1f3341b236e44940f88aa4cda427bf942f2a257f168b"
+    },
+    {
+      "frame": "idle_04",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/idle_v1.png",
+      "source_sha256": "1030bca552143cd9cee7d131a922a98fd4a2ca9da58bf9f374d87ed666e5bf43",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "61f0484865fa6b747475306cc6c3338b5ae6b7f98aff75cdc2958270de012db5"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    450,
+    581
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    210,
+    53,
+    211,
+    53
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -1,0 +1,60 @@
+{
+  "unit_id": "unit_brasshollow_debt_engine_exactors_veteran",
+  "identity": "ONE original stocky biped robot, the Foreclosure Engine veteran, facing screen right in elevated three-quarter view. Keep the dark iron and worn brass riveted body, the closed cylindrical brass head with an orange eye, the furnace-barrel chest with glowing orange bars, the one short chimney behind the near shoulder, the cog emblem on the near pauldron, the two chain-hung brass debt tags, the engraved metal apron and the heavy rectangular boots. Exactly two arms and two legs. The near screen-LEFT arm ends in ONE giant two-jaw crescent clamp; the far screen-RIGHT arm ends in ONE mechanical fist. Preserve the clamp, the fist, the furnace chest and the heavy proportions.",
+  "plate": "Locked orthographic camera, fixed scale and centred body. Keep the full clamp, the fist, the chimney and both boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, smoke, steam, sparks, flames, motion trails, particles or extra limbs; the chest bars and eye keep only their steady glow. The robot moves at its joints; the armour stays rigid and never morphs.",
+  "canvas": [960, 640],
+  "scale": 0.46,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026104050,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["idle_0", "idle_4"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "A heavy, menacing idle that loops. The body rises and settles as the furnace breathes, the clamp jaws open a little and snap shut, the fist flexes, the head turns slightly and the debt tags swing on their chains, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no attack."
+    },
+    "move_h3_v1": {
+      "clip": "move",
+      "references": ["move_40", "move_44"],
+      "guides": [[31, 1], [62, 0], [93, 1]],
+      "last": 0,
+      "action": "Stomp in place through two complete reciprocal cycles with heavy mechanical steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The body stays centred for engine-driven travel, the clamp and fist swinging and the tags jangling. Finish in the original gait phase."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["idle_0", "attack_10", "attack_12"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE clamp crush toward screen right. The robot bends its knees and draws the near arm back, raises the open clamp high beside its shoulder with the jaws spread, then lunges forward and swings the clamp out to full reach at screen right where the jaws snap shut, pulls the arm back and settles into the original stance. One crush only; no sparks or effect."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["idle_0", "hit_16"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "One heavy impact recoil and complete recovery. The body rocks back and twists, the arms swing out and the knees flex, the tags swinging, then the robot rebalances on both boots and returns to the same stance. Nothing is seen hitting it: no projectile, spark or flash. The blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["idle_0", "defend_21", "defend_22"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Swing the giant clamp across the front of the furnace chest as a shield, raise the fist behind it, bend the knees and crouch, then hold the braced guard on both planted boots. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["idle_0", "cast_27"],
+      "guides": [[44, 1], [70, 1]],
+      "last": 0,
+      "action": "A demanding gesture. The robot raises the clamp high beside its head and thrusts the far hand forward with the fingers open, palm out toward screen right, holds the pose briefly, then lowers both arms back to the original stance. A physical gesture only: no spell, glow change or aura."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["idle_0", "death_35", "death_39"],
+      "guides": [[48, 1], [96, 2]],
+      "last": 2,
+      "action": "Collapse slowly and heavily. The eye and chest glow dim, the knees buckle and the robot sinks down onto its clamp and knees, stays there a moment, then topples forward and lies flat on its front, finishing motionless with the head at screen right, the clamp lying open on the ground and the tags spilled beside it. The same body throughout: no explosion, no steam and no disappearing."
+    }
+  }
+}

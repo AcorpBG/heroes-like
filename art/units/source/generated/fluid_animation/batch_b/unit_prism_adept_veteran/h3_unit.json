@@ -1,0 +1,67 @@
+{
+  "unit_id": "unit_prism_adept_veteran",
+  "identity": "ONE original slender elf archer woman, the Prism Adept veteran, facing screen right in elevated three-quarter view. Keep her white hair in a high ponytail, pointed ears, ivory and gold fitted armour, violet-blue crystal feather pauldrons, a long pale blue scarf trailing behind, ivory tasset panels, dark leggings, gold greaves and boots, and the hip quiver of crystal-fletched arrows. Exactly two arms, two hands and two legs. She holds ONE ornate gold recurved bow with crystal-tipped limbs and two round violet gems in the screen-RIGHT hand. Preserve the bow, the scarf, the crystal pauldrons, her face and slender adult proportions; no wings.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full bow, the ponytail, the scarf, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, beams, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the bow.",
+  "canvas": [960, 640],
+  "scale": 0.43,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026102750,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["idle_v1_00", "idle_v1_04"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "A calm, watchful idle that loops. She breathes, the shoulders rise and fall, she lifts the bow a little and tests the string with two fingers, the head turns slightly and the scarf and ponytail stir, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no shooting."
+    },
+    "move_h3_v1": {
+      "clip": "move",
+      "references": ["move_8", "move_12"],
+      "guides": [[31, 1], [62, 0], [93, 1]],
+      "last": 0,
+      "action": "Walk in place through two complete reciprocal cycles with light, graceful steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The bow is carried low in the screen-right hand; the scarf and ponytail swing behind. Finish in the original gait phase."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["idle_v1_00", "attack_v1_02", "attack_v1_04"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE close-range bow strike toward screen right. She raises the bow high and draws it back across her body as the knees bend, then lunges forward on the front leg and swings the bow limb out to full reach at screen right, pulls it back, comes upright and settles into the original stance. One strike only; no arrow is loosed."
+    },
+    "ranged_h3_v1": {
+      "clip": "ranged",
+      "references": ["idle_v1_00", "ranged_3", "ranged_5"],
+      "guides": [[30, 1], [56, 2]],
+      "last": 0,
+      "action": "Shoot ONE arrow toward screen right. She takes an arrow from the hip quiver, nocks it, raises the bow level toward screen right and draws the string back to her cheek, holds a moment, then releases so the string snaps forward and the drawing hand flies back open, follows through, lowers the bow and settles into the original stance. One shot only; the arrow leaves frame instantly with no trail, beam or glow."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["idle_v1_00", "hit_defend_v1_01"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "She flinches from an unseen blow and recovers completely. The shoulders hunch and twist away, the head ducks and the knees flex while she keeps hold of the bow, then she straightens, rebalances on both boots and returns to the same stance. Nothing is seen hitting her: no arrow, blade, spark or flash. The blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["idle_v1_00", "hit_defend_v1_05", "hit_defend_v1_06"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Bring the bow up diagonally across the front of the body as a guard, bend the knees and turn the shoulder in, then hold the low braced guard on both planted boots. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["idle_v1_00", "cast_v2_04"],
+      "guides": [[44, 1], [70, 1]],
+      "last": 0,
+      "action": "A rallying signal. She raises her free hand in a fist high beside her head while the bow stays low in the other hand, holds it briefly with the chin lifted, then lowers the arm back to the original stance. A physical gesture only: no spell, glow or aura."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["idle_v1_00", "death_v2_02", "death_v2_07"],
+      "guides": [[48, 1], [96, 2]],
+      "last": 2,
+      "action": "Collapse slowly from standing. She doubles over and sinks onto her knees, the bow slipping down, stays kneeling a moment, then tips forward onto her side and lies down, finishing lying motionless on the ground with the head at screen right and the boots at screen left, the bow lying beside her. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    }
+  }
+}

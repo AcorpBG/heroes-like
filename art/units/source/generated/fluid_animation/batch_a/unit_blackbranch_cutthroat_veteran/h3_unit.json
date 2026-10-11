@@ -1,0 +1,71 @@
+{
+  "unit_id": "unit_blackbranch_cutthroat_veteran",
+  "identity": "ONE original swamp assassin, the Blackbranch Knifeshade, facing screen right in elevated three-quarter view, in a low crouched ready stance. Keep the pale gaunt human face under a low ragged hood of woven thorn twigs, the long layered cape of dark olive and brown leaves and bark strips, brown leather bracers and gloves, a belted leather jerkin, dark wrapped trousers and brown boots. Exactly two arms, two hands and two legs. Each hand holds ONE curved crescent hooked knife; both knives keep the same size and shape and never change hands. Preserve the hood, cape, knives and adult proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full hood, cape, both knives, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the equipment. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour.",
+  "canvas": [960, 640],
+  "scale": 0.44,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026101200,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["idle_00", "idle_04"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "A tense, watchful idle that loops. The assassin breathes in his low crouch: the shoulders rise and fall, the head turns slightly, both wrists turn the curved knives a little and the knees flex, then everything returns smoothly to the original crouched stance. Both boots stay planted; the leaf cape stirs gently. No walking and no attack."
+    },
+    "move_h3_v1": {
+      "clip": "move",
+      "references": ["move_00", "move_04"],
+      "guides": [[31, 1],
+        [62, 0],
+        [93, 1]],
+      "last": 0,
+      "action": "Stalk in place through two complete reciprocal cycles, crouched low. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. Both knives stay low in front of the body; allow small natural arm and cape motion. Finish in the original gait phase."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["idle_00", "attack_02", "attack_04"],
+      "guides": [[30, 1],
+        [54, 2]],
+      "last": 0,
+      "action": "Make ONE fast slash toward screen right. Draw the near knife back and raise it behind the shoulder while the knees load, lunge forward on the front leg and sweep the near arm out to full reach at screen right with the curved blade leading, then let the blade follow through downward, draw the arm back and return to the original low crouch. The other knife guards low at the body. One slash only; both knives stay in hand. No throw."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["idle_00", "hit_01"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "One brief impact recoil and complete recovery. The head and shoulders snap backward, the arms fly up with both knives still gripped and the knees flex, then he rebalances on both boots and returns to the same low crouch. Remain standing with both knives held. The impact is shown only by the body; the blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["idle_00", "defend_01", "defend_03"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Raise both knives and cross them in front of the face and chest as a guard, sinking a little lower on both bent knees, then hold the crossed-blade guard firmly on both planted boots. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["idle_00", "cast_04"],
+      "guides": [[44, 1],
+        [70, 1]],
+      "last": 0,
+      "action": "A sharp physical signal to allies. Raise the near knife straight up above the hood with the blade pointing at the sky, hold it there briefly while the other knife stays low, then lower the arm back to the original low crouch. A physical gesture only: no spell, glow or emitted effect."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["idle_00", "death_07"],
+      "guides": [[90, 1]],
+      "last": 1,
+      "action": "Collapse continuously from the crouch: both knees buckle onto the ground, the torso slumps forward over the knees, then the body topples onto its side and lies stretched out flat with the hood and head at screen left and the boots at screen right, the cape spread over the body and both knives lying on the ground. No recovery, no floating equipment and no disappearing body."
+    },
+    "idle_h3_v2": {
+      "clip": "idle",
+      "references": ["idle_00", "idle_04"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "A tense, watchful idle that loops. The assassin breathes in his low crouch: the shoulders rise and fall, the head turns slightly, both wrists turn the curved knives a little and the knees flex, then everything returns smoothly to the original crouched stance. Both boots stay planted; the leaf cape stirs gently. No walking and no attack."
+    }
+  }
+}

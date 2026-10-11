@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_bog_brute_veteran",
+  "guides": [
+    {
+      "frame": "hit_00",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_bog_brute_veteran/reactions_v1.png",
+      "source_sha256": "60c77db24310d65ea1a685fa2815c2a0765e213ad1ca32023a198231559897c2",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "e3f49357137475e53ea727b68f23576dff684a53fd253bf9e8d7ebfb874758c7"
+    },
+    {
+      "frame": "idle_00",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_bog_brute_veteran/idle_v1.png",
+      "source_sha256": "87384d327ac360f108e1632a552fdbde1d6b4324df99c850be330458ae9d4be4",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "a06e280f31687d0143872e76b010eb345d201308c2f6e93eae1bff70d8d8e0c7"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    444,
+    566
+  ],
+  "output_scale": 0.45,
+  "free_pixels_left_top_right_bottom": [
+    170,
+    50,
+    170,
+    51
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -1,0 +1,74 @@
+{
+  "clips": {
+    "idle": {
+      "segments": [
+        {
+          "take": "idle_h3_v2",
+          "frames": [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108, 110, 112, 114, 116, 118, 120, 122]
+        }
+      ],
+      "frame_msec": 60
+    },
+    "move": {
+      "segments": [
+        {
+          "take": "move_h3_v1",
+          "frames": [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60]
+        }
+      ],
+      "frame_msec": 50
+    },
+    "attack": {
+      "segments": [
+        {
+          "take": "attack_h3_v1",
+          "frames": [17, 22, 23, 25, 27, 29, 30, 31, 32, 33, 35, 36, 37, 38, 40, 44, 56, 59, 60, 61, 62, 63, 64, 66, 67, 70, 73, 75, 82, 92]
+        }
+      ],
+      "frame_msec": 42,
+      "contact_frame": 15
+    },
+    "hit": {
+      "segments": [
+        {
+          "take": "hit_h3_v1",
+          "frames": [13, 22, 24, 27, 30, 37, 44, 52, 54, 56, 58, 59, 61, 62, 64, 65, 66, 68, 69, 74]
+        }
+      ],
+      "frame_msec": 35
+    },
+    "defend": {
+      "segments": [
+        {
+          "take": "defend_h3_v1",
+          "frames": [0, 4, 6, 8, 10, 11, 13, 15, 16, 18, 20, 23, 25, 28, 30, 33, 37, 42, 52]
+        }
+      ],
+      "frame_msec": 42
+    },
+    "cast": {
+      "segments": [
+        {
+          "take": "cast_h3_v1",
+          "frames": [9, 14, 16, 18, 20, 22, 23, 25, 26, 28, 29, 30, 31, 33, 34, 36, 43, 50, 57, 67, 74, 83, 87, 89, 91, 93, 95, 97, 98, 100, 102, 106, 112]
+        }
+      ],
+      "frame_msec": 45,
+      "contact_frame": 16
+    },
+    "death": {
+      "segments": [
+        {
+          "take": "death_h3_v1",
+          "frames": [5, 15, 19, 22, 23, 24, 25, 26, 27, 28, 29, 30, 32, 37, 44, 48, 52, 55, 58, 60, 62, 63, 64, 65, 66, 67, 68, 69, 70, 72, 74, 76, 87, 123]
+        }
+      ],
+      "frame_msec": 45
+    }
+  },
+  "preserved_accepted_clips": [],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "idle: idle_h3_v2, every second frame 0-122 at 60 ms, breathing guard with a small knife lift, seam 122->0. move: stalking gait cycle 0-60, seam 60->0. attack: knife raised behind the hood (30-34), lunge and slash to full reach (39-44, contact video 44), held reach, recovery to the crouch by 75. hit: snaps from stance to the recoil (24->27; smeared transition frames 25-26 dropped), knives up, recovers by 72. defend: knives cross before the face by 33, held guard. cast: near knife raised beside the hood as a signal, held, lowered by 106. death: knees buckle, kneels hunched, tips sideways onto the back (63-67) and settles stretched out with the head at screen left. Rejected: idle_h3_v1 (plate drifted from blue to cyan and black; 90 of 124 frames failed the matte)."
+  }
+}

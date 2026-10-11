@@ -1,0 +1,60 @@
+{
+  "unit_id": "unit_mireclaw_sporewake_chanters",
+  "identity": "ONE original masked swamp priest, the Sporewake Chanter, facing screen right in elevated three-quarter view. Keep the dark skull mask with a purple face scarf, the brown dreadlocks, the leaf shoulder mantle, the long purple embroidered robe with ragged hem, the hanging pendants and the boots. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE tall wooden staff crowned with antlers at its top; the screen-RIGHT hand holds ONE brass censer bowl hanging from three chains. Preserve the antler staff, the censer, the mask and the robed proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole antler staff, the censer with its chains, the robe hem and both boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, smoke, spores, glow, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the staff stays straight and rigid and the censer stays attached to its chains.",
+  "canvas": [960, 640],
+  "scale": 0.5,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026105450,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["idle_0", "idle_4"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "A slow, chanting idle that loops. The priest breathes, sways gently, the masked head bows and lifts as if murmuring, the censer swings softly on its chains and the staff rocks slightly, then everything returns smoothly to the original stance. Both boots stay planted. No walking, no attack and no smoke."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["idle_0", "attack_2", "attack_4"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE staff thrust toward screen right. The priest raises the antler staff high and draws it back as the knees bend, then lunges forward and drives the antler crown out to full reach at screen right with both arms, draws back and settles into the original stance. One thrust only; no spores, smoke or effect at contact."
+    },
+    "ranged_h3_v1": {
+      "clip": "ranged",
+      "references": ["idle_0", "ranged_1"],
+      "guides": [[34, 1]],
+      "last": 0,
+      "action": "Make ONE censer swing toward screen right. The priest draws the censer back low behind the body, then swings it forward and up on its chains in a wide arc toward screen right, holds it out a moment at the top of the swing, then lets it swing back down and settles into the original stance. Nothing comes out of the censer: no spores, smoke, glow or projectile."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["idle_0", "hit_0"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "The priest reels from an unseen blow and recovers completely. The masked head and shoulders are thrown back, the robe swings and the knees flex while both hands keep hold of the staff and the censer, then the priest steadies on both boots and returns to the same stance. Nothing is seen hitting them: no projectile, spark or flash. The blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["idle_0", "defend_1", "defend_3"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Raise the antler staff diagonally across the body with both hands as a guard, the censer held close, bend the knees into a low stance and lower the mask behind the staff, then hold the braced guard on both planted boots. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["idle_0", "cast_3"],
+      "guides": [[44, 1], [70, 1]],
+      "last": 0,
+      "action": "A blessing. The priest lifts the censer high on its chains and raises the masked face toward it, holding the staff upright, holds the pose briefly, then lowers the censer back to the original stance. A physical gesture only: no spores, smoke, glow or spell effect."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["idle_0", "death_2", "death_7"],
+      "guides": [[48, 1], [96, 2]],
+      "last": 2,
+      "action": "Collapse slowly. The priest sinks down onto the knees leaning on the staff, stays kneeling a moment, then slumps forward and lies flat on the ground, finishing motionless with the robe spread out, the staff lying on the ground and the censer resting beside the body. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    }
+  }
+}

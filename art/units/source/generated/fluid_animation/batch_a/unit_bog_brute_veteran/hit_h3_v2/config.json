@@ -1,0 +1,46 @@
+{
+  "unit_id": "unit_bog_brute_veteran",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    444,
+    566
+  ],
+  "scale": 0.45,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026101257,
+  "references": [
+    "idle_00",
+    "hit_00"
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original huge swamp warrior, the Ironfen Bulwark, facing screen right in elevated three-quarter view. Keep the large muscular bearded man with tied-back dark hair, battered black layered iron plate armour edged in worn brass, grey-brown reeds and tattered vegetation hanging from the shoulders and waist, dark trousers and heavy boots. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE heavy square stone maul bound with rope on a short wooden handle; the screen-RIGHT arm carries ONE tall splintered wooden plank tower shield with two iron bands, a round iron boss and reeds along its top, held in front of the body. Preserve the maul, the shield size and markings, the armour and the heavy adult proportions. He flinches from an unseen blow and recovers completely. The head and shoulders rock backward, the shield arm gives and the knees flex while both hands keep hold of the maul and the shield, then he rebalances on both boots and returns to the same stance. Nothing is seen hitting him: no arrow, blade, thrown object, spark, flash or burst of light enters the frame. The blue background never flashes or changes colour. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, maul, shield, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the equipment.",
+  "protected_foreground_chroma": 12,
+  "edge_threshold": 11,
+  "palette_measurement": {
+    "bluest_opaque": 10.0,
+    "blue_minus_green_p999": 5.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

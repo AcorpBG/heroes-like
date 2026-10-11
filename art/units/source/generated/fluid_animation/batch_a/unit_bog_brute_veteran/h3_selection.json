@@ -1,0 +1,312 @@
+{
+  "clips": {
+    "idle": {
+      "segments": [
+        {
+          "take": "idle_h3_v1",
+          "frames": [
+            0,
+            2,
+            4,
+            6,
+            8,
+            10,
+            12,
+            14,
+            16,
+            18,
+            20,
+            22,
+            24,
+            26,
+            28,
+            30,
+            32,
+            34,
+            36,
+            38,
+            40,
+            42,
+            44,
+            46,
+            48,
+            50,
+            52,
+            54,
+            56,
+            58,
+            60,
+            62,
+            64,
+            66,
+            68,
+            70,
+            72,
+            74,
+            92,
+            94,
+            96,
+            98,
+            100,
+            102,
+            104,
+            106,
+            108,
+            110,
+            112,
+            114,
+            116,
+            118,
+            120,
+            122
+          ]
+        }
+      ],
+      "frame_msec": 60
+    },
+    "move": {
+      "segments": [
+        {
+          "take": "move_h3_v1",
+          "frames": [
+            0,
+            2,
+            4,
+            6,
+            8,
+            10,
+            12,
+            14,
+            16,
+            18,
+            20,
+            22,
+            24,
+            26,
+            28,
+            30,
+            32,
+            34,
+            36,
+            38,
+            40,
+            42,
+            44,
+            46,
+            48,
+            50,
+            52,
+            54,
+            56,
+            58,
+            60
+          ]
+        }
+      ],
+      "frame_msec": 50
+    },
+    "attack": {
+      "segments": [
+        {
+          "take": "attack_h3_v1",
+          "frames": [
+            8,
+            12,
+            14,
+            15,
+            17,
+            19,
+            20,
+            21,
+            23,
+            24,
+            25,
+            27,
+            29,
+            31,
+            32,
+            33,
+            34,
+            35,
+            37,
+            41,
+            48,
+            55,
+            62,
+            68,
+            75,
+            77,
+            79,
+            81,
+            83,
+            85,
+            87,
+            89,
+            92,
+            94,
+            96,
+            100
+          ]
+        }
+      ],
+      "frame_msec": 42,
+      "contact_frame": 16
+    },
+    "hit": {
+      "segments": [
+        {
+          "take": "hit_h3_v3",
+          "frames": [
+            0,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            17,
+            18,
+            20,
+            22,
+            24,
+            26,
+            32,
+            39
+          ]
+        }
+      ],
+      "frame_msec": 35
+    },
+    "defend": {
+      "segments": [
+        {
+          "take": "defend_h3_v1",
+          "frames": [
+            8,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            24,
+            29,
+            40,
+            47,
+            56,
+            63,
+            75,
+            85,
+            91,
+            95
+          ]
+        }
+      ],
+      "frame_msec": 42
+    },
+    "cast": {
+      "segments": [
+        {
+          "take": "cast_h3_v1",
+          "frames": [
+            11,
+            15,
+            16,
+            18,
+            19,
+            20,
+            21,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            32,
+            33,
+            36,
+            43,
+            53,
+            60,
+            67,
+            74,
+            81,
+            87,
+            90,
+            92,
+            94,
+            96,
+            97,
+            100,
+            104
+          ]
+        }
+      ],
+      "frame_msec": 45,
+      "contact_frame": 16
+    },
+    "death": {
+      "segments": [
+        {
+          "take": "death_h3_v2",
+          "frames": [
+            4,
+            9,
+            11,
+            13,
+            15,
+            16,
+            18,
+            19,
+            20,
+            22,
+            23,
+            25,
+            27,
+            28,
+            30,
+            34,
+            41,
+            48,
+            56,
+            64,
+            68,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            77,
+            78,
+            79,
+            81,
+            92,
+            123
+          ]
+        }
+      ],
+      "frame_msec": 45
+    }
+  },
+  "preserved_accepted_clips": [],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Reviewed every frame of each selected take. Idle, move, attack, defend, cast from the v1 takes; death from death_h3_v2 (falls onto the shield and stays down, no floating equipment); hit from hit_h3_v3, which starts in the recoil and recovers to the stance by frame 24 with nothing hitting him (v1 and v2 showed a flying projectile). Tail trimmed at frame 39."
+  }
+}

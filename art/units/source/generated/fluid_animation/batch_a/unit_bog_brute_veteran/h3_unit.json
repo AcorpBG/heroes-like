@@ -1,0 +1,183 @@
+{
+  "unit_id": "unit_bog_brute_veteran",
+  "identity": "ONE original huge swamp warrior, the Ironfen Bulwark, facing screen right in elevated three-quarter view. Keep the large muscular bearded man with tied-back dark hair, battered black layered iron plate armour edged in worn brass, grey-brown reeds and tattered vegetation hanging from the shoulders and waist, dark trousers and heavy boots. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE heavy square stone maul bound with rope on a short wooden handle; the screen-RIGHT arm carries ONE tall splintered wooden plank tower shield with two iron bands, a round iron boss and reeds along its top, held in front of the body. Preserve the maul, the shield size and markings, the armour and the heavy adult proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, maul, shield, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the equipment.",
+  "canvas": [
+    960,
+    640
+  ],
+  "scale": 0.45,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026101250,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": [
+        "idle_00",
+        "idle_04"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A heavy, steady guard idle that loops. The big chest rises and falls, the shoulders roll, the maul hand tightens and lifts the maul slightly and the shield arm settles the shield, then everything returns smoothly to the original stance. Both boots stay planted with a slight knee flex; the reeds sway gently. No walking and no attack."
+    },
+    "move_h3_v1": {
+      "clip": "move",
+      "references": [
+        "move_0",
+        "move_4"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Trudge in place through two complete reciprocal cycles with heavy steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The maul hangs low in the screen-left hand and the shield stays in front of the body; allow small natural arm and reed motion. Finish in the original gait phase."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": [
+        "idle_00",
+        "attack_02",
+        "attack_03"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE crushing maul blow toward screen right. Draw the maul back, heave it up high over the shoulder while the knees load, then lunge forward and swing it down and out to full reach at screen right, follow through low in front of the front knee, draw it back and straighten into the original guard. The shield stays on the screen-right arm in front of the body. One blow only; the maul stays in hand. No throw."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": [
+        "idle_00",
+        "hit_00"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "One brief impact recoil and complete recovery. The head and shoulders rock backward, the shield arm gives and the knees flex while both hands keep hold of the maul and the shield, then he rebalances on both boots and returns to the same stance. Remain standing with all equipment held. The impact is shown only by the body; the blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": [
+        "idle_00",
+        "defend_01",
+        "defend_03"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
+      "last": 2,
+      "action": "Swing the tall plank shield across to cover the body and brace behind it, bending both knees and tucking the maul behind the shield, then hold the firm covered guard on both planted boots. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": [
+        "idle_00",
+        "cast_03"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A rallying physical signal. Raise the maul upright in front of the chest with its stone head above the shoulder like a standard, hold it there briefly while the shield stays in front, then lower it back to the original stance. A physical gesture only: no spell, glow or emitted effect."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": [
+        "idle_00",
+        "death_07"
+      ],
+      "guides": [
+        [
+          90,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "Collapse continuously from standing: the knees buckle onto the ground, the heavy torso pitches forward and the big body falls onto its front, the shield toppling with him and the maul dropping onto the ground in front. Finish lying motionless face down, the reeds and shield over the back and the maul lying on the ground. No recovery, no floating equipment and no disappearing body."
+    },
+    "hit_h3_v2": {
+      "clip": "hit",
+      "references": [
+        "idle_00",
+        "hit_00"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "He flinches from an unseen blow and recovers completely. The head and shoulders rock backward, the shield arm gives and the knees flex while both hands keep hold of the maul and the shield, then he rebalances on both boots and returns to the same stance. Nothing is seen hitting him: no arrow, blade, thrown object, spark, flash or burst of light enters the frame. The blue background never flashes or changes colour."
+    },
+    "death_h3_v2": {
+      "clip": "death",
+      "references": [
+        "idle_00",
+        "death_03",
+        "death_07"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
+      "last": 2,
+      "action": "Collapse slowly and heavily from standing. His knees buckle and he sinks down onto both knees, leaning on the shield, and stays kneeling for a moment. Then he tips forward slowly onto his hands and lies down on his front, the shield sliding over his back and the maul dropping out of his hand to lie on the ground in front of him. Finish lying motionless face down. The body never leaves the ground or flies; no recovery, no floating equipment and no disappearing body."
+    },
+    "hit_h3_v3": {
+      "clip": "hit",
+      "references": ["hit_00", "idle_00"],
+      "guides": [[40, 1]],
+      "last": 1,
+      "action": "He starts rocked back in a flinch, head thrown back and the shield arm pushed out, and recovers from it: he straightens up, brings the head forward and the shield back to his side, settles his weight on both boots and returns to the original upright stance, then stands still breathing quietly. He keeps hold of the maul and the shield throughout. Only his body moves; nothing else appears in the frame. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour."
+    }
+  }
+}

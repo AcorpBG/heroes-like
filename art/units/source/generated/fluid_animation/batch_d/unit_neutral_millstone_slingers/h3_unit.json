@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_neutral_millstone_slingers",
+  "identity": "ONE original adult woman slinger, the Millstone Slinger, facing screen right in elevated three-quarter view. Keep her face, the brown hair in a bun, the green headband and green scarf, the ivory tunic, the brown leather apron, the green trousers, the brown boots, the bandolier of grey stones and the belt pouches. Exactly two arms, two hands and two legs. Both fists are raised in a ready stance; the screen-LEFT fist holds ONE small leather sling loosely coiled, its short cord never extending. Preserve the small coiled sling, the headband and the proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, both fists, the sling, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, stones in flight, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the sling stays small and coiled in the same fist.",
+  "canvas": [960, 640],
+  "scale": 0.53,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026105850,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["attack_00", "attack_07"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "A ready, bouncing idle that loops. She breathes with her fists raised, shifts her weight between the boots, rolls her shoulders and glances to the side as the scarf stirs, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no attack."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["attack_00", "attack_02", "attack_04"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE quick strike toward screen right. She twists her hips and snaps the fist holding the coiled sling straight out to full reach at screen right, the small sling loop swinging from the fist, then pulls it back and settles into the original stance. One strike only; the sling stays coiled in the fist and nothing is thrown."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["attack_00", "defend_01", "defend_02"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Crouch low and raise both forearms in front of the face as a guard, the sling still coiled in the fist, then hold the guarded crouch on both planted boots. No attack and no return to the relaxed stance."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["attack_00", "death_03", "death_07"],
+      "guides": [[48, 1], [96, 2]],
+      "last": 2,
+      "action": "Collapse slowly. She staggers, sinks down onto one knee and a hand with the sling dropping, stays there a moment, then slumps forward and lies flat on her front, finishing motionless with her head at screen left and her boots at screen right, the sling on the ground beside her. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    }
+  }
+}

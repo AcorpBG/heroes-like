@@ -1,0 +1,299 @@
+{
+  "unit_id": "unit_ember_archer",
+  "identity": "ONE original young woman archer, the Ember Archer, facing screen right in elevated three-quarter view. Keep her brown hair tied back in a braid, the orange and charcoal layered tunic with ragged orange tails, brown leather shoulder guards, chest straps and belt pouches, brown leather bracers with white wraps, dark trousers and tall brown boots, and the quiver of red-fletched arrows on her back. Exactly two arms, two hands and two legs. The screen-RIGHT hand holds ONE wooden recurve bow; the screen-LEFT hand is free. She carries no sword or other weapon. Preserve the bow size, the quiver, the costume and adult proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, bow, quiver, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the equipment. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour.",
+  "canvas": [
+    960,
+    640
+  ],
+  "scale": 0.47,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026101300,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": [
+        "cast_00"
+      ],
+      "guides": [],
+      "last": 0,
+      "action": "A calm, alert idle that loops. She breathes steadily, the shoulders rise and fall, her head turns slightly to watch the field, the free hand flexes at her side and the bow hand shifts its grip, then everything returns smoothly to the original stance. Both boots stay planted; the orange tunic tails stir gently. No walking, no drawing and no attack."
+    },
+    "move_h3_v1": {
+      "clip": "move",
+      "references": [
+        "move_00",
+        "move_04"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Walk in place through two complete reciprocal cycles. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The bow is carried low in the screen-right hand and the free arm swings naturally. Finish in the original gait phase."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": [
+        "cast_00",
+        "attack_02",
+        "attack_04"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE short punch toward screen right with the free screen-left hand. The knees flex and the elbow pulls the fist back as the torso winds, then she steps in and drives the fist straight out to screen right at full reach while the bow stays lowered in the other hand, then she retracts the fist and settles back into the original stance. One punch only; no sword and no second strike."
+    },
+    "ranged_h3_v1": {
+      "clip": "ranged",
+      "references": [
+        "cast_00",
+        "ranged_01",
+        "ranged_04"
+      ],
+      "guides": [
+        [
+          24,
+          1
+        ],
+        [
+          56,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Shoot ONE arrow toward screen right. Reach the free hand back over the shoulder and draw one arrow from the quiver, nock it, raise the bow level toward screen right and pull the string fully back to the cheek, hold the aim briefly, release so the arrow flies straight off toward screen right, then lower the bow and settle back into the original stance. One arrow only; the bow stays in the screen-right hand."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": [
+        "cast_00",
+        "hit_01"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "One brief impact recoil and complete recovery. The head and shoulders snap backward, the free arm flies up and the knees flex while she keeps hold of the bow, then she rebalances on both boots and returns to the same stance. Remain standing with the bow held. The impact is shown only by the body; the blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": [
+        "cast_00",
+        "defend_01",
+        "defend_03"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
+      "last": 2,
+      "action": "Duck into a low crouch and raise the free forearm in front of the face as a guard, the bow held close in front of the body, then hold the crouched guard on both planted boots. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": [
+        "cast_00",
+        "cast_04"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A rallying physical signal to allies. Raise the free fist high above the head, hold it there briefly while the bow stays lowered in the other hand, then lower the arm back to the original stance. A physical gesture only: no spell, glow or emitted effect."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": [
+        "cast_00",
+        "death_07"
+      ],
+      "guides": [
+        [
+          90,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "Collapse continuously from standing: she staggers back, sinks onto her knees, slumps forward and topples onto her side, finishing lying stretched out flat on the ground with her head at screen left and her boots at screen right, the bow lying on the ground beside her. No recovery, no floating equipment and no disappearing body."
+    },
+    "move_h3_v2": {
+      "clip": "move",
+      "references": [
+        "move_00",
+        "move_04"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Walk in place through two complete reciprocal cycles. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The bow stays UPRIGHT in the screen-right hand the whole time, held vertically at her side with one tip up and one tip down, swinging only slightly forward and back with the arm; it never tilts flat or turns horizontal. The free arm swings naturally. Finish in the original gait phase."
+    },
+    "ranged_h3_v2": {
+      "clip": "ranged",
+      "references": [
+        "cast_00",
+        "ranged_02",
+        "ranged_04"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ],
+        [
+          60,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Shoot ONE arrow toward screen right. She takes one arrow from the quiver and nocks it on the string with the bow held low in front of her, raises the bow level toward screen right and pulls the string back to the cheek, holds the aim briefly, then releases: the string snaps forward and the arrow is gone at once, never shown in flight. She lowers the bow and settles back into the original stance. The arrow is short, no longer than her arm. One arrow only; the bow stays in the screen-right hand."
+    },
+    "hit_h3_v2": {
+      "clip": "hit",
+      "references": [
+        "hit_00",
+        "cast_00"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "She starts rocked back in a flinch, head thrown back and knees bent, and recovers from it: she straightens up, brings the head forward, settles her weight on both boots and returns to the original upright stance, then stands still breathing quietly. She keeps hold of the bow throughout. Only her body moves; nothing else appears in the frame."
+    },
+    "death_h3_v2": {
+      "clip": "death",
+      "references": [
+        "cast_00",
+        "death_02",
+        "death_07"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
+      "last": 2,
+      "action": "Collapse slowly from standing. Her knees buckle and she sinks down onto both knees with her head bowed, and stays kneeling for a moment. Then she slumps forward slowly and lies down on her front, finishing motionless with her head at screen left and her boots at screen right, the bow lying on the ground beside her. Her face stays the same face throughout. The body never leaves the ground; no rolling over, no kicking legs, no recovery, no floating equipment and no disappearing body."
+    },
+    "move_h3_v3": {
+      "clip": "move",
+      "references": [
+        "move_00",
+        "move_02",
+        "move_04",
+        "move_06"
+      ],
+      "guides": [
+        [
+          16,
+          1
+        ],
+        [
+          31,
+          2
+        ],
+        [
+          47,
+          3
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          78,
+          1
+        ],
+        [
+          93,
+          2
+        ],
+        [
+          109,
+          3
+        ]
+      ],
+      "last": 0,
+      "action": "Walk in place through two complete reciprocal cycles at an even pace, matching each painted stride pose in turn. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. She carries the bow UPRIGHT at her side in the lowered screen-right hand, one tip above her shoulder and one tip near her knee, exactly as in every painted pose; the bow only rocks a little with her step and never tilts flat, never points forward and never turns horizontal. The free arm swings naturally. Finish in the original gait phase."
+    },
+    "death_h3_v3": {
+      "clip": "death",
+      "references": [
+        "cast_00",
+        "death_02",
+        "death_03",
+        "death_07"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ],
+        [
+          66,
+          2
+        ],
+        [
+          100,
+          3
+        ]
+      ],
+      "last": 3,
+      "action": "Collapse slowly and continuously from standing. Her knees buckle and she sinks down onto both knees with her head bowed, then leans forward and catches herself on her hands, then lowers herself down onto her front and lies still, finishing motionless with her head at screen left and her boots at screen right, the bow lying on the ground beside her. Every movement is slow and heavy; her face stays the same face throughout. The body never leaves the ground: no falling backward, no rolling over, no kicking or raised legs, no recovery, no floating equipment and no disappearing body."
+    }
+  }
+}

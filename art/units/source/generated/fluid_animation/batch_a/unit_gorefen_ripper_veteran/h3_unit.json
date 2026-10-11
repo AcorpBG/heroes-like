@@ -1,0 +1,60 @@
+{
+  "unit_id": "unit_gorefen_ripper_veteran",
+  "identity": "ONE original raptor beast, the Gorefen Redhook, facing screen right in elevated three-quarter side view. Keep the slender dark grey-black scaled body with a long narrow crocodile snout and gold eye, the crimson feather-quill mane running from the crown down the spine to the tip of the long curled tail, two powerful digitigrade hind legs, and TWO long forearms that hang low in a forward crouch, each ending in oversized curved crimson hook claws, with brass wrist cuffs and bone and tooth charms around the neck. Exactly two forearms, two hind legs and one tail. Preserve the red claws, quill mane, cuffs, charms and the slender long-snouted proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full snout, claws, feet and tail within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, weapons, magic, glow, blood, slash trails, particles, wings or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the claws or cuffs.",
+  "canvas": [960, 640],
+  "scale": 0.48,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026101950,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["idle_00", "idle_04"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "A coiled predator idle that loops. The chest breathes in and out, the shoulders lift, the forearms draw in toward the body and the hook claws flex and uncurl, the snout lifts slightly and the tail tip curls, then everything returns smoothly to the original crouch. Both hind feet stay planted. No walking and no attack."
+    },
+    "move_h3_v1": {
+      "clip": "move",
+      "references": ["move_00", "move_04"],
+      "guides": [[31, 1], [62, 0], [93, 1]],
+      "last": 0,
+      "action": "Run in place through two complete reciprocal cycles with a springy forward-leaning stride. The two hind legs alternate through forward contact, weight loading, passing and lift; the knees and ankles articulate and each clawed foot alternates taking weight and swinging. The body stays centred for engine-driven travel, the forearms swing loosely with the claws and the tail streams behind as counterweight. Finish in the original gait phase."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["idle_00", "attack_02", "attack_04"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE near-forearm slash toward screen right. The near elbow pulls back and the claw hand rises above the shoulder while the hind legs coil, then the beast lunges and sweeps the near claw forward and down to full reach at screen right at chest height, follows through below the chest, then draws the arm back and settles into the original crouch. One slash only; the far forearm stays low and the tail balances."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["idle_00", "hit_01"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "One brief impact recoil and complete recovery. The shoulders jerk back, the torso rears up with the neck drawn in and the forearms spread, then it regains its balance on both hind feet and returns to the same crouch. The impact is shown only by the body; the blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["idle_00", "defend_01", "defend_02"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Bend the knees and raise both forearms in front of the chest and head with the hook claws pointing outward, tuck the neck down, then hold the compact braced guard on both planted feet. No attack and no return to the relaxed crouch."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["idle_00", "cast_03"],
+      "guides": [[44, 1], [70, 1]],
+      "last": 0,
+      "action": "A predator's salute. The near forearm bends and the claw hand rests over the chest as the head bows in a deep nod and the tail curls, holds briefly, then the head rises, the hand lowers and the beast returns to the original crouch. The feet stay planted. A physical gesture only: no spell, glow or projectile."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["idle_00", "death_07"],
+      "guides": [[90, 1]],
+      "last": 1,
+      "action": "Collapse continuously from standing: the hind legs buckle, the beast sinks forward onto its chest, the snout drops to the ground and the tail goes limp, finishing lying flat and motionless on its belly with the snout at screen right and the tail stretched out at screen left, the claws lying on the ground. No recovery, no blood and no disappearing body."
+    }
+  }
+}

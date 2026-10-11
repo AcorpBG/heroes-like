@@ -1,0 +1,64 @@
+{
+  "unit_id": "unit_embercourt_beaconline_writguard_veteran",
+  "identity": "ONE original stocky armoured guard, the Lanternwall Warden, facing screen right in elevated three-quarter view. Keep the flat-topped bronze greathelm with a narrow dark slit visor and vertical vents, heavy weathered bronze shoulder, arm and leg plates over black chainmail, the long burgundy and black tabard with a cream trident emblem and gold trim, brown belts and dark armoured boots. No face is visible. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE long dark spear with a silver leaf blade and a narrow ivory and gold pennon hanging beneath the blade; the screen-RIGHT arm carries ONE tall rectangular black and steel tower shield with a bronze riveted border, a shallow pointed top and ONE large caged lantern glowing orange mounted on its front. Preserve the spear length, the pennon, the shield, the lantern and the stocky adult proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full helmet, spear, pennon, shield, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. No scenery, floor shadow, camera motion, zoom, additional weapons, magic effects, particles or extra limbs; the lantern keeps only its small steady glow inside the cage. Articulate joints naturally with physical planted-foot support; do not morph the equipment. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour.",
+  "canvas": [960, 640],
+  "scale": 0.51,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026101600,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["idle_0", "idle_4"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "A steady guard idle that loops. The armoured chest rises and falls, the helmet turns slightly, the spear hand shifts its grip on the upright spear so the pennon sways, and the shield arm settles the lantern shield, then everything returns smoothly to the original stance. Both boots stay planted with a slight knee flex. No walking and no attack."
+    },
+    "move_h3_v1": {
+      "clip": "move",
+      "references": ["move_40", "move_44"],
+      "guides": [[31, 1],
+        [62, 0],
+        [93, 1]],
+      "last": 0,
+      "action": "March in place through two complete reciprocal cycles with heavy armoured steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The spear is carried upright with its pennon hanging and the lantern shield stays in front of the body. Finish in the original gait phase."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["idle_0", "attack_10", "attack_12"],
+      "guides": [[30, 1],
+        [54, 2]],
+      "last": 0,
+      "action": "Make ONE powerful spear thrust toward screen right. Swing the spear down from upright until it is level at the hip with the blade pointing at screen right and crouch behind the shield, then lunge forward on the front leg and drive the spear straight out to full reach past the shield, the pennon swinging beneath it, then draw it back and raise it upright into the original stance. One thrust only; the shield stays on the screen-right arm. No throw."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["idle_0", "hit_17"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "One brief impact recoil and complete recovery. The helmet and shoulders yield backward, both knees flex and the shield arm gives while the hands keep hold of the spear and shield, then he rebalances on both boots and returns to the same stance. Remain standing with all equipment held. The impact is shown only by the body; the blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["idle_0", "defend_21", "defend_23"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Crouch low behind the tall lantern shield, bracing it in front of the body with both knees bent while the spear stays upright behind it, then hold the braced crouch firmly on both planted boots. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["idle_0", "cast_27"],
+      "guides": [[44, 1],
+        [70, 1]],
+      "last": 0,
+      "action": "A beacon signal to allies. Lift the tower shield high and forward so its mounted lantern is raised up like a signal light, hold it there briefly while the spear stays upright, then lower the shield back to the original stance. A physical gesture only: no spell effect, beam or emitted light beyond the lantern's steady glow."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["idle_0", "death_39"],
+      "guides": [[90, 1]],
+      "last": 1,
+      "action": "Collapse continuously from standing: the knees buckle onto the ground and the body slumps behind the shield, then he falls forward onto his front, finishing lying motionless face down with the helmet at screen right and the boots at screen left, the lantern shield lying beside his head and the spear with its pennon lying on the ground. No recovery, no floating equipment and no disappearing body."
+    }
+  }
+}

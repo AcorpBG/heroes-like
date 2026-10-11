@@ -1,0 +1,67 @@
+{
+  "unit_id": "unit_sunvault_daybreak_colossus_veteran",
+  "identity": "ONE original massive stocky bipedal construct, the Daybreak Colossus veteran, facing screen right in elevated three-quarter view. Keep the ivory-white ceramic and antique-gold armour with dark bronze mechanical joints, the small dark face under a pointed angular gold helmet, the broad winglike white and gold shoulder pauldrons with hanging deep navy-blue panels, the heavy white and gold forearm shells with articulated bronze fingers, the blue crystal inserts on wrists, thighs and shins, the broad segmented armoured feet, the ONE round blue chest aperture with thin gold radial iris spokes, the hanging navy and gold hip plate, and ONE gold mechanical halo ring above and behind the head carrying several oval blue lens medallions. Exactly two arms and two legs, no weapons or shields. Preserve the halo, the chest aperture and the massive proportions.",
+  "plate": "Locked orthographic camera, fixed scale and centred body. Keep the full halo, both hands and both feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, beams, projectiles, sparks, motion trails, particles, weapons or extra limbs; the crystals keep only their steady glow, and only the chest aperture may brighten where the action says so. The halo stays complete and attached behind the head; the armour shells stay rigid and never morph.",
+  "canvas": [960, 640],
+  "scale": 0.44,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026102950,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["idle_0", "idle_4"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "A heavy, watchful idle that loops. The body rises and settles slowly as if breathing, the shoulders roll, one hand opens and flexes its bronze fingers and closes again, the helmeted head turns slightly and the halo tilts with it, then everything returns smoothly to the original stance. Both feet stay planted. No walking and no attack."
+    },
+    "move_h3_v1": {
+      "clip": "move",
+      "references": ["move_48", "move_52"],
+      "guides": [[31, 1], [62, 0], [93, 1]],
+      "last": 0,
+      "action": "Walk in place through two complete reciprocal cycles with heavy, deliberate strides. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each broad foot alternates taking weight and swinging. The body stays centred for engine-driven travel, the arms swing in opposition and the halo stays attached. Finish in the original gait phase."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["idle_0", "attack_10", "attack_12"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE heavy punch toward screen right. The colossus draws the near fist back high beside the head as the knees bend and the torso twists, then steps into a wide lunge and drives the fist across the body to full reach at screen right, pulls it back and settles into the original stance. One punch only; no flash or effect at contact."
+    },
+    "ranged_h3_v1": {
+      "clip": "ranged",
+      "references": ["idle_0", "ranged_18", "ranged_20"],
+      "guides": [[30, 1], [56, 2]],
+      "last": 0,
+      "action": "Release ONE burst of light from the chest. The colossus braces its legs and draws both hands in beside the chest aperture, then throws the arms wide open and pushes the chest forward toward screen right as the round chest aperture flares bright for a moment, holds, then the glow fades back to its steady blue, the arms lower and it settles into the original stance. The light stays inside the aperture: no beam, ray or projectile leaves the body."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["idle_0", "hit_25"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "One heavy impact recoil and complete recovery. The torso rocks back and twists away, the arms swing out and the knees flex, the halo tilting with the body, then it rebalances on both feet and returns to the same stance. Nothing is seen hitting it: no projectile, spark or flash. The blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["idle_0", "defend_29", "defend_30"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Cross both heavy forearm shells in front of the chest aperture, bend the knees wide and crouch low behind the crossed arms, then hold the braced guard on both planted feet. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["idle_0", "cast_36"],
+      "guides": [[44, 1], [70, 1]],
+      "last": 0,
+      "action": "An invocation. The colossus raises both open hands high beside the halo, palms forward, as the chest aperture glows brighter blue, holds the pose briefly, then lowers the arms as the glow settles back and returns to the original stance. Only the chest aperture brightens; no beam, aura or spell effect."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["idle_0", "death_42", "death_47"],
+      "guides": [[48, 1], [96, 2]],
+      "last": 2,
+      "action": "Collapse slowly and heavily. The chest aperture dims, the knees buckle and the colossus sinks down onto its knees and hands, stays there a moment, then topples forward onto its side and lies down, finishing motionless flat on the ground with the halo resting by the head at screen left and the feet at screen right, the aperture dark. The same body throughout: no explosion, no shattering and no disappearing."
+    }
+  }
+}

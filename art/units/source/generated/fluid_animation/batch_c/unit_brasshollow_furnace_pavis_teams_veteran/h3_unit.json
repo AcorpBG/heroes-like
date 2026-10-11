@@ -1,0 +1,60 @@
+{
+  "unit_id": "unit_brasshollow_furnace_pavis_teams_veteran",
+  "identity": "A team of EXACTLY TWO original short stocky armoured soldiers, the Kilnwall Warden veterans, facing screen right in slightly elevated three-quarter view, flanking ONE large central pointed-arch iron and brass pavise shield with THREE glowing orange furnace slots, a round flame badge and two triangular braces at its feet. Both wear cream padded sleeves, soot-dark armour and leather aprons, dark boots and closed furnace-hood helmets with orange slit visors. The screen-LEFT soldier grips the left rim of the pavise with both gauntlets; the screen-RIGHT soldier grips the right rim with the inside hand and holds ONE short black iron poker with a square hook in the outside hand. Exactly two people, each with two arms and two legs. Preserve the pavise, the poker and the stocky proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred group. Keep both soldiers, the whole pavise, the poker and all feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, flames, smoke, sparks, motion trails, particles, a third person or extra limbs; the furnace slots and visors keep only their steady glow. Articulate joints naturally with physical planted-foot support; the pavise stays rigid and never morphs.",
+  "canvas": [960, 640],
+  "scale": 0.47,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026104150,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["idle_0", "idle_4"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "A watchful team idle that loops. Both soldiers breathe and shift their weight behind the pavise, the left one resettles the grip on the rim, the right one lifts the poker a little and lowers it, the helmets turn slightly to scan, then everything returns smoothly to the original stance. All boots stay planted. No walking and no attack."
+    },
+    "move_h3_v1": {
+      "clip": "move",
+      "references": ["move_40", "move_44"],
+      "guides": [[31, 1], [62, 0], [93, 1]],
+      "last": 0,
+      "action": "March in place together through two complete reciprocal cycles, carrying the pavise between them with short heavy steps. Each soldier alternates legs through contact, weight loading, passing and lift; the pavise stays upright and level between them and the group stays centred for engine-driven travel. Finish in the original gait phase."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["idle_0", "attack_10", "attack_12"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE synchronized shove and jab toward screen right. Both soldiers bend their knees and draw the pavise back a little while the right one raises the poker, then they lunge forward together, shoving the pavise toward screen right as the right soldier jabs the poker out to full reach at screen right, then both draw back and settle into the original stance. One shove only."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["idle_0", "hit_17"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "The team reels from an unseen blow and recovers completely. The pavise rocks back and both soldiers stagger and hunch behind it with their knees flexing, keeping their grips, then they plant their boots, push the pavise upright and return to the same stance. Nothing is seen hitting them: no projectile, spark or flash. The blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["idle_0", "defend_21", "defend_22"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Both soldiers crouch low and brace their shoulders against the pavise, setting it firmly in front of them with the poker drawn in, then hold the braced wall on all planted boots. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["idle_0", "cast_28"],
+      "guides": [[44, 1], [70, 1]],
+      "last": 0,
+      "action": "A rallying signal. The right soldier raises the poker high overhead as a signal while the left soldier holds the pavise steady, holds the pose briefly, then lowers the poker back to the original stance. A physical gesture only: no spell, flame or glow change."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["idle_0", "death_35", "death_39"],
+      "guides": [[48, 1], [96, 2]],
+      "last": 2,
+      "action": "Collapse slowly. Both soldiers slump and their knees buckle as the pavise tips forward, they sink down with it, stay a moment, then the pavise falls flat on the ground in the middle and both soldiers lie motionless on either side of it, the poker dropped beside them and the furnace slots dimmed. Exactly two bodies throughout; no recovery and no disappearing bodies."
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "unit_id": "unit_veilmourn_mirrorkeel_reavers_veteran",
+  "identity": "ONE original tall armoured reaver, the Mirrorkeel Reaver veteran, facing screen right in elevated three-quarter view. Keep the tall pointed dark hood and helm, the small dark wooden mast-and-yard frame rising behind the shoulders with hanging brass lanterns, the dark plate armour with bronze fittings, the long tattered pale blue-grey cloak streaming behind, and the dark armoured boots. Exactly two arms, two hands and two legs. Both hands hold ONE long polearm glaive with a dark shaft, a broad curved cleaver blade at the screen-right end and small brass lanterns hanging under the blade. Preserve the glaive, the back frame with lanterns, the cloak and the tall proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole glaive including the blade, the back frame, the cloak, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, sparks, slash trails, mist clouds, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the glaive stays straight and rigid and never morphs.",
+  "canvas": [960, 640],
+  "scale": 0.56,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026104850,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["idle_00", "idle_04"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "A grim, watchful idle that loops. The reaver breathes, the shoulders rise and fall, the glaive dips slightly and lifts so the little lanterns swing, the hooded head turns to scan and the cloak stirs, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no attack."
+    },
+    "move_h3_v1": {
+      "clip": "move",
+      "references": ["move_0", "move_4"],
+      "guides": [[31, 1], [62, 0], [93, 1]],
+      "last": 0,
+      "action": "Stride in place through two complete reciprocal cycles with long heavy steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel, the glaive carried level toward screen right with the lanterns swinging and the cloak streaming back. Finish in the original gait phase."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["idle_00", "attack_01", "attack_04"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE glaive thrust toward screen right. The reaver draws the glaive back low as the knees bend and the torso coils, then steps into a long lunge and drives the blade straight out to full reach at screen right, draws back and settles into the original stance. One thrust only; no slash trails or sparks."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["idle_00", "hit_01"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "The reaver reels from an unseen blow and recovers completely. The hooded head and shoulders hunch and twist back and the knees flex deep while both hands keep hold of the glaive, then the reaver straightens, rebalances on both boots and returns to the same stance. Nothing is seen hitting the reaver: no projectile, spark or flash. The blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["idle_00", "defend_01", "defend_02"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Crouch low and hold the glaive shaft horizontally in front of the body with both hands as a barrier, the blade toward screen right, then hold the braced guard on both planted boots. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["idle_00", "cast_03"],
+      "guides": [[44, 1], [70, 1]],
+      "last": 0,
+      "action": "A rallying signal. The reaver raises the glaive upright with the blade pointing straight up and holds it high as a standard, the lanterns swinging, holds the pose briefly, then lowers it back to the original stance. A physical gesture only: no spell, glow or aura."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["idle_00", "death_02", "death_07"],
+      "guides": [[48, 1], [96, 2]],
+      "last": 2,
+      "action": "Collapse slowly and heavily from standing. The reaver doubles over and sinks onto both knees, leaning on the glaive, stays kneeling a moment, then topples forward and lies flat on the ground, finishing motionless with the hood at screen right, the cloak spread over the body and the glaive lying on the ground beside it. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    }
+  }
+}

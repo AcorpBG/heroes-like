@@ -1,0 +1,60 @@
+{
+  "unit_id": "unit_veilmourn_maskglass_corsairs_veteran",
+  "identity": "ONE original lean adult duellist, the Maskglass Corsair veteran, facing screen right in elevated three-quarter view. Keep the tall black horned crescent helmet with a pale cracked mirror-glass face mask, the long tattered black cloak lined with dark crimson, the black scale leather armour with small brass studs, the dark gauntlets and boots. Exactly two arms, two hands and two legs. Each hand holds ONE curved pale glassy crescent dagger, two daggers in all. Preserve the mask helmet, both crescent daggers, the cloak and the lean proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full helmet, both daggers, the whole cloak, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, sparks, slash trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the daggers stay rigid and never morph.",
+  "canvas": [960, 640],
+  "scale": 0.44,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026104800,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["idle_00", "idle_04"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "A poised, predatory idle that loops. The duellist breathes, the shoulders rise and fall, both daggers turn a little in the low hands, the masked head tilts slightly to watch and the cloak stirs, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no attack."
+    },
+    "move_h3_v1": {
+      "clip": "move",
+      "references": ["move_0", "move_4"],
+      "guides": [[31, 1], [62, 0], [93, 1]],
+      "last": 0,
+      "action": "Stalk in place through two complete reciprocal cycles with light, long steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel, both daggers held low and ready and the cloak trailing behind. Finish in the original gait phase."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["idle_00", "attack_02", "attack_04"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE double dagger strike toward screen right. The duellist raises one dagger high beside the helmet as the knees bend, then steps into a long lunge and drives both daggers forward together to full reach at screen right, the cloak flaring, draws back and settles into the original stance. One strike only; no slash trails or sparks."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["idle_00", "hit_01"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "The duellist reels from an unseen blow and recovers completely. The masked head and shoulders twist back and the knees flex deep while both hands keep hold of the daggers, then the duellist straightens, rebalances on both boots and returns to the same stance. Nothing is seen hitting the duellist: no projectile, spark or flash. The blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["idle_00", "defend_02", "defend_03"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Cross both crescent daggers in front of the mask as a guard, bend the knees into a low stance with the shoulder turned in, then hold the crossed guard on both planted boots. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["idle_00", "cast_04"],
+      "guides": [[44, 1], [70, 1]],
+      "last": 0,
+      "action": "A taunting flourish. The duellist draws both daggers up and crosses them in front of the chest, holds the pose briefly, then sweeps them apart and down back into the original stance. A physical gesture only: no spell, glow or aura."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["idle_00", "death_02", "death_07"],
+      "guides": [[48, 1], [96, 2]],
+      "last": 2,
+      "action": "Collapse slowly from standing. The duellist doubles over and sinks onto one knee and then both, stays kneeling a moment, then slumps forward and lies flat on the ground, finishing motionless with the helmet at screen right, the cloak spread over the body and both daggers lying on the ground. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    }
+  }
+}

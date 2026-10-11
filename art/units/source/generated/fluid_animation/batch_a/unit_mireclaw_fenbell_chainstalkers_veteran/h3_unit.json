@@ -1,0 +1,60 @@
+{
+  "unit_id": "unit_mireclaw_fenbell_chainstalkers_veteran",
+  "identity": "ONE original slender pale marsh stalker, the Fenbell Tollreaper, facing screen right in elevated three-quarter view. Keep the dark moss-green woven pointed hood with reed tufts shading the face, bare upper arms, the fitted dark leather torso, bracers and greaves, round bronze kneecaps, the ragged long green and ochre reed skirt and mantle, the leather belt pouch and tiny brass bells. Exactly two arms, two hands and two legs. Each hand grips ONE short-handled ornate bronze crescent sickle, held low and spread wide to either side; ONE brass chain joins the two sickle handles and hangs in a loop below the hands with small brass bells on it. Preserve the two matching sickles, the chain and bells, the hood and the slim adult proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full hood, both sickles, the chain, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional blades, magic, glow, motion trails, particles or extra limbs. The chain stays attached to both handles and hangs below the hands with gravity. Articulate joints naturally with physical planted-foot support; do not morph the sickles.",
+  "canvas": [960, 640],
+  "scale": 0.48,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026102200,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["idle_0", "idle_4"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "A coiled, patient idle that loops. The stalker breathes, the shoulders rise and fall, one sickle lifts toward the waist and then the other so the chain loop swings and the bells jingle, the hooded head turns slightly, then everything returns smoothly to the original low spread-arm guard. Both boots stay planted. No walking and no attack."
+    },
+    "move_h3_v1": {
+      "clip": "move",
+      "references": ["move_40", "move_44"],
+      "guides": [[31, 1], [62, 0], [93, 1]],
+      "last": 0,
+      "action": "Stalk in place through two complete reciprocal cycles with low creeping steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. Both sickles are held low and wide with the chain loop swinging between them; the reed skirt swings with the legs. Finish in the original gait phase."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["idle_0", "attack_10", "attack_12"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE reaping slash toward screen right. The stalker raises the near sickle high above the shoulder as the knees load, then lunges and sweeps it forward and down to full reach at screen right while the other sickle draws back close to the torso, follows through low at knee height with the chain sagging between the handles, then draws back into the original low spread-arm guard. One slash only; both sickles stay in hand."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["idle_0", "hit_17"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "One brief impact recoil and complete recovery. The hooded head snaps back and the stalker hunches into a crouch as the knees flex, both hands keeping hold of the sickles, then rebalances on both boots and returns to the same guard. The impact is shown only by the body; the blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["idle_0", "defend_21", "defend_23"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Bend both elbows and bring the two sickles upright in front of the torso, shoulder width apart with the crescent edges turned outward and the chain hanging below, then sink into a low brace behind the blades with the hood lowered and hold the guard on both planted boots. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["idle_0", "cast_28"],
+      "guides": [[44, 1], [70, 1]],
+      "last": 0,
+      "action": "A tolling signal. The stalker raises both arms high in a broad V with the two sickles above the shoulders and the chain drooping in a loop below the hands so the bells swing, tilts the hooded face upward, holds the pose briefly, then lowers both arms back into the original low guard. A physical gesture only: no spell, glow or aura."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["idle_0", "death_39"],
+      "guides": [[90, 1]],
+      "last": 1,
+      "action": "Collapse continuously from standing: the stalker doubles over, sinks onto the knees, falls forward onto the hands and slumps flat, finishing lying motionless face down with the hood at screen right and the boots at screen left, both sickles and the chain lying on the ground in front. No recovery, no floating equipment and no disappearing body."
+    }
+  }
+}

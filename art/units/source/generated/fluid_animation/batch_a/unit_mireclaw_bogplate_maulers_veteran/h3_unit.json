@@ -1,0 +1,60 @@
+{
+  "unit_id": "unit_mireclaw_bogplate_maulers_veteran",
+  "identity": "ONE original tall muscular warrior, the Bogplate Gatebreaker, facing screen right in elevated three-quarter view. Keep the man with long dark hair and a dark beard, bare muscular upper arms, a weathered black iron breastplate, a coarse ochre reed and thatch shoulder mantle, a ragged reed skirt, dark trousers and leather-wrapped bracers and boots. Exactly two arms, two hands and two legs. BOTH hands grip ONE enormous long wooden two-handed maul with iron bands and iron spikes on its heavy head: the near hand at the handle butt toward screen left, the far hand further up the shaft, and the heavy spiked head toward screen right. Preserve the maul's full length and head size, the mantle, the breastplate and the massive adult proportions.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, the whole maul, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, sparks, impact effects, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the maul.",
+  "canvas": [960, 640],
+  "scale": 0.5,
+  "key_rgb": [0, 0, 255],
+  "seed": 2026102050,
+  "takes": {
+    "idle_h3_v1": {
+      "clip": "idle",
+      "references": ["idle_0", "idle_4"],
+      "guides": [[62, 1]],
+      "last": 0,
+      "action": "A heavy, ready idle that loops. He breathes deeply, the shoulders rise and fall, he shifts his grip and lifts the maul head slightly off its low guard, his head turns a little, then everything returns smoothly to the original stance. Both boots stay planted; the reed mantle and skirt stir gently. No walking and no attack."
+    },
+    "move_h3_v1": {
+      "clip": "move",
+      "references": ["move_40", "move_44"],
+      "guides": [[31, 1], [62, 0], [93, 1]],
+      "last": 0,
+      "action": "Walk in place through two complete reciprocal cycles with heavy deliberate steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. Both hands keep the maul held low across the body with its head toward screen right; the reed skirt swings with the legs. Finish in the original gait phase."
+    },
+    "attack_h3_v1": {
+      "clip": "attack",
+      "references": ["idle_0", "attack_10", "attack_12"],
+      "guides": [[30, 1], [54, 2]],
+      "last": 0,
+      "action": "Make ONE overhead maul smash toward screen right. He crouches and draws the shaft back, heaves the maul up above his head with both hands, then swings it down hard so the spiked head crashes low in front at screen right with the front knee bent and the torso folded forward, then pulls the shaft back toward the hips and settles into the original low guard. One strike only; both hands stay on the shaft."
+    },
+    "hit_h3_v1": {
+      "clip": "hit",
+      "references": ["idle_0", "hit_17"],
+      "guides": [[40, 1]],
+      "last": 0,
+      "action": "One brief impact recoil and complete recovery. The head and shoulders jerk back and he hunches over the maul as the knees flex, both hands drawing the shaft close, then he straightens, rebalances on both boots and returns to the same stance. The impact is shown only by the body; the blue background never flashes or changes colour."
+    },
+    "defend_h3_v1": {
+      "clip": "defend",
+      "references": ["idle_0", "defend_21", "defend_22"],
+      "guides": [[34, 1]],
+      "last": 2,
+      "action": "Raise the maul's shaft horizontally across the chest as a barrier with both elbows bent, then sink into a deep braced stance leaning into the held shaft with the face tucked, and hold the guard on both planted boots. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v1": {
+      "clip": "cast",
+      "references": ["idle_0", "cast_28"],
+      "guides": [[44, 1], [70, 1]],
+      "last": 0,
+      "action": "A battle cry. He lifts the maul diagonally across his chest with the spiked head raised high toward screen right, throws his chin up and roars with the mouth open, holds the cry briefly, then lowers the maul back to the original low guard. Both boots stay planted. A physical gesture only: no spell, glow or aura."
+    },
+    "death_h3_v1": {
+      "clip": "death",
+      "references": ["idle_0", "death_39"],
+      "guides": [[90, 1]],
+      "last": 1,
+      "action": "Collapse continuously from standing: he sags, sinks onto his knees leaning on the maul, then topples forward onto the ground, finishing lying motionless on his front with the head at screen left and the boots at screen right, the maul lying on the ground in front of him. No recovery, no floating equipment and no disappearing body."
+    }
+  }
+}
