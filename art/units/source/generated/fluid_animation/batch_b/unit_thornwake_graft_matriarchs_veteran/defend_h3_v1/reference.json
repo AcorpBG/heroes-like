@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_thornwake_graft_matriarchs_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/idle_v1.png",
+      "source_sha256": "601ce49544647fd5c4e722ebb3d7fb75c445da6df76d22e661466904dc4847e6",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "2d344941c6c64a5d62ab4c9916d4cd8b0eab920aa7d0102fc2a046276fc1c350"
+    },
+    {
+      "frame": "defend_29",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/reactions_v1.png",
+      "source_sha256": "c03ec40cdf4a6115df24fb83d26ab3be29a1d2c156d08b43b78a6cb04e43fad9",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "6ca4042df0f5184a00277390b49348595c473acd265586541a8db721a2da9843"
+    },
+    {
+      "frame": "defend_30",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/reactions_v1.png",
+      "source_sha256": "c03ec40cdf4a6115df24fb83d26ab3be29a1d2c156d08b43b78a6cb04e43fad9",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "57b7567d205b13ea27fdc06a8f87ecc78d7b6b6b5e356c704ce9c2a8a87a63e4"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    492,
+    547
+  ],
+  "output_scale": 0.5,
+  "free_pixels_left_top_right_bottom": [
+    186,
+    41,
+    185,
+    41
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

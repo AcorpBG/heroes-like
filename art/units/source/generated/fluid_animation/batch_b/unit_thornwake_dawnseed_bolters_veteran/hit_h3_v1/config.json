@@ -1,0 +1,46 @@
+{
+  "unit_id": "unit_thornwake_dawnseed_bolters_veteran",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    354,
+    584
+  ],
+  "scale": 0.49,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026103554,
+  "references": [
+    "hit_v1_01",
+    "idle_v1_00"
+  ],
+  "guides": [
+    [
+      40,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "ONE original hooded forest marksman, the Dawnburst Arbalist veteran, facing screen right in elevated three-quarter view. Keep the deep green hood over a dark wooden mask with green eyes, the long layered leafy cloak dotted with small white flowers, the twisted branch on the shoulder, the bark and vine legs, the pale birch-bark forearm bracers and brown boots. Exactly two arms, two hands and two legs. Both hands hold ONE long branch crossbow with gnarled wooden limbs, THREE glowing amber seed pods along the stock and a pointed golden bolt tip, held low and angled toward screen right. Preserve the crossbow, the hood, the leaf cloak and the adult proportions. The arbalist starts rocked back in a flinch and recovers from it. The hooded head and shoulders hunch and twist away and the knees flex while both hands keep hold of the crossbow, then the arbalist straightens, rebalances on both boots and returns to the same stance. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full crossbow, the hood, the cloak, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, bolts in flight, muzzle flash, falling leaves, magic, motion trails, particles or extra limbs; the amber pods keep only their steady glow. Articulate joints naturally with physical planted-foot support; do not morph the crossbow.",
+  "protected_foreground_chroma": 7,
+  "edge_threshold": 7,
+  "palette_measurement": {
+    "bluest_opaque": 5.0,
+    "blue_minus_green_p999": 1.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

@@ -1,0 +1,54 @@
+{
+  "unit_id": "unit_thornwake_graft_matriarchs_veteran",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    492,
+    547
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026103601,
+  "references": [
+    "move_48",
+    "move_52"
+  ],
+  "guides": [
+    [
+      31,
+      1
+    ],
+    [
+      62,
+      0
+    ],
+    [
+      93,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original tall feminine living tree, the Orchardheart Matriarch veteran, facing screen right in slightly elevated three-quarter view. Keep the pale ivory carved wooden face with a pointed nose and dark eyes, the crown of branching twigs, the broad arched canopy of olive leaves and small white blossoms growing from the back and shoulders, the hanging pear-shaped golden-green seed lanterns and trailing pale moss under the canopy, the glowing amber heartwood gem in the chest, the gnarled grey-brown bark body with moss and white flowers, and the thick root legs spreading at the base. No clothing. EXACTLY FOUR wooden arms: the upper pair are free branch hands; the lower pair hold ONE curved living-branch bow across the waist with a bright green bowstring and one glowing seed pod at its centre. Preserve the four arms, the bow, the canopy, the heart gem and the tall proportions. Stride in place on the two thick root legs through two complete reciprocal cycles with slow, heavy steps. Each root leg lifts, swings forward with its root toes curling and plants again while the other bears the weight. The body stays centred for engine-driven travel, the canopy swaying and the lanterns swinging with each step; the bow stays held across the waist. Finish in the original gait phase. Locked orthographic camera, fixed scale and centred body. Keep the whole canopy, every hanging lantern, the bow and the root feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, falling petals or leaves, arrows in flight, beams, magic, motion trails, particles or extra arms; the lanterns and heart gem keep only their steady glow. Articulate the branch joints naturally; the canopy sways but never morphs.",
+  "protected_foreground_chroma": 14,
+  "edge_threshold": 8,
+  "palette_measurement": {
+    "bluest_opaque": 12.0,
+    "blue_minus_green_p999": 2.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

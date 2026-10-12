@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_thornwake_dawnseed_bolters_veteran",
+  "guides": [
+    {
+      "frame": "move_0",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/move_half_a_v2.png",
+      "source_sha256": "d1fc1bc3d2a90a9bffd9abc4790b6f9160fc22bfb683bf4f614495ad470735ea",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "b0f2d3f770295a084138f094d8fbb409220565e539aa2ddaba5159178c16fdaa"
+    },
+    {
+      "frame": "move_4",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/move_contacts_v4.png",
+      "source_sha256": "c761401c2e7649ec8ba857b9779c2a3ffd5495a5a36ff55186a1f170cc007e34",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "7ccd067f4d773fc9d57a65e53489732303cca70c6921252ce1c5c642c2feb36b"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    354,
+    584
+  ],
+  "output_scale": 0.49,
+  "free_pixels_left_top_right_bottom": [
+    84,
+    52,
+    84,
+    53
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

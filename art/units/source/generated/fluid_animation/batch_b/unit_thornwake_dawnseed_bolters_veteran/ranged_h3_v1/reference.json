@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_thornwake_dawnseed_bolters_veteran",
+  "guides": [
+    {
+      "frame": "idle_v1_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/idle_v1_frame_00.png",
+      "source_sha256": "932f8675178129e5b9265a4efe30610de8810fda67c5152b8a7661a7b0a7b706",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "15073c698527acdaf3327f873f8220104807b50f361373b5fa3ff5ffb6518af6"
+    },
+    {
+      "frame": "ranged_v1_03",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/ranged_v1_frame_03.png",
+      "source_sha256": "aac2325f7c0c602b7382cce7b4a977d1435dd1f2ad24b2bb1e9ae2d68b43fd83",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "959272444a1c400e9f6579d014098bac3b5eefd490873fe862daa4074377fc69"
+    },
+    {
+      "frame": "ranged_v1_05",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/ranged_v1_frame_05.png",
+      "source_sha256": "4c77151e656668d684c2e7191888062b4e2015018bf227423a7930a320c3237a",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "e5fc0868e5d161f6037d9bc8b09dd6dd99e6b265c6e18821b09aa5bb2d49512b"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    354,
+    584
+  ],
+  "output_scale": 0.49,
+  "free_pixels_left_top_right_bottom": [
+    84,
+    52,
+    84,
+    53
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

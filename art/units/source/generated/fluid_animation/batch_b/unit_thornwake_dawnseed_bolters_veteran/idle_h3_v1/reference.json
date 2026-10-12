@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_thornwake_dawnseed_bolters_veteran",
+  "guides": [
+    {
+      "frame": "idle_v1_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/idle_v1_frame_00.png",
+      "source_sha256": "932f8675178129e5b9265a4efe30610de8810fda67c5152b8a7661a7b0a7b706",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "15073c698527acdaf3327f873f8220104807b50f361373b5fa3ff5ffb6518af6"
+    },
+    {
+      "frame": "idle_v1_06",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/idle_v1_frame_06.png",
+      "source_sha256": "e479116818ed9770ef9958b5711699897eac98319f4fb28b25e9374faa6d6600",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "b38cc10ed5c983c5fb3d06a5bb2fcdfb00c6c78df6f5f04ed0384cbc53c032a0"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    354,
+    584
+  ],
+  "output_scale": 0.49,
+  "free_pixels_left_top_right_bottom": [
+    84,
+    52,
+    84,
+    53
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

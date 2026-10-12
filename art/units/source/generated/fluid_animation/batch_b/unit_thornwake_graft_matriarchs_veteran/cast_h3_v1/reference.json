@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_thornwake_graft_matriarchs_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/idle_v1.png",
+      "source_sha256": "601ce49544647fd5c4e722ebb3d7fb75c445da6df76d22e661466904dc4847e6",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "2d344941c6c64a5d62ab4c9916d4cd8b0eab920aa7d0102fc2a046276fc1c350"
+    },
+    {
+      "frame": "cast_36",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/cast_v1.png",
+      "source_sha256": "2a08d1c6ea04168661bd8200d6664c9c7eb14be1f0285e6a317080752adfc20f",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "0b24ca330ac5b72723140093c39d79658dd2f20470390270650a60cd9339419e"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    492,
+    547
+  ],
+  "output_scale": 0.5,
+  "free_pixels_left_top_right_bottom": [
+    186,
+    41,
+    185,
+    41
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -169,6 +169,53 @@
       ],
       "last": 2,
       "action": "Collapse slowly from standing. The arbalist doubles over and sinks onto the knees with the crossbow dropping, stays kneeling a moment, then slumps forward and lies down flat, finishing motionless with the hooded head at screen right and the boots at screen left, the leaf cloak spread over the body and the crossbow on the ground beside it. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    },
+    "idle_h3_v2": {
+      "clip": "idle",
+      "references": [
+        "idle_v1_00"
+      ],
+      "guides": [],
+      "last": 0,
+      "action": "A watchful marksman idle that loops. The arbalist breathes, the shoulders rise and fall, the crossbow is lifted a little and sighted briefly toward screen right then lowered, the hooded head turns slightly and the leaf cloak stirs, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no shooting. Only the body moves; nothing else appears in the frame."
+    },
+    "move_h3_v2": {
+      "clip": "move",
+      "references": [
+        "move_0",
+        "move_4"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Walk in place through two complete reciprocal cycles with quiet, steady steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The crossbow is carried level in both hands; the leaf cloak swings with the legs. Finish in the original gait phase."
+    },
+    "hit_h3_v2": {
+      "clip": "hit",
+      "references": [
+        "hit_v1_01",
+        "idle_v1_00"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "The arbalist starts rocked back in a flinch and recovers from it. The hooded head and shoulders hunch and twist away and the knees flex while both hands keep hold of the crossbow, then the arbalist straightens, rebalances on both boots and returns to the same stance. Only the body moves; nothing else appears in the frame."
     }
   }
 }
