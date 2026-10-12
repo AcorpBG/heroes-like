@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_sunvault_resonant_choristers_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_resonant_choristers_veteran/idle_v1.png",
+      "source_sha256": "6369812bae6704d261c8265b10b8cb3f77e7210b17cfec9af9841147e0721187",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "598f7cb840655b6deb5d097c1172436429d2f9631abf777fc8bf9b348cc11b91"
+    },
+    {
+      "frame": "idle_4",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_resonant_choristers_veteran/idle_v1.png",
+      "source_sha256": "6369812bae6704d261c8265b10b8cb3f77e7210b17cfec9af9841147e0721187",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "66e1402ea432448ede2b9082430d004d8bad1ba1b921f66605d2c4f0e5781b24"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    418,
+    594
+  ],
+  "output_scale": 0.47,
+  "free_pixels_left_top_right_bottom": [
+    135,
+    46,
+    136,
+    46
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

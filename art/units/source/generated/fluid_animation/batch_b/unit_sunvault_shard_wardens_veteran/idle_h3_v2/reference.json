@@ -1,0 +1,28 @@
+{
+  "unit_id": "unit_sunvault_shard_wardens_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/idle_v1.png",
+      "source_sha256": "089cbe852fb39937bcd7c6dc8d3d15901c31b7a296b2faab9b3526a213d8f4ca",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "01a008cb8ad7670174be09d91ce14ded28ab7cd4bba7908d02897ff9dbd04b45"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    433,
+    592
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    88,
+    44,
+    88,
+    45
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

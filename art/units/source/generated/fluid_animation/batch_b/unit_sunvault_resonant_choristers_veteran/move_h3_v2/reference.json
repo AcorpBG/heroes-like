@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_sunvault_resonant_choristers_veteran",
+  "guides": [
+    {
+      "frame": "move_48",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_resonant_choristers_veteran/move_far_v1.png",
+      "source_sha256": "45478fac1fb572f5dab1f41557d47d53bdb9771c166e9ef4277dca5b94e4fceb",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "8eaf06c0206e3545f6bcc865b4387dd73c7ed9deea669a992c49714e3e67b2d6"
+    },
+    {
+      "frame": "move_52",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_resonant_choristers_veteran/move_near_v1.png",
+      "source_sha256": "36447d90e377d5054968df10e1e2130bbce4d01b5f4ef72c928e907efc4f96bb",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "a7bf447ac5c21e5eff482f88f2e4a35cd0376588c8e33231d4089872e716861e"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    418,
+    594
+  ],
+  "output_scale": 0.47,
+  "free_pixels_left_top_right_bottom": [
+    135,
+    46,
+    136,
+    46
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

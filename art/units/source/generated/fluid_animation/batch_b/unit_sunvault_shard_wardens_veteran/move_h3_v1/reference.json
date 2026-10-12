@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_sunvault_shard_wardens_veteran",
+  "guides": [
+    {
+      "frame": "move_40",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/move_b_v1.png",
+      "source_sha256": "6a6011369d2d1ae75cb6cece56f937a46605dfb45749a88f20227fdacfc4a886",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "9e8701dcb490e5a16a57724fd3fa73f3975db802bbb1f71aa1491425b7566691"
+    },
+    {
+      "frame": "move_44",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/move_a_v1.png",
+      "source_sha256": "f610086fed482352d3bbe6f56347cd695ad09204c99dfaeedb099d48d05afe61",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "fe13aefc850eac87e82eb55a1d52b028571282e1139d5e845a6c4d4b05ebbccd"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    433,
+    592
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    88,
+    44,
+    88,
+    45
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

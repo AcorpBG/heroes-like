@@ -149,6 +149,15 @@
       ],
       "last": 2,
       "action": "Collapse slowly and heavily from standing. His knees buckle and he sinks onto one knee, leaning on the shield, and stays there a moment. Then he topples forward onto his side and lies down, finishing motionless with the helmet at screen left and the boots at screen right, the shield lying beside him and the sword on the ground by his hand. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    },
+    "idle_h3_v2": {
+      "clip": "idle",
+      "references": [
+        "idle_0"
+      ],
+      "guides": [],
+      "last": 0,
+      "action": "A watchful warden idle that loops. He breathes, the shoulders rise and fall under the plate, he lifts the sword a little and turns the blade, resettles the shield on his arm, the helmeted head turns slightly to scan, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no attack. Only the body moves; nothing else appears in the frame."
     }
   }
 }

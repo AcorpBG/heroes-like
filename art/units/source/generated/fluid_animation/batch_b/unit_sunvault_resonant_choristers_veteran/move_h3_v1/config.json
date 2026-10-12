@@ -1,0 +1,54 @@
+{
+  "unit_id": "unit_sunvault_resonant_choristers_veteran",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    418,
+    594
+  ],
+  "scale": 0.47,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026103201,
+  "references": [
+    "move_48",
+    "move_52"
+  ],
+  "guides": [
+    [
+      31,
+      1
+    ],
+    [
+      62,
+      0
+    ],
+    [
+      93,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original tall slim robed precentor, the Harmonic Precentor veteran, facing screen right in elevated three-quarter view. Keep the flowing floor-length ivory robes with blue and gold vertical tabards, gilded gauntlets and gold pointed boots, the closed smooth gold and ivory angular mask with narrow violet eyes and a tall blue-violet crystal crest, the large rounded open gold chime halo framing the head with hanging blue-violet crystals, and the small gold collar ring. No hood and no bare face. Exactly two arms, two hands and two legs. Both hands hold ONE long gold staff diagonally, a crystal pommel at the lower screen-left end and a large U-shaped two-pronged tuning fork with a prismatic crystal between the prongs and short hanging gold chimes at the upper screen-right end. Preserve the staff, the chime halo, the mask and the slim adult proportions. Walk in place through two complete reciprocal cycles with measured, gliding steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate under the robes and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The staff is carried diagonally in both hands with the chimes swaying; the robes swing with the legs. Finish in the original gait phase. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full staff, the tuning fork, the halo and crest, limbs and boots within frame. The background is perfectly flat saturated GREEN throughout, no gradients or changes of hue. The green background stays the same flat saturated green in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, beams, sound waves, rings, projectiles, sparks, motion trails, particles or extra limbs; the crystals keep only their steady glow, and only the fork crystal may brighten where the action says so. Articulate joints naturally with physical planted-foot support; do not morph the staff or halo.",
+  "protected_foreground_chroma": 18,
+  "edge_threshold": 82,
+  "palette_measurement": {
+    "bluest_opaque": 16.0,
+    "blue_minus_green_p999": 76.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

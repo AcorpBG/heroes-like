@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_sunvault_shard_wardens_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/idle_v1.png",
+      "source_sha256": "089cbe852fb39937bcd7c6dc8d3d15901c31b7a296b2faab9b3526a213d8f4ca",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "01a008cb8ad7670174be09d91ce14ded28ab7cd4bba7908d02897ff9dbd04b45"
+    },
+    {
+      "frame": "defend_21",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/reactions_v1.png",
+      "source_sha256": "ed2d83871c54c42307852bb271baec6489528511a16417868fccf62f11b0f02d",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "a478ba18c9d718e1f0f4f5503f8aa7a8afeaed3253d7ae59f649ad19ce653132"
+    },
+    {
+      "frame": "defend_22",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/reactions_v1.png",
+      "source_sha256": "ed2d83871c54c42307852bb271baec6489528511a16417868fccf62f11b0f02d",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "cdea2a060c2023bc4bb5bdee152bc870b2a567af988fda0858605b4e3c3cabfd"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    433,
+    592
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    88,
+    44,
+    88,
+    45
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

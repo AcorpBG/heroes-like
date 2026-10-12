@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_sunvault_resonant_choristers_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_resonant_choristers_veteran/idle_v1.png",
+      "source_sha256": "6369812bae6704d261c8265b10b8cb3f77e7210b17cfec9af9841147e0721187",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "598f7cb840655b6deb5d097c1172436429d2f9631abf777fc8bf9b348cc11b91"
+    },
+    {
+      "frame": "death_43",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_resonant_choristers_veteran/death_v1.png",
+      "source_sha256": "7be0e7e68d7010e3b675f379a477470f64058f60c08223176805e7c1c914c900",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "b4eb986a06f1ef5eb57d9243a62255356423c09600f8ff68d7e120bb28afef01"
+    },
+    {
+      "frame": "death_47",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_resonant_choristers_veteran/death_v1.png",
+      "source_sha256": "7be0e7e68d7010e3b675f379a477470f64058f60c08223176805e7c1c914c900",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "72c8c58283b5386ee9a16f3b6987976cb721cab9cb0c81cdcfffc9ab418e8380"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    418,
+    594
+  ],
+  "output_scale": 0.47,
+  "free_pixels_left_top_right_bottom": [
+    135,
+    46,
+    136,
+    46
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

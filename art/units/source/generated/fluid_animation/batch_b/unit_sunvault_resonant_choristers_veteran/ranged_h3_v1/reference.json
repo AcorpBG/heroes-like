@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_sunvault_resonant_choristers_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_resonant_choristers_veteran/idle_v1.png",
+      "source_sha256": "6369812bae6704d261c8265b10b8cb3f77e7210b17cfec9af9841147e0721187",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "598f7cb840655b6deb5d097c1172436429d2f9631abf777fc8bf9b348cc11b91"
+    },
+    {
+      "frame": "ranged_18",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_resonant_choristers_veteran/ranged_v1.png",
+      "source_sha256": "41d34fe863b3eacbd404410b8ef704afecfcc7a7a1da72d13a814c29f9bfc10c",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "d711cfe5fa7663afe7485f933a94497a001d8367c0b8d57d234422fe1e1062d9"
+    },
+    {
+      "frame": "ranged_20",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_resonant_choristers_veteran/ranged_corrections_v1.png",
+      "source_sha256": "6d4a3720e3ad0ebd3df54c9ac44ecbe9958b7c118a632a80bee47c3b5c680976",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "d643f09a24663a7ea561e4b29f3fdcb90876fd2853ef8651e72da4c9b91fe65d"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    418,
+    594
+  ],
+  "output_scale": 0.47,
+  "free_pixels_left_top_right_bottom": [
+    135,
+    46,
+    136,
+    46
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

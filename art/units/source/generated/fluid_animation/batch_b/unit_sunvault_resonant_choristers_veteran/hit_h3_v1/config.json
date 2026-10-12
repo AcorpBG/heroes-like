@@ -1,0 +1,46 @@
+{
+  "unit_id": "unit_sunvault_resonant_choristers_veteran",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    418,
+    594
+  ],
+  "scale": 0.47,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026103204,
+  "references": [
+    "hit_25",
+    "idle_0"
+  ],
+  "guides": [
+    [
+      40,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "ONE original tall slim robed precentor, the Harmonic Precentor veteran, facing screen right in elevated three-quarter view. Keep the flowing floor-length ivory robes with blue and gold vertical tabards, gilded gauntlets and gold pointed boots, the closed smooth gold and ivory angular mask with narrow violet eyes and a tall blue-violet crystal crest, the large rounded open gold chime halo framing the head with hanging blue-violet crystals, and the small gold collar ring. No hood and no bare face. Exactly two arms, two hands and two legs. Both hands hold ONE long gold staff diagonally, a crystal pommel at the lower screen-left end and a large U-shaped two-pronged tuning fork with a prismatic crystal between the prongs and short hanging gold chimes at the upper screen-right end. Preserve the staff, the chime halo, the mask and the slim adult proportions. The precentor starts rocked back in a flinch and recovers from it. The shoulders hunch and twist away, the masked head ducks and the knees flex while both hands keep hold of the staff, then the precentor straightens, rebalances on both boots and returns to the same stance. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full staff, the tuning fork, the halo and crest, limbs and boots within frame. The background is perfectly flat saturated GREEN throughout, no gradients or changes of hue. The green background stays the same flat saturated green in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, beams, sound waves, rings, projectiles, sparks, motion trails, particles or extra limbs; the crystals keep only their steady glow, and only the fork crystal may brighten where the action says so. Articulate joints naturally with physical planted-foot support; do not morph the staff or halo.",
+  "protected_foreground_chroma": 31,
+  "edge_threshold": 78,
+  "palette_measurement": {
+    "bluest_opaque": 29.0,
+    "blue_minus_green_p999": 71.28800000002957,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}
