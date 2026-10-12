@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_sunvault_daybreak_colossus_veteran",
+  "guides": [
+    {
+      "frame": "move_48",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/move_far_corrections_v1.png",
+      "source_sha256": "40f8d64466c55484f507c820c4f77316c628ac7689820d1362f9792b2273a250",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "f5190428207baec5249308a66cffb2a54b34eec35f9b09e387fcaca02cc3a372"
+    },
+    {
+      "frame": "move_52",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/move_far_v1.png",
+      "source_sha256": "45ae4d89a9a1d0c66bd27741dc3ada883912fb4cf1189d5b653ac30a221d9484",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "08c9eafd486c5a4d75c583ee495a43fd375a3c57bc696d1a2291909d443719c7"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    492,
+    598
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    217,
+    42,
+    216,
+    42
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

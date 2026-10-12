@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_sunvault_aurora_ballistae_veteran",
+  "guides": [
+    {
+      "frame": "idle_v1_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/idle_v1_frame_00.png",
+      "source_sha256": "e5605922c6467729f8b295416514d7752f57af05a5fe191fe5d86bec7db30c0e",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "97b69d078c2d3f6267ae67b4a82a39d047b6725fd33c0f083b929addfec69b4e"
+    },
+    {
+      "frame": "death_v1_03",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/death_v1_frame_03.png",
+      "source_sha256": "da96fde17d98de4a0a9cbacce2ddf1095fcd1dbcfe48a544dc3444c0899ed99f",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "082d2e20afe9508fd180a857935555323eb467354a81d31b1e4137a722f2cacf"
+    },
+    {
+      "frame": "death_v1_07",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/death_v1_frame_07.png",
+      "source_sha256": "76a284bd71e2e45571e55cd61246a696bb74d386583ec215c995b5cd059ee620",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "5a5a59a0cf7d6435f60b5900bef23d930a751b571d61c087b984587f4c36ddf6"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    460,
+    570
+  ],
+  "output_scale": 0.45,
+  "free_pixels_left_top_right_bottom": [
+    202,
+    66,
+    203,
+    66
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -1,0 +1,74 @@
+{
+  "clips": {
+    "idle": {
+      "segments": [
+        {
+          "take": "idle_h3_v1",
+          "frames": [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 112, 110, 108, 106, 104, 102, 100, 98, 96, 94, 92, 90, 88, 86, 84, 82, 80, 78, 76, 74, 72, 70, 68, 66, 64, 62]
+        }
+      ],
+      "frame_msec": 60
+    },
+    "move": {
+      "segments": [
+        {
+          "take": "move_h3_v1",
+          "frames": [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60]
+        }
+      ],
+      "frame_msec": 50
+    },
+    "attack": {
+      "segments": [
+        {
+          "take": "attack_h3_v1",
+          "frames": [12, 15, 16, 17, 18, 19, 20, 21, 22, 23, 26, 29, 32, 33, 34, 36, 37, 39, 42, 49, 56, 63, 73, 74, 75, 76, 78, 79, 81, 82, 84, 88]
+        }
+      ],
+      "frame_msec": 42,
+      "contact_frame": 12
+    },
+    "hit": {
+      "segments": [
+        {
+          "take": "hit_h3_v1",
+          "frames": [4, 6, 7, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 36]
+        }
+      ],
+      "frame_msec": 35
+    },
+    "defend": {
+      "segments": [
+        {
+          "take": "defend_h3_v1",
+          "frames": [16, 21, 23, 24, 26, 27, 29, 31, 32, 33, 35, 36, 38, 39, 41, 48, 55, 62, 69]
+        }
+      ],
+      "frame_msec": 42
+    },
+    "cast": {
+      "segments": [
+        {
+          "take": "cast_h3_v1",
+          "frames": [14, 21, 28, 31, 33, 34, 35, 36, 38, 40, 42, 44, 56, 63, 70, 81, 82, 84, 85, 86, 88, 90, 99]
+        }
+      ],
+      "frame_msec": 45,
+      "contact_frame": 11
+    },
+    "death": {
+      "segments": [
+        {
+          "take": "death_h3_v1",
+          "frames": [7, 15, 19, 22, 25, 27, 29, 31, 34, 37, 38, 39, 41, 48, 55, 67, 76, 77, 78, 79, 80, 83, 123]
+        }
+      ],
+      "frame_msec": 45
+    }
+  },
+  "preserved_accepted_clips": [],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "All clips from the first H3 takes; dense-guide retakes of attack and death came out as held stills with one-frame snaps. The idle snaps back to the neutral pose twice (video 59-60, 113-114); its two halves nearly repeat, so the loop runs forward through 0-58 and returns through 112 down to 62, and both joins match closely. The punch turns from the three-quarter wind-up to the side-on strike, as painted, in two smeared frames (video 30-31); they are cut, so the wind-up snaps into the punch. Death drops the two smeared falling frames (35-36) with green fringes, so the construct crashes down from standing."
+  }
+}

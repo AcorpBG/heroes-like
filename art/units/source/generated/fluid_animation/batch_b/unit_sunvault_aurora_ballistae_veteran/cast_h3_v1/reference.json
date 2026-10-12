@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_sunvault_aurora_ballistae_veteran",
+  "guides": [
+    {
+      "frame": "idle_v1_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/idle_v1_frame_00.png",
+      "source_sha256": "e5605922c6467729f8b295416514d7752f57af05a5fe191fe5d86bec7db30c0e",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "97b69d078c2d3f6267ae67b4a82a39d047b6725fd33c0f083b929addfec69b4e"
+    },
+    {
+      "frame": "cast_v1_04",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/cast_v1_frame_04.png",
+      "source_sha256": "16c5dbd8031df4ba7cc59931f90fc588db9a4132d9007831d9a96ee8431a355e",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "9d9c34ad2444fa2f14e3bced9add825514b65b6eb0e40107f73c7fb7410a5383"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    460,
+    570
+  ],
+  "output_scale": 0.45,
+  "free_pixels_left_top_right_bottom": [
+    202,
+    66,
+    203,
+    66
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

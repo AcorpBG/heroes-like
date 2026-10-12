@@ -149,6 +149,86 @@
       ],
       "last": 2,
       "action": "Collapse slowly and heavily. The knees buckle and the construct sinks forward onto its fists, stays there a moment, then slumps face down flat onto the ground with the arms spread and the crystal fan lying flat, finishing motionless with the chest crystal dark. The same body throughout: no explosion, no shattering, no shrinking and no disappearing."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "idle_v1_00",
+        "attack_v1_01",
+        "attack_v1_02",
+        "attack_v1_03",
+        "attack_v1_04",
+        "attack_v1_05",
+        "attack_v1_06"
+      ],
+      "guides": [
+        [
+          14,
+          1
+        ],
+        [
+          28,
+          2
+        ],
+        [
+          40,
+          3
+        ],
+        [
+          52,
+          4
+        ],
+        [
+          72,
+          5
+        ],
+        [
+          90,
+          6
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE heavy punch toward screen right. The construct draws the far fist back high behind the crystal fan as the knees bend and the body twists, then steps into a wide lunge and drives that fist straight out to full reach at screen right, pulls the arm back and settles into the original stance. One punch only; no flash or effect at contact. Only the body moves; nothing else appears in the frame."
+    },
+    "death_h3_v2": {
+      "clip": "death",
+      "references": [
+        "idle_v1_00",
+        "death_v1_01",
+        "death_v1_02",
+        "death_v1_03",
+        "death_v1_04",
+        "death_v1_05",
+        "death_v1_07"
+      ],
+      "guides": [
+        [
+          16,
+          1
+        ],
+        [
+          32,
+          2
+        ],
+        [
+          48,
+          3
+        ],
+        [
+          64,
+          4
+        ],
+        [
+          80,
+          5
+        ],
+        [
+          100,
+          6
+        ]
+      ],
+      "last": 2,
+      "action": "Collapse slowly and heavily. The knees buckle and the construct sinks forward onto its fists, stays there a moment, then slumps face down flat onto the ground with the arms spread and the crystal fan lying flat, finishing motionless with the chest crystal dark. The same body throughout: no explosion, no shattering, no shrinking and no disappearing. Only the body moves; nothing else appears in the frame."
     }
   }
 }

@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_sunvault_daybreak_colossus_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/idle_v1.png",
+      "source_sha256": "0f9c0cb1b8ed7f7f37d1af42940817590ca879bb5a3aea409a9947b9426bae00",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "266a6a0c0b050a92a3e4df725d82a43ac7dac6427f0f0df586db00638f82d0ac"
+    },
+    {
+      "frame": "attack_10",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/attack_v1.png",
+      "source_sha256": "1995ee75d45e518877b7f6e6882af568285c4a3c55a9873d2748ac39251e3a6e",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "9b81ce85abada853380c1f4ceb9dae7c008bdb9d214ec76def960569e05569ba"
+    },
+    {
+      "frame": "attack_12",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/corrections_v1.png",
+      "source_sha256": "a1953ad440a402682221098ec93f89c4f0df3644fbc80af2aae4e31da3c51060",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "e15a329fe7910323bd322a016cdcb4e70c728e4804ea31cc81668186f346c2db"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    492,
+    598
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    217,
+    42,
+    216,
+    42
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -1,0 +1,71 @@
+{
+  "unit_id": "unit_sunvault_aurora_ballistae_veteran",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    460,
+    570
+  ],
+  "scale": 0.45,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026102907,
+  "references": [
+    "idle_v1_00",
+    "attack_v1_01",
+    "attack_v1_02",
+    "attack_v1_03",
+    "attack_v1_04",
+    "attack_v1_05",
+    "attack_v1_06"
+  ],
+  "guides": [
+    [
+      14,
+      1
+    ],
+    [
+      28,
+      2
+    ],
+    [
+      40,
+      3
+    ],
+    [
+      52,
+      4
+    ],
+    [
+      72,
+      5
+    ],
+    [
+      90,
+      6
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original bulky headless crystalline construct, the Corona Bulwark, facing screen right in slightly elevated three-quarter view. Keep the ivory and gold armoured shell, the huge vertical oval blue-violet crystal set in the chest, the radial fan of thick iridescent blue-violet crystal plates around the shoulders and back with a small gold crest on top, TWO large jointed armoured arms ending in heavy shield-shaped fists, and TWO short thick armoured legs with broad clawed feet. No separate head. Exactly two arms and two legs. Preserve the chest crystal, the crystal fan, the fists and the heavy squat proportions. Make ONE heavy punch toward screen right. The construct draws the far fist back high behind the crystal fan as the knees bend and the body twists, then steps into a wide lunge and drives that fist straight out to full reach at screen right, pulls the arm back and settles into the original stance. One punch only; no flash or effect at contact. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed scale and centred body. Keep the full crystal fan, both fists and both feet within frame. The background is perfectly flat saturated GREEN throughout, no gradients or changes of hue. The green background stays the same flat saturated green in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, flashes, beams, sparks, motion trails, particles or extra limbs; the crystals keep only their steady glow. The construct moves at its joints; the shell plates and crystals stay rigid and never bend or morph.",
+  "protected_foreground_chroma": 27,
+  "edge_threshold": 92,
+  "palette_measurement": {
+    "bluest_opaque": 25.0,
+    "blue_minus_green_p999": 86.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

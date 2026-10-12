@@ -1,0 +1,46 @@
+{
+  "unit_id": "unit_sunvault_daybreak_colossus_veteran",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    492,
+    598
+  ],
+  "scale": 0.44,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026102954,
+  "references": [
+    "hit_25",
+    "idle_0"
+  ],
+  "guides": [
+    [
+      40,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "ONE original massive stocky bipedal construct, the Daybreak Colossus veteran, facing screen right in elevated three-quarter view. Keep the ivory-white ceramic and antique-gold armour with dark bronze mechanical joints, the small dark face under a pointed angular gold helmet, the broad winglike white and gold shoulder pauldrons with hanging deep navy-blue panels, the heavy white and gold forearm shells with articulated bronze fingers, the blue crystal inserts on wrists, thighs and shins, the broad segmented armoured feet, the ONE round blue chest aperture with thin gold radial iris spokes, the hanging navy and gold hip plate, and ONE gold mechanical halo ring above and behind the head carrying several oval blue lens medallions. Exactly two arms and two legs, no weapons or shields. Preserve the halo, the chest aperture and the massive proportions. Start rocked back in a flinch, then recover completely. The torso rocks back and twists away, the arms swing out and the knees flex, the halo tilting with the body, then it rebalances on both feet and returns to the same stance. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed scale and centred body. Keep the full halo, both hands and both feet within frame. The background is perfectly flat saturated GREEN throughout, no gradients or changes of hue. The green background stays the same flat saturated green in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, beams, projectiles, sparks, motion trails, particles, weapons or extra limbs; the crystals keep only their steady glow, and only the chest aperture may brighten where the action says so. The halo stays complete and attached behind the head; the armour shells stay rigid and never morph.",
+  "protected_foreground_chroma": 16,
+  "edge_threshold": 100,
+  "palette_measurement": {
+    "bluest_opaque": 14.0,
+    "blue_minus_green_p999": 94.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

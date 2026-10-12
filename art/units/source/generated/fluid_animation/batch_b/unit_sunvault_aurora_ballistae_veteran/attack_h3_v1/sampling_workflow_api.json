@@ -1,0 +1,191 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "ONE original bulky headless crystalline construct, the Corona Bulwark, facing screen right in slightly elevated three-quarter view. Keep the ivory and gold armoured shell, the huge vertical oval blue-violet crystal set in the chest, the radial fan of thick iridescent blue-violet crystal plates around the shoulders and back with a small gold crest on top, TWO large jointed armoured arms ending in heavy shield-shaped fists, and TWO short thick armoured legs with broad clawed feet. No separate head. Exactly two arms and two legs. Preserve the chest crystal, the crystal fan, the fists and the heavy squat proportions. Make ONE heavy punch toward screen right. The construct draws the far fist back high behind the crystal fan as the knees bend and the body twists, then steps into a wide lunge and drives that fist straight out to full reach at screen right, pulls the arm back and settles into the original stance. One punch only; no flash or effect at contact. Locked orthographic camera, fixed scale and centred body. Keep the full crystal fan, both fists and both feet within frame. The background is perfectly flat saturated GREEN throughout, no gradients or changes of hue. The green background stays the same flat saturated green in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, flashes, beams, sparks, motion trails, particles or extra limbs; the crystals keep only their steady glow. The construct moves at its joints; the shell plates and crystals stay rigid and never bend or morph.",
+      "width": 960,
+      "height": 640,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "30",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026102902
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "h3/unit_sunvault_aurora_ballistae_veteran/attack_h3_v1/sampled"
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "h3_unit_sunvault_aurora_ballistae_veteran_attack_h3_v1_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "h3_unit_sunvault_aurora_ballistae_veteran_attack_h3_v1_guide_1.png"
+    }
+  },
+  "32": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "h3_unit_sunvault_aurora_ballistae_veteran_attack_h3_v1_guide_2.png"
+    }
+  },
+  "40": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 30,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "41": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "40",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 54,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "32",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "41",
+        0
+      ]
+    }
+  }
+}
