@@ -1,0 +1,46 @@
+{
+  "unit_id": "unit_mireclaw_drowned_antler_sovereign_veteran",
+  "clip": "hit",
+  "canvas": [
+    1088,
+    640
+  ],
+  "anchor": [
+    684,
+    551
+  ],
+  "scale": 0.54,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026102162,
+  "references": [
+    "hit_17",
+    "idle_0"
+  ],
+  "guides": [
+    [
+      40,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "ONE original regal swamp quadruped, the Crown of the Drowned Fen, facing screen right in elevated three-quarter side view. Keep the muscular grey-green reptilian and deer-like body with a bark and reed mane and moss streamers, the long crocodilian deer muzzle, the enormous wide curved branching antler crown hung with tiny brass bells, weathered ornate metal plates on the shoulders and forelegs, large dark cloven hooves, and the long leaf and reed fringed tail sweeping back to screen left. Exactly four animal legs and one tail; no arms, wings or rider. Preserve the antler crown, bells, shoulder armour, hooves and massive body proportions. Start rocked back in a flinch, then recover completely. The chest compresses down with the foreknees bent deeply and the crown dips, then the neck lifts, the near forehoof replants and the beast returns to the same stance on all four hooves. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep every antler tip, the hooves and the tail tip within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, weapons, magic, glow, sparks, impact effects, particles or extra limbs. Articulate joints naturally with physical planted-hoof support; the bells swing as secondary motion; do not morph the antlers or armour.",
+  "protected_foreground_chroma": 12,
+  "edge_threshold": 11,
+  "palette_measurement": {
+    "bluest_opaque": 10.0,
+    "blue_minus_green_p999": 5.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

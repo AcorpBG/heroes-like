@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_mireclaw_drowned_antler_sovereign_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign_veteran/idle_v1.png",
+      "source_sha256": "4995596368e8b725d29cf8dabb3f744b1fa3cc11ce6ff7cedf24c71bfa35e6f8",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "ba7e17efb8736545dd9999fdf549e21986919be397308d9c3653c1cdb7d428ba"
+    },
+    {
+      "frame": "defend_21",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign_veteran/reactions_v1.png",
+      "source_sha256": "7411ec3eb8675c1e86b7d4a6efb5d887df35240ed4d014697c2e79ecf41bbb93",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "5d3b28ce1073edc7f12448c24274981793ab88e951883b9cf57638fc7cf9c3ca"
+    },
+    {
+      "frame": "defend_23",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign_veteran/reactions_v1.png",
+      "source_sha256": "7411ec3eb8675c1e86b7d4a6efb5d887df35240ed4d014697c2e79ecf41bbb93",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "b989369898f035860a7dc0181ec05fc53b4ee8e71e7bc5a3dea69d9c8d662cc2"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    556,
+    551
+  ],
+  "output_scale": 0.54,
+  "free_pixels_left_top_right_bottom": [
+    67,
+    89,
+    66,
+    89
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

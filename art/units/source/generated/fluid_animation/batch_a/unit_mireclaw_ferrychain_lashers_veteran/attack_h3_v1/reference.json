@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_mireclaw_ferrychain_lashers_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_ferrychain_lashers_veteran/idle_v1.png",
+      "source_sha256": "e1894b255580cd700db189dadc1070b16d02635453bddad05f974ded021af735",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "27939b2bbdbc7d48842a8b10ca9711eb93da6053bb09525497f6590305bd111c"
+    },
+    {
+      "frame": "attack_10",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_ferrychain_lashers_veteran/attack_v1.png",
+      "source_sha256": "7195fb55fc86f1727aa0f064c3bebe63387a2c9d5744e19a406bbd3a3a4541e3",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "49599b9c275c63b60835ae57808d56f66b2d064bee5c62997323e6c1e758698c"
+    },
+    {
+      "frame": "attack_11",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_ferrychain_lashers_veteran/attack_v1.png",
+      "source_sha256": "7195fb55fc86f1727aa0f064c3bebe63387a2c9d5744e19a406bbd3a3a4541e3",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "4a8c65a1326987bf0e89ee2da8d3004a9653135b41315b4f740d4139609d0413"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    462,
+    590
+  ],
+  "output_scale": 0.47,
+  "free_pixels_left_top_right_bottom": [
+    136,
+    51,
+    135,
+    50
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

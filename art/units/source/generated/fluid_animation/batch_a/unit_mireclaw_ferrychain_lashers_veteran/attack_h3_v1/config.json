@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_mireclaw_ferrychain_lashers_veteran",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    462,
+    590
+  ],
+  "scale": 0.47,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026102302,
+  "references": [
+    "idle_0",
+    "attack_10",
+    "attack_11"
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      54,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original muscular marsh fighter, the Blackwater Chainmaster, facing screen right in elevated three-quarter view. Keep the man with long swept-back dark hair and a dark beard, the olive-grey ragged reed-and-feather cloak, bare tattooed upper arms, wrapped dark bracers, a layered riveted grey leather kilt, muddy green leg wraps and dark boots, and an iron chain slung diagonally across the torso. Exactly two arms, two hands and two legs. Each hand grips ONE large iron anchor-shaped hook with a long shaft and one curved pointed fluke, held low at either side; ONE thick iron chain joins the two hook grips and droops in a U between them. Preserve the two hooks, the chains, the cloak and the heavy adult proportions. Make ONE hooking swing toward screen right. He raises the near hook high over his shoulder as the knees load, then lunges forward and swings it down and out to full reach at screen right with the arm extended, the other hook held low at the belt, follows through low ahead of the front knee, then draws back and settles into the original stance. One strike only; both hooks stay in his hands and joined by the chain. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, both hooks, the chain, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, third hook, magic, glow, motion trails, particles or extra limbs. The chain stays attached to both grips. Articulate joints naturally with physical planted-foot support; do not morph the hooks.",
+  "protected_foreground_chroma": 6,
+  "edge_threshold": 9,
+  "palette_measurement": {
+    "bluest_opaque": 4.0,
+    "blue_minus_green_p999": 3.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

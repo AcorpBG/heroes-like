@@ -1,0 +1,46 @@
+{
+  "unit_id": "unit_mireclaw_ferrychain_lashers_veteran",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    462,
+    590
+  ],
+  "scale": 0.47,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026102306,
+  "references": [
+    "idle_0",
+    "death_39"
+  ],
+  "guides": [
+    [
+      90,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "ONE original muscular marsh fighter, the Blackwater Chainmaster, facing screen right in elevated three-quarter view. Keep the man with long swept-back dark hair and a dark beard, the olive-grey ragged reed-and-feather cloak, bare tattooed upper arms, wrapped dark bracers, a layered riveted grey leather kilt, muddy green leg wraps and dark boots, and an iron chain slung diagonally across the torso. Exactly two arms, two hands and two legs. Each hand grips ONE large iron anchor-shaped hook with a long shaft and one curved pointed fluke, held low at either side; ONE thick iron chain joins the two hook grips and droops in a U between them. Preserve the two hooks, the chains, the cloak and the heavy adult proportions. Collapse continuously from standing: he sags, sinks onto one knee with the hooks dragging, falls forward onto his hands and slumps flat, finishing lying motionless face down with the head at screen right and the boots at screen left, both hooks and the chain lying on the ground in front of him. No recovery, no floating equipment and no disappearing body. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, both hooks, the chain, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, third hook, magic, glow, motion trails, particles or extra limbs. The chain stays attached to both grips. Articulate joints naturally with physical planted-foot support; do not morph the hooks.",
+  "protected_foreground_chroma": 6,
+  "edge_threshold": 9,
+  "palette_measurement": {
+    "bluest_opaque": 4.0,
+    "blue_minus_green_p999": 3.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

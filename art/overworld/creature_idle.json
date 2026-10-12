@@ -11069,21 +11069,20 @@
       "sha256": "0d3533124a1035ba117898840ec251472df0afd0428ebc30cb643b900b3e94d4"
     },
     "unit_mireclaw_ferrychain_lashers_veteran": {
-      "path": "res://art/animation/runtime/idle/unit_mireclaw_ferrychain_lashers_veteran.png",
+      "path": "res://art/overworld/runtime/creature_idle/unit_mireclaw_ferrychain_lashers_veteran.png",
       "frame_size": [
-        252,
-        260
+        238,
+        259
       ],
-      "columns": 12,
-      "frames": 24,
-      "frame_msec": 53,
+      "frames": 62,
+      "frame_msec": 60,
       "static_frame": 0,
       "ground_anchor": [
-        124,
-        249
+        109,
+        247
       ],
-      "painted_extent": 244,
-      "source_sheet": "res://art/animation/runtime/idle/unit_mireclaw_ferrychain_lashers_veteran.png",
+      "painted_extent": 243,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_mireclaw_ferrychain_lashers_veteran.png",
       "source_indices": [
         0,
         1,
@@ -11108,17 +11107,55 @@
         20,
         21,
         22,
-        23
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61
       ],
       "source_crop": [
-        0,
-        0,
-        252,
-        260
+        59,
+        41,
+        297,
+        300
       ],
-      "source_sha256": "a5c3681ebb2d2acc0a6754164872db224611d03f8d3a7d1d90c6ea0984971e69",
+      "source_sha256": "bb29e833da20b04bae18c186279867dd68db94b3364c02b515952781e3e97600",
       "source_provenance": "res://art/animation/source/fluid/unit_mireclaw_ferrychain_lashers_veteran/provenance.json",
-      "sha256": "a5c3681ebb2d2acc0a6754164872db224611d03f8d3a7d1d90c6ea0984971e69"
+      "sha256": "446f24c6a4902af9ef79d69a35bc8926de98a6844d065fd3c470a4ba8213d0bc"
     },
     "unit_mireclaw_mireglass_reedcasters_veteran": {
       "path": "res://art/animation/runtime/idle/unit_mireclaw_mireglass_reedcasters_veteran.png",
@@ -11367,21 +11404,20 @@
       "sha256": "8c0ffae922dd18f4eae51a9b86032b21b21027af3578e9b2503e2b76efb59e5c"
     },
     "unit_mireclaw_drowned_antler_sovereign_veteran": {
-      "path": "res://art/animation/runtime/idle/unit_mireclaw_drowned_antler_sovereign_veteran.png",
+      "path": "res://art/overworld/runtime/creature_idle/unit_mireclaw_drowned_antler_sovereign_veteran.png",
       "frame_size": [
-        423,
-        261
+        430,
+        262
       ],
-      "columns": 8,
-      "frames": 24,
-      "frame_msec": 53,
+      "frames": 31,
+      "frame_msec": 60,
       "static_frame": 0,
       "ground_anchor": [
-        258,
+        263,
         250
       ],
-      "painted_extent": 407,
-      "source_sheet": "res://art/animation/runtime/idle/unit_mireclaw_drowned_antler_sovereign_veteran.png",
+      "painted_extent": 414,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_mireclaw_drowned_antler_sovereign_veteran.png",
       "source_indices": [
         0,
         1,
@@ -11406,17 +11442,24 @@
         20,
         21,
         22,
-        23
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30
       ],
       "source_crop": [
-        0,
-        0,
-        423,
-        261
+        57,
+        10,
+        487,
+        272
       ],
-      "source_sha256": "d286bbd01c3e80eaabbdc64a3cd3f03f566de1cd185c2c30e50334391253715c",
+      "source_sha256": "8c30f18e340ebf12053e41da762c7140d24e2832278fa9fb13a89bd9fe5886a4",
       "source_provenance": "res://art/animation/source/fluid/unit_mireclaw_drowned_antler_sovereign_veteran/provenance.json",
-      "sha256": "d286bbd01c3e80eaabbdc64a3cd3f03f566de1cd185c2c30e50334391253715c"
+      "sha256": "343300343d6a8a21e645d8f7d6d76179eeb6b26618cbd4f81b35ac3618ee0650"
     },
     "unit_shard_guard_veteran": {
       "path": "res://art/animation/runtime/idle/unit_shard_guard_veteran.png",

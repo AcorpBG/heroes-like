@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_mireclaw_ferrychain_lashers_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_ferrychain_lashers_veteran/idle_v1.png",
+      "source_sha256": "e1894b255580cd700db189dadc1070b16d02635453bddad05f974ded021af735",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "011804730450f457ee1e81f92a0275162f5ac61adcc11db5fb1d13e3255e6023"
+    },
+    {
+      "frame": "idle_2",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_ferrychain_lashers_veteran/idle_v1.png",
+      "source_sha256": "e1894b255580cd700db189dadc1070b16d02635453bddad05f974ded021af735",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "c30ff254be645e9b9c0dea2a16909cd8b9a5f913a72005e7625ad132098e9b2f"
+    }
+  ],
+  "canvas": [
+    960,
+    704
+  ],
+  "ground_anchor": [
+    462,
+    654
+  ],
+  "output_scale": 0.47,
+  "free_pixels_left_top_right_bottom": [
+    134,
+    115,
+    135,
+    50
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
