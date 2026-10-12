@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_sunvault_noonfacet_sentinels_veteran",
+  "clip": "attack",
+  "canvas": [
+    960,
+    768
+  ],
+  "anchor": [
+    389,
+    716
+  ],
+  "scale": 0.46,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026103107,
+  "references": [
+    "idle_0",
+    "attack_10",
+    "attack_12"
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      54,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original armoured sentinel, the Meridian Lockguard veteran, facing screen right in elevated three-quarter view. Keep the ivory plate armour with gold trim, the navy cloth split tabard, the closed round sundial helmet of gold and ivory with a short top spike, and gold sabatons. Exactly two arms, two hands and two legs. The near screen-LEFT arm bears ONE huge tall pointed navy and ivory sundial shield with a gold central boss; the far screen-RIGHT hand holds ONE gold-shafted polearm angled up toward screen right, topped by a round violet gem between TWO cyan-violet crystal crescent blades. Preserve the shield, the polearm, the sundial helmet and the armoured adult proportions. Make ONE polearm strike toward screen right. He raises the polearm high overhead with both crescents up as the knees bend, then lunges forward on the front leg and swings it down level so the crescent head reaches full extension at screen right, pulls it back and raises it to the original angled stance. One strike only; the shield stays on the near arm. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full polearm with both crescents, the shield, the helmet spike, limbs and boots within frame. The background is perfectly flat saturated GREEN throughout, no gradients or changes of hue. The green background stays the same flat saturated green in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, motion trails, slash arcs, sparks, particles or extra limbs; the crystal crescents keep only their steady glow. Articulate joints naturally with physical planted-foot support; do not morph the polearm or shield.",
+  "protected_foreground_chroma": 36,
+  "edge_threshold": 112,
+  "palette_measurement": {
+    "bluest_opaque": 34.0,
+    "blue_minus_green_p999": 106.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

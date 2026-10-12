@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_sunvault_mirror_duelists",
+  "clip": "attack",
+  "canvas": [
+    960,
+    768
+  ],
+  "anchor": [
+    496,
+    708
+  ],
+  "scale": 0.46,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026103007,
+  "references": [
+    "attack_v1_0",
+    "attack_v1_2",
+    "attack_v1_4"
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      54,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original athletic woman duelist, the Mirror Duelist, facing screen right in elevated three-quarter view. Keep her brown hair in a high bun with a small gold ornament, her face, the pale ivory fitted armour with gold filigree, the flowing white and royal-blue split tabard and scarf panels with gold trim, dark navy leggings and ivory and gold boots. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE long silver-blue curved sabre; the screen-RIGHT forearm carries ONE small triangular mirrored buckler with a gold rim. Preserve the sabre, the mirrored buckler, her face and the slender adult proportions. Make ONE sabre slash toward screen right. She raises the sabre high over her head as the knees bend, then lunges forward on the front leg and slashes the blade down and out to full reach at screen right, draws it back and returns to the original low guard stance. One slash only; the buckler stays on the screen-right forearm. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full sabre blade, the buckler, the tabard panels, limbs and boots within frame. The background is perfectly flat saturated GREEN throughout, no gradients or changes of hue. The green background stays the same flat saturated green in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, glints, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the sabre or buckler.",
+  "protected_foreground_chroma": 16,
+  "edge_threshold": 106,
+  "palette_measurement": {
+    "bluest_opaque": 14.0,
+    "blue_minus_green_p999": 100.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

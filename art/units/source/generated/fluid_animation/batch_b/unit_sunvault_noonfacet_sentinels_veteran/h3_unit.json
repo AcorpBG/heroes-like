@@ -149,6 +149,32 @@
       ],
       "last": 2,
       "action": "Collapse slowly and heavily from standing. His knees buckle and he sinks down onto his knees behind the shield, the polearm head dropping to the ground, and stays there a moment. Then he topples forward onto his side and lies down, finishing motionless with the helmet at screen left and the boots at screen right, the shield beneath his shoulder and the polearm lying on the ground in front. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "idle_0",
+        "attack_10",
+        "attack_12"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE polearm strike toward screen right. He raises the polearm high overhead with both crescents up as the knees bend, then lunges forward on the front leg and swings it down level so the crescent head reaches full extension at screen right, pulls it back and raises it to the original angled stance. One strike only; the shield stays on the near arm.",
+      "pad": [
+        0,
+        128,
+        0,
+        0
+      ]
     }
   }
 }

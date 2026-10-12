@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_sunvault_mirror_duelists_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/idle_v2.png",
+      "source_sha256": "877b3dc508a85ec73b88534682a8780234f5f6e550c7a8463ecb427252caffd9",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "67861c2d477f30ecd6a079663bd0665775cd924e5e2748250f05de30b0381972"
+    },
+    {
+      "frame": "death_34",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/death_v1.png",
+      "source_sha256": "f9d05115783b145b07f2ce2b6ede4bca347cc127ca033f4201790b72f6e9db4c",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "5d13ae0a0a9b26cbf9800f95a35cd06e3a69d12d9be35f4837d4d618bdf76d07"
+    },
+    {
+      "frame": "death_39",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/death_v1.png",
+      "source_sha256": "f9d05115783b145b07f2ce2b6ede4bca347cc127ca033f4201790b72f6e9db4c",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "6654eac1ac87e70968828e8590ce053408cfba83ca4937e90b091098be2fd288"
+    }
+  ],
+  "canvas": [
+    960,
+    768
+  ],
+  "ground_anchor": [
+    449,
+    597
+  ],
+  "output_scale": 0.46,
+  "free_pixels_left_top_right_bottom": [
+    49,
+    43,
+    49,
+    171
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

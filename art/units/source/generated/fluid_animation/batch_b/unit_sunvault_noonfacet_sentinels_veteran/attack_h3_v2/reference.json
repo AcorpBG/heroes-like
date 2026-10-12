@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_sunvault_noonfacet_sentinels_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels_veteran/idle_v1.png",
+      "source_sha256": "7a72c6b8e3e2930ead0abb94a732e252fc1e3d5524f9af2e80adeb7947814499",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "bfe4c9dafb58951f211c78576221dfc75053a54c598ac709a2700699b5315f01"
+    },
+    {
+      "frame": "attack_10",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels_veteran/attack_v1.png",
+      "source_sha256": "109141b9d7fe754b130b6ff738bbd25fcd104aeb42cd5a84e3f49eb87d1e9919",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "1f1c57aee8ebb5a90f922363b830dace0cf28164880b0fe68ae7e0df86a1fd2b"
+    },
+    {
+      "frame": "attack_12",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels_veteran/attack_v1.png",
+      "source_sha256": "109141b9d7fe754b130b6ff738bbd25fcd104aeb42cd5a84e3f49eb87d1e9919",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "5941305a003f0e274ee8c08cae3ad00a07cec970a758de8a4cf81953f2b3d7a7"
+    }
+  ],
+  "canvas": [
+    960,
+    768
+  ],
+  "ground_anchor": [
+    389,
+    716
+  ],
+  "output_scale": 0.46,
+  "free_pixels_left_top_right_bottom": [
+    135,
+    181,
+    135,
+    52
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

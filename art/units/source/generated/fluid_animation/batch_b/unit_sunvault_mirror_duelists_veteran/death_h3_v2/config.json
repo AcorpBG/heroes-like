@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_sunvault_mirror_duelists_veteran",
+  "clip": "death",
+  "canvas": [
+    960,
+    768
+  ],
+  "anchor": [
+    449,
+    597
+  ],
+  "scale": 0.46,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026103060,
+  "references": [
+    "idle_0",
+    "death_34",
+    "death_39"
+  ],
+  "guides": [
+    [
+      48,
+      1
+    ],
+    [
+      96,
+      2
+    ]
+  ],
+  "last": 2,
+  "prompt": "ONE original slim athletic masked duelist, the Parallax Blade veteran, facing screen right in elevated three-quarter view. No exposed face, skin or hair: a full ivory helmet with a narrow dark eye slit and two swept tall points, blue enamel on the screen-left side and lavender on the screen-right side. Keep the navy undersuit, the angular ivory armour edged in antique gold, the asymmetrical shoulder mantles and long divided cloth tails, blue on the near side and lavender on the far side, with fine gold scrollwork and small hanging diamond gems, and the ivory and gold shin armour and boots. Exactly two arms, two hands and two legs. The near screen-LEFT hand grips ONE LONG curved blue crystal sabre with an ornate gold hilt; the far screen-RIGHT hand grips ONE SHORTER curved violet crystal sabre with an ornate gold hilt. The blades never swap hands or colours. Preserve both sabres, the helmet and the slim adult proportions. Collapse slowly from standing. The duelist doubles over and sinks onto the knees with both blades dropping to the ground, stays kneeling a moment, then tips onto the side and lies down, finishing lying motionless with the helmet at screen left and the boots at screen right, both sabres lying on the ground beside the body. The body never leaves the ground; no recovery, no floating equipment and no disappearing body. Locked orthographic camera, fixed anatomical scale and centred body. Keep both sabre blades, the helmet points, the cloth tails, limbs and boots within frame. The background is perfectly flat saturated GREEN throughout, no gradients or changes of hue. The green background stays the same flat saturated green in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, motion trails, slash arcs, sparks, particles or extra limbs; the crystal blades keep only their steady glow. Articulate joints naturally with physical planted-foot support; do not morph or swap the sabres.",
+  "protected_foreground_chroma": 24,
+  "edge_threshold": 74,
+  "palette_measurement": {
+    "bluest_opaque": 22.0,
+    "blue_minus_green_p999": 68.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_sunvault_noonfacet_sentinels_veteran",
+  "guides": [
+    {
+      "frame": "hit_17",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels_veteran/reactions_v1.png",
+      "source_sha256": "8b2b700c4060c6925ea9eb630bc066d6b52094d96a5648b53b3393afb26eee5b",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "03f18adf0ddb220d9e2dfe18653b323b78e66bb35805295142c414c210483add"
+    },
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels_veteran/idle_v1.png",
+      "source_sha256": "7a72c6b8e3e2930ead0abb94a732e252fc1e3d5524f9af2e80adeb7947814499",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "8248c3a3c4353a369bc77396b51a96a2cad88b37fade9bf44e941423f5f58dcc"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    389,
+    588
+  ],
+  "output_scale": 0.46,
+  "free_pixels_left_top_right_bottom": [
+    135,
+    53,
+    135,
+    52
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

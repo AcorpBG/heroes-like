@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_sunvault_noonfacet_sentinels_veteran",
+  "guides": [
+    {
+      "frame": "move_40",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels_veteran/move_far_v1.png",
+      "source_sha256": "ae6fb59d996e703d4d0614a5e927c7a8bf537fdeef921db6d73b4e51b44f7971",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "3770bb1cbb37df90457d3b4fd203b0a3de05cfd856ee157b2b672d7d2fa4f9a2"
+    },
+    {
+      "frame": "move_44",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels_veteran/move_near_v1.png",
+      "source_sha256": "1dd7c8b66a705541a5777e5a778ffe9f0c426bf908c4cddcfbea53cfa285e0df",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "217768f7cb658c19989edd9e562504ee2e37f0f321062ddb344f501ef534c1c4"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    389,
+    588
+  ],
+  "output_scale": 0.46,
+  "free_pixels_left_top_right_bottom": [
+    135,
+    53,
+    135,
+    52
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

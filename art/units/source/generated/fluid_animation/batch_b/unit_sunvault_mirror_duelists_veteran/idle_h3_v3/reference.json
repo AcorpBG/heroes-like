@@ -1,0 +1,28 @@
+{
+  "unit_id": "unit_sunvault_mirror_duelists_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/idle_v2.png",
+      "source_sha256": "877b3dc508a85ec73b88534682a8780234f5f6e550c7a8463ecb427252caffd9",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "18812dc66dd3ad1e1106b92eb3dca3ec67fd2cc2aad435d488a1c046bc3ac4d1"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    449,
+    597
+  ],
+  "output_scale": 0.46,
+  "free_pixels_left_top_right_bottom": [
+    49,
+    43,
+    49,
+    43
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

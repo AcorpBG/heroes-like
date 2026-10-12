@@ -1,0 +1,50 @@
+{
+  "unit_id": "unit_sunvault_noonfacet_sentinels_veteran",
+  "clip": "cast",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    389,
+    588
+  ],
+  "scale": 0.46,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026103105,
+  "references": [
+    "idle_0",
+    "cast_27"
+  ],
+  "guides": [
+    [
+      44,
+      1
+    ],
+    [
+      70,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original armoured sentinel, the Meridian Lockguard veteran, facing screen right in elevated three-quarter view. Keep the ivory plate armour with gold trim, the navy cloth split tabard, the closed round sundial helmet of gold and ivory with a short top spike, and gold sabatons. Exactly two arms, two hands and two legs. The near screen-LEFT arm bears ONE huge tall pointed navy and ivory sundial shield with a gold central boss; the far screen-RIGHT hand holds ONE gold-shafted polearm angled up toward screen right, topped by a round violet gem between TWO cyan-violet crystal crescent blades. Preserve the shield, the polearm, the sundial helmet and the armoured adult proportions. A rallying salute. He lifts the polearm straight up high with the crescent head toward the sky while the shield stays in front, holds it there briefly, then lowers it back to the original angled stance. A physical gesture only: no spell, glow change or aura. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full polearm with both crescents, the shield, the helmet spike, limbs and boots within frame. The background is perfectly flat saturated GREEN throughout, no gradients or changes of hue. The green background stays the same flat saturated green in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, motion trails, slash arcs, sparks, particles or extra limbs; the crystal crescents keep only their steady glow. Articulate joints naturally with physical planted-foot support; do not morph the polearm or shield.",
+  "protected_foreground_chroma": 36,
+  "edge_threshold": 110,
+  "palette_measurement": {
+    "bluest_opaque": 34.0,
+    "blue_minus_green_p999": 104.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

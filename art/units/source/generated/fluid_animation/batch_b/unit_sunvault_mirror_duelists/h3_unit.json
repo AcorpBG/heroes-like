@@ -149,6 +149,57 @@
       ],
       "last": 2,
       "action": "Collapse slowly from standing. She doubles over and sinks onto her knees with the sabre point dropping to the ground, stays kneeling a moment, then tips over onto her side and lies down, finishing lying motionless with the head at screen left and the boots at screen right, the sabre on the ground beside her and the buckler still on her arm. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "attack_v1_0",
+        "attack_v1_2",
+        "attack_v1_4"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE sabre slash toward screen right. She raises the sabre high over her head as the knees bend, then lunges forward on the front leg and slashes the blade down and out to full reach at screen right, draws it back and returns to the original low guard stance. One slash only; the buckler stays on the screen-right forearm.",
+      "pad": [
+        0,
+        128,
+        0,
+        0
+      ]
+    },
+    "cast_h3_v2": {
+      "clip": "cast",
+      "references": [
+        "attack_v1_0",
+        "cast_v1_3"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A duelist's salute. She brings the sabre up vertical in front of her face with the blade pointing to the sky and opens the buckler arm out to the side, holds the salute briefly, then lowers the sabre back to the original low guard stance. A physical gesture only: no spell, glow or aura.",
+      "pad": [
+        0,
+        128,
+        0,
+        0
+      ]
     }
   }
 }

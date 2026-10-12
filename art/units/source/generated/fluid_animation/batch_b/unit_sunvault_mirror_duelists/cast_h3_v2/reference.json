@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_sunvault_mirror_duelists",
+  "guides": [
+    {
+      "frame": "attack_v1_0",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/attack_v1.png",
+      "source_sha256": "5baa2a3ab83fcba1eebdc8fadd7b886fbe5eb7d9241bc59ff0172d22b2d36748",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "aab328878cbe70f7b6fdea24ce5419386845e0aa61fff6880adf6e2c1f6974d8"
+    },
+    {
+      "frame": "cast_v1_3",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/cast_v1.png",
+      "source_sha256": "a7051d62fae784421c569ff4c6cf4aea803fc7b7dbb9cde04bbdabc6f42e6f69",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "08795b37a5b874bf2014cbc716888f5e1616e944ca00e6122a2fd0116e1f1c06"
+    }
+  ],
+  "canvas": [
+    960,
+    768
+  ],
+  "ground_anchor": [
+    496,
+    708
+  ],
+  "output_scale": 0.46,
+  "free_pixels_left_top_right_bottom": [
+    98,
+    179,
+    97,
+    51
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

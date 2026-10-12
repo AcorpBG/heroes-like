@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_sunvault_mirror_duelists_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/idle_v2.png",
+      "source_sha256": "877b3dc508a85ec73b88534682a8780234f5f6e550c7a8463ecb427252caffd9",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "d840a09a2580b4f4f00297b2a918d18007607492736522fe0aeb29f8484ae6c9"
+    },
+    {
+      "frame": "attack_10",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/attack_v1.png",
+      "source_sha256": "a7e03db4730e4e1f47b9fbaea4ef01d1e60c4a3d9e2e9e5d664e787e9678cd11",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "dfc2506d1243fd24c08a618125fa964d830bcf01e838cb93a4027f20f8fc8d70"
+    },
+    {
+      "frame": "attack_12",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/attack_v1.png",
+      "source_sha256": "a7e03db4730e4e1f47b9fbaea4ef01d1e60c4a3d9e2e9e5d664e787e9678cd11",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "0ccecc9d4f8e2c1b57e10b7ec1ee0f3a5e97580fc64853068937d0269f00b433"
+    }
+  ],
+  "canvas": [
+    960,
+    768
+  ],
+  "ground_anchor": [
+    449,
+    725
+  ],
+  "output_scale": 0.46,
+  "free_pixels_left_top_right_bottom": [
+    49,
+    171,
+    49,
+    43
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
