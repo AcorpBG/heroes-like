@@ -1,0 +1,54 @@
+{
+  "unit_id": "unit_mireclaw_mudglass_slingers_veteran",
+  "clip": "idle",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    408,
+    596
+  ],
+  "scale": 0.48,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026102450,
+  "references": [
+    "idle_0",
+    "idle_4"
+  ],
+  "guides": [
+    [
+      31,
+      1
+    ],
+    [
+      62,
+      0
+    ],
+    [
+      93,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original slender athletic marsh slinger, the Mudglass Slinger veteran, facing screen right in elevated three-quarter view. Keep the pallid skin, the dark swept-back tied reed hair, the pale green carved bone face mask with eye holes and an exposed mouth, the dark olive scarf, small bronze and reed shoulder plates, fitted brown and green leather armour, ragged split moss-cloth belt tails, TWO small corked glass jars at the near hip, and wrapped leather leggings and boots. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE flexible doubled-cord sling with a small leather pouch hanging low; the screen-RIGHT hand holds ONE small amber-green glass ball. Preserve the mask, sling, jars, glass ball and slender adult proportions. A poised, alert idle that loops. The slinger breathes, the shoulders rise and fall, the masked head turns a little, the free hand tosses the glass ball gently and catches it while the sling sways from the other hand, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no throwing. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, sling cords, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the sling or mask.",
+  "protected_foreground_chroma": 2,
+  "edge_threshold": 6,
+  "palette_measurement": {
+    "bluest_opaque": 0.0,
+    "blue_minus_green_p999": -1.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

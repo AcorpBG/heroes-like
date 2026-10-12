@@ -1,0 +1,50 @@
+{
+  "unit_id": "unit_mireclaw_mireglass_reedcasters_veteran",
+  "clip": "cast",
+  "canvas": [
+    960,
+    704
+  ],
+  "anchor": [
+    418,
+    657
+  ],
+  "scale": 0.48,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026102409,
+  "references": [
+    "idle_0",
+    "cast_36"
+  ],
+  "guides": [
+    [
+      44,
+      1
+    ],
+    [
+      70,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original slender pale marsh spellcaster, the Mireglass Dissonant, facing screen right in elevated three-quarter view. Keep the straight black hair under an olive-gold pointed hood crowned with tall dry reeds, the layered ragged olive and blue-grey reed coat with a long split hanging skirt, dark leggings, bronze-wrapped knee-high boots, engraved forearm bracers and a round turquoise glass medallion at the belt. Exactly two arms, two hands and two legs. The screen-RIGHT hand grips ONE long crooked wooden reed staff, held upright, whose forked crown holds exactly three turquoise glass lenses with slender glass chimes dangling below; the screen-LEFT hand is free. Preserve the staff, lenses, chimes, hood and slender adult proportions. An invocation. The caster raises the free arm high above the shoulder with the palm toward the sky and the head tilted up, the fingers making a precise sign while the staff lifts slightly and its lenses glint turquoise, holds it briefly, then sweeps the hand down across the chest and returns to the original stance. No large spell effect or particles. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full hood reeds, the staff crown, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, large magic effects, projectiles, particles or extra limbs; the lenses keep only a small turquoise glint. Articulate joints naturally with physical planted-foot support; do not morph the staff.",
+  "protected_foreground_chroma": 35,
+  "edge_threshold": 15,
+  "palette_measurement": {
+    "bluest_opaque": 33.0,
+    "blue_minus_green_p999": 9.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

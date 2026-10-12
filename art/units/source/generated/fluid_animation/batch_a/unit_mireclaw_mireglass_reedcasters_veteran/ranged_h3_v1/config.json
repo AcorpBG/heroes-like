@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_mireclaw_mireglass_reedcasters_veteran",
+  "clip": "ranged",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    418,
+    593
+  ],
+  "scale": 0.48,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026102403,
+  "references": [
+    "idle_0",
+    "ranged_19",
+    "ranged_20"
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      56,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original slender pale marsh spellcaster, the Mireglass Dissonant, facing screen right in elevated three-quarter view. Keep the straight black hair under an olive-gold pointed hood crowned with tall dry reeds, the layered ragged olive and blue-grey reed coat with a long split hanging skirt, dark leggings, bronze-wrapped knee-high boots, engraved forearm bracers and a round turquoise glass medallion at the belt. Exactly two arms, two hands and two legs. The screen-RIGHT hand grips ONE long crooked wooden reed staff, held upright, whose forked crown holds exactly three turquoise glass lenses with slender glass chimes dangling below; the screen-LEFT hand is free. Preserve the staff, lenses, chimes, hood and slender adult proportions. Make ONE ranged gesture toward screen right. The caster draws the free hand back to the chest, then thrusts the arm out at full extension toward screen right with the palm open, holds a moment, then the arm recoils and lowers and the caster returns to the original stance. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full hood reeds, the staff crown, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, large magic effects, projectiles, particles or extra limbs; the lenses keep only a small turquoise glint. Articulate joints naturally with physical planted-foot support; do not morph the staff.",
+  "protected_foreground_chroma": 35,
+  "edge_threshold": 16,
+  "palette_measurement": {
+    "bluest_opaque": 33.0,
+    "blue_minus_green_p999": 10.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

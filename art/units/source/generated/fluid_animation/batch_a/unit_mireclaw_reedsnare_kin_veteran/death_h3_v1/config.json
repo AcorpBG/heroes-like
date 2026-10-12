@@ -1,0 +1,46 @@
+{
+  "unit_id": "unit_mireclaw_reedsnare_kin_veteran",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    408,
+    592
+  ],
+  "scale": 0.46,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026102506,
+  "references": [
+    "idle_0",
+    "death_39"
+  ],
+  "guides": [
+    [
+      90,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "ONE original sturdy marsh trapper, the Reedsnare veteran, facing screen right in elevated three-quarter view. Keep the man with a weathered bearded face under a mottled moss-green hood, a straw and reed shoulder mantle, moss and brown layered leather armour, crossed rope straps with a bronze wheel-shaped chest brooch, a small netted pouch at the hip, ragged leaf-shaped skirt panels, wrapped bracers, sturdy leather leggings and boots. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE large coil of thick tan rope at the hip; the screen-RIGHT hand holds ONE wooden pole angled up toward screen right, ending in ONE inward-curved steel hook with ONE loose rope noose hanging below it. Preserve the rope coil, pole, hook, noose and sturdy adult proportions. Collapse continuously from standing: he doubles over, sinks onto his knees with the pole dragging, falls forward onto his hands and slumps flat, finishing lying motionless face down with the hood at screen right and the boots at screen left, the rope coil and the hooked pole lying on the ground beside him. No recovery, no floating equipment and no disappearing body. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full hood, the pole, hook and noose, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the pole or rope.",
+  "protected_foreground_chroma": 8,
+  "edge_threshold": 6,
+  "palette_measurement": {
+    "bluest_opaque": 6.0,
+    "blue_minus_green_p999": 0.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

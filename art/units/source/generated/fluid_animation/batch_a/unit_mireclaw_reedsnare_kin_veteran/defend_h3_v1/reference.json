@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_mireclaw_reedsnare_kin_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/idle_v1.png",
+      "source_sha256": "ad00baf8135c8602f3755d8d4d02754667739897ef893e32ab4f7796eb5076fa",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "980d5aa45ca6aabffbb2399285fc0d498ba82a7815f9c9c7674f59b0d41e3fe5"
+    },
+    {
+      "frame": "defend_21",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/reactions_v1.png",
+      "source_sha256": "4cab851a28911b3db3eb46b86d1218aae4641c0e1af3bbdf18ffb32d7a232887",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "775b4fafb20f62a7b96d977f6f3c016c7d03ae8b2783c982fd21b3e25a86fa18"
+    },
+    {
+      "frame": "defend_22",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/reactions_v1.png",
+      "source_sha256": "4cab851a28911b3db3eb46b86d1218aae4641c0e1af3bbdf18ffb32d7a232887",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "dda044446339ff97fca8b0d093048d6132a3297095e76e1e1db98d501683bd68"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    408,
+    592
+  ],
+  "output_scale": 0.46,
+  "free_pixels_left_top_right_bottom": [
+    96,
+    47,
+    95,
+    48
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

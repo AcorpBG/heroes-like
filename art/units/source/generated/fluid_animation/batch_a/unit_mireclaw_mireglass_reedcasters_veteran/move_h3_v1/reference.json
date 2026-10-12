@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_mireclaw_mireglass_reedcasters_veteran",
+  "guides": [
+    {
+      "frame": "move_48",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters_veteran/move_v1.png",
+      "source_sha256": "84d535a14ab90b50dcc74f5f3e92f51dc4c05702de281c4df59cca635e8c43fd",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "106b198f306036a67fb075187be8587fcab9f7423235ae49cedc7117e17cf446"
+    },
+    {
+      "frame": "move_52",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters_veteran/move_v1.png",
+      "source_sha256": "84d535a14ab90b50dcc74f5f3e92f51dc4c05702de281c4df59cca635e8c43fd",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "4bbf3e81f0899b175dfb9d2df8d7184aeaea046cf52a08564ff365ff99064990"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    418,
+    593
+  ],
+  "output_scale": 0.48,
+  "free_pixels_left_top_right_bottom": [
+    123,
+    47,
+    122,
+    47
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -1,0 +1,77 @@
+{
+  "unit_id": "unit_mireclaw_mudglass_slingers_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/idle_v1.png",
+      "source_sha256": "14ddfba017b578160f7be61e7187a492afabdb20f82266aceea7f39f7f849549",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "81ab59175876df7139308fdce3906a8f8d6f2165e103208dd3fd1c994d15410a"
+    },
+    {
+      "frame": "death_42",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/death_v1.png",
+      "source_sha256": "52f95547887e008bc5fdf3563c48cbde5481b392c8e533ea1f47dadd42048358",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "c5458bda3e8a6d832dee1bd47a6da2a099044f3f2fb0ab7d2481036dc9a10ad3"
+    },
+    {
+      "frame": "death_43",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/death_v1.png",
+      "source_sha256": "52f95547887e008bc5fdf3563c48cbde5481b392c8e533ea1f47dadd42048358",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "bc0703e1fb093362adefe300f74fb7d608e4dbc184b7b9cff47126ff791b2f69"
+    },
+    {
+      "frame": "death_44",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/death_v1.png",
+      "source_sha256": "52f95547887e008bc5fdf3563c48cbde5481b392c8e533ea1f47dadd42048358",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "78236b670a2fa4b7148bc5611deda6954610ed8c24ae5197bfce0a2020cca2b1"
+    },
+    {
+      "frame": "death_45",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/death_v1.png",
+      "source_sha256": "52f95547887e008bc5fdf3563c48cbde5481b392c8e533ea1f47dadd42048358",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "227d4b8c4d5e99961ccf2f79271eec3d6932583f32a0fa5ca739eae3c0705eb5"
+    },
+    {
+      "frame": "death_46",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/death_v1.png",
+      "source_sha256": "52f95547887e008bc5fdf3563c48cbde5481b392c8e533ea1f47dadd42048358",
+      "input_file": "guide_5_chroma.png",
+      "input_sha256": "c89e0177bff983c21f77b95aaceb7be75b857455e9efc4776eb189b9b1ecdc05"
+    },
+    {
+      "frame": "death_47",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/death_v1.png",
+      "source_sha256": "52f95547887e008bc5fdf3563c48cbde5481b392c8e533ea1f47dadd42048358",
+      "input_file": "guide_6_chroma.png",
+      "input_sha256": "79e6f27f73a29f3a778370f7d73dd7839a3c1e5f657c1e6de963949cc2d9d098"
+    },
+    {
+      "frame": "death_48",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/death_v1.png",
+      "source_sha256": "52f95547887e008bc5fdf3563c48cbde5481b392c8e533ea1f47dadd42048358",
+      "input_file": "guide_7_chroma.png",
+      "input_sha256": "f7a8e252db8c23ae8d387e53806245e908052a4b23874b394004dc289826d356"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    408,
+    596
+  ],
+  "output_scale": 0.48,
+  "free_pixels_left_top_right_bottom": [
+    135,
+    43,
+    167,
+    44
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

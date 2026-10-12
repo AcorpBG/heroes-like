@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_mireclaw_reedsnare_kin_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/idle_v1.png",
+      "source_sha256": "ad00baf8135c8602f3755d8d4d02754667739897ef893e32ab4f7796eb5076fa",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "980d5aa45ca6aabffbb2399285fc0d498ba82a7815f9c9c7674f59b0d41e3fe5"
+    },
+    {
+      "frame": "idle_4",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/idle_v1.png",
+      "source_sha256": "ad00baf8135c8602f3755d8d4d02754667739897ef893e32ab4f7796eb5076fa",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "3118b3ba2f668915c904abe15f80d12b3d85ca815a8b764b997c65e684a096d3"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    408,
+    592
+  ],
+  "output_scale": 0.46,
+  "free_pixels_left_top_right_bottom": [
+    96,
+    47,
+    95,
+    48
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

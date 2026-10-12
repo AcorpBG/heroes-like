@@ -164,6 +164,72 @@
       ],
       "last": 1,
       "action": "Collapse continuously from standing: the slinger clutches the middle, sinks onto the knees, catches the fall on one hand and slumps forward onto the ground, finishing lying motionless face down with the head at screen right and the boots at screen left, the sling and the glass ball lying on the ground by the hand. No recovery, no floating equipment and no disappearing body."
+    },
+    "death_h3_v2": {
+      "clip": "death",
+      "references": [
+        "idle_0",
+        "death_42",
+        "death_43",
+        "death_44",
+        "death_45",
+        "death_46",
+        "death_47",
+        "death_48"
+      ],
+      "guides": [
+        [
+          14,
+          1
+        ],
+        [
+          28,
+          2
+        ],
+        [
+          42,
+          3
+        ],
+        [
+          56,
+          4
+        ],
+        [
+          70,
+          5
+        ],
+        [
+          84,
+          6
+        ],
+        [
+          98,
+          7
+        ]
+      ],
+      "last": 7,
+      "action": "Collapse continuously from standing: the slinger clutches the middle, sinks onto the knees, catches the fall on one hand and slumps forward onto the ground, finishing lying motionless face down with the head at screen right and the boots at screen left, the sling and the glass ball lying on the ground by the hand. No recovery, no floating equipment and no disappearing body. Only the body moves; nothing else appears in the frame."
+    },
+    "death_h3_v3": {
+      "clip": "death",
+      "references": [
+        "idle_0",
+        "death_48"
+      ],
+      "guides": [
+        [
+          90,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "Collapse continuously from standing: the slinger clutches the middle, sinks onto the knees, catches the fall on one hand and slumps forward onto the ground, finishing lying motionless face down with the head at screen right and the boots at screen left, the sling and the glass ball lying on the ground by the hand. No recovery, no floating equipment and no disappearing body. Only the body moves; nothing else appears in the frame.",
+      "pad": [
+        64,
+        0,
+        0,
+        0
+      ]
     }
   }
 }

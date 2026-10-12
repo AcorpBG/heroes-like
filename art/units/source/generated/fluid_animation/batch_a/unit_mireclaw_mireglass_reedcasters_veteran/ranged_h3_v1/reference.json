@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_mireclaw_mireglass_reedcasters_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters_veteran/idle_v1.png",
+      "source_sha256": "69992a7a7303adea9ac1df45e60e26ecd44df7d3893e6dcacc47916763791a4e",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "441164b0b17553e65efdff66dae0e54070b42a5e92ec670abc0767f7191c2ef0"
+    },
+    {
+      "frame": "ranged_19",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters_veteran/ranged_v1.png",
+      "source_sha256": "db815c7e21ee469d86d4c759e4ccfaf9b01b53dc9fdcdac296dbec7262bffae0",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "398d402309ac3c9c1a8232198c1c4c05caddd31be1365d4b4ca47fc2dbc193c7"
+    },
+    {
+      "frame": "ranged_20",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters_veteran/ranged_v1.png",
+      "source_sha256": "db815c7e21ee469d86d4c759e4ccfaf9b01b53dc9fdcdac296dbec7262bffae0",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "87da3561e85bd5dff13f1c81544f7f1e04d5feb272e379181649a43c70097180"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    418,
+    593
+  ],
+  "output_scale": 0.48,
+  "free_pixels_left_top_right_bottom": [
+    123,
+    47,
+    122,
+    47
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

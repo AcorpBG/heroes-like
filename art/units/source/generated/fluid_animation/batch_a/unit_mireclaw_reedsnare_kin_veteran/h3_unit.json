@@ -144,6 +144,27 @@
       ],
       "last": 1,
       "action": "Collapse continuously from standing: he doubles over, sinks onto his knees with the pole dragging, falls forward onto his hands and slumps flat, finishing lying motionless face down with the hood at screen right and the boots at screen left, the rope coil and the hooked pole lying on the ground beside him. No recovery, no floating equipment and no disappearing body."
+    },
+    "death_h3_v2": {
+      "clip": "death",
+      "references": [
+        "idle_0",
+        "death_39"
+      ],
+      "guides": [
+        [
+          90,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "Collapse continuously from standing: he doubles over, sinks onto his knees with the pole dragging, falls forward onto his hands and slumps flat, finishing lying motionless face down with the hood at screen right and the boots at screen left, the rope coil and the hooked pole lying on the ground beside him. No recovery, no floating equipment and no disappearing body. Only the body moves; nothing else appears in the frame.",
+      "pad": [
+        64,
+        0,
+        0,
+        0
+      ]
     }
   }
 }
