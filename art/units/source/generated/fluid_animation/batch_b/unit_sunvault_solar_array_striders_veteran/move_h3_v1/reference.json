@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_sunvault_solar_array_striders_veteran",
+  "guides": [
+    {
+      "frame": "move_40",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/move_tripod_v1.png",
+      "source_sha256": "041a2757308946050b8ef81b30c18d0d03f82093e9eee6986b1c769db342e0db",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "25d4df45673acb26357f64744d7973066bdaddb66b0230f3c49e7d5a3475f2ac"
+    },
+    {
+      "frame": "move_44",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/move_tripod_v1.png",
+      "source_sha256": "041a2757308946050b8ef81b30c18d0d03f82093e9eee6986b1c769db342e0db",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "d40c9ad60d1572fe06fce8c2cdac849ea9667f3b803eb85335cff9d3dc5c21e3"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    453,
+    586
+  ],
+  "output_scale": 0.45,
+  "free_pixels_left_top_right_bottom": [
+    114,
+    50,
+    114,
+    51
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

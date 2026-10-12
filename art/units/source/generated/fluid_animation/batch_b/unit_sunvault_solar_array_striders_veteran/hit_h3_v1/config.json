@@ -1,0 +1,46 @@
+{
+  "unit_id": "unit_sunvault_solar_array_striders_veteran",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    453,
+    586
+  ],
+  "scale": 0.45,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026103303,
+  "references": [
+    "hit_17",
+    "idle_0"
+  ],
+  "guides": [
+    [
+      40,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "ONE original four-legged construct, the Heliostat Pathfinder veteran, facing screen right in elevated three-quarter view. Keep the ivory enamel and brass jointed body, the slim upright torso with a pointed closed avian visor with a blue eye and gold crown points, the broad hinged blue-violet solar-array fans spreading from the back, EXACTLY FOUR articulated walking legs with split blue crystal feet under the compact body, and the near arm ending in ONE short integrated forearm blade with a round blue lens and a gold spear point. No hand-held weapons, rider or extra legs. Preserve the four legs, the solar fans, the visor and the forearm blade. Start rocked back in a flinch, then recover completely. The torso jolts back and folds down, the fans clap closed and the leg hinges compress, then the construct springs back up, the fans reopen and it returns to the same stance. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed scale and centred body. Keep the full solar fans, the blade point, the crown points and all four feet within frame. The background is perfectly flat saturated GREEN throughout, no gradients or changes of hue. The green background stays the same flat saturated green in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, beams, flashes, sparks, motion trails, particles or extra legs; the crystals keep only their steady glow. The construct moves at its joints and hinges; the fans and armour stay rigid and never bend or morph.",
+  "protected_foreground_chroma": 44,
+  "edge_threshold": 157,
+  "palette_measurement": {
+    "bluest_opaque": 42.0,
+    "blue_minus_green_p999": 151.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

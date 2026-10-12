@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_sunvault_zenith_lensbearers_veteran",
+  "guides": [
+    {
+      "frame": "move_48",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/move_near_v1.png",
+      "source_sha256": "abece6feead0ff9feebd7adb68f9d5113c0ebf304ad0e03107afad28543f4a82",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "531fcef7444bf3ce3cb3da2cf492e618417bec2de88bc865deda80b1180c82bd"
+    },
+    {
+      "frame": "move_52",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/move_v1.png",
+      "source_sha256": "f384fbf4e16e830cbca47eb62e49c170a820c53f36e9c0d570a02531343e407e",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "61629b9a6a5d673e1515c93332e1fede56af24609668a101807bf22351797753"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    422,
+    570
+  ],
+  "output_scale": 0.5,
+  "free_pixels_left_top_right_bottom": [
+    145,
+    53,
+    145,
+    53
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_sunvault_zenith_lensbearers_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/idle_v1.png",
+      "source_sha256": "5aea9a94768dd6e89d144e003c5ad7ad192989461619e874d4d9b3d9ff5d139b",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "881857529b4097b4e3b50179327e28602f305070dc1c4aea0ca902523aca88ab"
+    },
+    {
+      "frame": "death_42",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/death_v1.png",
+      "source_sha256": "558c0a9cea79a1fd69c506ce2b1e37f5cc3680ce58fbbad607fcebc3d213ed5e",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "d5959e6f07378b3f54c70c64f8abdfd6eef830689a158864849ba0a5c852ccff"
+    },
+    {
+      "frame": "death_47",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/death_v1.png",
+      "source_sha256": "558c0a9cea79a1fd69c506ce2b1e37f5cc3680ce58fbbad607fcebc3d213ed5e",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "dae49d1560070f7d44945e91158cdb868db181b39c4f184571a0e4c7c11003a1"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    422,
+    570
+  ],
+  "output_scale": 0.5,
+  "free_pixels_left_top_right_bottom": [
+    145,
+    53,
+    145,
+    53
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

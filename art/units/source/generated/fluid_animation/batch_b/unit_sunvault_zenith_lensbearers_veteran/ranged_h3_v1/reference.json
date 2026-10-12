@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_sunvault_zenith_lensbearers_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/idle_v1.png",
+      "source_sha256": "5aea9a94768dd6e89d144e003c5ad7ad192989461619e874d4d9b3d9ff5d139b",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "881857529b4097b4e3b50179327e28602f305070dc1c4aea0ca902523aca88ab"
+    },
+    {
+      "frame": "ranged_18",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/ranged_v1.png",
+      "source_sha256": "7f80e01ee294df00cb390c16c4ce6590f0abe1801f10894f6b11d3189d876418",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "bbc6c70e0ad7a33aed64ad97b96b65a6d8cde81040b173ca35cade58af55c3b6"
+    },
+    {
+      "frame": "ranged_20",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/ranged_v1.png",
+      "source_sha256": "7f80e01ee294df00cb390c16c4ce6590f0abe1801f10894f6b11d3189d876418",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "990706c3a5887f64e4f9528000f8db688775dab1a5a9accb88557b7bf174ddcb"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    422,
+    570
+  ],
+  "output_scale": 0.5,
+  "free_pixels_left_top_right_bottom": [
+    145,
+    53,
+    145,
+    53
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

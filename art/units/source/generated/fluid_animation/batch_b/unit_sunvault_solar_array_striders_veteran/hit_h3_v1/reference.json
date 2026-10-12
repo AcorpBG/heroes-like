@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_sunvault_solar_array_striders_veteran",
+  "guides": [
+    {
+      "frame": "hit_17",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/reactions_v1.png",
+      "source_sha256": "1173a4314ec2d816d1f37abcb7f18fbbeadc351479efe52c80763c52d627ed28",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "49aded471693819293bda380abae06247c4e1c4b981258e49b4c4e7ab3a7ced3"
+    },
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/idle_v1.png",
+      "source_sha256": "fc04843420ae852bff6433aba448373be3d6f8908f02d9798516137b999fff16",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "6608d9c40ef239fb5144982293dd6dbdd4726accf55a0036c2fcbfc7e4381ee6"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    453,
+    586
+  ],
+  "output_scale": 0.45,
+  "free_pixels_left_top_right_bottom": [
+    114,
+    50,
+    114,
+    51
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -1,0 +1,54 @@
+{
+  "unit_id": "unit_sunvault_zenith_lensbearers_veteran",
+  "clip": "idle",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    422,
+    570
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026103350,
+  "references": [
+    "idle_0",
+    "idle_4"
+  ],
+  "guides": [
+    [
+      31,
+      1
+    ],
+    [
+      62,
+      0
+    ],
+    [
+      93,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original tall armoured humanoid, the Horizon Arbiter veteran, facing screen right in elevated three-quarter view. Keep the ivory and gold streamlined beaked helmet with a horizontal blue visor, the black faceless undersuit at the neck, the white and gold shoulder and forearm plates, golden greaves and boots, the long split ivory coat over a dark blue star-chart tabard with gold linework, and the lavender-blue cape with gold trim. A LARGE round blue lens in a spiked brass ring is fixed on a harness behind the screen-left shoulder, with a gold orbital arc above the helmet; it never detaches. Exactly two arms, two black-gloved hands and two legs. Both hands hold ONE long gold staff angled toward screen right, tipped with ONE large round blue lens in a brass ring and a dangling faceted blue crystal below it. Preserve the back lens, the staff lens, the helmet and the tall adult proportions. A composed, observant idle that loops. The arbiter breathes, the shoulders rise and fall, the staff is lifted a little so the lens tilts and the crystal pendant swings, the helmeted head turns slightly as if sighting the horizon, the coat stirs, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no casting. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full staff and its lens, the back lens, the arc, limbs and boots within frame. The background is perfectly flat saturated GREEN throughout, no gradients or changes of hue. The green background stays the same flat saturated green in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, beams, projectiles, sparks, motion trails, particles or extra limbs; the lenses keep only their steady glow, and only the staff lens may brighten where the action says so. Articulate joints naturally with physical planted-foot support; do not morph the staff or lenses.",
+  "protected_foreground_chroma": 18,
+  "edge_threshold": 79,
+  "palette_measurement": {
+    "bluest_opaque": 16.0,
+    "blue_minus_green_p999": 73.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}
