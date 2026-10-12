@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_prism_adept_veteran",
+  "guides": [
+    {
+      "frame": "hit_defend_v1_01",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/hit_defend_v1_frame_01.png",
+      "source_sha256": "af648322a5c3bc8b50f0753920e7416606ae00bc313e208f898c2114b15c001a",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "16cf9f0027cc7cf7a98c3ccaaa5a946be1e9b9e4d2b700c5730e99aa86db7eb5"
+    },
+    {
+      "frame": "idle_v1_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/idle_v1_frame_00.png",
+      "source_sha256": "804ddfb2f6e8044f0b01fcb8fc7de995ec44a621c6cff24e94f6899a7ca73b18",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "37c67dd4283fd3bc7b20bcfbc431f57b3fb492ab84df90c0471c09ff9f52d056"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    514,
+    594
+  ],
+  "output_scale": 0.43,
+  "free_pixels_left_top_right_bottom": [
+    199,
+    41,
+    199,
+    42
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

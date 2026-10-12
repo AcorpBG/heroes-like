@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_aurora_ballista_veteran",
+  "guides": [
+    {
+      "frame": "hit_defend_v2_01",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_aurora_ballista_veteran/hit_defend_v2_frame_01.png",
+      "source_sha256": "5753828d7781fc575fce1df32630aa4316edd84f78d3e97a06d6dc5f1a67d09d",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "98633ae99c35d25f13f99997af18773e27ad4338869b86685c754a7cbf331ea5"
+    },
+    {
+      "frame": "idle_v1_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_aurora_ballista_veteran/idle_v1_frame_00.png",
+      "source_sha256": "15f2a1fad89c207c789ab089927d48638225d96d025fd790855daed7034eb5f8",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "e99030dc03e1ac7000e0be4961ffbc80a35998f28a7cc9b39d587d36d55d6c33"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    457,
+    592
+  ],
+  "output_scale": 0.45,
+  "free_pixels_left_top_right_bottom": [
+    192,
+    42,
+    192,
+    42
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_prism_adept_veteran",
+  "guides": [
+    {
+      "frame": "idle_v1_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/idle_v1_frame_00.png",
+      "source_sha256": "804ddfb2f6e8044f0b01fcb8fc7de995ec44a621c6cff24e94f6899a7ca73b18",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "37c67dd4283fd3bc7b20bcfbc431f57b3fb492ab84df90c0471c09ff9f52d056"
+    },
+    {
+      "frame": "death_v2_02",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/death_v2_frame_02.png",
+      "source_sha256": "84522a3eba79734ce47507bbb0c5ed231abcd631c41c88d83a79ded706974530",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "419f95ede87e4860b45c945d74d18752f2e8b401d0ebec5a1995a29408392a40"
+    },
+    {
+      "frame": "death_v2_07",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/death_v2_frame_07.png",
+      "source_sha256": "7eb2b34c44714f212b92f98474bdeeb0bece84cf77ccca15df1555f9a154783c",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "f71afb34a3361e6162e822bacdedbbd1a760853097b4b8cc3558ba49a24517d5"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    514,
+    594
+  ],
+  "output_scale": 0.43,
+  "free_pixels_left_top_right_bottom": [
+    199,
+    41,
+    199,
+    42
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

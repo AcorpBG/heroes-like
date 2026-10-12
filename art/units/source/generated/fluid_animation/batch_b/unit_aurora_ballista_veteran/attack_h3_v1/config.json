@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_aurora_ballista_veteran",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    457,
+    592
+  ],
+  "scale": 0.45,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026102702,
+  "references": [
+    "idle_v1_00",
+    "attack_v2_01",
+    "attack_v2_04"
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      54,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original mechanical artillery construct, the Aurora Ballista veteran, facing screen right in elevated three-quarter view. Keep the ivory enamel armour plates with polished brass and bronze joints, the central round brass pedestal, the violet-blue faceted crystal drum, the THREE long parallel firing rails held in brass bands and tipped with pointed blue crystals, the large brass spoked handwheel on the near side, and EXACTLY THREE articulated ivory and brass legs ending in pointed brass feet. No crew, rider, wheels or extra legs. Preserve the three rails, the handwheel, the crystal drum and the rigid machine proportions. Make ONE melee ram toward screen right. The machine lowers its rail bundle toward a nearby target and the rear legs bend, loading force, then the front feet brace and the body shoves forward so the rigid rail housing strikes at full reach at screen right with all three rails still attached, the front legs compress absorbing the contact, then the body recoils back and settles level into the original ready position. One ram only; nothing is fired. Locked orthographic camera, fixed scale and centred body. Keep every crystal tip and all three feet within frame. The background is perfectly flat saturated GREEN throughout, no gradients or changes of hue. The green background stays the same flat saturated green in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, smoke, beams, bolts, sparks, motion trails, particles, crew or extra legs; the crystals keep only their steady blue glow. The machine moves only at its joints and pivots; the rails, drum and armour plates stay rigid and never bend or morph.",
+  "protected_foreground_chroma": 38,
+  "edge_threshold": 135,
+  "palette_measurement": {
+    "bluest_opaque": 36.0,
+    "blue_minus_green_p999": 129.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

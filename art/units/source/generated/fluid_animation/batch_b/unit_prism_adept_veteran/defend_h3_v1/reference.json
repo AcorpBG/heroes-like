@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_prism_adept_veteran",
+  "guides": [
+    {
+      "frame": "idle_v1_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/idle_v1_frame_00.png",
+      "source_sha256": "804ddfb2f6e8044f0b01fcb8fc7de995ec44a621c6cff24e94f6899a7ca73b18",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "37c67dd4283fd3bc7b20bcfbc431f57b3fb492ab84df90c0471c09ff9f52d056"
+    },
+    {
+      "frame": "hit_defend_v1_05",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/hit_defend_v1_frame_05.png",
+      "source_sha256": "354ba3767d48376e0ffe60167502782d9ed78fbce8d8c989b069bdfa12c897d0",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "dde64ee714155349912a018cc0001426e21672254400e3474a50ed8e43f65414"
+    },
+    {
+      "frame": "hit_defend_v1_06",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/hit_defend_v1_frame_06.png",
+      "source_sha256": "cab3703be217af6db7aea01447eb638c7acf938449463b53edc6f0271e0fc1be",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "f68d363824f4ad928542850429fcc3619dcedecf0cd6802b748472932b60ed3c"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    514,
+    594
+  ],
+  "output_scale": 0.43,
+  "free_pixels_left_top_right_bottom": [
+    199,
+    41,
+    199,
+    42
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

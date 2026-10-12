@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_prism_adept_veteran",
+  "guides": [
+    {
+      "frame": "idle_v1_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/idle_v1_frame_00.png",
+      "source_sha256": "804ddfb2f6e8044f0b01fcb8fc7de995ec44a621c6cff24e94f6899a7ca73b18",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "37c67dd4283fd3bc7b20bcfbc431f57b3fb492ab84df90c0471c09ff9f52d056"
+    },
+    {
+      "frame": "cast_v2_04",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/cast_v2_frame_04.png",
+      "source_sha256": "85571d4aeb90eb32ecab3f8bac461945cd8abc164105f31cae91c2dd7068464c",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "72f71a39d30c994cec714f7f7e938d79949bf2cb29aa03ce57adf5c3c39d264d"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    514,
+    594
+  ],
+  "output_scale": 0.43,
+  "free_pixels_left_top_right_bottom": [
+    199,
+    41,
+    199,
+    42
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

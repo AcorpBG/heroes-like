@@ -1,0 +1,69 @@
+{
+  "unit_id": "unit_aurora_ballista_veteran",
+  "clip": "ranged",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    457,
+    592
+  ],
+  "scale": 0.45,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026102710,
+  "references": [
+    "idle_v1_00",
+    "ranged_v1_01",
+    "ranged_v1_02",
+    "ranged_v1_05",
+    "ranged_v1_06"
+  ],
+  "guides": [
+    [
+      14,
+      1
+    ],
+    [
+      28,
+      2
+    ],
+    [
+      42,
+      3
+    ],
+    [
+      56,
+      3
+    ],
+    [
+      76,
+      4
+    ],
+    [
+      100,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original mechanical artillery construct, the Aurora Ballista veteran, facing screen right in elevated three-quarter view. Keep the ivory enamel armour plates with polished brass and bronze joints, the central round brass pedestal, the violet-blue faceted crystal drum, the THREE long parallel firing rails held in brass bands and tipped with pointed blue crystals, the large brass spoked handwheel on the near side, and EXACTLY THREE articulated ivory and brass legs ending in pointed brass feet. No crew, rider, wheels or extra legs. Preserve the three rails, the handwheel, the crystal drum and the rigid machine proportions. Make ONE recoil toward screen right as if firing a volley. The legs brace and the rails elevate a few degrees, the handwheel and crystal drum rotate to cock, then the three rails kick sharply back into their housing as the machine rocks back on its legs, stay compressed a moment, spring forward again as the handwheel turns, and the rails lower to the original level ready position. Nothing is fired: no bolt, beam, flash or sparks leave the rails, and the crystal tips keep the same soft glow. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed scale and centred body. Keep every crystal tip and all three feet within frame. The background is perfectly flat saturated GREEN throughout, no gradients or changes of hue. The green background stays the same flat saturated green in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, smoke, beams, bolts, sparks, motion trails, particles, crew or extra legs; the crystals keep only their steady blue glow. The machine moves only at its joints and pivots; the rails, drum and armour plates stay rigid and never bend or morph.",
+  "protected_foreground_chroma": 36,
+  "edge_threshold": 120,
+  "palette_measurement": {
+    "bluest_opaque": 34.0,
+    "blue_minus_green_p999": 114.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

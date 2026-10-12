@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_prism_adept_veteran",
+  "guides": [
+    {
+      "frame": "move_8",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/move_v3.png",
+      "source_sha256": "b1a2715bb15e37f16954fa039e5370e86704a384ee9725a9765e5967075e33b7",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "3f742b056f380e2cae490419ed4b87a90d891d46edca7321df2d645c96387011"
+    },
+    {
+      "frame": "move_12",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/move_v3.png",
+      "source_sha256": "b1a2715bb15e37f16954fa039e5370e86704a384ee9725a9765e5967075e33b7",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "91f0a0ad83da39b5657bcbbe3bfd0a2e84f99eb627e5cc76c8f2c59184272dad"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    514,
+    594
+  ],
+  "output_scale": 0.43,
+  "free_pixels_left_top_right_bottom": [
+    199,
+    41,
+    199,
+    42
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

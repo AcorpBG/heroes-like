@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_aurora_ballista_veteran",
+  "guides": [
+    {
+      "frame": "idle_v1_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_aurora_ballista_veteran/idle_v1_frame_00.png",
+      "source_sha256": "15f2a1fad89c207c789ab089927d48638225d96d025fd790855daed7034eb5f8",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "e99030dc03e1ac7000e0be4961ffbc80a35998f28a7cc9b39d587d36d55d6c33"
+    },
+    {
+      "frame": "ranged_v1_01",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_aurora_ballista_veteran/ranged_v1_frame_01.png",
+      "source_sha256": "7bd7d58236965b926c811e06c7fe6ab88b5eae8a3a249b47e92c2c367c3ba52c",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "9a9adac98046ca99dcb77272cdaa367fcac88a9f2c1fda3968ab99fc987d152b"
+    },
+    {
+      "frame": "ranged_v1_02",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_aurora_ballista_veteran/ranged_v1_frame_02.png",
+      "source_sha256": "e3fac28f2cd2c1300e5a02a8f40f4641de0e38de5b5b7c81f6c4f75890a66f5c",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "c0a14d660785f8781f8339d5d98885eec0f4a773e69d677c0a1b0a6045938cd2"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    457,
+    592
+  ],
+  "output_scale": 0.45,
+  "free_pixels_left_top_right_bottom": [
+    192,
+    42,
+    192,
+    42
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

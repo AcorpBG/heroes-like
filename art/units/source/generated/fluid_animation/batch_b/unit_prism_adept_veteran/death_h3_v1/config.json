@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_prism_adept_veteran",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    514,
+    594
+  ],
+  "scale": 0.43,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026102757,
+  "references": [
+    "idle_v1_00",
+    "death_v2_02",
+    "death_v2_07"
+  ],
+  "guides": [
+    [
+      48,
+      1
+    ],
+    [
+      96,
+      2
+    ]
+  ],
+  "last": 2,
+  "prompt": "ONE original slender elf archer woman, the Prism Adept veteran, facing screen right in elevated three-quarter view. Keep her white hair in a high ponytail, pointed ears, ivory and gold fitted armour, violet-blue crystal feather pauldrons, a long pale blue scarf trailing behind, ivory tasset panels, dark leggings, gold greaves and boots, and the hip quiver of crystal-fletched arrows. Exactly two arms, two hands and two legs. She holds ONE ornate gold recurved bow with crystal-tipped limbs and two round violet gems in the screen-RIGHT hand. Preserve the bow, the scarf, the crystal pauldrons, her face and slender adult proportions; no wings. Collapse slowly from standing. She doubles over and sinks onto her knees, the bow slipping down, stays kneeling a moment, then tips forward onto her side and lies down, finishing lying motionless on the ground with the head at screen right and the boots at screen left, the bow lying beside her. The body never leaves the ground; no recovery, no floating equipment and no disappearing body. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full bow, the ponytail, the scarf, limbs and boots within frame. The background is perfectly flat saturated GREEN throughout, no gradients or changes of hue. The green background stays the same flat saturated green in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, beams, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the bow.",
+  "protected_foreground_chroma": 23,
+  "edge_threshold": 66,
+  "palette_measurement": {
+    "bluest_opaque": 21.0,
+    "blue_minus_green_p999": 60.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}
