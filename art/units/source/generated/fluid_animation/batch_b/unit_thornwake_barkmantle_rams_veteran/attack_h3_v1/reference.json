@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_thornwake_barkmantle_rams_veteran",
+  "guides": [
+    {
+      "frame": "idle_v2_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_00.png",
+      "source_sha256": "9d132bd37c2d33b1cd271eeae71a62749d51e50c0f370d0f1fef67ee9937277c",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "24da6e5c9515c7a79e98d678b5e9de192c4de24f7d28830da5fd143d6fb72357"
+    },
+    {
+      "frame": "attack_v2_02",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_02.png",
+      "source_sha256": "9e6ebbfd4deb4a97e26c77a2a4193ddf886a7f6723e14121f91e135949c764f2",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "ef0c17023b626e91b018a1a1941fe3a755c2dd9b117db3d92f2a50642a0fbbf6"
+    },
+    {
+      "frame": "attack_v2_04",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_04.png",
+      "source_sha256": "13b269f33b800e518b95f601e5a8f84bbe6a9f1725d002ef85a34030e802aac4",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "fe3e14c16caea2d867027255aa97b1dcb0d84ae4aef7fb5d25cadb7f66f46eee"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    450,
+    585
+  ],
+  "output_scale": 0.46,
+  "free_pixels_left_top_right_bottom": [
+    91,
+    49,
+    90,
+    49
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

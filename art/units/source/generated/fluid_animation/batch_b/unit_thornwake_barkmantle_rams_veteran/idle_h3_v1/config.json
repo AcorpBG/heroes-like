@@ -1,0 +1,54 @@
+{
+  "unit_id": "unit_thornwake_barkmantle_rams_veteran",
+  "clip": "idle",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    450,
+    585
+  ],
+  "scale": 0.46,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026103400,
+  "references": [
+    "idle_v2_00",
+    "idle_v2_06"
+  ],
+  "guides": [
+    [
+      31,
+      1
+    ],
+    [
+      62,
+      0
+    ],
+    [
+      93,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original huge quadruped living-root ram, the Corkheart Rampart veteran, facing screen right in elevated three-quarter side view. Keep the body of overlapping tan cork bark plates bound by twisting brown roots, the mossy back crowned with green leaves and small white daisies, the thick ivory curled ram horns with a short forward horn on the snout, the small glowing amber heart in the chest, and the four thick root legs ending in splayed root toes. Exactly four legs and two curled horns. Preserve the cork plates, the horns, the daisies, the amber heart and the heavy proportions. A heavy, patient idle that loops. The bark chest swells and settles as it breathes, the horned head lowers a little and lifts again, one forefoot shifts its weight, the daisies on its back stir, then everything returns smoothly to the original stance. The other feet stay planted. No walking and no attack. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full horns, the back foliage and all four feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, falling leaves, petals, dust, magic, motion trails, particles or extra limbs; the amber heart keeps only its steady glow. Articulate joints naturally with physical planted-hoof support; the horns stay rigid and attached.",
+  "protected_foreground_chroma": 11,
+  "edge_threshold": 6,
+  "palette_measurement": {
+    "bluest_opaque": 9.0,
+    "blue_minus_green_p999": 0.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

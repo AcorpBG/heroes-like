@@ -7,1160 +7,4418 @@
       "source_facing": "right",
       "frames": [
         {
-          "name": "move_v3_00",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_00.png",
+          "name": "idle_h3_v1_000",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_000.png",
           "rects": [
             [
               0,
               0,
-              356,
-              303
+              960,
+              640
             ]
           ],
           "anchor": [
-            163.76000000000002,
-            300
+            450,
+            585
           ],
-          "scale": 0.78,
-          "source_rect": [
-            16,
-            174,
-            372,
-            477
-          ],
-          "clip": "move"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
         },
         {
-          "name": "move_v3_01",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_01.png",
+          "name": "idle_h3_v1_002",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_002.png",
           "rects": [
             [
               0,
               0,
-              349,
-              313
+              960,
+              640
             ]
           ],
           "anchor": [
-            160.54000000000002,
-            310
+            450,
+            585
           ],
-          "scale": 0.78,
-          "source_rect": [
-            374,
-            171,
-            723,
-            484
-          ],
-          "clip": "move"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 2,
+          "video_time_seconds": 0.0833
         },
         {
-          "name": "move_v3_02",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_02.png",
+          "name": "idle_h3_v1_004",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_004.png",
           "rects": [
             [
               0,
               0,
-              347,
-              307
+              960,
+              640
             ]
           ],
           "anchor": [
-            159.62,
-            304
+            450,
+            585
           ],
-          "scale": 0.78,
-          "source_rect": [
-            721,
-            175,
-            1068,
-            482
-          ],
-          "clip": "move"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.1667
         },
         {
-          "name": "move_v3_03",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_03.png",
+          "name": "idle_h3_v1_006",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_006.png",
           "rects": [
             [
               0,
               0,
-              358,
-              312
+              960,
+              640
             ]
           ],
           "anchor": [
-            164.68,
-            309
+            450,
+            585
           ],
-          "scale": 0.78,
-          "source_rect": [
-            1065,
-            173,
-            1423,
-            485
-          ],
-          "clip": "move"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
         },
         {
-          "name": "move_v3_04",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_04.png",
+          "name": "idle_h3_v1_008",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_008.png",
           "rects": [
             [
               0,
               0,
-              331,
-              295
+              960,
+              640
             ]
           ],
           "anchor": [
-            152.26000000000002,
-            292
+            450,
+            585
           ],
-          "scale": 0.78,
-          "source_rect": [
-            41,
-            607,
-            372,
-            902
-          ],
-          "clip": "move"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333
         },
         {
-          "name": "move_v3_05",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_05.png",
+          "name": "idle_h3_v1_010",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_010.png",
           "rects": [
             [
               0,
               0,
-              351,
-              291
+              960,
+              640
             ]
           ],
           "anchor": [
-            161.46,
-            288
+            450,
+            585
           ],
-          "scale": 0.78,
-          "source_rect": [
-            373,
-            607,
-            724,
-            898
-          ],
-          "clip": "move"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4167
         },
         {
-          "name": "move_v3_06",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_06.png",
+          "name": "idle_h3_v1_012",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_012.png",
           "rects": [
             [
               0,
               0,
-              376,
-              301
+              960,
+              640
             ]
           ],
           "anchor": [
-            172.96,
-            298
+            450,
+            585
           ],
-          "scale": 0.78,
-          "source_rect": [
-            700,
-            604,
-            1076,
-            905
-          ],
-          "clip": "move"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
         },
         {
-          "name": "move_v3_07",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_07.png",
+          "name": "idle_h3_v1_014",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_014.png",
           "rects": [
             [
               0,
               0,
-              365,
-              308
+              960,
+              640
             ]
           ],
           "anchor": [
-            167.9,
-            305
+            450,
+            585
           ],
-          "scale": 0.78,
-          "source_rect": [
-            1064,
-            605,
-            1429,
-            913
-          ],
-          "clip": "move"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833
         },
         {
-          "name": "idle_v2_00",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_00.png",
+          "name": "idle_h3_v1_016",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_016.png",
           "rects": [
             [
               0,
               0,
-              464,
-              355
+              960,
+              640
             ]
           ],
           "anchor": [
-            213.44,
-            352
+            450,
+            585
           ],
-          "scale": 0.67,
-          "source_rect": [
-            26,
-            19,
-            490,
-            374
-          ],
-          "clip": "idle"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6667
         },
         {
-          "name": "idle_v2_01",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_01.png",
+          "name": "idle_h3_v1_018",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_018.png",
           "rects": [
             [
               0,
               0,
-              470,
-              356
+              960,
+              640
             ]
           ],
           "anchor": [
-            216.20000000000002,
-            353
+            450,
+            585
           ],
-          "scale": 0.67,
-          "source_rect": [
-            536,
-            18,
-            1006,
-            374
-          ],
-          "clip": "idle"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
         },
         {
-          "name": "idle_v2_02",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_02.png",
+          "name": "idle_h3_v1_020",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_020.png",
           "rects": [
             [
               0,
               0,
-              477,
-              375
+              960,
+              640
             ]
           ],
           "anchor": [
-            219.42000000000002,
-            372
+            450,
+            585
           ],
-          "scale": 0.67,
-          "source_rect": [
-            25,
-            384,
-            502,
-            759
-          ],
-          "clip": "idle"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333
         },
         {
-          "name": "idle_v2_03",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_03.png",
+          "name": "idle_h3_v1_022",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_022.png",
           "rects": [
             [
               0,
               0,
-              474,
-              376
+              960,
+              640
             ]
           ],
           "anchor": [
-            218.04000000000002,
-            373
+            450,
+            585
           ],
-          "scale": 0.67,
-          "source_rect": [
-            533,
-            383,
-            1007,
-            759
-          ],
-          "clip": "idle"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9167
         },
         {
-          "name": "idle_v2_04",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_04.png",
+          "name": "idle_h3_v1_024",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_024.png",
           "rects": [
             [
               0,
               0,
-              473,
-              371
+              960,
+              640
             ]
           ],
           "anchor": [
-            217.58,
-            368
+            450,
+            585
           ],
-          "scale": 0.67,
-          "source_rect": [
-            26,
-            768,
-            499,
-            1139
-          ],
-          "clip": "idle"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
         },
         {
-          "name": "idle_v2_05",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_05.png",
+          "name": "idle_h3_v1_026",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_026.png",
           "rects": [
             [
               0,
               0,
-              472,
-              374
+              960,
+              640
             ]
           ],
           "anchor": [
-            217.12,
-            371
+            450,
+            585
           ],
-          "scale": 0.67,
-          "source_rect": [
-            535,
-            769,
-            1007,
-            1143
-          ],
-          "clip": "idle"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833
         },
         {
-          "name": "idle_v2_06",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_06.png",
+          "name": "idle_h3_v1_028",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_028.png",
           "rects": [
             [
               0,
               0,
-              480,
-              356
+              960,
+              640
             ]
           ],
           "anchor": [
-            220.8,
-            353
+            450,
+            585
           ],
-          "scale": 0.67,
-          "source_rect": [
-            26,
-            1157,
-            506,
-            1513
-          ],
-          "clip": "idle"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1667
         },
         {
-          "name": "idle_v2_07",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_07.png",
+          "name": "idle_h3_v1_030",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_030.png",
           "rects": [
             [
               0,
               0,
-              472,
-              372
+              960,
+              640
             ]
           ],
           "anchor": [
-            217.12,
-            369
+            450,
+            585
           ],
-          "scale": 0.67,
-          "source_rect": [
-            535,
-            1143,
-            1007,
-            1515
-          ],
-          "clip": "idle"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
         },
         {
-          "name": "attack_v2_00",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_00.png",
+          "name": "idle_h3_v1_032",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_032.png",
           "rects": [
             [
               0,
               0,
-              422,
-              338
+              960,
+              640
             ]
           ],
           "anchor": [
-            194.12,
-            335
+            450,
+            585
           ],
-          "scale": 0.7,
-          "source_rect": [
-            69,
-            52,
-            491,
-            390
-          ],
-          "clip": "attack"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333
         },
         {
-          "name": "attack_v2_01",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_01.png",
+          "name": "idle_h3_v1_034",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_034.png",
           "rects": [
             [
               0,
               0,
-              429,
-              314
+              960,
+              640
             ]
           ],
           "anchor": [
-            197.34,
-            311
+            450,
+            585
           ],
-          "scale": 0.7,
-          "source_rect": [
-            550,
-            76,
-            979,
-            390
-          ],
-          "clip": "attack"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4167
         },
         {
-          "name": "attack_v2_02",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_02.png",
+          "name": "idle_h3_v1_036",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_036.png",
           "rects": [
             [
               0,
               0,
-              446,
-              275
+              960,
+              640
             ]
           ],
           "anchor": [
-            205.16,
-            272
+            450,
+            585
           ],
-          "scale": 0.7,
-          "source_rect": [
-            68,
-            469,
-            514,
-            744
-          ],
-          "clip": "attack"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
         },
         {
-          "name": "attack_v2_03",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_03.png",
+          "name": "idle_h3_v1_038",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_038.png",
           "rects": [
             [
               0,
               0,
-              476,
-              281
+              960,
+              640
             ]
           ],
           "anchor": [
-            218.96,
-            278
+            450,
+            585
           ],
-          "scale": 0.7,
-          "source_rect": [
-            526,
-            459,
-            1002,
-            740
-          ],
-          "clip": "attack"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833
         },
         {
-          "name": "attack_v2_04",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_04.png",
+          "name": "idle_h3_v1_040",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_040.png",
           "rects": [
             [
               0,
               0,
-              512,
-              261
+              960,
+              640
             ]
           ],
           "anchor": [
-            235.52,
-            258
+            450,
+            585
           ],
-          "scale": 0.7,
-          "source_rect": [
-            40,
-            855,
-            552,
-            1116
-          ],
-          "clip": "attack"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6667
         },
         {
-          "name": "attack_v2_05",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_05.png",
+          "name": "idle_h3_v1_042",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_042.png",
           "rects": [
             [
               0,
               0,
-              438,
-              329
+              960,
+              640
             ]
           ],
           "anchor": [
-            201.48000000000002,
-            326
+            450,
+            585
           ],
-          "scale": 0.7,
-          "source_rect": [
-            556,
-            792,
-            994,
-            1121
-          ],
-          "clip": "attack"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
         },
         {
-          "name": "attack_v2_06",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_06.png",
+          "name": "idle_h3_v1_044",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_044.png",
           "rects": [
             [
               0,
               0,
-              454,
-              339
+              960,
+              640
             ]
           ],
           "anchor": [
-            208.84,
-            336
+            450,
+            585
           ],
-          "scale": 0.7,
-          "source_rect": [
-            71,
-            1146,
-            525,
-            1485
-          ],
-          "clip": "attack"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333
         },
         {
-          "name": "attack_v2_07",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_07.png",
+          "name": "idle_h3_v1_046",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_046.png",
           "rects": [
             [
               0,
               0,
-              430,
-              339
+              960,
+              640
             ]
           ],
           "anchor": [
-            197.8,
-            336
+            450,
+            585
           ],
-          "scale": 0.7,
-          "source_rect": [
-            568,
-            1145,
-            998,
-            1484
-          ],
-          "clip": "attack"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9167
         },
         {
-          "name": "hit_defend_v1_00",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_00.png",
+          "name": "idle_h3_v1_048",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_048.png",
           "rects": [
             [
               0,
               0,
-              399,
-              357
+              960,
+              640
             ]
           ],
           "anchor": [
-            183.54000000000002,
-            354
+            450,
+            585
           ],
-          "scale": 0.67,
-          "source_rect": [
-            57,
-            15,
-            456,
-            372
-          ],
-          "clip": "hit"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
         },
         {
-          "name": "hit_defend_v1_01",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_01.png",
+          "name": "idle_h3_v1_050",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_050.png",
           "rects": [
             [
               0,
               0,
-              387,
-              360
+              960,
+              640
             ]
           ],
           "anchor": [
-            178.02,
-            357
+            450,
+            585
           ],
-          "scale": 0.67,
-          "source_rect": [
-            555,
-            16,
-            942,
-            376
-          ],
-          "clip": "hit"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833
         },
         {
-          "name": "hit_defend_v1_02",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_02.png",
+          "name": "idle_h3_v1_052",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_052.png",
           "rects": [
             [
               0,
               0,
-              462,
-              356
+              960,
+              640
             ]
           ],
           "anchor": [
-            212.52,
-            353
+            450,
+            585
           ],
-          "scale": 0.67,
-          "source_rect": [
-            56,
-            383,
-            518,
-            739
-          ],
-          "clip": "hit"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1667
         },
         {
-          "name": "hit_defend_v1_03",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_03.png",
+          "name": "idle_h3_v1_054",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_054.png",
           "rects": [
             [
               0,
               0,
-              451,
-              353
+              960,
+              640
             ]
           ],
           "anchor": [
-            207.46,
-            350
+            450,
+            585
           ],
-          "scale": 0.67,
-          "source_rect": [
-            558,
-            386,
-            1009,
-            739
-          ],
-          "clip": "hit"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
         },
         {
-          "name": "hit_defend_v1_04",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_04.png",
+          "name": "idle_h3_v1_056",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_056.png",
           "rects": [
             [
               0,
               0,
-              458,
-              342
+              960,
+              640
             ]
           ],
           "anchor": [
-            210.68,
-            339
+            450,
+            585
           ],
-          "scale": 0.67,
-          "source_rect": [
-            35,
-            764,
-            493,
-            1106
-          ],
-          "clip": "defend"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333
         },
         {
-          "name": "hit_defend_v1_05",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_05.png",
+          "name": "idle_h3_v1_058",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_058.png",
           "rects": [
             [
               0,
               0,
-              466,
-              325
+              960,
+              640
             ]
           ],
           "anchor": [
-            214.36,
-            322
+            450,
+            585
           ],
-          "scale": 0.67,
-          "source_rect": [
-            540,
-            780,
-            1006,
-            1105
-          ],
-          "clip": "defend"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4167
         },
         {
-          "name": "hit_defend_v1_06",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_06.png",
+          "name": "idle_h3_v1_060",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_060.png",
           "rects": [
             [
               0,
               0,
-              474,
-              342
+              960,
+              640
             ]
           ],
           "anchor": [
-            218.04000000000002,
-            339
+            450,
+            585
           ],
-          "scale": 0.67,
-          "source_rect": [
-            28,
-            1151,
-            502,
-            1493
-          ],
-          "clip": "defend"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
         },
         {
-          "name": "hit_defend_v1_07",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_07.png",
+          "name": "idle_h3_v1_062",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_062.png",
           "rects": [
             [
               0,
               0,
-              467,
-              339
+              960,
+              640
             ]
           ],
           "anchor": [
-            214.82000000000002,
-            336
+            450,
+            585
           ],
-          "scale": 0.67,
-          "source_rect": [
-            538,
-            1154,
-            1005,
-            1493
-          ],
-          "clip": "defend"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833
         },
         {
-          "name": "death_v1_00",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_00.png",
+          "name": "idle_h3_v1_064",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_064.png",
           "rects": [
             [
               0,
               0,
-              444,
-              377
+              960,
+              640
             ]
           ],
           "anchor": [
-            204.24,
-            374
+            450,
+            585
           ],
-          "scale": 0.67,
-          "source_rect": [
-            33,
-            7,
-            477,
-            384
-          ],
-          "clip": "death"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6667
         },
         {
-          "name": "death_v1_01",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_01.png",
+          "name": "idle_h3_v1_066",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_066.png",
           "rects": [
             [
               0,
               0,
-              468,
-              311
+              960,
+              640
             ]
           ],
           "anchor": [
-            215.28,
-            308
+            450,
+            585
           ],
-          "scale": 0.67,
-          "source_rect": [
-            529,
-            76,
-            997,
-            387
-          ],
-          "clip": "death"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
         },
         {
-          "name": "death_v1_02",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_02.png",
+          "name": "idle_h3_v1_068",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_068.png",
           "rects": [
             [
               0,
               0,
-              477,
-              342
+              960,
+              640
             ]
           ],
           "anchor": [
-            219.42000000000002,
-            339
+            450,
+            585
           ],
-          "scale": 0.67,
-          "source_rect": [
-            16,
-            426,
-            493,
-            768
-          ],
-          "clip": "death"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333
         },
         {
-          "name": "death_v1_03",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_03.png",
+          "name": "idle_h3_v1_070",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_070.png",
           "rects": [
             [
               0,
               0,
-              483,
-              309
+              960,
+              640
             ]
           ],
           "anchor": [
-            222.18,
-            306
+            450,
+            585
           ],
-          "scale": 0.67,
-          "source_rect": [
-            528,
-            467,
-            1011,
-            776
-          ],
-          "clip": "death"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9167
         },
         {
-          "name": "death_v1_04",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_04.png",
+          "name": "idle_h3_v1_072",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_072.png",
           "rects": [
             [
               0,
               0,
-              495,
-              306
+              960,
+              640
             ]
           ],
           "anchor": [
-            227.70000000000002,
-            303
+            450,
+            585
           ],
-          "scale": 0.67,
-          "source_rect": [
-            10,
-            815,
-            505,
-            1121
-          ],
-          "clip": "death"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
         },
         {
-          "name": "death_v1_05",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_05.png",
+          "name": "idle_h3_v1_074",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_074.png",
           "rects": [
             [
               0,
               0,
-              499,
-              261
+              960,
+              640
             ]
           ],
           "anchor": [
-            229.54000000000002,
-            258
+            450,
+            585
           ],
-          "scale": 0.67,
-          "source_rect": [
-            520,
-            851,
-            1019,
-            1112
-          ],
-          "clip": "death"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833
         },
         {
-          "name": "death_v1_06",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_06.png",
+          "name": "idle_h3_v1_076",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_076.png",
           "rects": [
             [
               0,
               0,
-              499,
-              262
+              960,
+              640
             ]
           ],
           "anchor": [
-            229.54000000000002,
-            259
+            450,
+            585
           ],
-          "scale": 0.67,
-          "source_rect": [
-            8,
-            1201,
-            507,
-            1463
-          ],
-          "clip": "death"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1667
         },
         {
-          "name": "death_v1_07",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_07.png",
+          "name": "idle_h3_v1_078",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_078.png",
           "rects": [
             [
               0,
               0,
-              500,
-              257
+              960,
+              640
             ]
           ],
           "anchor": [
-            230.0,
-            254
+            450,
+            585
           ],
-          "scale": 0.67,
-          "source_rect": [
-            520,
-            1204,
-            1020,
-            1461
-          ],
-          "clip": "death"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
         },
         {
-          "name": "cast_v2_00",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_00.png",
+          "name": "idle_h3_v1_080",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_080.png",
           "rects": [
             [
               0,
               0,
-              390,
-              292
+              960,
+              640
             ]
           ],
           "anchor": [
-            179.4,
-            289
+            450,
+            585
           ],
-          "scale": 0.8,
-          "source_rect": [
-            40,
-            98,
-            430,
-            390
-          ],
-          "clip": "cast"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333
         },
         {
-          "name": "cast_v2_01",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_01.png",
+          "name": "idle_h3_v1_082",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_082.png",
           "rects": [
             [
               0,
               0,
-              385,
-              290
+              960,
+              640
             ]
           ],
           "anchor": [
-            177.1,
-            287
+            450,
+            585
           ],
-          "scale": 0.8,
-          "source_rect": [
-            478,
-            100,
-            863,
-            390
-          ],
-          "clip": "cast"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4167
         },
         {
-          "name": "cast_v2_02",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_02.png",
+          "name": "idle_h3_v1_084",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_084.png",
           "rects": [
             [
               0,
               0,
-              383,
-              301
+              960,
+              640
             ]
           ],
           "anchor": [
-            176.18,
-            298
+            450,
+            585
           ],
-          "scale": 0.8,
-          "source_rect": [
-            41,
-            520,
-            424,
-            821
-          ],
-          "clip": "cast"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
         },
         {
-          "name": "cast_v2_03",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_03.png",
+          "name": "idle_h3_v1_086",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_086.png",
           "rects": [
             [
               0,
               0,
-              371,
-              304
+              960,
+              640
             ]
           ],
           "anchor": [
-            170.66,
-            301
+            450,
+            585
           ],
-          "scale": 0.8,
-          "source_rect": [
-            479,
-            516,
-            850,
-            820
-          ],
-          "clip": "cast"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833
         },
         {
-          "name": "cast_v2_04",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_04.png",
+          "name": "idle_h3_v1_088",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_088.png",
           "rects": [
             [
               0,
               0,
-              390,
-              296
+              960,
+              640
             ]
           ],
           "anchor": [
-            179.4,
-            293
+            450,
+            585
           ],
-          "scale": 0.8,
-          "source_rect": [
-            41,
-            941,
-            431,
-            1237
-          ],
-          "clip": "cast"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6667
         },
         {
-          "name": "cast_v2_05",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_05.png",
+          "name": "idle_h3_v1_090",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_090.png",
           "rects": [
             [
               0,
               0,
-              389,
-              294
+              960,
+              640
             ]
           ],
           "anchor": [
-            178.94,
-            291
+            450,
+            585
           ],
-          "scale": 0.8,
-          "source_rect": [
-            478,
-            943,
-            867,
-            1237
-          ],
-          "clip": "cast"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
         },
         {
-          "name": "cast_v2_06",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_06.png",
+          "name": "idle_h3_v1_092",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_092.png",
           "rects": [
             [
               0,
               0,
-              389,
-              295
+              960,
+              640
             ]
           ],
           "anchor": [
-            178.94,
-            292
+            450,
+            585
           ],
-          "scale": 0.8,
-          "source_rect": [
-            41,
-            1357,
-            430,
-            1652
-          ],
-          "clip": "cast"
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333
         },
         {
-          "name": "cast_v2_07",
-          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_07.png",
+          "name": "idle_h3_v1_094",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_094.png",
           "rects": [
             [
               0,
               0,
-              388,
-              295
+              960,
+              640
             ]
           ],
           "anchor": [
-            178.48000000000002,
-            292
+            450,
+            585
           ],
-          "scale": 0.8,
-          "source_rect": [
-            479,
-            1357,
-            867,
-            1652
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9167
+        },
+        {
+          "name": "idle_h3_v1_096",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
           ],
-          "clip": "cast"
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "idle_h3_v1_098",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.0833
+        },
+        {
+          "name": "idle_h3_v1_100",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.1667
+        },
+        {
+          "name": "idle_h3_v1_102",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "idle_h3_v1_104",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.3333
+        },
+        {
+          "name": "idle_h3_v1_106",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_106.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 106,
+          "video_time_seconds": 4.4167
+        },
+        {
+          "name": "idle_h3_v1_108",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "idle_h3_v1_110",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_110.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 110,
+          "video_time_seconds": 4.5833
+        },
+        {
+          "name": "idle_h3_v1_112",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_112.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.6667
+        },
+        {
+          "name": "idle_h3_v1_114",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_114.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 114,
+          "video_time_seconds": 4.75
+        },
+        {
+          "name": "idle_h3_v1_116",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_116.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 116,
+          "video_time_seconds": 4.8333
+        },
+        {
+          "name": "idle_h3_v1_118",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_118.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 118,
+          "video_time_seconds": 4.9167
+        },
+        {
+          "name": "idle_h3_v1_120",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_120.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 120,
+          "video_time_seconds": 5.0
+        },
+        {
+          "name": "idle_h3_v1_122",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte/rgba_122.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 122,
+          "video_time_seconds": 5.0833
+        },
+        {
+          "name": "move_h3_v1_001",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_001.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 1,
+          "video_time_seconds": 0.0417
+        },
+        {
+          "name": "move_h3_v1_003",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_003.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 3,
+          "video_time_seconds": 0.125
+        },
+        {
+          "name": "move_h3_v1_005",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_005.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 5,
+          "video_time_seconds": 0.2083
+        },
+        {
+          "name": "move_h3_v1_007",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_007.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 7,
+          "video_time_seconds": 0.2917
+        },
+        {
+          "name": "move_h3_v1_009",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_009.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 9,
+          "video_time_seconds": 0.375
+        },
+        {
+          "name": "move_h3_v1_011",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_011.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 11,
+          "video_time_seconds": 0.4583
+        },
+        {
+          "name": "move_h3_v1_013",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5417
+        },
+        {
+          "name": "move_h3_v1_015",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "move_h3_v1_017",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083
+        },
+        {
+          "name": "move_h3_v1_019",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7917
+        },
+        {
+          "name": "move_h3_v1_021",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "move_h3_v1_023",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583
+        },
+        {
+          "name": "move_h3_v1_025",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0417
+        },
+        {
+          "name": "move_h3_v1_027",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "move_h3_v1_029",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083
+        },
+        {
+          "name": "move_h3_v1_031",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2917
+        },
+        {
+          "name": "move_h3_v1_033",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "move_h3_v1_035",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583
+        },
+        {
+          "name": "move_h3_v1_037",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5417
+        },
+        {
+          "name": "move_h3_v1_039",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "move_h3_v1_041",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083
+        },
+        {
+          "name": "move_h3_v1_043",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7917
+        },
+        {
+          "name": "move_h3_v1_045",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "move_h3_v1_047",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_047.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 47,
+          "video_time_seconds": 1.9583
+        },
+        {
+          "name": "move_h3_v1_049",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_049.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 49,
+          "video_time_seconds": 2.0417
+        },
+        {
+          "name": "move_h3_v1_051",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "move_h3_v1_053",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_053.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 53,
+          "video_time_seconds": 2.2083
+        },
+        {
+          "name": "move_h3_v1_055",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_055.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.2917
+        },
+        {
+          "name": "move_h3_v1_057",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_057.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 57,
+          "video_time_seconds": 2.375
+        },
+        {
+          "name": "move_h3_v1_059",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_059.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 59,
+          "video_time_seconds": 2.4583
+        },
+        {
+          "name": "move_h3_v1_061",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte/rgba_061.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 61,
+          "video_time_seconds": 2.5417
+        },
+        {
+          "name": "attack_h3_v1_011",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_011.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 11,
+          "video_time_seconds": 0.4583
+        },
+        {
+          "name": "attack_h3_v1_015",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "attack_h3_v1_016",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6667
+        },
+        {
+          "name": "attack_h3_v1_018",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "attack_h3_v1_019",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7917
+        },
+        {
+          "name": "attack_h3_v1_020",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333
+        },
+        {
+          "name": "attack_h3_v1_022",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9167
+        },
+        {
+          "name": "attack_h3_v1_025",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0417
+        },
+        {
+          "name": "attack_h3_v1_030",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "attack_h3_v1_037",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5417
+        },
+        {
+          "name": "attack_h3_v1_038",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833
+        },
+        {
+          "name": "attack_h3_v1_040",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6667
+        },
+        {
+          "name": "attack_h3_v1_041",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083
+        },
+        {
+          "name": "attack_h3_v1_043",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7917
+        },
+        {
+          "name": "attack_h3_v1_044",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333
+        },
+        {
+          "name": "attack_h3_v1_045",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "attack_h3_v1_047",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_047.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 47,
+          "video_time_seconds": 1.9583
+        },
+        {
+          "name": "attack_h3_v1_054",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "attack_h3_v1_065",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_065.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 65,
+          "video_time_seconds": 2.7083
+        },
+        {
+          "name": "attack_h3_v1_069",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_069.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 69,
+          "video_time_seconds": 2.875
+        },
+        {
+          "name": "attack_h3_v1_070",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9167
+        },
+        {
+          "name": "attack_h3_v1_072",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "attack_h3_v1_073",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_073.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 73,
+          "video_time_seconds": 3.0417
+        },
+        {
+          "name": "attack_h3_v1_076",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1667
+        },
+        {
+          "name": "attack_h3_v1_078",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "attack_h3_v1_081",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_081.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 81,
+          "video_time_seconds": 3.375
+        },
+        {
+          "name": "attack_h3_v1_089",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_089.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 89,
+          "video_time_seconds": 3.7083
+        },
+        {
+          "name": "attack_h3_v1_092",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333
+        },
+        {
+          "name": "attack_h3_v1_094",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9167
+        },
+        {
+          "name": "attack_h3_v1_095",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_095.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 95,
+          "video_time_seconds": 3.9583
+        },
+        {
+          "name": "attack_h3_v1_097",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_097.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 97,
+          "video_time_seconds": 4.0417
+        },
+        {
+          "name": "attack_h3_v1_099",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_099.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 99,
+          "video_time_seconds": 4.125
+        },
+        {
+          "name": "attack_h3_v1_101",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_101.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 101,
+          "video_time_seconds": 4.2083
+        },
+        {
+          "name": "attack_h3_v1_104",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.3333
+        },
+        {
+          "name": "hit_h3_v1_001",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/matte/rgba_001.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 1,
+          "video_time_seconds": 0.0417
+        },
+        {
+          "name": "hit_h3_v1_004",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.1667
+        },
+        {
+          "name": "hit_h3_v1_006",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "hit_h3_v1_008",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333
+        },
+        {
+          "name": "hit_h3_v1_010",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4167
+        },
+        {
+          "name": "hit_h3_v1_011",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/matte/rgba_011.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 11,
+          "video_time_seconds": 0.4583
+        },
+        {
+          "name": "hit_h3_v1_012",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "hit_h3_v1_013",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5417
+        },
+        {
+          "name": "hit_h3_v1_014",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833
+        },
+        {
+          "name": "hit_h3_v1_015",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "hit_h3_v1_016",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6667
+        },
+        {
+          "name": "hit_h3_v1_017",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083
+        },
+        {
+          "name": "hit_h3_v1_019",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7917
+        },
+        {
+          "name": "hit_h3_v1_021",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "hit_h3_v1_022",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9167
+        },
+        {
+          "name": "hit_h3_v1_023",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583
+        },
+        {
+          "name": "hit_h3_v1_024",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "hit_h3_v1_032",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333
+        },
+        {
+          "name": "hit_h3_v1_046",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9167
+        },
+        {
+          "name": "hit_h3_v1_059",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/matte/rgba_059.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 59,
+          "video_time_seconds": 2.4583
+        },
+        {
+          "name": "defend_h3_v1_009",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/defend_h3_v1/matte/rgba_009.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 9,
+          "video_time_seconds": 0.375
+        },
+        {
+          "name": "defend_h3_v1_013",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/defend_h3_v1/matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5417
+        },
+        {
+          "name": "defend_h3_v1_015",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/defend_h3_v1/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "defend_h3_v1_016",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/defend_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6667
+        },
+        {
+          "name": "defend_h3_v1_018",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/defend_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "defend_h3_v1_023",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/defend_h3_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583
+        },
+        {
+          "name": "defend_h3_v1_034",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/defend_h3_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4167
+        },
+        {
+          "name": "defend_h3_v1_046",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/defend_h3_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9167
+        },
+        {
+          "name": "defend_h3_v1_057",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/defend_h3_v1/matte/rgba_057.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 57,
+          "video_time_seconds": 2.375
+        },
+        {
+          "name": "defend_h3_v1_068",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/defend_h3_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333
+        },
+        {
+          "name": "cast_h3_v1_010",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4167
+        },
+        {
+          "name": "cast_h3_v1_015",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "cast_h3_v1_017",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083
+        },
+        {
+          "name": "cast_h3_v1_021",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "cast_h3_v1_023",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583
+        },
+        {
+          "name": "cast_h3_v1_024",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "cast_h3_v1_025",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0417
+        },
+        {
+          "name": "cast_h3_v1_026",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833
+        },
+        {
+          "name": "cast_h3_v1_027",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "cast_h3_v1_028",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1667
+        },
+        {
+          "name": "cast_h3_v1_029",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083
+        },
+        {
+          "name": "cast_h3_v1_030",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "cast_h3_v1_032",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333
+        },
+        {
+          "name": "cast_h3_v1_036",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "cast_h3_v1_048",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "cast_h3_v1_055",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte/rgba_055.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.2917
+        },
+        {
+          "name": "cast_h3_v1_071",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte/rgba_071.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 71,
+          "video_time_seconds": 2.9583
+        },
+        {
+          "name": "cast_h3_v1_076",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1667
+        },
+        {
+          "name": "cast_h3_v1_077",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte/rgba_077.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 77,
+          "video_time_seconds": 3.2083
+        },
+        {
+          "name": "cast_h3_v1_078",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "cast_h3_v1_079",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte/rgba_079.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 79,
+          "video_time_seconds": 3.2917
+        },
+        {
+          "name": "cast_h3_v1_081",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte/rgba_081.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 81,
+          "video_time_seconds": 3.375
+        },
+        {
+          "name": "cast_h3_v1_083",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte/rgba_083.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 83,
+          "video_time_seconds": 3.4583
+        },
+        {
+          "name": "cast_h3_v1_085",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte/rgba_085.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 85,
+          "video_time_seconds": 3.5417
+        },
+        {
+          "name": "cast_h3_v1_087",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte/rgba_087.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 87,
+          "video_time_seconds": 3.625
+        },
+        {
+          "name": "cast_h3_v1_094",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9167
+        },
+        {
+          "name": "cast_h3_v1_097",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte/rgba_097.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 97,
+          "video_time_seconds": 4.0417
+        },
+        {
+          "name": "cast_h3_v1_101",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte/rgba_101.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 101,
+          "video_time_seconds": 4.2083
+        },
+        {
+          "name": "death_h3_v1_000",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "death_h3_v1_002",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/matte/rgba_002.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 2,
+          "video_time_seconds": 0.0833
+        },
+        {
+          "name": "death_h3_v1_004",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.1667
+        },
+        {
+          "name": "death_h3_v1_006",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "death_h3_v1_007",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/matte/rgba_007.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 7,
+          "video_time_seconds": 0.2917
+        },
+        {
+          "name": "death_h3_v1_008",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333
+        },
+        {
+          "name": "death_h3_v1_010",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4167
+        },
+        {
+          "name": "death_h3_v1_012",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "death_h3_v1_014",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833
+        },
+        {
+          "name": "death_h3_v1_016",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6667
+        },
+        {
+          "name": "death_h3_v1_019",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7917
+        },
+        {
+          "name": "death_h3_v1_022",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9167
+        },
+        {
+          "name": "death_h3_v1_026",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833
+        },
+        {
+          "name": "death_h3_v1_030",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "death_h3_v1_037",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5417
+        },
+        {
+          "name": "death_h3_v1_052",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1667
+        },
+        {
+          "name": "death_h3_v1_054",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "death_h3_v1_056",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333
+        },
+        {
+          "name": "death_h3_v1_058",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4167
+        },
+        {
+          "name": "death_h3_v1_060",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "death_h3_v1_062",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833
+        },
+        {
+          "name": "death_h3_v1_076",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1667
+        },
+        {
+          "name": "death_h3_v1_090",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "death_h3_v1_096",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "death_h3_v1_123",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            450,
+            585
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
         }
       ],
       "clips": {
-        "move": {
+        "idle": {
           "indices": [
             0,
             1,
@@ -1169,14 +4427,7 @@
             4,
             5,
             6,
-            7
-          ],
-          "frame_msec": 115,
-          "loop": true,
-          "static_frame": 0
-        },
-        "idle": {
-          "indices": [
+            7,
             8,
             9,
             10,
@@ -1184,14 +4435,7 @@
             12,
             13,
             14,
-            15
-          ],
-          "frame_msec": 135,
-          "loop": true,
-          "static_frame": 0
-        },
-        "attack": {
-          "indices": [
+            15,
             16,
             17,
             18,
@@ -1199,37 +4443,15 @@
             20,
             21,
             22,
-            23
-          ],
-          "frame_msec": 95,
-          "loop": false,
-          "static_frame": 0,
-          "contact_frame": 4
-        },
-        "hit": {
-          "indices": [
+            23,
             24,
             25,
             26,
-            27
-          ],
-          "frame_msec": 90,
-          "loop": false,
-          "static_frame": 0
-        },
-        "defend": {
-          "indices": [
+            27,
             28,
             29,
             30,
-            31
-          ],
-          "frame_msec": 120,
-          "loop": false,
-          "static_frame": 0
-        },
-        "death": {
-          "indices": [
+            31,
             32,
             33,
             34,
@@ -1237,14 +4459,7 @@
             36,
             37,
             38,
-            39
-          ],
-          "frame_msec": 125,
-          "loop": false,
-          "static_frame": 0
-        },
-        "cast": {
-          "indices": [
+            39,
             40,
             41,
             42,
@@ -1252,80 +4467,536 @@
             44,
             45,
             46,
-            47
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61
           ],
-          "frame_msec": 115,
+          "frame_msec": 60,
+          "loop": true,
+          "static_frame": 0
+        },
+        "move": {
+          "indices": [
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92
+          ],
+          "frame_msec": 50,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 15
+        },
+        "hit": {
+          "indices": [
+            127,
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146
+          ],
+          "frame_msec": 35,
           "loop": false,
           "static_frame": 0
         },
-        "dead": {
+        "defend": {
           "indices": [
-            39
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156
           ],
-          "frame_msec": 125,
+          "frame_msec": 42,
           "loop": false,
-          "static_frame": 0
+          "static_frame": 9
+        },
+        "cast": {
+          "indices": [
+            157,
+            158,
+            159,
+            160,
+            161,
+            162,
+            163,
+            164,
+            165,
+            166,
+            167,
+            168,
+            169,
+            170,
+            171,
+            172,
+            173,
+            174,
+            175,
+            176,
+            177,
+            178,
+            179,
+            180,
+            181,
+            182,
+            183,
+            184
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 15
+        },
+        "death": {
+          "indices": [
+            185,
+            186,
+            187,
+            188,
+            189,
+            190,
+            191,
+            192,
+            193,
+            194,
+            195,
+            196,
+            197,
+            198,
+            199,
+            200,
+            201,
+            202,
+            203,
+            204,
+            205,
+            206,
+            207,
+            208,
+            209
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 24
         }
       },
-      "accepted_clips": [
-        "move"
-      ],
-      "preserve_clips": [],
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "Guides are the accepted paintings at their accepted scale; every video frame keeps one fixed extraction scale and anchor.",
+      "provenance": {
+        "idle_h3_v1/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/original_lossless.mkv",
+          "sha256": "b21772d710e864d344800578a6bb90db9df442b4267d8bae3867fddbb611ffdd"
+        },
+        "idle_h3_v1/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/original.json",
+          "sha256": "64f5d75af3fa903fdfc3eea8c9a232a6ec038a4a540af767fdbc1b2523aed813"
+        },
+        "idle_h3_v1/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/original.latent",
+          "sha256": "e75f25a8a3aae0681f0bfa0b03e32a31de6cf21ae06b19e22327380d52ebe8be"
+        },
+        "idle_h3_v1/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/sampling_workflow_api.json",
+          "sha256": "cc5f92d5bf25dd2405c07708c321c6b141cd1288d1ed9c0649d9b2cb755b5cea"
+        },
+        "idle_h3_v1/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/decode_workflow_api.json",
+          "sha256": "78af0635b32e71b251a2edd15663fec00d1604bba1cf7c7cc3beb838c519db39"
+        },
+        "idle_h3_v1/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/sampling_history.json",
+          "sha256": "03cc93b02c34f05aa6d0b8bcfa4aeccd45053d1c6497fd9ed5583cf626d75b8e"
+        },
+        "idle_h3_v1/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/generation_history.json",
+          "sha256": "af98b20cd451883dbc6c69dafbb2aca4ccd2e1ca102d952bfcf0e0a631b1f647"
+        },
+        "idle_h3_v1/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/prompt.txt",
+          "sha256": "a0f3284c30645b33c6ef32baf715020957297e940ca4e69f3c2f554a78e3aac3"
+        },
+        "idle_h3_v1/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/reference.json",
+          "sha256": "fde5680a68784a57f984c1f7d21d67867cf0dad2ff586d62b84603a2cdbb688c"
+        },
+        "idle_h3_v1/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/config.json",
+          "sha256": "55474bbbfe9db6acdd110f4124918bdfb9aa2f2d0c4e8a35273221671bc54bd9"
+        },
+        "idle_h3_v1/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_h3_v1/matte.json",
+          "sha256": "f1a03c8bb6350edc3bff713b3e1f6aca4932c70c5ff0c52bd02c8f2b9cfa814b"
+        },
+        "move_h3_v1/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/original_lossless.mkv",
+          "sha256": "d9a9a32c0a0d64e32bdd570917ac024f1fc13e3bf464b263292b68df5c086ab3"
+        },
+        "move_h3_v1/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/original.json",
+          "sha256": "9237a4b153f697e81009060235673187ef63de217b3fa0784f0c3846e1b0b58b"
+        },
+        "move_h3_v1/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/original.latent",
+          "sha256": "7889daa5e6e3b8ca993bf142032cd7d45ce1d024c4e0a7dc0e0cad8003b2c071"
+        },
+        "move_h3_v1/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/sampling_workflow_api.json",
+          "sha256": "7d8cb038bcb332138872c26393408e7f2f08a998f0b5f46299bfcde81fb877ce"
+        },
+        "move_h3_v1/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/decode_workflow_api.json",
+          "sha256": "650895a23b4781c705e19f563bc46b29594136f7e3fa23b3f20377306984a801"
+        },
+        "move_h3_v1/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/sampling_history.json",
+          "sha256": "3e1e903f19447ea42739e3d0278746cbc4165f317978a1fde553cbef8312a0f6"
+        },
+        "move_h3_v1/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/generation_history.json",
+          "sha256": "f67e6d3ff46fe07ebff7ef4f52f46c86ae0274977472bf3e75931fd7cb1e50f6"
+        },
+        "move_h3_v1/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/prompt.txt",
+          "sha256": "5fc920588d12788cec9068ab75c82c188d7a67d055486e43ad2f99a853efd9db"
+        },
+        "move_h3_v1/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/reference.json",
+          "sha256": "ef5a268f37f3a87ac1fe79d55a757b8aed49314b78df4849ac52b188a0952924"
+        },
+        "move_h3_v1/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/config.json",
+          "sha256": "8a486f830c37784aa80a076dbaa9111106df2e71dd94d78a488b19157c0dc7d3"
+        },
+        "move_h3_v1/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_h3_v1/matte.json",
+          "sha256": "aba9d36f5a4a381dd8f59bdb96439d8da5cdd4649dbdb3fc5b11a3ba6370c6a9"
+        },
+        "attack_h3_v1/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/original_lossless.mkv",
+          "sha256": "a5ede0424b1bc248a4a8594698ee27914b8ff96b27b32b4009efc4676c42bfe2"
+        },
+        "attack_h3_v1/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/original.json",
+          "sha256": "e67ecf8340272e39145a1ab0184fc64f268255677858ac0b580317949e865a9f"
+        },
+        "attack_h3_v1/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/original.latent",
+          "sha256": "6379f3e34c41b94aa23246e07675358adcdccc03ef87366e95f98d5813262256"
+        },
+        "attack_h3_v1/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/sampling_workflow_api.json",
+          "sha256": "fd9c828f1741ffc159bbdbe6e72ba54204998bed49251d428ff013ee63ef81c7"
+        },
+        "attack_h3_v1/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/decode_workflow_api.json",
+          "sha256": "ecaf1faf2b245a69a9d0058b32ddd16b5cb555d7521f9c97837047d54d1d587e"
+        },
+        "attack_h3_v1/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/sampling_history.json",
+          "sha256": "218e05fc48a8eb1bd87667ae755df4a54a4ade0f1efdcc1e117e976f4e9f0022"
+        },
+        "attack_h3_v1/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/generation_history.json",
+          "sha256": "3b4f1c0f0b26823fdc4236690421d2fce6735f39e49959179f282440558ee09a"
+        },
+        "attack_h3_v1/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/prompt.txt",
+          "sha256": "5575f248e09f250333d7e5a98fcce1d137e2d18cdfaca0e12d3973ffb5abb2c7"
+        },
+        "attack_h3_v1/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/reference.json",
+          "sha256": "d7699149b6402fab44803cb4753297360934a805e4c9be7bcbf04987dd33e1fc"
+        },
+        "attack_h3_v1/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/config.json",
+          "sha256": "1e11b2871229df6be0265d71503a47761b8df497f5a20226995508c4e9fb2a5d"
+        },
+        "attack_h3_v1/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_h3_v1/matte.json",
+          "sha256": "5091890c10239be1eeab2918653478d2c105b7d51c1a14123d80536ffd64ae56"
+        },
+        "hit_h3_v1/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/original_lossless.mkv",
+          "sha256": "d1ecf84e502b298f4d8b3438b45a9b9c3967e4c37762bfa108bc978489932c32"
+        },
+        "hit_h3_v1/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/original.json",
+          "sha256": "dca4a564a411f5f9ed03030816cef8bce3746d5c98392a7a34451bb87305f4a4"
+        },
+        "hit_h3_v1/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/original.latent",
+          "sha256": "9f115c7f96203577812fe4f1bc5e5adeab47e834f44b9eb8377c6399e605eb4d"
+        },
+        "hit_h3_v1/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/sampling_workflow_api.json",
+          "sha256": "2098b00f9852436babb0c39129718ea693e0d5ee027b56ff5cadb26eb1b4fed0"
+        },
+        "hit_h3_v1/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/decode_workflow_api.json",
+          "sha256": "8a17a03e03b0a3e0f30a09b45443f15544e98422de51541c904148bc0da95fcb"
+        },
+        "hit_h3_v1/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/sampling_history.json",
+          "sha256": "3c70dfb76adc3da09ba1db16ef07a46d8b5f057c41051eea007453b6d97013e8"
+        },
+        "hit_h3_v1/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/generation_history.json",
+          "sha256": "bb931a2a823d557da767ab8489e6274a2c4488f47590cbcc7b6e0fb7b3f9086c"
+        },
+        "hit_h3_v1/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/prompt.txt",
+          "sha256": "84f55720b25b6affd781090d8637dbbf4dc462003030b5b74755f6638d98e78d"
+        },
+        "hit_h3_v1/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/reference.json",
+          "sha256": "3636d3d208ae87741e85cdfa8b22ddc3710d97ec1cd1df4a6353162ee3cd9b82"
+        },
+        "hit_h3_v1/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/config.json",
+          "sha256": "b783006b2b7bfee796aa6ee29506287df9342227273aff835b123102189e1cfc"
+        },
+        "hit_h3_v1/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_h3_v1/matte.json",
+          "sha256": "565826057b8ee9054ce0564b65beb2e3b6f5117454839f6d3edf999d39473ebb"
+        },
+        "defend_h3_v1/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/defend_h3_v1/original_lossless.mkv",
+          "sha256": "37f8432c29a372de925fb35904d8f65fade3e8d497596a694cc30284264fbb14"
+        },
+        "defend_h3_v1/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/defend_h3_v1/original.json",
+          "sha256": "393286ff0c8384b309976ff177dd131008f9724bcbece7491211ffcd567650f8"
+        },
+        "defend_h3_v1/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/defend_h3_v1/original.latent",
+          "sha256": "f156ac63524a4f365ccbe8f6b9e21c0d0e3147931e660d3d891f7b955e640c76"
+        },
+        "defend_h3_v1/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/defend_h3_v1/sampling_workflow_api.json",
+          "sha256": "d4ddd6c20c023df27743dc1e44e194066a6b8645abb848bf64ce6688a3519b2c"
+        },
+        "defend_h3_v1/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/defend_h3_v1/decode_workflow_api.json",
+          "sha256": "57a23f77c0629b0c924c3966fa93fb52f735a1b50f354041d909662631e2ac9e"
+        },
+        "defend_h3_v1/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/defend_h3_v1/sampling_history.json",
+          "sha256": "e7ec31c698dec9c75f36d7f55d42c8a87a4cd61757bf68972b99386476a34e4a"
+        },
+        "defend_h3_v1/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/defend_h3_v1/generation_history.json",
+          "sha256": "5ef015c58fccf9c1a17f0fc6e26cfd583da40764ecc4d0f6dd3d12472f9569ac"
+        },
+        "defend_h3_v1/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/defend_h3_v1/prompt.txt",
+          "sha256": "f42c9d12c3c8b0ac75f5828e921b797bd707e052ef1e92bf3a0098fde81c94eb"
+        },
+        "defend_h3_v1/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/defend_h3_v1/reference.json",
+          "sha256": "43579b540628815ed6756181dbdbfe2830f4a8d66da37c9fbd0ef935f0f13e09"
+        },
+        "defend_h3_v1/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/defend_h3_v1/config.json",
+          "sha256": "5564426e491a48aa09e621284b8046c4e1a9c2de079eec1f8e6b4e7a11d2f64c"
+        },
+        "defend_h3_v1/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/defend_h3_v1/matte.json",
+          "sha256": "5d3ab370db273d46b64a352581913d9d32421e957ee8d83a3a578718d16f5ca4"
+        },
+        "cast_h3_v1/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/original_lossless.mkv",
+          "sha256": "cb718654a1b31099fb37bce60b946bc9f1f3b2f05df8fcf5cefa3106226dbe5f"
+        },
+        "cast_h3_v1/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/original.json",
+          "sha256": "04be0894949a79c05f350d984779b6f5c5858c9ccf8c3080ee664d54b92a5ede"
+        },
+        "cast_h3_v1/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/original.latent",
+          "sha256": "8b34b18825a8d425d8653f89ebd70ddb66bcce6316f0aa0bf1f1a918723f68d4"
+        },
+        "cast_h3_v1/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/sampling_workflow_api.json",
+          "sha256": "cea74f33fc16e12d7234a2692216bbdb92837094e8553397caf9ca9f9fa038ec"
+        },
+        "cast_h3_v1/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/decode_workflow_api.json",
+          "sha256": "f1537892ca7ceddda8438021581d7450611ff178dfc1db34e16a67fcda54d489"
+        },
+        "cast_h3_v1/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/sampling_history.json",
+          "sha256": "fc87193ec23d79ae047bba6373df72c29639f2cd9932cbedc526000de5e028f2"
+        },
+        "cast_h3_v1/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/generation_history.json",
+          "sha256": "34f003993db9c329f5a10c8dfd1c6fbeadc403fb11d8a1926e683de5c96fabdb"
+        },
+        "cast_h3_v1/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/prompt.txt",
+          "sha256": "d000eaa8cfcd66a17993b4d42129da5f86269b3db8514f5b1c9c7dd3bedb1066"
+        },
+        "cast_h3_v1/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/reference.json",
+          "sha256": "78bbdd92b8159354be5960523a8157d64ce3674a7b9915de30b47321d6686cfd"
+        },
+        "cast_h3_v1/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/config.json",
+          "sha256": "966d64695c2fc24771eda64e3483b9bc25766608c5ad7707079ddd36d4bdbb07"
+        },
+        "cast_h3_v1/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_h3_v1/matte.json",
+          "sha256": "d784af6b2a4fffeabf5b1ced65a1265e35d0a75a2e0dd355023552e799c03e54"
+        },
+        "death_h3_v1/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/original_lossless.mkv",
+          "sha256": "230391acc7840a3d41d8c53e463517b7cd4732522a777deac8f9c0d3c9278a28"
+        },
+        "death_h3_v1/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/original.json",
+          "sha256": "23b502fae94399950671b5f69766435a6c6680db954c58a14b14d2eddfb36bfa"
+        },
+        "death_h3_v1/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/original.latent",
+          "sha256": "d2e60fd7ddd1e42a64c072cb218f9518853efef123c1943b69ed2179f66eeb6a"
+        },
+        "death_h3_v1/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/sampling_workflow_api.json",
+          "sha256": "25443398e2827ef881f1eda10a92df836e44392ee19d48d02a3aa75b57f0291a"
+        },
+        "death_h3_v1/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/decode_workflow_api.json",
+          "sha256": "b448c93dfe4bef444f7696571529c479776ec9876dd52b1b6367b8fa26838250"
+        },
+        "death_h3_v1/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/sampling_history.json",
+          "sha256": "17c8f74f12080a746ad9d6ec442e4f2f8d2fac9b835f9cfa790757809441e2b1"
+        },
+        "death_h3_v1/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/generation_history.json",
+          "sha256": "9ad8422d3d409786d82d80acdbcae586e211e41bafbeb7cc4e9ffcbc9a22b6cb"
+        },
+        "death_h3_v1/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/prompt.txt",
+          "sha256": "536dbf5b636d36512e213553d0308d2fe93f5a06737c797d7ab8ff71d9a1570b"
+        },
+        "death_h3_v1/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/reference.json",
+          "sha256": "6b8d1f71c62ff99478b6099f709d6126a8026f0fe8b215640e1501c036e076e3"
+        },
+        "death_h3_v1/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/config.json",
+          "sha256": "3edc3b059b888d2628d0ae6ef8815673d5b29ea3e16c421e045903a70cef3acc"
+        },
+        "death_h3_v1/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_h3_v1/matte.json",
+          "sha256": "cd73cddc61b8ba803d2b07ca5d3bc2755e119d55d71b51e53a627be2f3780bf1"
+        }
+      },
+      "preserved_accepted_clips": [],
       "visual_review": {
-        "status": "partial",
-        "notes": "Root accepted move_v3 after engine review. Remaining five clips pending root motion review. Each source sheet uses fixed rigid scale to match approved body size; no per-pose scaling or warping. All source alpha<=4 discarded only to remove invisible edge/background RGB."
-      },
-      "source_scale_by_image": {
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_00.png": 0.78,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_01.png": 0.78,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_02.png": 0.78,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_03.png": 0.78,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_04.png": 0.78,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_05.png": 0.78,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_06.png": 0.78,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_07.png": 0.78,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_00.png": 0.67,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_01.png": 0.67,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_02.png": 0.67,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_03.png": 0.67,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_04.png": 0.67,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_05.png": 0.67,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_06.png": 0.67,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_07.png": 0.67,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_00.png": 0.7,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_01.png": 0.7,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_02.png": 0.7,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_03.png": 0.7,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_04.png": 0.7,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_05.png": 0.7,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_06.png": 0.7,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_07.png": 0.7,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_00.png": 0.67,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_01.png": 0.67,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_02.png": 0.67,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_03.png": 0.67,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_04.png": 0.67,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_05.png": 0.67,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_06.png": 0.67,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_07.png": 0.67,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_00.png": 0.67,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_01.png": 0.67,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_02.png": 0.67,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_03.png": 0.67,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_04.png": 0.67,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_05.png": 0.67,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_06.png": 0.67,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_07.png": 0.67,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_00.png": 0.8,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_01.png": 0.8,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_02.png": 0.8,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_03.png": 0.8,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_04.png": 0.8,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_05.png": 0.8,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_06.png": 0.8,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_07.png": 0.8
-      },
-      "source_scale_reason": "Different generated sheet resolutions require one rigid normalization factor per sheet to match approved movement body size. Every pose extracted from a given sheet uses identical scale; no per-pose fitting, warping or length-dependent resizing."
+        "status": "accepted",
+        "notes": "H3 video, first takes. The walk steps at the guided frames; the odd-frame cycle 1-61 keeps the smallest steps and loops. A single-reference walk retake turned the ram toward the camera and darkened its plate, so it is not used. The defend skips a morphing frame and snaps into the brace."
+      }
     }
   ]
 }

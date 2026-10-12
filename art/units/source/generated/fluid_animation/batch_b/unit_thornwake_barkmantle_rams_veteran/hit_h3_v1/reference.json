@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_thornwake_barkmantle_rams_veteran",
+  "guides": [
+    {
+      "frame": "hit_defend_v1_01",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_01.png",
+      "source_sha256": "99cb37565d9e21e373054b72114ebe71be9ab1af25422af8ae11763e0e1d0f44",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "09f0fb5139a9b8f24b15666b69b54b0a5b0ec8a696b9f9ca958e891d253eacdf"
+    },
+    {
+      "frame": "idle_v2_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_00.png",
+      "source_sha256": "9d132bd37c2d33b1cd271eeae71a62749d51e50c0f370d0f1fef67ee9937277c",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "24da6e5c9515c7a79e98d678b5e9de192c4de24f7d28830da5fd143d6fb72357"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    450,
+    585
+  ],
+  "output_scale": 0.46,
+  "free_pixels_left_top_right_bottom": [
+    91,
+    49,
+    90,
+    49
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

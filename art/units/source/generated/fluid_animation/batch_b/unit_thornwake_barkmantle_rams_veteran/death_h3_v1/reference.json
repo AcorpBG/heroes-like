@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_thornwake_barkmantle_rams_veteran",
+  "guides": [
+    {
+      "frame": "idle_v2_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_00.png",
+      "source_sha256": "9d132bd37c2d33b1cd271eeae71a62749d51e50c0f370d0f1fef67ee9937277c",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "24da6e5c9515c7a79e98d678b5e9de192c4de24f7d28830da5fd143d6fb72357"
+    },
+    {
+      "frame": "death_v1_03",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_03.png",
+      "source_sha256": "129c8e6af48c9d79c5225ce5e2ba68041db6b8120ff04184fd25702eeb2ecced",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "ba92d3ddfecc431d4bd9b70d6d4473f46e69d13232316a37b225e9ec67239621"
+    },
+    {
+      "frame": "death_v1_07",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_07.png",
+      "source_sha256": "8241b9fdaf4fdc3856703b3bfcb99a6ecee528a213536b1f4ecfe790102d09c0",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "867534676b1b251497d9ea5f7d8c8f55fd5515d81905b08c7b2d3fee1d432d20"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    450,
+    585
+  ],
+  "output_scale": 0.46,
+  "free_pixels_left_top_right_bottom": [
+    91,
+    49,
+    90,
+    49
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
