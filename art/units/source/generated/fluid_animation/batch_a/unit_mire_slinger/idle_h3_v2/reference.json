@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_mire_slinger",
+  "guides": [
+    {
+      "frame": "cast_00",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mire_slinger/cast_v1.png",
+      "source_sha256": "db6c1c29ac386ad25d81cb934b2117bf6b60ac2c1790e7c52cfbdfb93205f31f",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "78924323221cfc93c5b4e32b0210c868275f4622376c117b728978fccfaa3024"
+    },
+    {
+      "frame": "cast_02",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mire_slinger/cast_v1.png",
+      "source_sha256": "db6c1c29ac386ad25d81cb934b2117bf6b60ac2c1790e7c52cfbdfb93205f31f",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "d737436506034d52e30ba2a9170e4cafb8504b80378538332fc8eb6c497ef0ea"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    442,
+    572
+  ],
+  "output_scale": 0.45,
+  "free_pixels_left_top_right_bottom": [
+    182,
+    69,
+    183,
+    68
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

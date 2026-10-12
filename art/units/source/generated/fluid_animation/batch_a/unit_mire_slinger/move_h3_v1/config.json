@@ -1,0 +1,54 @@
+{
+  "unit_id": "unit_mire_slinger",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    442,
+    572
+  ],
+  "scale": 0.45,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026102001,
+  "references": [
+    "move_00",
+    "move_04"
+  ],
+  "guides": [
+    [
+      31,
+      1
+    ],
+    [
+      62,
+      0
+    ],
+    [
+      93,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original lean young woman skirmisher, the Mire Slinger, facing screen right in elevated three-quarter view. Keep her dark braided hair in a bun with a green reed headband, the weathered olive-green sleeveless tunic with ragged green leaf-like cloak and skirt panels, yellow reed bindings, a cord necklace with small bone charms, leather wrapped bracers and boots, and a woven side pouch of sling stones at the belt. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE simple cord sling with a dark leather cradle hanging from it; the screen-RIGHT hand is free. Preserve the sling, pouch, costume and lean adult proportions. Walk in place through two complete reciprocal cycles with quick light steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The sling hangs and swings from the screen-left hand and the free arm swings; the leaf panels swing with the legs. Finish in the original gait phase. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, sling cord, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the sling or costume.",
+  "protected_foreground_chroma": 19,
+  "edge_threshold": 10,
+  "palette_measurement": {
+    "bluest_opaque": 17.0,
+    "blue_minus_green_p999": 4.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

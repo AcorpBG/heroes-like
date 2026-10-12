@@ -136,6 +136,140 @@
       ],
       "last": 1,
       "action": "Collapse continuously from standing: the hind legs buckle, the beast sinks forward onto its chest, the snout drops to the ground and the tail goes limp, finishing lying flat and motionless on its belly with the snout at screen right and the tail stretched out at screen left, the claws lying on the ground. No recovery, no blood and no disappearing body."
+    },
+    "idle_h3_v2": {
+      "clip": "idle",
+      "references": [
+        "idle_00",
+        "idle_04"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A coiled predator idle that loops. The chest breathes slowly in and out, the shoulders lift a little, the hook claws flex and uncurl and the tail tip curls, then everything returns smoothly to the original crouch. Both hind feet stay planted. No walking and no attack. Only the body moves; nothing else appears in the frame."
+    },
+    "move_h3_v2": {
+      "clip": "move",
+      "references": [
+        "move_00",
+        "move_04"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Run in place through two complete reciprocal cycles with a springy forward-leaning stride. The two hind legs alternate through forward contact, weight loading, passing and lift; the knees and ankles articulate and each clawed foot alternates taking weight and swinging. The body stays centred for engine-driven travel and the tail streams behind as counterweight. Finish in the original gait phase. Only the body moves; nothing else appears in the frame."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "idle_00",
+        "attack_02",
+        "attack_04"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE near-forearm slash toward screen right. The near elbow pulls back and the claw hand rises above the shoulder while the hind legs coil, then the beast lunges and swings the near claw forward and down to full reach at screen right at chest height, follows through below the chest, then draws the arm back and settles into the original crouch. One slash only; the far forearm stays low and the tail balances. The claws stay sharp and solid through the swing, with no trail, arc, streak or blur behind them. Only the body moves; nothing else appears in the frame."
+    },
+    "hit_h3_v2": {
+      "clip": "hit",
+      "references": [
+        "hit_01",
+        "idle_00"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "Start rocked back in a flinch, then recover completely: the chest and snout come down, the forearms lower and the beast regains its footing and returns to the same crouch. The tail stays curled behind the body the whole time and never swings out. Only the body moves; nothing else appears in the frame."
+    },
+    "idle_h3_v3": {
+      "clip": "idle",
+      "references": [
+        "idle_00",
+        "idle_04"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A coiled predator idle that loops. The chest breathes slowly in and out, the shoulders lift a little, the hook claws flex and uncurl and the tail tip curls, then everything returns smoothly to the original crouch. Both hind feet stay planted. No walking and no attack. Only the body moves; nothing else appears in the frame."
+    },
+    "move_h3_v3": {
+      "clip": "move",
+      "references": [
+        "move_00",
+        "move_04"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Run in place through two complete reciprocal cycles with a springy forward-leaning stride. The two hind legs alternate through forward contact, weight loading, passing and lift; the knees and ankles articulate and each clawed foot alternates taking weight and swinging. The body stays centred for engine-driven travel and the tail streams behind as counterweight. Finish in the original gait phase. Only the body moves; nothing else appears in the frame."
+    },
+    "hit_h3_v3": {
+      "clip": "hit",
+      "references": [
+        "hit_02",
+        "idle_00"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "Start rocked back in a flinch, then recover completely: the chest and snout come down, the forearms lower and the beast regains its footing and returns to the same crouch. The tail stays curled behind the body the whole time and never swings out. Only the body moves; nothing else appears in the frame."
     }
   }
 }

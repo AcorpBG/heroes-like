@@ -51,6 +51,8 @@ A pulse that darkens only the plate near the figure passes the corner test and l
 
 A hit take starts on the painted hit pose and recovers to the neutral pose: references `[hit, neutral]`, guides `[[40, 1]]`, `last` 1. Its prompt describes only the body ("starts rocked back in a flinch and recovers from it … Only the body moves; nothing else appears in the frame") and never names a blow, an impact or a flash. In the first 60 takes the plate pulsed black in 8, and the matte has to reject those frames; five of the 8 were hits whose prompts named the impact or forbade flashes. `prepare --refresh` rewrites takes that are queued but not yet submitted, so a prompt change reaches them without adding a take.
 
+Guide an idle every 31 frames: references `[neutral, idle pose]`, guides `[[31, 1], [62, 0], [93, 1]]`, `last` 0, and end the prompt with the hit take's "Only the body moves; nothing else appears in the frame." With a single `[[62, 1]]` guide and no such sentence, the plate flashed in long stretches, and the matte rejected 30 to 96 of 124 frames (Gorefen Ripper Veteran, Mire Slinger, Bogplate Maulers Veteran). The retakes of the first two lost none, and their loops seam as smoothly as one frame step.
+
 ## Validation and retention
 
 Use focused clip/manifest, actual playback, grounding, reduced-motion/Fast and simulation/save checks. No full repository suite. A minimum frame count or a passing structural check is not visual acceptance. Document unfinished identities/clips honestly. Original asset masters, provenance, recipes, saves, backups and caches remain; remove task-owned temporary render previews, logs and probe profiles after inspection. Push coherent validated runtime/content slices to main, preserving unrelated existing work.

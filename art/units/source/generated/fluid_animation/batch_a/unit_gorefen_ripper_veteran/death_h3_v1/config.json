@@ -1,0 +1,46 @@
+{
+  "unit_id": "unit_gorefen_ripper_veteran",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    456,
+    595
+  ],
+  "scale": 0.48,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026101956,
+  "references": [
+    "idle_00",
+    "death_07"
+  ],
+  "guides": [
+    [
+      90,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "ONE original raptor beast, the Gorefen Redhook, facing screen right in elevated three-quarter side view. Keep the slender dark grey-black scaled body with a long narrow crocodile snout and gold eye, the crimson feather-quill mane running from the crown down the spine to the tip of the long curled tail, two powerful digitigrade hind legs, and TWO long forearms that hang low in a forward crouch, each ending in oversized curved crimson hook claws, with brass wrist cuffs and bone and tooth charms around the neck. Exactly two forearms, two hind legs and one tail. Preserve the red claws, quill mane, cuffs, charms and the slender long-snouted proportions. Collapse continuously from standing: the hind legs buckle, the beast sinks forward onto its chest, the snout drops to the ground and the tail goes limp, finishing lying flat and motionless on its belly with the snout at screen right and the tail stretched out at screen left, the claws lying on the ground. No recovery, no blood and no disappearing body. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full snout, claws, feet and tail within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, weapons, magic, glow, blood, slash trails, particles, wings or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the claws or cuffs.",
+  "protected_foreground_chroma": 24,
+  "edge_threshold": 16,
+  "palette_measurement": {
+    "bluest_opaque": 22.0,
+    "blue_minus_green_p999": 10.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

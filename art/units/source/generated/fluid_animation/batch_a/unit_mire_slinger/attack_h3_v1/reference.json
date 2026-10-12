@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_mire_slinger",
+  "guides": [
+    {
+      "frame": "cast_00",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mire_slinger/cast_v1.png",
+      "source_sha256": "db6c1c29ac386ad25d81cb934b2117bf6b60ac2c1790e7c52cfbdfb93205f31f",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "78924323221cfc93c5b4e32b0210c868275f4622376c117b728978fccfaa3024"
+    },
+    {
+      "frame": "attack_02",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mire_slinger/attack_v1.png",
+      "source_sha256": "548146b7db31e0784c43526dcf295b0b35f68e1183f66bfd3d57d114dc95b23f",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "65babd7f4df6ec526886382ac5266a041a5fd937852169f19f1c6709fe1b1c34"
+    },
+    {
+      "frame": "attack_04",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mire_slinger/attack_v1.png",
+      "source_sha256": "548146b7db31e0784c43526dcf295b0b35f68e1183f66bfd3d57d114dc95b23f",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "29c015fdf527d19ec2d133c25353f6c4979c05931e4bf6ecff98855a3724e49f"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    442,
+    572
+  ],
+  "output_scale": 0.45,
+  "free_pixels_left_top_right_bottom": [
+    182,
+    69,
+    183,
+    68
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -1,0 +1,47 @@
+{
+  "unit_id": "unit_mire_slinger",
+  "clip": "defend",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    442,
+    572
+  ],
+  "scale": 0.45,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026102010,
+  "references": [
+    "cast_00",
+    "defend_01",
+    "defend_02"
+  ],
+  "guides": [
+    [
+      34,
+      1
+    ]
+  ],
+  "last": 2,
+  "prompt": "ONE original lean young woman skirmisher, the Mire Slinger, facing screen right in elevated three-quarter view. Keep her dark braided hair in a bun with a green reed headband, the weathered olive-green sleeveless tunic with ragged green leaf-like cloak and skirt panels, yellow reed bindings, a cord necklace with small bone charms, leather wrapped bracers and boots, and a woven side pouch of sling stones at the belt. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE simple cord sling with a dark leather cradle hanging from it; the screen-RIGHT hand is free. Preserve the sling, pouch, costume and lean adult proportions. Sink into a wide low crouch and raise both forearms in front of the face, the bracers covering the head and the sling held against the body, then hold the guard on both planted boots. No attack and no return to the relaxed stance. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, sling cord, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the sling or costume.",
+  "protected_foreground_chroma": 25,
+  "edge_threshold": 10,
+  "palette_measurement": {
+    "bluest_opaque": 23.0,
+    "blue_minus_green_p999": 4.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

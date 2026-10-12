@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_gorefen_ripper_veteran",
+  "guides": [
+    {
+      "frame": "move_00",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper_veteran/move_v1.png",
+      "source_sha256": "b0650e997ce6f00e8836390390c71217df38e6d157f4339510ac53d560789efd",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "99387d7e413a50160a3859e6ca67629e1efab39b24e77c20eda2ab2c592ee169"
+    },
+    {
+      "frame": "move_04",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper_veteran/move_v1.png",
+      "source_sha256": "b0650e997ce6f00e8836390390c71217df38e6d157f4339510ac53d560789efd",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "ad06a9ad385f2a41b5b30ecf1c5a856c811a6046f4443ac73a5c0d4a2c87eae5"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    456,
+    595
+  ],
+  "output_scale": 0.48,
+  "free_pixels_left_top_right_bottom": [
+    50,
+    45,
+    49,
+    45
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

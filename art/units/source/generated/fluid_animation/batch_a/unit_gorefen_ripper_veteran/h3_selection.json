@@ -1,0 +1,74 @@
+{
+  "clips": {
+    "idle": {
+      "segments": [
+        {
+          "take": "idle_h3_v3",
+          "frames": [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108, 110, 112, 114, 116, 118, 120, 122]
+        }
+      ],
+      "frame_msec": 60
+    },
+    "move": {
+      "segments": [
+        {
+          "take": "move_h3_v3",
+          "frames": [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60]
+        }
+      ],
+      "frame_msec": 50
+    },
+    "attack": {
+      "segments": [
+        {
+          "take": "attack_h3_v2",
+          "frames": [15, 21, 23, 24, 25, 26, 27, 42, 43, 44, 45, 46, 56, 69, 73, 76, 81, 88, 95, 99, 108]
+        }
+      ],
+      "frame_msec": 42,
+      "contact_frame": 12
+    },
+    "hit": {
+      "segments": [
+        {
+          "take": "hit_h3_v3",
+          "frames": [0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 16, 17, 19, 35]
+        }
+      ],
+      "frame_msec": 35
+    },
+    "defend": {
+      "segments": [
+        {
+          "take": "defend_h3_v1",
+          "frames": [3, 8, 12, 14, 15, 17, 18, 20, 22, 26, 28, 32, 34, 38, 40, 42, 44, 46, 48, 51, 54]
+        }
+      ],
+      "frame_msec": 42
+    },
+    "cast": {
+      "segments": [
+        {
+          "take": "cast_h3_v1",
+          "frames": [16, 25, 27, 28, 30, 31, 32, 33, 34, 36, 38, 42, 56, 64, 74, 76, 77, 78, 79, 80, 81, 82, 83, 85, 87, 92]
+        }
+      ],
+      "frame_msec": 45,
+      "contact_frame": 12
+    },
+    "death": {
+      "segments": [
+        {
+          "take": "death_h3_v1",
+          "frames": [11, 18, 34, 39, 44, 46, 48, 51, 53, 55, 56, 57, 58, 59, 60, 61, 63, 64, 66, 68, 69, 71, 73, 77, 80, 95]
+        }
+      ],
+      "frame_msec": 45
+    }
+  },
+  "preserved_accepted_clips": [],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "H3 video on all seven clips. Idle (3 guides, 62 frames at 60 ms) and walk (one gait cycle, 0-60) seam cleanly; hit starts at the milder painted flinch, tail stays in frame, slow settle trimmed after video 35; attack contact at the claw rake (video 56); defend crouch 3-54; cast flare peaks at video 56; death collapses 11-95 onto its side."
+  }
+}
