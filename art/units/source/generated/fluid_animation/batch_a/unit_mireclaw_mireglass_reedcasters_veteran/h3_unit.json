@@ -164,6 +164,60 @@
       ],
       "last": 1,
       "action": "Collapse continuously from standing: the caster clutches the chest, sinks onto the knees leaning on the staff, then slumps forward onto the ground, finishing lying motionless face down with the hood at screen right and the boots at screen left, the staff lying on the ground beside the body. No recovery, no floating staff and no disappearing body."
+    },
+    "cast_h3_v2": {
+      "clip": "cast",
+      "references": [
+        "idle_0",
+        "cast_33",
+        "cast_34",
+        "cast_35",
+        "cast_36",
+        "cast_37",
+        "cast_38"
+      ],
+      "guides": [
+        [
+          14,
+          1
+        ],
+        [
+          28,
+          2
+        ],
+        [
+          42,
+          3
+        ],
+        [
+          56,
+          4
+        ],
+        [
+          70,
+          5
+        ],
+        [
+          84,
+          6
+        ],
+        [
+          98,
+          0
+        ],
+        [
+          112,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "An invocation. The caster raises the free arm high above the shoulder with the palm toward the sky and the head tilted up, the fingers making a precise sign while the staff lifts slightly and its lenses glint turquoise, holds it briefly, then sweeps the hand down across the chest and returns to the original stance. No large spell effect or particles. Only the body moves; nothing else appears in the frame.",
+      "pad": [
+        0,
+        64,
+        0,
+        0
+      ]
     }
   }
 }

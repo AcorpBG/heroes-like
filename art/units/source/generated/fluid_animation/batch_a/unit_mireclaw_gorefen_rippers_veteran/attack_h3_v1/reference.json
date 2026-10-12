@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_mireclaw_gorefen_rippers_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/idle_v1.png",
+      "source_sha256": "291bc7273a9d765714113cf08d50488cb07a40a97ffc8378fea0d014a2ac9ca3",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "580c881587e39fc34d5d35af6afa84cda912cc38638dbce7ec5780e27675cff7"
+    },
+    {
+      "frame": "attack_10",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/attack_v1.png",
+      "source_sha256": "28ecd414e45ddd9a8a293f1a196985e806fe86daf04c8cd692a77f5521de4356",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "ed0d69a51f61f8467cb2e727e004fe19174870f0178976ee47d22fadc1f97953"
+    },
+    {
+      "frame": "attack_12",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/attack_v1.png",
+      "source_sha256": "28ecd414e45ddd9a8a293f1a196985e806fe86daf04c8cd692a77f5521de4356",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "f0cf8df842283c05b6a4ee8616fc9215e8b0ebdc65b27206f708c26a96f870fa"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    523,
+    596
+  ],
+  "output_scale": 0.58,
+  "free_pixels_left_top_right_bottom": [
+    115,
+    44,
+    115,
+    44
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

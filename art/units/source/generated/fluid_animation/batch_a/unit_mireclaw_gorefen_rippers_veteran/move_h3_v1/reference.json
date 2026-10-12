@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_mireclaw_gorefen_rippers_veteran",
+  "guides": [
+    {
+      "frame": "move_40",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/move_v1.png",
+      "source_sha256": "377ede2ac8dff712d2201f6f5a3e2e6ec83f319a4bce3b6b39c83c43707b4cc5",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "fe36913fd910c2441e70dacfeb58903c79a803bcf7439c2e0770f4baaadfbe0d"
+    },
+    {
+      "frame": "move_44",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/move_far_v1.png",
+      "source_sha256": "0b89731d621a667c080f57c85f5406c13e94cf8ffd4bc71e7227533324cbccf5",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "bed4d130331349be9407bdc7467d14a2618edcda2da007bfc4d70a4a2b959cfd"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    523,
+    596
+  ],
+  "output_scale": 0.58,
+  "free_pixels_left_top_right_bottom": [
+    115,
+    44,
+    115,
+    44
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

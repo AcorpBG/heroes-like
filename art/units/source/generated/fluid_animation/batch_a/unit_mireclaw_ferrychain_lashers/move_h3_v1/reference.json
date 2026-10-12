@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_mireclaw_ferrychain_lashers",
+  "guides": [
+    {
+      "frame": "move_v6_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_ferrychain_lashers/move_v6.png",
+      "source_sha256": "17aa18252b08adc22d0017b656e53358447f4ec44f0e5448bb7f74aa01c06bf1",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "91b56ac91056f9531203ffe512ddd6f9c9e6de898e9667944cfcb18959e0ca64"
+    },
+    {
+      "frame": "move_v6_4",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_ferrychain_lashers/move_v6.png",
+      "source_sha256": "17aa18252b08adc22d0017b656e53358447f4ec44f0e5448bb7f74aa01c06bf1",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "a5f11c4b7c5f8e9c0a2bea888d985ef2db38423d6ce31dbc00f3655400b5f05f"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    423,
+    536
+  ],
+  "output_scale": 0.52,
+  "free_pixels_left_top_right_bottom": [
+    53,
+    89,
+    53,
+    89
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

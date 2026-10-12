@@ -1,0 +1,77 @@
+{
+  "unit_id": "unit_mireclaw_gorefen_rippers_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/idle_v1.png",
+      "source_sha256": "291bc7273a9d765714113cf08d50488cb07a40a97ffc8378fea0d014a2ac9ca3",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "580c881587e39fc34d5d35af6afa84cda912cc38638dbce7ec5780e27675cff7"
+    },
+    {
+      "frame": "death_33",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/death_v1.png",
+      "source_sha256": "01d5c80b54cb957bb2986d386613173a9aac4638f625e78394eaad9293ae2f85",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "e61902268501f6caa89b7fb317f1669098d6b91258672fd2742c0c604e29d168"
+    },
+    {
+      "frame": "death_34",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/death_v1.png",
+      "source_sha256": "01d5c80b54cb957bb2986d386613173a9aac4638f625e78394eaad9293ae2f85",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "9dd6d51cdc83cd6bc60a88ae925f8ed1756c334320e83abe345a07459cab9e1f"
+    },
+    {
+      "frame": "death_35",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/death_v1.png",
+      "source_sha256": "01d5c80b54cb957bb2986d386613173a9aac4638f625e78394eaad9293ae2f85",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "fdc01a1ebd1bac1b1a8f50cf75c21e9f430a64889a9682b0b63df1f51ec5f62b"
+    },
+    {
+      "frame": "death_36",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/death_v1.png",
+      "source_sha256": "01d5c80b54cb957bb2986d386613173a9aac4638f625e78394eaad9293ae2f85",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "86bf96819ada62251d6643fdb4bae31958a04416e74d433a667abed29abde214"
+    },
+    {
+      "frame": "death_37",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/death_v1.png",
+      "source_sha256": "01d5c80b54cb957bb2986d386613173a9aac4638f625e78394eaad9293ae2f85",
+      "input_file": "guide_5_chroma.png",
+      "input_sha256": "eb68198ded0edd06c468400836f812f4ea14706be3ba5450d2724ae1c93e5823"
+    },
+    {
+      "frame": "death_38",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/death_v1.png",
+      "source_sha256": "01d5c80b54cb957bb2986d386613173a9aac4638f625e78394eaad9293ae2f85",
+      "input_file": "guide_6_chroma.png",
+      "input_sha256": "8ca3615d3190aa2f3251bbe9bc7a93056738c7df7d01b5f850d9c9dd5fc870b0"
+    },
+    {
+      "frame": "death_39",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/death_v1.png",
+      "source_sha256": "01d5c80b54cb957bb2986d386613173a9aac4638f625e78394eaad9293ae2f85",
+      "input_file": "guide_7_chroma.png",
+      "input_sha256": "649e7ac04c66dd1bff8ed546bb8657a485f8059a8c7f2b225ad3c8312b982752"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    523,
+    596
+  ],
+  "output_scale": 0.58,
+  "free_pixels_left_top_right_bottom": [
+    115,
+    44,
+    115,
+    44
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

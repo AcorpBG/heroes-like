@@ -224,6 +224,80 @@
       ],
       "last": 0,
       "action": "A ready, watchful idle that loops. She breathes slowly, the shoulders rise and fall, she slowly rolls the chain coils in her hand while the hook end sways in a small slow arc along the ground and drifts back, and her head turns slowly toward screen right and back, then everything returns smoothly to the original stance. Every movement is slow and continuous. Both boots stay planted. No walking and no attack. Only the body moves; nothing else appears in the frame."
+    },
+    "idle_h3_v4": {
+      "clip": "idle",
+      "references": [
+        "cast_v1_0",
+        "cast_hands_v2_1"
+      ],
+      "guides": [
+        [
+          15,
+          1
+        ],
+        [
+          31,
+          0
+        ],
+        [
+          46,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          77,
+          1
+        ],
+        [
+          93,
+          0
+        ],
+        [
+          108,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A ready, watchful idle that loops. She breathes slowly, the shoulders rise and fall, she slowly rolls the chain coils in her hand while the hook end sways in a small slow arc along the ground and drifts back, and her head turns slowly toward screen right and back, then everything returns smoothly to the original stance. Every movement is slow and continuous. Both boots stay planted. No walking and no attack. Only the body moves; nothing else appears in the frame.",
+      "pad": [
+        0,
+        64,
+        0,
+        0
+      ]
+    },
+    "idle_h3_v5": {
+      "clip": "idle",
+      "references": [
+        "cast_v1_0",
+        "cast_v1_3"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A ready, watchful idle that loops. She breathes slowly, the shoulders rise and fall, she slowly rolls the chain coils in her hand while the hook end sways in a small slow arc along the ground and drifts back, and her head turns slowly toward screen right and back, then everything returns smoothly to the original stance. Every movement is slow and continuous. Both boots stay planted. No walking and no attack. Only the body moves; nothing else appears in the frame.",
+      "pad": [
+        0,
+        64,
+        0,
+        0
+      ]
     }
   }
 }

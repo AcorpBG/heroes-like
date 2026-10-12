@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_mireclaw_ferrychain_lashers",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    423,
+    536
+  ],
+  "scale": 0.52,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026102252,
+  "references": [
+    "cast_v1_0",
+    "attack_v1_2",
+    "attack_v1_4"
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      54,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original athletic woman fighter, the Ferrychain Lasher, facing screen right in elevated three-quarter view. Keep her long loosely braided black hair, the olive reed-woven sleeveless tunic with ragged fringes, dark leather trousers, boots and bracers, and the moss and white shell-bone charms at the waist. Exactly two arms, two hands and two legs. Her weapon is ONE long dark iron linked chain with ONE large curved crescent hook and a reed tassel at one end; the screen-left hand gathers the slack coils at her waist and the chain runs down to the hook resting on the ground near her front foot. Preserve the single chain and hook, the costume and the athletic adult proportions. Make ONE chain-hook lash toward screen right. She draws her arm back so the hook trails out behind her on the curving chain, winds up with the forearm beside the shoulder, then sweeps forward and flings the hook out on a taut chain to full reach at screen right, lets the hook arc down low ahead, then hauls the chain back under control while gathering the slack and settles into the original stance. One lash only; the hook stays on the chain. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, the whole chain and hook, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, second hook, magic, glow, motion trails, particles or extra limbs. The chain stays one connected piece held in her hands. Articulate joints naturally with physical planted-foot support; do not morph the hook.",
+  "protected_foreground_chroma": 15,
+  "edge_threshold": 11,
+  "palette_measurement": {
+    "bluest_opaque": 13.0,
+    "blue_minus_green_p999": 5.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}
