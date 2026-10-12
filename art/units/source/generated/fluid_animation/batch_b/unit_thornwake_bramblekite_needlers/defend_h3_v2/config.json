@@ -1,0 +1,47 @@
+{
+  "unit_id": "unit_thornwake_bramblekite_needlers",
+  "clip": "defend",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    466,
+    590
+  ],
+  "scale": 0.43,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026103460,
+  "references": [
+    "attack_v1_frame_00",
+    "defend_v2_frame_01",
+    "defend_v2_frame_02"
+  ],
+  "guides": [
+    [
+      34,
+      1
+    ]
+  ],
+  "last": 2,
+  "prompt": "ONE original slender winged living-wood humanoid, the Bramblekite Needler, facing screen right in elevated three-quarter view. Keep the pale bark body with a twig crown, amber eyes, the TWO large green leaf bat wings with wooden spars and golden edges, the layered leaf clothing, vine wrappings, small seed pods at the belt and root-clawed feet. Exactly two arms, two hands, two legs and two wings. Both hands hold ONE long wooden blowpipe level across the chest, the open end pointing to screen right. Preserve the blowpipe, the leaf wings, the twig crown and the slender proportions. Crouch low on bent knees and fold the leaf wings forward around the body like a cloak, with the blowpipe held across the chest behind them, then hold the covered guard on both planted feet. The blowpipe never goes to the mouth and nothing is fired: no darts, needles or projectiles anywhere. No attack and no return to the relaxed stance. Locked orthographic camera, fixed anatomical scale and centred body. Keep both wing tips, the blowpipe, the twig crown and both feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, darts in flight, falling leaves, magic, glow, motion trails, particles or extra limbs. Articulate joints naturally; do not morph the blowpipe or wings.",
+  "protected_foreground_chroma": 4,
+  "edge_threshold": 6,
+  "palette_measurement": {
+    "bluest_opaque": 2.0,
+    "blue_minus_green_p999": 0.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

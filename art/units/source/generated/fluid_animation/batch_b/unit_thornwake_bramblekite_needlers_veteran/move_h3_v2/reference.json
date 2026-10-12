@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_thornwake_bramblekite_needlers_veteran",
+  "guides": [
+    {
+      "frame": "move_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/move_v1_frame_00.png",
+      "source_sha256": "dda28e4edc0061fdb927794b70f7d4945783ff20c0d5fd2a3fd0ce730bfb9c41",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "b7334be410298e6095fdb897756618c1a3555efbcf3799503d725319c20e691b"
+    },
+    {
+      "frame": "move_04",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/move_v1_frame_04.png",
+      "source_sha256": "d087a98d3f7ffebeecf1cdcca6af632a4085c2b84c0e43093f3fbb4deec7d6d4",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "afb4c7e92ab45a3e6a5080bf407c82af125785a3da803d6856d47da440bc07a7"
+    }
+  ],
+  "canvas": [
+    1216,
+    640
+  ],
+  "ground_anchor": [
+    590,
+    593
+  ],
+  "output_scale": 0.48,
+  "free_pixels_left_top_right_bottom": [
+    251,
+    44,
+    250,
+    44
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

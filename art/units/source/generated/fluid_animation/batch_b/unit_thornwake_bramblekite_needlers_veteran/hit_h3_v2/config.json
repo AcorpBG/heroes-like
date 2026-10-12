@@ -1,0 +1,46 @@
+{
+  "unit_id": "unit_thornwake_bramblekite_needlers_veteran",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    462,
+    593
+  ],
+  "scale": 0.48,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026103508,
+  "references": [
+    "hit_01",
+    "idle_00"
+  ],
+  "guides": [
+    [
+      40,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "ONE original slim winged bark humanoid, the Sunspine Kite veteran, facing screen right in elevated three-quarter view. Keep the root-footed bark body clothed in olive leaves, the leafy crown, the ivory beaked mask with amber eyes, and the TWO large veined gold-green leaf wings with wooden spars ending in golden thorn tips. Exactly two arms, two hands, two legs and two wings. Both hands grip ONE organic wooden seed-launcher with gold bands and a flared gold muzzle, held low and angled toward screen right. Preserve the launcher, the leaf wings, the beaked mask and the slim proportions. The kite starts rocked back in a flinch and recovers from it. The body hunches down and twists, the wings shudder close to the body and the knees flex deep while both hands keep hold of the launcher with its muzzle tipped down toward the ground, then it straightens, rebalances on both feet and returns to the same stance. The launcher is never fired: no seeds, flash, smoke or projectiles anywhere. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep both wing tips, the launcher, the crown and both feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, seeds in flight, muzzle flash, smoke, falling leaves, magic, glow, motion trails, particles or extra limbs. Articulate joints naturally; do not morph the launcher or wings.",
+  "protected_foreground_chroma": 6,
+  "edge_threshold": 6,
+  "palette_measurement": {
+    "bluest_opaque": 4.0,
+    "blue_minus_green_p999": 0.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

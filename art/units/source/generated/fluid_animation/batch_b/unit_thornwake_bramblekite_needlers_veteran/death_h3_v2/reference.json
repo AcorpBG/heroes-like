@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_thornwake_bramblekite_needlers_veteran",
+  "guides": [
+    {
+      "frame": "idle_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2_frame_00.png",
+      "source_sha256": "478ee8b8f087c55535980691ae5e2d0f9d0370b77c4e77b62144793720786c39",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "36917835c990ad9f6cb37ac938194a0fc66a7cbd9aa23e3f30c187c94869f422"
+    },
+    {
+      "frame": "death_02",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1_frame_02.png",
+      "source_sha256": "fc5cbb3779ac946626bf015168443e75add7583c0e0cd332c001ed533e307ed6",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "8a1e1f033ae417361ed469ffb970cf1fdd90f205990124e5e49b43665285862e"
+    },
+    {
+      "frame": "death_07",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1_frame_07.png",
+      "source_sha256": "49234517f9a9b7738713db3e3a836cd042e6830c4e5407c75d88359daaea844b",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "0150b07444a5fc60349e4c54543290951656cca84eadafccf98df6e2807b9a0c"
+    }
+  ],
+  "canvas": [
+    960,
+    768
+  ],
+  "ground_anchor": [
+    462,
+    593
+  ],
+  "output_scale": 0.48,
+  "free_pixels_left_top_right_bottom": [
+    123,
+    44,
+    122,
+    172
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

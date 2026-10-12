@@ -169,6 +169,85 @@
       ],
       "last": 2,
       "action": "Collapse slowly from standing. The needler sags, the wings droop and it sinks onto its knees, stays there a moment, then slumps forward and lies down flat, finishing motionless with the head at screen right and the feet at screen left, the wings spread limp over the body and the blowpipe on the ground beside it. The body never leaves the ground; no recovery, no flying and no disappearing body."
+    },
+    "move_h3_v2": {
+      "clip": "move",
+      "references": [
+        "move_v1_frame_00",
+        "move_v1_frame_04"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Fly in place through two complete wingbeat cycles, hovering just off the ground. Both leaf wings sweep fully up and open, then beat down and fold forward around the body, then rise again; the legs dangle and the body bobs slightly with each beat but stays centred for engine-driven travel. The blowpipe is held level in both hands. Finish in the original wing phase.",
+      "pad": [
+        128,
+        0,
+        128,
+        0
+      ]
+    },
+    "hit_h3_v2": {
+      "clip": "hit",
+      "references": [
+        "hit_defend_v1_frame_01",
+        "attack_v1_frame_00"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "The needler starts rocked back in a flinch and recovers from it. The body hunches and twists back and the knees flex, the half-folded wings shudder but stay close to the body, both hands keep hold of the blowpipe, then it rebalances on both feet and returns to the same stance. The blowpipe never goes to the mouth and nothing is fired: no darts, needles or projectiles anywhere. Only the body moves; nothing else appears in the frame."
+    },
+    "defend_h3_v2": {
+      "clip": "defend",
+      "references": [
+        "attack_v1_frame_00",
+        "defend_v2_frame_01",
+        "defend_v2_frame_02"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
+      "last": 2,
+      "action": "Crouch low on bent knees and fold the leaf wings forward around the body like a cloak, with the blowpipe held across the chest behind them, then hold the covered guard on both planted feet. The blowpipe never goes to the mouth and nothing is fired: no darts, needles or projectiles anywhere. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v2": {
+      "clip": "cast",
+      "references": [
+        "attack_v1_frame_00",
+        "cast_3"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A calling gesture. The needler releases one hand from the blowpipe and raises it high overhead with the fingers spread, the wings lifting a little, holds the pose briefly, then lowers the hand back to the blowpipe in the original stance. The other hand holds the blowpipe low at the side; it never goes to the mouth and nothing is fired: no darts, needles or projectiles anywhere. A physical gesture only: no spell, glow or aura."
     }
   }
 }

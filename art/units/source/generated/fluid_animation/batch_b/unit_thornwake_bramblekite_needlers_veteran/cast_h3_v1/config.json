@@ -1,0 +1,50 @@
+{
+  "unit_id": "unit_thornwake_bramblekite_needlers_veteran",
+  "clip": "cast",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    462,
+    593
+  ],
+  "scale": 0.48,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026103506,
+  "references": [
+    "idle_00",
+    "cast_04"
+  ],
+  "guides": [
+    [
+      44,
+      1
+    ],
+    [
+      70,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original slim winged bark humanoid, the Sunspine Kite veteran, facing screen right in elevated three-quarter view. Keep the root-footed bark body clothed in olive leaves, the leafy crown, the ivory beaked mask with amber eyes, and the TWO large veined gold-green leaf wings with wooden spars ending in golden thorn tips. Exactly two arms, two hands, two legs and two wings. Both hands grip ONE organic wooden seed-launcher with gold bands and a flared gold muzzle, held low and angled toward screen right. Preserve the launcher, the leaf wings, the beaked mask and the slim proportions. A signal salute. The kite lifts the launcher upright before its masked face with the muzzle pointing to the sky and spreads the wings a little, holds the pose briefly, then lowers the launcher back to the original stance. A physical gesture only: no spell, glow or aura. Locked orthographic camera, fixed anatomical scale and centred body. Keep both wing tips, the launcher, the crown and both feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, seeds in flight, muzzle flash, smoke, falling leaves, magic, glow, motion trails, particles or extra limbs. Articulate joints naturally; do not morph the launcher or wings.",
+  "protected_foreground_chroma": 5,
+  "edge_threshold": 6,
+  "palette_measurement": {
+    "bluest_opaque": 3.0,
+    "blue_minus_green_p999": 0.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

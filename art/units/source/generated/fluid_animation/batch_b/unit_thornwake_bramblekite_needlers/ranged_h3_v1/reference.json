@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_thornwake_bramblekite_needlers",
+  "guides": [
+    {
+      "frame": "attack_v1_frame_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_00.png",
+      "source_sha256": "1a621efa5c51586faf233aec24bdef50152ab20481a274b11ad9039ea33c531a",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "7bb733130f18ae00f2b6d40c627ae82bb55d198df50377b2193332465afc47ac"
+    },
+    {
+      "frame": "ranged_v1_frame_03",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_03.png",
+      "source_sha256": "86e739d0e310de08076979b1bb09238999a0b0286c6423d367ebad18f464e912",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "75c91a16fc6a0c04bd4acede03b29f6d56aa7e20ee5a176c095c5c1af3fb1e9a"
+    },
+    {
+      "frame": "ranged_v1_frame_05",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_05.png",
+      "source_sha256": "1c454a32872de3f367e3bd98c602d9e123f03fa62aa0a9982c97394252886ab6",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "0dd9b48ff1008262d09aac80a0d8a581612caa0c928406f280805cc81b3d0cc6"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    466,
+    590
+  ],
+  "output_scale": 0.43,
+  "free_pixels_left_top_right_bottom": [
+    175,
+    50,
+    176,
+    49
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
