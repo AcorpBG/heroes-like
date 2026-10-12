@@ -1,0 +1,54 @@
+{
+  "unit_id": "unit_thornwake_pollenhook_whistlers_veteran",
+  "clip": "idle",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    436,
+    566
+  ],
+  "scale": 0.49,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026103650,
+  "references": [
+    "idle_0",
+    "idle_4"
+  ],
+  "guides": [
+    [
+      31,
+      1
+    ],
+    [
+      62,
+      0
+    ],
+    [
+      93,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original adult elf woman, the Bloomchime Whistler veteran, facing screen right in elevated three-quarter view. Keep her warm light skin, pointed ears, brown hair swept back with leaves and a small purple blossom, alert brown eyes, the purple petal veil edged in gold with tiny gold bells covering her nose and mouth, the broad purple flower ruff at the neck, the olive leaf cuirass and short layered leaf skirt, vine bands, bark forearm guards and knee-high dark bark boots with a purple flower on the near shin. On her back is a harness carrying TWO large yellow seed gourds with dangling brass bells. Exactly two arms, two hands and two legs. Both hands hold ONE slender twisted wooden dart pipe across the waist, its open purple bell-flower tip at screen right with small brass bells hanging from it. Preserve the dart pipe, the gourds, the petal veil and the adult proportions. An alert, light-footed idle that loops. She breathes, the shoulders rise and fall, she lifts the dart pipe a little so the little bells swing, the head turns to listen and the petal veil flutters, the gourds shift on her back, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no shooting. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full dart pipe, the gourds, the hair, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, darts in flight, pollen clouds, flashes, falling petals, magic, glow, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the dart pipe.",
+  "protected_foreground_chroma": 56,
+  "edge_threshold": 89,
+  "palette_measurement": {
+    "bluest_opaque": 54.0,
+    "blue_minus_green_p999": 83.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

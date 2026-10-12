@@ -169,6 +169,61 @@
       ],
       "last": 2,
       "action": "Collapse slowly from standing. She doubles over and sinks onto her knees with the dart pipe dropping, stays kneeling a moment, then slumps forward and lies down flat on her front, finishing motionless with the head at screen right and the boots at screen left, the gourds still on her back and the dart pipe on the ground beside her. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    },
+    "ranged_h3_v2": {
+      "clip": "ranged",
+      "references": [
+        "idle_0",
+        "ranged_18",
+        "ranged_21"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          56,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Shoot ONE dart toward screen right. She raises the dart pipe level to the veil at her mouth and sights along it at screen right, blows one sharp breath so the pipe kicks slightly and the bells jingle, holds a moment, then lowers the pipe across the waist in the original stance. One shot only; the dart is not shown, with no puff, pollen or flash."
+    },
+    "defend_h3_v2": {
+      "clip": "defend",
+      "references": [
+        "idle_0",
+        "defend_29",
+        "defend_30"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
+      "last": 2,
+      "action": "Crouch low on bent knees and raise the dart pipe diagonally in front of the face as a guard, its bell-flower tip pointing up and away and its mouthpiece held well away from the veil, the shoulder turned in, then hold the low braced guard on both planted boots. The pipe is never blown and nothing is fired: no darts, puffs or projectiles anywhere. No attack and no return to the relaxed stance."
+    },
+    "cast_h3_v2": {
+      "clip": "cast",
+      "references": [
+        "idle_0",
+        "cast_36"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A calling signal. She releases one hand from the dart pipe and raises it high overhead with the palm open, holding the pipe low in the other hand, holds the pose briefly, then lowers the hand back to the pipe in the original stance. A physical gesture only: no spell, glow or aura. The pipe stays low at her side, away from the veil; it is never blown and nothing is fired."
     }
   }
 }

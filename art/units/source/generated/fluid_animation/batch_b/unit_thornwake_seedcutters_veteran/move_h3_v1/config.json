@@ -1,0 +1,54 @@
+{
+  "unit_id": "unit_thornwake_seedcutters_veteran",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    472,
+    565
+  ],
+  "scale": 0.52,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026103701,
+  "references": [
+    "move_0",
+    "move_4"
+  ],
+  "guides": [
+    [
+      31,
+      1
+    ],
+    [
+      62,
+      0
+    ],
+    [
+      93,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original sturdy woman harvester, the Seedcutter veteran, facing screen right in elevated three-quarter view. Keep her brown hair in a bun with small white flowers, pointed ear, cream scarf, green quilted tunic with layered leaf-bark shoulders, brown trousers with leaf-bark greaves and boots, and the wicker basket on her back full of white seed pods and orange fruit. Exactly two arms, two hands and two legs. EACH hand holds its own separate short wooden-handled sickle with a glossy amber crescent hook blade. Preserve both sickles, the basket, her face and sturdy adult proportions; no bow, staff or projectile. Walk in place through two complete reciprocal cycles with brisk steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. Both sickles are carried low in each hand with the arms swinging; the basket bounces on her back. Finish in the original gait phase. Locked orthographic camera, fixed anatomical scale and centred body. Keep both sickle blades, the basket, the hair bun, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, slash arcs, motion trails, falling fruit, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the sickles.",
+  "protected_foreground_chroma": 8,
+  "edge_threshold": 6,
+  "palette_measurement": {
+    "bluest_opaque": 6.0,
+    "blue_minus_green_p999": 0.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

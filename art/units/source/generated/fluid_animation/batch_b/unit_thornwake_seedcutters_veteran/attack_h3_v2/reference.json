@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_thornwake_seedcutters_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/comparison_20260924/astra/idle_cycle_v1.png",
+      "source_sha256": "ef83dd73fa9194110ad2b9c57d682ef284487d5088a51c3ca0eb8a434f33d6ee",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "bea0cdc292025bfdcb824ce2a6bbc3f00b613f6444927cabb907239dfbb533c8"
+    },
+    {
+      "frame": "attack_2",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/attack_v1.png",
+      "source_sha256": "91c63cdc82dc0bc917be2773da24d83c1197fc04b9156eed854f74de206ee372",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "6946460946b6a4a9e6394007626f2dd3db7c3c7b687ff3207ea1e8c01e15baec"
+    },
+    {
+      "frame": "attack_4",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/attack_v1.png",
+      "source_sha256": "91c63cdc82dc0bc917be2773da24d83c1197fc04b9156eed854f74de206ee372",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "e15815d00d78e0ccb3880bc3fd66582075a28053aebaa33ba01a65f1d24c2138"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    472,
+    565
+  ],
+  "output_scale": 0.52,
+  "free_pixels_left_top_right_bottom": [
+    232,
+    35,
+    232,
+    35
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

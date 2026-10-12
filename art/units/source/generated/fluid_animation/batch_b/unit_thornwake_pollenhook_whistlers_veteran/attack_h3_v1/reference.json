@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_thornwake_pollenhook_whistlers_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_pollenhook_whistlers_veteran/idle_v1.png",
+      "source_sha256": "cfd549fc3e988077dbcde2f058d9ac41fdc38a3b07ba822fc872c9c859066512",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "ec52561cbc92372ac9d9a48f70e35f584caef47b9d0687a44a430a5908d7a149"
+    },
+    {
+      "frame": "attack_10",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_pollenhook_whistlers_veteran/ranged_v1.png",
+      "source_sha256": "4c3a50daa761b3984eb7f46eb92b6ba0fba006a023daa0ace12a3b115ee1c113",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "2a3c4f789dd380f3ef675f5dd5f16fcd70daecd2825656fbbb870fbaf4f20cb7"
+    },
+    {
+      "frame": "attack_11",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_pollenhook_whistlers_veteran/attack_v1.png",
+      "source_sha256": "2dc6392de6dab8e7b7173207f0e6b84089268dd62f6e767e6a8e0efcc8ccbe7e",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "d05bde5b5adbda67340579e0f125e65376cb36e0144d73a415772787bdfea9b2"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    436,
+    566
+  ],
+  "output_scale": 0.49,
+  "free_pixels_left_top_right_bottom": [
+    168,
+    49,
+    169,
+    48
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

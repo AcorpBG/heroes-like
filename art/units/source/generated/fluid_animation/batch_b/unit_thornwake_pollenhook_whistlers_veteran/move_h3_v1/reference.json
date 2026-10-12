@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_thornwake_pollenhook_whistlers_veteran",
+  "guides": [
+    {
+      "frame": "move_48",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_pollenhook_whistlers_veteran/move_v1.png",
+      "source_sha256": "a2285f42f1d9116bb22899f2ed700f208ddd5d66bb6a82f141c2a9e6b0726536",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "496b38a4b330f5c1d9b43537e4f9a73f2e044a083789c9612c201ecafa79c282"
+    },
+    {
+      "frame": "move_52",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_pollenhook_whistlers_veteran/move_v1.png",
+      "source_sha256": "a2285f42f1d9116bb22899f2ed700f208ddd5d66bb6a82f141c2a9e6b0726536",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "84adbf626c721dd1ba70eec34b9791eac93ea6af9934fe5dc88adb5014b1f173"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    436,
+    566
+  ],
+  "output_scale": 0.49,
+  "free_pixels_left_top_right_bottom": [
+    168,
+    49,
+    169,
+    48
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

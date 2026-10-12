@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_thornwake_seedcutters_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/comparison_20260924/astra/idle_cycle_v1.png",
+      "source_sha256": "ef83dd73fa9194110ad2b9c57d682ef284487d5088a51c3ca0eb8a434f33d6ee",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "bea0cdc292025bfdcb824ce2a6bbc3f00b613f6444927cabb907239dfbb533c8"
+    },
+    {
+      "frame": "death_3",
+      "source": "art/units/source/generated/fluid_animation/comparison_20260924/astra/death_middle_v2.png",
+      "source_sha256": "bc30d56b30447aadab84f197cfa240989565c8334f30e406d7296f568fcfaffc",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "019cff27c5f3f8f24db18767266f0caa2cbff0cfea10a47efbae2a666b1288a5"
+    },
+    {
+      "frame": "death_8",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/death_v1.png",
+      "source_sha256": "2175e0ecf308dd1ed004e6458bd4d02db3487b093106e2e9834fd56c2eae90ce",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "e0d03272ef43560daff3d8b72bc15bc3e41407d5ddecaa3482dd96f68ac4df27"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    472,
+    565
+  ],
+  "output_scale": 0.52,
+  "free_pixels_left_top_right_bottom": [
+    232,
+    35,
+    232,
+    35
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

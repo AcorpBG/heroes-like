@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_thornwake_seedcutters_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/comparison_20260924/astra/idle_cycle_v1.png",
+      "source_sha256": "ef83dd73fa9194110ad2b9c57d682ef284487d5088a51c3ca0eb8a434f33d6ee",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "bea0cdc292025bfdcb824ce2a6bbc3f00b613f6444927cabb907239dfbb533c8"
+    },
+    {
+      "frame": "cast_4",
+      "source": "art/units/source/generated/fluid_animation/comparison_20260924/astra/cast_cycle_v1.png",
+      "source_sha256": "6f1c4661fbee731f5276581c9a50e9ce6195e802ba17c59b353a27c8c85d0225",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "31fdc255522a14ac5ff27efebaca1c6e04b9cfd9032142ac0fa380dc0cd901d3"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    472,
+    565
+  ],
+  "output_scale": 0.52,
+  "free_pixels_left_top_right_bottom": [
+    232,
+    35,
+    232,
+    35
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
