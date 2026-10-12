@@ -1,0 +1,47 @@
+{
+  "unit_id": "unit_mireclaw_drowned_antler_sovereign",
+  "clip": "defend",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    444,
+    594
+  ],
+  "scale": 0.44,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026102104,
+  "references": [
+    "cast_00",
+    "defend_01",
+    "defend_02"
+  ],
+  "guides": [
+    [
+      34,
+      1
+    ]
+  ],
+  "last": 2,
+  "prompt": "ONE original four-legged marsh beast, the Drowned Antler Sovereign, facing screen right in elevated three-quarter side view. Keep the muscular reptilian-canine body covered in moss-green layered bark and scales with a mossy mane and violet hanging roots, the narrow elk-like face, the enormous wide antler crown with small bone charms and chains hanging from its tines, four long legs ending in heavy broad cloven paw feet, and the long tapering foliage tail sweeping out to screen left. Exactly four legs and one tail. It is not a normal deer. Preserve the antler crown, charms, mossy armour and long body proportions. Widen the forefeet, lower the neck and angle the antler crown forward like a barrier, then sink into a deep braced crouch on the forelegs guarding the chest beneath the crown and hold it on all four planted feet. No attack and no return to the relaxed stance. Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole antler crown, feet and tail tip within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, weapons, magic, glow, auras, impact effects, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the charms swing as secondary motion; do not morph the antlers.",
+  "protected_foreground_chroma": 27,
+  "edge_threshold": 30,
+  "palette_measurement": {
+    "bluest_opaque": 25.0,
+    "blue_minus_green_p999": 24.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

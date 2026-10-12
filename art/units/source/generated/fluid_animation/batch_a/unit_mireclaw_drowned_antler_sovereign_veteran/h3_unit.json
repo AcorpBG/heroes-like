@@ -350,6 +350,80 @@
         0,
         0
       ]
+    },
+    "idle_h3_v4": {
+      "clip": "idle",
+      "references": [
+        "idle_0",
+        "idle_6"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A regal, watchful idle that loops. The ribcage breathes slowly, the neck lowers a little and the muzzle dips so the antler bells sway gently, the tail sweeps in a slow arc close behind the hind legs and back, then everything returns smoothly to the original stance on all four hooves. Every movement is slow and continuous. The hooves stay planted. No walking and no attack. Only the body moves; nothing else appears in the frame.",
+      "pad": [
+        128,
+        0,
+        0,
+        0
+      ]
+    },
+    "idle_h3_v5": {
+      "clip": "idle",
+      "references": [
+        "idle_0",
+        "idle_6"
+      ],
+      "guides": [
+        [
+          15,
+          1
+        ],
+        [
+          31,
+          0
+        ],
+        [
+          46,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          77,
+          1
+        ],
+        [
+          93,
+          0
+        ],
+        [
+          108,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A regal, watchful idle that loops. The ribcage breathes slowly, the neck lowers a little and the muzzle dips so the antler bells sway gently, the tail sweeps in a slow arc close behind the hind legs and back, then everything returns smoothly to the original stance on all four hooves. Every movement is slow and continuous. The hooves stay planted. No walking and no attack. Only the body moves; nothing else appears in the frame.",
+      "pad": [
+        128,
+        0,
+        0,
+        0
+      ]
     }
   }
 }

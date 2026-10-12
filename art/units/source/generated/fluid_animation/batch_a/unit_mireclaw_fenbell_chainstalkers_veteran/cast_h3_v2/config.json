@@ -1,0 +1,72 @@
+{
+  "unit_id": "unit_mireclaw_fenbell_chainstalkers_veteran",
+  "clip": "cast",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    446,
+    590
+  ],
+  "scale": 0.48,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026102209,
+  "references": [
+    "idle_0",
+    "cast_26",
+    "cast_28",
+    "cast_29"
+  ],
+  "guides": [
+    [
+      16,
+      1
+    ],
+    [
+      32,
+      2
+    ],
+    [
+      46,
+      2
+    ],
+    [
+      60,
+      2
+    ],
+    [
+      74,
+      2
+    ],
+    [
+      90,
+      3
+    ],
+    [
+      106,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original slender pale marsh stalker, the Fenbell Tollreaper, facing screen right in elevated three-quarter view. Keep the dark moss-green woven pointed hood with reed tufts shading the face, bare upper arms, the fitted dark leather torso, bracers and greaves, round bronze kneecaps, the ragged long green and ochre reed skirt and mantle, the leather belt pouch and tiny brass bells. Exactly two arms, two hands and two legs. Each hand grips ONE short-handled ornate bronze crescent sickle, held low and spread wide to either side; ONE brass chain joins the two sickle handles and hangs in a loop below the hands with small brass bells on it. Preserve the two matching sickles, the chain and bells, the hood and the slim adult proportions. A tolling signal. The stalker raises both arms high in a broad V with the two sickles above the shoulders and the chain drooping in a loop below the hands so the bells swing, tilts the hooded face upward, holds the pose briefly, then lowers both arms back into the original low guard. A physical gesture only: no spell, glow or aura. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full hood, both sickles, the chain, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional blades, magic, glow, motion trails, particles or extra limbs. The chain stays attached to both handles and hangs below the hands with gravity. Articulate joints naturally with physical planted-foot support; do not morph the sickles.",
+  "protected_foreground_chroma": 8,
+  "edge_threshold": 7,
+  "palette_measurement": {
+    "bluest_opaque": 6.0,
+    "blue_minus_green_p999": 1.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

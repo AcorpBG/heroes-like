@@ -1,0 +1,70 @@
+{
+  "unit_id": "unit_mireclaw_drowned_antler_sovereign",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    444,
+    594
+  ],
+  "scale": 0.44,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026102110,
+  "references": [
+    "cast_00",
+    "attack_02",
+    "attack_03",
+    "attack_04",
+    "attack_05",
+    "attack_06"
+  ],
+  "guides": [
+    [
+      14,
+      1
+    ],
+    [
+      28,
+      2
+    ],
+    [
+      42,
+      3
+    ],
+    [
+      56,
+      4
+    ],
+    [
+      76,
+      5
+    ],
+    [
+      100,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original four-legged marsh beast, the Drowned Antler Sovereign, facing screen right in elevated three-quarter side view. Keep the muscular reptilian-canine body covered in moss-green layered bark and scales with a mossy mane and violet hanging roots, the narrow elk-like face, the enormous wide antler crown with small bone charms and chains hanging from its tines, four long legs ending in heavy broad cloven paw feet, and the long tapering foliage tail sweeping out to screen left. Exactly four legs and one tail. It is not a normal deer. Preserve the antler crown, charms, mossy armour and long body proportions. Make ONE antler thrust toward screen right. The beast bends its forelegs, lowers its neck and dips the antler crown as the hind legs coil, then drives its shoulders forward and thrusts the antlers low and forward to full reach at screen right, follows through briefly, then pulls the head back, raises the crown and settles into the original stance. One thrust only. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole antler crown, feet and tail tip within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, weapons, magic, glow, auras, impact effects, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the charms swing as secondary motion; do not morph the antlers.",
+  "protected_foreground_chroma": 30,
+  "edge_threshold": 36,
+  "palette_measurement": {
+    "bluest_opaque": 28.0,
+    "blue_minus_green_p999": 30.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

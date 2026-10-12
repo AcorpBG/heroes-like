@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_mireclaw_drowned_antler_sovereign",
+  "guides": [
+    {
+      "frame": "cast_00",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign/cast_v1.png",
+      "source_sha256": "9b0bbe5c454913daccddcf5fc30aedcfb23be4393e37260a81167f0dc19c153d",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "9701a673b4aa0112d9b1b39ba52cc202a74527ac19d4518385ed36d570b4bf27"
+    },
+    {
+      "frame": "hit_03",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign/reactions_v1.png",
+      "source_sha256": "b756e8021bf4f74a0d9bc40530c7e7720a0731665af52a7fcbd9e02e5aa0ae29",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "0486de8d6a2cd186d048193067bdf65598f42691fff826a50e99e762a235ba2d"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    444,
+    594
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    81,
+    47,
+    81,
+    46
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
