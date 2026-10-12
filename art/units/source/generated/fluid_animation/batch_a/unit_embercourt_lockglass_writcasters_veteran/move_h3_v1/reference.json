@@ -1,0 +1,28 @@
+{
+  "unit_id": "unit_embercourt_lockglass_writcasters_veteran",
+  "guides": [
+    {
+      "frame": "move_4",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/move_near_v3.png",
+      "source_sha256": "1f6f02778461bf4d22bc159fffd237a944081dfd59a8061564ecb2ff20ee007d",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "ff3b64de7ecfa6851bd1ca5d60b6e2748d15962bb0d5073058e36c5e93adbd30"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    450,
+    562
+  ],
+  "output_scale": 0.47,
+  "free_pixels_left_top_right_bottom": [
+    210,
+    63,
+    209,
+    62
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -562,8 +562,10 @@ def key_frame(job):
     except ValueError as error:  # a cyan plate: blue barely exceeds green
         return None, {"rejected": str(error)}
     image = np.asarray(image)[..., order + [3]]
+    opacity = image[..., 3]
+    haze = ((opacity >= 8) & (opacity < 200)).sum() / max(int((opacity >= 200).sum()), 1)
     return np.ascontiguousarray(image).tobytes(), dict(stats, background_rgb=bg[order].round(3).tolist(),
-                                                       corner_median_spread=round(spread, 3))
+                                                       corner_median_spread=round(spread, 3), haze=round(float(haze), 3))
 
 
 def matte(unit, name):
@@ -577,7 +579,16 @@ def matte(unit, name):
     with concurrent.futures.ProcessPoolExecutor() as pool:
         order = key_order(c["key_rgb"])
         jobs = [(f, c["protected_foreground_chroma"], c["edge_threshold"], order) for f in frames]
-        for i, (data, detail) in enumerate(pool.map(key_frame, jobs, chunksize=4)):
+        results = list(pool.map(key_frame, jobs, chunksize=4))
+        # A pulse that darkens only the plate near the figure passes the corner test and leaves a
+        # translucent patch fused to the figure. A clean frame's semi-transparent band stays well under
+        # half its opaque area; reject frames above that and above three times the take's median, so a
+        # translucent creature raises its own limit.
+        hazes = [detail["haze"] for data, detail in results if data is not None]
+        limit = max(0.5, 3 * float(np.median(hazes))) if hazes else 0
+        for i, (data, detail) in enumerate(results):
+            if data is not None and detail["haze"] > limit:
+                data, detail = None, dict(detail, rejected=f"translucent patch: band {detail['haze']} of the opaque area, limit {limit:.3f}")
             if data is None:
                 hashes.append(None)
             else:
@@ -591,7 +602,9 @@ def matte(unit, name):
                                "recipe": "Flat blue plate (corner spread <= 10, separation >= 80): blue-minus-max(red, green) unmix with the "
                                          "measured guard band, edge-only despill, alpha>=8 regions kept when they hold an alpha>=128 pixel; "
                                          "then the 2 px edge band re-solved by tools/rematte_blue_plate.py clean_edges. Geometry unchanged. "
-                                         "A green plate swaps green and blue before these rules and back after them."})
+                                         "A green plate swaps green and blue before these rules and back after them. A frame whose "
+                                         "alpha 8-199 band exceeds max(0.5, 3 x the take median) of its alpha>=200 area is rejected "
+                                         "as a plate pulse."})
     timed(out, "matte", time.monotonic() - started)
     rejected = sum(h is None for h in hashes)
     print(f"MATTED {name}: {FRAMES - rejected} frames" + (f", {rejected} rejected plates" if rejected else ""), flush=True)

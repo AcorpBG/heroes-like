@@ -1,0 +1,257 @@
+{
+  "prompt": [
+    281,
+    "118801ab-705e-4794-a0e3-20dce886e344",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "ONE original woman mage, the Prismwrit Adjudicator, facing screen right in elevated three-quarter view. Keep her black hair in a bun, the burgundy robe with cream-lined wide sleeves and long front panels with gold embroidery, the engraved brass collar, the brass belt with a fan of hanging brass tablets at the far hip, dark trousers and brown boots. Exactly two arms, two hands and two legs. The screen-RIGHT hand holds ONE amber diamond-shaped prism crystal up in front of the body; the screen-LEFT hand is free. Preserve the prism, the robe, the collar and adult proportions. Make ONE ranged gesture toward screen right. She draws the prism hand in to the chest and gathers herself, then extends the arm out at shoulder height toward screen right with the prism resting on her open palm, holds the pose a moment, then draws the hand back and returns to the original stance. The prism stays in her hand. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, prism, robe, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, weapons, large magic effects, particles or extra limbs; the prism keeps only its small warm amber glow. Articulate joints naturally with physical planted-foot support; do not morph the equipment.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026101809
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "h3/unit_embercourt_lockglass_writcasters_veteran/ranged_h3_v3/sampled"
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "h3_unit_embercourt_lockglass_writcasters_veteran_ranged_h3_v3_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "h3_unit_embercourt_lockglass_writcasters_veteran_ranged_h3_v3_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "h3_unit_embercourt_lockglass_writcasters_veteran_ranged_h3_v3_guide_2.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 30,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 56,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      }
+    },
+    {
+      "client_id": "h3_creature_animation",
+      "create_time": 1791763096169
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "h3\\unit_embercourt_lockglass_writcasters_veteran\\ranged_h3_v3",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "118801ab-705e-4794-a0e3-20dce886e344",
+          "timestamp": 1791763875254
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "118801ab-705e-4794-a0e3-20dce886e344",
+          "timestamp": 1791763875300
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "118801ab-705e-4794-a0e3-20dce886e344",
+          "timestamp": 1791764033482
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "unit_id": "unit_embercourt_lockglass_writcasters_veteran",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    450,
+    562
+  ],
+  "scale": 0.47,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026101804,
+  "references": [
+    "hit_01",
+    "idle_0"
+  ],
+  "guides": [
+    [
+      40,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "ONE original woman mage, the Prismwrit Adjudicator, facing screen right in elevated three-quarter view. Keep her black hair in a bun, the burgundy robe with cream-lined wide sleeves and long front panels with gold embroidery, the engraved brass collar, the brass belt with a fan of hanging brass tablets at the far hip, dark trousers and brown boots. Exactly two arms, two hands and two legs. The screen-RIGHT hand holds ONE amber diamond-shaped prism crystal up in front of the body; the screen-LEFT hand is free. Preserve the prism, the robe, the collar and adult proportions. Start rocked back in a flinch, then recover completely. The head and shoulders snap backward, the free arm flies out and the knees flex while she keeps hold of the prism, then she rebalances on both boots and returns to the same stance. Remain standing with the prism held. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, prism, robe, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, weapons, large magic effects, particles or extra limbs; the prism keeps only its small warm amber glow. Articulate joints naturally with physical planted-foot support; do not morph the equipment.",
+  "protected_foreground_chroma": 5,
+  "edge_threshold": 11,
+  "palette_measurement": {
+    "bluest_opaque": 3.0,
+    "blue_minus_green_p999": 5.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

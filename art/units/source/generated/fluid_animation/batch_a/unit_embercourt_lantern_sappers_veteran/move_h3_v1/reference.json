@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_embercourt_lantern_sappers_veteran",
+  "guides": [
+    {
+      "frame": "move_40",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/move_far_v1.png",
+      "source_sha256": "b6719af9d3284258ee6ddf2f0d505aefd97e0c7f14377660b35964c70b94a57e",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "4e4dcd7dabe3aa7d36270b3681d35af0fe1f9eefd6fc772518e9bc056d3a8e39"
+    },
+    {
+      "frame": "move_44",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/move_near_corrections_v1.png",
+      "source_sha256": "31393ce98333c2369721d51ff75f5c24d8a3587e7fd76a3b2504d121413b032f",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "f3ff4d3a90bb07b13c468ec5c21eab74285e651f0d1d7e8369e8a63d72590460"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    520,
+    598
+  ],
+  "output_scale": 0.5,
+  "free_pixels_left_top_right_bottom": [
+    62,
+    41,
+    63,
+    42
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

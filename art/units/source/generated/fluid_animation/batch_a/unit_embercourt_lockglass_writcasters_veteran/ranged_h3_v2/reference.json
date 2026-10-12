@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_embercourt_lockglass_writcasters_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/idle_v1.png",
+      "source_sha256": "ae482f9b2d4efd446e8e10873cfb2cf9e20352d7737225b7e51b89b7e933c305",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "7cbff3b28ab7b726b3094d2d412877d8dd015d74ae6f4c2bfc89f463e3e1f0b6"
+    },
+    {
+      "frame": "ranged_02",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/ranged_v1.png",
+      "source_sha256": "2abf87258eedb515836d473a7fe42b647c5ecadf0afa37af34ba8f6211683e98",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "41b1b9a779a5ac573483e4feeecfc48b27bfbd0548454223c3f5241287f1df33"
+    },
+    {
+      "frame": "ranged_04",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/ranged_v1.png",
+      "source_sha256": "2abf87258eedb515836d473a7fe42b647c5ecadf0afa37af34ba8f6211683e98",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "b966fbc9a9c21a6fbef281594c0f8c154919ccbe8d4151d30b9ec23cec883fb4"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    450,
+    562
+  ],
+  "output_scale": 0.47,
+  "free_pixels_left_top_right_bottom": [
+    210,
+    63,
+    209,
+    62
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

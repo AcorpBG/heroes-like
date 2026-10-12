@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_embercourt_lantern_sappers_veteran",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    520,
+    598
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026101752,
+  "references": [
+    "idle_0",
+    "attack_10",
+    "attack_12"
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      54,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original stocky woman engineer, the Flarepot Engineer, facing screen right in elevated three-quarter view. Keep the dark hair tucked under a faded burgundy headscarf, round brass goggles over the eyes, rolled burgundy sleeves, a grey neck scarf, the long weathered brown leather apron over a burgundy padded tunic and trousers, a broad buckled tool belt, dark work gloves and sturdy brown knee-high boots. ONE tall cylindrical brass tank is strapped on her back with a black corrugated hose looping to the belt, and small round orange clay flarepots sit in holders at the near hip. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE small round orange clay flarepot; the screen-RIGHT hand carries ONE round brass shutter lantern with an orange grille by its top loop handle. Preserve the tank, pots, lantern, costume and stocky adult proportions. Lob ONE flarepot at close range toward screen right. Raise the clay pot high behind the shoulder as the knees load, then step forward and throw it overhand so it flies off toward screen right, follow through with the arm stretched forward, then take a fresh flarepot from the belt and settle back into the original stance. One throw only; the lantern stays in the screen-right hand. No fire and no explosion. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, tank, lantern, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, fire, explosions, magic, particles or extra limbs; the lantern keeps only its small steady glow. Articulate joints naturally with physical planted-foot support; do not morph the equipment.",
+  "protected_foreground_chroma": 9,
+  "edge_threshold": 8,
+  "palette_measurement": {
+    "bluest_opaque": 7.0,
+    "blue_minus_green_p999": 2.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

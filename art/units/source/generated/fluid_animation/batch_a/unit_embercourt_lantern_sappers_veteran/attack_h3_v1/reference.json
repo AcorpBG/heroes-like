@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_embercourt_lantern_sappers_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/idle_v1.png",
+      "source_sha256": "be7c7a6e34ae136a1cd921360ccfd73be5765b33e0519376d0f0e306647fcb40",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "c3dc8d39e1ce30bf624cbc086bf724318922289e83491c2be1b505c65e6cfc3a"
+    },
+    {
+      "frame": "attack_10",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/attack_v1.png",
+      "source_sha256": "f17f43032b8e8bc0dd4ee77d58623fe4061917e781d032596067c56b18be0eae",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "963b35bd3f603fd7c77c4fdd51a9c263a13cf7f8224474f9ec955ea3132a4697"
+    },
+    {
+      "frame": "attack_12",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/attack_v1.png",
+      "source_sha256": "f17f43032b8e8bc0dd4ee77d58623fe4061917e781d032596067c56b18be0eae",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "e7719fcb887fd8a8f33b90bcce474075929344b5a278b6814938751483990fe9"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    520,
+    598
+  ],
+  "output_scale": 0.5,
+  "free_pixels_left_top_right_bottom": [
+    62,
+    41,
+    63,
+    42
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
