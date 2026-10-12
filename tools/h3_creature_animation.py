@@ -70,7 +70,7 @@ from scipy.ndimage import binary_erosion, label
 sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
-from integrate_fluid_creature_animation import pack_compact, source_pose  # noqa: E402
+from integrate_fluid_creature_animation import clip_indices, old_pose, pack_compact, source_pose  # noqa: E402
 from rematte_blue_plate import clean_edges  # noqa: E402
 
 FRAMES, FPS = 124, 24
@@ -818,14 +818,43 @@ def propose(unit, names):
 FIT_FLOOR = {"attack": 14, "ranged": 14, "cast": 14, "hit": 8, "defend": 10, "death": 14}
 
 
+def kept_poses(unit, clips):
+    """Poses the publisher packs beside the selection: the clips of the last reviewed delivery and
+    of the baseline sheet that the selection does not replace (publish combine, then pack_unit)."""
+    source = ROOT / "art/animation/source/fluid" / unit.id
+    if not (source / "baseline.json").exists():
+        return []
+    poses, replaced = [], set(clips)
+    if (source / "reviewed_handoff.json").exists():
+        previous = read(source / "reviewed_handoff.json")["units"][0]
+        for name, spec in previous["clips"].items():
+            if name not in replaced:
+                poses += [source_pose(previous["frames"][i], previous["frames"][i].get("alpha_noise_cutoff", 0)) for i in spec["indices"]]
+        replaced |= set(previous["clips"])
+    baseline = read(source / "baseline.json")
+    legacy = [n for n in baseline["pose_clips"] if n not in replaced and not (n == "dead" and "death" in replaced)]
+    if legacy:
+        sheet = source / "baseline.png"
+        if not sheet.exists():
+            raise SystemExit(f"{rel(sheet)} is archived; restore it first, the atlas keeps the legacy clips {legacy}")
+        with Image.open(sheet) as image:
+            for name in legacy:
+                poses += [old_pose(image, baseline, i) for i in clip_indices(baseline["pose_clips"][name], baseline["pose_columns"])]
+    return poses
+
+
 def fit(unit):
     """Thin the selection until every pose packs into one 4096 px atlas, as the publisher packs
-    it. Each step drops the action frame whose neighbours differ least, so holds go first; the
-    idle and move loops, each clip's first, last and contact frames, gaps over 16 video frames
-    and the FIT_FLOOR counts stay. A dropped frame's own hold passes to the frame before it."""
+    it, together with the older clips the publisher keeps (kept_poses). Each step drops the
+    action frame whose neighbours differ least, so holds go first; the idle and move loops, each
+    clip's first, last and contact frames, gaps over 16 video frames and the FIT_FLOOR counts
+    stay. A dropped frame's own hold passes to the frame before it."""
     path = unit.dir / "h3_selection.json"
     selection = read(path)
     configs, poses, small = {}, {}, {}
+    kept = kept_poses(unit, selection["clips"])
+    if kept:
+        print(f"the atlas also keeps {len(kept)} poses of older clips")
 
     def pose(take, i):
         if (take, i) not in poses:
@@ -845,7 +874,7 @@ def fit(unit):
     dropped = {}
     while True:
         try:
-            pack_compact([pose(s["take"], i) for spec in selection["clips"].values() for s in spec["segments"] for i in s["frames"]])
+            pack_compact(kept + [pose(s["take"], i) for spec in selection["clips"].values() for s in spec["segments"] for i in s["frames"]])
             break
         except ValueError:
             pass

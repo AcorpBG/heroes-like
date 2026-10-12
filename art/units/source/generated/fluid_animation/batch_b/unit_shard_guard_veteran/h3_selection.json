@@ -1,0 +1,74 @@
+{
+  "clips": {
+    "idle": {
+      "segments": [
+        {
+          "take": "idle_h3_v1",
+          "frames": [0, 4, 8, 12, 16, 20, 24, 26, 27, 28, 29, 32, 36, 40, 44, 48, 49, 50, 51, 52, 53, 56, 60, 64, 68, 72, 76, 80, 81, 82, 83, 86, 90, 94, 98, 102, 103, 104, 105, 106, 107, 110, 114, 118, 122]
+        }
+      ],
+      "frame_msec": 60
+    },
+    "move": {
+      "segments": [
+        {
+          "take": "move_h3_v1",
+          "frames": [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60]
+        }
+      ],
+      "frame_msec": 50
+    },
+    "attack": {
+      "segments": [
+        {
+          "take": "attack_h3_v1",
+          "frames": [9, 12, 14, 16, 17, 22, 23, 25, 29, 31, 33, 37, 38, 39, 46, 58, 62, 64, 66, 68, 69, 70, 72, 73, 75, 77, 81]
+        }
+      ],
+      "frame_msec": 42,
+      "contact_frame": 11
+    },
+    "hit": {
+      "segments": [
+        {
+          "take": "hit_h3_v1",
+          "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 15, 16, 17, 18, 20, 23, 27, 34, 41, 47]
+        }
+      ],
+      "frame_msec": 35
+    },
+    "defend": {
+      "segments": [
+        {
+          "take": "defend_h3_v1",
+          "frames": [7, 14, 24, 34, 36, 37, 39, 40, 41, 44, 46, 50, 56, 63, 71]
+        }
+      ],
+      "frame_msec": 42
+    },
+    "cast": {
+      "segments": [
+        {
+          "take": "cast_h3_v1",
+          "frames": [15, 20, 22, 23, 24, 25, 26, 27, 28, 29, 35, 42, 54, 61, 68, 77, 84, 85, 86, 87, 88, 89, 90, 91, 94]
+        }
+      ],
+      "frame_msec": 45,
+      "contact_frame": 12
+    },
+    "death": {
+      "segments": [
+        {
+          "take": "death_h3_v1",
+          "frames": [10, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 27, 32, 39, 46, 53, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 73, 77, 84, 96, 123]
+        }
+      ],
+      "frame_msec": 45
+    }
+  },
+  "preserved_accepted_clips": [],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "All clips from the first H3 takes. The idle holds still between short shifts (head turn, pavise resettle, glaive lift), so it runs through the holds at every fourth video frame and shows every frame of each shift, which keeps the shifts smooth instead of popping. Attack and cast skip the frames where the raised glaive tip leaves the top of the canvas (attack video 18-21 and 34-36, cast 30-34 and 78-83), so the twirl and the raise swing straight through."
+  }
+}

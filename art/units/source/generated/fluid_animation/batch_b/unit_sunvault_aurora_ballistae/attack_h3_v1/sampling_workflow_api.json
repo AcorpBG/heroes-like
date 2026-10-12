@@ -1,0 +1,191 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "ONE original four-legged crystal mechanical guardian, the Aurora Bastion, facing screen right in elevated three-quarter side view. Keep the ivory metal armour plates with gold edging, the row of tall violet-blue crystal spires along the back, the round blue crystal joint lenses, EXACTLY FOUR articulated piston legs with broad angular ivory feet, the huge gold-framed ivory and crystal tower shield forming the front at screen right with a violet gem at its top, and the long crystal blade arm on the screen-left flank. No head, no rider, no humanoid arms. Preserve the four legs, the shield, the blade arm, the spires and the heavy machine proportions. Make ONE shield ram toward screen right. The knee pistons compress and the chassis loads back onto the rear legs as the shield draws in, then the rear legs extend and drive the body forward so the massive tower shield shoves out to full reach at screen right with the front feet braced wide, the knees absorb the impact, and the chassis retracts into the original stance. One ram only; no flash or effect at contact. Locked orthographic camera, fixed scale and centred body. Keep every crystal spire, the blade arm tip, the shield and all four feet within frame. The background is perfectly flat saturated GREEN throughout, no gradients or changes of hue. The green background stays the same flat saturated green in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, flashes, beams, sparks, motion trails, particles or extra legs; the crystals keep only their steady glow. The machine moves only at its joints and pistons; the armour plates, spires and shield stay rigid and never bend or morph.",
+      "width": 960,
+      "height": 640,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "30",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026102852
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "h3/unit_sunvault_aurora_ballistae/attack_h3_v1/sampled"
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "h3_unit_sunvault_aurora_ballistae_attack_h3_v1_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "h3_unit_sunvault_aurora_ballistae_attack_h3_v1_guide_1.png"
+    }
+  },
+  "32": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "h3_unit_sunvault_aurora_ballistae_attack_h3_v1_guide_2.png"
+    }
+  },
+  "40": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 30,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "41": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "40",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 54,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "32",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "41",
+        0
+      ]
+    }
+  }
+}

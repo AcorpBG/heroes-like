@@ -1,0 +1,191 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "ONE original heavily armoured sentinel, the Shard Guard veteran, facing screen right in elevated three-quarter view. Keep the ivory-white full plate armour edged in gold, the closed visored helm with a radiant golden sun-ray crest, the dark blue tabard and long cape with gold star motifs, gold greaves and sabatons; no visible face. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE long dark-shafted glaive with a gold-wrapped grip and a curved blue crystal blade, carried low diagonally with the blade near the ground at screen right; the screen-RIGHT arm bears ONE tall rectangular gold-framed crystal pavise shield with a sun emblem at the top. Preserve the glaive, the pavise, the sun crest and the armoured adult proportions. Make ONE glaive thrust toward screen right. He raises the glaive and draws it back across his body as the knees bend, then lunges forward on the front leg and drives the crystal blade out level to full reach at screen right past the pavise, pulls it back and lowers it to the original low diagonal stance. One thrust only; the pavise stays on the screen-right arm. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full glaive blade, the pavise, the crest, limbs and boots within frame. The background is perfectly flat saturated GREEN throughout, no gradients or changes of hue. The green background stays the same flat saturated green in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, beams, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the glaive or shield.",
+      "width": 960,
+      "height": 640,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "30",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026102802
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "h3/unit_shard_guard_veteran/attack_h3_v1/sampled"
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "h3_unit_shard_guard_veteran_attack_h3_v1_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "h3_unit_shard_guard_veteran_attack_h3_v1_guide_1.png"
+    }
+  },
+  "32": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "h3_unit_shard_guard_veteran_attack_h3_v1_guide_2.png"
+    }
+  },
+  "40": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 30,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "41": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "40",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 54,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "32",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "41",
+        0
+      ]
+    }
+  }
+}

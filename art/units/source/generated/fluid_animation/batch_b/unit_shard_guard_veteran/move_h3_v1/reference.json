@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_shard_guard_veteran",
+  "guides": [
+    {
+      "frame": "move_0",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/move_v2.png",
+      "source_sha256": "82971b3bd54b3453adbc4cda4a1fc5e38ca04dbd1574ca242d7c13f9ff41ce42",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "ce0dbcfc224c60abafb3fff74d6fd50957840f408cec52ba9ee364fe675acda4"
+    },
+    {
+      "frame": "move_4",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/move_far_v3.png",
+      "source_sha256": "e3556a7dce1956ab71986415190c80447eac173c21118f5b4516cad72f893706",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "6e9e99921b0fa8b39eea14d964264737b6076d4fe9f1faa461db4d77816ef7d0"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    456,
+    571
+  ],
+  "output_scale": 0.48,
+  "free_pixels_left_top_right_bottom": [
+    174,
+    63,
+    173,
+    63
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

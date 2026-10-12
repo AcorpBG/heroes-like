@@ -1,0 +1,74 @@
+{
+  "clips": {
+    "idle": {
+      "segments": [
+        {
+          "take": "idle_h3_v3",
+          "frames": [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108, 110, 112, 114, 116, 118, 120, 122]
+        }
+      ],
+      "frame_msec": 60
+    },
+    "move": {
+      "segments": [
+        {
+          "take": "move_h3_v1",
+          "frames": [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60]
+        }
+      ],
+      "frame_msec": 50
+    },
+    "attack": {
+      "segments": [
+        {
+          "take": "attack_h3_v2",
+          "frames": [10, 12, 13, 24, 26, 27, 28, 30, 32, 33, 35, 37, 47, 56, 57, 58, 59, 60, 61, 62, 63, 64, 79, 86, 87, 89, 92, 94, 98]
+        }
+      ],
+      "frame_msec": 42,
+      "contact_frame": 12
+    },
+    "hit": {
+      "segments": [
+        {
+          "take": "hit_h3_v1",
+          "frames": [0, 2, 4, 5, 6, 7, 8, 9, 11, 13, 14, 15, 16, 18, 21, 24, 26, 34]
+        }
+      ],
+      "frame_msec": 35
+    },
+    "defend": {
+      "segments": [
+        {
+          "take": "defend_h3_v3",
+          "frames": [3, 7, 8, 10, 11, 12, 13, 14, 15, 30, 33, 35, 37, 38, 39, 40, 41, 42, 45]
+        }
+      ],
+      "frame_msec": 42
+    },
+    "cast": {
+      "segments": [
+        {
+          "take": "cast_h3_v1",
+          "frames": [19, 22, 24, 26, 28, 29, 30, 31, 32, 34, 36, 48, 62, 77, 79, 81, 83, 85, 86, 88, 90, 95]
+        }
+      ],
+      "frame_msec": 45,
+      "contact_frame": 12
+    },
+    "death": {
+      "segments": [
+        {
+          "take": "death_h3_v1",
+          "frames": [4, 12, 25, 34, 36, 37, 38, 39, 49, 58, 59, 61, 62, 63, 64, 74, 88, 123]
+        }
+      ],
+      "frame_msec": 45
+    }
+  },
+  "preserved_accepted_clips": [],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Idle is retake v3: the first take held each stance and swapped in two frames, so the retake alternates painted poses every 15 frames and moves without pausing. Attack is retake v2, densely guided by the painted ram poses: the first take burst into a white star with flying shards and pushed the shield off the chassis, and the retake still flashes at the impact (video 38-46), so those frames are cut and the loaded chassis lands straight on the full shove. Defend is retake v3: the first take darkened the plate through the whole brace. Cast mattes with its edge threshold lowered from 169 to 164 (the plate measured 163-167 against a 169 threshold and every frame was rejected). Move, hit, cast and death are the first takes."
+  }
+}

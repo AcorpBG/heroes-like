@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_sunvault_aurora_ballistae",
+  "guides": [
+    {
+      "frame": "move_v2_0",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/move_v2.png",
+      "source_sha256": "9784dfe5ad91d2cee87fed41febeed724e225c9c4a2f6c245bbf7fe5d869ead4",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "5fd5f97578bcd469b9cd75f65dadd2cf5082be3d2e3f7e2ac7804c4e3fc141ea"
+    },
+    {
+      "frame": "move_v2_4",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/move_v2.png",
+      "source_sha256": "9784dfe5ad91d2cee87fed41febeed724e225c9c4a2f6c245bbf7fe5d869ead4",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "0cf3d93f50c53773dcd77e55a2c3c0e0b5610605c331e907db1eb5ad48baf23b"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    586
+  ],
+  "output_scale": 0.52,
+  "free_pixels_left_top_right_bottom": [
+    130,
+    46,
+    131,
+    47
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

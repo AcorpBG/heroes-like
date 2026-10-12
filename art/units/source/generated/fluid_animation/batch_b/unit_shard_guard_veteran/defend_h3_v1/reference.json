@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_shard_guard_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/idle_v3.png",
+      "source_sha256": "20fcf40f178b76c0c371421e813cba4f3ec84bf805fca3f1d2cc557ffbf57827",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "58089a6f7b553711016d627627ec887092e6667440b182ccd047dda748daff41"
+    },
+    {
+      "frame": "hit_defend_v1_05",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/hit_defend_v1_frame_05.png",
+      "source_sha256": "0fea3afce17803e098b93183f60d13d1c1f38d1fc43b7b43e86db39348760dc5",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "9a1fa691eeb6a5713cf9f9c518d465044525ccde3690dcd18fe0bd8ceb0a524c"
+    },
+    {
+      "frame": "hit_defend_v1_06",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/hit_defend_v1_frame_06.png",
+      "source_sha256": "f9081fa058ac7639d6b489ec5066437688493a64b7f27e5f9df56cb11a57adcf",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "085673a56cfa05e2b3bb31814ced572964286874435c09ea88411ae57c785ada"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    456,
+    571
+  ],
+  "output_scale": 0.48,
+  "free_pixels_left_top_right_bottom": [
+    174,
+    63,
+    173,
+    63
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
