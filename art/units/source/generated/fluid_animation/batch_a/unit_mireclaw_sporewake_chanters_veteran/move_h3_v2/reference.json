@@ -1,0 +1,49 @@
+{
+  "unit_id": "unit_mireclaw_sporewake_chanters_veteran",
+  "guides": [
+    {
+      "frame": "move_48",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/move_near_v2.png",
+      "source_sha256": "8256680db59d38a54b018cb4d8ef64386121a47e2a120a1bb3050ee10aa48c62",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "35843bb16bd6a0f63a0cef9569b20e1ada62465a46071f3ea6edbdee1965a725"
+    },
+    {
+      "frame": "move_50",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/move_near_v2.png",
+      "source_sha256": "8256680db59d38a54b018cb4d8ef64386121a47e2a120a1bb3050ee10aa48c62",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "f7a93098b31387a4a7c11800f301d083ad910b058de1d9c9cfa03b7ed06843f2"
+    },
+    {
+      "frame": "move_52",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/move_v1.png",
+      "source_sha256": "281ffb35f1e23e69b9f2b420d384b40f14796e9c986bb0bd63f7b0aec7421af4",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "caf326076201cc9223cf20c1c4ea178881a16e931a4f380b743f095285d2397c"
+    },
+    {
+      "frame": "move_54",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/move_v1.png",
+      "source_sha256": "281ffb35f1e23e69b9f2b420d384b40f14796e9c986bb0bd63f7b0aec7421af4",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "0af356cfcceef3bc4f92082af3c3139726bd02d9d05c21956d77f94d7207604b"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    450,
+    559
+  ],
+  "output_scale": 0.49,
+  "free_pixels_left_top_right_bottom": [
+    124,
+    46,
+    167,
+    46
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

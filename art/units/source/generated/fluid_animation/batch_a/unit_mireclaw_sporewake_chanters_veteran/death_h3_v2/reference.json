@@ -1,0 +1,70 @@
+{
+  "unit_id": "unit_mireclaw_sporewake_chanters_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/idle_v1.png",
+      "source_sha256": "c2ef91d3aaec015d9067e2cb8d34876cd581ef39952e5ec79514032d02138900",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "4fc84fa679d8ed3deeb30960dcd0a8e75543fe9422b9fba4fad38c796366667a"
+    },
+    {
+      "frame": "death_41",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/death_v1.png",
+      "source_sha256": "516466a67a13323b4472b47e335685a35282ea57879921b27f1775a0eaeb28cf",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "d51b4a63e2d0941ab9b2fd66511705e9c3d2eb396357498542f4900707c73c2b"
+    },
+    {
+      "frame": "death_42",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/death_v1.png",
+      "source_sha256": "516466a67a13323b4472b47e335685a35282ea57879921b27f1775a0eaeb28cf",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "0992acb7fd54b80f70ac609687ad44b8a028d2bb8324a7fa8222bc4355b8c3e0"
+    },
+    {
+      "frame": "death_43",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/death_v1.png",
+      "source_sha256": "516466a67a13323b4472b47e335685a35282ea57879921b27f1775a0eaeb28cf",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "f08c63c801e2b12d3b8cafb0eba4969c82bbbe123593dc42874b8dba111144b6"
+    },
+    {
+      "frame": "death_44",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/death_v1.png",
+      "source_sha256": "516466a67a13323b4472b47e335685a35282ea57879921b27f1775a0eaeb28cf",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "341ad78a23f1262bff451c770fe771605bbd17fb2d8bdfe1592947c40fb149fb"
+    },
+    {
+      "frame": "death_45",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/death_v1.png",
+      "source_sha256": "516466a67a13323b4472b47e335685a35282ea57879921b27f1775a0eaeb28cf",
+      "input_file": "guide_5_chroma.png",
+      "input_sha256": "ecbcd866425351c58b45c2ce5701ef5747867f57b350073de5d1e16207aa5289"
+    },
+    {
+      "frame": "death_47",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/death_v1.png",
+      "source_sha256": "516466a67a13323b4472b47e335685a35282ea57879921b27f1775a0eaeb28cf",
+      "input_file": "guide_6_chroma.png",
+      "input_sha256": "e8f8e8b004b7a73984fb80ef0b8774c9167ccc1a5e71fccbaf1fd7231cd64377"
+    }
+  ],
+  "canvas": [
+    1024,
+    640
+  ],
+  "ground_anchor": [
+    514,
+    559
+  ],
+  "output_scale": 0.49,
+  "free_pixels_left_top_right_bottom": [
+    188,
+    46,
+    167,
+    46
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

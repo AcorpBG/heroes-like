@@ -1,0 +1,72 @@
+{
+  "unit_id": "unit_mireclaw_sporewake_chanters_veteran",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    450,
+    559
+  ],
+  "scale": 0.49,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026102558,
+  "references": [
+    "move_48",
+    "move_50",
+    "move_52",
+    "move_54"
+  ],
+  "guides": [
+    [
+      15,
+      1
+    ],
+    [
+      31,
+      2
+    ],
+    [
+      46,
+      3
+    ],
+    [
+      62,
+      0
+    ],
+    [
+      77,
+      1
+    ],
+    [
+      93,
+      2
+    ],
+    [
+      108,
+      3
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original slender pale masked marsh cantor, the Sporewake veteran, facing screen right in elevated three-quarter view. Keep the ornate pale bone filigree eye-mask with an open visible mouth, the radiating crown of thin reed and bone spikes, the moss hood, the layered tan and brown shelf-mushroom shoulder mantle, the long ragged purple-mauve and moss-green robes, the bronze round chest pendant, belt bells and wrapped boots. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE long twisted wooden crook staff upright with ONE small bell hanging inside the curl; the screen-RIGHT hand holds three fine chains supporting ONE ornate round lattice lantern with warm amber glass light and a small bell below it. Preserve the staff, the single lantern, the mask, the mantle and the slender adult proportions. Walk in place through two complete reciprocal cycles with measured steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The crook staff is planted and lifted in rhythm and the lantern swings on its chains; the robes swing with the legs. Finish in the original gait phase. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full crown spikes, the staff crook, the lantern, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, large magic effects, spore clouds, projectiles, particles or extra limbs; the lantern keeps only its small warm glow. Articulate joints naturally with physical planted-foot support; do not morph the staff or lantern.",
+  "protected_foreground_chroma": 14,
+  "edge_threshold": 15,
+  "palette_measurement": {
+    "bluest_opaque": 12.0,
+    "blue_minus_green_p999": 9.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

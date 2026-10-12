@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_river_guard_veteran",
+  "guides": [
+    {
+      "frame": "move_00",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_contacts_v2.png",
+      "source_sha256": "25f6e4d0a73796482718f6523723da7a2290cb74c86ada59ac0f06e684524db4",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "097f06f147ee1f420abb8df88419561fdedb7159cb21546e8aed01af1139d7f0"
+    },
+    {
+      "frame": "move_04",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_contacts_v2.png",
+      "source_sha256": "25f6e4d0a73796482718f6523723da7a2290cb74c86ada59ac0f06e684524db4",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "5a50ada876b452bdd453a1ecac71e45c88bbccb5246b22a4ae5e6b6c76993f52"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    393,
+    566
+  ],
+  "output_scale": 0.5,
+  "free_pixels_left_top_right_bottom": [
+    163,
+    67,
+    163,
+    67
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

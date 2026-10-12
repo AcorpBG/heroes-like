@@ -1,0 +1,46 @@
+{
+  "unit_id": "unit_neutral_ashcrown_kilnelk",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    588
+  ],
+  "scale": 0.43,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026102606,
+  "references": [
+    "attack_0",
+    "death_7"
+  ],
+  "guides": [
+    [
+      90,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "ONE original volcanic elk, the Ashcrown Kilnelk, facing screen right in elevated three-quarter side view. Keep the powerful four-legged elk body of charcoal rock hide split by glowing orange molten cracks, the shaggy ember-orange mane on the neck and chest, the huge pale cream branching antlers with faint glowing veins, the dark cloven hooves rimmed with orange glow and the short tail. Exactly four legs, two antlers and one tail. Preserve the antler shape, the molten cracks, the mane and the tall elk proportions. Collapse slowly and heavily from standing: the legs buckle, the elk sinks down onto its chest and folded legs, then rolls onto its side and lies down, finishing lying motionless on its side with the antlered head resting on the ground and the glow of the cracks dimmed. The body never leaves the ground; no recovery, no fire and no disappearing body. Locked orthographic camera, fixed anatomical scale and centred body. Keep every antler tip and all four hooves within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, flames, smoke, sparks, embers flying off, magic, particles or extra limbs; the cracks keep only their steady orange glow. Articulate joints naturally with physical planted-hoof support; the antlers stay rigid and attached.",
+  "protected_foreground_chroma": 16,
+  "edge_threshold": 13,
+  "palette_measurement": {
+    "bluest_opaque": 14.0,
+    "blue_minus_green_p999": 7.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

@@ -1,0 +1,50 @@
+{
+  "unit_id": "unit_mireclaw_sporewake_chanters_veteran",
+  "clip": "ranged",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    450,
+    559
+  ],
+  "scale": 0.49,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026102570,
+  "references": [
+    "idle_0",
+    "ranged_19"
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      56,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original slender pale masked marsh cantor, the Sporewake veteran, facing screen right in elevated three-quarter view. Keep the ornate pale bone filigree eye-mask with an open visible mouth, the radiating crown of thin reed and bone spikes, the moss hood, the layered tan and brown shelf-mushroom shoulder mantle, the long ragged purple-mauve and moss-green robes, the bronze round chest pendant, belt bells and wrapped boots. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE long twisted wooden crook staff upright with ONE small bell hanging inside the curl; the screen-RIGHT hand holds three fine chains supporting ONE ornate round lattice lantern with warm amber glass light and a small bell below it. Preserve the staff, the single lantern, the mask, the mantle and the slender adult proportions. Make ONE ranged chant toward screen right. The cantor draws the lantern in to the chest, then thrusts it out at arm's length toward screen right with the mouth open in song, holds it there a moment, then pulls the lantern back down and returns to the original stance. The lantern keeps only its small warm glow and the flat blue background never changes. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full crown spikes, the staff crook, the lantern, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, large magic effects, spore clouds, projectiles, particles or extra limbs; the lantern keeps only its small warm glow. Articulate joints naturally with physical planted-foot support; do not morph the staff or lantern.",
+  "protected_foreground_chroma": 5,
+  "edge_threshold": 20,
+  "palette_measurement": {
+    "bluest_opaque": 3.0,
+    "blue_minus_green_p999": 14.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

@@ -169,6 +169,170 @@
       ],
       "last": 2,
       "action": "Collapse mechanically. The crystals dim and the near leg buckles, the chassis leans as a knee fails and the rail bundle dips, then the front support folds and the body tips slowly onto its side, the housing settling on the ground with the legs folded under it and a few small loose gears dropping beside it, finishing as an inert grounded wreck with all three rails still recognisable and the crystals dark. The same body throughout: no explosion, no shrinking and no disappearing."
+    },
+    "idle_h3_v2": {
+      "clip": "idle",
+      "references": [
+        "idle_v1_00",
+        "idle_v1_01"
+      ],
+      "guides": [
+        [
+          15,
+          1
+        ],
+        [
+          31,
+          0
+        ],
+        [
+          46,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          77,
+          1
+        ],
+        [
+          93,
+          0
+        ],
+        [
+          108,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A slow mechanical scanning idle that loops. The side handwheel turns slowly, the rail bundle rises a few degrees and the turret pans a little on its pedestal in one continuous motion, then the rails lower smoothly back to the original level ready position. All three feet stay planted; the legs flex only slightly at the knees. No walking. Nothing is fired: no bolt, beam, flash or sparks leave the rails, and the crystal tips keep the same soft glow. Only the body moves; nothing else appears in the frame."
+    },
+    "idle_h3_v3": {
+      "clip": "idle",
+      "references": [
+        "idle_v1_00",
+        "idle_v1_01"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A slow mechanical scanning idle that loops. The side handwheel turns slowly, the rail bundle rises a few degrees and the turret pans a little on its pedestal in one continuous motion, then the rails lower smoothly back to the original level ready position. All three feet stay planted; the legs flex only slightly at the knees. No walking. Nothing is fired: no bolt, beam, flash or sparks leave the rails, and the crystal tips keep the same soft glow. Only the body moves; nothing else appears in the frame."
+    },
+    "ranged_h3_v2": {
+      "clip": "ranged",
+      "references": [
+        "idle_v1_00",
+        "ranged_v1_01",
+        "ranged_v1_02",
+        "ranged_v1_05",
+        "ranged_v1_06"
+      ],
+      "guides": [
+        [
+          14,
+          1
+        ],
+        [
+          28,
+          2
+        ],
+        [
+          42,
+          3
+        ],
+        [
+          56,
+          3
+        ],
+        [
+          76,
+          4
+        ],
+        [
+          100,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE recoil toward screen right as if firing a volley. The legs brace and the rails elevate a few degrees, the handwheel and crystal drum rotate to cock, then the three rails kick sharply back into their housing as the machine rocks back on its legs, stay compressed a moment, spring forward again as the handwheel turns, and the rails lower to the original level ready position. Nothing is fired: no bolt, beam, flash or sparks leave the rails, and the crystal tips keep the same soft glow. Only the body moves; nothing else appears in the frame."
+    },
+    "ranged_h3_v3": {
+      "clip": "ranged",
+      "references": [
+        "idle_v1_00",
+        "ranged_v1_02",
+        "ranged_v1_05"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          56,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE recoil toward screen right as if firing a volley. The legs brace and the rails elevate a few degrees, the handwheel and crystal drum rotate to cock, then the three rails kick sharply back into their housing as the machine rocks back on its legs, stay compressed a moment, spring forward again as the handwheel turns, and the rails lower to the original level ready position. Nothing is fired: no bolt, beam, flash or sparks leave the rails, and the crystal tips keep the same soft glow. Only the body moves; nothing else appears in the frame."
+    },
+    "defend_h3_v2": {
+      "clip": "defend",
+      "references": [
+        "idle_v1_00",
+        "hit_defend_v2_06",
+        "hit_defend_v2_07"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
+      "last": 2,
+      "action": "Brace defensively: the turret lowers closer to the body, the three legs spread wider and bend at the knees, and the machine locks into a low sturdy brace with the rails held level forward, then holds the guard on all three planted feet. No firing and no return to the ready height. Nothing is fired: no bolt, beam, flash or sparks leave the rails, and the crystal tips keep the same soft glow. Only the body moves; nothing else appears in the frame."
+    },
+    "defend_h3_v3": {
+      "clip": "defend",
+      "references": [
+        "idle_v1_00",
+        "hit_defend_v2_06",
+        "hit_defend_v2_07"
+      ],
+      "guides": [
+        [
+          20,
+          1
+        ],
+        [
+          40,
+          2
+        ],
+        [
+          70,
+          2
+        ],
+        [
+          100,
+          2
+        ]
+      ],
+      "last": 2,
+      "action": "Brace defensively: the turret lowers closer to the body, the three legs spread wider and bend at the knees, and the machine locks into a low sturdy brace with the rails held level forward, then holds the guard on all three planted feet. No firing and no return to the ready height. Nothing is fired: no bolt, beam, flash or sparks leave the rails, and the crystal tips keep the same soft glow. Only the body moves; nothing else appears in the frame."
     }
   }
 }

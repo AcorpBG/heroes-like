@@ -1,0 +1,54 @@
+{
+  "unit_id": "unit_river_guard_veteran",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    393,
+    566
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026102651,
+  "references": [
+    "move_00",
+    "move_04"
+  ],
+  "guides": [
+    [
+      31,
+      1
+    ],
+    [
+      62,
+      0
+    ],
+    [
+      93,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original armoured soldier, the River Guard veteran, facing screen right in elevated three-quarter view. Keep the man in a bronze-gold crested helmet with a teal plume, burgundy padded coat over bronze scale and plate armour with shoulder plates, a teal sash and tasset, bronze greaves and brown boots. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE tall upright spear with a hooked steel blade, the butt on the ground; the screen-RIGHT arm bears ONE tall bronze kite-shaped tower shield with raised vertical ribs. Preserve the spear, shield, helmet plume, sash and adult proportions. March in place through two complete reciprocal cycles with disciplined steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The spear is carried upright and the shield held at the side; the sash swings with the legs. Finish in the original gait phase. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full spear blade, the shield, the plume, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the spear or shield.",
+  "protected_foreground_chroma": 20,
+  "edge_threshold": 19,
+  "palette_measurement": {
+    "bluest_opaque": 18.0,
+    "blue_minus_green_p999": 13.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

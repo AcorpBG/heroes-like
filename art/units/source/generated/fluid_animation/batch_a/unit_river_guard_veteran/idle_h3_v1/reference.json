@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_river_guard_veteran",
+  "guides": [
+    {
+      "frame": "idle_00",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/idle_v1.png",
+      "source_sha256": "7b4196496fe49d3dd8c578ef111af27d8d8a4e543fe1a0721d5e573b30af2cd9",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "f908814ddfb242d57135c25d8b0d73bb5cb0ba802e4aa917af7f4b00586d2d84"
+    },
+    {
+      "frame": "idle_04",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/idle_return_v1.png",
+      "source_sha256": "acd6d38fb1e082dbcac10bb12012181c9e076023b7fd98450261eb152f363532",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "e22f974aa21870c4c2e6032a30e2227ed3a7be3073e8c90dc7553f08d70cf78d"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    393,
+    566
+  ],
+  "output_scale": 0.5,
+  "free_pixels_left_top_right_bottom": [
+    163,
+    67,
+    163,
+    67
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

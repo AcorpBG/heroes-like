@@ -149,6 +149,142 @@
       ],
       "last": 2,
       "action": "Collapse slowly from standing. His knees buckle and he sinks onto one knee, leaning on the spear and shield, and stays there a moment. Then he tips forward and lies down on his front, finishing lying motionless with the head at screen left and the boots at screen right, the shield and spear lying on the ground beside him. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "idle_00",
+        "attack_01",
+        "attack_02",
+        "attack_03",
+        "attack_04",
+        "attack_05",
+        "attack_06"
+      ],
+      "guides": [
+        [
+          14,
+          1
+        ],
+        [
+          28,
+          2
+        ],
+        [
+          42,
+          3
+        ],
+        [
+          56,
+          4
+        ],
+        [
+          70,
+          5
+        ],
+        [
+          86,
+          6
+        ],
+        [
+          104,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE spear thrust toward screen right. He brings the spear down level across his chest and draws it back as the knees bend, then lunges forward on the front leg and thrusts the hooked blade out to full reach at screen right beside the shield, pulls it back and raises the spear upright into the original stance. One thrust only; the shield stays on the screen-right arm. The halberd stays one rigid weapon in his hands at its full length and never spins or flips. Only the body moves; nothing else appears in the frame.",
+      "pad": [
+        0,
+        96,
+        0,
+        0
+      ]
+    },
+    "attack_h3_v3": {
+      "clip": "attack",
+      "references": [
+        "idle_00",
+        "attack_02",
+        "attack_04"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE spear thrust toward screen right. He brings the spear down level across his chest and draws it back as the knees bend, then lunges forward on the front leg and thrusts the hooked blade out to full reach at screen right beside the shield, pulls it back and raises the spear upright into the original stance. One thrust only; the shield stays on the screen-right arm. The halberd stays one rigid weapon in his hands at its full length and never spins or flips. Only the body moves; nothing else appears in the frame.",
+      "pad": [
+        0,
+        96,
+        0,
+        0
+      ]
+    },
+    "death_h3_v2": {
+      "clip": "death",
+      "references": [
+        "idle_00",
+        "death_01",
+        "death_02",
+        "death_03",
+        "death_04",
+        "death_05",
+        "death_07"
+      ],
+      "guides": [
+        [
+          14,
+          1
+        ],
+        [
+          28,
+          2
+        ],
+        [
+          42,
+          3
+        ],
+        [
+          58,
+          4
+        ],
+        [
+          74,
+          5
+        ],
+        [
+          96,
+          6
+        ]
+      ],
+      "last": 6,
+      "action": "Collapse continuously from standing. His knees buckle and he sinks onto one knee leaning on the spear and shield, then tips forward and lies down on his front, finishing lying motionless with the head at screen left and the boots at screen right, the shield and spear lying on the ground beside him. The body never leaves the ground; no recovery, no floating equipment and no disappearing body. Only the body moves; nothing else appears in the frame."
+    },
+    "death_h3_v3": {
+      "clip": "death",
+      "references": [
+        "idle_00",
+        "death_03",
+        "death_07"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ],
+        [
+          84,
+          2
+        ]
+      ],
+      "last": 2,
+      "action": "Collapse continuously from standing. His knees buckle and he sinks onto one knee leaning on the spear and shield, then tips forward and lies down on his front, finishing lying motionless with the head at screen left and the boots at screen right, the shield and spear lying on the ground beside him. The body never leaves the ground; no recovery, no floating equipment and no disappearing body. Only the body moves; nothing else appears in the frame."
     }
   }
 }

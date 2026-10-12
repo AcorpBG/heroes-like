@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_mireclaw_sporewake_chanters_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/idle_v1.png",
+      "source_sha256": "c2ef91d3aaec015d9067e2cb8d34876cd581ef39952e5ec79514032d02138900",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "83598108b2faafe9012ad0b0e1da5e04ba5148f5cc70c598b4031a3fa431443b"
+    },
+    {
+      "frame": "defend_29",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/reactions_v1.png",
+      "source_sha256": "5a155b9de25c9850d1491fe4d082593f0010c0008f65192be7e63c4867ea50c5",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "14f95741cd2e72744d6dd2d8a41bd413e98c465ae4598791622e0cb884c8b114"
+    },
+    {
+      "frame": "defend_30",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/reactions_v1.png",
+      "source_sha256": "5a155b9de25c9850d1491fe4d082593f0010c0008f65192be7e63c4867ea50c5",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "1071ef0152d22f195ed1879adac67e448ce51785780467c22439905cad031096"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    450,
+    559
+  ],
+  "output_scale": 0.49,
+  "free_pixels_left_top_right_bottom": [
+    168,
+    46,
+    167,
+    46
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

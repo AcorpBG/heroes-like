@@ -1,0 +1,47 @@
+{
+  "unit_id": "unit_river_guard_veteran",
+  "clip": "defend",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    393,
+    566
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026102654,
+  "references": [
+    "idle_00",
+    "defend_01",
+    "defend_03"
+  ],
+  "guides": [
+    [
+      34,
+      1
+    ]
+  ],
+  "last": 2,
+  "prompt": "ONE original armoured soldier, the River Guard veteran, facing screen right in elevated three-quarter view. Keep the man in a bronze-gold crested helmet with a teal plume, burgundy padded coat over bronze scale and plate armour with shoulder plates, a teal sash and tasset, bronze greaves and brown boots. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE tall upright spear with a hooked steel blade, the butt on the ground; the screen-RIGHT arm bears ONE tall bronze kite-shaped tower shield with raised vertical ribs. Preserve the spear, shield, helmet plume, sash and adult proportions. Raise the tower shield up in front of the face and chest and bend the knees, bracing behind it with the spear still upright behind, then hold the covered guard on both planted boots. No attack and no return to the relaxed stance. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full spear blade, the shield, the plume, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the spear or shield.",
+  "protected_foreground_chroma": 26,
+  "edge_threshold": 23,
+  "palette_measurement": {
+    "bluest_opaque": 24.0,
+    "blue_minus_green_p999": 17.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

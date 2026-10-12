@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_river_guard_veteran",
+  "guides": [
+    {
+      "frame": "idle_00",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/idle_v1.png",
+      "source_sha256": "7b4196496fe49d3dd8c578ef111af27d8d8a4e543fe1a0721d5e573b30af2cd9",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "f908814ddfb242d57135c25d8b0d73bb5cb0ba802e4aa917af7f4b00586d2d84"
+    },
+    {
+      "frame": "attack_02",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/attack_v2.png",
+      "source_sha256": "7e6a3c190e92b5f64a1e14baabce7372cca131f564cd31a25fba781635dc07f5",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "987056f1b037bd0aae4ad66b8b33f8eff63791f6bdb5abb65aa914a7fe645ab2"
+    },
+    {
+      "frame": "attack_04",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/attack_v2.png",
+      "source_sha256": "7e6a3c190e92b5f64a1e14baabce7372cca131f564cd31a25fba781635dc07f5",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "9903f32ecece5c6966a1537611c157b10be53b4d36be462f888896fa33d5582d"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    393,
+    566
+  ],
+  "output_scale": 0.5,
+  "free_pixels_left_top_right_bottom": [
+    163,
+    67,
+    163,
+    67
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

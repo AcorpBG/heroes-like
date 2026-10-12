@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_neutral_ashcrown_kilnelk",
+  "guides": [
+    {
+      "frame": "attack_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_ashcrown_kilnelk/extracted/attack_v1_0.png",
+      "source_sha256": "0b9d4685c69bd613f7562ce98f8f1bec333c744b7034502c500aac0e4ea41113",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "541f516e9db5c3129e3a06b7940eab144eff411e4e9b84469ab72faf8326b5ca"
+    },
+    {
+      "frame": "defend_1",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_ashcrown_kilnelk/extracted/reactions_v1_5.png",
+      "source_sha256": "dc4c26beb8c163cda22a45593fc40d9981e420060c97a47f3c85976de2d3b020",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "919e9905e4d6bba407ef139ddd325434e5e9a4e8b997022ab2b8408e1e48088c"
+    },
+    {
+      "frame": "defend_2",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_ashcrown_kilnelk/extracted/reactions_v1_6.png",
+      "source_sha256": "45b87d84cee660c08bc926f724a6470aba47020de0a1e1acf98a7124d6f0933c",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "d00fc1266094877b6ec685d117ab926bce3ea3ffa4b7f0cde4f080d62cc1f77d"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    588
+  ],
+  "output_scale": 0.43,
+  "free_pixels_left_top_right_bottom": [
+    201,
+    43,
+    201,
+    50
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

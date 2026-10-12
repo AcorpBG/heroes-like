@@ -144,6 +144,290 @@
       ],
       "last": 1,
       "action": "Collapse slowly and heavily from standing: the legs buckle, the elk sinks down onto its chest and folded legs, then rolls onto its side and lies down, finishing lying motionless on its side with the antlered head resting on the ground and the glow of the cracks dimmed. The body never leaves the ground; no recovery, no fire and no disappearing body."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "attack_0",
+        "attack_1",
+        "attack_2",
+        "attack_3",
+        "attack_4",
+        "attack_5",
+        "attack_6"
+      ],
+      "guides": [
+        [
+          14,
+          1
+        ],
+        [
+          28,
+          2
+        ],
+        [
+          42,
+          3
+        ],
+        [
+          56,
+          4
+        ],
+        [
+          70,
+          5
+        ],
+        [
+          86,
+          6
+        ],
+        [
+          104,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE antler ram toward screen right. The elk compresses its shoulders and lowers its antlers toward screen right as the hind legs brace, then drives forward with the forelegs thrusting and rams the antlers low to full reach at screen right, draws the forelegs back under the chest, raises its head and returns to the original stance. One ram only. Only the body moves; nothing else appears in the frame."
+    },
+    "attack_h3_v3": {
+      "clip": "attack",
+      "references": [
+        "attack_0",
+        "attack_2",
+        "attack_4",
+        "attack_6"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ],
+        [
+          78,
+          3
+        ],
+        [
+          100,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE antler ram toward screen right. The elk compresses its shoulders and lowers its antlers toward screen right as the hind legs brace, then drives forward with the forelegs thrusting and rams the antlers low to full reach at screen right, draws the forelegs back under the chest, raises its head and returns to the original stance. One ram only. Only the body moves; nothing else appears in the frame."
+    },
+    "hit_h3_v2": {
+      "clip": "hit",
+      "references": [
+        "hit_2",
+        "attack_0",
+        "hit_3"
+      ],
+      "guides": [
+        [
+          14,
+          2
+        ],
+        [
+          30,
+          1
+        ],
+        [
+          50,
+          1
+        ],
+        [
+          72,
+          1
+        ],
+        [
+          96,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "Start rocked back in a flinch, then recover completely. The shoulders jolt backward, the neck recoils and the antlers tilt back as the knees flex, then the front hoof replants, the head comes forward and the elk returns to the same stance. Only the body moves; nothing else appears in the frame. The elk stays side-on facing screen right throughout and never turns toward or away from the viewer."
+    },
+    "defend_h3_v2": {
+      "clip": "defend",
+      "references": [
+        "attack_0",
+        "defend_1",
+        "defend_2"
+      ],
+      "guides": [
+        [
+          20,
+          1
+        ],
+        [
+          40,
+          2
+        ],
+        [
+          70,
+          2
+        ],
+        [
+          100,
+          2
+        ]
+      ],
+      "last": 2,
+      "action": "Spread the front hooves and lower the neck, then sink into a deep brace with the antlers held low toward screen right like a barrier and the weight pressed back into the hindquarters, and hold the guard on all four planted hooves. No attack and no return to the relaxed stance. The elk stays side-on facing screen right throughout and never turns toward or away from the viewer. Only the body moves; nothing else appears in the frame."
+    },
+    "cast_h3_v2": {
+      "clip": "cast",
+      "references": [
+        "attack_0",
+        "cast_4"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ],
+        [
+          94,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "A silent bellow. The elk inhales, lifts its chin and stretches the neck upward with the jaw open wide in a bellow, the chest expanded, holds it briefly, then closes the mouth and lowers the head back to the original stance. The four hooves stay planted. A physical gesture only: no fire, rays or spell effects. Only the body moves; nothing else appears in the frame."
+    },
+    "hit_h3_v3": {
+      "clip": "hit",
+      "references": [
+        "hit_2",
+        "attack_0",
+        "hit_3"
+      ],
+      "guides": [
+        [
+          24,
+          2
+        ],
+        [
+          56,
+          1
+        ],
+        [
+          80,
+          1
+        ],
+        [
+          104,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "Start rocked back in a flinch, then recover slowly and smoothly. The shoulders jolt backward, the neck recoils and the antlers tilt back as the knees flex, then over a full second the front hoof replants, the head comes forward and the elk eases back into the same stance. The elk stays side-on facing screen right throughout and never turns toward or away from the viewer. Only the body moves; nothing else appears in the frame."
+    },
+    "hit_h3_v4": {
+      "clip": "hit",
+      "references": [
+        "hit_2",
+        "attack_0"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "Start rocked back in a flinch, then recover slowly and smoothly. The shoulders jolt backward, the neck recoils and the antlers tilt back as the knees flex, then over a full second the front hoof replants, the head comes forward and the elk eases back into the same stance. The elk stays side-on facing screen right throughout and never turns toward or away from the viewer. Only the body moves; nothing else appears in the frame."
+    },
+    "cast_h3_v3": {
+      "clip": "cast",
+      "references": [
+        "attack_0",
+        "cast_2",
+        "cast_4",
+        "cast_5",
+        "cast_6"
+      ],
+      "guides": [
+        [
+          22,
+          1
+        ],
+        [
+          44,
+          2
+        ],
+        [
+          66,
+          2
+        ],
+        [
+          82,
+          3
+        ],
+        [
+          98,
+          4
+        ],
+        [
+          114,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "A silent bellow. The elk inhales, lifts its chin and stretches the neck upward with the jaw open wide in a bellow, the chest expanded, holds it briefly, then closes the mouth and lowers the head back to the original stance. The four hooves stay planted. A physical gesture only: no fire, rays or spell effects. Only the body moves; nothing else appears in the frame."
+    },
+    "cast_h3_v4": {
+      "clip": "cast",
+      "references": [
+        "attack_0",
+        "cast_4"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ],
+        [
+          104,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "A silent bellow. The elk inhales, lifts its chin and stretches the neck upward with the jaw open wide in a bellow, the chest expanded, holds it briefly, then slowly closes the mouth and lowers the head over a full second back to the original stance. The four hooves stay planted. A physical gesture only: no fire, rays or spell effects. Only the body moves; nothing else appears in the frame."
+    },
+    "defend_h3_v3": {
+      "clip": "defend",
+      "references": [
+        "attack_0",
+        "defend_1",
+        "defend_2"
+      ],
+      "guides": [
+        [
+          12,
+          1
+        ],
+        [
+          28,
+          2
+        ],
+        [
+          60,
+          2
+        ],
+        [
+          100,
+          2
+        ]
+      ],
+      "last": 2,
+      "action": "Spread the front hooves and lower the neck, then sink into a deep brace with the antlers held low toward screen right like a barrier and the weight pressed back into the hindquarters, and hold the guard on all four planted hooves. No attack and no return to the relaxed stance. The elk stays side-on facing screen right throughout and never turns toward or away from the viewer. Only the body moves; nothing else appears in the frame."
     }
   }
 }

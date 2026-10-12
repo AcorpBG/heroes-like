@@ -1,0 +1,56 @@
+{
+  "unit_id": "unit_neutral_ashcrown_kilnelk",
+  "guides": [
+    {
+      "frame": "attack_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_ashcrown_kilnelk/extracted/attack_v1_0.png",
+      "source_sha256": "0b9d4685c69bd613f7562ce98f8f1bec333c744b7034502c500aac0e4ea41113",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "541f516e9db5c3129e3a06b7940eab144eff411e4e9b84469ab72faf8326b5ca"
+    },
+    {
+      "frame": "cast_2",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_ashcrown_kilnelk/extracted/cast_v3_2.png",
+      "source_sha256": "fcf87e3a7b184e2f516a9c70fc7c011348857d5db2efdb730ef0570b24d7e0e5",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "dbf375a8d5420b13786ec12b2169c97dc810c8d8ae1850d5bd7b945b58b5a1fb"
+    },
+    {
+      "frame": "cast_4",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_ashcrown_kilnelk/extracted/cast_v3_4.png",
+      "source_sha256": "1073bc1e4d824716244c370c711cae902385b5d89f4e482f36293c66aa57d77e",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "4f2fb333f082c031214345d31061f776f012109425383517140a58f4ea93ab6c"
+    },
+    {
+      "frame": "cast_5",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_ashcrown_kilnelk/extracted/cast_v3_5.png",
+      "source_sha256": "3b8b76a07ff57b33d624b15b72dac33962311f24472f3ce6c100c48c0078b612",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "37b5b886a70ed85582a8af5e66e2964c85f6f6ee9e28949541e0a797dc01257b"
+    },
+    {
+      "frame": "cast_6",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_ashcrown_kilnelk/extracted/cast_v3_6.png",
+      "source_sha256": "3f3bba6c9aeaa6cb5ed043ff7d8e0007dabd0e99e4e96707819f57538afd695f",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "a388b23eb5e288b764846cbad8e9f0f0c7fbeeec052a2ebcd45211edf0c347f1"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    588
+  ],
+  "output_scale": 0.43,
+  "free_pixels_left_top_right_bottom": [
+    201,
+    43,
+    201,
+    50
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

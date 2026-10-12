@@ -1,0 +1,71 @@
+{
+  "unit_id": "unit_mireclaw_sporewake_chanters_veteran",
+  "clip": "death",
+  "canvas": [
+    1024,
+    640
+  ],
+  "anchor": [
+    514,
+    559
+  ],
+  "scale": 0.49,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026102563,
+  "references": [
+    "idle_0",
+    "death_41",
+    "death_42",
+    "death_43",
+    "death_44",
+    "death_45",
+    "death_47"
+  ],
+  "guides": [
+    [
+      14,
+      1
+    ],
+    [
+      28,
+      2
+    ],
+    [
+      42,
+      3
+    ],
+    [
+      56,
+      4
+    ],
+    [
+      70,
+      5
+    ],
+    [
+      90,
+      6
+    ]
+  ],
+  "last": 6,
+  "prompt": "ONE original slender pale masked marsh cantor, the Sporewake veteran, facing screen right in elevated three-quarter view. Keep the ornate pale bone filigree eye-mask with an open visible mouth, the radiating crown of thin reed and bone spikes, the moss hood, the layered tan and brown shelf-mushroom shoulder mantle, the long ragged purple-mauve and moss-green robes, the bronze round chest pendant, belt bells and wrapped boots. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE long twisted wooden crook staff upright with ONE small bell hanging inside the curl; the screen-RIGHT hand holds three fine chains supporting ONE ornate round lattice lantern with warm amber glass light and a small bell below it. Preserve the staff, the single lantern, the mask, the mantle and the slender adult proportions. Collapse continuously from standing: the cantor sags, sinks onto the knees with the staff slipping, falls forward onto the hands and slumps flat, finishing lying motionless face down with the crown at screen right and the boots at screen left, the staff and the lantern lying on the ground beside the body. No recovery, no floating equipment and no disappearing body. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full crown spikes, the staff crook, the lantern, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, large magic effects, spore clouds, projectiles, particles or extra limbs; the lantern keeps only its small warm glow. Articulate joints naturally with physical planted-foot support; do not morph the staff or lantern.",
+  "protected_foreground_chroma": 5,
+  "edge_threshold": 13,
+  "palette_measurement": {
+    "bluest_opaque": 3.0,
+    "blue_minus_green_p999": 7.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

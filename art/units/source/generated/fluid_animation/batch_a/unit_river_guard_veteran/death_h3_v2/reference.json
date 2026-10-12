@@ -1,0 +1,70 @@
+{
+  "unit_id": "unit_river_guard_veteran",
+  "guides": [
+    {
+      "frame": "idle_00",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/idle_v1.png",
+      "source_sha256": "7b4196496fe49d3dd8c578ef111af27d8d8a4e543fe1a0721d5e573b30af2cd9",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "f908814ddfb242d57135c25d8b0d73bb5cb0ba802e4aa917af7f4b00586d2d84"
+    },
+    {
+      "frame": "death_01",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/death_v1.png",
+      "source_sha256": "4f4fcaaae2dddccca7e57dc0f0025d0c3329f21f054c8a06d49ba71d6f6fd5a6",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "d72fc0d3f65e2a6dceaf2d8c50f8fa7c289e8745f340a2d005d996e51fb5a977"
+    },
+    {
+      "frame": "death_02",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/death_v1.png",
+      "source_sha256": "4f4fcaaae2dddccca7e57dc0f0025d0c3329f21f054c8a06d49ba71d6f6fd5a6",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "8a53f6cb3090a43c71f658545b6ac816a78c1e7aec594236f4aa7d3f90e55843"
+    },
+    {
+      "frame": "death_03",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/death_v1.png",
+      "source_sha256": "4f4fcaaae2dddccca7e57dc0f0025d0c3329f21f054c8a06d49ba71d6f6fd5a6",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "9ae67bf684fe1d57389004e1c537a271271bfe1698c0e3356ebc9acb160ff9ce"
+    },
+    {
+      "frame": "death_04",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/death_v1.png",
+      "source_sha256": "4f4fcaaae2dddccca7e57dc0f0025d0c3329f21f054c8a06d49ba71d6f6fd5a6",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "3d6a8fcce2b66de8c3a24e89fa80a5c9eb9b606684a133b288667e00d7bce305"
+    },
+    {
+      "frame": "death_05",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/death_v1.png",
+      "source_sha256": "4f4fcaaae2dddccca7e57dc0f0025d0c3329f21f054c8a06d49ba71d6f6fd5a6",
+      "input_file": "guide_5_chroma.png",
+      "input_sha256": "3767db6989efdeea653ff139a25b67356034c01ae20fe18e0b1d2cf974b2f868"
+    },
+    {
+      "frame": "death_07",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/death_v1.png",
+      "source_sha256": "4f4fcaaae2dddccca7e57dc0f0025d0c3329f21f054c8a06d49ba71d6f6fd5a6",
+      "input_file": "guide_6_chroma.png",
+      "input_sha256": "ef2e3220d4274dc03e377fed794a37a7a9c4908aab2cd90cb41891eab576f43a"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    393,
+    566
+  ],
+  "output_scale": 0.5,
+  "free_pixels_left_top_right_bottom": [
+    163,
+    61,
+    159,
+    51
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
