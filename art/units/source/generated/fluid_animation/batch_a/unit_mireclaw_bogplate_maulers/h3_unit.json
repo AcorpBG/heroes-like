@@ -18,16 +18,24 @@
       "clip": "idle",
       "references": [
         "attack_00",
-        "hit_03"
+        "death_00"
       ],
       "guides": [
         [
+          31,
+          1
+        ],
+        [
           62,
+          0
+        ],
+        [
+          93,
           1
         ]
       ],
       "last": 0,
-      "action": "A heavy, steady idle that loops. He breathes deeply, the broad shoulders rise and fall, the hammer head dips a little and lifts as he resettles his grip, the bearded head turns slightly to scan and the reed fringes stir, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no attack."
+      "action": "A heavy, steady idle that loops. He breathes deeply, the broad shoulders rise and fall, the hammer head dips a little and lifts as he resettles his grip, the bearded head turns slightly to scan and the reed fringes stir, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no attack. Only the body moves; nothing else appears in the frame."
     },
     "attack_h3_v1": {
       "clip": "attack",

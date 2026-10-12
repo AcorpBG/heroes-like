@@ -18,16 +18,24 @@
       "clip": "idle",
       "references": [
         "attack_00",
-        "hit_03"
+        "hit_02"
       ],
       "guides": [
         [
+          31,
+          1
+        ],
+        [
           62,
+          0
+        ],
+        [
+          93,
           1
         ]
       ],
       "last": 0,
-      "action": "A creeping, watchful idle that loops. The stalker breathes in a low crouch, the masked head tilts and turns to listen, the bell sways a little so the chain and hook swing gently, and the reeds stir, then everything returns smoothly to the original stance. Both feet stay planted. No walking and no attack."
+      "action": "A creeping, watchful idle that loops. The stalker breathes in a low crouch, the masked head tilts and turns to listen, the bell sways a little so the chain and hook swing gently, and the reeds stir, then everything returns smoothly to the original stance. Both feet stay planted. No walking and no attack. Only the body moves; nothing else appears in the frame."
     },
     "attack_h3_v1": {
       "clip": "attack",

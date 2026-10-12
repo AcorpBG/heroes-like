@@ -136,6 +136,177 @@
       ],
       "last": 1,
       "action": "Collapse continuously from standing: he sags, sinks onto his knees leaning on the maul, then topples forward onto the ground, finishing lying motionless on his front with the head at screen left and the boots at screen right, the maul lying on the ground in front of him. No recovery, no floating equipment and no disappearing body."
+    },
+    "idle_h3_v2": {
+      "clip": "idle",
+      "references": [
+        "idle_0",
+        "idle_4"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A heavy, ready idle that loops. He breathes deeply, the shoulders rise and fall, he shifts his grip and lifts the maul head slightly off its low guard, his head turns a little, then everything returns smoothly to the original stance. Both boots stay planted; the reed mantle and skirt stir gently. No walking and no attack. Only the body moves; nothing else appears in the frame."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "idle_0",
+        "attack_9",
+        "attack_10",
+        "attack_12"
+      ],
+      "guides": [
+        [
+          16,
+          1
+        ],
+        [
+          30,
+          2
+        ],
+        [
+          54,
+          3
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE overhead maul smash toward screen right. He draws the shaft back and lifts the maul up over his head with both hands, the spiked head staying close above his head and inside the frame, then swings it down so the head lands low in front at screen right with the front knee bent and the torso folded forward, then draws the shaft back toward the hips and settles into the original low guard. One strike only; both hands stay on the shaft. Only the body and the maul move; nothing else appears in the frame."
+    },
+    "attack_h3_v3": {
+      "clip": "attack",
+      "references": [
+        "idle_0",
+        "attack_9",
+        "attack_12"
+      ],
+      "guides": [
+        [
+          26,
+          1
+        ],
+        [
+          50,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE heavy diagonal maul blow toward screen right. He draws the maul back and up over his rear shoulder with both hands, then swings it down across his body so the spiked head lands low in front at screen right with the front knee bent and the torso folded forward, then draws the shaft back toward the hips and settles into the original low guard. One strike only; both hands stay on the shaft. Only the body and the maul move; nothing else appears in the frame."
+    },
+    "attack_h3_v4": {
+      "clip": "attack",
+      "references": [
+        "idle_0",
+        "attack_9",
+        "attack_10",
+        "attack_12"
+      ],
+      "guides": [
+        [
+          16,
+          1
+        ],
+        [
+          30,
+          2
+        ],
+        [
+          54,
+          3
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE overhead maul smash toward screen right. He draws the shaft back and lifts the maul up over his head with both hands, the spiked head staying close above his head and inside the frame, then swings it down so the head lands low in front at screen right with the front knee bent and the torso folded forward, then draws the shaft back toward the hips and settles into the original low guard. One strike only; both hands stay on the shaft. Only the body and the maul move; nothing else appears in the frame.",
+      "pad": [
+        0,
+        160,
+        0,
+        0
+      ]
+    },
+    "idle_h3_v3": {
+      "clip": "idle",
+      "references": [
+        "idle_0",
+        "idle_6"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A heavy, ready idle that loops. He breathes deeply, the shoulders rise and fall, he shifts his grip and lifts the maul head slightly off its low guard, his head turns a little, then everything returns smoothly to the original stance. Both boots stay planted; the reed mantle and skirt stir gently. No walking and no attack. Only the body moves; nothing else appears in the frame."
+    },
+    "attack_h3_v5": {
+      "clip": "attack",
+      "references": [
+        "idle_0",
+        "attack_9",
+        "attack_10",
+        "attack_11",
+        "attack_13",
+        "attack_14"
+      ],
+      "guides": [
+        [
+          14,
+          1
+        ],
+        [
+          28,
+          2
+        ],
+        [
+          42,
+          3
+        ],
+        [
+          58,
+          4
+        ],
+        [
+          76,
+          5
+        ],
+        [
+          94,
+          0
+        ],
+        [
+          108,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE overhead maul smash toward screen right. He draws the shaft back and lifts the maul up over his head with both hands, the spiked head staying close above his head and inside the frame, then swings it down so the head comes down low in front at screen right with the front knee bent and the torso folded forward, then draws the shaft back toward the hips and settles into the original low guard. One strike only; both hands stay on the shaft. Only the body and the maul move; nothing else appears in the frame. Only the body moves; nothing else appears in the frame.",
+      "pad": [
+        0,
+        160,
+        64,
+        0
+      ]
     }
   }
 }

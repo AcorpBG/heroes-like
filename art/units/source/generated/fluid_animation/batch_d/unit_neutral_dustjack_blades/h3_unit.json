@@ -18,16 +18,24 @@
       "clip": "idle",
       "references": [
         "idle_v1_01",
-        "idle_v1_05"
+        "idle_v1_04"
       ],
       "guides": [
         [
+          31,
+          1
+        ],
+        [
           62,
+          0
+        ],
+        [
+          93,
           1
         ]
       ],
       "last": 0,
-      "action": "A loose, ready idle that loops. He breathes, rolls his shoulders, turns both knives a little in his grip, shifts his weight from one boot to the other and glances to the side as the scarf stirs, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no attack."
+      "action": "A loose, ready idle that loops. He breathes, rolls his shoulders, turns both knives a little in his grip, shifts his weight from one boot to the other and glances to the side as the scarf stirs, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no attack. Only the body moves; nothing else appears in the frame."
     },
     "attack_h3_v1": {
       "clip": "attack",

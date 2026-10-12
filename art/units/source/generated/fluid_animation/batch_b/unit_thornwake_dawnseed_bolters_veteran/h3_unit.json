@@ -18,16 +18,24 @@
       "clip": "idle",
       "references": [
         "idle_v1_00",
-        "idle_v1_03"
+        "idle_v1_06"
       ],
       "guides": [
         [
+          31,
+          1
+        ],
+        [
           62,
+          0
+        ],
+        [
+          93,
           1
         ]
       ],
       "last": 0,
-      "action": "A watchful marksman idle that loops. The arbalist breathes, the shoulders rise and fall, the crossbow is lifted a little and sighted briefly toward screen right then lowered, the hooded head turns slightly and the leaf cloak stirs, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no shooting."
+      "action": "A watchful marksman idle that loops. The arbalist breathes, the shoulders rise and fall, the crossbow is lifted a little and sighted briefly toward screen right then lowered, the hooded head turns slightly and the leaf cloak stirs, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no shooting. Only the body moves; nothing else appears in the frame."
     },
     "move_h3_v1": {
       "clip": "move",

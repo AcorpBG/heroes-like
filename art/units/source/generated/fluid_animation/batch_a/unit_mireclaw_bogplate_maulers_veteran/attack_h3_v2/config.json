@@ -1,0 +1,56 @@
+{
+  "unit_id": "unit_mireclaw_bogplate_maulers_veteran",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    399,
+    596
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026102058,
+  "references": [
+    "idle_0",
+    "attack_9",
+    "attack_10",
+    "attack_12"
+  ],
+  "guides": [
+    [
+      16,
+      1
+    ],
+    [
+      30,
+      2
+    ],
+    [
+      54,
+      3
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original tall muscular warrior, the Bogplate Gatebreaker, facing screen right in elevated three-quarter view. Keep the man with long dark hair and a dark beard, bare muscular upper arms, a weathered black iron breastplate, a coarse ochre reed and thatch shoulder mantle, a ragged reed skirt, dark trousers and leather-wrapped bracers and boots. Exactly two arms, two hands and two legs. BOTH hands grip ONE enormous long wooden two-handed maul with iron bands and iron spikes on its heavy head: the near hand at the handle butt toward screen left, the far hand further up the shaft, and the heavy spiked head toward screen right. Preserve the maul's full length and head size, the mantle, the breastplate and the massive adult proportions. Make ONE overhead maul smash toward screen right. He draws the shaft back and lifts the maul up over his head with both hands, the spiked head staying close above his head and inside the frame, then swings it down so the head lands low in front at screen right with the front knee bent and the torso folded forward, then draws the shaft back toward the hips and settles into the original low guard. One strike only; both hands stay on the shaft. Only the body and the maul move; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, the whole maul, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, sparks, impact effects, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the maul.",
+  "protected_foreground_chroma": 16,
+  "edge_threshold": 10,
+  "palette_measurement": {
+    "bluest_opaque": 14.0,
+    "blue_minus_green_p999": 4.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

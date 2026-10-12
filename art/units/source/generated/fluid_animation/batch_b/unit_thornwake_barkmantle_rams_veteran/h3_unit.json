@@ -18,16 +18,24 @@
       "clip": "idle",
       "references": [
         "idle_v2_00",
-        "idle_v2_04"
+        "idle_v2_06"
       ],
       "guides": [
         [
+          31,
+          1
+        ],
+        [
           62,
+          0
+        ],
+        [
+          93,
           1
         ]
       ],
       "last": 0,
-      "action": "A heavy, patient idle that loops. The bark chest swells and settles as it breathes, the horned head lowers a little and lifts again, one forefoot shifts its weight, the daisies on its back stir, then everything returns smoothly to the original stance. The other feet stay planted. No walking and no attack."
+      "action": "A heavy, patient idle that loops. The bark chest swells and settles as it breathes, the horned head lowers a little and lifts again, one forefoot shifts its weight, the daisies on its back stir, then everything returns smoothly to the original stance. The other feet stay planted. No walking and no attack. Only the body moves; nothing else appears in the frame."
     },
     "move_h3_v1": {
       "clip": "move",

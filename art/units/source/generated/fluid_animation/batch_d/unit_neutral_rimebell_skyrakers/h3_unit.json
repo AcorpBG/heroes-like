@@ -18,16 +18,24 @@
       "clip": "idle",
       "references": [
         "attack_00",
-        "cast_05"
+        "attack_07"
       ],
       "guides": [
         [
+          31,
+          1
+        ],
+        [
           62,
+          0
+        ],
+        [
+          93,
           1
         ]
       ],
       "last": 0,
-      "action": "Fly in place, a hovering idle that loops. The upper wings beat slowly down and up, the lower wings follow with smaller delayed strokes, the body bobs gently, the talons flex and the tail sways, then everything returns smoothly to the original hovering pose. The body stays in place. No attack."
+      "action": "Fly in place, a hovering idle that loops. The upper wings beat slowly down and up, the lower wings follow with smaller delayed strokes, the body bobs gently, the talons flex and the tail sways, then everything returns smoothly to the original hovering pose. The body stays in place. No attack. Only the body moves; nothing else appears in the frame."
     },
     "attack_h3_v1": {
       "clip": "attack",

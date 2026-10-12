@@ -18,16 +18,24 @@
       "clip": "idle",
       "references": [
         "attack_v1_00",
-        "cast_v1_07"
+        "attack_v1_07"
       ],
       "guides": [
         [
+          31,
+          1
+        ],
+        [
           62,
+          0
+        ],
+        [
+          93,
           1
         ]
       ],
       "last": 0,
-      "action": "A heavy, breathing idle that loops. The ram's barrel chest swells and settles, the horned head lowers a little and lifts, it shifts its weight from one side to the other and the ribbons stir, then everything returns smoothly to the original stance. All four paws stay planted. No walking and no attack."
+      "action": "A heavy, breathing idle that loops. The ram's barrel chest swells and settles, the horned head lowers a little and lifts, it shifts its weight from one side to the other and the ribbons stir, then everything returns smoothly to the original stance. All four paws stay planted. No walking and no attack. Only the body moves; nothing else appears in the frame."
     },
     "attack_h3_v1": {
       "clip": "attack",

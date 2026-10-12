@@ -18,16 +18,24 @@
       "clip": "idle",
       "references": [
         "attack_v3_0",
-        "move_v2_4"
+        "death_v2_0"
       ],
       "guides": [
         [
+          31,
+          1
+        ],
+        [
           62,
+          0
+        ],
+        [
+          93,
           1
         ]
       ],
       "last": 0,
-      "action": "A heavy mechanical idle that loops. The knee pistons compress and extend slowly as the chassis rises and settles, the shield shifts a little on its hinge, the blade arm lifts slightly and lowers, then everything returns smoothly to the original stance. All four feet stay planted. No walking and no attack."
+      "action": "A heavy mechanical idle that loops. The knee pistons compress and extend slowly as the chassis rises and settles, the shield shifts a little on its hinge, the blade arm lifts slightly and lowers, then everything returns smoothly to the original stance. All four feet stay planted. No walking and no attack. Only the body moves; nothing else appears in the frame."
     },
     "move_h3_v1": {
       "clip": "move",

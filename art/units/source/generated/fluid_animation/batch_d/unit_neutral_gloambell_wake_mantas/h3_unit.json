@@ -18,16 +18,24 @@
       "clip": "idle",
       "references": [
         "idle_0",
-        "idle_4"
+        "idle_1"
       ],
       "guides": [
         [
+          31,
+          1
+        ],
+        [
           62,
+          0
+        ],
+        [
+          93,
           1
         ]
       ],
       "last": 0,
-      "action": "Hover in place in a gentle loop. The wings ripple and beat slowly up and down, the body bobs a little, the tail fins flick and the five bell tendrils sway beneath, then everything returns smoothly to the original hovering pose. The body stays centred in the air. No flying off and no attack."
+      "action": "Hover in place in a gentle loop. The wings ripple and beat slowly up and down, the body bobs a little, the tail fins flick and the five bell tendrils sway beneath, then everything returns smoothly to the original hovering pose. The body stays centred in the air. No flying off and no attack. Only the body moves; nothing else appears in the frame."
     },
     "move_h3_v1": {
       "clip": "move",

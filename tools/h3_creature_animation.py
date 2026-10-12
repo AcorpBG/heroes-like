@@ -8,8 +8,10 @@ A unit is described by <unit_dir>/h3_unit.json:
   per video px), key_rgb ([0, 0, 255], or [0, 255, 0] for a palette full of blue), seed,
   optional anchor [x, y] and tiled_decode, and "takes":
   {take_name: {clip, references: [painted frame names], guides: [[video_frame, ref]],
-  last: ref, action: prompt text}}. Append new takes (retakes too) at the end: a take's
-  seed is the unit seed plus its position.
+  last: ref, action: prompt text, optional pad [left, top, right, bottom]}}. Append new
+  takes (retakes too) at the end: a take's seed is the unit seed plus its position. pad
+  widens one take's canvas (multiples of 32) where its swing leaves the unit canvas; the
+  figure keeps its anchor and scale.
 
 References name frames of the unit's live reviewed handoff
 (art/animation/source/fluid/<unit>/reviewed_handoff.json), so each guide is an accepted
@@ -21,6 +23,7 @@ SciPy and PyAV; the ComfyUI service is http://127.0.0.1:8189 unless --url says o
                                (--archive-dir), draw every painted frame by clip with its
                                name and suggest a scale
   prepare  UNIT_DIR [TAKE...]  guides, prompts and graphs for takes not prepared yet
+                               (an idle prints how far its poses sit from the neutral)
   generate UNIT_DIR [TAKE...]  queue every sampling job, free the models, queue the decodes;
                                then collect lossless originals, matte and draw review sheets;
                                --batch UNIT_DIR... adds other prepared units to the same run
@@ -78,6 +81,7 @@ TILED_DECODE = {"tile_size": 512, "overlap": 64, "temporal_size": 16, "temporal_
 MARGIN = 24          # free pixels every guide keeps from the canvas edge
 UNMIX_MARGIN = 2     # protected foreground chroma: bluest opaque guide pixel plus this
 EDGE_MARGIN = 6      # edge-rule threshold: guide blue-minus-green p99.9 plus this
+IDLE_POSE_FAR = 17   # pose distance above which a three-guide idle holds each pose and pops between them
 URL = "http://127.0.0.1:8189"
 QUEUE = ROOT / ".artifacts/h3/queue"
 
@@ -201,6 +205,17 @@ def measure(guides, order):
     return max(0, int(worst) + UNMIX_MARGIN), max(6, math.ceil(p999) + EDGE_MARGIN), {"bluest_opaque": worst, "blue_minus_green_p999": p999}
 
 
+def pose_distance(a, b):
+    """How far apart two guides sit: mean premultiplied colour difference plus half the mean
+    opacity difference, at quarter size. Smooth three-guide idles measured 5.4 and 16.2; those
+    that held each pose for about 20 frames and popped between them, 18.2 to 23.6."""
+    def lit(im):
+        x = np.asarray(im.resize((im.width // 4, im.height // 4), Image.Resampling.BILINEAR)).astype(np.float32)
+        return x[..., :3] * x[..., 3:] / 255, x[..., 3]
+    (ca, aa), (cb, ab) = lit(a), lit(b)
+    return float(np.abs(ca - cb).mean() + np.abs(aa - ab).mean() / 2)
+
+
 def prepare(unit, names, refresh=False):
     """refresh: prepare again, from the current h3_unit.json, takes the runner has not submitted yet."""
     anchor, room = unit.layout()
@@ -211,12 +226,16 @@ def prepare(unit, names, refresh=False):
         started = time.monotonic()
         spec = unit.cfg["takes"][name]
         out.mkdir(exist_ok=True)
-        w, h = unit.canvas
+        pad = spec.get("pad", [0, 0, 0, 0])
+        if any(v % 32 for v in pad):
+            raise SystemExit(f"{name}: pad {pad} must be multiples of 32")
+        w, h = unit.canvas[0] + pad[0] + pad[2], unit.canvas[1] + pad[1] + pad[3]
+        at, free = [anchor[0] + pad[0], anchor[1] + pad[1]], [r + q for r, q in zip(room, pad)]
         guides, refs = [], []
         for i, frame_name in enumerate(spec["references"]):
             pose, (x, y) = unit.guide_pose(frame_name)
             rgba = Image.new("RGBA", (w, h))
-            rgba.alpha_composite(pose, (anchor[0] + x, anchor[1] + y))
+            rgba.alpha_composite(pose, (at[0] + x, at[1] + y))
             rgba.save(out / f"guide_{i}_rgba.png")
             plate = Image.new("RGBA", (w, h), tuple(unit.cfg["key_rgb"]) + (255,))
             plate.alpha_composite(rgba)
@@ -228,14 +247,14 @@ def prepare(unit, names, refresh=False):
         protected, threshold, measured = measure(guides, key_order(unit.cfg["key_rgb"]))
         prompt = unit.cfg["identity"] + " " + spec["action"] + " " + unit.cfg["plate"]
         seed = unit.cfg["seed"] + list(unit.cfg["takes"]).index(name)
-        config = {"unit_id": unit.id, "clip": spec["clip"], "canvas": [w, h], "anchor": anchor, "scale": unit.scale,
+        config = {"unit_id": unit.id, "clip": spec["clip"], "canvas": [w, h], "anchor": at, "scale": unit.scale,
                   "key_rgb": unit.cfg["key_rgb"], "seed": seed, "references": spec["references"], "guides": spec["guides"],
                   "last": spec["last"], "prompt": prompt, "protected_foreground_chroma": protected, "edge_threshold": threshold,
                   "palette_measurement": dict(measured, rule="opaque guide interiors (alpha>240, eroded 3 px)"),
                   "tiled_decode": unit.cfg.get("tiled_decode", TILED_DECODE), "frames": FRAMES, "fps": FPS}
         write(out / "config.json", config)
-        write(out / "reference.json", {"unit_id": unit.id, "guides": refs, "canvas": [w, h], "ground_anchor": anchor,
-                                       "output_scale": unit.scale, "free_pixels_left_top_right_bottom": room,
+        write(out / "reference.json", {"unit_id": unit.id, "guides": refs, "canvas": [w, h], "ground_anchor": at,
+                                       "output_scale": unit.scale, "free_pixels_left_top_right_bottom": free,
                                        "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."})
         (out / "prompt.txt").write_text(prompt + "\n", encoding="utf-8", newline="\n")
         graph = {
@@ -260,7 +279,12 @@ def prepare(unit, names, refresh=False):
         graph["6"] = node("BasicGuider", model=["1", 0], conditioning=[previous, 0])
         write(out / "sampling_workflow_api.json", graph)
         timed(out, "prepare", time.monotonic() - started)
-        print(f"PREPARED {name}: {len(refs)} guides, anchor {anchor}, unmix guard {protected}, edge threshold {threshold}", flush=True)
+        print(f"PREPARED {name}: {len(refs)} guides, canvas {w}x{h}, anchor {at}, unmix guard {protected}, edge threshold {threshold}", flush=True)
+        if spec["clip"] == "idle" and len(guides) > 1:
+            # A mean over the canvas: rescale a padded take to the unit canvas, since padding adds only empty pixels.
+            far = max(pose_distance(guides[0], g) for g in guides[1:]) * w * h / (unit.canvas[0] * unit.canvas[1])
+            note = f" (above {IDLE_POSE_FAR}: expect hold-and-pop; pick a pose nearer the neutral)" if far > IDLE_POSE_FAR else ""
+            print(f"  idle pose distance {far:.1f}{note}", flush=True)
 
 
 def upload(name, path):
@@ -506,21 +530,27 @@ def collect(out, history):
     target = out / "original_lossless.mkv"
     if target.exists():
         raise RuntimeError(f"{out.name}: original already collected")
-    hashes = []
-    with av.open(str(target), "w") as container:
-        stream = container.add_stream("ffv1", rate=FPS)
-        stream.width, stream.height = size
-        stream.pix_fmt = "bgr0"
-        for item in images:
-            image = Image.open(io.BytesIO(fetch(item))).convert("RGB")
-            assert image.size == size
-            hashes.append(hashlib.sha256(image.tobytes()).hexdigest())
-            for packet in stream.encode(av.VideoFrame.from_image(image)):
+    # One write in about 150 failed its re-decode, and the same frames passed when written again,
+    # so a mismatch is written once more before the take fails.
+    for attempt in (1, 2):
+        hashes = []
+        with av.open(str(target), "w") as container:
+            stream = container.add_stream("ffv1", rate=FPS)
+            stream.width, stream.height = size
+            stream.pix_fmt = "bgr0"
+            for item in images:
+                image = Image.open(io.BytesIO(fetch(item))).convert("RGB")
+                assert image.size == size
+                hashes.append(hashlib.sha256(image.tobytes()).hexdigest())
+                for packet in stream.encode(av.VideoFrame.from_image(image)):
+                    container.mux(packet)
+            for packet in stream.encode():
                 container.mux(packet)
-        for packet in stream.encode():
-            container.mux(packet)
-    with av.open(str(target)) as container:
-        if [hashlib.sha256(f.to_image().convert("RGB").tobytes()).hexdigest() for f in container.decode(video=0)] != hashes:
+        with av.open(str(target)) as container:
+            if [hashlib.sha256(f.to_image().convert("RGB").tobytes()).hexdigest() for f in container.decode(video=0)] == hashes:
+                break
+        target.unlink()
+        if attempt == 2:
             raise RuntimeError(f"{out.name}: lossless original differs from the decoded frames")
     for item in history["outputs"].get("14", {}).get("images", []) + history["outputs"].get("14", {}).get("animated", []):
         if isinstance(item, dict) and str(item.get("filename", "")).endswith(".mp4"):
@@ -795,14 +825,13 @@ def fit(unit):
     and the FIT_FLOOR counts stay. A dropped frame's own hold passes to the frame before it."""
     path = unit.dir / "h3_selection.json"
     selection = read(path)
-    w, h = unit.canvas
     configs, poses, small = {}, {}, {}
 
     def pose(take, i):
         if (take, i) not in poses:
             c = configs.setdefault(take, read(unit.dir / take / "config.json"))
             poses[take, i] = source_pose({"name": f"{take}_{i:03}", "source": rel(unit.dir / take / "matte" / f"rgba_{i:03}.png"),
-                                          "rects": [[0, 0, w, h]], "anchor": c["anchor"], "scale": c["scale"]})
+                                          "rects": [[0, 0, *c["canvas"]]], "anchor": c["anchor"], "scale": c["scale"]})
         return poses[take, i]
 
     def jump(take, a, b):
@@ -850,7 +879,6 @@ def fit(unit):
 def build(unit):
     selection = read(unit.dir / "h3_selection.json")
     frames, clips, provenance, used = [], {}, {}, []
-    w, h = unit.canvas
     for clip, spec in selection["clips"].items():
         start = len(frames)
         for segment in spec["segments"]:
@@ -860,7 +888,7 @@ def build(unit):
             for i in segment["frames"]:
                 path = out / "matte" / f"rgba_{i:03}.png"
                 assert matte_record["rgba_sha256"][i] and sha(path) == matte_record["rgba_sha256"][i], (segment["take"], i)
-                frames.append({"name": f"{segment['take']}_{i:03}", "clip": clip, "source": rel(path), "rects": [[0, 0, w, h]],
+                frames.append({"name": f"{segment['take']}_{i:03}", "clip": clip, "source": rel(path), "rects": [[0, 0, *c["canvas"]]],
                                "anchor": c["anchor"], "scale": c["scale"], "alpha_noise_cutoff": 0, "video_frame": i,
                                "video_time_seconds": round(i / FPS, 4)})
             used.append(segment["take"])

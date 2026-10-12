@@ -18,16 +18,24 @@
       "clip": "idle",
       "references": [
         "idle_0",
-        "idle_4"
+        "idle_1"
       ],
       "guides": [
         [
+          31,
+          1
+        ],
+        [
           62,
+          0
+        ],
+        [
+          93,
           1
         ]
       ],
       "last": 0,
-      "action": "A tense hunting idle that loops. The hound breathes, the body rises and settles on its legs, the head lowers and lifts slightly as it sniffs, the ears twitch and the tail sways slowly, then everything returns smoothly to the original crouched stance. All four feet stay planted. No walking and no attack."
+      "action": "A tense hunting idle that loops. The hound breathes, the body rises and settles on its legs, the head lowers and lifts slightly as it sniffs, the ears twitch and the tail sways slowly, then everything returns smoothly to the original crouched stance. All four feet stay planted. No walking and no attack. Only the body moves; nothing else appears in the frame."
     },
     "move_h3_v1": {
       "clip": "move",

@@ -18,16 +18,24 @@
       "clip": "idle",
       "references": [
         "idle_v1_00",
-        "idle_v1_03"
+        "idle_v1_04"
       ],
       "guides": [
         [
+          31,
+          1
+        ],
+        [
           62,
+          0
+        ],
+        [
+          93,
           1
         ]
       ],
       "last": 0,
-      "action": "A mechanical scanning idle that loops. The side handwheel turns slowly, the rail bundle elevates a few degrees to scan and the turret pans a little on its pedestal, then the rails lower and everything returns smoothly to the original level ready position. All three feet stay planted; the legs flex only slightly at the knees. No walking and no firing."
+      "action": "A mechanical scanning idle that loops. The side handwheel turns slowly, the rail bundle elevates a few degrees to scan and the turret pans a little on its pedestal, then the rails lower and everything returns smoothly to the original level ready position. All three feet stay planted; the legs flex only slightly at the knees. No walking and no firing. Only the body moves; nothing else appears in the frame."
     },
     "move_h3_v1": {
       "clip": "move",

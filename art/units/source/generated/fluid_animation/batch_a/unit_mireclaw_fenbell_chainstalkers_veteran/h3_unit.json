@@ -136,6 +136,182 @@
       ],
       "last": 1,
       "action": "Collapse continuously from standing: the stalker doubles over, sinks onto the knees, falls forward onto the hands and slumps flat, finishing lying motionless face down with the hood at screen right and the boots at screen left, both sickles and the chain lying on the ground in front. No recovery, no floating equipment and no disappearing body."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "idle_0",
+        "attack_9",
+        "attack_10",
+        "attack_12",
+        "attack_13",
+        "attack_14"
+      ],
+      "guides": [
+        [
+          14,
+          1
+        ],
+        [
+          28,
+          2
+        ],
+        [
+          44,
+          3
+        ],
+        [
+          58,
+          4
+        ],
+        [
+          74,
+          5
+        ],
+        [
+          90,
+          0
+        ],
+        [
+          106,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE reaping slash toward screen right. The stalker raises the near sickle high above the shoulder as the knees load, then lunges and sweeps it forward and down to full reach at screen right while the other sickle draws back close to the torso, follows through low at knee height with the chain sagging between the handles, then draws back into the original low spread-arm guard. One slash only; both sickles stay in hand. Only the body moves; nothing else appears in the frame."
+    },
+    "defend_h3_v2": {
+      "clip": "defend",
+      "references": [
+        "idle_0",
+        "defend_21",
+        "defend_23"
+      ],
+      "guides": [
+        [
+          16,
+          1
+        ],
+        [
+          30,
+          2
+        ],
+        [
+          44,
+          2
+        ],
+        [
+          58,
+          2
+        ],
+        [
+          72,
+          2
+        ],
+        [
+          86,
+          2
+        ],
+        [
+          100,
+          2
+        ],
+        [
+          112,
+          2
+        ]
+      ],
+      "last": 2,
+      "action": "Bend both elbows and bring the two sickles upright in front of the torso, shoulder width apart with the crescent edges turned outward and the chain hanging below, then sink into a low brace behind the blades with the hood lowered and hold the guard on both planted boots. No attack and no return to the relaxed stance. Only the body moves; nothing else appears in the frame."
+    },
+    "cast_h3_v2": {
+      "clip": "cast",
+      "references": [
+        "idle_0",
+        "cast_26",
+        "cast_28",
+        "cast_29"
+      ],
+      "guides": [
+        [
+          16,
+          1
+        ],
+        [
+          32,
+          2
+        ],
+        [
+          46,
+          2
+        ],
+        [
+          60,
+          2
+        ],
+        [
+          74,
+          2
+        ],
+        [
+          90,
+          3
+        ],
+        [
+          106,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "A tolling signal. The stalker raises both arms high in a broad V with the two sickles above the shoulders and the chain drooping in a loop below the hands so the bells swing, tilts the hooded face upward, holds the pose briefly, then lowers both arms back into the original low guard. A physical gesture only: no spell, glow or aura. Only the body moves; nothing else appears in the frame."
+    },
+    "attack_h3_v3": {
+      "clip": "attack",
+      "references": [
+        "idle_0",
+        "attack_9",
+        "attack_10",
+        "attack_12",
+        "attack_13",
+        "attack_14",
+        "attack_15"
+      ],
+      "guides": [
+        [
+          14,
+          1
+        ],
+        [
+          28,
+          2
+        ],
+        [
+          42,
+          3
+        ],
+        [
+          56,
+          4
+        ],
+        [
+          70,
+          5
+        ],
+        [
+          84,
+          6
+        ],
+        [
+          98,
+          0
+        ],
+        [
+          112,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE reaping slash toward screen right. The stalker raises the near sickle high above the shoulder as the knees load, then lunges and sweeps it forward and down to full reach at screen right while the other sickle draws back close to the torso, follows through low at knee height with the chain sagging between the handles, then draws back into the original low spread-arm guard. One slash only; both sickles stay in hand. Only the body moves; nothing else appears in the frame."
     }
   }
 }
