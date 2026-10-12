@@ -169,6 +169,26 @@
       ],
       "last": 2,
       "action": "Collapse slowly from standing. The conjurer sags, leans on the staff and sinks onto the knees, stays kneeling a moment, then slumps forward onto the side and lies down, finishing motionless flat on the ground with the mitre at screen right and the boots at screen left, the staff lying beside the body. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    },
+    "death_h3_v2": {
+      "clip": "death",
+      "references": [
+        "idle_0",
+        "death_43",
+        "death_47"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
+      "last": 2,
+      "action": "Collapse slowly from standing. The conjurer sags, leans on the staff and sinks onto the knees, stays kneeling a moment, then slumps forward onto the side and lies down, finishing motionless flat on the ground with the mitre at screen right and the boots at screen left, the staff lying beside the body. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
     }
   }
 }
