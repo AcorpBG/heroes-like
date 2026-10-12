@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_gorefen_ripper",
+  "guides": [
+    {
+      "frame": "idle_00",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper/idle_v2.png",
+      "source_sha256": "82109128bfb84b4ed75599f326392306431afc3a92e547338edd9cadc25c2d11",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "e75f424a54167d223a435bfcb737d31c50b3522ed4e655f5936cbb08296423ba"
+    },
+    {
+      "frame": "attack_02",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper/attack_v1.png",
+      "source_sha256": "88ae77bd45ba20bde46196dfe034b88daecaa6ccb2d8dbf44cce98d4f2d85690",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "1943445d1b751c93c881f8a4929e845b741978fb0e02cd6de8394b6fb85d8d86"
+    },
+    {
+      "frame": "attack_04",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper/attack_v1.png",
+      "source_sha256": "88ae77bd45ba20bde46196dfe034b88daecaa6ccb2d8dbf44cce98d4f2d85690",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "a84db09d395ce8b61f613a9ff148cc1f55a20431f3bde951286dee191a77d663"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    427,
+    594
+  ],
+  "output_scale": 0.48,
+  "free_pixels_left_top_right_bottom": [
+    92,
+    45,
+    92,
+    46
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -37,6 +37,8 @@ SciPy and PyAV; the ComfyUI service is http://127.0.0.1:8189 unless --url says o
                                --frames 28-40,88 draws a close-up sheet of just those frames
   propose  UNIT_DIR [TAKE...]  a starting h3_selection.json from the motion in the matte
                                frames; named takes update just their clips
+  fit      UNIT_DIR            thin the action clips, holds first, until every pose packs
+                               into one 4096 px atlas as the publisher packs it
   build    UNIT_DIR            candidate handoff.json from h3_selection.json
   profile  UNIT_DIR            stage timings of every take
 
@@ -65,7 +67,7 @@ from scipy.ndimage import binary_erosion, label
 sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
-from integrate_fluid_creature_animation import source_pose  # noqa: E402
+from integrate_fluid_creature_animation import pack_compact, source_pose  # noqa: E402
 from rematte_blue_plate import clean_edges  # noqa: E402
 
 FRAMES, FPS = 124, 24
@@ -783,6 +785,68 @@ def propose(unit, names):
     print(f"WROTE {rel(path)}")
 
 
+FIT_FLOOR = {"attack": 14, "ranged": 14, "cast": 14, "hit": 8, "defend": 10, "death": 14}
+
+
+def fit(unit):
+    """Thin the selection until every pose packs into one 4096 px atlas, as the publisher packs
+    it. Each step drops the action frame whose neighbours differ least, so holds go first; the
+    idle and move loops, each clip's first, last and contact frames, gaps over 16 video frames
+    and the FIT_FLOOR counts stay. A dropped frame's own hold passes to the frame before it."""
+    path = unit.dir / "h3_selection.json"
+    selection = read(path)
+    w, h = unit.canvas
+    configs, poses, small = {}, {}, {}
+
+    def pose(take, i):
+        if (take, i) not in poses:
+            c = configs.setdefault(take, read(unit.dir / take / "config.json"))
+            poses[take, i] = source_pose({"name": f"{take}_{i:03}", "source": rel(unit.dir / take / "matte" / f"rgba_{i:03}.png"),
+                                          "rects": [[0, 0, w, h]], "anchor": c["anchor"], "scale": c["scale"]})
+        return poses[take, i]
+
+    def jump(take, a, b):
+        for i in (a, b):
+            if (take, i) not in small:
+                image = Image.open(unit.dir / take / "matte" / f"rgba_{i:03}.png")
+                small[take, i] = np.asarray(image.resize((image.width // 4, image.height // 4), Image.Resampling.BILINEAR)).astype(np.float32)
+        x, y = small[take, a], small[take, b]
+        return float(np.abs(x[..., :3] * x[..., 3:] - y[..., :3] * y[..., 3:]).mean() / 255 + np.abs(x[..., 3] - y[..., 3]).mean() / 2)
+
+    dropped = {}
+    while True:
+        try:
+            pack_compact([pose(s["take"], i) for spec in selection["clips"].values() for s in spec["segments"] for i in s["frames"]])
+            break
+        except ValueError:
+            pass
+        candidates = []
+        for clip, spec in selection["clips"].items():
+            frames = spec["segments"][0]["frames"]
+            if clip not in FIT_FLOOR or len(spec["segments"]) != 1 or len(frames) <= FIT_FLOOR[clip]:
+                continue
+            contact = frames[spec["contact_frame"]] if "contact_frame" in spec else None
+            candidates += [(jump(spec["segments"][0]["take"], frames[k - 1], frames[k + 1]), clip, k)
+                           for k in range(1, len(frames) - 1) if frames[k] != contact and frames[k + 1] - frames[k - 1] <= 16]
+        if not candidates:
+            raise SystemExit("the selection cannot thin further and still overflows one 4096 px atlas; it needs split pages")
+        _, clip, k = min(candidates)
+        spec = selection["clips"][clip]
+        frames = spec["segments"][0]["frames"]
+        contact = frames[spec["contact_frame"]] if "contact_frame" in spec else None
+        if "frame_durations_msec" in spec:
+            spec["frame_durations_msec"][k - 1] += spec["frame_durations_msec"].pop(k)
+        dropped.setdefault(clip, []).append(frames.pop(k))
+        if contact is not None:
+            spec["contact_frame"] = frames.index(contact)
+    for clip, frames in dropped.items():
+        print(f"{clip:7} dropped {len(frames):2} frames, video {sorted(frames)}; {len(selection['clips'][clip]['segments'][0]['frames'])} left")
+    print(f"FITS {sum(len(s['frames']) for spec in selection['clips'].values() for s in spec['segments'])} poses in one 4096 px atlas")
+    text = json.dumps(selection, indent=2)
+    text = re.sub(r"\[\s+([\d,\s]+?)\s+\]", lambda m: "[" + " ".join(m.group(1).split()) + "]", text)
+    path.write_text(text + "\n", encoding="utf-8", newline="\n")
+
+
 def build(unit):
     selection = read(unit.dir / "h3_selection.json")
     frames, clips, provenance, used = [], {}, {}, []
@@ -836,7 +900,7 @@ def profile(unit):
 def main():
     global URL
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("verb", choices=["survey", "prepare", "generate", "enqueue", "run", "matte", "sheets", "propose", "build", "profile"])
+    parser.add_argument("verb", choices=["survey", "prepare", "generate", "enqueue", "run", "matte", "sheets", "propose", "fit", "build", "profile"])
     parser.add_argument("unit_dir", type=Path, nargs="?")
     parser.add_argument("takes", nargs="*")
     parser.add_argument("--url", default=URL)
@@ -870,6 +934,8 @@ def main():
             sheets(unit, name, args.frames)
     elif args.verb == "propose":
         propose(unit, args.takes)
+    elif args.verb == "fit":
+        fit(unit)
     elif args.verb == "build":
         build(unit)
     else:

@@ -141,7 +141,8 @@ def pack_unit(entry, previous, output_dir):
     # This permits small reviewed deliveries without silently deleting actions.
     with Image.open(resolve(previous["pose_sheet"])) as sheet:
         for name, spec in previous["pose_clips"].items():
-            if name in entry["clips"]:
+            # A delivered death brings its own corpse (below); the old one would sit unused in the atlas.
+            if name in entry["clips"] or (name == "dead" and "death" in entry["clips"]):
                 continue
             indices = []
             for index in clip_indices(spec, previous["pose_columns"]):

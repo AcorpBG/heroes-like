@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_embercourt_sluicefire_lindworms_veteran",
+  "guides": [
+    {
+      "frame": "move_00",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/move_v2.png",
+      "source_sha256": "a805390ea34858330034f88ac5f4d645e73c1f6cfae2eeb8a175ddf2d2dfee59",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "ac580dd60c0ba484e8ca20a78fc857e3cdbe1c8ea9f0dc21af507baef948cdae"
+    },
+    {
+      "frame": "move_04",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/move_v2.png",
+      "source_sha256": "a805390ea34858330034f88ac5f4d645e73c1f6cfae2eeb8a175ddf2d2dfee59",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "bbf1366d3b8eefdcfba84052bcb541544708e1578ccf744c601a88ce2e5080a4"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    473,
+    527
+  ],
+  "output_scale": 0.5,
+  "free_pixels_left_top_right_bottom": [
+    59,
+    65,
+    59,
+    65
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

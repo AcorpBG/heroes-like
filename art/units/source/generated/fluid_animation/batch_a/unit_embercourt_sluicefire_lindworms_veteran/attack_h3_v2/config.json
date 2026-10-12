@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_embercourt_sluicefire_lindworms_veteran",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    473,
+    527
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026101859,
+  "references": [
+    "idle_00",
+    "attack_01",
+    "attack_04"
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      54,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original legless serpent dragon, the Floodpyre Lindworm, facing screen right in elevated three-quarter side view. Keep the long blue-black scaled body with a pale scaled belly, the spiky dorsal ridge and finned tail tip, the swept bronze horns and nose horn, the glowing orange throat vents down the front of the neck, the bronze barred collar around the neck and the bronze gridded flank harness joined to it by hanging chains. The neck rises in an S-curve from the coiled body and the tail trails off to screen left. NO legs, NO arms and NO wings. Preserve the horns, harness, chains, throat vents and the long serpent proportions. Make ONE striking bite toward screen right. The neck draws back and compresses into a tight S-coil, the jaws open wide, then the head lunges forward to full reach at screen right and the jaws snap shut, then at once the neck pulls back and coils up into the original upright pose. One bite only; no fire and no breath. The throat vents keep the same steady glow. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, horns, harness and tail tip within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, fire, breath, smoke, magic, particles, legs or wings; the throat vents keep only their small steady orange glow. The body bends smoothly along its whole length and the chains follow it; do not morph the harness.",
+  "protected_foreground_chroma": 28,
+  "edge_threshold": 25,
+  "palette_measurement": {
+    "bluest_opaque": 26.0,
+    "blue_minus_green_p999": 19.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

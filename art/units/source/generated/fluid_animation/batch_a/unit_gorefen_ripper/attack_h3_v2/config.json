@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_gorefen_ripper",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    427,
+    594
+  ],
+  "scale": 0.48,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026101907,
+  "references": [
+    "idle_00",
+    "attack_02",
+    "attack_04"
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      54,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original reptilian predator, the Gorefen Ripper, facing screen right in elevated three-quarter side view. Keep the dark charcoal crocodilian quadruped with a long toothy snout and cyan eyes, muscular forelimbs ending in long curved ivory talons, powerful hind legs, a burnt-orange fin crest running down the neck and back, the long spiked tail curled up behind it with orange fins, and the olive reed ropes with brass rings wrapped around the body and legs. Exactly four legs and one tail. Preserve the talons, crest, reed ropes, rings and the long low body proportions. Make ONE claw-rake toward screen right. The beast shifts its weight back onto the hind legs and raises the near claw beside its head, then drives its shoulder forward and swings the near forearm down and out to full reach at screen right with the talons spread, follows through low under the muzzle, then raises its chest and settles back into the original crouch. One strike only; the tail counterbalances. The talons stay sharp and solid through the swing, with no trail, streak or blur behind them. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full snout, talons, legs and tail within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, weapons, magic, glow, gore, slash effects, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the reed ropes or rings.",
+  "protected_foreground_chroma": 10,
+  "edge_threshold": 8,
+  "palette_measurement": {
+    "bluest_opaque": 8.0,
+    "blue_minus_green_p999": 2.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

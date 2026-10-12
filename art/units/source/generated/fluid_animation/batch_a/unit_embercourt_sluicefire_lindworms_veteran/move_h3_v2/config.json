@@ -1,0 +1,54 @@
+{
+  "unit_id": "unit_embercourt_sluicefire_lindworms_veteran",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    473,
+    527
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026101858,
+  "references": [
+    "move_00",
+    "move_04"
+  ],
+  "guides": [
+    [
+      31,
+      1
+    ],
+    [
+      62,
+      0
+    ],
+    [
+      93,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original legless serpent dragon, the Floodpyre Lindworm, facing screen right in elevated three-quarter side view. Keep the long blue-black scaled body with a pale scaled belly, the spiky dorsal ridge and finned tail tip, the swept bronze horns and nose horn, the glowing orange throat vents down the front of the neck, the bronze barred collar around the neck and the bronze gridded flank harness joined to it by hanging chains. The neck rises in an S-curve from the coiled body and the tail trails off to screen left. NO legs, NO arms and NO wings. Preserve the horns, harness, chains, throat vents and the long serpent proportions. Slither in place through two complete cycles. Smooth waves of lateral S-curves travel from the neck down the whole body to the tail, the belly coils push against the ground and the head bobs gently forward with each push while staying upright. The body stays centred for engine-driven travel. Finish in the original pose. The throat vents keep the same steady glow. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, horns, harness and tail tip within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, fire, breath, smoke, magic, particles, legs or wings; the throat vents keep only their small steady orange glow. The body bends smoothly along its whole length and the chains follow it; do not morph the harness.",
+  "protected_foreground_chroma": 25,
+  "edge_threshold": 19,
+  "palette_measurement": {
+    "bluest_opaque": 23.0,
+    "blue_minus_green_p999": 13.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

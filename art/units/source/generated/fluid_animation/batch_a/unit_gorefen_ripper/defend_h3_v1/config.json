@@ -1,0 +1,47 @@
+{
+  "unit_id": "unit_gorefen_ripper",
+  "clip": "defend",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    427,
+    594
+  ],
+  "scale": 0.48,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026101904,
+  "references": [
+    "idle_00",
+    "defend_01",
+    "defend_02"
+  ],
+  "guides": [
+    [
+      34,
+      1
+    ]
+  ],
+  "last": 2,
+  "prompt": "ONE original reptilian predator, the Gorefen Ripper, facing screen right in elevated three-quarter side view. Keep the dark charcoal crocodilian quadruped with a long toothy snout and cyan eyes, muscular forelimbs ending in long curved ivory talons, powerful hind legs, a burnt-orange fin crest running down the neck and back, the long spiked tail curled up behind it with orange fins, and the olive reed ropes with brass rings wrapped around the body and legs. Exactly four legs and one tail. Preserve the talons, crest, reed ropes, rings and the long low body proportions. Widen the forepaws, tuck the muzzle down and bring the near forearm across the chest, then sink into a deep braced crouch with the forearms guarding the head and hold the low guard on all four planted feet. No attack and no return to the relaxed crouch. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full snout, talons, legs and tail within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, weapons, magic, glow, gore, slash effects, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the reed ropes or rings.",
+  "protected_foreground_chroma": 12,
+  "edge_threshold": 10,
+  "palette_measurement": {
+    "bluest_opaque": 10.0,
+    "blue_minus_green_p999": 4.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

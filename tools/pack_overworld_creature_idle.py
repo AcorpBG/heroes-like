@@ -85,12 +85,15 @@ def extract(row):
     padding = 8
     crop = (left - padding, top - padding, right + padding, bottom + padding)
     fw, fh = crop[2] - crop[0], crop[3] - crop[1]
-    strip = Image.new('RGBA', (fw * len(frames), fh))
+    # One row past Godot's 16384 px texture limit fails to load (a wide 62-frame
+    # H3 idle reached 26412), so such a loop wraps into rows at most 4096 px wide.
+    columns = len(frames) if fw * len(frames) <= 16384 else max(1, 4096 // fw)
+    strip = Image.new('RGBA', (fw * columns, fh * -(-len(frames) // columns)))
     for i, frame in enumerate(frames):
-        strip.paste(frame.crop(crop), (i * fw, 0))
+        strip.paste(frame.crop(crop), (i % columns * fw, i // columns * fh))
     entry = {
         'path': 'res://art/overworld/runtime/creature_idle/' + row['id'] + '.png',
-        'frame_size': [fw, fh], 'frames': len(frames),
+        'frame_size': [fw, fh], **({'columns': columns} if columns < len(frames) else {}), 'frames': len(frames),
         'frame_msec': spec.get('frame_msec', 600),
         'static_frame': spec.get('static_frame', 0),
         'ground_anchor': [row.get('pose_anchor_x', width / 2) - crop[0], height - row.get('pose_ground_margin', 0) - crop[1]],
