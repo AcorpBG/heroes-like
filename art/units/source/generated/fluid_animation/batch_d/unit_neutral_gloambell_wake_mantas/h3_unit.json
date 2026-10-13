@@ -169,6 +169,93 @@
       ],
       "last": 2,
       "action": "Fall and lie still. The bells dim, the wings go limp and the manta sinks slowly down to the ground, lands with the wings drooping, stays a moment, then flattens out with both wings spread flat on the ground and the tendrils lying beneath, finishing motionless with the head at screen right. The same body throughout: no dissolving and no disappearing."
+    },
+    "idle_h3_v2": {
+      "clip": "idle",
+      "references": [
+        "idle_0",
+        "idle_1"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Hover in place in a gentle loop. The wings ripple and beat slowly up and down, the body bobs a little, the tail fins flick and the five bell tendrils sway beneath, then everything returns smoothly to the original hovering pose. The body stays centred in the air. No flying off and no attack. Only the body moves; nothing else appears in the frame. The five bell lanterns keep one steady soft glow that never flares or fades. The lighting never changes: the light on the manta and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "move_h3_v2": {
+      "clip": "move",
+      "references": [
+        "move_0",
+        "move_4"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Fly in place through two complete wingbeat cycles. The two wings sweep fully down and fold under the body, then rise back up high, while the body stays centred for engine-driven travel and the bell tendrils trail back and swing. Finish in the original wing phase. The five bell lanterns keep one steady soft glow that never flares or fades. The lighting never changes: the light on the manta and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "idle_0",
+        "attack_2",
+        "attack_4"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE diving strike toward screen right. The manta raises both wings high and draws back, then sweeps the wings down and darts forward so the beaked head stabs to full reach at screen right, then glides back and settles into the original hovering pose. One strike only; no effect at contact. The manta keeps its full shape the whole time: both wings stay spread and visible, the five bell tendrils keep hanging beneath, and it never rolls sideways or turns into a sleek fish shape. The five bell lanterns keep one steady soft glow that never flares or fades. The lighting never changes: the light on the manta and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "hit_h3_v2": {
+      "clip": "hit",
+      "references": [
+        "hit_1",
+        "idle_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "Start rocked back in a flinch, then recover completely. The manta curls up tight, the wings snapping down around the body and the tendrils bunching, then it unfurls the wings and returns to the same hovering pose. Only the body moves; nothing else appears in the frame. The five bell lanterns keep one steady soft glow that never flares or fades. The lighting never changes: the light on the manta and the background keeps exactly the same brightness and colour in every frame.",
+      "pad": [
+        0,
+        0,
+        0,
+        128
+      ]
     }
   }
 }

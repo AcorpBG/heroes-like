@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_neutral_gloambell_wake_mantas",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    538,
+    580
+  ],
+  "scale": 0.33,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026105102,
+  "references": [
+    "idle_0",
+    "attack_2",
+    "attack_4"
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      54,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original flying manta creature, the Gloambell Wake Manta, facing screen right in elevated three-quarter side view, hovering in the air. Keep the two large upswept wing fins in pale cream with deep navy-blue patterning and scalloped edges, the smooth white beaked head, the ribbed pale cream belly, the forked tail fins, and the FIVE slender dangling tendrils that each end in ONE small softly glowing white bell lantern. No rider and no extra wings. Preserve the two wings, the five bell tendrils, the beaked head and the graceful proportions. Make ONE diving strike toward screen right. The manta raises both wings high and draws back, then sweeps the wings down and darts forward so the beaked head stabs to full reach at screen right, then glides back and settles into the original hovering pose. One strike only; no effect at contact. Locked orthographic camera, fixed scale and centred body. Keep both wing tips, the tail fins and every bell within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, water, light bursts, beams, rings, sparks, motion trails, particles or extra limbs; glow stays only inside the five small bells. The wings bend smoothly; the body never morphs.",
+  "protected_foreground_chroma": 83,
+  "edge_threshold": 68,
+  "palette_measurement": {
+    "bluest_opaque": 81.0,
+    "blue_minus_green_p999": 61.086000000010245,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_neutral_gloambell_wake_mantas",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/idle_v1_frame_0.png",
+      "source_sha256": "48b19a8b8aa6ca5a1e5648c5ae1ec9113f16c757fe44b132c8300fbf93ea047b",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "19d6e256527f04be33b8838c8b9597a6f8be59915d6d16506ca6cf7bc03e3741"
+    },
+    {
+      "frame": "ranged_2",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/ranged_v2_frame_2.png",
+      "source_sha256": "e0173a6b9380e85c40de093cb8efc1967e71288a54bbed6b9c8a901fe188ee3a",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "d4e3b9c30aa793876d5ba96f462b0b9c91b263db086daa9d39d0fdcd67ca2008"
+    },
+    {
+      "frame": "ranged_6",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/ranged_v2_frame_6.png",
+      "source_sha256": "61d687f85c2bc38ee6403c14cb0208c7d6cee4f3fe7fc46de3ecd00e49066afb",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "925a7ee2f6ad9af5aec49b2251a96c2d7d5aa2ead50aaeee34a9cfb3610f2ea1"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    538,
+    580
+  ],
+  "output_scale": 0.33,
+  "free_pixels_left_top_right_bottom": [
+    142,
+    59,
+    143,
+    59
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_neutral_gloambell_wake_mantas",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/idle_v1_frame_0.png",
+      "source_sha256": "48b19a8b8aa6ca5a1e5648c5ae1ec9113f16c757fe44b132c8300fbf93ea047b",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "19d6e256527f04be33b8838c8b9597a6f8be59915d6d16506ca6cf7bc03e3741"
+    },
+    {
+      "frame": "cast_3",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/cast_v1_frame_3.png",
+      "source_sha256": "2f8e6f5583a91b75523aba79e1f81118681683358ada6ad8b41e35e048bd3875",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "6339e218ab37c6a589083ccc90e6f0f4e374f4d5920df088bdda34f121e3b24d"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    538,
+    580
+  ],
+  "output_scale": 0.33,
+  "free_pixels_left_top_right_bottom": [
+    142,
+    59,
+    143,
+    59
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_neutral_gloambell_wake_mantas",
+  "clip": "ranged",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    538,
+    580
+  ],
+  "scale": 0.33,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026105103,
+  "references": [
+    "idle_0",
+    "ranged_2",
+    "ranged_6"
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      56,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original flying manta creature, the Gloambell Wake Manta, facing screen right in elevated three-quarter side view, hovering in the air. Keep the two large upswept wing fins in pale cream with deep navy-blue patterning and scalloped edges, the smooth white beaked head, the ribbed pale cream belly, the forked tail fins, and the FIVE slender dangling tendrils that each end in ONE small softly glowing white bell lantern. No rider and no extra wings. Preserve the two wings, the five bell tendrils, the beaked head and the graceful proportions. Make ONE bell volley toward screen right. The manta swings all five bell tendrils forward together toward screen right as the bells glow brighter inside, holds them there a moment, then the tendrils snap back and the bells dim as it settles into the original hovering pose. Nothing is released from the bells: no light bursts, beams, rings or projectiles. Locked orthographic camera, fixed scale and centred body. Keep both wing tips, the tail fins and every bell within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, water, light bursts, beams, rings, sparks, motion trails, particles or extra limbs; glow stays only inside the five small bells. The wings bend smoothly; the body never morphs.",
+  "protected_foreground_chroma": 87,
+  "edge_threshold": 74,
+  "palette_measurement": {
+    "bluest_opaque": 85.0,
+    "blue_minus_green_p999": 68.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}
