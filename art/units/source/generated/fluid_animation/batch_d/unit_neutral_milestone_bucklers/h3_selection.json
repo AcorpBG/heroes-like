@@ -1,0 +1,46 @@
+{
+  "clips": {
+    "idle": {
+      "segments": [
+        {
+          "take": "idle_h3_v1",
+          "frames": [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108, 110, 112, 114, 116, 118, 120, 122]
+        }
+      ],
+      "frame_msec": 60
+    },
+    "attack": {
+      "segments": [
+        {
+          "take": "attack_h3_v2",
+          "frames": [13, 16, 18, 26, 35, 36, 46, 48, 55, 64, 66, 75, 76, 83, 90, 92, 93, 94, 97]
+        }
+      ],
+      "frame_msec": 42,
+      "contact_frame": 6
+    },
+    "hit": {
+      "segments": [
+        {
+          "take": "hit_h3_v2",
+          "frames": [4, 6, 8, 11, 17, 19, 30, 32, 44, 51, 58, 65, 73]
+        }
+      ],
+      "frame_msec": 35
+    },
+    "defend": {
+      "segments": [
+        {
+          "take": "defend_h3_v2",
+          "frames": [10, 13, 22, 24, 25, 26, 28, 34, 44, 46]
+        }
+      ],
+      "frame_msec": 42
+    }
+  },
+  "preserved_accepted_clips": [],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Reviewed on H3 video. Idle v1 is clean and very still. Attack v1 flashed at the spear tip and lost its return to plate pulses, hit v1 and defend v1 strobed. Their retakes kept every frame: attack v2 is guided through attack_00, 03, 01, 06 and 07, hit v2 through hit_00 to hit_03, defend v2 through defend_00 to defend_02, all with steady light. Cast, death and walk keep their published H3 clips."
+  }
+}

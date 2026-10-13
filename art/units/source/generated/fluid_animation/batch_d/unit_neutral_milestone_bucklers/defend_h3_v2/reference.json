@@ -1,0 +1,49 @@
+{
+  "unit_id": "unit_neutral_milestone_bucklers",
+  "guides": [
+    {
+      "frame": "hit_03",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/reactions_v1.png",
+      "source_sha256": "f30540dd641016fc13f80c30b084dfde0864bd9513c5bf7eb7a44d71f3553b8c",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "d733c0aa5948eb7646be1c42ac574dcbdbc778861b1f76032105d148ff3d4941"
+    },
+    {
+      "frame": "defend_00",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/reactions_v1.png",
+      "source_sha256": "f30540dd641016fc13f80c30b084dfde0864bd9513c5bf7eb7a44d71f3553b8c",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "d431f14e319b8e82257adfed6d01aabd4a6ce78398f05c6612368f49751a145b"
+    },
+    {
+      "frame": "defend_01",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/reactions_v1.png",
+      "source_sha256": "f30540dd641016fc13f80c30b084dfde0864bd9513c5bf7eb7a44d71f3553b8c",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "868b68009424a514bfde1f41a8db534a19629257796749a2bb4ce206c84f37f9"
+    },
+    {
+      "frame": "defend_02",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/reactions_v1.png",
+      "source_sha256": "f30540dd641016fc13f80c30b084dfde0864bd9513c5bf7eb7a44d71f3553b8c",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "a094e7d603a3164cbc7072818452700c4fad8f3d4c6822e225a5706dcae87869"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    490,
+    551
+  ],
+  "output_scale": 0.46,
+  "free_pixels_left_top_right_bottom": [
+    161,
+    71,
+    153,
+    69
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

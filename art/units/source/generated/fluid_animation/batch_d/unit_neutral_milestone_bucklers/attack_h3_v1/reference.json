@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_neutral_milestone_bucklers",
+  "guides": [
+    {
+      "frame": "hit_03",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/reactions_v1.png",
+      "source_sha256": "f30540dd641016fc13f80c30b084dfde0864bd9513c5bf7eb7a44d71f3553b8c",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "d733c0aa5948eb7646be1c42ac574dcbdbc778861b1f76032105d148ff3d4941"
+    },
+    {
+      "frame": "attack_00",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_v3.png",
+      "source_sha256": "7cb6967f7e35c035d54d83d3e1bfed3e24f2c19005f63273f5c62c2dc84a5523",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "18c5c6ee58f2cc3f11fce0061a6c4268042a4e9fb30d9ed9cdaeb8678e435949"
+    },
+    {
+      "frame": "attack_01",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_v3.png",
+      "source_sha256": "7cb6967f7e35c035d54d83d3e1bfed3e24f2c19005f63273f5c62c2dc84a5523",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "22df5dd58f0f435fa46f6974db6378bf701281139d887c9fe2342f3e3e2b7b24"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    490,
+    551
+  ],
+  "output_scale": 0.46,
+  "free_pixels_left_top_right_bottom": [
+    161,
+    78,
+    160,
+    78
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_neutral_milestone_bucklers",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    490,
+    551
+  ],
+  "scale": 0.46,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026105801,
+  "references": [
+    "hit_03",
+    "attack_00",
+    "attack_01"
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      54,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original bearded infantry soldier, the Milestone Buckler, facing screen right in elevated three-quarter view. Keep his short dark brown hair and beard, the cream scarf, the rust-red quilted tunic, the steel shoulder plates, the navy trousers, the brown gloves and boots and the leather belt pouches. Exactly two arms, two hands and two legs. The screen-RIGHT forearm carries ONE rigid rectangular navy wooden shield with a brass rim, a vertical brass stripe and a round boss; the screen-LEFT hand grips ONE short wooden spear with one steel leaf-shaped head, held low and pointing diagonally down toward screen left. Preserve the shield, the spear and the proportions. Make ONE spear thrust toward screen right. He raises the spear level to waist height and draws it back as the knees bend, then lunges forward and drives it straight out beside the shield to full reach at screen right, draws back and lowers the spear to its low diagonal ready position in the original stance. One thrust only; no sparks or effect at contact. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, the whole spear with its tip, the whole shield, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the spear stays rigid at its original length and the shield never morphs.",
+  "protected_foreground_chroma": 28,
+  "edge_threshold": 25,
+  "palette_measurement": {
+    "bluest_opaque": 26.0,
+    "blue_minus_green_p999": 19.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

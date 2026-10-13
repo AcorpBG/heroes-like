@@ -73,6 +73,184 @@
       ],
       "last": 2,
       "action": "Crouch low behind the shield, pulling it in front of the body with the head ducked behind its rim and the spear held low, then hold the braced guard on both planted boots. No attack and no return to the relaxed stance."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "hit_03",
+        "attack_00",
+        "attack_03",
+        "attack_01",
+        "attack_06",
+        "attack_07"
+      ],
+      "guides": [
+        [
+          18,
+          1
+        ],
+        [
+          36,
+          2
+        ],
+        [
+          48,
+          3
+        ],
+        [
+          66,
+          4
+        ],
+        [
+          86,
+          5
+        ],
+        [
+          104,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE spear thrust toward screen right. He raises the spear level to waist height and draws it back as the knees bend, then lunges forward and drives it straight out beside the shield to full reach at screen right, draws back and lowers the spear to its low diagonal ready position in the original stance. One thrust only; no sparks or effect at contact. No flash, spark or glow at the spear tip. The lighting never changes: the light on him and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "attack_h3_v3": {
+      "clip": "attack",
+      "references": [
+        "hit_03",
+        "attack_00",
+        "attack_03",
+        "attack_01",
+        "attack_06",
+        "attack_07"
+      ],
+      "guides": [
+        [
+          18,
+          1
+        ],
+        [
+          36,
+          2
+        ],
+        [
+          48,
+          3
+        ],
+        [
+          66,
+          4
+        ],
+        [
+          86,
+          5
+        ],
+        [
+          104,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE spear thrust toward screen right. He raises the spear level to waist height and draws it back as the knees bend, then lunges forward and drives it straight out beside the shield to full reach at screen right, draws back and lowers the spear to its low diagonal ready position in the original stance. One thrust only; no sparks or effect at contact. No flash, spark or glow at the spear tip. The lighting never changes: the light on him and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "hit_h3_v2": {
+      "clip": "hit",
+      "references": [
+        "hit_00",
+        "hit_03",
+        "hit_01",
+        "hit_02"
+      ],
+      "guides": [
+        [
+          14,
+          2
+        ],
+        [
+          28,
+          3
+        ],
+        [
+          44,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "He starts rocked back in a flinch and recovers from it. His head and shoulders are thrown back, the shield swings out and the knees flex while both hands keep hold of the spear and the shield, then he steadies on both boots and returns to the same stance. Only the body moves; nothing else appears in the frame. The lighting never changes: the light on him and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "hit_h3_v3": {
+      "clip": "hit",
+      "references": [
+        "hit_00",
+        "hit_03",
+        "hit_01",
+        "hit_02"
+      ],
+      "guides": [
+        [
+          14,
+          2
+        ],
+        [
+          28,
+          3
+        ],
+        [
+          44,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "He starts rocked back in a flinch and recovers from it. His head and shoulders are thrown back, the shield swings out and the knees flex while both hands keep hold of the spear and the shield, then he steadies on both boots and returns to the same stance. Only the body moves; nothing else appears in the frame. The lighting never changes: the light on him and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "defend_h3_v2": {
+      "clip": "defend",
+      "references": [
+        "hit_03",
+        "defend_00",
+        "defend_01",
+        "defend_02"
+      ],
+      "guides": [
+        [
+          14,
+          1
+        ],
+        [
+          30,
+          2
+        ],
+        [
+          46,
+          3
+        ]
+      ],
+      "last": 3,
+      "action": "Crouch low behind the shield, pulling it in front of the body with the head ducked behind its rim and the spear held low, then hold the braced guard on both planted boots. No attack and no return to the relaxed stance. The lighting never changes: the light on him and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "defend_h3_v3": {
+      "clip": "defend",
+      "references": [
+        "hit_03",
+        "defend_00",
+        "defend_01",
+        "defend_02"
+      ],
+      "guides": [
+        [
+          14,
+          1
+        ],
+        [
+          30,
+          2
+        ],
+        [
+          46,
+          3
+        ]
+      ],
+      "last": 3,
+      "action": "Crouch low behind the shield, pulling it in front of the body with the head ducked behind its rim and the spear held low, then hold the braced guard on both planted boots. No attack and no return to the relaxed stance. The lighting never changes: the light on him and the background keeps exactly the same brightness and colour in every frame."
     }
   }
 }

@@ -7,310 +7,6 @@
       "source_facing": "right",
       "frames": [
         {
-          "name": "attack_00",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_v3.png",
-          "rects": [
-            [
-              0,
-              0,
-              512,
-              385
-            ]
-          ],
-          "anchor": [
-            260,
-            376
-          ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "attack_02",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_v3.png",
-          "rects": [
-            [
-              0,
-              385,
-              512,
-              775
-            ]
-          ],
-          "anchor": [
-            260,
-            760
-          ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "attack_04",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_v3.png",
-          "rects": [
-            [
-              0,
-              775,
-              512,
-              1156
-            ]
-          ],
-          "anchor": [
-            260,
-            1142
-          ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "attack_03",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_v3.png",
-          "rects": [
-            [
-              512,
-              385,
-              1024,
-              775
-            ]
-          ],
-          "anchor": [
-            772,
-            760
-          ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "attack_01",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_v3.png",
-          "rects": [
-            [
-              512,
-              0,
-              1024,
-              385
-            ]
-          ],
-          "anchor": [
-            772,
-            376
-          ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "attack_06",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_v3.png",
-          "rects": [
-            [
-              0,
-              1156,
-              512,
-              1536
-            ]
-          ],
-          "anchor": [
-            260,
-            1522
-          ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "attack_05",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_v3.png",
-          "rects": [
-            [
-              512,
-              775,
-              1024,
-              1156
-            ]
-          ],
-          "anchor": [
-            772,
-            1142
-          ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "attack_07",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_v3.png",
-          "rects": [
-            [
-              512,
-              1156,
-              1024,
-              1536
-            ]
-          ],
-          "anchor": [
-            772,
-            1522
-          ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "hit_00",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/reactions_v1.png",
-          "rects": [
-            [
-              0,
-              748,
-              512,
-              1123
-            ]
-          ],
-          "anchor": [
-            277,
-            1112
-          ],
-          "scale": 0.58,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "hit_01",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/reactions_v1.png",
-          "rects": [
-            [
-              512,
-              748,
-              1024,
-              1123
-            ]
-          ],
-          "anchor": [
-            789,
-            1112
-          ],
-          "scale": 0.58,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "hit_02",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/reactions_v1.png",
-          "rects": [
-            [
-              0,
-              1123,
-              512,
-              1536
-            ]
-          ],
-          "anchor": [
-            277,
-            1504
-          ],
-          "scale": 0.58,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "hit_03",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/reactions_v1.png",
-          "rects": [
-            [
-              512,
-              1123,
-              1024,
-              1536
-            ]
-          ],
-          "anchor": [
-            789,
-            1504
-          ],
-          "scale": 0.58,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "defend_00",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/reactions_v1.png",
-          "rects": [
-            [
-              0,
-              0,
-              512,
-              388
-            ]
-          ],
-          "anchor": [
-            277,
-            378
-          ],
-          "scale": 0.58,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "defend_01",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/reactions_v1.png",
-          "rects": [
-            [
-              512,
-              0,
-              1024,
-              388
-            ]
-          ],
-          "anchor": [
-            789,
-            378
-          ],
-          "scale": 0.58,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "defend_02",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/reactions_v1.png",
-          "rects": [
-            [
-              0,
-              388,
-              512,
-              748
-            ]
-          ],
-          "anchor": [
-            277,
-            737
-          ],
-          "scale": 0.58,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "defend_03",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/reactions_v1.png",
-          "rects": [
-            [
-              512,
-              388,
-              1024,
-              748
-            ]
-          ],
-          "anchor": [
-            789,
-            737
-          ],
-          "scale": 0.58,
-          "alpha_noise_cutoff": 8
-        },
-        {
           "name": "cast_h3_016",
           "clip": "cast",
           "source": "art/units/source/generated/video_trials/milestone_h3/cast_v2/matte/rgba_016.png",
@@ -2409,11 +2105,2194 @@
           "alpha_noise_cutoff": 0,
           "video_frame": 86,
           "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "idle_h3_v1_000",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "idle_h3_v1_002",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_002.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 2,
+          "video_time_seconds": 0.0833
+        },
+        {
+          "name": "idle_h3_v1_004",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.1667
+        },
+        {
+          "name": "idle_h3_v1_006",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "idle_h3_v1_008",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333
+        },
+        {
+          "name": "idle_h3_v1_010",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4167
+        },
+        {
+          "name": "idle_h3_v1_012",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "idle_h3_v1_014",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833
+        },
+        {
+          "name": "idle_h3_v1_016",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6667
+        },
+        {
+          "name": "idle_h3_v1_018",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "idle_h3_v1_020",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333
+        },
+        {
+          "name": "idle_h3_v1_022",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9167
+        },
+        {
+          "name": "idle_h3_v1_024",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "idle_h3_v1_026",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833
+        },
+        {
+          "name": "idle_h3_v1_028",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1667
+        },
+        {
+          "name": "idle_h3_v1_030",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "idle_h3_v1_032",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333
+        },
+        {
+          "name": "idle_h3_v1_034",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4167
+        },
+        {
+          "name": "idle_h3_v1_036",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "idle_h3_v1_038",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833
+        },
+        {
+          "name": "idle_h3_v1_040",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6667
+        },
+        {
+          "name": "idle_h3_v1_042",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "idle_h3_v1_044",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333
+        },
+        {
+          "name": "idle_h3_v1_046",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9167
+        },
+        {
+          "name": "idle_h3_v1_048",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "idle_h3_v1_050",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833
+        },
+        {
+          "name": "idle_h3_v1_052",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1667
+        },
+        {
+          "name": "idle_h3_v1_054",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "idle_h3_v1_056",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333
+        },
+        {
+          "name": "idle_h3_v1_058",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4167
+        },
+        {
+          "name": "idle_h3_v1_060",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "idle_h3_v1_062",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833
+        },
+        {
+          "name": "idle_h3_v1_064",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6667
+        },
+        {
+          "name": "idle_h3_v1_066",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "idle_h3_v1_068",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333
+        },
+        {
+          "name": "idle_h3_v1_070",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9167
+        },
+        {
+          "name": "idle_h3_v1_072",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "idle_h3_v1_074",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833
+        },
+        {
+          "name": "idle_h3_v1_076",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1667
+        },
+        {
+          "name": "idle_h3_v1_078",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "idle_h3_v1_080",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333
+        },
+        {
+          "name": "idle_h3_v1_082",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4167
+        },
+        {
+          "name": "idle_h3_v1_084",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "idle_h3_v1_086",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833
+        },
+        {
+          "name": "idle_h3_v1_088",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6667
+        },
+        {
+          "name": "idle_h3_v1_090",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "idle_h3_v1_092",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333
+        },
+        {
+          "name": "idle_h3_v1_094",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9167
+        },
+        {
+          "name": "idle_h3_v1_096",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "idle_h3_v1_098",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.0833
+        },
+        {
+          "name": "idle_h3_v1_100",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.1667
+        },
+        {
+          "name": "idle_h3_v1_102",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "idle_h3_v1_104",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.3333
+        },
+        {
+          "name": "idle_h3_v1_106",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_106.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 106,
+          "video_time_seconds": 4.4167
+        },
+        {
+          "name": "idle_h3_v1_108",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "idle_h3_v1_110",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_110.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 110,
+          "video_time_seconds": 4.5833
+        },
+        {
+          "name": "idle_h3_v1_112",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_112.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.6667
+        },
+        {
+          "name": "idle_h3_v1_114",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_114.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 114,
+          "video_time_seconds": 4.75
+        },
+        {
+          "name": "idle_h3_v1_116",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_116.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 116,
+          "video_time_seconds": 4.8333
+        },
+        {
+          "name": "idle_h3_v1_118",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_118.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 118,
+          "video_time_seconds": 4.9167
+        },
+        {
+          "name": "idle_h3_v1_120",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_120.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 120,
+          "video_time_seconds": 5.0
+        },
+        {
+          "name": "idle_h3_v1_122",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_122.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 122,
+          "video_time_seconds": 5.0833
+        },
+        {
+          "name": "attack_h3_v2_013",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5417
+        },
+        {
+          "name": "attack_h3_v2_016",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6667
+        },
+        {
+          "name": "attack_h3_v2_018",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "attack_h3_v2_026",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833
+        },
+        {
+          "name": "attack_h3_v2_035",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583
+        },
+        {
+          "name": "attack_h3_v2_036",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "attack_h3_v2_046",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9167
+        },
+        {
+          "name": "attack_h3_v2_048",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "attack_h3_v2_055",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_055.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.2917
+        },
+        {
+          "name": "attack_h3_v2_064",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6667
+        },
+        {
+          "name": "attack_h3_v2_066",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "attack_h3_v2_075",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "attack_h3_v2_076",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1667
+        },
+        {
+          "name": "attack_h3_v2_083",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_083.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 83,
+          "video_time_seconds": 3.4583
+        },
+        {
+          "name": "attack_h3_v2_090",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "attack_h3_v2_092",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333
+        },
+        {
+          "name": "attack_h3_v2_093",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_093.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 93,
+          "video_time_seconds": 3.875
+        },
+        {
+          "name": "attack_h3_v2_094",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9167
+        },
+        {
+          "name": "attack_h3_v2_097",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_097.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 97,
+          "video_time_seconds": 4.0417
+        },
+        {
+          "name": "hit_h3_v2_004",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.1667
+        },
+        {
+          "name": "hit_h3_v2_006",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "hit_h3_v2_008",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333
+        },
+        {
+          "name": "hit_h3_v2_011",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/matte/rgba_011.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 11,
+          "video_time_seconds": 0.4583
+        },
+        {
+          "name": "hit_h3_v2_017",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083
+        },
+        {
+          "name": "hit_h3_v2_019",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7917
+        },
+        {
+          "name": "hit_h3_v2_030",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "hit_h3_v2_032",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333
+        },
+        {
+          "name": "hit_h3_v2_044",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333
+        },
+        {
+          "name": "hit_h3_v2_051",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "hit_h3_v2_058",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4167
+        },
+        {
+          "name": "hit_h3_v2_065",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/matte/rgba_065.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 65,
+          "video_time_seconds": 2.7083
+        },
+        {
+          "name": "hit_h3_v2_073",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/matte/rgba_073.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 73,
+          "video_time_seconds": 3.0417
+        },
+        {
+          "name": "defend_h3_v2_010",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4167
+        },
+        {
+          "name": "defend_h3_v2_013",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5417
+        },
+        {
+          "name": "defend_h3_v2_022",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9167
+        },
+        {
+          "name": "defend_h3_v2_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "defend_h3_v2_025",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0417
+        },
+        {
+          "name": "defend_h3_v2_026",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833
+        },
+        {
+          "name": "defend_h3_v2_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1667
+        },
+        {
+          "name": "defend_h3_v2_034",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4167
+        },
+        {
+          "name": "defend_h3_v2_044",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333
+        },
+        {
+          "name": "defend_h3_v2_046",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            490,
+            551
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9167
         }
       ],
-      "alpha_noise_cutoff": 0,
       "clips": {
-        "attack": {
+        "cast": {
           "indices": [
             0,
             1,
@@ -2422,37 +4301,15 @@
             4,
             5,
             6,
-            7
-          ],
-          "loop": false,
-          "frame_msec": 100,
-          "static_frame": 0,
-          "contact_frame": 4
-        },
-        "hit": {
-          "indices": [
+            7,
             8,
             9,
             10,
-            11
-          ],
-          "loop": false,
-          "frame_msec": 100,
-          "static_frame": 0
-        },
-        "defend": {
-          "indices": [
+            11,
             12,
             13,
             14,
-            15
-          ],
-          "loop": false,
-          "frame_msec": 100,
-          "static_frame": 0
-        },
-        "cast": {
-          "indices": [
+            15,
             16,
             17,
             18,
@@ -2472,7 +4329,15 @@
             32,
             33,
             34,
-            35,
+            35
+          ],
+          "frame_msec": 50,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 13
+        },
+        "move": {
+          "indices": [
             36,
             37,
             38,
@@ -2488,19 +4353,18 @@
             48,
             49,
             50,
-            51
-          ],
-          "frame_msec": 50,
-          "loop": false,
-          "static_frame": 0,
-          "contact_frame": 13
-        },
-        "move": {
-          "indices": [
+            51,
             52,
             53,
             54,
-            55,
+            55
+          ],
+          "frame_msec": 60,
+          "loop": true,
+          "static_frame": 0
+        },
+        "death": {
+          "indices": [
             56,
             57,
             58,
@@ -2516,14 +4380,7 @@
             68,
             69,
             70,
-            71
-          ],
-          "frame_msec": 60,
-          "loop": true,
-          "static_frame": 0
-        },
-        "death": {
-          "indices": [
+            71,
             72,
             73,
             74,
@@ -2551,7 +4408,14 @@
             96,
             97,
             98,
-            99,
+            99
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 0
+        },
+        "idle": {
+          "indices": [
             100,
             101,
             102,
@@ -2567,47 +4431,309 @@
             112,
             113,
             114,
-            115
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156,
+            157,
+            158,
+            159,
+            160,
+            161
           ],
-          "frame_msec": 45,
+          "frame_msec": 60,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            162,
+            163,
+            164,
+            165,
+            166,
+            167,
+            168,
+            169,
+            170,
+            171,
+            172,
+            173,
+            174,
+            175,
+            176,
+            177,
+            178,
+            179,
+            180
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 6
+        },
+        "hit": {
+          "indices": [
+            181,
+            182,
+            183,
+            184,
+            185,
+            186,
+            187,
+            188,
+            189,
+            190,
+            191,
+            192,
+            193
+          ],
+          "frame_msec": 35,
           "loop": false,
           "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            194,
+            195,
+            196,
+            197,
+            198,
+            199,
+            200,
+            201,
+            202,
+            203
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 9
         }
       },
+      "alpha_noise_cutoff": 0,
       "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
       "provenance": {
-        "original_lossless.mkv": {
-          "path": "art/units/source/generated/video_trials/milestone_h3/death_v1/original_lossless.mkv",
-          "sha256": "5bbf2bc2aff80a462de4c1cf27664dd7d9a20ea846d171cedede7c59b4cc36c9"
+        "idle_h3_v1/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/original_lossless.mkv",
+          "sha256": "5790e9c932da0da6d6251dfbdb47ef4131f47a092df385864480759d89961a82"
         },
-        "original.json": {
-          "path": "art/units/source/generated/video_trials/milestone_h3/death_v1/original.json",
-          "sha256": "efd535b9c9ee01a75d9a7cf1d908d00c22d398add02ddb8db456300b5d97f027"
+        "idle_h3_v1/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/original.json",
+          "sha256": "ffac208e251d6ba886b821356dc10859b844474f3e890ad52d8a51cb0e8afc28"
         },
-        "workflow_api.json": {
-          "path": "art/units/source/generated/video_trials/milestone_h3/death_v1/workflow_api.json",
-          "sha256": "f27eb5d19cf91efb25cae1abb9c3e139e3f9a43907efd84b38f7a50199e28efd"
+        "idle_h3_v1/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/original.latent",
+          "sha256": "16ac0354a31aa95a915727befcc6634ecec455412a70c7a74e89072a9db54a7e"
         },
-        "prompt.txt": {
-          "path": "art/units/source/generated/video_trials/milestone_h3/death_v1/prompt.txt",
-          "sha256": "376fd1b2419ffef295128d26a24c86bc620ef45548950017a332c8f7e9c4cc71"
+        "idle_h3_v1/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/sampling_workflow_api.json",
+          "sha256": "532ad5df7fc61847f5199f92b5ec8373e4984b48c7e73a3ce0468a182ea90734"
         },
-        "reference.json": {
-          "path": "art/units/source/generated/video_trials/milestone_h3/death_v1/reference.json",
-          "sha256": "8b4a8a7bfa4d02930a05c6e24cbce56053674c71ef4fca4cc5d841f9bb2ed7cf"
+        "idle_h3_v1/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/decode_workflow_api.json",
+          "sha256": "98bbdececaa760c140dfb50a4ed607a4647da6e941bd0c20e7b046d407b90aa1"
         },
-        "matte.json": {
-          "path": "art/units/source/generated/video_trials/milestone_h3/death_v1/matte.json",
-          "sha256": "32a83878c27fc6eb9b7d2c39246219b453c7b36fdf13da715d8e48fad3255ac4"
+        "idle_h3_v1/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/sampling_history.json",
+          "sha256": "02077b9194a5d969f39d091dc892e2f6f812fafeb33dade3031faa412d67f1e3"
+        },
+        "idle_h3_v1/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/generation_history.json",
+          "sha256": "bd2fe5a6a3f0404ab4d1081431db2a32da8635a4056cfd022a7fd03d26f1d4b3"
+        },
+        "idle_h3_v1/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/prompt.txt",
+          "sha256": "8545b1d799dbe3a1b9bd2517a6644bdb60d6df085ad970b094e46dfe6c14363d"
+        },
+        "idle_h3_v1/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/reference.json",
+          "sha256": "287c3c64e6e93c640c0b2ecc65ac2a64096a1a92d0afad1d7bd57b019c2fb3bf"
+        },
+        "idle_h3_v1/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/config.json",
+          "sha256": "45638d5262d4f8bdfaef2234d5347b4dd43785dca07b7d6b40bb0bfbbdc9492c"
+        },
+        "idle_h3_v1/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte.json",
+          "sha256": "424c54f397551edfd9282aa6941c06cbe54e7e0aac40700f83abb44efbcc1b92"
+        },
+        "attack_h3_v2/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/original_lossless.mkv",
+          "sha256": "fc16bf83c2f47c7d1c22e09db41c161709421317e3b8cc01a53f22735ac012ab"
+        },
+        "attack_h3_v2/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/original.json",
+          "sha256": "7efcd0f11eeb314c6277e3098687bd0dd04a3c2967d1a7db9cc6723401d34279"
+        },
+        "attack_h3_v2/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/original.latent",
+          "sha256": "b18d831d1285dc93966c891ad21f511139c72e14ff4d2bfa6389a8bb0a6851e4"
+        },
+        "attack_h3_v2/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/sampling_workflow_api.json",
+          "sha256": "1452da955bce2be9999be55997e86766ef1e2e397111e5d7a6ee68534b0e573c"
+        },
+        "attack_h3_v2/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/decode_workflow_api.json",
+          "sha256": "2ffe5cb1264df36205421e5297bcd80faec0095b82431b4d10a0028375f0e94c"
+        },
+        "attack_h3_v2/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/sampling_history.json",
+          "sha256": "438cb06321525ceae12588ab4990f2d5e12c4c4058f2130e4a54906f6bc20ea1"
+        },
+        "attack_h3_v2/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/generation_history.json",
+          "sha256": "b240ab96bc8805b529f403517897fa68ad323683d14f485d7407b8a57d841ec0"
+        },
+        "attack_h3_v2/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/prompt.txt",
+          "sha256": "b43a4390229ed0c5d136a8f9db6a3f5f02cdb97480999d7e582666b0460d97ab"
+        },
+        "attack_h3_v2/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/reference.json",
+          "sha256": "633066ca89392da880e98e75f4de491dea6f1bcdf54fdecdbd77490640970bda"
+        },
+        "attack_h3_v2/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/config.json",
+          "sha256": "61832a8abbcdf42a7188bcf11c73201287605359bb65732d20c52498733ac03b"
+        },
+        "attack_h3_v2/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte.json",
+          "sha256": "8094bf15a98612f49dbd4297349c99c8af8f82ac905cd02fb613f420320c2e4c"
+        },
+        "hit_h3_v2/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/original_lossless.mkv",
+          "sha256": "43ccfb260b048ed5854f66049b08b0c5b75c340f5b00bfee64e7127f29ae3c15"
+        },
+        "hit_h3_v2/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/original.json",
+          "sha256": "1ac629cc9d5562fb353ecd00b1e9fec31384c7cee0156f35fb6b3078d2addea2"
+        },
+        "hit_h3_v2/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/original.latent",
+          "sha256": "908fb486b99aa34b3544357dcbaf4f0ba1ca0b90d9be081c6a24fed6e8ea56df"
+        },
+        "hit_h3_v2/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/sampling_workflow_api.json",
+          "sha256": "d7443de68cdda208dab584f1a82378b03eeb9a3299f41547b098dab8377cab64"
+        },
+        "hit_h3_v2/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/decode_workflow_api.json",
+          "sha256": "625c4e349988b95a238ce88fc53e6251acb15e825fd711df6e7ccee329bb7666"
+        },
+        "hit_h3_v2/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/sampling_history.json",
+          "sha256": "256a2c377971aec029ce09f59c4b3460a37f17e06adcccb326fbc998d3cbfa53"
+        },
+        "hit_h3_v2/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/generation_history.json",
+          "sha256": "e611628785541e28887e314e67ce17d724041aae84b65c474901c83a3fe31d45"
+        },
+        "hit_h3_v2/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/prompt.txt",
+          "sha256": "6bd54d3e6b3822b48dcbf5b3644abf596ad80742e3c926ded002f33090870ce1"
+        },
+        "hit_h3_v2/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/reference.json",
+          "sha256": "9b5caeff757fcfa92f9cb0282d49b961bfb218b4774e81f60ed0711d6a97fdcf"
+        },
+        "hit_h3_v2/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/config.json",
+          "sha256": "27269c45b4dc8cddaa95881e47561e02facdd33586e9e6ffff9c92171ffa6499"
+        },
+        "hit_h3_v2/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/matte.json",
+          "sha256": "2d8cea8c07da9a55e994faa0df06b24d485a613c7c8a6f76d37d4626f6dd4440"
+        },
+        "defend_h3_v2/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/original_lossless.mkv",
+          "sha256": "6d8b50a679d25bac1e35d13b9cf6d176e53b41af0589c6850daea694e6030b85"
+        },
+        "defend_h3_v2/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/original.json",
+          "sha256": "125efed3e4c6575f72275d5f6f0596221527febffef2a17b1f74126faabc208e"
+        },
+        "defend_h3_v2/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/original.latent",
+          "sha256": "bb30cae6827f3b292e82223ec13ee4d53a1ba834d5b312e95b8226b38190eee8"
+        },
+        "defend_h3_v2/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/sampling_workflow_api.json",
+          "sha256": "91d58ac45e35281400f9eeb86b30bf047ed2c52dd3a963c99350345e0d84c3dc"
+        },
+        "defend_h3_v2/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/decode_workflow_api.json",
+          "sha256": "1a8f30d38b294ee6d90b68aeb651930501678e4dfade18961c83a6084b752f1d"
+        },
+        "defend_h3_v2/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/sampling_history.json",
+          "sha256": "c8027c79c725206a82be6ea69f20af1e9bdcf84f34d1f436ae1c464976f1f18a"
+        },
+        "defend_h3_v2/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/generation_history.json",
+          "sha256": "2d1090fbec297c8f0067f205b6183efcea99b3a4bb50b6dadb972c4cda41c043"
+        },
+        "defend_h3_v2/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/prompt.txt",
+          "sha256": "ecf3dfc941fbdc349a1deb349e0d1101b789a766f4d3cafda384f18f6a9fd953"
+        },
+        "defend_h3_v2/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/reference.json",
+          "sha256": "ea7de9a41883c79507c7d5ea64fcb18f95df3970c464712a20724a7c4c0f8704"
+        },
+        "defend_h3_v2/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/config.json",
+          "sha256": "996c26e069689c31508a196f311b323e7b2797cb30e43850c840f335ae25136f"
+        },
+        "defend_h3_v2/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/matte.json",
+          "sha256": "e559a1a1497aa24d4c7e4922f45bca75509fa5b8b5447d4d26abb8d7e2a3564b"
         }
       },
+      "preserved_accepted_clips": [],
       "visual_review": {
         "status": "accepted_selected_clips",
-        "notes": "Autonomously reviewed all372 original chronological H3 frames, enlarged spear grip/shaft/head, shield, face, boots, death anatomy and light/dark alpha; inspected walk seam80/82/42 and actual native Godot overview at gameplay scale. Dedicated spear salute has visible wrist/arm rotation and recovery; walking alternates foot contacts/passing with stable equipment; death buckles to knees, falls onto shield and settles with spear on ground. Original source-wide body scales and corrected anatomical foot anchors retained. Four previously accepted actions preserved. Candidate182 focused checks passed including Normal/Fast/reduced-motion. Plain magenta matte preserves armor colors; inappropriate local edge refinement excluded. Review used ordered frames and native renders, not continuous browser playback or manual playtest."
+        "notes": "Reviewed on H3 video. Idle v1 is clean and very still. Attack v1 flashed at the spear tip and lost its return to plate pulses, hit v1 and defend v1 strobed. Their retakes kept every frame: attack v2 is guided through attack_00, 03, 01, 06 and 07, hit v2 through hit_00 to hit_03, defend v2 through defend_00 to defend_02, all with steady light. Cast, death and walk keep their published H3 clips."
       },
       "source_scale_by_image": {
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_v3.png": 0.59,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/reactions_v1.png": 0.58,
         "art/units/source/generated/video_trials/milestone_h3/cast_v2/matte/rgba_016.png": 0.65,
         "art/units/source/generated/video_trials/milestone_h3/cast_v2/matte/rgba_018.png": 0.65,
         "art/units/source/generated/video_trials/milestone_h3/cast_v2/matte/rgba_020.png": 0.65,
@@ -2707,19 +4833,120 @@
         "art/units/source/generated/video_trials/milestone_h3/death_v1/matte/rgba_080.png": 0.65,
         "art/units/source/generated/video_trials/milestone_h3/death_v1/matte/rgba_082.png": 0.65,
         "art/units/source/generated/video_trials/milestone_h3/death_v1/matte/rgba_084.png": 0.65,
-        "art/units/source/generated/video_trials/milestone_h3/death_v1/matte/rgba_086.png": 0.65
+        "art/units/source/generated/video_trials/milestone_h3/death_v1/matte/rgba_086.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_000.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_002.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_004.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_006.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_008.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_010.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_012.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_014.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_016.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_018.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_020.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_022.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_024.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_026.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_028.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_030.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_032.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_034.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_036.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_038.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_040.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_042.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_044.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_046.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_048.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_050.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_052.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_054.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_056.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_058.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_060.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_062.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_064.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_066.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_068.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_070.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_072.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_074.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_076.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_078.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_080.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_082.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_084.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_086.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_088.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_090.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_092.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_094.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_096.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_098.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_100.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_102.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_104.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_106.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_108.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_110.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_112.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_114.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_116.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_118.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_120.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/idle_h3_v1/matte/rgba_122.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_013.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_016.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_018.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_026.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_035.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_036.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_046.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_048.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_055.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_064.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_066.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_075.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_076.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_083.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_090.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_092.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_093.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_094.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_h3_v2/matte/rgba_097.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/matte/rgba_004.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/matte/rgba_006.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/matte/rgba_008.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/matte/rgba_011.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/matte/rgba_017.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/matte/rgba_019.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/matte/rgba_030.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/matte/rgba_032.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/matte/rgba_044.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/matte/rgba_051.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/matte/rgba_058.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/matte/rgba_065.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/hit_h3_v2/matte/rgba_073.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/matte/rgba_010.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/matte/rgba_013.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/matte/rgba_022.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/matte/rgba_024.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/matte/rgba_025.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/matte/rgba_026.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/matte/rgba_028.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/matte/rgba_034.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/matte/rgba_044.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/defend_h3_v2/matte/rgba_046.png": 0.46
       },
-      "preserved_accepted_clips": [
-        "idle"
-      ],
       "accepted_clips": [
-        "attack",
-        "hit",
-        "defend",
         "cast",
         "move",
         "death",
-        "idle"
+        "idle",
+        "attack",
+        "hit",
+        "defend"
       ]
     }
   ]

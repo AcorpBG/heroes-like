@@ -1,0 +1,56 @@
+{
+  "unit_id": "unit_neutral_milestone_bucklers",
+  "clip": "defend",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    490,
+    551
+  ],
+  "scale": 0.46,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026105809,
+  "references": [
+    "hit_03",
+    "defend_00",
+    "defend_01",
+    "defend_02"
+  ],
+  "guides": [
+    [
+      14,
+      1
+    ],
+    [
+      30,
+      2
+    ],
+    [
+      46,
+      3
+    ]
+  ],
+  "last": 3,
+  "prompt": "ONE original bearded infantry soldier, the Milestone Buckler, facing screen right in elevated three-quarter view. Keep his short dark brown hair and beard, the cream scarf, the rust-red quilted tunic, the steel shoulder plates, the navy trousers, the brown gloves and boots and the leather belt pouches. Exactly two arms, two hands and two legs. The screen-RIGHT forearm carries ONE rigid rectangular navy wooden shield with a brass rim, a vertical brass stripe and a round boss; the screen-LEFT hand grips ONE short wooden spear with one steel leaf-shaped head, held low and pointing diagonally down toward screen left. Preserve the shield, the spear and the proportions. Crouch low behind the shield, pulling it in front of the body with the head ducked behind its rim and the spear held low, then hold the braced guard on both planted boots. No attack and no return to the relaxed stance. The lighting never changes: the light on him and the background keeps exactly the same brightness and colour in every frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, the whole spear with its tip, the whole shield, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the spear stays rigid at its original length and the shield never morphs.",
+  "protected_foreground_chroma": 24,
+  "edge_threshold": 23,
+  "palette_measurement": {
+    "bluest_opaque": 22.0,
+    "blue_minus_green_p999": 17.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}
