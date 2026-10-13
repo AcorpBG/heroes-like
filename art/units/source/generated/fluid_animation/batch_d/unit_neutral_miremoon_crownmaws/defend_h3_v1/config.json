@@ -1,0 +1,47 @@
+{
+  "unit_id": "unit_neutral_miremoon_crownmaws",
+  "clip": "defend",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    476,
+    589
+  ],
+  "scale": 0.52,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026105254,
+  "references": [
+    "idle_00",
+    "defend_01",
+    "defend_02"
+  ],
+  "guides": [
+    [
+      34,
+      1
+    ]
+  ],
+  "last": 2,
+  "prompt": "ONE original hulking four-legged swamp beast, the Miremoon Crownmaw, facing screen right in elevated three-quarter side view. Keep the dark blue-green scaled armour plates draped with hanging green moss, the many glowing blue crescent-moon markings on the plates and limbs, the pale belly, the wide toothy jaw with two upward tusks, the crown of large curved golden crescent horns sweeping up and back from the head, the short spiked tail curling up behind, and EXACTLY FOUR thick legs with golden claws. No rider and no extra legs. Preserve the crescent horn crown, the moss, the moon markings and the hulking proportions. Lower the horns: the beast drops its head low with the crescent horn crown turned forward toward screen right like a shield, hunches the armoured back and braces all four legs wide, then holds the low guarded stance. No attack and no return to the raised stance. Locked orthographic camera, fixed scale and centred body. Keep the whole horn crown, the tail and all four feet within frame. The background is perfectly flat saturated GREEN throughout, no gradients or changes of hue. The green background stays the same flat saturated green in every frame and never darkens, flashes or changes colour. No scenery, water, floor shadow, camera motion, zoom, mist, sparks, motion trails, particles or extra legs; the moon markings keep only their steady glow. Articulate joints naturally with physical planted-foot support; the horns stay rigid and never morph.",
+  "protected_foreground_chroma": 36,
+  "edge_threshold": 140,
+  "palette_measurement": {
+    "bluest_opaque": 34.0,
+    "blue_minus_green_p999": 134.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

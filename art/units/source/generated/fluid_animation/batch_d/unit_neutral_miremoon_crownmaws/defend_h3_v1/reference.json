@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_neutral_miremoon_crownmaws",
+  "guides": [
+    {
+      "frame": "idle_00",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_miremoon_crownmaws/idle_v1.png",
+      "source_sha256": "48a77939ee969f3f45d1f759c66315b8b56f8c3c4d8af89fca2fb6be754fe6e8",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "cdf7c3fad8036c275019615b60c786608dab5545a35c916600e0c0f60dbe9f52"
+    },
+    {
+      "frame": "defend_01",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_miremoon_crownmaws/reactions_v1.png",
+      "source_sha256": "3ee83268823e43c2255f163e5b4f38ab75236c8ffd8574e1430e00705dca7718",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "a367a9e5880441bbd6d88cf395cb428032dd9cc6ad15feb110d2c30470ad42fb"
+    },
+    {
+      "frame": "defend_02",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_miremoon_crownmaws/reactions_v1.png",
+      "source_sha256": "3ee83268823e43c2255f163e5b4f38ab75236c8ffd8574e1430e00705dca7718",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "33dbdee4bc70ca4f7bf717919b4560440fb2b8cee66f9891349237e191380afa"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    476,
+    589
+  ],
+  "output_scale": 0.52,
+  "free_pixels_left_top_right_bottom": [
+    222,
+    44,
+    222,
+    44
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

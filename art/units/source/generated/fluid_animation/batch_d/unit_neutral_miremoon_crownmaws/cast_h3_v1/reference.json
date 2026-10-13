@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_neutral_miremoon_crownmaws",
+  "guides": [
+    {
+      "frame": "idle_00",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_miremoon_crownmaws/idle_v1.png",
+      "source_sha256": "48a77939ee969f3f45d1f759c66315b8b56f8c3c4d8af89fca2fb6be754fe6e8",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "cdf7c3fad8036c275019615b60c786608dab5545a35c916600e0c0f60dbe9f52"
+    },
+    {
+      "frame": "cast_04",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_miremoon_crownmaws/cast_v1.png",
+      "source_sha256": "5c2b220d59aa5fa2449dd6474f90c4fe755de7424fef7a20622840e19eaaf90c",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "1a2a29db03ff9eb42c94baac7bb19aa82ef1f9a9663e8e99d49f140421aae8c2"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    476,
+    589
+  ],
+  "output_scale": 0.52,
+  "free_pixels_left_top_right_bottom": [
+    222,
+    44,
+    222,
+    44
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

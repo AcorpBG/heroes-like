@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_neutral_miremoon_crownmaws",
+  "guides": [
+    {
+      "frame": "idle_00",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_miremoon_crownmaws/idle_v1.png",
+      "source_sha256": "48a77939ee969f3f45d1f759c66315b8b56f8c3c4d8af89fca2fb6be754fe6e8",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "cdf7c3fad8036c275019615b60c786608dab5545a35c916600e0c0f60dbe9f52"
+    },
+    {
+      "frame": "attack_01",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_miremoon_crownmaws/attack_v1.png",
+      "source_sha256": "aa9219c4f9bc536c376d895e4b39da0521b161e94654f65d600e56f872b60684",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "cd37367d5f79e9a3c7640dd4186db2b0c926d8b0fdf9be18ed93cf3d8e9d5a1e"
+    },
+    {
+      "frame": "attack_03",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_miremoon_crownmaws/attack_v1.png",
+      "source_sha256": "aa9219c4f9bc536c376d895e4b39da0521b161e94654f65d600e56f872b60684",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "21ff5844f5e96c85de0d8d6ce2dc40ce2e3b2b2418bcc3566122b7b20479dfac"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    476,
+    589
+  ],
+  "output_scale": 0.52,
+  "free_pixels_left_top_right_bottom": [
+    222,
+    44,
+    222,
+    44
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
