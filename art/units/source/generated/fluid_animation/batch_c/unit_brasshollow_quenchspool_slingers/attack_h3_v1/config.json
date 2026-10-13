@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_brasshollow_quenchspool_slingers",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    530,
+    572
+  ],
+  "scale": 0.44,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026105601,
+  "references": [
+    "idle_0",
+    "attack_1",
+    "attack_3"
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      54,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original young woman engineer, the Quenchspool Slinger, facing screen right in elevated three-quarter view. Keep her brown hair in a high bun, the round brass goggles on her forehead, the black scarf, the brass shoulder plate and knee guards, the dark trousers, the ragged leather apron, the tall strapped boots with brass toes, the red rear cloth, and the small backpack pressure vessel with a round gauge and hose. Exactly two arms, two hands and two legs. Both hands carry ONE brass cable reel across her torso, the left hand on its crank knob; ONE flexible cable runs from the reel to ONE glowing orange cylindrical canister hanging low at screen left. Preserve the reel, the cable and canister, the goggles and the slim proportions. Make ONE canister lash toward screen right. She swings the canister back on its cable behind her as the knees bend, then lunges forward and whips it out so the cable pulls taut and the canister reaches full length at screen right, reels it back in and settles into the original stance. One lash only; the canister stays on its cable with no fire, trail or effect. Locked orthographic camera, fixed anatomical scale and centred body. Keep the reel, the whole cable and the canister even at full swing, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, fire, flame trails, smoke, sparks, motion trails, particles or extra limbs; the canister keeps only its steady orange glow inside. Articulate joints naturally with physical planted-foot support; the cable stays one unbroken line attached to the reel and the canister.",
+  "protected_foreground_chroma": 8,
+  "edge_threshold": 8,
+  "palette_measurement": {
+    "bluest_opaque": 6.0,
+    "blue_minus_green_p999": 2.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

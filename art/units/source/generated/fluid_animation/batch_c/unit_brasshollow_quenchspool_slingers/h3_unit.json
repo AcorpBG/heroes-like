@@ -146,6 +146,115 @@
       ],
       "last": 2,
       "action": "Collapse slowly. She sinks down onto her knees with the reel dropping, stays there a moment, then slumps forward and lies flat on her front, finishing motionless with her head at screen right, the reel and the dimmed canister lying beside her. The body never leaves the ground; no fire, no recovery and no disappearing body."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "idle_0",
+        "attack_1",
+        "attack_3"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE canister lash toward screen right. She swings the canister back on its cable behind her as the knees bend, then lunges forward and whips it out so the cable pulls taut and the canister reaches full length at screen right, reels it back in and settles into the original stance. One lash only; the canister stays on its cable with no fire, trail or effect. The canister and cable stay sharp in every frame, with no motion blur, smear or streak lines. After the lash she reels the canister straight back in so it drops and hangs low at her side on its cable, as at the start; it never swings out behind her. The lighting never changes: the light on her and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "attack_h3_v3": {
+      "clip": "attack",
+      "references": [
+        "idle_0",
+        "attack_1",
+        "attack_3"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE canister lash toward screen right. She swings the canister back on its cable behind her as the knees bend, then lunges forward and whips it out so the cable pulls taut and the canister reaches full length at screen right, reels it back in and settles into the original stance. One lash only; the canister stays on its cable with no fire, trail or effect. The canister and cable stay sharp in every frame, with no motion blur, smear or streak lines. After the lash she reels the canister straight back in so it drops and hangs low at her side on its cable, as at the start; it never swings out behind her. The lighting never changes: the light on her and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "defend_h3_v2": {
+      "clip": "defend",
+      "references": [
+        "idle_0",
+        "defend_1",
+        "defend_2"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
+      "last": 2,
+      "action": "Crouch low and hunch behind the brass reel, holding it up in front of her chest as a shield with the canister drawn in, then hold the braced guard on both planted boots. No attack and no return to the relaxed stance. Nothing lies on the ground and nothing drops from her. The lighting never changes: the light on her and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "cast_h3_v2": {
+      "clip": "cast",
+      "references": [
+        "idle_0",
+        "cast_4"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A quick adjustment. She pulls the goggles down over her eyes with one hand and taps the backpack gauge, holds the pose briefly, then returns the hand to the reel crank in the original stance. A physical gesture only: no glow change, steam or effect. The lighting never changes: the light on her and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "cast_h3_v3": {
+      "clip": "cast",
+      "references": [
+        "idle_0",
+        "cast_4"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A quick adjustment. She pulls the goggles down over her eyes with one hand and taps the backpack gauge, holds the pose briefly, then returns the hand to the reel crank in the original stance. A physical gesture only: no glow change, steam or effect. The lighting never changes: the light on her and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "defend_h3_v3": {
+      "clip": "defend",
+      "references": [
+        "idle_0",
+        "defend_2"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "Crouch low and hunch behind the brass reel, holding it up in front of her chest as a shield with the canister drawn in, then hold the braced guard on both planted boots. No attack and no return to the relaxed stance. Nothing lies on the ground and nothing drops from her. The lighting never changes: the light on her and the background keeps exactly the same brightness and colour in every frame."
     }
   }
 }

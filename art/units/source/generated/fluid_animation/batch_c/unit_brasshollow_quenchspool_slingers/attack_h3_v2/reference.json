@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_brasshollow_quenchspool_slingers",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/idle_v1.png",
+      "source_sha256": "4beade8ded613ea5e195b7d0ea05dee39c91d760d012b17c0e13fa62465e7b1c",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "52f1c5371ef72163e03821463fc29519062aa0729ccedee437b76e75dbc515f4"
+    },
+    {
+      "frame": "attack_1",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/attack_v1.png",
+      "source_sha256": "afef2c6a4ed533dda0a202b6e4e1b063b94865b9b29cbe8335bceb7d80e74617",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "34ce3378c73ad3f4c57c823dd5432fadd112f2cd22a3a65a1a6c15e2876085bf"
+    },
+    {
+      "frame": "attack_3",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/attack_v1.png",
+      "source_sha256": "afef2c6a4ed533dda0a202b6e4e1b063b94865b9b29cbe8335bceb7d80e74617",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "c05763c2cb989a773431f3aa4046588e257836418bd952242ae020c27ce8bde7"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    530,
+    572
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    156,
+    67,
+    155,
+    66
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

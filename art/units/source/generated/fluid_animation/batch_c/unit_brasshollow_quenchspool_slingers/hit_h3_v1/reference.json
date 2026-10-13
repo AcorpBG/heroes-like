@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_brasshollow_quenchspool_slingers",
+  "guides": [
+    {
+      "frame": "hit_1",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/reactions_v1.png",
+      "source_sha256": "2fd0d3000e3612c2443f85e6147258b6fd31ca82cabc7dc52ef2fc9e8db2d18f",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "663aa41eb02600200e9c33111351afb2cb5d170b62ad1fe57251b11521d1ae7f"
+    },
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/idle_v1.png",
+      "source_sha256": "4beade8ded613ea5e195b7d0ea05dee39c91d760d012b17c0e13fa62465e7b1c",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "52f1c5371ef72163e03821463fc29519062aa0729ccedee437b76e75dbc515f4"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    530,
+    572
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    156,
+    67,
+    155,
+    66
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
