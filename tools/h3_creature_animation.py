@@ -56,6 +56,7 @@ import io
 import json
 import math
 import re
+import subprocess
 import sys
 import time
 import urllib.parse
@@ -141,6 +142,30 @@ def drop_slivers(pose, share=0.02):
     return Image.fromarray(rgba, "RGBA")
 
 
+def published_away(unit_dir, live, names):
+    """Painted frames a publish replaced in the live handoff, so a retake after publishing can
+    still be guided by them: read from painted_frames.json, or found in the live handoff's git
+    history, newest first, and saved there."""
+    cache = unit_dir / "painted_frames.json"
+    found = read(cache) if cache.exists() else {}
+    missing = set(names) - found.keys()
+    if missing:
+        path = rel(live)
+        log = subprocess.run(["git", "log", "--format=%H", "--", path], cwd=ROOT, capture_output=True, text=True, check=True)
+        for commit in log.stdout.split():
+            old = subprocess.run(["git", "show", f"{commit}:{path}"], cwd=ROOT, capture_output=True, check=True)
+            for frame in json.loads(old.stdout)["units"][0]["frames"]:
+                if frame["name"] in missing:
+                    found[frame["name"]] = frame
+            missing -= found.keys()
+            if not missing:
+                break
+        if missing:
+            raise SystemExit(f"painted frames not in the live handoff or its history: {sorted(missing)}")
+        write(cache, dict(sorted(found.items())))
+    return {name: found[name] for name in names}
+
+
 class Unit:
     def __init__(self, directory):
         self.dir = Path(directory).resolve()
@@ -149,6 +174,9 @@ class Unit:
         live = ROOT / "art/animation/source/fluid" / self.id / "reviewed_handoff.json"
         self.live = read(live)["units"][0]
         self.painted = {f["name"]: f for f in self.live["frames"]}
+        wanted = {name for spec in self.cfg["takes"].values() for name in spec["references"]}
+        if wanted - self.painted.keys():
+            self.painted.update(published_away(self.dir, live, wanted - self.painted.keys()))
         self.canvas = tuple(self.cfg.get("canvas", [960, 640]))
         self.scale = float(self.cfg["scale"])
 
