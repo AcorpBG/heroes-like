@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_mireclaw_sporewake_chanters",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    406,
+    566
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026105459,
+  "references": [
+    "idle_0",
+    "death_2",
+    "death_7"
+  ],
+  "guides": [
+    [
+      48,
+      1
+    ],
+    [
+      96,
+      2
+    ]
+  ],
+  "last": 2,
+  "prompt": "ONE original masked swamp priest, the Sporewake Chanter, facing screen right in elevated three-quarter view. Keep the dark skull mask with a purple face scarf, the brown dreadlocks, the leaf shoulder mantle, the long purple embroidered robe with ragged hem, the hanging pendants and the boots. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE tall wooden staff crowned with antlers at its top; the screen-RIGHT hand holds ONE brass censer bowl hanging from three chains. Preserve the antler staff, the censer, the mask and the robed proportions. Collapse slowly. The priest sinks down onto the knees leaning on the staff, stays kneeling a moment, then slumps forward and lies flat on the ground, finishing motionless with the robe spread out, the staff lying on the ground and the censer resting beside the body. The body never leaves the ground; no recovery, no floating equipment and no disappearing body. The lighting never changes: the light on the chanter and the background keeps exactly the same brightness and colour in every frame, and any glow stays soft and steady. Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole antler staff, the censer with its chains, the robe hem and both boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, smoke, spores, glow, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the staff stays straight and rigid and the censer stays attached to its chains.",
+  "protected_foreground_chroma": 10,
+  "edge_threshold": 27,
+  "palette_measurement": {
+    "bluest_opaque": 8.0,
+    "blue_minus_green_p999": 21.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

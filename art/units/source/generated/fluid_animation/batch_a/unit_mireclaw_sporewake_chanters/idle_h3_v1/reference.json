@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_mireclaw_sporewake_chanters",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/idle_v1_0.png",
+      "source_sha256": "c5ec2fbf4d0f45b3186527a5282e99814cedfdadbd4f88cffed5eaaca5799848",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "50fe31b3c23f8a3f1cecd4064c5dbbc8cee6d8a1479c9d645497331aaa062ecd"
+    },
+    {
+      "frame": "idle_4",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/idle_v1_4.png",
+      "source_sha256": "a35f22cfd4814aae7fc4a7b4207abb01c5c79953ec151ade341bc3baa5bf983f",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "c150dcf024840bb844500c9fd5bc0806ecfaff55cdcb96aa4d94ebd3f80461d9"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    406,
+    566
+  ],
+  "output_scale": 0.5,
+  "free_pixels_left_top_right_bottom": [
+    115,
+    72,
+    116,
+    72
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
