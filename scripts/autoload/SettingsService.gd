@@ -273,6 +273,11 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	set_process(false)
 	ensure_controller_ui_actions()
+	# Earlier autoloads block the main thread long enough for Windows to mark the
+	# boot window as not responding. A window change made in that state is undone
+	# when the app recovers: the window snaps back to its old windowed rect and
+	# drops out of fullscreen. Pumping the window messages first ends that state.
+	DisplayServer.force_process_and_drop_events()
 	load_settings()
 
 func _process(_delta: float) -> void:
