@@ -225,6 +225,10 @@ def prepare(unit, names, refresh=False):
             continue
         started = time.monotonic()
         spec = unit.cfg["takes"][name]
+        count = len(spec["references"])
+        if not 0 <= spec["last"] < count or any(not 0 <= ref < count for _, ref in spec["guides"]):
+            # The service refuses a graph that names a missing image node, and the runner would stop.
+            raise SystemExit(f"{name}: last and every guide must name one of its {count} references")
         out.mkdir(exist_ok=True)
         pad = spec.get("pad", [0, 0, 0, 0])
         if any(v % 32 for v in pad):
@@ -361,6 +365,16 @@ def submit_sampling(unit, name):
     print(f"QUEUED sampling {unit.id}/{name} {submitted['prompt_id']}", flush=True)
 
 
+def submitted(job):
+    """Queue a take's sampling; a request the service refuses fails that take, not the run."""
+    try:
+        submit_sampling(*job)
+        return True
+    except OSError as error:  # urllib's HTTPError is an OSError
+        print(f"FAILED submit {job[0].id}/{job[1]}: {error!r}", flush=True)
+        return False
+
+
 def store_latent(unit, name, history):
     out, started = unit.dir / name, time.monotonic()
     write(out / "sampling_history.json", history)
@@ -479,9 +493,8 @@ def run(poll):
             if not group:
                 time.sleep(poll)
                 continue
-        for job in group:
-            submit_sampling(*job)
-        waiting = [job for job in group if not (job[0].dir / job[1] / "original.latent").exists()]
+        group = [job for job in group if submitted(job)]
+        waiting =[job for job in group if not (job[0].dir / job[1] / "original.latent").exists()]
         while waiting:
             for unit, name in list(waiting):
                 try:
@@ -495,9 +508,7 @@ def run(poll):
                     store_latent(unit, name, history)
                     waiting.remove((unit, name))
             running = {(u.dir, n) for u, n in group}
-            joining = [(u, n) for u, n in take_requests(True) if (u.dir, n) not in running]
-            for job in joining:
-                submit_sampling(*job)
+            joining = [(u, n) for u, n in take_requests(True) if (u.dir, n) not in running and submitted((u, n))]
             group += joining
             waiting += joining
             if waiting:
@@ -508,8 +519,7 @@ def run(poll):
         for unit, name in group:
             # The next group's samplings queue behind these decodes.
             for u, n in take_requests(bool(following)):
-                if (u.dir, n) not in {(v.dir, m) for v, m in following}:
-                    submit_sampling(u, n)
+                if (u.dir, n) not in {(v.dir, m) for v, m in following} and submitted((u, n)):
                     following.append((u, n))
             try:
                 finish(unit, name)
