@@ -169,6 +169,55 @@
       ],
       "last": 2,
       "action": "Collapse slowly and heavily. The fusilier's knees buckle and it sinks onto one knee with the gun dropping, stays there a moment, then topples forward and lies flat on its front, finishing motionless with the helmet at screen right and the boots at screen left, the tanks still on the back and the gun on the ground beside it, the eye lenses dark. The body never leaves the ground; no explosion, no steam and no disappearing body."
+    },
+    "idle_h3_v2": {
+      "clip": "idle",
+      "references": [
+        "idle_0"
+      ],
+      "guides": [],
+      "last": 0,
+      "action": "A heavy, steady idle that loops. The fusilier breathes, the shoulders and the back tanks rise and settle, the helmeted head turns slightly to scan, then everything returns smoothly to the original stance. The rivet gun rests at the hip with the three barrels tipped down toward the ground in front of the boots; it is never raised or fired, and the barrels stay dark: no flash, sparks, smoke, steam or rivets anywhere. Both boots stay planted. No walking. Only the body moves; nothing else appears in the frame."
+    },
+    "ranged_h3_v2": {
+      "clip": "ranged",
+      "references": [
+        "idle_0",
+        "ranged_3",
+        "ranged_5"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          56,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Aim and recoil once toward screen right. The fusilier braces wide, raises the rivet gun level at screen right and sights along it, then the gun and both arms jolt back once and the whole body rocks back on its heels, holds a moment, and the fusilier lowers the gun to the hip in the original stance. A physical recoil only: the barrels stay dark and the armour keeps its own colour, with no flash, light, sparks, smoke, steam or rivets anywhere."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "idle_0",
+        "attack_2",
+        "attack_4"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE heavy clubbing blow toward screen right. The fusilier braces the knees and lifts the rivet gun up to the chest, twists the shoulders back, then steps forward and swings the whole gun down in an arc so the barrel ends chop down onto the ground in front of it at screen right, pulls it back up and settles into the original stance. The gun is used as a club: the barrels stay dark and nothing comes out of them, no flash, sparks, smoke, steam or rivets."
     }
   }
 }

@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_brasshollow_boiler_rivetcasters_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/idle_v2.png",
+      "source_sha256": "532b5c8662be1eef72c8fad9c60e92cf5a1e216eb0d6ed7bacb2c8a61f4c89a7",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "122277e2c2a872bd52e80e580e871a44b6cee3ef8d8ba7b8f6a72556f93e6860"
+    },
+    {
+      "frame": "attack_2",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/attack_v1.png",
+      "source_sha256": "3a1c093dba06e6862b27993b85d0cbfa638d074ec2b6137e189b974ad9de771b",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "08f5c7c5ebf764eb58d0ea8d50d09424b44b9595dc91ecad1fcc33fdc3f8f609"
+    },
+    {
+      "frame": "attack_4",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/attack_v1.png",
+      "source_sha256": "3a1c093dba06e6862b27993b85d0cbfa638d074ec2b6137e189b974ad9de771b",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "1011041664b12f64e5897abf0a40fcf59a93da544b41435678d24b671ec93dfb"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    450,
+    581
+  ],
+  "output_scale": 0.46,
+  "free_pixels_left_top_right_bottom": [
+    160,
+    56,
+    159,
+    56
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

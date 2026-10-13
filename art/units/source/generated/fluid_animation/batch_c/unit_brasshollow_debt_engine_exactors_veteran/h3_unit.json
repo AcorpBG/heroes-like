@@ -149,6 +149,29 @@
       ],
       "last": 2,
       "action": "Collapse slowly and heavily. The eye and chest glow dim, the knees buckle and the robot sinks down onto its clamp and knees, stays there a moment, then topples forward and lies flat on its front, finishing motionless with the head at screen right, the clamp lying open on the ground and the tags spilled beside it. The same body throughout: no explosion, no steam and no disappearing."
+    },
+    "idle_h3_v2": {
+      "clip": "idle",
+      "references": [
+        "idle_0",
+        "idle_2"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A calm, heavy idle that loops. The body rises and settles slowly as the furnace breathes, the clamp jaws open a little and close again gently, the fist flexes, the head turns slightly and the debt tags sway on their chains, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no attack. The lighting never changes: the eye and chest bars hold one steady glow that never pulses, flickers or brightens, and the background keeps exactly the same brightness in every frame. Only the body moves; nothing else appears in the frame."
     }
   }
 }

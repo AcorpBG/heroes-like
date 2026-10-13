@@ -1,0 +1,47 @@
+{
+  "unit_id": "unit_brasshollow_boiler_rivetcasters_veteran",
+  "clip": "defend",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    450,
+    581
+  ],
+  "scale": 0.46,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026103955,
+  "references": [
+    "idle_0",
+    "defend_2",
+    "defend_3"
+  ],
+  "guides": [
+    [
+      34,
+      1
+    ]
+  ],
+  "last": 2,
+  "prompt": "ONE original stocky armoured gunner, the Twinboiler Fusilier veteran, facing screen right in slightly elevated three-quarter view. Keep the heavy segmented brass and dark iron armour, the slotted full helmet with two round amber eye lenses, the TWO large spherical brass pressure tanks with red valve wheels and a gauge on the back, the thick ribbed hoses, the dark red apron and heavy armoured boots. Exactly two arms, two gauntleted hands and two legs. Both hands hold ONE brass rivet gun with EXACTLY THREE parallel barrels, connected to the tanks by hoses, held at the hip pointing to screen right. Preserve the tanks, the hoses, the three-barrel gun and the stocky proportions. Crouch low on bent knees, tuck the helmet down behind the armoured shoulders and hold the rivet gun close across the body, then hold the low braced guard on both planted boots. No attack and no return to the relaxed stance. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full gun, the tank tops, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, steam, smoke, muzzle flash, rivets in flight, sparks, motion trails, particles or extra limbs; the eye lenses keep only their steady glow. Articulate joints naturally with physical planted-foot support; do not morph the gun or tanks.",
+  "protected_foreground_chroma": 9,
+  "edge_threshold": 9,
+  "palette_measurement": {
+    "bluest_opaque": 7.0,
+    "blue_minus_green_p999": 3.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

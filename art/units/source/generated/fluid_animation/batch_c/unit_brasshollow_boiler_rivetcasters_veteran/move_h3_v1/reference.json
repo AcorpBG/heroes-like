@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_brasshollow_boiler_rivetcasters_veteran",
+  "guides": [
+    {
+      "frame": "move_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v6.png",
+      "source_sha256": "c3e4d30bd1824de1e278ddcb05bb95253248e9033ccebb900b65905ecff9bd54",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "66f49ed70c4b1090a821a8f97689c6eed176e684b9c5eb62f0305a4de83a9d79"
+    },
+    {
+      "frame": "move_4",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v6.png",
+      "source_sha256": "c3e4d30bd1824de1e278ddcb05bb95253248e9033ccebb900b65905ecff9bd54",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "3b38240d8c82edda88ec748a9c9308d0d96a02240b3c3b44caba3c1eb97d392c"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    450,
+    581
+  ],
+  "output_scale": 0.46,
+  "free_pixels_left_top_right_bottom": [
+    160,
+    56,
+    159,
+    56
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

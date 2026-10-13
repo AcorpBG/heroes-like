@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_brasshollow_debt_engine_exactors_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_debt_engine_exactors_veteran/idle_v1.png",
+      "source_sha256": "6dba44f952d1cb771253fedd0075fcdcc4fed52b8fbf0dc6af0c19b2c0feb0d7",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "0712e36cd26bbb5c2134d1943bb63473896817d999bec5cfa16a8179f1c26669"
+    },
+    {
+      "frame": "attack_10",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_debt_engine_exactors_veteran/attack_v1.png",
+      "source_sha256": "d3509f32cbfa94fe639a70ae5cf2d0fd6be9d06a05825cc5ee4659ec18348e65",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "51a1ac7deb3035fc961a0cf5271706bc52b0f6aba1b0aa11cdf963ea970cdb2f"
+    },
+    {
+      "frame": "attack_12",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_debt_engine_exactors_veteran/attack_v1.png",
+      "source_sha256": "d3509f32cbfa94fe639a70ae5cf2d0fd6be9d06a05825cc5ee4659ec18348e65",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "a962fed8c98212cf0e2301f0bf137ff84a9ef5e9dc4e12d74a759555b8e48e6c"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    498,
+    598
+  ],
+  "output_scale": 0.46,
+  "free_pixels_left_top_right_bottom": [
+    160,
+    41,
+    161,
+    42
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

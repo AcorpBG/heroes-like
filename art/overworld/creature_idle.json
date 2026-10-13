@@ -14078,21 +14078,20 @@
       "sha256": "bf63edaa4dfcc5a8d882271a01f0bd4bd74e61d27c75bbd045aaa42537ee3e46"
     },
     "unit_brasshollow_boiler_rivetcasters_veteran": {
-      "path": "res://art/animation/runtime/idle/unit_brasshollow_boiler_rivetcasters_veteran.png",
+      "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_boiler_rivetcasters_veteran.png",
       "frame_size": [
-        231,
-        251
+        222,
+        247
       ],
-      "columns": 16,
-      "frames": 16,
-      "frame_msec": 62,
+      "frames": 46,
+      "frame_msec": 60,
       "static_frame": 0,
       "ground_anchor": [
-        102,
-        241
+        96,
+        237
       ],
-      "painted_extent": 235,
-      "source_sheet": "res://art/animation/runtime/idle/unit_brasshollow_boiler_rivetcasters_veteran.png",
+      "painted_extent": 231,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_brasshollow_boiler_rivetcasters_veteran.png",
       "source_indices": [
         0,
         1,
@@ -14109,17 +14108,47 @@
         12,
         13,
         14,
-        15
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45
       ],
       "source_crop": [
-        0,
-        0,
-        231,
-        251
+        48,
+        23,
+        270,
+        270
       ],
-      "source_sha256": "bdbc7f6af754691646a3e82f661a40a87b939017a2180e9f1ec6c0a4f9f4c461",
+      "source_sha256": "15b9941835d71642cea8bf0fe63b9caa3a7f36c2b03c565bd7ce503512d8b3ef",
       "source_provenance": "res://art/animation/source/fluid/unit_brasshollow_boiler_rivetcasters_veteran/provenance.json",
-      "sha256": "bdbc7f6af754691646a3e82f661a40a87b939017a2180e9f1ec6c0a4f9f4c461"
+      "sha256": "dad504c164d6cc57e0233384e222ba65acd003cfd77757606c46e7c5f6b9b618"
     },
     "unit_brasshollow_gaugeplate_bailiffs_veteran": {
       "path": "res://art/animation/runtime/idle/unit_brasshollow_gaugeplate_bailiffs_veteran.png",
@@ -14174,21 +14203,20 @@
       "sha256": "399fd835c6219674e4feade09360b0abc7d5cc9e5ab458a035164024479797ee"
     },
     "unit_brasshollow_debt_engine_exactors_veteran": {
-      "path": "res://art/animation/runtime/idle/unit_brasshollow_debt_engine_exactors_veteran.png",
+      "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_debt_engine_exactors_veteran.png",
       "frame_size": [
-        257,
-        262
+        253,
+        261
       ],
-      "columns": 12,
-      "frames": 24,
-      "frame_msec": 53,
+      "frames": 62,
+      "frame_msec": 60,
       "static_frame": 0,
       "ground_anchor": [
-        145,
+        147,
         251
       ],
-      "painted_extent": 246,
-      "source_sheet": "res://art/animation/runtime/idle/unit_brasshollow_debt_engine_exactors_veteran.png",
+      "painted_extent": 245,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_brasshollow_debt_engine_exactors_veteran.png",
       "source_indices": [
         0,
         1,
@@ -14213,17 +14241,55 @@
         20,
         21,
         22,
-        23
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61
       ],
       "source_crop": [
-        0,
-        0,
-        257,
-        262
+        57,
+        13,
+        310,
+        274
       ],
-      "source_sha256": "f8ab468451ecb3aa7b995292f0fd39c2bf0dafd794f8be2e58349841c84c9ead",
+      "source_sha256": "5b5fd33a9d450325d8162ae381515f6d7ae114758fb476c9920b3235aec93ebb",
       "source_provenance": "res://art/animation/source/fluid/unit_brasshollow_debt_engine_exactors_veteran/provenance.json",
-      "sha256": "f8ab468451ecb3aa7b995292f0fd39c2bf0dafd794f8be2e58349841c84c9ead"
+      "sha256": "78b012f313416ed614a0b7e3a2431585a3865d60aedb7ce6fd9790fe8b2fc93f"
     },
     "unit_brasshollow_quenchbell_mortars_veteran": {
       "path": "res://art/animation/runtime/idle/unit_brasshollow_quenchbell_mortars_veteran.png",
