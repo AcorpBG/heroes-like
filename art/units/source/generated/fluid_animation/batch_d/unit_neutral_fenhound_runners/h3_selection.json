@@ -1,0 +1,74 @@
+{
+  "clips": {
+    "idle": {
+      "segments": [
+        {
+          "take": "idle_h3_v1",
+          "frames": [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108, 110, 112, 114, 116, 118, 120, 122]
+        }
+      ],
+      "frame_msec": 60
+    },
+    "move": {
+      "segments": [
+        {
+          "take": "move_h3_v2",
+          "frames": [8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70]
+        }
+      ],
+      "frame_msec": 50
+    },
+    "attack": {
+      "segments": [
+        {
+          "take": "attack_h3_v2",
+          "frames": [21, 25, 26, 28, 30, 31, 33, 34, 35, 37, 39, 40, 45, 51, 56, 58, 59, 61, 62, 63, 65, 67, 69, 72, 75, 77, 78, 80, 82, 85, 87, 90, 94, 100]
+        }
+      ],
+      "frame_msec": 42,
+      "contact_frame": 17
+    },
+    "hit": {
+      "segments": [
+        {
+          "take": "hit_h3_v1",
+          "frames": [2, 3, 4, 5, 6, 7, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 34]
+        }
+      ],
+      "frame_msec": 35
+    },
+    "defend": {
+      "segments": [
+        {
+          "take": "defend_h3_v1",
+          "frames": [0, 5, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 26, 31, 35, 38, 40, 44, 51, 60, 67, 74, 80]
+        }
+      ],
+      "frame_msec": 42
+    },
+    "cast": {
+      "segments": [
+        {
+          "take": "cast_h3_v1",
+          "frames": [6, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 22, 26, 35, 43, 52, 62, 71, 76, 78, 79, 80, 81, 82, 84, 92]
+        }
+      ],
+      "frame_msec": 45,
+      "contact_frame": 13
+    },
+    "death": {
+      "segments": [
+        {
+          "take": "death_h3_v1",
+          "frames": [0, 4, 6, 9, 12, 14, 16, 18, 20, 22, 24, 27, 30, 33, 36, 40, 46, 53, 64, 68, 70, 72, 74, 76, 78, 80, 83, 90, 97, 104, 123]
+        }
+      ],
+      "frame_msec": 45
+    }
+  },
+  "preserved_accepted_clips": [],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Reviewed every take by contact strip. Run and attack were retaken with steady light because the first takes darkened the plate every few strides and through the crouch and landing; the run loops video 8-71 every second frame. The hit skips the two opening frames that hold the reference pose and cut into the take. The idle's spikes are head turns toward the viewer. Idle, hit, defend, cast and death are first takes."
+  }
+}

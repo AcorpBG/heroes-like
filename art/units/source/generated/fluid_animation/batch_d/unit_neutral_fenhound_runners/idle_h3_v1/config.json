@@ -1,0 +1,54 @@
+{
+  "unit_id": "unit_neutral_fenhound_runners",
+  "clip": "idle",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    534
+  ],
+  "scale": 0.38,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026105050,
+  "references": [
+    "idle_v1_01",
+    "idle_v1_05"
+  ],
+  "guides": [
+    [
+      31,
+      1
+    ],
+    [
+      62,
+      0
+    ],
+    [
+      93,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original lean marsh hound, the Fenhound Runner, facing screen right in elevated three-quarter side view. Keep the tawny brown fur with teal-blue stripe markings on the flanks, legs and bushy tail, the pale chest, the long narrow muzzle and tall pointed ears, the brown leather harness with brass rings and a small bundle of green reeds strapped on the back, and the brass medallion hanging at the collar. EXACTLY FOUR slender legs and one bushy tail. No rider and no extra legs. Preserve the harness, the stripe markings and the lean proportions. An alert hunting idle that loops. The hound pants and breathes, the ears swivel, the head turns to sniff the air, one forepaw lifts briefly and sets down and the tail wags slowly, then everything returns smoothly to the original stance. The paws stay in place. No running and no attack. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed scale and centred body. Keep the muzzle, ears, tail and all four paws within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, water splashes, dust, motion trails, particles or extra legs. Articulate joints naturally with physical planted-paw support; the harness stays attached.",
+  "protected_foreground_chroma": 32,
+  "edge_threshold": 13,
+  "palette_measurement": {
+    "bluest_opaque": 30.0,
+    "blue_minus_green_p999": 7.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

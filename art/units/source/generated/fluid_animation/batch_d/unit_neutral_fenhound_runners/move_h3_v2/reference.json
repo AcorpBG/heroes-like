@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_neutral_fenhound_runners",
+  "guides": [
+    {
+      "frame": "move_v1_01",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/move_v1.png",
+      "source_sha256": "e4c65cabaac949e10ea1ad21dd0a2c9a647b70d7fb7984d4620e7710913b085f",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "a94698e8b85427c14b0f5c66b0e6b1428178385ed11890a1555f64a6b4da35ef"
+    },
+    {
+      "frame": "move_v1_05",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/move_v1.png",
+      "source_sha256": "e4c65cabaac949e10ea1ad21dd0a2c9a647b70d7fb7984d4620e7710913b085f",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "22521c1decf4760c40f913293328a3efcb5aa52965e20199e984bb0d944ce500"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    534
+  ],
+  "output_scale": 0.38,
+  "free_pixels_left_top_right_bottom": [
+    217,
+    52,
+    217,
+    51
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_neutral_fenhound_runners",
+  "guides": [
+    {
+      "frame": "idle_v1_01",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/idle_v1.png",
+      "source_sha256": "08f0b7e09b1bff66f270d2c2a800fc3e8d430f29c65ab99f92ab7607a2d7169c",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "000f3efbba7771b764e41d97da3d1763e3285ab15d4b74becc3169dc9386ea4c"
+    },
+    {
+      "frame": "attack_v1_02",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/attack_v1.png",
+      "source_sha256": "4513f03636283cf3aa66c96dbabb4c477c367b86b0a7927a6ae0780e9c6ee76e",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "c8715d3531be58dd09634186051bedee9acf28f3f1dcc31103d95b547c14226c"
+    },
+    {
+      "frame": "attack_v1_04",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/attack_v1.png",
+      "source_sha256": "4513f03636283cf3aa66c96dbabb4c477c367b86b0a7927a6ae0780e9c6ee76e",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "fb5408186311fa28cc4527741220417b4e383c2fdabb80cd3dcbac16acc38278"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    534
+  ],
+  "output_scale": 0.38,
+  "free_pixels_left_top_right_bottom": [
+    217,
+    52,
+    217,
+    51
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

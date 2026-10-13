@@ -1,0 +1,47 @@
+{
+  "unit_id": "unit_neutral_fenhound_runners",
+  "clip": "defend",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    534
+  ],
+  "scale": 0.38,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026105054,
+  "references": [
+    "idle_v1_01",
+    "hit_defend_v1_06",
+    "hit_defend_v1_07"
+  ],
+  "guides": [
+    [
+      34,
+      1
+    ]
+  ],
+  "last": 2,
+  "prompt": "ONE original lean marsh hound, the Fenhound Runner, facing screen right in elevated three-quarter side view. Keep the tawny brown fur with teal-blue stripe markings on the flanks, legs and bushy tail, the pale chest, the long narrow muzzle and tall pointed ears, the brown leather harness with brass rings and a small bundle of green reeds strapped on the back, and the brass medallion hanging at the collar. EXACTLY FOUR slender legs and one bushy tail. No rider and no extra legs. Preserve the harness, the stripe markings and the lean proportions. Crouch low and snarl: the hound drops its chest toward the ground, flattens the ears, bares its teeth with the head low toward screen right and braces all four legs, then holds the low guarded crouch. No attack and no return to the standing stance. Locked orthographic camera, fixed scale and centred body. Keep the muzzle, ears, tail and all four paws within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, water splashes, dust, motion trails, particles or extra legs. Articulate joints naturally with physical planted-paw support; the harness stays attached.",
+  "protected_foreground_chroma": 32,
+  "edge_threshold": 11,
+  "palette_measurement": {
+    "bluest_opaque": 30.0,
+    "blue_minus_green_p999": 5.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

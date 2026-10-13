@@ -149,6 +149,49 @@
       ],
       "last": 2,
       "action": "Collapse slowly. The hound staggers, the legs buckle and it sinks down onto its belly with the head drooping, stays a moment, then rolls onto its side and lies flat with the legs stretched out, the head at screen right and the tail at screen left, finishing motionless. The body never leaves the ground; no recovery and no disappearing."
+    },
+    "move_h3_v2": {
+      "clip": "move",
+      "references": [
+        "move_v1_01",
+        "move_v1_05"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Trot in place on four legs through two complete cycles with a quick light gait. Diagonal pairs of legs alternate lifting, reaching forward and planting their paws while the others bear the weight. The body stays centred for engine-driven travel with the head level and the tail streaming back. Exactly four legs at all times. Finish in the original gait phase. The lighting never changes: the light on the hound and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "idle_v1_01",
+        "attack_v1_02",
+        "attack_v1_04"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE leaping bite toward screen right. The hound crouches low and gathers its hind legs, then springs forward with the jaws open and snaps at full reach toward screen right, lands on its forepaws and draws back into the original stance. One bite only; the body stays close to the ground and no effect appears. The lighting never changes: the light on the hound and the background keeps exactly the same brightness and colour in every frame."
     }
   }
 }
