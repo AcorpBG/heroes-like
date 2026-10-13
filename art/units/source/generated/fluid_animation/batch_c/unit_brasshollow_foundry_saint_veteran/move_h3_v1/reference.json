@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_brasshollow_foundry_saint_veteran",
+  "guides": [
+    {
+      "frame": "move_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_v2.png",
+      "source_sha256": "a2ea0931c6a3f31c2db69f38b08dd6fed6751aa2c749ba1b065d75ac87e5d801",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "8a123d65759bc3d5a8803241298ea420c73613a8ed167c1ce9fa5e32520493e0"
+    },
+    {
+      "frame": "move_4",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_farstep_v3.png",
+      "source_sha256": "262225fc06628fe7a5d53b373392a6da06e2f8cc540471629a936aff738e3755",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "0ad90d36a2aca2f61e3f6f7fe8eeb578743dca79df48e7f75fdc0e213dd88a5a"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    433,
+    581
+  ],
+  "output_scale": 0.43,
+  "free_pixels_left_top_right_bottom": [
+    160,
+    53,
+    160,
+    53
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

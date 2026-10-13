@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_brasshollow_crucible_crawlers_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers_veteran/idle_v1.png",
+      "source_sha256": "24c08ea52553dc6e9cf155504191c6431b19801b500df7ed8d25ed7fe80572f6",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "805ec5347ccbf4504acbcc322f1e1fc40176e793cbcbd6f1b06a244559561ad4"
+    },
+    {
+      "frame": "cast_4",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers_veteran/support_v1.png",
+      "source_sha256": "997ddd3b634aa68c7ebd878fc78438bdb6ac6413132112c2bc136671500f28d9",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "ede8c6ce282e448b7f31bcba34c1c7f9706cac2f5b801aae4a1be111bb79af11"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    452,
+    574
+  ],
+  "output_scale": 0.48,
+  "free_pixels_left_top_right_bottom": [
+    118,
+    49,
+    117,
+    50
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

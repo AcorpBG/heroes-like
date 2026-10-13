@@ -1,0 +1,54 @@
+{
+  "unit_id": "unit_brasshollow_crucible_crawlers_veteran",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    452,
+    574
+  ],
+  "scale": 0.48,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026104013,
+  "references": [
+    "move_0",
+    "move_4"
+  ],
+  "guides": [
+    [
+      31,
+      1
+    ],
+    [
+      62,
+      0
+    ],
+    [
+      93,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original squat mechanical artillery walker, the Redline Crucible Crawler veteran, facing screen right in slightly elevated three-quarter view. Keep the brass and dark iron riveted body, the rounded furnace belly with a glowing orange grille, the compact turret carrying ONE long straight cannon with glowing orange slots along the barrel and a ringed muzzle pointing to screen right, the TWO small lidded glowing crucible pots at the rear of the turret, and EXACTLY FOUR jointed armoured piston legs with three-pronged feet. No crew and no extra legs. Preserve the four legs, the one cannon, the two pots and the squat proportions. Walk in place on four legs through two complete cycles with smooth, quiet, gliding steps. Diagonal pairs of piston legs alternate lifting, swinging forward and setting their three-pronged feet down softly while the others bear the weight. The body stays centred for engine-driven travel with the cannon held level. Exactly four legs at all times. No stomping, no impacts and no shaking. The lighting never changes: the orange slots, grille and pots hold one steady glow that never pulses, flickers or brightens, and the blue background keeps exactly the same brightness in every frame. Finish in the original gait phase. Locked orthographic camera, fixed scale and centred body. Keep the whole cannon including the muzzle, the pots and all four feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, muzzle flash, smoke, fire, sparks, shells in flight, motion trails, particles or extra legs; the orange slots, grille and pots keep only their steady glow. The machine moves only at its joints and turret pivot; the cannon stays rigid and straight.",
+  "protected_foreground_chroma": 21,
+  "edge_threshold": 12,
+  "palette_measurement": {
+    "bluest_opaque": 19.0,
+    "blue_minus_green_p999": 6.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

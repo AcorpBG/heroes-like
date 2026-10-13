@@ -1,0 +1,54 @@
+{
+  "unit_id": "unit_brasshollow_foundry_saint_veteran",
+  "clip": "idle",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    433,
+    581
+  ],
+  "scale": 0.43,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026104100,
+  "references": [
+    "idle_0",
+    "idle_1"
+  ],
+  "guides": [
+    [
+      31,
+      1
+    ],
+    [
+      62,
+      0
+    ],
+    [
+      93,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original massive humanoid furnace automaton, the Saint of the Last Furnace veteran, facing slightly screen right in elevated three-quarter view. Keep the brass and dark iron body, the barred glowing orange furnace in the chest, the slotted cylindrical knight helmet, the huge articulated metal gauntlets, the brass shoulder domes, the battered dark apron plates and heavy block feet, and the curved overhead back framework carrying glowing crucible ladles with hanging chains and counterweights. Exactly two arms and two legs. Preserve the furnace chest, the back framework with its ladles and chains, the gauntlets and the massive proportions. A heavy, solemn idle that loops. The furnace body rises and settles as if breathing, one great gauntlet lifts and opens slowly then closes, the helmet turns slightly, the hanging chains and counterweights sway gently, then everything returns smoothly to the original stance. Both feet stay planted. No walking and no attack. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed scale and centred body. Keep the whole back framework, every hanging counterweight, both gauntlets and both feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, flames, pouring metal, smoke, sparks, motion trails, particles or extra limbs; the furnace and ladles keep only their steady glow. The automaton moves at its joints; the armour and framework stay rigid and never morph.",
+  "protected_foreground_chroma": 8,
+  "edge_threshold": 9,
+  "palette_measurement": {
+    "bluest_opaque": 6.0,
+    "blue_minus_green_p999": 3.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

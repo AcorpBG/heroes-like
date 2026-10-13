@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_brasshollow_crucible_crawlers_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers_veteran/idle_v1.png",
+      "source_sha256": "24c08ea52553dc6e9cf155504191c6431b19801b500df7ed8d25ed7fe80572f6",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "805ec5347ccbf4504acbcc322f1e1fc40176e793cbcbd6f1b06a244559561ad4"
+    },
+    {
+      "frame": "defend_2",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers_veteran/reactions_v1.png",
+      "source_sha256": "f06c94d243e79f4da1feed9eb85859b055627568eb46c3f91711a512fdd893cc",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "559fd8d3e4f6b2574b0ca1e8edf75a250035ac19327dfbfcf330f9c48a33b895"
+    },
+    {
+      "frame": "defend_3",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers_veteran/reactions_v1.png",
+      "source_sha256": "f06c94d243e79f4da1feed9eb85859b055627568eb46c3f91711a512fdd893cc",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "e9bf3e4136167c23b37df150dbe645fdd1dbca544f04532abf36537d83c6b7d6"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    452,
+    574
+  ],
+  "output_scale": 0.48,
+  "free_pixels_left_top_right_bottom": [
+    118,
+    49,
+    117,
+    50
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

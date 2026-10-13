@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_brasshollow_foundry_saint_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_v1.png",
+      "source_sha256": "43feb89f756d12301d1512db80c4a53519617719542b04a379daebaca5f3e8fd",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "5eaf3c23a1c65ae5dfe7abf5cdaf5043abd8bf441b8d43e8bc40a1e4221877be"
+    },
+    {
+      "frame": "death_3",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_v1.png",
+      "source_sha256": "82397cb0c92a8b1ec366579844fc2e7adec058a3a8137266a114c7cd018ca656",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "5abfad5a961391141c902d25838525d4fa1f6cda93e94ef4de52075d75e4aab7"
+    },
+    {
+      "frame": "death_7",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_landing_v3.png",
+      "source_sha256": "1710d6f1f55206d9364b5917da8efca3e1606ede36df9c414fe56c3fc8a1dc74",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "c78e775c1a08adb6b4427e33b4e2b3cf350ad6849e93256a3a7642684af8b4b4"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    433,
+    581
+  ],
+  "output_scale": 0.43,
+  "free_pixels_left_top_right_bottom": [
+    160,
+    53,
+    160,
+    53
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -149,6 +149,45 @@
       ],
       "last": 2,
       "action": "Collapse slowly and heavily. The furnace dims, the knees buckle and the automaton sinks down onto its knees and gauntlets, stays there a moment, then topples over and lies flat on its side, finishing motionless with the helmet and framework at screen right, the ladles and chains resting on the ground and the furnace dark. The same body throughout: no explosion, no spilled metal and no disappearing."
+    },
+    "move_h3_v2": {
+      "clip": "move",
+      "references": [
+        "move_0",
+        "move_4"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Walk in place through two complete reciprocal cycles with slow, smooth, quiet steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each block foot alternates taking weight and swinging, setting down softly. The body stays centred for engine-driven travel, the gauntlets swinging and the chains and counterweights swaying. No stomping, impacts or shaking. The lighting never changes: the furnace and the crucible ladles hold one steady glow that never pulses, flickers or brightens, and the background keeps exactly the same brightness in every frame. Finish in the original gait phase."
+    },
+    "defend_h3_v2": {
+      "clip": "defend",
+      "references": [
+        "idle_0",
+        "defend_2",
+        "defend_3"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
+      "last": 2,
+      "action": "Cross both great gauntlets over the furnace chest, bend the knees and lower the helmet behind them, then hold the braced guard on both planted feet. No attack and no return to the relaxed stance. The lighting never changes: the furnace and the crucible ladles hold one steady glow that never pulses, flickers or brightens, and the background keeps exactly the same brightness in every frame."
     }
   }
 }

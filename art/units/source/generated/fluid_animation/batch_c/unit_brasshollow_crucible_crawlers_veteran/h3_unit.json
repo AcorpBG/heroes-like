@@ -169,6 +169,197 @@
       ],
       "last": 2,
       "action": "Shut down and collapse. The glow dims and the front legs buckle so the cannon dips to the ground, the body sags, stays there a moment, then the rear legs fold and the walker settles flat onto its belly with the legs splayed and the cannon lying angled on the ground, finishing as a still wreck with the slots and pots dark. The same body throughout: no explosion, no fire and no disappearing."
+    },
+    "idle_h3_v2": {
+      "clip": "idle",
+      "references": [
+        "idle_0"
+      ],
+      "guides": [],
+      "last": 0,
+      "action": "A rumbling mechanical idle that loops. The body rises and settles gently on its piston legs and the turret pans a little, then everything returns smoothly to the original level stance. The cannon muzzle dips slightly toward the ground and stays dark at its tip, and the two crucible lids stay shut: nothing leaves the cannon or the pots, no flash, fire, smoke, sparks or shells anywhere. All four feet stay planted. No walking. Only the body moves; nothing else appears in the frame."
+    },
+    "move_h3_v2": {
+      "clip": "move",
+      "references": [
+        "move_0",
+        "move_4"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Walk in place on four legs through two complete cycles with heavy mechanical steps. Diagonal pairs of piston legs alternate lifting, swinging forward and planting their three-pronged feet while the others bear the weight. The body stays centred for engine-driven travel with the cannon held level. Exactly four legs at all times. Finish in the original gait phase."
+    },
+    "idle_h3_v3": {
+      "clip": "idle",
+      "references": [
+        "idle_0"
+      ],
+      "guides": [],
+      "last": 0,
+      "action": "A calm, quiet idle that loops. The body rises and settles very gently on its piston legs and the turret pans a little, then everything returns smoothly to the original level stance. The cannon stays still and dark at its tip and the two crucible lids stay shut: nothing leaves the cannon or the pots, no flash, fire, smoke, sparks or shells anywhere. All four feet stay planted. No walking. The lighting never changes: the orange slots, grille and pots hold one steady glow that never pulses, flickers or brightens, and the blue background keeps exactly the same brightness in every frame. Only the body moves; nothing else appears in the frame."
+    },
+    "move_h3_v3": {
+      "clip": "move",
+      "references": [
+        "move_0",
+        "move_4"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Walk in place on four legs through two complete cycles with smooth, quiet, gliding steps. Diagonal pairs of piston legs alternate lifting, swinging forward and setting their three-pronged feet down softly while the others bear the weight. The body stays centred for engine-driven travel with the cannon held level. Exactly four legs at all times. No stomping, no impacts and no shaking. The lighting never changes: the orange slots, grille and pots hold one steady glow that never pulses, flickers or brightens, and the blue background keeps exactly the same brightness in every frame. Finish in the original gait phase."
+    },
+    "cast_h3_v2": {
+      "clip": "cast",
+      "references": [
+        "idle_0",
+        "cast_4"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A mechanical salute. The walker raises the cannon steeply upward and lifts one front leg off the ground in a salute, holds it briefly, then lowers the leg and brings the cannon back to level in the original stance. A physical gesture only: no fire, glow change or effect. The lighting never changes: the orange slots, grille and pots hold one steady glow that never pulses, flickers or brightens, and the blue background keeps exactly the same brightness in every frame."
+    },
+    "move_h3_v4": {
+      "clip": "move",
+      "references": [
+        "move_0",
+        "move_4"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Walk in place on four legs through two complete cycles with smooth, quiet, gliding steps. Diagonal pairs of piston legs alternate lifting, swinging forward and setting their three-pronged feet down softly while the others bear the weight. The body stays centred for engine-driven travel with the cannon held level. Exactly four legs at all times. No stomping, no impacts and no shaking. The lighting never changes: the orange slots, grille and pots hold one steady glow that never pulses, flickers or brightens, and the blue background keeps exactly the same brightness in every frame. Finish in the original gait phase."
+    },
+    "ranged_h3_v2": {
+      "clip": "ranged",
+      "references": [
+        "idle_0",
+        "ranged_3",
+        "ranged_5"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          56,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Brace and recoil once toward screen right. The legs brace wide and the cannon elevates, then the barrel slams back in recoil and the whole walker rocks back on its rear legs with the crucible lids jumping, holds a moment, then the barrel returns, the cannon lowers and the walker settles level into the original stance. A physical recoil only. The cannon is never fired: its muzzle stays dark and nothing leaves it, no flash, fire, smoke, sparks or shell. The lighting never changes: the orange slots, grille and pots hold one steady glow that never pulses, flickers or brightens, and the blue background keeps exactly the same brightness in every frame."
+    },
+    "cast_h3_v3": {
+      "clip": "cast",
+      "references": [
+        "idle_0",
+        "cast_4"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A mechanical salute. The walker raises the cannon steeply upward and lifts one front leg off the ground in a salute, holds it briefly, then lowers the leg and brings the cannon back to level in the original stance. A physical gesture only: no fire, glow change or effect. The cannon is never fired: its muzzle stays dark and nothing leaves it, no flash, fire, smoke, sparks or shell. The lighting never changes: the orange slots, grille and pots hold one steady glow that never pulses, flickers or brightens, and the blue background keeps exactly the same brightness in every frame."
+    },
+    "move_h3_v5": {
+      "clip": "move",
+      "references": [
+        "move_0",
+        "move_4"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Walk in place on four legs through two complete cycles with smooth, quiet, gliding steps. Diagonal pairs of piston legs alternate lifting, swinging forward and setting their three-pronged feet down softly while the others bear the weight. The body stays centred for engine-driven travel with the cannon held level. Exactly four legs at all times. No stomping, no impacts and no shaking. The lighting never changes: the orange slots, grille and pots hold one steady glow that never pulses, flickers or brightens, and the blue background keeps exactly the same brightness in every frame. Finish in the original gait phase."
+    },
+    "move_h3_v6": {
+      "clip": "move",
+      "references": [
+        "move_0",
+        "move_4"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Walk in place on four legs through two complete cycles with smooth, quiet, gliding steps. Diagonal pairs of piston legs alternate lifting, swinging forward and setting their three-pronged feet down softly while the others bear the weight. The body stays centred for engine-driven travel with the cannon held level. Exactly four legs at all times. No stomping, no impacts and no shaking. The lighting never changes: the orange slots, grille and pots hold one steady glow that never pulses, flickers or brightens, and the blue background keeps exactly the same brightness in every frame. Finish in the original gait phase."
     }
   }
 }

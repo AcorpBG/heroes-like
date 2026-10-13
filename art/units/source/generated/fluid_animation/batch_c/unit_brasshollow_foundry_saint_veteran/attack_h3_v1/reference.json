@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_brasshollow_foundry_saint_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_v1.png",
+      "source_sha256": "43feb89f756d12301d1512db80c4a53519617719542b04a379daebaca5f3e8fd",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "5eaf3c23a1c65ae5dfe7abf5cdaf5043abd8bf441b8d43e8bc40a1e4221877be"
+    },
+    {
+      "frame": "attack_2",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_v1.png",
+      "source_sha256": "58ad2842925b66095b10701da1b909ca2357adb3c465ec3727d800f56383aac8",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "efac13627f73f52f6780ef57b138036ed32d0d92953d4065388046639706fddc"
+    },
+    {
+      "frame": "attack_4",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_v1.png",
+      "source_sha256": "58ad2842925b66095b10701da1b909ca2357adb3c465ec3727d800f56383aac8",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "a67cc8cc893a05fd060ee062b13861f79cfa5ba6a727d083aac9ea0746aa3de4"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    433,
+    581
+  ],
+  "output_scale": 0.43,
+  "free_pixels_left_top_right_bottom": [
+    160,
+    53,
+    160,
+    53
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -7,916 +7,4540 @@
       "source_facing": "right",
       "frames": [
         {
-          "name": "idle_0",
+          "name": "idle_h3_v1_000",
           "clip": "idle",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_000.png",
           "rects": [
             [
               0,
               0,
-              444,
-              444
+              960,
+              640
             ]
           ],
           "anchor": [
-            265,
-            417
+            433,
+            581
           ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
         },
         {
-          "name": "idle_1",
+          "name": "idle_h3_v1_002",
           "clip": "idle",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_002.png",
           "rects": [
             [
-              444,
               0,
-              887,
-              444
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            681,
-            417
+            433,
+            581
           ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 2,
+          "video_time_seconds": 0.0833
         },
         {
-          "name": "idle_2",
+          "name": "idle_h3_v1_004",
           "clip": "idle",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_004.png",
           "rects": [
             [
-              887,
               0,
-              1330,
-              444
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            1110,
-            417
+            433,
+            581
           ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.1667
         },
         {
-          "name": "idle_3",
+          "name": "idle_h3_v1_006",
           "clip": "idle",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_006.png",
           "rects": [
             [
-              1330,
               0,
-              1774,
-              444
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            1558,
-            417
+            433,
+            581
           ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
         },
         {
-          "name": "idle_4",
+          "name": "idle_h3_v1_008",
           "clip": "idle",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_008.png",
           "rects": [
             [
               0,
-              444,
-              444,
-              887
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            265,
-            849
+            433,
+            581
           ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333
         },
         {
-          "name": "idle_5",
+          "name": "idle_h3_v1_010",
           "clip": "idle",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_010.png",
           "rects": [
             [
-              444,
-              444,
-              887,
-              887
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            681,
-            849
+            433,
+            581
           ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4167
         },
         {
-          "name": "idle_6",
+          "name": "idle_h3_v1_012",
           "clip": "idle",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_012.png",
           "rects": [
             [
-              887,
-              444,
-              1330,
-              887
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            1110,
-            849
+            433,
+            581
           ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
         },
         {
-          "name": "idle_7",
+          "name": "idle_h3_v1_014",
           "clip": "idle",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_v1.png",
-          "rects": [
-            [
-              1330,
-              444,
-              1774,
-              887
-            ]
-          ],
-          "anchor": [
-            1558,
-            849
-          ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "attack_0",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_014.png",
           "rects": [
             [
               0,
               0,
-              444,
-              444
+              960,
+              640
             ]
           ],
           "anchor": [
-            207,
-            421
+            433,
+            581
           ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833
         },
         {
-          "name": "attack_1",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_v1.png",
-          "rects": [
-            [
-              444,
-              0,
-              887,
-              444
-            ]
-          ],
-          "anchor": [
-            660,
-            421
-          ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "attack_2",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_v1.png",
-          "rects": [
-            [
-              887,
-              0,
-              1330,
-              444
-            ]
-          ],
-          "anchor": [
-            1103,
-            421
-          ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "attack_3",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_v1.png",
-          "rects": [
-            [
-              1330,
-              0,
-              1774,
-              444
-            ]
-          ],
-          "anchor": [
-            1550,
-            421
-          ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "attack_4",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_v1.png",
+          "name": "idle_h3_v1_016",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_016.png",
           "rects": [
             [
               0,
-              444,
-              500,
-              887
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            205,
-            842
+            433,
+            581
           ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6667
         },
         {
-          "name": "attack_5",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_v1.png",
+          "name": "idle_h3_v1_018",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_018.png",
           "rects": [
             [
-              500,
-              444,
-              887,
-              887
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            666,
-            842
+            433,
+            581
           ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
         },
         {
-          "name": "attack_6",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_v1.png",
+          "name": "idle_h3_v1_020",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_020.png",
           "rects": [
             [
-              887,
-              444,
-              1330,
-              887
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            1113,
-            842
+            433,
+            581
           ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333
         },
         {
-          "name": "attack_7",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_v1.png",
+          "name": "idle_h3_v1_022",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_022.png",
           "rects": [
             [
-              1330,
-              444,
-              1774,
-              887
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            1560,
-            842
+            433,
+            581
           ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9167
         },
         {
-          "name": "move_0",
+          "name": "idle_h3_v1_024",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "idle_h3_v1_026",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833
+        },
+        {
+          "name": "idle_h3_v1_028",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1667
+        },
+        {
+          "name": "idle_h3_v1_030",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "idle_h3_v1_032",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333
+        },
+        {
+          "name": "idle_h3_v1_034",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4167
+        },
+        {
+          "name": "idle_h3_v1_036",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "idle_h3_v1_038",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833
+        },
+        {
+          "name": "idle_h3_v1_040",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6667
+        },
+        {
+          "name": "idle_h3_v1_042",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "idle_h3_v1_044",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333
+        },
+        {
+          "name": "idle_h3_v1_046",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9167
+        },
+        {
+          "name": "idle_h3_v1_048",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "idle_h3_v1_050",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833
+        },
+        {
+          "name": "idle_h3_v1_052",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1667
+        },
+        {
+          "name": "idle_h3_v1_054",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "idle_h3_v1_056",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333
+        },
+        {
+          "name": "idle_h3_v1_058",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4167
+        },
+        {
+          "name": "idle_h3_v1_060",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "idle_h3_v1_062",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833
+        },
+        {
+          "name": "idle_h3_v1_064",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6667
+        },
+        {
+          "name": "idle_h3_v1_066",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "idle_h3_v1_068",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333
+        },
+        {
+          "name": "idle_h3_v1_070",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9167
+        },
+        {
+          "name": "idle_h3_v1_072",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "idle_h3_v1_074",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833
+        },
+        {
+          "name": "idle_h3_v1_076",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1667
+        },
+        {
+          "name": "idle_h3_v1_078",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "idle_h3_v1_080",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333
+        },
+        {
+          "name": "idle_h3_v1_082",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4167
+        },
+        {
+          "name": "idle_h3_v1_084",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "idle_h3_v1_086",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833
+        },
+        {
+          "name": "idle_h3_v1_088",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6667
+        },
+        {
+          "name": "idle_h3_v1_090",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "idle_h3_v1_092",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333
+        },
+        {
+          "name": "idle_h3_v1_094",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9167
+        },
+        {
+          "name": "idle_h3_v1_096",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "idle_h3_v1_098",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.0833
+        },
+        {
+          "name": "idle_h3_v1_100",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.1667
+        },
+        {
+          "name": "idle_h3_v1_102",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "idle_h3_v1_104",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.3333
+        },
+        {
+          "name": "idle_h3_v1_106",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_106.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 106,
+          "video_time_seconds": 4.4167
+        },
+        {
+          "name": "idle_h3_v1_108",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "idle_h3_v1_110",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_110.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 110,
+          "video_time_seconds": 4.5833
+        },
+        {
+          "name": "idle_h3_v1_112",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_112.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.6667
+        },
+        {
+          "name": "idle_h3_v1_114",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_114.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 114,
+          "video_time_seconds": 4.75
+        },
+        {
+          "name": "idle_h3_v1_116",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_116.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 116,
+          "video_time_seconds": 4.8333
+        },
+        {
+          "name": "idle_h3_v1_118",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_118.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 118,
+          "video_time_seconds": 4.9167
+        },
+        {
+          "name": "idle_h3_v1_120",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_120.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 120,
+          "video_time_seconds": 5.0
+        },
+        {
+          "name": "idle_h3_v1_122",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte/rgba_122.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 122,
+          "video_time_seconds": 5.0833
+        },
+        {
+          "name": "move_h3_v2_044",
           "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_v2.png",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_044.png",
           "rects": [
             [
               0,
               0,
-              444,
-              444
+              960,
+              640
             ]
           ],
           "anchor": [
-            214,
-            418
+            433,
+            581
           ],
-          "scale": 0.585,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333
         },
         {
-          "name": "move_1",
+          "name": "move_h3_v2_046",
           "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_v2.png",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_046.png",
           "rects": [
             [
-              444,
               0,
-              887,
-              444
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            658,
-            418
+            433,
+            581
           ],
-          "scale": 0.585,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9167
         },
         {
-          "name": "move_2",
+          "name": "move_h3_v2_048",
           "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_v2.png",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_048.png",
           "rects": [
             [
-              887,
               0,
-              1330,
-              444
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            1104,
-            418
+            433,
+            581
           ],
-          "scale": 0.585,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
         },
         {
-          "name": "move_3",
+          "name": "move_h3_v2_050",
           "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_v2.png",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_050.png",
           "rects": [
             [
-              1330,
               0,
-              1774,
-              444
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            1549,
-            418
+            433,
+            581
           ],
-          "scale": 0.585,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833
         },
         {
-          "name": "move_4",
+          "name": "move_h3_v2_052",
           "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_farstep_v3.png",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_052.png",
           "rects": [
             [
               0,
               0,
-              627,
-              627
+              960,
+              640
             ]
           ],
           "anchor": [
-            345,
-            594
+            433,
+            581
           ],
-          "scale": 0.395,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1667
         },
         {
-          "name": "move_5",
+          "name": "move_h3_v2_054",
           "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_farstep_v3.png",
-          "rects": [
-            [
-              627,
-              0,
-              1254,
-              627
-            ]
-          ],
-          "anchor": [
-            968,
-            594
-          ],
-          "scale": 0.395,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "move_6",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_farstep_v3.png",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_054.png",
           "rects": [
             [
               0,
-              627,
-              627,
-              1254
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            345,
-            1210
+            433,
+            581
           ],
-          "scale": 0.395,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
         },
         {
-          "name": "move_7",
+          "name": "move_h3_v2_056",
           "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_farstep_v3.png",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_056.png",
           "rects": [
             [
-              627,
-              627,
-              1254,
-              1254
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            968,
-            1210
+            433,
+            581
           ],
-          "scale": 0.395,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333
         },
         {
-          "name": "hit_0",
+          "name": "move_h3_v2_058",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4167
+        },
+        {
+          "name": "move_h3_v2_060",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "move_h3_v2_062",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833
+        },
+        {
+          "name": "move_h3_v2_064",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6667
+        },
+        {
+          "name": "move_h3_v2_066",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "move_h3_v2_068",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333
+        },
+        {
+          "name": "move_h3_v2_070",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9167
+        },
+        {
+          "name": "move_h3_v2_072",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "move_h3_v2_074",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833
+        },
+        {
+          "name": "move_h3_v2_076",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1667
+        },
+        {
+          "name": "move_h3_v2_078",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "move_h3_v2_080",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333
+        },
+        {
+          "name": "move_h3_v2_082",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4167
+        },
+        {
+          "name": "move_h3_v2_084",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "move_h3_v2_086",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833
+        },
+        {
+          "name": "move_h3_v2_088",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6667
+        },
+        {
+          "name": "move_h3_v2_090",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "move_h3_v2_092",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333
+        },
+        {
+          "name": "move_h3_v2_094",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9167
+        },
+        {
+          "name": "move_h3_v2_096",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "move_h3_v2_098",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.0833
+        },
+        {
+          "name": "move_h3_v2_100",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.1667
+        },
+        {
+          "name": "move_h3_v2_102",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "move_h3_v2_104",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.3333
+        },
+        {
+          "name": "attack_h3_v1_013",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5417
+        },
+        {
+          "name": "attack_h3_v1_017",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083
+        },
+        {
+          "name": "attack_h3_v1_021",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "attack_h3_v1_023",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583
+        },
+        {
+          "name": "attack_h3_v1_025",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0417
+        },
+        {
+          "name": "attack_h3_v1_028",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1667
+        },
+        {
+          "name": "attack_h3_v1_030",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "attack_h3_v1_032",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333
+        },
+        {
+          "name": "attack_h3_v1_034",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4167
+        },
+        {
+          "name": "attack_h3_v1_036",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "attack_h3_v1_041",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083
+        },
+        {
+          "name": "attack_h3_v1_042",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "attack_h3_v1_043",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7917
+        },
+        {
+          "name": "attack_h3_v1_044",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333
+        },
+        {
+          "name": "attack_h3_v1_054",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "attack_h3_v1_058",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4167
+        },
+        {
+          "name": "attack_h3_v1_069",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_069.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 69,
+          "video_time_seconds": 2.875
+        },
+        {
+          "name": "attack_h3_v1_074",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833
+        },
+        {
+          "name": "attack_h3_v1_075",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "attack_h3_v1_077",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_077.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 77,
+          "video_time_seconds": 3.2083
+        },
+        {
+          "name": "attack_h3_v1_078",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "attack_h3_v1_080",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333
+        },
+        {
+          "name": "attack_h3_v1_081",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_081.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 81,
+          "video_time_seconds": 3.375
+        },
+        {
+          "name": "attack_h3_v1_083",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_083.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 83,
+          "video_time_seconds": 3.4583
+        },
+        {
+          "name": "attack_h3_v1_085",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_085.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 85,
+          "video_time_seconds": 3.5417
+        },
+        {
+          "name": "attack_h3_v1_087",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_087.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 87,
+          "video_time_seconds": 3.625
+        },
+        {
+          "name": "attack_h3_v1_088",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6667
+        },
+        {
+          "name": "attack_h3_v1_090",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "attack_h3_v1_092",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333
+        },
+        {
+          "name": "attack_h3_v1_094",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9167
+        },
+        {
+          "name": "attack_h3_v1_095",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_095.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 95,
+          "video_time_seconds": 3.9583
+        },
+        {
+          "name": "attack_h3_v1_097",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_097.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 97,
+          "video_time_seconds": 4.0417
+        },
+        {
+          "name": "attack_h3_v1_099",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_099.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 99,
+          "video_time_seconds": 4.125
+        },
+        {
+          "name": "attack_h3_v1_103",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_103.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 103,
+          "video_time_seconds": 4.2917
+        },
+        {
+          "name": "attack_h3_v1_107",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte/rgba_107.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 107,
+          "video_time_seconds": 4.4583
+        },
+        {
+          "name": "hit_h3_v1_004",
           "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/reactions_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/matte/rgba_004.png",
           "rects": [
             [
               0,
               0,
-              444,
-              444
+              960,
+              640
             ]
           ],
           "anchor": [
-            209,
-            413
+            433,
+            581
           ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.1667
         },
         {
-          "name": "hit_1",
+          "name": "hit_h3_v1_007",
           "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/reactions_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/matte/rgba_007.png",
           "rects": [
             [
-              444,
               0,
-              887,
-              444
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            657,
-            413
+            433,
+            581
           ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 7,
+          "video_time_seconds": 0.2917
         },
         {
-          "name": "hit_2",
+          "name": "hit_h3_v1_008",
           "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/reactions_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/matte/rgba_008.png",
           "rects": [
             [
-              887,
               0,
-              1330,
-              444
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            1106,
-            413
+            433,
+            581
           ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333
         },
         {
-          "name": "hit_3",
+          "name": "hit_h3_v1_009",
           "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/reactions_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/matte/rgba_009.png",
           "rects": [
             [
-              1330,
               0,
-              1774,
-              444
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            1560,
-            413
+            433,
+            581
           ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 9,
+          "video_time_seconds": 0.375
         },
         {
-          "name": "defend_0",
+          "name": "hit_h3_v1_010",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4167
+        },
+        {
+          "name": "hit_h3_v1_011",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/matte/rgba_011.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 11,
+          "video_time_seconds": 0.4583
+        },
+        {
+          "name": "hit_h3_v1_012",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "hit_h3_v1_016",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6667
+        },
+        {
+          "name": "hit_h3_v1_017",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083
+        },
+        {
+          "name": "hit_h3_v1_018",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "hit_h3_v1_019",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7917
+        },
+        {
+          "name": "hit_h3_v1_020",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333
+        },
+        {
+          "name": "hit_h3_v1_021",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "hit_h3_v1_022",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9167
+        },
+        {
+          "name": "hit_h3_v1_024",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "hit_h3_v1_025",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0417
+        },
+        {
+          "name": "hit_h3_v1_027",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "hit_h3_v1_030",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "hit_h3_v1_041",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083
+        },
+        {
+          "name": "defend_h3_v2_013",
           "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/reactions_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/defend_h3_v2/matte/rgba_013.png",
           "rects": [
             [
               0,
-              444,
-              444,
-              887
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            209,
-            852
+            433,
+            581
           ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5417
         },
         {
-          "name": "defend_1",
+          "name": "defend_h3_v2_020",
           "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/reactions_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/defend_h3_v2/matte/rgba_020.png",
           "rects": [
             [
-              444,
-              444,
-              887,
-              887
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            657,
-            852
+            433,
+            581
           ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333
         },
         {
-          "name": "defend_2",
+          "name": "defend_h3_v2_026",
           "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/reactions_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/defend_h3_v2/matte/rgba_026.png",
           "rects": [
             [
-              887,
-              444,
-              1330,
-              887
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            1106,
-            852
+            433,
+            581
           ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833
         },
         {
-          "name": "defend_3",
+          "name": "defend_h3_v2_027",
           "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/reactions_v1.png",
-          "rects": [
-            [
-              1330,
-              444,
-              1774,
-              887
-            ]
-          ],
-          "anchor": [
-            1560,
-            852
-          ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "death_0",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/defend_h3_v2/matte/rgba_027.png",
           "rects": [
             [
               0,
               0,
-              444,
-              444
+              960,
+              640
             ]
           ],
           "anchor": [
-            205,
-            433
+            433,
+            581
           ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
         },
         {
-          "name": "death_1",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_v1.png",
-          "rects": [
-            [
-              444,
-              0,
-              887,
-              444
-            ]
-          ],
-          "anchor": [
-            651,
-            433
-          ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "death_2",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_v1.png",
-          "rects": [
-            [
-              887,
-              0,
-              1330,
-              444
-            ]
-          ],
-          "anchor": [
-            1100,
-            433
-          ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "death_3",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_v1.png",
-          "rects": [
-            [
-              1330,
-              0,
-              1774,
-              444
-            ]
-          ],
-          "anchor": [
-            1546,
-            433
-          ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "death_4",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_landing_v3.png",
+          "name": "defend_h3_v2_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/defend_h3_v2/matte/rgba_028.png",
           "rects": [
             [
               0,
               0,
-              627,
-              627
+              960,
+              640
             ]
           ],
           "anchor": [
-            313,
-            582
+            433,
+            581
           ],
-          "scale": 0.39,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1667
         },
         {
-          "name": "death_5",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_landing_v3.png",
-          "rects": [
-            [
-              627,
-              0,
-              1254,
-              627
-            ]
-          ],
-          "anchor": [
-            943,
-            584
-          ],
-          "scale": 0.39,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "death_6",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_landing_v3.png",
+          "name": "defend_h3_v2_029",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/defend_h3_v2/matte/rgba_029.png",
           "rects": [
             [
               0,
-              627,
-              627,
-              1254
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            313,
-            1137
+            433,
+            581
           ],
-          "scale": 0.39,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083
         },
         {
-          "name": "death_7",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_landing_v3.png",
+          "name": "defend_h3_v2_030",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/defend_h3_v2/matte/rgba_030.png",
           "rects": [
             [
-              627,
-              627,
-              1254,
-              1254
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            943,
-            1143
+            433,
+            581
           ],
-          "scale": 0.39,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
         },
         {
-          "name": "cast_0",
+          "name": "defend_h3_v2_031",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/defend_h3_v2/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2917
+        },
+        {
+          "name": "defend_h3_v2_033",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/defend_h3_v2/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "defend_h3_v2_034",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/defend_h3_v2/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4167
+        },
+        {
+          "name": "defend_h3_v2_035",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/defend_h3_v2/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583
+        },
+        {
+          "name": "defend_h3_v2_036",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/defend_h3_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "defend_h3_v2_038",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/defend_h3_v2/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833
+        },
+        {
+          "name": "defend_h3_v2_043",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/defend_h3_v2/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7917
+        },
+        {
+          "name": "defend_h3_v2_050",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/defend_h3_v2/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833
+        },
+        {
+          "name": "defend_h3_v2_057",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/defend_h3_v2/matte/rgba_057.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 57,
+          "video_time_seconds": 2.375
+        },
+        {
+          "name": "defend_h3_v2_065",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/defend_h3_v2/matte/rgba_065.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 65,
+          "video_time_seconds": 2.7083
+        },
+        {
+          "name": "cast_h3_v1_010",
           "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/support_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_010.png",
           "rects": [
             [
               0,
               0,
-              444,
-              444
+              960,
+              640
             ]
           ],
           "anchor": [
-            252,
-            419
+            433,
+            581
           ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4167
         },
         {
-          "name": "cast_1",
+          "name": "cast_h3_v1_015",
           "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/support_v1.png",
-          "rects": [
-            [
-              444,
-              0,
-              887,
-              444
-            ]
-          ],
-          "anchor": [
-            674,
-            419
-          ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "cast_2",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/support_v1.png",
-          "rects": [
-            [
-              887,
-              0,
-              1330,
-              444
-            ]
-          ],
-          "anchor": [
-            1107,
-            419
-          ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "cast_3",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/support_v1.png",
-          "rects": [
-            [
-              1330,
-              0,
-              1774,
-              444
-            ]
-          ],
-          "anchor": [
-            1543,
-            419
-          ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "cast_4",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/support_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_015.png",
           "rects": [
             [
               0,
-              444,
-              494,
-              887
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            239,
-            859
+            433,
+            581
           ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
         },
         {
-          "name": "cast_5",
+          "name": "cast_h3_v1_017",
           "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/support_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_017.png",
           "rects": [
             [
-              494,
-              444,
-              887,
-              887
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            674,
-            859
+            433,
+            581
           ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083
         },
         {
-          "name": "cast_6",
+          "name": "cast_h3_v1_018",
           "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/support_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_018.png",
           "rects": [
             [
-              887,
-              444,
-              1330,
-              887
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            1107,
-            859
+            433,
+            581
           ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
         },
         {
-          "name": "cast_7",
+          "name": "cast_h3_v1_019",
           "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/support_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_019.png",
           "rects": [
             [
-              1330,
-              444,
-              1774,
-              887
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            1543,
-            859
+            433,
+            581
           ],
-          "scale": 0.56,
-          "alpha_noise_cutoff": 8
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7917
+        },
+        {
+          "name": "cast_h3_v1_020",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333
+        },
+        {
+          "name": "cast_h3_v1_021",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "cast_h3_v1_022",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9167
+        },
+        {
+          "name": "cast_h3_v1_023",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583
+        },
+        {
+          "name": "cast_h3_v1_024",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "cast_h3_v1_026",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833
+        },
+        {
+          "name": "cast_h3_v1_028",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1667
+        },
+        {
+          "name": "cast_h3_v1_035",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583
+        },
+        {
+          "name": "cast_h3_v1_047",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_047.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 47,
+          "video_time_seconds": 1.9583
+        },
+        {
+          "name": "cast_h3_v1_054",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "cast_h3_v1_061",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_061.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 61,
+          "video_time_seconds": 2.5417
+        },
+        {
+          "name": "cast_h3_v1_068",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333
+        },
+        {
+          "name": "cast_h3_v1_077",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_077.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 77,
+          "video_time_seconds": 3.2083
+        },
+        {
+          "name": "cast_h3_v1_078",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "cast_h3_v1_080",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333
+        },
+        {
+          "name": "cast_h3_v1_081",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_081.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 81,
+          "video_time_seconds": 3.375
+        },
+        {
+          "name": "cast_h3_v1_083",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_083.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 83,
+          "video_time_seconds": 3.4583
+        },
+        {
+          "name": "cast_h3_v1_084",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "cast_h3_v1_086",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833
+        },
+        {
+          "name": "cast_h3_v1_087",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_087.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 87,
+          "video_time_seconds": 3.625
+        },
+        {
+          "name": "cast_h3_v1_088",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6667
+        },
+        {
+          "name": "cast_h3_v1_090",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "cast_h3_v1_091",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_091.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 91,
+          "video_time_seconds": 3.7917
+        },
+        {
+          "name": "cast_h3_v1_092",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333
+        },
+        {
+          "name": "cast_h3_v1_094",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9167
+        },
+        {
+          "name": "cast_h3_v1_103",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte/rgba_103.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 103,
+          "video_time_seconds": 4.2917
+        },
+        {
+          "name": "death_h3_v1_004",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.1667
+        },
+        {
+          "name": "death_h3_v1_010",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4167
+        },
+        {
+          "name": "death_h3_v1_016",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6667
+        },
+        {
+          "name": "death_h3_v1_020",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333
+        },
+        {
+          "name": "death_h3_v1_021",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "death_h3_v1_022",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9167
+        },
+        {
+          "name": "death_h3_v1_027",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "death_h3_v1_029",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083
+        },
+        {
+          "name": "death_h3_v1_031",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2917
+        },
+        {
+          "name": "death_h3_v1_042",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "death_h3_v1_049",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/matte/rgba_049.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 49,
+          "video_time_seconds": 2.0417
+        },
+        {
+          "name": "death_h3_v1_056",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333
+        },
+        {
+          "name": "death_h3_v1_063",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/matte/rgba_063.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 63,
+          "video_time_seconds": 2.625
+        },
+        {
+          "name": "death_h3_v1_074",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833
+        },
+        {
+          "name": "death_h3_v1_076",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1667
+        },
+        {
+          "name": "death_h3_v1_083",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/matte/rgba_083.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 83,
+          "video_time_seconds": 3.4583
+        },
+        {
+          "name": "death_h3_v1_085",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/matte/rgba_085.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 85,
+          "video_time_seconds": 3.5417
+        },
+        {
+          "name": "death_h3_v1_087",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/matte/rgba_087.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 87,
+          "video_time_seconds": 3.625
+        },
+        {
+          "name": "death_h3_v1_090",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "death_h3_v1_101",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/matte/rgba_101.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 101,
+          "video_time_seconds": 4.2083
+        },
+        {
+          "name": "death_h3_v1_123",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            433,
+            581
+          ],
+          "scale": 0.43,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
         }
       ],
       "clips": {
@@ -929,14 +4553,7 @@
             4,
             5,
             6,
-            7
-          ],
-          "frame_msec": 125,
-          "loop": true,
-          "static_frame": 0
-        },
-        "attack": {
-          "indices": [
+            7,
             8,
             9,
             10,
@@ -944,14 +4561,7 @@
             12,
             13,
             14,
-            15
-          ],
-          "frame_msec": 110,
-          "loop": false,
-          "contact_frame": 4
-        },
-        "move": {
-          "indices": [
+            15,
             16,
             17,
             18,
@@ -959,33 +4569,15 @@
             20,
             21,
             22,
-            23
-          ],
-          "frame_msec": 100,
-          "loop": true
-        },
-        "hit": {
-          "indices": [
+            23,
             24,
             25,
             26,
-            27
-          ],
-          "frame_msec": 110,
-          "loop": false
-        },
-        "defend": {
-          "indices": [
+            27,
             28,
             29,
             30,
-            31
-          ],
-          "frame_msec": 110,
-          "loop": false
-        },
-        "death": {
-          "indices": [
+            31,
             32,
             33,
             34,
@@ -993,20 +4585,7 @@
             36,
             37,
             38,
-            39
-          ],
-          "frame_msec": 110,
-          "loop": false
-        },
-        "dead": {
-          "indices": [
-            39
-          ],
-          "frame_msec": 110,
-          "loop": false
-        },
-        "cast": {
-          "indices": [
+            39,
             40,
             41,
             42,
@@ -1014,128 +4593,541 @@
             44,
             45,
             46,
-            47
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61
           ],
-          "frame_msec": 110,
+          "frame_msec": 60,
+          "loop": true,
+          "static_frame": 0
+        },
+        "move": {
+          "indices": [
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92
+          ],
+          "frame_msec": 50,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127
+          ],
+          "frame_msec": 42,
           "loop": false,
-          "contact_frame": 4
+          "static_frame": 0,
+          "contact_frame": 12
+        },
+        "hit": {
+          "indices": [
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146
+          ],
+          "frame_msec": 35,
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156,
+            157,
+            158,
+            159,
+            160,
+            161,
+            162,
+            163
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 16
+        },
+        "cast": {
+          "indices": [
+            164,
+            165,
+            166,
+            167,
+            168,
+            169,
+            170,
+            171,
+            172,
+            173,
+            174,
+            175,
+            176,
+            177,
+            178,
+            179,
+            180,
+            181,
+            182,
+            183,
+            184,
+            185,
+            186,
+            187,
+            188,
+            189,
+            190,
+            191,
+            192,
+            193,
+            194
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 15
+        },
+        "death": {
+          "indices": [
+            195,
+            196,
+            197,
+            198,
+            199,
+            200,
+            201,
+            202,
+            203,
+            204,
+            205,
+            206,
+            207,
+            208,
+            209,
+            210,
+            211,
+            212,
+            213,
+            214,
+            215
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 20
         }
       },
-      "accepted_clips": [
-        "idle",
-        "attack",
-        "move",
-        "hit",
-        "defend",
-        "death",
-        "dead",
-        "cast"
-      ],
-      "preserve_clips": [],
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "Guides are the accepted paintings at their accepted scale; every video frame keeps one fixed extraction scale and anchor.",
+      "provenance": {
+        "idle_h3_v1/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/original_lossless.mkv",
+          "sha256": "a2171035ce97aff933aade8952d2b533600a4b23a9c710d5e9c5e2dcada8d504"
+        },
+        "idle_h3_v1/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/original.json",
+          "sha256": "d58c4fd30790b94f3db48d717d3a402e0152fb2af8a2d3f6dbf87aaaee695e96"
+        },
+        "idle_h3_v1/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/original.latent",
+          "sha256": "92dce777dfa0ddb30056a4afbe59d5745bb10dd9aaac964d12122381d6e9307a"
+        },
+        "idle_h3_v1/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/sampling_workflow_api.json",
+          "sha256": "c8290b881e27548c9f04593665683108d711d5d39846c298aeeaa912346bcc0b"
+        },
+        "idle_h3_v1/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/decode_workflow_api.json",
+          "sha256": "626ae6638c58ef166bb207096f1a15220f79ea3fcae3ac0f48082ba56adc93a0"
+        },
+        "idle_h3_v1/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/sampling_history.json",
+          "sha256": "e11e844d2ee1bc8ceea4a916026be60f7948ff0d9850c47b7749f9d3f4269301"
+        },
+        "idle_h3_v1/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/generation_history.json",
+          "sha256": "13321bf81a485c3bb5e2b37a6f9237a619dd4e24fdff2f6522a9a1a241a21e53"
+        },
+        "idle_h3_v1/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/prompt.txt",
+          "sha256": "1c0de1df4da728501ee25dac11eb09c5b8d3fed6b290621519b47b35a52f600d"
+        },
+        "idle_h3_v1/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/reference.json",
+          "sha256": "4dc60527527255c4e852955f724d836a89082267df76a505866f9f19ab0e6e8e"
+        },
+        "idle_h3_v1/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/config.json",
+          "sha256": "bf0b05072bdd40107f487ea3977b4ff6e811f6accb8d0f28b8c80ca84f667c82"
+        },
+        "idle_h3_v1/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_h3_v1/matte.json",
+          "sha256": "dbc23a72e3e3da20933ed1c256d3aa3a7bdc829a5d2bef344a09dcdab7c43df9"
+        },
+        "move_h3_v2/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/original_lossless.mkv",
+          "sha256": "75a7e56a6c83525b780de79ff3db1f13b0271583180f77f66d0189b16c5d435f"
+        },
+        "move_h3_v2/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/original.json",
+          "sha256": "0ca1e0ca640e71d05517b0cb74c08305f03fe9708b99dd9cee1a462a6ce3f106"
+        },
+        "move_h3_v2/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/original.latent",
+          "sha256": "f534c4ebf1e71d76283cb23dbb495b37bb9c08a357f53380e93073a1ff3a2553"
+        },
+        "move_h3_v2/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/sampling_workflow_api.json",
+          "sha256": "2895e66911117a83bbcb54d8ee33deb8fdecd1537c6c261c204b90f4c448bb57"
+        },
+        "move_h3_v2/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/decode_workflow_api.json",
+          "sha256": "913296c2140dbf17bf87df348b85c29d3117275a0e6933106cb5c255efef4d9a"
+        },
+        "move_h3_v2/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/sampling_history.json",
+          "sha256": "bfa24823a10d49594737212f5a1782ebb54457e644ac57c66581c3c0aba4df88"
+        },
+        "move_h3_v2/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/generation_history.json",
+          "sha256": "de851706dc2ced854d7936fecf9af42ddd1bb84d9865cf492d55680e35263008"
+        },
+        "move_h3_v2/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/prompt.txt",
+          "sha256": "035d596f1f884d1f6e5876dbe39584831e9a61a9d1fb302da641d66ad76a52d7"
+        },
+        "move_h3_v2/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/reference.json",
+          "sha256": "dbf80eeaf6833b73a80b9d20e0ab1ab184beee86672788ef05409134a20c4013"
+        },
+        "move_h3_v2/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/config.json",
+          "sha256": "d73bd50983b142a9ed7f49e45426d2976bdb8720cff60e79e11dd4e81110d4e3"
+        },
+        "move_h3_v2/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_h3_v2/matte.json",
+          "sha256": "258a0ecccc8618444b8c710516e1f8588da765b57e4385120ffc873ef1cc162c"
+        },
+        "attack_h3_v1/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/original_lossless.mkv",
+          "sha256": "5c3b7e2d29c02695868a587ded9827eb9768bb2535828a5caa8fe0cef7906616"
+        },
+        "attack_h3_v1/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/original.json",
+          "sha256": "082cc62083f1ab808638453f6594578b39de1febb5c859f4f214758e59367dbf"
+        },
+        "attack_h3_v1/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/original.latent",
+          "sha256": "01bf28ca2abca9193fe0620bdcbd98bbd89cf43c415ee84376787d1dc30158bd"
+        },
+        "attack_h3_v1/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/sampling_workflow_api.json",
+          "sha256": "8e6467e695233b5cb3cae7fc5d85e09a2181fea911406fc22e76242311cdee12"
+        },
+        "attack_h3_v1/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/decode_workflow_api.json",
+          "sha256": "784eb474c785a8a1dae4574334268c37c5752114bb0e54cf12efe02b9e4dd3de"
+        },
+        "attack_h3_v1/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/sampling_history.json",
+          "sha256": "6fadf0b3a1dcf212deec029989a8f483fe4b901de76e2d38c6cef93ab62985d9"
+        },
+        "attack_h3_v1/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/generation_history.json",
+          "sha256": "08346d5945128175cacb8fc7a03f24df4a7460216ad03add0d6b170307c3b8f3"
+        },
+        "attack_h3_v1/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/prompt.txt",
+          "sha256": "61ecea0f5ff7ea01a6606bcda27cab4e1f473d34790e196e6210c2846f88f0ac"
+        },
+        "attack_h3_v1/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/reference.json",
+          "sha256": "6648c1f50fc2efa2e6eee9fa398ee252dd6b47cc22f436f7c970a075dd8788fb"
+        },
+        "attack_h3_v1/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/config.json",
+          "sha256": "d147ead2e05c38159744b26a7e871ed620ce1e9badb663d14a3f6f777a9cd45b"
+        },
+        "attack_h3_v1/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_h3_v1/matte.json",
+          "sha256": "9948a8e915ff7422702d315d418830df3f3c50925e8b561063dfb44cb8faeaf8"
+        },
+        "hit_h3_v1/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/original_lossless.mkv",
+          "sha256": "8f0a232facc4847282cb3103bfd27541bafef363cb598c88c5e10f57809d9c88"
+        },
+        "hit_h3_v1/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/original.json",
+          "sha256": "39bb27c0797f70a5e24e9f9b9ebd61321e728321f31a4e9aec1ec3e4f6d2f352"
+        },
+        "hit_h3_v1/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/original.latent",
+          "sha256": "c128d385536c014821b3c776c5daa578480f0daab0627aa99790ce0c2410bc01"
+        },
+        "hit_h3_v1/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/sampling_workflow_api.json",
+          "sha256": "20923b2138fdb6953324348e6b488400d887bf48c75128df25b2ed37279bc32e"
+        },
+        "hit_h3_v1/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/decode_workflow_api.json",
+          "sha256": "8e00e584bb82e8bc2d0d21230730699bd95fe7c9481f1dae88227acb6ab49040"
+        },
+        "hit_h3_v1/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/sampling_history.json",
+          "sha256": "0d6922e27552050575db6a708b9f20c3ae3232138d65c61e1257a6710b93fc3c"
+        },
+        "hit_h3_v1/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/generation_history.json",
+          "sha256": "2208df43a82ff00b675f14ac272607e0137a2493f3eabf488bccf6dc2c5d884c"
+        },
+        "hit_h3_v1/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/prompt.txt",
+          "sha256": "dc43d2ea23e871db8ec9ad106f4754533f101dba67dcdd62156c8fc019e9a4e8"
+        },
+        "hit_h3_v1/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/reference.json",
+          "sha256": "d4e4828f250330e4714ce2d5777645d6e1e87114d00e94f82c8909d829cef53e"
+        },
+        "hit_h3_v1/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/config.json",
+          "sha256": "5ed598750d29fa02298659c4faf0ef0aa1c65d17db8613842f601d8e68ce8a1a"
+        },
+        "hit_h3_v1/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/hit_h3_v1/matte.json",
+          "sha256": "eeb58c22cf8365e665869f6d117f4a8e3e90881ff96d930541825a84d160c0c1"
+        },
+        "defend_h3_v2/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/defend_h3_v2/original_lossless.mkv",
+          "sha256": "f8cd18ee52888ca2889570272d453fd97f19dcf50d9fb2d0120172d1bb9ee32f"
+        },
+        "defend_h3_v2/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/defend_h3_v2/original.json",
+          "sha256": "db7bb21e93d8afae8415d1e55426bc440e7ad53e16aa0ccc2cb672fb0f6ca469"
+        },
+        "defend_h3_v2/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/defend_h3_v2/original.latent",
+          "sha256": "98f474c12b54d69fcbfafdc9f21c757717625f3266493828c184b130a58d9789"
+        },
+        "defend_h3_v2/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/defend_h3_v2/sampling_workflow_api.json",
+          "sha256": "0daa706f9b7b155cc2062f394fc1dc540efd6a34c90885bf2eaf85e786cb8764"
+        },
+        "defend_h3_v2/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/defend_h3_v2/decode_workflow_api.json",
+          "sha256": "f857cdcc9c29e617f0e439c8baf92ff537e20ed04643c95aa2b2352006137bae"
+        },
+        "defend_h3_v2/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/defend_h3_v2/sampling_history.json",
+          "sha256": "17634deaab1ceba4d6d84c220dc2345ad505b3aea52ecfd330686a7c626f76de"
+        },
+        "defend_h3_v2/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/defend_h3_v2/generation_history.json",
+          "sha256": "931cb9f165483a7cee91d55e989b5729021609a05c91715d3780a1f9f4fc598a"
+        },
+        "defend_h3_v2/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/defend_h3_v2/prompt.txt",
+          "sha256": "54c4227512c91bb1813b0f52eb889806f3a20d80f5a82484ef03369e0a00b030"
+        },
+        "defend_h3_v2/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/defend_h3_v2/reference.json",
+          "sha256": "ce2761696849d4f84e0e89ddba497ee626d0a972d694bb9478e0779bc2b57851"
+        },
+        "defend_h3_v2/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/defend_h3_v2/config.json",
+          "sha256": "3e0ee22ceb9f3a8b2fef8dbfc6e07283ec9fd96610080db8dbf7658cf0c7bdff"
+        },
+        "defend_h3_v2/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/defend_h3_v2/matte.json",
+          "sha256": "8ba9994bcb52c88e88af93e4eeab7bab7febcbb27da08835cbb522abc1ed29e7"
+        },
+        "cast_h3_v1/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/original_lossless.mkv",
+          "sha256": "e70fa53b849ee01eb5a95797c0df21b5b48b737327e7c67c63784193c93f970c"
+        },
+        "cast_h3_v1/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/original.json",
+          "sha256": "4d4c3ff969afdf9a4c7df0ae2c0150956103f56b41330a5d90c2cb232521a4d8"
+        },
+        "cast_h3_v1/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/original.latent",
+          "sha256": "650c09028f302aa812bdd9863184608c97952b820620b0c9ad0af32016654a67"
+        },
+        "cast_h3_v1/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/sampling_workflow_api.json",
+          "sha256": "d9b805ef322f750dede863ab464971cbf2aac45b3a3c3f00ef16f0302c5368a2"
+        },
+        "cast_h3_v1/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/decode_workflow_api.json",
+          "sha256": "54d2ac7adb004bfa5cb9413e38078c761b3f19d0d697435e1ad5f0b890883279"
+        },
+        "cast_h3_v1/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/sampling_history.json",
+          "sha256": "7c649dabe68a4f306c6637c0610f30d9f3ad13576b21f53b4e3c1877a88af403"
+        },
+        "cast_h3_v1/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/generation_history.json",
+          "sha256": "173efcb09168b339a42b8bd2c9370a36a603f6e408de76d8fa23dc5691fbf47e"
+        },
+        "cast_h3_v1/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/prompt.txt",
+          "sha256": "681816183c49c32a0bad1c17371c6979db6d169f2c4cb649543fdb95e01075f0"
+        },
+        "cast_h3_v1/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/reference.json",
+          "sha256": "80275b49db39138706574f6a2eabd0e4cd9d9c95d70068b3a9dda620f0f314ec"
+        },
+        "cast_h3_v1/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/config.json",
+          "sha256": "beadd69bc3a61f953acf8d5657668301ea7a891ee3413e493115f14a269fa20e"
+        },
+        "cast_h3_v1/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/cast_h3_v1/matte.json",
+          "sha256": "6b062c21673fe7bc6d584f6600ed765d9e2349f288b2c519507981e81ba6269e"
+        },
+        "death_h3_v1/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/original_lossless.mkv",
+          "sha256": "6ff138a58aa7dd7e69ba0e6b5fa367d86abd913792abcb3f52f3dab2ea5c489c"
+        },
+        "death_h3_v1/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/original.json",
+          "sha256": "b61a9bbcd77312515987c212535d7576675bf4a653715c8e433f754e365c9f9a"
+        },
+        "death_h3_v1/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/original.latent",
+          "sha256": "7a809d11ec82afbca0e4a59b87fe93ac6f7197549a379eaa9b57117a1f1e60d0"
+        },
+        "death_h3_v1/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/sampling_workflow_api.json",
+          "sha256": "a222b9ce9bc001c76e4fdfe3d6c63642886169d11f8f33add2f443d3ea889f59"
+        },
+        "death_h3_v1/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/decode_workflow_api.json",
+          "sha256": "22845294e7d0d7398d666d7efd8fadac852cdd3d9a334bab216df7fded42496d"
+        },
+        "death_h3_v1/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/sampling_history.json",
+          "sha256": "4650227d99847184e4e38eecb27faf7e0f452d401752b2de7d89c85f9e11e6c6"
+        },
+        "death_h3_v1/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/generation_history.json",
+          "sha256": "6d50945ae5ec62e9a5f52854db8c5d9a08910f411cd896d5a265f245dc70caed"
+        },
+        "death_h3_v1/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/prompt.txt",
+          "sha256": "bccb49d8af7210c9df3b8f27a34586e40f27b91854d5ca526a6769f3386b6e3b"
+        },
+        "death_h3_v1/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/reference.json",
+          "sha256": "aa03f8f09816e354b35ea7efe1c374f063b02490427f707c6e0a0b395d5cae50"
+        },
+        "death_h3_v1/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/config.json",
+          "sha256": "6dd45b05dd4b4094139120f5017b0f3e75e1eefd684a5f843d5cea6a31bf52cf"
+        },
+        "death_h3_v1/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_h3_v1/matte.json",
+          "sha256": "db6118eaf6b2ed5060e70fc134484e873778bcb1c9400928e8646906713b7d4e"
+        }
+      },
+      "preserved_accepted_clips": [],
       "visual_review": {
         "status": "accepted",
-        "reviewer": "root",
-        "surface": "Godot rendered motion for all seven clips",
-        "notes": "Root approved articulated hands/punch, gait, guard/recoil, physical support and grounded cold-furnace corpse on2026-09-23."
-      },
-      "source_scale_by_image": {
-        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_v1.png": 0.56,
-        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_v1.png": 0.56,
-        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_v2.png": 0.585,
-        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_farstep_v3.png": 0.395,
-        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/reactions_v1.png": 0.56,
-        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_v1.png": 0.56,
-        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_landing_v3.png": 0.39,
-        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/support_v1.png": 0.56
-      },
-      "source_scale_reason": "Fixed per-source scales normalize independent original sheet body heights to approximately225pixels. Same original image always uses same scale; no per-pose warp or scaling.",
-      "provenance": {
-        "tool": "builtin_image_gen",
-        "references": [
-          "art/animation/source/poses/unit_brasshollow_foundry_saint_veteran/unit_brasshollow_foundry_saint_veteran_source-alpha.png"
-        ],
-        "sources": [
-          {
-            "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_v1.png",
-            "sha256": "58ad2842925b66095b10701da1b909ca2357adb3c465ec3727d800f56383aac8",
-            "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_v1.prompt.txt",
-            "prompt_sha256": "251bfe2e44018ce67a17377a46d46e0607bba04fd900189d28f140e0207369e3",
-            "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-fd32-7871-9a3b-64fb488c298f/exec-6be76c40-2399-4aee-8256-623c63879fcc.png",
-            "status": "pending_review"
-          },
-          {
-            "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_v1.png",
-            "sha256": "43feb89f756d12301d1512db80c4a53519617719542b04a379daebaca5f3e8fd",
-            "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_v1.prompt.txt",
-            "prompt_sha256": "903f9dce68be53366998a9609d44e489ad99eeabe0111e9767cae815f5abf7dd",
-            "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-fd32-7871-9a3b-64fb488c298f/exec-c4c3b732-4b7d-45ee-80d0-c6cc8d9db071.png",
-            "status": "pending_review"
-          },
-          {
-            "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_v1.png",
-            "sha256": "854de0d9a000e51f8ee76e928bcfe78689188f646f2b6aa8c000b44696789b98",
-            "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_v1.prompt.txt",
-            "prompt_sha256": "80ec8fc0eb4b73873630078e3e529eab4c0a307614d54489bac90582d1f4f562",
-            "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-fd32-7871-9a3b-64fb488c298f/exec-2f98d353-98cc-40b0-b0e8-cdf32f5d9e2c.png",
-            "status": "rejected"
-          },
-          {
-            "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_v2.png",
-            "sha256": "a2ea0931c6a3f31c2db69f38b08dd6fed6751aa2c749ba1b065d75ac87e5d801",
-            "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_v2.prompt.txt",
-            "prompt_sha256": "6bfb1a0d6decc8577fc5826d6c04a0f58897baa8e566de1f3e59f073f02a67af",
-            "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-fd32-7871-9a3b-64fb488c298f/exec-b04e87d5-391c-41fc-9739-d009c860f68d.png",
-            "status": "pending_review"
-          },
-          {
-            "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_farstep_v3.png",
-            "sha256": "262225fc06628fe7a5d53b373392a6da06e2f8cc540471629a936aff738e3755",
-            "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_farstep_v3.prompt.txt",
-            "prompt_sha256": "e44326a6e8b88c5313c5ae6ac5721ea10341aa4b642433bf20543dbc5e199cb1",
-            "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-fd32-7871-9a3b-64fb488c298f/exec-b0140d51-2f08-45d2-9038-6b4395acaddb.png",
-            "status": "pending_review"
-          },
-          {
-            "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_v1.png",
-            "sha256": "82397cb0c92a8b1ec366579844fc2e7adec058a3a8137266a114c7cd018ca656",
-            "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_v1.prompt.txt",
-            "prompt_sha256": "c2323e4f8f86170dea7e0f68823fbdc26b560a7210800558cdd5c8c5dceb0c6d",
-            "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-fd32-7871-9a3b-64fb488c298f/exec-0f8b2b30-a799-4c38-b9a0-3cdc2c134c6a.png",
-            "status": "pending_review"
-          },
-          {
-            "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_direction_v2.png",
-            "sha256": "c8127d7a33abd63a84974445242f9fec090795efba78fe6385c44407f9d1f31b",
-            "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_direction_v2.prompt.txt",
-            "prompt_sha256": "da2b8b8aa16bd092ab46257f18b8a3f7fc9bb4d2f9e7f2878f0438c2335d79d9",
-            "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-fd32-7871-9a3b-64fb488c298f/exec-ab4883ea-75d7-4433-af76-521784b1aa32.png",
-            "status": "rejected"
-          },
-          {
-            "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_landing_v3.png",
-            "sha256": "1710d6f1f55206d9364b5917da8efca3e1606ede36df9c414fe56c3fc8a1dc74",
-            "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_landing_v3.prompt.txt",
-            "prompt_sha256": "ef3f0976279b21bc2ab9c09769a7ad208bbd8b4921b55a22fc37e8cb283b602e",
-            "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-fd32-7871-9a3b-64fb488c298f/exec-498e5464-28ef-46ad-aab3-b456554c1533.png",
-            "status": "pending_review"
-          },
-          {
-            "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/reactions_v1.png",
-            "sha256": "45ced50ca291c3b26df4aa30cbdf62d630ba6fc48554f5d3a2aeebe9c28748b5",
-            "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/reactions_v1.prompt.txt",
-            "prompt_sha256": "a0170f1a85821026dd53d496ce705c331771ca163f67d001f0659bef075841b2",
-            "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-fd32-7871-9a3b-64fb488c298f/exec-21824d96-a139-41b7-902b-b893ed2f4200.png",
-            "status": "pending_review"
-          },
-          {
-            "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/support_v1.png",
-            "sha256": "70ce767bff35d0b70145cd07b14862005989528d02cf85003a41eb39428b64cc",
-            "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/support_v1.prompt.txt",
-            "prompt_sha256": "088f89dc010f99ffba95aeefb9f2c2c8c22636f8082a37c12a257effac6c5dca",
-            "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-fd32-7871-9a3b-64fb488c298f/exec-d6105dbe-d89f-4760-b1b0-23e4f49a09e2.png",
-            "status": "pending_review"
-          }
-        ]
+        "notes": "H3 video. The first walk and defend pulsed the background dark with each stomp and the furnace glow, losing most of their plates; both were retaken with quiet steps and a steady glow and come back clean on every frame. The attack skips the smeared frames as the fist swings forward, the hit skips the smeared arm as it flies up, and the death skips the distorted frames as the automaton drops to its knees and as it rolls onto its side. The ladle flames flare briefly three times in the idle, as the glow in the painting does. The walk loops on frames 44 to 104."
       }
     }
   ]
