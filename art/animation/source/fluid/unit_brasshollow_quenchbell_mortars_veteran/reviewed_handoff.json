@@ -4585,7 +4585,7 @@
       "preserved_accepted_clips": [],
       "visual_review": {
         "status": "accepted_selected_clips",
-        "notes": "{'status': 'accepted', 'notes': \"{'status': 'accepted', 'notes': 'Reviewed every clip frame by frame. The first idle, walk and hit fired the mortar although their prompts forbid it, so they are retaken with the barrel kept dark. Even the single-reference idle retake fires once mid-loop, so the idle ping-pongs the clean stretch after the shot (64-100 forward, the in-between frames back) for a seamless loop. The walk loops 59-118 with the wheels turning. The ranged shot is retaken with steady light: it aims through 44, skips the flash and smoke at 45-55 and snaps to the recoil at 56. Attack, defend, cast and death are used as generated.'}\"}"
+        "notes": "Reviewed every clip frame by frame. The first idle, walk and hit fired the mortar although their prompts forbid it, so they are retaken with the barrel kept dark. Even the single-reference idle retake fires once mid-loop, so the idle ping-pongs the clean stretch after the shot (64-100 forward, the in-between frames back) for a seamless loop. The walk loops 59-118 with the wheels turning. The ranged shot is retaken with steady light: it aims through 44, skips the flash and smoke at 45-55 and snaps to the recoil at 56. Attack, defend, cast and death are used as generated."
       },
       "source_scale_by_image": {
         "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/idle_h3_v3/matte/rgba_064.png": 0.5,
