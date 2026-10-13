@@ -1,0 +1,46 @@
+{
+  "unit_id": "unit_neutral_ashdart_stalkers",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    579
+  ],
+  "scale": 0.43,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026105503,
+  "references": [
+    "hit_0",
+    "attack_0"
+  ],
+  "guides": [
+    [
+      40,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "ONE original young woman scout, the Ashdart Stalker, facing screen right in elevated three-quarter view. Keep her black ponytail, the round brass goggles on the forehead, the orange scarf and ragged orange cape, the brown leather armour with straps, the metal knee guards and calf straps, the boots, and the quiver on her back. Exactly two arms, two hands and two legs. Both hands hold ONE long straight dark wooden blowpipe with brass bands and a hanging orange feather, pointing to screen right at waist height. Preserve the blowpipe, the goggles, the cape and the lithe proportions. She starts rocked back in a flinch and recovers from it. Her head and shoulders are thrown back, the cape whips and the knees buckle while both hands keep hold of the blowpipe, then she steadies on both boots and returns to the same crouch. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole blowpipe with its feather, the cape, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, darts in flight, smoke, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the blowpipe stays straight and rigid and never morphs.",
+  "protected_foreground_chroma": 11,
+  "edge_threshold": 8,
+  "palette_measurement": {
+    "bluest_opaque": 9.0,
+    "blue_minus_green_p999": 2.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

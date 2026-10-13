@@ -146,6 +146,134 @@
       ],
       "last": 2,
       "action": "Collapse slowly. She sinks down onto her knees and hands with the blowpipe dropping, stays there a moment, then slumps forward and lies flat on her front, finishing motionless with her head at screen left and her boots at screen right, the blowpipe lying on the ground beside her. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    },
+    "ranged_h3_v2": {
+      "clip": "ranged",
+      "references": [
+        "attack_0",
+        "ranged_2",
+        "ranged_5"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          56,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Shoot ONE dart toward screen right. She raises the blowpipe to her lips and sights along it toward screen right, holds the aim, then her cheeks puff as she blows one sharp breath and the pipe kicks slightly, holds a moment, then she lowers the blowpipe back to waist height in the original stance. One shot only; the dart is never shown, with no smoke or trail. Nothing ever leaves the blowpipe: no dart, flash, fire, spark, smoke or puff appears at its tip, and the tip stays dark. The lighting never changes: the light on her and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "hit_h3_v2": {
+      "clip": "hit",
+      "references": [
+        "hit_0",
+        "attack_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "She starts rocked back in a flinch and recovers from it. Her head and shoulders are thrown back, the cape whips and the knees buckle while both hands keep hold of the blowpipe, then she steadies on both boots and returns to the same crouch. Only the body moves; nothing else appears in the frame. The lighting never changes: the light on her and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "defend_h3_v2": {
+      "clip": "defend",
+      "references": [
+        "attack_0",
+        "defend_1",
+        "defend_2"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
+      "last": 2,
+      "action": "Duck into a low crouch behind the raised blowpipe, holding it diagonally across her face with both hands and drawing the cape around her, then hold the guarded crouch on both planted boots. No attack and no return to the relaxed stance. She does not shoot: nothing flies, and no darts, arrows, sparks or flashes appear anywhere. The lighting never changes: the light on her and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "cast_h3_v2": {
+      "clip": "cast",
+      "references": [
+        "attack_0",
+        "cast_4"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A rallying signal. She straightens up, holds the blowpipe low in one hand and raises the other fist high above her head, holds the pose briefly, then lowers the arm and returns to the original stance. A physical gesture only: no spell, glow or aura. The lighting never changes: the light on her and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "death_h3_v2": {
+      "clip": "death",
+      "references": [
+        "attack_0",
+        "death_2",
+        "death_7"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
+      "last": 2,
+      "action": "Collapse slowly. She sinks down onto her knees and hands with the blowpipe dropping, stays there a moment, then slumps forward and lies flat on her front, finishing motionless with her head at screen left and her boots at screen right, the blowpipe lying on the ground beside her. The body never leaves the ground; no recovery, no floating equipment and no disappearing body. No dust, smoke or debris rises from the ground. The lighting never changes: the light on her and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "cast_h3_v3": {
+      "clip": "cast",
+      "references": [
+        "attack_0",
+        "cast_4"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A rallying signal. She straightens up, holds the blowpipe low in one hand and raises the other fist high above her head, holds the pose briefly, then lowers the arm and returns to the original stance. A physical gesture only: no spell, glow or aura. The lighting never changes: the light on her and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "cast_h3_v4": {
+      "clip": "cast",
+      "references": [
+        "attack_0",
+        "cast_4"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A rallying signal. She straightens up, holds the blowpipe low in one hand and raises the other fist high above her head, holds the pose briefly, then lowers the arm and returns to the original stance. A physical gesture only: no spell, glow or aura. The lighting never changes: the light on her and the background keeps exactly the same brightness and colour in every frame."
     }
   }
 }

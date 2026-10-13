@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_neutral_ashdart_stalkers",
+  "guides": [
+    {
+      "frame": "attack_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_ashdart_stalkers/extracted/attack_v1_0.png",
+      "source_sha256": "901f3a803d182c215fa50102d971f955d362dd164eb8f9d2d9dd4d90478f21c6",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "ccdb67d75e559d532ffa62e10314c6a20c6ce651ac234690a1fcd92202c39003"
+    },
+    {
+      "frame": "attack_7",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_ashdart_stalkers/extracted/attack_v1_7.png",
+      "source_sha256": "ca2f8692764531b1ac684fc85a816e27f93abd00cdf8b525d82cc486a418c50e",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "6b7365683cb0833a45e7a76fa5f1418551c0cba302ecf99632cdfd1bb2554394"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    579
+  ],
+  "output_scale": 0.43,
+  "free_pixels_left_top_right_bottom": [
+    150,
+    59,
+    149,
+    59
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_neutral_ashdart_stalkers",
+  "clip": "ranged",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    579
+  ],
+  "scale": 0.43,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026105507,
+  "references": [
+    "attack_0",
+    "ranged_2",
+    "ranged_5"
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      56,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original young woman scout, the Ashdart Stalker, facing screen right in elevated three-quarter view. Keep her black ponytail, the round brass goggles on the forehead, the orange scarf and ragged orange cape, the brown leather armour with straps, the metal knee guards and calf straps, the boots, and the quiver on her back. Exactly two arms, two hands and two legs. Both hands hold ONE long straight dark wooden blowpipe with brass bands and a hanging orange feather, pointing to screen right at waist height. Preserve the blowpipe, the goggles, the cape and the lithe proportions. Shoot ONE dart toward screen right. She raises the blowpipe to her lips and sights along it toward screen right, holds the aim, then her cheeks puff as she blows one sharp breath and the pipe kicks slightly, holds a moment, then she lowers the blowpipe back to waist height in the original stance. One shot only; the dart is never shown, with no smoke or trail. Nothing ever leaves the blowpipe: no dart, flash, fire, spark, smoke or puff appears at its tip, and the tip stays dark. The lighting never changes: the light on her and the background keeps exactly the same brightness and colour in every frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole blowpipe with its feather, the cape, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, darts in flight, smoke, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the blowpipe stays straight and rigid and never morphs.",
+  "protected_foreground_chroma": 19,
+  "edge_threshold": 10,
+  "palette_measurement": {
+    "bluest_opaque": 17.0,
+    "blue_minus_green_p999": 4.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

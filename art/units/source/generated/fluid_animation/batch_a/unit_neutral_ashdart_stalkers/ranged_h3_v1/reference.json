@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_neutral_ashdart_stalkers",
+  "guides": [
+    {
+      "frame": "attack_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_ashdart_stalkers/extracted/attack_v1_0.png",
+      "source_sha256": "901f3a803d182c215fa50102d971f955d362dd164eb8f9d2d9dd4d90478f21c6",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "ccdb67d75e559d532ffa62e10314c6a20c6ce651ac234690a1fcd92202c39003"
+    },
+    {
+      "frame": "ranged_2",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_ashdart_stalkers/extracted/ranged_v1_2.png",
+      "source_sha256": "a1e9498ffe69dbd36f68416a431a49a4c9eae275dc3b16a1e848d4e13c13f262",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "60c159d38470271f2071cde5eabbe0913ccf77f0f8f982787447659b37fb9740"
+    },
+    {
+      "frame": "ranged_5",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_ashdart_stalkers/extracted/ranged_v1_5.png",
+      "source_sha256": "ea3949d219e69d027d7addaee3138b68d9170dd65dfeac2fe57ddf91f79b389b",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "91f3f9e356f9ec6fdf93d8eaa11b50ca3395ff3d845db8b8a267a80f0c29379f"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    579
+  ],
+  "output_scale": 0.43,
+  "free_pixels_left_top_right_bottom": [
+    150,
+    59,
+    149,
+    59
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
