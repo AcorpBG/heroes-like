@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_neutral_sumpstone_guards",
+  "guides": [
+    {
+      "frame": "attack_00",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_00.png",
+      "source_sha256": "b036bb2653069db4d00b6e9b3fc37f3dec414f13ba5f0b216e7b1cccd08c7997",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "88a6311cc4135815ea60b90314ba513c8cdfe1401677ab2f6162c3c5cbf2bd9e"
+    },
+    {
+      "frame": "cast_07",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_07.png",
+      "source_sha256": "730fbc9495bf14006b0fd033cacbcab5286ca6841acc4e1c4dae9cde775c741f",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "ab49d7d62e2ba4a7330141c60b58bb743aed5e8d476367ccf96168e6f4b1c6e0"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    574
+  ],
+  "output_scale": 0.36,
+  "free_pixels_left_top_right_bottom": [
+    205,
+    60,
+    205,
+    60
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

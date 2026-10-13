@@ -126,6 +126,84 @@
       ],
       "last": 2,
       "action": "Collapse slowly and heavily. The dwarf sinks onto both knees leaning on the shield, stays kneeling a moment, then topples over and lies flat on his side, finishing motionless with the helmet at screen right, the shield lying against the body and the pickaxe on the ground beside it. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    },
+    "cast_h3_v2": {
+      "clip": "cast",
+      "references": [
+        "attack_00",
+        "cast_01",
+        "cast_02",
+        "cast_04",
+        "cast_05",
+        "cast_06"
+      ],
+      "guides": [
+        [
+          16,
+          1
+        ],
+        [
+          30,
+          2
+        ],
+        [
+          46,
+          3
+        ],
+        [
+          66,
+          4
+        ],
+        [
+          82,
+          5
+        ],
+        [
+          104,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "A rallying signal. The dwarf smoothly raises the pickaxe, over half a second, high overhead as a signal, the shield held steady, holds the pose briefly, then lowers it back to the original stance. A physical gesture only: no spell, glow or aura. The lighting never changes: the light on him and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "cast_h3_v3": {
+      "clip": "cast",
+      "references": [
+        "attack_00",
+        "cast_01",
+        "cast_02",
+        "cast_04",
+        "cast_05",
+        "cast_06"
+      ],
+      "guides": [
+        [
+          16,
+          1
+        ],
+        [
+          30,
+          2
+        ],
+        [
+          46,
+          3
+        ],
+        [
+          66,
+          4
+        ],
+        [
+          82,
+          5
+        ],
+        [
+          104,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "A rallying signal. The dwarf smoothly raises the pickaxe, over half a second, high overhead as a signal, the shield held steady, holds the pose briefly, then lowers it back to the original stance. A physical gesture only: no spell, glow or aura. The lighting never changes: the light on him and the background keeps exactly the same brightness and colour in every frame."
     }
   }
 }

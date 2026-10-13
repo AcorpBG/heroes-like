@@ -1,0 +1,50 @@
+{
+  "unit_id": "unit_neutral_sumpstone_guards",
+  "clip": "cast",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    574
+  ],
+  "scale": 0.36,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026106004,
+  "references": [
+    "attack_00",
+    "cast_04"
+  ],
+  "guides": [
+    [
+      44,
+      1
+    ],
+    [
+      70,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original stocky dwarf, the Sumpstone Guard, facing screen right in elevated three-quarter view. Keep the short-legged body, the braided red beard, the metal helmet with a round cyan headlamp, the dark fractured stone plate armour with brass seams, the blue tabard and the violet and cyan crystals on the shoulders. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE short pickaxe with two rigid curved crystal pick tips; the screen-RIGHT arm carries ONE tall kite-shaped faceted crystal shield in navy, cyan, white and violet with a brass rim. Preserve the pickaxe, the crystal shield, the beard and the stocky proportions. A rallying signal. The dwarf raises the pickaxe high overhead as a signal, the shield held steady, holds the pose briefly, then lowers it back to the original stance. A physical gesture only: no spell, glow or aura. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full helmet, the whole pickaxe, the whole shield, limbs and boots within frame. The background is perfectly flat saturated GREEN throughout, no gradients or changes of hue. The green background stays the same flat saturated green in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, glow bursts, sparkles, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the shield stays a rigid crystal slab with the same colours and never morphs.",
+  "protected_foreground_chroma": 53,
+  "edge_threshold": 75,
+  "palette_measurement": {
+    "bluest_opaque": 51.0,
+    "blue_minus_green_p999": 69.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

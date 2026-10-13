@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_neutral_sumpstone_guards",
+  "guides": [
+    {
+      "frame": "attack_00",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_00.png",
+      "source_sha256": "b036bb2653069db4d00b6e9b3fc37f3dec414f13ba5f0b216e7b1cccd08c7997",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "88a6311cc4135815ea60b90314ba513c8cdfe1401677ab2f6162c3c5cbf2bd9e"
+    },
+    {
+      "frame": "death_02",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_02.png",
+      "source_sha256": "d781d680e4fae3896987194ca40f122dcc5edc78a6d82baff073a5b75e8d7db6",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "5530190538164cbd4b8b6b58820cadada298fb55e0d7f7a46b35c3ada6915344"
+    },
+    {
+      "frame": "death_07",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_07.png",
+      "source_sha256": "bcebb1708a06b803a69f9e61efc27d5135adfcaa6c64e24cff917fd6aa3b53e8",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "65d8ba5fb787b0bd5d08288d4173da26659c47e1f959f36e7c6dee14eb8b30a7"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    574
+  ],
+  "output_scale": 0.36,
+  "free_pixels_left_top_right_bottom": [
+    205,
+    60,
+    205,
+    60
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

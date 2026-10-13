@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_sumpstone_guards",
+  "guides": [
+    {
+      "frame": "attack_00",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_00.png",
+      "source_sha256": "b036bb2653069db4d00b6e9b3fc37f3dec414f13ba5f0b216e7b1cccd08c7997",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "88a6311cc4135815ea60b90314ba513c8cdfe1401677ab2f6162c3c5cbf2bd9e"
+    },
+    {
+      "frame": "cast_01",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_01.png",
+      "source_sha256": "649c540ff557c811e1cfc2890cdb03a302e3f833081102350cbd4cc1dfe0f88f",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "e9e7d6a34cbaf2da9ff8399e38b48fd3a23a90496b9005b86ae3cad5f9953593"
+    },
+    {
+      "frame": "cast_02",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_02.png",
+      "source_sha256": "a2099ef0b36f495069cdb8bae7f618aa5d5a7d710c21c513b34cd5c0e3d49d57",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "c526c2bd14f9a99e760dcd78b3c1f3c597d744dd0a2525d7b30bb67f43b5c5f9"
+    },
+    {
+      "frame": "cast_04",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_04.png",
+      "source_sha256": "839ecf81e1d6468014f5997c0141dae3b2058c631d2db7622c6e98a62cee4044",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "235d4e431efa5e591397ce1d2e3d9d32c21096529240a43ddaf6ee6743aa145e"
+    },
+    {
+      "frame": "cast_05",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_05.png",
+      "source_sha256": "fde67d0ddbb29785c8f351d1c1ba9214adb660a742e0f75c2db2bf061fc9a097",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "25afcc19261a55b2c81c02a5c26fb6f73cd39427b0b6d8ebfbcf47d2bf45c38d"
+    },
+    {
+      "frame": "cast_06",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_06.png",
+      "source_sha256": "3f55315ebe60dc45120d68cf327d3bea955fe0706a09cde283b229b24a6e6f1a",
+      "input_file": "guide_5_chroma.png",
+      "input_sha256": "d820ae6e2ca52d2cf56f0d7f02bead3cfa86ac1911c0cd66055874964e845fa2"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    574
+  ],
+  "output_scale": 0.36,
+  "free_pixels_left_top_right_bottom": [
+    205,
+    60,
+    205,
+    60
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
