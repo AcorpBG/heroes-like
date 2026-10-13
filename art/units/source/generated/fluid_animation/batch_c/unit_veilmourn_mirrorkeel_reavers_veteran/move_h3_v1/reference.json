@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_veilmourn_mirrorkeel_reavers_veteran",
+  "guides": [
+    {
+      "frame": "move_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_near_v4.png",
+      "source_sha256": "b94c639246e57e33e80fcbd9e279e1af29becf4f9c8b434853e51eb63feee95b",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "d5b830f5a6c81dae375ed026ac9ee65059f79861479df96a7dad3902e9e09636"
+    },
+    {
+      "frame": "move_4",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_left_support_v7.png",
+      "source_sha256": "760ced2b97bd9cedc2887de6c81ebd3467cc39f02e2f0ffb2437a32891359842",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "97257d54853dd393141f679d272fd72805f5c73b787ea3ee48627a86bf39c23b"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    424,
+    593
+  ],
+  "output_scale": 0.56,
+  "free_pixels_left_top_right_bottom": [
+    134,
+    44,
+    135,
+    44
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

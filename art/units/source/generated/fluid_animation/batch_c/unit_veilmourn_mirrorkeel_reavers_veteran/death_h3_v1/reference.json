@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_veilmourn_mirrorkeel_reavers_veteran",
+  "guides": [
+    {
+      "frame": "idle_00",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/idle_v1.png",
+      "source_sha256": "37fcc3c2f25df3d8f28649c8217d8e805e5c503937157248ea8a49afbe419247",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "7e8fde306dd8f5b57f1a2d641ee820a61b0a84abf1d93f7c224cfc4a7bd8623c"
+    },
+    {
+      "frame": "death_02",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/death_v1.png",
+      "source_sha256": "02cd2000e9b83dcaedfa0b66d561720f976d9f6e39200f93c81aabf35839ff86",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "ced058c2e19f9b165e2a90e00e372cfa26be6410568a5211543b70ede68145c9"
+    },
+    {
+      "frame": "death_07",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/death_v1.png",
+      "source_sha256": "02cd2000e9b83dcaedfa0b66d561720f976d9f6e39200f93c81aabf35839ff86",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "f14650676d1d8fcce5bcb1a27acc263a865cc7ef92d7c030c247b1b91757339c"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    424,
+    593
+  ],
+  "output_scale": 0.56,
+  "free_pixels_left_top_right_bottom": [
+    134,
+    44,
+    135,
+    44
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
