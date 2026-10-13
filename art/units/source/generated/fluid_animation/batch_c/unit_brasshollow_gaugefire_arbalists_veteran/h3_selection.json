@@ -1,0 +1,84 @@
+{
+  "clips": {
+    "idle": {
+      "segments": [
+        {
+          "take": "idle_h3_v1",
+          "frames": [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 102, 104, 106, 108, 110, 112, 114, 116, 118, 120, 122]
+        }
+      ],
+      "frame_msec": 60
+    },
+    "move": {
+      "segments": [
+        {
+          "take": "move_h3_v1",
+          "frames": [31, 33, 35, 37, 39, 41, 43, 45, 47, 49, 51, 53, 55, 57, 59, 61, 63, 65, 67, 69, 71, 73, 75, 77, 79, 81, 83, 85, 87, 89, 91]
+        }
+      ],
+      "frame_msec": 50
+    },
+    "attack": {
+      "segments": [
+        {
+          "take": "attack_h3_v1",
+          "frames": [20, 26, 28, 30, 33, 36, 38, 40, 41, 45, 46, 48, 55, 62, 71, 76, 78, 80, 81, 82, 84, 86, 87, 89, 90, 91, 93, 94, 97, 98, 100]
+        }
+      ],
+      "frame_msec": 42,
+      "contact_frame": 8
+    },
+    "ranged": {
+      "segments": [
+        {
+          "take": "ranged_h3_v1",
+          "frames": [9, 13, 15, 16, 18, 20, 21, 23, 28, 41, 42, 46, 47, 52, 59, 61, 63, 64, 66, 68, 70, 77, 84, 88, 90, 92, 94, 96, 98, 101, 104]
+        }
+      ],
+      "frame_msec": 42,
+      "contact_frame": 9
+    },
+    "hit": {
+      "segments": [
+        {
+          "take": "hit_h3_v2",
+          "frames": [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 28, 32, 36]
+        }
+      ],
+      "frame_msec": 35
+    },
+    "defend": {
+      "segments": [
+        {
+          "take": "defend_h3_v1",
+          "frames": [13, 20, 28, 30, 32, 33, 34, 35, 36, 38, 40, 42, 44, 46, 56, 57, 60]
+        }
+      ],
+      "frame_msec": 42
+    },
+    "cast": {
+      "segments": [
+        {
+          "take": "cast_h3_v1",
+          "frames": [5, 16, 18, 20, 21, 22, 23, 25, 26, 27, 29, 38, 45, 51, 62, 75, 79, 81, 87, 88, 89, 90, 91, 93, 94, 95, 97, 103, 110, 118, 122]
+        }
+      ],
+      "frame_msec": 45,
+      "contact_frame": 16
+    },
+    "death": {
+      "segments": [
+        {
+          "take": "death_h3_v1",
+          "frames": [4, 9, 11, 13, 15, 17, 19, 20, 22, 25, 26, 28, 29, 30, 32, 34, 41, 48, 54, 61, 68, 79, 81, 83, 84, 86, 87, 88, 89, 90, 91, 92, 93, 96, 123]
+        }
+      ],
+      "frame_msec": 45
+    }
+  },
+  "preserved_accepted_clips": [],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Reviewed every clip frame by frame. The hit is retaken with one steady gauge glow because the first take turned the plate black for most of the clip; it flinches back and recovers into the aiming stance. The idle skips the blurred crossbow lifts at 20, 44 and 100. The attack skips the streak at 43-44. The ranged shot skips the muzzle flash at 40 and the bolt trail at 43-45. The defend snaps into guard over the rejected plates. The cast is an open-hand signal, so it skips the stray magenta shots at 76-78 and 119-121 and the smudge at 73; the clean signal pose at 79 is the contact frame. The death skips one smudged frame. The walk uses 31-91."
+  }
+}

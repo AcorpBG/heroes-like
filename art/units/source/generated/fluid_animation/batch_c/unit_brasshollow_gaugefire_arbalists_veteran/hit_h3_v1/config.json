@@ -1,0 +1,46 @@
+{
+  "unit_id": "unit_brasshollow_gaugefire_arbalists_veteran",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    424,
+    594
+  ],
+  "scale": 0.44,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026104204,
+  "references": [
+    "hit_25",
+    "idle_0"
+  ],
+  "guides": [
+    [
+      40,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "ONE original slim tall human marksman, the Datumline Piercer veteran, facing screen right in elevated three-quarter view. Keep the dark hood, the closed beaked brass helmet with a long upright two-prong tuning-fork crest, the brass pauldrons and gauntlets, the charcoal split tabard with a thin gold survey reticle, the dark leather boots with brass knee and toe armour, and the small cylinder backpack. Exactly two arms, two hands and two legs. Both hands hold ONE long brass mechanical arbalest across the waist pointing to screen right, with a round crank near the stock, two parallel upper rails, a curved lower brace, a cylindrical muzzle with a tall two-prong sight and one hanging pointed plumb bob. Preserve the arbalest, the crested helmet and the slim adult proportions. The marksman starts rocked back in a flinch and recovers from it. The helmet and shoulders hunch and twist away and the knees flex deep while both hands keep hold of the arbalest, then the marksman straightens, rebalances on both boots and returns to the same stance. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole arbalest including the muzzle and plumb bob, the crest, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, bolts in flight, muzzle flash, smoke, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the arbalest.",
+  "protected_foreground_chroma": 18,
+  "edge_threshold": 11,
+  "palette_measurement": {
+    "bluest_opaque": 16.0,
+    "blue_minus_green_p999": 5.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_brasshollow_gaugefire_arbalists_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/idle_v1.png",
+      "source_sha256": "352d9f1cc14132dee6451199a203d09632f961e442afe1af5fd5a53cec7e112d",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "16c97c0ae714ed4d967f9fed814de18f47ce30496b92e24b26ab8f76b5d500f4"
+    },
+    {
+      "frame": "death_42",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/death_v1.png",
+      "source_sha256": "5ff3ec12c70328e3c2cb229dd110170ab06a53ca47541f3cadd6acf77dd52c2f",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "f9e0fde9aac8ccdb654bcb4f3d1ebcabf06b6a700017886e247c5005cd4d6c25"
+    },
+    {
+      "frame": "death_47",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/death_v1.png",
+      "source_sha256": "5ff3ec12c70328e3c2cb229dd110170ab06a53ca47541f3cadd6acf77dd52c2f",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "16d15c4c178223faa5798fb05e7c1039f6e1b31d9407ac839a4fc23d6a25a9d9"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    424,
+    594
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    144,
+    45,
+    143,
+    46
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

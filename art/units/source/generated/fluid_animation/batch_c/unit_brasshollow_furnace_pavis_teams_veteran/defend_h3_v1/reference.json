@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_brasshollow_furnace_pavis_teams_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/idle_v1.png",
+      "source_sha256": "de2e69244551055217d3680d72e1d8d1c40d29ee688196b8e802ffcecc2382c1",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "4d09dfd92c880355601e7b6ca19c0d98d02e2d326346f93048ebd20cae3c7dd5"
+    },
+    {
+      "frame": "defend_21",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/reactions_v1.png",
+      "source_sha256": "fc8572737dc75c0ff26ffe8448831a1f975c9897ff4f261ce71fb9bc5b193a50",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "dee95cb7de9a3e115f537da38f64b42028819d5eaa5d9f2fbec444097e52d385"
+    },
+    {
+      "frame": "defend_22",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/reactions_v1.png",
+      "source_sha256": "fc8572737dc75c0ff26ffe8448831a1f975c9897ff4f261ce71fb9bc5b193a50",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "35ba00bf9febca65afa74498699cac4e3bd429399681c2238804e4da3975bb84"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    450,
+    596
+  ],
+  "output_scale": 0.47,
+  "free_pixels_left_top_right_bottom": [
+    77,
+    43,
+    76,
+    44
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

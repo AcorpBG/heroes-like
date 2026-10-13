@@ -1,0 +1,47 @@
+{
+  "unit_id": "unit_brasshollow_furnace_pavis_teams_veteran",
+  "clip": "defend",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    450,
+    596
+  ],
+  "scale": 0.47,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026104154,
+  "references": [
+    "idle_0",
+    "defend_21",
+    "defend_22"
+  ],
+  "guides": [
+    [
+      34,
+      1
+    ]
+  ],
+  "last": 2,
+  "prompt": "A team of EXACTLY TWO original short stocky armoured soldiers, the Kilnwall Warden veterans, facing screen right in slightly elevated three-quarter view, flanking ONE large central pointed-arch iron and brass pavise shield with THREE glowing orange furnace slots, a round flame badge and two triangular braces at its feet. Both wear cream padded sleeves, soot-dark armour and leather aprons, dark boots and closed furnace-hood helmets with orange slit visors. The screen-LEFT soldier grips the left rim of the pavise with both gauntlets; the screen-RIGHT soldier grips the right rim with the inside hand and holds ONE short black iron poker with a square hook in the outside hand. Exactly two people, each with two arms and two legs. Preserve the pavise, the poker and the stocky proportions. Both soldiers crouch low and brace their shoulders against the pavise, setting it firmly in front of them with the poker drawn in, then hold the braced wall on all planted boots. No attack and no return to the relaxed stance. Locked orthographic camera, fixed anatomical scale and centred group. Keep both soldiers, the whole pavise, the poker and all feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, flames, smoke, sparks, motion trails, particles, a third person or extra limbs; the furnace slots and visors keep only their steady glow. Articulate joints naturally with physical planted-foot support; the pavise stays rigid and never morphs.",
+  "protected_foreground_chroma": 9,
+  "edge_threshold": 8,
+  "palette_measurement": {
+    "bluest_opaque": 7.0,
+    "blue_minus_green_p999": 2.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

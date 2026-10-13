@@ -149,6 +149,106 @@
       ],
       "last": 2,
       "action": "Collapse slowly. Both soldiers slump and their knees buckle as the pavise tips forward, they sink down with it, stay a moment, then the pavise falls flat on the ground in the middle and both soldiers lie motionless on either side of it, the poker dropped beside them and the furnace slots dimmed. Exactly two bodies throughout; no recovery and no disappearing bodies."
+    },
+    "move_h3_v2": {
+      "clip": "move",
+      "references": [
+        "move_40",
+        "move_44"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Walk in place together through two complete reciprocal cycles, carrying the pavise between them with short, smooth, quiet steps. Each soldier alternates legs through contact, weight loading, passing and lift, setting each boot down softly; the pavise stays upright and level between them and the group stays centred for engine-driven travel. No stomping, impacts or shaking. The lighting never changes: the furnace slots, badge and visors hold one steady glow that never pulses, flickers or brightens, and the background keeps exactly the same brightness in every frame. Finish in the original gait phase."
+    },
+    "defend_h3_v2": {
+      "clip": "defend",
+      "references": [
+        "idle_0",
+        "defend_21",
+        "defend_22"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
+      "last": 2,
+      "action": "Both soldiers crouch low and brace their shoulders against the pavise, setting it firmly in front of them with the poker drawn in, then hold the braced wall calmly on all planted boots. No attack and no return to the relaxed stance. The lighting never changes: the furnace slots, badge and visors hold one steady glow that never pulses, flickers or brightens, and the background keeps exactly the same brightness in every frame."
+    },
+    "hit_h3_v2": {
+      "clip": "hit",
+      "references": [
+        "hit_17",
+        "idle_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "The team starts rocked back in a flinch and recovers from it. The pavise rocks back and both soldiers stagger and hunch behind it with their knees flexing, keeping their grips, then they plant their boots, push the pavise upright and return to the same stance. The poker stays plain black iron along its whole length and never glows or heats up, and the furnace slots keep one steady glow. Only the body moves; nothing else appears in the frame."
+    },
+    "move_h3_v3": {
+      "clip": "move",
+      "references": [
+        "move_40",
+        "move_44"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Walk in place together through two complete reciprocal cycles, carrying the pavise between them with short, smooth, quiet steps. Each soldier alternates legs through contact, weight loading, passing and lift, setting each boot down softly; the pavise stays upright and level between them and the group stays centred for engine-driven travel. Both soldiers keep stepping continuously from the first frame to the last with no pause and no standing still, their legs always in motion. No stomping, impacts or shaking. The lighting never changes: the furnace slots, badge and visors hold one steady glow that never pulses, flickers or brightens, and the background keeps exactly the same brightness in every frame. Finish in the original gait phase."
+    },
+    "move_h3_v4": {
+      "clip": "move",
+      "references": [
+        "move_40",
+        "move_44"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Walk in place together through two complete reciprocal cycles, carrying the pavise between them with short, smooth, quiet steps. Each soldier alternates legs through contact, weight loading, passing and lift, setting each boot down softly; the pavise stays upright and level between them and the group stays centred for engine-driven travel. Both soldiers keep stepping continuously from the first frame to the last with no pause and no standing still, their legs always in motion. No stomping, impacts or shaking. The lighting never changes: the furnace slots, badge and visors hold one steady glow that never pulses, flickers or brightens, and the background keeps exactly the same brightness in every frame. Finish in the original gait phase."
     }
   }
 }

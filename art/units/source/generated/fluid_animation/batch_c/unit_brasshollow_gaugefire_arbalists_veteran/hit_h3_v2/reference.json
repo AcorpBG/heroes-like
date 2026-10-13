@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_brasshollow_gaugefire_arbalists_veteran",
+  "guides": [
+    {
+      "frame": "hit_25",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/reactions_v1.png",
+      "source_sha256": "0b4bf7e62eeb9bed3737222fdf3d94106e6f3324b0d8b8f80bc36b12072e8459",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "ac2dbfb4dbd0f5b9bbf558647000830b3a8d8d2a538014c28baac74c62b36350"
+    },
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/idle_v1.png",
+      "source_sha256": "352d9f1cc14132dee6451199a203d09632f961e442afe1af5fd5a53cec7e112d",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "16c97c0ae714ed4d967f9fed814de18f47ce30496b92e24b26ab8f76b5d500f4"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    424,
+    594
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    144,
+    45,
+    143,
+    46
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
