@@ -3375,21 +3375,21 @@
       "sha256": "43fd9cb3f1a13cac1d00bd313f5da7d81455eb9856c57cd7e0bfd47787dbf49b"
     },
     "unit_veilmourn_fogbound_leviathan": {
-      "path": "res://art/animation/runtime/idle/unit_veilmourn_fogbound_leviathan.png",
+      "path": "res://art/overworld/runtime/creature_idle/unit_veilmourn_fogbound_leviathan.png",
       "frame_size": [
-        278,
-        226
+        310,
+        214
       ],
-      "columns": 11,
-      "frames": 32,
-      "frame_msec": 65,
+      "columns": 13,
+      "frames": 62,
+      "frame_msec": 60,
       "static_frame": 0,
       "ground_anchor": [
-        133,
-        215
+        151,
+        199
       ],
-      "painted_extent": 262,
-      "source_sheet": "res://art/animation/runtime/idle/unit_veilmourn_fogbound_leviathan.png",
+      "painted_extent": 294,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_veilmourn_fogbound_leviathan.png",
       "source_indices": [
         0,
         1,
@@ -3422,17 +3422,47 @@
         28,
         29,
         30,
-        31
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61
       ],
       "source_crop": [
-        0,
-        0,
-        278,
-        226
+        17,
+        65,
+        327,
+        279
       ],
-      "source_sha256": "ec58293531d783c9590ff782be78fef2b042b1b69747a5905edea39d8877c6d6",
+      "source_sha256": "b158e5d79b19c69ca03b552b6f7162928160efac49e5d4b6ff86bda1fe05bde2",
       "source_provenance": "res://art/animation/source/fluid/unit_veilmourn_fogbound_leviathan/provenance.json",
-      "sha256": "ec58293531d783c9590ff782be78fef2b042b1b69747a5905edea39d8877c6d6"
+      "sha256": "f51c42c172bb74c9f2f9be23d10175543cfa2c6976f94415f4013f901250e2e3"
     },
     "unit_embercourt_cinderseal_bombardiers": {
       "path": "res://art/animation/runtime/idle/unit_embercourt_cinderseal_bombardiers.png",

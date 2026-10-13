@@ -1,0 +1,54 @@
+{
+  "unit_id": "unit_veilmourn_fogbound_leviathan",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    483,
+    578
+  ],
+  "scale": 0.46,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026104651,
+  "references": [
+    "move_0",
+    "move_4"
+  ],
+  "guides": [
+    [
+      31,
+      1
+    ],
+    [
+      62,
+      0
+    ],
+    [
+      93,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original hulking four-legged sea beast, the Fogbound Leviathan, facing screen LEFT in elevated three-quarter view. Keep the dark blue-black scaled hide with a pale grey belly, the pale bony beaked skull-like head with curved tusks and a toothed jaw, the row of glowing pale violet crest plates and dark webbed fin spines along the back, the small glowing violet orbs on the shoulders and flank, the long tail curling up high behind the body and ending in a small hanging violet gem lure, and EXACTLY FOUR thick legs with webbed clawed feet. No rider and no extra legs. Preserve the skull head, the glowing back crests, the curled tail with its lure and the hulking proportions. Lumber in place on four legs through two complete cycles with heavy steps. Diagonal pairs of legs alternate lifting, swinging forward and planting their webbed feet while the others bear the weight. The body stays centred for engine-driven travel, still facing screen left, with the head low and the curled tail swaying. Exactly four legs at all times. Finish in the original gait phase. Locked orthographic camera, fixed scale and centred body. Keep the head, the whole curled tail with the lure and all four feet within frame. The background is perfectly flat saturated GREEN throughout, no gradients or changes of hue. The green background stays the same flat saturated green in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, water, fog clouds, sparks, motion trails, particles or extra legs; the crests, orbs and lure keep only their steady glow. Articulate joints naturally with physical planted-foot support; the skull head stays rigid apart from the jaw.",
+  "protected_foreground_chroma": 52,
+  "edge_threshold": 37,
+  "palette_measurement": {
+    "bluest_opaque": 50.0,
+    "blue_minus_green_p999": 31.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

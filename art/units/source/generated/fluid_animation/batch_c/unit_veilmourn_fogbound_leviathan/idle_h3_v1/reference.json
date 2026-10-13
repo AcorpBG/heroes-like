@@ -1,0 +1,28 @@
+{
+  "unit_id": "unit_veilmourn_fogbound_leviathan",
+  "guides": [
+    {
+      "frame": "cast_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan/cast_v1.png",
+      "source_sha256": "c904fca2f8406a3ad23682bf6891683f18805064f1ddee470b2c8c08c4bfd8c1",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "2e6259b953245e3c731d0cea0a9a169fe55340f87e45d4539576e7b1b55a2916"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    483,
+    578
+  ],
+  "output_scale": 0.46,
+  "free_pixels_left_top_right_bottom": [
+    193,
+    49,
+    193,
+    49
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
