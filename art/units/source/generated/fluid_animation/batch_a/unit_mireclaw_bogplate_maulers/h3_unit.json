@@ -126,6 +126,57 @@
       ],
       "last": 2,
       "action": "Collapse slowly and heavily from standing. He sinks onto one knee leaning on the planted hammer, stays kneeling a moment, then topples forward and lies flat on his front, finishing motionless with the helmet at screen right and the hammer lying on the ground beside him. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "attack_00",
+        "attack_02",
+        "attack_04"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE overhead hammer smash toward screen right. He heaves the hammer up high above the helmet with both hands as the knees bend, then steps into a deep lunge and brings it crashing down in front of him at screen right, holds the low follow-through a moment, then lifts the hammer back across his body and settles into the original stance. One smash only; no dust, debris or effect at impact. The lighting never changes: the light on him and the background keeps exactly the same brightness and colour in every frame.",
+      "pad": [
+        0,
+        128,
+        0,
+        0
+      ]
+    },
+    "cast_h3_v2": {
+      "clip": "cast",
+      "references": [
+        "attack_00",
+        "cast_03"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A war cry, made once. He plants the hammer head on the ground beside him with one hand on the shaft and raises the other fist high, shouting, holds the pose, then lifts the hammer back across his body into the original stance and stays there. The hammer is never swung or raised overhead. A physical gesture only: no spell, glow or aura. The lighting never changes: the light on him and the background keeps exactly the same brightness and colour in every frame.",
+      "pad": [
+        0,
+        128,
+        0,
+        0
+      ]
     }
   }
 }

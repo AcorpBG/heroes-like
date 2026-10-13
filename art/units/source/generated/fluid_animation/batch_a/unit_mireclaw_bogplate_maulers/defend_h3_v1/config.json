@@ -1,0 +1,47 @@
+{
+  "unit_id": "unit_mireclaw_bogplate_maulers",
+  "clip": "defend",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    466,
+    596
+  ],
+  "scale": 0.49,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026105353,
+  "references": [
+    "attack_00",
+    "defend_01",
+    "defend_02"
+  ],
+  "guides": [
+    [
+      34,
+      1
+    ]
+  ],
+  "last": 2,
+  "prompt": "ONE original bulky bearded man, the Bogplate Mauler, facing screen right in elevated three-quarter view. Keep the squared bronze helmet with a yellow crest stripe, the dark beard, the layered mossy green scale armour with rounded shoulder plates, the yellow reed bindings and fringes, and the heavy armoured boots. Exactly two arms, two hands and two legs. Both hands grip ONE long straight wooden hammer shaft held across the body, with ONE rectangular mossy stone block hammer head at the screen-right end. Preserve the hammer, the mossy armour and the bulky proportions. Raise the hammer shaft diagonally in front of the body with both hands as a guard, bend the knees into a low wide stance and tuck the bearded head behind it, then hold the braced guard on both planted boots. No attack and no return to the relaxed stance. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full helmet, the whole hammer, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, dust, debris, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the hammer stays straight and rigid and never morphs.",
+  "protected_foreground_chroma": 8,
+  "edge_threshold": 8,
+  "palette_measurement": {
+    "bluest_opaque": 6.0,
+    "blue_minus_green_p999": 2.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

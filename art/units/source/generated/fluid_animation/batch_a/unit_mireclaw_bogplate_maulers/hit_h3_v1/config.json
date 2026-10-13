@@ -1,0 +1,46 @@
+{
+  "unit_id": "unit_mireclaw_bogplate_maulers",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    466,
+    596
+  ],
+  "scale": 0.49,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026105352,
+  "references": [
+    "hit_01",
+    "attack_00"
+  ],
+  "guides": [
+    [
+      40,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "ONE original bulky bearded man, the Bogplate Mauler, facing screen right in elevated three-quarter view. Keep the squared bronze helmet with a yellow crest stripe, the dark beard, the layered mossy green scale armour with rounded shoulder plates, the yellow reed bindings and fringes, and the heavy armoured boots. Exactly two arms, two hands and two legs. Both hands grip ONE long straight wooden hammer shaft held across the body, with ONE rectangular mossy stone block hammer head at the screen-right end. Preserve the hammer, the mossy armour and the bulky proportions. He starts rocked back in a flinch and recovers from it. The helmet and shoulders twist back and the knees flex deep while both hands keep hold of the hammer, then he straightens, rebalances on both boots and returns to the same stance. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full helmet, the whole hammer, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, dust, debris, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the hammer stays straight and rigid and never morphs.",
+  "protected_foreground_chroma": 11,
+  "edge_threshold": 7,
+  "palette_measurement": {
+    "bluest_opaque": 9.0,
+    "blue_minus_green_p999": 1.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_mireclaw_bogplate_maulers",
+  "guides": [
+    {
+      "frame": "hit_01",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers/reactions_v1.png",
+      "source_sha256": "b3abd10474d0007ead406f327bde4c90c5527483ff6950f27e847563c318ec92",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "6bdbb3b5cfc44719bfbb1c6c1c1ca77b6ad53fed37bf6cce8fff9c83049107e1"
+    },
+    {
+      "frame": "attack_00",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers/attack_v1.png",
+      "source_sha256": "90bb880c2f8421df63d405f8037141940cd493ea3188a7d512807a0aab6e615b",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "5aa53bc56979df78eefddbbace48c72e73a81fb50362fe692eab96e9f1e37003"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    466,
+    596
+  ],
+  "output_scale": 0.49,
+  "free_pixels_left_top_right_bottom": [
+    191,
+    45,
+    190,
+    44
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

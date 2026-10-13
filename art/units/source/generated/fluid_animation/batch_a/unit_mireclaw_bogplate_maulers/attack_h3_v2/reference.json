@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_mireclaw_bogplate_maulers",
+  "guides": [
+    {
+      "frame": "attack_00",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers/attack_v1.png",
+      "source_sha256": "90bb880c2f8421df63d405f8037141940cd493ea3188a7d512807a0aab6e615b",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "0ad42e58af6b8e56c78e722f0d591b81ef5c058428a2112c36b371e4314bb093"
+    },
+    {
+      "frame": "attack_02",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers/attack_v1.png",
+      "source_sha256": "90bb880c2f8421df63d405f8037141940cd493ea3188a7d512807a0aab6e615b",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "3b0034373df642bed1cb5871d89773fa876d558290e84e5f6311659f82c682f9"
+    },
+    {
+      "frame": "attack_04",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers/attack_v1.png",
+      "source_sha256": "90bb880c2f8421df63d405f8037141940cd493ea3188a7d512807a0aab6e615b",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "9317c5c17d525eb7559a05f63c111e35fcf74994ea1f0915380ca7bed892721a"
+    }
+  ],
+  "canvas": [
+    960,
+    768
+  ],
+  "ground_anchor": [
+    466,
+    724
+  ],
+  "output_scale": 0.49,
+  "free_pixels_left_top_right_bottom": [
+    191,
+    173,
+    190,
+    44
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
