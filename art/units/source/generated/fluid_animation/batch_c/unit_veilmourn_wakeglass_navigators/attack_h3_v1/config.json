@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_veilmourn_wakeglass_navigators",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    524,
+    566
+  ],
+  "scale": 0.47,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026104952,
+  "references": [
+    "idle_0",
+    "attack_3",
+    "attack_4"
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      54,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original robed adult seer, the Wakeglass Navigator, facing screen right in elevated three-quarter view. Keep the deep dark blue hood with a smooth pale mask face, the long layered dark blue robes with bronze embroidery, the many ragged trailing robe tatters in dark blue and pale teal, and the small glowing teal gem charms hanging on the chest and robe. Exactly two arms and two hands. The screen-RIGHT hand holds ONE tall carved wooden staff topped by a bronze crescent-horned frame around ONE glowing teal compass orb, with a long pale teal ribbon hanging from the head; the screen-LEFT hand is free. Preserve the staff and compass orb, the mask, the robes and the tall proportions. Make ONE staff thrust toward screen right. The seer draws the staff back as the body leans away, then steps forward and drives the staff head out with both hands to full reach at screen right, the robe tatters streaming, draws back and settles into the original stance. One thrust only; no beam, burst or effect from the orb. Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole staff with the orb and ribbon, the hood, the robe hem and all tatters within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, beams, bursts, sparks, particles or extra limbs; glow stays only inside the compass orb and the small gem charms. Articulate the body naturally beneath the robes; the staff stays straight and rigid and never morphs.",
+  "protected_foreground_chroma": 66,
+  "edge_threshold": 52,
+  "palette_measurement": {
+    "bluest_opaque": 64.0,
+    "blue_minus_green_p999": 46.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

@@ -149,6 +149,93 @@
       ],
       "last": 2,
       "action": "Collapse slowly. The seer bows forward and sinks down onto the knees leaning on the staff, stays a moment, then slumps forward and lies flat on the ground, finishing motionless with the robes spread out, the mask at screen right and the staff lying on the ground with the orb dimmed. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    },
+    "move_h3_v2": {
+      "clip": "move",
+      "references": [
+        "move_0",
+        "move_4"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Walk in place through two complete reciprocal cycles with slow gliding steps beneath the long robe. The legs alternate under the robe so the hem sways with each step; the torso stays centred for engine-driven travel, the staff planted and lifted in rhythm in the right hand and the robe tatters trailing. Finish in the original gait phase. Smooth, quiet, gliding steps; no stomping, impacts or shaking. The orb keeps one steady soft glow that never flares, pulses or spreads. The lighting never changes: the light on the seer and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "move_h3_v3": {
+      "clip": "move",
+      "references": [
+        "move_0",
+        "move_4"
+      ],
+      "guides": [],
+      "last": 0,
+      "action": "Walk in place through two complete reciprocal cycles with slow gliding steps beneath the long robe. The legs alternate under the robe so the hem sways with each step; the torso stays centred for engine-driven travel, the staff planted and lifted in rhythm in the right hand and the robe tatters trailing. Finish in the original gait phase. Smooth, quiet, gliding steps; no stomping, impacts or shaking. The orb keeps one steady soft glow that never flares, pulses or spreads. The lighting never changes: the light on the seer and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "idle_0",
+        "attack_3",
+        "attack_4"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE staff thrust toward screen right. The seer draws the staff back as the body leans away, then steps forward and drives the staff head out with both hands to full reach at screen right, the robe tatters streaming, draws back and settles into the original stance. One thrust only; no beam, burst or effect from the orb. The orb keeps one steady soft glow that never flares, pulses or spreads. The lighting never changes: the light on the seer and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "defend_h3_v2": {
+      "clip": "defend",
+      "references": [
+        "idle_0",
+        "defend_1",
+        "defend_2"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
+      "last": 2,
+      "action": "Draw back and raise the free hand with the palm out toward screen right as a ward, holding the staff close in front of the body, then hold the guarded pose. No attack, no spell effect and no return to the relaxed stance. No shield, ward circle, rune, glow burst or light appears in front of the hand. The orb keeps one steady soft glow that never flares, pulses or spreads. The lighting never changes: the light on the seer and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "hit_h3_v2": {
+      "clip": "hit",
+      "references": [
+        "idle_0"
+      ],
+      "guides": [],
+      "last": 0,
+      "action": "Starting from the original stance, the seer is struck: the hooded head and shoulders snap back and hunch, the knees flex and the robe tatters jolt, then the seer straightens, rebalances and returns to the same stance, the staff kept in the right hand throughout. The orb keeps one steady soft glow that never flares, pulses or spreads. The lighting never changes: the light on the seer and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "hit_h3_v3": {
+      "clip": "hit",
+      "references": [
+        "idle_0"
+      ],
+      "guides": [],
+      "last": 0,
+      "action": "Starting from the original stance, the seer is struck: the hooded head and shoulders snap back and hunch, the knees flex and the robe tatters jolt, then the seer straightens, rebalances and returns to the same stance, the staff kept in the right hand throughout. The orb keeps one steady soft glow that never flares, pulses or spreads. The scene stays evenly and brightly lit exactly like the first frame: the flat bright blue background never darkens, and the orb is never the light source of the scene."
     }
   }
 }

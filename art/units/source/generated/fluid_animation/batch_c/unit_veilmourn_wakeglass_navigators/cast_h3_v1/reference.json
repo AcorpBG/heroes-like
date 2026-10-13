@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_veilmourn_wakeglass_navigators",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/idle_v1_frame_0.png",
+      "source_sha256": "146d9499518a16df2d6d9188fcf866a4d193ff3da2e559736b5ffb6fdbe53adc",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "7cc0439303983a5ca5e2381bf5ecbb0b513ae5c7c984357e893f0c0931982e7d"
+    },
+    {
+      "frame": "cast_3",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/cast_v1_frame_3.png",
+      "source_sha256": "163825bb1e351753f45ae1afaa5566381bd9ca55b109cc17f7aa50e5e6a56654",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "d28c8a7f7e8cea10c625416f5d94b422c539abd280fcb8fc8561500692c54a9c"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    524,
+    566
+  ],
+  "output_scale": 0.47,
+  "free_pixels_left_top_right_bottom": [
+    137,
+    58,
+    137,
+    58
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

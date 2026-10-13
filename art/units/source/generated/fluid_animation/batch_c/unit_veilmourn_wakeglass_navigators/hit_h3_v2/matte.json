@@ -1,0 +1,816 @@
+{
+  "frames": 124,
+  "fps": 24,
+  "rgba_sha256": [
+    "7bfafa3db359a8a7f52f982b5f74fa31ac50f025820753d23bb00d447a8206b8",
+    "48501c66600508a8a438dac7053804acbf349b8a7ba2b4d08b20508bc7effda0",
+    "610dcf40f385662a9347a120abb4aa2ff9ea4639b98f810b51772a8c365f7782",
+    "cac107236fa22361bed625aca8ecd0b5a5dd9a5e56cc9579bdadc59974c8fecd",
+    "b8de6168faa9efb20e59891a71d5cc851a7666cac557daef272a1ba0579b4ac2",
+    "be39a200e18a651dea71995adf6ba7a1aa2df4394d58bb6156aecaee3373fac2",
+    "0c174f85b8bcf99e91d6cf1f001f5d4c00ec8b9f2b1d41718f8e3980fa94b52b",
+    "e498839d9321c5e4d22a32e7449f7d6d7c6b4b3a5b69844b09a4b46021d894dc",
+    "affc9648e8d6b203c4c9f9cdef9e2f4358c6077642ccf4883c4a0291f21710b6",
+    "d303d832df6bfd2a47c44a8cea469b73d9f66112dd165f62d4388e51fe3c2071",
+    "d0e3862c422a8a2b0ad5298b313ecd180fccab0e0d26d52b2d183ab2366a6db4",
+    "322da0e2f35792d47851666609d8333894ee17044eab1549d98b2a126621200d",
+    "4f3321274cbf25538356a726271a97fbefb32958c985d59e42930ec40d4e3fc1",
+    "0f0989d9862383fd975e7a4a0c63613b9ea82fe22101447c596af6e2aed9cf58",
+    "229a0db0713d465084031c817b06975b5f2fa22659d72331281e59c8cd63635b",
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    "a1803f145f8b1d8dc175830c519bbc69fb8590516627ac6606fa59ae0291a0b9",
+    "d38db38be74ddf9586e8dd6eda409f71b098ed573fe3a09a3a1dd5281e1f638d",
+    "f6d0287207297727569ab0e17bb43d61f143dff5330de98c056862caf386f4cb",
+    "1ea64d3350179f6aecba2a4a75ff79c0b6c4ce531fc6cde20244b68c8a91d98a",
+    "cb9a3b5cbe79de7dba746d9dc6b483b9a89323cbf825b64b814a0bc767ac865c",
+    "13f262f4f29a5b4ff2885c0af134f41878c18032972ae5eb29914feb1a3099e8",
+    "09a59ac924d2deae0bcbb4d80014517253f9a9d84684074a4254b15f2f54e6ff",
+    "11ea90851be421fb3c9c4e3485a8ef568fb5bec3a0524ab7420b4d3923600001",
+    "3f6323d0288943a68b1c3729849e937da91dbc44829ec43f0e505d671ba7400a",
+    "f28f6fdde4d7bba557d624763a1c85ff65e604caa28d4aa083858976c03a7111",
+    "df964b45609dad087d852424868ddd3506b2169a86276f231ff8c0c0c10ab022",
+    "85e4be3112fee6e910b1a4085adcddc879dbe762752d18519fefcd4f8dbc5078",
+    "523d5a24743599a79c16feade3903a63d327df594a21e3a62e97f98d9d643e7a",
+    "323dc7f029650811e17027489a0c0f11587277ab42dc6be77c6749d33ad25673",
+    "84084951adaf1134c4fe32d7a234e8373d4718fbfb15a152e36b10a30521a8e9",
+    "1e6612753027f96ef3551f144c095b3bad707d420386fce12be995c6761bb1c3",
+    "fb792d85a79b7f8223eaddb82b160fda2ffca5b0c7028ec5a834dead1b4050a1",
+    "0334958f29a20f43be49c5fb6f7b2ccf3391876cd6de9af4598b9191eb06ee94",
+    "bd1cdf1903a585ccf430705e7c6f9568969f00cbc613f9aadc8b2962efdc05df",
+    "e2ddc4cae2ef607836d53528b512510de7bb4f118f68421993363177b1802f4c",
+    "0a51b6709157d50e11f33d22b4f9d3df43278f95de52a3ec869e2df8a672c8d7",
+    "ac888f28030d1ce57e6480f79a0c566e12a12559f39ea9c2999f587c4cacc2fe",
+    "b889f168ae6a3136a6a88f63355c38d4f3641a4483f40c865e0e570daa7bcd0f"
+  ],
+  "frame_details": [
+    {
+      "fixed_pixels": 13885,
+      "opacity_removed": 0.01464,
+      "background_rgb": [
+        1.0,
+        2.0,
+        252.0
+      ],
+      "corner_median_spread": 1.0,
+      "haze": 0.119
+    },
+    {
+      "fixed_pixels": 13031,
+      "opacity_removed": 0.01468,
+      "background_rgb": [
+        2.0,
+        2.0,
+        247.5
+      ],
+      "corner_median_spread": 1.118,
+      "haze": 0.112
+    },
+    {
+      "fixed_pixels": 12713,
+      "opacity_removed": 0.01465,
+      "background_rgb": [
+        1.5,
+        2.0,
+        245.0
+      ],
+      "corner_median_spread": 0.5,
+      "haze": 0.109
+    },
+    {
+      "fixed_pixels": 12563,
+      "opacity_removed": 0.01456,
+      "background_rgb": [
+        1.5,
+        1.0,
+        243.0
+      ],
+      "corner_median_spread": 1.118,
+      "haze": 0.108
+    },
+    {
+      "fixed_pixels": 12253,
+      "opacity_removed": 0.01482,
+      "background_rgb": [
+        1.5,
+        1.0,
+        238.0
+      ],
+      "corner_median_spread": 3.041,
+      "haze": 0.105
+    },
+    {
+      "fixed_pixels": 13417,
+      "opacity_removed": 0.01558,
+      "background_rgb": [
+        1.5,
+        0.0,
+        230.5
+      ],
+      "corner_median_spread": 2.55,
+      "haze": 0.115
+    },
+    {
+      "fixed_pixels": 12431,
+      "opacity_removed": 0.01541,
+      "background_rgb": [
+        1.0,
+        1.0,
+        219.0
+      ],
+      "corner_median_spread": 3.0,
+      "haze": 0.106
+    },
+    {
+      "fixed_pixels": 11404,
+      "opacity_removed": 0.01499,
+      "background_rgb": [
+        1.0,
+        0.5,
+        205.5
+      ],
+      "corner_median_spread": 3.536,
+      "haze": 0.097
+    },
+    {
+      "fixed_pixels": 11062,
+      "opacity_removed": 0.01521,
+      "background_rgb": [
+        1.0,
+        0.0,
+        192.0
+      ],
+      "corner_median_spread": 3.0,
+      "haze": 0.093
+    },
+    {
+      "fixed_pixels": 13495,
+      "opacity_removed": 0.01735,
+      "background_rgb": [
+        0.0,
+        0.0,
+        184.5
+      ],
+      "corner_median_spread": 3.64,
+      "haze": 0.109
+    },
+    {
+      "fixed_pixels": 15534,
+      "opacity_removed": 0.02019,
+      "background_rgb": [
+        0.0,
+        0.0,
+        175.0
+      ],
+      "corner_median_spread": 4.0,
+      "haze": 0.123
+    },
+    {
+      "fixed_pixels": 16793,
+      "opacity_removed": 0.02207,
+      "background_rgb": [
+        0.0,
+        0.0,
+        162.5
+      ],
+      "corner_median_spread": 3.5,
+      "haze": 0.129
+    },
+    {
+      "fixed_pixels": 17104,
+      "opacity_removed": 0.02372,
+      "background_rgb": [
+        0.5,
+        0.0,
+        152.0
+      ],
+      "corner_median_spread": 3.041,
+      "haze": 0.127
+    },
+    {
+      "fixed_pixels": 15140,
+      "opacity_removed": 0.0225,
+      "background_rgb": [
+        0.0,
+        0.0,
+        144.5
+      ],
+      "corner_median_spread": 3.5,
+      "haze": 0.11
+    },
+    {
+      "fixed_pixels": 14684,
+      "opacity_removed": 0.02229,
+      "background_rgb": [
+        0.0,
+        0.0,
+        136.0
+      ],
+      "corner_median_spread": 3.0,
+      "haze": 0.105
+    },
+    {
+      "rejected": "the plate [0.0, 0.0, 123.5] is not blue enough to measure against green"
+    },
+    {
+      "rejected": "the plate [0.0, 0.0, 108.5] is not blue enough to measure against green"
+    },
+    {
+      "rejected": "the plate [0.0, 0.0, 103.0] is not blue enough to measure against green"
+    },
+    {
+      "rejected": "the plate [0.0, 0.0, 92.0] is not blue enough to measure against green"
+    },
+    {
+      "rejected": "the plate [0.0, 0.0, 82.5] is not blue enough to measure against green"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 69.0] spread 3.0 separation 69.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 62.5] spread 2.5 separation 62.5"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 56.5] spread 2.5 separation 56.5"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 48.5] spread 1.5 separation 48.5"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 38.5] spread 0.5 separation 38.5"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 38.0] spread 1.0 separation 38.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 38.5] spread 0.5 separation 38.5"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 0.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 0.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 38.5] spread 0.5 separation 38.5"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 38.5] spread 0.5 separation 38.5"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 38.0] spread 1.0 separation 38.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 38.0] spread 1.0 separation 38.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 38.5] spread 0.5 separation 38.5"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 38.0] spread 1.0 separation 38.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 38.5] spread 0.5 separation 38.5"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 38.0] spread 0.0 separation 38.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 38.0] spread 1.0 separation 38.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 38.5] spread 0.5 separation 38.5"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 38.5] spread 0.5 separation 38.5"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 38.0] spread 1.0 separation 38.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 38.0] spread 0.0 separation 38.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 38.0] spread 0.0 separation 38.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 38.5] spread 0.5 separation 38.5"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 38.5] spread 0.5 separation 38.5"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 38.5] spread 0.5 separation 38.5"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 38.5] spread 0.5 separation 38.5"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 38.5] spread 0.5 separation 38.5"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 38.5] spread 0.5 separation 38.5"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 0.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 39.0] spread 1.0 separation 39.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 41.0] spread 1.0 separation 41.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 46.5] spread 1.5 separation 46.5"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 53.0] spread 2.0 separation 53.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 56.0] spread 2.0 separation 56.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 63.0] spread 1.0 separation 63.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 65.5] spread 1.5 separation 65.5"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 67.0] spread 2.0 separation 67.0"
+    },
+    {
+      "rejected": "plate [0.0, 0.0, 74.0] spread 1.0 separation 74.0"
+    },
+    {
+      "rejected": "the plate [0.0, 0.0, 80.0] is not blue enough to measure against green"
+    },
+    {
+      "rejected": "the plate [0.0, 0.0, 85.5] is not blue enough to measure against green"
+    },
+    {
+      "rejected": "the plate [0.0, 0.0, 89.0] is not blue enough to measure against green"
+    },
+    {
+      "rejected": "the plate [0.0, 0.0, 98.5] is not blue enough to measure against green"
+    },
+    {
+      "rejected": "the plate [0.0, 0.0, 103.0] is not blue enough to measure against green"
+    },
+    {
+      "rejected": "the plate [0.0, 0.0, 109.0] is not blue enough to measure against green"
+    },
+    {
+      "rejected": "the plate [0.0, 0.0, 114.5] is not blue enough to measure against green"
+    },
+    {
+      "rejected": "the plate [0.0, 0.0, 118.0] is not blue enough to measure against green"
+    },
+    {
+      "rejected": "the plate [0.0, 0.0, 125.0] is not blue enough to measure against green"
+    },
+    {
+      "rejected": "the plate [0.0, 0.0, 130.0] is not blue enough to measure against green"
+    },
+    {
+      "rejected": "the plate [0.0, 0.0, 134.5] is not blue enough to measure against green"
+    },
+    {
+      "fixed_pixels": 8856,
+      "opacity_removed": 0.01839,
+      "background_rgb": [
+        0.0,
+        0.0,
+        138.5
+      ],
+      "corner_median_spread": 3.5,
+      "haze": 0.068
+    },
+    {
+      "fixed_pixels": 8716,
+      "opacity_removed": 0.01757,
+      "background_rgb": [
+        0.0,
+        0.5,
+        142.0
+      ],
+      "corner_median_spread": 2.062,
+      "haze": 0.068
+    },
+    {
+      "fixed_pixels": 8668,
+      "opacity_removed": 0.01705,
+      "background_rgb": [
+        0.0,
+        0.0,
+        147.5
+      ],
+      "corner_median_spread": 2.5,
+      "haze": 0.07
+    },
+    {
+      "fixed_pixels": 8717,
+      "opacity_removed": 0.01626,
+      "background_rgb": [
+        0.0,
+        0.0,
+        153.0
+      ],
+      "corner_median_spread": 2.236,
+      "haze": 0.072
+    },
+    {
+      "fixed_pixels": 8776,
+      "opacity_removed": 0.0158,
+      "background_rgb": [
+        0.0,
+        0.0,
+        158.0
+      ],
+      "corner_median_spread": 4.0,
+      "haze": 0.072
+    },
+    {
+      "fixed_pixels": 9991,
+      "opacity_removed": 0.01683,
+      "background_rgb": [
+        0.0,
+        0.5,
+        170.0
+      ],
+      "corner_median_spread": 2.062,
+      "haze": 0.083
+    },
+    {
+      "fixed_pixels": 9684,
+      "opacity_removed": 0.01609,
+      "background_rgb": [
+        0.0,
+        0.0,
+        175.5
+      ],
+      "corner_median_spread": 2.5,
+      "haze": 0.082
+    },
+    {
+      "fixed_pixels": 10158,
+      "opacity_removed": 0.0161,
+      "background_rgb": [
+        0.5,
+        0.5,
+        183.0
+      ],
+      "corner_median_spread": 3.082,
+      "haze": 0.086
+    },
+    {
+      "fixed_pixels": 10293,
+      "opacity_removed": 0.01601,
+      "background_rgb": [
+        0.5,
+        0.5,
+        187.0
+      ],
+      "corner_median_spread": 3.082,
+      "haze": 0.087
+    },
+    {
+      "fixed_pixels": 10364,
+      "opacity_removed": 0.01571,
+      "background_rgb": [
+        1.0,
+        1.0,
+        190.5
+      ],
+      "corner_median_spread": 2.5,
+      "haze": 0.088
+    },
+    {
+      "fixed_pixels": 10683,
+      "opacity_removed": 0.01537,
+      "background_rgb": [
+        1.0,
+        0.0,
+        197.5
+      ],
+      "corner_median_spread": 3.5,
+      "haze": 0.091
+    },
+    {
+      "fixed_pixels": 10955,
+      "opacity_removed": 0.01545,
+      "background_rgb": [
+        1.0,
+        1.0,
+        204.0
+      ],
+      "corner_median_spread": 2.0,
+      "haze": 0.093
+    },
+    {
+      "fixed_pixels": 11020,
+      "opacity_removed": 0.01524,
+      "background_rgb": [
+        1.0,
+        1.0,
+        208.0
+      ],
+      "corner_median_spread": 1.0,
+      "haze": 0.094
+    },
+    {
+      "fixed_pixels": 11171,
+      "opacity_removed": 0.01504,
+      "background_rgb": [
+        1.5,
+        1.0,
+        212.0
+      ],
+      "corner_median_spread": 1.118,
+      "haze": 0.095
+    },
+    {
+      "fixed_pixels": 11634,
+      "opacity_removed": 0.01492,
+      "background_rgb": [
+        1.0,
+        0.5,
+        220.0
+      ],
+      "corner_median_spread": 1.5,
+      "haze": 0.1
+    },
+    {
+      "fixed_pixels": 12297,
+      "opacity_removed": 0.01499,
+      "background_rgb": [
+        1.0,
+        1.0,
+        228.0
+      ],
+      "corner_median_spread": 2.0,
+      "haze": 0.106
+    },
+    {
+      "fixed_pixels": 12138,
+      "opacity_removed": 0.01471,
+      "background_rgb": [
+        1.0,
+        1.0,
+        231.0
+      ],
+      "corner_median_spread": 1.414,
+      "haze": 0.104
+    },
+    {
+      "fixed_pixels": 12061,
+      "opacity_removed": 0.0147,
+      "background_rgb": [
+        1.0,
+        1.0,
+        232.0
+      ],
+      "corner_median_spread": 1.414,
+      "haze": 0.103
+    },
+    {
+      "fixed_pixels": 12558,
+      "opacity_removed": 0.01452,
+      "background_rgb": [
+        1.0,
+        1.0,
+        238.0
+      ],
+      "corner_median_spread": 3.162,
+      "haze": 0.108
+    },
+    {
+      "fixed_pixels": 13375,
+      "opacity_removed": 0.01456,
+      "background_rgb": [
+        1.0,
+        1.0,
+        243.5
+      ],
+      "corner_median_spread": 1.118,
+      "haze": 0.115
+    },
+    {
+      "fixed_pixels": 13007,
+      "opacity_removed": 0.01458,
+      "background_rgb": [
+        1.0,
+        1.0,
+        243.0
+      ],
+      "corner_median_spread": 1.414,
+      "haze": 0.112
+    },
+    {
+      "fixed_pixels": 12869,
+      "opacity_removed": 0.01434,
+      "background_rgb": [
+        0.5,
+        1.0,
+        244.0
+      ],
+      "corner_median_spread": 1.118,
+      "haze": 0.11
+    },
+    {
+      "fixed_pixels": 12769,
+      "opacity_removed": 0.01446,
+      "background_rgb": [
+        1.0,
+        1.5,
+        243.5
+      ],
+      "corner_median_spread": 0.707,
+      "haze": 0.11
+    }
+  ],
+  "protected_foreground_chroma": 66,
+  "edge_threshold": 56,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "recipe": "Flat blue plate (corner spread <= 10, separation >= 80): blue-minus-max(red, green) unmix with the measured guard band, edge-only despill, alpha>=8 regions kept when they hold an alpha>=128 pixel; then the 2 px edge band re-solved by tools/rematte_blue_plate.py clean_edges. Geometry unchanged. A green plate swaps green and blue before these rules and back after them. A frame whose alpha 8-199 band exceeds max(0.5, 3 x the take median) of its alpha>=200 area is rejected as a plate pulse."
+}

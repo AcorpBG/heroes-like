@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_veilmourn_wakeglass_navigators",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/idle_v1_frame_0.png",
+      "source_sha256": "146d9499518a16df2d6d9188fcf866a4d193ff3da2e559736b5ffb6fdbe53adc",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "7cc0439303983a5ca5e2381bf5ecbb0b513ae5c7c984357e893f0c0931982e7d"
+    },
+    {
+      "frame": "attack_3",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/attack_v1_frame_3.png",
+      "source_sha256": "39520100663eee29344c0cc08ed9b39519c73abccaeb47413e0007acfddeadf1",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "45d2b2de16a20a787412f625d0cff168bd737179e67d81c311c68c3f44756903"
+    },
+    {
+      "frame": "attack_4",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/attack_v1_frame_4.png",
+      "source_sha256": "409c2d6eb024b8c86674bdf7ebf998da5e4e413a000f8ac2f94ad394d2cf6dd3",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "1ae98dac1d5eb321f094e192777092649aef69302713a6139983605feae370e1"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    524,
+    566
+  ],
+  "output_scale": 0.47,
+  "free_pixels_left_top_right_bottom": [
+    137,
+    58,
+    137,
+    58
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
