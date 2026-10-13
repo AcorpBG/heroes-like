@@ -7,616 +7,4229 @@
       "source_facing": "right",
       "frames": [
         {
-          "name": "attack_0",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_0.png",
+          "name": "idle_h3_v1_000",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_000.png",
           "rects": [
             [
               0,
               0,
-              297,
-              374
+              960,
+              640
             ]
           ],
           "anchor": [
-            148,
-            373
+            481,
+            580
           ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
         },
         {
-          "name": "attack_1",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_1.png",
+          "name": "idle_h3_v1_002",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_002.png",
           "rects": [
             [
               0,
               0,
-              288,
-              365
+              960,
+              640
             ]
           ],
           "anchor": [
-            144,
-            364
+            481,
+            580
           ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 2,
+          "video_time_seconds": 0.0833
         },
         {
-          "name": "attack_2",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_2.png",
+          "name": "idle_h3_v1_004",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_004.png",
           "rects": [
             [
               0,
               0,
-              315,
-              399
+              960,
+              640
             ]
           ],
           "anchor": [
-            158,
-            398
+            481,
+            580
           ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.1667
         },
         {
-          "name": "attack_3",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_3.png",
+          "name": "idle_h3_v1_006",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_006.png",
           "rects": [
             [
               0,
               0,
-              326,
-              356
+              960,
+              640
             ]
           ],
           "anchor": [
-            163,
-            355
+            481,
+            580
           ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
         },
         {
-          "name": "attack_4",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_4.png",
+          "name": "idle_h3_v1_008",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_008.png",
           "rects": [
             [
               0,
               0,
-              374,
-              324
+              960,
+              640
             ]
           ],
           "anchor": [
-            187,
-            323
+            481,
+            580
           ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333
         },
         {
-          "name": "attack_5",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_5.png",
+          "name": "idle_h3_v1_010",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_010.png",
           "rects": [
             [
               0,
               0,
-              327,
-              355
+              960,
+              640
             ]
           ],
           "anchor": [
-            164,
-            354
+            481,
+            580
           ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4167
         },
         {
-          "name": "attack_6",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_6.png",
+          "name": "idle_h3_v1_012",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_012.png",
           "rects": [
             [
               0,
               0,
-              306,
-              387
+              960,
+              640
             ]
           ],
           "anchor": [
-            153,
-            386
+            481,
+            580
           ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
         },
         {
-          "name": "attack_7",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_7.png",
+          "name": "idle_h3_v1_014",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_014.png",
           "rects": [
             [
               0,
               0,
-              292,
-              395
+              960,
+              640
             ]
           ],
           "anchor": [
-            146,
-            394
+            481,
+            580
           ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833
         },
         {
-          "name": "hit_0",
+          "name": "idle_h3_v1_016",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6667
+        },
+        {
+          "name": "idle_h3_v1_018",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "idle_h3_v1_020",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333
+        },
+        {
+          "name": "idle_h3_v1_022",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9167
+        },
+        {
+          "name": "idle_h3_v1_024",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "idle_h3_v1_026",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833
+        },
+        {
+          "name": "idle_h3_v1_028",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1667
+        },
+        {
+          "name": "idle_h3_v1_030",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "idle_h3_v1_032",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333
+        },
+        {
+          "name": "idle_h3_v1_034",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4167
+        },
+        {
+          "name": "idle_h3_v1_036",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "idle_h3_v1_038",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833
+        },
+        {
+          "name": "idle_h3_v1_040",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6667
+        },
+        {
+          "name": "idle_h3_v1_042",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "idle_h3_v1_044",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333
+        },
+        {
+          "name": "idle_h3_v1_046",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9167
+        },
+        {
+          "name": "idle_h3_v1_048",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "idle_h3_v1_050",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833
+        },
+        {
+          "name": "idle_h3_v1_052",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1667
+        },
+        {
+          "name": "idle_h3_v1_054",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "idle_h3_v1_056",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333
+        },
+        {
+          "name": "idle_h3_v1_058",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4167
+        },
+        {
+          "name": "idle_h3_v1_060",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "idle_h3_v1_062",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833
+        },
+        {
+          "name": "idle_h3_v1_064",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6667
+        },
+        {
+          "name": "idle_h3_v1_066",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "idle_h3_v1_068",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333
+        },
+        {
+          "name": "idle_h3_v1_070",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9167
+        },
+        {
+          "name": "idle_h3_v1_072",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "idle_h3_v1_074",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833
+        },
+        {
+          "name": "idle_h3_v1_076",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1667
+        },
+        {
+          "name": "idle_h3_v1_078",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "idle_h3_v1_080",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333
+        },
+        {
+          "name": "idle_h3_v1_082",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4167
+        },
+        {
+          "name": "idle_h3_v1_084",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "idle_h3_v1_086",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833
+        },
+        {
+          "name": "idle_h3_v1_088",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6667
+        },
+        {
+          "name": "idle_h3_v1_090",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "idle_h3_v1_092",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333
+        },
+        {
+          "name": "idle_h3_v1_094",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9167
+        },
+        {
+          "name": "idle_h3_v1_096",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "idle_h3_v1_098",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.0833
+        },
+        {
+          "name": "idle_h3_v1_100",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.1667
+        },
+        {
+          "name": "idle_h3_v1_102",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "idle_h3_v1_104",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.3333
+        },
+        {
+          "name": "idle_h3_v1_106",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_106.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 106,
+          "video_time_seconds": 4.4167
+        },
+        {
+          "name": "idle_h3_v1_108",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "idle_h3_v1_110",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_110.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 110,
+          "video_time_seconds": 4.5833
+        },
+        {
+          "name": "idle_h3_v1_112",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_112.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.6667
+        },
+        {
+          "name": "idle_h3_v1_114",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_114.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 114,
+          "video_time_seconds": 4.75
+        },
+        {
+          "name": "idle_h3_v1_116",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_116.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 116,
+          "video_time_seconds": 4.8333
+        },
+        {
+          "name": "idle_h3_v1_118",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_118.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 118,
+          "video_time_seconds": 4.9167
+        },
+        {
+          "name": "idle_h3_v1_120",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_120.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 120,
+          "video_time_seconds": 5.0
+        },
+        {
+          "name": "idle_h3_v1_122",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte/rgba_122.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 122,
+          "video_time_seconds": 5.0833
+        },
+        {
+          "name": "attack_h3_v1_017",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083
+        },
+        {
+          "name": "attack_h3_v1_021",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "attack_h3_v1_022",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9167
+        },
+        {
+          "name": "attack_h3_v1_023",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583
+        },
+        {
+          "name": "attack_h3_v1_024",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "attack_h3_v1_025",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0417
+        },
+        {
+          "name": "attack_h3_v1_026",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833
+        },
+        {
+          "name": "attack_h3_v1_027",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "attack_h3_v1_028",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1667
+        },
+        {
+          "name": "attack_h3_v1_029",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083
+        },
+        {
+          "name": "attack_h3_v1_031",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2917
+        },
+        {
+          "name": "attack_h3_v1_032",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333
+        },
+        {
+          "name": "attack_h3_v1_034",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4167
+        },
+        {
+          "name": "attack_h3_v1_035",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583
+        },
+        {
+          "name": "attack_h3_v1_036",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "attack_h3_v1_037",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5417
+        },
+        {
+          "name": "attack_h3_v1_039",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "attack_h3_v1_046",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9167
+        },
+        {
+          "name": "attack_h3_v1_053",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_053.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 53,
+          "video_time_seconds": 2.2083
+        },
+        {
+          "name": "attack_h3_v1_061",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_061.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 61,
+          "video_time_seconds": 2.5417
+        },
+        {
+          "name": "attack_h3_v1_068",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333
+        },
+        {
+          "name": "attack_h3_v1_074",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833
+        },
+        {
+          "name": "attack_h3_v1_076",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1667
+        },
+        {
+          "name": "attack_h3_v1_077",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_077.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 77,
+          "video_time_seconds": 3.2083
+        },
+        {
+          "name": "attack_h3_v1_078",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "attack_h3_v1_079",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_079.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 79,
+          "video_time_seconds": 3.2917
+        },
+        {
+          "name": "attack_h3_v1_080",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333
+        },
+        {
+          "name": "attack_h3_v1_081",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_081.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 81,
+          "video_time_seconds": 3.375
+        },
+        {
+          "name": "attack_h3_v1_082",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4167
+        },
+        {
+          "name": "attack_h3_v1_083",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_083.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 83,
+          "video_time_seconds": 3.4583
+        },
+        {
+          "name": "attack_h3_v1_085",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_085.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 85,
+          "video_time_seconds": 3.5417
+        },
+        {
+          "name": "attack_h3_v1_086",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833
+        },
+        {
+          "name": "attack_h3_v1_087",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_087.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 87,
+          "video_time_seconds": 3.625
+        },
+        {
+          "name": "attack_h3_v1_094",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9167
+        },
+        {
+          "name": "hit_h3_v1_000",
           "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/reactions_v1_0.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/matte/rgba_000.png",
           "rects": [
             [
               0,
               0,
-              375,
-              378
+              960,
+              640
             ]
           ],
           "anchor": [
-            188,
-            377
+            481,
+            580
           ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
         },
         {
-          "name": "hit_1",
+          "name": "hit_h3_v1_001",
           "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/reactions_v1_1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/matte/rgba_001.png",
           "rects": [
             [
               0,
               0,
-              386,
-              346
+              960,
+              640
             ]
           ],
           "anchor": [
-            193,
-            345
+            481,
+            580
           ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 1,
+          "video_time_seconds": 0.0417
         },
         {
-          "name": "hit_2",
+          "name": "hit_h3_v1_002",
           "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/reactions_v1_2.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/matte/rgba_002.png",
           "rects": [
             [
               0,
               0,
-              375,
-              380
+              960,
+              640
             ]
           ],
           "anchor": [
-            188,
-            379
+            481,
+            580
           ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 2,
+          "video_time_seconds": 0.0833
         },
         {
-          "name": "hit_3",
+          "name": "hit_h3_v1_003",
           "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/reactions_v1_3.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/matte/rgba_003.png",
           "rects": [
             [
               0,
               0,
-              329,
-              403
+              960,
+              640
             ]
           ],
           "anchor": [
-            164,
-            402
+            481,
+            580
           ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 3,
+          "video_time_seconds": 0.125
         },
         {
-          "name": "defend_0",
+          "name": "hit_h3_v1_004",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.1667
+        },
+        {
+          "name": "hit_h3_v1_005",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/matte/rgba_005.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 5,
+          "video_time_seconds": 0.2083
+        },
+        {
+          "name": "hit_h3_v1_006",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "hit_h3_v1_007",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/matte/rgba_007.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 7,
+          "video_time_seconds": 0.2917
+        },
+        {
+          "name": "hit_h3_v1_009",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/matte/rgba_009.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 9,
+          "video_time_seconds": 0.375
+        },
+        {
+          "name": "hit_h3_v1_010",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4167
+        },
+        {
+          "name": "hit_h3_v1_012",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "hit_h3_v1_013",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5417
+        },
+        {
+          "name": "hit_h3_v1_015",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "hit_h3_v1_017",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083
+        },
+        {
+          "name": "hit_h3_v1_019",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7917
+        },
+        {
+          "name": "hit_h3_v1_020",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333
+        },
+        {
+          "name": "hit_h3_v1_022",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9167
+        },
+        {
+          "name": "hit_h3_v1_024",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "hit_h3_v1_025",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0417
+        },
+        {
+          "name": "hit_h3_v1_027",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "hit_h3_v1_028",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1667
+        },
+        {
+          "name": "hit_h3_v1_030",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "hit_h3_v1_032",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333
+        },
+        {
+          "name": "hit_h3_v1_044",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333
+        },
+        {
+          "name": "defend_h3_v2_013",
           "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/reactions_v1_4.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/matte/rgba_013.png",
           "rects": [
             [
               0,
               0,
-              348,
-              369
+              960,
+              640
             ]
           ],
           "anchor": [
-            174,
-            368
+            481,
+            580
           ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5417
         },
         {
-          "name": "defend_1",
+          "name": "defend_h3_v2_018",
           "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/reactions_v1_5.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/matte/rgba_018.png",
           "rects": [
             [
               0,
               0,
-              334,
-              313
+              960,
+              640
             ]
           ],
           "anchor": [
-            167,
-            312
+            481,
+            580
           ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
         },
         {
-          "name": "defend_2",
+          "name": "defend_h3_v2_021",
           "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/reactions_v1_6.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/matte/rgba_021.png",
           "rects": [
             [
               0,
               0,
-              347,
-              379
+              960,
+              640
             ]
           ],
           "anchor": [
-            174,
-            378
+            481,
+            580
           ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
         },
         {
-          "name": "defend_3",
+          "name": "defend_h3_v2_023",
           "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/reactions_v1_7.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/matte/rgba_023.png",
           "rects": [
             [
               0,
               0,
-              317,
-              399
+              960,
+              640
             ]
           ],
           "anchor": [
-            158,
-            398
+            481,
+            580
           ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583
         },
         {
-          "name": "death_0",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/death_v1_0.png",
+          "name": "defend_h3_v2_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/matte/rgba_024.png",
           "rects": [
             [
               0,
               0,
-              372,
-              403
+              960,
+              640
             ]
           ],
           "anchor": [
-            186,
-            402
+            481,
+            580
           ],
-          "scale": 0.55,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
         },
         {
-          "name": "death_1",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/death_v1_1.png",
+          "name": "defend_h3_v2_025",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/matte/rgba_025.png",
           "rects": [
             [
               0,
               0,
-              349,
-              333
+              960,
+              640
             ]
           ],
           "anchor": [
-            174,
-            332
+            481,
+            580
           ],
-          "scale": 0.55,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0417
         },
         {
-          "name": "death_2",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/death_v1_2.png",
+          "name": "defend_h3_v2_027",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/matte/rgba_027.png",
           "rects": [
             [
               0,
               0,
-              439,
-              321
+              960,
+              640
             ]
           ],
           "anchor": [
-            220,
-            320
+            481,
+            580
           ],
-          "scale": 0.55,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
         },
         {
-          "name": "death_3",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/death_v1_3.png",
+          "name": "defend_h3_v2_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/matte/rgba_028.png",
           "rects": [
             [
               0,
               0,
-              480,
-              220
+              960,
+              640
             ]
           ],
           "anchor": [
-            240,
-            219
+            481,
+            580
           ],
-          "scale": 0.55,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1667
         },
         {
-          "name": "death_4",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/death_v1_4.png",
+          "name": "defend_h3_v2_029",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/matte/rgba_029.png",
           "rects": [
             [
               0,
               0,
-              493,
-              184
+              960,
+              640
             ]
           ],
           "anchor": [
-            246,
-            183
+            481,
+            580
           ],
-          "scale": 0.55,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083
         },
         {
-          "name": "death_5",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/death_v1_5.png",
+          "name": "defend_h3_v2_030",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/matte/rgba_030.png",
           "rects": [
             [
               0,
               0,
-              481,
-              190
+              960,
+              640
             ]
           ],
           "anchor": [
-            240,
-            189
+            481,
+            580
           ],
-          "scale": 0.55,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
         },
         {
-          "name": "death_6",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/death_v1_6.png",
+          "name": "defend_h3_v2_031",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/matte/rgba_031.png",
           "rects": [
             [
               0,
               0,
-              492,
-              193
+              960,
+              640
             ]
           ],
           "anchor": [
-            246,
-            192
+            481,
+            580
           ],
-          "scale": 0.55,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2917
         },
         {
-          "name": "death_7",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/death_v1_7.png",
+          "name": "defend_h3_v2_032",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/matte/rgba_032.png",
           "rects": [
             [
               0,
               0,
-              483,
-              191
+              960,
+              640
             ]
           ],
           "anchor": [
-            242,
-            190
+            481,
+            580
           ],
-          "scale": 0.55,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333
         },
         {
-          "name": "cast_0",
+          "name": "defend_h3_v2_034",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4167
+        },
+        {
+          "name": "defend_h3_v2_037",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5417
+        },
+        {
+          "name": "defend_h3_v2_044",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333
+        },
+        {
+          "name": "defend_h3_v2_051",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "defend_h3_v2_058",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4167
+        },
+        {
+          "name": "defend_h3_v2_068",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333
+        },
+        {
+          "name": "defend_h3_v2_075",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "defend_h3_v2_086",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833
+        },
+        {
+          "name": "cast_h3_v2_013",
           "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_0.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_013.png",
           "rects": [
             [
               0,
               0,
-              245,
-              357
+              960,
+              640
             ]
           ],
           "anchor": [
-            122,
-            356
+            481,
+            580
           ],
-          "scale": 0.63,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5417
         },
         {
-          "name": "cast_1",
+          "name": "cast_h3_v2_018",
           "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_018.png",
           "rects": [
             [
               0,
               0,
-              252,
-              358
+              960,
+              640
             ]
           ],
           "anchor": [
-            126,
-            357
+            481,
+            580
           ],
-          "scale": 0.63,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
         },
         {
-          "name": "cast_2",
+          "name": "cast_h3_v2_020",
           "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_2.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_020.png",
           "rects": [
             [
               0,
               0,
-              227,
-              353
+              960,
+              640
             ]
           ],
           "anchor": [
-            114,
-            352
+            481,
+            580
           ],
-          "scale": 0.63,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333
         },
         {
-          "name": "cast_3",
+          "name": "cast_h3_v2_021",
           "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_3.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_021.png",
           "rects": [
             [
               0,
               0,
-              242,
-              385
+              960,
+              640
             ]
           ],
           "anchor": [
-            121,
-            384
+            481,
+            580
           ],
-          "scale": 0.63,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
         },
         {
-          "name": "cast_4",
+          "name": "cast_h3_v2_023",
           "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_4.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_023.png",
           "rects": [
             [
               0,
               0,
-              251,
-              408
+              960,
+              640
             ]
           ],
           "anchor": [
-            126,
-            407
+            481,
+            580
           ],
-          "scale": 0.63,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583
         },
         {
-          "name": "cast_5",
+          "name": "cast_h3_v2_024",
           "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_5.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_024.png",
           "rects": [
             [
               0,
               0,
-              241,
-              360
+              960,
+              640
             ]
           ],
           "anchor": [
-            120,
-            359
+            481,
+            580
           ],
-          "scale": 0.63,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
         },
         {
-          "name": "cast_6",
+          "name": "cast_h3_v2_026",
           "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_6.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_026.png",
           "rects": [
             [
               0,
               0,
-              258,
-              354
+              960,
+              640
             ]
           ],
           "anchor": [
-            129,
-            353
+            481,
+            580
           ],
-          "scale": 0.63,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833
         },
         {
-          "name": "cast_7",
+          "name": "cast_h3_v2_028",
           "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_7.png",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_028.png",
           "rects": [
             [
               0,
               0,
-              254,
-              357
+              960,
+              640
             ]
           ],
           "anchor": [
-            127,
-            356
+            481,
+            580
           ],
-          "scale": 0.63,
-          "alpha_noise_cutoff": 8
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1667
+        },
+        {
+          "name": "cast_h3_v2_029",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083
+        },
+        {
+          "name": "cast_h3_v2_030",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "cast_h3_v2_031",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2917
+        },
+        {
+          "name": "cast_h3_v2_032",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333
+        },
+        {
+          "name": "cast_h3_v2_033",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "cast_h3_v2_034",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4167
+        },
+        {
+          "name": "cast_h3_v2_036",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "cast_h3_v2_048",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "cast_h3_v2_055",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_055.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.2917
+        },
+        {
+          "name": "cast_h3_v2_062",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833
+        },
+        {
+          "name": "cast_h3_v2_069",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_069.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 69,
+          "video_time_seconds": 2.875
+        },
+        {
+          "name": "cast_h3_v2_080",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333
+        },
+        {
+          "name": "cast_h3_v2_082",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4167
+        },
+        {
+          "name": "cast_h3_v2_084",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "cast_h3_v2_085",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_085.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 85,
+          "video_time_seconds": 3.5417
+        },
+        {
+          "name": "cast_h3_v2_087",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_087.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 87,
+          "video_time_seconds": 3.625
+        },
+        {
+          "name": "cast_h3_v2_088",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6667
+        },
+        {
+          "name": "cast_h3_v2_089",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_089.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 89,
+          "video_time_seconds": 3.7083
+        },
+        {
+          "name": "cast_h3_v2_090",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "cast_h3_v2_092",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333
+        },
+        {
+          "name": "cast_h3_v2_093",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_093.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 93,
+          "video_time_seconds": 3.875
+        },
+        {
+          "name": "cast_h3_v2_095",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_095.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 95,
+          "video_time_seconds": 3.9583
+        },
+        {
+          "name": "cast_h3_v2_099",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte/rgba_099.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 99,
+          "video_time_seconds": 4.125
+        },
+        {
+          "name": "death_h3_v1_006",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "death_h3_v1_011",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_011.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 11,
+          "video_time_seconds": 0.4583
+        },
+        {
+          "name": "death_h3_v1_013",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5417
+        },
+        {
+          "name": "death_h3_v1_014",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833
+        },
+        {
+          "name": "death_h3_v1_015",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "death_h3_v1_016",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6667
+        },
+        {
+          "name": "death_h3_v1_017",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083
+        },
+        {
+          "name": "death_h3_v1_018",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "death_h3_v1_019",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7917
+        },
+        {
+          "name": "death_h3_v1_021",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "death_h3_v1_028",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1667
+        },
+        {
+          "name": "death_h3_v1_035",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583
+        },
+        {
+          "name": "death_h3_v1_045",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "death_h3_v1_055",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_055.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.2917
+        },
+        {
+          "name": "death_h3_v1_056",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333
+        },
+        {
+          "name": "death_h3_v1_057",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_057.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 57,
+          "video_time_seconds": 2.375
+        },
+        {
+          "name": "death_h3_v1_058",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4167
+        },
+        {
+          "name": "death_h3_v1_059",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_059.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 59,
+          "video_time_seconds": 2.4583
+        },
+        {
+          "name": "death_h3_v1_060",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "death_h3_v1_061",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_061.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 61,
+          "video_time_seconds": 2.5417
+        },
+        {
+          "name": "death_h3_v1_062",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833
+        },
+        {
+          "name": "death_h3_v1_063",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_063.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 63,
+          "video_time_seconds": 2.625
+        },
+        {
+          "name": "death_h3_v1_064",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6667
+        },
+        {
+          "name": "death_h3_v1_065",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_065.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 65,
+          "video_time_seconds": 2.7083
+        },
+        {
+          "name": "death_h3_v1_067",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_067.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 67,
+          "video_time_seconds": 2.7917
+        },
+        {
+          "name": "death_h3_v1_069",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_069.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 69,
+          "video_time_seconds": 2.875
+        },
+        {
+          "name": "death_h3_v1_076",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1667
+        },
+        {
+          "name": "death_h3_v1_083",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_083.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 83,
+          "video_time_seconds": 3.4583
+        },
+        {
+          "name": "death_h3_v1_090",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "death_h3_v1_123",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            481,
+            580
+          ],
+          "scale": 0.49,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
         }
       ],
       "clips": {
-        "attack": {
+        "idle": {
           "indices": [
             0,
             1,
@@ -625,37 +4238,15 @@
             4,
             5,
             6,
-            7
-          ],
-          "frame_msec": 105,
-          "loop": false,
-          "static_frame": 0,
-          "contact_frame": 4
-        },
-        "hit": {
-          "indices": [
+            7,
             8,
             9,
             10,
-            11
-          ],
-          "frame_msec": 105,
-          "loop": false,
-          "static_frame": 0
-        },
-        "defend": {
-          "indices": [
+            11,
             12,
             13,
             14,
-            15
-          ],
-          "frame_msec": 125,
-          "loop": false,
-          "static_frame": 0
-        },
-        "death": {
-          "indices": [
+            15,
             16,
             17,
             18,
@@ -663,22 +4254,7 @@
             20,
             21,
             22,
-            23
-          ],
-          "frame_msec": 145,
-          "loop": false,
-          "static_frame": 0
-        },
-        "dead": {
-          "indices": [
-            23
-          ],
-          "frame_msec": 150,
-          "loop": false,
-          "static_frame": 0
-        },
-        "cast": {
-          "indices": [
+            23,
             24,
             25,
             26,
@@ -686,59 +4262,491 @@
             28,
             29,
             30,
-            31
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61
           ],
-          "frame_msec": 125,
+          "frame_msec": 60,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95
+          ],
+          "frame_msec": 42,
           "loop": false,
           "static_frame": 0,
-          "contact_frame": 4
+          "contact_frame": 27
+        },
+        "hit": {
+          "indices": [
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119
+          ],
+          "frame_msec": 35,
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 19
+        },
+        "cast": {
+          "indices": [
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156,
+            157,
+            158,
+            159,
+            160,
+            161,
+            162,
+            163,
+            164,
+            165,
+            166,
+            167,
+            168,
+            169,
+            170
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 15
+        },
+        "death": {
+          "indices": [
+            171,
+            172,
+            173,
+            174,
+            175,
+            176,
+            177,
+            178,
+            179,
+            180,
+            181,
+            182,
+            183,
+            184,
+            185,
+            186,
+            187,
+            188,
+            189,
+            190,
+            191,
+            192,
+            193,
+            194,
+            195,
+            196,
+            197,
+            198,
+            199,
+            200
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 29
         }
       },
-      "accepted_clips": [],
-      "preserve_clips": [
-        "idle"
-      ],
-      "unfinished_clips": [
-        "move"
-      ],
-      "source_scale_by_image": {
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_0.png": 0.59,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_1.png": 0.59,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_2.png": 0.59,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_3.png": 0.59,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_4.png": 0.59,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_5.png": 0.59,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_6.png": 0.59,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_7.png": 0.59,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/reactions_v1_0.png": 0.59,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/reactions_v1_1.png": 0.59,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/reactions_v1_2.png": 0.59,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/reactions_v1_3.png": 0.59,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/reactions_v1_4.png": 0.59,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/reactions_v1_5.png": 0.59,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/reactions_v1_6.png": 0.59,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/reactions_v1_7.png": 0.59,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/death_v1_0.png": 0.55,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/death_v1_1.png": 0.55,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/death_v1_2.png": 0.55,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/death_v1_3.png": 0.55,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/death_v1_4.png": 0.55,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/death_v1_5.png": 0.55,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/death_v1_6.png": 0.55,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/death_v1_7.png": 0.55,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_0.png": 0.63,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_1.png": 0.63,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_2.png": 0.63,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_3.png": 0.63,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_4.png": 0.63,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_5.png": 0.63,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_6.png": 0.63,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_7.png": 0.63
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "Guides are the accepted paintings at their accepted scale; every video frame keeps one fixed extraction scale and anchor.",
+      "provenance": {
+        "idle_h3_v1/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/original_lossless.mkv",
+          "sha256": "641be67b7a11030ef6b54c12075fb3288802f6bff39aaed8676c3cca62e2a453"
+        },
+        "idle_h3_v1/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/original.json",
+          "sha256": "4638b73cb5a18219ce5f23cc1d821da10e5e4e4f2f267ab6c234ce7d3eff4f4f"
+        },
+        "idle_h3_v1/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/original.latent",
+          "sha256": "e1c731ce204091abca3187aaef82efba06fe08450aa067f56978fed8406e5fe7"
+        },
+        "idle_h3_v1/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/sampling_workflow_api.json",
+          "sha256": "822fadf934e3db12eda7e154a2dd03e89b80d9a2e744ac0e1e6ee94e9da90783"
+        },
+        "idle_h3_v1/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/decode_workflow_api.json",
+          "sha256": "f02ade369faab344d4789cf7e1220942a05f5af43fcc6b8a4ecdc8ad8fc257bb"
+        },
+        "idle_h3_v1/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/sampling_history.json",
+          "sha256": "a96910e68e10c055d1ec0b4f4fbe6f18c67028aac1d9a814f6f7d919ee828f5b"
+        },
+        "idle_h3_v1/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/generation_history.json",
+          "sha256": "5653f797fd3a52f59f921f8d936489fbc5013a77cf02cc53ba28063bb7ddc525"
+        },
+        "idle_h3_v1/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/prompt.txt",
+          "sha256": "42eb9e2391a795b609068e2ac85042b571c436630a93fd9953c2077fec3ddc62"
+        },
+        "idle_h3_v1/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/reference.json",
+          "sha256": "10dcc13a30d869a899f90dc8f51c8f0820ee0289fa0437ece9c5e2ad623db072"
+        },
+        "idle_h3_v1/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/config.json",
+          "sha256": "d8f58b379a5ec31c8c8ed6ef0675fdc07a3bef7fe79a74875e23b74d17e5d745"
+        },
+        "idle_h3_v1/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/idle_h3_v1/matte.json",
+          "sha256": "1f741d2cd2a9a7ce4b6ef9e15497c5c9b4a2615d0e386dee933c6b6bb856952b"
+        },
+        "attack_h3_v1/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/original_lossless.mkv",
+          "sha256": "d485a3acb8aaf5888b57ba9cdf77c2087363ba5c45cc9a9c05b32fc2b373fda6"
+        },
+        "attack_h3_v1/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/original.json",
+          "sha256": "a0da6966c3dad9393c456ef9bd5275fd24ec3fa1ae2eddaf395392dcfe3a54a1"
+        },
+        "attack_h3_v1/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/original.latent",
+          "sha256": "4ce2cf26047617c86d2c2f5796906807496d140d65dfb778798f5fd73b2a53f2"
+        },
+        "attack_h3_v1/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/sampling_workflow_api.json",
+          "sha256": "12caf93d7eadcee3265fd358ebd14f26fa7b2441f1a8ca447cfd5efffa22afbd"
+        },
+        "attack_h3_v1/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/decode_workflow_api.json",
+          "sha256": "1cbbeb20cd48adaba3d05af997f3ceed733a60c4748221ab3f0c53ac90dd34c9"
+        },
+        "attack_h3_v1/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/sampling_history.json",
+          "sha256": "b76af1c7f427ec227c24bbb655ef324c846f04c44a6d67bd5b29ef19703aacfa"
+        },
+        "attack_h3_v1/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/generation_history.json",
+          "sha256": "ce3bd49da729edf00290e3ae0c62e4fb64544ea45bde9a29e11885a3b1c6ed87"
+        },
+        "attack_h3_v1/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/prompt.txt",
+          "sha256": "dc2cbd398dc7ffe7be83c923befdb89b1c19a27c6ea86723f4834f33911cf8f7"
+        },
+        "attack_h3_v1/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/reference.json",
+          "sha256": "8125abbec9114b59606f3c1e1c89c6c05f690057e642c5bd493e3fe4009b0d2a"
+        },
+        "attack_h3_v1/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/config.json",
+          "sha256": "76c8a945691893606dcffd52e851722887b811d04bd986bc107887b994888e00"
+        },
+        "attack_h3_v1/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/attack_h3_v1/matte.json",
+          "sha256": "8baf58d9afa917c88c66a297de235597a547e85df7d216e6f77924e3c35ea0c3"
+        },
+        "hit_h3_v1/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/original_lossless.mkv",
+          "sha256": "01d530e5a590da15d4f990f7751c98de30ee005c617ef14f0be5b9692d4b9ce3"
+        },
+        "hit_h3_v1/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/original.json",
+          "sha256": "2550f9cd42f6d19ee597668c91d4995525f3dfd1f4a82b4191f55201d1c29554"
+        },
+        "hit_h3_v1/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/original.latent",
+          "sha256": "ddd6675e3e234b9aad3b9e1848cac65b99edce955177909f49e2420e0a532a22"
+        },
+        "hit_h3_v1/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/sampling_workflow_api.json",
+          "sha256": "cbf0b83d2ebbe8229a2aab023478d2a28ad0e1e7a1540ab93ccdd0bfc73c2dbd"
+        },
+        "hit_h3_v1/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/decode_workflow_api.json",
+          "sha256": "2a1bcf9b61dd19d641edd55885103c3b57d6e420aedc822c91ecf0fa9d45489c"
+        },
+        "hit_h3_v1/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/sampling_history.json",
+          "sha256": "1098b857c8cb79d3bf36dc0d99744db875cdd161d1edd9dec34498c0a3a9f7f1"
+        },
+        "hit_h3_v1/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/generation_history.json",
+          "sha256": "dd8784fe827fd8a85c2be8ffbb7e8254670dfa686c65ebc55ee3ea3893f0c36f"
+        },
+        "hit_h3_v1/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/prompt.txt",
+          "sha256": "85e743ed3d5d8b29def36e55e1149e94b306c62877326c41cf5f4af3d9e4ba2e"
+        },
+        "hit_h3_v1/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/reference.json",
+          "sha256": "c708920054aebe1878dd67883603087bc6c86e1e85a125350efead376613db25"
+        },
+        "hit_h3_v1/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/config.json",
+          "sha256": "1e880d6b914087442f712155b53ccfa14a58dd945735f099d8b6b3f269f03002"
+        },
+        "hit_h3_v1/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/hit_h3_v1/matte.json",
+          "sha256": "eec9e6231a3888d2dcf8c279136f738bac788c78ed2afe35442650b89943a05c"
+        },
+        "defend_h3_v2/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/original_lossless.mkv",
+          "sha256": "0d2006edbfd7123a86d30e250e581071e5146902d4068a60d5700c997683cd88"
+        },
+        "defend_h3_v2/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/original.json",
+          "sha256": "04dbe932d661a17c8fc489c982ae855518305253aba6c13d333c7fe07f233297"
+        },
+        "defend_h3_v2/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/original.latent",
+          "sha256": "80a66dd981fa7bb8218e99f06fb80e41c35a5988eef1973b11427016e403a046"
+        },
+        "defend_h3_v2/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/sampling_workflow_api.json",
+          "sha256": "e00923a2ae78262a676235e4b5c85066666bcac4021b446f31c703f8840379c7"
+        },
+        "defend_h3_v2/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/decode_workflow_api.json",
+          "sha256": "5ece857ce570185f58b64bb0f25174686c155a60af3fac900c87468ef0e858b1"
+        },
+        "defend_h3_v2/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/sampling_history.json",
+          "sha256": "e4910925fc79b2742ea78af78c9ffccfcef4d0faaffcad5f066f74459838708a"
+        },
+        "defend_h3_v2/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/generation_history.json",
+          "sha256": "0f6f3bab305c5543e830585320ca2d2021d269e230f4d855a9db76ec71889ad9"
+        },
+        "defend_h3_v2/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/prompt.txt",
+          "sha256": "b39c13acb98daead2e56302eca3d89d480345c43ed6ebf6d1be472482db7e40b"
+        },
+        "defend_h3_v2/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/reference.json",
+          "sha256": "f2f2810aaeb500bda98abf86e0690a52a6af6dcaf7c4ffdb87efc3d83aacd208"
+        },
+        "defend_h3_v2/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/config.json",
+          "sha256": "0acb489a2e99a2394170d1f81392c0a01a1bf50e6cb138166ec06083f42532f2"
+        },
+        "defend_h3_v2/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/defend_h3_v2/matte.json",
+          "sha256": "a1ccf5f7b419d90c3db7e9d1ed75629a0320a30206a5c7bb675740f2242c45af"
+        },
+        "cast_h3_v2/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/original_lossless.mkv",
+          "sha256": "24645146529e6a9a48140e8f234159b830533f8a2a24e187b159c75b86fcad38"
+        },
+        "cast_h3_v2/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/original.json",
+          "sha256": "b7a249cbeac2b256915b0d467f5df633f10544f69dce402d3ba24937aee64508"
+        },
+        "cast_h3_v2/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/original.latent",
+          "sha256": "3f6973b3bb231d3a77fc95b2dbada659b5deaecf0583625d0c09be69581a8644"
+        },
+        "cast_h3_v2/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/sampling_workflow_api.json",
+          "sha256": "8b6fa1a854e771f7d2463249672bf7ae781830f2b166a0d5d43199ffc487360f"
+        },
+        "cast_h3_v2/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/decode_workflow_api.json",
+          "sha256": "76de1a13b5f605e318d9ba83ff39008f8ab83fe2a16cae7939609bb8afa8bc46"
+        },
+        "cast_h3_v2/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/sampling_history.json",
+          "sha256": "535d460d8942f94eca18feda7592920877dfb5e899ae749cc934075cb460b9c2"
+        },
+        "cast_h3_v2/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/generation_history.json",
+          "sha256": "6a9d40d5d54db3e63be9bd9245667a6ebc51ba1c7ca8415f427e9678494248ac"
+        },
+        "cast_h3_v2/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/prompt.txt",
+          "sha256": "413acca2f7f44f8ba9c36f817dc0534906b0d7b3680b7bb40c3904c02fb6370d"
+        },
+        "cast_h3_v2/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/reference.json",
+          "sha256": "f417caeab2cf3e77ff35ecd0380c13d75272449c66335e7c542e619ce60ea146"
+        },
+        "cast_h3_v2/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/config.json",
+          "sha256": "5cadfdc2121d032963a6a1d6a2b91ad01c23d30a396e1ec37ebac3424cfc18cd"
+        },
+        "cast_h3_v2/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/cast_h3_v2/matte.json",
+          "sha256": "ad7c11c48d9356449e0c37817cd14c9b20a2be33ba5b23e5542d0d6418eb66d2"
+        },
+        "death_h3_v1/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/original_lossless.mkv",
+          "sha256": "824d956a6b23d221dfc643a014d6467ab6a7496791398e466ad15fa75b0c3bb9"
+        },
+        "death_h3_v1/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/original.json",
+          "sha256": "4a6a9be68ccb7279b400fd9e8a259dd5019a18003fff51a31a243780278e6024"
+        },
+        "death_h3_v1/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/original.latent",
+          "sha256": "93e58f217f1fb94be5e4a8b22cffe48ea4805ca7bbf59d701cde2b2e039f07c8"
+        },
+        "death_h3_v1/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/sampling_workflow_api.json",
+          "sha256": "f0434efd894e3c6d25a4b094515cbeadf4974549ad63d5b5ab8dad419026c148"
+        },
+        "death_h3_v1/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/decode_workflow_api.json",
+          "sha256": "e85f3d020295e293b2cd650cf1a0438ab391f2739ba1dce4f048a7c8b011f677"
+        },
+        "death_h3_v1/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/sampling_history.json",
+          "sha256": "7091e0b2e4246124f5e9ec2ed1606e23ee397fff17b3a6a697fc7a9fbb177b1b"
+        },
+        "death_h3_v1/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/generation_history.json",
+          "sha256": "a603e8e58caaf9a9e10c58b357d8fd29e7427d0717fe82bf8f8f89586931712c"
+        },
+        "death_h3_v1/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/prompt.txt",
+          "sha256": "8f4320b256d14cddc2ab65ab5a399b778f57ee1ea837ae6f22f533598fc959b2"
+        },
+        "death_h3_v1/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/reference.json",
+          "sha256": "af2217068cb23dc3e60a9458c60198f4f5c42b7c206f46d6d3bc53eae411dd18"
+        },
+        "death_h3_v1/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/config.json",
+          "sha256": "bddea69f964bf76f63b2e7c579ebd1da439638f5c7392ed8cb52cdb213b7c1e4"
+        },
+        "death_h3_v1/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/death_h3_v1/matte.json",
+          "sha256": "0a360aedd4e86c6b78b812ad9fb422857f2379b4b9db98a42e3c9b67f54e5b4f"
+        }
       },
-      "source_scale_reason": "All poses from a given original master share its fixed scale: attack/reactions 0.59, death 0.55, cast 0.63. These register different source drawing sizes to the existing 220px standing silhouette within reference height 256. Exact connected-alpha extracts inherit master scale; no per-pose size changes or warping.",
+      "preserved_accepted_clips": [],
       "visual_review": {
-        "status": "pending",
-        "notes": "Existing eight idle paintings reviewed: distinct elbow/mace adjustment, head turn, shield sway and tabard response, candidate to preserve. New five action clips need coordinator motion/registration approval. Movement candidates locally rejected: near leg repeatedly leads instead of reciprocal gait. Original failed masters retained."
+        "status": "accepted",
+        "notes": "Reviewed on H3 video. Idle v1, attack v1, hit v1 and death v1 are clean; the idle is very still apart from a slow breath every few seconds. Cast v1 changed its lighting and defend v1 zoomed toward the camera, so cast v2 and defend v2 (steady light, fixed camera) are used. Defend v2 ends on the deep braced crouch before she half rises. The walk keeps the published clip."
       }
     }
   ]

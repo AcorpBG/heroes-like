@@ -126,6 +126,60 @@
       ],
       "last": 2,
       "action": "Collapse slowly and heavily from standing. The warden sinks onto both knees leaning on the shield, stays kneeling a moment, then topples forward onto the fallen shield and lies flat, finishing motionless with the head at screen right, the shield flat beneath the body and the mace on the ground beside it. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    },
+    "cast_h3_v2": {
+      "clip": "cast",
+      "references": [
+        "attack_0",
+        "cast_4"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A rallying signal. The warden raises the mace high overhead as a signal, the shield held steady, holds the pose briefly, then lowers it back to the original stance. A physical gesture only: no spell, glow or aura. The lighting never changes: the light on her and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "cast_h3_v3": {
+      "clip": "cast",
+      "references": [
+        "attack_0",
+        "cast_4"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A rallying signal. The warden raises the mace high overhead as a signal, the shield held steady, holds the pose briefly, then lowers it back to the original stance. A physical gesture only: no spell, glow or aura. The lighting never changes: the light on her and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "defend_h3_v2": {
+      "clip": "defend",
+      "references": [
+        "attack_0",
+        "defend_1",
+        "defend_2"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
+      "last": 2,
+      "action": "Crouch low behind the basalt shield, setting it forward in front of the body with the shoulder braced against it and the mace drawn back, then hold the braced guard on both planted boots. No attack and no return to the relaxed stance. The camera never moves or zooms: she stays the same size and on the same spot, crouching in place, never stepping toward the viewer, never turning, always facing screen right. The lighting never changes: the light on her and the background keeps exactly the same brightness and colour in every frame."
     }
   }
 }

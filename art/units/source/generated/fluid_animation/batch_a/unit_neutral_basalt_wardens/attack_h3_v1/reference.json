@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_neutral_basalt_wardens",
+  "guides": [
+    {
+      "frame": "attack_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_0.png",
+      "source_sha256": "70b25a64ae186710800c98f5991cd9b52a4e092526eae37facfbc0612e6bea58",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "e37d2657e10fd19a9522f695193444eaad6674f5f07912f40d683b4a73494bed"
+    },
+    {
+      "frame": "attack_2",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_2.png",
+      "source_sha256": "e90f5e3c1146f894d09821ec2ca3d631f489c5be8928b59c1f3933d517cbfb19",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "856a138a86ad173d86c708e889b055e58d9b8ffd8e8da9ce5e76ce3f46943fc5"
+    },
+    {
+      "frame": "attack_3",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_3.png",
+      "source_sha256": "0e2ee4a1e3244e967be73ca2d002b706882628107ae784c0458f9cc00952c4e9",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "fbb7468b1c79a3a06959e3cd4be0a5bece3d657636dd2e49162a57fc477b5356"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    481,
+    580
+  ],
+  "output_scale": 0.49,
+  "free_pixels_left_top_right_bottom": [
+    209,
+    57,
+    209,
+    58
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
