@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_thornwake_sporeglass_menders_veteran",
+  "guides": [
+    {
+      "frame": "move_0",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/move_near_v3.png",
+      "source_sha256": "7b3b9c958233877c380690c656f2d1fabd6051c9bd75ead2f9de943f21469a75",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "045da0a2a2a10a831da4b64d9759a9a527537df101c92e616830a58c833ff030"
+    },
+    {
+      "frame": "move_4",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/move_far_v1.png",
+      "source_sha256": "cecb5d351db026d52b1c474b7688568f932b52b1c1d5bbab887d9771d17b94b7",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "92dcb45ac39a2f4f0fae89978fec144f3e239e92da84f48810beb604e4826a64"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    458,
+    568
+  ],
+  "output_scale": 0.45,
+  "free_pixels_left_top_right_bottom": [
+    185,
+    41,
+    184,
+    42
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

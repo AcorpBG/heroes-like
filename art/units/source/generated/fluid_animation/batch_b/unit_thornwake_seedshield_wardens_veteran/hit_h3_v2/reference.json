@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_thornwake_seedshield_wardens_veteran",
+  "guides": [
+    {
+      "frame": "hit_1",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/reactions_v1.png",
+      "source_sha256": "9b91014820a4ba4747171d1f9d2746852295f7cdd0e01f02c37f0bd121331f0e",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "f53ba9f97288820c50c0f0a31c3e0e42fae6eb5f060aafd46a2ee1b0a1cd324b"
+    },
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/idle_v1.png",
+      "source_sha256": "2bf196c7ee9798fb32d071a59f74619e08c9f844b7a1e06fdfd009908626ea3a",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "91d2c9637da7d02ee726561a9cc23c35b5b8d6e345c9eb95f1093568567435e5"
+    }
+  ],
+  "canvas": [
+    960,
+    768
+  ],
+  "ground_anchor": [
+    412,
+    672
+  ],
+  "output_scale": 0.5,
+  "free_pixels_left_top_right_bottom": [
+    153,
+    171,
+    152,
+    43
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

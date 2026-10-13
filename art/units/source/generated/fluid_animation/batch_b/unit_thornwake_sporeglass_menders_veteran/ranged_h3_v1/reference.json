@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_thornwake_sporeglass_menders_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/idle_v2.png",
+      "source_sha256": "58cb00b809537dab3f2949d8f96036b0c8656401de4ae8f5ba738f6dd708ec3b",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "abee250cfd1f9a3453ea767584478347ef0aabff624a58b4fc4757efaec1ee6a"
+    },
+    {
+      "frame": "ranged_2",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/ranged_v1.png",
+      "source_sha256": "8592d4961cb8aae2b948d7566129c92ad854c084c6681ab90d89f9e74f259627",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "0e1e819a023df10af6c9e29383ead354b032bdd52e41945028afdd27db2f1019"
+    },
+    {
+      "frame": "ranged_6",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/ranged_v1.png",
+      "source_sha256": "8592d4961cb8aae2b948d7566129c92ad854c084c6681ab90d89f9e74f259627",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "a5623a260cc2a4b01965e4f8f5dea525b5b5a5cf80240c723f6ac3f481445211"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    458,
+    568
+  ],
+  "output_scale": 0.45,
+  "free_pixels_left_top_right_bottom": [
+    185,
+    41,
+    184,
+    42
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

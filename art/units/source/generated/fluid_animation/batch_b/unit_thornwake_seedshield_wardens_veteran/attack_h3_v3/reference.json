@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_thornwake_seedshield_wardens_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/idle_v1.png",
+      "source_sha256": "2bf196c7ee9798fb32d071a59f74619e08c9f844b7a1e06fdfd009908626ea3a",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "91d2c9637da7d02ee726561a9cc23c35b5b8d6e345c9eb95f1093568567435e5"
+    },
+    {
+      "frame": "attack_2",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/attack_windup_v2.png",
+      "source_sha256": "27ee67ab5c6374024300f68e3e8116324121949687026bfeffebef18bcf21ae8",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "cb163edc6400de2d1ebff5f20563cda11a453b0376053f556108b03db997e581"
+    },
+    {
+      "frame": "attack_4",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/attack_contact_v3.png",
+      "source_sha256": "05f47de38474f6890a6dfe219e017ff48ca19ec1216d7fa24db88117fa6f6e09",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "23ede6e00b659ca38c0405b394059a7c500f749f1759620a01faf71014b78066"
+    }
+  ],
+  "canvas": [
+    960,
+    768
+  ],
+  "ground_anchor": [
+    412,
+    672
+  ],
+  "output_scale": 0.5,
+  "free_pixels_left_top_right_bottom": [
+    153,
+    171,
+    152,
+    43
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

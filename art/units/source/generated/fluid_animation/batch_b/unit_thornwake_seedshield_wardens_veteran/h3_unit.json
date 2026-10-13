@@ -149,6 +149,96 @@
       ],
       "last": 2,
       "action": "Collapse slowly from standing. The warden's knees buckle and it sinks down behind the shield with the staff falling to the ground, stays crouched a moment, then slumps forward onto its side and lies down, finishing motionless flat on the ground with the antlered head at screen right, the shield beneath it and the staff lying in front, the amber heart dimmed. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    },
+    "idle_h3_v2": {
+      "clip": "idle",
+      "references": [
+        "idle_0",
+        "idle_4"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A steady guardian idle that loops. The warden breathes, the leaf armour rises and settles, the staff is lifted a little and replanted, the heart shield is resettled on the arm, the antlered head turns slightly to scan, then everything returns smoothly to the original stance. Both feet stay planted. No walking and no attack. Only the body moves; nothing else appears in the frame."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "idle_0",
+        "attack_2",
+        "attack_4"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE staff thrust toward screen right. The warden raises the staff level overhead and draws it back as the knees bend, then lunges forward on the front leg and drives the seed-bud tip out level to full reach at screen right past the shield, pulls it back and returns the staff upright to the original stance. One thrust only; the shield stays on the screen-right arm."
+    },
+    "hit_h3_v2": {
+      "clip": "hit",
+      "references": [
+        "hit_1",
+        "idle_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "The warden starts rocked back in a flinch and recovers from it. The antlered head and shoulders hunch and twist away, the staff tilts back and the knees flex while both hands keep hold of the staff and the shield, then it rebalances on both feet and returns to the same stance. Only the body moves; nothing else appears in the frame.",
+      "pad": [
+        0,
+        128,
+        0,
+        0
+      ]
+    },
+    "attack_h3_v3": {
+      "clip": "attack",
+      "references": [
+        "idle_0",
+        "attack_2",
+        "attack_4"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE staff thrust toward screen right. The warden raises the staff level overhead and draws it back as the knees bend, then lunges forward on the front leg and drives the seed-bud tip out level to full reach at screen right past the shield, pulls it back and returns the staff upright to the original stance. One thrust only; the shield stays on the screen-right arm.",
+      "pad": [
+        0,
+        128,
+        0,
+        0
+      ]
     }
   }
 }
