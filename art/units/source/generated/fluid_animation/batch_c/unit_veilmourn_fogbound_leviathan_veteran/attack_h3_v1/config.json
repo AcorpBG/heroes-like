@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_veilmourn_fogbound_leviathan_veteran",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    416,
+    587
+  ],
+  "scale": 0.4,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026104702,
+  "references": [
+    "idle_0",
+    "attack_3",
+    "attack_4"
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      54,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original heavy four-legged sea lizard, the Fogbound Leviathan veteran, facing screen right in elevated three-quarter side view. Keep the black-blue scaled hide, the long crocodile-like snout with small teeth, the row of cream curved spikes along the back and the long tail that curls up high behind the body, the small dark webbed fin-wings at the shoulders, the rope harness across the chest hung with brass bells and glowing amber lantern gourds, and EXACTLY FOUR thick legs with webbed clawed feet. No rider and no extra legs. Preserve the harness with bells and lanterns, the spiked crest, the curled tail and the heavy proportions. Make ONE lunging bite toward screen right. The beast raises its head and opens the jaws wide, then lunges forward low and snaps the jaws shut at full reach toward screen right, the bells swinging, then draws back and settles into the original stance. One bite only; no water, spray or effect. Locked orthographic camera, fixed scale and centred body. Keep the snout, the whole curled tail and all four feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, water, fog, sparks, motion trails, particles or extra legs; the lantern gourds keep only their steady amber glow. Articulate joints naturally with physical planted-foot support; the harness, bells and lanterns stay attached.",
+  "protected_foreground_chroma": 36,
+  "edge_threshold": 28,
+  "palette_measurement": {
+    "bluest_opaque": 34.0,
+    "blue_minus_green_p999": 22.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

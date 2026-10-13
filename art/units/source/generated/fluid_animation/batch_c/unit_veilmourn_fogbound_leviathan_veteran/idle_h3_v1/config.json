@@ -1,0 +1,54 @@
+{
+  "unit_id": "unit_veilmourn_fogbound_leviathan_veteran",
+  "clip": "idle",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    416,
+    587
+  ],
+  "scale": 0.4,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026104700,
+  "references": [
+    "idle_0",
+    "idle_4"
+  ],
+  "guides": [
+    [
+      31,
+      1
+    ],
+    [
+      62,
+      0
+    ],
+    [
+      93,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original heavy four-legged sea lizard, the Fogbound Leviathan veteran, facing screen right in elevated three-quarter side view. Keep the black-blue scaled hide, the long crocodile-like snout with small teeth, the row of cream curved spikes along the back and the long tail that curls up high behind the body, the small dark webbed fin-wings at the shoulders, the rope harness across the chest hung with brass bells and glowing amber lantern gourds, and EXACTLY FOUR thick legs with webbed clawed feet. No rider and no extra legs. Preserve the harness with bells and lanterns, the spiked crest, the curled tail and the heavy proportions. A slow, watchful idle that loops. The beast breathes so the flanks rise and fall, the head lifts and turns slightly, the jaw parts a little and closes, the bells and lanterns sway on the harness and the curled tail flexes, then everything returns smoothly to the original stance. All four feet stay planted. No walking and no attack. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed scale and centred body. Keep the snout, the whole curled tail and all four feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, water, fog, sparks, motion trails, particles or extra legs; the lantern gourds keep only their steady amber glow. Articulate joints naturally with physical planted-foot support; the harness, bells and lanterns stay attached.",
+  "protected_foreground_chroma": 39,
+  "edge_threshold": 30,
+  "palette_measurement": {
+    "bluest_opaque": 37.0,
+    "blue_minus_green_p999": 24.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

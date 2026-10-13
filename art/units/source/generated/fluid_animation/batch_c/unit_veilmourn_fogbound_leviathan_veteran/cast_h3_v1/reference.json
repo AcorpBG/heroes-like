@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_veilmourn_fogbound_leviathan_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan_veteran/idle_v1.png",
+      "source_sha256": "02f5f219fe12db4dbfba0dcc6bb6c57aa49f23a419116871dc94df678a35ccc7",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "62b556bc4404e04e8b4c6b5366ddb5d6855ad56c0232db35f94b3fe59e81610c"
+    },
+    {
+      "frame": "cast_3",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan_veteran/support_v1.png",
+      "source_sha256": "5b2af0466da173616060ac6c9f83b35925b5fc5ed437963af6044834db21f0b2",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "99fe5c90c7d46428476ae33c3ed0aebdf3f09b75509ddc55e720d2385e4ee3a7"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    416,
+    587
+  ],
+  "output_scale": 0.4,
+  "free_pixels_left_top_right_bottom": [
+    147,
+    47,
+    148,
+    47
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

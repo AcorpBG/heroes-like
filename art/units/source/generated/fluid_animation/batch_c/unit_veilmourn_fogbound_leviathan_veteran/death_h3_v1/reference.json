@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_veilmourn_fogbound_leviathan_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan_veteran/idle_v1.png",
+      "source_sha256": "02f5f219fe12db4dbfba0dcc6bb6c57aa49f23a419116871dc94df678a35ccc7",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "62b556bc4404e04e8b4c6b5366ddb5d6855ad56c0232db35f94b3fe59e81610c"
+    },
+    {
+      "frame": "death_3",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan_veteran/death_v1.png",
+      "source_sha256": "2cb12396a343e0eda6ae939fd9abbe64873703391e836edd883694eee0289de7",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "043980c5fe59093bd6b2556bac060700b7a23273fe1d80b17b136fea74904a87"
+    },
+    {
+      "frame": "death_7",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan_veteran/death_corpse_v2.png",
+      "source_sha256": "99d43e8d15adcf151cdc1d6a2775346b41f5ecf6108e205fc135bc3d96cb4c44",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "488b8cc711d19eb9e11a98229ec3fc30a8eecd16aa42d0a2466bb13e613ef8cb"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    416,
+    587
+  ],
+  "output_scale": 0.4,
+  "free_pixels_left_top_right_bottom": [
+    147,
+    47,
+    148,
+    47
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -149,6 +149,32 @@
       ],
       "last": 2,
       "action": "Collapse slowly and heavily. The legs buckle and the beast sinks down onto its belly with the head lowering, stays a moment, then slumps flat with the head resting on the ground at screen right and the tail lying stretched out to screen left, the lanterns dimmed and the bells lying still. The same body throughout: no dissolving and no disappearing."
+    },
+    "death_h3_v2": {
+      "clip": "death",
+      "references": [
+        "idle_0",
+        "death_3",
+        "death_7"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
+      "last": 2,
+      "action": "Collapse slowly and heavily. The legs buckle and the beast sinks down onto its belly with the head lowering, stays a moment, then slumps flat with the head resting on the ground at screen right and the tail lying stretched out to screen left, the lanterns dimmed and the bells lying still. The same body throughout: no dissolving and no disappearing.",
+      "pad": [
+        128,
+        0,
+        0,
+        128
+      ]
     }
   }
 }
