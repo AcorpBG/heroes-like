@@ -1,0 +1,47 @@
+{
+  "unit_id": "unit_neutral_millstone_slingers",
+  "clip": "defend",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    508,
+    524
+  ],
+  "scale": 0.53,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026105852,
+  "references": [
+    "attack_00",
+    "defend_01",
+    "defend_02"
+  ],
+  "guides": [
+    [
+      34,
+      1
+    ]
+  ],
+  "last": 2,
+  "prompt": "ONE original adult woman slinger, the Millstone Slinger, facing screen right in elevated three-quarter view. Keep her face, the brown hair in a bun, the green headband and green scarf, the ivory tunic, the brown leather apron, the green trousers, the brown boots, the bandolier of grey stones and the belt pouches. Exactly two arms, two hands and two legs. Both fists are raised in a ready stance; the screen-LEFT fist holds ONE small leather sling loosely coiled, its short cord never extending. Preserve the small coiled sling, the headband and the proportions. Crouch low and raise both forearms in front of the face as a guard, the sling still coiled in the fist, then hold the guarded crouch on both planted boots. No attack and no return to the relaxed stance. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, both fists, the sling, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, stones in flight, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the sling stays small and coiled in the same fist.",
+  "protected_foreground_chroma": 14,
+  "edge_threshold": 8,
+  "palette_measurement": {
+    "bluest_opaque": 12.0,
+    "blue_minus_green_p999": 2.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

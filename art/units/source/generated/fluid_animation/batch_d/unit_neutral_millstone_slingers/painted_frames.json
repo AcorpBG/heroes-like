@@ -1,0 +1,154 @@
+{
+  "attack_00": {
+    "name": "attack_00",
+    "clip": "attack",
+    "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_v1.png",
+    "rects": [
+      [
+        0,
+        0,
+        512,
+        387
+      ]
+    ],
+    "anchor": [
+      260,
+      379
+    ],
+    "scale": 0.59,
+    "alpha_noise_cutoff": 8
+  },
+  "attack_01": {
+    "name": "attack_01",
+    "clip": "attack",
+    "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_v1.png",
+    "rects": [
+      [
+        512,
+        0,
+        1024,
+        387
+      ]
+    ],
+    "anchor": [
+      772,
+      379
+    ],
+    "scale": 0.59,
+    "alpha_noise_cutoff": 8
+  },
+  "attack_02": {
+    "name": "attack_02",
+    "clip": "attack",
+    "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_v1.png",
+    "rects": [
+      [
+        0,
+        387,
+        512,
+        777
+      ]
+    ],
+    "anchor": [
+      260,
+      766
+    ],
+    "scale": 0.59,
+    "alpha_noise_cutoff": 8
+  },
+  "attack_04": {
+    "name": "attack_04",
+    "clip": "attack",
+    "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_v1.png",
+    "rects": [
+      [
+        0,
+        777,
+        512,
+        1155
+      ]
+    ],
+    "anchor": [
+      260,
+      1148
+    ],
+    "scale": 0.59,
+    "alpha_noise_cutoff": 8
+  },
+  "death_03": {
+    "name": "death_03",
+    "clip": "death",
+    "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_v1.png",
+    "rects": [
+      [
+        512,
+        505,
+        1024,
+        923
+      ]
+    ],
+    "anchor": [
+      787,
+      883
+    ],
+    "scale": 0.46,
+    "alpha_noise_cutoff": 8
+  },
+  "death_07": {
+    "name": "death_07",
+    "clip": "death",
+    "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_v1.png",
+    "rects": [
+      [
+        512,
+        1220,
+        1024,
+        1536
+      ]
+    ],
+    "anchor": [
+      787,
+      1465
+    ],
+    "scale": 0.46,
+    "alpha_noise_cutoff": 8
+  },
+  "defend_01": {
+    "name": "defend_01",
+    "clip": "defend",
+    "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/reactions_v1.png",
+    "rects": [
+      [
+        512,
+        0,
+        1024,
+        400
+      ]
+    ],
+    "anchor": [
+      837,
+      393
+    ],
+    "scale": 0.55,
+    "alpha_noise_cutoff": 8
+  },
+  "defend_02": {
+    "name": "defend_02",
+    "clip": "defend",
+    "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/reactions_v1.png",
+    "rects": [
+      [
+        0,
+        400,
+        512,
+        753
+      ]
+    ],
+    "anchor": [
+      325,
+      745
+    ],
+    "scale": 0.55,
+    "alpha_noise_cutoff": 8
+  }
+}

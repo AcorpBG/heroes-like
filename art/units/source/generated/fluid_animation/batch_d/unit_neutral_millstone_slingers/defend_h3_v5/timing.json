@@ -1,0 +1,11 @@
+{
+  "prepare": 0.265,
+  "upload_and_queue": 0.344,
+  "sampling_gpu": 149.943,
+  "latent_fetch": 0.047,
+  "release_models_shared": 0.219,
+  "decode_gpu": 16.322,
+  "collect": 3.656,
+  "matte": 8.547,
+  "sheets": 0.735
+}

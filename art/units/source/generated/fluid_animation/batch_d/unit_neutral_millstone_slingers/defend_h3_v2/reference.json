@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_neutral_millstone_slingers",
+  "guides": [
+    {
+      "frame": "attack_00",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_v1.png",
+      "source_sha256": "6ff38497016b49d82f13ce994ad1004bb4d161befe6902720bf273053a0dd122",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "09cb63aaa738b4c3bdb784e5c9a132f14bc694ec88756484483017fc3ac75314"
+    },
+    {
+      "frame": "defend_01",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/reactions_v1.png",
+      "source_sha256": "9e483de144db8939887830fb2eafd972480919daf3058c494a7264b73fbdabc0",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "26f34ee6651ed65df6e96a70699767bea5a3c109a7d052eae776ea2b16727558"
+    },
+    {
+      "frame": "defend_02",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/reactions_v1.png",
+      "source_sha256": "9e483de144db8939887830fb2eafd972480919daf3058c494a7264b73fbdabc0",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "c4a71d34b4fb9c7bf7d8d0945d59e78137b4803fd1e11f2fbf5e82f35587fcb4"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    508,
+    524
+  ],
+  "output_scale": 0.53,
+  "free_pixels_left_top_right_bottom": [
+    236,
+    105,
+    236,
+    104
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -92,6 +92,76 @@
       ],
       "last": 2,
       "action": "Collapse slowly. She staggers, sinks down onto one knee and a hand with the sling dropping, stays there a moment, then slumps forward and lies flat on her front, finishing motionless with her head at screen left and her boots at screen right, the sling on the ground beside her. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    },
+    "defend_h3_v2": {
+      "clip": "defend",
+      "references": [
+        "attack_00",
+        "defend_01",
+        "defend_02"
+      ],
+      "guides": [
+        [
+          18,
+          1
+        ],
+        [
+          36,
+          2
+        ]
+      ],
+      "last": 2,
+      "action": "Crouch low and raise both forearms in front of the face as a guard, the sling still coiled in the fist, then hold the guarded crouch on both planted boots. No attack and no return to the relaxed stance. The lighting never changes: the light on her and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "defend_h3_v3": {
+      "clip": "defend",
+      "references": [
+        "attack_00",
+        "defend_01",
+        "defend_02"
+      ],
+      "guides": [
+        [
+          18,
+          1
+        ],
+        [
+          36,
+          2
+        ]
+      ],
+      "last": 2,
+      "action": "Crouch low and raise both forearms in front of the face as a guard, the sling still coiled in the fist, then hold the guarded crouch on both planted boots. No attack and no return to the relaxed stance. The lighting never changes: the light on her and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "defend_h3_v4": {
+      "clip": "defend",
+      "references": [
+        "attack_00",
+        "defend_02"
+      ],
+      "guides": [],
+      "last": 1,
+      "action": "Smoothly and steadily, over about a second, crouch low and raise both forearms in front of the face as a guard, the sling still coiled in the fist, then hold the guarded crouch on both planted boots. No attack and no return to the relaxed stance. The lighting never changes: the light on her and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "defend_h3_v5": {
+      "clip": "defend",
+      "references": [
+        "attack_00",
+        "defend_01",
+        "defend_02"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ],
+        [
+          70,
+          2
+        ]
+      ],
+      "last": 2,
+      "action": "Smoothly and steadily, over about a second, crouch low and raise both forearms in front of the face as a guard, the sling still coiled in the fist, then hold the guarded crouch on both planted boots. No attack and no return to the relaxed stance. The lighting never changes: the light on her and the background keeps exactly the same brightness and colour in every frame."
     }
   }
 }

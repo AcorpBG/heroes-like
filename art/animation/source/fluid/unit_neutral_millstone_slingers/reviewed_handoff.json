@@ -7,386 +7,6 @@
       "source_facing": "right",
       "frames": [
         {
-          "name": "attack_00",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_v1.png",
-          "rects": [
-            [
-              0,
-              0,
-              512,
-              387
-            ]
-          ],
-          "anchor": [
-            260,
-            379
-          ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "attack_01",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_v1.png",
-          "rects": [
-            [
-              512,
-              0,
-              1024,
-              387
-            ]
-          ],
-          "anchor": [
-            772,
-            379
-          ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "attack_02",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_v1.png",
-          "rects": [
-            [
-              0,
-              387,
-              512,
-              777
-            ]
-          ],
-          "anchor": [
-            260,
-            766
-          ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "attack_03",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_v1.png",
-          "rects": [
-            [
-              512,
-              387,
-              1024,
-              777
-            ]
-          ],
-          "anchor": [
-            772,
-            766
-          ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "attack_04",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_v1.png",
-          "rects": [
-            [
-              0,
-              777,
-              512,
-              1155
-            ]
-          ],
-          "anchor": [
-            260,
-            1148
-          ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "attack_05",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_v1.png",
-          "rects": [
-            [
-              512,
-              777,
-              1024,
-              1155
-            ]
-          ],
-          "anchor": [
-            772,
-            1148
-          ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "attack_06",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_v1.png",
-          "rects": [
-            [
-              0,
-              1155,
-              512,
-              1536
-            ]
-          ],
-          "anchor": [
-            260,
-            1529
-          ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "attack_07",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_v1.png",
-          "rects": [
-            [
-              512,
-              1155,
-              1024,
-              1536
-            ]
-          ],
-          "anchor": [
-            772,
-            1529
-          ],
-          "scale": 0.59,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "defend_00",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/reactions_v1.png",
-          "rects": [
-            [
-              0,
-              0,
-              512,
-              400
-            ]
-          ],
-          "anchor": [
-            325,
-            393
-          ],
-          "scale": 0.55,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "defend_01",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/reactions_v1.png",
-          "rects": [
-            [
-              512,
-              0,
-              1024,
-              400
-            ]
-          ],
-          "anchor": [
-            837,
-            393
-          ],
-          "scale": 0.55,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "defend_02",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/reactions_v1.png",
-          "rects": [
-            [
-              0,
-              400,
-              512,
-              753
-            ]
-          ],
-          "anchor": [
-            325,
-            745
-          ],
-          "scale": 0.55,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "defend_03",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/reactions_v1.png",
-          "rects": [
-            [
-              512,
-              400,
-              1024,
-              753
-            ]
-          ],
-          "anchor": [
-            837,
-            745
-          ],
-          "scale": 0.55,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "death_00",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_v1.png",
-          "rects": [
-            [
-              0,
-              0,
-              512,
-              505
-            ]
-          ],
-          "anchor": [
-            275,
-            490
-          ],
-          "scale": 0.46,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "death_01",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_v1.png",
-          "rects": [
-            [
-              512,
-              0,
-              1024,
-              505
-            ]
-          ],
-          "anchor": [
-            787,
-            490
-          ],
-          "scale": 0.46,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "death_02",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_v1.png",
-          "rects": [
-            [
-              0,
-              505,
-              512,
-              923
-            ]
-          ],
-          "anchor": [
-            275,
-            883
-          ],
-          "scale": 0.46,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "death_03",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_v1.png",
-          "rects": [
-            [
-              512,
-              505,
-              1024,
-              923
-            ]
-          ],
-          "anchor": [
-            787,
-            883
-          ],
-          "scale": 0.46,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "death_04",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_v1.png",
-          "rects": [
-            [
-              0,
-              923,
-              512,
-              1220
-            ]
-          ],
-          "anchor": [
-            275,
-            1174
-          ],
-          "scale": 0.46,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "death_05",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_v1.png",
-          "rects": [
-            [
-              512,
-              923,
-              1024,
-              1220
-            ]
-          ],
-          "anchor": [
-            787,
-            1174
-          ],
-          "scale": 0.46,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "death_06",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_v1.png",
-          "rects": [
-            [
-              0,
-              1220,
-              512,
-              1536
-            ]
-          ],
-          "anchor": [
-            275,
-            1465
-          ],
-          "scale": 0.46,
-          "alpha_noise_cutoff": 8
-        },
-        {
-          "name": "death_07",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_v1.png",
-          "rects": [
-            [
-              512,
-              1220,
-              1024,
-              1536
-            ]
-          ],
-          "anchor": [
-            787,
-            1465
-          ],
-          "scale": 0.46,
-          "alpha_noise_cutoff": 8
-        },
-        {
           "name": "move_h3_042",
           "clip": "move",
           "source": "art/units/source/generated/video_trials/millstone_h3/move_guided_v3/matte/rgba_042.png",
@@ -3031,11 +2651,2509 @@
           "alpha_noise_cutoff": 0,
           "video_frame": 88,
           "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "idle_h3_v1_000",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "idle_h3_v1_002",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_002.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 2,
+          "video_time_seconds": 0.0833
+        },
+        {
+          "name": "idle_h3_v1_004",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.1667
+        },
+        {
+          "name": "idle_h3_v1_006",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "idle_h3_v1_008",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333
+        },
+        {
+          "name": "idle_h3_v1_012",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "idle_h3_v1_014",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833
+        },
+        {
+          "name": "idle_h3_v1_016",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6667
+        },
+        {
+          "name": "idle_h3_v1_018",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "idle_h3_v1_020",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333
+        },
+        {
+          "name": "idle_h3_v1_024",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "idle_h3_v1_026",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833
+        },
+        {
+          "name": "idle_h3_v1_028",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1667
+        },
+        {
+          "name": "idle_h3_v1_030",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "idle_h3_v1_032",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333
+        },
+        {
+          "name": "idle_h3_v1_034",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4167
+        },
+        {
+          "name": "idle_h3_v1_036",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "idle_h3_v1_038",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833
+        },
+        {
+          "name": "idle_h3_v1_040",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6667
+        },
+        {
+          "name": "idle_h3_v1_042",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "idle_h3_v1_044",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333
+        },
+        {
+          "name": "idle_h3_v1_046",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9167
+        },
+        {
+          "name": "idle_h3_v1_048",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "idle_h3_v1_050",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833
+        },
+        {
+          "name": "idle_h3_v1_052",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1667
+        },
+        {
+          "name": "idle_h3_v1_054",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "idle_h3_v1_056",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333
+        },
+        {
+          "name": "idle_h3_v1_060",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "idle_h3_v1_062",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833
+        },
+        {
+          "name": "idle_h3_v1_064",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6667
+        },
+        {
+          "name": "idle_h3_v1_066",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "idle_h3_v1_068",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333
+        },
+        {
+          "name": "idle_h3_v1_070",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9167
+        },
+        {
+          "name": "idle_h3_v1_072",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "idle_h3_v1_074",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833
+        },
+        {
+          "name": "idle_h3_v1_076",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1667
+        },
+        {
+          "name": "idle_h3_v1_078",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "idle_h3_v1_080",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333
+        },
+        {
+          "name": "idle_h3_v1_084",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "idle_h3_v1_086",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833
+        },
+        {
+          "name": "idle_h3_v1_088",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6667
+        },
+        {
+          "name": "idle_h3_v1_090",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "idle_h3_v1_092",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333
+        },
+        {
+          "name": "idle_h3_v1_096",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "idle_h3_v1_098",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.0833
+        },
+        {
+          "name": "idle_h3_v1_100",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.1667
+        },
+        {
+          "name": "idle_h3_v1_102",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "idle_h3_v1_104",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.3333
+        },
+        {
+          "name": "idle_h3_v1_106",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_106.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 106,
+          "video_time_seconds": 4.4167
+        },
+        {
+          "name": "idle_h3_v1_108",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "idle_h3_v1_110",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_110.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 110,
+          "video_time_seconds": 4.5833
+        },
+        {
+          "name": "idle_h3_v1_112",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_112.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.6667
+        },
+        {
+          "name": "idle_h3_v1_114",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_114.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 114,
+          "video_time_seconds": 4.75
+        },
+        {
+          "name": "idle_h3_v1_116",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_116.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 116,
+          "video_time_seconds": 4.8333
+        },
+        {
+          "name": "idle_h3_v1_118",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_118.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 118,
+          "video_time_seconds": 4.9167
+        },
+        {
+          "name": "idle_h3_v1_120",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_120.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 120,
+          "video_time_seconds": 5.0
+        },
+        {
+          "name": "idle_h3_v1_122",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_122.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 122,
+          "video_time_seconds": 5.0833
+        },
+        {
+          "name": "attack_h3_v1_010",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4167
+        },
+        {
+          "name": "attack_h3_v1_022",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9167
+        },
+        {
+          "name": "attack_h3_v1_024",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "attack_h3_v1_026",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833
+        },
+        {
+          "name": "attack_h3_v1_028",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1667
+        },
+        {
+          "name": "attack_h3_v1_030",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "attack_h3_v1_032",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333
+        },
+        {
+          "name": "attack_h3_v1_034",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4167
+        },
+        {
+          "name": "attack_h3_v1_039",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "attack_h3_v1_049",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_049.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 49,
+          "video_time_seconds": 2.0417
+        },
+        {
+          "name": "attack_h3_v1_057",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_057.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 57,
+          "video_time_seconds": 2.375
+        },
+        {
+          "name": "attack_h3_v1_068",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333
+        },
+        {
+          "name": "attack_h3_v1_079",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_079.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 79,
+          "video_time_seconds": 3.2917
+        },
+        {
+          "name": "attack_h3_v1_086",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833
+        },
+        {
+          "name": "attack_h3_v1_088",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6667
+        },
+        {
+          "name": "attack_h3_v1_090",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "attack_h3_v1_091",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_091.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 91,
+          "video_time_seconds": 3.7917
+        },
+        {
+          "name": "attack_h3_v1_092",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333
+        },
+        {
+          "name": "attack_h3_v1_094",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9167
+        },
+        {
+          "name": "attack_h3_v1_098",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.0833
+        },
+        {
+          "name": "attack_h3_v1_109",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_109.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 109,
+          "video_time_seconds": 4.5417
+        },
+        {
+          "name": "defend_h3_v4_022",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9167
+        },
+        {
+          "name": "defend_h3_v4_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1667
+        },
+        {
+          "name": "defend_h3_v4_030",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "defend_h3_v4_031",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2917
+        },
+        {
+          "name": "defend_h3_v4_032",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333
+        },
+        {
+          "name": "defend_h3_v4_033",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "defend_h3_v4_034",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4167
+        },
+        {
+          "name": "defend_h3_v4_035",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583
+        },
+        {
+          "name": "defend_h3_v4_036",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "defend_h3_v4_038",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833
+        },
+        {
+          "name": "defend_h3_v4_040",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6667
+        },
+        {
+          "name": "defend_h3_v4_044",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333
+        },
+        {
+          "name": "defend_h3_v4_050",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833
+        },
+        {
+          "name": "defend_h3_v4_060",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "defend_h3_v4_080",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333
+        },
+        {
+          "name": "death_h3_v1_006",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "death_h3_v1_010",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4167
+        },
+        {
+          "name": "death_h3_v1_018",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "death_h3_v1_022",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9167
+        },
+        {
+          "name": "death_h3_v1_024",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "death_h3_v1_026",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833
+        },
+        {
+          "name": "death_h3_v1_028",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1667
+        },
+        {
+          "name": "death_h3_v1_030",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "death_h3_v1_031",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2917
+        },
+        {
+          "name": "death_h3_v1_032",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333
+        },
+        {
+          "name": "death_h3_v1_033",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "death_h3_v1_034",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4167
+        },
+        {
+          "name": "death_h3_v1_036",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "death_h3_v1_038",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833
+        },
+        {
+          "name": "death_h3_v1_042",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "death_h3_v1_052",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1667
+        },
+        {
+          "name": "death_h3_v1_059",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_059.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 59,
+          "video_time_seconds": 2.4583
+        },
+        {
+          "name": "death_h3_v1_066",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "death_h3_v1_077",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_077.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 77,
+          "video_time_seconds": 3.2083
+        },
+        {
+          "name": "death_h3_v1_086",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833
+        },
+        {
+          "name": "death_h3_v1_088",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6667
+        },
+        {
+          "name": "death_h3_v1_090",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "death_h3_v1_092",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333
+        },
+        {
+          "name": "death_h3_v1_094",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9167
+        },
+        {
+          "name": "death_h3_v1_100",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.1667
+        },
+        {
+          "name": "death_h3_v1_123",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            508,
+            524
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
         }
       ],
-      "alpha_noise_cutoff": 0,
       "clips": {
-        "attack": {
+        "move": {
           "indices": [
             0,
             1,
@@ -3044,26 +5162,11 @@
             4,
             5,
             6,
-            7
-          ],
-          "loop": false,
-          "frame_msec": 100,
-          "static_frame": 0,
-          "contact_frame": 4
-        },
-        "defend": {
-          "indices": [
+            7,
             8,
             9,
             10,
-            11
-          ],
-          "loop": false,
-          "frame_msec": 100,
-          "static_frame": 0
-        },
-        "death": {
-          "indices": [
+            11,
             12,
             13,
             14,
@@ -3073,11 +5176,11 @@
             18,
             19
           ],
-          "loop": false,
-          "frame_msec": 120,
+          "frame_msec": 60,
+          "loop": true,
           "static_frame": 0
         },
-        "move": {
+        "hit": {
           "indices": [
             20,
             21,
@@ -3098,14 +5201,7 @@
             36,
             37,
             38,
-            39
-          ],
-          "frame_msec": 60,
-          "loop": true,
-          "static_frame": 0
-        },
-        "hit": {
-          "indices": [
+            39,
             40,
             41,
             42,
@@ -3114,7 +5210,14 @@
             45,
             46,
             47,
-            48,
+            48
+          ],
+          "frame_msec": 30,
+          "loop": false,
+          "static_frame": 0
+        },
+        "cast": {
+          "indices": [
             49,
             50,
             51,
@@ -3134,14 +5237,7 @@
             65,
             66,
             67,
-            68
-          ],
-          "frame_msec": 30,
-          "loop": false,
-          "static_frame": 0
-        },
-        "cast": {
-          "indices": [
+            68,
             69,
             70,
             71,
@@ -3159,7 +5255,15 @@
             83,
             84,
             85,
-            86,
+            86
+          ],
+          "frame_msec": 50,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 9
+        },
+        "ranged": {
+          "indices": [
             87,
             88,
             89,
@@ -3179,15 +5283,7 @@
             103,
             104,
             105,
-            106
-          ],
-          "frame_msec": 50,
-          "loop": false,
-          "static_frame": 0,
-          "contact_frame": 9
-        },
-        "ranged": {
-          "indices": [
+            106,
             107,
             108,
             109,
@@ -3206,7 +5302,16 @@
             122,
             123,
             124,
-            125,
+            125
+          ],
+          "frame_msec": 50,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 18,
+          "projectile_travel_msec": 300
+        },
+        "idle": {
+          "indices": [
             126,
             127,
             128,
@@ -3226,50 +5331,320 @@
             142,
             143,
             144,
-            145
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156,
+            157,
+            158,
+            159,
+            160,
+            161,
+            162,
+            163,
+            164,
+            165,
+            166,
+            167,
+            168,
+            169,
+            170,
+            171,
+            172,
+            173,
+            174,
+            175,
+            176,
+            177,
+            178,
+            179,
+            180,
+            181,
+            182
           ],
-          "frame_msec": 50,
+          "frame_msec": 60,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            183,
+            184,
+            185,
+            186,
+            187,
+            188,
+            189,
+            190,
+            191,
+            192,
+            193,
+            194,
+            195,
+            196,
+            197,
+            198,
+            199,
+            200,
+            201,
+            202,
+            203
+          ],
+          "frame_msec": 42,
           "loop": false,
           "static_frame": 0,
-          "contact_frame": 18,
-          "projectile_travel_msec": 300
+          "contact_frame": 6
+        },
+        "defend": {
+          "indices": [
+            204,
+            205,
+            206,
+            207,
+            208,
+            209,
+            210,
+            211,
+            212,
+            213,
+            214,
+            215,
+            216,
+            217,
+            218
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 14
+        },
+        "death": {
+          "indices": [
+            219,
+            220,
+            221,
+            222,
+            223,
+            224,
+            225,
+            226,
+            227,
+            228,
+            229,
+            230,
+            231,
+            232,
+            233,
+            234,
+            235,
+            236,
+            237,
+            238,
+            239,
+            240,
+            241,
+            242,
+            243,
+            244
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 25
         }
       },
+      "alpha_noise_cutoff": 0,
       "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
       "provenance": {
-        "original_lossless.mkv": {
-          "path": "art/units/source/generated/video_trials/millstone_ranged_h3/underarm_v2/original_lossless.mkv",
-          "sha256": "d8177085a1a825f7f26f8ae3ad61e1dead6d147550572147145e2fcc9d671eac"
+        "idle_h3_v1/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/original_lossless.mkv",
+          "sha256": "75ead70326f3dffafe636cb8317de0432dd7de719a7a96bdcfc6a446c2e6595b"
         },
-        "original.json": {
-          "path": "art/units/source/generated/video_trials/millstone_ranged_h3/underarm_v2/original.json",
-          "sha256": "05ebdd4d73f40595fc7bdf7b1a3cdbec2ac381401b5b24e1a59267bbe14c29cb"
+        "idle_h3_v1/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/original.json",
+          "sha256": "73b477225da0cb62b5ce8e2c9a073dec15b2326c862d779ec62f4850c7e360f0"
         },
-        "workflow_api.json": {
-          "path": "art/units/source/generated/video_trials/millstone_ranged_h3/underarm_v2/workflow_api.json",
-          "sha256": "7b7b2573ad185b56f1885250ad673714dfc0226df30f42e4cc46ae384027a2f5"
+        "idle_h3_v1/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/original.latent",
+          "sha256": "2bcdf818a24836bad37409c88ebb53a562e063f070d5dd6fe96c96f8c24a79b1"
         },
-        "prompt.txt": {
-          "path": "art/units/source/generated/video_trials/millstone_ranged_h3/underarm_v2/prompt.txt",
-          "sha256": "10f212a5229880c4a96f9efecb37194839d06feb86c57181096dc861e03fd17c"
+        "idle_h3_v1/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/sampling_workflow_api.json",
+          "sha256": "410c5d7554d178c323b4bf904c76d390369e3ed2d6e5735c75510a5f93868116"
         },
-        "reference.json": {
-          "path": "art/units/source/generated/video_trials/millstone_ranged_h3/underarm_v2/reference.json",
-          "sha256": "0cf9503449a0946c6a56413dc04704aaac08d51744db0e07c8ac85280c3af5cc"
+        "idle_h3_v1/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/decode_workflow_api.json",
+          "sha256": "8af4690419ec65e78288e5e592c4f04968f9b161367ea577960bc86651da0e8c"
         },
-        "matte.json": {
-          "path": "art/units/source/generated/video_trials/millstone_ranged_h3/underarm_v2/matte.json",
-          "sha256": "34ca4c969fcd99c3bf776f6f20c9b1143f0379218dfc17deabf689c5f62a191a"
+        "idle_h3_v1/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/sampling_history.json",
+          "sha256": "f36c13c3347195f35b0719db00ec65bf6f4d92b01ee923c132dec61a57129aab"
+        },
+        "idle_h3_v1/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/generation_history.json",
+          "sha256": "7d2f8d7b163db180a4e1006af6e04f9aab0424ce5268bc231fb046fcdfcf3fb6"
+        },
+        "idle_h3_v1/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/prompt.txt",
+          "sha256": "9fdced2da73a314d8450592637515fa69d16126e1004596fad914d24769aa2b1"
+        },
+        "idle_h3_v1/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/reference.json",
+          "sha256": "80ac2789f96628a8e875f8f0d0087ab8be1e39ba713440b794c4f0779431d392"
+        },
+        "idle_h3_v1/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/config.json",
+          "sha256": "4648d7ca093126b583300240c2c3cd5e768bbbd37b8d954a4b69222969c35a0e"
+        },
+        "idle_h3_v1/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte.json",
+          "sha256": "8856f7678b05441652b5478017525969068d7bdf4b8a63dd51dedd979b4a652e"
+        },
+        "attack_h3_v1/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/original_lossless.mkv",
+          "sha256": "723edb07a60d3065b3d89550a1ba3af556c6cd46ff32fd8bbc2fe9718c9ef57a"
+        },
+        "attack_h3_v1/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/original.json",
+          "sha256": "83f45f0d4878744dc728552c6dbd1b677f369947594a0d2370e998010f572bf1"
+        },
+        "attack_h3_v1/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/original.latent",
+          "sha256": "737f161dcb92c47abf72701a74443a758a6c9e46e7715aba9f9bed0340bb73bf"
+        },
+        "attack_h3_v1/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/sampling_workflow_api.json",
+          "sha256": "8fabbed18a9c323db597e3e6dbf686da8a8d9384716ae65cde998d1dfb2cc9d9"
+        },
+        "attack_h3_v1/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/decode_workflow_api.json",
+          "sha256": "d0e15bbe0eae98242426995fa71fac994b3bb02d072d08b748d0c3695d4732c9"
+        },
+        "attack_h3_v1/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/sampling_history.json",
+          "sha256": "c0edc9e4d44b66ce3ca8e060229edac7461baaee392df23836d2ba1dfe544859"
+        },
+        "attack_h3_v1/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/generation_history.json",
+          "sha256": "8ae651b3ae0570cdc2f48bdc1a4bcd6f0de36a9d94f1aa09964a667be26ca3ff"
+        },
+        "attack_h3_v1/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/prompt.txt",
+          "sha256": "30939b14e1c11e87eda3f0c91b21042dd64bc0356d4f8030d38e75124fc7e218"
+        },
+        "attack_h3_v1/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/reference.json",
+          "sha256": "3e013f72cb6c77a7452e24d22a4722be630e5bcdf6df269e026a3c980bf8145e"
+        },
+        "attack_h3_v1/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/config.json",
+          "sha256": "65f2eafc577de0e1cd2966284b148a36bee4b373eb5b12cadb540ee505dfe671"
+        },
+        "attack_h3_v1/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte.json",
+          "sha256": "ea9f215a9176d343460731cd6e6538f320933dc8811081172e10fc96b2e50104"
+        },
+        "defend_h3_v4/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/original_lossless.mkv",
+          "sha256": "996573a3aba1ae68583c6f55962d0d861cfb9d361c535fba5fb2012fcb7a88b6"
+        },
+        "defend_h3_v4/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/original.json",
+          "sha256": "2a1dd1490b9774f73a4076016922ee8223f7af02a50f6a597e342986d5924a91"
+        },
+        "defend_h3_v4/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/original.latent",
+          "sha256": "fa85393377949d8e20e6858411e2293bec7dfa473a2e68572f26634ee3f781a4"
+        },
+        "defend_h3_v4/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/sampling_workflow_api.json",
+          "sha256": "d20631f243bb7b7c2e0c07c39a810b49f04085c3ffa8fb17e989320613e0e876"
+        },
+        "defend_h3_v4/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/decode_workflow_api.json",
+          "sha256": "ee68edf229848202b6be6ef25779bedf38de4b8250759e5683e132cce11e67c0"
+        },
+        "defend_h3_v4/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/sampling_history.json",
+          "sha256": "1ec3198ce42bf1efdab7daa59a8910224c1a51296bf43912a25f4bf5c9cb6efc"
+        },
+        "defend_h3_v4/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/generation_history.json",
+          "sha256": "298c5b7bcfbd1817d9c90a02db1837161f0031183f2d143148c11c099b919f80"
+        },
+        "defend_h3_v4/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/prompt.txt",
+          "sha256": "acb4943d312769e96a76b2683b522c99a38ab5d5358a0137f73ec552b7f38029"
+        },
+        "defend_h3_v4/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/reference.json",
+          "sha256": "d48b3870f071d6d2e91bc30d8f8b02d829ca61094f634ab4521d6f7f50c16d20"
+        },
+        "defend_h3_v4/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/config.json",
+          "sha256": "a7d5d0a5a771fae5ab2dbcdceee0234d7d73236fa448b01874b7552e5d3f3428"
+        },
+        "defend_h3_v4/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte.json",
+          "sha256": "70d2a2de7acbcc819ff58507cdee9494479e3601cdede7061ff6a63f0957fbdf"
+        },
+        "death_h3_v1/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/original_lossless.mkv",
+          "sha256": "2a5be114ee1ffbf0fc62c3e28693d4b6866753a1bf7174842f616e3dfb0e9671"
+        },
+        "death_h3_v1/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/original.json",
+          "sha256": "3ba956269d62ec89e473c60273517016c4077ddee0f999fbe2faafe5164cfe0d"
+        },
+        "death_h3_v1/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/original.latent",
+          "sha256": "3c7794efea982f034771836dc601edd7aca7a1d7b7c55d6ce06f07b0657f4738"
+        },
+        "death_h3_v1/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/sampling_workflow_api.json",
+          "sha256": "cdb5cf11edee2f1122757ba9811aa3fa2caf27a459554e705458617d797bde25"
+        },
+        "death_h3_v1/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/decode_workflow_api.json",
+          "sha256": "40b5b8bdb78a9217e18bba240f2f08a519c95f5e212fa89600f81a50115ac199"
+        },
+        "death_h3_v1/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/sampling_history.json",
+          "sha256": "3a0db4a4b7f7ee7e1c33f4bc29611f2125f3a8887034309327e8815ec99c95ff"
+        },
+        "death_h3_v1/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/generation_history.json",
+          "sha256": "3f59344dfdf82ef179ae2f932560d96f2be4cafaae4a30f7eafde99dc8887bf3"
+        },
+        "death_h3_v1/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/prompt.txt",
+          "sha256": "160df7d871facf30f284badb60930b1c015eee9192d61d9673ff861e834465d2"
+        },
+        "death_h3_v1/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/reference.json",
+          "sha256": "8cd38234e20b9f6436cc504cb4d6fcad3d3b4a54abb6f6337d09126237cf26ef"
+        },
+        "death_h3_v1/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/config.json",
+          "sha256": "70da93d93fdba19916b98fadc6677b019cded5f24c7ae6c98a3f3312ac190bf6"
+        },
+        "death_h3_v1/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte.json",
+          "sha256": "399e77400711f0029492bc661b36ebd1752ddee9ca583e1d5e9f2559b9eb94dc"
         }
       },
+      "preserved_accepted_clips": [],
       "visual_review": {
         "status": "accepted_selected_clips",
-        "notes": "Autonomous review: all124 ordered source frames, enlarged single-cup release and grip/limb continuity, dark/light alpha and actual128px Godot phase rendering. Underarm backswing and release followed by an upward empty-sling recovery; no v1 double-cup frames.39 observed poses12-88 every2 at50ms; source48 release index18.220 focused candidate checks passed including Normal/Fast/reduced-motion. This is ordered-frame/native-render/runtime review, not continuous browser playback or manual playtest. Preserve all seven previously accepted clips and existing overworld idle."
+        "notes": "Reviewed on H3 video. Attack v1 and death v1 are clean. Idle v1 lost five single frames to plate pulses; the loop steps over them without a visible pop. Defend v1 lost the crouch to plate pulses, and defend v2 and v3 snapped from the stance into the guard in one frame; defend v4, guided only by its final guard pose and asked for a steady crouch over a second, lowers smoothly from video 28 to 40 and is used. Hit, cast, ranged and walk keep their published H3 clips."
       },
       "source_scale_by_image": {
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_v1.png": 0.59,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/reactions_v1.png": 0.55,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_v1.png": 0.46,
         "art/units/source/generated/video_trials/millstone_h3/move_guided_v3/matte/rgba_042.png": 0.6,
         "art/units/source/generated/video_trials/millstone_h3/move_guided_v3/matte/rgba_044.png": 0.6,
         "art/units/source/generated/video_trials/millstone_h3/move_guided_v3/matte/rgba_046.png": 0.6,
@@ -3395,20 +5770,136 @@
         "art/units/source/generated/video_trials/millstone_ranged_h3/underarm_v2/matte/rgba_082.png": 0.6,
         "art/units/source/generated/video_trials/millstone_ranged_h3/underarm_v2/matte/rgba_084.png": 0.6,
         "art/units/source/generated/video_trials/millstone_ranged_h3/underarm_v2/matte/rgba_086.png": 0.6,
-        "art/units/source/generated/video_trials/millstone_ranged_h3/underarm_v2/matte/rgba_088.png": 0.6
+        "art/units/source/generated/video_trials/millstone_ranged_h3/underarm_v2/matte/rgba_088.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_000.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_002.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_004.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_006.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_008.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_012.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_014.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_016.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_018.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_020.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_024.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_026.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_028.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_030.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_032.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_034.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_036.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_038.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_040.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_042.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_044.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_046.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_048.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_050.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_052.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_054.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_056.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_060.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_062.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_064.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_066.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_068.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_070.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_072.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_074.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_076.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_078.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_080.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_084.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_086.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_088.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_090.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_092.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_096.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_098.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_100.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_102.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_104.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_106.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_108.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_110.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_112.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_114.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_116.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_118.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_120.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/idle_h3_v1/matte/rgba_122.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_010.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_022.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_024.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_026.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_028.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_030.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_032.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_034.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_039.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_049.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_057.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_068.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_079.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_086.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_088.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_090.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_091.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_092.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_094.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_098.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_h3_v1/matte/rgba_109.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_022.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_028.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_030.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_031.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_032.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_033.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_034.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_035.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_036.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_038.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_040.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_044.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_050.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_060.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/defend_h3_v4/matte/rgba_080.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_006.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_010.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_018.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_022.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_024.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_026.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_028.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_030.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_031.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_032.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_033.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_034.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_036.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_038.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_042.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_052.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_059.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_066.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_077.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_086.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_088.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_090.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_092.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_094.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_100.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_h3_v1/matte/rgba_123.png": 0.53
       },
-      "preserved_accepted_clips": [
-        "idle"
-      ],
       "accepted_clips": [
-        "attack",
-        "defend",
-        "death",
         "move",
         "hit",
         "cast",
         "ranged",
-        "idle"
+        "idle",
+        "attack",
+        "defend",
+        "death"
       ]
     }
   ]
