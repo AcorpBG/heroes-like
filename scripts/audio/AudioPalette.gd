@@ -2,6 +2,7 @@ class_name AudioPalette
 extends RefCounted
 
 const PATH := "res://content/audio_production_banks.json"
+const LazyScriptsScript = preload("res://scripts/core/LazyScripts.gd")
 
 static func _data() -> Dictionary:
 	return ContentService.load_json(PATH)
@@ -39,16 +40,18 @@ static func ground_bank(terrain: String, level: int = 0) -> String:
 
 static func objective_snapshot(session) -> Dictionary:
 	var result := {}
-	var definitions = ScenarioRules.objectives_for_session(session)
+	# Loaded on use: audio autoloads reach this file, and the scenario rules are large.
+	var scenario_rules := LazyScriptsScript.load_once("res://scripts/core/ScenarioRules.gd")
+	var definitions = scenario_rules.objectives_for_session(session)
 	if not definitions is Dictionary:
 		return result
 	for objective in definitions.get("victory", []):
 		if not objective is Dictionary: continue
 		var id := String(objective.get("id", ""))
 		if id == "": continue
-		var row := {"complete": ScenarioRules.is_objective_met(session, id, "victory")}
-		if String(objective.get("type", "")) == ScenarioRules.GeneratedObjectives.KIND:
-			var progress: Dictionary = ScenarioRules.GeneratedObjectives.progress(session)
+		var row := {"complete": bool(scenario_rules.is_objective_met(session, id, "victory"))}
+		if String(objective.get("type", "")) == String(scenario_rules.GeneratedObjectives.KIND):
+			var progress: Dictionary = scenario_rules.GeneratedObjectives.progress(session)
 			if not bool(progress.get("known", false)): continue
 			row["defeated"] = int(progress.get("defeated", 0))
 		result[id] = row

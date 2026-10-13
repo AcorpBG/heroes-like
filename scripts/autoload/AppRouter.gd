@@ -2,11 +2,11 @@ class_name HeroesAppRouter
 extends Node
 
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
-const TownRulesScript = preload("res://scripts/core/TownRules.gd")
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 const SceneTransitionCoverScript = preload("res://scripts/ui/SceneTransitionCover.gd")
 const BattleArtPrewarmScript = preload("res://scripts/ui/BattleArtPrewarm.gd")
+const LazyScriptsScript = preload("res://scripts/core/LazyScripts.gd")
 
 const MAIN_MENU_SCENE := "res://scenes/menus/MainMenu.tscn"
 const SCENARIO_OUTCOME_SCENE := "res://scenes/results/ScenarioOutcomeShell.tscn"
@@ -15,13 +15,24 @@ const OVERWORLD_SCENE := "res://scenes/overworld/OverworldShell.tscn"
 const BATTLE_SCENE := "res://scenes/battle/BattleShell.tscn"
 const TOWN_SCENE := "res://scenes/town/TownShell.tscn"
 const MAP_EDITOR_SCENE := "res://scenes/editor/MapEditorShell.tscn"
-const MAIN_MENU_PACKED_SCENE := preload("res://scenes/menus/MainMenu.tscn")
-const SCENARIO_OUTCOME_PACKED_SCENE := preload("res://scenes/results/ScenarioOutcomeShell.tscn")
-const BATTLE_REPORT_PACKED_SCENE := preload("res://scenes/battle/BattleReportShell.tscn")
-const OVERWORLD_PACKED_SCENE := preload("res://scenes/overworld/OverworldShell.tscn")
-const BATTLE_PACKED_SCENE := preload("res://scenes/battle/BattleShell.tscn")
-const TOWN_PACKED_SCENE := preload("res://scenes/town/TownShell.tscn")
-const MAP_EDITOR_PACKED_SCENE := preload("res://scenes/editor/MapEditorShell.tscn")
+const ROUTED_SCENES := [
+	MAIN_MENU_SCENE,
+	SCENARIO_OUTCOME_SCENE,
+	BATTLE_REPORT_SCENE,
+	OVERWORLD_SCENE,
+	BATTLE_SCENE,
+	TOWN_SCENE,
+	MAP_EDITOR_SCENE,
+]
+# Loaded behind the main menu, most likely next screen first.
+const BACKGROUND_LOADED_SCENES := [
+	OVERWORLD_SCENE,
+	TOWN_SCENE,
+	BATTLE_SCENE,
+	BATTLE_REPORT_SCENE,
+	SCENARIO_OUTCOME_SCENE,
+	MAP_EDITOR_SCENE,
+]
 const AUTOSAVE_DIRTY_FLAG := "runtime_autosave_dirty"
 const AUTOSAVE_PENDING_INTENT_FLAG := "runtime_autosave_pending_intent"
 const AUTOSAVE_PENDING_REASON_FLAG := "runtime_autosave_pending_reason"
@@ -131,6 +142,21 @@ var _scenario_outcome_last_route := {}
 var _scenario_outcome_last_runtime_issue := {}
 var _validation_scenario_outcome_routing_suppressed := false
 var _transition_cover = null
+# Screens are not preloaded: a preload here compiled every screen and the rules
+# they use while the engine loaded autoloads, freezing the boot window for
+# seconds. Boot loads them on worker threads instead and keeps drawing.
+var _packed_scenes := {}
+var _scene_load_requests := {}
+
+var TownRulesScript:
+	get:
+		return LazyScriptsScript.load_once("res://scripts/core/TownRules.gd")
+var OverworldRulesScript:
+	get:
+		return LazyScriptsScript.load_once("res://scripts/core/OverworldRules.gd")
+var BattleRulesScript:
+	get:
+		return LazyScriptsScript.load_once("res://scripts/core/BattleRules.gd")
 
 func _ready() -> void:
 	_transition_cover = SceneTransitionCoverScript.new()
@@ -149,6 +175,8 @@ func _ready() -> void:
 
 func _exit_tree() -> void:
 	FrontierVisualKit.release_runtime_resources()
+	for scene_path in _scene_load_requests.keys():
+		scene_load_pending(scene_path)
 	var scene_tree := get_tree()
 	if scene_tree == null:
 		return
@@ -258,7 +286,7 @@ func request_safe_quit(source: String = "application") -> Dictionary:
 	if _validation_quit_suppressed:
 		_safe_quit_suppressed_count += 1
 	else:
-		get_tree().quit()
+		_quit_after_scene_loads()
 	return _safe_quit_last_result.duplicate(true)
 
 func request_safe_quit_after_close_guard(source: String = "map_editor_confirmed") -> Dictionary:
@@ -599,7 +627,7 @@ func go_to_overworld() -> void:
 		return
 
 	var session := SessionState.ensure_active_session()
-	if not BattleRules.pending_battle_report(session).is_empty():
+	if not BattleRulesScript.pending_battle_report(session).is_empty():
 		go_to_battle_report(true)
 		return
 	if session.scenario_status != "in_progress":
@@ -612,9 +640,9 @@ func go_to_overworld() -> void:
 	var state_started := ProfileLogScript.begin_usec()
 	session.game_state = "overworld"
 	_note_overworld_handoff_step("go_to_overworld_state_set")
-	OverworldRules.clear_active_town_visit(session)
+	OverworldRulesScript.clear_active_town_visit(session)
 	_note_overworld_handoff_step("go_to_overworld_town_visit_cleared")
-	OverworldRules.mark_runtime_normalized_transition_state(session)
+	OverworldRulesScript.mark_runtime_normalized_transition_state(session)
 	buckets["state_handoff"] = ProfileLogScript.elapsed_ms(state_started)
 	var autosave_intent := {}
 	if _should_defer_initial_generated_overworld_autosave(session):
@@ -856,8 +884,8 @@ func _battle_resolution_checkpoint_route_after_save(checkpoint_result: Dictionar
 
 func _prepare_battle_resolution_overworld_state(session: SessionStateStoreScript.SessionData) -> void:
 	session.game_state = "overworld"
-	OverworldRules.clear_active_town_visit(session)
-	OverworldRules.normalize_overworld_state(session)
+	OverworldRulesScript.clear_active_town_visit(session)
+	OverworldRulesScript.normalize_overworld_state(session)
 
 func _battle_resolution_checkpoint_result(
 	ok: bool,
@@ -1010,7 +1038,7 @@ func arm_battle_resolution_overworld_presentation(result: Dictionary) -> Diction
 		tile = Vector2i(int(live_town.get("x", -1)), int(live_town.get("y", -1)))
 	elif context_type == "resource_assault":
 		placement_id = String(context.get("resource_placement_id", "")).strip_edges()
-		var live_resource: Dictionary = OverworldRules._find_resource_node_by_placement(session, placement_id).get("node", {})
+		var live_resource: Dictionary = OverworldRulesScript._find_resource_node_by_placement(session, placement_id).get("node", {})
 		var site_id := String(live_resource.get("site_id", ""))
 		var site := ContentService.get_resource_site(site_id)
 		if (
@@ -1030,13 +1058,13 @@ func arm_battle_resolution_overworld_presentation(result: Dictionary) -> Diction
 			return {}
 		var encounter_snapshot: Dictionary = encounter_snapshot_value
 		placement_id = String(encounter_snapshot.get("placement_id", "")).strip_edges()
-		var live_encounter: Dictionary = OverworldRules._find_encounter_by_placement(session, placement_id).get("encounter", {})
+		var live_encounter: Dictionary = OverworldRulesScript._find_encounter_by_placement(session, placement_id).get("encounter", {})
 		var live_encounter_id := String(live_encounter.get("encounter_id", live_encounter.get("id", ""))).strip_edges()
 		var encounter_content := ContentService.get_encounter(live_encounter_id)
 		if (
 			live_encounter.is_empty()
 			or encounter_content.is_empty()
-			or not OverworldRules.is_encounter_resolved(session, live_encounter)
+			or not OverworldRulesScript.is_encounter_resolved(session, live_encounter)
 			or String(live_encounter.get("spawned_by_faction_id", "")).strip_edges() != ""
 			or live_encounter_id != String(encounter_snapshot.get("encounter_id", ""))
 			or int(live_encounter.get("x", -1)) != int(encounter_snapshot.get("x", -2))
@@ -1049,7 +1077,7 @@ func arm_battle_resolution_overworld_presentation(result: Dictionary) -> Diction
 		tile = Vector2i(int(live_encounter.get("x", -1)), int(live_encounter.get("y", -1)))
 		event_id = "overworld_object_depleted"
 		owner = "resolved"
-	var map_size := OverworldRules.derive_map_size(session)
+	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
 	if (
 		placement_id == ""
 		or content_id == ""
@@ -1123,7 +1151,7 @@ func consume_battle_resolution_overworld_presentation(surface: String) -> Dictio
 		):
 			return {}
 	elif String(pending.get("family", "")) == "resource_site":
-		var live_resource: Dictionary = OverworldRules._find_resource_node_by_placement(session, placement_id).get("node", {})
+		var live_resource: Dictionary = OverworldRulesScript._find_resource_node_by_placement(session, placement_id).get("node", {})
 		var site := ContentService.get_resource_site(String(live_resource.get("site_id", "")))
 		if (
 			live_resource.is_empty()
@@ -1136,12 +1164,12 @@ func consume_battle_resolution_overworld_presentation(surface: String) -> Dictio
 		):
 			return {}
 	else:
-		var live_encounter: Dictionary = OverworldRules._find_encounter_by_placement(session, placement_id).get("encounter", {})
+		var live_encounter: Dictionary = OverworldRulesScript._find_encounter_by_placement(session, placement_id).get("encounter", {})
 		var live_encounter_id := String(live_encounter.get("encounter_id", live_encounter.get("id", ""))).strip_edges()
 		if (
 			live_encounter.is_empty()
 			or ContentService.get_encounter(live_encounter_id).is_empty()
-			or not OverworldRules.is_encounter_resolved(session, live_encounter)
+			or not OverworldRulesScript.is_encounter_resolved(session, live_encounter)
 			or String(live_encounter.get("spawned_by_faction_id", "")).strip_edges() != ""
 			or live_encounter_id != String(pending.get("content_id", ""))
 			or int(live_encounter.get("x", -1)) != int(tile.get("x", -2))
@@ -1184,7 +1212,7 @@ func go_to_town() -> void:
 		return
 	var state_started := ProfileLogScript.begin_usec()
 	session.game_state = "town"
-	OverworldRules.mark_runtime_normalized_transition_state(session)
+	OverworldRulesScript.mark_runtime_normalized_transition_state(session)
 	buckets["state_handoff"] = ProfileLogScript.elapsed_ms(state_started)
 	var autosave_intent := _record_transition_autosave_skip(session, "go_to_town", "manual_or_end_turn_only")
 	buckets["save_before_transition"] = 0.0
@@ -1262,10 +1290,10 @@ func go_to_battle(skip_required_save: bool = false) -> Dictionary:
 	var state_started := ProfileLogScript.begin_usec()
 	# Only the game state changes here, so an overworld normalized before the
 	# handoff stays normalized: the checkpoint and battle shell can trust it.
-	var normalized_before_handoff := OverworldRules.is_runtime_session_normalized(session)
+	var normalized_before_handoff: bool = OverworldRulesScript.is_runtime_session_normalized(session)
 	session.game_state = "battle"
 	if normalized_before_handoff:
-		OverworldRules.mark_runtime_normalized_transition_state(session)
+		OverworldRulesScript.mark_runtime_normalized_transition_state(session)
 	buckets["state_handoff"] = ProfileLogScript.elapsed_ms(state_started)
 	var autosave_result := {}
 	if skip_required_save:
@@ -1281,7 +1309,7 @@ func go_to_battle(skip_required_save: bool = false) -> Dictionary:
 		if not bool(autosave_result.get("ok", false)):
 			session.game_state = pre_route_game_state
 			if normalized_before_handoff:
-				OverworldRules.mark_runtime_normalized_transition_state(session)
+				OverworldRulesScript.mark_runtime_normalized_transition_state(session)
 			_battle_entry_save_failure_count += 1
 			_battle_entry_runtime_issue_count += 1
 			_battle_entry_last_runtime_issue = RuntimeIssueLog.emit_error(
@@ -1415,7 +1443,7 @@ func go_to_battle_report(skip_required_save: bool = false, in_place: bool = fals
 		_route_battle_report(MAIN_MENU_SCENE, "missing_session")
 		return _battle_report_last_entry_result.duplicate(true)
 	var session := SessionState.ensure_active_session()
-	var report := BattleRules.pending_battle_report(session)
+	var report: Dictionary = BattleRulesScript.pending_battle_report(session)
 	if report.is_empty():
 		var fallback_scene := SCENARIO_OUTCOME_SCENE if session.scenario_status != "in_progress" else OVERWORLD_SCENE
 		var fallback_target := "scenario_outcome" if session.scenario_status != "in_progress" else "overworld"
@@ -1459,14 +1487,14 @@ func complete_battle_report(skip_required_save: bool = false) -> Dictionary:
 		)
 		return _battle_report_last_continue_result.duplicate(true)
 	var session := SessionState.ensure_active_session()
-	var report := BattleRules.pending_battle_report(session)
+	var report: Dictionary = BattleRulesScript.pending_battle_report(session)
 	if report.is_empty():
 		_battle_report_last_continue_result = _battle_report_result(
 			false, false, false, "missing_pending_report", "This battle report is no longer pending.", "stay", ""
 		)
 		return _battle_report_last_continue_result.duplicate(true)
 	var snapshot := session.to_dict()
-	var acknowledgement := BattleRules.acknowledge_pending_battle_report(session)
+	var acknowledgement: Dictionary = BattleRulesScript.acknowledge_pending_battle_report(session)
 	if not bool(acknowledgement.get("ok", false)):
 		_battle_report_last_continue_result = _battle_report_result(
 			false, false, false, "acknowledgement_failed", "The battle report could not be acknowledged.", "stay", String(report.get("report_id", ""))
@@ -1552,7 +1580,7 @@ func validation_reset_battle_report_state() -> void:
 	_battle_report_last_route = {}
 
 func validation_battle_report_snapshot() -> Dictionary:
-	var report := BattleRules.pending_battle_report(SessionState.ensure_active_session()) if SessionState.has_playable_session() else {}
+	var report: Dictionary = BattleRulesScript.pending_battle_report(SessionState.ensure_active_session()) if SessionState.has_playable_session() else {}
 	return {
 		"entry_request_count": _battle_report_entry_request_count,
 		"entry_save_attempt_count": _battle_report_entry_save_attempt_count,
@@ -1590,7 +1618,7 @@ func go_to_scenario_outcome(skip_required_save: bool = false) -> Dictionary:
 		return _scenario_outcome_last_result.duplicate(true)
 
 	var session := SessionState.ensure_active_session()
-	if not BattleRules.pending_battle_report(session).is_empty():
+	if not BattleRulesScript.pending_battle_report(session).is_empty():
 		var report_redirect := go_to_battle_report(true)
 		return report_redirect
 	if session.scenario_status == "in_progress":
@@ -1876,7 +1904,12 @@ func go_to_map_editor() -> void:
 
 func boot() -> void:
 	var started := ProfileLogScript.begin_usec()
+	# Boot waited for the main menu scene, which compiled the campaign rules the
+	# profile needs, so loading it here does not stall the window.
+	CampaignProgression.load_profile()
 	go_to_main_menu()
+	for scene_path in BACKGROUND_LOADED_SCENES:
+		request_scene_load(scene_path)
 	ProfileLogScript.emit_general("router", "boot", "boot", ProfileLogScript.elapsed_ms(started), {}, {
 		"target_scene": MAIN_MENU_SCENE,
 	}, SessionState.ensure_active_session())
@@ -1887,7 +1920,7 @@ func resume_active_session() -> void:
 		return
 
 	var session := SessionState.ensure_active_session()
-	if not BattleRules.pending_battle_report(session).is_empty():
+	if not BattleRulesScript.pending_battle_report(session).is_empty():
 		go_to_battle_report(true)
 		return
 	if session.scenario_status != "in_progress":
@@ -2122,9 +2155,9 @@ func validation_prepare_overworld_handoff_without_scene_change() -> Dictionary:
 	_note_overworld_handoff_step("go_to_overworld_enter")
 	session.game_state = "overworld"
 	_note_overworld_handoff_step("go_to_overworld_state_set")
-	OverworldRules.clear_active_town_visit(session)
+	OverworldRulesScript.clear_active_town_visit(session)
 	_note_overworld_handoff_step("go_to_overworld_town_visit_cleared")
-	OverworldRules.mark_runtime_normalized_transition_state(session)
+	OverworldRulesScript.mark_runtime_normalized_transition_state(session)
 	var autosave_intent := {}
 	if _should_defer_initial_generated_overworld_autosave(session):
 		autosave_intent = _record_transition_autosave_intent(session, "go_to_overworld", "generated_initial_overworld_deferred")
@@ -2151,7 +2184,7 @@ func validation_prepare_town_handoff_without_scene_change() -> Dictionary:
 	if not TownRulesScript.can_visit_active_town_bridge(session):
 		return {"ok": false, "reason": "invalid_town_visit"}
 	session.game_state = "town"
-	OverworldRules.mark_runtime_normalized_transition_state(session)
+	OverworldRulesScript.mark_runtime_normalized_transition_state(session)
 	var autosave_intent := _record_transition_autosave_skip(session, "go_to_town", "manual_or_end_turn_only")
 	return {
 		"ok": true,
@@ -2233,24 +2266,55 @@ func _reconcile_pending_battle_resolution_overworld_scene(scene_path: String) ->
 	if String(_pending_battle_resolution_overworld_presentation.get("expected_scene_path", "")) != scene_path:
 		_clear_pending_battle_resolution_overworld_presentation()
 
+## Starts loading a routed screen on worker threads. Its scripts compile there,
+## so the window keeps drawing; the route that opens the screen collects it.
+func request_scene_load(scene_path: String, use_sub_threads: bool = false) -> void:
+	if scene_path not in ROUTED_SCENES or _packed_scenes.has(scene_path) or _scene_load_requests.has(scene_path):
+		return
+	if ResourceLoader.load_threaded_request(scene_path, "PackedScene", use_sub_threads) == OK:
+		_scene_load_requests[scene_path] = true
+
+## True only while a requested background load is still running. A finished
+## load is collected here: the loader keeps an uncollected request until exit,
+## where it reports as leaked. A screen that failed to start loading counts as
+## done; its route loads it directly.
+func scene_load_pending(scene_path: String) -> bool:
+	if not _scene_load_requests.has(scene_path):
+		return false
+	if ResourceLoader.load_threaded_get_status(scene_path) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+		return true
+	_packed_scene_for_route(scene_path)
+	return false
+
+## Quitting mid-load aborts the worker threads, which logs every unfinished
+## screen as a failed load and blocks exit until their compiles end. The loads
+## finish within seconds of boot, so an early quit waits for them out of sight.
+func _quit_after_scene_loads() -> void:
+	var pending: Array = _scene_load_requests.keys().filter(scene_load_pending)
+	if not pending.is_empty():
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_MINIMIZED)
+		AudioServer.set_bus_mute(0, true)
+	for scene_path in pending:
+		while scene_load_pending(scene_path):
+			await get_tree().process_frame
+	get_tree().quit()
+
+## Routed screens stay loaded once opened, as they did when preloaded. A screen
+## still loading in the background is waited for; one never requested loads now.
 func _packed_scene_for_route(scene_path: String) -> PackedScene:
-	match scene_path:
-		MAIN_MENU_SCENE:
-			return MAIN_MENU_PACKED_SCENE
-		SCENARIO_OUTCOME_SCENE:
-			return SCENARIO_OUTCOME_PACKED_SCENE
-		BATTLE_REPORT_SCENE:
-			return BATTLE_REPORT_PACKED_SCENE
-		OVERWORLD_SCENE:
-			return OVERWORLD_PACKED_SCENE
-		BATTLE_SCENE:
-			return BATTLE_PACKED_SCENE
-		TOWN_SCENE:
-			return TOWN_PACKED_SCENE
-		MAP_EDITOR_SCENE:
-			return MAP_EDITOR_PACKED_SCENE
-		_:
-			return null
+	if scene_path not in ROUTED_SCENES:
+		return null
+	var packed_scene: PackedScene = _packed_scenes.get(scene_path)
+	if packed_scene != null:
+		return packed_scene
+	if _scene_load_requests.has(scene_path):
+		_scene_load_requests.erase(scene_path)
+		packed_scene = ResourceLoader.load_threaded_get(scene_path) as PackedScene
+	if packed_scene == null:
+		packed_scene = load(scene_path) as PackedScene
+	if packed_scene != null:
+		_packed_scenes[scene_path] = packed_scene
+	return packed_scene
 
 func _autosave_active_session(
 	session: SessionStateStoreScript.SessionData,

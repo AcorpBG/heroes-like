@@ -1,9 +1,8 @@
 class_name HeroesCampaignProgression
 extends Node
 
-const CampaignRulesScript = preload("res://scripts/core/CampaignRules.gd")
-const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
+const LazyScriptsScript = preload("res://scripts/core/LazyScripts.gd")
 const STORAGE_BLOCKED_MESSAGE := "Campaign progress is unavailable. Existing data was preserved and cannot be overwritten."
 const LOAD_FAILED_MESSAGE := "Campaign progress could not be loaded. Existing in-memory progress remains unchanged."
 const SAVE_FAILED_MESSAGE := "Campaign progression could not be saved. Existing progress remains unchanged."
@@ -13,9 +12,16 @@ var _storage_state: Dictionary = {}
 var _storage_warning := ""
 var _last_failure_result: Dictionary = {}
 var _last_storage_warning_signature := ""
+var _profile_load_attempted := false
 
-func _ready() -> void:
-	load_profile()
+# The campaign rules compile most of the game, so they load on first use rather
+# than with this autoload. The router loads the profile once boot has them.
+var CampaignRulesScript:
+	get:
+		return LazyScriptsScript.load_once("res://scripts/core/CampaignRules.gd")
+var ScenarioSelectRulesScript:
+	get:
+		return LazyScriptsScript.load_once("res://scripts/core/ScenarioSelectRules.gd")
 
 func ensure_profile() -> Dictionary:
 	if profile.is_empty():
@@ -23,6 +29,7 @@ func ensure_profile() -> Dictionary:
 	return profile
 
 func load_profile() -> Dictionary:
+	_profile_load_attempted = true
 	var inspection := _refresh_storage_state()
 	if _storage_is_blocked(inspection):
 		return _blocked_storage_result("load_profile")
@@ -40,7 +47,7 @@ func load_profile() -> Dictionary:
 			"message": LOAD_FAILED_MESSAGE,
 			"storage_state": inspection,
 		})
-	var next_profile := CampaignRulesScript.normalize_profile(loaded_profile)
+	var next_profile: Dictionary = CampaignRulesScript.normalize_profile(loaded_profile)
 	var changed := next_profile != profile
 	profile = next_profile
 	_last_failure_result = {}
@@ -50,7 +57,7 @@ func save_profile() -> Dictionary:
 	var prior_profile := ensure_profile()
 	if is_storage_blocked():
 		return _blocked_storage_result("save_profile")
-	var next_profile := CampaignRulesScript.normalize_profile(prior_profile.duplicate(true))
+	var next_profile: Dictionary = CampaignRulesScript.normalize_profile(prior_profile.duplicate(true))
 	var save_result := _save_candidate_profile(next_profile, "save_profile")
 	if not bool(save_result.get("ok", false)):
 		return save_result
@@ -74,6 +81,8 @@ func storage_warning() -> String:
 	return _storage_warning
 
 func last_failure_result() -> Dictionary:
+	if not _profile_load_attempted:
+		load_profile()
 	return _last_failure_result.duplicate(true)
 
 func failure_result() -> Dictionary:
@@ -90,7 +99,7 @@ func select_campaign(campaign_id: String) -> Dictionary:
 	if is_storage_blocked():
 		return _blocked_storage_result("select_campaign", {"campaign_id": campaign_id})
 	var prior_profile := ensure_profile()
-	var next_profile := CampaignRulesScript.mark_selected_campaign(prior_profile, campaign_id)
+	var next_profile: Dictionary = CampaignRulesScript.mark_selected_campaign(prior_profile, campaign_id)
 	var result := _save_candidate_profile(next_profile, "select_campaign", next_profile != prior_profile)
 	result["campaign_id"] = campaign_id
 	if bool(result.get("ok", false)):
@@ -104,7 +113,7 @@ func select_scenario(campaign_id: String, scenario_id: String) -> Dictionary:
 			"scenario_id": scenario_id,
 		})
 	var prior_profile := ensure_profile()
-	var next_profile := CampaignRulesScript.mark_selected_scenario(prior_profile, scenario_id, campaign_id)
+	var next_profile: Dictionary = CampaignRulesScript.mark_selected_scenario(prior_profile, scenario_id, campaign_id)
 	var result := _save_candidate_profile(next_profile, "select_scenario", next_profile != prior_profile)
 	result["campaign_id"] = campaign_id
 	result["scenario_id"] = scenario_id
@@ -139,7 +148,7 @@ func restart_campaign(campaign_id: String = "") -> Dictionary:
 	var resolved_campaign_id := campaign_id if campaign_id != "" else selected_campaign_id()
 	if is_storage_blocked():
 		return _blocked_storage_result("restart_campaign", {"campaign_id": resolved_campaign_id})
-	var action := CampaignRulesScript.build_restart_action(ensure_profile(), resolved_campaign_id)
+	var action: Dictionary = CampaignRulesScript.build_restart_action(ensure_profile(), resolved_campaign_id)
 	if bool(action.get("disabled", true)):
 		return {
 			"ok": false,
@@ -148,7 +157,7 @@ func restart_campaign(campaign_id: String = "") -> Dictionary:
 			"campaign_id": resolved_campaign_id,
 			"message": String(action.get("summary", "Campaign arc has no recorded progress.")),
 		}
-	var next_profile := CampaignRulesScript.reset_campaign(ensure_profile(), resolved_campaign_id)
+	var next_profile: Dictionary = CampaignRulesScript.reset_campaign(ensure_profile(), resolved_campaign_id)
 	var save_result := _save_candidate_profile(next_profile, "restart_campaign")
 	if not bool(save_result.get("ok", false)):
 		save_result["campaign_id"] = resolved_campaign_id
@@ -249,7 +258,7 @@ func start_scenario(scenario_id: String, difficulty: String = "normal", campaign
 		return SessionStateStoreScript.new_session_data()
 
 	var prior_profile := ensure_profile()
-	var next_profile := CampaignRulesScript.mark_selected_scenario(prior_profile, scenario_id, resolved_campaign_id)
+	var next_profile: Dictionary = CampaignRulesScript.mark_selected_scenario(prior_profile, scenario_id, resolved_campaign_id)
 	var save_result := _save_candidate_profile(next_profile, "start_scenario", next_profile != prior_profile)
 	if not bool(save_result.get("ok", false)):
 		save_result["campaign_id"] = resolved_campaign_id

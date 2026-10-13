@@ -8,7 +8,9 @@ extends RefCounted
 ## autosave. A board load() of a path still in flight waits for that request.
 ## The battle shell releases the requests once its board has drawn.
 
-const BattleBoardViewScript = preload("res://scenes/battle/BattleBoardView.gd")
+# The board script is large and autoloads reach this file, so it loads on use.
+const BATTLE_BOARD_VIEW_PATH := "res://scenes/battle/BattleBoardView.gd"
+const LazyScriptsScript = preload("res://scripts/core/LazyScripts.gd")
 
 static var _requested: Dictionary = {}
 static var _validation_force_enabled := false
@@ -20,7 +22,7 @@ static func request_for_battle(battle: Dictionary) -> int:
 	if battle.is_empty() or not _enabled():
 		return 0
 	var started := 0
-	for path in BattleBoardViewScript.art_texture_paths_for_battle(battle):
+	for path in LazyScriptsScript.load_once(BATTLE_BOARD_VIEW_PATH).art_texture_paths_for_battle(battle):
 		if _requested.has(path) or ResourceLoader.has_cached(path):
 			continue
 		if not ResourceLoader.exists(path, "Texture2D"):

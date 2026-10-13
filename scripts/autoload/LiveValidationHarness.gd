@@ -16,7 +16,7 @@ const TOWN_SCENE := "res://scenes/town/TownShell.tscn"
 const BATTLE_SCENE := "res://scenes/battle/BattleShell.tscn"
 const BATTLE_REPORT_SCENE := "res://scenes/battle/BattleReportShell.tscn"
 const SCENARIO_OUTCOME_SCENE := "res://scenes/results/ScenarioOutcomeShell.tscn"
-const CampaignRulesScript = preload("res://scripts/core/CampaignRules.gd")
+const LazyScriptsScript = preload("res://scripts/core/LazyScripts.gd")
 const DEFAULT_BATTLE_SAVE_STEP_ID := "battle_saved"
 const DEFAULT_BATTLE_MENU_RETURN_STEP_ID := "main_menu_after_battle_return"
 const DEFAULT_BATTLE_RESUME_STEP_ID := "battle_resumed"
@@ -85,6 +85,17 @@ var _output_dir := ""
 var _report := {}
 var _log_lines: Array[String] = []
 var _started_at_ms := 0
+
+# Rules load on use so this autoload does not compile them before boot draws.
+var CampaignRulesScript:
+	get:
+		return LazyScriptsScript.load_once("res://scripts/core/CampaignRules.gd")
+var OverworldRulesScript:
+	get:
+		return LazyScriptsScript.load_once("res://scripts/core/OverworldRules.gd")
+var TownRulesScript:
+	get:
+		return LazyScriptsScript.load_once("res://scripts/core/TownRules.gd")
 
 func _ready() -> void:
 	_config = _parse_user_args(OS.get_cmdline_user_args())
@@ -246,7 +257,7 @@ func _execute_boot_to_generated_skirmish_town_flow() -> bool:
 			player_heroes[hero_index]["y"] = int(player_town.get("y", 0))
 			break
 	session.overworld["player_heroes"] = player_heroes
-	var visit_result := OverworldRules.set_active_town_visit(session, String(player_town.get("placement_id", "")))
+	var visit_result: Dictionary = OverworldRulesScript.set_active_town_visit(session, String(player_town.get("placement_id", "")))
 	if not _require(bool(visit_result.get("ok", false)), "Generated validation could not establish the player-town visit.", {"town": player_town, "visit": visit_result}):
 		return false
 	AppRouter.go_to_town()
@@ -288,7 +299,7 @@ func _execute_boot_to_generated_skirmish_town_flow() -> bool:
 				if not bool(defense.get("ok", false)): return false
 				session = SessionState.ensure_active_session()
 				if not _require(session.battle.is_empty() and session.day == prior_day + 1 and session.scenario_status == "in_progress", "Packaged growth defense did not return a live unchanged-day session.", defense): return false
-			visit_result = OverworldRules.set_active_town_visit(session, String(player_town.get("placement_id", "")))
+			visit_result = OverworldRulesScript.set_active_town_visit(session, String(player_town.get("placement_id", "")))
 			if not _require(bool(visit_result.get("ok", false)), "Packaged growth cannot re-enter the same Town.", visit_result):
 				return false
 			AppRouter.go_to_town()
@@ -306,12 +317,12 @@ func _validate_generated_town_construction(town: Node, building_id: String, step
 	# Full save, alpha hit testing and keyboard/controller coverage lives in the
 	# Python-owned town_scene_layer_regression, not a replacement release scene.
 	var session = SessionState.ensure_active_session()
-	var active_town := TownRules.get_active_town(session)
+	var active_town: Dictionary = TownRulesScript.get_active_town(session)
 	var stage = town.get_node("%TownStage")
 	var layer: Dictionary = stage.call("_town_scene_layer", building_id)
 	if not _require(not layer.is_empty() and building_id not in active_town.get("built_buildings", []), "Packaged construction needs an unbuilt exact scene-layer mapping.", {"building_id": building_id, "layer": layer}):
 		return false
-	var actions: Array = TownRules.get_build_actions(session).filter(func(action): return String(action.get("id", "")) == "build:" + building_id and not bool(action.get("disabled", true)))
+	var actions: Array = TownRulesScript.get_build_actions(session).filter(func(action): return String(action.get("id", "")) == "build:" + building_id and not bool(action.get("disabled", true)))
 	if not _require(actions.size() == 1, "Requested packaged construction is not normally available.", {"building_id": building_id}):
 		return false
 	var cost: Dictionary = actions[0].get("cost", {}).duplicate(true)
@@ -324,7 +335,7 @@ func _validate_generated_town_construction(town: Node, building_id: String, step
 		return false
 	await _settle_frames(6)
 	session = SessionState.ensure_active_session()
-	active_town = TownRules.get_active_town(session)
+	active_town = TownRulesScript.get_active_town(session)
 	var expected_resources := resources_before.duplicate(true)
 	for resource in cost:
 		expected_resources[resource] = int(expected_resources.get(resource, 0)) - int(cost[resource])
