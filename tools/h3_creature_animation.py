@@ -127,6 +127,20 @@ def timed(take_dir, stage, seconds):
     write(path, timing)
 
 
+def drop_slivers(pose, share=0.02):
+    """Clear the opaque pieces detached from the figure and smaller than share of its largest piece.
+    A painted crop can carry a sliver of the neighbouring pose, which the video then animates as a
+    loose object; h3_unit.json "clean_references" names the references that need this."""
+    rgba = np.array(pose.convert("RGBA"))
+    labels, count = label(rgba[..., 3] >= 8, structure=np.ones((3, 3), dtype=np.uint8))
+    if count < 2:
+        return pose
+    sizes = np.bincount(labels.ravel())[1:]
+    keep = np.concatenate([[False], sizes >= share * sizes.max()])
+    rgba[~keep[labels]] = 0
+    return Image.fromarray(rgba, "RGBA")
+
+
 class Unit:
     def __init__(self, directory):
         self.dir = Path(directory).resolve()
@@ -152,6 +166,8 @@ class Unit:
         # A painting smaller than the video is enlarged as a whole, never per pose.
         grow = max(1.0, frame["scale"])
         pose, (x, y) = source_pose(dict(frame, scale=frame["scale"] / grow), frame.get("alpha_noise_cutoff", 8))
+        if name in self.cfg.get("clean_references", []):
+            pose = drop_slivers(pose)
         if grow > 1:
             pose = pose.resize((round(pose.width * grow), round(pose.height * grow)), Image.Resampling.LANCZOS)
             x, y = round(x * grow), round(y * grow)
