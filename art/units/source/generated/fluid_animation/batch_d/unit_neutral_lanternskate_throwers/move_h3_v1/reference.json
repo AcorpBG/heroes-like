@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_neutral_lanternskate_throwers",
+  "guides": [
+    {
+      "frame": "move_00",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/move_v1.png",
+      "source_sha256": "6cffae2a78a117226e26f5836b18721474b585f9d94e66b91b6278cd41a722f5",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "44ad682c61be97af4442a355b732ab2c99bb480ac3a4ebdb5962594e3b5b5278"
+    },
+    {
+      "frame": "move_04",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/move_v1.png",
+      "source_sha256": "6cffae2a78a117226e26f5836b18721474b585f9d94e66b91b6278cd41a722f5",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "068dc6ec16c257125e3d04cbacbc66934ce3f07dcf1537e848d99229059f4832"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    490,
+    560
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    172,
+    60,
+    171,
+    59
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_neutral_lanternskate_throwers",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    490,
+    560
+  ],
+  "scale": 0.44,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026105152,
+  "references": [
+    "cast_00",
+    "attack_02",
+    "attack_04"
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      54,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original young adult ice skater, the Lanternskate Thrower, facing screen right in elevated three-quarter view. Keep the teal quilted hooded coat with white fur trim, the long white knitted scarf, the brown hair braid, the dark gloves, the grey-blue padded trousers with dark knee wraps, the brown boots with steel ice-skate blades, and the belt hung with small glowing amber lanterns. Exactly two arms, two hands and two legs. Preserve the hood, scarf, skates, lantern belt and slim proportions. Make ONE punch toward screen right. The skater draws one fist back as the knees bend and the torso winds, then glides forward into a lunge and drives the fist straight out to full reach at screen right, retracts it and settles into the original stance. One punch only; no effect at contact. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full hood, scarf, hands, skates and lanterns within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, ice, floor shadow, camera motion, zoom, snow, sparks, motion trails, particles or extra limbs; the lanterns keep only their steady amber glow. Articulate joints naturally with physical skate-blade support.",
+  "protected_foreground_chroma": 39,
+  "edge_threshold": 27,
+  "palette_measurement": {
+    "bluest_opaque": 37.0,
+    "blue_minus_green_p999": 21.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

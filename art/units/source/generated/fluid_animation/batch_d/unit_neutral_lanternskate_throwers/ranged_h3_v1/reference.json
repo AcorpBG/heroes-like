@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_neutral_lanternskate_throwers",
+  "guides": [
+    {
+      "frame": "cast_00",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/cast_v1.png",
+      "source_sha256": "74592eac892b35953a08022ed0968779f63fe6704a90a612f9f642ca07a50cb5",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "5fcfc826b303ea424d24def29f2ef25cf68fad440f9c7b19b440dd4c63f795d3"
+    },
+    {
+      "frame": "ranged_01",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/ranged_v2.png",
+      "source_sha256": "36839be4c0df02b4110d536b093ab5db5fb317b2e5eaff1f4c62ed4f173d8dd5",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "bd6fa9297710ff703f2362e326d8ee697b771bd1e38df9137f22dd808447c9cb"
+    },
+    {
+      "frame": "ranged_04",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/ranged_v2.png",
+      "source_sha256": "36839be4c0df02b4110d536b093ab5db5fb317b2e5eaff1f4c62ed4f173d8dd5",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "48850b9b12a77f5134345e2281fc07b3fa6bb251f92ecc84ecb398b4257e7223"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    490,
+    560
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    172,
+    60,
+    171,
+    59
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

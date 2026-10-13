@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_neutral_lanternskate_throwers",
+  "guides": [
+    {
+      "frame": "cast_00",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/cast_v1.png",
+      "source_sha256": "74592eac892b35953a08022ed0968779f63fe6704a90a612f9f642ca07a50cb5",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "5fcfc826b303ea424d24def29f2ef25cf68fad440f9c7b19b440dd4c63f795d3"
+    },
+    {
+      "frame": "death_02",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/death_v1.png",
+      "source_sha256": "deac1ea32ebc3207875bcfb7d96a20f0ef35bd4b7f88abe225e132e5d3722230",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "6b548a10b81ed0106932e45f50cd9e88a6293751c92ea5009e29e2ee3753a7b2"
+    },
+    {
+      "frame": "death_07",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/death_v1.png",
+      "source_sha256": "deac1ea32ebc3207875bcfb7d96a20f0ef35bd4b7f88abe225e132e5d3722230",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "9f1f18fc9efc39b4ef9987e3095cf628463418d09f8b2f0ac20ba960e9457fcc"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    490,
+    560
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    172,
+    60,
+    171,
+    59
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

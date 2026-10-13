@@ -1,0 +1,47 @@
+{
+  "unit_id": "unit_neutral_lanternskate_throwers",
+  "clip": "defend",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    490,
+    560
+  ],
+  "scale": 0.44,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026105160,
+  "references": [
+    "cast_00",
+    "defend_01",
+    "defend_02"
+  ],
+  "guides": [
+    [
+      34,
+      1
+    ]
+  ],
+  "last": 2,
+  "prompt": "ONE original young adult ice skater, the Lanternskate Thrower, facing screen right in elevated three-quarter view. Keep the teal quilted hooded coat with white fur trim, the long white knitted scarf, the brown hair braid, the dark gloves, the grey-blue padded trousers with dark knee wraps, the brown boots with steel ice-skate blades, and the belt hung with small glowing amber lanterns. Exactly two arms, two hands and two legs. Preserve the hood, scarf, skates, lantern belt and slim proportions. Crouch low on bent knees and cross both forearms in front of the face as a guard, the scarf pulled in, then hold the guarded crouch on both skates. No attack and no return to the relaxed stance. Nothing is thrown or let go: every lantern stays hanging on the belt. The lighting never changes: the light on the skater and the background keeps exactly the same brightness and colour in every frame. The belt lanterns keep one steady soft glow and stay hanging on the belt. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full hood, scarf, hands, skates and lanterns within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, ice, floor shadow, camera motion, zoom, snow, sparks, motion trails, particles or extra limbs; the lanterns keep only their steady amber glow. Articulate joints naturally with physical skate-blade support.",
+  "protected_foreground_chroma": 52,
+  "edge_threshold": 32,
+  "palette_measurement": {
+    "bluest_opaque": 50.0,
+    "blue_minus_green_p999": 26.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

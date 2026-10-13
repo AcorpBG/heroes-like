@@ -6599,21 +6599,20 @@
       "sha256": "cb5e40a425da261d23dc78b9f63cecffbbab7f95dd7ea651aba3c38b0afc0e98"
     },
     "unit_neutral_lanternskate_throwers": {
-      "path": "res://art/animation/runtime/idle/unit_neutral_lanternskate_throwers.png",
+      "path": "res://art/overworld/runtime/creature_idle/unit_neutral_lanternskate_throwers.png",
       "frame_size": [
-        151,
-        229
+        167,
+        256
       ],
-      "columns": 16,
-      "frames": 32,
+      "frames": 62,
       "frame_msec": 60,
       "static_frame": 0,
       "ground_anchor": [
-        78,
-        219
+        91,
+        237
       ],
-      "painted_extent": 213,
-      "source_sheet": "res://art/animation/runtime/idle/unit_neutral_lanternskate_throwers.png",
+      "painted_extent": 240,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_lanternskate_throwers.png",
       "source_indices": [
         0,
         1,
@@ -6646,17 +6645,47 @@
         28,
         29,
         30,
-        31
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61
       ],
       "source_crop": [
-        0,
-        0,
-        151,
-        229
+        57,
+        7,
+        224,
+        263
       ],
-      "source_sha256": "f6da81f73e16fad6563b6f63604bf00f19707089c2e8f57284192ba9d32d0665",
+      "source_sha256": "96952290d1f2fe0acebfb72a4206097b5c60aa48c2fafa6dbf53a30e3ef74128",
       "source_provenance": "res://art/animation/source/fluid/unit_neutral_lanternskate_throwers/provenance.json",
-      "sha256": "f6da81f73e16fad6563b6f63604bf00f19707089c2e8f57284192ba9d32d0665"
+      "sha256": "b1511e80d3a02db08425d1a02b85da041a63a4cc95776adffad3f118bfde897a"
     },
     "unit_neutral_charcoal_mauls": {
       "path": "res://art/animation/runtime/idle/unit_neutral_charcoal_mauls.png",
