@@ -1,0 +1,75 @@
+{
+  "clips": {
+    "idle": {
+      "segments": [
+        {
+          "take": "idle_h3_v2",
+          "frames": [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108, 110, 112, 114, 116, 118, 120, 122]
+        }
+      ],
+      "frame_msec": 60
+    },
+    "attack": {
+      "segments": [
+        {
+          "take": "attack_h3_v2",
+          "frames": [6, 13, 15, 16, 17, 18, 22, 26, 28, 29, 30, 31, 32, 33, 38, 46, 53, 54, 55, 62, 70, 71, 72, 73, 77, 84, 90, 91, 93]
+        }
+      ],
+      "frame_msec": 42,
+      "contact_frame": 15
+    },
+    "ranged": {
+      "segments": [
+        {
+          "take": "ranged_h3_v1",
+          "frames": [12, 16, 17, 19, 22, 24, 26, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 40, 42, 48, 56, 63, 71, 78, 84, 86, 87, 90, 92, 94, 97, 99, 104]
+        }
+      ],
+      "frame_msec": 42,
+      "contact_frame": 14
+    },
+    "hit": {
+      "segments": [
+        {
+          "take": "hit_h3_v1",
+          "frames": [0, 2, 4, 6, 8, 10, 12, 14, 15, 16, 18, 19, 20, 23, 26, 29, 35, 42, 49, 61, 68, 76, 88]
+        }
+      ],
+      "frame_msec": 35
+    },
+    "defend": {
+      "segments": [
+        {
+          "take": "defend_h3_v1",
+          "frames": [3, 15, 22, 23, 24, 25, 32, 39, 47, 48, 50, 55, 67]
+        }
+      ],
+      "frame_msec": 42
+    },
+    "cast": {
+      "segments": [
+        {
+          "take": "cast_h3_v2",
+          "frames": [8, 17, 20, 24, 25, 26, 27, 28, 29, 30, 35, 39, 43, 46, 50, 52, 56, 62, 70, 71, 72, 73, 74, 75, 76, 77, 80, 91, 98, 106]
+        }
+      ],
+      "frame_msec": 45,
+      "contact_frame": 15
+    },
+    "death": {
+      "segments": [
+        {
+          "take": "death_h3_v1",
+          "frames": [15, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 37, 44, 51, 60, 67, 77, 78, 79, 80, 81, 82, 83, 84, 86, 93, 100, 123]
+        }
+      ],
+      "frame_msec": 45
+    }
+  },
+  "preserved_accepted_clips": [],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Reviewed on H3 video. Ranged v1, hit v1 and death v1 are clean; in the hit the ember basket glows as he hunches forward. Defend v1 ends on the held guard before its rejected run. Idle v1, attack v1 and cast v1 strobed. Their retakes kept every frame: idle v2 alternates the neutral and idle_05 every 15 frames, attack v2 is guided through attack_03 to attack_07, and cast v2 through support_04 and support_05, all with steady light. The walk keeps the published clip."
+  }
+}

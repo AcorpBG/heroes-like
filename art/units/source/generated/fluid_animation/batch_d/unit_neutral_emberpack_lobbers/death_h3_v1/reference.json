@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_neutral_emberpack_lobbers",
+  "guides": [
+    {
+      "frame": "idle_v1_01",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/idle_v1.png",
+      "source_sha256": "aa4b208ca2a33227106bf9d1cfc0cc90fcafe2369e6c05a4527dfdf8d44dea25",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "b1ca7d744810a137069d0aac1c8d21a9f365caf1bc2dff88fe8c6915cf456f0c"
+    },
+    {
+      "frame": "death_v1_03",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/death_v1.png",
+      "source_sha256": "d40115a7984dcc44ce857f6c1db0913e3574dc895cdb9d4d3a5397f785ad165e",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "821e7d24655ca390edb09f88ecbeb3be8f43a1074af9a6332d6d910285bf92c7"
+    },
+    {
+      "frame": "death_v1_08",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/death_v1.png",
+      "source_sha256": "d40115a7984dcc44ce857f6c1db0913e3574dc895cdb9d4d3a5397f785ad165e",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "f9a7a81f85cf95d1b55bfedba5cd23ca60fd9d9a593a3b9c01e0d4ccdb9f67ac"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    450,
+    486
+  ],
+  "output_scale": 0.41,
+  "free_pixels_left_top_right_bottom": [
+    238,
+    60,
+    237,
+    60
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

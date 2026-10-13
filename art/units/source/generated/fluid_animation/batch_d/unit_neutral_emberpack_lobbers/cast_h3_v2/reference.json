@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_neutral_emberpack_lobbers",
+  "guides": [
+    {
+      "frame": "idle_v1_01",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/idle_v1.png",
+      "source_sha256": "aa4b208ca2a33227106bf9d1cfc0cc90fcafe2369e6c05a4527dfdf8d44dea25",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "b1ca7d744810a137069d0aac1c8d21a9f365caf1bc2dff88fe8c6915cf456f0c"
+    },
+    {
+      "frame": "support_v1_04",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/support_v1.png",
+      "source_sha256": "dd411048e84366dc90d3cd6c4cf45aea65e460784a61680c0771357dc66a4c44",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "e8d61fb73509d636f0dbccc3ad34df24e6f13cd2f8cf85a272ad2864c46eb51a"
+    },
+    {
+      "frame": "support_v1_05",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/support_v1.png",
+      "source_sha256": "dd411048e84366dc90d3cd6c4cf45aea65e460784a61680c0771357dc66a4c44",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "a4a9f156d733d6171114accdc312d4d96ba3b889408f706bcf9983985c5504bb"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    450,
+    486
+  ],
+  "output_scale": 0.41,
+  "free_pixels_left_top_right_bottom": [
+    230,
+    60,
+    237,
+    60
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_neutral_emberpack_lobbers",
+  "guides": [
+    {
+      "frame": "idle_v1_01",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/idle_v1.png",
+      "source_sha256": "aa4b208ca2a33227106bf9d1cfc0cc90fcafe2369e6c05a4527dfdf8d44dea25",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "b1ca7d744810a137069d0aac1c8d21a9f365caf1bc2dff88fe8c6915cf456f0c"
+    },
+    {
+      "frame": "attack_v1_03",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/attack_v1.png",
+      "source_sha256": "737fef43385dc510e37ec29682d6d42cb9a17ddc0a5ce136e76885d9397846a0",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "c02668c3d1929095d099fef63bccaa82c0d7580b822c5ab0eb8e9f66f7e6edd6"
+    },
+    {
+      "frame": "attack_v1_05",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/attack_v1.png",
+      "source_sha256": "737fef43385dc510e37ec29682d6d42cb9a17ddc0a5ce136e76885d9397846a0",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "bae9866c9bc9c7c24d76cc7f27dc621bae59ce7a3a4d964587bb1156492eaafa"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    450,
+    486
+  ],
+  "output_scale": 0.41,
+  "free_pixels_left_top_right_bottom": [
+    238,
+    60,
+    237,
+    60
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

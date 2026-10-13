@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_neutral_emberpack_lobbers",
+  "clip": "cast",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    450,
+    486
+  ],
+  "scale": 0.41,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026105761,
+  "references": [
+    "idle_v1_01",
+    "support_v1_04",
+    "support_v1_05"
+  ],
+  "guides": [
+    [
+      40,
+      1
+    ],
+    [
+      60,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original hooded man, the Emberpack Lobber, facing screen right in elevated three-quarter view. Keep his hooded face, the perforated brass forehead plate, the dark hood and leather coat, the orange scarf and split orange coat tails, the dark trousers, the belts and brass belt cases, the wrapped forearms and the tall brown boots, and the ONE rigid strapped wicker-and-brass ember basket on his back with its glowing coals. Exactly two arms, two hands and two legs. The screen-LEFT hand holds the gathered straps of ONE sling whose glowing ember pouch hangs beside the knee; the screen-RIGHT hand is empty. Preserve the basket, the sling, the hood and the proportions. A rallying signal. He raises his empty fist forward and up toward screen right, holds the pose briefly, then lowers it back to the original stance. A physical gesture only: no spell, glow change or aura. The lighting never changes: the light on him and the background keeps exactly the same brightness and colour in every frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full hood, the whole basket, the sling with its pouch even at full swing, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, fire, flame trails, smoke, sparks, motion trails, particles or extra limbs; the coals keep only their steady contained glow. Articulate joints naturally with physical planted-foot support; the sling stays one strap attached to the hand and the pouch.",
+  "protected_foreground_chroma": 6,
+  "edge_threshold": 7,
+  "palette_measurement": {
+    "bluest_opaque": 4.0,
+    "blue_minus_green_p999": 1.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}
