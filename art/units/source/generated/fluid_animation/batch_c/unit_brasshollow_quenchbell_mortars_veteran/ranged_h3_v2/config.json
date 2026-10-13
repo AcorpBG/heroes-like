@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_brasshollow_quenchbell_mortars_veteran",
+  "clip": "ranged",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    517,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026104361,
+  "references": [
+    "idle_0",
+    "ranged_18",
+    "ranged_19"
+  ],
+  "guides": [
+    [
+      26,
+      1
+    ],
+    [
+      44,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original hooded gunner with ONE wheeled bell mortar, the Staybell Bombardier veteran, facing screen right in elevated three-quarter view. The gunner stands at screen left: a stocky adult in a dark blue-grey hooded coat with brass trim, a blue tabard with a gold bell emblem, small brass bells at the belt, leather gauntlets and boots; exactly one person with two arms, two hands and two legs, both hands gripping ONE long iron lever that runs into the gun carriage. The gun stands at screen right: ONE dark iron two-wheeled carriage with spoked wheels carrying a tall dark blue riveted cylindrical canister with a gold finial on top, and ONE short wide bronze bell-mouthed mortar barrel with engraved bands pointing up toward screen right. Preserve the gunner, the canister, the bronze mortar, both wheels and the proportions. Fire ONE mortar shot toward upper screen right. The gunner hauls the lever so the bronze barrel tilts up steeply to aim, then pulls it down hard; the barrel kicks back in recoil and the carriage jolts back a little on its wheels while the gunner braces, holds a moment, then the barrel lowers and everything settles into the original stance. One shot only; no flash, fire, smoke or shell is shown. The lighting never changes: no lingering smoke or glow hangs around the gun after the shot, and the background keeps exactly the same brightness and colour in every frame. Locked orthographic camera, fixed scale and centred group. Keep the whole gun including the mortar mouth, the finial, both wheels and the whole gunner within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, muzzle flash, fire, smoke, steam, sparks, shells in flight, motion trails, particles, a second person or extra limbs. Articulate the gunner naturally with planted-foot support; the gun carriage, canister and barrel stay rigid and never morph, and the wheels only turn.",
+  "protected_foreground_chroma": 41,
+  "edge_threshold": 31,
+  "palette_measurement": {
+    "bluest_opaque": 39.0,
+    "blue_minus_green_p999": 25.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

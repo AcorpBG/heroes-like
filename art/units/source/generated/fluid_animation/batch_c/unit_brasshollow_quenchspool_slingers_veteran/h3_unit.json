@@ -169,6 +169,48 @@
       ],
       "last": 2,
       "action": "Collapse slowly under the weight of the spool. The slinger staggers and sinks down to sit on the ground, stays there a moment, then topples backward and lies flat with the spool on the ground at screen left and the boots at screen right, the cable and weight lying beside the body. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    },
+    "move_h3_v2": {
+      "clip": "move",
+      "references": [
+        "move_48",
+        "move_52"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Trudge in place through two complete reciprocal cycles with short heavy steps under the spool. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel, the spool steady on the back and the cable weight swinging at the side; the apron swings with the legs. Finish in the original gait phase. He keeps stepping continuously with smooth, quiet steps from the first frame to the last, no stomping or impacts. The lighting never changes and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "cast_h3_v2": {
+      "clip": "cast",
+      "references": [
+        "idle_0",
+        "cast_36"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A halting signal. The slinger thrusts the free hand forward with the palm flat toward screen right, holds the gesture briefly, then lowers it back to the original stance. A physical gesture only: no spell, glow or aura. The lighting never changes and the background keeps exactly the same brightness and colour in every frame."
     }
   }
 }

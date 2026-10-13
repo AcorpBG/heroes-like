@@ -169,6 +169,105 @@
       ],
       "last": 2,
       "action": "The gunner collapses slowly while the gun stays standing. The gunner lets go of the lever, doubles over and sinks onto both knees, stays kneeling a moment, then slumps forward and lies flat on the ground at the foot of the gun, finishing motionless with the hood at screen left. The gun stays upright and unchanged. The body never leaves the ground; no recovery and no disappearing body."
+    },
+    "idle_h3_v2": {
+      "clip": "idle",
+      "references": [
+        "idle_0",
+        "idle_4"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A watchful crew idle that loops. The gunner breathes and shifts weight, keeps both hands resting still on the lever without pulling it, the hood turns slightly toward the target and the belt bells sway, while the gun stays still, then everything returns smoothly to the original stance. The gunner's boots stay planted. No walking and no firing. Only the body moves; nothing else appears in the frame. The gun never fires: no shell, flash, flame, smoke or spark ever leaves the barrel, and the barrel mouth stays dark."
+    },
+    "move_h3_v2": {
+      "clip": "move",
+      "references": [
+        "move_48",
+        "move_52"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Push the gun in place through two complete reciprocal walking cycles. The gunner leans into the lever and steps with alternating legs through contact, weight loading, passing and lift, while the gun wheels turn steadily; the whole group stays centred for engine-driven travel and the gun stays upright and level. Finish in the original gait phase. The gun never fires: no shell, flash, flame, smoke or spark ever leaves the barrel, and the barrel mouth stays dark."
+    },
+    "hit_h3_v2": {
+      "clip": "hit",
+      "references": [
+        "hit_25",
+        "idle_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "The gunner starts rocked back in a flinch and recovers from it. The hood and shoulders hunch, the knees flex and the gunner staggers half a step while keeping hold of the lever, and the gun rocks slightly on its wheels, then the gunner straightens and returns to the same stance. Only the body moves; nothing else appears in the frame. The gun never fires: no shell, flash, flame, smoke or spark ever leaves the barrel, and the barrel mouth stays dark."
+    },
+    "ranged_h3_v2": {
+      "clip": "ranged",
+      "references": [
+        "idle_0",
+        "ranged_18",
+        "ranged_19"
+      ],
+      "guides": [
+        [
+          26,
+          1
+        ],
+        [
+          44,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Fire ONE mortar shot toward upper screen right. The gunner hauls the lever so the bronze barrel tilts up steeply to aim, then pulls it down hard; the barrel kicks back in recoil and the carriage jolts back a little on its wheels while the gunner braces, holds a moment, then the barrel lowers and everything settles into the original stance. One shot only; no flash, fire, smoke or shell is shown. The lighting never changes: no lingering smoke or glow hangs around the gun after the shot, and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "idle_h3_v3": {
+      "clip": "idle",
+      "references": [
+        "idle_0"
+      ],
+      "guides": [],
+      "last": 0,
+      "action": "A watchful crew idle that loops. The gunner breathes and shifts weight, keeps both hands resting still on the lever without pulling it, the hood turns slightly toward the target and the belt bells sway, while the gun stays still, then everything returns smoothly to the original stance. The gunner's boots stay planted. No walking and no firing. Only the body moves; nothing else appears in the frame. The gun never fires: no shell, flash, flame, smoke or spark ever leaves the barrel, and the barrel mouth stays dark."
+    },
+    "idle_h3_v4": {
+      "clip": "idle",
+      "references": [
+        "idle_0"
+      ],
+      "guides": [],
+      "last": 0,
+      "action": "A watchful crew idle that loops. The gunner breathes and shifts weight, keeps both hands resting still on the lever without pulling it, the hood turns slightly toward the target and the belt bells sway, while the gun stays still, then everything returns smoothly to the original stance. The gunner's boots stay planted. No walking and no firing. Only the body moves; nothing else appears in the frame. The gun never fires: no shell, flash, flame, smoke or spark ever leaves the barrel, and the barrel mouth stays dark."
     }
   }
 }

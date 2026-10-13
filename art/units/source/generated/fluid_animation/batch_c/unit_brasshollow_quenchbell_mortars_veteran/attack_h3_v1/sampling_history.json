@@ -1,0 +1,257 @@
+{
+  "prompt": [
+    1370,
+    "1030f254-7a27-42ce-a385-b81dbdf3d3b0",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "ONE original hooded gunner with ONE wheeled bell mortar, the Staybell Bombardier veteran, facing screen right in elevated three-quarter view. The gunner stands at screen left: a stocky adult in a dark blue-grey hooded coat with brass trim, a blue tabard with a gold bell emblem, small brass bells at the belt, leather gauntlets and boots; exactly one person with two arms, two hands and two legs, both hands gripping ONE long iron lever that runs into the gun carriage. The gun stands at screen right: ONE dark iron two-wheeled carriage with spoked wheels carrying a tall dark blue riveted cylindrical canister with a gold finial on top, and ONE short wide bronze bell-mouthed mortar barrel with engraved bands pointing up toward screen right. Preserve the gunner, the canister, the bronze mortar, both wheels and the proportions. Make ONE ramming shove toward screen right. The gunner crouches and grips the lever, then lunges forward low and heaves so the gun lurches a short way toward screen right on its wheels as a ram, then the gunner draws back, the gun rolls back to its place and everything settles into the original stance. One shove only; nothing is fired. Locked orthographic camera, fixed scale and centred group. Keep the whole gun including the mortar mouth, the finial, both wheels and the whole gunner within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, muzzle flash, fire, smoke, steam, sparks, shells in flight, motion trails, particles, a second person or extra limbs. Articulate the gunner naturally with planted-foot support; the gun carriage, canister and barrel stay rigid and never morph, and the wheels only turn.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026104352
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "h3/unit_brasshollow_quenchbell_mortars_veteran/attack_h3_v1/sampled"
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "h3_unit_brasshollow_quenchbell_mortars_veteran_attack_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "h3_unit_brasshollow_quenchbell_mortars_veteran_attack_h3_v1_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "h3_unit_brasshollow_quenchbell_mortars_veteran_attack_h3_v1_guide_2.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 30,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 54,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      }
+    },
+    {
+      "client_id": "h3_creature_animation",
+      "create_time": 1791867355806
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "h3\\unit_brasshollow_quenchbell_mortars_veteran\\attack_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "1030f254-7a27-42ce-a385-b81dbdf3d3b0",
+          "timestamp": 1791867887246
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "1030f254-7a27-42ce-a385-b81dbdf3d3b0",
+          "timestamp": 1791867887363
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "1030f254-7a27-42ce-a385-b81dbdf3d3b0",
+          "timestamp": 1791868037038
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

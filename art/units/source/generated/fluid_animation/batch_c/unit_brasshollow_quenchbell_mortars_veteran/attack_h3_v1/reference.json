@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_brasshollow_quenchbell_mortars_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/idle_v1.png",
+      "source_sha256": "5fbae2edd93085b82fce47cce27799b79f114d944c637ac50608b215eb4ba546",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "c8cb0797ed464a21f31fc0b0bd08d328aa6abc1e58a2e4b36ca18d18ef7d8189"
+    },
+    {
+      "frame": "attack_10",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/attack_v1.png",
+      "source_sha256": "b7387f09dd4514bc8445c32b07eb5d5ebd12c48123a39bbffe98a6e79738c830",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "d53edc48fc7f50a9daae3b813c938774c8054c151ddf06b476c814ca56ee9342"
+    },
+    {
+      "frame": "attack_12",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/attack_v1.png",
+      "source_sha256": "b7387f09dd4514bc8445c32b07eb5d5ebd12c48123a39bbffe98a6e79738c830",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "730f7a99ebcad03383054471ea51a45eb04ed99aa8966a46c2c4a4a5667dfb5a"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    517,
+    560
+  ],
+  "output_scale": 0.5,
+  "free_pixels_left_top_right_bottom": [
+    112,
+    80,
+    112,
+    80
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
