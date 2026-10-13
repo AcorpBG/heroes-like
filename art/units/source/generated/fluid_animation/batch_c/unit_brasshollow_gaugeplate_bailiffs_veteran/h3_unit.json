@@ -149,6 +149,85 @@
       ],
       "last": 2,
       "action": "Collapse slowly and heavily from standing. The knight doubles over and sinks onto both knees, leaning on the shield, stays kneeling a moment, then topples forward and lies flat on the ground, finishing motionless with the helmet at screen right, the shield lying flat beside the body and the hammer on the ground at screen left. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    },
+    "move_h3_v2": {
+      "clip": "move",
+      "references": [
+        "move_40",
+        "move_44"
+      ],
+      "guides": [],
+      "last": 0,
+      "action": "March in place through two complete reciprocal cycles with short heavy steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The shield stays upright on the arm and the hammer swings a little at the side; the warrant parchment sways. Finish in the original gait phase. He keeps stepping continuously from the first frame to the last with no pause and no standing still, his legs always in motion."
+    },
+    "move_h3_v3": {
+      "clip": "move",
+      "references": [
+        "move_40",
+        "move_44"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "March in place through two complete reciprocal cycles with short heavy steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The shield stays upright on the arm and the hammer swings a little at the side; the warrant parchment sways. Finish in the original gait phase. He keeps stepping continuously from the first frame to the last with no pause and no standing still, his legs always in motion."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "idle_0",
+        "attack_10",
+        "attack_12"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE overhead hammer blow toward screen right. The knight raises the hammer high above the helmet as the knees bend, then steps into a deep lunge and swings the hammer down and forward to full reach at screen right, the shield held close, pulls back and settles into the original stance. One blow only; no sparks or effect at contact.",
+      "pad": [
+        0,
+        128,
+        0,
+        0
+      ]
+    },
+    "death_h3_v2": {
+      "clip": "death",
+      "references": [
+        "idle_0",
+        "death_34",
+        "death_39"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
+      "last": 2,
+      "action": "Collapse slowly and heavily from standing. The knight doubles over and sinks onto both knees, leaning on the shield, stays kneeling a moment, then topples forward and lies flat on the ground, finishing motionless with the helmet at screen right, the shield lying flat beside the body and the hammer on the ground at screen left. The body never leaves the ground; no recovery, no floating equipment and no disappearing body. The lighting never changes: the shield gauge and the brass hold one steady light that never pulses, flickers or darkens, and the background keeps exactly the same brightness and colour in every frame."
     }
   }
 }

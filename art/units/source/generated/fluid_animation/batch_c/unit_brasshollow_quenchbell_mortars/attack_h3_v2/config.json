@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_brasshollow_quenchbell_mortars",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    503,
+    582
+  ],
+  "scale": 0.42,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026104309,
+  "references": [
+    "idle_0",
+    "attack_1",
+    "attack_5"
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      54,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original squat biped furnace automaton, the Quenchbell Mortar, facing screen LEFT in elevated three-quarter view. Keep the dark iron and worn brass riveted body, the round furnace belly with a glowing orange barred grille, the coiled brass pipes and small canisters, the ONE giant short wide mortar barrel mounted on top with a glowing orange rim, its mouth pointing up toward screen left, the ONE jointed loading arm ending in a round dark shell ball with glowing orange seams, held out toward screen left, and EXACTLY TWO thick jointed legs with wide splayed brass feet. No crew and no extra legs or arms. Preserve the mortar, the shell arm, the furnace belly and the squat proportions. Make ONE shell-arm smash toward screen left. The automaton draws the shell arm back and curls it in as the knees bend, then lunges forward toward screen left and swings the heavy shell ball out and down to full reach at screen left, pulls the arm back and settles into the original stance. One smash only; no sparks or effect at contact. No sparks, embers, debris or dust appear at contact or fall to the ground; only the machine moves. Locked orthographic camera, fixed scale and centred body. Keep the whole mortar barrel, the shell arm and both feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, muzzle flash, fire, smoke clouds, sparks, shells in flight, motion trails, particles or extra limbs; only faint steam wisps at the back pipes, and the grille, rim and shell seams keep only their steady glow. The machine moves only at its joints; the barrel stays rigid.",
+  "protected_foreground_chroma": 28,
+  "edge_threshold": 21,
+  "palette_measurement": {
+    "bluest_opaque": 26.0,
+    "blue_minus_green_p999": 15.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

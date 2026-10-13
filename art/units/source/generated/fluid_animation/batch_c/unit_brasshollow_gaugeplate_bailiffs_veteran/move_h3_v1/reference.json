@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_brasshollow_gaugeplate_bailiffs_veteran",
+  "guides": [
+    {
+      "frame": "move_40",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugeplate_bailiffs_veteran/move_v1.png",
+      "source_sha256": "8a4b11ee19fa7de42637eefc69004a22682ec3fb318d18ba8096ac298d95c9db",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "166969463a87436fa248eeafef89f4ed12f670f13f5bb1d4da9b6ac110a28fc0"
+    },
+    {
+      "frame": "move_44",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugeplate_bailiffs_veteran/move_far_v1.png",
+      "source_sha256": "311aa1ddcb9c0a2119b2e066948a97a56fb65a953012fe55cc859ce382dbd198",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "c04a963d5d67ef89bd7d52f5ae7f993a7036d229d7e0914e0336560cea8b3831"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    442,
+    600
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    150,
+    41,
+    149,
+    40
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

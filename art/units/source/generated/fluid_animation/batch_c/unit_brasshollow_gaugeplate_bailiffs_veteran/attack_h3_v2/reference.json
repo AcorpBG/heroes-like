@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_brasshollow_gaugeplate_bailiffs_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugeplate_bailiffs_veteran/idle_v1.png",
+      "source_sha256": "67474c9e4312375840ba96dbd2808b8dd313fea8a9e78046b32f33ffd31d9b8c",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "d704ce4e8b7f714f328e21b0a208faab211d816e7b50446a8614561b6a0f4d0d"
+    },
+    {
+      "frame": "attack_10",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugeplate_bailiffs_veteran/attack_v1.png",
+      "source_sha256": "301154dbdbfb6f8459d86ef6980067af3af8fd07d1b890a0c97d35c4e018eeb9",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "321e23181bd7c1fdb10a04ebe3625e83ae8e7635054ec17d502fe919495b5fce"
+    },
+    {
+      "frame": "attack_12",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugeplate_bailiffs_veteran/attack_v1.png",
+      "source_sha256": "301154dbdbfb6f8459d86ef6980067af3af8fd07d1b890a0c97d35c4e018eeb9",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "d9d7dd8c9ccf674b737cb51fc827187db08afc2d7fd40687ffa9c97776be6593"
+    }
+  ],
+  "canvas": [
+    960,
+    768
+  ],
+  "ground_anchor": [
+    442,
+    728
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    150,
+    169,
+    149,
+    40
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

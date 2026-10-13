@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_brasshollow_quenchbell_mortars",
+  "guides": [
+    {
+      "frame": "hit_1",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars/reactions_v1.png",
+      "source_sha256": "c76188ce370a8f3e4d4035cd974a317088b8cfa49c8f831bf7f1668780700ada",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "b7f71a30027786b214098a0aefa927b6cb85b799d3ec361891bb6dd9f715df51"
+    },
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars/idle_v1.png",
+      "source_sha256": "18a0f252c8b132a523e211908e94f7842ffea3238ddc127d99d6d2d7f3ccbed5",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "6f4b48702725e8af11fbaf4a9d387f71927630c38dc3ea026af8b486a800257b"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    503,
+    582
+  ],
+  "output_scale": 0.42,
+  "free_pixels_left_top_right_bottom": [
+    146,
+    51,
+    146,
+    50
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

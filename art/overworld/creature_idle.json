@@ -7598,21 +7598,20 @@
       "sha256": "8597ee99924db69aa62f2736110556584670b2e9920748d01212cfa186ef6cd7"
     },
     "unit_brasshollow_quenchbell_mortars": {
-      "path": "res://art/animation/runtime/idle/unit_brasshollow_quenchbell_mortars.png",
+      "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_quenchbell_mortars.png",
       "frame_size": [
-        240,
-        228
+        265,
+        264
       ],
-      "columns": 16,
-      "frames": 16,
-      "frame_msec": 75,
+      "frames": 58,
+      "frame_msec": 60,
       "static_frame": 0,
       "ground_anchor": [
-        136,
-        218
+        148,
+        252
       ],
-      "painted_extent": 224,
-      "source_sheet": "res://art/animation/runtime/idle/unit_brasshollow_quenchbell_mortars.png",
+      "painted_extent": 249,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_brasshollow_quenchbell_mortars.png",
       "source_indices": [
         0,
         1,
@@ -7629,17 +7628,59 @@
         12,
         13,
         14,
-        15
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57
       ],
       "source_crop": [
-        0,
-        0,
-        240,
-        228
+        32,
+        -4,
+        297,
+        260
       ],
-      "source_sha256": "4b6a419a703d4fab3a7ade38c7dd43d6dc95d99925bfb4d35d96b66201e83b52",
+      "source_sha256": "3472101f727eaaada1cd198a32d0b3c03463c5da12c7bc616c5079caacaae223",
       "source_provenance": "res://art/animation/source/fluid/unit_brasshollow_quenchbell_mortars/provenance.json",
-      "sha256": "4b6a419a703d4fab3a7ade38c7dd43d6dc95d99925bfb4d35d96b66201e83b52"
+      "sha256": "d06f68d13a2890e9207d0ab28e6ec97be47e54e2bf521d3ed87ed3f10041bf65"
     },
     "unit_veilmourn_saltwake_eulogists": {
       "path": "res://art/animation/runtime/idle/unit_veilmourn_saltwake_eulogists.png",
@@ -14223,21 +14264,20 @@
       "sha256": "dad504c164d6cc57e0233384e222ba65acd003cfd77757606c46e7c5f6b9b618"
     },
     "unit_brasshollow_gaugeplate_bailiffs_veteran": {
-      "path": "res://art/animation/runtime/idle/unit_brasshollow_gaugeplate_bailiffs_veteran.png",
+      "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_gaugeplate_bailiffs_veteran.png",
       "frame_size": [
-        260,
-        249
+        237,
+        245
       ],
-      "columns": 12,
-      "frames": 24,
-      "frame_msec": 53,
+      "frames": 62,
+      "frame_msec": 60,
       "static_frame": 0,
       "ground_anchor": [
-        131,
-        239
+        108,
+        234
       ],
-      "painted_extent": 244,
-      "source_sheet": "res://art/animation/runtime/idle/unit_brasshollow_gaugeplate_bailiffs_veteran.png",
+      "painted_extent": 229,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_brasshollow_gaugeplate_bailiffs_veteran.png",
       "source_indices": [
         0,
         1,
@@ -14262,17 +14302,55 @@
         20,
         21,
         22,
-        23
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61
       ],
       "source_crop": [
-        0,
-        0,
-        260,
-        249
+        32,
+        30,
+        269,
+        275
       ],
-      "source_sha256": "399fd835c6219674e4feade09360b0abc7d5cc9e5ab458a035164024479797ee",
+      "source_sha256": "915969cf1ef8d3ac22292707fb671aa8546c1a8f9bcf33213fdb6c7aa33d5414",
       "source_provenance": "res://art/animation/source/fluid/unit_brasshollow_gaugeplate_bailiffs_veteran/provenance.json",
-      "sha256": "399fd835c6219674e4feade09360b0abc7d5cc9e5ab458a035164024479797ee"
+      "sha256": "0b74742eb4d90ce29e78f0a36f7d867b6fbd085c6eba278bf0f8f373e0578a0e"
     },
     "unit_brasshollow_debt_engine_exactors_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_debt_engine_exactors_veteran.png",

@@ -169,6 +169,46 @@
       ],
       "last": 2,
       "action": "Shut down and collapse. The glow dims, the legs buckle and the body sinks down with the mortar tipping forward, stays there a moment, then it slumps flat onto the ground with the mortar barrel lying on its side pointing to screen left and the shell arm resting on the ground, finishing as a still wreck with the grille dark. The same body throughout: no explosion, no fire and no disappearing."
+    },
+    "ranged_h3_v2": {
+      "clip": "ranged",
+      "references": [
+        "idle_0",
+        "ranged_2",
+        "ranged_6"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          56,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Fire ONE mortar shot toward upper screen left. The legs brace, the shell arm lifts and the mortar tilts up to aim, then the barrel kicks back in recoil and the whole body squats down hard on its legs, holds a moment, then rises and the mortar lowers back into the original stance. One shot only; no flash, fire, smoke or shell is shown. The lighting never changes: the furnace and the muzzle hold one steady glow that never flashes, pulses or brightens, nothing glows or smoulders on the ground, and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "idle_0",
+        "attack_1",
+        "attack_5"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE shell-arm smash toward screen left. The automaton draws the shell arm back and curls it in as the knees bend, then lunges forward toward screen left and swings the heavy shell ball out and down to full reach at screen left, pulls the arm back and settles into the original stance. One smash only; no sparks or effect at contact. No sparks, embers, debris or dust appear at contact or fall to the ground; only the machine moves."
     }
   }
 }
