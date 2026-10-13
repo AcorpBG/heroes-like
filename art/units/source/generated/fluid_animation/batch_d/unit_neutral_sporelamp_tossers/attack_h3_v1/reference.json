@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_neutral_sporelamp_tossers",
+  "guides": [
+    {
+      "frame": "cast_00",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/cast_v1_00.png",
+      "source_sha256": "2318c759ea72eb394c96f75b8807d5dce595120f5049ba763a4ac4dd66b172bc",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "02e90f1582771c016e28d56349c1688a198d02c85a1be625ccb2d86d741ba5f9"
+    },
+    {
+      "frame": "attack_02",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/attack_v2_02.png",
+      "source_sha256": "d8821d48e303779262a8712ea9249f1bca89a16baf1618a45e43a9f42270cc22",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "d6f7c484a142d5e7796e177e71327c2d67c333ab7c7872c0f0b5187f49ea134b"
+    },
+    {
+      "frame": "attack_04",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/attack_v2_04.png",
+      "source_sha256": "5564efc01181f4c3445d370904dc2f9be87d804c056e08fd9c4fbe04ea8291e3",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "d26b5da945346480187e591e827d6afdd57cddc2e2d4f510fb552a03a2269df9"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    448,
+    588
+  ],
+  "output_scale": 0.39,
+  "free_pixels_left_top_right_bottom": [
+    151,
+    43,
+    152,
+    43
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

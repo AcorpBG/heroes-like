@@ -155,6 +155,73 @@
       ],
       "last": 2,
       "action": "Collapse slowly. The creature staggers and sits down hard on the ground, stays there a moment, then slumps over and lies flat on its side with the mushroom hood at screen right, the satchel spilled open and the orbs and lamp lying dim beside it, finishing motionless. The body never leaves the ground; no spore cloud, no recovery and no disappearing body."
+    },
+    "idle_h3_v2": {
+      "clip": "idle",
+      "references": [
+        "cast_00"
+      ],
+      "guides": [],
+      "last": 0,
+      "action": "A calm, quiet idle that loops. The creature breathes, bobs slightly on its bent knees, turns the hooded head to peer around and lets the sling lamp sway gently, then everything returns smoothly to the original stance. Both hands stay low in front of the body, keeping hold of the orb and the sling; nothing is tossed, raised or thrown. Both boots stay planted. No walking and no dancing. The lighting never changes: the light on the creature and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "cast_00",
+        "attack_02",
+        "attack_04"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE orb jab toward screen right. The creature draws the hand with the spore orb back to the chest as the knees bend, then lunges forward and thrusts the orb out to full reach at screen right, still holding it, pulls it back and settles into the original stance. One jab only; the orb never breaks and no spores appear. The air around the orb stays empty: no spores, sparkles, dust or particles ever appear. The lighting never changes: the light on the creature and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "ranged_h3_v2": {
+      "clip": "ranged",
+      "references": [
+        "cast_00",
+        "ranged_01",
+        "ranged_03"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Throw ONE spore orb toward screen right. The creature raises the orb high behind the hooded head, then steps forward and whips the arm through overhand toward screen right; at the release the hand opens and the orb is gone at once, never shown in flight. The creature takes a new orb from the satchel and settles into the original stance. One throw only; no spores, smoke or trail. The lighting never changes: the light on the creature and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "idle_h3_v3": {
+      "clip": "idle",
+      "references": [
+        "cast_00"
+      ],
+      "guides": [],
+      "last": 0,
+      "action": "A calm, quiet idle that loops. The creature breathes, bobs slightly on its bent knees, turns the hooded head to peer around and lets the sling lamp sway gently, then everything returns smoothly to the original stance. Both hands stay low in front of the body, keeping hold of the orb and the sling; nothing is tossed, raised or thrown. Both boots stay planted. No walking and no dancing. The lighting never changes: the light on the creature and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "idle_h3_v4": {
+      "clip": "idle",
+      "references": [
+        "cast_00"
+      ],
+      "guides": [],
+      "last": 0,
+      "action": "A calm, quiet idle that loops. The creature breathes, bobs slightly on its bent knees, turns the hooded head to peer around and lets the sling lamp sway gently, then everything returns smoothly to the original stance. Both hands stay low in front of the body, keeping hold of the orb and the sling; nothing is tossed, raised or thrown. Both boots stay planted. No walking and no dancing. The lighting never changes: the light on the creature and the background keeps exactly the same brightness and colour in every frame."
     }
   }
 }

@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_neutral_sporelamp_tossers",
+  "guides": [
+    {
+      "frame": "move_02",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/move_inbetweens_v1_02.png",
+      "source_sha256": "eb6c3458f03ff0cf80b4537489fce6e04a32a2fab8f9fd1b3f1ca0f1f4f92139",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "ff5adda133b3a10ad34010938f2ce5a9dfecb8f3ee642644d88b111174e26cd1"
+    },
+    {
+      "frame": "move_04",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/move_inbetweens_v1_04.png",
+      "source_sha256": "331cf2aac013165ac3f9deb5726ed0f24cae489357e72d28f7c9b23936519e5c",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "a71638f1f2b907b6a1688b6b6e98a190032aab5b3e43e399c5fa48bfdc88915a"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    448,
+    588
+  ],
+  "output_scale": 0.39,
+  "free_pixels_left_top_right_bottom": [
+    151,
+    43,
+    152,
+    43
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

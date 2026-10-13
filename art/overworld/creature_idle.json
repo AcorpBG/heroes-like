@@ -4454,21 +4454,20 @@
       "sha256": "4160de79d182166aa153743e533848b0d2244ebc58be42e036d664b7c6c5805b"
     },
     "unit_neutral_sporelamp_tossers": {
-      "path": "res://art/animation/runtime/idle/unit_neutral_sporelamp_tossers.png",
+      "path": "res://art/overworld/runtime/creature_idle/unit_neutral_sporelamp_tossers.png",
       "frame_size": [
-        168,
-        214
+        195,
+        218
       ],
-      "columns": 16,
-      "frames": 32,
+      "frames": 62,
       "frame_msec": 60,
       "static_frame": 0,
       "ground_anchor": [
-        73,
-        203
+        88,
+        205
       ],
-      "painted_extent": 198,
-      "source_sheet": "res://art/animation/runtime/idle/unit_neutral_sporelamp_tossers.png",
+      "painted_extent": 202,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_sporelamp_tossers.png",
       "source_indices": [
         0,
         1,
@@ -4501,17 +4500,47 @@
         28,
         29,
         30,
-        31
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61
       ],
       "source_crop": [
-        0,
-        0,
-        168,
-        214
+        36,
+        15,
+        231,
+        233
       ],
-      "source_sha256": "1ab473c50c685db81307a5dc11cf74e2d03326a02984777af8ecb3cfe7c1bc5c",
+      "source_sha256": "fc89899aadf1822a75a652910b70899ab5b231651dcce211cda381d27e70f10f",
       "source_provenance": "res://art/animation/source/fluid/unit_neutral_sporelamp_tossers/provenance.json",
-      "sha256": "1ab473c50c685db81307a5dc11cf74e2d03326a02984777af8ecb3cfe7c1bc5c"
+      "sha256": "33f152baa027b0ae54bc8d533c18fa0ec4041ae8a6cdc96f303bd175bdec9e46"
     },
     "unit_neutral_dustjack_blades": {
       "path": "res://art/animation/runtime/idle/unit_neutral_dustjack_blades.png",
