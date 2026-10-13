@@ -149,6 +149,21 @@
       ],
       "last": 2,
       "action": "Collapse slowly from standing. The boarder doubles over and sinks onto both knees with the chains dropping, stays kneeling a moment, then slumps forward and lies flat on the ground, finishing motionless with the hood at screen right, the coat spread out and both chain-hooks lying beside the body. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    },
+    "hit_h3_v2": {
+      "clip": "hit",
+      "references": [
+        "hit_1",
+        "idle_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "The boarder starts rocked back in a flinch and recovers from it. The hooded head and shoulders hunch back and the knees flex deep while both hands keep hold of the chains, then the boarder straightens, rebalances on both boots and returns to the same stance. The boarder never turns or spins around: the body and hood keep facing screen right the whole time and the chains hang close to the body. Only the body moves; nothing else appears in the frame."
     }
   }
 }

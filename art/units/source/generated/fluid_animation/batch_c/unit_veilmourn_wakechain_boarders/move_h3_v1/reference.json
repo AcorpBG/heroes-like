@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_veilmourn_wakechain_boarders",
+  "guides": [
+    {
+      "frame": "move_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders/move_keys_v1.png",
+      "source_sha256": "1101c41a23bcb107692e27a73008ada9809cd1d6a7138af49a8703eacd170dfa",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "12bc1ba8027ddcd3d9a5b101ade6dfc843e9cd4bf59eeb222eba39205f103195"
+    },
+    {
+      "frame": "move_4",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders/move_contacts_v2.png",
+      "source_sha256": "8bf29257f50f70fcbc8d49ff7ea45773fd5997112b5d5c09742557ac0e1c81b1",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "800efbacc7f93e4ac79b7914107b2c0bfe00548508d252264f07007df2edc345"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    415,
+    580
+  ],
+  "output_scale": 0.51,
+  "free_pixels_left_top_right_bottom": [
+    131,
+    47,
+    131,
+    47
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

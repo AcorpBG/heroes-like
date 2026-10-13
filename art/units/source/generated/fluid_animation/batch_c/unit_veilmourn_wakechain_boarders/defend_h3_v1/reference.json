@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_veilmourn_wakechain_boarders",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders/idle_v1_frame_0.png",
+      "source_sha256": "96a3643741fbaaa6d52bec3eb42b00400bedb75781bdd9887328f877318e26cb",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "3fc972a88a6ab7dcb07da66dc944e5001bcca030a2fd169accc01be1bf9c1647"
+    },
+    {
+      "frame": "defend_1",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders/reaction_v1_frame_5.png",
+      "source_sha256": "dcaa9a5993cb92231a4ddc0b7caef642c333df27bf1ab70b71a05df4557b362c",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "f41463c712b53cebfe5ad697f3da14d514ef45bccc0ae86d67d36522b309b68d"
+    },
+    {
+      "frame": "defend_2",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders/reaction_v1_frame_6.png",
+      "source_sha256": "6b4b8c23b6ab166b48384d3ed8a87ded4a0edc1e8b11d3b1995e620376ac562c",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "9ce95637b8d8fd5204db7077b11e1f4adbdd46d94baff79a44e959d5ed0865a2"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    415,
+    580
+  ],
+  "output_scale": 0.51,
+  "free_pixels_left_top_right_bottom": [
+    131,
+    47,
+    131,
+    47
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
