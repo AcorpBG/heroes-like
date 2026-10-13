@@ -87,15 +87,16 @@ var _log_lines: Array[String] = []
 var _started_at_ms := 0
 
 # Rules load on use so this autoload does not compile them before boot draws.
+var _lazy_scripts := LazyScriptsScript.new()
 var CampaignRulesScript:
 	get:
-		return LazyScriptsScript.load_once("res://scripts/core/CampaignRules.gd")
+		return _lazy_scripts.load_once("res://scripts/core/CampaignRules.gd")
 var OverworldRulesScript:
 	get:
-		return LazyScriptsScript.load_once("res://scripts/core/OverworldRules.gd")
+		return _lazy_scripts.load_once("res://scripts/core/OverworldRules.gd")
 var TownRulesScript:
 	get:
-		return LazyScriptsScript.load_once("res://scripts/core/TownRules.gd")
+		return _lazy_scripts.load_once("res://scripts/core/TownRules.gd")
 
 func _ready() -> void:
 	_config = _parse_user_args(OS.get_cmdline_user_args())

@@ -63,30 +63,31 @@ var _latest_loadable_summary_fingerprint := ""
 
 # The rules scripts load on first use. Preloading them here compiled most of the
 # game while the engine loaded autoloads, before the boot screen could respond.
+var _lazy_scripts := LazyScriptsScript.new()
 var ScenarioSelectRulesScript:
 	get:
-		return LazyScriptsScript.load_once("res://scripts/core/ScenarioSelectRules.gd")
+		return _lazy_scripts.load_once("res://scripts/core/ScenarioSelectRules.gd")
 var RandomMapGeneratorRulesScript:
 	get:
-		return LazyScriptsScript.load_once("res://scripts/core/RandomMapGeneratorRules.gd")
+		return _lazy_scripts.load_once("res://scripts/core/RandomMapGeneratorRules.gd")
 var OverworldRulesScript:
 	get:
-		return LazyScriptsScript.load_once("res://scripts/core/OverworldRules.gd")
+		return _lazy_scripts.load_once("res://scripts/core/OverworldRules.gd")
 var BattleRulesScript:
 	get:
-		return LazyScriptsScript.load_once("res://scripts/core/BattleRules.gd")
+		return _lazy_scripts.load_once("res://scripts/core/BattleRules.gd")
 var TownRulesScript:
 	get:
-		return LazyScriptsScript.load_once("res://scripts/core/TownRules.gd")
+		return _lazy_scripts.load_once("res://scripts/core/TownRules.gd")
 var HeroProgressionRulesScript:
 	get:
-		return LazyScriptsScript.load_once("res://scripts/core/HeroProgressionRules.gd")
+		return _lazy_scripts.load_once("res://scripts/core/HeroProgressionRules.gd")
 var HeroCommandRulesScript:
 	get:
-		return LazyScriptsScript.load_once("res://scripts/core/HeroCommandRules.gd")
+		return _lazy_scripts.load_once("res://scripts/core/HeroCommandRules.gd")
 var CampaignRulesScript:
 	get:
-		return LazyScriptsScript.load_once("res://scripts/core/CampaignRules.gd")
+		return _lazy_scripts.load_once("res://scripts/core/CampaignRules.gd")
 
 # Named saves use the same versioned payload and transaction writer as legacy
 # slots. The basename is the identity; callers can never supply an arbitrary path.

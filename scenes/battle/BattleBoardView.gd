@@ -1,4 +1,8 @@
-extends "res://scripts/ui/BoundedTooltipControl.gd"
+# Plain Control: the board replaces the bounded hover card with its own
+# forecast (_make_custom_tooltip below), so it has nothing to inherit. Godot
+# 4.6.2 can stop its exit cleanup early when a script and its script base are
+# freed together, and then reports leaked scripts.
+extends Control
 
 signal stack_focus_requested(battle_id: String)
 # A click on an enemy, or Enter on it, with the order the cursor showed:
