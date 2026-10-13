@@ -2,7 +2,6 @@ class_name AudioPalette
 extends RefCounted
 
 const PATH := "res://content/audio_production_banks.json"
-const LazyScriptsScript = preload("res://scripts/core/LazyScripts.gd")
 
 static func _data() -> Dictionary:
 	return ContentService.load_json(PATH)
@@ -40,8 +39,9 @@ static func ground_bank(terrain: String, level: int = 0) -> String:
 
 static func objective_snapshot(session) -> Dictionary:
 	var result := {}
-	# Loaded on use: audio autoloads reach this file, and the scenario rules are large.
-	var scenario_rules := LazyScriptsScript.load_once("res://scripts/core/ScenarioRules.gd")
+	# Loaded on use: audio autoloads reach this file, and the scenario rules are
+	# large. Any running session already has them loaded.
+	var scenario_rules: Script = load("res://scripts/core/ScenarioRules.gd")
 	var definitions = scenario_rules.objectives_for_session(session)
 	if not definitions is Dictionary:
 		return result

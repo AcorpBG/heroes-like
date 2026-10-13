@@ -16,12 +16,13 @@ var _profile_load_attempted := false
 
 # The campaign rules compile most of the game, so they load on first use rather
 # than with this autoload. The router loads the profile once boot has them.
+var _lazy_scripts := LazyScriptsScript.new()
 var CampaignRulesScript:
 	get:
-		return LazyScriptsScript.load_once("res://scripts/core/CampaignRules.gd")
+		return _lazy_scripts.load_once("res://scripts/core/CampaignRules.gd")
 var ScenarioSelectRulesScript:
 	get:
-		return LazyScriptsScript.load_once("res://scripts/core/ScenarioSelectRules.gd")
+		return _lazy_scripts.load_once("res://scripts/core/ScenarioSelectRules.gd")
 
 func ensure_profile() -> Dictionary:
 	if profile.is_empty():

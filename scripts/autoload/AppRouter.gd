@@ -5,9 +5,10 @@ const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 const SceneTransitionCoverScript = preload("res://scripts/ui/SceneTransitionCover.gd")
-const BattleArtPrewarmScript = preload("res://scripts/ui/BattleArtPrewarm.gd")
 const LazyScriptsScript = preload("res://scripts/core/LazyScripts.gd")
 
+# The prewarm script preloads the battle board, so the router loads it on use.
+const BATTLE_ART_PREWARM_PATH := "res://scripts/ui/BattleArtPrewarm.gd"
 const MAIN_MENU_SCENE := "res://scenes/menus/MainMenu.tscn"
 const SCENARIO_OUTCOME_SCENE := "res://scenes/results/ScenarioOutcomeShell.tscn"
 const BATTLE_REPORT_SCENE := "res://scenes/battle/BattleReportShell.tscn"
@@ -148,15 +149,19 @@ var _transition_cover = null
 var _packed_scenes := {}
 var _scene_load_requests := {}
 
+var _lazy_scripts := LazyScriptsScript.new()
 var TownRulesScript:
 	get:
-		return LazyScriptsScript.load_once("res://scripts/core/TownRules.gd")
+		return _lazy_scripts.load_once("res://scripts/core/TownRules.gd")
 var OverworldRulesScript:
 	get:
-		return LazyScriptsScript.load_once("res://scripts/core/OverworldRules.gd")
+		return _lazy_scripts.load_once("res://scripts/core/OverworldRules.gd")
 var BattleRulesScript:
 	get:
-		return LazyScriptsScript.load_once("res://scripts/core/BattleRules.gd")
+		return _lazy_scripts.load_once("res://scripts/core/BattleRules.gd")
+var BattleArtPrewarmScript:
+	get:
+		return _lazy_scripts.load_once(BATTLE_ART_PREWARM_PATH)
 
 func _ready() -> void:
 	_transition_cover = SceneTransitionCoverScript.new()
@@ -2199,7 +2204,8 @@ func _change_scene(scene_path: String) -> void:
 		AmbientAudio.stop_overworld_ambient("scene_change")
 	_reconcile_pending_load_resumed_scene(scene_path)
 	_reconcile_pending_battle_resolution_overworld_scene(scene_path)
-	if scene_path != BATTLE_SCENE:
+	# Art requests exist only once a battle approach loaded the prewarm script.
+	if scene_path != BATTLE_SCENE and ResourceLoader.has_cached(BATTLE_ART_PREWARM_PATH):
 		BattleArtPrewarmScript.release()
 	var packed_scene := _packed_scene_for_route(scene_path)
 	# The outgoing scene leaves the tree now; the incoming one joins at the next
