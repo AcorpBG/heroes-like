@@ -1,0 +1,47 @@
+{
+  "unit_id": "unit_brasshollow_rivet_hounds",
+  "clip": "defend",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    468,
+    586
+  ],
+  "scale": 0.38,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026104454,
+  "references": [
+    "idle_0",
+    "defend_1",
+    "defend_2"
+  ],
+  "guides": [
+    [
+      34,
+      1
+    ]
+  ],
+  "last": 2,
+  "prompt": "ONE original lean mechanical hound, the Rivet Hound, facing screen right in elevated three-quarter side view. Keep the dark iron and worn brass riveted armour plates, the blue steel piston joints, the glowing orange slit vents on the flank and the glowing orange eyes, the long narrow pointed snout ending in a small glowing orange spike tip, the two pointed ears, the long segmented tail with a spearhead tip, and EXACTLY FOUR jointed legs with clawed brass feet. No rider and no extra legs. Preserve the four legs, the snout, the tail and the lean proportions. Hunker down: the hound drops its belly low, pulls its head in behind the armoured shoulders with the snout pointing at screen right, curls the tail in and braces all four legs wide, then holds the low guarded crouch. No attack and no return to the standing stance. Locked orthographic camera, fixed scale and centred body. Keep the snout tip, the tail tip and all four feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, sparks, steam, motion trails, particles or extra legs; the vents and eyes keep only their steady glow. The hound moves only at its joints; the armour plates stay rigid and never morph.",
+  "protected_foreground_chroma": 51,
+  "edge_threshold": 40,
+  "palette_measurement": {
+    "bluest_opaque": 49.0,
+    "blue_minus_green_p999": 34.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

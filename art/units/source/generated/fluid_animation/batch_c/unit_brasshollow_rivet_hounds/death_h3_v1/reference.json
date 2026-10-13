@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_brasshollow_rivet_hounds",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds/idle_v1.png",
+      "source_sha256": "b860973275bb2a8dbd6a424ff51070e6421ee144fac140dcaf12bb8b565d61f3",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "20eb15ca4c5bb8c5e83f273260bb1dd37cbf75130fe55fa0898c75f84b6e99d6"
+    },
+    {
+      "frame": "death_3",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds/death_v1.png",
+      "source_sha256": "b9cd14360c325d8345fba1e303e95caebcf4db6f071f403d8a6c5e5dcbb98d3d",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "53a1d93def634374346c8919fee6522b3fb166dbb505fe152b785d3a6971845a"
+    },
+    {
+      "frame": "death_7",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds/death_v1.png",
+      "source_sha256": "b9cd14360c325d8345fba1e303e95caebcf4db6f071f403d8a6c5e5dcbb98d3d",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "6c3625016fa4c040ea8b6354e55895f7596c7f2c53bb230e35659dd2c3a7b307"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    468,
+    586
+  ],
+  "output_scale": 0.38,
+  "free_pixels_left_top_right_bottom": [
+    119,
+    53,
+    120,
+    52
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
