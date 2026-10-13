@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_neutral_rimebell_skyrakers",
+  "guides": [
+    {
+      "frame": "attack_00",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/attack_v1_00.png",
+      "source_sha256": "f0f09142ec6dd58056ba8b4e016d8466bc9cd1a3d630997a82681020225b61ca",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "dde9c7442db582275dc5e7606adf14067cf2942a1d514d404e915138236b44f1"
+    },
+    {
+      "frame": "cast_04",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/cast_v1_04.png",
+      "source_sha256": "7e693a76837bdac0bff6581bb47cb200c7cb56c2abe1b82a923332c960eacea5",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "cc7b6efcd7cb93b162a6d291ca9899db234c544cc4d53e45e41fc951a35955b6"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    486,
+    476
+  ],
+  "output_scale": 0.48,
+  "free_pixels_left_top_right_bottom": [
+    175,
+    112,
+    176,
+    112
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

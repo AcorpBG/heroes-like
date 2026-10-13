@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_neutral_rimebell_skyrakers",
+  "guides": [
+    {
+      "frame": "attack_00",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/attack_v1_00.png",
+      "source_sha256": "f0f09142ec6dd58056ba8b4e016d8466bc9cd1a3d630997a82681020225b61ca",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "dde9c7442db582275dc5e7606adf14067cf2942a1d514d404e915138236b44f1"
+    },
+    {
+      "frame": "death_03",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/death_v1_03.png",
+      "source_sha256": "95c2d7c7607c9e7dc84324b164ca523adcaa39e92eb04ea4fe0da375da0e8e70",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "0a0d45fbc4a1f0470a63f40bbcfc47dd83cbfdf90fbdea13fab14c3069766cf0"
+    },
+    {
+      "frame": "death_07",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/death_v1_07.png",
+      "source_sha256": "5ff038245de493a2ca3b0d9d03c6c3190304b6d1d67d8f901acfef5103fa673a",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "af667d3f13141e77360a6034677aae262822b872b49ac7103c3fd74208ef154e"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    486,
+    476
+  ],
+  "output_scale": 0.48,
+  "free_pixels_left_top_right_bottom": [
+    175,
+    112,
+    176,
+    112
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
