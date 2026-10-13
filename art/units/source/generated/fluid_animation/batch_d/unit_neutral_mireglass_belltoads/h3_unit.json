@@ -169,6 +169,35 @@
       ],
       "last": 2,
       "action": "Collapse slowly. The glow fades, the legs give way and the toad sinks down onto its belly, the throat sac sagging, stays a moment, then slumps flat with the deflated sac lying on the ground, the head resting at screen right and the legs splayed, finishing motionless. The same body throughout: no bursting and no disappearing."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "idle_00",
+        "attack_01",
+        "attack_03"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make exactly ONE lunging bite toward screen right. The toad crouches low and gathers its hind legs, lunges forward once with the mouth gaping wide and snaps it shut at full reach toward screen right, then settles back into the original squat and stays there, calm and still, for the rest of the clip. Only one lunge and one bite; the mouth stays closed after the bite. No tongue ever comes out, and no spit or effect appears. The lighting never changes: the light on the toad and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "hit_h3_v2": {
+      "clip": "hit",
+      "references": [
+        "idle_00"
+      ],
+      "guides": [],
+      "last": 0,
+      "action": "Starting from the original squat, the toad is struck: it jolts back and up with the mouth open and the front feet lifting off the ground, the throat sac squeezing, then drops back onto all four feet and settles into the same squat. The toad stays sharp and clearly drawn in every frame. The lighting never changes: the light on the toad and the background keeps exactly the same brightness and colour in every frame."
     }
   }
 }

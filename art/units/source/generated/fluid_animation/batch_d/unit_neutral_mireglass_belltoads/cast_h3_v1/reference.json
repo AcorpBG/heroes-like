@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_neutral_mireglass_belltoads",
+  "guides": [
+    {
+      "frame": "idle_00",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/idle_v2.png",
+      "source_sha256": "0127f941567515e7ef7d0ef0f4229d672fde6fd42a9b0a2fc1a3f06598b77db2",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "fb3687e65a2f4eae50d38c412285e58481741a279447f3237b9142999c6c2417"
+    },
+    {
+      "frame": "cast_04",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/cast_v1.png",
+      "source_sha256": "56948979d6ce5bc89baf6fec99936622b1c8390a3a7fffcc09a9899423c2caf8",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "76dbb482e1ef989b3545fa90a856fd0aea638556ac1ab9f9fc22a3bcf4ef17e9"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    439,
+    570
+  ],
+  "output_scale": 0.4,
+  "free_pixels_left_top_right_bottom": [
+    141,
+    42,
+    141,
+    43
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

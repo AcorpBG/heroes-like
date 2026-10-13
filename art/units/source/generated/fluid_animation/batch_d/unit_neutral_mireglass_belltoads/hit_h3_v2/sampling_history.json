@@ -1,0 +1,201 @@
+{
+  "prompt": [
+    1732,
+    "2634bddd-b55f-4cc5-b913-7444e615ba34",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "ONE original giant marsh toad, the Mireglass Belltoad, facing screen right in elevated three-quarter side view. Keep the dark green-black warty skin with a pale belly, the frill of golden-brown spines around the head and down the back, the row of small glowing teal glass bubbles along the back, the large golden eye, and the huge translucent glowing teal throat sac hanging below the jaw like a glass bell. EXACTLY FOUR legs with webbed orange-toed feet. No rider and no extra legs. Preserve the glass throat sac, the back bubbles, the spine frill and the squat proportions. Starting from the original squat, the toad is struck: it jolts back and up with the mouth open and the front feet lifting off the ground, the throat sac squeezing, then drops back onto all four feet and settles into the same squat. The toad stays sharp and clearly drawn in every frame. The lighting never changes: the light on the toad and the background keeps exactly the same brightness and colour in every frame. Locked orthographic camera, fixed scale and centred body. Keep the whole throat sac, the spines and all four feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, water, floor shadow, camera motion, zoom, spit, bubbles in flight, sound rings, sparks, motion trails, particles or extra legs; glow stays only inside the throat sac and the back bubbles. Articulate joints naturally with physical planted-foot support.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026105209
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "h3/unit_neutral_mireglass_belltoads/hit_h3_v2/sampled"
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "h3_unit_neutral_mireglass_belltoads_hit_h3_v2_guide_0.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      }
+    },
+    {
+      "client_id": "h3_creature_animation",
+      "create_time": 1791900839572
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "h3\\unit_neutral_mireglass_belltoads\\hit_h3_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "2634bddd-b55f-4cc5-b913-7444e615ba34",
+          "timestamp": 1791901617956
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "2634bddd-b55f-4cc5-b913-7444e615ba34",
+          "timestamp": 1791901618006
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "2634bddd-b55f-4cc5-b913-7444e615ba34",
+          "timestamp": 1791901769125
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

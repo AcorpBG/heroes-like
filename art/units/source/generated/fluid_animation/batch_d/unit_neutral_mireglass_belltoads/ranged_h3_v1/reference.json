@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_neutral_mireglass_belltoads",
+  "guides": [
+    {
+      "frame": "idle_00",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/idle_v2.png",
+      "source_sha256": "0127f941567515e7ef7d0ef0f4229d672fde6fd42a9b0a2fc1a3f06598b77db2",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "fb3687e65a2f4eae50d38c412285e58481741a279447f3237b9142999c6c2417"
+    },
+    {
+      "frame": "ranged_03",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/ranged_v2.png",
+      "source_sha256": "6eacb8494878b51219bfc01c22df983a9d46eaa210e8d5ab48ae42dbf8d186a6",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "c6f85401af402edd24782f3fb1d935ce09b21f4b9ef74f9b60466532648089a5"
+    },
+    {
+      "frame": "ranged_05",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/ranged_v2.png",
+      "source_sha256": "6eacb8494878b51219bfc01c22df983a9d46eaa210e8d5ab48ae42dbf8d186a6",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "3cd9fe7c0dcfea00e8856f80285064112c36bcf96b62e9e25b51f4b3826aa623"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    439,
+    570
+  ],
+  "output_scale": 0.4,
+  "free_pixels_left_top_right_bottom": [
+    141,
+    42,
+    141,
+    43
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

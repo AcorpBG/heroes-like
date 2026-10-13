@@ -1,0 +1,54 @@
+{
+  "unit_id": "unit_neutral_mireglass_belltoads",
+  "clip": "idle",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    439,
+    570
+  ],
+  "scale": 0.4,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026105200,
+  "references": [
+    "idle_00",
+    "idle_04"
+  ],
+  "guides": [
+    [
+      31,
+      1
+    ],
+    [
+      62,
+      0
+    ],
+    [
+      93,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original giant marsh toad, the Mireglass Belltoad, facing screen right in elevated three-quarter side view. Keep the dark green-black warty skin with a pale belly, the frill of golden-brown spines around the head and down the back, the row of small glowing teal glass bubbles along the back, the large golden eye, and the huge translucent glowing teal throat sac hanging below the jaw like a glass bell. EXACTLY FOUR legs with webbed orange-toed feet. No rider and no extra legs. Preserve the glass throat sac, the back bubbles, the spine frill and the squat proportions. A heavy, croaking idle that loops. The toad breathes so the glowing throat sac swells and shrinks slowly, the head lifts slightly, the eye blinks and the spine frill twitches, then everything returns smoothly to the original squat stance. All four feet stay planted. No hopping and no attack. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed scale and centred body. Keep the whole throat sac, the spines and all four feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, water, floor shadow, camera motion, zoom, spit, bubbles in flight, sound rings, sparks, motion trails, particles or extra legs; glow stays only inside the throat sac and the back bubbles. Articulate joints naturally with physical planted-foot support.",
+  "protected_foreground_chroma": 53,
+  "edge_threshold": 43,
+  "palette_measurement": {
+    "bluest_opaque": 51.0,
+    "blue_minus_green_p999": 37.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

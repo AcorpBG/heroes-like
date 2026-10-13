@@ -1,0 +1,84 @@
+{
+  "clips": {
+    "idle": {
+      "segments": [
+        {
+          "take": "idle_h3_v1",
+          "frames": [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108, 110, 112, 114, 116, 118, 120, 122]
+        }
+      ],
+      "frame_msec": 60
+    },
+    "move": {
+      "segments": [
+        {
+          "take": "move_h3_v1",
+          "frames": [55, 57, 59, 61, 63, 65, 67, 69, 71, 73, 75, 77, 79, 81, 83, 84, 85, 87, 89, 91, 93, 95, 97, 98, 99, 101, 103, 105]
+        }
+      ],
+      "frame_msec": 50
+    },
+    "attack": {
+      "segments": [
+        {
+          "take": "attack_h3_v1",
+          "frames": [2, 6, 9, 12, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 32]
+        }
+      ],
+      "frame_msec": 42,
+      "contact_frame": 11
+    },
+    "ranged": {
+      "segments": [
+        {
+          "take": "ranged_h3_v1",
+          "frames": [7, 11, 14, 17, 19, 20, 22, 23, 24, 25, 26, 27, 36, 38, 39, 40, 41, 42, 44, 47, 50, 52, 56, 63, 69, 73, 74, 77, 80, 82, 93]
+        }
+      ],
+      "frame_msec": 42,
+      "contact_frame": 5
+    },
+    "hit": {
+      "segments": [
+        {
+          "take": "hit_h3_v1",
+          "frames": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 26]
+        }
+      ],
+      "frame_msec": 35
+    },
+    "defend": {
+      "segments": [
+        {
+          "take": "defend_h3_v1",
+          "frames": [1, 4, 6, 8, 9, 11, 12, 13, 15, 17, 19, 21, 24, 28, 31, 34, 38, 43, 47, 51, 55, 58]
+        }
+      ],
+      "frame_msec": 42
+    },
+    "cast": {
+      "segments": [
+        {
+          "take": "cast_h3_v1",
+          "frames": [6, 9, 11, 12, 13, 14, 16, 17, 18, 19, 20, 22, 24, 27, 39, 46, 53, 60, 72, 81, 84, 85, 87, 88, 89, 91, 92, 93, 94, 96, 97, 99, 102]
+        }
+      ],
+      "frame_msec": 45,
+      "contact_frame": 16
+    },
+    "death": {
+      "segments": [
+        {
+          "take": "death_h3_v1",
+          "frames": [0, 4, 7, 9, 12, 14, 16, 18, 20, 22, 24, 25, 27, 28, 30, 31, 32, 34, 35, 37, 38, 40, 43, 45, 48, 51, 53, 56, 59, 62, 64, 67, 72, 79, 86, 93, 105, 123]
+        }
+      ],
+      "frame_msec": 45
+    }
+  },
+  "preserved_accepted_clips": [],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Reviewed every take by contact strip. The first attack lunges three times, and two retakes (one asking for exactly one bite) still lunged repeatedly and sprayed water, so the attack uses only the first lunge of the first take, from the squat through the bite back to the squat. A hit retake spat bubbles, so the hit is the first take, starting after its held reference pose. The defend ends on the hunkered guard before its dark plates. The hop loops video 55-106 with the landing frames kept. Idle, walk, ranged, cast and death are first takes."
+  }
+}
