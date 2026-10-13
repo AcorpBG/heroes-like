@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_veilmourn_maskglass_corsairs_veteran",
+  "guides": [
+    {
+      "frame": "idle_00",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/idle_v1.png",
+      "source_sha256": "efc8282e307950670d3147f6ba71a3f7b5b3c84a72e9a5e5af7f4b71060ba32e",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "26eab9ce0acf19744313886528de7beaf3dd186ce0621d9e0ea1231c28647b80"
+    },
+    {
+      "frame": "death_02",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/death_v1.png",
+      "source_sha256": "ecc0fba86ef02d8b6ee9482eb26b111a640904b42cfeecc56b198fbd075ae6b9",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "80c71d78fbefc7fd9e79464c6e3d0c9f8b46287fbaea1a0978c0b5f55bc4f5e5"
+    },
+    {
+      "frame": "death_07",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/death_v1.png",
+      "source_sha256": "ecc0fba86ef02d8b6ee9482eb26b111a640904b42cfeecc56b198fbd075ae6b9",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "ff81dfe6f7ebfbf7ae359e958a581bf2db5ddae305258065f8ccd792d85d05f2"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    500,
+    588
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    155,
+    48,
+    155,
+    47
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

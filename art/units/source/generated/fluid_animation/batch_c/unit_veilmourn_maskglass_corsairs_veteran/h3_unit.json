@@ -149,6 +149,48 @@
       ],
       "last": 2,
       "action": "Collapse slowly from standing. The duellist doubles over and sinks onto one knee and then both, stays kneeling a moment, then slumps forward and lies flat on the ground, finishing motionless with the helmet at screen right, the cloak spread over the body and both daggers lying on the ground. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    },
+    "move_h3_v2": {
+      "clip": "move",
+      "references": [
+        "move_0",
+        "move_4"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Stalk in place through two complete reciprocal cycles with light, long steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel, both daggers held low and ready and the cloak trailing behind. Finish in the original gait phase. Smooth, quiet, gliding steps; no stomping, impacts or shaking. The duellist keeps stepping continuously from the first frame to the last. The lighting never changes and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "cast_h3_v2": {
+      "clip": "cast",
+      "references": [
+        "idle_00",
+        "cast_04"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A taunting flourish. The duellist draws both daggers up and crosses them in front of the chest, holds the pose briefly, then sweeps them apart and down back into the original stance. A physical gesture only: no spell, glow or aura. The lighting never changes and the background keeps exactly the same brightness and colour in every frame."
     }
   }
 }

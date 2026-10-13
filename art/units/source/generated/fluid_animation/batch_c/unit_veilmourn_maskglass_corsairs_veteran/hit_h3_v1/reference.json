@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_veilmourn_maskglass_corsairs_veteran",
+  "guides": [
+    {
+      "frame": "hit_01",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/hit_defend_v1.png",
+      "source_sha256": "f30a8d4f766262b1a104e28e0ca956c63f4997fac16aad2a1256b6a200971cb7",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "b04c5c779696dcdb426935af9262d8a7b5bd562e3bf555bba9bb629022c23864"
+    },
+    {
+      "frame": "idle_00",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/idle_v1.png",
+      "source_sha256": "efc8282e307950670d3147f6ba71a3f7b5b3c84a72e9a5e5af7f4b71060ba32e",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "26eab9ce0acf19744313886528de7beaf3dd186ce0621d9e0ea1231c28647b80"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    500,
+    588
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    155,
+    48,
+    155,
+    47
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
