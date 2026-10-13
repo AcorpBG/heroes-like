@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_neutral_reefbolt_crews",
+  "guides": [
+    {
+      "frame": "idle_00",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/idle_v2.png",
+      "source_sha256": "7318e8b4570f12d4c803cf61650f4f0e08803fe6e96eb119271fa8ae496250fd",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "3779afc5c2bb44f7d07ed5fef234a1f0e5cd905501d2a4adcb67116ec9e55444"
+    },
+    {
+      "frame": "attack_02",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/attack_v1.png",
+      "source_sha256": "2771dfde1ab204a61b95968c989bc65877f83a9d9fbac567913e11731c0cfef5",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "b080505b78b53a1b4a186ece9b56a5c5694de5c788ee55e2445680a59c3b1bff"
+    },
+    {
+      "frame": "attack_04",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/attack_v1.png",
+      "source_sha256": "2771dfde1ab204a61b95968c989bc65877f83a9d9fbac567913e11731c0cfef5",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "224325e21e0a6d0b32a3592520ce1d4f68a29a05675b7fd2778572412f012c3c"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    508,
+    510
+  ],
+  "output_scale": 0.62,
+  "free_pixels_left_top_right_bottom": [
+    233,
+    38,
+    232,
+    38
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

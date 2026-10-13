@@ -1,0 +1,75 @@
+{
+  "clips": {
+    "idle": {
+      "segments": [
+        {
+          "take": "idle_h3_v1",
+          "frames": [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108, 110, 112, 114, 116, 118, 120, 122]
+        }
+      ],
+      "frame_msec": 60
+    },
+    "attack": {
+      "segments": [
+        {
+          "take": "attack_h3_v3",
+          "frames": [6, 12, 17, 23, 24, 25, 26, 31, 36, 40, 43, 46, 48, 50, 52, 56, 59, 65, 70, 74, 88, 92, 95, 98, 103, 106, 110]
+        }
+      ],
+      "frame_msec": 42,
+      "contact_frame": 14
+    },
+    "ranged": {
+      "segments": [
+        {
+          "take": "ranged_h3_v2",
+          "frames": [8, 10, 12, 13, 14, 34, 36, 37, 38, 39, 41, 43, 45, 49, 53, 59, 61, 64, 68, 71, 73, 77, 84, 94]
+        }
+      ],
+      "frame_msec": 42,
+      "contact_frame": 5
+    },
+    "hit": {
+      "segments": [
+        {
+          "take": "hit_h3_v1",
+          "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 17, 19, 22, 29, 37, 44, 51, 61, 68, 75, 85]
+        }
+      ],
+      "frame_msec": 35
+    },
+    "defend": {
+      "segments": [
+        {
+          "take": "defend_h3_v3",
+          "frames": [3, 10, 12, 15, 17, 19, 20, 21, 22, 25, 32, 39, 46, 53, 56]
+        }
+      ],
+      "frame_msec": 42
+    },
+    "cast": {
+      "segments": [
+        {
+          "take": "cast_h3_v1",
+          "frames": [10, 17, 24, 27, 29, 30, 31, 32, 33, 39, 46, 56, 63, 72, 78, 79, 80, 81, 82, 84, 87, 90, 97, 104]
+        }
+      ],
+      "frame_msec": 45,
+      "contact_frame": 12
+    },
+    "death": {
+      "segments": [
+        {
+          "take": "death_h3_v1",
+          "frames": [3, 10, 17, 29, 35, 36, 37, 38, 45, 56, 63, 69, 76, 82, 90, 91, 92, 93, 94, 103, 110, 118, 123]
+        }
+      ],
+      "frame_msec": 45
+    }
+  },
+  "preserved_accepted_clips": [],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Reviewed on H3 video. Idle v1, hit v1, cast v1 and death v1 are clean; the idle's larger steps are the loader handling a bolt. The crew kept firing the crossbow in its retakes, so the clean frames around each shot are used. Attack v3: the loader draws a bolt and jabs it out (contact video 52); the crossbow smoke at 76-86 is skipped. Ranged v2: the aim (8-14) cuts to the recoil at 34, past the bolt in flight and the flash. Defend v3: the crew ducks behind the crossbow and the clip ends at 56, before the crossbow fires at 60. The walk keeps the published clip."
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_neutral_reefbolt_crews",
+  "guides": [
+    {
+      "frame": "idle_00",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/idle_v2.png",
+      "source_sha256": "7318e8b4570f12d4c803cf61650f4f0e08803fe6e96eb119271fa8ae496250fd",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "3779afc5c2bb44f7d07ed5fef234a1f0e5cd905501d2a4adcb67116ec9e55444"
+    },
+    {
+      "frame": "idle_04",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/idle_return_v1.png",
+      "source_sha256": "496f5782ab88ea56b4c7f376d47e92dbed6102cbbfae1f338060336904f526fa",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "dde01d5fa4b530fdd96edf0a07d5e78af41190140b1064b821c7871eaf7e9ebe"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    508,
+    510
+  ],
+  "output_scale": 0.62,
+  "free_pixels_left_top_right_bottom": [
+    233,
+    38,
+    232,
+    38
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

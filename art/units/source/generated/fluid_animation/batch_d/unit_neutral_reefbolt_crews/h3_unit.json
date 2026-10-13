@@ -146,6 +146,141 @@
       ],
       "last": 2,
       "action": "Collapse slowly. The woman slumps down beside the basket and the gunner sinks to his knees as the tripod tips over, they stay low a moment, then both fall flat and lie motionless on the ground with the toppled crossbow and the spilled bolts beside them. The bodies never leave the ground; no recovery, no floating equipment and no disappearing bodies."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "idle_00",
+        "attack_02",
+        "attack_04"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE close-quarters jab toward screen right. The woman draws one bolt from the basket and lunges forward, stabbing it out toward screen right like a short spear while the gunner leans in and holds the crossbow steady, then she pulls back, returns the bolt to the basket and both settle into the original pose. One jab only; nothing is fired and no effect appears at contact. No sparks, flash or glow anywhere; the bolt stays in her hand. The lighting never changes: the light on them and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "attack_h3_v3": {
+      "clip": "attack",
+      "references": [
+        "idle_00",
+        "attack_02",
+        "attack_04"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE close-quarters jab toward screen right. The woman draws one bolt from the basket and lunges forward, stabbing it out toward screen right like a short spear while the gunner leans in and holds the crossbow steady, then she pulls back, returns the bolt to the basket and both settle into the original pose. One jab only; nothing is fired and no effect appears at contact. No sparks, flash or glow anywhere; the bolt stays in her hand. The lighting never changes: the light on them and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "ranged_h3_v2": {
+      "clip": "ranged",
+      "references": [
+        "idle_00",
+        "ranged_02",
+        "ranged_05"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          56,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Shoot ONE bolt toward screen right. The gunner sights along the crossbow and squeezes the trigger; the string snaps forward and the crossbow kicks back on the tripod. The woman hands up one fresh bolt from the basket and the gunner sets it in place, then both settle into the original pose. One shot only; the bolt is never shown in flight, with no streak or trail. Nothing is shown flying across the frame and there is no flash, spark or smoke; the woman keeps her hands on the basket and lifts no bolt. The lighting never changes: the light on them and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "ranged_h3_v3": {
+      "clip": "ranged",
+      "references": [
+        "idle_00",
+        "ranged_02",
+        "ranged_05"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          56,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Shoot ONE bolt toward screen right. The gunner sights along the crossbow and squeezes the trigger; the string snaps forward and the crossbow kicks back on the tripod. The woman hands up one fresh bolt from the basket and the gunner sets it in place, then both settle into the original pose. One shot only; the bolt is never shown in flight, with no streak or trail. Nothing is shown flying across the frame and there is no flash, spark or smoke; the woman keeps her hands on the basket and lifts no bolt. The lighting never changes: the light on them and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "defend_h3_v2": {
+      "clip": "defend",
+      "references": [
+        "idle_00",
+        "defend_01",
+        "defend_02"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
+      "last": 2,
+      "action": "Both crouch lower and duck behind the crossbow and the tripod, the gunner bracing the weapon with both hands and the woman pulling the basket in close, then they hold the braced crouch. No shooting and no return to the relaxed pose. Nothing leaves the basket: every bolt stays inside it, and nothing flies or falls. The lighting never changes: the light on them and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "defend_h3_v3": {
+      "clip": "defend",
+      "references": [
+        "idle_00",
+        "defend_01",
+        "defend_02"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
+      "last": 2,
+      "action": "Both crouch lower and duck behind the crossbow and the tripod, the gunner bracing the weapon with both hands and the woman pulling the basket in close, then they hold the braced crouch. No shooting and no return to the relaxed pose. Nothing leaves the basket: every bolt stays inside it, and nothing flies or falls. The lighting never changes: the light on them and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "ranged_h3_v4": {
+      "clip": "ranged",
+      "references": [
+        "idle_00",
+        "ranged_02",
+        "ranged_05"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          56,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Shoot ONE bolt toward screen right. The gunner sights along the crossbow and squeezes the trigger; the string snaps forward and the crossbow kicks back on the tripod, then he settles it and both return to the original pose. The woman stays crouched beside the basket with her hands on it. One shot only: nothing is shown flying across the frame, with no flash, spark, smoke, streak or trail. The lighting never changes: the light on them and the background keeps exactly the same brightness and colour in every frame."
     }
-  }
+  },
+  "clean_references": [
+    "idle_04"
+  ]
 }

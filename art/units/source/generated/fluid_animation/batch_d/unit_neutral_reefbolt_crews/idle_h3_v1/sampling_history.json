@@ -1,0 +1,269 @@
+{
+  "prompt": [
+    2005,
+    "98abf4a7-9bbf-41e4-ab7d-448b3da79aba",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "EXACTLY TWO original humans, the Reefbolt Crew, facing screen right in elevated three-quarter view, with four arms and four legs in total. The tall bearded gunner behind, on screen right, wears a teal brimmed helmet with a brass star, a teal naval coat, black trousers, brown boots and gloves, and holds ONE large tripod-mounted crossbow with a brass crank, wooden stock, bow arms, string and one coral-tipped bolt, both hands on its rear handle and forward stock. The shorter braided woman in front, on screen left, wears a teal bandana and coat, dark trousers and brown boots, kneels beside the wooden rope-bound tripod and keeps ONE full basket of bolts at her side. The crossbow points to screen right. Preserve both faces and costumes, the crossbow, the three tripod legs and the basket. A watchful crew idle that loops. The gunner breathes and sights along the crossbow, turning it a little on the tripod and back; the woman glances up at him and settles a bolt in the basket. Then everything returns smoothly to the original pose. Both stay in place. No walking and no shooting. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred group. Keep both crew members, the whole crossbow with its bow arms, all three tripod legs and the basket within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, bolts in flight, sparks, motion trails, particles, extra people or extra limbs. Articulate joints naturally with physical planted-foot support; the crossbow and the tripod stay rigid and never morph.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026105900
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "h3/unit_neutral_reefbolt_crews/idle_h3_v1/sampled"
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "h3_unit_neutral_reefbolt_crews_idle_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "h3_unit_neutral_reefbolt_crews_idle_h3_v1_guide_1.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 31,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 62,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "30",
+            0
+          ]
+        }
+      },
+      "42": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "41",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 93,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "42",
+            0
+          ]
+        }
+      }
+    },
+    {
+      "client_id": "h3_creature_animation",
+      "create_time": 1791925650656
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "h3\\unit_neutral_reefbolt_crews\\idle_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "98abf4a7-9bbf-41e4-ab7d-448b3da79aba",
+          "timestamp": 1791925812638
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "3"
+          ],
+          "prompt_id": "98abf4a7-9bbf-41e4-ab7d-448b3da79aba",
+          "timestamp": 1791925812754
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "98abf4a7-9bbf-41e4-ab7d-448b3da79aba",
+          "timestamp": 1791925984613
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

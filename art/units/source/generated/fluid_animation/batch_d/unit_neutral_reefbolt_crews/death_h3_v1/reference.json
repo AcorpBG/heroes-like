@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_neutral_reefbolt_crews",
+  "guides": [
+    {
+      "frame": "idle_00",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/idle_v2.png",
+      "source_sha256": "7318e8b4570f12d4c803cf61650f4f0e08803fe6e96eb119271fa8ae496250fd",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "3779afc5c2bb44f7d07ed5fef234a1f0e5cd905501d2a4adcb67116ec9e55444"
+    },
+    {
+      "frame": "death_02",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/death_v1.png",
+      "source_sha256": "802e9ef232b2b3abfae936a0cc613b2d9c43468d25d1df8dd185eb0206ce3940",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "3bb4f57ec82a9f63c8a4f29db4e33b0e13693edea7ca1445f03800f1c5c98b59"
+    },
+    {
+      "frame": "death_07",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/death_v1.png",
+      "source_sha256": "802e9ef232b2b3abfae936a0cc613b2d9c43468d25d1df8dd185eb0206ce3940",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "74a10659aa83a312ccf559d1cef79c29d25d59f94266e87f1be8759ee30d1379"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    508,
+    510
+  ],
+  "output_scale": 0.62,
+  "free_pixels_left_top_right_bottom": [
+    233,
+    38,
+    232,
+    38
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
