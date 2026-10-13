@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_neutral_echodart_casts",
+  "clip": "ranged",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    521
+  ],
+  "scale": 0.39,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026105701,
+  "references": [
+    "attack_v1_01",
+    "ranged_v1_03",
+    "ranged_v1_06"
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      56,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original adult woman crossbow scout, the Echodart Cast, facing screen LEFT in elevated three-quarter view. Keep her dark brown high ponytail, the blue crystal hair clasp, the grey scarf and the trailing torn grey cloth, the dark leather armour and boots with bronze trim and small cyan crystals, the belt pouches and the cyan bolts at the hip. Exactly two arms, two hands and two legs. Both hands hold ONE short rigid bronze-and-dark-wood crossbow with a cyan front tip, two rigid limbs and a string: one hand supports the front stock and the other holds the rear grip. Preserve the crossbow, the ponytail, the cloth and the lithe proportions. Shoot ONE bolt toward screen LEFT. She raises the crossbow to her shoulder and sights along it toward screen left, holds the aim, then the string snaps forward and the crossbow kicks back against her shoulder, holds a moment, then she lowers it to the original ready stance. One shot only; the bolt is never shown in flight, with no glow, streak or trail. Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole crossbow, the ponytail, the trailing cloth, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, bolts in flight, glow bursts, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the crossbow stays rigid and never morphs.",
+  "protected_foreground_chroma": 89,
+  "edge_threshold": 57,
+  "palette_measurement": {
+    "bluest_opaque": 87.0,
+    "blue_minus_green_p999": 51.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

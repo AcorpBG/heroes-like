@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_neutral_echodart_casts",
+  "guides": [
+    {
+      "frame": "attack_v1_01",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_v1.png",
+      "source_sha256": "5f6ae1438aa8ce86548916da13c82c742a3547a7a98f469ee1bd01a3ede9885c",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "a12dfd409ea603472f2b9a1ea2e27a191f6ff288a3fd5d71c12ee54eeca204ee"
+    },
+    {
+      "frame": "support_v1_04",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/support_v1.png",
+      "source_sha256": "1bc3a18f28e7c5c488881eb40ccc9926c2ac87f6f11401eaabd62fad758f2765",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "8a8cfa743292473e7695c56d22dde126e726bfa15db0789f2ed9e3a39d7a0eec"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    521
+  ],
+  "output_scale": 0.39,
+  "free_pixels_left_top_right_bottom": [
+    250,
+    43,
+    251,
+    43
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

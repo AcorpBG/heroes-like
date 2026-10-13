@@ -7,1072 +7,3494 @@
       "source_facing": "left",
       "frames": [
         {
-          "name": "death_v1_01",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_v1.png",
-          "rects": [
-            [
-              36,
-              0,
-              379,
-              540
-            ]
-          ],
-          "anchor": [
-            221.0,
-            499
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "death_v1_02",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_v1.png",
-          "rects": [
-            [
-              489,
-              0,
-              843,
-              540
-            ]
-          ],
-          "anchor": [
-            664.5,
-            499
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "death_v1_03",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_v1.png",
-          "rects": [
-            [
-              885,
-              0,
-              1270,
-              540
-            ]
-          ],
-          "anchor": [
-            1108.0,
-            499
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "death_v1_04",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_v1.png",
-          "rects": [
-            [
-              1357,
-              0,
-              1734,
-              540
-            ]
-          ],
-          "anchor": [
-            1551.5,
-            499
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "death_v1_05",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_v1.png",
-          "rects": [
-            [
-              40,
-              540,
-              437,
-              887
-            ]
-          ],
-          "anchor": [
-            221.0,
-            797
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "death_v1_06",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_v1.png",
-          "rects": [
-            [
-              458,
-              540,
-              873,
-              887
-            ]
-          ],
-          "anchor": [
-            664.5,
-            797
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "death_v1_07",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_v1.png",
-          "rects": [
-            [
-              884,
-              540,
-              1318,
-              887
-            ]
-          ],
-          "anchor": [
-            1108.0,
-            797
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "death_v1_08",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_v1.png",
-          "rects": [
-            [
-              1328,
-              540,
-              1763,
-              887
-            ]
-          ],
-          "anchor": [
-            1551.5,
-            797
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "move_v1_01",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/move_v1.png",
-          "rects": [
-            [
-              81,
-              0,
-              394,
-              445
-            ]
-          ],
-          "anchor": [
-            221.0,
-            438
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "move_v1_02",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/move_v1.png",
-          "rects": [
-            [
-              522,
-              0,
-              839,
-              445
-            ]
-          ],
-          "anchor": [
-            664.5,
-            438
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "move_v1_03",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/move_v1.png",
-          "rects": [
-            [
-              982,
-              0,
-              1275,
-              445
-            ]
-          ],
-          "anchor": [
-            1108.0,
-            438
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "move_v1_04",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/move_v1.png",
-          "rects": [
-            [
-              1418,
-              0,
-              1725,
-              445
-            ]
-          ],
-          "anchor": [
-            1551.5,
-            438
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "move_v1_05",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/move_v1.png",
-          "rects": [
-            [
-              75,
-              445,
-              391,
-              887
-            ]
-          ],
-          "anchor": [
-            221.0,
-            879
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "move_v1_06",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/move_v1.png",
-          "rects": [
-            [
-              521,
-              445,
-              836,
-              887
-            ]
-          ],
-          "anchor": [
-            664.5,
-            879
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "move_v1_07",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/move_v1.png",
-          "rects": [
-            [
-              982,
-              445,
-              1274,
-              887
-            ]
-          ],
-          "anchor": [
-            1108.0,
-            879
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "move_v1_08",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/move_v1.png",
-          "rects": [
-            [
-              1413,
-              445,
-              1718,
-              887
-            ]
-          ],
-          "anchor": [
-            1551.5,
-            879
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "attack_v1_01",
+          "name": "attack_h3_v1_004",
           "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/matte/rgba_004.png",
           "rects": [
             [
-              43,
               0,
-              398,
-              445
-            ]
-          ],
-          "anchor": [
-            221.0,
-            438
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "attack_v1_02",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_v1.png",
-          "rects": [
-            [
-              510,
               0,
-              839,
-              445
-            ]
-          ],
-          "anchor": [
-            664.5,
-            438
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "attack_v1_03",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_v1.png",
-          "rects": [
-            [
-              935,
-              0,
-              1284,
-              445
-            ]
-          ],
-          "anchor": [
-            1108.0,
-            438
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "attack_v1_04",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_v1.png",
-          "rects": [
-            [
-              1336,
-              0,
-              1744,
-              445
-            ]
-          ],
-          "anchor": [
-            1551.5,
-            438
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "attack_v1_05",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_v1.png",
-          "rects": [
-            [
-              4,
-              445,
-              443,
-              887
-            ]
-          ],
-          "anchor": [
-            221.0,
-            879
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "attack_v1_06",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_v1.png",
-          "rects": [
-            [
-              501,
-              445,
-              850,
-              887
-            ]
-          ],
-          "anchor": [
-            664.5,
-            879
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "attack_v1_07",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_v1.png",
-          "rects": [
-            [
-              929,
-              445,
-              1286,
-              887
-            ]
-          ],
-          "anchor": [
-            1108.0,
-            879
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "attack_v1_08",
-          "clip": "attack",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_v1.png",
-          "rects": [
-            [
-              1372,
-              445,
-              1728,
-              887
-            ]
-          ],
-          "anchor": [
-            1551.5,
-            879
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "idle_v1_01",
-          "clip": "idle",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/idle_v1.png",
-          "rects": [
-            [
-              33,
-              0,
-              406,
-              445
-            ]
-          ],
-          "anchor": [
-            221.0,
-            438
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "idle_v1_02",
-          "clip": "idle",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/idle_v1.png",
-          "rects": [
-            [
-              490,
-              0,
-              856,
-              445
-            ]
-          ],
-          "anchor": [
-            664.5,
-            438
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "idle_v1_03",
-          "clip": "idle",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/idle_v1.png",
-          "rects": [
-            [
-              942,
-              0,
-              1292,
-              445
-            ]
-          ],
-          "anchor": [
-            1108.0,
-            438
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "idle_v1_04",
-          "clip": "idle",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/idle_v1.png",
-          "rects": [
-            [
-              1385,
-              0,
-              1736,
-              445
-            ]
-          ],
-          "anchor": [
-            1551.5,
-            438
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "idle_v1_05",
-          "clip": "idle",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/idle_v1.png",
-          "rects": [
-            [
-              39,
-              445,
-              410,
-              887
-            ]
-          ],
-          "anchor": [
-            221.0,
-            879
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "idle_v1_06",
-          "clip": "idle",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/idle_v1.png",
-          "rects": [
-            [
-              482,
-              445,
-              849,
-              887
-            ]
-          ],
-          "anchor": [
-            664.5,
-            879
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "idle_v1_07",
-          "clip": "idle",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/idle_v1.png",
-          "rects": [
-            [
-              923,
-              445,
-              1293,
-              887
-            ]
-          ],
-          "anchor": [
-            1108.0,
-            879
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "idle_v1_08",
-          "clip": "idle",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/idle_v1.png",
-          "rects": [
-            [
-              1364,
-              445,
-              1733,
-              887
-            ]
-          ],
-          "anchor": [
-            1551.5,
-            879
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "hit_defend_v1_01",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_defend_v1.png",
-          "rects": [
-            [
-              49,
-              0,
-              416,
-              445
-            ]
-          ],
-          "anchor": [
-            221.0,
-            438
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "hit_defend_v1_02",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_defend_v1.png",
-          "rects": [
-            [
-              543,
-              0,
-              866,
-              445
-            ]
-          ],
-          "anchor": [
-            664.5,
-            438
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "hit_defend_v1_03",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_defend_v1.png",
-          "rects": [
-            [
-              911,
-              0,
-              1320,
-              445
-            ]
-          ],
-          "anchor": [
-            1108.0,
-            438
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "hit_defend_v1_04",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_defend_v1.png",
-          "rects": [
-            [
-              1422,
-              0,
-              1767,
-              445
-            ]
-          ],
-          "anchor": [
-            1551.5,
-            438
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "hit_defend_v1_05",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_defend_v1.png",
-          "rects": [
-            [
-              27,
-              445,
-              428,
-              887
-            ]
-          ],
-          "anchor": [
-            221.0,
-            879
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "hit_defend_v1_06",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_defend_v1.png",
-          "rects": [
-            [
-              530,
-              445,
-              860,
-              887
-            ]
-          ],
-          "anchor": [
-            664.5,
-            879
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "hit_defend_v1_07",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_defend_v1.png",
-          "rects": [
-            [
-              945,
-              445,
-              1281,
-              887
-            ]
-          ],
-          "anchor": [
-            1108.0,
-            879
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "hit_defend_v1_08",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_defend_v1.png",
-          "rects": [
-            [
-              1389,
-              445,
-              1724,
-              887
-            ]
-          ],
-          "anchor": [
-            1551.5,
-            879
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "support_v1_01",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/support_v1.png",
-          "rects": [
-            [
-              73,
-              0,
-              392,
-              445
-            ]
-          ],
-          "anchor": [
-            221.0,
-            438
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "support_v1_02",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/support_v1.png",
-          "rects": [
-            [
-              523,
-              0,
-              834,
-              445
-            ]
-          ],
-          "anchor": [
-            664.5,
-            438
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "support_v1_03",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/support_v1.png",
-          "rects": [
-            [
               960,
-              0,
-              1283,
-              445
+              640
             ]
           ],
           "anchor": [
-            1108.0,
-            438
+            480,
+            521
           ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.1667
         },
         {
-          "name": "support_v1_04",
+          "name": "attack_h3_v1_014",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833
+        },
+        {
+          "name": "attack_h3_v1_022",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9167
+        },
+        {
+          "name": "attack_h3_v1_028",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1667
+        },
+        {
+          "name": "attack_h3_v1_030",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "attack_h3_v1_031",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2917
+        },
+        {
+          "name": "attack_h3_v1_035",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583
+        },
+        {
+          "name": "attack_h3_v1_044",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333
+        },
+        {
+          "name": "attack_h3_v1_046",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9167
+        },
+        {
+          "name": "attack_h3_v1_047",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/matte/rgba_047.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 47,
+          "video_time_seconds": 1.9583
+        },
+        {
+          "name": "attack_h3_v1_050",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833
+        },
+        {
+          "name": "attack_h3_v1_056",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333
+        },
+        {
+          "name": "attack_h3_v1_061",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/matte/rgba_061.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 61,
+          "video_time_seconds": 2.5417
+        },
+        {
+          "name": "attack_h3_v1_069",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/matte/rgba_069.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 69,
+          "video_time_seconds": 2.875
+        },
+        {
+          "name": "attack_h3_v1_071",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/matte/rgba_071.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 71,
+          "video_time_seconds": 2.9583
+        },
+        {
+          "name": "attack_h3_v1_073",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/matte/rgba_073.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 73,
+          "video_time_seconds": 3.0417
+        },
+        {
+          "name": "attack_h3_v1_074",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833
+        },
+        {
+          "name": "attack_h3_v1_076",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1667
+        },
+        {
+          "name": "attack_h3_v1_078",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "attack_h3_v1_080",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333
+        },
+        {
+          "name": "attack_h3_v1_082",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4167
+        },
+        {
+          "name": "attack_h3_v1_086",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833
+        },
+        {
+          "name": "attack_h3_v1_090",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "attack_h3_v1_095",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/matte/rgba_095.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 95,
+          "video_time_seconds": 3.9583
+        },
+        {
+          "name": "attack_h3_v1_102",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "attack_h3_v1_109",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/matte/rgba_109.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 109,
+          "video_time_seconds": 4.5417
+        },
+        {
+          "name": "attack_h3_v1_117",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/matte/rgba_117.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 117,
+          "video_time_seconds": 4.875
+        },
+        {
+          "name": "ranged_h3_v1_003",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte/rgba_003.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 3,
+          "video_time_seconds": 0.125
+        },
+        {
+          "name": "ranged_h3_v1_011",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte/rgba_011.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 11,
+          "video_time_seconds": 0.4583
+        },
+        {
+          "name": "ranged_h3_v1_018",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "ranged_h3_v1_025",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0417
+        },
+        {
+          "name": "ranged_h3_v1_028",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1667
+        },
+        {
+          "name": "ranged_h3_v1_033",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "ranged_h3_v1_040",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6667
+        },
+        {
+          "name": "ranged_h3_v1_052",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1667
+        },
+        {
+          "name": "ranged_h3_v1_053",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte/rgba_053.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 53,
+          "video_time_seconds": 2.2083
+        },
+        {
+          "name": "ranged_h3_v1_055",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte/rgba_055.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.2917
+        },
+        {
+          "name": "ranged_h3_v1_059",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte/rgba_059.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 59,
+          "video_time_seconds": 2.4583
+        },
+        {
+          "name": "ranged_h3_v1_061",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte/rgba_061.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 61,
+          "video_time_seconds": 2.5417
+        },
+        {
+          "name": "ranged_h3_v1_062",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833
+        },
+        {
+          "name": "ranged_h3_v1_063",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte/rgba_063.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 63,
+          "video_time_seconds": 2.625
+        },
+        {
+          "name": "ranged_h3_v1_064",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6667
+        },
+        {
+          "name": "ranged_h3_v1_065",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte/rgba_065.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 65,
+          "video_time_seconds": 2.7083
+        },
+        {
+          "name": "ranged_h3_v1_067",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte/rgba_067.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 67,
+          "video_time_seconds": 2.7917
+        },
+        {
+          "name": "ranged_h3_v1_070",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9167
+        },
+        {
+          "name": "ranged_h3_v1_073",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte/rgba_073.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 73,
+          "video_time_seconds": 3.0417
+        },
+        {
+          "name": "ranged_h3_v1_077",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte/rgba_077.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 77,
+          "video_time_seconds": 3.2083
+        },
+        {
+          "name": "ranged_h3_v1_084",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "ranged_h3_v1_091",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte/rgba_091.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 91,
+          "video_time_seconds": 3.7917
+        },
+        {
+          "name": "ranged_h3_v1_095",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte/rgba_095.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 95,
+          "video_time_seconds": 3.9583
+        },
+        {
+          "name": "ranged_h3_v1_098",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.0833
+        },
+        {
+          "name": "ranged_h3_v1_101",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte/rgba_101.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 101,
+          "video_time_seconds": 4.2083
+        },
+        {
+          "name": "ranged_h3_v1_105",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte/rgba_105.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 105,
+          "video_time_seconds": 4.375
+        },
+        {
+          "name": "ranged_h3_v1_111",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte/rgba_111.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 111,
+          "video_time_seconds": 4.625
+        },
+        {
+          "name": "ranged_h3_v1_117",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte/rgba_117.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 117,
+          "video_time_seconds": 4.875
+        },
+        {
+          "name": "hit_h3_v2_000",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "hit_h3_v2_003",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/matte/rgba_003.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 3,
+          "video_time_seconds": 0.125
+        },
+        {
+          "name": "hit_h3_v2_004",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.1667
+        },
+        {
+          "name": "hit_h3_v2_005",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/matte/rgba_005.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 5,
+          "video_time_seconds": 0.2083
+        },
+        {
+          "name": "hit_h3_v2_006",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "hit_h3_v2_007",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/matte/rgba_007.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 7,
+          "video_time_seconds": 0.2917
+        },
+        {
+          "name": "hit_h3_v2_008",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333
+        },
+        {
+          "name": "hit_h3_v2_009",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/matte/rgba_009.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 9,
+          "video_time_seconds": 0.375
+        },
+        {
+          "name": "hit_h3_v2_010",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4167
+        },
+        {
+          "name": "hit_h3_v2_012",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "hit_h3_v2_013",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5417
+        },
+        {
+          "name": "hit_h3_v2_015",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "hit_h3_v2_016",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6667
+        },
+        {
+          "name": "hit_h3_v2_018",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "hit_h3_v2_020",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333
+        },
+        {
+          "name": "hit_h3_v2_023",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583
+        },
+        {
+          "name": "hit_h3_v2_031",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2917
+        },
+        {
+          "name": "hit_h3_v2_042",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "hit_h3_v2_049",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/matte/rgba_049.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 49,
+          "video_time_seconds": 2.0417
+        },
+        {
+          "name": "hit_h3_v2_055",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/matte/rgba_055.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.2917
+        },
+        {
+          "name": "hit_h3_v2_062",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833
+        },
+        {
+          "name": "hit_h3_v2_068",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333
+        },
+        {
+          "name": "hit_h3_v2_080",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333
+        },
+        {
+          "name": "hit_h3_v2_087",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/matte/rgba_087.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 87,
+          "video_time_seconds": 3.625
+        },
+        {
+          "name": "hit_h3_v2_093",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/matte/rgba_093.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 93,
+          "video_time_seconds": 3.875
+        },
+        {
+          "name": "hit_h3_v2_104",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.3333
+        },
+        {
+          "name": "defend_h3_v2_000",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "defend_h3_v2_004",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.1667
+        },
+        {
+          "name": "defend_h3_v2_006",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "defend_h3_v2_009",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/matte/rgba_009.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 9,
+          "video_time_seconds": 0.375
+        },
+        {
+          "name": "defend_h3_v2_013",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5417
+        },
+        {
+          "name": "defend_h3_v2_016",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6667
+        },
+        {
+          "name": "defend_h3_v2_020",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333
+        },
+        {
+          "name": "defend_h3_v2_023",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583
+        },
+        {
+          "name": "defend_h3_v2_026",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833
+        },
+        {
+          "name": "defend_h3_v2_029",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083
+        },
+        {
+          "name": "defend_h3_v2_032",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333
+        },
+        {
+          "name": "defend_h3_v2_036",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "defend_h3_v2_041",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083
+        },
+        {
+          "name": "defend_h3_v2_043",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7917
+        },
+        {
+          "name": "defend_h3_v2_046",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9167
+        },
+        {
+          "name": "defend_h3_v2_048",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "defend_h3_v2_051",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "defend_h3_v2_054",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "defend_h3_v2_059",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/matte/rgba_059.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 59,
+          "video_time_seconds": 2.4583
+        },
+        {
+          "name": "defend_h3_v2_064",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6667
+        },
+        {
+          "name": "defend_h3_v2_073",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/matte/rgba_073.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 73,
+          "video_time_seconds": 3.0417
+        },
+        {
+          "name": "defend_h3_v2_080",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333
+        },
+        {
+          "name": "defend_h3_v2_088",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6667
+        },
+        {
+          "name": "cast_h3_v2_004",
           "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/support_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_004.png",
           "rects": [
             [
-              1395,
               0,
-              1738,
-              445
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            1551.5,
-            438
+            480,
+            521
           ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.1667
         },
         {
-          "name": "support_v1_05",
+          "name": "cast_h3_v2_010",
           "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/support_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_010.png",
           "rects": [
             [
-              71,
-              445,
-              392,
-              887
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            221.0,
-            879
+            480,
+            521
           ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4167
         },
         {
-          "name": "support_v1_06",
+          "name": "cast_h3_v2_012",
           "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/support_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_012.png",
           "rects": [
             [
-              516,
-              445,
-              838,
-              887
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            664.5,
-            879
+            480,
+            521
           ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
         },
         {
-          "name": "support_v1_07",
+          "name": "cast_h3_v2_013",
           "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/support_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_013.png",
           "rects": [
             [
-              957,
-              445,
-              1283,
-              887
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            1108.0,
-            879
+            480,
+            521
           ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5417
         },
         {
-          "name": "support_v1_08",
+          "name": "cast_h3_v2_015",
           "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/support_v1.png",
-          "rects": [
-            [
-              1399,
-              445,
-              1742,
-              887
-            ]
-          ],
-          "anchor": [
-            1551.5,
-            879
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "ranged_v1_01",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_v1.png",
-          "rects": [
-            [
-              90,
-              0,
-              386,
-              445
-            ]
-          ],
-          "anchor": [
-            221.0,
-            438
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "ranged_v1_02",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_v1.png",
-          "rects": [
-            [
-              517,
-              0,
-              842,
-              445
-            ]
-          ],
-          "anchor": [
-            664.5,
-            438
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "ranged_v1_03",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_v1.png",
-          "rects": [
-            [
-              934,
-              0,
-              1298,
-              445
-            ]
-          ],
-          "anchor": [
-            1108.0,
-            438
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "ranged_v1_04",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_v1.png",
-          "rects": [
-            [
-              1359,
-              0,
-              1731,
-              445
-            ]
-          ],
-          "anchor": [
-            1551.5,
-            438
-          ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
-        },
-        {
-          "name": "ranged_v1_05",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_v1.png",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_015.png",
           "rects": [
             [
               0,
-              445,
-              445,
-              887
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            221.0,
-            879
+            480,
+            521
           ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
         },
         {
-          "name": "ranged_v1_06",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_v1.png",
+          "name": "cast_h3_v2_016",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_016.png",
           "rects": [
             [
-              441,
-              445,
-              889,
-              887
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            664.5,
-            879
+            480,
+            521
           ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6667
         },
         {
-          "name": "ranged_v1_07",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_v1.png",
+          "name": "cast_h3_v2_018",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_018.png",
           "rects": [
             [
-              885,
-              445,
-              1332,
-              887
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            1108.0,
-            879
+            480,
+            521
           ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
         },
         {
-          "name": "ranged_v1_08",
-          "clip": "ranged",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_v1.png",
+          "name": "cast_h3_v2_020",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_020.png",
           "rects": [
             [
-              1328,
-              445,
-              1774,
-              887
+              0,
+              0,
+              960,
+              640
             ]
           ],
           "anchor": [
-            1551.5,
-            879
+            480,
+            521
           ],
-          "scale": 0.4,
-          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse."
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333
+        },
+        {
+          "name": "cast_h3_v2_021",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "cast_h3_v2_023",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583
+        },
+        {
+          "name": "cast_h3_v2_025",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0417
+        },
+        {
+          "name": "cast_h3_v2_028",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1667
+        },
+        {
+          "name": "cast_h3_v2_032",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333
+        },
+        {
+          "name": "cast_h3_v2_043",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7917
+        },
+        {
+          "name": "cast_h3_v2_055",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_055.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.2917
+        },
+        {
+          "name": "cast_h3_v2_062",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833
+        },
+        {
+          "name": "cast_h3_v2_068",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333
+        },
+        {
+          "name": "cast_h3_v2_078",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "cast_h3_v2_082",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4167
+        },
+        {
+          "name": "cast_h3_v2_084",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "cast_h3_v2_085",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_085.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 85,
+          "video_time_seconds": 3.5417
+        },
+        {
+          "name": "cast_h3_v2_086",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833
+        },
+        {
+          "name": "cast_h3_v2_088",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6667
+        },
+        {
+          "name": "cast_h3_v2_090",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "cast_h3_v2_092",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333
+        },
+        {
+          "name": "cast_h3_v2_094",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9167
+        },
+        {
+          "name": "cast_h3_v2_096",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "cast_h3_v2_098",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.0833
+        },
+        {
+          "name": "cast_h3_v2_100",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.1667
+        },
+        {
+          "name": "cast_h3_v2_106",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_106.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 106,
+          "video_time_seconds": 4.4167
+        },
+        {
+          "name": "cast_h3_v2_115",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte/rgba_115.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 115,
+          "video_time_seconds": 4.7917
+        },
+        {
+          "name": "death_h3_v1_003",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_003.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 3,
+          "video_time_seconds": 0.125
+        },
+        {
+          "name": "death_h3_v1_011",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_011.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 11,
+          "video_time_seconds": 0.4583
+        },
+        {
+          "name": "death_h3_v1_013",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5417
+        },
+        {
+          "name": "death_h3_v1_014",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833
+        },
+        {
+          "name": "death_h3_v1_015",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "death_h3_v1_016",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6667
+        },
+        {
+          "name": "death_h3_v1_017",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083
+        },
+        {
+          "name": "death_h3_v1_018",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "death_h3_v1_019",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7917
+        },
+        {
+          "name": "death_h3_v1_020",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333
+        },
+        {
+          "name": "death_h3_v1_021",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "death_h3_v1_023",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583
+        },
+        {
+          "name": "death_h3_v1_026",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833
+        },
+        {
+          "name": "death_h3_v1_030",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "death_h3_v1_038",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833
+        },
+        {
+          "name": "death_h3_v1_047",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_047.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 47,
+          "video_time_seconds": 1.9583
+        },
+        {
+          "name": "death_h3_v1_054",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "death_h3_v1_060",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "death_h3_v1_066",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "death_h3_v1_069",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_069.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 69,
+          "video_time_seconds": 2.875
+        },
+        {
+          "name": "death_h3_v1_071",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_071.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 71,
+          "video_time_seconds": 2.9583
+        },
+        {
+          "name": "death_h3_v1_072",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "death_h3_v1_074",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833
+        },
+        {
+          "name": "death_h3_v1_075",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "death_h3_v1_076",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1667
+        },
+        {
+          "name": "death_h3_v1_077",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_077.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 77,
+          "video_time_seconds": 3.2083
+        },
+        {
+          "name": "death_h3_v1_078",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "death_h3_v1_079",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_079.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 79,
+          "video_time_seconds": 3.2917
+        },
+        {
+          "name": "death_h3_v1_080",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333
+        },
+        {
+          "name": "death_h3_v1_088",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6667
+        },
+        {
+          "name": "death_h3_v1_123",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            521
+          ],
+          "scale": 0.39,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
         }
       ],
       "clips": {
-        "death": {
+        "attack": {
           "indices": [
             0,
             1,
@@ -1081,20 +3503,7 @@
             4,
             5,
             6,
-            7
-          ],
-          "frame_msec": 120,
-          "loop": false
-        },
-        "dead": {
-          "indices": [
-            7
-          ],
-          "frame_msec": 120,
-          "loop": false
-        },
-        "move": {
-          "indices": [
+            7,
             8,
             9,
             10,
@@ -1102,13 +3511,7 @@
             12,
             13,
             14,
-            15
-          ],
-          "frame_msec": 110,
-          "loop": true
-        },
-        "attack": {
-          "indices": [
+            15,
             16,
             17,
             18,
@@ -1116,50 +3519,31 @@
             20,
             21,
             22,
-            23
-          ],
-          "frame_msec": 110,
-          "loop": false,
-          "contact_frame": 4
-        },
-        "idle": {
-          "indices": [
+            23,
             24,
             25,
-            26,
+            26
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 10
+        },
+        "ranged": {
+          "indices": [
             27,
             28,
             29,
             30,
-            31
-          ],
-          "frame_msec": 120,
-          "loop": true,
-          "static_frame": 0
-        },
-        "hit": {
-          "indices": [
+            31,
             32,
             33,
             34,
-            35
-          ],
-          "frame_msec": 110,
-          "loop": false
-        },
-        "defend": {
-          "indices": [
+            35,
             36,
             37,
             38,
-            39
-          ],
-          "frame_msec": 120,
-          "loop": false,
-          "hold_last": true
-        },
-        "cast": {
-          "indices": [
+            39,
             40,
             41,
             42,
@@ -1167,134 +3551,434 @@
             44,
             45,
             46,
-            47
-          ],
-          "frame_msec": 110,
-          "loop": false,
-          "contact_frame": 4
-        },
-        "ranged": {
-          "indices": [
+            47,
             48,
             49,
             50,
             51,
             52,
             53,
-            54,
-            55
+            54
           ],
-          "frame_msec": 110,
+          "frame_msec": 42,
           "loop": false,
-          "contact_frame": 4
+          "static_frame": 0,
+          "contact_frame": 7
+        },
+        "hit": {
+          "indices": [
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80
+          ],
+          "frame_msec": 35,
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 22
+        },
+        "cast": {
+          "indices": [
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 15
+        },
+        "death": {
+          "indices": [
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156,
+            157,
+            158,
+            159,
+            160,
+            161,
+            162,
+            163,
+            164,
+            165
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 30
         }
       },
-      "accepted_clips": [],
-      "preserve_clips": [],
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "Guides are the accepted paintings at their accepted scale; every video frame keeps one fixed extraction scale and anchor.",
+      "provenance": {
+        "attack_h3_v1/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/original_lossless.mkv",
+          "sha256": "66c785e135e0df9c0e3ad2b7aca319ff8c677b924cd02c8b101af68cd9d571db"
+        },
+        "attack_h3_v1/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/original.json",
+          "sha256": "b1a81919de7fce5f5761582c096020007ddf1469217cf152b5e7d6649d8db13a"
+        },
+        "attack_h3_v1/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/original.latent",
+          "sha256": "d86d38eac29af3005bf55ebbd6dd88fb6d274a0b8b30c417c2a9df4cbdce2146"
+        },
+        "attack_h3_v1/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/sampling_workflow_api.json",
+          "sha256": "ba53dc845d65f6b3c5a064e6dbb68513ec569d3c995fa2bcd6334ddcd240e4fd"
+        },
+        "attack_h3_v1/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/decode_workflow_api.json",
+          "sha256": "2a50dd63cfdc71f0c692ca93665841e084e4fa7afbbea4ee627ce5681cfec51f"
+        },
+        "attack_h3_v1/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/sampling_history.json",
+          "sha256": "7b54a1ce4e4716589a73cad7cda582a8afc267ddd11b49c998d83dcebd04d377"
+        },
+        "attack_h3_v1/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/generation_history.json",
+          "sha256": "60f773575f87016193c6e3e4f6bdda1ec6d069ea65ec7b703c4d36431219ffed"
+        },
+        "attack_h3_v1/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/prompt.txt",
+          "sha256": "c9103b4c86378beed2e6cfa4ca1e481daea5cc1b76a7c62a498e3ecb41143f04"
+        },
+        "attack_h3_v1/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/reference.json",
+          "sha256": "bb8582055acdd9f00d9af803f8c88196e43e6cd94b539df48ddcf5c6501c4fb6"
+        },
+        "attack_h3_v1/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/config.json",
+          "sha256": "bc631ffb06d53304affc1de5dcb71e3e008021b152cc10437da88dc070a8cd3c"
+        },
+        "attack_h3_v1/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_h3_v1/matte.json",
+          "sha256": "1b97ce9e64685dcb34bf9b7edf541d91b1ef870193957697daabc1bcfd4e4105"
+        },
+        "ranged_h3_v1/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/original_lossless.mkv",
+          "sha256": "c783fe30174bd824b80410002d6d8c0bc25aea2f6cde260f7e181c340ea5c4ba"
+        },
+        "ranged_h3_v1/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/original.json",
+          "sha256": "b7a2a34b26396d243f6dc57fc8f9d7044d6014c9b980c49bce3cfc1cce798a1a"
+        },
+        "ranged_h3_v1/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/original.latent",
+          "sha256": "61f181b021702114d03f83ed63daed03fb56da56a07b5bfea163c5bcf0699582"
+        },
+        "ranged_h3_v1/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/sampling_workflow_api.json",
+          "sha256": "361e53d2392e1f9371e9afaa0801f4d27c305975c859a709c385f32fc9d7d371"
+        },
+        "ranged_h3_v1/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/decode_workflow_api.json",
+          "sha256": "4656fe85f5f8bcf463f53c553bdcf964115951f3591039fdcbb06b306f5c85e7"
+        },
+        "ranged_h3_v1/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/sampling_history.json",
+          "sha256": "fc46af315fdedfce39169bda9c6087f7ca9ad9b354f30d0204b7052ec3d861c4"
+        },
+        "ranged_h3_v1/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/generation_history.json",
+          "sha256": "897fe48ae2a7206bfcd78d5e3914e665ef2b30012872a11552247410e43d627a"
+        },
+        "ranged_h3_v1/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/prompt.txt",
+          "sha256": "c1c6fcfff018222100cb2d1dd22dc8d1cce4c09fc42c9e4f8d6cbc177334a590"
+        },
+        "ranged_h3_v1/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/reference.json",
+          "sha256": "5ba40fb2ac2196dc24151531ea9595041ddaee1ac51f5023cb377daa41a7a70e"
+        },
+        "ranged_h3_v1/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/config.json",
+          "sha256": "87a29ba8fccb8f8ebc1da9b530b7d37c42cef4959a4fc31bca81c8cf9fd8b5ae"
+        },
+        "ranged_h3_v1/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_h3_v1/matte.json",
+          "sha256": "20bc5205df98958606fbbff3611ac1297537630ac837e9344c5ae12e845af0a9"
+        },
+        "hit_h3_v2/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/original_lossless.mkv",
+          "sha256": "8b603f2d593a327331aa15ebdf4060810f3ceaae913741f7f0c386cfb8049873"
+        },
+        "hit_h3_v2/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/original.json",
+          "sha256": "edcd8e866a4d39e6c9399bf28142b4505a7766b9c7f5f12f1b2b8c0963121d2a"
+        },
+        "hit_h3_v2/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/original.latent",
+          "sha256": "f6e251597218030e33c34b01a631631faa8662fc54b4245c31aab7d276ac7ece"
+        },
+        "hit_h3_v2/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/sampling_workflow_api.json",
+          "sha256": "f9e9a5957901497a153dea1f1c326ea954254b11874a92beeb63753b4a270d8c"
+        },
+        "hit_h3_v2/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/decode_workflow_api.json",
+          "sha256": "8de69361b2aa3a5e9caee62bceaf1a2dd260daf830e47ed2cf745623cbb7504a"
+        },
+        "hit_h3_v2/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/sampling_history.json",
+          "sha256": "f626c385ad2ce2381cb14a0daf9132d3beff368ae34f7d1cd619f5a25738d4b5"
+        },
+        "hit_h3_v2/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/generation_history.json",
+          "sha256": "a8d0709dadb72b0109c0e6fd10c9372e0ab2461bc5ebecb2bb72b6a787cab381"
+        },
+        "hit_h3_v2/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/prompt.txt",
+          "sha256": "412e196537d92cde574edc6d0268a46d01f87b162f4aea93b4a41ac2c23ced2d"
+        },
+        "hit_h3_v2/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/reference.json",
+          "sha256": "9048a7138a403171d4a3e4f61fac672f159a590e3898a9470c33a5a7bb9610f7"
+        },
+        "hit_h3_v2/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/config.json",
+          "sha256": "8fb1334032041e1632c07fa9e60f7b97605204a5c632e109e1d1ba021e772a5b"
+        },
+        "hit_h3_v2/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_h3_v2/matte.json",
+          "sha256": "5c9a5e2bf413ed94dd65bb41a48a318e821f6f6d1fbea2f6e2a1fd599b8694b5"
+        },
+        "defend_h3_v2/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/original_lossless.mkv",
+          "sha256": "bf1cda45a36253dfc46c38838f58adcc6736225a693003339a98bdfd21cd5537"
+        },
+        "defend_h3_v2/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/original.json",
+          "sha256": "ea35a93c25d305b5c8f4109b1ebfa984690857e7b14e1255c28abeb22a32e879"
+        },
+        "defend_h3_v2/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/original.latent",
+          "sha256": "610f3c0653f1b4418aba41c7fb300c7e3e5cc2f3cfc62da06b13ae90e398069a"
+        },
+        "defend_h3_v2/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/sampling_workflow_api.json",
+          "sha256": "a5187ade4fe1017d1fbd500ebe45b841214244e2092d270ca32cb7708f0764b0"
+        },
+        "defend_h3_v2/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/decode_workflow_api.json",
+          "sha256": "8be973f7bd73e6f0516d088a7411028239fdd8bdee77b5a13b2040141f15aa2e"
+        },
+        "defend_h3_v2/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/sampling_history.json",
+          "sha256": "e0d8b51c76880694b58c5d5b24834c262ae71607a16e05f55ab6d00b1202abb0"
+        },
+        "defend_h3_v2/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/generation_history.json",
+          "sha256": "750bbbb38e15771abef549a54e0c9f718d40f8006844c8a9bedb61c6a186745d"
+        },
+        "defend_h3_v2/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/prompt.txt",
+          "sha256": "7718840d92ab5e2de98bb5d54d237d658f64c5d0c30fc8b1012eca6976f067cc"
+        },
+        "defend_h3_v2/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/reference.json",
+          "sha256": "be4405ef670e388ce6969d6ba73f70d9a5399672f40f20b2faf72c212b1d0215"
+        },
+        "defend_h3_v2/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/config.json",
+          "sha256": "10185344e5631675a379ed20da86784baa28b2965687ebdb7220eb975e4e4ec2"
+        },
+        "defend_h3_v2/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/defend_h3_v2/matte.json",
+          "sha256": "58b9d1bcfaae001e9ba0cb680bbfcd4b44584468d0e64439dbc56661c282b707"
+        },
+        "cast_h3_v2/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/original_lossless.mkv",
+          "sha256": "e62369de276151631e1972f79a699162fb3905aa3fe4953a7aa2c8fe715926b8"
+        },
+        "cast_h3_v2/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/original.json",
+          "sha256": "45971cf1a8aaadd946fd60a6a745a885e69d3dec8c2be7e0b445c67b6813a1e0"
+        },
+        "cast_h3_v2/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/original.latent",
+          "sha256": "f070f5f3d02b4c9cafc1606582184b20e417130d650ffa8e4871bc0c1b83ae46"
+        },
+        "cast_h3_v2/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/sampling_workflow_api.json",
+          "sha256": "192948e7d4c4fe964970ac056aa7822c76126e65edef3301746d88da94cfe5bd"
+        },
+        "cast_h3_v2/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/decode_workflow_api.json",
+          "sha256": "4c9a898ab804a951bf1d0df01d720a685641bdaec167d7bbf9682393e933f892"
+        },
+        "cast_h3_v2/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/sampling_history.json",
+          "sha256": "d919536d22eb8847a13eab51d3b3bd5644bcf2b5740e5dd62dea04ebeef4f1a3"
+        },
+        "cast_h3_v2/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/generation_history.json",
+          "sha256": "c46b71236eea422be0fbea106d44937c23b18cee07dc85cefca9cb20951bf03e"
+        },
+        "cast_h3_v2/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/prompt.txt",
+          "sha256": "86910b7a151363c4b8b9d7251c0bbe9029fa3f6ea31916e4d2c6df2fdac05a3a"
+        },
+        "cast_h3_v2/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/reference.json",
+          "sha256": "a8f4b44ba7e434483793de9aabae136ba359baf132a409658f1f4d9bacc3734e"
+        },
+        "cast_h3_v2/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/config.json",
+          "sha256": "5704b41f5d1a4222a2d9385476b1ad2cc2814afacf5731b07862dca8de9d589a"
+        },
+        "cast_h3_v2/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/cast_h3_v2/matte.json",
+          "sha256": "29aecc9dbf1fa47488b506d2e486dce4e49c04a87d47d4d6e53e571be155f8df"
+        },
+        "death_h3_v1/original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/original_lossless.mkv",
+          "sha256": "55e241dd607cf11a1b937faa5784aec1ee8945461f7f2921c2333476ac5a4ec1"
+        },
+        "death_h3_v1/original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/original.json",
+          "sha256": "4ede7948c84f2b64b6e598cc8eef47f0ae83bd89f944d1926fa4ac4cff302475"
+        },
+        "death_h3_v1/original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/original.latent",
+          "sha256": "46715f1c0c77c1262aa449ebe851bc4104fa50e012ddc28f68147c288e26a607"
+        },
+        "death_h3_v1/sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/sampling_workflow_api.json",
+          "sha256": "705afdfa28d9881bcd5e5fd285a42e86438b69064f19ba019ba5b446764b83c4"
+        },
+        "death_h3_v1/decode_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/decode_workflow_api.json",
+          "sha256": "17984d87a5d4707e8aad7ac8154a99bfb3f233ec2173e587cbc5cb79013fad4e"
+        },
+        "death_h3_v1/sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/sampling_history.json",
+          "sha256": "6002e01fc8f36a979eb20ea4cd1aa2a64716301fd7f33433df68249eb488cef2"
+        },
+        "death_h3_v1/generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/generation_history.json",
+          "sha256": "1af7df2ddd01caf1eddb1d842c15bc78423d14d639668ec99d9a86edbf4a165e"
+        },
+        "death_h3_v1/prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/prompt.txt",
+          "sha256": "e57c26234fab2f12230a12407d9219962162c7ca1a7776b01fd9b1c45a4d75b4"
+        },
+        "death_h3_v1/reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/reference.json",
+          "sha256": "3ffc09b5ba08b9d4950750e454cd7bd74163357d9decb345ccc63c3ba9ccbd59"
+        },
+        "death_h3_v1/config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/config.json",
+          "sha256": "613a163118f814589efcd95f371daa0f4694a0476aca19409301a7c1d2fa604e"
+        },
+        "death_h3_v1/matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_h3_v1/matte.json",
+          "sha256": "1033907aab6acb79b84cac6c3222bdde6635f69a2699b7940e84f1d8c5d8afb7"
+        }
+      },
+      "preserved_accepted_clips": [],
       "visual_review": {
-        "status": "pending",
-        "notes": "56 genuine original poses. Crossbow ranged/reload, close stock strike, physical hand signal support. Movement has clear rear-leg swing but near/far alternation deserves particular engine review before acceptance."
-      },
-      "provenance": [
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_v1.png",
-          "source_sha256": "322880aaad795054ba747f0f77b01a8974b155fe5d416947969705fca642cdc0",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_v1.prompt.txt",
-          "prompt_sha256": "27d0f6af8eee3488c9d7293b8bf01ffbd4f64d80e31809691c3ac099988edb4d",
-          "reference": "art/units/source/curated/unit_neutral_echodart_casts.png",
-          "reference_sha256": "3a1e253742e5c6895823287ffa73ca8fbd734e2da7b94fb28b58307df8c8f621",
-          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-ec194580-830d-4779-8313-34471950253a.png",
-          "output_size": [
-            1774,
-            887
-          ]
-        },
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/move_v1.png",
-          "source_sha256": "d6dcca58008be8cf28b33f06babad4cb665d8263b4881085ced4323f0704f5ac",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/move_v1.prompt.txt",
-          "prompt_sha256": "75c20fe1b5f3d0c308969c74b8948d5ff615f5b1dcf7e2df235adc55376a231c",
-          "reference": "art/units/source/curated/unit_neutral_echodart_casts.png",
-          "reference_sha256": "3a1e253742e5c6895823287ffa73ca8fbd734e2da7b94fb28b58307df8c8f621",
-          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-ee149d39-952e-4d0e-a7bf-26929b599201.png",
-          "output_size": [
-            1774,
-            887
-          ]
-        },
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_v1.png",
-          "source_sha256": "5f6ae1438aa8ce86548916da13c82c742a3547a7a98f469ee1bd01a3ede9885c",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_v1.prompt.txt",
-          "prompt_sha256": "9801e828df55b9b84def6c1c49ea4148588bf0e82117c27de07fa34ad3e27736",
-          "reference": "art/units/source/curated/unit_neutral_echodart_casts.png",
-          "reference_sha256": "3a1e253742e5c6895823287ffa73ca8fbd734e2da7b94fb28b58307df8c8f621",
-          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-e1ede49d-9198-4302-b8fc-fcaa562771e8.png",
-          "output_size": [
-            1774,
-            887
-          ]
-        },
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/idle_v1.png",
-          "source_sha256": "f99a2b8a6cc25acd9b4ef010493439cf2b29ecf4cec2d2bdb96453b1306f2151",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/idle_v1.prompt.txt",
-          "prompt_sha256": "32797962cd33570d8875cd1c6ed01d70b1eefb72ad33457acfbe4b2378e3ef20",
-          "reference": "art/units/source/curated/unit_neutral_echodart_casts.png",
-          "reference_sha256": "3a1e253742e5c6895823287ffa73ca8fbd734e2da7b94fb28b58307df8c8f621",
-          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-79ce213c-ac40-48c0-a8d8-eeb89db3e013.png",
-          "output_size": [
-            1774,
-            887
-          ]
-        },
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_defend_v1.png",
-          "source_sha256": "a1c8ed08dfe540586be33a1ebd5f7b3e703f8c7fbef4d7688b8f26eb92186d7a",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_defend_v1.prompt.txt",
-          "prompt_sha256": "76a68ddc7c56ba9a1362c262865d76d015d3002b649e80ced671ec406411ef29",
-          "reference": "art/units/source/curated/unit_neutral_echodart_casts.png",
-          "reference_sha256": "3a1e253742e5c6895823287ffa73ca8fbd734e2da7b94fb28b58307df8c8f621",
-          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-169e43a5-0a45-4d80-829d-8c981bcefe7c.png",
-          "output_size": [
-            1774,
-            887
-          ]
-        },
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/support_v1.png",
-          "source_sha256": "1bc3a18f28e7c5c488881eb40ccc9926c2ac87f6f11401eaabd62fad758f2765",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/support_v1.prompt.txt",
-          "prompt_sha256": "62d3e14ba8b2434305400d69d085453b28e51d34c541d7e85862bb008ad5119b",
-          "reference": "art/units/source/curated/unit_neutral_echodart_casts.png",
-          "reference_sha256": "3a1e253742e5c6895823287ffa73ca8fbd734e2da7b94fb28b58307df8c8f621",
-          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-1a926726-1a7a-4d72-a71c-1129a98c655b.png",
-          "output_size": [
-            1774,
-            887
-          ]
-        },
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_v1.png",
-          "source_sha256": "d9cf1dc97742b2b44ef992c9707d2b3f5ba42c89b54f6450713d4afd59f6a514",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_v1.prompt.txt",
-          "prompt_sha256": "ce420fa6b0922c933962f02332eb0b50630e5252865f294828fc9ddf81d3d39e",
-          "reference": "art/units/source/curated/unit_neutral_echodart_casts.png",
-          "reference_sha256": "3a1e253742e5c6895823287ffa73ca8fbd734e2da7b94fb28b58307df8c8f621",
-          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-1c9bc743-1795-4a52-b0dd-6e55a2629b5a.png",
-          "output_size": [
-            1774,
-            887
-          ]
-        }
-      ]
+        "status": "accepted",
+        "notes": "Reviewed on H3 video. Death v1 is clean; the crossbow lying beside her is detached as it should be. Attack v1 drops the white flash of the bash (48-49) and lands on 50. Ranged v1 skips the shot flash and the bolt streak (42-51): the aim at 40 cuts to the recoil at 52, where the hit lands. Hit v1 flashed and threw sparks and defend v1 fired the crossbow, so hit v2 and defend v2 (never fires, steady light) are used; cast v1 strobed and cast v2 is steady. The idle and walk keep their published H3 clips."
+      }
     }
   ]
 }

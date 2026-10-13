@@ -1,0 +1,66 @@
+{
+  "clips": {
+    "attack": {
+      "segments": [
+        {
+          "take": "attack_h3_v1",
+          "frames": [4, 14, 22, 28, 30, 31, 35, 44, 46, 47, 50, 56, 61, 69, 71, 73, 74, 76, 78, 80, 82, 86, 90, 95, 102, 109, 117]
+        }
+      ],
+      "frame_msec": 42,
+      "contact_frame": 10
+    },
+    "ranged": {
+      "segments": [
+        {
+          "take": "ranged_h3_v1",
+          "frames": [3, 11, 18, 25, 28, 33, 40, 52, 53, 55, 59, 61, 62, 63, 64, 65, 67, 70, 73, 77, 84, 91, 95, 98, 101, 105, 111, 117]
+        }
+      ],
+      "frame_msec": 42,
+      "contact_frame": 7
+    },
+    "hit": {
+      "segments": [
+        {
+          "take": "hit_h3_v2",
+          "frames": [0, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 15, 16, 18, 20, 23, 31, 42, 49, 55, 62, 68, 80, 87, 93, 104]
+        }
+      ],
+      "frame_msec": 35
+    },
+    "defend": {
+      "segments": [
+        {
+          "take": "defend_h3_v2",
+          "frames": [0, 4, 6, 9, 13, 16, 20, 23, 26, 29, 32, 36, 41, 43, 46, 48, 51, 54, 59, 64, 73, 80, 88]
+        }
+      ],
+      "frame_msec": 42
+    },
+    "cast": {
+      "segments": [
+        {
+          "take": "cast_h3_v2",
+          "frames": [4, 10, 12, 13, 15, 16, 18, 20, 21, 23, 25, 28, 32, 43, 55, 62, 68, 78, 82, 84, 85, 86, 88, 90, 92, 94, 96, 98, 100, 106, 115]
+        }
+      ],
+      "frame_msec": 45,
+      "contact_frame": 15
+    },
+    "death": {
+      "segments": [
+        {
+          "take": "death_h3_v1",
+          "frames": [3, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 23, 26, 30, 38, 47, 54, 60, 66, 69, 71, 72, 74, 75, 76, 77, 78, 79, 80, 88, 123]
+        }
+      ],
+      "frame_msec": 45
+    }
+  },
+  "preserved_accepted_clips": [],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Reviewed on H3 video. Death v1 is clean; the crossbow lying beside her is detached as it should be. Attack v1 drops the white flash of the bash (48-49) and lands on 50. Ranged v1 skips the shot flash and the bolt streak (42-51): the aim at 40 cuts to the recoil at 52, where the hit lands. Hit v1 flashed and threw sparks and defend v1 fired the crossbow, so hit v2 and defend v2 (never fires, steady light) are used; cast v1 strobed and cast v2 is steady. The idle and walk keep their published H3 clips."
+  }
+}
