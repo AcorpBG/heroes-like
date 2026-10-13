@@ -149,6 +149,41 @@
       ],
       "last": 2,
       "action": "Collapse slowly from standing. The carrier doubles over and sinks onto the knees with the whip slipping loose, stays kneeling a moment, then slumps forward onto the side and lies down, finishing motionless with the head at screen left and the boots at screen right, the thorn whip lying in loops on the ground. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "attack_00",
+        "attack_02",
+        "attack_04"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE whip lash toward screen right. The carrier turns the shoulder back and raises the whip arm high so the thorn vine swings in a loop overhead, then steps forward and whips the arm down and out so the vine snaps out straight to its full length at screen right, the vine falls back into loose loops as the arm pulls back, and the carrier settles into the original stance. One lash only.",
+      "pad": [
+        128,
+        128,
+        128,
+        0
+      ]
+    },
+    "idle_h3_v2": {
+      "clip": "idle",
+      "references": [
+        "idle_00"
+      ],
+      "guides": [],
+      "last": 0,
+      "action": "A ready, restless idle that loops. The carrier breathes, the shoulders rise and fall, the whip hand shifts its grip on the handle so the hanging loops of thorn vine sway gently beside the legs, the head turns slightly to watch, then everything returns smoothly to the original stance. The vine always hangs in loose loops close to the body and never swings out. Both boots stay planted. No walking and no attack. Only the body moves; nothing else appears in the frame."
     }
   }
 }

@@ -149,6 +149,32 @@
       ],
       "last": 2,
       "action": "Collapse slowly from standing. He doubles over and sinks onto his knees with the whip slipping from his hand, stays kneeling a moment, then slumps forward and lies down flat on his front, finishing motionless with the head at screen right and the boots at screen left, the leaf cloak spread over him and the thorn whip lying in loops on the ground. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "idle_0",
+        "attack_2",
+        "attack_4"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE whip lash toward screen right. He turns his shoulder back and raises the whip arm high so the braided vine swings in a wide loop overhead, then steps forward and whips the arm down and out so the vine snaps out straight to its full length at screen right, the vine falls back into loose loops as he pulls the arm back, and he settles into the original stance. One lash only.",
+      "pad": [
+        128,
+        128,
+        128,
+        0
+      ]
     }
   }
 }

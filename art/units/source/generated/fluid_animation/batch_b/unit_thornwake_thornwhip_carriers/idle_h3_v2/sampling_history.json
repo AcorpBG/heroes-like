@@ -1,0 +1,201 @@
+{
+  "prompt": [
+    1182,
+    "4bcfcecb-3a83-4a19-a526-2ec21b0b49a9",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "ONE original human forest warrior, the Thornwhip Carrier, facing screen right in elevated three-quarter view. Keep the long brown hair, the green scarf and ragged green leaf skirt, the bone-white forearm and knee armour, the leather harness and boots, the small amber flask at the belt, and the round pack of coiled thorny vine on the back. Exactly two arms, two hands and two legs. ONE hand holds the wooden handle of ONE long red-brown thorn-vine whip whose length hangs in loose loops. Preserve the whip, the coiled vine pack, the bone armour and the adult proportions. A ready, restless idle that loops. The carrier breathes, the shoulders rise and fall, the whip hand shifts its grip on the handle so the hanging loops of thorn vine sway gently beside the legs, the head turns slightly to watch, then everything returns smoothly to the original stance. The vine always hangs in loose loops close to the body and never swings out. Both boots stay planted. No walking and no attack. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole whip including its tip, the pack, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, motion trails, crack flashes, falling leaves, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the whip stays one continuous vine attached to its handle.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026103858
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "h3/unit_thornwake_thornwhip_carriers/idle_h3_v2/sampled"
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "h3_unit_thornwake_thornwhip_carriers_idle_h3_v2_guide_0.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      }
+    },
+    {
+      "client_id": "h3_creature_animation",
+      "create_time": 1791851374699
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "h3\\unit_thornwake_thornwhip_carriers\\idle_h3_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "4bcfcecb-3a83-4a19-a526-2ec21b0b49a9",
+          "timestamp": 1791852039710
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "4bcfcecb-3a83-4a19-a526-2ec21b0b49a9",
+          "timestamp": 1791852039746
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "4bcfcecb-3a83-4a19-a526-2ec21b0b49a9",
+          "timestamp": 1791852177849
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

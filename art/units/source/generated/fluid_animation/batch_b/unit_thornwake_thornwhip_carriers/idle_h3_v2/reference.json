@@ -1,0 +1,28 @@
+{
+  "unit_id": "unit_thornwake_thornwhip_carriers",
+  "guides": [
+    {
+      "frame": "idle_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2_00.png",
+      "source_sha256": "4d1b598896684ce376c7c8e17abe100aed9b2132c0f3b617123a7561208c7feb",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "f749a233984755bf719e5111a282aad0d9bb9fd11c143cea2bdfce5ef80d4dab"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    373,
+    550
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    65,
+    47,
+    65,
+    46
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

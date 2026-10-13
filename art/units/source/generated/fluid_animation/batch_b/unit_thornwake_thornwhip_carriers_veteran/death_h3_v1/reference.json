@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_thornwake_thornwhip_carriers_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers_veteran/idle_v1.png",
+      "source_sha256": "114bf05c64672f0ef9bb1b5dfc8ef6199d784d70b8126df136d19fd7a46cddf3",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "9c9983817f49011a17eb48602e7494ef7436a7377eeeb9a6c1f01567b72cb2dd"
+    },
+    {
+      "frame": "death_2",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers_veteran/death_v1.png",
+      "source_sha256": "1233a4bd3eb06893582935ef659cd8bc3ccc145a43a18e16c7dd9768a06e8e69",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "a03bf93e3087ae85a5c7c9f7ba8b77224aab693eee38e055d16ad98ca5c59773"
+    },
+    {
+      "frame": "death_7",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers_veteran/death_v1.png",
+      "source_sha256": "1233a4bd3eb06893582935ef659cd8bc3ccc145a43a18e16c7dd9768a06e8e69",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "ac5f732665611a0fb27bd23f48a08703b6858e6579d68b2e30baff0634f1567e"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    392,
+    572
+  ],
+  "output_scale": 0.54,
+  "free_pixels_left_top_right_bottom": [
+    55,
+    62,
+    56,
+    61
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

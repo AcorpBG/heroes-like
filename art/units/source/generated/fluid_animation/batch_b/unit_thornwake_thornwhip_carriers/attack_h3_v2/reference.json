@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_thornwake_thornwhip_carriers",
+  "guides": [
+    {
+      "frame": "attack_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/attack_v1_00.png",
+      "source_sha256": "0e0fe7743201621e6369c9df920df06761c8c37c6a82872b97769b3dae286932",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "6ec9c311e1bd881771d5ec4238d79bee8ce4ab5595e5c9023f19433a0dc22657"
+    },
+    {
+      "frame": "attack_02",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/attack_v1_02.png",
+      "source_sha256": "feb1c1c34d37f165a834186f189dfc623fc9d40e4b378a2c9b50b1afcbb7d4ad",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "327692e683e1418a19f537f4980c1bdc9af0b585008288e92274f6daf3a05510"
+    },
+    {
+      "frame": "attack_04",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/attack_v1_04.png",
+      "source_sha256": "a8115d685b03bb6a1e27535440854393f0ab5eededf10b9df9469869c80c1900",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "bfae5b573dca65104af0f341992c282f5d74140a50500416c679456b69e7380f"
+    }
+  ],
+  "canvas": [
+    1216,
+    768
+  ],
+  "ground_anchor": [
+    501,
+    678
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    193,
+    175,
+    193,
+    46
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

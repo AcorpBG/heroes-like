@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_thornwake_thornwhip_carriers",
+  "guides": [
+    {
+      "frame": "attack_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/attack_v1_00.png",
+      "source_sha256": "0e0fe7743201621e6369c9df920df06761c8c37c6a82872b97769b3dae286932",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "c56d0aa6c4ddeaec64dee24ff5e55ce0e01c9c7ea9b22c1d8ef7e3879da88324"
+    },
+    {
+      "frame": "cast_04",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/cast_v1_04.png",
+      "source_sha256": "1ae64719c761dff5ec1f66e34b8598f4b4d0119d6f817ab9ad54f6845b02b9b3",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "7fdb8ce702206c10e52bf985cf63a9e4fb065b57dba334b8b9780695ce80ecf5"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    373,
+    550
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    65,
+    47,
+    65,
+    46
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
