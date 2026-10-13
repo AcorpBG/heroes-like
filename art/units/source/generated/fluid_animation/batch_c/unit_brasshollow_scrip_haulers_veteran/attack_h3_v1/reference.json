@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_brasshollow_scrip_haulers_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/idle_v1.png",
+      "source_sha256": "9621de1052bcdd9215c358635b7d3d112dc8db39ac04016b57ef94ff38c85407",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "e9dce00673d4b2d9d6842ac1724c1802ad91b36cd65acd063db5d656a36cad1a"
+    },
+    {
+      "frame": "attack_10",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/attack_v1.png",
+      "source_sha256": "1647e7261fe493956d95b3412887840e20e562267641a6c66789de81181a4f4f",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "0d6aa858a421a0d8308c1325d3562680a94b500a929080b2181a0c26a52a0c4c"
+    },
+    {
+      "frame": "attack_12",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/attack_v1.png",
+      "source_sha256": "1647e7261fe493956d95b3412887840e20e562267641a6c66789de81181a4f4f",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "833acaa6e3510c0ed7868e0b4dea5f724459b069d0c2dd488b582f4390352c2d"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    448,
+    597
+  ],
+  "output_scale": 0.5,
+  "free_pixels_left_top_right_bottom": [
+    71,
+    43,
+    72,
+    43
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

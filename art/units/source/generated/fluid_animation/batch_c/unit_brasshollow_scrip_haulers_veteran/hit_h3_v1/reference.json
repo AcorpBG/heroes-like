@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_brasshollow_scrip_haulers_veteran",
+  "guides": [
+    {
+      "frame": "hit_17",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/reactions_v1.png",
+      "source_sha256": "4da317b2b90fbc64a786993020ce3ae89c06866185daab90032aa5e2e97571d2",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "20c10c9fb09efb5004f7b41a810225342b526a23a0a054b84b62c97f9902f8cc"
+    },
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/idle_v1.png",
+      "source_sha256": "9621de1052bcdd9215c358635b7d3d112dc8db39ac04016b57ef94ff38c85407",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "e9dce00673d4b2d9d6842ac1724c1802ad91b36cd65acd063db5d656a36cad1a"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    448,
+    597
+  ],
+  "output_scale": 0.5,
+  "free_pixels_left_top_right_bottom": [
+    71,
+    43,
+    72,
+    43
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

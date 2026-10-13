@@ -1,0 +1,28 @@
+{
+  "unit_id": "unit_veilmourn_dreamwake_foganchor_colossi",
+  "guides": [
+    {
+      "frame": "cast_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/cast_v1.png",
+      "source_sha256": "dcc71ebcc7d7e9d4807ec3b79bc7e1cfed16dc2127dcf5c53f7548dfc928fdc0",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "5a78f3193bc299799267841885deaf768aa704cd4957c0dd8b19b74d7254490f"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    427,
+    569
+  ],
+  "output_scale": 0.46,
+  "free_pixels_left_top_right_bottom": [
+    60,
+    50,
+    60,
+    50
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

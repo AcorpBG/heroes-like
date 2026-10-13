@@ -149,6 +149,51 @@
       ],
       "last": 2,
       "action": "Collapse slowly and heavily from standing. The hauler doubles over and sinks onto both knees, leaning on the shield, stays kneeling a moment, then topples forward and lies flat on the ground, finishing motionless with the helmet at screen right, the shield lying flat beside the head and the pick-hammer on the ground. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    },
+    "hit_h3_v2": {
+      "clip": "hit",
+      "references": [
+        "hit_17",
+        "idle_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "The hauler starts rocked back in a flinch and recovers from it. The helmet and shoulders hunch behind the shield and the knees flex deep while both hands keep hold of the pick-hammer and the shield, then the hauler straightens, rebalances on both boots and returns to the same stance. Only the body moves; nothing else appears in the frame. The lighting never changes and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "hit_h3_v3": {
+      "clip": "hit",
+      "references": [
+        "hit_17",
+        "idle_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "The hauler starts rocked back in a flinch and recovers from it. The helmet and shoulders hunch behind the shield and the knees flex deep while both hands keep hold of the pick-hammer and the shield, then the hauler straightens, rebalances on both boots and returns to the same stance. Only the body moves; nothing else appears in the frame."
+    },
+    "hit_h3_v4": {
+      "clip": "hit",
+      "references": [
+        "hit_17",
+        "idle_0"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "The hauler starts rocked back in a flinch and recovers from it. The helmet and shoulders hunch behind the shield and the knees flex deep while both hands keep hold of the pick-hammer and the shield, then the hauler straightens, rebalances on both boots and returns to the same stance. Only the body moves; nothing else appears in the frame."
     }
   }
 }

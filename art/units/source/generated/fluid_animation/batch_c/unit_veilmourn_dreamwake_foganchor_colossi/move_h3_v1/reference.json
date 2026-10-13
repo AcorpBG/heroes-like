@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_veilmourn_dreamwake_foganchor_colossi",
+  "guides": [
+    {
+      "frame": "move_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/move_contacts_v1.png",
+      "source_sha256": "fc7df9889bab10aa87e0753eaa49bf5d4aeff63e716a475fc9fd131ab5f5a556",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "21e4ee7e3f200f4701766edd22427ce666f2ea7dedc49f54ca0c079c5f1f7aaf"
+    },
+    {
+      "frame": "move_4",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/move_contacts_v1.png",
+      "source_sha256": "fc7df9889bab10aa87e0753eaa49bf5d4aeff63e716a475fc9fd131ab5f5a556",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "f44682ce49fc477a5dcb655fe4621e27c0a10687288219621c8a524e39b83074"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    427,
+    569
+  ],
+  "output_scale": 0.46,
+  "free_pixels_left_top_right_bottom": [
+    60,
+    50,
+    60,
+    50
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

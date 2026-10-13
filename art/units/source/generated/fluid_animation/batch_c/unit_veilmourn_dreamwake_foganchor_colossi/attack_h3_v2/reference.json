@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_veilmourn_dreamwake_foganchor_colossi",
+  "guides": [
+    {
+      "frame": "cast_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/cast_v1.png",
+      "source_sha256": "dcc71ebcc7d7e9d4807ec3b79bc7e1cfed16dc2127dcf5c53f7548dfc928fdc0",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "e32d2bb33f4c0e899c91b49d2eebb392ea6653083c73017c25b3408789022286"
+    },
+    {
+      "frame": "attack_2",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/attack_v1.png",
+      "source_sha256": "f1983bf51eb1618684908eeb94de3b9f1e4bc2153a3bccdb93afa00ca39cac06",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "ce130ed512fae27c2f6fd57ab050b9823391e058d92cae889b64591256f28a7c"
+    },
+    {
+      "frame": "attack_4",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/attack_v1.png",
+      "source_sha256": "f1983bf51eb1618684908eeb94de3b9f1e4bc2153a3bccdb93afa00ca39cac06",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "e4034a0b09fa783805f9603bb9e79af889135dcadd4f770e8bc12c20b6b5b3a1"
+    }
+  ],
+  "canvas": [
+    960,
+    768
+  ],
+  "ground_anchor": [
+    427,
+    697
+  ],
+  "output_scale": 0.46,
+  "free_pixels_left_top_right_bottom": [
+    60,
+    178,
+    60,
+    50
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

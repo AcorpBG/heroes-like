@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_brasshollow_scrip_haulers_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/idle_v1.png",
+      "source_sha256": "9621de1052bcdd9215c358635b7d3d112dc8db39ac04016b57ef94ff38c85407",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "e9dce00673d4b2d9d6842ac1724c1802ad91b36cd65acd063db5d656a36cad1a"
+    },
+    {
+      "frame": "death_34",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/death_v1.png",
+      "source_sha256": "237676123ae2fa1319cc0cd8c61aec8302db04d2e00622231dd04eac775a9563",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "3722cc7b33b1786c531f7bd13b71a13f93a7b4647bb2e9ac2c2092a28977bf0a"
+    },
+    {
+      "frame": "death_39",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/death_v1.png",
+      "source_sha256": "237676123ae2fa1319cc0cd8c61aec8302db04d2e00622231dd04eac775a9563",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "278ea87df130a98d1cf79b27044dca52f0e3405c5ca4b8628e1524fdaf2a6a9d"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    448,
+    597
+  ],
+  "output_scale": 0.5,
+  "free_pixels_left_top_right_bottom": [
+    71,
+    43,
+    72,
+    43
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

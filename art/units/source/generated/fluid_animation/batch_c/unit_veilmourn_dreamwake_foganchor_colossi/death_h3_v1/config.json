@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_veilmourn_dreamwake_foganchor_colossi",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    427,
+    569
+  ],
+  "scale": 0.46,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026104606,
+  "references": [
+    "cast_0",
+    "death_3",
+    "death_7"
+  ],
+  "guides": [
+    [
+      48,
+      1
+    ],
+    [
+      96,
+      2
+    ]
+  ],
+  "last": 2,
+  "prompt": "ONE original towering spectral giant, the Dreamwake Foganchor Colossus, facing screen right in elevated three-quarter view. Keep the dark iron armour with a tall spiked crown helm, the pale glowing icy-blue face and hands, and the many long flowing ragged wisps of pale blue and white fog that stream from the shoulders, arms and robe like torn cloth. Exactly two arms, two hands and two legs. The screen-LEFT hand holds a heavy iron chain whose end carries ONE large ship anchor with curved flukes, hanging low beside the legs. Preserve the anchor and chain, the crown helm, the fog wisps and the massive proportions. Collapse slowly and heavily. The colossus sinks down onto its knees with the head bowed, the anchor dropping to the ground, stays there a moment, then topples forward and lies flat on its front, finishing motionless with the head at screen right, the anchor and chain lying beside it and the fog wisps settling flat over the body. The same body throughout: no dissolving, no explosion and no disappearing. Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole anchor and chain even at full swing, the crown, the fog wisps, limbs and feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, swirling trails, sparks, particles or extra limbs; the fog wisps stay attached to the body and drift gently, and the face and hands keep only their steady pale glow. Articulate joints naturally with physical planted-foot support; the anchor stays rigid and never morphs.",
+  "protected_foreground_chroma": 70,
+  "edge_threshold": 56,
+  "palette_measurement": {
+    "bluest_opaque": 68.0,
+    "blue_minus_green_p999": 50.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

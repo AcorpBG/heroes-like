@@ -1,0 +1,54 @@
+{
+  "unit_id": "unit_brasshollow_scrip_haulers_veteran",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    448,
+    597
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026104551,
+  "references": [
+    "move_40",
+    "move_44"
+  ],
+  "guides": [
+    [
+      31,
+      1
+    ],
+    [
+      62,
+      0
+    ],
+    [
+      93,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original short stocky bearded adult hauler, the Scrip Hauler veteran, facing screen right in elevated three-quarter view. Keep the brass miner helmet with goggles pushed up, the dark beard, the polished brass shoulder and arm plates, the long brown leather work apron with rivets and buckles, the dark undercoat and the brass armoured boots. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE short pick-hammer with a curved steel head; the screen-RIGHT arm carries ONE tall dark iron board shield with a brass frame and a row of brass pegs along its top edge. Preserve the pick-hammer, the board shield and the stocky proportions. March in place through two complete reciprocal cycles with short sturdy steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The shield stays upright on the arm and the pick-hammer swings a little at the side; the apron swings with the legs. Finish in the original gait phase. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full helmet, pick-hammer, shield, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the shield stays rigid and never morphs.",
+  "protected_foreground_chroma": 19,
+  "edge_threshold": 11,
+  "palette_measurement": {
+    "bluest_opaque": 17.0,
+    "blue_minus_green_p999": 5.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}
