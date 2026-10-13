@@ -149,6 +149,58 @@
       ],
       "last": 2,
       "action": "Collapse slowly and heavily from standing. The warrior doubles over and sinks onto both knees, leaning on the shield, stays kneeling a moment, then topples forward and lies flat on the ground, finishing motionless with the helmet at screen right, the shield lying flat and the saber on the ground beside the body, the lantern dimmed. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "idle_00",
+        "attack_02",
+        "attack_04"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE saber strike toward screen right. The warrior raises the saber high above the helmet as the knees bend, then steps into a long lunge and slashes down into a straight thrust with the blade at full reach toward screen right, the shield held close, draws back and settles into the original stance. One strike only; no sparks or trail. The saber stays one solid blade: no motion streaks, trails, slash arcs or loose fragments, and nothing else appears in the frame.",
+      "pad": [
+        0,
+        128,
+        128,
+        0
+      ]
+    },
+    "attack_h3_v3": {
+      "clip": "attack",
+      "references": [
+        "idle_00",
+        "attack_02",
+        "attack_04"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE saber strike toward screen right. The warrior raises the saber high above the helmet as the knees bend, then steps into a long lunge and slashes down into a straight thrust with the blade at full reach toward screen right, the shield held close, draws back and settles into the original stance. One strike only; no sparks or trail. The saber stays one solid blade: no motion streaks, trails, slash arcs or loose fragments, and nothing else appears in the frame.",
+      "pad": [
+        0,
+        128,
+        128,
+        0
+      ]
     }
   }
 }

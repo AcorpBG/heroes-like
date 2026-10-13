@@ -1,0 +1,54 @@
+{
+  "unit_id": "unit_veilmourn_gloamkeel_bulwarks_veteran",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    434,
+    585
+  ],
+  "scale": 0.45,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026104751,
+  "references": [
+    "move_00",
+    "move_04"
+  ],
+  "guides": [
+    [
+      31,
+      1
+    ],
+    [
+      62,
+      0
+    ],
+    [
+      93,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original tall armoured warrior, the Gloamkeel Bulwark veteran, facing screen right in elevated three-quarter view. Keep the blackened scale and plate armour, the tall narrow finned helmet with a pale streaked face guard, the long tattered dark navy cloak and tabard strips streaked with pale grey, the belted waist and the dark armoured boots. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE curved single-edged saber; the screen-RIGHT arm carries ONE large black kite shield with dark bronze trim, an anchor emblem, an iron ring and a round glowing amber lantern porthole near its top. Preserve the saber, the shield with its lantern, the finned helmet and the tall proportions. March in place through two complete reciprocal cycles with measured heavy steps. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. The shield stays upright on the arm, the saber swings a little at the side and the cloak strips trail. Finish in the original gait phase. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full helmet, saber, shield, cloak, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, sparks, motion trails, particles or extra limbs; the lantern keeps only its steady glow. Articulate joints naturally with physical planted-foot support; the shield stays rigid and never morphs.",
+  "protected_foreground_chroma": 25,
+  "edge_threshold": 19,
+  "palette_measurement": {
+    "bluest_opaque": 23.0,
+    "blue_minus_green_p999": 13.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

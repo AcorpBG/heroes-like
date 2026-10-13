@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_veilmourn_gloamkeel_bulwarks_veteran",
+  "guides": [
+    {
+      "frame": "idle_00",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/idle_v1.png",
+      "source_sha256": "d9c90ba5af6871e0f9669dc6caab988ebd29bbe4a8e576783d77a63355a4a428",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "a902e584dcd3c8c6aa511556f07d5e471c9071b33ad8c7daa3d2f0d7271fb352"
+    },
+    {
+      "frame": "death_03",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/death_v1.png",
+      "source_sha256": "f7deb20a80f8a62e08fec5f719f779c25295a0a52b211873e9a44d96916f7a64",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "18951e58f2fc5b1f42f2e22ece403cf777af0f6e1ae408497705f92fb18f63a1"
+    },
+    {
+      "frame": "death_07",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/death_v1.png",
+      "source_sha256": "f7deb20a80f8a62e08fec5f719f779c25295a0a52b211873e9a44d96916f7a64",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "77df5fdd752e0ca9a7cad88950461b4ec14f3751a1af608032da15b6d9ae6d99"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    434,
+    585
+  ],
+  "output_scale": 0.45,
+  "free_pixels_left_top_right_bottom": [
+    99,
+    50,
+    99,
+    50
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_veilmourn_gloamkeel_bulwarks_veteran",
+  "guides": [
+    {
+      "frame": "idle_00",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/idle_v1.png",
+      "source_sha256": "d9c90ba5af6871e0f9669dc6caab988ebd29bbe4a8e576783d77a63355a4a428",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "a902e584dcd3c8c6aa511556f07d5e471c9071b33ad8c7daa3d2f0d7271fb352"
+    },
+    {
+      "frame": "idle_04",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/idle_v1.png",
+      "source_sha256": "d9c90ba5af6871e0f9669dc6caab988ebd29bbe4a8e576783d77a63355a4a428",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "2c04a71755bc616741125b80dffa6111b988c186e44230e479061c6a20108963"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    434,
+    585
+  ],
+  "output_scale": 0.45,
+  "free_pixels_left_top_right_bottom": [
+    99,
+    50,
+    99,
+    50
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
