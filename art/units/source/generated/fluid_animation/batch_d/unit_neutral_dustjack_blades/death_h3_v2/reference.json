@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_neutral_dustjack_blades",
+  "guides": [
+    {
+      "frame": "idle_v1_01",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/idle_v1.png",
+      "source_sha256": "c74092fec888c65e45959543caf134d22e0fb2f5a8c805fb0dcf5598671d3176",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "31c4b9cdfc5ac316cd427c59c27e8ede7cfe13091338883d590d6b26f45b306b"
+    },
+    {
+      "frame": "death_v1_03",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/death_v1.png",
+      "source_sha256": "0abc8e13a99a7d166ece471ff2260093915a221da5f773ba2ed8384d8853e2a3",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "08d96eec0ffb21ae5423e2c2b8e055464fc6c6c629eb5f4e884966a060488126"
+    },
+    {
+      "frame": "death_v1_08",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/death_v1.png",
+      "source_sha256": "0abc8e13a99a7d166ece471ff2260093915a221da5f773ba2ed8384d8853e2a3",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "9a37816731aee544b8457b7cd723a7a4e94552d7ad13528e2e63981ebf43c48c"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    467,
+    516
+  ],
+  "output_scale": 0.39,
+  "free_pixels_left_top_right_bottom": [
+    241,
+    42,
+    241,
+    43
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

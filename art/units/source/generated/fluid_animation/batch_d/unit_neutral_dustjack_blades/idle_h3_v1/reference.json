@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_neutral_dustjack_blades",
+  "guides": [
+    {
+      "frame": "idle_v1_01",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/idle_v1.png",
+      "source_sha256": "c74092fec888c65e45959543caf134d22e0fb2f5a8c805fb0dcf5598671d3176",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "31c4b9cdfc5ac316cd427c59c27e8ede7cfe13091338883d590d6b26f45b306b"
+    },
+    {
+      "frame": "idle_v1_04",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/idle_v1.png",
+      "source_sha256": "c74092fec888c65e45959543caf134d22e0fb2f5a8c805fb0dcf5598671d3176",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "ebd67dd49062fe5ca22209e72d45e1da26a987ff48fa269a3a7fe2ccef6a1d01"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    467,
+    516
+  ],
+  "output_scale": 0.39,
+  "free_pixels_left_top_right_bottom": [
+    241,
+    42,
+    241,
+    43
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

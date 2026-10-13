@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_neutral_dustjack_blades",
+  "guides": [
+    {
+      "frame": "idle_v1_01",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/idle_v1.png",
+      "source_sha256": "c74092fec888c65e45959543caf134d22e0fb2f5a8c805fb0dcf5598671d3176",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "31c4b9cdfc5ac316cd427c59c27e8ede7cfe13091338883d590d6b26f45b306b"
+    },
+    {
+      "frame": "attack_v1_03",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/attack_v1.png",
+      "source_sha256": "2c87228a8f11728450dc1c09f3511a93cb47cc80ff8e163bfaea2e07307163fc",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "12406645473f9c56d68e9c6d87f4b63ace633d06e70748ebc898a9e64ea0f1ce"
+    },
+    {
+      "frame": "attack_v1_05",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/attack_v1.png",
+      "source_sha256": "2c87228a8f11728450dc1c09f3511a93cb47cc80ff8e163bfaea2e07307163fc",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "558cfb3c82eafee2b646747d61690608758ad202dafa99b900a03a35164f7832"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    467,
+    516
+  ],
+  "output_scale": 0.39,
+  "free_pixels_left_top_right_bottom": [
+    241,
+    42,
+    241,
+    43
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

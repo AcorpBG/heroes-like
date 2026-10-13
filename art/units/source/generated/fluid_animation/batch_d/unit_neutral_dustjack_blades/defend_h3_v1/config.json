@@ -1,0 +1,47 @@
+{
+  "unit_id": "unit_neutral_dustjack_blades",
+  "clip": "defend",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    467,
+    516
+  ],
+  "scale": 0.39,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026105653,
+  "references": [
+    "idle_v1_01",
+    "hit_defend_v1_07",
+    "hit_defend_v1_08"
+  ],
+  "guides": [
+    [
+      34,
+      1
+    ]
+  ],
+  "last": 2,
+  "prompt": "ONE original young man, the Dustjack Blade, facing screen right in elevated three-quarter view. Keep his youthful face, the short tousled brown hair, the brass goggles on his forehead, the teal scarf, the layered brown leather armour, the tan trousers, the leather belts, the metal knee guards, the brown armoured boots, the brown gloves and the single large shoulder pauldron on the screen-RIGHT shoulder. Exactly two arms, two hands and two legs. Each hand holds ONE short broad curved steel knife, exactly two knives in all, blade tips pointing down and outward. Preserve both knives, the goggles, the scarf and the lean proportions. Crouch slightly and cross both knives in front of the face in an X guard, elbows tucked, then hold the crossed guard on both planted boots. No attack and no return to the relaxed stance. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, both knives, the scarf, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the knives stay rigid steel blades and never morph or swap hands.",
+  "protected_foreground_chroma": 22,
+  "edge_threshold": 17,
+  "palette_measurement": {
+    "bluest_opaque": 20.0,
+    "blue_minus_green_p999": 11.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}
