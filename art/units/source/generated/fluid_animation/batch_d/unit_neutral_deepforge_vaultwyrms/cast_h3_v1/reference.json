@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_neutral_deepforge_vaultwyrms",
+  "guides": [
+    {
+      "frame": "idle_01",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/idle_v1.png",
+      "source_sha256": "bd025585ea119c94482d8cc97ba4d00c76b746f9a4c4b8a53a473f848552d558",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "26c253450c7861b79a5730c6cb57c57aa275e6b6f1e4597e0557c9f63ec53762"
+    },
+    {
+      "frame": "support_05",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/support_v1.png",
+      "source_sha256": "287a803cbab9a6895663fed4eede099dca2ac4f2b3ee53e5bea12c1e24db42ec",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "38c3ea6ab779e60c1d38d7273e735a9a393bae38a5f9b96376e1748a47f57ba4"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    478,
+    550
+  ],
+  "output_scale": 0.4,
+  "free_pixels_left_top_right_bottom": [
+    202,
+    40,
+    203,
+    41
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

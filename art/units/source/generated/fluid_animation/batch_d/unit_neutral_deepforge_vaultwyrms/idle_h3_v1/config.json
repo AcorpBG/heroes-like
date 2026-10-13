@@ -1,0 +1,54 @@
+{
+  "unit_id": "unit_neutral_deepforge_vaultwyrms",
+  "clip": "idle",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    478,
+    550
+  ],
+  "scale": 0.4,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026105000,
+  "references": [
+    "idle_01",
+    "idle_05"
+  ],
+  "guides": [
+    [
+      31,
+      1
+    ],
+    [
+      62,
+      0
+    ],
+    [
+      93,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original four-legged magma wyrm, the Deepforge Vaultwyrm, facing screen LEFT in elevated three-quarter view. Keep the overlapping bronze and dark stone armour plates with glowing orange-red lava cracks between them, the long crocodile-like jaws lined with teeth and glowing inside, the ridge of short plated spines along the back, the segmented tail curling up high behind the body to a bulbous plated tip, and EXACTLY FOUR thick armoured legs with glowing orange claws. No rider and no extra legs. Preserve the plates and lava cracks, the jaws, the curled tail and the stocky proportions. A smouldering, watchful idle that loops. The wyrm breathes slowly so the plates rise and settle, the head lowers and lifts slightly, the jaws part a little and close, the curled tail flexes, then everything returns smoothly to the original stance. All four feet stay planted. No walking and no attack. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed scale and centred body. Keep the jaws, the whole curled tail and all four feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, flames, smoke, embers, sparks, dripping lava, motion trails, particles or extra legs; the lava cracks, jaws and claws keep only their steady glow. Articulate joints naturally with physical planted-foot support; the armour plates stay rigid and never morph.",
+  "protected_foreground_chroma": 8,
+  "edge_threshold": 6,
+  "palette_measurement": {
+    "bluest_opaque": 6.0,
+    "blue_minus_green_p999": 0.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

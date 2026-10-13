@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_neutral_deepforge_vaultwyrms",
+  "guides": [
+    {
+      "frame": "idle_01",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/idle_v1.png",
+      "source_sha256": "bd025585ea119c94482d8cc97ba4d00c76b746f9a4c4b8a53a473f848552d558",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "26c253450c7861b79a5730c6cb57c57aa275e6b6f1e4597e0557c9f63ec53762"
+    },
+    {
+      "frame": "hit_defend_06",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/hit_defend_v1.png",
+      "source_sha256": "6e3c85d5f3eb70d8b40fbafd194fcc02fa6d8b413d68dba16e4d87fb6f90d8b4",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "b02ffc8041e7986a361b22f9aad7c67ff0698b719f4897b362df35970fc60fd3"
+    },
+    {
+      "frame": "hit_defend_07",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/hit_defend_v1.png",
+      "source_sha256": "6e3c85d5f3eb70d8b40fbafd194fcc02fa6d8b413d68dba16e4d87fb6f90d8b4",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "1c2126de575d31a16b5a73880dfc1f5e2aed08ce6833e6d36baf0b86ff39a95c"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    478,
+    550
+  ],
+  "output_scale": 0.4,
+  "free_pixels_left_top_right_bottom": [
+    202,
+    40,
+    203,
+    41
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
