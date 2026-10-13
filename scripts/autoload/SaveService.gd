@@ -2,15 +2,8 @@ class_name HeroesSaveService
 extends Node
 
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
-const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
-const RandomMapGeneratorRulesScript = preload("res://scripts/core/RandomMapGeneratorRules.gd")
-const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
-const BattleRulesScript = preload("res://scripts/core/BattleRules.gd")
-const TownRulesScript = preload("res://scripts/core/TownRules.gd")
-const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
-const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
-const CampaignRulesScript = preload("res://scripts/core/CampaignRules.gd")
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
+const LazyScriptsScript = preload("res://scripts/core/LazyScripts.gd")
 # Validation markers: ScenarioSelectRules.launch_mode_label / ScenarioSelectRules.difficulty_label
 
 const SAVE_DIR := "user://saves"
@@ -67,6 +60,33 @@ var _last_runtime_save_profile := {}
 var _verified_save_receipts := {}
 var _latest_loadable_summary_cache := {}
 var _latest_loadable_summary_fingerprint := ""
+
+# The rules scripts load on first use. Preloading them here compiled most of the
+# game while the engine loaded autoloads, before the boot screen could respond.
+var ScenarioSelectRulesScript:
+	get:
+		return LazyScriptsScript.load_once("res://scripts/core/ScenarioSelectRules.gd")
+var RandomMapGeneratorRulesScript:
+	get:
+		return LazyScriptsScript.load_once("res://scripts/core/RandomMapGeneratorRules.gd")
+var OverworldRulesScript:
+	get:
+		return LazyScriptsScript.load_once("res://scripts/core/OverworldRules.gd")
+var BattleRulesScript:
+	get:
+		return LazyScriptsScript.load_once("res://scripts/core/BattleRules.gd")
+var TownRulesScript:
+	get:
+		return LazyScriptsScript.load_once("res://scripts/core/TownRules.gd")
+var HeroProgressionRulesScript:
+	get:
+		return LazyScriptsScript.load_once("res://scripts/core/HeroProgressionRules.gd")
+var HeroCommandRulesScript:
+	get:
+		return LazyScriptsScript.load_once("res://scripts/core/HeroCommandRules.gd")
+var CampaignRulesScript:
+	get:
+		return LazyScriptsScript.load_once("res://scripts/core/CampaignRules.gd")
 
 # Named saves use the same versioned payload and transaction writer as legacy
 # slots. The basename is the identity; callers can never supply an arbitrary path.
@@ -742,7 +762,7 @@ func build_in_session_save_surface(
 	var current_context := describe_resume_brief(default_live_summary) if not default_live_summary.is_empty() else ""
 	buckets["current_context"] = ProfileLogScript.elapsed_ms(context_started)
 	var normalization_started := ProfileLogScript.begin_usec()
-	var detached_was_runtime_normalized := OverworldRulesScript.is_runtime_session_normalized(detached_live_session)
+	var detached_was_runtime_normalized: bool = OverworldRulesScript.is_runtime_session_normalized(detached_live_session)
 	var detached_normalization_fallback := detached_live_session != null and not detached_was_runtime_normalized
 	if detached_normalization_fallback:
 		OverworldRulesScript.normalize_overworld_state(detached_live_session)
@@ -1498,10 +1518,10 @@ func describe_load_preview(summary: Dictionary) -> String:
 		String(summary.get("scenario_name", summary.get("scenario_id", "Saved Expedition"))),
 		64
 	)
-	var mode_label := ScenarioSelectRulesScript.launch_mode_label(
+	var mode_label: String = ScenarioSelectRulesScript.launch_mode_label(
 		String(summary.get("launch_mode", SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN))
 	)
-	var difficulty_label := ScenarioSelectRulesScript.difficulty_label(
+	var difficulty_label: String = ScenarioSelectRulesScript.difficulty_label(
 		String(summary.get("difficulty", ScenarioSelectRulesScript.default_difficulty_id()))
 	)
 	var lines := [_slot_label(summary), scenario_name]
@@ -3698,7 +3718,7 @@ func _summary_resume_action_line(summary: Dictionary) -> String:
 			return ""
 
 func _summary_campaign_context_line(summary: Dictionary) -> String:
-	var mode_label := ScenarioSelectRulesScript.launch_mode_label(String(summary.get("launch_mode", SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN)))
+	var mode_label: String = ScenarioSelectRulesScript.launch_mode_label(String(summary.get("launch_mode", SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN)))
 	var parts := [mode_label]
 	var campaign_name := String(summary.get("campaign_name", "")).strip_edges()
 	var chapter_label := String(summary.get("chapter_label", "")).strip_edges()
@@ -3830,7 +3850,7 @@ func _summary_watch_state_line(
 			var frontier_line := _first_meaningful_line(frontier_watch, ["Frontier Watch"])
 			if frontier_line != "" and not frontier_line.contains("No hostile factions are active"):
 				return "Risk watch: %s" % frontier_line.trim_prefix("- ").strip_edges()
-			var management_watch := (
+			var management_watch: String = (
 				String(refresh_watch_context.get("management_watch", ""))
 				if refresh_watch_context.has("management_watch")
 				else OverworldRulesScript.describe_management_watch(session)
