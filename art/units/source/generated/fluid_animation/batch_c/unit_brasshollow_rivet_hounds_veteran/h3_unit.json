@@ -149,6 +149,88 @@
       ],
       "last": 2,
       "action": "Shut down and collapse. The legs buckle and the heavy body sinks down onto its belly, stays a moment, then slumps over and settles flat on the ground with the legs folded and the snout resting at screen right, finishing as a still wreck. The same body throughout: no explosion, no smoke and no disappearing."
+    },
+    "move_h3_v2": {
+      "clip": "move",
+      "references": [
+        "move_40",
+        "move_44"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Trot in place on four legs through two complete cycles with heavy mechanical steps. Diagonal pairs of legs alternate lifting, swinging forward and planting their clawed feet while the others bear the weight. The body stays centred for engine-driven travel with the snout held level and the tail swaying. Exactly four legs at all times. Finish in the original gait phase. Smooth, quiet, gliding steps with the paws set down softly; no stomping, impacts or shaking. The lighting never changes: the eyes and vents hold one steady glow that never pulses, flickers or dims, and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "idle_0",
+        "attack_10",
+        "attack_12"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE snapping lunge toward screen right. The beast lowers its head and opens the armoured jaws wide, then drives forward off its hind legs and stretches the snout to full reach at screen right where the jaws snap shut, then draws back and settles into the original stance. One bite only; no sparks or effect at contact. The lighting never changes: the eyes and vents hold one steady glow that never pulses, flickers or dims, and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "cast_h3_v2": {
+      "clip": "cast",
+      "references": [
+        "idle_0",
+        "cast_27"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A challenge. The beast rears up on its hind legs with the front legs lifted and the snout raised high, jaws open wide as if roaring, holds the pose briefly, then drops back onto all four feet in the original stance. A physical gesture only: no sound waves, glow or effect. The lighting never changes: the eyes and vents hold one steady glow that never pulses, flickers or dims, and the background keeps exactly the same brightness and colour in every frame."
+    },
+    "death_h3_v2": {
+      "clip": "death",
+      "references": [
+        "idle_0",
+        "death_34",
+        "death_39"
+      ],
+      "guides": [
+        [
+          48,
+          1
+        ],
+        [
+          96,
+          2
+        ]
+      ],
+      "last": 2,
+      "action": "Shut down and collapse. The legs buckle and the heavy body sinks down onto its belly, stays a moment, then slumps over and settles flat on the ground with the legs folded and the snout resting at screen right, finishing as a still wreck. The same body throughout: no explosion, no smoke and no disappearing. The lighting never changes and the background keeps exactly the same brightness and colour in every frame."
     }
   }
 }

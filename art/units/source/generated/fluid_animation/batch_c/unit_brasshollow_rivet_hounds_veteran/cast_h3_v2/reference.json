@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_brasshollow_rivet_hounds_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds_veteran/idle_v1.png",
+      "source_sha256": "2a65d948c71dba5ef76dc82ee6a5ff1bc906d4855a5f74249481920ac2285f7a",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "743466f12e69088151fa65c6524f9b40d3467a288afbd5a37b2c9da8a2955b63"
+    },
+    {
+      "frame": "cast_27",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds_veteran/cast_v1.png",
+      "source_sha256": "775b881244a57c4f12e553f8b34c8b01edcebcd3e311371054f9aba745562fe8",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "a603e4ffa060acba319aec119db15aef78fba12ead6a11a2f35b99a34d792b9f"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    452,
+    595
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    108,
+    45,
+    108,
+    45
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
