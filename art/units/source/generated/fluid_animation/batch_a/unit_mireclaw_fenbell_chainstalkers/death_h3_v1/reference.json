@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_mireclaw_fenbell_chainstalkers",
+  "guides": [
+    {
+      "frame": "attack_00",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/attack_v1.png",
+      "source_sha256": "7f59c888a46ad55a3c0cf3772a739547eda22c88c3419b29bbc37270d75a1254",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "1bfbbdd8a11004ab8cdb495cdabed90a4f65e343621a47b8ae50a9cbf78cfd81"
+    },
+    {
+      "frame": "death_03",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/death_v1.png",
+      "source_sha256": "0662038bf098cb6378c7f05607753cdd73cc0031a82b20a0f85a885758ab6806",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "ada58d46e1db7a036f8f6012c3a0d9f0ebb161f9591db50ee8e275ff06156acc"
+    },
+    {
+      "frame": "death_07",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/death_v1.png",
+      "source_sha256": "0662038bf098cb6378c7f05607753cdd73cc0031a82b20a0f85a885758ab6806",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "740ba2f65c2549a5893aef922aaf74b14dcb4cae7f69b87516f87b96c0c16578"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    404,
+    579
+  ],
+  "output_scale": 0.45,
+  "free_pixels_left_top_right_bottom": [
+    96,
+    61,
+    97,
+    61
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

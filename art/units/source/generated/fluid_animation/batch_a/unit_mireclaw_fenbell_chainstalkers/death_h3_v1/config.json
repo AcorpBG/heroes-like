@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_mireclaw_fenbell_chainstalkers",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    404,
+    579
+  ],
+  "scale": 0.45,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026105405,
+  "references": [
+    "attack_00",
+    "death_03",
+    "death_07"
+  ],
+  "guides": [
+    [
+      48,
+      1
+    ],
+    [
+      96,
+      2
+    ]
+  ],
+  "last": 2,
+  "prompt": "ONE original lean hunched masked stalker, the Fenbell Chainstalker, facing screen right in elevated three-quarter view. Keep the pale carved wooden mask with dark eye slits, the thick shaggy olive and yellow reed hood and mantle with teal strands, the brown leather wraps with red bindings, the rope belt and the wrapped boots. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE small bronze bell with a long rusty iron chain that ends in ONE bronze crescent hook; the screen-RIGHT hand holds a coil of spare chain. Preserve the mask, the reed mantle, the bell, the one hook and the lean proportions. Collapse slowly. The stalker sinks down onto the knees with the chain dropping, stays there a moment, then slumps forward and lies flat on the ground, finishing motionless with the mask at screen right, the reed mantle spread over the body and the bell, chain and hook lying beside it. The body never leaves the ground; no recovery, no floating equipment and no disappearing body. Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole reed mantle, the bell, the full chain with its hook even at full swing, limbs and feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, sound rings, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the chain stays one unbroken line from the bell hand to the one hook.",
+  "protected_foreground_chroma": 29,
+  "edge_threshold": 12,
+  "palette_measurement": {
+    "bluest_opaque": 27.0,
+    "blue_minus_green_p999": 6.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

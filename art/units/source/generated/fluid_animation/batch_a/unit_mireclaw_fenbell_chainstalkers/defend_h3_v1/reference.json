@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_mireclaw_fenbell_chainstalkers",
+  "guides": [
+    {
+      "frame": "attack_00",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/attack_v1.png",
+      "source_sha256": "7f59c888a46ad55a3c0cf3772a739547eda22c88c3419b29bbc37270d75a1254",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "1bfbbdd8a11004ab8cdb495cdabed90a4f65e343621a47b8ae50a9cbf78cfd81"
+    },
+    {
+      "frame": "defend_01",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/reactions_v1.png",
+      "source_sha256": "138e9ae1d6f5ed3c0fcb40b899155de8d3fde3ed39e03de3fad5d5164ddb64fc",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "8544164eed31b2bc2fcc81d393683d8df7d8fffec85b68450efedf985b9f762e"
+    },
+    {
+      "frame": "defend_02",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/reactions_v1.png",
+      "source_sha256": "138e9ae1d6f5ed3c0fcb40b899155de8d3fde3ed39e03de3fad5d5164ddb64fc",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "74bfa06f94310442d67ecf00490181d63e81dc47aa1df782750dcacefcbbc389"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    404,
+    579
+  ],
+  "output_scale": 0.45,
+  "free_pixels_left_top_right_bottom": [
+    96,
+    61,
+    97,
+    61
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

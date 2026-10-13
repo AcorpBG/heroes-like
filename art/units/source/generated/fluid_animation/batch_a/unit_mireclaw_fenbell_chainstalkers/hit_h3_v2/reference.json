@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_mireclaw_fenbell_chainstalkers",
+  "guides": [
+    {
+      "frame": "hit_00",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/reactions_v1.png",
+      "source_sha256": "138e9ae1d6f5ed3c0fcb40b899155de8d3fde3ed39e03de3fad5d5164ddb64fc",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "8ad269e5b7dd8b4a8b1f5ab4adf3e5e47fbbaea10493de88d37e5f21da518f1a"
+    },
+    {
+      "frame": "attack_00",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/attack_v1.png",
+      "source_sha256": "7f59c888a46ad55a3c0cf3772a739547eda22c88c3419b29bbc37270d75a1254",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "b8ccb69761957c7a959c2d786f57e35bc8e38d28d89af7bd12fb960877dabfeb"
+    }
+  ],
+  "canvas": [
+    960,
+    768
+  ],
+  "ground_anchor": [
+    404,
+    579
+  ],
+  "output_scale": 0.45,
+  "free_pixels_left_top_right_bottom": [
+    96,
+    61,
+    97,
+    189
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
