@@ -4989,7 +4989,7 @@
         },
         "idle_h3_v2/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/idle_h3_v2/matte.json",
-          "sha256": "eb7c3c84228e843862b9169376920b404e2517f4b2da6a83d111a2ad88a0b44f"
+          "sha256": "1e1363098267c3feb90ad2463b629037ef899745f3c16b9b9a55bf52e50adc88"
         },
         "move_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/move_h3_v1/original_lossless.mkv",
@@ -5033,7 +5033,7 @@
         },
         "move_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/move_h3_v1/matte.json",
-          "sha256": "644583388df0690e8ae725c91e46d9ce23942e6af00fe9b6e7f9a7b6452bc50e"
+          "sha256": "efa53b1c27eb30e572c361e1d1f0ac912367d778cd0089727f346f167a7e6674"
         },
         "attack_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/attack_h3_v1/original_lossless.mkv",
@@ -5077,7 +5077,7 @@
         },
         "attack_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/attack_h3_v1/matte.json",
-          "sha256": "556af922b143007c478dc8ce9a946ab107d324efc7e3115bf3e17766de6c6c05"
+          "sha256": "69d23c847e0800bb99e925e496a6a60821f168e1c2cb0f1343322c30e9989225"
         },
         "hit_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/hit_h3_v1/original_lossless.mkv",
@@ -5121,7 +5121,7 @@
         },
         "hit_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/hit_h3_v1/matte.json",
-          "sha256": "524268c0a1f39b6a6966b695fa72c621f03eb48983ce797ae9e921f39ff12ba7"
+          "sha256": "e5009530f903cf3fcda9db38f0a0eaa31d8d726f976253494dcbcbe88f22ec9b"
         },
         "defend_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/defend_h3_v1/original_lossless.mkv",
@@ -5165,7 +5165,7 @@
         },
         "defend_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/defend_h3_v1/matte.json",
-          "sha256": "c6a17313434499fbf8f21822d62a525433142291355a106aadcc3490b3b57ba5"
+          "sha256": "aabb2d58efe1acc045e90467744ab52df48b2ce59b57e58a27b5973df541d301"
         },
         "cast_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/cast_h3_v1/original_lossless.mkv",
@@ -5209,7 +5209,7 @@
         },
         "cast_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/cast_h3_v1/matte.json",
-          "sha256": "cc4f5c0783e21bf3f625177d49f993ac1946ec7d7a28f4a0c17dcf453f748206"
+          "sha256": "fe72281ea061e08f3c945110f0980fdfb06caa7570789231244a74f421801b7d"
         },
         "death_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/death_h3_v1/original_lossless.mkv",
@@ -5253,13 +5253,13 @@
         },
         "death_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/death_h3_v1/matte.json",
-          "sha256": "cafa4d5d04700ebe8198ad737fa850a07418b1e36bbff4890f5d194138b9ea75"
+          "sha256": "c716961d520f89573384706bfae16ab8ad903f9a7dd83b26e98ee8e35efe575a"
         }
       },
       "preserved_accepted_clips": [],
       "visual_review": {
         "status": "accepted",
-        "notes": "H3 video. The two-reference idle popped at every guide; idle_h3_v2 with the single reference idle_0 moves freely and loops. The attack swings the sword up behind the helmet and over into the level strike. The defend snaps twice into its deeper crouches. The death skips the smeared topple 78-81."
+        "notes": "H3 video. The two-reference idle popped at every guide; idle_h3_v2 with the single reference idle_0 moves freely and loops. The attack swings the sword up behind the helmet and over into the level strike. The defend snaps twice into its deeper crouches. The death skips the smeared topple 78-81. Re-matted 2026-10-14 with the green-plate spill limit: the green rims on thin and blurred edges are gone, with the same frames, timing, anchor and scale."
       }
     }
   ]

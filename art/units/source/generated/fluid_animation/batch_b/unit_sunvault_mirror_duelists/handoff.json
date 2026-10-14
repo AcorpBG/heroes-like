@@ -5033,7 +5033,7 @@
         },
         "idle_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/idle_h3_v1/matte.json",
-          "sha256": "27d5a28eb1e38ca27be17a321dd871a72a7e176a332e4dce72490bd28ae9e735"
+          "sha256": "ab90ef31be4b24733e8218f6742bb1a12f295c40ef2cfa09b8833c79f15341fb"
         },
         "move_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/move_h3_v1/original_lossless.mkv",
@@ -5077,7 +5077,7 @@
         },
         "move_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/move_h3_v1/matte.json",
-          "sha256": "d83175870b98fedb9a37ea03e85c7ca8c7e8d035e79e44b18f7e474c933cb1d6"
+          "sha256": "bc0833b3b3d95e1d1257c60b49ce6eb0cb2985c091f244c5d607544d6cd47ab7"
         },
         "attack_h3_v2/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/attack_h3_v2/original_lossless.mkv",
@@ -5121,7 +5121,7 @@
         },
         "attack_h3_v2/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/attack_h3_v2/matte.json",
-          "sha256": "87f3cf8abf6314e4ac13a220c93438ffd4c6ed364497dbf21f45535c2e69877c"
+          "sha256": "2b6d27de62003438d1386d18f58e80723ff1231905ae1064e81c937db427fe99"
         },
         "hit_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/hit_h3_v1/original_lossless.mkv",
@@ -5165,7 +5165,7 @@
         },
         "hit_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/hit_h3_v1/matte.json",
-          "sha256": "9aa79f89d3ae4e7c70a6ad0561a43a7486e369c24db6d13772a99da76c681cc4"
+          "sha256": "e1f06896ab2c2f7642ebb7faa6645c6355a7e9571b841644dfafb1df08b3c253"
         },
         "defend_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/defend_h3_v1/original_lossless.mkv",
@@ -5209,7 +5209,7 @@
         },
         "defend_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/defend_h3_v1/matte.json",
-          "sha256": "be5c286bd8fe21d4c3ebf48d06de7e7881b3d19aba67f61e5f49b95fbb9451e4"
+          "sha256": "3dfd0cf61417c2597d38ee3205559770d0f0321edc6d73e13ac39119f9fc5e4e"
         },
         "cast_h3_v2/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/cast_h3_v2/original_lossless.mkv",
@@ -5253,7 +5253,7 @@
         },
         "cast_h3_v2/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/cast_h3_v2/matte.json",
-          "sha256": "c7aa272165dbaba773fd92baf36ace9f6ec321312f23166c53a91f07ad5384d8"
+          "sha256": "4d1b6335fe73e41e5e493a6a0624e9a631798c59e84a355fb201246da64dba4d"
         },
         "death_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/death_h3_v1/original_lossless.mkv",
@@ -5297,13 +5297,13 @@
         },
         "death_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/death_h3_v1/matte.json",
-          "sha256": "9bf703353b633f0253b27423ef4ddf87bd2b24a875b445fc406684a4b1766f75"
+          "sha256": "f18f1d1e0017f38c3928e3846c7f6cfd7ad16ae41761b3d2157174c0c4348d11"
         }
       },
       "preserved_accepted_clips": [],
       "visual_review": {
         "status": "accepted",
-        "notes": "Attack and cast are retakes with 128 px of headroom: the first takes raised the sabre out of the top of the video. Attack skips three frames where the blade tip still touches the top edge (video 21-23) and the return where the sabre thins into a straight greenish rod (78-86). Cast skips the turn where the buckler goes black and the sabre seems to pass out of it (10-16), so the low guard snaps up into the salute. Death skips the fall frames where the hair carries green fringes (64-66). Idle, move, hit and defend are the first takes."
+        "notes": "Attack and cast are retakes with 128 px of headroom: the first takes raised the sabre out of the top of the video. Attack skips three frames where the blade tip still touches the top edge (video 21-23) and the return where the sabre thins into a straight greenish rod (78-86). Cast skips the turn where the buckler goes black and the sabre seems to pass out of it (10-16), so the low guard snaps up into the salute. Death skips the fall frames where the hair carries green fringes (64-66). Idle, move, hit and defend are the first takes. Re-matted 2026-10-14 with the green-plate spill limit: the green rims on thin and blurred edges are gone, with the same frames, timing, anchor and scale."
       }
     }
   ]

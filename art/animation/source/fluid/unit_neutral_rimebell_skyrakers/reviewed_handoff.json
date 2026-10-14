@@ -5187,7 +5187,7 @@
         },
         "idle_h3_v2/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/idle_h3_v2/matte.json",
-          "sha256": "9e38d385197af26672e7cc107a6969714845df3af666a0c18d8e15f264fe12b7"
+          "sha256": "118173f8d46826dd4189c2bb555a53a82182bf0ddb0cb27b483f708c34c933c8"
         },
         "attack_h3_v2/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/attack_h3_v2/original_lossless.mkv",
@@ -5231,7 +5231,7 @@
         },
         "attack_h3_v2/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/attack_h3_v2/matte.json",
-          "sha256": "fcc6e9d240540409ab67d8bedb6e8aeb3e0d8843b54b5e596e184dbe1b5a09c3"
+          "sha256": "317179382e64c2a9c02c271b1c9d44e5d9a6b5b6260e3221b0afc43a85bc0e92"
         },
         "hit_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/hit_h3_v1/original_lossless.mkv",
@@ -5275,7 +5275,7 @@
         },
         "hit_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/hit_h3_v1/matte.json",
-          "sha256": "0f2dd5b243886e993cba5ecd44addecd8ab44070f0b13e6f985f54afb6330361"
+          "sha256": "9b41383927a5e86c2316de31758707a7da0f570251ada4066e21ed3986ec4de2"
         },
         "defend_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/defend_h3_v1/original_lossless.mkv",
@@ -5319,7 +5319,7 @@
         },
         "defend_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/defend_h3_v1/matte.json",
-          "sha256": "25bf7273b533720fda43778af45d1fe2a743754b68ad230a69432c8cc493f996"
+          "sha256": "af19464df44a571cfcf8bb94844a36f96e3eaef1651e341c47e8ee8e22c4fce5"
         },
         "cast_h3_v2/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/cast_h3_v2/original_lossless.mkv",
@@ -5363,7 +5363,7 @@
         },
         "cast_h3_v2/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/cast_h3_v2/matte.json",
-          "sha256": "a297300539a5104c3c01f2d48bf8294f767d0269679bfdaacd4a2c7c977d4416"
+          "sha256": "f6c7812a9ea458f68ad21bc7914405ba1738fcfcd414efcab97675f76f416dcd"
         },
         "death_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/death_h3_v1/original_lossless.mkv",
@@ -5407,13 +5407,13 @@
         },
         "death_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/death_h3_v1/matte.json",
-          "sha256": "7835e7c087898a77688742a5274bc4277e715d2f1cbb8f9c2c2bebb172a98d98"
+          "sha256": "32dbf232f74bf79371a6be24b5745ffbaea0faabe04650493308448141fa4b0d"
         }
       },
       "preserved_accepted_clips": [],
       "visual_review": {
         "status": "accepted_selected_clips",
-        "notes": "Reviewed on H3 video. Hit v1, defend v1 and death v1 are clean. Idle v1 rolled the body through big turns, so idle v2 (small strokes, never turns, steady light) is used: a steady wing-beat hover facing screen left that loops cleanly. Attack v1 turned in its wind-up; attack v2 rears back and rakes the talons toward screen left, with the hit on the rake (video 36). Cast v1 spun into its display; cast v2 sweeps the wings down and up into the painted front-facing spread and folds back. The walk keeps the published clip."
+        "notes": "Reviewed on H3 video. Hit v1, defend v1 and death v1 are clean. Idle v1 rolled the body through big turns, so idle v2 (small strokes, never turns, steady light) is used: a steady wing-beat hover facing screen left that loops cleanly. Attack v1 turned in its wind-up; attack v2 rears back and rakes the talons toward screen left, with the hit on the rake (video 36). Cast v1 spun into its display; cast v2 sweeps the wings down and up into the painted front-facing spread and folds back. The walk keeps the published clip. Re-matted 2026-10-14 with the green-plate spill limit: the green rims on thin and blurred edges are gone, with the same frames, timing, anchor and scale."
       },
       "source_scale_by_image": {
         "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_032.png": 0.625,

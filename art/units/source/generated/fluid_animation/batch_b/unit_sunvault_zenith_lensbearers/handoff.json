@@ -4946,7 +4946,7 @@
         },
         "idle_h3_v3/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/idle_h3_v3/matte.json",
-          "sha256": "40cefcb2c028e42a18d7cd360028757f37aa6bfa7d907d65ea7185d827caf32e"
+          "sha256": "f0e6368f27a7b1f240179ae980f1807bd4cb86a91521609066d963b8552d34e0"
         },
         "attack_h3_v2/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/attack_h3_v2/original_lossless.mkv",
@@ -4990,7 +4990,7 @@
         },
         "attack_h3_v2/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/attack_h3_v2/matte.json",
-          "sha256": "3cfe462f2bcb9ce26b0f1d2273f04e613d4cbeae8f67ccb8e5986ba81e3b213a"
+          "sha256": "b302316c5608d7306691f1018b51991c06133ee72803ecd8bac37d2d5a6a5e7a"
         },
         "ranged_h3_v3/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/ranged_h3_v3/original_lossless.mkv",
@@ -5034,7 +5034,7 @@
         },
         "ranged_h3_v3/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/ranged_h3_v3/matte.json",
-          "sha256": "a9b7004c015def772d18a99ec0070da76a741e19c8980b65dab6272aafc6d0f5"
+          "sha256": "2d7449abf5b4ebbc6f312e34b9ca594d9bf62a2a73e83f68e3da2acb523ef915"
         },
         "hit_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/hit_h3_v1/original_lossless.mkv",
@@ -5078,7 +5078,7 @@
         },
         "hit_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/hit_h3_v1/matte.json",
-          "sha256": "d708d2cf2f1ba7977d27762629d5bc37db6dccc82982144a5b3a77c867273d56"
+          "sha256": "54e4db91ca5ec0a31233a4def51828a5099b9587f226106a4faec06ab3fa33ae"
         },
         "defend_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/defend_h3_v1/original_lossless.mkv",
@@ -5122,7 +5122,7 @@
         },
         "defend_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/defend_h3_v1/matte.json",
-          "sha256": "8be0f4fbdc2618c8e579814d18a40a6598902a17fa9d275dbdbabba13d79e0e7"
+          "sha256": "44bc6d457294a73bb28293dcff3cf1199d7c94c7cb3bde981f66685ac1f76243"
         },
         "cast_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/cast_h3_v1/original_lossless.mkv",
@@ -5166,7 +5166,7 @@
         },
         "cast_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/cast_h3_v1/matte.json",
-          "sha256": "cb00c22d90b3a6c9f53b6ecd9e83750058d6bbd73e677c2a498c29623caba486"
+          "sha256": "a821948190c34a0352e9e6013aa65e894d564f24166d8c057f5fb1212d7d8b15"
         },
         "death_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/death_h3_v1/original_lossless.mkv",
@@ -5210,13 +5210,13 @@
         },
         "death_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/death_h3_v1/matte.json",
-          "sha256": "acc1cc8c57f3a8b601beb9c44f4b8a6d4d78332959bc21f736e45302892f32a9"
+          "sha256": "597d979e11daf71bd77888b6e0054a2506f91dad1f70cfe7b4cbc787c82d78af"
         }
       },
       "preserved_accepted_clips": [],
       "visual_review": {
         "status": "accepted",
-        "notes": "Reviewed on H3 video. Hit v1, defend v1 and cast v1 are clean. Death v1 skips one green-fringed frame of the fall (24). Idle v1 held each guide and popped between them; idle v3, guided by the neutral pose alone, loops smoothly. Attack v1 burst into shards and ranged v1 charged a glowing orb and fired a beam. The retakes say the cannon never fires and its crystals stay unlit and are guided through more painted poses, but both still flashed at contact: attack v2 cuts from the aim (40) to the lunge (50) and ranged v3 from the aim (46) to the recoil (59). The walk keeps the published clip."
+        "notes": "Reviewed on H3 video. Hit v1, defend v1 and cast v1 are clean. Death v1 skips one green-fringed frame of the fall (24). Idle v1 held each guide and popped between them; idle v3, guided by the neutral pose alone, loops smoothly. Attack v1 burst into shards and ranged v1 charged a glowing orb and fired a beam. The retakes say the cannon never fires and its crystals stay unlit and are guided through more painted poses, but both still flashed at contact: attack v2 cuts from the aim (40) to the lunge (50) and ranged v3 from the aim (46) to the recoil (59). The walk keeps the published clip. Re-matted 2026-10-14 with the green-plate spill limit: the green rims on thin and blurred edges are gone, with the same frames, timing, anchor and scale."
       }
     }
   ]

@@ -4615,7 +4615,7 @@
         },
         "idle_h3_v3/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/idle_h3_v3/matte.json",
-          "sha256": "a0cab776e8e82081662cf1eaae97d173781f60d5deeb9578a2a7de5733e7abf6"
+          "sha256": "b6d2b8d2eca3b226e94eae0cf32be7898c3705b7a2596425679dcaf50373938f"
         },
         "move_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/move_h3_v1/original_lossless.mkv",
@@ -4659,7 +4659,7 @@
         },
         "move_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/move_h3_v1/matte.json",
-          "sha256": "e4440c9b1418252df344702745ad1f59b050e2e49af2bd6f4b0bf3ebe904512b"
+          "sha256": "6b8a203ce4110824d2fa5bbc597a3a9dbbf3ad2e7cd0c7b3bac88d87f0df11b8"
         },
         "attack_h3_v2/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/attack_h3_v2/original_lossless.mkv",
@@ -4703,7 +4703,7 @@
         },
         "attack_h3_v2/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/attack_h3_v2/matte.json",
-          "sha256": "1d72a42946ff18b1f8df6819744e1b6ad4b72196bbcb0eeed9c26587d49b9cec"
+          "sha256": "12b594d14aa4f1b85ddecf854204d2c5ed7eb949a0a2a68fa7e378e60df4c072"
         },
         "hit_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/hit_h3_v1/original_lossless.mkv",
@@ -4747,7 +4747,7 @@
         },
         "hit_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/hit_h3_v1/matte.json",
-          "sha256": "2fdf6c3488d1b73ac325bb035855a35c736aedbb7d7287aaf8db127ede8b2954"
+          "sha256": "404ba01753b23dface9d3587f49e78d5df193d1e567bbe38dd517be285c298c4"
         },
         "defend_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/defend_h3_v1/original_lossless.mkv",
@@ -4791,7 +4791,7 @@
         },
         "defend_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/defend_h3_v1/matte.json",
-          "sha256": "a1d5bc22c8a13e7419689b20bae99e3db329cc62831398cdc0e776b8eae494c6"
+          "sha256": "478d3ffa847a575f1b7d326f0a21555922f492f1983a05a21f93de7df052f40d"
         },
         "cast_h3_v2/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/cast_h3_v2/original_lossless.mkv",
@@ -4835,7 +4835,7 @@
         },
         "cast_h3_v2/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/cast_h3_v2/matte.json",
-          "sha256": "89ac1e64d51b3b67c1ec1a3589942c622d5f976810650c12c996f3113318c20d"
+          "sha256": "b71288148170818488d9938a63c2b09f0014229b8ef50833d1465c4aced8c138"
         },
         "death_h3_v2/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/death_h3_v2/original_lossless.mkv",
@@ -4879,13 +4879,13 @@
         },
         "death_h3_v2/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/death_h3_v2/matte.json",
-          "sha256": "7bbbea6da0f8ef90cd77b1f76f1fd8ac4dd24662c0fec0b70a2089739be6ee46"
+          "sha256": "27e73c6a48faf9e0c2f1ead6df586a203a6c5bf01427f3b4ec1205d51e1364f1"
         }
       },
       "preserved_accepted_clips": [],
       "visual_review": {
         "status": "accepted",
-        "notes": "H3 video. Idle from the single-reference take idle_h3_v3: the clean stretch 92-123-0-16 forward on even frames and back on odd frames, skipping both wrist rolls where the blue sabre smears into a blob (two-reference idles popped between misregistered idle paintings). Attack from the padded take: cuts 22-24 where the blue blade vanishes, contact at the full-reach slash. Cast from the padded take: cuts the smeared sweeps 36-39 and 78-81, contact at the salute. Death from the bottom-padded take, which keeps the blade in frame. Move, hit and defend from v1."
+        "notes": "H3 video. Idle from the single-reference take idle_h3_v3: the clean stretch 92-123-0-16 forward on even frames and back on odd frames, skipping both wrist rolls where the blue sabre smears into a blob (two-reference idles popped between misregistered idle paintings). Attack from the padded take: cuts 22-24 where the blue blade vanishes, contact at the full-reach slash. Cast from the padded take: cuts the smeared sweeps 36-39 and 78-81, contact at the salute. Death from the bottom-padded take, which keeps the blade in frame. Move, hit and defend from v1. Re-matted 2026-10-14 with the green-plate spill limit: the green rims on thin and blurred edges are gone, with the same frames, timing, anchor and scale."
       }
     }
   ]

@@ -2,410 +2,179 @@
   "frames": 124,
   "fps": 24,
   "rgba_sha256": [
-    "d8087cbf94bf85bedad2e01b51a5a522047d51f5fd37ed22079af877132f5095",
-    "3043e2288433df08e6d8a1444bc4e5c4649753dd5e49cac1319f99f6834dd1df",
-    "bea24d69c741510682d71e4a941ab96ac178a0ca516f70460858bce05b33c6f1",
-    "ef5ac6049d9339e0e3024a9a421439d34a8078efd23a5c83e7a41528f28dbbbd",
-    "1e6e85e2f5e1c25fbde855d1bdbcedc90d660d5e85fc15a40b6e151cf40bd1ce",
-    "fbb0516b13970fd041b94699154eb41ea81d7080e853e5529c2fdcb2cd796e14",
-    "2d34c73d530edea9723ab49ad383a723ce653fe77bcd93fd857796b07f3fbd7a",
-    "cbf613ec44b6a1efdf3f4791a5e39ea06b9048535553b6bdf91b331d3752f30b",
-    "901df067cfca8dd12213456148a63c53f725713c19e555410d10ddcd3b27b811",
-    "0e416ac2a0d77e9d4a7be677bfb07671f2ee53433b26b874800bf831b1135bc9",
-    "e00fcfd235ccb98702595f1e30d6a43401975bbfc6c02d6d98a619ac184e680b",
-    "e3795725e768b71ccb562d144d9cd9b6b91a01f52022c46ba5876d9a9193b588",
-    "9fbf6a8dad13b4f3717653c2ad374757b5467a3aaa3009f00f0901f3104ab77b",
-    "3228f861673f2607b1228d3471cb871eef536dc9b56d7d39db9f03b2411f9c30",
-    "26a64e8b181d38586468b5417c2d6da7a63e74118d8d161c3269d94bef436ebf",
-    "65c007005843d5ed9c93fcc468a4d6151f095ab02ca661478e64385646b69ee1",
-    "b187f5e6e6ab4c1ab2a1589b233569231a3f011d341cc0387bc3488b49fbfe5a",
-    "cb5770ba62b8fd080b3d57139b5bc7fc160fc860ac49f637adc75357a66936f3",
-    "595348fd285a79b8e24975a53f6fea62a50d57613ca4cbae65ce36dddf97d41c",
-    "5590066ef8815f66f9ef1b1d239056defcec054439fb7b54b2b5011837c9313c",
-    "1bf30606900525c946e3d301f99151afc36c339aeee442cb93174b746c875eec",
-    "9b384a048cc68f9077471ae1abee64ab9be950fc79ea451165612cd39856c126",
-    "8ca7aff40cbca6cb222bcccbf10c53160c5eb037300315fe3a4702070dac2037",
-    "9270a2e989f5794d16f187a1cf50555e432705c36ad5000b497634f5e5aeb3f4",
-    "9526b97b6c7e23231f63b6d553f8d2b4cbf3fe5c62b099b492772555ca7a16bd",
-    "5e0887d45c3d96bbb0fb9625ee3dcf8b23d2ee8ee135a85cd6d0f89b746414d7",
-    "3411e391e5405db03284a918c889b2579a5b38e87a6bce72f9346a7de08b6364",
-    "3ccf957e4433f707944438d33cd26cfd4e6e6b59524dc251508f7273ad86232b",
-    "f877e0ff22231472c14966db8a5e93291d15987cd44672110b0ef8b74a7bbdfb",
-    "6030180152e98ae28e5344b600119e755e1f013b0a19b4494c4a8dcc580da70f",
-    "39f772e688ae9de4afab9a450250ca95b9744c47ad68e8bc458cb7dfd009f512",
-    "b22f6f9ecea10c0d1eb17b1648f24ca22005826866e7214d8b4f0d2a2e6d93db",
-    "aa38df2be780ada66e6a2a3813e30e74a2d91b3f2b74d3284cb31faddf75e84c",
-    "6f4508f28338819a94775bbee9aac904f5e7a04b92323976509541bbe8e0f9c3",
-    "737aa9763e459ae2f13240a02909eff8dac684a43a5995179f9354383057c4e5",
-    "8b2010a483e73f79c664b7313a485b3c202772af927d4e92097c90a1aa8f851a",
-    "31576fdb37839b208a1dfcc0fbd409441bb167a0b37b8c91ce3bd3789a66993c",
-    "65e87af4e4564233e29087b633b93b2a95832063309a8cb68828788e6576b900",
-    "85b6fba338f145f36635788878c8c5b252e3ff66243277bd4019cec53869bfdc",
-    "5f83ba99d00865b9dfbc0312329ccd3ad3cd5a0924ef21f5a0f5d49e664b9b23",
-    "1f82a98b791ef06be905b846e768d850d5980d0d9725595f5b936e5573ad59ef",
-    "c0fbdc54728d661e7f205a258a603ffdf864c34542215c372325627f98743d10",
-    "595cdcf93be2dac7340470930edc5b4070eb5b0a94830cd60da3ab637db409e4",
-    "babca9276114d939132ca83417f2d7a252923ebff1d89befbde4be6dd48dac31",
-    "2903fa759a30bbc2d24c038b5f26ef4951d0c5fb8215d4eee69d27d9d6635bd1",
-    "66dc445562adcffde340b23041b9992ff72016719973761b2daf13b8e4a76407",
-    "aef2041f916475a7b0f9f98112ac5e8dcf757dbcba77202a3a4b985880de85ff",
-    "0aaef0000107b3842e3ba2ba65b386aa642f4e019cfa395f6cdb67d87549a8d3",
-    "bdd210cc6d424d74013623828c83daced68c9d93a6122ba46eb2b5733f268f2a",
-    "de53eaaee0a5ae1414f581670aacc99c7a6fc2f738deddbdc9a5fa99da93eff9",
-    "1f73d0c5484dcc26645805b8d090f686c4554b2ae28dba3c18f7cc17cb890d0a",
-    "b2ab650b0195b25927be72251ae2d7d9481a59f9ce54b9ed6d010935cb54da37",
-    "cd4dd684aa9d2a85bbf2f48d0afa4d56fec0d6c7aa11370c477b0b6e8a0f1d7e",
-    "f16d12bc4e5788e7fe411303f8987ef473d56ae79ab25718784668ff9280007f",
-    "6909911292ed6d90a28d29e5b940d5d788cd5fc7165b58fc2ca2afeb6b800291",
-    "24bbb270a24e0c3739059204c075942e80f470fe111c1893dde123b01643e827",
-    "a09d8cb473df85a9c44bf807a8fbf0ddfca1c5fb7a2f6d1c570cf57e443c9447",
-    "c272e7116b1a8429b79edf546f7159fde3e755330ec331adc5e3af4d19a04db0",
-    "2fd4206d7605c209c71bcefa3d864524906148fb0b5fd0010f0f6c9552b636c9",
-    "0cc076a4f2ce7a1a02f20e6f87a9c0985d91537e479702463dafdcf8a715b04d",
-    "9be297885a35574156b86366f92425a0f62ccce01bf1a9c36fa57c9e6dd7fd5f",
-    "7bf7e6f3e265e689e915259d2ec0abdc0031a345f630c19abd2c152456a210dc",
-    "1aab464107ef8cf3b630b9506ceac30165ebc6ce7aba2947f7f3823c51e70032",
-    "5a9adb991f8b668dc9e6ce3111867390966294404a9675941f0067f870712f11",
-    "6fe05b3caadc4824f6d8c47d0df2ac4bc6e87273ddcb9023c52423ab0692b9c5",
-    "81cbddb5a163d1726e5222f732e6ae9d7f25d296860df199a87cfaf1a2e884d0",
-    "5608fe669a6062f1ef125f8c5c81dee245094d8ae97aa56d7717a86e12bcf35f",
-    "8cc3afb09111a7d2713368b37cea0a86d6361a5904633e4d045590c24f8e8379",
-    "c0b3a44465e0d3cdb9dd6c42b4dde7e1936bd94bc75466bc83432d21a8992d43",
-    "3f3f7aed6508037594e679f07ae7fb0aa8fb9aee41a9668a3e0364a12e1cecb8",
-    "2b0505e50a5e4109afe1ba3feeea9fbf27e295ef56a53f8004d77fc55e142d72",
-    "c5c8a82b6c8d0d1f0921d04a2143da19008c11dde76d07448416ab6242efc39d",
-    "2a17e4b07b3168b6fe29da1bb20a12952f72297dc9dd406d1ef9ef5d765d6fce",
-    "8f630caa9c4ee13dfe19fcf05f40301f2e489ff79f801c2fe0d272269891e821",
-    "2a98066ebf07e5a5ad5482b15bb1f2b284c0038cbce7fd893d1aa5e36ced4fea",
-    "2f88f05cb90a585f9c292ed71daa8dab09043bb003bae279d5f8b0971fdc8c92",
-    "f5ce57335fe111a09eee115415a8733e5873ae30421cedbfd510c92176402908",
-    "ccc8d75df562782450e2d14cb700e0b30c58c9dea2ed760059d3d7e4a59aec85",
-    "c2812b103d0e4ce869d8764b53252299c1feb01480ff1696fe7a44b7b8df0ee8",
-    "35d5d38cbd343a3f928b10c250284821fa0cbea4bd830e0331e2d14009fe2be9",
-    "d4abe96842393716283061aa78822c18e5d2994e1d01dee4b4b3952c0c995b4e",
-    "dd319a5ed6557893a2a16b2295c60fad76223de20f6e74984c61d5b6a57b3e9d",
-    "a6d555dd971ab8737581e324c5ddbffa2f921760420b61883685b86cf0655bfb",
-    "eb2f5489f216f917b4f0633ec342a6e3d4780aa6978025c6e0865baf5d08200e",
-    "5db8c8d4be5a9303d33aa7bd3554b085d776d19b6d9cee88520160b5ed33e171",
-    "9cae684bd137b9256e112304e4691721127081aa499e66f4a75ae4436e5ab31d",
-    "62a4b01e2e340decb81642cd36783107c03532bfdca66f98445c2658a4326a5a",
-    "e3d2ad2d76e4653f5a341db6a8981904f30a7c30ffaf3dfe550df9464fce1a61",
-    "6cdb3940f963f5b655d075200473e535c3e080c20508f51080a2214e6bcbab01",
-    "bd4a85a58e60ed02ca6960842b884a4e1b576666f6e43489c57149db3b135b5b",
-    "b9d06f9af34616172ed267d8e1db1bb46796273b7e9cd6152dc8e277b36a0d46",
-    "e5989d65d6501338be5187b00420f0686e931e5664ab33074d18e06a0cd86a7d",
-    "84b5e78a6752476f4a4f4625fb2dde782df59eec65fd8a9b5cd5e1c77cd7ff2d",
-    "9be8eabc30b39ee3fd780d7c6a2efc744187342ace4bc63d679cec588e2cf2c7",
-    "61da69ff9dc5a7f6a8fe6bd9e54319f0bda9ebf24972ccf07fc52467eefe05fb",
-    "2c3b23ceddbdf8bb767cb6458c0f2aab35b49ad517a283b2aa7e69ca667c6640",
-    "00d3281291ae1e878d3cb12740af3c797fc14b45198bd1392d3eb5edf369ad13",
-    "f1e30a9fd66444a0f524f9fd4788a3f082cae5b2d02918cfaa3c7b7e64acecae",
-    "56f91f28917719fce1b8623bb93c915ae5c8e2f877883a521bf84ec57e293d6a",
-    "e87fc6a1df56c6391139023fbeaa114ad71ab96e2419d6e3a373079c88b2c67c",
-    "25403feee6b9cd6198b9103bcaec7f9cee042f315fc5ef9dc13598acba7336c7",
-    "46f2403a31f745c7606a41fbcd8e28b3b979624d5b3c5fcaa31c76eb80ebebc6",
-    "526880de76ac0230f388283a22813eae813da1c4ea6c513e2e8b97f4afb3896e",
-    "eec140e27d3e7b5325f0b5c87958483fdb20204fa28c2a95c89f753ff5026206",
-    "736222216bc933327160839556df8f036e8d83a36100d8b9183c9eece5f3cf99",
-    "ae36d7b05332b0d0e2b5b364991b7625aa0cb3018eb265044c088daf25707c69",
-    "b903b137348606d3accd472cc0d055dcc0bf48cd4152ed6e4964aa13d99adf57",
-    "3f46702a9a17bb7d9a4200b29f321784b92196e09cee868531d9a5fef40a2c1f",
-    "72dea9e894c791be1e216a1d51835306581fb86e3a9ea29d0f96d9a775dbd8a0",
-    "ab8b040d3f0b12e83cd9acd598d3043247747dcb0a2176d879243ef4e874f3f0",
-    "88bce3c4e9a1283b7a21949b19a873ed5549a431813d9aa16159fff07ec39348",
-    "9209215a09b0f390e3d5afe9ac146217ab98c60200d46d85493c08e23000d67b",
-    "f534923067212452a7939c43877bd1383dac8d396d667c5c33efd334f45d768a",
-    "b6caebfcc1026aec954dfab257bfbd13bed20276ea850bb59da77d4e26e31789",
-    "e16b2d22bba9d018d4d9daf88ecb701272f7c7fffb42ca19bf9983595ff1ab2f",
-    "e50d29ab325b6de630adcadbd81e7bec6c4cd3232ce7106ccbf9d40ac10e309c",
-    "0485c3b42e3b916d917fd23fe1b15e93287f52cb8e45484a0b9c2d357fb79cfc",
-    "3ee851f4038424fd9a70f2ee16cfcaa744cd789cbef40bd3fb241c3a305dd757",
-    "4e43361c1a1e320471375ac5d2b2fa7ffc9eee59a0676bfbe86b3f5b5a5d6847",
-    "95346531abf13c7c3abd2fb0de3fe689cd7fe9e19bdd5b825f5f960156201955",
-    "2472bd12b984a1d07110dd85f2a38765ff525e9300e557530d657fbba4a76724",
-    "b359667e3f806cec6ba2c766a0d26f8f043ca26ee7a8ecfb7beeaec4609e9feb",
-    "ed2d5f2732f0293585e11b6952cb2c79661f52dbe291756ae94f196b0abdbf80",
-    "668c3b20bc306becdb1485b5b93f9d18fe503daf68bd465c1382dd56cac9b13d"
+    "e594a06aeb21f890874faa46b03e3aa9fe5af52289480c10cb895f723d1da5ba",
+    "60f6d3344e21a0140660b83d81e8d65a2af81bbf6d307647ca42cf5980140505",
+    "301b57345d3a6055edbb9c4bfcec0987408f2e7358f8e74cc93423bbb5923064",
+    "7230f1525c8e6a7324161bfe77cf64e98a96fd112f54192341e6dea17970181f",
+    "b578ea5ed6ec946fd21ba4e58447ad42f61032b57af5bb5859ff22b945ce4438",
+    "079019316b0127eafe1d8cd29b2b4001106d139bb06670c8470642339d5a19ee",
+    "2a33129ca56aa6b74f2f05ddcfabba2da7d5fdc48d45acb9826140de99f0e42e",
+    "3697c3545f5a9bcfd17c69e6c1a46b5ad59ca6768b9074ef9324a7f451d5e31c",
+    "d540c8221973c8de25c675bd44479dc50812f9c96fc2e1a4ab033b109719e930",
+    "71074f9ecff40f2fbe531bfe5dba306611d4ee8a94092db805d8e9fc2cb33cb6",
+    "d07eac59c524fe10ad493a9196fde0836db44c440d000816138e943cae0d8ea8",
+    "f7616fc595f01e1380ac069e66d7ee9fdc3016ec16c2933d51c394a5f72c8eb0",
+    "e0a0c65f370e14ed516f8070fe8c9de05df0e8c93510bcacab94a19e11707168",
+    "d35d29adfaa9bac8cbb56fcda8061667498a65db9e1b9f9e1df46731b06ba116",
+    "e781c815549bcada312c7616c835490c7147905c54538eb8ac9bc9c617d951c3",
+    "6aa54e2b3ea556bfa4e11680bf9f73fe33f3a683d7a8d3e2b917aea96c4d3128",
+    "591bd36605966565d0b43b4ed82772588744de3da4399d60be469bf9bea6b638",
+    "c933fa675ed6481d8f42d193a44e16b4e1f61624afb2c7f8a5139fddd5dd381d",
+    "a610348309f77396dd80902c4b22c09b707b0e21b798cf4e67fd44656febea87",
+    "f71f38330d7fee12f0d231dbbd24be7994351a8c7e64a2f96df47a924f8d184b",
+    "2f2db3f8c8058f64b45ff69e458bf348352649ae6d2780d2ca07b7ee98b65ffd",
+    "f66649095cd6ecd0790ee59e55236a3443f291fc22fb3a5c5b8234011270618b",
+    "d15e024b0ad662d461a803df26f1a13a72d0a84ef56d593efa7748d87728c5a4",
+    "da23e1480c5618086a65e686c0c54417f0472d7db497690307e92bc0979466e7",
+    "9f3f6622f0864ad132074321a287d3dcd1ae944a8721fc287acf92bf98a9e6ac",
+    "b5cd6d572f07085d174c0aa07f6b13a6ca46357dc64c96824cbe565355c65d04",
+    "83e2c4cd27ac52cd4b1c12c90de6f468f8c935a9e63dd74bbc3078119a14448a",
+    "63c1123d6a585782ede602beb725cdb53602286260185157eaefcc4068c4d1f9",
+    "179a7d145ea5b0afafe277db59960108e3303f8e5380eb3d58bd9be4e608ce79",
+    "53883c88d1c59b86e635c48916d752cbc1c39b087211381655b9a4cf15807b4a",
+    "626052371653ba22a2e47018aa8ff28a93f739eb6978bc3e8f6657d76727d389",
+    "209a571439735a378b4a44d75e410ea90cbabb22665a325f219ac5812c4038ae",
+    "362e68a601bda3bd912fb022a4189226fceaf6e9915cdba6aa101765b7c50f0d",
+    "de517acf27059f16b87b21be641bee46a0e36b8e05ab9706b8488156a560ace2",
+    "be6d6d491819e574040f2069f0f34aae095b952693b083eacea2bd4574b3bf1f",
+    "aaff03ee20faf36264286c278abf11527638298ace54023c15810e3f333271bb",
+    "69cdf81db2f19161c1ebe99ebcb95787d41a14f31cb42ec23b3eddde2ef912b5",
+    "81e2d3650acf2e5e708e4954b84385a5dd4ba89168e88e3d586291e76639639f",
+    "c8177337c43c89b331581acf4c83e775b4d5b5eb2d817e3ff5f29d20d4864d36",
+    "9267c3fb6eafbafdc7f3d89404445f968684c5aa44549f79cc80e5d9d13fbbea",
+    "4bd12cc89a646e1aa8600e838361e95b7fa2eebf7857a1c15efe3bd51023318e",
+    "11391c3af3b21ced63917ed1de1129752741c8b26c363b4dbd0a5c3f43b13899",
+    "83747757de48b8b5b884e3ece11ce9d6638efa50dc104680ad3d4505744107ce",
+    "60e02b81ec6a997b9422b8611536ed343c0c2fbb2639cbdcea2037d4dd8f4a11",
+    "52a642a2d22dc19fdde02af4dc5ec54e9f35785c80573bfbba10a1fd2b53bea1",
+    "5be005c8decfd425e38f95140a82c0ccdbdeb4bb1afed1739bd95c2fdb5bec9f",
+    "2cee92adf134c39d0caa2e8d7717cca4c61511a00b52f2ee9d57192c590304a6",
+    "db251eebfb849387d4530826e126f0753e6d3fe17b74d0e05e991c1eab3433ea",
+    "5bf5d6f21d474dd647109eba7f2a51d6e7841c84ada7252041ed4bae7300c4f8",
+    "44d912e88b8b8f42c3212d974dd76dff448fcb61e73e25c238aaf311ec831daf",
+    "8ce5aa5f73b2f577ba7384000c9f2a1a5d1fbf495dc69459db4f4afaf9576102",
+    "4f4b02bf1b3f4df14002aba22e31f012b4d29824260b061c40b74679b261d7fd",
+    "c0d6026ff6c84d04a9a9c57ade2483f08a0e236eb84e57e2ddbd26e56651f94b",
+    "c0a1efe86e8ae75178ef7c0d015cef72df510b334391c368ad45a6a0456f3daa",
+    "a3cd0ed148d317436eae3c66a820d8bf8b475214c80c3cb6cad463c4f1151a61",
+    "b9c23f1650b4242784e197d090755db07f100057ee373b7459d2132f16f37d14",
+    "d71b314a5c456c72a27823413a9649b96295406867fefae6cca55acc245aa62a",
+    "93d8d97428bdae9249f6ec9629cea6af384ca87c5ca0a9dfafa1fc760f64d328",
+    "0bd11f8014b55e5fccd725a4838485d5e4174da85d3e3d1e0c62bb67bfdd2a0d",
+    "5cc58f395e9eaf892506e84747a602b2884b782026f68396d89d4a67650e381b",
+    "c12ba2e2c7cd2068cc6413699998ddb6c657b5b157ba638e8bb9c09a369bbbb8",
+    "c0cd4560951abdd4c8328bbbb32096381b71f66e2bd700434ea6c9c02de37e6c",
+    "14f6bb725ef84f2bc313ba3cb2dfcc3965fe74ebef7840f62081016d42000505",
+    "aea09652befce0311351fdec33be7d5b89f9dd2b53eeee06d9a525344cb69fae",
+    "bde389f169fd7f2819854437a497666ed2f5e19a3ed1090bbf84851817587d0a",
+    "cbc9ec12cfcc24db33621ec4764efae05fc7f505184b1385b45f1494288cae6c",
+    "0ae32771b8322cccc2f0ff5c8464b30dfffc2ba17674b5b6a80e9eee1a2f1de8",
+    "d1a06e8a94e6bda4f8b027664e38dddacfafcb61280bf57894c0f2550e0169e5",
+    "72714c4c729f3cbc2eb6bc469c5c3c02adf052eafc7560ea525aba5494935363",
+    "d1c68ef452aa02d49f9b801752069af582ab849c8955aa6aca783fb475ffbeda",
+    "116487704952277f0fc773ae8442e2daaca53b24aa92a077ca940986a73576a7",
+    "d01b492d8101d4919b7213eeec0eed33d36fcc546e9717c5f1597d482d7d9148",
+    "421ce4abfae17982af2b6b7bf1a81574015a02601d57b8a5e2b7810aff401cb1",
+    "b6f305be139faba95a995af3a5b7f5d9de498467462cbc2a2dd17ba688bed25e",
+    "4830942f81c3854fe736a925990034520620794c5bf520ce5d770140966711ea",
+    "b519ec8115bcf2e2f2db6b388d3c2c648474f86b83394ae7cfcab85e997f3dea",
+    "b199392c0f5e1c2cee52d79c36ea7055b5b0f54784e930dd4a272261c8746e52",
+    "7ca4ca62c015309c92dade34de7c00db34c5bfadc4c302126d29b4c30dab5825",
+    "f19e4a68b43c4de3ecfb52f3ab10d4bfde77c6e7f5f4b70ad23ac303d1ab6cfa",
+    "82c84b18457c9b675351e39fd7e1d29feb6fea4fef2feb94a0c675204f173444",
+    "5322a704f50b86c084363870889af958db02a96c5526edee98dee4bd1735e95a",
+    "fa867fe8b9515387c8e24f2c71240bd7a937ad926c090dbfaddb692faad06f94",
+    "e1e874f3e8185d28e36d48a32c14ee5969eb7ac817650d4e3bb8dd2ebbea2242",
+    "b97d6a7f0e7d4ce05e94a4c1e780a11f7d06361a02778799f05106265d898041",
+    "6450000e3e8e6a5004eaff7cb0ee5edabbffaab81238c9ac92f09a51c3e3f327",
+    "9784622636e9048fd5272edd23f0e87bb4e7c9bc437c38fe754853537589c931",
+    "8e0fcfca4906ec9de0be511a1b5e8a3443c2abf2733f63f7cc0b3d2036923889",
+    "7d29d7227b32daa91db11ad87ec2f758b64dc4a88f0ad7c70725ec7b584a47f6",
+    "61e6cbc11b887e660482c95e6c4e24c81b26c56f041d3b34e09bdc0fb18e2ac6",
+    "dd6f0e1c03f1fda1f312dd31608968296ea0c8e1133b5aab2c5475d55a292541",
+    "acc01ab5c90d5f653606ce06be5c5d5eb34c06eb148efda731c2cec2d6172d89",
+    "e2095cf73bb8a9a17d2f8c73e34d61e3e2ef905439a8702d325320f7d7f0efef",
+    "3a231d21ec83c3b57a2a7853c2b874182c2f58c13a371a1a14ee509f463b77a7",
+    "187a92f06d1c7feed1804e8c51530a35113a7f5a76eb788c57af6da5693ebee2",
+    "3eae63e244c83dd25c792d48f02af082c78d1633798870bb7e392537ab6b77c3",
+    "18a4ee6a46fae21db3b403e0c4bd1035339aa69b2f291c1d12a61b62018d2ae1",
+    "2cf0fc12a60ae7607565cd31ffd22a4d85effeba80ce1dcef7d6b4166614047c",
+    "1cb41dd838007efabdc281c3a3f7d967fc6ab063c147073085f5cc024ebc7870",
+    "462dc92d5bac08a5608a15d47e9316f6479713ae1595cb4bc01fdf69a936f40d",
+    "bbd23c519c4ef6474624638d96da6a6e4f54bff92ed12b803af30d9dda606d1a",
+    "a77c6b0e68c824e24f61f8d2536ce2fd99977f6704856037110c07732bc3da4a",
+    "9b2f7e68c0be3dffbc558a5cedcd119adff42f08c7c20111d44d40b3e2bab32b",
+    "165c8b524291677e6ae52d3fb6e8d445ee11e16f17d736b4ff3c62d5d6d2b775",
+    "ca13d9511a6f577d9c7c17b7c354e3ad538004d2c6e3e7b233b182dfb700162b",
+    "86a861f1327f43ed6b4afb92fc9bb04dcfbe7da076046cb107c7cedba61c1c5f",
+    "40e6440113ab2b53b1bf8aff2c1ae7c62fa9d389101a0ae09550abb60952f170",
+    "49052c66906f830c161bde774df4e9b938613f3364a4b80c3c9d53366e2f79ed",
+    "4ed9c3420d007cffd68d4e7874c47ba9bb327e9afeedb93e4ee742bc23ba0747",
+    "db939598627bee559c07a512d20306af500c95d1ecac3b356a8e679860fc2ea8",
+    "aaea9647b4406fab6afe1b704ee164c623e8229f2e67b63669474e1d7f0e3e6d",
+    "d7da10d4696f88ed95ddb92bc4be4c7a702b9dae252ad1dbe9ba1b0dee1de615",
+    "8e382f4e44f5fe7bf25c34376763d65a97b3ac6f9f4b0a32abc4966ac802be95",
+    "f5e6fefc48873e843517ce97b69c1b0277e5b5a23bd15179a464af491a5c2810",
+    "8e20a0faad697d85138e89ea091ec90bc4bdddc88210ff2512872416c4005258",
+    "6c004424d098bcc40f4ac18751d07a5d91c9682b9f54470cfad9255e922ca562",
+    "00dc3cae9d102c54feb8ad892ac0e83918b90cb6f55a914a99858dd3e4d1d44d",
+    "c2f3b2af5aa5f072b47e73e54c86136606df2fe74a0deb4fd3017b80dce4c0f2",
+    "1558041dd61b0f595eef33b5088304a04922c36be93177234bac79bcaeccff85",
+    "e6d597f587b03d045b830df03ba905da7892b6a839c1b19869689180339f3893",
+    "c9e0d9c0023c17df44dc0f1d224579d2cb48c26491c43ffaf32132fb7f05775d",
+    "e4d1dc498e04022e1a3082b81b252bc7d3a5568b9f048e810c1f9ac63a494cb8",
+    "bd5028ea98a4c0596563b46d49cbd9bf38977927eb4ba189a8646eed32cf5f9d",
+    "8bd1ac3daafc0ae0077534ed63b10f9353ea5dba682cfc103b849db08b897fe5",
+    "cb7ac58bec768f4696ebe55cdcc3d13e42678f294f177525d90074d605a91fa1"
   ],
   "frame_details": [
     {
-      "fixed_pixels": 12594,
-      "opacity_removed": 0.01384,
+      "fixed_pixels": 13425,
+      "opacity_removed": 0.01809,
       "background_rgb": [
         3.5,
         245.0,
         0.0
       ],
       "corner_median_spread": 1.5,
-      "haze": 0.146
+      "haze": 0.156
     },
     {
-      "fixed_pixels": 13829,
-      "opacity_removed": 0.01419,
+      "fixed_pixels": 14700,
+      "opacity_removed": 0.01802,
       "background_rgb": [
         3.5,
         246.0,
         0.0
       ],
       "corner_median_spread": 1.118,
-      "haze": 0.163
+      "haze": 0.171
     },
     {
-      "fixed_pixels": 13585,
-      "opacity_removed": 0.01417,
+      "fixed_pixels": 14430,
+      "opacity_removed": 0.01812,
       "background_rgb": [
         4.0,
         246.0,
         0.0
       ],
       "corner_median_spread": 1.0,
-      "haze": 0.16
+      "haze": 0.168
     },
     {
-      "fixed_pixels": 13522,
-      "opacity_removed": 0.0141,
+      "fixed_pixels": 14383,
+      "opacity_removed": 0.01818,
       "background_rgb": [
         4.0,
         246.0,
         0.0
       ],
       "corner_median_spread": 1.0,
-      "haze": 0.158
+      "haze": 0.167
     },
     {
-      "fixed_pixels": 13690,
-      "opacity_removed": 0.01402,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.0,
-      "haze": 0.161
-    },
-    {
-      "fixed_pixels": 13818,
-      "opacity_removed": 0.01393,
-      "background_rgb": [
-        4.0,
-        246.5,
-        0.0
-      ],
-      "corner_median_spread": 1.118,
-      "haze": 0.162
-    },
-    {
-      "fixed_pixels": 13657,
-      "opacity_removed": 0.01387,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.0,
-      "haze": 0.161
-    },
-    {
-      "fixed_pixels": 13666,
-      "opacity_removed": 0.0139,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.0,
-      "haze": 0.16
-    },
-    {
-      "fixed_pixels": 13789,
-      "opacity_removed": 0.01379,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.0,
-      "haze": 0.162
-    },
-    {
-      "fixed_pixels": 15898,
-      "opacity_removed": 0.01564,
-      "background_rgb": [
-        4.0,
-        246.5,
-        0.0
-      ],
-      "corner_median_spread": 0.5,
-      "haze": 0.187
-    },
-    {
-      "fixed_pixels": 16079,
-      "opacity_removed": 0.0159,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.0,
-      "haze": 0.189
-    },
-    {
-      "fixed_pixels": 16783,
-      "opacity_removed": 0.01518,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.0,
-      "haze": 0.194
-    },
-    {
-      "fixed_pixels": 16711,
-      "opacity_removed": 0.01485,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.0,
-      "haze": 0.193
-    },
-    {
-      "fixed_pixels": 18718,
-      "opacity_removed": 0.01541,
-      "background_rgb": [
-        4.0,
-        246.5,
-        0.0
-      ],
-      "corner_median_spread": 0.5,
-      "haze": 0.212
-    },
-    {
-      "fixed_pixels": 19229,
-      "opacity_removed": 0.01499,
-      "background_rgb": [
-        4.0,
-        246.5,
-        0.0
-      ],
-      "corner_median_spread": 0.5,
-      "haze": 0.218
-    },
-    {
-      "fixed_pixels": 18788,
-      "opacity_removed": 0.01496,
-      "background_rgb": [
-        4.0,
-        246.5,
-        0.0
-      ],
-      "corner_median_spread": 0.5,
-      "haze": 0.211
-    },
-    {
-      "fixed_pixels": 17154,
-      "opacity_removed": 0.01497,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.0,
-      "haze": 0.195
-    },
-    {
-      "fixed_pixels": 13131,
-      "opacity_removed": 0.01305,
-      "background_rgb": [
-        4.0,
-        245.0,
-        0.0
-      ],
-      "corner_median_spread": 1.0,
-      "haze": 0.151
-    },
-    {
-      "fixed_pixels": 16934,
-      "opacity_removed": 0.01339,
-      "background_rgb": [
-        3.5,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.118,
-      "haze": 0.19
-    },
-    {
-      "fixed_pixels": 17432,
-      "opacity_removed": 0.01338,
-      "background_rgb": [
-        3.5,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.118,
-      "haze": 0.196
-    },
-    {
-      "fixed_pixels": 16672,
-      "opacity_removed": 0.01278,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.0,
-      "haze": 0.188
-    },
-    {
-      "fixed_pixels": 16658,
-      "opacity_removed": 0.01315,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.0,
-      "haze": 0.189
-    },
-    {
-      "fixed_pixels": 17534,
-      "opacity_removed": 0.01239,
-      "background_rgb": [
-        3.5,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 0.5,
-      "haze": 0.193
-    },
-    {
-      "fixed_pixels": 17043,
-      "opacity_removed": 0.0127,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 0.0,
-      "haze": 0.186
-    },
-    {
-      "fixed_pixels": 16762,
-      "opacity_removed": 0.01211,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.0,
-      "haze": 0.178
-    },
-    {
-      "fixed_pixels": 16101,
-      "opacity_removed": 0.01251,
+      "fixed_pixels": 14569,
+      "opacity_removed": 0.01807,
       "background_rgb": [
         4.0,
         246.0,
@@ -415,74 +184,74 @@
       "haze": 0.169
     },
     {
-      "fixed_pixels": 18765,
-      "opacity_removed": 0.01288,
+      "fixed_pixels": 14688,
+      "opacity_removed": 0.01798,
+      "background_rgb": [
+        4.0,
+        246.5,
+        0.0
+      ],
+      "corner_median_spread": 1.118,
+      "haze": 0.171
+    },
+    {
+      "fixed_pixels": 14514,
+      "opacity_removed": 0.01806,
       "background_rgb": [
         4.0,
         246.0,
         0.0
       ],
       "corner_median_spread": 1.0,
-      "haze": 0.192
+      "haze": 0.169
     },
     {
-      "fixed_pixels": 18279,
-      "opacity_removed": 0.01211,
+      "fixed_pixels": 14498,
+      "opacity_removed": 0.0181,
       "background_rgb": [
         4.0,
         246.0,
         0.0
       ],
-      "corner_median_spread": 0.0,
-      "haze": 0.187
+      "corner_median_spread": 1.0,
+      "haze": 0.169
     },
     {
-      "fixed_pixels": 19004,
-      "opacity_removed": 0.0125,
+      "fixed_pixels": 14661,
+      "opacity_removed": 0.01795,
       "background_rgb": [
         4.0,
         246.0,
         0.0
       ],
-      "corner_median_spread": 0.0,
-      "haze": 0.195
+      "corner_median_spread": 1.0,
+      "haze": 0.171
     },
     {
-      "fixed_pixels": 19357,
-      "opacity_removed": 0.01276,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 0.0,
-      "haze": 0.197
-    },
-    {
-      "fixed_pixels": 21920,
-      "opacity_removed": 0.01288,
+      "fixed_pixels": 16978,
+      "opacity_removed": 0.02025,
       "background_rgb": [
         4.0,
         246.5,
         0.0
       ],
       "corner_median_spread": 0.5,
-      "haze": 0.211
+      "haze": 0.196
     },
     {
-      "fixed_pixels": 19968,
-      "opacity_removed": 0.01226,
+      "fixed_pixels": 17082,
+      "opacity_removed": 0.01993,
       "background_rgb": [
         4.0,
         246.0,
         0.0
       ],
       "corner_median_spread": 1.0,
-      "haze": 0.192
+      "haze": 0.197
     },
     {
-      "fixed_pixels": 20624,
-      "opacity_removed": 0.01288,
+      "fixed_pixels": 17907,
+      "opacity_removed": 0.01931,
       "background_rgb": [
         4.0,
         246.0,
@@ -492,8 +261,283 @@
       "haze": 0.203
     },
     {
-      "fixed_pixels": 19209,
-      "opacity_removed": 0.0127,
+      "fixed_pixels": 17767,
+      "opacity_removed": 0.01971,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.0,
+      "haze": 0.203
+    },
+    {
+      "fixed_pixels": 20095,
+      "opacity_removed": 0.0208,
+      "background_rgb": [
+        4.0,
+        246.5,
+        0.0
+      ],
+      "corner_median_spread": 0.5,
+      "haze": 0.223
+    },
+    {
+      "fixed_pixels": 20550,
+      "opacity_removed": 0.01989,
+      "background_rgb": [
+        4.0,
+        246.5,
+        0.0
+      ],
+      "corner_median_spread": 0.5,
+      "haze": 0.229
+    },
+    {
+      "fixed_pixels": 20254,
+      "opacity_removed": 0.02024,
+      "background_rgb": [
+        4.0,
+        246.5,
+        0.0
+      ],
+      "corner_median_spread": 0.5,
+      "haze": 0.223
+    },
+    {
+      "fixed_pixels": 18340,
+      "opacity_removed": 0.01972,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.0,
+      "haze": 0.204
+    },
+    {
+      "fixed_pixels": 14019,
+      "opacity_removed": 0.01715,
+      "background_rgb": [
+        4.0,
+        245.0,
+        0.0
+      ],
+      "corner_median_spread": 1.0,
+      "haze": 0.159
+    },
+    {
+      "fixed_pixels": 18200,
+      "opacity_removed": 0.0177,
+      "background_rgb": [
+        3.5,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.118,
+      "haze": 0.199
+    },
+    {
+      "fixed_pixels": 18779,
+      "opacity_removed": 0.01831,
+      "background_rgb": [
+        3.5,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.118,
+      "haze": 0.206
+    },
+    {
+      "fixed_pixels": 18064,
+      "opacity_removed": 0.01752,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.0,
+      "haze": 0.198
+    },
+    {
+      "fixed_pixels": 17802,
+      "opacity_removed": 0.01782,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.0,
+      "haze": 0.198
+    },
+    {
+      "fixed_pixels": 18750,
+      "opacity_removed": 0.01711,
+      "background_rgb": [
+        3.5,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 0.5,
+      "haze": 0.203
+    },
+    {
+      "fixed_pixels": 18172,
+      "opacity_removed": 0.0168,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 0.0,
+      "haze": 0.195
+    },
+    {
+      "fixed_pixels": 17921,
+      "opacity_removed": 0.01634,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.0,
+      "haze": 0.186
+    },
+    {
+      "fixed_pixels": 17179,
+      "opacity_removed": 0.01649,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.0,
+      "haze": 0.177
+    },
+    {
+      "fixed_pixels": 20068,
+      "opacity_removed": 0.01755,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.0,
+      "haze": 0.201
+    },
+    {
+      "fixed_pixels": 19671,
+      "opacity_removed": 0.0169,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 0.0,
+      "haze": 0.197
+    },
+    {
+      "fixed_pixels": 20246,
+      "opacity_removed": 0.01684,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 0.0,
+      "haze": 0.204
+    },
+    {
+      "fixed_pixels": 20617,
+      "opacity_removed": 0.01734,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 0.0,
+      "haze": 0.207
+    },
+    {
+      "fixed_pixels": 23393,
+      "opacity_removed": 0.01766,
+      "background_rgb": [
+        4.0,
+        246.5,
+        0.0
+      ],
+      "corner_median_spread": 0.5,
+      "haze": 0.221
+    },
+    {
+      "fixed_pixels": 21497,
+      "opacity_removed": 0.01679,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.0,
+      "haze": 0.201
+    },
+    {
+      "fixed_pixels": 22069,
+      "opacity_removed": 0.01774,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.0,
+      "haze": 0.212
+    },
+    {
+      "fixed_pixels": 20548,
+      "opacity_removed": 0.0174,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.0,
+      "haze": 0.197
+    },
+    {
+      "fixed_pixels": 15552,
+      "opacity_removed": 0.01543,
+      "background_rgb": [
+        3.5,
+        245.0,
+        0.0
+      ],
+      "corner_median_spread": 1.118,
+      "haze": 0.147
+    },
+    {
+      "fixed_pixels": 20253,
+      "opacity_removed": 0.01654,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.0,
+      "haze": 0.19
+    },
+    {
+      "fixed_pixels": 19398,
+      "opacity_removed": 0.01702,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.0,
+      "haze": 0.19
+    },
+    {
+      "fixed_pixels": 18907,
+      "opacity_removed": 0.01782,
       "background_rgb": [
         4.0,
         246.0,
@@ -503,481 +547,96 @@
       "haze": 0.188
     },
     {
-      "fixed_pixels": 14528,
-      "opacity_removed": 0.01177,
-      "background_rgb": [
-        3.5,
-        245.0,
-        0.0
-      ],
-      "corner_median_spread": 1.118,
-      "haze": 0.139
-    },
-    {
-      "fixed_pixels": 18954,
-      "opacity_removed": 0.01239,
+      "fixed_pixels": 17651,
+      "opacity_removed": 0.01748,
       "background_rgb": [
         4.0,
         246.0,
         0.0
       ],
       "corner_median_spread": 1.0,
-      "haze": 0.182
+      "haze": 0.177
     },
     {
-      "fixed_pixels": 18188,
-      "opacity_removed": 0.01273,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.0,
-      "haze": 0.182
-    },
-    {
-      "fixed_pixels": 17709,
-      "opacity_removed": 0.01288,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.0,
-      "haze": 0.179
-    },
-    {
-      "fixed_pixels": 16594,
-      "opacity_removed": 0.01338,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.0,
-      "haze": 0.169
-    },
-    {
-      "fixed_pixels": 15898,
-      "opacity_removed": 0.01279,
+      "fixed_pixels": 16944,
+      "opacity_removed": 0.01699,
       "background_rgb": [
         4.0,
         246.5,
         0.0
       ],
       "corner_median_spread": 0.5,
-      "haze": 0.163
+      "haze": 0.171
     },
     {
-      "fixed_pixels": 15757,
-      "opacity_removed": 0.01318,
+      "fixed_pixels": 16723,
+      "opacity_removed": 0.01708,
       "background_rgb": [
         4.0,
         246.5,
         0.0
       ],
       "corner_median_spread": 1.5,
-      "haze": 0.166
-    },
-    {
-      "fixed_pixels": 15610,
-      "opacity_removed": 0.01278,
-      "background_rgb": [
-        4.0,
-        246.5,
-        0.0
-      ],
-      "corner_median_spread": 1.5,
-      "haze": 0.164
-    },
-    {
-      "fixed_pixels": 15534,
-      "opacity_removed": 0.01271,
-      "background_rgb": [
-        4.0,
-        246.5,
-        0.0
-      ],
-      "corner_median_spread": 1.5,
-      "haze": 0.165
-    },
-    {
-      "fixed_pixels": 14986,
-      "opacity_removed": 0.0134,
-      "background_rgb": [
-        4.0,
-        246.5,
-        0.0
-      ],
-      "corner_median_spread": 1.118,
-      "haze": 0.158
-    },
-    {
-      "fixed_pixels": 14600,
-      "opacity_removed": 0.0129,
-      "background_rgb": [
-        4.5,
-        246.5,
-        0.0
-      ],
-      "corner_median_spread": 0.707,
-      "haze": 0.154
-    },
-    {
-      "fixed_pixels": 15061,
-      "opacity_removed": 0.01318,
-      "background_rgb": [
-        4.0,
-        246.5,
-        0.0
-      ],
-      "corner_median_spread": 1.118,
-      "haze": 0.159
-    },
-    {
-      "fixed_pixels": 14830,
-      "opacity_removed": 0.01246,
-      "background_rgb": [
-        4.5,
-        246.5,
-        0.0
-      ],
-      "corner_median_spread": 1.581,
-      "haze": 0.155
-    },
-    {
-      "fixed_pixels": 15168,
-      "opacity_removed": 0.01301,
-      "background_rgb": [
-        4.5,
-        247.0,
-        0.0
-      ],
-      "corner_median_spread": 1.118,
-      "haze": 0.157
-    },
-    {
-      "fixed_pixels": 15019,
-      "opacity_removed": 0.01307,
-      "background_rgb": [
-        4.5,
-        246.5,
-        0.0
-      ],
-      "corner_median_spread": 0.707,
-      "haze": 0.156
-    },
-    {
-      "fixed_pixels": 15143,
-      "opacity_removed": 0.01292,
-      "background_rgb": [
-        4.0,
-        246.5,
-        0.0
-      ],
-      "corner_median_spread": 1.118,
-      "haze": 0.156
-    },
-    {
-      "fixed_pixels": 15177,
-      "opacity_removed": 0.01265,
-      "background_rgb": [
-        4.0,
-        246.5,
-        0.0
-      ],
-      "corner_median_spread": 1.118,
-      "haze": 0.156
-    },
-    {
-      "fixed_pixels": 13282,
-      "opacity_removed": 0.01214,
-      "background_rgb": [
-        3.5,
-        245.0,
-        1.0
-      ],
-      "corner_median_spread": 1.118,
-      "haze": 0.136
-    },
-    {
-      "fixed_pixels": 14472,
-      "opacity_removed": 0.01259,
-      "background_rgb": [
-        4.0,
-        246.5,
-        0.0
-      ],
-      "corner_median_spread": 1.118,
-      "haze": 0.149
-    },
-    {
-      "fixed_pixels": 14423,
-      "opacity_removed": 0.01253,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.0,
-      "haze": 0.149
-    },
-    {
-      "fixed_pixels": 14524,
-      "opacity_removed": 0.01274,
-      "background_rgb": [
-        3.5,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.118,
-      "haze": 0.151
-    },
-    {
-      "fixed_pixels": 14619,
-      "opacity_removed": 0.01211,
-      "background_rgb": [
-        3.5,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.118,
-      "haze": 0.152
-    },
-    {
-      "fixed_pixels": 14430,
-      "opacity_removed": 0.01281,
-      "background_rgb": [
-        4.0,
-        246.5,
-        0.0
-      ],
-      "corner_median_spread": 1.118,
-      "haze": 0.152
-    },
-    {
-      "fixed_pixels": 14428,
-      "opacity_removed": 0.01238,
-      "background_rgb": [
-        4.0,
-        246.5,
-        0.0
-      ],
-      "corner_median_spread": 1.5,
-      "haze": 0.152
-    },
-    {
-      "fixed_pixels": 14550,
-      "opacity_removed": 0.01278,
-      "background_rgb": [
-        4.0,
-        246.5,
-        0.0
-      ],
-      "corner_median_spread": 1.5,
-      "haze": 0.153
-    },
-    {
-      "fixed_pixels": 14678,
-      "opacity_removed": 0.01308,
-      "background_rgb": [
-        4.0,
-        246.5,
-        0.0
-      ],
-      "corner_median_spread": 1.5,
-      "haze": 0.156
-    },
-    {
-      "fixed_pixels": 14609,
-      "opacity_removed": 0.01271,
-      "background_rgb": [
-        4.0,
-        246.5,
-        0.0
-      ],
-      "corner_median_spread": 1.118,
-      "haze": 0.154
-    },
-    {
-      "fixed_pixels": 14628,
-      "opacity_removed": 0.01283,
-      "background_rgb": [
-        4.0,
-        246.5,
-        0.0
-      ],
-      "corner_median_spread": 1.5,
-      "haze": 0.155
-    },
-    {
-      "fixed_pixels": 14711,
-      "opacity_removed": 0.01275,
-      "background_rgb": [
-        4.0,
-        246.5,
-        0.0
-      ],
-      "corner_median_spread": 1.5,
-      "haze": 0.156
-    },
-    {
-      "fixed_pixels": 14738,
-      "opacity_removed": 0.01264,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.0,
-      "haze": 0.157
-    },
-    {
-      "fixed_pixels": 15945,
-      "opacity_removed": 0.01336,
-      "background_rgb": [
-        4.0,
-        246.5,
-        0.0
-      ],
-      "corner_median_spread": 1.118,
-      "haze": 0.168
-    },
-    {
-      "fixed_pixels": 16237,
-      "opacity_removed": 0.01358,
-      "background_rgb": [
-        4.5,
-        246.5,
-        0.0
-      ],
-      "corner_median_spread": 0.707,
-      "haze": 0.17
-    },
-    {
-      "fixed_pixels": 16231,
-      "opacity_removed": 0.01335,
-      "background_rgb": [
-        4.0,
-        246.5,
-        0.0
-      ],
-      "corner_median_spread": 0.5,
-      "haze": 0.172
-    },
-    {
-      "fixed_pixels": 16600,
-      "opacity_removed": 0.01361,
-      "background_rgb": [
-        4.0,
-        246.5,
-        0.0
-      ],
-      "corner_median_spread": 1.5,
-      "haze": 0.175
-    },
-    {
-      "fixed_pixels": 13450,
-      "opacity_removed": 0.01203,
-      "background_rgb": [
-        3.5,
-        245.0,
-        0.0
-      ],
-      "corner_median_spread": 1.5,
-      "haze": 0.141
-    },
-    {
-      "fixed_pixels": 18268,
-      "opacity_removed": 0.01389,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.414,
-      "haze": 0.192
-    },
-    {
-      "fixed_pixels": 17344,
-      "opacity_removed": 0.01347,
-      "background_rgb": [
-        4.0,
-        245.5,
-        0.0
-      ],
-      "corner_median_spread": 1.118,
-      "haze": 0.181
-    },
-    {
-      "fixed_pixels": 17138,
-      "opacity_removed": 0.01323,
-      "background_rgb": [
-        4.0,
-        245.5,
-        0.0
-      ],
-      "corner_median_spread": 1.118,
-      "haze": 0.18
-    },
-    {
-      "fixed_pixels": 16050,
-      "opacity_removed": 0.01225,
-      "background_rgb": [
-        4.0,
-        245.5,
-        0.0
-      ],
-      "corner_median_spread": 1.118,
-      "haze": 0.174
-    },
-    {
-      "fixed_pixels": 15686,
-      "opacity_removed": 0.01287,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.414,
       "haze": 0.173
     },
     {
-      "fixed_pixels": 14257,
-      "opacity_removed": 0.01163,
+      "fixed_pixels": 16561,
+      "opacity_removed": 0.01682,
       "background_rgb": [
         4.0,
-        246.0,
+        246.5,
         0.0
       ],
-      "corner_median_spread": 1.414,
-      "haze": 0.159
+      "corner_median_spread": 1.5,
+      "haze": 0.171
     },
     {
-      "fixed_pixels": 14189,
-      "opacity_removed": 0.01141,
+      "fixed_pixels": 16432,
+      "opacity_removed": 0.01631,
       "background_rgb": [
         4.0,
-        246.0,
+        246.5,
         0.0
       ],
-      "corner_median_spread": 1.414,
-      "haze": 0.158
+      "corner_median_spread": 1.5,
+      "haze": 0.171
     },
     {
-      "fixed_pixels": 13942,
-      "opacity_removed": 0.01128,
+      "fixed_pixels": 15917,
+      "opacity_removed": 0.01692,
       "background_rgb": [
         4.0,
-        246.0,
+        246.5,
         0.0
       ],
-      "corner_median_spread": 1.414,
-      "haze": 0.158
+      "corner_median_spread": 1.118,
+      "haze": 0.164
     },
     {
-      "fixed_pixels": 14563,
-      "opacity_removed": 0.01119,
+      "fixed_pixels": 15531,
+      "opacity_removed": 0.01647,
+      "background_rgb": [
+        4.5,
+        246.5,
+        0.0
+      ],
+      "corner_median_spread": 0.707,
+      "haze": 0.161
+    },
+    {
+      "fixed_pixels": 15956,
+      "opacity_removed": 0.01683,
+      "background_rgb": [
+        4.0,
+        246.5,
+        0.0
+      ],
+      "corner_median_spread": 1.118,
+      "haze": 0.165
+    },
+    {
+      "fixed_pixels": 15714,
+      "opacity_removed": 0.0161,
       "background_rgb": [
         4.5,
         246.5,
@@ -987,96 +646,250 @@
       "haze": 0.162
     },
     {
-      "fixed_pixels": 15769,
-      "opacity_removed": 0.01293,
+      "fixed_pixels": 16090,
+      "opacity_removed": 0.01664,
       "background_rgb": [
         4.5,
-        246.0,
+        247.0,
         0.0
       ],
-      "corner_median_spread": 1.803,
-      "haze": 0.171
-    },
-    {
-      "fixed_pixels": 15652,
-      "opacity_removed": 0.01243,
-      "background_rgb": [
-        4.5,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.803,
-      "haze": 0.176
-    },
-    {
-      "fixed_pixels": 14576,
-      "opacity_removed": 0.01271,
-      "background_rgb": [
-        4.5,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.803,
+      "corner_median_spread": 1.118,
       "haze": 0.164
     },
     {
-      "fixed_pixels": 17371,
-      "opacity_removed": 0.0128,
+      "fixed_pixels": 15961,
+      "opacity_removed": 0.01657,
       "background_rgb": [
         4.5,
         246.5,
         0.0
       ],
-      "corner_median_spread": 1.581,
-      "haze": 0.195
+      "corner_median_spread": 0.707,
+      "haze": 0.162
     },
     {
-      "fixed_pixels": 18017,
-      "opacity_removed": 0.0139,
-      "background_rgb": [
-        4.5,
-        246.5,
-        0.0
-      ],
-      "corner_median_spread": 1.581,
-      "haze": 0.209
-    },
-    {
-      "fixed_pixels": 17579,
-      "opacity_removed": 0.01398,
-      "background_rgb": [
-        4.5,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.803,
-      "haze": 0.208
-    },
-    {
-      "fixed_pixels": 17342,
-      "opacity_removed": 0.01455,
-      "background_rgb": [
-        4.5,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.803,
-      "haze": 0.205
-    },
-    {
-      "fixed_pixels": 13838,
-      "opacity_removed": 0.0132,
+      "fixed_pixels": 16066,
+      "opacity_removed": 0.0165,
       "background_rgb": [
         4.0,
+        246.5,
+        0.0
+      ],
+      "corner_median_spread": 1.118,
+      "haze": 0.162
+    },
+    {
+      "fixed_pixels": 16077,
+      "opacity_removed": 0.01609,
+      "background_rgb": [
+        4.0,
+        246.5,
+        0.0
+      ],
+      "corner_median_spread": 1.118,
+      "haze": 0.162
+    },
+    {
+      "fixed_pixels": 14112,
+      "opacity_removed": 0.01561,
+      "background_rgb": [
+        3.5,
         245.0,
         1.0
       ],
-      "corner_median_spread": 1.414,
+      "corner_median_spread": 1.118,
+      "haze": 0.143
+    },
+    {
+      "fixed_pixels": 15321,
+      "opacity_removed": 0.01604,
+      "background_rgb": [
+        4.0,
+        246.5,
+        0.0
+      ],
+      "corner_median_spread": 1.118,
+      "haze": 0.156
+    },
+    {
+      "fixed_pixels": 15291,
+      "opacity_removed": 0.01632,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.0,
+      "haze": 0.156
+    },
+    {
+      "fixed_pixels": 15340,
+      "opacity_removed": 0.0161,
+      "background_rgb": [
+        3.5,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.118,
+      "haze": 0.157
+    },
+    {
+      "fixed_pixels": 15542,
+      "opacity_removed": 0.016,
+      "background_rgb": [
+        3.5,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.118,
+      "haze": 0.159
+    },
+    {
+      "fixed_pixels": 15331,
+      "opacity_removed": 0.01627,
+      "background_rgb": [
+        4.0,
+        246.5,
+        0.0
+      ],
+      "corner_median_spread": 1.118,
+      "haze": 0.158
+    },
+    {
+      "fixed_pixels": 15349,
+      "opacity_removed": 0.01647,
+      "background_rgb": [
+        4.0,
+        246.5,
+        0.0
+      ],
+      "corner_median_spread": 1.5,
+      "haze": 0.159
+    },
+    {
+      "fixed_pixels": 15509,
+      "opacity_removed": 0.01677,
+      "background_rgb": [
+        4.0,
+        246.5,
+        0.0
+      ],
+      "corner_median_spread": 1.5,
+      "haze": 0.161
+    },
+    {
+      "fixed_pixels": 15607,
+      "opacity_removed": 0.0169,
+      "background_rgb": [
+        4.0,
+        246.5,
+        0.0
+      ],
+      "corner_median_spread": 1.5,
+      "haze": 0.163
+    },
+    {
+      "fixed_pixels": 15538,
+      "opacity_removed": 0.01655,
+      "background_rgb": [
+        4.0,
+        246.5,
+        0.0
+      ],
+      "corner_median_spread": 1.118,
+      "haze": 0.161
+    },
+    {
+      "fixed_pixels": 15495,
+      "opacity_removed": 0.01654,
+      "background_rgb": [
+        4.0,
+        246.5,
+        0.0
+      ],
+      "corner_median_spread": 1.5,
+      "haze": 0.162
+    },
+    {
+      "fixed_pixels": 15561,
+      "opacity_removed": 0.01658,
+      "background_rgb": [
+        4.0,
+        246.5,
+        0.0
+      ],
+      "corner_median_spread": 1.5,
+      "haze": 0.163
+    },
+    {
+      "fixed_pixels": 15620,
+      "opacity_removed": 0.01646,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.0,
       "haze": 0.164
     },
     {
-      "fixed_pixels": 17048,
-      "opacity_removed": 0.01397,
+      "fixed_pixels": 16905,
+      "opacity_removed": 0.01715,
+      "background_rgb": [
+        4.0,
+        246.5,
+        0.0
+      ],
+      "corner_median_spread": 1.118,
+      "haze": 0.175
+    },
+    {
+      "fixed_pixels": 17318,
+      "opacity_removed": 0.01798,
+      "background_rgb": [
+        4.5,
+        246.5,
+        0.0
+      ],
+      "corner_median_spread": 0.707,
+      "haze": 0.178
+    },
+    {
+      "fixed_pixels": 17345,
+      "opacity_removed": 0.01777,
+      "background_rgb": [
+        4.0,
+        246.5,
+        0.0
+      ],
+      "corner_median_spread": 0.5,
+      "haze": 0.18
+    },
+    {
+      "fixed_pixels": 17634,
+      "opacity_removed": 0.01794,
+      "background_rgb": [
+        4.0,
+        246.5,
+        0.0
+      ],
+      "corner_median_spread": 1.5,
+      "haze": 0.183
+    },
+    {
+      "fixed_pixels": 14328,
+      "opacity_removed": 0.01588,
+      "background_rgb": [
+        3.5,
+        245.0,
+        0.0
+      ],
+      "corner_median_spread": 1.5,
+      "haze": 0.148
+    },
+    {
+      "fixed_pixels": 19390,
+      "opacity_removed": 0.01852,
       "background_rgb": [
         4.0,
         246.0,
@@ -1086,184 +899,52 @@
       "haze": 0.201
     },
     {
-      "fixed_pixels": 16990,
-      "opacity_removed": 0.01451,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.414,
-      "haze": 0.2
-    },
-    {
-      "fixed_pixels": 16603,
-      "opacity_removed": 0.01382,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.414,
-      "haze": 0.197
-    },
-    {
-      "fixed_pixels": 16255,
-      "opacity_removed": 0.01392,
+      "fixed_pixels": 18612,
+      "opacity_removed": 0.01852,
       "background_rgb": [
         4.0,
         245.5,
         0.0
       ],
-      "corner_median_spread": 1.803,
-      "haze": 0.192
+      "corner_median_spread": 1.118,
+      "haze": 0.191
     },
     {
-      "fixed_pixels": 16079,
-      "opacity_removed": 0.01414,
+      "fixed_pixels": 18338,
+      "opacity_removed": 0.01791,
       "background_rgb": [
         4.0,
-        246.0,
+        245.5,
         0.0
       ],
-      "corner_median_spread": 2.236,
+      "corner_median_spread": 1.118,
       "haze": 0.189
     },
     {
-      "fixed_pixels": 15578,
-      "opacity_removed": 0.01434,
+      "fixed_pixels": 17081,
+      "opacity_removed": 0.0168,
       "background_rgb": [
         4.0,
-        246.0,
+        245.5,
         0.0
       ],
-      "corner_median_spread": 2.236,
-      "haze": 0.183
+      "corner_median_spread": 1.118,
+      "haze": 0.182
     },
     {
-      "fixed_pixels": 15323,
-      "opacity_removed": 0.01412,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 2.236,
-      "haze": 0.18
-    },
-    {
-      "fixed_pixels": 15244,
-      "opacity_removed": 0.01416,
+      "fixed_pixels": 16800,
+      "opacity_removed": 0.01697,
       "background_rgb": [
         4.0,
         246.0,
         0.0
       ],
       "corner_median_spread": 1.414,
-      "haze": 0.18
+      "haze": 0.181
     },
     {
-      "fixed_pixels": 14008,
-      "opacity_removed": 0.01362,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 2.236,
-      "haze": 0.165
-    },
-    {
-      "fixed_pixels": 13797,
-      "opacity_removed": 0.01352,
-      "background_rgb": [
-        4.5,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.803,
-      "haze": 0.163
-    },
-    {
-      "fixed_pixels": 13779,
-      "opacity_removed": 0.01364,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.414,
-      "haze": 0.162
-    },
-    {
-      "fixed_pixels": 13942,
-      "opacity_removed": 0.01364,
-      "background_rgb": [
-        4.5,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.803,
-      "haze": 0.164
-    },
-    {
-      "fixed_pixels": 14031,
-      "opacity_removed": 0.0138,
-      "background_rgb": [
-        4.0,
-        246.5,
-        0.0
-      ],
-      "corner_median_spread": 1.803,
-      "haze": 0.166
-    },
-    {
-      "fixed_pixels": 13780,
-      "opacity_removed": 0.01388,
-      "background_rgb": [
-        5.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 2.828,
-      "haze": 0.163
-    },
-    {
-      "fixed_pixels": 13853,
-      "opacity_removed": 0.0138,
-      "background_rgb": [
-        4.5,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 2.5,
-      "haze": 0.163
-    },
-    {
-      "fixed_pixels": 14045,
-      "opacity_removed": 0.01384,
-      "background_rgb": [
-        4.5,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.803,
-      "haze": 0.167
-    },
-    {
-      "fixed_pixels": 13092,
-      "opacity_removed": 0.01347,
-      "background_rgb": [
-        4.0,
-        245.0,
-        0.5
-      ],
-      "corner_median_spread": 1.5,
-      "haze": 0.154
-    },
-    {
-      "fixed_pixels": 14267,
-      "opacity_removed": 0.01369,
+      "fixed_pixels": 15311,
+      "opacity_removed": 0.01575,
       "background_rgb": [
         4.0,
         246.0,
@@ -1273,8 +954,19 @@
       "haze": 0.168
     },
     {
-      "fixed_pixels": 14015,
-      "opacity_removed": 0.01368,
+      "fixed_pixels": 15346,
+      "opacity_removed": 0.01575,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.414,
+      "haze": 0.167
+    },
+    {
+      "fixed_pixels": 14845,
+      "opacity_removed": 0.01533,
       "background_rgb": [
         4.0,
         246.0,
@@ -1284,221 +976,530 @@
       "haze": 0.166
     },
     {
-      "fixed_pixels": 13889,
-      "opacity_removed": 0.01385,
+      "fixed_pixels": 15632,
+      "opacity_removed": 0.01507,
       "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.414,
-      "haze": 0.163
-    },
-    {
-      "fixed_pixels": 13940,
-      "opacity_removed": 0.01361,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 1.414,
-      "haze": 0.164
-    },
-    {
-      "fixed_pixels": 13663,
-      "opacity_removed": 0.01365,
-      "background_rgb": [
-        4.0,
+        4.5,
         246.5,
         0.0
       ],
-      "corner_median_spread": 1.803,
-      "haze": 0.16
+      "corner_median_spread": 1.581,
+      "haze": 0.17
     },
     {
-      "fixed_pixels": 13537,
-      "opacity_removed": 0.0139,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 2.236,
-      "haze": 0.159
-    },
-    {
-      "fixed_pixels": 13453,
-      "opacity_removed": 0.01395,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 2.236,
-      "haze": 0.158
-    },
-    {
-      "fixed_pixels": 13617,
-      "opacity_removed": 0.01395,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 2.236,
-      "haze": 0.161
-    },
-    {
-      "fixed_pixels": 13620,
-      "opacity_removed": 0.01392,
-      "background_rgb": [
-        4.0,
-        246.0,
-        0.0
-      ],
-      "corner_median_spread": 2.236,
-      "haze": 0.16
-    },
-    {
-      "fixed_pixels": 13470,
-      "opacity_removed": 0.01389,
+      "fixed_pixels": 16948,
+      "opacity_removed": 0.01755,
       "background_rgb": [
         4.5,
         246.0,
         0.0
       ],
       "corner_median_spread": 1.803,
-      "haze": 0.158
+      "haze": 0.18
     },
     {
-      "fixed_pixels": 13493,
-      "opacity_removed": 0.01403,
+      "fixed_pixels": 16754,
+      "opacity_removed": 0.01681,
       "background_rgb": [
-        4.0,
+        4.5,
         246.0,
         0.0
       ],
-      "corner_median_spread": 1.414,
-      "haze": 0.158
+      "corner_median_spread": 1.803,
+      "haze": 0.184
     },
     {
-      "fixed_pixels": 13646,
-      "opacity_removed": 0.01378,
+      "fixed_pixels": 15533,
+      "opacity_removed": 0.01691,
       "background_rgb": [
-        4.0,
+        4.5,
         246.0,
         0.0
       ],
-      "corner_median_spread": 1.414,
-      "haze": 0.16
+      "corner_median_spread": 1.803,
+      "haze": 0.172
     },
     {
-      "fixed_pixels": 13707,
-      "opacity_removed": 0.01391,
-      "background_rgb": [
-        4.0,
-        247.0,
-        0.0
-      ],
-      "corner_median_spread": 1.414,
-      "haze": 0.161
-    },
-    {
-      "fixed_pixels": 13511,
-      "opacity_removed": 0.01397,
+      "fixed_pixels": 18638,
+      "opacity_removed": 0.01756,
       "background_rgb": [
         4.5,
         246.5,
         0.0
       ],
-      "corner_median_spread": 2.121,
-      "haze": 0.159
+      "corner_median_spread": 1.581,
+      "haze": 0.204
     },
     {
-      "fixed_pixels": 13565,
-      "opacity_removed": 0.01398,
+      "fixed_pixels": 19223,
+      "opacity_removed": 0.01897,
       "background_rgb": [
-        4.0,
-        246.25,
+        4.5,
+        246.5,
         0.0
       ],
-      "corner_median_spread": 2.016,
-      "haze": 0.159
+      "corner_median_spread": 1.581,
+      "haze": 0.219
     },
     {
-      "fixed_pixels": 13686,
-      "opacity_removed": 0.01371,
+      "fixed_pixels": 18719,
+      "opacity_removed": 0.01863,
       "background_rgb": [
-        4.0,
+        4.5,
         246.0,
         0.0
       ],
-      "corner_median_spread": 2.236,
-      "haze": 0.161
+      "corner_median_spread": 1.803,
+      "haze": 0.217
     },
     {
-      "fixed_pixels": 12542,
-      "opacity_removed": 0.01391,
+      "fixed_pixels": 18416,
+      "opacity_removed": 0.01905,
+      "background_rgb": [
+        4.5,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.803,
+      "haze": 0.215
+    },
+    {
+      "fixed_pixels": 14709,
+      "opacity_removed": 0.01769,
       "background_rgb": [
         4.0,
         245.0,
-        0.5
+        1.0
       ],
-      "corner_median_spread": 1.5,
-      "haze": 0.145
+      "corner_median_spread": 1.414,
+      "haze": 0.174
     },
     {
-      "fixed_pixels": 13754,
-      "opacity_removed": 0.01395,
+      "fixed_pixels": 18129,
+      "opacity_removed": 0.01861,
       "background_rgb": [
         4.0,
         246.0,
         0.0
       ],
       "corner_median_spread": 1.414,
-      "haze": 0.161
+      "haze": 0.21
     },
     {
-      "fixed_pixels": 13623,
-      "opacity_removed": 0.01399,
+      "fixed_pixels": 18154,
+      "opacity_removed": 0.01944,
       "background_rgb": [
         4.0,
         246.0,
         0.0
       ],
       "corner_median_spread": 1.414,
-      "haze": 0.16
+      "haze": 0.21
     },
     {
-      "fixed_pixels": 13552,
-      "opacity_removed": 0.01401,
+      "fixed_pixels": 17719,
+      "opacity_removed": 0.01878,
       "background_rgb": [
         4.0,
         246.0,
         0.0
       ],
       "corner_median_spread": 1.414,
-      "haze": 0.159
+      "haze": 0.206
     },
     {
-      "fixed_pixels": 13735,
-      "opacity_removed": 0.01386,
+      "fixed_pixels": 17273,
+      "opacity_removed": 0.01844,
       "background_rgb": [
         4.0,
         245.5,
         0.0
       ],
       "corner_median_spread": 1.803,
+      "haze": 0.201
+    },
+    {
+      "fixed_pixels": 17184,
+      "opacity_removed": 0.01973,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 2.236,
+      "haze": 0.201
+    },
+    {
+      "fixed_pixels": 16532,
+      "opacity_removed": 0.01906,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 2.236,
+      "haze": 0.193
+    },
+    {
+      "fixed_pixels": 16285,
+      "opacity_removed": 0.01889,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 2.236,
+      "haze": 0.19
+    },
+    {
+      "fixed_pixels": 16263,
+      "opacity_removed": 0.01899,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.414,
+      "haze": 0.19
+    },
+    {
+      "fixed_pixels": 14982,
+      "opacity_removed": 0.01855,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 2.236,
+      "haze": 0.174
+    },
+    {
+      "fixed_pixels": 14734,
+      "opacity_removed": 0.01789,
+      "background_rgb": [
+        4.5,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.803,
+      "haze": 0.172
+    },
+    {
+      "fixed_pixels": 14687,
+      "opacity_removed": 0.01799,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.414,
+      "haze": 0.171
+    },
+    {
+      "fixed_pixels": 14877,
+      "opacity_removed": 0.01795,
+      "background_rgb": [
+        4.5,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.803,
+      "haze": 0.173
+    },
+    {
+      "fixed_pixels": 14938,
+      "opacity_removed": 0.01782,
+      "background_rgb": [
+        4.0,
+        246.5,
+        0.0
+      ],
+      "corner_median_spread": 1.803,
+      "haze": 0.174
+    },
+    {
+      "fixed_pixels": 14649,
+      "opacity_removed": 0.01776,
+      "background_rgb": [
+        5.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 2.828,
+      "haze": 0.171
+    },
+    {
+      "fixed_pixels": 14704,
+      "opacity_removed": 0.01771,
+      "background_rgb": [
+        4.5,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 2.5,
+      "haze": 0.171
+    },
+    {
+      "fixed_pixels": 14900,
+      "opacity_removed": 0.01762,
+      "background_rgb": [
+        4.5,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.803,
+      "haze": 0.174
+    },
+    {
+      "fixed_pixels": 13977,
+      "opacity_removed": 0.01752,
+      "background_rgb": [
+        4.0,
+        245.0,
+        0.5
+      ],
+      "corner_median_spread": 1.5,
       "haze": 0.162
+    },
+    {
+      "fixed_pixels": 15190,
+      "opacity_removed": 0.01791,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.414,
+      "haze": 0.177
+    },
+    {
+      "fixed_pixels": 14890,
+      "opacity_removed": 0.01778,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.414,
+      "haze": 0.175
+    },
+    {
+      "fixed_pixels": 14726,
+      "opacity_removed": 0.01781,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.414,
+      "haze": 0.172
+    },
+    {
+      "fixed_pixels": 14818,
+      "opacity_removed": 0.01776,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.414,
+      "haze": 0.173
+    },
+    {
+      "fixed_pixels": 14533,
+      "opacity_removed": 0.01775,
+      "background_rgb": [
+        4.0,
+        246.5,
+        0.0
+      ],
+      "corner_median_spread": 1.803,
+      "haze": 0.169
+    },
+    {
+      "fixed_pixels": 14327,
+      "opacity_removed": 0.01756,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 2.236,
+      "haze": 0.167
+    },
+    {
+      "fixed_pixels": 14229,
+      "opacity_removed": 0.01761,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 2.236,
+      "haze": 0.165
+    },
+    {
+      "fixed_pixels": 14414,
+      "opacity_removed": 0.01757,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 2.236,
+      "haze": 0.168
+    },
+    {
+      "fixed_pixels": 14468,
+      "opacity_removed": 0.01788,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 2.236,
+      "haze": 0.168
+    },
+    {
+      "fixed_pixels": 14282,
+      "opacity_removed": 0.01763,
+      "background_rgb": [
+        4.5,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.803,
+      "haze": 0.166
+    },
+    {
+      "fixed_pixels": 14279,
+      "opacity_removed": 0.01772,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.414,
+      "haze": 0.166
+    },
+    {
+      "fixed_pixels": 14527,
+      "opacity_removed": 0.01775,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.414,
+      "haze": 0.169
+    },
+    {
+      "fixed_pixels": 14554,
+      "opacity_removed": 0.01782,
+      "background_rgb": [
+        4.0,
+        247.0,
+        0.0
+      ],
+      "corner_median_spread": 1.414,
+      "haze": 0.169
+    },
+    {
+      "fixed_pixels": 14296,
+      "opacity_removed": 0.01771,
+      "background_rgb": [
+        4.5,
+        246.5,
+        0.0
+      ],
+      "corner_median_spread": 2.121,
+      "haze": 0.167
+    },
+    {
+      "fixed_pixels": 14395,
+      "opacity_removed": 0.01777,
+      "background_rgb": [
+        4.0,
+        246.25,
+        0.0
+      ],
+      "corner_median_spread": 2.016,
+      "haze": 0.166
+    },
+    {
+      "fixed_pixels": 14544,
+      "opacity_removed": 0.01763,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 2.236,
+      "haze": 0.169
+    },
+    {
+      "fixed_pixels": 13333,
+      "opacity_removed": 0.01768,
+      "background_rgb": [
+        4.0,
+        245.0,
+        0.5
+      ],
+      "corner_median_spread": 1.5,
+      "haze": 0.153
+    },
+    {
+      "fixed_pixels": 14613,
+      "opacity_removed": 0.01791,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.414,
+      "haze": 0.17
+    },
+    {
+      "fixed_pixels": 14423,
+      "opacity_removed": 0.01768,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.414,
+      "haze": 0.168
+    },
+    {
+      "fixed_pixels": 14359,
+      "opacity_removed": 0.01774,
+      "background_rgb": [
+        4.0,
+        246.0,
+        0.0
+      ],
+      "corner_median_spread": 1.414,
+      "haze": 0.167
+    },
+    {
+      "fixed_pixels": 14593,
+      "opacity_removed": 0.01769,
+      "background_rgb": [
+        4.0,
+        245.5,
+        0.0
+      ],
+      "corner_median_spread": 1.803,
+      "haze": 0.17
     }
   ],
   "protected_foreground_chroma": 16,
   "edge_threshold": 106,
+  "edge_spill_threshold": 8,
   "key_rgb": [
     0,
     255,
     0
   ],
-  "recipe": "Flat blue plate (corner spread <= 10, separation >= 80): blue-minus-max(red, green) unmix with the measured guard band, edge-only despill, alpha>=8 regions kept when they hold an alpha>=128 pixel; then the 2 px edge band re-solved by tools/rematte_blue_plate.py clean_edges. Geometry unchanged. A green plate swaps green and blue before these rules and back after them. A frame whose alpha 8-199 band exceeds max(0.5, 3 x the take median) of its alpha>=200 area is rejected as a plate pulse."
+  "recipe": "Flat blue plate (corner spread <= 10, separation >= 80): blue-minus-max(red, green) unmix with the measured guard band, edge-only despill, alpha>=8 regions kept when they hold an alpha>=128 pixel; then the 2 px edge band re-solved by tools/rematte_blue_plate.py clean_edges. Geometry unchanged. A green plate swaps green and blue before these rules and back after them, and its edge band also re-solves pixels whose green over max(red, blue) exceeds edge_spill_threshold (guide p99.9 + 6), keeping re-solved green at most that far above max(red, blue), translucent pixels no higher than it. A frame whose alpha 8-199 band exceeds max(0.5, 3 x the take median) of its alpha>=200 area is rejected as a plate pulse."
 }

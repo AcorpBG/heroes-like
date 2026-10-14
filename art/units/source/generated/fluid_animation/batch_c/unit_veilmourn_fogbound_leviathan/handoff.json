@@ -5253,7 +5253,7 @@
         },
         "idle_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan/idle_h3_v1/matte.json",
-          "sha256": "3d313065f07811cd4e6b7cacd406b747fa40402f809ccc892249af103a557090"
+          "sha256": "38bd658b585547cbb87a8fd7c3001917dff26a168368efda54345c7bef88e2d6"
         },
         "move_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan/move_h3_v1/original_lossless.mkv",
@@ -5297,7 +5297,7 @@
         },
         "move_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan/move_h3_v1/matte.json",
-          "sha256": "f58dd809675558c252dd12c2650596fc0741bc1a2b863d32aa94878286e80938"
+          "sha256": "cb24039b7ea75c40eda161ac4ed9574b46a2a9968837af49481b316b9f32928f"
         },
         "attack_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan/attack_h3_v1/original_lossless.mkv",
@@ -5341,7 +5341,7 @@
         },
         "attack_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan/attack_h3_v1/matte.json",
-          "sha256": "48ee55281c1eb50e089e9186db179bbe3b21f481dd302a9bf0391b348cd3c65c"
+          "sha256": "6c5be7022779a072022b687b502df9a79ca9f5313b83dbdbb14909ef64658eb5"
         },
         "hit_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan/hit_h3_v1/original_lossless.mkv",
@@ -5385,7 +5385,7 @@
         },
         "hit_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan/hit_h3_v1/matte.json",
-          "sha256": "4809ee33af590a8978d92ad32b60c5dd281bb79b55367b973660aa0e46eba9a7"
+          "sha256": "16e28c9b7d65309f21527524914ee2122ab48b9ce45d0bde2d7a8c10baa36969"
         },
         "defend_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan/defend_h3_v1/original_lossless.mkv",
@@ -5429,7 +5429,7 @@
         },
         "defend_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan/defend_h3_v1/matte.json",
-          "sha256": "c3e60513483703b9b6c78daa7fc96ed08706df076d5bf78e7ce5616207f6f377"
+          "sha256": "f06f0770ee7d85ce6d2c746d93ab0bc53f068fe9f31f73259bd6461c78c880d6"
         },
         "cast_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan/cast_h3_v1/original_lossless.mkv",
@@ -5473,7 +5473,7 @@
         },
         "cast_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan/cast_h3_v1/matte.json",
-          "sha256": "89d0ab66c0b6a3310ef48941c4ce0eb0f4ecda8a70adc3d58a3f21ed13c4fabd"
+          "sha256": "18ae458bf0694595ca0bb6e310fab1c99b0228f0bf7e09ef20975f52c7c5f005"
         },
         "death_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan/death_h3_v1/original_lossless.mkv",
@@ -5517,13 +5517,13 @@
         },
         "death_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan/death_h3_v1/matte.json",
-          "sha256": "f8a85e4d10a9c17e54b67bc049ce6b5ce65cf6ea36e558d2dc68f4abef8303ba"
+          "sha256": "25a101790de040a0b08512dfe3c47b7f332b0d584ab0bda91471f8c78dd0d31c"
         }
       },
       "preserved_accepted_clips": [],
       "visual_review": {
         "status": "accepted",
-        "notes": "Reviewed every clip frame by frame. Every take came back with clean plates and is used as generated. The walk loops one lumbering cycle over 5-63. The bite rears up with the jaws open and snaps at screen left; the hit starts reared back and drops onto all four feet; the defend hunkers low with a tail flick; the dread-call cast rears and holds; the death dims and slumps flat."
+        "notes": "Reviewed every clip frame by frame. Every take came back with clean plates and is used as generated. The walk loops one lumbering cycle over 5-63. The bite rears up with the jaws open and snaps at screen left; the hit starts reared back and drops onto all four feet; the defend hunkers low with a tail flick; the dread-call cast rears and holds; the death dims and slumps flat. Re-matted 2026-10-14 with the green-plate spill limit: the green rims on thin and blurred edges are gone, with the same frames, timing, anchor and scale."
       }
     }
   ]

@@ -5429,7 +5429,7 @@
         },
         "idle_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_miremoon_crownmaws/idle_h3_v1/matte.json",
-          "sha256": "aea564523049d7fa0aca725c942daf3b2d20c460ace27322ede0c6af073fe63c"
+          "sha256": "de84a3dacdadb64def9b55b433fa73f02e2c7c76c69d335c9d91cb98eea06942"
         },
         "move_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_miremoon_crownmaws/move_h3_v1/original_lossless.mkv",
@@ -5473,7 +5473,7 @@
         },
         "move_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_miremoon_crownmaws/move_h3_v1/matte.json",
-          "sha256": "11d15a65082ebeeb88deb036e97f4d37d25051469d660ed5a688e8bd59546e6a"
+          "sha256": "5920f587213b076b2ee52ad3fb112d0beea269560dce6167e04be055d690df4e"
         },
         "attack_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_miremoon_crownmaws/attack_h3_v1/original_lossless.mkv",
@@ -5517,7 +5517,7 @@
         },
         "attack_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_miremoon_crownmaws/attack_h3_v1/matte.json",
-          "sha256": "d0c71aa42d81fcd1c115fe70523b005cc692d1bcab2cbfca610e11f580ed948d"
+          "sha256": "2e07978bf9a2831bfadc8eb3125b406b485c6c48ff4ffd5522291275cfa6079f"
         },
         "hit_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_miremoon_crownmaws/hit_h3_v1/original_lossless.mkv",
@@ -5561,7 +5561,7 @@
         },
         "hit_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_miremoon_crownmaws/hit_h3_v1/matte.json",
-          "sha256": "07954f1a0bc5cd4be060ec02009febea9116c6090f8f208f6335b9bd9c21ebb7"
+          "sha256": "e3ee1961eecd9ebcc618c6a1b9e40f9cbdf20c460ad06e2e98c8e107235dff25"
         },
         "defend_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_miremoon_crownmaws/defend_h3_v1/original_lossless.mkv",
@@ -5605,7 +5605,7 @@
         },
         "defend_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_miremoon_crownmaws/defend_h3_v1/matte.json",
-          "sha256": "52ef82d9b909e7e6f5bc3c4745c4d55e9a21924d384149775da3d6d0598fc4dc"
+          "sha256": "51594b7aed0127c7317b7392cea25186ca8801a6bb56f5a1c2f5655e620fccf7"
         },
         "cast_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_miremoon_crownmaws/cast_h3_v1/original_lossless.mkv",
@@ -5649,7 +5649,7 @@
         },
         "cast_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_miremoon_crownmaws/cast_h3_v1/matte.json",
-          "sha256": "068b1491aa90705bb55e2759e0538ce32071eed6e8aa769f7fe15aaf908c5d7f"
+          "sha256": "59585d5dcbae5f1c186ec8cc4515742a0de24236316702ad3af87017103822c3"
         },
         "death_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_miremoon_crownmaws/death_h3_v1/original_lossless.mkv",
@@ -5693,13 +5693,13 @@
         },
         "death_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_miremoon_crownmaws/death_h3_v1/matte.json",
-          "sha256": "bfa9187b2ab67980044984a87ee81fb50416c28ff8c4c029d9596de4719b2231"
+          "sha256": "2de8fa8d1baa9f689e138efdedc0354aee5997ef9a214b028621a7f47f68ff14"
         }
       },
       "preserved_accepted_clips": [],
       "visual_review": {
         "status": "accepted_selected_clips",
-        "notes": "Reviewed every take by contact strip. Every clip is a first take with clean plates. The walk loops video 32-93 every second frame; the defend lowers the horn crown forward and holds; the hit rears, whips the tail and drops back into the stance. The idle's spikes are slow head turns."
+        "notes": "Reviewed every take by contact strip. Every clip is a first take with clean plates. The walk loops video 32-93 every second frame; the defend lowers the horn crown forward and holds; the hit rears, whips the tail and drops back into the stance. The idle's spikes are slow head turns. Re-matted 2026-10-14 with the green-plate spill limit: the green rims on thin and blurred edges are gone, with the same frames, timing, anchor and scale."
       },
       "source_scale_by_image": {
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_miremoon_crownmaws/idle_h3_v1/matte/rgba_000.png": 0.52,

@@ -42,7 +42,7 @@ Rules:
 
 `art-h3-painted-units-20261011` (completed 2026-10-14, owner request "keep going through the painted units", "H3 idle too"): every painted unit's clips, idle included, became H3 video, so every live unit now animates from H3 video. A pipelined runner (`tools/h3_creature_animation.py enqueue` / `run`) kept the GPU sampling while finished units were matted and reviewed; units were published one by one after visual review. Follow-up `art-h3-green-plate-edge-spill-20261014` fixed the green-plate edge rule. See `docs/fluid-creature-animation.md`.
 
-`art-h3-green-plate-edge-spill-20261014` (completed 2026-10-14, owner task "Tighten green-plate edge cleanup on gold palettes"): on a green plate the edge rule also limits green over max(red, blue) to the palette's p99.9 plus 6 (`edge_spill_threshold`). Thin and blurred edges of gold units lose their green tint and gold keeps its colour and opacity; the blue-plate rule is unchanged. The shipped green-plate clips still carry the old matte until the owner asks for them to be re-matted and republished.
+`art-h3-green-plate-edge-spill-20261014` (completed 2026-10-14, owner task "Tighten green-plate edge cleanup on gold palettes"): on a green plate the edge rule also limits green over max(red, blue) to the palette's p99.9 plus 6 (`edge_spill_threshold`). Thin and blurred edges of gold units lose their green tint and gold keeps its colour and opacity; the blue-plate rule is unchanged. Owner go-ahead "yea mate do it": all 20 green-plate units were re-matted with the rule and republished 2026-10-14 with the same frames, timing, anchor and scale.
 
 ### Gold-only unit recruitment costs
 

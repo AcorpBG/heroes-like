@@ -4967,7 +4967,7 @@
         },
         "idle_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/idle_h3_v1/matte.json",
-          "sha256": "861d3132672e11fb292f10443132bd2c2b61a429e82508b27f296ecfda1d8d08"
+          "sha256": "4fee0f4aa84378cee1c2e0dabe056812f47b8d886ff1c270ce6c0e853a4d8b34"
         },
         "move_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/move_h3_v1/original_lossless.mkv",
@@ -5011,7 +5011,7 @@
         },
         "move_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/move_h3_v1/matte.json",
-          "sha256": "09c9c4facdab3105d02eaa8472b7afa90a567ebf9ec0c62f941b39d0caad8b26"
+          "sha256": "6419deed8cd4b5723c8a6c4168cfb61e7c59806b8cfcd2a864cbb0bc2cc7a780"
         },
         "attack_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/attack_h3_v1/original_lossless.mkv",
@@ -5055,7 +5055,7 @@
         },
         "attack_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/attack_h3_v1/matte.json",
-          "sha256": "7bc7dce416031bb024d1eafd7a78e10080cd4c039f2aa5aa3f0c8bea568b1f96"
+          "sha256": "9caebb7e20fac3707344965e0ee2a8011ca7317316ddb399fe049889f00660e8"
         },
         "hit_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/hit_h3_v1/original_lossless.mkv",
@@ -5099,7 +5099,7 @@
         },
         "hit_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/hit_h3_v1/matte.json",
-          "sha256": "ad085552ce8458b168a0987c6a2314f54dbb42949c48e1b894add73282389cec"
+          "sha256": "03b6a603bc1a18a6404aa5a69599a52c9bc81363bcfe3e8a1f193d98cbe6e88c"
         },
         "defend_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/defend_h3_v1/original_lossless.mkv",
@@ -5143,7 +5143,7 @@
         },
         "defend_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/defend_h3_v1/matte.json",
-          "sha256": "051e553f2204e1745d2ca5ba7b5dcf6bc9da5d9199a25d2c82119a8af0699277"
+          "sha256": "00a53afd170207b5f48263a9c18542b262e2b9e3f003956617f34bc2b9bf1eb3"
         },
         "cast_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/cast_h3_v1/original_lossless.mkv",
@@ -5187,7 +5187,7 @@
         },
         "cast_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/cast_h3_v1/matte.json",
-          "sha256": "c25d6581bae7856ec1a8f8f14c879188c2e1d4fe6726d4c88d3812bcc33e5fae"
+          "sha256": "630b7ddb52a97c7042c10b1aa2cbfd2d925c425c20af5b948f5239352e6170ab"
         },
         "death_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/death_h3_v1/original_lossless.mkv",
@@ -5231,13 +5231,13 @@
         },
         "death_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/death_h3_v1/matte.json",
-          "sha256": "03bbaa7ae58253e513af319d56d3a9f5d11aa7513d727ffe64ea8651d60250d6"
+          "sha256": "875b6150b9c5becbb5b34ca0de77c452e01635a1d10ef1dd390c9e17ccc30e36"
         }
       },
       "preserved_accepted_clips": [],
       "visual_review": {
         "status": "accepted",
-        "notes": "H3 video, first takes. The move and attack plates failed the matte at their computed edge thresholds (192 and 170, raised by the gold body in their references); at 160, like the other takes, they matte cleanly. The idle curls the forearm blade back and melts it four times; frames 20 and 80 match, so the loop runs the calm stretches 20-42 and 80-103 forward and back. A single-reference idle retake turned the body to profile and flapped the fans, too busy for an idle. The lens fires a flash at 55 although nothing should fire; the attack runs to the full-reach thrust at 53 and resumes at 85 as the arm retracts. The death skips two green-fringed collapse frames."
+        "notes": "H3 video, first takes. The move and attack plates failed the matte at their computed edge thresholds (192 and 170, raised by the gold body in their references); at 160, like the other takes, they matte cleanly. The idle curls the forearm blade back and melts it four times; frames 20 and 80 match, so the loop runs the calm stretches 20-42 and 80-103 forward and back. A single-reference idle retake turned the body to profile and flapped the fans, too busy for an idle. The lens fires a flash at 55 although nothing should fire; the attack runs to the full-reach thrust at 53 and resumes at 85 as the arm retracts. The death skips two green-fringed collapse frames. Re-matted 2026-10-14 with the green-plate spill limit: the green rims on thin and blurred edges are gone, with the same frames, timing, anchor and scale."
       }
     }
   ]

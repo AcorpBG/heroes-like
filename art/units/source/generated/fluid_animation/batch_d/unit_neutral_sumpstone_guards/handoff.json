@@ -4256,7 +4256,7 @@
         },
         "idle_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/idle_h3_v1/matte.json",
-          "sha256": "8569c857c88147b4552e900a77f9246a8ca53fe19fbd15fbf45422a83b846a75"
+          "sha256": "945b2ab62a8358ecb4c7ee009491cddaa117487262eccb0e6f7157faa09a6b7e"
         },
         "attack_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/attack_h3_v1/original_lossless.mkv",
@@ -4300,7 +4300,7 @@
         },
         "attack_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/attack_h3_v1/matte.json",
-          "sha256": "1c63d1a5a88be1fb6942142d82ab5659b76f57ca7d19d28b8b8adab1f3b96a15"
+          "sha256": "b20b1096c6fcdf31ad3e2a3eda365eb7c64dbb733fb35bf62ad985b48149bdbf"
         },
         "hit_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/hit_h3_v1/original_lossless.mkv",
@@ -4344,7 +4344,7 @@
         },
         "hit_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/hit_h3_v1/matte.json",
-          "sha256": "f5e53be5bd434fe4a77ee031c1c82f9899edc5f02c4a993de6a287348114e2d1"
+          "sha256": "4dff1605e35665bf71245e6df865556569f8ac55110ad362444bc1f302d06652"
         },
         "defend_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/defend_h3_v1/original_lossless.mkv",
@@ -4388,7 +4388,7 @@
         },
         "defend_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/defend_h3_v1/matte.json",
-          "sha256": "70d3f19f33acfd3bd87edcfac91e459c9e253ce5fe6b0e2c474953d02b40084b"
+          "sha256": "2aee93f193c01c16328e5d11601711bf5e3d177115f0743baee25b4da5a1be85"
         },
         "cast_h3_v3/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/cast_h3_v3/original_lossless.mkv",
@@ -4432,7 +4432,7 @@
         },
         "cast_h3_v3/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/cast_h3_v3/matte.json",
-          "sha256": "22b98d2aa118598a58bc2673a6ffecb54d6fe1b6b7c603a891355a79692db301"
+          "sha256": "471cf1c99f7c53f0ee4868dffeb0574f513807f24a2cd701b37025d3c3f572e3"
         },
         "death_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/death_h3_v1/original_lossless.mkv",
@@ -4476,13 +4476,13 @@
         },
         "death_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/death_h3_v1/matte.json",
-          "sha256": "08db146913c8e5ce4f5ab2f97cd0cbb59f5a052998f631b42b5e97bc4aff9056"
+          "sha256": "260bef73159b6afbf32baf65e1b2c624c9e6268dfc9180e09bfae73633fcf961"
         }
       },
       "preserved_accepted_clips": [],
       "visual_review": {
         "status": "accepted",
-        "notes": "Reviewed on H3 video. Idle v1, attack v1, hit v1 and defend v1 are clean. Death v1 skips three smeared frames of the topple (73-75). Cast v1 snapped the pickaxe up and down in single frames, so cast v3 is used: guided through the painted cast_01, 02, 04, 05 and 06, it raises and lowers the pickaxe smoothly. The walk keeps the published clip."
+        "notes": "Reviewed on H3 video. Idle v1, attack v1, hit v1 and defend v1 are clean. Death v1 skips three smeared frames of the topple (73-75). Cast v1 snapped the pickaxe up and down in single frames, so cast v3 is used: guided through the painted cast_01, 02, 04, 05 and 06, it raises and lowers the pickaxe smoothly. The walk keeps the published clip. Re-matted 2026-10-14 with the green-plate spill limit: the green rims on thin and blurred edges are gone, with the same frames, timing, anchor and scale."
       }
     }
   ]
