@@ -65,8 +65,18 @@ On 2026-10-11 (owner request), `tools/archive_source_material.py --base` wrote `
 The index names its base, and `load_index` in `tools/restore_archived_source_material.py` follows that chain: tools take the newest snapshot, and the newest copy of a path wins. The snapshot carries standalone copies of the archive, inventory and restore tools. Write the next one with:
 
 ```text
-python tools/archive_source_material.py --destination N:/heroes-like-archives/source-art/<date>-<revision> --base N:/heroes-like-archives/source-art/2026-10-11-ca154fc4
+python tools/archive_source_material.py --destination N:/heroes-like-archives/source-art/<date>-<revision> --base N:/heroes-like-archives/source-art/2026-10-14-fe9bdcc1-main
 ```
+
+## Incremental snapshots, 2026-10-14
+
+The H3 video sources made from 2026-10-11 to 2026-10-14 existed only on D:, almost all of them inside the agent worktree `.claude/worktrees/cool-greider-b0456c` where the H3 runner worked. On 2026-10-14 (owner request "do a snapshot first"), two chained snapshots archived them at Git revision `fe9bdcc1a053f070b0aefb4cd11db32dc56e65bd`:
+
+- `2026-10-14-fe9bdcc1` extends `2026-10-11-ca154fc4`, written from that worktree: 10 ZIP64 archives, 151,830 files, 110,462,564,694 bytes (102.876 GiB); the ZIPs total 110,408,762,785 bytes. It holds the 1,128 H3 takes of 105 units: the raw videos (`.mkv`, 58.559 GiB), sampler latents (`.latent`, 9.054 GiB), preview `.mp4` files (0.706 GiB), and 133,011 guide images and matte frames (`.png`, 34.427 GiB). 15,435 changed tracked recipe and provenance files are backup copies.
+- `2026-10-14-fe9bdcc1-main` extends it from the owner's checkout: 7 archives, 1,144 files, 706,929,772 bytes. It holds the 9 takes of the Citadel Pikeward Veteran pilot (1,127 files), plus 17 tracked text files whose two checkout copies differ only in line endings.
+- Every payload was read back against its SHA-256 and ZIP CRC, and each snapshot's standalone verifier passed again. A path and SHA-256 comparison of both checkouts found no source file outside the chain. Nothing was removed locally.
+
+Write each snapshot from the checkout that made the sources. Agent worktrees hold untracked sources that no other checkout has, and removing a worktree deletes them.
 
 ## Tests never need archived sources
 
@@ -86,7 +96,7 @@ Since 2026-10-10 the `.import` and `.uid` sidecars are tracked, apart from those
 The art-regeneration tools (`tools/prepare_overworld_*_cutouts.py`, `tools/prepare_spell_variety_assets.py` and similar) still need their sources when someone deliberately rebuilds art. Restore exactly what a rebuild needs (dry-run without `--apply`). Every payload is verified against the archive SHA-256 and a differing local file is never overwritten:
 
 ```text
-python tools/restore_archived_source_material.py --archive-dir N:/heroes-like-archives/source-art/2026-10-11-ca154fc4 --prefix art/units/source/curated/ --apply
+python tools/restore_archived_source_material.py --archive-dir N:/heroes-like-archives/source-art/2026-10-14-fe9bdcc1-main --prefix art/units/source/curated/ --apply
 ```
 
 Pass the newest snapshot; its base chain is read too. Restored media stays ignored by Git. Remove it again with the same command plus `--remove`: it deletes only untracked files identical to their archived payload, and the folders that leaves empty. `tools/remove_archived_source_material.py` was the one-time 2026-10-03 cleanup; it needs that snapshot's exact local file set and no longer applies.

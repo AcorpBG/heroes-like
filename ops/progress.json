@@ -115121,6 +115121,18 @@
       "completedAt": "2026-10-11T15:05:00Z"
     },
     {
+      "id": "tooling-source-material-archive-incremental-20261014",
+      "title": "Archive the H3 video sources in incremental snapshots",
+      "status": "completed",
+      "classification": "owner_requested_archive_operation",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/source-material-storage-map.md"
+      ],
+      "notes": "Owner question 2026-10-14 whether the new sources are on GitHub and archived on N:, then 'do a snapshot first'. GitHub: no source media is tracked (check_source_material_tracking.py PASS; only the 299 editor exceptions) and no commit on any origin branch since the 2026-10-03 migration added one. N:: the H3 takes made since 2026-10-11 were in no snapshot and existed only on D:, almost all in the agent worktree .claude/worktrees/cool-greider-b0456c. Two chained snapshots at fe9bdcc1a: 2026-10-14-fe9bdcc1 extends 2026-10-11-ca154fc4 from that worktree (10 ZIP64 archives, 151830 files, 110462564694 bytes, ZIPs 110408762785): 1128 H3 takes of 105 units (mkv 58.559 GiB, latent 9.054 GiB, mp4 0.706 GiB, 133011 guide/matte png 34.427 GiB) plus 15435 changed tracked recipe/provenance files as backup copies. 2026-10-14-fe9bdcc1-main extends it from the owner's checkout (7 archives, 1144 files, 706929772 bytes): the 9 Citadel Pikeward Veteran pilot takes and 17 tracked text files differing only in line endings. Every payload passed SHA-256/CRC read-back and each standalone verifier; a path and SHA-256 comparison of both checkouts found no source outside the chain. Nothing removed locally; whether to remove the archived local copies waits for the owner.",
+      "updatedAt": "2026-10-14T21:00:00Z"
+    },
+    {
       "id": "art-h3-painted-unit-pilot-20261011",
       "title": "Profile one painted unit converted to H3 video",
       "status": "completed",
