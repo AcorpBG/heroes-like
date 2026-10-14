@@ -1,0 +1,46 @@
+{
+  "unit_id": "unit_neutral_ridgeflare_shots",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    575
+  ],
+  "scale": 0.44,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026105962,
+  "references": [
+    "hit_01",
+    "attack_00"
+  ],
+  "guides": [
+    [
+      40,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "ONE original red-haired young woman, the Ridgeflare Shot, facing screen right in elevated three-quarter view. Keep her face, the red ponytail, the brass goggles on her forehead, the red scarf, the rusty orange coat with white fur collar and cuffs, the split red and gold coat tails, the blue-grey trousers, the brass knee guards, the strapped brown boots, the leather belts, the quiver of red-fletched bolts behind her shoulder and the rolled blanket. Exactly two arms, two hands and two legs. The screen-RIGHT hand holds ONE compact brass and dark wood crossbow by its stock, pointing down and outward beside the hip; the screen-LEFT hand is empty. Preserve the crossbow, the goggles, the coat and the proportions. She starts rocked back in a flinch and recovers from it. Her head and shoulders are thrown back, the coat swings and the knees buckle while the hand keeps hold of the crossbow, then she steadies on both boots and returns to the same stance. The crossbow stays whole in her lowered hand with its bolt in place; nothing breaks off, drops or flies away. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full head, the whole crossbow, the coat tails, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, bolts in flight, muzzle flash, fire, smoke, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the crossbow stays rigid and never morphs.",
+  "protected_foreground_chroma": 17,
+  "edge_threshold": 12,
+  "palette_measurement": {
+    "bluest_opaque": 15.0,
+    "blue_minus_green_p999": 6.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

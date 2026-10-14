@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_neutral_ridgeflare_shots",
+  "guides": [
+    {
+      "frame": "hit_01",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/reactions_v1_02.png",
+      "source_sha256": "aed34551f55e38a108eeb368b85e264b12df03cf19ae954deca65895f8175787",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "4dd2c8526f6542a9e00c5f75c6d7ebe0116e47fc87bf60539a2ca636c88abe71"
+    },
+    {
+      "frame": "attack_00",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/attack_v1_00.png",
+      "source_sha256": "946e604f5355f62e7da1046400363ff43957d5d096c3882a75cbecab84742788",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "89e2c318aca032209ac355141441caa5772e5903cd5d28264cac25be3da644ca"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    575
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    241,
+    65,
+    241,
+    65
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_neutral_ridgeflare_shots",
+  "guides": [
+    {
+      "frame": "attack_00",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/attack_v1_00.png",
+      "source_sha256": "946e604f5355f62e7da1046400363ff43957d5d096c3882a75cbecab84742788",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "89e2c318aca032209ac355141441caa5772e5903cd5d28264cac25be3da644ca"
+    },
+    {
+      "frame": "death_02",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/death_v1_02.png",
+      "source_sha256": "be186813215c65aa3612eb532f2b45f692d5b43939c8cc0bc987abaae4d8f6e2",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "67c7949ae72e281d70023d9cbda96ad969dde0350112d5764f7083e11502ae50"
+    },
+    {
+      "frame": "death_07",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/death_v1_07.png",
+      "source_sha256": "2917b65fccafee6198e58e848a98c04b9c8fca6b8202763e3009bb4502409c6d",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "8511edf09a892ee034f183cd46687d771dc53b9422947c4a77a91c5cb05da72a"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    575
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    241,
+    65,
+    241,
+    65
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -1,0 +1,56 @@
+{
+  "unit_id": "unit_neutral_ridgeflare_shots",
+  "guides": [
+    {
+      "frame": "attack_00",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/attack_v1_00.png",
+      "source_sha256": "946e604f5355f62e7da1046400363ff43957d5d096c3882a75cbecab84742788",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "89e2c318aca032209ac355141441caa5772e5903cd5d28264cac25be3da644ca"
+    },
+    {
+      "frame": "ranged_01",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/ranged_v1_01.png",
+      "source_sha256": "896be23b5bd2d669e5b541415176d038f91c5d7167e92bc95b8f2ef271d52be0",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "534ed013ff1387ccdd35c4796ca16e3db6c41ab34104885bf82da9a1a8b4db8b"
+    },
+    {
+      "frame": "ranged_02",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/ranged_v1_02.png",
+      "source_sha256": "2d8a8a04a5b783c68194b444054b785f7b8b5427ccec412dc61c9ea9a94c5b05",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "5aebcde1eb7512e11524cb886bcd86278093a48db30c948b46007bfd85f90655"
+    },
+    {
+      "frame": "ranged_04",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/ranged_v1_04.png",
+      "source_sha256": "f501faf7c52814c5081397a55c48a37123e1d316b3bb13051bc01e59a5b05cc4",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "1814ab93e715aed51407115c6ca26526009d826b0e37abb9d74bc9ce301a8818"
+    },
+    {
+      "frame": "ranged_06",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/ranged_v1_06.png",
+      "source_sha256": "d042b95c5311230996d761b51a98b4a393d0d7d1b4e98eda7259645f5332fbb0",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "51f5abdd85b12c31ee4bdd85a8047178fbcd4d99b6a1a4ce3d3dc6bfc17cef90"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    575
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    241,
+    65,
+    241,
+    65
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

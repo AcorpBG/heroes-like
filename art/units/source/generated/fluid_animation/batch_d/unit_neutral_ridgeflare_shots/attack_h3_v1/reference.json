@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_neutral_ridgeflare_shots",
+  "guides": [
+    {
+      "frame": "attack_00",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/attack_v1_00.png",
+      "source_sha256": "946e604f5355f62e7da1046400363ff43957d5d096c3882a75cbecab84742788",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "89e2c318aca032209ac355141441caa5772e5903cd5d28264cac25be3da644ca"
+    },
+    {
+      "frame": "attack_02",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/attack_v1_02.png",
+      "source_sha256": "f7587c8f0e1aeae7ea7b5ef0cbac368b826deec73da1b53c9f3a7c5d8c65b400",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "e0629c5c7aad34a9e02b763b3b5672d377bc305e80f575a558092b5dfc235080"
+    },
+    {
+      "frame": "attack_04",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/attack_v1_04.png",
+      "source_sha256": "4cdc3b98c44f4d6adc09ea3056218e2900ae4c7bc7e1278b165995b22c6beca7",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "7d60c1441c4c61bf968aaf1696dde885b2aeb35cb96d49dfd7ea0d7af973383a"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    575
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    241,
+    65,
+    241,
+    65
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

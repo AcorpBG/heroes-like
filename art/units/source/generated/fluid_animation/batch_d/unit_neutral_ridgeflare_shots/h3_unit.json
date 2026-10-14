@@ -146,6 +146,234 @@
       ],
       "last": 2,
       "action": "Collapse slowly. She sinks down onto her knees with the crossbow dropping, stays there a moment, then slumps onto her side and lies flat, finishing motionless with her head at screen left and her boots at screen right, the crossbow lying on the ground beside her. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "attack_00",
+        "attack_02",
+        "attack_04",
+        "attack_06"
+      ],
+      "guides": [
+        [
+          24,
+          1
+        ],
+        [
+          44,
+          2
+        ],
+        [
+          60,
+          2
+        ],
+        [
+          80,
+          3
+        ],
+        [
+          100,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE punch toward screen right. She draws her empty fist back to her shoulder as the knees bend, then lunges forward and drives it straight out to full reach at screen right, the crossbow held low in the other hand, draws back and settles into the original stance. One punch only. The fist stays empty and nothing ever leaves it: no flash, spark, beam, streak or impact effect. The light stays steady."
+    },
+    "attack_h3_v3": {
+      "clip": "attack",
+      "references": [
+        "attack_00",
+        "attack_02",
+        "attack_04",
+        "attack_06"
+      ],
+      "guides": [
+        [
+          24,
+          1
+        ],
+        [
+          44,
+          2
+        ],
+        [
+          60,
+          2
+        ],
+        [
+          80,
+          3
+        ],
+        [
+          100,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE punch toward screen right. She draws her empty fist back to her shoulder as the knees bend, then lunges forward and drives it straight out to full reach at screen right, the crossbow held low in the other hand, draws back and settles into the original stance. One punch only. The fist stays empty and nothing ever leaves it: no flash, spark, beam, streak or impact effect. The light stays steady."
+    },
+    "ranged_h3_v2": {
+      "clip": "ranged",
+      "references": [
+        "attack_00",
+        "ranged_01",
+        "ranged_02",
+        "ranged_04",
+        "ranged_06"
+      ],
+      "guides": [
+        [
+          18,
+          1
+        ],
+        [
+          34,
+          2
+        ],
+        [
+          50,
+          3
+        ],
+        [
+          70,
+          4
+        ],
+        [
+          96,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "Shoot ONE bolt toward screen right. She raises the crossbow to her shoulder with both hands and sights along it toward screen right, the crossbow kicks back once as the string snaps forward, then she lowers it smoothly back to her hip in the original stance. Nothing leaves the crossbow: no bolt in flight, muzzle flash, fire, sparks, smoke or trail, and nothing is raised overhead. The light stays steady."
+    },
+    "ranged_h3_v3": {
+      "clip": "ranged",
+      "references": [
+        "attack_00",
+        "ranged_01",
+        "ranged_02",
+        "ranged_04",
+        "ranged_06"
+      ],
+      "guides": [
+        [
+          18,
+          1
+        ],
+        [
+          34,
+          2
+        ],
+        [
+          50,
+          3
+        ],
+        [
+          70,
+          4
+        ],
+        [
+          96,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "Shoot ONE bolt toward screen right. She raises the crossbow to her shoulder with both hands and sights along it toward screen right, the crossbow kicks back once as the string snaps forward, then she lowers it smoothly back to her hip in the original stance. Nothing leaves the crossbow: no bolt in flight, muzzle flash, fire, sparks, smoke or trail, and nothing is raised overhead. The light stays steady."
+    },
+    "hit_h3_v2": {
+      "clip": "hit",
+      "references": [
+        "hit_01",
+        "attack_00"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "She starts rocked back in a flinch and recovers from it. Her head and shoulders are thrown back, the coat swings and the knees buckle while the hand keeps hold of the crossbow, then she steadies on both boots and returns to the same stance. The crossbow stays whole in her lowered hand with its bolt in place; nothing breaks off, drops or flies away. Only the body moves; nothing else appears in the frame."
+    },
+    "hit_h3_v3": {
+      "clip": "hit",
+      "references": [
+        "hit_01",
+        "attack_00"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "She starts rocked back in a flinch and recovers from it. Her head and shoulders are thrown back, the coat swings and the knees buckle while the hand keeps hold of the crossbow, then she steadies on both boots and returns to the same stance. The crossbow stays whole in her lowered hand with its bolt in place; nothing breaks off, drops or flies away. Only the body moves; nothing else appears in the frame."
+    },
+    "cast_h3_v2": {
+      "clip": "cast",
+      "references": [
+        "attack_00",
+        "cast_03",
+        "cast_04"
+      ],
+      "guides": [
+        [
+          22,
+          1
+        ],
+        [
+          38,
+          2
+        ],
+        [
+          66,
+          2
+        ],
+        [
+          84,
+          1
+        ],
+        [
+          104,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "A rallying signal. She raises her empty fist high above her head, the crossbow held low and still in the other hand, holds the pose briefly, then lowers the arm back to the original stance. A physical gesture only: the crossbow never fires, and there is no flash, spark, glow, fire or aura anywhere. Nothing drops. The light stays steady."
+    },
+    "cast_h3_v3": {
+      "clip": "cast",
+      "references": [
+        "attack_00",
+        "cast_03",
+        "cast_04"
+      ],
+      "guides": [
+        [
+          22,
+          1
+        ],
+        [
+          38,
+          2
+        ],
+        [
+          66,
+          2
+        ],
+        [
+          84,
+          1
+        ],
+        [
+          104,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "A rallying signal. She raises her empty fist high above her head, the crossbow held low and still in the other hand, holds the pose briefly, then lowers the arm back to the original stance. A physical gesture only: the crossbow never fires, and there is no flash, spark, glow, fire or aura anywhere. Nothing drops. The light stays steady."
     }
   }
 }
