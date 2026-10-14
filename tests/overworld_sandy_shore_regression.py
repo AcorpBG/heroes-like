@@ -64,11 +64,16 @@ func run() -> void:
 	check(rows == before, "rendering mutated terrain data")
 	for y in range(6):
 		for x in range(4,8): fog[y][x] = false
+	# Column 4 is the fog edge, which paints its ground under the soft fog;
+	# columns 5-7 are deeper fog and must stay identity-silent.
 	var hidden := await capture(rows, fog)
 	for y in range(6):
-		for x in range(4,8): rows[y][x] = "lava"
+		for x in range(5,8): rows[y][x] = "lava"
 	var changed_hidden := await capture(rows, fog)
-	check(hidden.get_data() == changed_hidden.get_data(), "beach reveals unexplored neighboring terrain")
+	check(hidden.get_data() == changed_hidden.get_data(), "beach reveals terrain beyond the fog edge")
+	for y in range(6): rows[y][4] = "lava"
+	var changed_edge := await capture(rows, fog)
+	check(distance(changed_hidden.get_pixel(540, 360), changed_edge.get_pixel(540, 360)) > 0.05, "fog-edge tile does not paint its ground")
 	for row in fog: row.fill(true)
 	for y in range(6):
 		for x in range(8): rows[y][x] = "grass" if x+y < 7 else "water"

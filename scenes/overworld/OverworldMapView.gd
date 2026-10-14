@@ -52,6 +52,17 @@ const Motion = preload("res://scenes/overworld/OverworldMotion.gd")
 const SceneryBatch = preload("res://scenes/overworld/OverworldSceneryBatch.gd")
 const RoadStyle = preload("res://scenes/overworld/OverworldRoadStyle.gd")
 const GroundSurface = preload("res://scenes/overworld/OverworldGroundSurface.gd")
+const FogSurface = preload("res://scenes/overworld/OverworldFogSurface.gd")
+const OBJECT_SHADOW_SHADER = preload("res://scenes/overworld/OverworldObjectShadow.gdshader")
+# Object shadows (docs/overworld-soft-fog-and-shadows.md): each object's own
+# silhouette, softened, slanted up and to the right and squashed onto the
+# ground behind it, as if lit from in front and to the left. Town art carries
+# its own ground plane and casts none.
+const OBJECT_SHADOW_SHEAR := -0.75
+const OBJECT_SHADOW_SQUASH := 0.42
+const OBJECT_SHADOW_FOOT_FACTOR := 0.06
+const OBJECT_SHADOW_ALPHA := 0.36
+const OBJECT_SHADOW_BLUR_PX := 6.0
 const ActorStyle = preload("res://scenes/overworld/OverworldActorStyle.gd")
 const CreatureIdle = preload("res://scenes/overworld/OverworldCreatureIdle.gd")
 const Mines = preload("res://scripts/core/MineRules.gd")
@@ -69,6 +80,13 @@ var _actor_unit_ids: Dictionary = {}
 var _creature_idle := CreatureIdle.new()
 var _ground_background_layer: Control
 var _ground_surface: TextureRect
+var _fog_surface: ColorRect
+# Object shadows: a render item drawn behind the state layer's own content.
+var _object_shadow_item := RID()
+var _object_shadow_material: ShaderMaterial
+var _object_shadows_casting := false
+var _object_shadows_muted := false
+var _object_shadow_paintings: Dictionary = {}
 
 const OVERWORLD_ART_MANIFEST_PATH := "res://art/overworld/manifest.json"
 const GROUND_MATERIAL_MANIFEST_PATH := "res://art/overworld/ground_materials.json"
@@ -998,6 +1016,7 @@ func set_map_state(
 			road_tiles.append(Vector2i(int(String(key).get_slice(",", 0)), int(String(key).get_slice(",", 1))))
 		_ground_surface.sync_lookup(_map_data, _map_size, session_static_signature, explored, _bool_grid_cache_signature(explored), road_tiles)
 		_ground_surface.sync_layout(_board_rect(), _map_viewport_rect(), _map_size)
+		_sync_soft_fog()
 
 	if visibility_changed or viewport_layout_changed:
 		_invalidate_frame_layer("viewport_layout_changed")
@@ -1560,7 +1579,10 @@ func _apply_selected_route_state(selected_route_state: Dictionary) -> bool:
 	return true
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_RESIZED:
+	if what == NOTIFICATION_PREDELETE and _object_shadow_item.is_valid():
+		RenderingServer.free_rid(_object_shadow_item)
+		_object_shadow_item = RID()
+	elif what == NOTIFICATION_RESIZED:
 		_invalidate_frame_layer("resized")
 		_invalidate_session_static_cache("resized")
 		_invalidate_terrain_ambient_layer("resized")
@@ -1585,6 +1607,15 @@ func _ensure_render_layers() -> void:
 	_state_layer = _create_render_layer("StateLayer", Callable(self, "_draw_state_layer"))
 	_portal_fx = PortalFx.new()
 	_state_layer.add_child(_portal_fx)
+	_object_shadow_material = ShaderMaterial.new()
+	_object_shadow_material.shader = OBJECT_SHADOW_SHADER
+	_object_shadow_material.set_shader_parameter("blur_px", OBJECT_SHADOW_BLUR_PX)
+	_object_shadow_item = RenderingServer.canvas_item_create()
+	RenderingServer.canvas_item_set_parent(_object_shadow_item, _state_layer.get_canvas_item())
+	RenderingServer.canvas_item_set_draw_behind_parent(_object_shadow_item, true)
+	RenderingServer.canvas_item_set_material(_object_shadow_item, _object_shadow_material.get_rid())
+	_fog_surface = FogSurface.new()
+	add_child(_fog_surface)
 	_dynamic_layer = _create_render_layer("DynamicLayer", Callable(self, "_draw_dynamic_layer"))
 	_gain_floaters = GainFloaters.new()
 	_gain_floaters.name = "GainFloaterLayer"
@@ -1780,6 +1811,7 @@ func _draw_living_scenery(asset_id: String, texture: Texture2D, rect: Rect2, tin
 	if _draw_canvas_item != _state_layer or not _scenery_batches.recording or profile.is_empty():
 		_canvas_draw_texture_rect(texture, rect, false, tint)
 		return
+	_cast_object_shadow(texture, rect)
 	var region: Dictionary = _object_texture_visible_regions.get(asset_id, {})
 	_scenery_batches.paint(texture, rect, tint, profile, region.get("normalized_source_rect", Rect2(0, 0, 1, 1)), asset_id, tile, _level, _scenery_motion_enabled())
 
@@ -1800,7 +1832,60 @@ func _draw_living_scenery_region(asset_id: String, texture: Texture2D, payload: 
 		padding = Vector2.ONE * margin / painted.size
 		payload = preload("res://scripts/persistence/NativeSceneryFormation.gd").clip(painted.grow(margin), cell_rect, texture.get_size())
 		if payload.is_empty(): return
+	_cast_object_shadow(texture, payload.rect, payload.source, payload.get("painted_rect", Rect2()))
 	_scenery_batches.paint_region(texture, payload.rect, payload.source, tint, profile, original_region, asset_id, tile, phase_tile, _level, _scenery_motion_enabled(), padding)
+
+## The fog follows the ground surface; shadows map where they land on the
+## canvas to map tiles the same way, so they fade out under the fog.
+func _sync_soft_fog() -> void:
+	_fog_surface.sync(_ground_surface)
+	if not _fog_surface.visible:
+		return
+	var ground_transform := _ground_surface.get_global_transform()
+	var world_span: Vector2 = _ground_surface.material.get_shader_parameter("world_span")
+	_object_shadow_material.set_shader_parameter("canvas_origin", ground_transform.origin)
+	_object_shadow_material.set_shader_parameter("canvas_world_origin", _ground_surface.material.get_shader_parameter("world_origin"))
+	_object_shadow_material.set_shader_parameter("canvas_world_scale", world_span / (_ground_surface.size * ground_transform.get_scale()))
+
+## Shadows read the ground lookup to cast only from explored tiles; the
+## mapping is the board at paint time, which moves with the state layer.
+func _sync_object_shadow_mask(board_rect: Rect2) -> void:
+	var mask := _soft_fog_active() and _ground_surface.data_texture != null
+	_object_shadow_material.set_shader_parameter("mask_explored", mask)
+	if not mask:
+		return
+	_object_shadow_material.set_shader_parameter("terrain_data", _ground_surface.data_texture)
+	_object_shadow_material.set_shader_parameter("map_size", Vector2(_map_size))
+	_object_shadow_material.set_shader_parameter("board_origin", board_rect.position)
+	_object_shadow_material.set_shader_parameter("tile_px", board_rect.size / Vector2(maxi(_map_size.x, 1), maxi(_map_size.y, 1)))
+
+## Lays the object's shadow while the state layer paints objects. A per-tile
+## slice of one painting (`painting`) casts the whole painting once.
+func _cast_object_shadow(texture: Texture2D, rect: Rect2, source: Rect2 = Rect2(), painting: Rect2 = Rect2()) -> void:
+	if not _object_shadows_casting or _object_shadows_muted or texture == null or _draw_canvas_item != _state_layer:
+		return
+	var texture_size := texture.get_size()
+	var source_rect := source if source.has_area() else Rect2(Vector2.ZERO, texture_size)
+	if painting.has_area():
+		var key := [texture.get_rid(), painting]
+		if _object_shadow_paintings.has(key):
+			return
+		_object_shadow_paintings[key] = true
+		rect = painting
+		source_rect = Rect2(Vector2.ZERO, texture_size)
+	var draw_rect := rect
+	if source_rect.position == Vector2.ZERO and source_rect.size == texture_size:
+		# Room for the blur past the sprite's edge; the shader reads it as empty.
+		var margin := Vector2.ONE * OBJECT_SHADOW_BLUR_PX * 2.5
+		var ratio := source_rect.size / rect.size
+		draw_rect = rect.grow(margin.x)
+		source_rect = Rect2(source_rect.position - margin * ratio, source_rect.size + margin * ratio * 2.0)
+	var pivot := Vector2(rect.get_center().x, rect.end.y - rect.size.y * OBJECT_SHADOW_FOOT_FACTOR)
+	var slant := Transform2D(Vector2(1.0, 0.0), Vector2(OBJECT_SHADOW_SHEAR, OBJECT_SHADOW_SQUASH), Vector2.ZERO)
+	slant.origin = pivot - slant.basis_xform(pivot)
+	RenderingServer.canvas_item_add_set_transform(_object_shadow_item, slant)
+	RenderingServer.canvas_item_add_texture_rect_region(_object_shadow_item, draw_rect, texture.get_rid(), source_rect, Color(1.0, 1.0, 1.0, OBJECT_SHADOW_ALPHA * _turn_actor_alpha), false, false)
+	RenderingServer.canvas_item_add_set_transform(_object_shadow_item, Transform2D.IDENTITY)
 
 func _canvas_draw_rect(rect: Rect2, color: Color, filled: bool = true, width: float = -1.0) -> void:
 	if _record_scenery_command(&"draw_rect", [rect, _actor_color(color), filled, width]):
@@ -1856,6 +1941,7 @@ func _canvas_draw_texture_rect(
 	modulate: Color = Color(1.0, 1.0, 1.0, 1.0),
 	transpose: bool = false
 ) -> void:
+	_cast_object_shadow(texture, rect)
 	if _record_scenery_command(&"draw_texture_rect", [texture, rect, tile, _actor_color(modulate), transpose]):
 		return
 	_current_draw_canvas_item().draw_texture_rect(texture, rect, tile, _actor_color(modulate), transpose)
@@ -1866,6 +1952,7 @@ func _canvas_draw_texture_rect_region(
 	source_rect: Rect2,
 	modulate: Color = Color(1.0, 1.0, 1.0, 1.0)
 ) -> void:
+	_cast_object_shadow(texture, rect, source_rect)
 	if _record_scenery_command(&"draw_texture_rect_region", [texture, rect, source_rect, _actor_color(modulate), false, true]):
 		return
 	_current_draw_canvas_item().draw_texture_rect_region(texture, rect, source_rect, _actor_color(modulate), false, true)
@@ -1878,6 +1965,7 @@ func _canvas_draw_texture_rect_flipped(
 	modulate: Color = Color(1.0, 1.0, 1.0, 1.0),
 	transpose: bool = false
 ) -> void:
+	_cast_object_shadow(texture, rect)
 	if _draw_canvas_item == _state_layer and _scenery_batches.recording:
 		if flip_x or flip_y:
 			_record_scenery_command(&"draw_set_transform", [rect.get_center(), 0.0, Vector2(-1.0 if flip_x else 1.0, -1.0 if flip_y else 1.0)])
@@ -2077,6 +2165,7 @@ func _draw_ground_background_layer() -> void:
 	_ground_surface.sync_layout(board_rect, viewport_rect, _map_size)
 	if _homm3_runtime_rendering_enabled():
 		_ground_surface.hide()
+	_sync_soft_fog()
 	_draw_canvas_item = previous_target
 
 func _draw_session_static_layer() -> void:
@@ -2264,6 +2353,8 @@ func _draw_terrain_ambient_layer() -> void:
 
 func _draw_state_layer() -> void:
 	_scenery_batches.begin(_state_layer)
+	RenderingServer.canvas_item_clear(_object_shadow_item)
+	_object_shadow_paintings.clear()
 	if _portal_fx != null:
 		_portal_fx.clear()
 		_portal_fx.animate = _portal_fx_motion_enabled()
@@ -2280,6 +2371,7 @@ func _draw_state_layer() -> void:
 	var board_rect = _board_rect()
 	var visible_bounds := _visible_tile_bounds(board_rect, viewport_rect)
 	_record_layer_paint_origin(_state_layer, board_rect, visible_bounds)
+	_sync_object_shadow_mask(board_rect)
 	# About ten fog lookups per tile follow; read the level's grids once.
 	OverworldRulesScript.begin_fog_read_scope(_session)
 	for y in range(visible_bounds.position.y, visible_bounds.position.y + visible_bounds.size.y):
@@ -2294,6 +2386,7 @@ func _draw_state_layer() -> void:
 			_draw_tile_state_overlay(tile, rect)
 			_draw_town_footprint_underlay(tile, rect)
 	# A tree's canopy can reach tiles several rows above its ground anchor.
+	_object_shadows_casting = true
 	for y in range(visible_bounds.position.y, visible_bounds.position.y + visible_bounds.size.y):
 		for x in range(visible_bounds.position.x, visible_bounds.position.x + visible_bounds.size.x):
 			var tile := Vector2i(x, y)
@@ -2306,6 +2399,7 @@ func _draw_state_layer() -> void:
 			var rect := _tile_rect(board_rect, tile)
 			_draw_tile_ground_pickups(tile, rect)
 			_draw_tile_state_icon(tile, rect, false)
+	_object_shadows_casting = false
 	OverworldRulesScript.end_fog_read_scope(_session)
 	_scenery_batches.finish()
 	_draw_canvas_item = previous_target
@@ -2405,11 +2499,20 @@ func _draw_tile_terrain_surface(tile: Vector2i, rect: Rect2) -> void:
 	_draw_terrain_transitions(tile, rect, terrain)
 
 func _draw_tile_state_overlay(tile: Vector2i, rect: Rect2) -> void:
+	# The soft fog surface draws all fog above the objects; the per-tile veil
+	# and frontier feather remain for the HoMM3 tile renderer.
+	var soft_fog := _soft_fog_active()
 	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
-		_canvas_draw_rect(rect, UNEXPLORED_COLOR, true)
-		_draw_unexplored_shroud(tile, rect)
+		if not soft_fog:
+			_canvas_draw_rect(rect, UNEXPLORED_COLOR, true)
+			_draw_unexplored_shroud(tile, rect)
 		return
-	_draw_explored_terrain_boundary(tile, rect)
+	if not soft_fog:
+		_draw_explored_terrain_boundary(tile, rect)
+
+func _soft_fog_active() -> bool:
+	return _fog_surface != null and _ground_surface != null and _ground_surface.configured \
+		and _ground_surface.missing_terrain_ids.is_empty() and not _homm3_runtime_rendering_enabled()
 
 func _draw_unexplored_shroud(tile: Vector2i, rect: Rect2) -> void:
 	if rect.size.x <= 0.0 or rect.size.y <= 0.0:
@@ -4450,6 +4553,7 @@ func _draw_mine(node: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i)
 			var clipped := draw_rect.intersection(cell)
 			if clipped.size.x <= 0.0 or clipped.size.y <= 0.0: continue
 			var source := Rect2((clipped.position - draw_rect.position) / draw_rect.size * pose.canvas, clipped.size / draw_rect.size * pose.canvas)
+			_cast_object_shadow(pose.texture, clipped, source, draw_rect)
 			_scenery_batches.paint_material_region(pose.texture, clipped, source, tint, material,
 				{"kind": "common_mine" if resource in ["wood", "ore", "gold"] else "rare_mine", "resource": resource, "tile": tile, "cell": Vector2i(x, y), "level": _level})
 	return true
@@ -4466,6 +4570,7 @@ func _draw_town_sprite(rect: Rect2, entry_rect: Rect2, remembered: bool, tile: V
 	if not (texture is Texture2D):
 		return false
 	var anchor := _draw_town_grounding_anchor(rect, remembered, tile)
+	_object_shadows_muted = true
 	var draw_payload := _town_sprite_draw_payload(asset_id, texture, rect)
 	var draw_texture: Texture2D = draw_payload.get("draw_texture", texture)
 	var sprite_rect: Rect2 = draw_payload.get("draw_rect", Rect2(rect.get_center(), Vector2.ZERO))
@@ -4477,6 +4582,7 @@ func _draw_town_sprite(rect: Rect2, entry_rect: Rect2, remembered: bool, tile: V
 	_draw_town_owner_pennant(entry_rect, _town_color(tile), remembered, _town_owner_id(_town_at(tile)))
 	_draw_town_front_contact(anchor, remembered)
 	_draw_town_entry_approach(entry_rect, _town_color(tile), remembered)
+	_object_shadows_muted = false
 	return true
 
 func _town_explored_sprite_slices(sprite_rect: Rect2, texture_size: Vector2) -> Array:
@@ -4654,6 +4760,7 @@ func _draw_encounter_creature_idle(encounter: Dictionary, rect: Rect2, remembere
 	var shader_material := _scenery_batches.cached_material(["creature", phase_key, pose.texture, pose.rect.size],
 		func() -> ShaderMaterial: return CreatureIdle.material(pose, phase_key, _scenery_motion_enabled()))
 	var tint := OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE
+	_cast_object_shadow(_creature_idle.still_frame(unit_id), pose.rect)
 	_scenery_batches.paint_material(pose.texture, pose.rect, _actor_color(tint), shader_material,
 		{"kind": "creature_idle", "unit_id": unit_id, "tile": tile, "level": _level, "ground": ground})
 	_draw_procedural_contact_marks(anchor, "encounter", remembered)
@@ -5245,6 +5352,7 @@ func _draw_control_flag(profile: Dictionary, remembered: bool, owner: String, ki
 	var material := _control_flag.material(profile.color)
 	for part in _town_explored_sprite_slices(rect, texture.get_size()):
 		if _scenery_batches.recording:
+			_cast_object_shadow(texture, part.rect, part.source, rect)
 			_scenery_batches.paint_material_region(texture, part.rect, part.source, tint, material,
 				{"kind": kind, "cell": part.cell, "color": profile.color, "pole_base": profile.pole_base, "level": _level})
 	# The optional accessibility symbol stays tiny and inside explored cloth.
@@ -12128,6 +12236,7 @@ func _load_overworld_art_manifest() -> void:
 	var ground_payload = JSON.parse_string(FileAccess.get_file_as_string(GROUND_MATERIAL_MANIFEST_PATH))
 	var ground_config: Dictionary = ground_payload if ground_payload is Dictionary else {}
 	_ground_surface.configure(ground_config, _texture_from_path(str(ground_config.get("atlas", ""))))
+	_fog_surface.configure(_unexplored_shroud_texture(), UNEXPLORED_COLOR, UNEXPLORED_SHROUD_BASE, UNEXPLORED_SHROUD_TEXTURE_MODULATE)
 	var decal_config: Dictionary = ContentService.load_json(TERRAIN_DECAL_MANIFEST_PATH)
 	_ground_surface.configure_decals(decal_config, _texture_from_path(str(decal_config.get("atlas", ""))))
 	var terrain_rendering = _overworld_art_manifest.get("terrain_rendering", {})

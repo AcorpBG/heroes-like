@@ -2,7 +2,8 @@ shader_type canvas_item;
 render_mode unshaded;
 
 uniform sampler2D materials : source_color, filter_linear_mipmap, repeat_disable;
-// R: exact manifest slot / 255. G: explored bit. Never filtered or gamma corrected.
+// R: exact manifest slot / 255. G: 1 explored, 0.5 fog edge (unexplored next
+// to explored land), 0 deeper fog. B: road. Never filtered or gamma corrected.
 uniform sampler2D terrain_data : filter_nearest, repeat_disable;
 uniform vec2 map_size;
 uniform vec2 world_origin;
@@ -156,7 +157,7 @@ vec4 decal_layer(vec2 world, float world_per_pixel, vec4 slots, vec4 blend, vec3
 
 float known_slot(vec2 cell, float own_slot) {
 	vec2 data = cell_data(cell);
-	return data.g > 0.5 ? floor(data.r * 255.0 + 0.5) : own_slot;
+	return data.g > 0.25 ? floor(data.r * 255.0 + 0.5) : own_slot;
 }
 
 float is_water(float slot) {
@@ -167,7 +168,9 @@ void fragment() {
 	vec2 world = world_origin + UV * world_span;
 	vec2 own = cell_data(floor(world));
 	float own_slot = floor(own.r * 255.0 + 0.5);
-	if (own.g < 0.5 || own_slot > 15.0) {
+	// Fog-edge tiles paint their ground: the soft fog above (overworld_fog.gdshader)
+	// thins over them. Deeper fog stays identity-silent.
+	if (own.g < 0.25 || own_slot > 15.0) {
 		// Identity-silent underlay. The authoritative fog layer is above this.
 		COLOR = vec4(0.04, 0.05, 0.06, 1.0);
 	} else {

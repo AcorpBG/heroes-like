@@ -96,7 +96,7 @@ func sync_lookup(rows: Array, dimensions: Vector2i, terrain_signature: int, expl
 	if not map_changed and not fog_changed:
 		return
 	var start := Time.get_ticks_usec()
-	# One RGBA8 texel per tile: red is the material slot, green is explored.
+	# One RGBA8 texel per tile: red is the material slot, green is exploration.
 	# Fill a byte buffer and upload it once instead of per-pixel Color calls.
 	if map_changed:
 		missing_terrain_ids.clear()
@@ -127,13 +127,31 @@ func sync_lookup(rows: Array, dimensions: Vector2i, terrain_signature: int, expl
 				lookup_bytes[(tile.y * dimensions.x + tile.x) * 4 + 2] = 255
 		map_signature = terrain_signature
 		map_uploads += 1
+	# Green: 255 explored, 128 the fog edge (unexplored, touching explored land
+	# in any of 8 directions: the soft fog edge may show its ground), 0 deeper.
+	var width := dimensions.x
+	var near_row := PackedByteArray()
+	near_row.resize(width * dimensions.y)
 	for y in range(dimensions.y):
 		var explored_row = explored[y] if y < explored.size() and explored[y] is Array else []
 		var explored_width: int = explored_row.size()
-		var offset := y * dimensions.x * 4 + 1
-		for x in range(dimensions.x):
-			lookup_bytes[offset] = 255 if x < explored_width and bool(explored_row[x]) else 0
+		var offset := y * width * 4 + 1
+		for x in range(width):
+			var seen := x < explored_width and bool(explored_row[x])
+			lookup_bytes[offset] = 255 if seen else 0
+			if seen:
+				var i := y * width + x
+				near_row[i] = 1
+				if x > 0: near_row[i - 1] = 1
+				if x + 1 < width: near_row[i + 1] = 1
 			offset += 4
+	for y in range(dimensions.y):
+		for x in range(width):
+			var i := y * width + x
+			if lookup_bytes[i * 4 + 1] == 255:
+				continue
+			if near_row[i] == 1 or (y > 0 and near_row[i - width] == 1) or (y + 1 < dimensions.y and near_row[i + width] == 1):
+				lookup_bytes[i * 4 + 1] = 128
 	data_image = Image.create_from_data(dimensions.x, dimensions.y, false, Image.FORMAT_RGBA8, lookup_bytes)
 	if data_texture == null or data_texture.get_size() != Vector2(dimensions):
 		data_texture = ImageTexture.create_from_image(data_image)
