@@ -4483,7 +4483,7 @@
         },
         "idle_h3_v3/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/idle_h3_v3/matte.json",
-          "sha256": "1fd049d24bf44b5c2856eb556f1ef6f680f60a722f599f9e1026c72c43eeac9c"
+          "sha256": "167ed870b57d76f8f827b5248e779438c7db5989552595f5db0e9dfb2cf351a4"
         },
         "move_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/move_h3_v1/original_lossless.mkv",
@@ -4527,7 +4527,7 @@
         },
         "move_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/move_h3_v1/matte.json",
-          "sha256": "7084479f8589b57f6d7c24e5cbeb4a50ce78eefbdbce7da7aec6590b9cbc9cfe"
+          "sha256": "a1cf740bd6bb880101e4f8da3a6eddb421d84ce71eb1519e1ed12f771ee5a81f"
         },
         "attack_h3_v2/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/attack_h3_v2/original_lossless.mkv",
@@ -4571,7 +4571,7 @@
         },
         "attack_h3_v2/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/attack_h3_v2/matte.json",
-          "sha256": "2b8303e0f9ed7bed404093b955b07f528f9d49de9d16c2789e9db52c89b4a437"
+          "sha256": "bcb86fb5245bee22fb0d8a45b86a7ca8a50de972285505738a65bec16ba8d8b0"
         },
         "hit_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/hit_h3_v1/original_lossless.mkv",
@@ -4615,7 +4615,7 @@
         },
         "hit_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/hit_h3_v1/matte.json",
-          "sha256": "69313b4d179817ac993cb1ec2d8d00ec6aee7b05f8300dd5135fbdd32b5265cb"
+          "sha256": "e14ff95204ee415967c78e1472e5b5739e94c1116a9c30eddaa36049f2f5e727"
         },
         "defend_h3_v3/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/defend_h3_v3/original_lossless.mkv",
@@ -4659,7 +4659,7 @@
         },
         "defend_h3_v3/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/defend_h3_v3/matte.json",
-          "sha256": "d28df75706560d894a83766c433312da55e97d11445f5bbc9fb100c0fdd9aacd"
+          "sha256": "f89d7b364180f02c62747f36a71a9ae8b29a068d9af862a23e9621a1747b02b2"
         },
         "cast_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/cast_h3_v1/original_lossless.mkv",
@@ -4703,7 +4703,7 @@
         },
         "cast_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/cast_h3_v1/matte.json",
-          "sha256": "aab878e03b888c442c84ca6d16dd0e8104f557ab5923274027ebdd2d35779cbc"
+          "sha256": "aa1c70adc1ffa4d97fb8e2881d4ff28dec4f5311accf9d8d800bf446deb55029"
         },
         "death_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/death_h3_v1/original_lossless.mkv",
@@ -4747,13 +4747,13 @@
         },
         "death_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/death_h3_v1/matte.json",
-          "sha256": "126b6ed4559233c9694f5ceabd79deec42b75252bb93c5093790a084000653f3"
+          "sha256": "7f903abdac9b8a0a1d38ca7ebac7a38fb8f22c0672c24fbbc6a9bf9caac60499"
         }
       },
       "preserved_accepted_clips": [],
       "visual_review": {
         "status": "accepted",
-        "notes": "Idle is retake v3: the first take held each stance and swapped in two frames, so the retake alternates painted poses every 15 frames and moves without pausing. Attack is retake v2, densely guided by the painted ram poses: the first take burst into a white star with flying shards and pushed the shield off the chassis, and the retake still flashes at the impact (video 38-46), so those frames are cut and the loaded chassis lands straight on the full shove. Defend is retake v3: the first take darkened the plate through the whole brace. Cast mattes with its edge threshold lowered from 169 to 164 (the plate measured 163-167 against a 169 threshold and every frame was rejected). Move, hit, cast and death are the first takes."
+        "notes": "Idle is retake v3: the first take held each stance and swapped in two frames, so the retake alternates painted poses every 15 frames and moves without pausing. Attack is retake v2, densely guided by the painted ram poses: the first take burst into a white star with flying shards and pushed the shield off the chassis, and the retake still flashes at the impact (video 38-46), so those frames are cut and the loaded chassis lands straight on the full shove. Defend is retake v3: the first take darkened the plate through the whole brace. Cast mattes with its edge threshold lowered from 169 to 164 (the plate measured 163-167 against a 169 threshold and every frame was rejected). Move, hit, cast and death are the first takes. Re-matted 2026-10-14 with the green-plate spill limit: the green rims on thin and blurred edges are gone, with the same frames, timing, anchor and scale."
       }
     }
   ]

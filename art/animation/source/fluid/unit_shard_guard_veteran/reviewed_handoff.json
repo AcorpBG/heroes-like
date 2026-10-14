@@ -4461,7 +4461,7 @@
         },
         "idle_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/idle_h3_v1/matte.json",
-          "sha256": "c945418af34946741f1989364eaf2aecc6cc188c7c24a202ef390cc112226554"
+          "sha256": "5fcefb6d32612dda158a87fefdf9c13fa6c5801541f02bf38762754b70105ca9"
         },
         "move_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/move_h3_v1/original_lossless.mkv",
@@ -4505,7 +4505,7 @@
         },
         "move_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/move_h3_v1/matte.json",
-          "sha256": "53168581930c85a2a5bac57432a1591e7c4d31aae3917c921802aea2a1eb09ac"
+          "sha256": "3fe1f1dd51973ecad2368ad82e87f4edabe722d7982b285b1f51b15d9e150605"
         },
         "attack_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/attack_h3_v1/original_lossless.mkv",
@@ -4549,7 +4549,7 @@
         },
         "attack_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/attack_h3_v1/matte.json",
-          "sha256": "05c7dca4ea771a7bee9ec36df6bcbefd5ebe90957bf3e3b990643c644ca6763d"
+          "sha256": "5ef8a1ce1438a099a8088094bfffd31695b5de4d0c49be303adbc75b35195978"
         },
         "hit_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/hit_h3_v1/original_lossless.mkv",
@@ -4593,7 +4593,7 @@
         },
         "hit_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/hit_h3_v1/matte.json",
-          "sha256": "e20145e8665b51c81954c5fc0e77c16914b8f25af543340fe86ab767e9b630e1"
+          "sha256": "6259e72b103296ae3a79c7c44537f2a5bef69e9d5e45f3a51463a7c77c5027c8"
         },
         "defend_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/defend_h3_v1/original_lossless.mkv",
@@ -4637,7 +4637,7 @@
         },
         "defend_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/defend_h3_v1/matte.json",
-          "sha256": "6a6d886e4d8de742b10bc3ef41229221e1af3ae728badf4d21589035538ef624"
+          "sha256": "b750fd50b951055be2e0f74f3edfb3c9d855327474a8992eb02c60b9446884a5"
         },
         "cast_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/cast_h3_v1/original_lossless.mkv",
@@ -4681,7 +4681,7 @@
         },
         "cast_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/cast_h3_v1/matte.json",
-          "sha256": "49ae48e30bb8b1ae032980a2053971d83e0653ca11f4716b4d5cbbdc947a4e80"
+          "sha256": "0c313309b984a2559b4ef78e47ee0764c33f59fbe986aa93e5c383addd1ffd86"
         },
         "death_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/death_h3_v1/original_lossless.mkv",
@@ -4725,13 +4725,13 @@
         },
         "death_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/death_h3_v1/matte.json",
-          "sha256": "ea45c053c66233b59151db63ec9c394a46998dd7eaab0187f66229d840ec9a65"
+          "sha256": "58e2b3461ac664251e20b538ab6f5d09cdd87011976c4e274e5beb3abfaf30e8"
         }
       },
       "preserved_accepted_clips": [],
       "visual_review": {
         "status": "accepted_selected_clips",
-        "notes": "Shard Guard Veteran on H3 video: all first takes; the idle hurries through its holds and slows its shifts, attack and cast skip the frames where the glaive tip leaves the canvas."
+        "notes": "All clips from the first H3 takes. The idle holds still between short shifts (head turn, pavise resettle, glaive lift), so it runs through the holds at every fourth video frame and shows every frame of each shift, which keeps the shifts smooth instead of popping. Attack and cast skip the frames where the raised glaive tip leaves the top of the canvas (attack video 18-21 and 34-36, cast 30-34 and 78-83), so the twirl and the raise swing straight through. Re-matted 2026-10-14 with the green-plate spill limit: the green rims on thin and blurred edges are gone, with the same frames, timing, anchor and scale."
       },
       "source_scale_by_image": {
         "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/idle_h3_v1/matte/rgba_000.png": 0.48,

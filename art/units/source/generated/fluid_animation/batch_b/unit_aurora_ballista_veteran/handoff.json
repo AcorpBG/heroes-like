@@ -5349,7 +5349,7 @@
         },
         "idle_h3_v3/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_aurora_ballista_veteran/idle_h3_v3/matte.json",
-          "sha256": "2c27023478b96b6f84a66994b0c31f47f0bdb24197b1e908312879960c3ad326"
+          "sha256": "2bb7705fba2edbaba0e1e742422bdca55c965dbadd99900ad6a04d1741fca581"
         },
         "move_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_aurora_ballista_veteran/move_h3_v1/original_lossless.mkv",
@@ -5393,7 +5393,7 @@
         },
         "move_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_aurora_ballista_veteran/move_h3_v1/matte.json",
-          "sha256": "048d00f1de74d04f9635ced2bca43a291463ecc01a6a55631cc6d3d032f1d681"
+          "sha256": "e292fdb5d560cc0c131312bd7daf6fd4607486dfb0bbf4f0558a0f29c70b60f2"
         },
         "attack_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_aurora_ballista_veteran/attack_h3_v1/original_lossless.mkv",
@@ -5437,7 +5437,7 @@
         },
         "attack_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_aurora_ballista_veteran/attack_h3_v1/matte.json",
-          "sha256": "4738b43f9aa195c814fc6c7260acf916d4a237473fdebe459a5fd2789b70997f"
+          "sha256": "ef18e9101b28770bc362b2669c101f26b96c8bae3211088400d501f8105bbb74"
         },
         "ranged_h3_v5/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_aurora_ballista_veteran/ranged_h3_v5/original_lossless.mkv",
@@ -5481,7 +5481,7 @@
         },
         "ranged_h3_v5/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_aurora_ballista_veteran/ranged_h3_v5/matte.json",
-          "sha256": "c50b3d5ad3be6a7f67fca0d44e470f4fe96e1a0297642ae3b06fdabb6a496f01"
+          "sha256": "7facd08a9a8b458307f6532518e268b8cc09d1a906b361d2e0a047349d8fab8d"
         },
         "hit_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_aurora_ballista_veteran/hit_h3_v1/original_lossless.mkv",
@@ -5525,7 +5525,7 @@
         },
         "hit_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_aurora_ballista_veteran/hit_h3_v1/matte.json",
-          "sha256": "c1935b57ac523b9b96d4c7a6e8151d990ce9591f942652ef789064c710742e9c"
+          "sha256": "018a49c85e68863192ac199bd587fc34a2d1c064f087420d3da67cc17c17280b"
         },
         "defend_h3_v3/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_aurora_ballista_veteran/defend_h3_v3/original_lossless.mkv",
@@ -5569,7 +5569,7 @@
         },
         "defend_h3_v3/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_aurora_ballista_veteran/defend_h3_v3/matte.json",
-          "sha256": "c32d29c02b5ab77b208a7de22caa267aef26554086c3d93a3424ba4910d27bd8"
+          "sha256": "f57f4e8398c3409029e8186b53c71b5afa93209a4fcad5fdeab2b5bb68f015b7"
         },
         "cast_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_aurora_ballista_veteran/cast_h3_v1/original_lossless.mkv",
@@ -5613,7 +5613,7 @@
         },
         "cast_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_aurora_ballista_veteran/cast_h3_v1/matte.json",
-          "sha256": "e00c550c095d50b0d5df01daf0800158fb6c7da8b76675b952dd9e233f65d32d"
+          "sha256": "04f1b19c548b8156ab15a4543088aa7abff4f177feefeea48fcae824977ce884"
         },
         "death_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_aurora_ballista_veteran/death_h3_v1/original_lossless.mkv",
@@ -5657,13 +5657,13 @@
         },
         "death_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_aurora_ballista_veteran/death_h3_v1/matte.json",
-          "sha256": "c9f7202431bcc362b6b23b1eab26efcca93f65357fa5c5dd1664fcfebc0f856b"
+          "sha256": "c1420c767fa253efc659cf640c46100bf510dd84bd18d28d78daedd0cae3a342"
         }
       },
       "preserved_accepted_clips": [],
       "visual_review": {
         "status": "accepted",
-        "notes": "The crystal rails make the video model fire a bolt in nearly every take, even with no-fire wording. Idle uses the two quiet stretches of retake v3: the rails lower to level (video 22-62), then the second lowering played backwards (122 down to 82) lifts them again, with every frame of both tilts kept so neither snaps. Ranged is retake v5, guided only by full-length rail poses because the painted compressed-rails recoil read as a turn toward the camera in v2 and v3; the shot (video 34-39) is cut, so the cocked rails jolt straight into the recoil. Defend is retake v3 with the no-fire sentence. Attack, hit, cast and death are the first takes."
+        "notes": "The crystal rails make the video model fire a bolt in nearly every take, even with no-fire wording. Idle uses the two quiet stretches of retake v3: the rails lower to level (video 22-62), then the second lowering played backwards (122 down to 82) lifts them again, with every frame of both tilts kept so neither snaps. Ranged is retake v5, guided only by full-length rail poses because the painted compressed-rails recoil read as a turn toward the camera in v2 and v3; the shot (video 34-39) is cut, so the cocked rails jolt straight into the recoil. Defend is retake v3 with the no-fire sentence. Attack, hit, cast and death are the first takes. Re-matted 2026-10-14 with the green-plate spill limit: the green rims on thin and blurred edges are gone, with the same frames, timing, anchor and scale."
       }
     }
   ]

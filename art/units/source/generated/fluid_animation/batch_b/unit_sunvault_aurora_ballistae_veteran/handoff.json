@@ -4461,7 +4461,7 @@
         },
         "idle_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/idle_h3_v1/matte.json",
-          "sha256": "98eeaa983b29922b6576a6a612d24d672a2ec71ffb7ba6ff5fe2f06084058340"
+          "sha256": "db5d412e919ef74249ecbca6aad0ab8aad7d9165ec464a1a921bd2cc5b08b18a"
         },
         "move_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/move_h3_v1/original_lossless.mkv",
@@ -4505,7 +4505,7 @@
         },
         "move_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/move_h3_v1/matte.json",
-          "sha256": "c55d89b1fdbca7d090fc7a52418f5938f19d35ed6d1ce46fdf97ee97e8bf5257"
+          "sha256": "6d24b52ec61ae25bddde59beb5a006ffc8df935c84345d7ae53fbf8279fcf7a5"
         },
         "attack_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/attack_h3_v1/original_lossless.mkv",
@@ -4549,7 +4549,7 @@
         },
         "attack_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/attack_h3_v1/matte.json",
-          "sha256": "001fdefd7328e173662d9f2e23abc04e5ccfe3612de92b9ee8a80e66fc93c317"
+          "sha256": "d48c0e2ceae0e3d40c59c852e654faaa6024c3e0d12d350830bfef798ad0fe40"
         },
         "hit_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/hit_h3_v1/original_lossless.mkv",
@@ -4593,7 +4593,7 @@
         },
         "hit_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/hit_h3_v1/matte.json",
-          "sha256": "93a7e126a960358613bc4a8683e401ff11a3213ea7489cdb3d6190f3da7f3953"
+          "sha256": "1efcc730d8e214e10e980b91597d399d62820af0973944572735068cc0a41428"
         },
         "defend_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/defend_h3_v1/original_lossless.mkv",
@@ -4637,7 +4637,7 @@
         },
         "defend_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/defend_h3_v1/matte.json",
-          "sha256": "3e4b5832abc9022ed36f06a21d82da5812d4a2aac2517df7140a523a03502ad7"
+          "sha256": "4e50a2b9f147f74b7ed0932157b5adc448f3199f9cee64c8c0ddf6677f67a057"
         },
         "cast_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/cast_h3_v1/original_lossless.mkv",
@@ -4681,7 +4681,7 @@
         },
         "cast_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/cast_h3_v1/matte.json",
-          "sha256": "2cf15a67c7da3356969b751976ce34c89d20e7f09a0e5bf8c3676c9f18171b04"
+          "sha256": "4c8f6070c053afa3d264cddb2a451d20d639d291a24c722511191ab7c20f09f5"
         },
         "death_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/death_h3_v1/original_lossless.mkv",
@@ -4725,13 +4725,13 @@
         },
         "death_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/death_h3_v1/matte.json",
-          "sha256": "a365cb82f90db0df0963bcfb8ef789b6a9047ca9ae49a370c8ece766c7ec65a2"
+          "sha256": "23c8d3e900c38b5864bd4ffc56b6bc1dc4cff8f6d0b204f53ae9d2fd52a72837"
         }
       },
       "preserved_accepted_clips": [],
       "visual_review": {
         "status": "accepted",
-        "notes": "All clips from the first H3 takes; dense-guide retakes of attack and death came out as held stills with one-frame snaps. The idle snaps back to the neutral pose twice (video 59-60, 113-114); its two halves nearly repeat, so the loop runs forward through 0-58 and returns through 112 down to 62, and both joins match closely. The punch turns from the three-quarter wind-up to the side-on strike, as painted, in two smeared frames (video 30-31); they are cut, so the wind-up snaps into the punch. Death drops the two smeared falling frames (35-36) with green fringes, so the construct crashes down from standing."
+        "notes": "All clips from the first H3 takes; dense-guide retakes of attack and death came out as held stills with one-frame snaps. The idle snaps back to the neutral pose twice (video 59-60, 113-114); its two halves nearly repeat, so the loop runs forward through 0-58 and returns through 112 down to 62, and both joins match closely. The punch turns from the three-quarter wind-up to the side-on strike, as painted, in two smeared frames (video 30-31); they are cut, so the wind-up snaps into the punch. Death drops the two smeared falling frames (35-36) with green fringes, so the construct crashes down from standing. Re-matted 2026-10-14 with the green-plate spill limit: the green rims on thin and blurred edges are gone, with the same frames, timing, anchor and scale."
       }
     }
   ]

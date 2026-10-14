@@ -5547,7 +5547,7 @@
         },
         "idle_h3_v7/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/idle_h3_v7/matte.json",
-          "sha256": "042c6a3be883720b00eff7d35c62335945f5ba0ab39cbade97b6e618717877d6"
+          "sha256": "823912ac793637be9b26fd92d9c25f378e0e2ed7f0d27f8e782a8be57d8397b1"
         },
         "attack_h3_v3/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/attack_h3_v3/original_lossless.mkv",
@@ -5591,7 +5591,7 @@
         },
         "attack_h3_v3/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/attack_h3_v3/matte.json",
-          "sha256": "b8df5287eee330c3be77616a433e746e8b9e6559f5f706fe4cdf9f3c78ac3fb9"
+          "sha256": "2d8aa4c65df2e022df09bce25716c8fc5ff003e3e21b129557dba778000db65e"
         },
         "ranged_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/ranged_h3_v1/original_lossless.mkv",
@@ -5635,7 +5635,7 @@
         },
         "ranged_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/ranged_h3_v1/matte.json",
-          "sha256": "8f8223032772205df5046ee5b30150f123d60c553479088d0b193f73720229af"
+          "sha256": "11811ed33db1fa301cb71f2b07d93a8b26b0fd246a5059f19adb81fc2acaa0a9"
         },
         "hit_h3_v2/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/hit_h3_v2/original_lossless.mkv",
@@ -5679,7 +5679,7 @@
         },
         "hit_h3_v2/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/hit_h3_v2/matte.json",
-          "sha256": "75fd9dd538a8cd95216d6da0ba6fb3760f1cc75af1b1e8239176b56ee00cca0a"
+          "sha256": "9666759ba173c205fea0140f0f73616ed16b4cdd37c355a04377a8b921974297"
         },
         "defend_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/defend_h3_v1/original_lossless.mkv",
@@ -5723,7 +5723,7 @@
         },
         "defend_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/defend_h3_v1/matte.json",
-          "sha256": "bdedcf3b1e550e23515ea521466338e647844af26feff90fa2459880fdf248b4"
+          "sha256": "9de1d2debf3ce64a5633963d579d45118498635fd8eb8862fc60427d25c824af"
         },
         "cast_h3_v1/original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/cast_h3_v1/original_lossless.mkv",
@@ -5767,13 +5767,13 @@
         },
         "cast_h3_v1/matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/cast_h3_v1/matte.json",
-          "sha256": "c9345910537f1a6235df096a9a73ff869baa49ece474b030e597cc3b64796ac7"
+          "sha256": "4563521a0ffc89e8e9df48e84ccfdca7db9d458b2f2cc2e8e1e284d81ffe0e4b"
         }
       },
       "preserved_accepted_clips": [],
       "visual_review": {
         "status": "accepted_selected_clips",
-        "notes": "Reviewed on H3 video. Idle v1 rejected every frame: its gold-heavy attack_01 guide pushed the green-plate edge threshold past the plate's reach. Idle v7, guided by the neutral pose alone, loops smoothly. Attack v1 to v3 all burst at the bash; v3 keeps one clean bash (wind-up to 17, reach from 23 to 34, return from 50), skipping both bursts, a second lunge and two green-fringed blur frames. Ranged v1 skips the shot flash (43-48). Hit v1 shot a beam; hit v2 is used without a faint streak at 4 and a sliver at 14 (v3 cut from a closer framing at 24). Defend v1 is used up to frame 59, before rejected plates. Cast v1 is clean. The walk and death keep the published clips."
+        "notes": "Reviewed on H3 video. Idle v1 rejected every frame: its gold-heavy attack_01 guide pushed the green-plate edge threshold past the plate's reach. Idle v7, guided by the neutral pose alone, loops smoothly. Attack v1 to v3 all burst at the bash; v3 keeps one clean bash (wind-up to 17, reach from 23 to 34, return from 50), skipping both bursts, a second lunge and two green-fringed blur frames. Ranged v1 skips the shot flash (43-48). Hit v1 shot a beam; hit v2 is used without a faint streak at 4 and a sliver at 14 (v3 cut from a closer framing at 24). Defend v1 is used up to frame 59, before rejected plates. Cast v1 is clean. The walk and death keep the published clips. Re-matted 2026-10-14 with the green-plate spill limit: the green rims on thin and blurred edges are gone, with the same frames, timing, anchor and scale."
       },
       "source_scale_by_image": {
         "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_040.png": 0.6311475409836066,

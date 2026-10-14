@@ -573,7 +573,7 @@
     "unit_prism_adept": {
       "path": "res://art/overworld/runtime/creature_idle/unit_prism_adept.png",
       "frame_size": [
-        227,
+        226,
         248
       ],
       "frames": 62,
@@ -652,12 +652,12 @@
       "source_crop": [
         58,
         10,
-        285,
+        284,
         258
       ],
-      "source_sha256": "20dd222ddd6c681c5ba80f25502a89b8f677c55e5e1574b51a81a4b23361e636",
+      "source_sha256": "2bcfdb9da832bd14af28de99de48ac2f8acba399667dcc0ad92768ab2ada7c33",
       "source_provenance": "res://art/animation/source/fluid/unit_prism_adept/provenance.json",
-      "sha256": "009c28ea831b34dcde80b1353dbc6e5c01c4b340dd2708bfa24a2f9c85b981c2"
+      "sha256": "717ea7a1350db9a72c156a538d7847a39ad637a5517a046b849290cf0dfa3318"
     },
     "unit_mirror_duelist": {
       "path": "res://art/animation/runtime/idle/unit_mirror_duelist.png",
@@ -2075,7 +2075,7 @@
     "unit_sunvault_aurora_ballistae": {
       "path": "res://art/overworld/runtime/creature_idle/unit_sunvault_aurora_ballistae.png",
       "frame_size": [
-        303,
+        302,
         266
       ],
       "columns": 13,
@@ -2083,10 +2083,10 @@
       "frame_msec": 60,
       "static_frame": 0,
       "ground_anchor": [
-        167,
+        166,
         255
       ],
-      "painted_extent": 287,
+      "painted_extent": 286,
       "source_sheet": "res://art/animation/runtime/fluid/unit_sunvault_aurora_ballistae.png",
       "source_indices": [
         4,
@@ -2153,14 +2153,14 @@
         65
       ],
       "source_crop": [
-        57,
+        58,
         33,
         360,
         299
       ],
-      "source_sha256": "404785401e1c1de5899337938a5c6ed6c2a2ce26500097e61e512a21f465345c",
+      "source_sha256": "72cae3194f90725792a91a4897f1075c14ca4b690b975d67b20a59e575b824c0",
       "source_provenance": "res://art/animation/source/fluid/unit_sunvault_aurora_ballistae/provenance.json",
-      "sha256": "547894e40d9214af5135c89267cf2462ce70b4d2aad8aca24e2faedd17950874"
+      "sha256": "0d990992de3fca518f10f7bfc1ed152b7a4053e746a0d04772218d5280338615"
     },
     "unit_sunvault_daybreak_colossus": {
       "path": "res://art/animation/runtime/idle/unit_sunvault_daybreak_colossus.png",
@@ -13039,9 +13039,9 @@
         272,
         292
       ],
-      "source_sha256": "61ff67131a63c010c2ea803fdcf0acb872714469b62f19443c9fd6384e90d821",
+      "source_sha256": "ade92992fdfc19b9ec0294427fee1fb25366e237d2b598e999e9b19a3fbd4b2c",
       "source_provenance": "res://art/animation/source/fluid/unit_shard_guard_veteran/provenance.json",
-      "sha256": "df88ab338cfa95d5de4757892da637b6fe3bd4ef15820b5dea11925ed989481f"
+      "sha256": "c0275b55038d5115bcb39da35d3c552bd89b73ed254fecaf5916cc42855c2a0c"
     },
     "unit_sunvault_shard_wardens_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_sunvault_shard_wardens_veteran.png",
@@ -13217,9 +13217,9 @@
         253,
         256
       ],
-      "source_sha256": "d294be5409f3decd483136eae48cc6e1e30da4113e19b3f1b6a805ccf04f5c62",
+      "source_sha256": "733ad9db84a69487b7b4ca391e5bb6b59c33d82b834df1c56e2615d7ca545fba",
       "source_provenance": "res://art/animation/source/fluid/unit_prism_adept_veteran/provenance.json",
-      "sha256": "00971ea2bc2df9788b9fb60949684714915fdd0390966f32fc5f269cc01cbe1d"
+      "sha256": "5bc4f85341cc04d6e42bb0162288e0f9c2e10cb651b4a425932aa82213fee422"
     },
     "unit_sunvault_prism_adepts_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_sunvault_prism_adepts_veteran.png",
@@ -13384,9 +13384,9 @@
         272,
         265
       ],
-      "source_sha256": "cac932a173cb0a33d951e86b840280c9e3c01ad54368b79a9b9aee09cd064b12",
+      "source_sha256": "461b0b03b66ad746ed2cf371d74af3f1b93c58cacb8df2a3654ecdbdf050a1cd",
       "source_provenance": "res://art/animation/source/fluid/unit_aurora_ballista_veteran/provenance.json",
-      "sha256": "2bad422dc54a75034a06f60a785fcd5a82b2bc7e64bf2efdc5ceb9930751caff"
+      "sha256": "92a23fa42f4b13e38ad623b389e519b5887057436d3005bd08b2d2277057eecf"
     },
     "unit_sunvault_mirror_duelists_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_sunvault_mirror_duelists_veteran.png",
@@ -13853,9 +13853,9 @@
         270,
         256
       ],
-      "source_sha256": "6a56a3a66087c4cebd8dafecdd88f3e3dd395c93c0d1bc696a57e5f98bfa5896",
+      "source_sha256": "901ab7fa9d8888f2ca36da615a9060aad2db03ccf4e5dafc55f8a19e32577eb6",
       "source_provenance": "res://art/animation/source/fluid/unit_sunvault_aurora_ballistae_veteran/provenance.json",
-      "sha256": "81b0fff8a036c8895273e4654791a8afe5cabd906cf33960c1c2dde71f543870"
+      "sha256": "5c7562dcbe39fb04ff89ff0a6ccbd4121ff84199c5952302e78496ad33645a14"
     },
     "unit_sunvault_daybreak_colossus_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_sunvault_daybreak_colossus_veteran.png",
