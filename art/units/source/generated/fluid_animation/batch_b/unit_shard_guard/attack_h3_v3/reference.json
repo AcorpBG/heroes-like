@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_shard_guard",
+  "guides": [
+    {
+      "frame": "attack_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/attack_v1.png",
+      "source_sha256": "4257f33760125433b46464eabd4bf42660e0f9d3671fc58f1532cbde1eb4d8c2",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "552e6f3b1f10ab9a3b7d4f498e4aa16394c10f0ba756d7092122c082d5278aa3"
+    },
+    {
+      "frame": "attack_01",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/attack_v1.png",
+      "source_sha256": "4257f33760125433b46464eabd4bf42660e0f9d3671fc58f1532cbde1eb4d8c2",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "b946af741b1eeacf71a87e263f5681810dee7443662670475c03c53735b07504"
+    },
+    {
+      "frame": "attack_02",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/attack_v1.png",
+      "source_sha256": "4257f33760125433b46464eabd4bf42660e0f9d3671fc58f1532cbde1eb4d8c2",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "77495b00153c07300e64774115590b89b84f366fb01037e5e5e4a7260070872c"
+    },
+    {
+      "frame": "attack_04",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/attack_v1.png",
+      "source_sha256": "4257f33760125433b46464eabd4bf42660e0f9d3671fc58f1532cbde1eb4d8c2",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "fe62657fd29fcda9488ef58ab128e579b40e1e334874f3801026e0ea9439cb6f"
+    },
+    {
+      "frame": "attack_05",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/attack_v1.png",
+      "source_sha256": "4257f33760125433b46464eabd4bf42660e0f9d3671fc58f1532cbde1eb4d8c2",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "4fb53fa7e66847646b2d085518a6a4c6b933cde98e522569a02f4c62da991da4"
+    },
+    {
+      "frame": "attack_06",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/attack_v1.png",
+      "source_sha256": "4257f33760125433b46464eabd4bf42660e0f9d3671fc58f1532cbde1eb4d8c2",
+      "input_file": "guide_5_chroma.png",
+      "input_sha256": "0511d87151912d303c2174d431c46cd3eff617480de8bd83ee6a650d7af1dbe0"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    432,
+    584
+  ],
+  "output_scale": 0.46,
+  "free_pixels_left_top_right_bottom": [
+    148,
+    51,
+    148,
+    51
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

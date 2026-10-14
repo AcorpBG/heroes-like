@@ -1,0 +1,47 @@
+{
+  "unit_id": "unit_prism_adept",
+  "clip": "defend",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    420,
+    572
+  ],
+  "scale": 0.45,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026106104,
+  "references": [
+    "attack_00",
+    "defend_01",
+    "defend_02"
+  ],
+  "guides": [
+    [
+      34,
+      1
+    ]
+  ],
+  "last": 2,
+  "prompt": "ONE original young woman crossbow soldier, the Prism Adept, facing screen right in elevated three-quarter view. Keep her ivory hood with blue lining, the long dark hair, the gold-edged white and royal blue split tabard with a gold sun star, the dark leggings, the gold boots, the gold and blue gloves, the iridescent blue-gold crystal shoulder plates and the crystal bolt pouch at the screen-left hip. Exactly two arms, two hands and two legs. Both hands hold ONE rigid elaborate gold and blue crystal crossbow diagonally across her waist, pointing to screen right, with curved bow limbs, a thin string, a central blue gem and a crystal muzzle. Preserve the crossbow, the hood and the slim proportions. Crouch low and brace the crossbow crosswise in front of the body with both hands as a guard, the hooded head lowered behind it, then hold the braced guard on both planted boots. No shooting and no return to the relaxed stance. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full hood, the whole crossbow, the tabard tails, limbs and boots within frame. The background is perfectly flat saturated GREEN throughout, no gradients or changes of hue. The green background stays the same flat saturated green in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, bolts in flight, muzzle flash, glow bursts, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the crossbow stays rigid and never morphs.",
+  "protected_foreground_chroma": 34,
+  "edge_threshold": 158,
+  "palette_measurement": {
+    "bluest_opaque": 32.0,
+    "blue_minus_green_p999": 152.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

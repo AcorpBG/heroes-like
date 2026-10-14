@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_prism_adept",
+  "guides": [
+    {
+      "frame": "attack_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/attack_v1.png",
+      "source_sha256": "a7d13aad02b5a4068d25dca4100d44a25f169d4919641f3c283f9723381aabfd",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "8c853a1243018a8ed2a8e797698e7405e47faceae397c7bc79db9e97166f42e3"
+    },
+    {
+      "frame": "cast_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/cast_v3.png",
+      "source_sha256": "07cca1443b712f3c533cf4d96b4091164b8bd6bd811ea8ea03790f276658d5cb",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "d3035e67e9f399c2913d50db201bb104b84734f259c4f253186652a714d175ad"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    420,
+    572
+  ],
+  "output_scale": 0.45,
+  "free_pixels_left_top_right_bottom": [
+    142,
+    61,
+    142,
+    60
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_prism_adept",
+  "guides": [
+    {
+      "frame": "attack_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/attack_v1.png",
+      "source_sha256": "a7d13aad02b5a4068d25dca4100d44a25f169d4919641f3c283f9723381aabfd",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "8c853a1243018a8ed2a8e797698e7405e47faceae397c7bc79db9e97166f42e3"
+    },
+    {
+      "frame": "ranged_02",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/ranged_v1.png",
+      "source_sha256": "2b29a271fd128d3eacc9e025c22266fde3fba2f1407c373291c69035c332b022",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "78bf7d3b14ace679ac9e315044c1d5b0611f3da88cbbfceb00c9f803b16d9c50"
+    },
+    {
+      "frame": "ranged_05",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/ranged_v1.png",
+      "source_sha256": "2b29a271fd128d3eacc9e025c22266fde3fba2f1407c373291c69035c332b022",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "0d2615807f1bf738ac7f5abb9797b24e594e2ee9832bfe34adf2714ae2cfe1db"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    420,
+    572
+  ],
+  "output_scale": 0.45,
+  "free_pixels_left_top_right_bottom": [
+    142,
+    61,
+    142,
+    62
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

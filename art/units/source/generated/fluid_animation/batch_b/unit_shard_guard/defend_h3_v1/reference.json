@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_shard_guard",
+  "guides": [
+    {
+      "frame": "attack_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/attack_v1.png",
+      "source_sha256": "4257f33760125433b46464eabd4bf42660e0f9d3671fc58f1532cbde1eb4d8c2",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "552e6f3b1f10ab9a3b7d4f498e4aa16394c10f0ba756d7092122c082d5278aa3"
+    },
+    {
+      "frame": "defend_01",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/reactions_v1.png",
+      "source_sha256": "4a3e448ba2d3ba52ef61b9207d3b07c3c8f51b399cc19bf108f53a71611cd10a",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "bd72e284df70ba6f507ea3822419ba7da4c7bef14d3863a650039786b6c2cd59"
+    },
+    {
+      "frame": "defend_03",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/reactions_v1.png",
+      "source_sha256": "4a3e448ba2d3ba52ef61b9207d3b07c3c8f51b399cc19bf108f53a71611cd10a",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "6d2e56e7a5e340aa6a9b5a4ef0dc56f2112c78575da9a91da799d5f40480ad28"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    432,
+    584
+  ],
+  "output_scale": 0.46,
+  "free_pixels_left_top_right_bottom": [
+    148,
+    51,
+    148,
+    52
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

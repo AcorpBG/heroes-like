@@ -126,6 +126,221 @@
       ],
       "last": 0,
       "action": "A brief salute. She bows her hooded head and draws the crossbow close against her chest, holds the bow briefly, then straightens back to the original stance. A physical gesture only: no spell, glow or aura."
+    },
+    "idle_h3_v2": {
+      "clip": "idle",
+      "references": [
+        "attack_00",
+        "attack_06"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A calm, alert idle that loops. She breathes, the shoulders rise and fall, the crossbow dips a little and lifts as she resettles her grip, her head turns slightly to scan and the tabard tails stir, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no shooting. Only the body moves; nothing else appears in the frame."
+    },
+    "idle_h3_v3": {
+      "clip": "idle",
+      "references": [
+        "attack_00",
+        "attack_06"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A calm, alert idle that loops. She breathes, the shoulders rise and fall, the crossbow dips a little and lifts as she resettles her grip, her head turns slightly to scan and the tabard tails stir, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no shooting. Only the body moves; nothing else appears in the frame."
+    },
+    "idle_h3_v4": {
+      "clip": "idle",
+      "references": [
+        "attack_00",
+        "cast_00"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A calm, alert idle that loops. She breathes, the shoulders rise and fall, the crossbow dips a little and lifts as she resettles her grip, her head turns slightly to scan and the tabard tails stir, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no shooting. Only the body moves; nothing else appears in the frame."
+    },
+    "idle_h3_v5": {
+      "clip": "idle",
+      "references": [
+        "attack_00",
+        "cast_00"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A calm, alert idle that loops. She breathes, the shoulders rise and fall, the crossbow dips a little and lifts as she resettles her grip, her head turns slightly to scan and the tabard tails stir, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no shooting. Only the body moves; nothing else appears in the frame."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "attack_00",
+        "attack_02",
+        "attack_03",
+        "attack_04",
+        "attack_05"
+      ],
+      "guides": [
+        [
+          18,
+          1
+        ],
+        [
+          34,
+          2
+        ],
+        [
+          46,
+          3
+        ],
+        [
+          64,
+          4
+        ],
+        [
+          90,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE crossbow bash toward screen right. She draws the crossbow back to her shoulder as the knees bend, then lunges forward and drives the crystal muzzle out to full reach at screen right with both hands, draws back and settles into the original stance. One bash only. The crossbow never fires: no flash, burst, beam, sparks or shards, and the crystals do not glow. The light stays steady."
+    },
+    "attack_h3_v3": {
+      "clip": "attack",
+      "references": [
+        "attack_00",
+        "attack_02",
+        "attack_03",
+        "attack_04",
+        "attack_05"
+      ],
+      "guides": [
+        [
+          18,
+          1
+        ],
+        [
+          34,
+          2
+        ],
+        [
+          46,
+          3
+        ],
+        [
+          64,
+          4
+        ],
+        [
+          90,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE crossbow bash toward screen right. She draws the crossbow back to her shoulder as the knees bend, then lunges forward and drives the crystal muzzle out to full reach at screen right with both hands, draws back and settles into the original stance. One bash only. The crossbow never fires: no flash, burst, beam, sparks or shards, and the crystals do not glow. The light stays steady."
+    },
+    "hit_h3_v2": {
+      "clip": "hit",
+      "references": [
+        "hit_01",
+        "attack_00"
+      ],
+      "guides": [
+        [
+          40,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "She starts rocked back in a flinch and recovers from it. Her head and shoulders are thrown back, the hood and tabard swing and the knees flex while both hands keep hold of the crossbow, then she steadies on both boots and returns to the same stance. The crossbow stays whole in both hands and never fires: no beam, bolt, flash or sparks leave it. Only the body moves; nothing else appears in the frame."
+    },
+    "hit_h3_v3": {
+      "clip": "hit",
+      "references": [
+        "hit_01",
+        "hit_02",
+        "attack_00"
+      ],
+      "guides": [
+        [
+          16,
+          1
+        ],
+        [
+          40,
+          2
+        ]
+      ],
+      "last": 2,
+      "action": "She starts rocked back in a flinch and recovers from it. Her head and shoulders are thrown back, the hood and tabard swing and the knees flex while both hands keep hold of the crossbow, then she steadies on both boots and returns to the same stance. The crossbow stays whole in both hands and never fires: no beam, bolt, flash or sparks leave it. Only the body moves; nothing else appears in the frame."
+    },
+    "idle_h3_v6": {
+      "clip": "idle",
+      "references": [
+        "attack_00"
+      ],
+      "guides": [
+        [
+          62,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "A calm, alert idle that loops. She breathes, the shoulders rise and fall, the crossbow dips a little and lifts as she resettles her grip, her head turns slightly to scan and the tabard tails stir, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no shooting. Only the body moves; nothing else appears in the frame. The crossbow never fires and stays dark. The light stays steady."
+    },
+    "idle_h3_v7": {
+      "clip": "idle",
+      "references": [
+        "attack_00"
+      ],
+      "guides": [
+        [
+          62,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "A calm, alert idle that loops. She breathes, the shoulders rise and fall, the crossbow dips a little and lifts as she resettles her grip, her head turns slightly to scan and the tabard tails stir, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no shooting. Only the body moves; nothing else appears in the frame. The crossbow never fires and stays dark. The light stays steady."
     }
   }
 }

@@ -103,6 +103,84 @@
       ],
       "last": 2,
       "action": "Collapse slowly and heavily. The knight sinks onto both knees leaning on the shield, stays kneeling a moment, then topples forward and lies flat, finishing motionless with the helmet at screen left, the shield lying across the body and the sword on the ground beside it. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "attack_00",
+        "attack_01",
+        "attack_02",
+        "attack_04",
+        "attack_05",
+        "attack_06"
+      ],
+      "guides": [
+        [
+          16,
+          1
+        ],
+        [
+          30,
+          2
+        ],
+        [
+          48,
+          3
+        ],
+        [
+          66,
+          4
+        ],
+        [
+          84,
+          5
+        ],
+        [
+          104,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE sword thrust toward screen right. The knight raises the crystal sword high beside the helmet as the knees bend, then lunges forward past the shield and thrusts the blade out to full reach at screen right, draws back and settles into the original stance. One thrust only; no sparks or effect at contact. The blade never glows or flashes: no burst, sparks, beam or streak at the thrust. The light stays steady."
+    },
+    "attack_h3_v3": {
+      "clip": "attack",
+      "references": [
+        "attack_00",
+        "attack_01",
+        "attack_02",
+        "attack_04",
+        "attack_05",
+        "attack_06"
+      ],
+      "guides": [
+        [
+          16,
+          1
+        ],
+        [
+          30,
+          2
+        ],
+        [
+          48,
+          3
+        ],
+        [
+          66,
+          4
+        ],
+        [
+          84,
+          5
+        ],
+        [
+          104,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE sword thrust toward screen right. The knight raises the crystal sword high beside the helmet as the knees bend, then lunges forward past the shield and thrusts the blade out to full reach at screen right, draws back and settles into the original stance. One thrust only; no sparks or effect at contact. The blade never glows or flashes: no burst, sparks, beam or streak at the thrust. The light stays steady."
     }
   }
 }
