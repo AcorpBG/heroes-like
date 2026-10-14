@@ -26,7 +26,7 @@ python tools/idle_inbetweens.py --all --out DIR
 | `--device` | `cuda` if available, else `cpu` | The torch device. |
 | `--review` | off | Also writes `review.mp4`. It shows the current idle above the new loop, at game size and zoomed 2x, on a battlefield. Needs `ffmpeg` on PATH. |
 
-Source images are read from the checkout if they are restored there. Otherwise they are read straight from the source-art archive (the newest snapshot, `N:/heroes-like-archives/source-art/2026-10-14-fe9bdcc1-main`, on the owner's Windows machine; see `docs/source-material-storage-map.md`), and every payload is checked against the archive's SHA-256 manifest. Nothing is extracted into the repository.
+Source images are read from the checkout if they are restored there. Otherwise they are read straight from the source-art archive (the newest snapshot, `N:/heroes-like-archives/source-art/2026-10-14-5dab5349`, on the owner's Windows machine; see `docs/source-material-storage-map.md`), and every payload is checked against the archive's SHA-256 manifest. Nothing is extracted into the repository.
 
 The tool writes one folder per unit under `DIR/<unit_id>/`:
 
