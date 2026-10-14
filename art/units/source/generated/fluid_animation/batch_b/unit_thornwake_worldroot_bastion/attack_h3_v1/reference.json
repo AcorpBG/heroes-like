@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_thornwake_worldroot_bastion",
+  "guides": [
+    {
+      "frame": "attack_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_00.png",
+      "source_sha256": "73df279a72f33da6cc5c2e1e8a62ff37e2fdea633bc598d83eef75bbb6393f88",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "1060014d60626e3a053eef1de9ea7e0188d696c654cf5a96457b4b184b206060"
+    },
+    {
+      "frame": "attack_02",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_02.png",
+      "source_sha256": "7cf9b5f97b46a5fc03ad530f1df059428c9cf991c6a0a6e4e89f862c83280670",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "47d369e5855be7ddd920313be95b6b4005c345d8c02de7afea67cc95dfb889d8"
+    },
+    {
+      "frame": "attack_04",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_04.png",
+      "source_sha256": "c320e7b165ddd9d0637811d5352af82da1844fd02fda87f890b0e6c172d3093d",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "dd440af482a0438f9928358fbe10220f812149a68097e0a7f7145a28db98a523"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    465,
+    586
+  ],
+  "output_scale": 0.42,
+  "free_pixels_left_top_right_bottom": [
+    112,
+    53,
+    112,
+    52
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

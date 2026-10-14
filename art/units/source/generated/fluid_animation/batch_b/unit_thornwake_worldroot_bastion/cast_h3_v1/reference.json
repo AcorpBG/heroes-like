@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_thornwake_worldroot_bastion",
+  "guides": [
+    {
+      "frame": "attack_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_00.png",
+      "source_sha256": "73df279a72f33da6cc5c2e1e8a62ff37e2fdea633bc598d83eef75bbb6393f88",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "1060014d60626e3a053eef1de9ea7e0188d696c654cf5a96457b4b184b206060"
+    },
+    {
+      "frame": "cast_04",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_04.png",
+      "source_sha256": "c87e475f7215dbab1d093c62d30cd46cae765c8739df13f079cd53e32e092fc3",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "78d45970c999e0b315c2a58000c3814bd6e48c5c9be986e9a219353f26cccc10"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    465,
+    586
+  ],
+  "output_scale": 0.42,
+  "free_pixels_left_top_right_bottom": [
+    112,
+    53,
+    112,
+    52
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

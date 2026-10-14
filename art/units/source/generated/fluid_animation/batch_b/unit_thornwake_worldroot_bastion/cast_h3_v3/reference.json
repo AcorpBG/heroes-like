@@ -1,0 +1,70 @@
+{
+  "unit_id": "unit_thornwake_worldroot_bastion",
+  "guides": [
+    {
+      "frame": "attack_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_00.png",
+      "source_sha256": "73df279a72f33da6cc5c2e1e8a62ff37e2fdea633bc598d83eef75bbb6393f88",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "1060014d60626e3a053eef1de9ea7e0188d696c654cf5a96457b4b184b206060"
+    },
+    {
+      "frame": "cast_01",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_01.png",
+      "source_sha256": "bde510d1d599c94ab0a601a325ed76cd532f4bc0c0a8dc9914a64da48dabc7ec",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "861d1b85e8df75c87918b566e672e64d350d04eb632423efe88d601562aca37d"
+    },
+    {
+      "frame": "cast_02",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_02.png",
+      "source_sha256": "2ce989c8f1370845cc0cf0520014b13e8d5ac83c7493f00288203723d36be0f0",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "fc828be0f210a57a7b9139a95f1e99acb419f5fca7c03488753c168da32c3361"
+    },
+    {
+      "frame": "cast_03",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_03.png",
+      "source_sha256": "5a8446311687b082ad9ddfc7f7143c0f9bc5e50b91a8c0cf2b09c26ee3b8fd63",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "953ff9b68c40f236084e7675adca343d66c1f4a7b3176e63836ba6120953e18c"
+    },
+    {
+      "frame": "cast_04",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_04.png",
+      "source_sha256": "c87e475f7215dbab1d093c62d30cd46cae765c8739df13f079cd53e32e092fc3",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "78d45970c999e0b315c2a58000c3814bd6e48c5c9be986e9a219353f26cccc10"
+    },
+    {
+      "frame": "cast_05",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_05.png",
+      "source_sha256": "06063bb0d0723caa1f6dec5f8255bbb6f777bf5bada59c959a7c11144149b977",
+      "input_file": "guide_5_chroma.png",
+      "input_sha256": "fc128225850c249a72f9840bc4efc29b06daa81f76b1b3eb00dafed6db1e8303"
+    },
+    {
+      "frame": "cast_06",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_06.png",
+      "source_sha256": "cc7bebf4705ec59a94906ee5f66a67562c3ca16cbb771d6c37edd7f4cc21954c",
+      "input_file": "guide_6_chroma.png",
+      "input_sha256": "626c1744207fb881fbfbcd8d6ea46bded1bcd21c8be7a2cd22a77353148eef15"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    465,
+    586
+  ],
+  "output_scale": 0.42,
+  "free_pixels_left_top_right_bottom": [
+    112,
+    53,
+    112,
+    52
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

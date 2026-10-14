@@ -1,0 +1,75 @@
+{
+  "unit_id": "unit_thornwake_worldroot_bastion",
+  "clip": "cast",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    465,
+    586
+  ],
+  "scale": 0.42,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026106361,
+  "references": [
+    "attack_00",
+    "cast_01",
+    "cast_02",
+    "cast_03",
+    "cast_04",
+    "cast_05",
+    "cast_06"
+  ],
+  "guides": [
+    [
+      14,
+      1
+    ],
+    [
+      28,
+      2
+    ],
+    [
+      42,
+      3
+    ],
+    [
+      58,
+      4
+    ],
+    [
+      78,
+      5
+    ],
+    [
+      94,
+      6
+    ],
+    [
+      110,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original massive living wooden fortress, the Worldroot Bastion, facing screen right in elevated three-quarter view, standing on thick root legs. Keep the green leaf-patterned doorway at its centre, the ivory birch armour, the red thorn bindings, the glowing amber lantern nodules, the tall amber crown, the three small red-roofed turrets, the wooden bridges and the foliage, and the large red and ivory leaf shields on its root limbs. Keep all the architecture rigid and identical. Preserve the doorway, the turrets, the leaf shields and the massive proportions. A rallying display. The bastion slowly and steadily spreads its leaf-shielded root limbs wide to both sides, holds the pose briefly, then slowly lowers them back to the original stance. A physical gesture only: no spell, glow change or aura. The leaf shields stay on the limbs. The light stays steady. Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole crown, every turret, all the leaf shields and all the root feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, falling leaves, dust, glow bursts, sparks, motion trails, particles or extra limbs. The towers never multiply, the roof never morphs and the door never opens; the root limbs bend naturally with planted-foot support.",
+  "protected_foreground_chroma": 11,
+  "edge_threshold": 8,
+  "palette_measurement": {
+    "bluest_opaque": 9.0,
+    "blue_minus_green_p999": 2.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

@@ -126,6 +126,165 @@
       ],
       "last": 2,
       "action": "Collapse slowly and heavily. The root legs give way and the fortress sinks and tilts, settling lower and lower as its limbs fold, then it crumbles into a low heap of roots, leaf shields and broken turrets that lies motionless. Nothing flies away; no recovery and no disappearing body."
+    },
+    "hit_h3_v2": {
+      "clip": "hit",
+      "references": [
+        "hit_01",
+        "hit_02",
+        "attack_00"
+      ],
+      "guides": [
+        [
+          18,
+          1
+        ],
+        [
+          44,
+          2
+        ]
+      ],
+      "last": 2,
+      "action": "The bastion starts rocked back in a flinch and recovers from it. The whole fortress rocks back, the leaf shields swing out and the root limbs flex, then it settles on its root feet and returns to the same stance. Nothing breaks off: no leaves, splinters or debris fall or fly. Only the body moves; nothing else appears in the frame. The light stays steady."
+    },
+    "hit_h3_v3": {
+      "clip": "hit",
+      "references": [
+        "hit_01",
+        "hit_02",
+        "attack_00"
+      ],
+      "guides": [
+        [
+          18,
+          1
+        ],
+        [
+          44,
+          2
+        ]
+      ],
+      "last": 2,
+      "action": "The bastion starts rocked back in a flinch and recovers from it. The whole fortress rocks back, the leaf shields swing out and the root limbs flex, then it settles on its root feet and returns to the same stance. Nothing breaks off: no leaves, splinters or debris fall or fly. Only the body moves; nothing else appears in the frame. The light stays steady."
+    },
+    "defend_h3_v2": {
+      "clip": "defend",
+      "references": [
+        "attack_00",
+        "defend_04",
+        "defend_05",
+        "defend_06"
+      ],
+      "guides": [
+        [
+          18,
+          1
+        ],
+        [
+          36,
+          2
+        ]
+      ],
+      "last": 3,
+      "action": "Smoothly and steadily, over about a second, draw the leaf shields together in front of the doorway as a wall while the root limbs bend and brace low, then hold the guarded stance. No attack and no return to the relaxed stance. The light stays steady."
+    },
+    "defend_h3_v3": {
+      "clip": "defend",
+      "references": [
+        "attack_00",
+        "defend_06"
+      ],
+      "guides": [],
+      "last": 1,
+      "action": "Smoothly and steadily, over about a second, draw the leaf shields together in front of the doorway as a wall while the root limbs bend and brace low, then hold the guarded stance. No attack and no return to the relaxed stance. The light stays steady."
+    },
+    "cast_h3_v2": {
+      "clip": "cast",
+      "references": [
+        "attack_00",
+        "cast_01",
+        "cast_02",
+        "cast_03",
+        "cast_04",
+        "cast_05",
+        "cast_06"
+      ],
+      "guides": [
+        [
+          14,
+          1
+        ],
+        [
+          28,
+          2
+        ],
+        [
+          42,
+          3
+        ],
+        [
+          58,
+          4
+        ],
+        [
+          78,
+          5
+        ],
+        [
+          94,
+          6
+        ],
+        [
+          110,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "A rallying display. The bastion slowly and steadily spreads its leaf-shielded root limbs wide to both sides, holds the pose briefly, then slowly lowers them back to the original stance. A physical gesture only: no spell, glow change or aura. The leaf shields stay on the limbs. The light stays steady."
+    },
+    "cast_h3_v3": {
+      "clip": "cast",
+      "references": [
+        "attack_00",
+        "cast_01",
+        "cast_02",
+        "cast_03",
+        "cast_04",
+        "cast_05",
+        "cast_06"
+      ],
+      "guides": [
+        [
+          14,
+          1
+        ],
+        [
+          28,
+          2
+        ],
+        [
+          42,
+          3
+        ],
+        [
+          58,
+          4
+        ],
+        [
+          78,
+          5
+        ],
+        [
+          94,
+          6
+        ],
+        [
+          110,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "A rallying display. The bastion slowly and steadily spreads its leaf-shielded root limbs wide to both sides, holds the pose briefly, then slowly lowers them back to the original stance. A physical gesture only: no spell, glow change or aura. The leaf shields stay on the limbs. The light stays steady."
     }
   }
 }
