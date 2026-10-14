@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_thornwake_barkmantle_rams",
+  "guides": [
+    {
+      "frame": "attack_v1_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams/attack_v1.png",
+      "source_sha256": "d36dcbc0f5c09b0a5ca9e31e54405862e7f93ed2e81d5dcf9aeece22d62913cc",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "ecd7c5b10f91be8f8af5b6b8b997cf01b3dcc573a019436febffd04c9e0a0542"
+    },
+    {
+      "frame": "death_v1_03",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams/death_v1.png",
+      "source_sha256": "e765cb03d8ab790c0ea9602c072df88f6c86320c26a65f77ab39ac8f23c1f2e9",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "d32ea08e248cebc8243f88f73b1f647ffc8cd379e476c899367e8f67902c4ffd"
+    },
+    {
+      "frame": "death_v1_07",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams/death_v1.png",
+      "source_sha256": "e765cb03d8ab790c0ea9602c072df88f6c86320c26a65f77ab39ac8f23c1f2e9",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "da7e828dfed432b075d4921089b51174cbde8b255db3eeef699e655dc87cd297"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    448,
+    574
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    63,
+    66,
+    62,
+    66
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

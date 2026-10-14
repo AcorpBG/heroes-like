@@ -126,6 +126,44 @@
       ],
       "last": 2,
       "action": "Collapse slowly and heavily. The ram's legs buckle and it sinks down onto its belly, stays there a moment with the head drooping, then slumps onto its side and lies motionless with the horned head at screen right. The body never rises again; no recovery and no disappearing body."
+    },
+    "cast_h3_v2": {
+      "clip": "cast",
+      "references": [
+        "attack_v1_00",
+        "cast_v1_05"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A defiant display. The ram rears up on its front legs and lifts the horned head high, holds the pose briefly, then lowers smoothly back to the original stance. A physical gesture only: no spell, glow or aura. The light stays steady."
+    },
+    "cast_h3_v3": {
+      "clip": "cast",
+      "references": [
+        "attack_v1_00",
+        "cast_v1_05"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A defiant display. The ram rears up on its front legs and lifts the horned head high, holds the pose briefly, then lowers smoothly back to the original stance. A physical gesture only: no spell, glow or aura. The light stays steady."
     }
   }
 }

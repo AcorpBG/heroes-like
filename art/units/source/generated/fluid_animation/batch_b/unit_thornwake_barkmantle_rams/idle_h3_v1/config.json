@@ -1,0 +1,54 @@
+{
+  "unit_id": "unit_thornwake_barkmantle_rams",
+  "clip": "idle",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    448,
+    574
+  ],
+  "scale": 0.44,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026106250,
+  "references": [
+    "attack_v1_00",
+    "attack_v1_07"
+  ],
+  "guides": [
+    [
+      31,
+      1
+    ],
+    [
+      62,
+      0
+    ],
+    [
+      93,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original heavy quadruped ram made of living wood, the Barkmantle Ram, facing screen right in elevated three-quarter view. Keep its barrel torso, the ivory birch-bark plates, the amber sap nodules, the moss, the red vine bindings and patterned ribbons, and the rigid horned wooden head with curled ivory horns. EXACTLY FOUR legs ending in root paws, attached at their original joints. Preserve the horns, the bark plates and the massive proportions. A heavy, breathing idle that loops. The ram's barrel chest swells and settles, the horned head lowers a little and lifts, it shifts its weight from one side to the other and the ribbons stir, then everything returns smoothly to the original stance. All four paws stay planted. No walking and no attack. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole head with both horns, the tail, all four legs and paws within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, dust, falling leaves, glow bursts, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-paw support; legs never grow longer and paws keep their size.",
+  "protected_foreground_chroma": 7,
+  "edge_threshold": 12,
+  "palette_measurement": {
+    "bluest_opaque": 5.0,
+    "blue_minus_green_p999": 6.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

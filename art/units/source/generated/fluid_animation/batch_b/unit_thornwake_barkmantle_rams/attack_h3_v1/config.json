@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_thornwake_barkmantle_rams",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    448,
+    574
+  ],
+  "scale": 0.44,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026106251,
+  "references": [
+    "attack_v1_00",
+    "attack_v1_02",
+    "attack_v1_04"
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      54,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original heavy quadruped ram made of living wood, the Barkmantle Ram, facing screen right in elevated three-quarter view. Keep its barrel torso, the ivory birch-bark plates, the amber sap nodules, the moss, the red vine bindings and patterned ribbons, and the rigid horned wooden head with curled ivory horns. EXACTLY FOUR legs ending in root paws, attached at their original joints. Preserve the horns, the bark plates and the massive proportions. Make ONE headbutt toward screen right. The ram rocks back onto its hind legs and lowers the horned head, then lunges forward and drives the horns out to full reach at screen right, pulls back and settles into the original stance. One headbutt only; the paws step, never slide, and no effect appears at contact. Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole head with both horns, the tail, all four legs and paws within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, dust, falling leaves, glow bursts, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-paw support; legs never grow longer and paws keep their size.",
+  "protected_foreground_chroma": 9,
+  "edge_threshold": 13,
+  "palette_measurement": {
+    "bluest_opaque": 7.0,
+    "blue_minus_green_p999": 7.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}
