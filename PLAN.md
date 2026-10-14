@@ -44,6 +44,8 @@ Rules:
 
 `art-h3-green-plate-edge-spill-20261014` (completed 2026-10-14, owner task "Tighten green-plate edge cleanup on gold palettes"): on a green plate the edge rule also limits green over max(red, blue) to the palette's p99.9 plus 6 (`edge_spill_threshold`). Thin and blurred edges of gold units lose their green tint and gold keeps its colour and opacity; the blue-plate rule is unchanged. Owner go-ahead "yea mate do it": all 20 green-plate units were re-matted with the rule and republished 2026-10-14 with the same frames, timing, anchor and scale.
 
+`art-h3-kilnelk-facing-20261014` (completed 2026-10-14, owner report "enemy unit starting on the right side of the map facing right", "fix the ashcrown klinelk"): the Ashcrown Kilnelk's painted neutral, walk and bellow pointed the body left with the head turned back, so the mirrored enemy stood facing away and turned round to charge. A check of all 232 units found no other case. Every clip was retaken in H3 from hit_3, its one painting that faces right in body and head. The bellow and death use mirrored paintings, through the new `"mirrored"` reference aliases of `tools/h3_creature_animation.py`. See `docs/fluid-creature-animation.md`.
+
 ### Gold-only unit recruitment costs
 
 `content-gold-only-unit-costs-20261006` (completed, owner-directed economy content): tier 1-6 units, base and upgraded, cost only gold; each faction's tier 7 costs gold plus its main rare resource, the only non-gold unit cost; no unit costs wood or ore, and neutral units follow the same tiers. Gold amounts are unchanged and faction resource pressure stays in building costs. `tests/validate_repo.py` enforces the rule. See `docs/economy-overhaul-foundation.md`.

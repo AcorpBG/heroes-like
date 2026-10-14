@@ -1,0 +1,44 @@
+{
+  "unit_id": "unit_neutral_ashcrown_kilnelk",
+  "guides": [
+    {
+      "frame": "hit_3",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_ashcrown_kilnelk/extracted/reactions_v1_3.png",
+      "source_sha256": "f68601bb33c5214321af2ae6fbc9f06b802d0c2863eb60b63ad2bdae777e9d83",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "431e2d6fcabdf4747ee5a12f07616b717082a5135d635529f9ec5c4567b6ac42"
+    },
+    {
+      "frame": "death_3_mirrored",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_ashcrown_kilnelk/extracted/death_v1_3.png",
+      "source_sha256": "428e12e37b02badd58a41ec8741170d6b03478f85d11bbfc03d4116404a7397a",
+      "mirrored_from": "death_3",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "7a9499bcedb4bfa028a2ac3771adebb2f14446359f860f89e19a2e30e61b055c"
+    },
+    {
+      "frame": "death_7_mirrored",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_ashcrown_kilnelk/extracted/death_v1_7.png",
+      "source_sha256": "d06676990e4801bd843e4014cca2e79da1cc619e94bcabc6abc715ffa4a9ae25",
+      "mirrored_from": "death_7",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "9faa731f42102bcb666417d2f0fe2976ab09aa9b137ef863e9936ec2a8912dfc"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    588
+  ],
+  "output_scale": 0.43,
+  "free_pixels_left_top_right_bottom": [
+    201,
+    43,
+    201,
+    50
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

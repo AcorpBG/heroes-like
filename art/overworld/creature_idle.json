@@ -9298,17 +9298,17 @@
     "unit_neutral_ashcrown_kilnelk": {
       "path": "res://art/overworld/runtime/creature_idle/unit_neutral_ashcrown_kilnelk.png",
       "frame_size": [
-        229,
-        245
+        230,
+        251
       ],
       "frames": 62,
       "frame_msec": 60,
       "static_frame": 0,
       "ground_anchor": [
-        122,
-        233
+        112,
+        240
       ],
-      "painted_extent": 229,
+      "painted_extent": 235,
       "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_ashcrown_kilnelk.png",
       "source_indices": [
         0,
@@ -9375,14 +9375,14 @@
         61
       ],
       "source_crop": [
-        22,
-        19,
-        251,
-        264
+        28,
+        16,
+        258,
+        267
       ],
-      "source_sha256": "27c9beb9d232c64a737864f2b503b3b26dfcdfb9dff82cdd7b4db59973163044",
+      "source_sha256": "a3254d04baf7bb1ed5f9ff8cf3e0848eac119f921d65964da23239cf59ce2730",
       "source_provenance": "res://art/animation/source/fluid/unit_neutral_ashcrown_kilnelk/provenance.json",
-      "sha256": "ca902909150e5c21f1406e54c0fd605d7ee155e858ea8d46694436879ad3cf1a"
+      "sha256": "43366b555818411297fd355b3e2355bca42535e4f81670743e0915a41d8a3272"
     },
     "unit_neutral_miremoon_crownmaws": {
       "path": "res://art/overworld/runtime/creature_idle/unit_neutral_miremoon_crownmaws.png",

@@ -3,7 +3,7 @@
     "idle": {
       "segments": [
         {
-          "take": "idle_h3_v1",
+          "take": "idle_h3_v4",
           "frames": [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100, 102, 104, 106, 108, 110, 112, 114, 116, 118, 120, 122]
         }
       ],
@@ -12,7 +12,7 @@
     "move": {
       "segments": [
         {
-          "take": "move_h3_v1",
+          "take": "move_h3_v2",
           "frames": [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60]
         }
       ],
@@ -21,18 +21,18 @@
     "attack": {
       "segments": [
         {
-          "take": "attack_h3_v2",
-          "frames": [9, 12, 15, 16, 18, 19, 21, 23, 26, 28, 31, 33, 36, 38, 40, 42, 45, 48, 51, 53, 56, 61, 64, 67, 70, 74, 77, 79, 81, 83, 85, 86, 88, 91]
+          "take": "attack_h3_v4",
+          "frames": [8, 13, 16, 19, 22, 24, 29, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 53, 55, 57, 61, 65, 68, 70, 73, 75, 79, 82, 85, 87, 88, 90, 93, 96]
         }
       ],
       "frame_msec": 42,
-      "contact_frame": 21
+      "contact_frame": 8
     },
     "hit": {
       "segments": [
         {
-          "take": "hit_h3_v3",
-          "frames": [0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 18, 20, 22, 25, 28]
+          "take": "hit_h3_v5",
+          "frames": [0, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 25, 32, 40, 47, 54, 61, 71]
         }
       ],
       "frame_msec": 35
@@ -40,8 +40,8 @@
     "defend": {
       "segments": [
         {
-          "take": "defend_h3_v3",
-          "frames": [0, 2, 3, 4, 5, 9, 10, 11, 12, 13, 14, 15, 16, 18, 21, 24]
+          "take": "defend_h3_v4",
+          "frames": [3, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 27, 34, 41, 50]
         }
       ],
       "frame_msec": 42
@@ -49,18 +49,18 @@
     "cast": {
       "segments": [
         {
-          "take": "cast_h3_v3",
-          "frames": [9, 12, 13, 14, 16, 18, 22, 24, 25, 26, 27, 29, 30, 32, 39, 47, 54, 61, 73, 76, 78, 80, 81, 82, 84, 87, 88, 94, 106, 107, 108, 110, 112]
+          "take": "cast_h3_v5",
+          "frames": [2, 5, 6, 7, 8, 10, 11, 12, 13, 16, 17, 24, 31, 38, 45, 52, 59, 67, 68, 69, 70, 71, 72, 73, 74, 75, 82, 88]
         }
       ],
       "frame_msec": 45,
-      "contact_frame": 16
+      "contact_frame": 13
     },
     "death": {
       "segments": [
         {
-          "take": "death_h3_v1",
-          "frames": [7, 16, 20, 23, 25, 27, 29, 31, 32, 34, 35, 36, 37, 38, 39, 40, 42, 45, 48, 50, 51, 52, 53, 54, 55, 56, 57, 58, 60, 61, 64, 68, 75, 87, 123]
+          "take": "death_h3_v3",
+          "frames": [6, 10, 12, 14, 16, 17, 18, 19, 20, 22, 24, 26, 29, 33, 35, 36, 44, 45, 46, 47, 48, 49, 51, 52, 54, 56, 59, 66, 73, 82, 123]
         }
       ],
       "frame_msec": 45
@@ -69,6 +69,6 @@
   "preserved_accepted_clips": [],
   "visual_review": {
     "status": "accepted",
-    "notes": "H3 video for every clip, idle every second frame (a slow stance shift with a foreleg paw). The blue plate faded after the last guide on v1 attack and cast: attack v2 guided through the painted ram, cast v3 through the painted bellow and return. v1 hit spun to face away; hit v3 ends at video 28 before a later turn. The neutral pose is three-quarter and the brace side-on, so defend v3 turns the body; frames 6-8, where the head faces the camera, are dropped."
+    "notes": "Facing fix 2026-10-14: the painted neutral (attack_0), walk and bellow pointed the body left with the head turned back right, so the mirrored enemy stood facing away and turned to charge. Every clip now starts and ends on hit_3, the one painting facing right in body and head. Idle v4 (hit_3 guided at 31/62/93; v2, v3 lost 42 and 96 frames to plate pulses, dense v5 left grey matte residue) loops video 0-122 with one paw and snort. Move v2 trots between hit_3 and hit_2. Attack v4 rams through the painted attack_2-5. Hit v5 staggers from hit_2. Defend v4 braces side-on with no body turn. Cast v5 bellows to a mirrored cast_4; frames 14-15, head to the camera, dropped. Death v3 sinks slowly to a mirrored death_7; frames 38-43, head to the camera, dropped. Rejected: hit v6 drew a sword and sparks, death v2 dropped in three frames with a flame tail, death v4 turned to the camera."
   }
 }

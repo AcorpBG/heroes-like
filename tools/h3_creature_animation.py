@@ -11,7 +11,9 @@ A unit is described by <unit_dir>/h3_unit.json:
   last: ref, action: prompt text, optional pad [left, top, right, bottom]}}. Append new
   takes (retakes too) at the end: a take's seed is the unit seed plus its position. pad
   widens one take's canvas (multiples of 32) where its swing leaves the unit canvas; the
-  figure keeps its anchor and scale.
+  figure keeps its anchor and scale. Optional "mirrored": {alias: painted frame name} adds a
+  reference that is that painting flipped about the anatomical anchor, for a unit whose
+  paintings face both ways: references name the alias.
 
 References name frames of the unit's live reviewed handoff
 (art/animation/source/fluid/<unit>/reviewed_handoff.json), so each guide is an accepted
@@ -175,9 +177,13 @@ class Unit:
         live = ROOT / "art/animation/source/fluid" / self.id / "reviewed_handoff.json"
         self.live = read(live)["units"][0]
         self.painted = {f["name"]: f for f in self.live["frames"]}
-        wanted = {name for spec in self.cfg["takes"].values() for name in spec["references"]}
+        mirrored = self.cfg.get("mirrored", {})
+        wanted = {name for spec in self.cfg["takes"].values() for name in spec["references"]} - mirrored.keys()
+        wanted |= set(mirrored.values())
         if wanted - self.painted.keys():
             self.painted.update(published_away(self.dir, live, wanted - self.painted.keys()))
+        for alias, name in mirrored.items():
+            self.painted[alias] = dict(self.painted[name], name=alias, mirrored_from=name)
         self.canvas = tuple(self.cfg.get("canvas", [960, 640]))
         self.scale = float(self.cfg["scale"])
 
@@ -200,6 +206,8 @@ class Unit:
         if grow > 1:
             pose = pose.resize((round(pose.width * grow), round(pose.height * grow)), Image.Resampling.LANCZOS)
             x, y = round(x * grow), round(y * grow)
+        if "mirrored_from" in frame:
+            pose, x = pose.transpose(Image.Transpose.FLIP_LEFT_RIGHT), -x - pose.width
         return pose, (x, y)
 
     def layout(self):
@@ -305,6 +313,7 @@ def prepare(unit, names, refresh=False):
             guides.append(rgba)
             source = unit.painted[frame_name]["source"].removeprefix("res://")
             refs.append({"frame": frame_name, "source": source, "source_sha256": sha(ROOT / source),
+                         **({"mirrored_from": unit.painted[frame_name]["mirrored_from"]} if "mirrored_from" in unit.painted[frame_name] else {}),
                          "input_file": f"guide_{i}_chroma.png", "input_sha256": sha(out / f"guide_{i}_chroma.png")})
         order = key_order(unit.cfg["key_rgb"])
         protected, threshold, spill, measured = measure(guides, order)

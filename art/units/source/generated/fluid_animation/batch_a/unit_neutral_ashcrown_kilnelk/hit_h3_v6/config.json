@@ -1,0 +1,54 @@
+{
+  "unit_id": "unit_neutral_ashcrown_kilnelk",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    588
+  ],
+  "scale": 0.43,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026102622,
+  "references": [
+    "hit_3"
+  ],
+  "guides": [
+    [
+      56,
+      0
+    ],
+    [
+      80,
+      0
+    ],
+    [
+      104,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original volcanic elk, the Ashcrown Kilnelk, facing screen right in elevated three-quarter side view. Keep the powerful four-legged elk body of charcoal rock hide split by glowing orange molten cracks, the shaggy ember-orange mane on the neck and chest, the huge pale cream branching antlers with faint glowing veins, the dark cloven hooves rimmed with orange glow and the short tail. Exactly four legs, two antlers and one tail. Preserve the antler shape, the molten cracks, the mane and the tall elk proportions. A blow lands from screen right. The shoulders jolt backward, the neck recoils and the antlers tilt back as the knees flex and one forehoof lifts, then over a full second the hoof replants, the head comes forward and the elk eases back into the same stance. The elk stays side-on facing screen right throughout and never turns toward or away from the viewer. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep every antler tip and all four hooves within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, flames, smoke, sparks, embers flying off, magic, particles or extra limbs; the cracks keep only their steady orange glow. Articulate joints naturally with physical planted-hoof support; the antlers stay rigid and attached.",
+  "protected_foreground_chroma": 5,
+  "edge_threshold": 10,
+  "palette_measurement": {
+    "bluest_opaque": 3.0,
+    "blue_minus_green_p999": 4.0,
+    "bluest_p999": -3.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

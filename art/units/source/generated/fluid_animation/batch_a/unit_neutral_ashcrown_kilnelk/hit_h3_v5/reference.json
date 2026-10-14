@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_neutral_ashcrown_kilnelk",
+  "guides": [
+    {
+      "frame": "hit_2",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_ashcrown_kilnelk/extracted/reactions_v1_2.png",
+      "source_sha256": "bd4739944a761971c53add0b06dee52c367e2e4fccafa12072b5172b5357c1e4",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "f3a31ccfdc02b1d85c944520f0eeb05c0802594e197a0a4f3e867d5c17c3e8a2"
+    },
+    {
+      "frame": "hit_3",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_ashcrown_kilnelk/extracted/reactions_v1_3.png",
+      "source_sha256": "f68601bb33c5214321af2ae6fbc9f06b802d0c2863eb60b63ad2bdae777e9d83",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "431e2d6fcabdf4747ee5a12f07616b717082a5135d635529f9ec5c4567b6ac42"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    588
+  ],
+  "output_scale": 0.43,
+  "free_pixels_left_top_right_bottom": [
+    201,
+    43,
+    201,
+    50
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
