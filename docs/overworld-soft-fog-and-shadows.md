@@ -19,6 +19,7 @@ Fog of war was drawn per tile in the state layer: an opaque rectangle plus a vei
 
 - Every map object drawn by the state layer (living scenery, scenery icons, pickups, mines, sites, creatures, control flags) also lays its own silhouette on a render item drawn behind the state layer's content.
 - The silhouette is softened by a 5x5 gaussian (`OBJECT_SHADOW_BLUR_PX` 6 px). It is slanted up and to the right (`OBJECT_SHADOW_SHEAR` -0.75) and squashed onto the ground (`OBJECT_SHADOW_SQUASH` 0.42) about a foot point 6% above the sprite's bottom, as if lit from in front and to the left. Strength is `OBJECT_SHADOW_ALPHA` 0.36, scaled by the turn-actor dimming.
+- Creatures and other figures are thin, so a soft, faint shadow all but vanishes: theirs is darker and crisper (`OBJECT_SHADOW_ACTOR_ALPHA` 0.8, half the blur; owner pick from a strength comparison). A figure drawn with an outline casts once, not once per outline pass.
 - A painting drawn as per-tile slices (forest formations, mines, flags) casts the whole painting once per frame, so slices never cast rectangles.
 - Only explored parts cast, and only onto explored ground: the shader masks by the ground lookup at the casting texel (`VERTEX`) and where it lands (`MODEL_MATRIX`). A forest running into the fog therefore never shadows its hidden trees.
 - Towns cast none: their art carries its own ground plane. Ground decals (single trees and bushes painted by the ground shader) cast none. The hero moving in the dynamic layer casts none while it walks.

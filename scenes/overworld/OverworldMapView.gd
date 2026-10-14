@@ -1,4 +1,4 @@
-extends Control
+﻿extends Control
 
 signal tile_pressed(tile: Vector2i)
 signal tile_hovered(tile: Vector2i)
@@ -63,6 +63,10 @@ const OBJECT_SHADOW_SQUASH := 0.42
 const OBJECT_SHADOW_FOOT_FACTOR := 0.06
 const OBJECT_SHADOW_ALPHA := 0.36
 const OBJECT_SHADOW_BLUR_PX := 6.0
+# Creatures are thin figures: a softer, fainter shadow all but vanishes, so
+# theirs is darker and crisper.
+const OBJECT_SHADOW_ACTOR_ALPHA := 0.8
+const OBJECT_SHADOW_ACTOR_BLUR := 0.5
 const ActorStyle = preload("res://scenes/overworld/OverworldActorStyle.gd")
 const CreatureIdle = preload("res://scenes/overworld/OverworldCreatureIdle.gd")
 const Mines = preload("res://scripts/core/MineRules.gd")
@@ -1861,7 +1865,7 @@ func _sync_object_shadow_mask(board_rect: Rect2) -> void:
 
 ## Lays the object's shadow while the state layer paints objects. A per-tile
 ## slice of one painting (`painting`) casts the whole painting once.
-func _cast_object_shadow(texture: Texture2D, rect: Rect2, source: Rect2 = Rect2(), painting: Rect2 = Rect2()) -> void:
+func _cast_object_shadow(texture: Texture2D, rect: Rect2, source: Rect2 = Rect2(), painting: Rect2 = Rect2(), strength: float = OBJECT_SHADOW_ALPHA, blur: float = 1.0) -> void:
 	if not _object_shadows_casting or _object_shadows_muted or texture == null or _draw_canvas_item != _state_layer:
 		return
 	var texture_size := texture.get_size()
@@ -1876,7 +1880,7 @@ func _cast_object_shadow(texture: Texture2D, rect: Rect2, source: Rect2 = Rect2(
 	var draw_rect := rect
 	if source_rect.position == Vector2.ZERO and source_rect.size == texture_size:
 		# Room for the blur past the sprite's edge; the shader reads it as empty.
-		var margin := Vector2.ONE * OBJECT_SHADOW_BLUR_PX * 2.5
+		var margin := Vector2.ONE * OBJECT_SHADOW_BLUR_PX * blur * 2.5
 		var ratio := source_rect.size / rect.size
 		draw_rect = rect.grow(margin.x)
 		source_rect = Rect2(source_rect.position - margin * ratio, source_rect.size + margin * ratio * 2.0)
@@ -1884,7 +1888,7 @@ func _cast_object_shadow(texture: Texture2D, rect: Rect2, source: Rect2 = Rect2(
 	var slant := Transform2D(Vector2(1.0, 0.0), Vector2(OBJECT_SHADOW_SHEAR, OBJECT_SHADOW_SQUASH), Vector2.ZERO)
 	slant.origin = pivot - slant.basis_xform(pivot)
 	RenderingServer.canvas_item_add_set_transform(_object_shadow_item, slant)
-	RenderingServer.canvas_item_add_texture_rect_region(_object_shadow_item, draw_rect, texture.get_rid(), source_rect, Color(1.0, 1.0, 1.0, OBJECT_SHADOW_ALPHA * _turn_actor_alpha), false, false)
+	RenderingServer.canvas_item_add_texture_rect_region(_object_shadow_item, draw_rect, texture.get_rid(), source_rect, Color(blur, 1.0, 1.0, strength * _turn_actor_alpha), false, false)
 	RenderingServer.canvas_item_add_set_transform(_object_shadow_item, Transform2D.IDENTITY)
 
 func _canvas_draw_rect(rect: Rect2, color: Color, filled: bool = true, width: float = -1.0) -> void:
@@ -4622,6 +4626,10 @@ func _actor_sprite_payload(asset_id: String, texture: Texture2D, ground: Vector2
 func _draw_actor_art(payload: Dictionary, remembered: bool) -> void:
 	var texture: Texture2D = payload.draw_texture
 	var rect: Rect2 = payload.draw_rect
+	# One shadow for the figure, not one per outline pass.
+	_cast_object_shadow(texture, rect, Rect2(), Rect2(), OBJECT_SHADOW_ACTOR_ALPHA, OBJECT_SHADOW_ACTOR_BLUR)
+	var was_muted := _object_shadows_muted
+	_object_shadows_muted = true
 	var mask := _actor_style.alpha_mask(texture)
 	if mask != null:
 		var width := ActorStyle.edge_width(maxf(rect.size.x, rect.size.y))
@@ -4632,6 +4640,7 @@ func _draw_actor_art(payload: Dictionary, remembered: bool) -> void:
 		for direction in ActorStyle.DIRECTIONS:
 			_canvas_draw_texture_rect(mask, Rect2(rect.position + direction * width * 0.50, rect.size), false, light)
 	_canvas_draw_texture_rect(texture, rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
+	_object_shadows_muted = was_muted
 
 func _town_sprite_draw_payload(asset_id: String, texture: Texture2D, footprint_rect: Rect2, single_tile_extent_override: float = 0.0) -> Dictionary:
 	var footprint := _object_profile_footprint(_town_object_profile())
@@ -4760,7 +4769,7 @@ func _draw_encounter_creature_idle(encounter: Dictionary, rect: Rect2, remembere
 	var shader_material := _scenery_batches.cached_material(["creature", phase_key, pose.texture, pose.rect.size],
 		func() -> ShaderMaterial: return CreatureIdle.material(pose, phase_key, _scenery_motion_enabled()))
 	var tint := OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE
-	_cast_object_shadow(_creature_idle.still_frame(unit_id), pose.rect)
+	_cast_object_shadow(_creature_idle.still_frame(unit_id), pose.rect, Rect2(), Rect2(), OBJECT_SHADOW_ACTOR_ALPHA, OBJECT_SHADOW_ACTOR_BLUR)
 	_scenery_batches.paint_material(pose.texture, pose.rect, _actor_color(tint), shader_material,
 		{"kind": "creature_idle", "unit_id": unit_id, "tile": tile, "level": _level, "ground": ground})
 	_draw_procedural_contact_marks(anchor, "encounter", remembered)

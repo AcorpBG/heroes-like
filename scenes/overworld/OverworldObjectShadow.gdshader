@@ -3,7 +3,7 @@ render_mode unshaded;
 
 // A map object's own silhouette, softened, laid on the ground behind it
 // (docs/overworld-soft-fog-and-shadows.md). The draw transform slants and squashes it;
-// vertex alpha is the strength. UVs outside the texture read as empty, so
+// vertex alpha is the strength and vertex red scales the blur. UVs outside the texture read as empty, so
 // the blur can spread past the sprite's edge.
 uniform vec3 tone = vec3(0.03, 0.035, 0.05);
 uniform float blur_px = 6.0;
@@ -21,11 +21,13 @@ uniform vec2 canvas_origin;
 uniform vec2 canvas_world_origin;
 uniform vec2 canvas_world_scale = vec2(1.0);
 varying float strength;
+varying float blur_scale;
 varying vec2 source_world;
 varying vec2 land_world;
 
 void vertex() {
 	strength = COLOR.a;
+	blur_scale = COLOR.r;
 	source_world = (VERTEX - board_origin) / tile_px;
 	land_world = canvas_world_origin + ((MODEL_MATRIX * vec4(VERTEX, 0.0, 1.0)).xy - canvas_origin) * canvas_world_scale;
 }
@@ -43,7 +45,7 @@ float explored_share(vec2 world) {
 }
 
 void fragment() {
-	vec2 step_uv = fwidth(UV) * blur_px * 0.5;
+	vec2 step_uv = fwidth(UV) * blur_px * blur_scale * 0.5;
 	float coverage = 0.0;
 	float total = 0.0;
 	for (int j = -2; j <= 2; j++) {
