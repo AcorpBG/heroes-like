@@ -80,6 +80,8 @@ The H3 video sources made from 2026-10-11 to 2026-10-14 existed only on D:, almo
 
 Write each snapshot from the checkout that made the sources. Agent worktrees hold untracked sources that no other checkout has, and removing a worktree deletes them.
 
+On 2026-10-14 (owner request) the 140,968 untracked sources of the worktree `.claude/worktrees/cool-greider-b0456c` (105.75 GiB) were removed with `tools/restore_archived_source_material.py --prefix art/ --remove --apply` against `2026-10-14-dd68fe59`. Each file was deleted only after its local copy and its archived payload both matched the manifest SHA-256; none differed, and the 45,816 tracked files stayed. A retake there restores its guides and painted sources from the archive first.
+
 ## Tests never need archived sources
 
 The game and its tests need no archived source. Source paintings, trims and generation masters were used once to make the shipped art; since 2026-10-04 no test opens them. Tests check what a clone contains: content, scripts, shipped runtime art, tracked import settings and manifest metadata (recorded paths, hashes and prompts stay as provenance text).
