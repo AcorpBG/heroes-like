@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_sunvault_zenith_lensbearers",
+  "guides": [
+    {
+      "frame": "attack_v1_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/attack_v1.png",
+      "source_sha256": "62303699700f746e011f946abb56311a8f70212940b38d489e413f89f868b185",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "5126eca9c6c2fdb4a402083a6e845b83b5091f487ff93eac0b30edfdc5f65241"
+    },
+    {
+      "frame": "attack_v1_07",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/attack_v1.png",
+      "source_sha256": "62303699700f746e011f946abb56311a8f70212940b38d489e413f89f868b185",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "6965c8fb20d2c542cb43df8753b442bd9be346b9f4db58a97327b318fdc19f25"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    384,
+    571
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    103,
+    69,
+    102,
+    69
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_sunvault_zenith_lensbearers",
+  "guides": [
+    {
+      "frame": "attack_v1_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/attack_v1.png",
+      "source_sha256": "62303699700f746e011f946abb56311a8f70212940b38d489e413f89f868b185",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "5126eca9c6c2fdb4a402083a6e845b83b5091f487ff93eac0b30edfdc5f65241"
+    },
+    {
+      "frame": "hit_defend_v1_05",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/hit_defend_v1.png",
+      "source_sha256": "585ba3870ba0d8eab6ed2b1327acd55985641484495de5254896147c9098795e",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "b0c2f785f0444f108b957f59a9e675720a74a28aad049d34f89edb1e8f321820"
+    },
+    {
+      "frame": "hit_defend_v1_06",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/hit_defend_v1.png",
+      "source_sha256": "585ba3870ba0d8eab6ed2b1327acd55985641484495de5254896147c9098795e",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "d8f47a87cd9c8f902cc85549a0550694016d8c8e6b4815a8c9670e060853c8a4"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    384,
+    571
+  ],
+  "output_scale": 0.44,
+  "free_pixels_left_top_right_bottom": [
+    103,
+    69,
+    102,
+    69
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

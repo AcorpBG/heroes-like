@@ -146,6 +146,200 @@
       ],
       "last": 2,
       "action": "Collapse slowly. The gunner sinks down onto the knees with the lens cannon dropping, stays there a moment, then slumps forward and lies flat on the front, finishing motionless with the head at screen right, the back standard still strapped on and the lens cannon on the ground beside the body. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    },
+    "idle_h3_v2": {
+      "clip": "idle",
+      "references": [
+        "attack_v1_00"
+      ],
+      "guides": [
+        [
+          62,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "A steady, watchful idle that loops. The gunner breathes, the shoulders rise and fall, the lens cannon dips a little and lifts as the grip resettles, the head turns slightly to scan and the coat tails stir, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no firing. Only the body moves; nothing else appears in the frame. The cannon never fires and its crystals stay unlit. The light stays steady."
+    },
+    "idle_h3_v3": {
+      "clip": "idle",
+      "references": [
+        "attack_v1_00"
+      ],
+      "guides": [
+        [
+          62,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "A steady, watchful idle that loops. The gunner breathes, the shoulders rise and fall, the lens cannon dips a little and lifts as the grip resettles, the head turns slightly to scan and the coat tails stir, then everything returns smoothly to the original stance. Both boots stay planted. No walking and no firing. Only the body moves; nothing else appears in the frame. The cannon never fires and its crystals stay unlit. The light stays steady."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "attack_v1_00",
+        "attack_v1_01",
+        "attack_v1_02",
+        "attack_v1_03",
+        "attack_v1_04",
+        "attack_v1_05",
+        "attack_v1_06"
+      ],
+      "guides": [
+        [
+          14,
+          1
+        ],
+        [
+          26,
+          2
+        ],
+        [
+          38,
+          3
+        ],
+        [
+          50,
+          4
+        ],
+        [
+          66,
+          5
+        ],
+        [
+          84,
+          6
+        ],
+        [
+          104,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE cannon bash toward screen right. The gunner draws the lens cannon back as the knees bend, then lunges forward and rams its muzzle out to full reach at screen right with both hands, draws back and settles into the original stance. One bash only; nothing is fired and no effect appears at contact. The cannon never fires: no burst, beam, shards, sparks or flash at contact, and its crystals stay unlit. The light stays steady."
+    },
+    "attack_h3_v3": {
+      "clip": "attack",
+      "references": [
+        "attack_v1_00",
+        "attack_v1_01",
+        "attack_v1_02",
+        "attack_v1_03",
+        "attack_v1_04",
+        "attack_v1_05",
+        "attack_v1_06"
+      ],
+      "guides": [
+        [
+          14,
+          1
+        ],
+        [
+          26,
+          2
+        ],
+        [
+          38,
+          3
+        ],
+        [
+          50,
+          4
+        ],
+        [
+          66,
+          5
+        ],
+        [
+          84,
+          6
+        ],
+        [
+          104,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE cannon bash toward screen right. The gunner draws the lens cannon back as the knees bend, then lunges forward and rams its muzzle out to full reach at screen right with both hands, draws back and settles into the original stance. One bash only; nothing is fired and no effect appears at contact. The cannon never fires: no burst, beam, shards, sparks or flash at contact, and its crystals stay unlit. The light stays steady."
+    },
+    "ranged_h3_v2": {
+      "clip": "ranged",
+      "references": [
+        "attack_v1_00",
+        "ranged_v1_01",
+        "ranged_v1_02",
+        "ranged_v1_03",
+        "ranged_v1_05",
+        "ranged_v1_06"
+      ],
+      "guides": [
+        [
+          16,
+          1
+        ],
+        [
+          30,
+          2
+        ],
+        [
+          46,
+          3
+        ],
+        [
+          60,
+          4
+        ],
+        [
+          78,
+          5
+        ],
+        [
+          100,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "Fire ONE shot toward screen right. The gunner raises the lens cannon to the shoulder and sights along it toward screen right, the cannon kicks up and back once with the recoil, then lowers smoothly to the original stance. Nothing leaves the cannon: no beam, bolt, glow, charge, flash, sparks or smoke, and its crystals stay unlit. The light stays steady."
+    },
+    "ranged_h3_v3": {
+      "clip": "ranged",
+      "references": [
+        "attack_v1_00",
+        "ranged_v1_01",
+        "ranged_v1_02",
+        "ranged_v1_03",
+        "ranged_v1_05",
+        "ranged_v1_06"
+      ],
+      "guides": [
+        [
+          16,
+          1
+        ],
+        [
+          30,
+          2
+        ],
+        [
+          46,
+          3
+        ],
+        [
+          60,
+          4
+        ],
+        [
+          78,
+          5
+        ],
+        [
+          100,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "Fire ONE shot toward screen right. The gunner raises the lens cannon to the shoulder and sights along it toward screen right, the cannon kicks up and back once with the recoil, then lowers smoothly to the original stance. Nothing leaves the cannon: no beam, bolt, glow, charge, flash, sparks or smoke, and its crystals stay unlit. The light stays steady."
     }
   }
 }
