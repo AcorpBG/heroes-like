@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_veilmourn_dreamwake_tideglass_oracles",
+  "clip": "ranged",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    427,
+    562
+  ],
+  "scale": 0.52,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026106412,
+  "references": [
+    "attack_0",
+    "ranged_1",
+    "ranged_6"
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      78,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original pale adult woman, the Tideglass Oracle, facing screen right in elevated three-quarter view. Keep her long dark braided hair, the blue cloak with trailing pale ribbons, the ivory layered long robe, the silver-blue shoulder scales, the belt trinkets, the black gloves and the two dark armoured boots. Exactly two arms, two hands and two legs. The screen-LEFT hand grips ONE tall rigid dark staff topped by a silver crescent moon around ONE blue glass sphere; the screen-RIGHT hand holds ONE shallow round gold-rimmed blue scrying bowl. Preserve the staff, the bowl and the slender proportions. Make ONE casting thrust toward screen right. She draws the scrying bowl in to her chest, then sweeps her arm forward and thrusts the bowl out toward screen right, holds it out a moment, then draws it back to the original stance. Nothing comes out of the bowl: no water, glow or projectile. A physical gesture only: no water, beam, splash, glow or sparks leave the bowl. The light stays steady. Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole staff with its crescent, the bowl, the cloak and ribbons, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, water splashes, glow bursts, mist, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the staff and the bowl stay rigid, never change hands and never morph.",
+  "protected_foreground_chroma": 73,
+  "edge_threshold": 61,
+  "palette_measurement": {
+    "bluest_opaque": 71.0,
+    "blue_minus_green_p999": 55.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

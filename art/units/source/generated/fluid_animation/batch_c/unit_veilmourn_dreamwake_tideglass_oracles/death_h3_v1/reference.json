@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_veilmourn_dreamwake_tideglass_oracles",
+  "guides": [
+    {
+      "frame": "attack_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_tideglass_oracles/attack_v1.png",
+      "source_sha256": "dd899a0e1185e946d1b339eda7d7366460ff5cde728a6c2070bdccca0ae66ae2",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "7ab199f1286985c8decec64e28c5dd5f7a2ca1cabdc8b7beb03221659998f9ef"
+    },
+    {
+      "frame": "death_2",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_tideglass_oracles/death_v1.png",
+      "source_sha256": "f1a6778f98db37fe2af6bf08f94deb7e37f898a3ab590d3a6e1a9088ef0a0029",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "630785bba0c1ac92fb3a6607c6b69697cde216c6b4b544506de4a909c59f4dc6"
+    },
+    {
+      "frame": "death_7",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_tideglass_oracles/death_v1.png",
+      "source_sha256": "f1a6778f98db37fe2af6bf08f94deb7e37f898a3ab590d3a6e1a9088ef0a0029",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "1a80af15aad1a35b5b68b5a75469a700e3c0191d2ed3215092f57094d2aa4648"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    427,
+    562
+  ],
+  "output_scale": 0.52,
+  "free_pixels_left_top_right_bottom": [
+    121,
+    71,
+    121,
+    71
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

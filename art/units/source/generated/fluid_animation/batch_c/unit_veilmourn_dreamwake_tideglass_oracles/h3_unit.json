@@ -141,6 +141,335 @@
       ],
       "last": 2,
       "action": "Collapse slowly. She sinks down onto her knees with the staff and the bowl dropping, stays there a moment, then slumps onto her side and lies flat, finishing motionless with her head at screen left, the staff and the bowl on the ground beside her. The body never leaves the ground; no recovery, no floating equipment and no disappearing body."
+    },
+    "idle_h3_v2": {
+      "clip": "idle",
+      "references": [
+        "attack_0"
+      ],
+      "guides": [
+        [
+          62,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "A calm, dreaming idle that loops. She breathes, the head tilts as she gazes into the bowl, the staff rocks slightly and the cloak and ribbons stir, then everything returns smoothly to the original stance. Both boots stay planted. No walking, no attack and no effect. Only the body moves; nothing else appears in the frame. The light stays steady."
+    },
+    "idle_h3_v3": {
+      "clip": "idle",
+      "references": [
+        "attack_0"
+      ],
+      "guides": [
+        [
+          62,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "A calm, dreaming idle that loops. She breathes, the head tilts as she gazes into the bowl, the staff rocks slightly and the cloak and ribbons stir, then everything returns smoothly to the original stance. Both boots stay planted. No walking, no attack and no effect. Only the body moves; nothing else appears in the frame. The light stays steady."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "attack_0",
+        "attack_1",
+        "attack_2",
+        "attack_3",
+        "attack_4",
+        "attack_6"
+      ],
+      "guides": [
+        [
+          14,
+          1
+        ],
+        [
+          30,
+          2
+        ],
+        [
+          46,
+          3
+        ],
+        [
+          62,
+          4
+        ],
+        [
+          84,
+          5
+        ],
+        [
+          106,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE staff strike toward screen right. She swings the staff up high behind her as the knees bend, then lunges forward and thrusts the crescent end out to full reach at screen right, draws back and settles into the original stance. One strike only; no water, glow or effect at contact. Both hands keep hold of the staff the whole time; it never flies loose. The crescent never glows or flashes: no burst, beam, orb or sparks. The light stays steady."
+    },
+    "attack_h3_v3": {
+      "clip": "attack",
+      "references": [
+        "attack_0",
+        "attack_1",
+        "attack_2",
+        "attack_3",
+        "attack_4",
+        "attack_6"
+      ],
+      "guides": [
+        [
+          14,
+          1
+        ],
+        [
+          30,
+          2
+        ],
+        [
+          46,
+          3
+        ],
+        [
+          62,
+          4
+        ],
+        [
+          84,
+          5
+        ],
+        [
+          106,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE staff strike toward screen right. She swings the staff up high behind her as the knees bend, then lunges forward and thrusts the crescent end out to full reach at screen right, draws back and settles into the original stance. One strike only; no water, glow or effect at contact. Both hands keep hold of the staff the whole time; it never flies loose. The crescent never glows or flashes: no burst, beam, orb or sparks. The light stays steady."
+    },
+    "ranged_h3_v2": {
+      "clip": "ranged",
+      "references": [
+        "attack_0",
+        "ranged_1",
+        "ranged_6"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          78,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE casting thrust toward screen right. She draws the scrying bowl in to her chest, then sweeps her arm forward and thrusts the bowl out toward screen right, holds it out a moment, then draws it back to the original stance. Nothing comes out of the bowl: no water, glow or projectile. A physical gesture only: no water, beam, splash, glow or sparks leave the bowl. The light stays steady."
+    },
+    "ranged_h3_v3": {
+      "clip": "ranged",
+      "references": [
+        "attack_0",
+        "ranged_1",
+        "ranged_6"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          78,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE casting thrust toward screen right. She draws the scrying bowl in to her chest, then sweeps her arm forward and thrusts the bowl out toward screen right, holds it out a moment, then draws it back to the original stance. Nothing comes out of the bowl: no water, glow or projectile. A physical gesture only: no water, beam, splash, glow or sparks leave the bowl. The light stays steady."
+    },
+    "defend_h3_v2": {
+      "clip": "defend",
+      "references": [
+        "attack_0",
+        "defend_2"
+      ],
+      "guides": [],
+      "last": 1,
+      "action": "Smoothly and steadily, over about a second, crouch slightly and bring the staff diagonally across the body as a guard with both hands, the bowl drawn in close, then hold the guarded stance on both planted boots. No attack and no return to the relaxed stance. The light stays steady."
+    },
+    "defend_h3_v3": {
+      "clip": "defend",
+      "references": [
+        "attack_0",
+        "defend_0",
+        "defend_1",
+        "defend_2"
+      ],
+      "guides": [
+        [
+          16,
+          1
+        ],
+        [
+          30,
+          2
+        ]
+      ],
+      "last": 3,
+      "action": "Smoothly and steadily, over about a second, crouch slightly and bring the staff diagonally across the body as a guard with both hands, the bowl drawn in close, then hold the guarded stance on both planted boots. No attack and no return to the relaxed stance. The light stays steady."
+    },
+    "ranged_h3_v4": {
+      "clip": "ranged",
+      "references": [
+        "attack_0",
+        "ranged_1",
+        "ranged_6"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          78,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE casting thrust toward screen right. She draws the scrying bowl in to her chest, then sweeps her arm forward and thrusts the bowl out toward screen right, holds it out a moment, then draws it back to the original stance. Nothing comes out of the bowl: no water, glow or projectile. The water in the bowl stays the same dark blue and calm; nothing glows, sparkles, splashes or changes colour. The light stays steady."
+    },
+    "ranged_h3_v5": {
+      "clip": "ranged",
+      "references": [
+        "attack_0",
+        "ranged_1",
+        "ranged_6"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          78,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE casting thrust toward screen right. She draws the scrying bowl in to her chest, then sweeps her arm forward and thrusts the bowl out toward screen right, holds it out a moment, then draws it back to the original stance. Nothing comes out of the bowl: no water, glow or projectile. The water in the bowl stays the same dark blue and calm; nothing glows, sparkles, splashes or changes colour. The light stays steady."
+    },
+    "attack_h3_v4": {
+      "clip": "attack",
+      "references": [
+        "attack_0",
+        "attack_1",
+        "attack_2",
+        "attack_3",
+        "attack_4",
+        "attack_6"
+      ],
+      "guides": [
+        [
+          14,
+          1
+        ],
+        [
+          30,
+          2
+        ],
+        [
+          46,
+          3
+        ],
+        [
+          62,
+          4
+        ],
+        [
+          84,
+          5
+        ],
+        [
+          106,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE staff strike toward screen right. She swings the staff up high behind her as the knees bend, then lunges forward and thrusts the crescent end out to full reach at screen right, draws back and settles into the original stance. One strike only; no water, glow or effect at contact. Both hands keep hold of the staff the whole time; it never flies loose. The crescent never glows or flashes: no burst, beam, orb or sparks. The light stays steady."
+    },
+    "attack_h3_v5": {
+      "clip": "attack",
+      "references": [
+        "attack_0",
+        "attack_1",
+        "attack_2",
+        "attack_3",
+        "attack_4",
+        "attack_6"
+      ],
+      "guides": [
+        [
+          14,
+          1
+        ],
+        [
+          30,
+          2
+        ],
+        [
+          46,
+          3
+        ],
+        [
+          62,
+          4
+        ],
+        [
+          84,
+          5
+        ],
+        [
+          106,
+          0
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE staff strike toward screen right. She swings the staff up high behind her as the knees bend, then lunges forward and thrusts the crescent end out to full reach at screen right, draws back and settles into the original stance. One strike only; no water, glow or effect at contact. Both hands keep hold of the staff the whole time; it never flies loose. The crescent never glows or flashes: no burst, beam, orb or sparks. The light stays steady."
+    },
+    "ranged_h3_v6": {
+      "clip": "ranged",
+      "references": [
+        "attack_0",
+        "ranged_1"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE forceful push toward screen right with the scrying bowl. She draws the bowl in to her chest, then pushes her arm straight out and holds the bowl at arm's length toward screen right, holds it there a moment, then smoothly brings it back to her side in the original stance. The bowl is a plain solid dish: nothing comes out of it, with no water, splash, glow, light, sparks or beam. The light stays steady."
+    },
+    "ranged_h3_v7": {
+      "clip": "ranged",
+      "references": [
+        "attack_0",
+        "ranged_1"
+      ],
+      "guides": [
+        [
+          34,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE forceful push toward screen right with the scrying bowl. She draws the bowl in to her chest, then pushes her arm straight out and holds the bowl at arm's length toward screen right, holds it there a moment, then smoothly brings it back to her side in the original stance. The bowl is a plain solid dish: nothing comes out of it, with no water, splash, glow, light, sparks or beam. The light stays steady."
     }
-  }
+  },
+  "clean_references": [
+    "attack_4",
+    "hit_1"
+  ]
 }

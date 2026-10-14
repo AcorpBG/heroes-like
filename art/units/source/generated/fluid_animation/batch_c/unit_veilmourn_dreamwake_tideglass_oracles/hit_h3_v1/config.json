@@ -1,0 +1,46 @@
+{
+  "unit_id": "unit_veilmourn_dreamwake_tideglass_oracles",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    427,
+    562
+  ],
+  "scale": 0.52,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026106403,
+  "references": [
+    "hit_1",
+    "attack_0"
+  ],
+  "guides": [
+    [
+      40,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "ONE original pale adult woman, the Tideglass Oracle, facing screen right in elevated three-quarter view. Keep her long dark braided hair, the blue cloak with trailing pale ribbons, the ivory layered long robe, the silver-blue shoulder scales, the belt trinkets, the black gloves and the two dark armoured boots. Exactly two arms, two hands and two legs. The screen-LEFT hand grips ONE tall rigid dark staff topped by a silver crescent moon around ONE blue glass sphere; the screen-RIGHT hand holds ONE shallow round gold-rimmed blue scrying bowl. Preserve the staff, the bowl and the slender proportions. She starts rocked back in a flinch and recovers from it. Her head and shoulders are thrown back, the cloak and ribbons swing and the knees flex while both hands keep hold of the staff and the bowl, then she steadies on both boots and returns to the same stance. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole staff with its crescent, the bowl, the cloak and ribbons, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, water splashes, glow bursts, mist, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the staff and the bowl stay rigid, never change hands and never morph.",
+  "protected_foreground_chroma": 68,
+  "edge_threshold": 53,
+  "palette_measurement": {
+    "bluest_opaque": 66.0,
+    "blue_minus_green_p999": 47.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

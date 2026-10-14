@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_veilmourn_dreamwake_tideglass_oracles",
+  "guides": [
+    {
+      "frame": "attack_0",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_tideglass_oracles/attack_v1.png",
+      "source_sha256": "dd899a0e1185e946d1b339eda7d7366460ff5cde728a6c2070bdccca0ae66ae2",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "7ab199f1286985c8decec64e28c5dd5f7a2ca1cabdc8b7beb03221659998f9ef"
+    },
+    {
+      "frame": "defend_2",
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_tideglass_oracles/reactions_v1.png",
+      "source_sha256": "544b8c5f861953550066af8120b3054bea6dfc08d1db6f3fd5ac5d997fb0b37c",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "14c7d9db591d796246310fa60d3b578c35e2bf65f0218ed1f9d1159e1e6a1d0b"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    427,
+    562
+  ],
+  "output_scale": 0.52,
+  "free_pixels_left_top_right_bottom": [
+    121,
+    71,
+    121,
+    66
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
