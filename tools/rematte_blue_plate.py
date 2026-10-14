@@ -201,7 +201,7 @@ def plate(a):
     return np.median(np.array([np.median(t.reshape(-1, 3), axis=0) for t in tiles]), axis=0)
 
 
-def clean_edges(rgb, old, threshold):
+def clean_edges(rgb, old, threshold, spill=None):
     """Re-solve the edge band of an old blue-plate matte; returns (RGBA image, stats).
 
     The generated videos bleed at the figure's edge: a pixel there mixes the plate
@@ -210,16 +210,27 @@ def clean_edges(rgb, old, threshold):
     clean opaque pixel therefore takes that pixel's colour, and its opacity is the
     share of that colour along the line from the plate to it. Further out (wide
     translucent parts) it is unmixed against the plate with blue measured against
-    green, and leftover blue is clamped."""
+    green, and leftover blue is clamped.
+
+    spill (a green plate keyed with green and blue swapped): the palette's limit for
+    the plate channel over the larger other channel. Gold has green far above blue,
+    so threshold sits at 100-170 and lets a green rim pass as clean; gold never has
+    green above red. An edge pixel above spill is re-solved too, unmixed against the
+    plate by both measures, and a re-solved pixel keeps green at most spill above
+    max(red, blue), a translucent one no higher than max(red, blue)."""
     a = np.asarray(rgb, dtype=np.float32)
     out = np.asarray(old).astype(np.float32)
     alpha_old = out[..., 3] / 255.0
     bg = plate(a)
     separation = bg[2] - bg[1]
-    if separation - threshold < 80:
+    dominance = bg[2] - max(bg[0], bg[1])
+    if separation - threshold < 80 or (spill is not None and dominance - spill < 80):
         raise NotBluePlate(f"the plate {bg.round(1).tolist()} is not blue enough to measure against green")
     band = (alpha_old > 0) & (distance_transform_edt(alpha_old >= 0.98) <= EDGE_PX)
     clean = (alpha_old >= 0.98) & (a[..., 2] - a[..., 1] <= threshold)
+    if spill is not None:
+        chroma = a[..., 2] - np.maximum(a[..., 0], a[..., 1])
+        clean &= chroma <= spill
     fix = band & ~clean
     distance, (iy, ix) = distance_transform_edt(~clean, return_indices=True)
     near = a[iy, ix]
@@ -227,12 +238,16 @@ def clean_edges(rgb, old, threshold):
     length = (toward * toward).sum(-1)
     alpha_near = np.clip(((a - bg) * toward).sum(-1) / np.maximum(length, 1), 0, 1)
     alpha_plate = np.clip((separation - (a[..., 2] - a[..., 1])) / (separation - threshold), 0, 1)
+    if spill is not None:
+        alpha_plate = np.minimum(alpha_plate, np.clip((dominance - chroma) / (dominance - spill), 0, 1))
     use_near = fix & (distance <= REACH) & (length >= MIN_PLATE_DISTANCE ** 2)
     alpha = alpha_old.copy()
     alpha[fix] = np.minimum(alpha_old, np.where(use_near, alpha_near, alpha_plate))[fix]
     color = np.clip((a - (1 - alpha[..., None]) * bg) / np.maximum(alpha[..., None], 0.001), 0, 255)
     color[..., 2] = np.minimum(color[..., 2], color[..., 1] + threshold)
     color[use_near] = near[use_near]
+    if spill is not None:
+        color[..., 2] = np.minimum(color[..., 2], np.maximum(color[..., 0], color[..., 1]) + spill * (alpha >= 0.98))
     out[fix, :3] = color[fix]
     out[fix, 3] = alpha[fix] * 255
     out = out.astype("uint8")

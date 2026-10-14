@@ -81,7 +81,7 @@ VAE = "minimax_h3_video_vae_int8_convrot.safetensors"
 TILED_DECODE = {"tile_size": 512, "overlap": 64, "temporal_size": 16, "temporal_overlap": 4}
 MARGIN = 24          # free pixels every guide keeps from the canvas edge
 UNMIX_MARGIN = 2     # protected foreground chroma: bluest opaque guide pixel plus this
-EDGE_MARGIN = 6      # edge-rule threshold: guide blue-minus-green p99.9 plus this
+EDGE_MARGIN = 6      # edge-rule thresholds: guide blue-minus-green (and, green plate, plate chroma) p99.9 plus this
 PLATE_SEPARATION = 243  # a sampled plate's key channel minus the edge rule's other channel (242-246 measured)
 IDLE_POSE_FAR = 17   # pose distance above which a three-guide idle holds each pose and pops between them
 URL = "http://127.0.0.1:8189"
@@ -227,27 +227,42 @@ class Unit:
         return anchor, room
 
 
+GREEN_ORDER = [0, 2, 1]
+
+
 def key_order(key_rgb):
     """Channel order that puts the plate's channel last, so the blue-plate rules key it.
 
     A blue plate keeps RGB. A green plate, for a unit whose palette is full of blue (ice,
     crystal), swaps green and blue: the unmix measures green against max(red, blue) and the
     edge rule green against blue, which blue, cyan and violet parts never approach."""
-    order = {(0, 0, 255): [0, 1, 2], (0, 255, 0): [0, 2, 1]}.get(tuple(key_rgb))
+    order = {(0, 0, 255): [0, 1, 2], (0, 255, 0): GREEN_ORDER}.get(tuple(key_rgb))
     assert order, f"key_rgb {key_rgb}: only a blue or a green plate is supported"
     return order
 
 
 def measure(guides, order):
-    """Plate colour in the painted palette: the unmix guard band and the edge-rule threshold."""
-    worst, values = 0.0, []
+    """Plate colour in the painted palette: the unmix guard band, the edge-rule threshold and,
+    used on a green plate only, the edge rule's spill limit (plate chroma p99.9 plus EDGE_MARGIN)."""
+    values, chromas = [], []
     for rgba in guides:
         a = np.asarray(rgba).astype(float)[..., order + [3]]
         inner = binary_erosion(a[..., 3] > 240, iterations=3)
-        worst = max(worst, float((a[..., 2] - np.maximum(a[..., 0], a[..., 1]))[inner].max()))
+        chromas.append((a[..., 2] - np.maximum(a[..., 0], a[..., 1]))[inner])
         values.append(a[..., 2][inner] - a[..., 1][inner])
+    worst = max(0.0, *(float(c.max()) for c in chromas))
     p999 = float(np.percentile(np.concatenate(values), 99.9))
-    return max(0, int(worst) + UNMIX_MARGIN), max(6, math.ceil(p999) + EDGE_MARGIN), {"bluest_opaque": worst, "blue_minus_green_p999": p999}
+    chroma_p999 = float(np.percentile(np.concatenate(chromas), 99.9))
+    return (max(0, int(worst) + UNMIX_MARGIN), max(6, math.ceil(p999) + EDGE_MARGIN), max(6, math.ceil(chroma_p999) + EDGE_MARGIN),
+            {"bluest_opaque": worst, "blue_minus_green_p999": p999, "bluest_p999": chroma_p999})
+
+
+def guide_image(unit, frame_name, canvas, at):
+    """A painted pose placed on the take's canvas at its anchor, as prepare gives it to the video."""
+    pose, (x, y) = unit.guide_pose(frame_name)
+    rgba = Image.new("RGBA", tuple(canvas))
+    rgba.alpha_composite(pose, (at[0] + x, at[1] + y))
+    return rgba
 
 
 def pose_distance(a, b):
@@ -282,9 +297,7 @@ def prepare(unit, names, refresh=False):
         at, free = [anchor[0] + pad[0], anchor[1] + pad[1]], [r + q for r, q in zip(room, pad)]
         guides, refs = [], []
         for i, frame_name in enumerate(spec["references"]):
-            pose, (x, y) = unit.guide_pose(frame_name)
-            rgba = Image.new("RGBA", (w, h))
-            rgba.alpha_composite(pose, (at[0] + x, at[1] + y))
+            rgba = guide_image(unit, frame_name, (w, h), at)
             rgba.save(out / f"guide_{i}_rgba.png")
             plate = Image.new("RGBA", (w, h), tuple(unit.cfg["key_rgb"]) + (255,))
             plate.alpha_composite(rgba)
@@ -293,7 +306,8 @@ def prepare(unit, names, refresh=False):
             source = unit.painted[frame_name]["source"].removeprefix("res://")
             refs.append({"frame": frame_name, "source": source, "source_sha256": sha(ROOT / source),
                          "input_file": f"guide_{i}_chroma.png", "input_sha256": sha(out / f"guide_{i}_chroma.png")})
-        protected, threshold, measured = measure(guides, key_order(unit.cfg["key_rgb"]))
+        order = key_order(unit.cfg["key_rgb"])
+        protected, threshold, spill, measured = measure(guides, order)
         if PLATE_SEPARATION - threshold < 80:  # clean_edges' limit: the matte would reject every frame
             raise SystemExit(f"{name}: edge threshold {threshold} leaves the plate under 80 of separation; "
                              f"swap the reference richest in plate colour (green plate: gold, blue plate: violet)")
@@ -302,6 +316,7 @@ def prepare(unit, names, refresh=False):
         config = {"unit_id": unit.id, "clip": spec["clip"], "canvas": [w, h], "anchor": at, "scale": unit.scale,
                   "key_rgb": unit.cfg["key_rgb"], "seed": seed, "references": spec["references"], "guides": spec["guides"],
                   "last": spec["last"], "prompt": prompt, "protected_foreground_chroma": protected, "edge_threshold": threshold,
+                  **({"edge_spill_threshold": spill} if order == GREEN_ORDER else {}),
                   "palette_measurement": dict(measured, rule="opaque guide interiors (alpha>240, eroded 3 px)"),
                   "tiled_decode": unit.cfg.get("tiled_decode", TILED_DECODE), "frames": FRAMES, "fps": FPS}
         write(out / "config.json", config)
@@ -623,9 +638,11 @@ def collect(out, history):
 
 def key_frame(job):
     """Blue-plate unmix (the produce.py recipe), then the edge rule. Returns (RGBA bytes, detail).
-    A green plate runs the same rules with green and blue swapped (key_order) and swaps them back."""
-    rgb, protected, threshold, *order = job  # a runner started before key_order sends no order
-    order = order[0] if order else [0, 1, 2]
+    A green plate runs the same rules with green and blue swapped (key_order) and swaps them back,
+    and its edge rule also holds green to the palette's spill limit (clean_edges spill)."""
+    rgb, protected, threshold, *rest = job
+    order = rest[0] if rest else [0, 1, 2]  # a runner started before key_order sends no order
+    spill = rest[1] if len(rest) > 1 else None  # nor one started before the spill limit a spill
     rgb = np.ascontiguousarray(rgb[..., order])
     a = rgb.astype(np.float32)
     tiles = [a[:24, :24], a[:24, -24:], a[-24:, :24], a[-24:, -24:]]
@@ -648,7 +665,7 @@ def key_frame(job):
     keep[0] = False
     old[~keep[labels]] = 0
     try:
-        image, stats = clean_edges(Image.fromarray(rgb), Image.fromarray(old, "RGBA"), threshold)
+        image, stats = clean_edges(Image.fromarray(rgb), Image.fromarray(old, "RGBA"), threshold, spill)
     except ValueError as error:  # a cyan plate: blue barely exceeds green
         return None, {"rejected": str(error)}
     image = np.asarray(image)[..., order + [3]]
@@ -666,9 +683,12 @@ def matte(unit, name):
         frames = [f.to_ndarray(format="rgb24") for f in video.decode(video=0)]
     (out / "matte").mkdir(exist_ok=True)
     hashes, details = [], []
+    order = key_order(c["key_rgb"])
+    spill = c.get("edge_spill_threshold") if order == GREEN_ORDER else None
+    if order == GREEN_ORDER and spill is None:  # prepared before the spill limit: measure the take's guides now
+        spill = measure([guide_image(unit, f, c["canvas"], c["anchor"]) for f in c["references"]], order)[2]
     with concurrent.futures.ProcessPoolExecutor() as pool:
-        order = key_order(c["key_rgb"])
-        jobs = [(f, c["protected_foreground_chroma"], c["edge_threshold"], order) for f in frames]
+        jobs = [(f, c["protected_foreground_chroma"], c["edge_threshold"], order, spill) for f in frames]
         results = list(pool.map(key_frame, jobs, chunksize=4))
         # A pulse that darkens only the plate near the figure passes the corner test and leaves a
         # translucent patch fused to the figure. A clean frame's semi-transparent band stays well under
@@ -688,11 +708,14 @@ def matte(unit, name):
             details.append(detail)
     write(out / "matte.json", {"frames": FRAMES, "fps": FPS, "rgba_sha256": hashes, "frame_details": details,
                                "protected_foreground_chroma": c["protected_foreground_chroma"], "edge_threshold": c["edge_threshold"],
-                               "key_rgb": c["key_rgb"],
+                               **({"edge_spill_threshold": spill} if spill is not None else {}), "key_rgb": c["key_rgb"],
                                "recipe": "Flat blue plate (corner spread <= 10, separation >= 80): blue-minus-max(red, green) unmix with the "
                                          "measured guard band, edge-only despill, alpha>=8 regions kept when they hold an alpha>=128 pixel; "
                                          "then the 2 px edge band re-solved by tools/rematte_blue_plate.py clean_edges. Geometry unchanged. "
-                                         "A green plate swaps green and blue before these rules and back after them. A frame whose "
+                                         "A green plate swaps green and blue before these rules and back after them, and its edge "
+                                         "band also re-solves pixels whose green over max(red, blue) exceeds edge_spill_threshold "
+                                         "(guide p99.9 + 6), keeping re-solved green at most that far above max(red, blue), translucent "
+                                         "pixels no higher than it. A frame whose "
                                          "alpha 8-199 band exceeds max(0.5, 3 x the take median) of its alpha>=200 area is rejected "
                                          "as a plate pulse."})
     timed(out, "matte", time.monotonic() - started)
