@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_thornwake_canopy_rammers",
+  "guides": [
+    {
+      "frame": "attack_v1_00",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_canopy_rammers/attack_v1.png",
+      "source_sha256": "b195ac96e1b5d03e5e69f5cd8328bd3e1fb91a58abcf44966fae528316458219",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "48de5f9122c33968d76b2d6f75c1c734d51672e7d6432af26a5f38e2398a0023"
+    },
+    {
+      "frame": "attack_v1_03",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_canopy_rammers/attack_v1.png",
+      "source_sha256": "b195ac96e1b5d03e5e69f5cd8328bd3e1fb91a58abcf44966fae528316458219",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "571d44796d2334373b27f3110d6b8ff637774c06138b2f69f8531fb87338c678"
+    },
+    {
+      "frame": "attack_v1_04",
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_canopy_rammers/attack_v1.png",
+      "source_sha256": "b195ac96e1b5d03e5e69f5cd8328bd3e1fb91a58abcf44966fae528316458219",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "aeb2efaac8636246043cddf11544945c7ebc886e0edcb1f985846d1478ae9b33"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    438,
+    576
+  ],
+  "output_scale": 0.38,
+  "free_pixels_left_top_right_bottom": [
+    146,
+    64,
+    146,
+    64
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

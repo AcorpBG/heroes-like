@@ -1,0 +1,47 @@
+{
+  "unit_id": "unit_thornwake_canopy_rammers",
+  "clip": "defend",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    438,
+    576
+  ],
+  "scale": 0.38,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026106303,
+  "references": [
+    "attack_v1_00",
+    "hit_defend_v1_05",
+    "hit_defend_v1_06"
+  ],
+  "guides": [
+    [
+      34,
+      1
+    ]
+  ],
+  "last": 2,
+  "prompt": "ONE original massive bark-and-root forest golem, the Canopy Rammer, facing screen right in elevated three-quarter view. Keep its two huge wooden arms with big fists, the two thick root legs with spread woody toes, the rhino-like branching horn crown, the glowing amber seams, the vines, the moss and the white lichen plates. Exactly two arms and two legs. Preserve the horn crown, the fists and the massive proportions. Cross both huge arms in front of the chest as a guard and hunch the horned head down behind them, knees bent, then hold the braced guard on both planted feet. No attack and no return to the relaxed stance. Locked orthographic camera, fixed anatomical scale and centred body. Keep the whole horn crown, both fists, both legs and feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, falling leaves, dust, glow bursts, sparks, motion trails, particles or extra limbs. Articulate joints naturally with physical planted-foot support; the horns keep their count and length.",
+  "protected_foreground_chroma": 4,
+  "edge_threshold": 6,
+  "palette_measurement": {
+    "bluest_opaque": 2.0,
+    "blue_minus_green_p999": -1.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}
