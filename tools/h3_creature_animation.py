@@ -82,6 +82,7 @@ TILED_DECODE = {"tile_size": 512, "overlap": 64, "temporal_size": 16, "temporal_
 MARGIN = 24          # free pixels every guide keeps from the canvas edge
 UNMIX_MARGIN = 2     # protected foreground chroma: bluest opaque guide pixel plus this
 EDGE_MARGIN = 6      # edge-rule threshold: guide blue-minus-green p99.9 plus this
+PLATE_SEPARATION = 243  # a sampled plate's key channel minus the edge rule's other channel (242-246 measured)
 IDLE_POSE_FAR = 17   # pose distance above which a three-guide idle holds each pose and pops between them
 URL = "http://127.0.0.1:8189"
 QUEUE = ROOT / ".artifacts/h3/queue"
@@ -293,7 +294,10 @@ def prepare(unit, names, refresh=False):
             refs.append({"frame": frame_name, "source": source, "source_sha256": sha(ROOT / source),
                          "input_file": f"guide_{i}_chroma.png", "input_sha256": sha(out / f"guide_{i}_chroma.png")})
         protected, threshold, measured = measure(guides, key_order(unit.cfg["key_rgb"]))
-        prompt = unit.cfg["identity"] + " " + spec["action"] + " " + unit.cfg["plate"]
+        if PLATE_SEPARATION - threshold < 80:  # clean_edges' limit: the matte would reject every frame
+            raise SystemExit(f"{name}: edge threshold {threshold} leaves the plate under 80 of separation; "
+                             f"swap the reference richest in plate colour (green plate: gold, blue plate: violet)")
+        prompt =unit.cfg["identity"] + " " + spec["action"] + " " + unit.cfg["plate"]
         seed = unit.cfg["seed"] + list(unit.cfg["takes"]).index(name)
         config = {"unit_id": unit.id, "clip": spec["clip"], "canvas": [w, h], "anchor": at, "scale": unit.scale,
                   "key_rgb": unit.cfg["key_rgb"], "seed": seed, "references": spec["references"], "guides": spec["guides"],
