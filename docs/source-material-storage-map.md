@@ -65,7 +65,7 @@ On 2026-10-11 (owner request), `tools/archive_source_material.py --base` wrote `
 The index names its base, and `load_index` in `tools/restore_archived_source_material.py` follows that chain: tools take the newest snapshot, and the newest copy of a path wins. The snapshot carries standalone copies of the archive, inventory and restore tools. Write the next one with:
 
 ```text
-python tools/archive_source_material.py --destination N:/heroes-like-archives/source-art/<date>-<revision> --base N:/heroes-like-archives/source-art/2026-10-14-5dab5349
+python tools/archive_source_material.py --destination N:/heroes-like-archives/source-art/<date>-<revision> --base N:/heroes-like-archives/source-art/2026-10-14-dd68fe59
 ```
 
 ## Incremental snapshots, 2026-10-14
@@ -76,6 +76,7 @@ The H3 video sources made from 2026-10-11 to 2026-10-14 existed only on D:, almo
 - `2026-10-14-fe9bdcc1-main` extends it from the owner's checkout: 7 archives, 1,144 files, 706,929,772 bytes. It holds the 9 takes of the Citadel Pikeward Veteran pilot (1,127 files), plus 17 tracked text files whose two checkout copies differ only in line endings.
 - Every payload was read back against its SHA-256 and ZIP CRC, and each snapshot's standalone verifier passed again. A path and SHA-256 comparison of both checkouts found no source file outside the chain. Nothing was removed locally.
 - `2026-10-14-5dab5349` extends `2026-10-14-fe9bdcc1-main` from the agent worktree at revision `5dab5349d`: 7 archives, 1,755 files, 1,394,314,820 bytes. It holds the 13 takes of the Ashcrown Kilnelk facing fix (1,736 files: raw videos, latents, previews, guides and matte frames) plus 19 tracked text files as backup copies: the Kilnelk's new provenance and reviewed handoff, and 17 files whose worktree copies differ from the copies archived from the owner's checkout. Its standalone verifier passed. Nothing was removed locally.
+- `2026-10-14-dd68fe59` extends `2026-10-14-5dab5349`: 1 archive, 2 files, 4,088,532 bytes. A check of every checkout against the chain (the owner's checkout, this worktree and the worktrees `glasswing-eerie-rewards-b26625`, `minimap-mines-display-a813f5` and `overworld-inspection-right-click-96c04d`) found only two sources in no snapshot: the 2026-10-09 masters of the overworld status badges, `art/ui/source/status_badges/badge_built_today.png` and `badge_spell_cast_today.png`, which existed only in the minimap worktree. Their SHA-256 matches the badges' `provenance.json`. They were copied into this worktree for the snapshot and removed again; the originals stay in the minimap worktree. Its standalone verifier passed.
 
 Write each snapshot from the checkout that made the sources. Agent worktrees hold untracked sources that no other checkout has, and removing a worktree deletes them.
 
@@ -97,7 +98,7 @@ Since 2026-10-10 the `.import` and `.uid` sidecars are tracked, apart from those
 The art-regeneration tools (`tools/prepare_overworld_*_cutouts.py`, `tools/prepare_spell_variety_assets.py` and similar) still need their sources when someone deliberately rebuilds art. Restore exactly what a rebuild needs (dry-run without `--apply`). Every payload is verified against the archive SHA-256 and a differing local file is never overwritten:
 
 ```text
-python tools/restore_archived_source_material.py --archive-dir N:/heroes-like-archives/source-art/2026-10-14-5dab5349 --prefix art/units/source/curated/ --apply
+python tools/restore_archived_source_material.py --archive-dir N:/heroes-like-archives/source-art/2026-10-14-dd68fe59 --prefix art/units/source/curated/ --apply
 ```
 
 Pass the newest snapshot; its base chain is read too. Restored media stays ignored by Git. Remove it again with the same command plus `--remove`: it deletes only untracked files identical to their archived payload, and the folders that leaves empty. `tools/remove_archived_source_material.py` was the one-time 2026-10-03 cleanup; it needs that snapshot's exact local file set and no longer applies.
