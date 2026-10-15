@@ -115334,6 +115334,17 @@
         "tools/battle_ai_arena/README.md"
       ],
       "notes": "Owner request 2026-10-15: the GA/CMA-ES tuning of BattleAiRules. The 49 general weights (attack, defend, advance, reposition, hero spell bars, melee approach, holding the line) moved into content/battle_ai_weights.json (BattleAiRules._w) with all 288 standard-suite games identical. tools/battle_ai_arena/tune.py runs separable CMA-ES: 16 weight sets and their mean per generation against the current weights, on fresh maps every generation, both sides each; resumable. First run, 40 generations (about two hours): against the previous weights 0.553 +/- 0.019 on standard, 0.532 +/- 0.023 on holdout; against an older AI the tuner never played 0.577 where the previous weights score 0.540. Landed. Damage prediction, unit abilities, terrain bonuses, withdrawal and the decisive-attack thresholds stay in code. Next: more runs (against a pool of past AIs to avoid fitting one opponent), and strategy changes judged with the tuned weights."
+    },
+    {
+      "id": "battle-ai-arena-realistic-battles-20261015",
+      "title": "Battle AI arena plays realistic battles; weights retuned on them",
+      "status": "completed",
+      "classification": "gameplay",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "tools/battle_ai_arena/README.md"
+      ],
+      "notes": "Owner request 2026-10-15: the synthetic hero-vs-hero ladder battles were not representative; tune on realistic battles with different compositions, heroes, guards from the generator options, and do not even out strength (the owner wins with ranged-only armies). tools/battle_ai_arena/scenarios.py builds them: generated maps (small/medium, 2-4 players, weak/normal/strong monsters, every faction), armies recruited by build plans from the town rosters (balanced, ranged, melee, top-heavy, swarm; dwellings, upgrades and second towns over weeks 1-10, gold-limited), heroes at the week's level, guild spells and mana. Battles: guards as placed by the generator matched to a sampled strength ratio (55%), AI heroes (30%), sieges with garrison, defender or captain, fort level and faction defence building (15%). worker.gd plays them, arena.py reports by type, guard strength, build plan, week and odds, and --roles splits B's gain into player side and enemy side. Identical variants score exactly 0.5 everywhere. Findings: only 5-7% of realistic battles change winner with the AI; the three earlier changes together beat the AI before them 0.517 +/- 0.012 (kill weighting 0.488 without it; holding the line neutral; first tuning 0.506) and stay; with the AI on both sides ranged-built armies beat their army_power by ~0.10 in hero battles, melee-built ones fall short by ~0.12. Strategy passes: melee heading for enemy shooters (no change at all, the 11x9 field), outshot melee not waiting (0.490), holding only against incoming melee (0.502): none landed. tune.py now trains on fresh realistic battles (--maps, --battles, --base-weights, --seed). Two runs; the second's weights landed: 0.517 +/- 0.012 on standard and 0.509 +/- 0.009 on holdout against the previous weights, gains as player and as enemy in guard, hero and siege battles. Largest moves: strike-back losses x10, kills x7, enemy shooters first x4.5, wounded stacks defend x0.2, damage spells x2.9. Follow-up proposed: computer players' recruitment and army_power for ranged armies (overworld AI, not the battle AI)."
     }
   ],
   "project": "heroes-like",

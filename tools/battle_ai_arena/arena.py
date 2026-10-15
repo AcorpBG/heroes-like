@@ -35,6 +35,7 @@ sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(ROOT / "tools"))
 
 import router  # noqa: E402
+import scenarios  # noqa: E402
 from core_suite import find_godot  # noqa: E402
 
 AI_SOURCE = ROOT / "scripts" / "core" / "BattleAiRules.gd"
@@ -42,22 +43,17 @@ WEIGHTS_FILE = ROOT / "content" / "battle_ai_weights.json"
 WEIGHTS_DECLARATION = "static var _weights: Dictionary = {}"
 MAPS_DIR = ROOT / "maps"
 
-# Army stages: weeks of creature growth from a fully built town, the top tier
-# recruited by then, the hero's level and the guild spell tiers it knows.
-STAGES = [
-    {"id": "week1", "weeks": 1, "tier_max": 4, "hero_level": 2, "spell_tier_max": 1},
-    {"id": "week3", "weeks": 3, "tier_max": 6, "hero_level": 5, "spell_tier_max": 2},
-    {"id": "week5", "weeks": 5, "tier_max": 7, "hero_level": 8, "spell_tier_max": 3},
-    {"id": "week8", "weeks": 8, "tier_max": 7, "hero_level": 11, "spell_tier_max": 3},
-]
+# Suites of realistic battles (scenarios.py): generated maps, battles on each.
 SUITES = {
-    # Training set: every player faction at every stage against every faction (mirror included).
-    "standard": {"stages": ["week1", "week3", "week5", "week8"], "enemies": 6, "hero_offset": 0},
-    # Holdout: the same coverage on other maps, sites and heroes. Keep it out of any tuning loop.
-    "holdout": {"stages": ["week1", "week3", "week5", "week8"], "enemies": 6, "hero_offset": 5},
-    # A minute-long smoke run.
-    "quick": {"stages": ["week5"], "enemies": 3, "hero_offset": 0},
+    # For judging changes.
+    "standard": {"seed": "standard", "groups": 48, "battles": 5},
+    # Other maps, armies and heroes. Keep it out of any tuning loop.
+    "holdout": {"seed": "holdout", "groups": 48, "battles": 5},
+    # A smoke run.
+    "quick": {"seed": "quick", "groups": 12, "battles": 3},
 }
+# The player's strength over the enemy's (AiHeroRules.army_power) in bands.
+ODDS_BANDS = [(0.5, "odds <0.5"), (0.8, "odds 0.5-0.8"), (1.25, "odds 0.8-1.25"), (2.0, "odds 1.25-2"), (float("inf"), "odds >2")]
 
 # Scoring (see README.md). A unit is worth its recruitment cost in gold, other resources at
 # this gold rate. A hero is worth this share of its army's starting value.
@@ -123,35 +119,9 @@ def resolve_variant(spec: str, dest: Path, weights: dict[str, float] | None = No
     return source
 
 
-def build_suite(name: str, balance: bool = True) -> list[dict]:
+def build_suite(name: str) -> list[dict]:
     config = SUITES[name]
-    factions = [f for f in load_items("factions.json") if len(f.get("unit_ladder_ids", [])) >= 7 and f.get("hero_ids")]
-    stages = [s for s in STAGES if s["id"] in config["stages"]]
-    groups = []
-    for p_index, player in enumerate(factions):
-        for s_index, stage in enumerate(stages):
-            hero_ids = player["hero_ids"]
-            group = {
-                "group_id": f"{name}:{player['id']}:{stage['id']}",
-                "map_seed": f"battle-ai-arena-{name}-{player['id']}-{stage['id']}",
-                "map_size": "homm3_small",
-                "player_faction": player["id"],
-                "player_hero_id": hero_ids[(config["hero_offset"] + s_index) % len(hero_ids)],
-                "stage": stage,
-                "balance": balance,
-                "battles": [],
-            }
-            for e_index in range(config["enemies"]):
-                enemy = factions[(p_index + e_index) % len(factions)]
-                enemy_heroes = enemy["hero_ids"]
-                group["battles"].append({
-                    "battle_id": f"{group['group_id']}:{e_index}",
-                    "site_index": config["hero_offset"] + e_index,
-                    "enemy_faction": enemy["id"],
-                    "enemy_hero_id": enemy_heroes[(config["hero_offset"] + s_index + e_index + 1) % len(enemy_heroes)],
-                })
-            groups.append(group)
-    return groups
+    return scenarios.build_suite(name, config["seed"], config["groups"], config["battles"])
 
 
 def unit_values() -> dict[str, float]:
@@ -260,9 +230,28 @@ def mean_ci(values: list[float]) -> tuple[float, float]:
     return statistics.fmean(values), 1.96 * statistics.stdev(values) / math.sqrt(len(values))
 
 
+def battle_tags(game: dict) -> dict[str, str]:
+    """The breakdowns a battle counts in (see scenarios.py for what they mean)."""
+    kind = game.get("type", "")
+    week = int(game.get("week", 0))
+    ratio = float(game.get("player_power", 0)) / max(1.0, float(game.get("enemy_power", 0)))
+    tags = {
+        "type": kind,
+        "weeks": "weeks 1-2" if week <= 2 else ("weeks 3-5" if week <= 5 else "weeks 6+"),
+        "player_doctrine": f"player {game.get('player_doctrine', '')}",
+        "odds": next(label for limit, label in ODDS_BANDS if ratio < limit),
+    }
+    if kind == "guard":
+        tags["guard"] = f"{game.get('monster_strength', '')} guard"
+        tags["guard_ratio"] = f"guard x{game.get('guard_ratio', '')}"
+    else:
+        tags["enemy_doctrine"] = f"{kind} {game.get('enemy_doctrine', '')}"
+    return tags
+
+
 def summarize(rows: list[dict], values: dict[str, float]) -> tuple[dict, list[str]]:
     games = [row for row in rows if row.get("kind") == "game"]
-    problems = [f"{row.get('battle_id')}: {row.get('error')}" for row in rows if row.get("error")]
+    problems = [f"{row.get('battle_id', row.get('group_id'))}: {row.get('error')}" for row in rows if row.get("error")]
     by_battle: dict[str, dict] = {}
     for game in games:
         if game.get("error"):
@@ -272,11 +261,16 @@ def summarize(rows: list[dict], values: dict[str, float]) -> tuple[dict, list[st
             problems.append(f"{game['battle_id']} ({game['player_variant']} as player): unscored outcome {game.get('outcome')!r} state {game.get('state')!r}")
             continue
         calls = game.get("ai_calls", {})
-        if not calls.get("player") or not calls.get("enemy"):
+        if (not calls.get("player") or not calls.get("enemy")) and game.get("rounds", 0) > 1:
             problems.append(f"{game['battle_id']}: an AI side made no calls {calls}")
+        entry = by_battle.setdefault(game["battle_id"], {"tags": battle_tags(game), "games": [], "reference": None})
+        if game["player_variant"] == game["enemy_variant"]:
+            entry["reference"] = scored["player_score"]  # A against A, for the role split
+            continue
         b_is_player = game["player_variant"] == "B"
-        entry = by_battle.setdefault(game["battle_id"], {"stage": game["stage"], "matchup": f"{game['player_faction']} v {game['enemy_faction']}", "games": []})
         entry["games"].append({
+            "b_is_player": b_is_player,
+            "player_score": scored["player_score"],
             "b_score": scored["player_score"] if b_is_player else 1.0 - scored["player_score"],
             "b_result": scored["result"] if b_is_player else 1.0 - scored["result"],
             "player_won": scored["result"],
@@ -286,18 +280,38 @@ def summarize(rows: list[dict], values: dict[str, float]) -> tuple[dict, list[st
     battles = {key: value for key, value in by_battle.items() if len(value["games"]) == 2}
     for key in by_battle.keys() - battles.keys():
         problems.append(f"{key}: only {len(by_battle[key]['games'])} of 2 games scored")
-    scores = [statistics.fmean(g["b_score"] for g in b["games"]) for b in battles.values()]
+    for battle in battles.values():
+        battle["b_score"] = statistics.fmean(g["b_score"] for g in battle["games"])
+    scores = [b["b_score"] for b in battles.values()]
     results = [g["b_result"] for b in battles.values() for g in b["games"]]
     mean, ci = mean_ci(scores)
     # A battle the same side wins in both orders is decided by the armies; one that
     # changes hands with the AI is where the AI decides.
     ai_decided = sum(1 for b in battles.values() if b["games"][0]["player_won"] != b["games"][1]["player_won"])
 
+    def rounded(v: list[float]) -> dict:
+        m, c = mean_ci(v)
+        return {"mean": round(m, 4), "ci95": None if math.isnan(c) else round(c, 4), "battles": len(v)}
+
     def breakdown(field: str) -> dict:
         groups: dict[str, list[float]] = {}
         for battle in battles.values():
-            groups.setdefault(battle[field], []).append(statistics.fmean(g["b_score"] for g in battle["games"]))
-        return {key: {"b_score": round(statistics.fmean(v), 4), "battles": len(v)} for key, v in sorted(groups.items())}
+            if field in battle["tags"]:
+                groups.setdefault(battle["tags"][field], []).append(battle["b_score"])
+        return {key: rounded(v) for key, v in sorted(groups.items())}
+
+    # With a reference game (A against A), B's gain splits into its play as the player
+    # side (B against A over A against A) and as the enemy side (guards, defenders, AI heroes).
+    roles: dict[str, dict[str, list[float]]] = {}
+    for battle in battles.values():
+        if battle["reference"] is None:
+            continue
+        b_player = next(g["player_score"] for g in battle["games"] if g["b_is_player"])
+        a_player = next(g["player_score"] for g in battle["games"] if not g["b_is_player"])
+        for key in ("all", battle["tags"]["type"], battle["tags"]["player_doctrine"]):
+            entry = roles.setdefault(key, {"as_player": [], "as_enemy": []})
+            entry["as_player"].append(b_player - battle["reference"])
+            entry["as_enemy"].append(battle["reference"] - a_player)
 
     all_games = [g for b in battles.values() for g in b["games"]]
     summary = {
@@ -311,8 +325,8 @@ def summarize(rows: list[dict], values: dict[str, float]) -> tuple[dict, list[st
         "ai_decided_battles": ai_decided,
         "mean_rounds": round(statistics.fmean(g["rounds"] for g in all_games), 2) if all_games else None,
         "mean_game_ms": round(statistics.fmean(g["ms"] for g in all_games), 1) if all_games else None,
-        "by_stage": breakdown("stage"),
-        "by_matchup": breakdown("matchup"),
+        "breakdowns": {field: breakdown(field) for field in ("type", "guard", "guard_ratio", "enemy_doctrine", "player_doctrine", "weeks", "odds")},
+        "roles": {key: {side: rounded(v) for side, v in entry.items()} for key, entry in roles.items()},
     }
     return summary, problems
 
@@ -333,9 +347,13 @@ def print_report(summary: dict, problems: list[str], args, wall: float, run_dir:
         print(f"B score {summary['b_score']:.4f} +/- {ci if ci is not None else float('nan'):.4f} (0.5 = equal): {verdict}")
         print(f"B games won {summary['b_wins']}, lost {summary['b_losses']}, drawn {summary['draws']}; "
               f"battles the AI decided (winner changes with the sides): {summary['ai_decided_battles']} of {summary['battles']}")
-        print("By stage: " + ", ".join(f"{k} {v['b_score']:.3f}" for k, v in summary["by_stage"].items()))
-        worst = sorted(summary["by_matchup"].items(), key=lambda item: item[1]["b_score"])[:5]
-        print("Weakest matchups for B: " + ", ".join(f"{k} {v['b_score']:.3f}" for k, v in worst))
+        for field, rows in summary["breakdowns"].items():
+            if rows:
+                print(f"  {field:16s} " + ", ".join(f"{k} {v['mean']:.3f} ({v['battles']})" for k, v in rows.items()))
+        if summary["roles"]:
+            print("B's gain over A as the player side / as the enemy side (guards, defenders, AI heroes):")
+            for key, entry in summary["roles"].items():
+                print(f"  {key:16s} {entry['as_player']['mean']:+.3f} / {entry['as_enemy']['mean']:+.3f} ({entry['as_player']['battles']})")
     if problems:
         print(f"\n{len(problems)} problems:")
         for line in problems[:20]:
@@ -354,7 +372,7 @@ def main() -> int:
     parser.add_argument("--godot", help="Godot binary")
     parser.add_argument("--out", help="results directory (default .artifacts/battle_ai_arena/<time>-<suite>)")
     parser.add_argument("--timeout", type=int, default=3600, help="seconds before workers are stopped")
-    parser.add_argument("--no-balance", action="store_true", help="keep each faction's raw stage army instead of evening the strength")
+    parser.add_argument("--roles", action="store_true", help="also play A against A, to split B's gain into its play as player and as enemy")
     parser.add_argument("--keep-logs", action="store_true", help="keep worker jobs, logs and raw results")
     args = parser.parse_args()
 
@@ -370,12 +388,13 @@ def main() -> int:
     router_path = run_dir / "router.gd"
     router_path.write_text(router.build_router(AI_SOURCE.read_text(encoding="utf-8")), encoding="utf-8")
 
-    groups = build_suite(args.suite, not args.no_balance)
+    groups = build_suite(args.suite)
+    orders = [["A", "B"], ["B", "A"]] + ([["A", "A"]] if args.roles else [])
     workers = max(1, min(args.workers, len(groups)))
     maps_before = set(MAPS_DIR.iterdir()) if MAPS_DIR.exists() else set()
-    print(f"Arena: {sum(len(g['battles']) for g in groups)} battles x 2 sides on {len(groups)} maps, {workers} workers ...")
+    print(f"Arena: {sum(len(g['battles']) for g in groups)} battles x {len(orders)} games on {len(groups)} maps, {workers} workers ...")
     started = time.monotonic()
-    rows, problems = run_workers(godot, run_dir, groups, workers, variant_paths, router_path, args.timeout)
+    rows, problems = run_workers(godot, run_dir, groups, workers, variant_paths, router_path, args.timeout, orders)
     wall = time.monotonic() - started
     summary, game_problems = summarize(rows, unit_values())
     problems = problems + game_problems

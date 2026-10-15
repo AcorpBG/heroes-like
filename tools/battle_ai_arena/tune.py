@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 """Tunes the battle AI's weights (content/battle_ai_weights.json) with CMA-ES in the arena.
 
-    python tools/battle_ai_arena/tune.py                        # 40 generations, about 2-3 hours
-    python tools/battle_ai_arena/tune.py --generations 2 --population 4 --battles 1   # smoke run
+    python tools/battle_ai_arena/tune.py                        # 30 generations, about two hours
+    python tools/battle_ai_arena/tune.py --generations 2 --population 4 --maps 6 --battles 1   # smoke run
     python tools/battle_ai_arena/tune.py --resume .artifacts/battle_ai_arena/tune-<time>
 
 Evaluation tooling only, run on demand, like arena.py; see README.md here.
 
 Each generation samples a population of weight sets around the current mean and plays every
-one, and the mean itself, against the game's current weights (the baseline) on the same
-battles, both sides each. Every generation plays fresh maps, sites and heroes, so the weights
-cannot fit one set of battles; the arena's `standard` and `holdout` suites stay out of the
-loop and judge the result. A weight is searched as a power-of-two multiple of its current
+one, and the mean itself, against the baseline (the game's current weights, or --base-weights)
+on the same battles, both sides each. The battles are the arena's realistic ones (scenarios.py: guards,
+AI heroes and sieges, armies built the way players build them), and every generation plays
+fresh maps, armies and heroes, so the weights cannot fit one set of battles; the arena's
+`standard` and `holdout` suites stay out of the loop and judge the result. A weight is searched as a power-of-two multiple of its current
 value, so it keeps its sign and scale. The search is separable CMA-ES (sep-CMA-ES, Ros and
 Hansen 2008): a diagonal covariance, which learns fast enough in about fifty dimensions on a
 few dozen generations. Ranking candidates that played the same battles cancels most of the
@@ -41,6 +42,7 @@ sys.path.insert(0, str(HERE))
 
 import arena  # noqa: E402
 import router  # noqa: E402
+import scenarios  # noqa: E402
 
 SEARCH_LIMIT = 3.0  # a weight stays within 1/8 and 8 times its current value
 
@@ -106,34 +108,9 @@ class SepCMA:
         }
 
 
-def training_groups(generation: int, battles: int) -> list[dict]:
-    """Every faction at every stage on a map of its own, against `battles` rotating opponents."""
-    factions = [f for f in arena.load_items("factions.json") if len(f.get("unit_ladder_ids", [])) >= 7 and f.get("hero_ids")]
-    groups = []
-    for p_index, player in enumerate(factions):
-        for s_index, stage in enumerate(arena.STAGES):
-            hero_ids = player["hero_ids"]
-            group = {
-                "group_id": f"tune:g{generation}:{player['id']}:{stage['id']}",
-                "map_seed": f"battle-ai-tune-g{generation}-{player['id']}-{stage['id']}",
-                "map_size": "homm3_small",
-                "player_faction": player["id"],
-                "player_hero_id": hero_ids[(generation + s_index) % len(hero_ids)],
-                "stage": stage,
-                "balance": True,
-                "battles": [],
-            }
-            for b_index in range(battles):
-                enemy = factions[(p_index + generation + b_index * 2 + s_index) % len(factions)]
-                enemy_heroes = enemy["hero_ids"]
-                group["battles"].append({
-                    "battle_id": f"{group['group_id']}:{b_index}",
-                    "site_index": generation * battles + b_index,
-                    "enemy_faction": enemy["id"],
-                    "enemy_hero_id": enemy_heroes[(generation + s_index + b_index + 1) % len(enemy_heroes)],
-                })
-            groups.append(group)
-    return groups
+def training_groups(seed: int, generation: int, groups: int, battles: int) -> list[dict]:
+    """Fresh realistic battles (scenarios.py) for this run and generation: never the arena's suites."""
+    return scenarios.build_suite("tune", f"{seed}-{generation}", groups, battles)
 
 
 def to_weights(x: np.ndarray, keys: list[str], base: dict[str, float]) -> dict[str, float]:
@@ -163,21 +140,23 @@ def candidate_scores(rows: list[dict], names: list[str], values: dict[str, float
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--generations", type=int, default=40)
+    parser.add_argument("--generations", type=int, default=30)
     parser.add_argument("--population", type=int, default=16, help="weight sets per generation (default 16)")
     parser.add_argument("--sigma", type=float, default=0.5, help="initial step, in powers of two (default 0.5)")
-    parser.add_argument("--battles", type=int, default=3, help="battles per faction and stage each generation (default 3)")
+    parser.add_argument("--maps", type=int, default=24, help="generated maps each generation (default 24)")
+    parser.add_argument("--battles", type=int, default=3, help="battles per map (default 3)")
     parser.add_argument("--workers", type=int, default=max(1, (os.cpu_count() or 2) * 3 // 4))
     parser.add_argument("--godot", help="Godot binary")
     parser.add_argument("--out", help="run directory (default .artifacts/battle_ai_arena/tune-<time>)")
     parser.add_argument("--resume", help="a run directory to continue")
+    parser.add_argument("--base-weights", help="weights to search around and play against, for example an earlier run's weights.json (default: the game's)")
     parser.add_argument("--seed", type=int, default=1)
     parser.add_argument("--timeout", type=int, default=3600, help="seconds before a generation's workers are stopped")
     parser.add_argument("--keep-logs", action="store_true", help="keep each generation's jobs, logs and raw results")
     args = parser.parse_args()
 
     godot = arena.find_godot(args.godot)
-    base = arena.load_weights()
+    base = arena.load_weights(args.base_weights)
     if args.resume:
         run_dir = Path(args.resume)
         saved = json.loads((run_dir / "state.json").read_text(encoding="utf-8"))
@@ -188,14 +167,14 @@ def main() -> int:
         run_dir = Path(args.out) if args.out else arena.ROOT / ".artifacts" / "battle_ai_arena" / f"tune-{datetime.now():%Y%m%d-%H%M%S}"
         run_dir.mkdir(parents=True, exist_ok=True)
         keys = sorted(base)
-        settings = {"population": args.population, "sigma": args.sigma, "battles": args.battles, "seed": args.seed}
+        settings = {"population": args.population, "sigma": args.sigma, "maps": args.maps, "battles": args.battles, "seed": args.seed}
         cma = SepCMA(len(keys), args.sigma, args.population)
         rng = np.random.default_rng([args.seed, 0])
     values = arena.unit_values()
     source = arena.AI_SOURCE.read_text(encoding="utf-8")
     router_path = run_dir / "router.gd"
     router_path.write_text(router.build_router(source), encoding="utf-8")
-    print(f"Tuning {len(keys)} weights, population {settings['population']}, {settings['battles'] * 24} battles a generation -> {run_dir}")
+    print(f"Tuning {len(keys)} weights, population {settings['population']}, {settings['battles'] * settings['maps']} battles a generation -> {run_dir}")
 
     while cma.gen < args.generations:
         gen = cma.gen
@@ -214,7 +193,7 @@ def main() -> int:
             paths[name] = variants_dir / f"{name}.gd"
             arena.resolve_variant("current", paths[name], to_weights(x, keys, base))
         orders = [order for name in names for order in ([name, "base"], ["base", name])]
-        groups = training_groups(gen, settings["battles"])
+        groups = training_groups(settings["seed"], gen, settings["maps"], settings["battles"])
         rows, problems = arena.run_workers(godot, gen_dir, groups, min(args.workers, len(groups)), paths, router_path, args.timeout, orders, "base")
         scores = candidate_scores(rows, names, values)
         expected = settings["battles"] * len(groups)

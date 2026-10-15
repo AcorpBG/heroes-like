@@ -14,6 +14,7 @@ folder. It never writes the repo's files.
 python tools/battle_ai_arena/arena.py                       # HEAD's AI (A) vs the working tree's (B)
 python tools/battle_ai_arena/arena.py --suite holdout       # the battles a tuning run never sees
 python tools/battle_ai_arena/arena.py --a git:main~5 --b path/to/BattleAiRules.gd --suite quick
+python tools/battle_ai_arena/arena.py --roles                # also says where B gains: as player or as enemy
 ```
 
 A variant is `current` (the working tree), `git:<rev>`, or a path to a copy of
@@ -34,41 +35,61 @@ the same script with those weights built in.
 ## Tuning the weights
 
 ```
-python tools/battle_ai_arena/tune.py                     # 40 generations, a few hours
+python tools/battle_ai_arena/tune.py                     # 30 generations, about two hours
 python tools/battle_ai_arena/tune.py --resume .artifacts/battle_ai_arena/tune-<time>
+python tools/battle_ai_arena/tune.py --base-weights <earlier run>/weights.json --seed 2   # search on from a run
 python tools/battle_ai_arena/arena.py --b-weights .artifacts/battle_ai_arena/tune-<time>/weights.json --suite holdout
 ```
 
 `tune.py` searches the weights with separable CMA-ES. Each generation samples a population of
 weight sets around the current mean, and plays each of them and the mean itself against the
-game's current weights, on the same battles and both sides each. Every generation plays fresh
-maps, sites and heroes (never the `standard` or `holdout` battles), so the result cannot fit
-one set of battles. A weight is searched as a power-of-two multiple of its current value
+game's current weights, on the same battles and both sides each. The battles are realistic
+ones (below), 24 maps of 3 battles a generation by default (`--maps`, `--battles`), and every
+generation plays fresh maps, armies and heroes (never the `standard` or `holdout` battles),
+so the result cannot fit one set of battles. A weight is searched as a power-of-two multiple of its current value
 (1/8 to 8 times), so it keeps its sign. `weights.json` in the run directory is the current
 mean, the run's recommendation; `history.jsonl` has one line per generation. Copy the weights
 into `content/battle_ai_weights.json` only after `arena.py` confirms them on `standard` and
-`holdout`.
+`holdout`. When weights reach the 1/8 or 8 times limit, search on from that run's weights
+with `--base-weights` (and another `--seed`, which also picks other training maps): they
+become the centre and the opponent.
 
-On a 32-thread machine with 24 workers a 288-game suite takes about a minute.
+On a 32-thread machine with 24 workers the 480 games of `standard` take about 75 seconds.
 
 ## What it plays
 
-Suites (`SUITES` in `arena.py`):
+Realistic battles, built by `scenarios.py`. Suites (`SUITES` in `arena.py`):
 
-- `standard`: every faction at four army stages (`STAGES`: weeks 1, 3, 5 and 8 of
-  growth, with the hero level, top tier and guild spells of that stage), each against all six
-  factions. That is 144 battles.
-- `holdout`: the same coverage on other maps, sites and heroes.
-- `quick`: 18 battles at week 5, a smoke run.
+- `standard`: 48 generated maps with 5 battles each, 240 battles.
+- `holdout`: the same mix on other maps, armies and heroes. Keep it out of any tuning loop.
+- `quick`: 12 maps with 3 battles each, a smoke run.
 
-Each battle is hero against hero on a generated small map. The enemy is set up as an AI
-player's hero, so it may withdraw. The enemy's stack counts are scaled until both armies rate
-equally on the game's own strength estimate (`AiHeroRules.army_power`, heroes included), so
-more battles hinge on the AI. `--no-balance` turns that off.
+Each map is generated as the skirmish menu makes it: small or medium, 2 to 4 players, weak,
+normal or strong monsters, every faction in turn as the player's. A battle is one of:
 
-Every battle is played twice from the identical start, A as the player side and then B. The
-armies, the battlefield and the dice are the same, so only the AI differs. Two identical
-variants score exactly 0.5; the arena checks itself that way.
+- a guard (55%): the player's hero against a neutral guard exactly as the generator placed it,
+  the one whose strength (`AiHeroRules.army_power`) is nearest a sampled share of the hero's,
+  0.3 (easy) to 1.3 (hard) times;
+- an AI hero (30%): another faction's hero with an army of its own, a few weeks ahead or
+  behind. It may withdraw, as on the map;
+- a siege (15%): the player attacks an enemy town: the garrison, a defending hero half the
+  time (else the town's captain), the fort level of the week and sometimes the faction's
+  defence building.
+
+Armies are built the way players build them, from the factions' town rosters: a build plan
+picks one dwelling of each tier's two (balanced, ranged wherever a tier offers it, melee, top
+tiers, or massed low tiers), dwellings open over the weeks, upgrades come with time, a
+second town adds the other dwelling, a neutral stack joins now and then, and the gold of the
+week buys top tier first. Heroes are any of the faction's, at the level, guild spells and
+mana of the week (weeks 1 to 10, early weeks most often).
+
+Nothing is evened out: a mismatched battle is part of a game. Both sides of every battle
+play, so the armies cancel; a battle the armies decide still moves the score through the
+losses. The report breaks the score down by battle type, monster strength, guard odds, build
+plan, week and odds. With `--roles` each battle is also played A against A, and B's gain
+splits into its play as the player side and as the enemy side: guards, defenders and AI
+heroes. The battle AI plays both: the enemy side in the game, and the player side in Quick
+Resolve and every computer player's own fights.
 
 ## How the variants are swapped
 
@@ -109,19 +130,22 @@ score = 0.5 * result + 0.25 * kept_own + 0.25 * (1 - kept_enemy)
 
 The enemy side scores 1 minus the player side, so any win beats any loss, a cheap win beats
 a bloody one, and a loss that cost the enemy dearly beats a rout. B's score for a battle is
-its mean over the two games. The report gives the mean over battles with a 95% interval,
-broken down by stage and by matchup.
+its mean over the two games. The report gives the mean over battles with a 95% interval and
+the breakdowns above.
 
 The report also counts the battles the AI decided: those where the winner changes when the
 sides swap. The rest are decided by the armies and only move the score through losses.
 
 ## Checked
 
-- Two identical variants score 0.5000 +/- 0 on every suite.
+- Two identical variants score 0.5000 +/- 0 on every suite, in every breakdown and role.
 - A copy with hero spellcasting switched off scores 0.37 +/- 0.03 on `standard`: clearly
   worse, weakest at week 1.
 
 ## Strategy changes tried
+
+On the first, synthetic suites (hero against hero, every army a full tier ladder, strengths
+evened out):
 
 - Kills weighed by the damage each creature deals instead of counted (two dragons beat twenty
   peasants): 0.560 +/- 0.023 on `standard`, 0.562 +/- 0.022 on `holdout`. Landed.
@@ -136,11 +160,40 @@ sides swap. The rest are decided by the armies and only move the score through l
 - Striking first the enemies that can reach our shooters next turn: 0.497, and nothing added
   on top of holding.
 
+On the realistic suites (`standard`, `--roles`):
+
+- Battles are mostly decided by the armies: only 5 to 7% change winner when the AIs swap
+  sides, so most of the score comes from the losses. Weights drawn at random between a
+  quarter and four times the current ones score 0.51 +/- 0.02 on `quick`.
+- The three changes above together, against the AI before them: 0.517 +/- 0.012, as player
+  +0.021 and as enemy +0.012. Without the kill weighting 0.488 +/- 0.011; without holding the
+  line 0.501 +/- 0.005 (it seldom comes up); the tuned weights over the ones before them
+  0.506 +/- 0.010. All kept.
+- With the current AI on both sides, an army built ranged does about 0.10 better in the 67
+  hero battles of `standard` than its strength (`AiHeroRules.army_power`) predicts, and one built melee 0.12
+  worse: the battle AI's melee is the weak side against shooters.
+- A melee stack heading for the enemy's shooters instead of the nearest enemy, up to eight
+  turns further: no change at all. The field is 11 by 9 hexes, so melee meets the enemy within
+  a turn or two whatever it heads for.
+- A melee stack whose side is outshot not waiting for contact: 0.490 +/- 0.009, worse.
+  Waiting lets the shooters and the hero act first.
+- Holding the line only while the enemy has melee strength to come: 0.502 +/- 0.003.
+
 ## Weight tuning runs
 
-- First run (40 generations of 16, 48 battles each, about two hours): training score from 0.50
-  to about 0.54. Against the previous weights 0.553 +/- 0.019 on `standard` and 0.532 +/- 0.023
+- First run, on the synthetic suites (40 generations of 16, 48 battles each, about two
+  hours): training score from 0.50 to about 0.54. Against the previous weights 0.553 +/- 0.019 on `standard` and 0.532 +/- 0.023
   on `holdout`; against an older AI the tuner never played, 0.577 where the previous weights
   score 0.540. Landed. The largest moves: enemy shooters first (x4), damage and kills over the
   flat kill bonus (x0.15), melee closing in harder (x3), damage spells worth more but held to a
   higher bar, buffs cheaper, and holding the line from two thirds of the enemy's shooting.
+- First realistic run (18 generations of 16, 72 battles each, about an hour): kills x8 and
+  strike-back x8 reached the search limit. Its weights: 0.519 +/- 0.013 on `standard`, but
+  0.505 +/- 0.010 on `holdout`.
+- Second realistic run from those weights (`--base-weights`, `--seed 2`, 18 generations):
+  training scores stayed near 0.50, and its mean against the weights before both runs scores
+  0.517 +/- 0.012 on `standard` and 0.509 +/- 0.009 on `holdout`, as player +0.020 and as
+  enemy +0.014 on `standard`, in guard, hero and siege battles alike. Landed. The largest
+  moves against the weights before: our losses to the strike-back x10, kills x7, enemy
+  shooters first x4.5 (and "has shots left" x0.1), wounded stacks defending x0.2, damage
+  spells x2.9.
