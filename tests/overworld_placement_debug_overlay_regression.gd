@@ -47,6 +47,10 @@ func _assert_map_view_overlay_tiles() -> Dictionary:
 		failures.append("Artifact action tile was not yellow/interactable.")
 	if not _tile_present(snapshot.get("interactable_tiles", []), Vector2i(4, 4), "encounter_action", "overlay_encounter"):
 		failures.append("Encounter action tile was not yellow/interactable.")
+	if not _tile_present(snapshot.get("blocker_tiles", []), Vector2i(17, 2), "impassable_terrain", "rock"):
+		failures.append("Rock tile 17,2 was not red/blocker.")
+	if _tile_present(snapshot.get("blocker_tiles", []), Vector2i(17, 3), "impassable_terrain", "water"):
+		failures.append("Water tile 17,3 was marked red/blocker.")
 	view.set_placement_debug_overlay_enabled(false)
 	var disabled_snapshot: Dictionary = view.validation_placement_debug_overlay_snapshot()
 	if bool(disabled_snapshot.get("enabled", true)):
@@ -124,6 +128,8 @@ func _fixture_session():
 		for _x in range(width):
 			row.append("grass")
 		rows.append(row)
+	rows[2][17] = "rock"
+	rows[3][17] = "water"
 	var session = SessionStateStore.SessionData.new("overlay_fixture", "overlay_fixture", "hero_lyra", 1, {
 		"map": rows,
 		"map_size": {"width": width, "height": height},

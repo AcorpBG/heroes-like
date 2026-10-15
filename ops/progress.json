@@ -114405,6 +114405,16 @@
       "notes": "Owner asked for a complete rework (different decals per ground type, more variety, seamless integration, more varied placement). Old: 16 clusters, 4 'grey rock with meadow grass' shared by rough/rock/underground/dirt/sand/ash, drawn per tile on every fifth tile as stickers. New: 13 generated 4x4 sheets (grass, plains, forest, swamp, dirt, sand, rough, rock, ash, lava, underground, snow, ice; 208 decals), each generated with its ground material as reference (sources, prompts, hashes in art/overworld/source/generated/terrain/decals_v4/manifest.json); tools/prepare_overworld_terrain_decals.py cuts, grades 12% toward the ground tone, feathers, bleeds and packs a reproducible 2048x2048 atlas. The ground shader scatters them (decal_layer): jittered 1-tile grid, tiny/medium/large classes, mirror, per-set density modulated by slow noise for clusters and clearings, roads (lookup blue channel), water and unexplored tiles excluded, fading by the ground's own blend weight at biome borders, explicit mip levels. The per-tile _draw_terrain_detail_decal path is removed; OverworldMapView._terrain_decal_payload reports the set. Validation: before/after captures on the owner's map (dirt, lava, snow, grass, swamp, rough, sand) reviewed; validate_repo identical (828) with the decal contract rewritten; random_map_live_overworld_render_move_report and overworld_raster_terrain_blocker_mass_report updated to the new payload. Old atlases kept as provenance; archived Ninefold smoke still references v3."
     },
     {
+      "id": "debug-placement-overlay-impassable-terrain-20261015",
+      "title": "F4 placement overlay marks impassable terrain as blocked",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "tooling_fix",
+      "source": "owner playtest report",
+      "sourceDocs": [],
+      "notes": "Owner report: underground rock showed as passable under F4. The overlay listed only object bodies and actions; it now adds every tile whose terrain OverworldRules.terrain_id_is_passable rejects (rock, impassable biomes) as a red blocker. Water stays clear because boats sail it. overworld_placement_debug_overlay_regression checks a rock tile is red and a water tile is not; an underground generated map showed 748 rock blockers with the cave paths clear; core suite passes."
+    },
+    {
       "id": "art-overworld-soft-fog-shadows-20261014",
       "title": "Soft fog of war and object shadows on the overworld",
       "status": "completed",

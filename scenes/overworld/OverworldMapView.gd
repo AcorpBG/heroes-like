@@ -13295,6 +13295,17 @@ func _placement_debug_overlay_payload() -> Dictionary:
 				var tile := Vector2i(int(encounter_value.get("x", -1)), int(encounter_value.get("y", -1)))
 				_add_placement_debug_tile(interactable_index, tile, "encounter_action", String(encounter_value.get("placement_id", encounter_value.get("id", ""))))
 				records.append(_placement_debug_record("encounter", String(encounter_value.get("placement_id", encounter_value.get("id", ""))), 0, 1))
+	# Impassable ground (rock, impassable biomes) blocks heroes as surely as an
+	# object body. Water is left clear: boats sail it.
+	var terrain_blockers := 0
+	for y in range(_map_data.size()):
+		for x in range(_map_size.x):
+			var terrain := _terrain_at(Vector2i(x, y))
+			if terrain == "" or OverworldRulesScript.terrain_id_is_passable(terrain) 					or ContentService.normalize_terrain_id(terrain) == "water":
+				continue
+			_add_placement_debug_tile(blocker_index, Vector2i(x, y), "impassable_terrain", terrain)
+			terrain_blockers += 1
+	records.append(_placement_debug_record("terrain", "", terrain_blockers, 0))
 	return _placement_debug_payload_from_indexes(blocker_index, interactable_index, records)
 
 func _collect_town_placement_debug_tiles(town: Dictionary, blocker_index: Dictionary, interactable_index: Dictionary, records: Array) -> void:
