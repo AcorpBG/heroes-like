@@ -552,8 +552,8 @@ static func _stack_order_choice(scoring_battle: Dictionary, active_stack: Dictio
 ## The best strike the stack can make this turn, from where it stands or after
 ## walking to the hex the AI picks, for a stack that fights hand to hand:
 ## {"action": "strike", "target_battle_id", "score"}, with "approach" when it
-## walks first. {} when no enemy is in reach. BattleRules.ai_advance_plan
-## carries out an advance order with it.
+## walks first. {} when no enemy is in reach. advance_plan carries out an
+## advance order with it.
 static func best_reachable_strike(battle: Dictionary, active_stack: Dictionary) -> Dictionary:
 	if active_stack.is_empty() or _alive_count(active_stack) <= 0 or not _fights_in_melee(active_stack):
 		return {}
@@ -579,6 +579,90 @@ static func should_wait_for_contact(battle: Dictionary, active_stack: Dictionary
 	if not _fights_in_melee(active_stack):
 		return false
 	return not _can_make_melee_attack(active_stack, battle)
+
+## How a computer-driven stack carries out an advance order, the same for the
+## enemy and for the side Quick Resolve, Auto battle or a computer player
+## plays: it strikes the best enemy in its reach this turn
+## (best_reachable_strike), from the hex choose_melee_approach picks; one that
+## reaches none waits while enemies still have to act this round
+## (should_wait_for_contact), else walks (best_advance_destination). A rooted
+## stack defends. Returns {"action": "strike", "target_battle_id", "approach"},
+## {"action": "wait"}, {"action": "advance"} or {"action": "defend"}.
+## BattleRules.ai_advance_plan is the game's entry point.
+static func advance_plan(battle: Dictionary, stack: Dictionary) -> Dictionary:
+	var rules := _battle_rules()
+	if stack.is_empty() or _alive_count(stack) <= 0 or rules._stack_is_rooted(stack, battle):
+		return {"action": "defend"}
+	var strike := best_reachable_strike(battle, stack)
+	if not strike.is_empty():
+		var target: Dictionary = rules._get_stack_by_id(battle, String(strike.get("target_battle_id", "")))
+		strike["approach"] = choose_melee_approach(battle, stack, target, rules.melee_approach_cells(battle, stack, target))
+		return strike
+	if should_wait_for_contact(battle, stack, rules.can_wait(battle), rules._opposing_stacks_still_to_act(battle, stack)):
+		return {"action": "wait"}
+	return {"action": "advance"}
+
+## The enemy an advance heads for: the one the stack can walk to in the fewest
+## steps around obstacles and stacks, then the nearest in hexes.
+static func advance_target(battle: Dictionary, stack: Dictionary) -> Dictionary:
+	var rules := _battle_rules()
+	var gap: int = rules._advance_desired_gap(stack, battle)
+	var start_key: String = rules._hex_key(_stack_hex(stack))
+	var best := {}
+	var best_steps := 0
+	var best_distance := 0
+	for target in _alive_stacks_for_side(battle, _opposing_side(String(stack.get("side", "")))):
+		var walk_steps: Dictionary = rules._walk_steps_to_target(battle, stack, target, gap)
+		var steps := int(walk_steps.get(start_key, 9999))
+		var distance := _stack_hex_distance(stack, target)
+		if best.is_empty() or steps < best_steps or (steps == best_steps and distance < best_distance):
+			best = target
+			best_steps = steps
+			best_distance = distance
+	return best
+
+## Where an advance walks (BattleRules._apply_auto_advance_movement, also the
+## player's Advance order): the legal destination that brings the stack nearest
+## its target by walking, around obstacles and stacks, without standing closer
+## than desired_gap to any enemy. A target it cannot walk to is measured in
+## hexes. With no living enemy target given it heads for advance_target.
+static func best_advance_destination(
+	battle: Dictionary,
+	stack: Dictionary,
+	preferred_target: Dictionary = {},
+	desired_gap: int = 1
+) -> Dictionary:
+	var rules := _battle_rules()
+	var destinations: Array = rules.legal_destinations_for_stack(battle, String(stack.get("battle_id", "")))
+	if destinations.is_empty():
+		return {}
+	var target := preferred_target
+	if target.is_empty() or _alive_count(target) <= 0 or String(target.get("side", "")) == String(stack.get("side", "")):
+		target = advance_target(battle, stack)
+	var walk_steps: Dictionary = rules._walk_steps_to_target(battle, stack, target, desired_gap) if not target.is_empty() else {}
+	var best := {}
+	var best_score := 0
+	for destination in destinations:
+		if not (destination is Dictionary):
+			continue
+		var score := 0
+		if not target.is_empty():
+			var closest_gap: int = rules._projected_min_opposing_hex_distance(battle, stack, destination)
+			if closest_gap < desired_gap:
+				score += (desired_gap - closest_gap) * 1000
+			var remaining := int(walk_steps.get(rules._hex_key(destination), -1))
+			if remaining < 0:
+				remaining = maxi(0, Footprint.distance(stack, target, destination) - desired_gap)
+				if not walk_steps.is_empty():
+					# Walks reach the target, only none from this hex.
+					remaining += BATTLE_HEX_COLUMNS
+			score += remaining * 100
+		score += int(destination.get("steps", 1))
+		score += int(rules._advance_lateral_penalty(stack, destination))
+		if best.is_empty() or score < best_score:
+			best = destination
+			best_score = score
+	return best
 
 ## The best of cells (BattleRules.melee_approach_cells) to strike target from,
 ## weighed as damage output: the target's creatures it kills, less its own lost
@@ -1273,6 +1357,24 @@ static func _strike_candidate(battle: Dictionary, active_stack: Dictionary, targ
 		"approach": {"q": int(approach.get("q", -1)), "r": int(approach.get("r", -1)), "steps": int(approach.get("steps", 0))},
 	}
 
+## What one of the target's creatures is worth killing next to the average
+## creature on its side, by the damage it deals: 1.0 for an average creature,
+## more for a dragon among peasants. The mean over the side's creatures is 1,
+## so attack scores keep their size against the other orders.
+static func _creature_threat_weight(battle: Dictionary, target: Dictionary) -> float:
+	var creatures := 0
+	var damage := 0.0
+	for stack in _alive_stacks_for_side(battle, String(target.get("side", ""))):
+		var count := _alive_count(stack)
+		creatures += count
+		damage += float(count) * _creature_average_damage(stack)
+	if creatures <= 0 or damage <= 0.0:
+		return 1.0
+	return _creature_average_damage(target) / (damage / float(creatures))
+
+static func _creature_average_damage(stack: Dictionary) -> float:
+	return max(0.5, (float(int(stack.get("min_damage", 1))) + float(int(stack.get("max_damage", 1)))) / 2.0)
+
 static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dictionary, is_ranged: bool) -> float:
 	var attack_distance := _attack_distance_for_action(attacker, target, battle, is_ranged)
 	var damage := _estimate_damage(attacker, target, battle, is_ranged, false, attack_distance)
@@ -1280,7 +1382,9 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 	var applied_damage: int = min(damage, target_health)
 	var side := String(attacker.get("side", ""))
 	var round_number := int(battle.get("round", 1))
-	var score := float(applied_damage) / float(max(1, int(target.get("unit_hp", 1))))
+	# Creatures killed, each weighed by the damage it deals: killing two dragons
+	# beats killing twenty peasants.
+	var score := float(applied_damage) / float(max(1, int(target.get("unit_hp", 1)))) * _creature_threat_weight(battle, target)
 	score += min(1.0, float(applied_damage) / float(target_health)) * 8.0
 	if damage >= target_health:
 		score += 6.0

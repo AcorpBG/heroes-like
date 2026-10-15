@@ -337,10 +337,16 @@ def main() -> int:
         problems.append(f"maps/ gained {len(leftovers)} files during the run (workers remove their own): {leftovers[:6]}")
     summary.update({"suite": args.suite, "a": args.a, "b": args.b, "workers": workers, "wall_seconds": round(wall, 1), "problems": problems})
     (run_dir / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
-    with (run_dir / "games.jsonl").open("w", encoding="utf-8") as handle:
+    values = unit_values()
+    with (run_dir / "games.jsonl").open("w", encoding="utf-8", newline="\n") as handle:
         for row in rows:
             if row.get("kind") == "game":
-                handle.write(json.dumps({k: v for k, v in row.items() if k not in ("start_ledger", "end_ledger")}) + "\n")
+                line = {k: v for k, v in row.items() if k not in ("start_ledger", "end_ledger")}
+                scored = score_game(row, values)
+                if scored is not None:
+                    line["player_score"] = round(scored["player_score"], 6)
+                    line["kept"] = {side: round(share, 6) for side, share in scored["kept"].items()}
+                handle.write(json.dumps(line) + "\n")
     if not args.keep_logs and not problems:
         for path in list(run_dir.glob("job_*.json")) + list(run_dir.glob("results_*.jsonl")) + list(run_dir.glob("worker_*.log")):
             path.unlink()

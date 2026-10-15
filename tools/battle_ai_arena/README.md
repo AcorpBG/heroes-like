@@ -61,9 +61,10 @@ stay inside it. A call is routed by:
 
 Limits:
 
-- Only `BattleAiRules.gd` changes per side. AI logic that lives in `BattleRules.gd`
-  (`ai_advance_plan`, `ai_melee_approach`, the enemy turn flow) is shared by both sides, so
-  move it into `BattleAiRules.gd` before experimenting with it.
+- Only `BattleAiRules.gd` changes per side. The battle AI's choices live there, the
+  advance plan and the advance walk included (`advance_plan`, `best_advance_destination`).
+  `BattleRules.gd` only carries out the orders (the enemy turn flow, a hero's cast before
+  its stack's order), and that part is shared by both sides.
 - Functions the rest of the game calls must keep their signatures; the router is built from
   the working tree's file.
 
@@ -95,3 +96,11 @@ sides swap. The rest are decided by the armies and only move the score through l
 - Two identical variants score 0.5000 +/- 0 on every suite.
 - A copy with hero spellcasting switched off scores 0.37 +/- 0.03 on `standard`: clearly
   worse, weakest at week 1.
+
+## Strategy changes tried
+
+- Kills weighed by the damage each creature deals instead of counted (two dragons beat twenty
+  peasants): 0.560 +/- 0.023 on `standard`, 0.562 +/- 0.022 on `holdout`. Landed.
+- Focus fire, where the stacks still to act this round pile onto a target they can destroy
+  together: 0.49 +/- 0.02 in two forms, and nothing added on top of the kill weighting. The
+  scorer already favours wounded targets.

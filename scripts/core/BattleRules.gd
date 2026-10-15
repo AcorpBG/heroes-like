@@ -2169,26 +2169,11 @@ static func _matching_melee_approach(battle: Dictionary, stack: Dictionary, targ
 static func ai_melee_approach(battle: Dictionary, stack: Dictionary, target: Dictionary) -> Dictionary:
 	return BattleAiRulesScript.choose_melee_approach(battle, stack, target, melee_approach_cells(battle, stack, target))
 
-## How a computer-driven stack carries out an advance order, the same for the
-## enemy and for the side Quick Resolve, Auto battle or a computer player
-## plays: it strikes the best enemy in its reach this turn
-## (BattleAiRules.best_reachable_strike), from the hex the AI picks; one that
-## reaches none waits while enemies still have to act this round
-## (BattleAiRules.should_wait_for_contact), else walks toward the enemy nearest
-## by walking (_apply_auto_advance_movement). A rooted stack defends. Returns
-## {"action": "strike", "target_battle_id", "approach"}, {"action": "wait"},
-## {"action": "advance"} or {"action": "defend"}.
+## How a computer-driven stack carries out an advance order
+## (BattleAiRules.advance_plan): a strike on the best enemy in reach, a wait,
+## the walk, or a defend for a rooted stack.
 static func ai_advance_plan(battle: Dictionary, stack: Dictionary) -> Dictionary:
-	if stack.is_empty() or _alive_count(stack) <= 0 or _stack_is_rooted(stack, battle):
-		return {"action": "defend"}
-	var strike := BattleAiRulesScript.best_reachable_strike(battle, stack)
-	if not strike.is_empty():
-		var target := _get_stack_by_id(battle, String(strike.get("target_battle_id", "")))
-		strike["approach"] = ai_melee_approach(battle, stack, target)
-		return strike
-	if BattleAiRulesScript.should_wait_for_contact(battle, stack, can_wait(battle), _opposing_stacks_still_to_act(battle, stack)):
-		return {"action": "wait"}
-	return {"action": "advance"}
+	return BattleAiRulesScript.advance_plan(battle, stack)
 
 ## Whether extra movement points would let the stack reach a hex next to an
 ## enemy this turn when it reaches none now (the AI weighs haste by it).
@@ -4393,8 +4378,8 @@ static func _advance_action_summary(battle: Dictionary, stack: Dictionary) -> St
 	if stalled:
 		clauses.append("Press into the obstruction line without moving")
 	else:
-		var nearest := _advance_target(battle, stack)
-		destination = _best_advance_destination(battle, stack, nearest, _advance_desired_gap(stack, battle))
+		var nearest := BattleAiRulesScript.advance_target(battle, stack)
+		destination = BattleAiRulesScript.best_advance_destination(battle, stack, nearest, _advance_desired_gap(stack, battle))
 		if destination.is_empty():
 			clauses.append("No open hex to move into")
 		else:
@@ -9722,46 +9707,6 @@ static func _sync_distance_from_hexes(battle: Dictionary) -> void:
 	if best < 999:
 		battle["distance"] = _distance_band_from_hex_distance(best)
 
-## The legal destination that brings the stack nearest its target by walking,
-## around obstacles and stacks, without standing closer than desired_gap to
-## any enemy. A target it cannot walk to is measured in hexes.
-static func _best_advance_destination(
-	battle: Dictionary,
-	stack: Dictionary,
-	preferred_target: Dictionary = {},
-	desired_gap: int = 1
-) -> Dictionary:
-	var destinations := legal_destinations_for_stack(battle, String(stack.get("battle_id", "")))
-	if destinations.is_empty():
-		return {}
-	var target := preferred_target
-	if target.is_empty() or _alive_count(target) <= 0 or String(target.get("side", "")) == String(stack.get("side", "")):
-		target = _advance_target(battle, stack)
-	var walk_steps := _walk_steps_to_target(battle, stack, target, desired_gap) if not target.is_empty() else {}
-	var best := {}
-	var best_score := 0
-	for destination in destinations:
-		if not (destination is Dictionary):
-			continue
-		var score := 0
-		if not target.is_empty():
-			var closest_gap := _projected_min_opposing_hex_distance(battle, stack, destination)
-			if closest_gap < desired_gap:
-				score += (desired_gap - closest_gap) * 1000
-			var remaining := int(walk_steps.get(_hex_key(destination), -1))
-			if remaining < 0:
-				remaining = maxi(0, Footprint.distance(stack, target, destination) - desired_gap)
-				if not walk_steps.is_empty():
-					# Walks reach the target, only none from this hex.
-					remaining += BATTLE_HEX_COLUMNS
-			score += remaining * 100
-		score += int(destination.get("steps", 1))
-		score += _advance_lateral_penalty(stack, destination)
-		if best.is_empty() or score < best_score:
-			best = destination
-			best_score = score
-	return best
-
 ## The walking steps from each hex the stack could stand on to the nearest hex
 ## gap hexes from target, around obstacles and the other stacks, keyed by
 ## _hex_key. Hexes with no such walk are missing; so is every hex when all the
@@ -9810,23 +9755,6 @@ static func _walk_fit_cells(battle: Dictionary, stack: Dictionary) -> Dictionary
 	if cache_key != "":
 		_board_read_scope_cache[cache_key] = fit_cells.duplicate(true)
 	return fit_cells
-
-## The enemy an advance heads for: the one the stack can walk to in the fewest
-## steps around obstacles and stacks, then the nearest in hexes.
-static func _advance_target(battle: Dictionary, stack: Dictionary) -> Dictionary:
-	var gap := _advance_desired_gap(stack, battle)
-	var start_key := _hex_key(_stack_hex(stack))
-	var best := {}
-	var best_steps := 0
-	var best_distance := 0
-	for target in _alive_stacks_for_side(battle, _opposing_side(String(stack.get("side", "")))):
-		var steps := int(_walk_steps_to_target(battle, stack, target, gap).get(start_key, 9999))
-		var distance := _stack_hex_distance(stack, target)
-		if best.is_empty() or steps < best_steps or (steps == best_steps and distance < best_distance):
-			best = target
-			best_steps = steps
-			best_distance = distance
-	return best
 
 static func _destination_is_legal(battle: Dictionary, stack: Dictionary, destination: Dictionary) -> bool:
 	return not _legal_destination_for_stack(battle, stack, destination).is_empty()
@@ -10117,10 +10045,10 @@ static func _apply_auto_advance_movement(battle: Dictionary, active_stack: Dicti
 	var start_key := _hex_key(_stack_hex(active_stack))
 	# Choosing the target and the destination walks the same board; walk it once.
 	begin_board_read_scope(battle)
-	var destination: Dictionary = _best_advance_destination(
+	var destination: Dictionary = BattleAiRulesScript.best_advance_destination(
 		battle,
 		active_stack,
-		_advance_target(battle, active_stack),
+		BattleAiRulesScript.advance_target(battle, active_stack),
 		_advance_desired_gap(active_stack, battle)
 	)
 	end_board_read_scope()
