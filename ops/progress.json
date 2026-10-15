@@ -115282,6 +115282,25 @@
       ],
       "notes": "Owner report 2026-10-14: an enemy unit on the right faced right; 'fix the ashcrown klinelk'. Battle mirrors a unit by pose_source_facing (right for the Kilnelk). Its painted neutral (attack_0/7), walk and bellow pointed the body left with the head turned back right while the ram and reactions faced right, so the enemy elk stood and walked facing away and turned round to charge. A rest-versus-strike check of all 232 units in the enemy view found no other case. tools/h3_creature_animation.py gained h3_unit.json \"mirrored\": {alias: painted frame}, a reference flipped about the anatomical anchor (reference.json records mirrored_from). Every clip was retaken from hit_3, the one painting facing right in body and head: idle v4 (hit_3 at 31/62/93), move v2 (hit_3/hit_2), attack v4 (attack_2-5), hit v5, defend v4, cast v5 (mirrored cast_4; camera-facing frames 14-15 dropped) and death v3 (mirrored death_7; frames 38-43 dropped). Rejected: idle v2/v3 (plate pulses), idle v5 (grey matte residue), hit v6 (sword and sparks), death v2 (three-frame drop, flame tail), death v4 (turned to the camera). Published with source_facing right; 229 poses in one atlas; Godot render check 767 checks passed. Core suite 15/15. The 13 takes' sources (1736 files, 1.394 GB) are archived on N: in 2026-10-14-5dab5349, chained on 2026-10-14-fe9bdcc1-main and verified; nothing removed locally.",
       "updatedAt": "2026-10-14T23:30:00Z"
+    },
+    {
+      "id": "battle-neutral-guards-fight-on-20261015",
+      "title": "Neutral guards never retreat or surrender",
+      "status": "completed",
+      "classification": "gameplay_bugfix",
+      "source": "PLAN.md",
+      "notes": "Owner report 2026-10-15: neutral encounters retreated or surrendered, which makes no sense since they keep no units. The battle now records enemy_withdrawal_allowed (BattleRules._enemy_withdrawal_allowed): only an enemy owned by a player (an AI hero's encounter, a hero holding a site) may withdraw; neutral guards and town battles fight to the end, whatever faction their units belong to. Recomputed on load. battle_ai_flow_report gained the cases; core suite 15/15. Commit 5d384fe72."
+    },
+    {
+      "id": "tooling-battle-ai-arena-20261015",
+      "title": "Battle AI arena: head-to-head evaluation of BattleAiRules variants",
+      "status": "completed",
+      "classification": "tooling",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "tools/battle_ai_arena/README.md"
+      ],
+      "notes": "Owner request 2026-10-15: automated battle AI improvement, strategy changes first, then weight tuning; tooling kept out of the game and the test suites. tools/battle_ai_arena plays two BattleAiRules.gd variants (working tree, git revision or file) on hero-vs-hero battles from generated maps (6 factions x weeks 1/3/5/8 x 6 opponents = 144 battles; holdout and quick suites), each battle twice with the sides swapped, armies balanced by AiHeroRules.army_power. Variants are swapped per side in the worker's memory by a generated router (one stub per static function, routed by the acting stack's side); no game file changes. Score per game 0.5*result + 0.25*own value kept + 0.25*(1 - enemy value kept), unit value = recruitment cost, hero 20% of its army. Checked: identical variants 0.5000 +/- 0 on every suite; hero spells disabled 0.366 +/- 0.029 (worse). 288 games in about a minute with 24 workers. Next: move the tunable weights into data and tune them with CMA-ES against this arena; first strategy experiments."
     }
   ],
   "project": "heroes-like",
