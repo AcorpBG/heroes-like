@@ -161,6 +161,8 @@ Rules:
 
 `ux-overworld-road-junctions-20261008` (completed, owner playtest fix): where generated roads run two tiles wide at a junction or side by side, the renderer links the roads entering each clump with one tree instead of joining every adjacent tile, so junctions read as a T or a cross instead of ladders and loops; real loops and crossings are unchanged. See `docs/overworld-road-junctions.md`.
 
+`ux-overworld-road-diagonal-steps-20261015` (completed, owner playtest fix): generated roads that step diagonally across a tile corner are joined through that corner, so they no longer show a gap at every step. See `docs/overworld-road-junctions.md`.
+
 ### Battle stat scaling
 
 `battle-stat-scaling-20261008` (completed, owner review): attack against defense no longer stops at ±8 points: +5% per point of attack lead up to +300%, -2.5% per point of defense lead down to -70%. Level-ups roll one stat weighted by the hero's might or magic command path (40/40/10/10 toward attack and defense or power and knowledge), seeded per hero so saves never re-roll; damage spells gain 2.5x as much per point of power, and every 4 power adds a round to spell buffs, debuffs and riders (up to 3). A hit's cohesion loss goes by the share of the stack it took, not by creatures killed, so big stacks no longer lose 2 cohesion to every hit. See `docs/battle-stat-scaling.md`.

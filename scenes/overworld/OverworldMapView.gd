@@ -532,12 +532,18 @@ const ROAD_PIECE_SELECTION_MODEL := "homm3_4_neighbor_mask_lookup"
 const ROAD_VERTICAL_LANE := "orthogonal_mask_frame"
 const ROAD_HORIZONTAL_LANE := "orthogonal_mask_frame"
 const ROAD_HORIZONTAL_EDGE_Y_FACTOR := 0.50
-const ROAD_CONNECTION_SOURCE := "orthogonal_same_type_road_tiles"
+const ROAD_CONNECTION_SOURCE := "same_type_road_tiles_orthogonal_and_corner_steps"
 const ROAD_CARDINAL_DIRECTIONS := [
 	Vector2i.LEFT,
 	Vector2i.RIGHT,
 	Vector2i.UP,
 	Vector2i.DOWN,
+]
+const ROAD_DIAGONAL_DIRECTIONS := [
+	Vector2i(-1, -1),
+	Vector2i(1, -1),
+	Vector2i(-1, 1),
+	Vector2i(1, 1),
 ]
 const TOWN_MARKER_BODY_WIDTH := 0.64
 const TOWN_MARKER_BODY_HEIGHT := 0.34
@@ -3533,7 +3539,12 @@ func _draw_road_land_path(tile: Vector2i, rect: Rect2) -> void:
 		paths.append(corner)
 	else:
 		for direction in neighbor_directions:
-			paths.append(_road_land_path_points(tile, direction, _road_connector_start(rect, direction), _road_connector_end(rect, direction), width))
+			var start := _road_connector_start(rect, direction)
+			var end := _road_connector_end(rect, direction)
+			if direction.x != 0 and direction.y != 0:
+				paths.append(PackedVector2Array([start, start.lerp(end, 0.5), end]))
+			else:
+				paths.append(_road_land_path_points(tile, direction, start, end, width))
 	var texture = _terrain_art_texture(RoadStyle.TEXTURE_PATH)
 	if not texture is Texture2D:
 		for points in paths: _canvas_draw_polyline(points, ROAD_LAND_EARTH_COLOR, width, true)
@@ -3550,7 +3561,7 @@ func _road_land_corner_points(rect: Rect2, neighbors: Array) -> PackedVector2Arr
 	if neighbors.size() != 2: return PackedVector2Array()
 	var a: Vector2i = neighbors[0]
 	var b: Vector2i = neighbors[1]
-	if absi(a.x)+absi(a.y)!=1 or absi(b.x)+absi(b.y)!=1 or a+b==Vector2i.ZERO:
+	if a+b==Vector2i.ZERO:
 		return PackedVector2Array()
 	var start := _road_connector_end(rect, a)
 	var end := _road_connector_end(rect, b)
@@ -11042,7 +11053,7 @@ func _road_neighbor_directions(tile: Vector2i) -> Array:
 		var connections = road.get("connections", [])
 		var connection_directions := []
 		if connections is Array:
-			for direction in ROAD_CARDINAL_DIRECTIONS:
+			for direction in ROAD_CARDINAL_DIRECTIONS + ROAD_DIAGONAL_DIRECTIONS:
 				if _direction_key(direction) in connections:
 					connection_directions.append(direction)
 		return connection_directions
@@ -11057,6 +11068,8 @@ func _road_horizontal_lane_y(rect: Rect2) -> float:
 	return rect.position.y + (rect.size.y * ROAD_HORIZONTAL_EDGE_Y_FACTOR)
 
 func _road_connector_start(rect: Rect2, direction: Vector2i) -> Vector2:
+	if direction.x != 0 and direction.y != 0:
+		return rect.get_center()
 	if direction == Vector2i.LEFT or direction == Vector2i.RIGHT:
 		return Vector2(rect.get_center().x, _road_horizontal_lane_y(rect))
 	return rect.get_center()
@@ -11066,6 +11079,9 @@ func _road_connector_end(rect: Rect2, direction: Vector2i) -> Vector2:
 		return Vector2(rect.position.x - (rect.size.x * 0.05), _road_horizontal_lane_y(rect))
 	if direction == Vector2i.RIGHT:
 		return Vector2(rect.end.x + (rect.size.x * 0.05), _road_horizontal_lane_y(rect))
+	if direction.x != 0 and direction.y != 0:
+		# The shared corner, where the diagonal neighbour's half meets this one.
+		return rect.get_center() + Vector2(float(direction.x), float(direction.y)) * rect.size * 0.5
 	return rect.get_center() + Vector2(float(direction.x) * rect.size.x * 0.52, float(direction.y) * rect.size.y * 0.52)
 
 func _road_has_horizontal_connections(neighbor_directions: Array) -> bool:
@@ -12052,6 +12068,29 @@ func _rebuild_road_adjacency_connections() -> void:
 			if _road_payloads_can_connect(payload, neighbor_payload):
 				_add_road_connection(tile, direction)
 	_simplify_fat_road_clusters()
+	_add_road_corner_steps()
+
+## Generated roads also step diagonally, from one tile to the next across a
+## shared corner (the HoMM3 generator lays them so). Without a link there the
+## road showed a gap at every step. Join such tiles through the corner when no
+## drawn road tile beside both already joins them.
+func _add_road_corner_steps() -> void:
+	for key in _road_tiles.keys():
+		var payload: Dictionary = _road_tiles.get(key, {})
+		if payload.is_empty() or bool(payload.get("presentation_hidden", false)):
+			continue
+		var tile := Vector2i(int(payload.get("tile_x", -1)), int(payload.get("tile_y", -1)))
+		for direction in ROAD_DIAGONAL_DIRECTIONS:
+			var neighbor_payload: Dictionary = _road_tiles.get(_tile_key(tile + direction), {})
+			if bool(neighbor_payload.get("presentation_hidden", false)) or not _road_payloads_can_connect(payload, neighbor_payload):
+				continue
+			if _road_tile_drawn(tile + Vector2i(direction.x, 0)) or _road_tile_drawn(tile + Vector2i(0, direction.y)):
+				continue
+			_add_road_connection(tile, direction)
+
+func _road_tile_drawn(tile: Vector2i) -> bool:
+	var payload: Dictionary = _road_tiles.get(_tile_key(tile), {})
+	return not payload.is_empty() and not bool(payload.get("presentation_hidden", false))
 
 ## Generated roads can run two tiles wide where two roads meet or pass side by
 ## side (the HoMM3 generator does this too). Joining every adjacent tile drew

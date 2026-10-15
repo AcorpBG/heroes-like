@@ -21,6 +21,9 @@ class Roads extends Control:
 		var result := []
 		for direction in [Vector2i.UP,Vector2i.RIGHT,Vector2i.DOWN,Vector2i.LEFT]:
 			if roads.has(tile+direction): result.append(direction)
+		# Corner steps, as the live map joins them: no road beside both tiles.
+		for direction in [Vector2i(-1,-1),Vector2i(1,-1),Vector2i(-1,1),Vector2i(1,1)]:
+			if roads.has(tile+direction) and not roads.has(tile+Vector2i(direction.x,0)) and not roads.has(tile+Vector2i(0,direction.y)): result.append(direction)
 		return result
 	func _terrain_art_texture(_path): return dirt
 	func _canvas_draw_polyline(points, color, width, aa):
@@ -64,6 +67,7 @@ func run() -> void:
 	for y in range(2,4): roads.roads[Vector2i(4,y)] = true
 	roads.roads[Vector2i(3,5)] = true
 	roads.roads[Vector2i(6,4)] = true
+	roads.roads[Vector2i(7,5)] = true
 	viewport.add_child(roads)
 	for i in range(4): await process_frame
 	await RenderingServer.frame_post_draw
@@ -82,6 +86,9 @@ func run() -> void:
 		for band in strips:
 			check(band.points.size()==band.colors.size() and band.points.size()==band.uvs.size(),"invalid raster mesh")
 			for point in band.points: check(is_finite(point.x) and is_finite(point.y),"nonfinite road geometry")
+	var step_a := Rect2(Vector2(6,4)*120,Vector2(120,120))
+	var step_b := Rect2(Vector2(7,5)*120,Vector2(120,120))
+	check(Vector2i(1,1) in roads._road_neighbor_directions(Vector2i(6,4)) and roads._road_connector_end(step_a,Vector2i(1,1)) == roads._road_connector_end(step_b,Vector2i(-1,-1)),"diagonal road step does not meet at the shared corner")
 	print("ROAD_STYLE "+JSON.stringify({"checks":checks,"failures":failures,"draw_calls":roads.calls}))
 	quit(0 if failures.is_empty() else 1)
 '''
