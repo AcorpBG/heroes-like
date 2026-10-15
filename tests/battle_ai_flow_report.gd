@@ -9,11 +9,14 @@ extends Node
 ## closest pair on the field; bracing loses its worth as the battle clock runs
 ## out; a hero's buff is worth more on the stack about to act, and haste most
 ## when it lets that stack reach an enemy this turn. A fallen stack's effects
-## end without an event when the next round begins. The stacks come from a
+## end without an event when the next round begins. A neutral guard never
+## retreats or surrenders; an AI hero's army may. The stacks come from a
 ## battle on a generated small map.
 
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const AutoResolve = preload("res://scripts/core/BattleAutoResolveRules.gd")
+const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
+const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const Footprint = preload("res://scripts/core/BattleFootprint.gd")
 const REPORT_ID := "BATTLE_AI_FLOW_REPORT"
 const SEED := "battle-ai-flow-20261010"
@@ -49,6 +52,7 @@ func _run() -> void:
 		_check_clock_pressure()
 		_check_buff_timing()
 		_check_fallen_stack_effects()
+		_check_neutral_guard_fights_on()
 		await _check_auto_battle()
 		# Last: resolving the battle ends the session's battle for good.
 		_check_quick_resolve_generated()
@@ -433,6 +437,43 @@ func _check_fallen_stack_effects() -> void:
 			ended.append("queued " + String(event.get("battle_id", "")))
 	_check(ended.has("other") and not ended.has("struck") and not ended.has("fallen") and not ended.has("queued struck") and not ended.has("queued fallen"), "round start: only the living stack's effect ends with an event: %s" % [ended])
 	_check((_stack(battle, "struck").get("effects", []) as Array).is_empty() and (_stack(battle, "fallen").get("effects", []) as Array).is_empty(), "round start: the fallen stacks' effects are gone")
+
+
+# --- Withdrawal ----------------------------------------------------------------
+
+## A neutral guard keeps no survivors, so it never retreats or surrenders: a
+## battle against one locks enemy withdrawal, one against an AI hero does not.
+## A nearly destroyed enemy stack late in a lost battle withdraws only when the
+## battle allows it.
+func _check_neutral_guard_fights_on() -> void:
+	var session = _base_session
+	var neutral := {}
+	for encounter in session.overworld.get("encounters", []):
+		if not encounter.has(AiHeroRulesScript.AI_HERO_KEY):
+			neutral = encounter
+			break
+	_check(not neutral.is_empty() and not bool(BattleRules.create_battle_payload(session, neutral).get("enemy_withdrawal_allowed", true)), "withdrawal: a neutral guard battle locks enemy withdrawal")
+	# An AI hero's entry names the player that owns it (AiHeroRules).
+	var states: Array = session.overworld.get("enemy_states", [])
+	var owned_placement: Dictionary = neutral.duplicate(true)
+	owned_placement["spawned_by_player_id"] = PlayerRules.controller_id(states[0]) if not states.is_empty() else ""
+	_check(BattleRules._enemy_withdrawal_allowed(session, {}, owned_placement), "withdrawal: a battle against an AI player's hero allows enemy withdrawal")
+	var board := _board([
+		{"id": "actor", "side": "enemy", "hex": _cell(10, 4)},
+		{"id": "foe_a", "side": "player", "hex": _cell(0, 2)},
+		{"id": "foe_b", "side": "player", "hex": _cell(0, 6)},
+	], ["actor", "foe_a", "foe_b"])
+	board["round"] = 6
+	_stack(board, "actor")["total_health"] = 100
+	var actor := _stack(board, "actor")
+	board["enemy_withdrawal_allowed"] = true
+	var owned := String(BattleAiRules.choose_enemy_action(board, actor, {}).get("action", ""))
+	_check(owned in ["retreat", "surrender"], "withdrawal: a beaten AI hero's army leaves the field: %s" % owned)
+	board["enemy_withdrawal_allowed"] = false
+	var guard := String(BattleAiRules.choose_enemy_action(board, actor, {}).get("action", ""))
+	_check(guard not in ["retreat", "surrender"], "withdrawal: a beaten neutral guard fights on: %s" % guard)
+	var turn: Dictionary = BattleRules._run_enemy_stack_order(session, actor, {"action": "retreat"})
+	_check(String(turn.get("state", "")) == "invalid" and not session.battle.is_empty(), "withdrawal: a neutral guard's retreat order is refused: %s" % turn.get("message", ""))
 
 
 # --- Quick Resolve and Auto battle ---------------------------------------------

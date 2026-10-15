@@ -2000,9 +2000,8 @@ static func _enemy_withdrawal_action(
 ) -> Dictionary:
 	if battle.is_empty() or active_stack.is_empty() or _alive_count(active_stack) <= 0:
 		return {}
-	var context = battle.get("context", {})
-	var context_type := String(context.get("type", "")) if context is Dictionary else ""
-	if context_type in ["town_defense", "town_assault"]:
+	# Neutral guards and town battles fight to the end (BattleRules._enemy_withdrawal_allowed).
+	if not bool(battle.get("enemy_withdrawal_allowed", false)):
 		return {}
 	var retreat_allowed := bool(battle.get("retreat_allowed", true))
 	var surrender_allowed := bool(battle.get("surrender_allowed", true))

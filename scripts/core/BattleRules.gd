@@ -298,6 +298,7 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 		"enemy_army_affiliation": _army_affiliation(enemy_army),
 		"retreat_allowed": not _is_town_defense_context(battle_context),
 		"surrender_allowed": not _is_town_defense_context(battle_context),
+		"enemy_withdrawal_allowed": _enemy_withdrawal_allowed(session, battle_context, encounter_placement),
 		"player_commander_state": player_commander_state.duplicate(true) if player_commander_state is Dictionary else {},
 		"player_commander_source": player_setup.get("commander_source", {}),
 		"player_hero": _hero_payload_from_state(
@@ -1015,6 +1016,21 @@ static func _battle_surrender_allowed(battle: Dictionary) -> bool:
 		return false
 	return bool(battle.get("surrender_allowed", true))
 
+## Whether the enemy side may retreat or surrender. Only a force a player owns
+## (an AI hero, or a hero holding a site) keeps its survivors when it leaves the
+## field. A neutral guard has nowhere to go, so it fights to the end; its units
+## may still belong to a faction, so the stacks' faction does not count.
+static func _enemy_withdrawal_allowed(
+	session: SessionStateStoreScript.SessionData,
+	battle_context: Dictionary,
+	encounter_placement: Dictionary
+) -> bool:
+	if _is_town_defense_context(battle_context) or _is_town_assault_context(battle_context):
+		return false
+	if _is_resource_assault_context(battle_context):
+		return _enemy_state_exists(session, _battle_context_controller_id(session, battle_context))
+	return _enemy_state_exists(session, PlayerRules.raid_controller_id(encounter_placement))
+
 static func _withdrawal_pressure_label(battle: Dictionary, allowed: bool) -> String:
 	if not allowed:
 		return "Locked"
@@ -1379,6 +1395,11 @@ static func normalize_battle_state(session: SessionStateStoreScript.SessionData)
 		false
 		if town_defense_context
 		else bool(session.battle.get("surrender_allowed", true))
+	)
+	session.battle["enemy_withdrawal_allowed"] = _enemy_withdrawal_allowed(
+		session,
+		normalized_context,
+		_current_battle_encounter_placement(session)
 	)
 	session.battle["recent_events"] = _normalize_recent_events(session.battle.get("recent_events", []))
 	session.battle[PRESENTATION_EVENT_SERIAL_KEY] = max(0, int(session.battle.get(PRESENTATION_EVENT_SERIAL_KEY, 0)))
@@ -7287,12 +7308,12 @@ static func _run_enemy_stack_order(session: SessionStateStoreScript.SessionData,
 	var targets = _alive_stacks_for_side(session.battle, "player")
 	match String(action.get("action", "")):
 		"retreat":
-			if not _battle_retreat_allowed(session.battle):
+			if not _battle_retreat_allowed(session.battle) or not bool(session.battle.get("enemy_withdrawal_allowed", false)):
 				return {"ok": false, "message": "Enemy retreat is locked for this battle.", "state": "invalid"}
 			_mark_side_animation_event(session.battle, "enemy", "battle_unit_retreat")
 			return _finalize_enemy_withdrawal(session, "enemy_retreat")
 		"surrender":
-			if not _battle_surrender_allowed(session.battle):
+			if not _battle_surrender_allowed(session.battle) or not bool(session.battle.get("enemy_withdrawal_allowed", false)):
 				return {"ok": false, "message": "Enemy surrender is locked for this battle.", "state": "invalid"}
 			_mark_side_animation_event(session.battle, "enemy", "battle_unit_surrender")
 			return _finalize_enemy_withdrawal(session, "enemy_surrender")
