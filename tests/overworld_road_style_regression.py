@@ -5,9 +5,11 @@ import overworld_sandy_shore_regression as runner
 SOURCE = (runner.ROOT / 'scenes/overworld/OverworldMapView.gd').read_text(encoding='utf-8')
 METHODS = ['_draw_road_land_path', '_road_land_corner_points', '_road_land_path_points',
            '_road_connector_start', '_road_connector_end', '_road_horizontal_lane_y',
-           '_road_needs_joint_cap', '_draw_hostile_actor_marker']
+           '_road_needs_joint_cap', '_draw_hostile_actor_marker', '_road_bridge_axis', '_draw_road_bridge',
+           '_bridge_quad']
 LIVE = '\n'.join('\n'.join('\t' + line for line in re.search(
     rf'^func {name}\(.*?(?=^func |\Z)', SOURCE, re.M | re.S).group().rstrip().splitlines()) for name in METHODS)
+CONSTANTS = '\n'.join('\t' + line for line in re.findall(r'^const ROAD_(?:BRIDGE_\w+|CAUSEWAY_(?:DECK|GRAIN|SEAM)_COLOR) := .*$', SOURCE, re.M))
 runner.DEPENDENCIES += ['OverworldRoadStyle.gd']
 runner.SCRIPT = r'''extends SceneTree
 const RoadStyle = preload("res://scenes/overworld/OverworldRoadStyle.gd")
@@ -16,7 +18,9 @@ class Roads extends Control:
 	const ROAD_LAND_EARTH_COLOR := Color(0.57,0.42,0.24,0.58)
 	var dirt: Texture2D
 	var roads := {}
+	var _river_masks := {}
 	var calls := 0
+	var bridge_calls := 0
 	func _road_neighbor_directions(tile: Vector2i) -> Array:
 		var result := []
 		for direction in [Vector2i.UP,Vector2i.RIGHT,Vector2i.DOWN,Vector2i.LEFT]:
@@ -32,9 +36,21 @@ class Roads extends Control:
 	func _canvas_draw_textured_polygon(points, colors, uvs, image):
 		calls += 1
 		draw_polygon(points,colors,uvs,image)
+	func _canvas_draw_colored_polygon(points, color):
+		bridge_calls += 1
+		draw_colored_polygon(points,color)
+	func _canvas_draw_polygon(points, colors):
+		bridge_calls += 1
+		draw_polygon(points,colors)
+	func _canvas_draw_line(from, to, color, width, aa):
+		bridge_calls += 1
+		draw_line(from,to,color,width,aa)
+	func _canvas_draw_circle(at, radius, color):
+		bridge_calls += 1
+		draw_circle(at,radius,color)
 	func _draw() -> void:
 		for tile in roads: _draw_road_land_path(tile,Rect2(Vector2(tile)*120,Vector2(120,120)))
-''' + LIVE + r'''
+''' + CONSTANTS + '\n' + LIVE + r'''
 var checks := 0
 var failures := []
 func check(ok: bool, label: String) -> void:
@@ -68,6 +84,9 @@ func run() -> void:
 	roads.roads[Vector2i(3,5)] = true
 	roads.roads[Vector2i(6,4)] = true
 	roads.roads[Vector2i(7,5)] = true
+	# A stream crossing the straight east-west road, and one running along it.
+	roads._river_masks[Vector2i(5,1)] = 16 | 1 | 4
+	roads._river_masks[Vector2i(2,1)] = 16 | 2 | 8
 	viewport.add_child(roads)
 	for i in range(4): await process_frame
 	await RenderingServer.frame_post_draw
@@ -89,6 +108,9 @@ func run() -> void:
 	var step_a := Rect2(Vector2(6,4)*120,Vector2(120,120))
 	var step_b := Rect2(Vector2(7,5)*120,Vector2(120,120))
 	check(Vector2i(1,1) in roads._road_neighbor_directions(Vector2i(6,4)) and roads._road_connector_end(step_a,Vector2i(1,1)) == roads._road_connector_end(step_b,Vector2i(-1,-1)),"diagonal road step does not meet at the shared corner")
+	check(roads._road_bridge_axis(Vector2i(5,1),roads._road_neighbor_directions(Vector2i(5,1))) == Vector2i(1,0),"road over a crossing stream has no bridge")
+	check(roads._road_bridge_axis(Vector2i(2,1),roads._road_neighbor_directions(Vector2i(2,1))) == Vector2i.ZERO,"road along a stream got a bridge")
+	check(roads.bridge_calls > 0,"bridge was not drawn")
 	print("ROAD_STYLE "+JSON.stringify({"checks":checks,"failures":failures,"draw_calls":roads.calls}))
 	quit(0 if failures.is_empty() else 1)
 '''

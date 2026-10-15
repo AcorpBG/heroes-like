@@ -532,6 +532,13 @@ const ROAD_PIECE_SELECTION_MODEL := "homm3_4_neighbor_mask_lookup"
 const ROAD_VERTICAL_LANE := "orthogonal_mask_frame"
 const ROAD_HORIZONTAL_LANE := "orthogonal_mask_frame"
 const ROAD_HORIZONTAL_EDGE_Y_FACTOR := 0.50
+const ROAD_BRIDGE_HALF_LENGTH := 0.25
+const ROAD_BRIDGE_WIDTH_FACTOR := 0.64
+const ROAD_BRIDGE_PLANKS := 9
+const ROAD_BRIDGE_SHADOW_COLOR := Color(0.02, 0.03, 0.04, 0.45)
+const ROAD_BRIDGE_TIMBER_COLOR := Color(0.16, 0.105, 0.055, 1.0)
+const ROAD_BRIDGE_RAIL_COLOR := Color(0.2, 0.13, 0.07, 1.0)
+const ROAD_BRIDGE_RAIL_LIGHT_COLOR := Color(0.72, 0.55, 0.33, 0.8)
 const ROAD_CONNECTION_SOURCE := "same_type_road_tiles_orthogonal_and_corner_steps"
 const ROAD_CARDINAL_DIRECTIONS := [
 	Vector2i.LEFT,
@@ -3537,13 +3544,20 @@ func _draw_road_land_path(tile: Vector2i, rect: Rect2) -> void:
 	var neighbor_directions := _road_neighbor_directions(tile)
 	var corner := _road_land_corner_points(rect, neighbor_directions)
 	var paths := []
+	var bridge := _road_bridge_axis(tile, neighbor_directions)
 	if not corner.is_empty():
 		paths.append(corner)
 	else:
 		for direction in neighbor_directions:
 			var start := _road_connector_start(rect, direction)
 			var end := _road_connector_end(rect, direction)
-			if direction.x != 0 and direction.y != 0:
+			if bridge != Vector2i.ZERO:
+				# Straight onto the bridge deck, which sits on the tile centre.
+				var points := PackedVector2Array()
+				for index in range(9):
+					points.append(start.lerp(end, float(index) / 8.0))
+				paths.append(points)
+			elif direction.x != 0 and direction.y != 0:
 				paths.append(PackedVector2Array([start, start.lerp(end, 0.5), end]))
 			else:
 				paths.append(_road_land_path_points(tile, direction, start, end, width))
@@ -3557,6 +3571,60 @@ func _draw_road_land_path(tile: Vector2i, rect: Rect2) -> void:
 	if neighbor_directions.is_empty() or (corner.is_empty() and _road_needs_joint_cap(neighbor_directions)):
 		for band in RoadStyle.cap(center, width, tile, rect):
 			_canvas_draw_textured_polygon(band.points, band.colors, band.uvs, texture)
+	if bridge != Vector2i.ZERO:
+		_draw_road_bridge(rect, bridge, width)
+
+## A straight road over a river tile whose river does not run along the road
+## crosses on a timber bridge. Returns the road's axis, (1,0) east-west or
+## (0,1) north-south, else ZERO.
+func _road_bridge_axis(tile: Vector2i, neighbor_directions: Array) -> Vector2i:
+	var mask := int(_river_masks.get(tile, 0))
+	if mask & 15 == 0 or neighbor_directions.size() != 2:
+		return Vector2i.ZERO
+	var a: Vector2i = neighbor_directions[0]
+	var b: Vector2i = neighbor_directions[1]
+	if a + b != Vector2i.ZERO or (a.x != 0 and a.y != 0):
+		return Vector2i.ZERO
+	var axis := Vector2i(absi(a.x), absi(a.y))
+	# River joins along the road's own axis: N+S (5) or E+W (10).
+	var along_mask := 5 if axis.y != 0 else 10
+	if mask & along_mask != 0:
+		return Vector2i.ZERO
+	return axis
+
+## A plank deck on end beams across the stream, with rails and posts and a
+## shadow cast on the water down-right like the objects' shadows.
+func _draw_road_bridge(rect: Rect2, axis: Vector2i, road_width: float) -> void:
+	var s := rect.size.x
+	var center := rect.get_center()
+	var along := Vector2(axis)
+	var across := Vector2(-along.y, along.x)
+	var half_length := s * ROAD_BRIDGE_HALF_LENGTH
+	var half_width := road_width * ROAD_BRIDGE_WIDTH_FACTOR
+	_canvas_draw_colored_polygon(_bridge_quad(center + Vector2(s * 0.03, s * 0.045), along, across, s * 0.17, half_width), ROAD_BRIDGE_SHADOW_COLOR)
+	for end in [-1.0, 1.0]:
+		_canvas_draw_colored_polygon(_bridge_quad(center + along * half_length * float(end), along, across, s * 0.03, half_width * 1.22), ROAD_BRIDGE_TIMBER_COLOR)
+	# Darker at the ends, light where the deck crowns over the water.
+	var ends := ROAD_CAUSEWAY_DECK_COLOR.darkened(0.25)
+	var crown := ROAD_CAUSEWAY_GRAIN_COLOR.lightened(0.05)
+	var deck := PackedVector2Array([center - along * half_length - across * half_width, center - across * half_width, center + along * half_length - across * half_width, center + along * half_length + across * half_width, center + across * half_width, center - along * half_length + across * half_width])
+	_canvas_draw_polygon(deck, PackedColorArray([ends, crown, ends, ends, crown, ends]))
+	var seam_width := maxf(1.0, s * 0.012)
+	for index in range(ROAD_BRIDGE_PLANKS + 1):
+		var at := center + along * half_length * (-1.0 + 2.0 * float(index) / float(ROAD_BRIDGE_PLANKS))
+		_canvas_draw_line(at - across * half_width, at + across * half_width, ROAD_CAUSEWAY_SEAM_COLOR, seam_width, true)
+	var rail := maxf(1.5, s * 0.03)
+	for side in [-1.0, 1.0]:
+		var offset: Vector2 = across * half_width * float(side)
+		_canvas_draw_line(center - along * half_length + offset, center + along * half_length + offset, ROAD_BRIDGE_RAIL_COLOR, rail, true)
+		var lit: Vector2 = offset - across * rail * 0.2
+		_canvas_draw_line(center - along * half_length + lit, center + along * half_length + lit, ROAD_BRIDGE_RAIL_LIGHT_COLOR, rail * 0.4, true)
+		for post in [-1.0, 0.0, 1.0]:
+			_canvas_draw_circle(center + along * half_length * 0.86 * float(post) + offset, rail * 0.8, ROAD_BRIDGE_TIMBER_COLOR)
+
+## A rectangle centred on center, half_length along the road, half_width across.
+func _bridge_quad(center: Vector2, along: Vector2, across: Vector2, half_length: float, half_width: float) -> PackedVector2Array:
+	return PackedVector2Array([center - along * half_length - across * half_width, center + along * half_length - across * half_width, center + along * half_length + across * half_width, center - along * half_length + across * half_width])
 
 func _road_land_corner_points(rect: Rect2, neighbors: Array) -> PackedVector2Array:
 	# The native edges/topology stay exact; only the join within this tile bends.

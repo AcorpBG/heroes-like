@@ -14,10 +14,16 @@ The native generator's river pass writes a river type per tile (`river_path_writ
 - `OverworldGroundSurface` writes the mask into the lookup's blue channel: bits 0-3 the joins, bit 4 a river tile, bits 5-6 the type; bit 7 stays the road flag. Road and river tiles get no ground decals.
 - The ground shader (`river_paint`) measures the distance to each river tile's centre-to-edge runs, bent by slow noise so the stream winds off the grid; turns are arcs round the tile corner and springs taper. A narrow channel of calm water (the sea material, desaturated and darkened, with a broken glint down the middle) sits in dark wet banks taken from the ground under it. Icy, muddy and lava rivers tint the water.
 
-Presentation only: rivers do not change movement (as in HoMM3), and the river data and saves are untouched. Roads cross rivers drawn over the water.
+Presentation only: rivers do not change movement (as in HoMM3), and the river data and saves are untouched.
+
+## Bridges
+
+Slice: `art-overworld-river-bridges-20261015` (owner pick A, a timber bridge, from four in-game looks: timber bridge, stone bridge, stepping-stone ford, shallow ford).
+
+Where a straight road crosses a river (the road joins two opposite sides of the tile and the river joins neither of those sides), `OverworldMapView._road_bridge_axis` gives the road's axis and `_draw_road_bridge` draws a plank deck on end beams with rails, posts and a shadow on the water, over the road. Other road and river overlaps (a road running along the river, or turning on a river tile) keep the road drawn over the water. The ground shader straightens the stream's meander near any tile with both the road and river bits, so the water runs through the tile centre under the bridge. The generator places few such crossings: one on each of the two sampled maps that have them.
 
 Uniforms: `river_half_width`, `river_bank`, `river_meander`, `lava_slot`.
 
 ## Validation
 
-Generated medium map (seed `river-b`) rendered at two river-dense spots before and after, with the owner's comparison sheets; `tests/overworld_sandy_shore_regression.py` (ground shader and lookup) and `tests/overworld_road_style_regression.py` pass; core suite.
+Generated medium map (seed `river-b`) rendered at two river-dense spots before and after, with the owner's comparison sheets; `tests/overworld_sandy_shore_regression.py` (ground shader and lookup) and `tests/overworld_road_style_regression.py` pass (it also checks a bridge is drawn where a road crosses a stream and not where it runs along one); core suite. Bridges: the crossings on seeds `ford-1` (large) and `river-b` (medium) rendered in game in each candidate look.

@@ -264,8 +264,21 @@ vec2 river_field(vec2 p) {
 }
 
 vec3 river_paint(vec3 surface, vec2 world, vec2 warp) {
-	vec2 p = world + vec2(value_noise(world * 0.7 + vec2(3.1, 7.7)), value_noise(world * 0.7 + vec2(-5.3, 1.9))) * 2.0 * river_meander - vec2(river_meander)
-		+ warp * 0.15;
+	// Where a road crosses (road and river on one tile) the stream runs
+	// straight through the tile centre, so the crossing sits on the water.
+	float straight = 1.0;
+	vec2 base = floor(world);
+	for (int dy = -1; dy <= 1; dy++) {
+		for (int dx = -1; dx <= 1; dx++) {
+			vec2 cell = base + vec2(float(dx), float(dy));
+			if ((river_bits(cell) & 144) == 144) {
+				vec2 off = abs(world - cell - vec2(0.5));
+				straight = min(straight, smoothstep(0.3, 1.1, max(off.x, off.y)));
+			}
+		}
+	}
+	vec2 p = world + (vec2(value_noise(world * 0.7 + vec2(3.1, 7.7)), value_noise(world * 0.7 + vec2(-5.3, 1.9))) * 2.0 * river_meander - vec2(river_meander)
+		+ warp * 0.15) * straight;
 	vec2 field = river_field(p);
 	float half_width = river_half_width;
 	float bank = river_bank;
