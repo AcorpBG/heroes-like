@@ -3561,12 +3561,13 @@ func _draw_road_land_path(tile: Vector2i, rect: Rect2) -> void:
 				paths.append(PackedVector2Array([start, start.lerp(end, 0.5), end]))
 			else:
 				paths.append(_road_land_path_points(tile, direction, start, end, width))
-	var texture = _terrain_art_texture(RoadStyle.TEXTURE_PATH)
+	var road_type := int(_road_tile_payload(tile).get("road_type", RoadStyle.ROAD_TYPE_DIRT))
+	var texture = _terrain_art_texture(RoadStyle.texture_path(road_type))
 	if not texture is Texture2D:
 		for points in paths: _canvas_draw_polyline(points, ROAD_LAND_EARTH_COLOR, width, true)
 		return
 	for points in paths:
-		for band in RoadStyle.strips(points, width, tile, rect):
+		for band in RoadStyle.strips(points, width, tile, rect, road_type):
 			_canvas_draw_textured_polygon(band.points, band.colors, band.uvs, texture)
 	if neighbor_directions.is_empty() or (corner.is_empty() and _road_needs_joint_cap(neighbor_directions)):
 		for band in RoadStyle.cap(center, width, tile, rect):
@@ -11375,6 +11376,12 @@ func _rebuild_road_tiles() -> void:
 		_profile_add("road_index_rebuilds", 1)
 		_profile_end("road_index", profile_start, {"rebuilt": true, "road_tiles": 0, "signature": signature})
 		return
+	# The generator's road type per tile (1 dirt, 2 gravel, 3 cobblestone).
+	var road_types := PackedInt32Array()
+	var road_type_layer = _terrain_layers.get("road_type", {})
+	var road_type_levels = road_type_layer.get("levels", []) if road_type_layer is Dictionary else []
+	if road_type_levels is Array and _level >= 0 and _level < road_type_levels.size():
+		road_types = PackedInt32Array(road_type_levels[_level])
 	for road in roads:
 		if not (road is Dictionary):
 			continue
@@ -11393,6 +11400,8 @@ func _rebuild_road_tiles() -> void:
 			if tile.x < 0 or tile.y < 0 or tile.x >= _map_size.x or tile.y >= _map_size.y:
 				continue
 			_ensure_road_tile_payload(tile, overlay_id, road_id, role, tile_value)
+			if tile.y * _map_size.x + tile.x < road_types.size():
+				_road_tiles[_tile_key(tile)]["road_type"] = road_types[tile.y * _map_size.x + tile.x]
 	_rebuild_road_adjacency_connections()
 	_profile_add("road_index_rebuilds", 1)
 	_profile_end("road_index", profile_start, {

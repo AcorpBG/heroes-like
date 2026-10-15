@@ -19,6 +19,7 @@ class Roads extends Control:
 	var dirt: Texture2D
 	var roads := {}
 	var _river_masks := {}
+	var road_types := {}
 	var calls := 0
 	var bridge_calls := 0
 	func _road_neighbor_directions(tile: Vector2i) -> Array:
@@ -30,6 +31,7 @@ class Roads extends Control:
 			if roads.has(tile+direction) and not roads.has(tile+Vector2i(direction.x,0)) and not roads.has(tile+Vector2i(0,direction.y)): result.append(direction)
 		return result
 	func _terrain_art_texture(_path): return dirt
+	func _road_tile_payload(tile: Vector2i) -> Dictionary: return {"road_type": road_types.get(tile, 1)}
 	func _canvas_draw_polyline(points, color, width, aa):
 		calls += 1
 		draw_polyline(points,color,width,aa)
@@ -87,6 +89,9 @@ func run() -> void:
 	# A stream crossing the straight east-west road, and one running along it.
 	roads._river_masks[Vector2i(5,1)] = 16 | 1 | 4
 	roads._river_masks[Vector2i(2,1)] = 16 | 2 | 8
+	# The generator's road types: gravel and cobblestone stretches.
+	for y in range(2,5): roads.road_types[Vector2i(1,y)] = RoadStyle.ROAD_TYPE_COBBLESTONE
+	for y in range(2,4): roads.road_types[Vector2i(4,y)] = RoadStyle.ROAD_TYPE_GRAVEL
 	viewport.add_child(roads)
 	for i in range(4): await process_frame
 	await RenderingServer.frame_post_draw
@@ -111,6 +116,14 @@ func run() -> void:
 	check(roads._road_bridge_axis(Vector2i(5,1),roads._road_neighbor_directions(Vector2i(5,1))) == Vector2i(1,0),"road over a crossing stream has no bridge")
 	check(roads._road_bridge_axis(Vector2i(2,1),roads._road_neighbor_directions(Vector2i(2,1))) == Vector2i.ZERO,"road along a stream got a bridge")
 	check(roads.bridge_calls > 0,"bridge was not drawn")
+	var surfaces := {}
+	for road_type in [RoadStyle.ROAD_TYPE_DIRT, RoadStyle.ROAD_TYPE_GRAVEL, RoadStyle.ROAD_TYPE_COBBLESTONE]:
+		var path := RoadStyle.texture_path(road_type)
+		surfaces[path] = true
+		check(FileAccess.file_exists(root_path.path_join(path.trim_prefix("res://"))),"road surface missing for type %d" % road_type)
+		check(RoadStyle.strips(PackedVector2Array([Vector2(0,60),Vector2(120,60)]),28.8,Vector2i.ZERO,Rect2(0,0,120,120),road_type).size() == 3,"road type %d lacks its bands" % road_type)
+	check(surfaces.size() == 3,"road types share a surface")
+	check(RoadStyle.texture_path(0) == RoadStyle.TEXTURE_PATH,"unknown road type is not drawn as dirt")
 	print("ROAD_STYLE "+JSON.stringify({"checks":checks,"failures":failures,"draw_calls":roads.calls}))
 	quit(0 if failures.is_empty() else 1)
 '''

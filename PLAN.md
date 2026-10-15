@@ -203,6 +203,10 @@ Rules:
 
 `art-overworld-rivers-20261015` (completed, owner pick D): the generator's river layer is drawn as a narrow winding stream with dark wet banks in the ground shader; turns are arcs, two-tile-wide stretches run through as one stream, ends run into water or the map edge or taper as springs. Presentation only. See `docs/overworld-rivers.md`.
 
+### Road types
+
+`art-overworld-road-types-20261015` (completed, owner picks): roads are drawn in the type the generator picked for the map (dirt, gravel or cobblestone) from the package `road_type` layer, with original procedurally generated gravel and cobblestone surfaces. Presentation only. See `docs/overworld-road-junctions.md`.
+
 ### River bridges
 
 `art-overworld-river-bridges-20261015` (completed, owner pick A): a straight road over a river crosses on a timber bridge; the stream runs straight under it. Presentation only. See `docs/overworld-rivers.md`.

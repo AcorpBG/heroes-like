@@ -2,8 +2,23 @@ extends RefCounted
 ## Original dirt painting clipped to soft shoulders; road connectivity is external.
 const TEXTURE_PATH := "res://art/overworld/runtime/terrain_tiles/base_generated_v2/dirt.png"
 const WIDTH_FACTOR := 0.24
+## The generator's road types, as in the map format: 1 dirt, 2 gravel, 3 cobblestone.
+const ROAD_TYPE_DIRT := 1
+const ROAD_TYPE_GRAVEL := 2
+const ROAD_TYPE_COBBLESTONE := 3
+const GRAVEL_TEXTURE_PATH := "res://art/overworld/runtime/terrain_tiles/roads/road_gravel.png"
+const COBBLESTONE_TEXTURE_PATH := "res://art/overworld/runtime/terrain_tiles/roads/road_cobblestone.png"
 
-static func strips(path: PackedVector2Array, width: float, tile: Vector2i, rect: Rect2) -> Array:
+## The painting a road of this type samples; dirt for unknown types.
+static func texture_path(road_type: int) -> String:
+	match road_type:
+		ROAD_TYPE_GRAVEL:
+			return GRAVEL_TEXTURE_PATH
+		ROAD_TYPE_COBBLESTONE:
+			return COBBLESTONE_TEXTURE_PATH
+	return TEXTURE_PATH
+
+static func strips(path: PackedVector2Array, width: float, tile: Vector2i, rect: Rect2, road_type := ROAD_TYPE_DIRT) -> Array:
 	if path.size() < 2: return []
 	# Legacy line connectors overlap beyond their cell. Alpha-blended raster
 	# shoulders meet at the exact edge instead, avoiding a dark seam every tile.
@@ -18,7 +33,11 @@ static func strips(path: PackedVector2Array, width: float, tile: Vector2i, rect:
 		widths.append(width * (1.0 + 0.08 * sin(world.x * 6.1 + world.y * 4.7)))
 	var bands := []
 	# Alpha tapers out into the underlying biome; no dark outline or parallel rails.
-	for span in [Vector4(-0.72,-0.37,0.0,0.92), Vector4(-0.37,0.37,0.92,0.92), Vector4(0.37,0.72,0.92,0.0)]:
+	# Paving keeps a firmer edge than packed earth.
+	var spans := [Vector4(-0.72,-0.37,0.0,0.92), Vector4(-0.37,0.37,0.92,0.92), Vector4(0.37,0.72,0.92,0.0)]
+	if road_type == ROAD_TYPE_COBBLESTONE:
+		spans = [Vector4(-0.62,-0.5,0.0,0.96), Vector4(-0.5,0.5,0.96,0.96), Vector4(0.5,0.62,0.96,0.0)]
+	for span in spans:
 		var points := PackedVector2Array()
 		var colors := PackedColorArray()
 		for i in range(path.size()):
