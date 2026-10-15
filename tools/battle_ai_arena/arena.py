@@ -38,6 +38,8 @@ import router  # noqa: E402
 from core_suite import find_godot  # noqa: E402
 
 AI_SOURCE = ROOT / "scripts" / "core" / "BattleAiRules.gd"
+WEIGHTS_FILE = ROOT / "content" / "battle_ai_weights.json"
+WEIGHTS_DECLARATION = "static var _weights: Dictionary = {}"
 MAPS_DIR = ROOT / "maps"
 
 # Army stages: weeks of creature growth from a fully built town, the top tier
@@ -72,8 +74,27 @@ def load_items(name: str) -> list[dict]:
     return data.get("items", data) if isinstance(data, dict) else data
 
 
-def resolve_variant(spec: str, dest: Path) -> str:
-    """'current' (the working tree), 'git:<rev>', or a path to a BattleAiRules.gd copy."""
+def load_weights(path: Path | str | None = None) -> dict[str, float]:
+    """A weights file ({"weights": {...}} or a flat mapping); the game's own by default."""
+    data = json.loads(Path(path or WEIGHTS_FILE).read_text(encoding="utf-8"))
+    weights = data.get("weights", data) if isinstance(data, dict) else {}
+    return {key: float(value) for key, value in weights.items()}
+
+
+def weighted_source(source: str, weights: dict[str, float]) -> str:
+    """The variant's source with its weights built in, in place of reading the game's file.
+    Every weight the game's file names must be given (missing ones keep the file's values)."""
+    if WEIGHTS_DECLARATION not in source:
+        sys.exit("this BattleAiRules.gd reads no weights file, so it cannot take weights")
+    full = load_weights()
+    full.update(weights)
+    literal = "{" + ", ".join(f'"{key}": {value:.6f}' for key, value in sorted(full.items())) + "}"
+    return source.replace(WEIGHTS_DECLARATION, f"static var _weights: Dictionary = {literal}", 1)
+
+
+def resolve_variant(spec: str, dest: Path, weights: dict[str, float] | None = None) -> str:
+    """'current' (the working tree), 'git:<rev>', or a path to a BattleAiRules.gd copy,
+    optionally with its weights replaced."""
     if spec == "current":
         source = AI_SOURCE.read_text(encoding="utf-8")
     elif spec.startswith("git:"):
@@ -87,6 +108,8 @@ def resolve_variant(spec: str, dest: Path) -> str:
         source = proc.stdout
     else:
         source = Path(spec).read_text(encoding="utf-8")
+    if weights is not None:
+        source = weighted_source(source, weights)
     dest.write_text(router.strip_class_name(source), encoding="utf-8")
     return source
 
@@ -159,7 +182,18 @@ def score_game(game: dict, values: dict[str, float]) -> dict | None:
     return {"result": result, "player_score": 0.5 * result + 0.25 * kept["player"] + 0.25 * (1.0 - kept["enemy"]), "kept": kept}
 
 
-def run_workers(godot: str, run_dir: Path, groups: list[dict], workers: int, variant_paths: dict, router_path: Path, timeout: int) -> tuple[list[dict], list[str]]:
+def run_workers(
+    godot: str,
+    run_dir: Path,
+    groups: list[dict],
+    workers: int,
+    variant_paths: dict,
+    router_path: Path,
+    timeout: int,
+    orders: list[list[str]] | None = None,
+    default_variant: str = "A",
+) -> tuple[list[dict], list[str]]:
+    """Plays every battle of groups once per order ([player variant, enemy variant])."""
     chunks = [groups[i::workers] for i in range(workers)]
     procs = []
     profiles = []
@@ -169,9 +203,9 @@ def run_workers(godot: str, run_dir: Path, groups: list[dict], workers: int, var
         job = run_dir / f"job_{index}.json"
         job.write_text(json.dumps({
             "variants": {label: str(path) for label, path in variant_paths.items()},
-            "default_variant": "A",
+            "default_variant": default_variant,
             "router": str(router_path),
-            "orders": [["A", "B"], ["B", "A"]],
+            "orders": orders or [["A", "B"], ["B", "A"]],
             "groups": chunk,
         }), encoding="utf-8")
         profile = tempfile.mkdtemp(prefix="heroes-arena-")
@@ -275,7 +309,9 @@ def summarize(rows: list[dict], values: dict[str, float]) -> tuple[dict, list[st
 
 
 def print_report(summary: dict, problems: list[str], args, wall: float, run_dir: Path) -> None:
-    print(f"\nBattle AI arena | suite {args.suite} | A = {args.a} | B = {args.b}")
+    a_label = args.a + (f" with {args.a_weights}" if args.a_weights else "")
+    b_label = args.b + (f" with {args.b_weights}" if args.b_weights else "")
+    print(f"\nBattle AI arena | suite {args.suite} | A = {a_label} | B = {b_label}")
     print(f"{summary['battles']} battles, {summary['games']} games in {wall:.0f}s ({summary['games'] / wall:.1f} games/s), "
           f"{summary['mean_rounds']} rounds and {summary['mean_game_ms']} ms per game")
     if summary["b_score"] is not None:
@@ -302,6 +338,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--a", default="git:HEAD", help="baseline variant: current, git:<rev> or a file (default git:HEAD)")
     parser.add_argument("--b", default="current", help="candidate variant: current, git:<rev> or a file (default current)")
+    parser.add_argument("--a-weights", help="weights file for A, over the game's content/battle_ai_weights.json")
+    parser.add_argument("--b-weights", help="weights file for B, for example a tune.py result")
     parser.add_argument("--suite", choices=sorted(SUITES), default="standard")
     parser.add_argument("--workers", type=int, default=max(1, (os.cpu_count() or 2) * 3 // 4))
     parser.add_argument("--godot", help="Godot binary")
@@ -317,8 +355,8 @@ def main() -> int:
     variants_dir = run_dir / "variants"
     variants_dir.mkdir(exist_ok=True)
     variant_paths = {"A": variants_dir / "A.gd", "B": variants_dir / "B.gd"}
-    resolve_variant(args.a, variant_paths["A"])
-    resolve_variant(args.b, variant_paths["B"])
+    resolve_variant(args.a, variant_paths["A"], load_weights(args.a_weights) if args.a_weights else None)
+    resolve_variant(args.b, variant_paths["B"], load_weights(args.b_weights) if args.b_weights else None)
     # The router keeps the signatures the game was compiled against: the working tree's.
     router_path = run_dir / "router.gd"
     router_path.write_text(router.build_router(AI_SOURCE.read_text(encoding="utf-8")), encoding="utf-8")

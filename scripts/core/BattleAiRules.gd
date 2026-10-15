@@ -22,8 +22,20 @@ const BATTLE_HEX_ROWS := 9
 const DECISIVE_ATTACK_TARGET_SIDE_HEALTH_RATIO_MAX := 0.4
 const DECISIVE_ATTACK_ACTING_SIDE_HEALTH_RATIO_MIN := 0.5
 const DECISIVE_ATTACK_MAX_DEFEND_SCORE_GAP := 2.0
+## The battle AI's tunable weights: what each scored consideration is worth
+## (_w). Tuned against the battle AI arena (tools/battle_ai_arena/tune.py).
+const WEIGHTS_PATH := "res://content/battle_ai_weights.json"
 ## The last rounds before stalemate, in which defending loses its worth.
 const CLOCK_PRESSURE_ROUNDS := 3
+
+static var _weights: Dictionary = {}
+
+## The weight named key in WEIGHTS_PATH, read once.
+static func _w(key: String) -> float:
+	if _weights.is_empty():
+		var data: Dictionary = ContentService.load_json(WEIGHTS_PATH)
+		_weights = data.get("weights", {}) if data.get("weights", {}) is Dictionary else {}
+	return float(_weights[key])
 
 static func _opposing_side(side: String) -> String:
 	if side == "player":
@@ -613,7 +625,7 @@ static func _should_hold_line(battle: Dictionary, stack: Dictionary) -> bool:
 	if not _fights_in_melee(stack) or _clock_pressure(battle) > 0:
 		return false
 	var side := String(stack.get("side", ""))
-	return _side_ranged_power(battle, side) > _side_ranged_power(battle, _opposing_side(side))
+	return _side_ranged_power(battle, side) > _side_ranged_power(battle, _opposing_side(side)) * _w("hold_ranged_ratio")
 
 ## The side's shooting this round: creatures in stacks with shots left times
 ## their average damage.
@@ -720,7 +732,7 @@ static func _melee_approach_score(battle: Dictionary, stack: Dictionary, target:
 		score -= float(strike_back) / float(maxi(1, int(projected.get("unit_hp", 1)))) * _average_unit_damage(projected)
 	for enemy in _alive_stacks_for_side(projected_battle, String(target.get("side", ""))):
 		if bool(enemy.get("ranged", false)) and int(enemy.get("shots_remaining", 0)) > 0 and _stack_hex_distance(projected, enemy) <= 1:
-			score += 0.25 * float(_alive_count(enemy)) * _average_unit_damage(enemy)
+			score += _w("approach_next_to_shooter") * float(_alive_count(enemy)) * _average_unit_damage(enemy)
 	return score
 
 static func _average_unit_damage(stack: Dictionary) -> float:
@@ -1056,20 +1068,20 @@ static func _shared_tactical_spell_conservation_delta(
 	support_needs_pressure: bool = true
 ) -> float:
 	var effect_type := String(behavior.get("effect_type", ""))
-	var delta := 1.75
+	var delta := _w("spell_bar_default")
 	match effect_type:
 		"damage_enemy":
-			delta = 2.0
+			delta = _w("spell_bar_damage")
 		"control_enemy":
-			delta = 2.25
+			delta = _w("spell_bar_control")
 		"recover_ally", "cleanse_ally":
-			delta = 1.0
+			delta = _w("spell_bar_recovery")
 		"defense_buff", "initiative_buff", "attack_buff":
-			delta = 1.75 if not support_needs_pressure or _support_spell_has_active_pressure(battle, active_stack, target_stack, hostile_targets) else 100.0
+			delta = _w("spell_bar_buff") if not support_needs_pressure or _support_spell_has_active_pressure(battle, active_stack, target_stack, hostile_targets) else 100.0
 	var command_path := String(commander_payload.get("command_path", "")).to_lower()
 	var archetype := String(commander_payload.get("archetype", "")).to_lower()
 	if command_path == "magic" or archetype in ["hexcaller", "starseer", "rootoracle", "denaugur", "drumoracle", "fogprophet", "funeralhexer", "artillerist", "sharpshooter", "beaconscribe", "pressuremath", "slagalchemist", "heatrice"]:
-		delta -= 0.75
+		delta -= _w("spell_bar_caster_discount")
 	return max(0.75, delta)
 
 static func _support_spell_has_active_pressure(
@@ -1406,33 +1418,33 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 	var round_number := int(battle.get("round", 1))
 	# Creatures killed, each weighed by the damage it deals: killing two dragons
 	# beats killing twenty peasants.
-	var score := float(applied_damage) / float(max(1, int(target.get("unit_hp", 1)))) * _creature_threat_weight(battle, target)
-	score += min(1.0, float(applied_damage) / float(target_health)) * 8.0
+	var score := float(applied_damage) / float(max(1, int(target.get("unit_hp", 1)))) * _creature_threat_weight(battle, target) * _w("attack_kills")
+	score += min(1.0, float(applied_damage) / float(target_health)) * _w("attack_damage_share")
 	if damage >= target_health:
-		score += 6.0
+		score += _w("attack_lethal")
 	if bool(target.get("ranged", false)):
-		score += 2.5
+		score += _w("attack_target_ranged")
 	if int(target.get("shots_remaining", 0)) > 0:
-		score += 1.0
+		score += _w("attack_target_has_shots")
 	var foundry_aura := _ability_by_id(target, "foundry_aura")
 	if not foundry_aura.is_empty():
 		score += float(foundry_aura.get("ai_target_priority_bonus", 0.0))
-	score += _target_immediate_threat_score(attacker, target, battle)
-	score += (1.0 - _health_ratio(target)) * 3.0
-	score += (1.0 - (float(_stack_cohesion_total(target, battle)) / float(COHESION_MAX))) * 3.5
-	score += float(_stack_momentum_total(attacker, battle)) * 0.6
+	score += _target_immediate_threat_score(attacker, target, battle) * _w("attack_target_threat")
+	score += (1.0 - _health_ratio(target)) * _w("attack_target_wounded")
+	score += (1.0 - (float(_stack_cohesion_total(target, battle)) / float(COHESION_MAX))) * _w("attack_target_cohesion_lost")
+	score += float(_stack_momentum_total(attacker, battle)) * _w("attack_momentum")
 	if _stack_cohesion_total(target, battle) <= 3:
-		score += 2.5
+		score += _w("attack_target_shaken")
 	if _stack_is_isolated(battle, target):
-		score += 1.5
+		score += _w("attack_target_isolated")
 	if _stack_cohesion_total(attacker, battle) <= 4:
-		score -= 1.5
+		score -= _w("attack_own_shaken")
 	# A shooter next to an enemy shoots at x0.6 (_stack_is_engaged).
 	var point_blank := is_ranged and _stack_is_engaged(attacker, battle)
 	if is_ranged and not point_blank:
-		score += 2.0
+		score += _w("attack_clear_shot")
 	if point_blank:
-		score -= 1.5
+		score -= _w("attack_point_blank")
 	if is_ranged and attack_distance > 0 and _side_controls_field_objective_type(battle, String(target.get("side", "")), "cover_line"):
 		score -= 2.5 if _stack_is_cover_screened(target, battle) else 1.0
 	if _side_controls_field_objective_type(battle, String(target.get("side", "")), "cover_line") and _stack_is_cover_screened(target, battle):
@@ -1560,7 +1572,7 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 				score -= 6.0
 	if not is_ranged and int(target.get("retaliations_left", 0)) > 0 and _alive_count(target) > 0 and _can_make_retaliation(target, attack_distance, battle):
 		var retaliation_damage := _estimate_damage(target, attacker, battle, false, true, attack_distance)
-		score -= (float(retaliation_damage) / float(max(1, int(attacker.get("unit_hp", 1))))) * 0.45
+		score -= (float(retaliation_damage) / float(max(1, int(attacker.get("unit_hp", 1))))) * _w("attack_strike_back")
 	return score
 
 static func _damage_spell_score(
@@ -1576,7 +1588,7 @@ static func _damage_spell_score(
 	var resistance_pct: int = int(damage_projection.get("resistance_pct", 0))
 	var damage_efficiency := clampf(float(damage) / float(raw_damage), 0.0, 1.0)
 	var score := (_attack_score(active_stack, target, battle, true) + 1.5) * (0.35 + (damage_efficiency * 0.65))
-	score += min(1.0, float(damage) / float(max(1, int(target.get("total_health", 0))))) * 6.0
+	score += min(1.0, float(damage) / float(max(1, int(target.get("total_health", 0))))) * _w("spell_damage_share")
 	score -= float(resistance_pct) * 0.06
 	var status_effect := _status_effect_from_spell(spell)
 	var status_id := String(status_effect.get("effect_id", ""))
@@ -2015,16 +2027,16 @@ static func _stack_spell_target_value(stack: Dictionary, battle: Dictionary) -> 
 ## counts, not the closest pair on the field, and in the last rounds before
 ## stalemate (_clock_pressure) bracing loses its worth.
 static func _defend_score(battle: Dictionary, active_stack: Dictionary, targets: Array) -> float:
-	var score := 2.0 + ((1.0 - _health_ratio(active_stack)) * 5.0)
+	var score := _w("defend_base") + ((1.0 - _health_ratio(active_stack)) * _w("defend_wounded"))
 	var round_number := int(battle.get("round", 1))
 	var contact := _stack_contact_band(active_stack, battle)
-	score += (1.0 - (float(_stack_cohesion_total(active_stack, battle)) / float(COHESION_MAX))) * 5.0
+	score += (1.0 - (float(_stack_cohesion_total(active_stack, battle)) / float(COHESION_MAX))) * _w("defend_cohesion_lost")
 	if bool(active_stack.get("ranged", false)) and int(active_stack.get("shots_remaining", 0)) > 0:
-		score -= 3.0
+		score -= _w("defend_shooter")
 	if contact > 0 and _fights_in_melee(active_stack):
-		score -= 2.0
+		score -= _w("defend_melee_out_of_contact")
 	if (_brace_available(active_stack, battle) or _bramble_ground_available(active_stack, battle)) and contact <= 1:
-		score += 3.0
+		score += _w("defend_brace")
 	var charter_aura := _charter_retaliation_aura_context(active_stack, battle)
 	if not charter_aura.is_empty() and _has_ability(active_stack, "brace"):
 		score += float(charter_aura.get("ability", {}).get("ally_retaliation_ai_defend_bonus", 0.0))
@@ -2045,13 +2057,13 @@ static func _defend_score(battle: Dictionary, active_stack: Dictionary, targets:
 	if _side_controls_field_objective_type(battle, String(active_stack.get("side", "")), "obstruction_line") and _stack_can_breach_obstruction(active_stack, battle) and int(battle.get("distance", 1)) > 0:
 		score += 2.0
 	if contact == 0 and _has_hostile_ranged_pressure(targets):
-		score += 1.0
+		score += _w("defend_in_contact_under_fire")
 	if _stack_is_isolated(battle, active_stack):
-		score += 2.0
+		score += _w("defend_isolated")
 	if _hero_has_trait(battle, String(active_stack.get("side", "")), "linekeeper"):
 		score += 1.0
 	score += _objective_action_score(battle, String(active_stack.get("side", "")), "defend", active_stack, active_stack)
-	score -= 2.5 * float(_clock_pressure(battle))
+	score -= _w("defend_clock") * float(_clock_pressure(battle))
 	return score
 
 static func _advance_score(battle: Dictionary, active_stack: Dictionary, targets: Array) -> float:
@@ -2067,35 +2079,35 @@ static func _advance_score(battle: Dictionary, active_stack: Dictionary, targets
 	if current_distance <= 0:
 		if _can_make_melee_attack(active_stack, battle) or (ranged and _can_make_any_ranged_attack(active_stack, battle, targets)):
 			return -9999.0
-		var reposition_score := 8.0
+		var reposition_score := _w("reposition_base")
 		if not ranged:
-			reposition_score += 4.0
+			reposition_score += _w("reposition_melee")
 		if _has_hostile_ranged_pressure(targets):
-			reposition_score += 2.0
+			reposition_score += _w("reposition_under_fire")
 		if _stack_is_isolated(battle, active_stack):
 			reposition_score += 1.0
 		reposition_score += _objective_action_score(battle, side, "advance", active_stack)
 		return reposition_score
 	var distance_delta := _advance_distance_delta(active_stack, battle)
-	var score := -0.5
+	var score := _w("advance_base")
 	if _should_close_distance(active_stack):
-		score += 2.5
+		score += _w("advance_close_in")
 	if not ranged:
-		score += 2.0
+		score += _w("advance_melee")
 		if not _can_make_melee_attack(active_stack, battle):
-			score += 4.0
+			score += _w("advance_melee_out_of_reach")
 			if _has_hostile_ranged_pressure(targets):
-				score += 1.5
+				score += _w("advance_melee_out_of_reach_under_fire")
 		if current_distance >= 2:
-			score += 0.75
+			score += _w("advance_far")
 	else:
-		score -= 1.5
+		score -= _w("advance_shooter")
 	if _has_hostile_ranged_pressure(targets) and not ranged:
-		score += 1.0
+		score += _w("advance_melee_under_fire")
 	if distance_delta <= 0:
-		score -= 4.0
+		score -= _w("advance_no_gain")
 	else:
-		score += 0.75
+		score += _w("advance_gain")
 		if _side_controls_field_objective_type(battle, _opposing_side(side), "obstruction_line"):
 			if _stack_can_breach_obstruction(active_stack, battle):
 				score += 1.5
@@ -2104,9 +2116,9 @@ static func _advance_score(battle: Dictionary, active_stack: Dictionary, targets
 		if _side_controls_field_objective_type(battle, side, "obstruction_line"):
 			score -= 3.0
 		if _stack_cohesion_total(active_stack, battle) <= 4:
-			score -= 1.25
+			score -= _w("advance_own_shaken")
 	if _stack_is_isolated(battle, active_stack):
-		score -= 0.5
+		score -= _w("advance_isolated")
 	if _battle_has_tag(battle, "wall_pressure") and _stack_is_assault_side(active_stack, battle) and not ranged and round_number >= 3:
 		score += 1.25
 	if _hero_has_trait(battle, side, "vanguard") and not ranged and round_number <= 2:
@@ -2115,7 +2127,7 @@ static func _advance_score(battle: Dictionary, active_stack: Dictionary, targets
 		score += 0.75
 	score += _objective_action_score(battle, side, "advance", active_stack)
 	if not ranged:
-		score += float(_clock_pressure(battle))
+		score += _w("advance_clock") * float(_clock_pressure(battle))
 	return score
 
 static func _enemy_withdrawal_action(

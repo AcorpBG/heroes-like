@@ -25,6 +25,28 @@ profile. Results go to `.artifacts/battle_ai_arena/<time>-<suite>/` (`summary.js
 The usual loop for a strategy change: edit `BattleAiRules.gd`, run the `standard` suite
 against HEAD, then confirm on `holdout` before committing.
 
+A variant can also take a weights file (`--a-weights`, `--b-weights`): the battle AI's tunable
+numbers live in `content/battle_ai_weights.json` (`BattleAiRules._w`), and the variant is
+the same script with those weights built in.
+
+## Tuning the weights
+
+```
+python tools/battle_ai_arena/tune.py                     # 40 generations, a few hours
+python tools/battle_ai_arena/tune.py --resume .artifacts/battle_ai_arena/tune-<time>
+python tools/battle_ai_arena/arena.py --b-weights .artifacts/battle_ai_arena/tune-<time>/weights.json --suite holdout
+```
+
+`tune.py` searches the weights with separable CMA-ES. Each generation samples a population of
+weight sets around the current mean, and plays each of them and the mean itself against the
+game's current weights, on the same battles and both sides each. Every generation plays fresh
+maps, sites and heroes (never the `standard` or `holdout` battles), so the result cannot fit
+one set of battles. A weight is searched as a power-of-two multiple of its current value
+(1/8 to 8 times), so it keeps its sign. `weights.json` in the run directory is the current
+mean, the run's recommendation; `history.jsonl` has one line per generation. Copy the weights
+into `content/battle_ai_weights.json` only after `arena.py` confirms them on `standard` and
+`holdout`.
+
 On a 32-thread machine with 24 workers a 288-game suite takes about a minute.
 
 ## What it plays
