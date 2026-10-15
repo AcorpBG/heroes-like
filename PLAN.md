@@ -199,6 +199,10 @@ Rules:
 
 `art-overworld-organic-ground-borders-20261008` (completed, owner-approved prototype): biome borders meander off the tile grid (noise-bent corner weights that fade out near tile centres) and grounds meet with a height-and-priority blend instead of a cross-fade, so one ground's detail fringes the other; coasts curve the same way. See `docs/overworld-ground-borders.md`.
 
+### Overworld rivers
+
+`art-overworld-rivers-20261015` (completed, owner pick D): the generator's river layer is drawn as a narrow winding stream with dark wet banks in the ground shader; turns are arcs, two-tile-wide stretches run through as one stream, ends run into water or the map edge or taper as springs. Presentation only. See `docs/overworld-rivers.md`.
+
 ### Impassable rock void
 
 `art-overworld-impassable-rock-void-20261015` (completed, owner pick C, thicker): impassable land (rock, per the movement rule) is drawn as a black void walled by a thick rugged stone ledge on its side of the tile edge, so blocked ground reads at a glance, as in HoMM3's underground. See `docs/overworld-ground-borders.md`.

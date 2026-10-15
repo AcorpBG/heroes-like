@@ -41,6 +41,14 @@ uniform float rock_crag = 0.24;
 uniform float rock_ledge_start = 0.46;
 uniform float rock_ledge_end = 0.97;
 uniform vec3 rock_void_color = vec3(0.016, 0.015, 0.018);
+// Rivers (owner pick D, a narrow stream, 2026-10-15): terrain_data blue bits
+// 0-3 join a river tile N/E/S/W, bit 4 marks it, bits 5-6 its type (clear,
+// icy, muddy, lava), bit 7 is road. The stream winds off the tile grid and
+// turns in arcs; dark wet banks blend it into the ground under it.
+uniform float river_half_width = 0.09;
+uniform float river_bank = 0.07;
+uniform float river_meander = 0.2;
+uniform float lava_slot = 9.0;
 
 vec3 paint(float slot, vec2 uv) {
 	vec2 cell = vec2(mod(slot, 4.0), floor(slot / 4.0));
@@ -134,7 +142,7 @@ vec4 decal_layer(vec2 world, float world_per_pixel, vec4 slots, vec4 blend, vec3
 			vec4 h = hash4(grid + vec2(311.7, 183.3));
 			vec2 center = (grid + vec2(0.2) + h.xy * 0.6) * decal_cell_tiles;
 			vec3 data = cell_data3(floor(center));
-			if (data.g < 0.5 || data.b > 0.5) { continue; }
+			if (data.g < 0.5 || data.b > 0.002) { continue; }
 			float slot = floor(data.r * 255.0 + 0.5);
 			if (slot > 15.0) { continue; }
 			float set = decal_set_for_slot[int(slot)];
@@ -198,6 +206,103 @@ float void_depth(vec2 world, vec2 warp, float bend, float own_void) {
 	float r = mix(mix(v.x, v.y, w.x), mix(v.z, v.w, w.x), w.y);
 	float crag = value_noise(world * 6.0) * 0.6 + value_noise(world * 14.0 + vec2(5.3, 1.7)) * 0.4 - 0.5;
 	return r + crag * rock_crag * bend;
+}
+
+int river_bits(vec2 cell) {
+	return int(texture(terrain_data, (clamp(cell, vec2(0.0), map_size - vec2(1.0)) + vec2(0.5)) / map_size).b * 255.0 + 0.5);
+}
+
+float segment_distance(vec2 p, vec2 a, vec2 b) {
+	vec2 ab = b - a;
+	float t = clamp(dot(p - a, ab) / max(dot(ab, ab), 0.0001), 0.0, 1.0);
+	return length(p - a - ab * t);
+}
+
+// Distance from p to the river network in the 3x3 tiles around it, each
+// river tile running from its centre to the edges it joins, divided by the
+// local half-width (springs taper). y: the river's type bits of the nearest.
+vec2 river_field(vec2 p) {
+	vec2 base = floor(p);
+	float best = 1e5;
+	float type_bits = 0.0;
+	for (int dy = -1; dy <= 1; dy++) {
+		for (int dx = -1; dx <= 1; dx++) {
+			vec2 cell = base + vec2(float(dx), float(dy));
+			int bits = river_bits(cell);
+			if ((bits & 16) == 0) { continue; }
+			vec2 centre = cell + vec2(0.5);
+			int joins = bits & 15;
+			int count = (joins & 1) + ((joins >> 1) & 1) + ((joins >> 2) & 1) + ((joins >> 3) & 1);
+			float d = length(p - centre) / (count == 0 ? 0.7 : 1.0);
+			bool bend = count == 2 && joins != 5 && joins != 10;
+			if (bend) {
+				// A turn sweeps round the corner between its two edges.
+				vec2 corner = cell + vec2((joins & 2) != 0 ? 1.0 : 0.0, (joins & 4) != 0 ? 1.0 : 0.0);
+				vec2 local = p - corner;
+				vec2 inward = centre - corner;
+				d = (local.x * inward.x >= 0.0 && local.y * inward.y >= 0.0) ? abs(length(local) - 0.5)
+					: min(length(p - (centre + (corner - centre) * vec2(1.0, 0.0))), length(p - (centre + (corner - centre) * vec2(0.0, 1.0))));
+			} else {
+				if ((joins & 1) != 0) { d = min(d, segment_distance(p, centre, centre + vec2(0.0, -0.5))); }
+				if ((joins & 2) != 0) { d = min(d, segment_distance(p, centre, centre + vec2(0.5, 0.0))); }
+				if ((joins & 4) != 0) { d = min(d, segment_distance(p, centre, centre + vec2(0.0, 0.5))); }
+				if ((joins & 8) != 0) { d = min(d, segment_distance(p, centre, centre + vec2(-0.5, 0.0))); }
+			}
+			if (count == 1) {
+				// A spring: narrow at its source, full width by the tile edge.
+				vec2 dir = (joins & 1) != 0 ? vec2(0.0, -1.0) : ((joins & 2) != 0 ? vec2(1.0, 0.0) : ((joins & 4) != 0 ? vec2(0.0, 1.0) : vec2(-1.0, 0.0)));
+				float along = clamp(dot(p - centre, dir) / 0.5, 0.0, 1.0);
+				d /= mix(0.45, 1.0, smoothstep(0.0, 1.0, along));
+			}
+			if (d < best) {
+				best = d;
+				type_bits = float((bits >> 5) & 3);
+			}
+		}
+	}
+	return vec2(best, type_bits);
+}
+
+vec3 river_paint(vec3 surface, vec2 world, vec2 warp) {
+	vec2 p = world + vec2(value_noise(world * 0.7 + vec2(3.1, 7.7)), value_noise(world * 0.7 + vec2(-5.3, 1.9))) * 2.0 * river_meander - vec2(river_meander)
+		+ warp * 0.15;
+	vec2 field = river_field(p);
+	float half_width = river_half_width;
+	float bank = river_bank;
+	// Banks wobble a little; the width breathes along the river.
+	float wobble = 1.0 + 0.18 * (value_noise(world * 3.3 + vec2(9.1, 2.3)) - 0.5);
+	float d = field.x / wobble;
+	if (d > half_width + bank + 0.06) { return surface; }
+	float aa = max(fwidth(d), 0.004);
+	float type_bits = field.y;
+	vec3 sea = ground(12.0, world * 0.7);
+	// Calmer than the open sea: a little desaturated, darker in the channel.
+	vec3 deep = mix(sea, vec3(dot(sea, vec3(0.299, 0.587, 0.114))), 0.35) * vec3(0.62, 0.74, 0.8);
+	vec3 shallow = mix(sea, vec3(dot(sea, vec3(0.299, 0.587, 0.114))), 0.4) * vec3(0.85, 0.95, 0.95) + vec3(0.02, 0.03, 0.02);
+	if (type_bits > 2.5) {
+		vec3 lava = ground(lava_slot, world);
+		deep = lava * vec3(1.6, 0.9, 0.5) + vec3(0.35, 0.08, 0.0);
+		shallow = lava * vec3(1.2, 0.8, 0.6);
+	} else if (type_bits > 1.5) {
+		deep = mix(deep, vec3(0.36, 0.3, 0.2), 0.65);
+		shallow = mix(shallow, vec3(0.5, 0.42, 0.3), 0.6);
+	} else if (type_bits > 0.5) {
+		deep = mix(deep, vec3(0.72, 0.84, 0.9), 0.55);
+		shallow = mix(shallow, vec3(0.88, 0.94, 0.97), 0.6);
+	}
+	float centre = 1.0 - smoothstep(0.0, half_width, d);
+	vec3 water = mix(shallow, deep, smoothstep(0.1, 0.85, centre));
+	// A soft light glint down the middle, broken up along the river.
+	float glint = smoothstep(0.55, 0.95, centre) * smoothstep(0.45, 0.8, value_noise(world * 5.0 + vec2(1.3, 4.1)));
+	water += vec3(0.08, 0.09, 0.08) * glint;
+	vec3 bank_color = surface * vec3(0.55, 0.52, 0.48);
+	float in_bank = 1.0 - smoothstep(half_width + bank - aa, half_width + bank + 0.06, d);
+	vec3 result = mix(surface, bank_color, in_bank * 0.85);
+	// Wet edge: darker just outside the water line.
+	float wet = 1.0 - smoothstep(half_width, half_width + bank * 0.6, d);
+	result *= mix(1.0, 0.82, wet);
+	float in_water = 1.0 - smoothstep(half_width - aa, half_width + aa, d);
+	return mix(result, water, in_water);
 }
 
 vec3 rock_void(vec3 surface, vec2 world, vec2 warp, float bend, float own_void) {
@@ -283,6 +388,7 @@ void fragment() {
 			float beach = smoothstep(0.015, 0.16, water) * (1.0 - smoothstep(0.52, 0.94, water));
 			surface = mix(surface, sand, beach);
 		}
+		surface = river_paint(surface, world, warp);
 		surface = rock_void(surface, world, warp, bend, own_void);
 		COLOR = vec4(surface, 1.0);
 	}

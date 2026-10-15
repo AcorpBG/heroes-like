@@ -594,6 +594,8 @@ var _route_preview: Dictionary = {}
 var _route_preview_enabled := true
 var _terrain_layers: Dictionary = {}
 var _road_tiles: Dictionary = {}
+var _river_masks: Dictionary = {}
+var _river_masks_signature := 0
 var _movement_left := 0
 var _camera_center_tile := Vector2.ZERO
 var _camera_center_ready := false
@@ -1026,7 +1028,7 @@ func set_map_state(
 		var road_tiles := []
 		for key in _road_tiles:
 			road_tiles.append(Vector2i(int(String(key).get_slice(",", 0)), int(String(key).get_slice(",", 1))))
-		_ground_surface.sync_lookup(_map_data, _map_size, session_static_signature, explored, _bool_grid_cache_signature(explored), road_tiles)
+		_ground_surface.sync_lookup(_map_data, _map_size, session_static_signature, explored, _bool_grid_cache_signature(explored), road_tiles, _river_masks_for_level(session_static_signature))
 		_ground_surface.sync_layout(_board_rect(), _map_viewport_rect(), _map_size)
 		_sync_soft_fog()
 
@@ -11162,6 +11164,127 @@ func _color_from_hex(value: String, fallback: Color) -> Color:
 	if value.begins_with("#") and value.length() in [7, 9]:
 		return Color.html(value)
 	return fallback
+
+const RIVER_DIRECTIONS := [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)]
+
+## Generated rivers (terrain layer river_type, written by the native river
+## pass 0x458a2f) as per-tile masks for the ground shader: bits 0-3 join the
+## river north/east/south/west, bit 4 marks a river tile, bits 5-6 its type
+## (clear, icy, muddy, lava). A river tile joins the river tiles of its type
+## beside it, as the generator's own art choice does (0x4587f7 neighbour
+## flags). Where the river runs two tiles wide, each closed 2x2 block drops
+## one inner join so the stream runs through as one line instead of looping
+## round a corner (owner direction, 2026-10-15). A river end beside water or
+## the map edge runs on into it. Presentation only: rivers do not change
+## movement.
+func _river_masks_for_level(signature: int) -> Dictionary:
+	if signature == _river_masks_signature and signature != 0:
+		return _river_masks
+	_river_masks_signature = signature
+	_river_masks = {}
+	var layer = _terrain_layers.get("river_type", {})
+	var levels = layer.get("levels", []) if layer is Dictionary else []
+	if not (levels is Array) or _level < 0 or _level >= levels.size():
+		return _river_masks
+	var types: PackedInt32Array = PackedInt32Array(levels[_level])
+	var width := _map_size.x
+	if types.size() != width * _map_size.y:
+		return _river_masks
+	var joins := {}
+	for index in range(types.size()):
+		var river_type := types[index]
+		if river_type <= 0:
+			continue
+		var tile := Vector2i(index % width, index / width)
+		var mask := 0
+		for bit in range(4):
+			var neighbor: Vector2i = tile + RIVER_DIRECTIONS[bit]
+			var inside := neighbor.x >= 0 and neighbor.y >= 0 and neighbor.x < width and neighbor.y < _map_size.y
+			if inside and types[neighbor.y * width + neighbor.x] == river_type:
+				mask |= 1 << bit
+		joins[tile] = mask
+	_open_river_blocks(joins)
+	for tile: Vector2i in joins:
+		var river_type := types[tile.y * width + tile.x]
+		var mask: int = joins[tile]
+		var joined := _river_join_count(mask)
+		if joined <= 1:
+			# Prefer running straight on from the one joined side.
+			for step in range(4):
+				var bit := (step + 2) % 4
+				if joined == 1:
+					bit = (_river_single_bit(mask) + 2 + step) % 4
+				var neighbor: Vector2i = tile + RIVER_DIRECTIONS[bit]
+				var off_map := neighbor.x < 0 or neighbor.y < 0 or neighbor.x >= width or neighbor.y >= _map_size.y
+				if mask & (1 << bit) == 0 and (off_map or ContentService.normalize_terrain_id(_terrain_at(neighbor)) == "water"):
+					mask |= 1 << bit
+					break
+		_river_masks[tile] = mask | 16 | (clampi(river_type - 1, 0, 3) << 5)
+	return _river_masks
+
+## Each closed 2x2 block of joined river tiles is opened into a path: drop
+## one inner join, then drop block tiles the river no longer needs (no join
+## leading out of the block and at most one left inside it). Of the four
+## choices keep the one with the fewest tiles, the straightest run through
+## the block. A block with fewer than two ways out only loses the join.
+func _open_river_blocks(joins: Dictionary) -> void:
+	var changed := true
+	while changed:
+		changed = false
+		for origin: Vector2i in joins.keys():
+			var east := origin + Vector2i(1, 0)
+			var south := origin + Vector2i(0, 1)
+			var corner := origin + Vector2i(1, 1)
+			if not (joins.has(origin) and joins.has(east) and joins.has(south) and joins.has(corner)):
+				continue
+			if int(joins[origin]) & 6 != 6 or int(joins[corner]) & 9 != 9:
+				continue
+			var block := [origin, east, south, corner]
+			var ports := []
+			for tile: Vector2i in block:
+				for bit in range(4):
+					if int(joins[tile]) & (1 << bit) != 0 and not (tile + RIVER_DIRECTIONS[bit]) in block:
+						ports.append(tile)
+						break
+			# Inner joins as [tile, bit, other tile, other bit].
+			var edges := [[origin, 1, east, 3], [origin, 2, south, 0], [corner, 3, south, 1], [corner, 0, east, 2]]
+			var best: Dictionary = {}
+			for edge in edges:
+				var trial := {}
+				for tile: Vector2i in block:
+					trial[tile] = int(joins[tile])
+				trial[edge[0]] = int(trial[edge[0]]) & ~(1 << int(edge[1]))
+				trial[edge[2]] = int(trial[edge[2]]) & ~(1 << int(edge[3]))
+				var pruning := ports.size() >= 2
+				while pruning:
+					pruning = false
+					for tile: Vector2i in block:
+						if not trial.has(tile) or tile in ports or _river_join_count(int(trial[tile])) > 1:
+							continue
+						for bit in range(4):
+							var neighbor: Vector2i = tile + RIVER_DIRECTIONS[bit]
+							if int(trial[tile]) & (1 << bit) != 0 and trial.has(neighbor):
+								trial[neighbor] = int(trial[neighbor]) & ~(1 << ((bit + 2) % 4))
+						trial.erase(tile)
+						pruning = true
+				if best.is_empty() or trial.size() < best.size():
+					best = trial
+			for tile: Vector2i in block:
+				if best.has(tile):
+					joins[tile] = best[tile]
+				else:
+					joins.erase(tile)
+			changed = true
+			break
+
+func _river_join_count(mask: int) -> int:
+	return (mask & 1) + ((mask >> 1) & 1) + ((mask >> 2) & 1) + ((mask >> 3) & 1)
+
+func _river_single_bit(mask: int) -> int:
+	for bit in range(4):
+		if mask & (1 << bit) != 0:
+			return bit
+	return 0
 
 func _rebuild_road_tiles() -> void:
 	var profile_start := _profile_begin("road_index")

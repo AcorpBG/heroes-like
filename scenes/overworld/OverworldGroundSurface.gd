@@ -90,7 +90,7 @@ func configure_decals(config: Dictionary, atlas: Texture2D) -> void:
 	decals_configured = true
 	material.set_shader_parameter("decals_enabled", true)
 
-func sync_lookup(rows: Array, dimensions: Vector2i, terrain_signature: int, explored: Array, exploration_signature: int, road_tiles: Array = []) -> void:
+func sync_lookup(rows: Array, dimensions: Vector2i, terrain_signature: int, explored: Array, exploration_signature: int, road_tiles: Array = [], river_masks: Dictionary = {}) -> void:
 	if not configured:
 		return
 	var byte_count := dimensions.x * dimensions.y * 4
@@ -128,11 +128,16 @@ func sync_lookup(rows: Array, dimensions: Vector2i, terrain_signature: int, expl
 				lookup_bytes[offset] = slot
 				lookup_bytes[offset + 3] = 0 if void_by_cell[cell] else 255
 				offset += 4
-		# Blue marks road tiles, which keep their decals off.
+		# Blue: bits 0-6 are the river mask (see OverworldMapView
+		# _river_masks_for_level), bit 7 marks road tiles. Both keep decals off.
+		for river in river_masks:
+			var tile: Vector2i = river
+			if tile.x >= 0 and tile.y >= 0 and tile.x < dimensions.x and tile.y < dimensions.y:
+				lookup_bytes[(tile.y * dimensions.x + tile.x) * 4 + 2] = int(river_masks[river]) & 127
 		for road in road_tiles:
 			var tile: Vector2i = road
 			if tile.x >= 0 and tile.y >= 0 and tile.x < dimensions.x and tile.y < dimensions.y:
-				lookup_bytes[(tile.y * dimensions.x + tile.x) * 4 + 2] = 255
+				lookup_bytes[(tile.y * dimensions.x + tile.x) * 4 + 2] |= 128
 		map_signature = terrain_signature
 		map_uploads += 1
 	# Green: 255 explored, 128 the fog edge (unexplored, touching explored land
