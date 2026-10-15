@@ -115323,6 +115323,17 @@
         "tools/battle_ai_arena/README.md"
       ],
       "notes": "Owner request 2026-10-15: try strike-or-wait, retaliation-aware targets and shooter protection in the arena. Landed: a melee stack that reaches no enemy holds its ground (defends) while its side's shooting (creatures with shots x average damage) is stronger than the enemy's, until the battle clock presses (BattleAiRules._should_hold_line in advance_plan). Against the previous AI: 0.529 +/- 0.019 on standard, 0.540 +/- 0.020 on holdout, every faction and stage better, battles no longer. Thresholds 0.5x and 1.5x scored 0.525 and 0.514, so the plain comparison stays. Not landed (no measurable gain): strike-back estimated from the survivors with our losses weighed like kills (0.494 and 0.497), striking first the enemies that can reach our shooters next turn (0.497), and either on top of holding (0.531, 0.526)."
+    },
+    {
+      "id": "battle-ai-weights-cma-tuning-20261015",
+      "title": "Battle AI weights in data, tuned with CMA-ES in the arena",
+      "status": "completed",
+      "classification": "gameplay",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "tools/battle_ai_arena/README.md"
+      ],
+      "notes": "Owner request 2026-10-15: the GA/CMA-ES tuning of BattleAiRules. The 49 general weights (attack, defend, advance, reposition, hero spell bars, melee approach, holding the line) moved into content/battle_ai_weights.json (BattleAiRules._w) with all 288 standard-suite games identical. tools/battle_ai_arena/tune.py runs separable CMA-ES: 16 weight sets and their mean per generation against the current weights, on fresh maps every generation, both sides each; resumable. First run, 40 generations (about two hours): against the previous weights 0.553 +/- 0.019 on standard, 0.532 +/- 0.023 on holdout; against an older AI the tuner never played 0.577 where the previous weights score 0.540. Landed. Damage prediction, unit abilities, terrain bonuses, withdrawal and the decisive-attack thresholds stay in code. Next: more runs (against a pool of past AIs to avoid fitting one opponent), and strategy changes judged with the tuned weights."
     }
   ],
   "project": "heroes-like",

@@ -350,8 +350,8 @@ func _check_own_contact() -> void:
 	var free := BattleAiRules._attack_score(_stack(free_board, "shooter"), _stack(free_board, "target"), free_board, true)
 	_check(engaged < free, "a shooter next to an enemy scores its point-blank shot lower (%.2f, free %.2f)" % [engaged, free])
 
-## In the last three rounds before stalemate bracing loses 2.5 a round and a
-## melee advance gains 1, so neither side sits out the clock.
+## In the last three rounds before stalemate bracing loses worth each round
+## and a melee advance gains it, so neither side sits out the clock.
 func _check_clock_pressure() -> void:
 	var board := _board([
 		{"id": "walker", "side": "player", "hex": _cell(1, 4)},
@@ -366,8 +366,8 @@ func _check_clock_pressure() -> void:
 		defend[round_number] = BattleAiRules._defend_score(board, walker, targets)
 		advance[round_number] = BattleAiRules._advance_score(board, walker, targets)
 	_check(is_equal_approx(float(defend[9]), float(defend[1])) and is_equal_approx(float(advance[9]), float(advance[1])), "four rounds before stalemate the clock does not press yet: %s %s" % [defend, advance])
-	_check(is_equal_approx(float(defend[1]) - float(defend[10]), 2.5) and is_equal_approx(float(defend[1]) - float(defend[12]), 7.5), "bracing loses 2.5 three rounds out and 7.5 in the last round: %s" % [defend])
-	_check(is_equal_approx(float(advance[12]) - float(advance[1]), 3.0), "a melee advance gains 3 in the last round: %s" % [advance])
+	_check(float(defend[10]) < float(defend[1]) and float(defend[12]) < float(defend[10]), "bracing loses worth three rounds out and more in the last round: %s" % [defend])
+	_check(float(advance[12]) > float(advance[1]), "a melee advance gains worth in the last round: %s" % [advance])
 
 ## A buff on the stack about to act is worth 1 more, since an effect on the
 ## acting stack does not spend its turn; haste is worth 2.5 more again when it

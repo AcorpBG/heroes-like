@@ -17,7 +17,9 @@ python tools/battle_ai_arena/arena.py --a git:main~5 --b path/to/BattleAiRules.g
 ```
 
 A variant is `current` (the working tree), `git:<rev>`, or a path to a copy of
-`BattleAiRules.gd`. Godot comes from `--godot`, `$GODOT_BIN`, `godot4`/`godot` on PATH, or
+`BattleAiRules.gd`. A `git:<rev>` variant plays with that revision's weights file; `current`
+and a file read the working tree's `content/battle_ai_weights.json` unless given a weights
+file. Godot comes from `--godot`, `$GODOT_BIN`, `godot4`/`godot` on PATH, or
 the owner's Windows install, as for the core suite. Every worker gets a throwaway user
 profile. Results go to `.artifacts/battle_ai_arena/<time>-<suite>/` (`summary.json`,
 `games.jsonl`). Worker logs are kept only when something went wrong, or with `--keep-logs`.
@@ -133,3 +135,12 @@ sides swap. The rest are decided by the armies and only move the score through l
   0.49-0.50. The scorer already counts the strike-back.
 - Striking first the enemies that can reach our shooters next turn: 0.497, and nothing added
   on top of holding.
+
+## Weight tuning runs
+
+- First run (40 generations of 16, 48 battles each, about two hours): training score from 0.50
+  to about 0.54. Against the previous weights 0.553 +/- 0.019 on `standard` and 0.532 +/- 0.023
+  on `holdout`; against an older AI the tuner never played, 0.577 where the previous weights
+  score 0.540. Landed. The largest moves: enemy shooters first (x4), damage and kills over the
+  flat kill bonus (x0.15), melee closing in harder (x3), damage spells worth more but held to a
+  higher bar, buffs cheaper, and holding the line from two thirds of the enemy's shooting.

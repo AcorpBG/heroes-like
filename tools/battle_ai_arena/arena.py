@@ -108,6 +108,15 @@ def resolve_variant(spec: str, dest: Path, weights: dict[str, float] | None = No
         source = proc.stdout
     else:
         source = Path(spec).read_text(encoding="utf-8")
+    if weights is None and spec.startswith("git:") and WEIGHTS_DECLARATION in source:
+        # The revision's own weights, not the working tree's file the game would read.
+        proc = subprocess.run(
+            ["git", "-C", str(ROOT), "show", f"{spec[4:]}:content/battle_ai_weights.json"],
+            capture_output=True, text=True, encoding="utf-8",
+        )
+        if proc.returncode == 0:
+            data = json.loads(proc.stdout)
+            weights = {key: float(value) for key, value in data.get("weights", data).items()}
     if weights is not None:
         source = weighted_source(source, weights)
     dest.write_text(router.strip_class_name(source), encoding="utf-8")
