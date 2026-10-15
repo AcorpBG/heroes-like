@@ -30,6 +30,17 @@ uniform float decal_set_for_slot[16];
 uniform float decal_density_for_set[16];
 uniform float decal_cell_tiles = 0.6;
 uniform float decal_opacity = 0.92;
+// Impassable land (terrain_data alpha 0, e.g. rock) is a black void walled
+// by a thick rugged stone ledge, so blocked ground reads at a glance
+// (owner-approved 2026-10-15). The ledge sits on the impassable side of the
+// tile edge: walkable tiles keep their own ground. Depth units: 0.5 is the
+// tile edge, 1.0 a tile walled in on all sides.
+uniform float rock_slot = 7.0;
+uniform float rock_warp_scale = 0.3;
+uniform float rock_crag = 0.24;
+uniform float rock_ledge_start = 0.46;
+uniform float rock_ledge_end = 0.97;
+uniform vec3 rock_void_color = vec3(0.016, 0.015, 0.018);
 
 vec3 paint(float slot, vec2 uv) {
 	vec2 cell = vec2(mod(slot, 4.0), floor(slot / 4.0));
@@ -164,9 +175,62 @@ float is_water(float slot) {
 	return any(lessThan(abs(water_slots - vec3(slot)), vec3(0.5))) ? 1.0 : 0.0;
 }
 
+float void_flag(vec2 cell, float own_void) {
+	vec4 data = texture(terrain_data, (clamp(cell, vec2(0.0), map_size - vec2(1.0)) + vec2(0.5)) / map_size);
+	return data.g > 0.25 ? 1.0 - step(0.5, data.a) : own_void;
+}
+
+// How deep a point lies in impassable land: 0 on open ground, 0.5 on the
+// tile edge, 1 at the middle of a tile walled in on all sides. Smooth weights
+// between tile centres; a little of the border warp and a fine crag noise
+// make the wall line rugged without moving it off its tile edge.
+float void_depth(vec2 world, vec2 warp, float bend, float own_void) {
+	vec2 p = world - vec2(0.5) + warp * bend * rock_warp_scale;
+	vec2 cell = floor(p);
+	vec2 w = fract(p);
+	w = w * w * (3.0 - 2.0 * w);
+	vec4 v = vec4(void_flag(cell, own_void), void_flag(cell + vec2(1.0, 0.0), own_void),
+		void_flag(cell + vec2(0.0, 1.0), own_void), void_flag(cell + vec2(1.0), own_void));
+	float count = v.x + v.y + v.z + v.w;
+	if (count == 0.0) { return 0.0; }
+	// Walled in on all sides: plain void, no crag specks.
+	if (count == 4.0) { return 1.0; }
+	float r = mix(mix(v.x, v.y, w.x), mix(v.z, v.w, w.x), w.y);
+	float crag = value_noise(world * 6.0) * 0.6 + value_noise(world * 14.0 + vec2(5.3, 1.7)) * 0.4 - 0.5;
+	return r + crag * rock_crag * bend;
+}
+
+vec3 rock_void(vec3 surface, vec2 world, vec2 warp, float bend, float own_void) {
+	float depth = void_depth(world, warp, bend, own_void);
+	vec2 grad = vec2(dFdx(depth), dFdy(depth));
+	if (depth <= 0.3) { return surface; }
+	if (depth < rock_ledge_start) {
+		// A thin contact shade on the ground where it meets the ledge.
+		return surface * (1.0 - 0.3 * smoothstep(rock_ledge_start - 0.18, rock_ledge_start, depth));
+	}
+	float t = (depth - rock_ledge_start) / (rock_ledge_end - rock_ledge_start);
+	if (t >= 1.0) { return rock_void_color; }
+	// The ledge's outward side facing up-left, toward the light, is brighter.
+	float glen = length(grad);
+	vec2 outward = glen > 0.0 ? -grad / glen : vec2(0.0, -1.0);
+	float facing = dot(outward, normalize(vec2(-0.55, -0.83)));
+	// Stacked, lumpy stones: warm lit tops, dark joints, the inner face
+	// dropping into the void.
+	vec3 stone = ground(rock_slot, world * 1.6 + vec2(0.37, 0.11));
+	float lumps = value_noise(world * 9.0 + vec2(depth * 6.0)) * 0.65 + value_noise(world * 21.0) * 0.35;
+	float joints = smoothstep(0.18, 0.42, abs(fract(t * 2.8 + lumps * 0.9) - 0.5));
+	vec3 ledge = stone * vec3(1.25, 1.02, 0.74) * (0.72 + 0.5 * lumps) * mix(0.55, 1.0, joints);
+	float light = 0.82 + 0.38 * facing;
+	float fall = 1.0 - smoothstep(0.72, 1.0, t);
+	vec3 face = ledge * light * mix(0.1, 1.0, fall) * (1.0 + 0.35 * (1.0 - smoothstep(0.0, 0.16, t)));
+	return mix(face, rock_void_color, smoothstep(0.94, 1.0, t));
+}
+
 void fragment() {
 	vec2 world = world_origin + UV * world_span;
-	vec2 own = cell_data(floor(world));
+	vec4 own_full = texture(terrain_data, (clamp(floor(world), vec2(0.0), map_size - vec2(1.0)) + vec2(0.5)) / map_size);
+	vec2 own = own_full.rg;
+	float own_void = 1.0 - step(0.5, own_full.a);
 	float own_slot = floor(own.r * 255.0 + 0.5);
 	// Fog-edge tiles paint their ground: the soft fog above (overworld_fog.gdshader)
 	// thins over them. Deeper fog stays identity-silent.
@@ -178,7 +242,8 @@ void fragment() {
 		// its own ground and stays readable.
 		vec2 from_center = abs(fract(world) - vec2(0.5));
 		float bend = smoothstep(0.05, 0.3, max(from_center.x, from_center.y));
-		vec2 sample_position = world - vec2(0.5) + border_warp(world) * bend;
+		vec2 warp = border_warp(world);
+		vec2 sample_position = world - vec2(0.5) + warp * bend;
 		vec2 cell = floor(sample_position);
 		vec2 w = fract(sample_position);
 		vec4 slots = vec4(known_slot(cell, own_slot), known_slot(cell + vec2(1.0, 0.0), own_slot),
@@ -218,6 +283,7 @@ void fragment() {
 			float beach = smoothstep(0.015, 0.16, water) * (1.0 - smoothstep(0.52, 0.94, water));
 			surface = mix(surface, sand, beach);
 		}
+		surface = rock_void(surface, world, warp, bend, own_void);
 		COLOR = vec4(surface, 1.0);
 	}
 }

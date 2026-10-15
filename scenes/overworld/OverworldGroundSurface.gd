@@ -13,6 +13,9 @@ var last_upload_usec := 0
 var missing_terrain_ids: Array[String] = []
 var configured := false
 var decals_configured := false
+## Terrain id -> true when the ground is impassable land the shader walls off
+## as a void. Set by the map view from the movement rules; unset, no void.
+var is_void_terrain: Callable
 
 func configure(config: Dictionary, atlas: Texture2D) -> void:
 	texture = atlas
@@ -96,13 +99,15 @@ func sync_lookup(rows: Array, dimensions: Vector2i, terrain_signature: int, expl
 	if not map_changed and not fog_changed:
 		return
 	var start := Time.get_ticks_usec()
-	# One RGBA8 texel per tile: red is the material slot, green is exploration.
+	# One RGBA8 texel per tile: red is the material slot, green is exploration,
+	# alpha is 0 on impassable land.
 	# Fill a byte buffer and upload it once instead of per-pixel Color calls.
 	if map_changed:
 		missing_terrain_ids.clear()
 		lookup_bytes.resize(byte_count)
 		lookup_bytes.fill(0)
 		var slot_by_cell: Dictionary = {}
+		var void_by_cell: Dictionary = {}
 		var offset := 0
 		for y in range(dimensions.y):
 			var row = rows[y]
@@ -117,8 +122,11 @@ func sync_lookup(rows: Array, dimensions: Vector2i, terrain_signature: int, expl
 							push_error("Unmapped ground material: " + terrain_id)
 					slot = int(slots.get(terrain_id, 255))
 					slot_by_cell[cell] = slot
+					# Alpha 0 marks land no one can walk on (rock), so the shader
+					# can draw it as a walled-off void.
+					void_by_cell[cell] = is_void_terrain.is_valid() and bool(is_void_terrain.call(terrain_id))
 				lookup_bytes[offset] = slot
-				lookup_bytes[offset + 3] = 255
+				lookup_bytes[offset + 3] = 0 if void_by_cell[cell] else 255
 				offset += 4
 		# Blue marks road tiles, which keep their decals off.
 		for road in road_tiles:

@@ -16,6 +16,17 @@ The ground shader cross-faded the four nearest tile materials over about half a 
 
 Presentation only: the per-tile lookup, fog, gameplay and saves are unchanged.
 
+## Impassable land: walled void
+
+Slice: `art-overworld-impassable-rock-void-20261015` (owner pick C, thicker, from in-game comparison sheets, 2026-10-15). Rock looked like walkable gravel, so blocked ground could not be told apart from cave floor.
+
+- `OverworldGroundSurface` writes lookup alpha 0 on every tile whose terrain `OverworldRules.terrain_id_is_passable` rejects, except water (it keeps its shore). The material slot alone cannot decide this: `ridge` shares the rock texture but is walkable.
+- The shader builds a depth field from those flags (smooth weights between tile centres, 0.5 on the tile edge, 1 inside), bent by a third of the border warp plus fine crag noise. Past the ledge it draws a near-black void.
+- A thick rugged ledge of stacked stones (the rock texture, warm-tinted, with lumps and joints) runs on the impassable side of the edge, from depth 0.46 to 0.97, lit on the side facing up-left and falling into shadow toward the void. Walkable tiles keep their own ground with a thin contact shade.
+- Inspired by how HoMM3 builds underground rock (black interior tiles plus edge tiles with a cliff rim inside the rock tile). The art is our own shader and rock texture, no HoMM3 frames.
+
+Uniforms: `rock_warp_scale`, `rock_crag`, `rock_ledge_start`, `rock_ledge_end`, `rock_void_color`, `rock_slot` (ledge texture).
+
 ## Tuning
 
 Shader uniforms: `warp_tiles`, `warp_frequency`, `warp_detail_tiles` (how far borders wander), `height_strength` (how much a ground's own detail shapes the fringe), `blend_depth` (edge softness). `border_priority` in the ground manifest.

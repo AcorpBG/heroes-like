@@ -9582,6 +9582,10 @@ func _load_terrain_grammar() -> void:
 			_terrain_overlay_styles[overlay_id] = normalized
 			_register_road_overlay_art(overlay_id, overlay_class)
 
+## Impassable land (rock) is drawn as a walled-off void; water keeps its shore.
+func _terrain_is_walled_void(terrain_id: String) -> bool:
+	return not OverworldRulesScript.terrain_id_is_passable(terrain_id) and ContentService.normalize_terrain_id(terrain_id) != "water"
+
 func _load_homm3_prototype(grammar: Dictionary) -> void:
 	var prototype = grammar.get("homm3_local_prototype", {})
 	if not (prototype is Dictionary):
@@ -12250,6 +12254,7 @@ func _load_overworld_art_manifest() -> void:
 	var ground_payload = JSON.parse_string(FileAccess.get_file_as_string(GROUND_MATERIAL_MANIFEST_PATH))
 	var ground_config: Dictionary = ground_payload if ground_payload is Dictionary else {}
 	_ground_surface.configure(ground_config, _texture_from_path(str(ground_config.get("atlas", ""))))
+	_ground_surface.is_void_terrain = _terrain_is_walled_void
 	_fog_surface.configure(_unexplored_shroud_texture(), UNEXPLORED_COLOR, UNEXPLORED_SHROUD_BASE, UNEXPLORED_SHROUD_TEXTURE_MODULATE)
 	var decal_config: Dictionary = ContentService.load_json(TERRAIN_DECAL_MANIFEST_PATH)
 	_ground_surface.configure_decals(decal_config, _texture_from_path(str(decal_config.get("atlas", ""))))

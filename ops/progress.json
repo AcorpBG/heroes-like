@@ -114405,6 +114405,19 @@
       "notes": "Owner asked for a complete rework (different decals per ground type, more variety, seamless integration, more varied placement). Old: 16 clusters, 4 'grey rock with meadow grass' shared by rough/rock/underground/dirt/sand/ash, drawn per tile on every fifth tile as stickers. New: 13 generated 4x4 sheets (grass, plains, forest, swamp, dirt, sand, rough, rock, ash, lava, underground, snow, ice; 208 decals), each generated with its ground material as reference (sources, prompts, hashes in art/overworld/source/generated/terrain/decals_v4/manifest.json); tools/prepare_overworld_terrain_decals.py cuts, grades 12% toward the ground tone, feathers, bleeds and packs a reproducible 2048x2048 atlas. The ground shader scatters them (decal_layer): jittered 1-tile grid, tiny/medium/large classes, mirror, per-set density modulated by slow noise for clusters and clearings, roads (lookup blue channel), water and unexplored tiles excluded, fading by the ground's own blend weight at biome borders, explicit mip levels. The per-tile _draw_terrain_detail_decal path is removed; OverworldMapView._terrain_decal_payload reports the set. Validation: before/after captures on the owner's map (dirt, lava, snow, grass, swamp, rough, sand) reviewed; validate_repo identical (828) with the decal contract rewritten; random_map_live_overworld_render_move_report and overworld_raster_terrain_blocker_mass_report updated to the new payload. Old atlases kept as provenance; archived Ninefold smoke still references v3."
     },
     {
+      "id": "art-overworld-impassable-rock-void-20261015",
+      "title": "Impassable rock reads as a walled void on the overworld",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "art_implementation_slice",
+      "source": "owner playtest report",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/overworld-ground-borders.md"
+      ],
+      "notes": "Owner report: underground rock looked walkable. Studied HoMM3 rocktl (8 black interior frames, 40 edge frames with a cliff rim inside the rock tile) and rendered current/HoMM3/four original options on an underground generated map; owner picked C (black void, thick rugged stone ledge), thicker. OverworldGroundSurface writes lookup alpha 0 on tiles terrain_id_is_passable rejects (not water); the ground shader draws a depth field from those flags, a near-black void past the ledge, and a lumpy stacked-stone ledge from depth 0.46 to 0.97 on the impassable side, lit up-left. Validation: overworld_sandy_shore_regression, overworld_ground_materials_contract, game run on an underground generated map, core suite."
+    },
+    {
       "id": "debug-placement-overlay-impassable-terrain-20261015",
       "title": "F4 placement overlay marks impassable terrain as blocked",
       "status": "completed",

@@ -197,6 +197,10 @@ Rules:
 
 `art-overworld-organic-ground-borders-20261008` (completed, owner-approved prototype): biome borders meander off the tile grid (noise-bent corner weights that fade out near tile centres) and grounds meet with a height-and-priority blend instead of a cross-fade, so one ground's detail fringes the other; coasts curve the same way. See `docs/overworld-ground-borders.md`.
 
+### Impassable rock void
+
+`art-overworld-impassable-rock-void-20261015` (completed, owner pick C, thicker): impassable land (rock, per the movement rule) is drawn as a black void walled by a thick rugged stone ledge on its side of the tile edge, so blocked ground reads at a glance, as in HoMM3's underground. See `docs/overworld-ground-borders.md`.
+
 ### Soft fog and object shadows
 
 `art-overworld-soft-fog-shadows-20261014` (completed, owner choice from comparison sheets): fog of war is one soft surface above the objects whose organic, noise-bent edge straddles the explored boundary (fog-edge tiles paint their ground; deeper fog stays fully covered), replacing the per-tile veil. Map objects cast soft shadows of their own silhouettes, slanted up and to the right, only from and onto explored ground. See `docs/overworld-soft-fog-and-shadows.md`.
