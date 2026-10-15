@@ -1,4 +1,4 @@
-﻿shader_type canvas_item;
+shader_type canvas_item;
 render_mode unshaded;
 
 // Soft fog of war (docs/overworld-soft-fog-and-shadows.md). It lies above the map objects

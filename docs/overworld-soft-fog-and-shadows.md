@@ -22,7 +22,7 @@ Fog of war was drawn per tile in the state layer: an opaque rectangle plus a vei
 - Creatures and other figures are thin, so a soft, faint shadow all but vanishes: theirs is darker and crisper (`OBJECT_SHADOW_ACTOR_ALPHA` 0.8, half the blur; owner pick from a strength comparison). A figure drawn with an outline casts once, not once per outline pass.
 - A painting drawn as per-tile slices (forest formations, mines, flags) casts the whole painting once per frame, so slices never cast rectangles.
 - Only explored parts cast, and only onto explored ground: the shader masks by the ground lookup at the casting texel (`VERTEX`) and where it lands (`MODEL_MATRIX`). A forest running into the fog therefore never shadows its hidden trees.
-- Towns cast none: their art carries its own ground plane. Ground decals (single trees and bushes painted by the ground shader) cast none. The hero moving in the dynamic layer casts none while it walks.
+- A town casts its whole painting once, before its per-tile slices and outline passes (which would each cast a slab). A town is wide and low, so most of its shadow lies behind its walls; it casts at `OBJECT_SHADOW_TOWN_ALPHA` 0.6 (owner pick from a strength comparison). Ground decals (single trees and bushes painted by the ground shader) cast none. The hero moving in the dynamic layer casts none while it walks.
 
 Presentation only: fog rules, exploration, gameplay and saves are unchanged.
 

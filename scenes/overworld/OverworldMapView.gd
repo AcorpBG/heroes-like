@@ -1,4 +1,4 @@
-﻿extends Control
+extends Control
 
 signal tile_pressed(tile: Vector2i)
 signal tile_hovered(tile: Vector2i)
@@ -56,8 +56,7 @@ const FogSurface = preload("res://scenes/overworld/OverworldFogSurface.gd")
 const OBJECT_SHADOW_SHADER = preload("res://scenes/overworld/OverworldObjectShadow.gdshader")
 # Object shadows (docs/overworld-soft-fog-and-shadows.md): each object's own
 # silhouette, softened, slanted up and to the right and squashed onto the
-# ground behind it, as if lit from in front and to the left. Town art carries
-# its own ground plane and casts none.
+# ground behind it, as if lit from in front and to the left.
 const OBJECT_SHADOW_SHEAR := -0.75
 const OBJECT_SHADOW_SQUASH := 0.42
 const OBJECT_SHADOW_FOOT_FACTOR := 0.06
@@ -67,6 +66,9 @@ const OBJECT_SHADOW_BLUR_PX := 6.0
 # theirs is darker and crisper.
 const OBJECT_SHADOW_ACTOR_ALPHA := 0.8
 const OBJECT_SHADOW_ACTOR_BLUR := 0.5
+# A town is wide and low: most of its slanted shadow lies behind its walls,
+# so the part that shows needs to be darker.
+const OBJECT_SHADOW_TOWN_ALPHA := 0.6
 const ActorStyle = preload("res://scenes/overworld/OverworldActorStyle.gd")
 const CreatureIdle = preload("res://scenes/overworld/OverworldCreatureIdle.gd")
 const Mines = preload("res://scripts/core/MineRules.gd")
@@ -4574,10 +4576,13 @@ func _draw_town_sprite(rect: Rect2, entry_rect: Rect2, remembered: bool, tile: V
 	if not (texture is Texture2D):
 		return false
 	var anchor := _draw_town_grounding_anchor(rect, remembered, tile)
-	_object_shadows_muted = true
 	var draw_payload := _town_sprite_draw_payload(asset_id, texture, rect)
 	var draw_texture: Texture2D = draw_payload.get("draw_texture", texture)
 	var sprite_rect: Rect2 = draw_payload.get("draw_rect", Rect2(rect.get_center(), Vector2.ZERO))
+	# The town casts its whole painting once; its per-tile slices and outline
+	# passes below would each cast a slab of their own.
+	_cast_object_shadow(draw_texture, sprite_rect, Rect2(), Rect2(), OBJECT_SHADOW_TOWN_ALPHA)
+	_object_shadows_muted = true
 	var outline := TOWN_SPRITE_SILHOUETTE_MEMORY if remembered else TOWN_SPRITE_SILHOUETTE_VISIBLE
 	var edge := maxf(TOWN_SPRITE_SILHOUETTE_MIN_PX, minf(rect.size.x, rect.size.y) * TOWN_SPRITE_SILHOUETTE_WIDTH_FACTOR)
 	for direction in ActorStyle.DIRECTIONS:

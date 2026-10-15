@@ -199,7 +199,7 @@ Rules:
 
 ### Soft fog and object shadows
 
-`art-overworld-soft-fog-shadows-20261014` (completed, owner choice from comparison sheets): fog of war is one soft surface above the objects whose organic, noise-bent edge straddles the explored boundary (fog-edge tiles paint their ground; deeper fog stays fully covered), replacing the per-tile veil. Map objects cast soft shadows of their own silhouettes, slanted up and to the right, only from and onto explored ground; towns cast none. See `docs/overworld-soft-fog-and-shadows.md`.
+`art-overworld-soft-fog-shadows-20261014` (completed, owner choice from comparison sheets): fog of war is one soft surface above the objects whose organic, noise-bent edge straddles the explored boundary (fog-edge tiles paint their ground; deeper fog stays fully covered), replacing the per-tile veil. Map objects cast soft shadows of their own silhouettes, slanted up and to the right, only from and onto explored ground. See `docs/overworld-soft-fog-and-shadows.md`.
 
 ### Ground detail decals
 
