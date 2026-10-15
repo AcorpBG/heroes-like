@@ -585,8 +585,9 @@ static func should_wait_for_contact(battle: Dictionary, active_stack: Dictionary
 ## plays: it strikes the best enemy in its reach this turn
 ## (best_reachable_strike), from the hex choose_melee_approach picks; one that
 ## reaches none waits while enemies still have to act this round
-## (should_wait_for_contact), else walks (best_advance_destination). A rooted
-## stack defends. Returns {"action": "strike", "target_battle_id", "approach"},
+## (should_wait_for_contact), then holds its ground while its side outshoots
+## the other (_should_hold_line), else walks (best_advance_destination). A
+## rooted stack defends. Returns {"action": "strike", "target_battle_id", "approach"},
 ## {"action": "wait"}, {"action": "advance"} or {"action": "defend"}.
 ## BattleRules.ai_advance_plan is the game's entry point.
 static func advance_plan(battle: Dictionary, stack: Dictionary) -> Dictionary:
@@ -600,7 +601,28 @@ static func advance_plan(battle: Dictionary, stack: Dictionary) -> Dictionary:
 		return strike
 	if should_wait_for_contact(battle, stack, rules.can_wait(battle), rules._opposing_stacks_still_to_act(battle, stack)):
 		return {"action": "wait"}
+	if _should_hold_line(battle, stack):
+		return {"action": "defend"}
 	return {"action": "advance"}
+
+## A melee stack that reaches no enemy holds its ground while its side
+## outshoots the other: the enemy has to walk into its strike and past it to
+## the shooters, which keep firing meanwhile. It closes in once the battle
+## clock presses (_clock_pressure), and a side that is outshot keeps closing.
+static func _should_hold_line(battle: Dictionary, stack: Dictionary) -> bool:
+	if not _fights_in_melee(stack) or _clock_pressure(battle) > 0:
+		return false
+	var side := String(stack.get("side", ""))
+	return _side_ranged_power(battle, side) > _side_ranged_power(battle, _opposing_side(side))
+
+## The side's shooting this round: creatures in stacks with shots left times
+## their average damage.
+static func _side_ranged_power(battle: Dictionary, side: String) -> float:
+	var power := 0.0
+	for stack in _alive_stacks_for_side(battle, side):
+		if bool(stack.get("ranged", false)) and int(stack.get("shots_remaining", 0)) > 0:
+			power += float(_alive_count(stack)) * _creature_average_damage(stack)
+	return power
 
 ## The enemy an advance heads for: the one the stack can walk to in the fewest
 ## steps around obstacles and stacks, then the nearest in hexes.

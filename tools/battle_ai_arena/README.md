@@ -104,3 +104,10 @@ sides swap. The rest are decided by the armies and only move the score through l
 - Focus fire, where the stacks still to act this round pile onto a target they can destroy
   together: 0.49 +/- 0.02 in two forms, and nothing added on top of the kill weighting. The
   scorer already favours wounded targets.
+- A melee stack that reaches no enemy holds its ground while its side outshoots the other,
+  until the battle clock presses: 0.529 +/- 0.019 on `standard`, 0.540 +/- 0.020 on
+  `holdout`. Landed. Holding at half or one and a half times the enemy's shooting scored less.
+- Strike-back estimated from the survivors, with our creatures lost weighed like kills:
+  0.49-0.50. The scorer already counts the strike-back.
+- Striking first the enemies that can reach our shooters next turn: 0.497, and nothing added
+  on top of holding.

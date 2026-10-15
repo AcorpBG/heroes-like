@@ -115312,6 +115312,17 @@
         "tools/battle_ai_arena/README.md"
       ],
       "notes": "Owner request 2026-10-15: move the AI logic still in BattleRules.gd into BattleAiRules.gd, then try a first strategy change in the arena. The advance plan (strike, wait or walk) and the advance walk (target and destination, also the player's Advance order) now live in BattleAiRules (advance_plan, advance_target, best_advance_destination); BattleRules.ai_advance_plan delegates. The move left all 288 standard-suite games identical. Focus fire (stacks still to act this round pile onto a target they can destroy together) scored 0.49 and 0.49 +/- 0.02 (two forms): the scorer already favours wounded targets. Weighing each creature killed by its damage against the side's average creature (two dragons beat twenty peasants) scored 0.560 +/- 0.023 on standard and 0.562 +/- 0.022 on holdout against the previous AI, 21 more of the 27 AI-decided battles won, every faction better; landed. Focus fire on top added nothing (0.551)."
+    },
+    {
+      "id": "battle-ai-hold-the-line-20261015",
+      "title": "Battle AI: melee holds its ground while its side outshoots the other",
+      "status": "completed",
+      "classification": "gameplay",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "tools/battle_ai_arena/README.md"
+      ],
+      "notes": "Owner request 2026-10-15: try strike-or-wait, retaliation-aware targets and shooter protection in the arena. Landed: a melee stack that reaches no enemy holds its ground (defends) while its side's shooting (creatures with shots x average damage) is stronger than the enemy's, until the battle clock presses (BattleAiRules._should_hold_line in advance_plan). Against the previous AI: 0.529 +/- 0.019 on standard, 0.540 +/- 0.020 on holdout, every faction and stage better, battles no longer. Thresholds 0.5x and 1.5x scored 0.525 and 0.514, so the plain comparison stays. Not landed (no measurable gain): strike-back estimated from the survivors with our losses weighed like kills (0.494 and 0.497), striking first the enemies that can reach our shooters next turn (0.497), and either on top of holding (0.531, 0.526)."
     }
   ],
   "project": "heroes-like",
