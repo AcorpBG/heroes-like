@@ -35,7 +35,7 @@ the same script with those weights built in.
 ## Tuning the weights
 
 ```
-python tools/battle_ai_arena/tune.py                     # 30 generations, about two hours
+python tools/battle_ai_arena/tune.py                     # 30 generations, a few hours
 python tools/battle_ai_arena/tune.py --resume .artifacts/battle_ai_arena/tune-<time>
 python tools/battle_ai_arena/tune.py --base-weights <earlier run>/weights.json --seed 2   # search on from a run
 python tools/battle_ai_arena/arena.py --b-weights .artifacts/battle_ai_arena/tune-<time>/weights.json --suite holdout
@@ -44,10 +44,11 @@ python tools/battle_ai_arena/arena.py --b-weights .artifacts/battle_ai_arena/tun
 `tune.py` searches the weights with separable CMA-ES. Each generation samples a population of
 weight sets around the current mean, and plays each of them and the mean itself against the
 game's current weights, on the same battles and both sides each. The battles are realistic
-ones (below), 24 maps of 3 battles a generation by default (`--maps`, `--battles`), and every
-generation plays fresh maps, armies and heroes (never the `standard` or `holdout` battles),
-so the result cannot fit one set of battles. A weight is searched as a power-of-two multiple of its current value
-(1/8 to 8 times), so it keeps its sign. `weights.json` in the run directory is the current
+and contested ones (below): 48 maps of 3 battles generated a generation by default
+(`--maps`, `--battles`), the contested ones played (`--odds`, about 100). Every generation
+plays fresh maps, armies and heroes (never the `standard` or `holdout` battles), so the
+result cannot fit one set of battles. A weight is searched as a power-of-two multiple of its
+current value (1/8 to 8 times), so it keeps its sign. `weights.json` in the run directory is the current
 mean, the run's recommendation; `history.jsonl` has one line per generation. Copy the weights
 into `content/battle_ai_weights.json` only after `arena.py` confirms them on `standard` and
 `holdout`. When weights reach the 1/8 or 8 times limit, search on from that run's weights
@@ -90,6 +91,14 @@ plan, week and odds. With `--roles` each battle is also played A against A, and 
 splits into its play as the player side and as the enemy side: guards, defenders and AI
 heroes. The battle AI plays both: the enemy side in the game, and the player side in Quick
 Resolve and every computer player's own fights.
+
+Contested battles (`--odds 0.6,1.7`): most realistic battles are mismatches whose winner is
+fixed, which squeezes the score. With `--odds` the worker plays only the battles whose odds
+(the player's strength over the enemy's) fall in the band, from twice as many generated, and
+guards are sampled near even. No army is rescaled: they are the same realistic battles, only
+the ones the AI can swing. On `standard` that keeps 333 of 480; switching off hero spells
+scores 0.436 there against 0.465 on all battles, and 15% of battles change winner with the
+AI instead of 5 to 7%. `tune.py` trains on contested battles by default.
 
 ## How the variants are swapped
 
@@ -179,6 +188,19 @@ On the realistic suites (`standard`, `--roles`):
   Waiting lets the shooters and the hero act first.
 - Holding the line only while the enemy has melee strength to come: 0.502 +/- 0.003.
 
+On contested battles (`--odds 0.6,1.7`), against the weights above:
+
+- A one-move look-ahead: each order (shot, strike, defend, advance) played on a copy of the
+  battle with the AI's own damage estimate, every enemy stack answering with its most costly
+  blow, and the stack's next blow counted at half; the strength each side keeps (creatures
+  worth the root of damage times health, shooters more) added to the order's score. At weight
+  1 and 3: 0.499 to 0.502 +/- 0.008. It changes more than half the battles, by 0.03 on average,
+  and its gains and losses cancel. Not landed. A look-ahead that plays the real rules costs
+  about a second a candidate, too slow for Quick Resolve and the computer players' fights.
+- Weights for being outshot (the share of ranged power the enemy has over ours): shooting
+  enemy shooters first, control spells on shooters, melee not defending out of contact and
+  advancing: 0.497 +/- 0.005. Not landed.
+
 ## Weight tuning runs
 
 - First run, on the synthetic suites (40 generations of 16, 48 battles each, about two
@@ -197,3 +219,10 @@ On the realistic suites (`standard`, `--roles`):
   moves against the weights before: our losses to the strike-back x10, kills x7, enemy
   shooters first x4.5 (and "has shots left" x0.1), wounded stacks defending x0.2, damage
   spells x2.9.
+- Third run, on contested battles with the look-ahead and outshot weights added (16
+  generations of 16, about 100 battles each, three hours): training scores 0.49 to 0.51 all
+  run, and its mean scores 0.503 +/- 0.007 on contested `standard` and 0.500 +/- 0.008 on
+  contested `holdout`; the look-ahead weight did not move (x0.93). Not landed: around the
+  current weights the battle AI is at a flat optimum against itself. What decides most
+  realistic battles is the armies, and against ranged armies the free shots during the two
+  or three rounds melee needs to close in.

@@ -119,9 +119,19 @@ def resolve_variant(spec: str, dest: Path, weights: dict[str, float] | None = No
     return source
 
 
-def build_suite(name: str) -> list[dict]:
+def parse_odds(text: str | None) -> tuple[float, float] | None:
+    """"0.6,1.7" -> (0.6, 1.7); None or "" -> None."""
+    if not text:
+        return None
+    low, high = (float(part) for part in text.split(","))
+    return (low, high)
+
+
+def build_suite(name: str, odds: tuple[float, float] | None = None) -> list[dict]:
     config = SUITES[name]
-    return scenarios.build_suite(name, config["seed"], config["groups"], config["battles"])
+    # A contested run plays about half the battles: generate twice as many.
+    battles = config["battles"] * (2 if odds else 1)
+    return scenarios.build_suite(name, config["seed"], config["groups"], battles, odds)
 
 
 def unit_values() -> dict[str, float]:
@@ -334,7 +344,8 @@ def summarize(rows: list[dict], values: dict[str, float]) -> tuple[dict, list[st
 def print_report(summary: dict, problems: list[str], args, wall: float, run_dir: Path) -> None:
     a_label = args.a + (f" with {args.a_weights}" if args.a_weights else "")
     b_label = args.b + (f" with {args.b_weights}" if args.b_weights else "")
-    print(f"\nBattle AI arena | suite {args.suite} | A = {a_label} | B = {b_label}")
+    odds = f" odds {args.odds} ({summary.get('skipped', 0)} battles outside)" if args.odds else ""
+    print(f"\nBattle AI arena | suite {args.suite}{odds} | A = {a_label} | B = {b_label}")
     print(f"{summary['battles']} battles, {summary['games']} games in {wall:.0f}s ({summary['games'] / wall:.1f} games/s), "
           f"{summary['mean_rounds']} rounds and {summary['mean_game_ms']} ms per game")
     if summary["b_score"] is not None:
@@ -372,6 +383,7 @@ def main() -> int:
     parser.add_argument("--godot", help="Godot binary")
     parser.add_argument("--out", help="results directory (default .artifacts/battle_ai_arena/<time>-<suite>)")
     parser.add_argument("--timeout", type=int, default=3600, help="seconds before workers are stopped")
+    parser.add_argument("--odds", help="contested battles only: LOW,HIGH band of the player's strength over the enemy's, e.g. 0.6,1.7")
     parser.add_argument("--roles", action="store_true", help="also play A against A, to split B's gain into its play as player and as enemy")
     parser.add_argument("--keep-logs", action="store_true", help="keep worker jobs, logs and raw results")
     args = parser.parse_args()
@@ -388,7 +400,7 @@ def main() -> int:
     router_path = run_dir / "router.gd"
     router_path.write_text(router.build_router(AI_SOURCE.read_text(encoding="utf-8")), encoding="utf-8")
 
-    groups = build_suite(args.suite)
+    groups = build_suite(args.suite, parse_odds(args.odds))
     orders = [["A", "B"], ["B", "A"]] + ([["A", "A"]] if args.roles else [])
     workers = max(1, min(args.workers, len(groups)))
     maps_before = set(MAPS_DIR.iterdir()) if MAPS_DIR.exists() else set()
@@ -401,7 +413,7 @@ def main() -> int:
     leftovers = sorted(p.name for p in (set(MAPS_DIR.iterdir()) if MAPS_DIR.exists() else set()) - maps_before)
     if leftovers:
         problems.append(f"maps/ gained {len(leftovers)} files during the run (workers remove their own): {leftovers[:6]}")
-    summary.update({"suite": args.suite, "a": args.a, "b": args.b, "workers": workers, "wall_seconds": round(wall, 1), "problems": problems})
+    summary.update({"suite": args.suite, "odds": args.odds, "skipped": sum(1 for row in rows if row.get("kind") == "skipped") // max(1, len(orders)), "a": args.a, "b": args.b, "workers": workers, "wall_seconds": round(wall, 1), "problems": problems})
     (run_dir / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
     values = unit_values()
     with (run_dir / "games.jsonl").open("w", encoding="utf-8", newline="\n") as handle:

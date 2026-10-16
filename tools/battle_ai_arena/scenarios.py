@@ -34,6 +34,9 @@ WEEK_WEIGHTS = {1: 0.17, 2: 0.17, 3: 0.15, 4: 0.13, 5: 0.11, 6: 0.10, 8: 0.09, 1
 DOCTRINE_WEIGHTS = {"balanced": 0.35, "ranged": 0.25, "melee": 0.15, "top_heavy": 0.13, "swarm": 0.12}
 # The guard's strength over the hero's (AiHeroRules.army_power): an easy fight to a hard one.
 GUARD_RATIOS = {0.3: 0.2, 0.6: 0.3, 0.9: 0.3, 1.3: 0.2}
+# A contested suite keeps the battles whose odds (the player's strength over the enemy's) fall
+# in a band, where the AI can swing the result; its guards are sampled near even.
+CONTESTED_GUARD_RATIOS = {0.6: 0.35, 0.9: 0.4, 1.3: 0.25}
 MONSTER_STRENGTHS = ["weak", "normal", "strong"]
 MAP_SIZES = {"homm3_small": 0.7, "homm3_medium": 0.3}
 RESOURCE_GOLD_VALUE = 250
@@ -157,7 +160,7 @@ def hero_spec(content: Content, faction: str, week: int, rng: random.Random, her
     }
 
 
-def build_battle(content: Content, rng: random.Random, battle_id: str, faction: str, hero_id: str) -> dict:
+def build_battle(content: Content, rng: random.Random, battle_id: str, faction: str, hero_id: str, contested: bool = False) -> dict:
     kind = _pick(rng, TYPE_WEIGHTS)
     week = _pick(rng, WEEK_WEIGHTS)
     doctrine = _pick(rng, DOCTRINE_WEIGHTS)
@@ -171,7 +174,7 @@ def build_battle(content: Content, rng: random.Random, battle_id: str, faction: 
         "site_index": rng.randrange(1000),
     }
     if kind == "guard":
-        battle["guard_ratio"] = _pick(rng, GUARD_RATIOS)
+        battle["guard_ratio"] = _pick(rng, CONTESTED_GUARD_RATIOS if contested else GUARD_RATIOS)
     elif kind == "hero":
         enemy = rng.choice(content.factions)["id"]
         enemy_week = max(1, min(12, week + rng.randint(-2, 2)))
@@ -203,8 +206,9 @@ def build_battle(content: Content, rng: random.Random, battle_id: str, faction: 
     return battle
 
 
-def build_suite(name: str, seed: int | str, groups: int, battles_per_group: int) -> list[dict]:
-    """groups maps of battles_per_group battles each, reproducible from (name, seed)."""
+def build_suite(name: str, seed: int | str, groups: int, battles_per_group: int, odds: tuple[float, float] | None = None) -> list[dict]:
+    """groups maps of battles_per_group battles each, reproducible from (name, seed). With odds
+    the worker plays only the battles whose odds fall in that band (contested battles)."""
     content = Content()
     rng = random.Random(f"battle-ai-arena:{name}:{seed}")
     suite = []
@@ -221,8 +225,10 @@ def build_suite(name: str, seed: int | str, groups: int, battles_per_group: int)
             "player_hero_id": rng.choice(faction["hero_ids"]),
             "battles": [],
         }
+        if odds:
+            group["odds"] = list(odds)
         for b_index in range(battles_per_group):
-            group["battles"].append(build_battle(content, rng, f"{group['group_id']}:{b_index}", faction["id"], group["player_hero_id"]))
+            group["battles"].append(build_battle(content, rng, f"{group['group_id']}:{b_index}", faction["id"], group["player_hero_id"], bool(odds)))
         suite.append(group)
     return suite
 

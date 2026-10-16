@@ -270,6 +270,13 @@ func _play_game(base: Dictionary, group: Dictionary, battle: Dictionary, ground:
 			enemy_power = float(ground.get("guard", {}).get("power", 0.0))
 	row["player_power"] = snappedf(float(ground.get("player_power", 0.0)), 0.1)
 	row["enemy_power"] = snappedf(enemy_power, 0.1)
+	# A contested run plays only the battles whose odds fall in its band.
+	var odds: Array = group.get("odds", [])
+	if odds.size() == 2:
+		var ratio := float(ground.get("player_power", 0.0)) / maxf(1.0, enemy_power)
+		if ratio < float(odds[0]) or ratio > float(odds[1]):
+			_emit({"kind": "skipped", "battle_id": row.battle_id})
+			return
 	# Installed before the battle is built: building it already asks the AI.
 	# Calls tied to no side (shared payload plumbing) always take the default.
 	_router._arena_install({"player": variants[player_variant], "enemy": variants[enemy_variant]}, _default_variant)

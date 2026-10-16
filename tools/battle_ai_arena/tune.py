@@ -108,9 +108,10 @@ class SepCMA:
         }
 
 
-def training_groups(seed: int, generation: int, groups: int, battles: int) -> list[dict]:
-    """Fresh realistic battles (scenarios.py) for this run and generation: never the arena's suites."""
-    return scenarios.build_suite("tune", f"{seed}-{generation}", groups, battles)
+def training_groups(seed: int, generation: int, groups: int, battles: int, odds: tuple[float, float] | None) -> list[dict]:
+    """Fresh realistic battles (scenarios.py) for this run and generation: never the arena's
+    suites. With odds, only the contested ones are played."""
+    return scenarios.build_suite("tune", f"{seed}-{generation}", groups, battles, odds)
 
 
 def to_weights(x: np.ndarray, keys: list[str], base: dict[str, float]) -> dict[str, float]:
@@ -143,8 +144,9 @@ def main() -> int:
     parser.add_argument("--generations", type=int, default=30)
     parser.add_argument("--population", type=int, default=16, help="weight sets per generation (default 16)")
     parser.add_argument("--sigma", type=float, default=0.5, help="initial step, in powers of two (default 0.5)")
-    parser.add_argument("--maps", type=int, default=24, help="generated maps each generation (default 24)")
-    parser.add_argument("--battles", type=int, default=3, help="battles per map (default 3)")
+    parser.add_argument("--maps", type=int, default=48, help="generated maps each generation (default 48; several per worker even out the load)")
+    parser.add_argument("--battles", type=int, default=3, help="battles generated per map (default 3)")
+    parser.add_argument("--odds", default="0.6,1.7", help="play only battles whose odds fall in LOW,HIGH (default 0.6,1.7, about half); '' plays all")
     parser.add_argument("--workers", type=int, default=max(1, (os.cpu_count() or 2) * 3 // 4))
     parser.add_argument("--godot", help="Godot binary")
     parser.add_argument("--out", help="run directory (default .artifacts/battle_ai_arena/tune-<time>)")
@@ -167,14 +169,14 @@ def main() -> int:
         run_dir = Path(args.out) if args.out else arena.ROOT / ".artifacts" / "battle_ai_arena" / f"tune-{datetime.now():%Y%m%d-%H%M%S}"
         run_dir.mkdir(parents=True, exist_ok=True)
         keys = sorted(base)
-        settings = {"population": args.population, "sigma": args.sigma, "maps": args.maps, "battles": args.battles, "seed": args.seed}
+        settings = {"population": args.population, "sigma": args.sigma, "maps": args.maps, "battles": args.battles, "odds": args.odds, "seed": args.seed}
         cma = SepCMA(len(keys), args.sigma, args.population)
         rng = np.random.default_rng([args.seed, 0])
     values = arena.unit_values()
     source = arena.AI_SOURCE.read_text(encoding="utf-8")
     router_path = run_dir / "router.gd"
     router_path.write_text(router.build_router(source), encoding="utf-8")
-    print(f"Tuning {len(keys)} weights, population {settings['population']}, {settings['battles'] * settings['maps']} battles a generation -> {run_dir}")
+    print(f"Tuning {len(keys)} weights, population {settings['population']}, {settings['battles'] * settings['maps']} battles generated a generation (odds {settings.get('odds') or 'any'}) -> {run_dir}")
 
     while cma.gen < args.generations:
         gen = cma.gen
@@ -193,11 +195,12 @@ def main() -> int:
             paths[name] = variants_dir / f"{name}.gd"
             arena.resolve_variant("current", paths[name], to_weights(x, keys, base))
         orders = [order for name in names for order in ([name, "base"], ["base", name])]
-        groups = training_groups(settings["seed"], gen, settings["maps"], settings["battles"])
+        groups = training_groups(settings["seed"], gen, settings["maps"], settings["battles"], arena.parse_odds(settings.get("odds", "")))
         rows, problems = arena.run_workers(godot, gen_dir, groups, min(args.workers, len(groups)), paths, router_path, args.timeout, orders, "base")
         scores = candidate_scores(rows, names, values)
-        expected = settings["battles"] * len(groups)
-        short = {name: len(s) for name, s in scores.items() if len(s) < expected * 0.9}
+        # Battles outside the odds band are skipped, the same ones for every candidate.
+        expected = max(len(s) for s in scores.values())
+        short = {name: len(s) for name, s in scores.items() if len(s) < expected * 0.9 or not s}
         if problems or short:
             print(f"generation {gen}: {len(problems)} problems, short candidates {short}")
             for line in problems[:10]:
