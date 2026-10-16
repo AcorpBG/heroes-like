@@ -115356,6 +115356,17 @@
         "tools/battle_ai_arena/README.md"
       ],
       "notes": "Owner request 2026-10-16 (after the self-improving runs moved little): try a look-ahead, a fitness on battles the AI can swing, and new anti-ranged considerations for the tuner. arena.py and tune.py take --odds LOW,HIGH: the worker plays only the realistic battles whose player/enemy army_power falls in the band, from twice as many generated, guards sampled near even; nothing rescaled. tune.py trains on --odds 0.6,1.7 by default (48 maps of 3). On standard that keeps 333 of 480 battles, 15% AI-decided instead of 5-7%. Tried and not landed (game code unchanged): a one-move look-ahead on a copy of the battle (enemy best replies, own followup) 0.499-0.502; outshot weights for shooting shooters, control spells, melee defend and advance 0.497; a third CMA-ES run over 56 weights on contested battles 0.503 +/- 0.007 standard, 0.500 +/- 0.008 holdout, look-ahead weight unmoved. Finding: the battle AI is at a flat optimum against itself; ranged strength is structural (free shots while melee closes in), which belongs to game design and the overworld AI's recruitment."
+    },
+    {
+      "id": "ai-army-power-ranged-calibration-20261016",
+      "title": "Strength estimate counts shooters at their battle performance",
+      "status": "completed",
+      "classification": "gameplay",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "tools/battle_ai_arena/README.md"
+      ],
+      "notes": "Owner direction 2026-10-16: adjust the strength estimates to ranged performance. AiHeroRules.army_power counted a shooter 1.15 times a melee creature of the same stats; with the battle AI on both sides armies built ranged won about a tenth more often than it predicted and melee-built ones a tenth less. Fitted on 2,880 realistic arena battles (scenarios.py, 12 seeds, logistic fit of the winner on the log strength ratio): 1.6 best (log-likelihood -736 against -862, winner called 89% against 86%; 1.6 in guard and hero battles, 1.35 in sieges); a bonus scaled by the opponent's melee share or the side's own melee screen fits worse. New const RANGED_POWER := 1.6; tools/build_generated_neutral_companies.py mirrors it and the catalog was rebuilt (only the 51 authored companies' slot shares move). Checked on 1,440 fresh battles generated with the change: best fit still 1.6, every build plan within 0.02. Effects: computer players value shooters about 40% more in recruit, dwelling and upgrade choices and in threat/attack strength checks; a generated guard's ranged units get about 28% fewer creatures for the same native budget; the arena's odds bands use the new estimate. tests/generated_neutral_encounter_regression.py fails 'legacy save encounters changed' at HEAD too (not caused here, not a core test)."
     }
   ],
   "project": "heroes-like",

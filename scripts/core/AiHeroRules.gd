@@ -123,6 +123,13 @@ const THREAT_KILL_SHARE := 0.5
 ## A visible hostile hero this many times a hero's strength is a danger to it:
 ## the hero keeps out of its reach (`_dangers`).
 const DANGER_RATIO := 1.15
+## What a shooter is worth in army_power over a melee creature of the same
+## health, damage and stats. Fitted 2026-10-16 on 2,880 realistic battles of
+## the battle AI arena (tools/battle_ai_arena), both sides played by the battle
+## AI: 1.6 calls the winner in 89% of them where 1.15 called 86%, and armies
+## built melee no longer win a tenth less often than predicted (1.6 in guard
+## and hero battles alike, 1.35 in sieges, where walls shelter the defenders).
+const RANGED_POWER := 1.6
 ## The most of its strength a main hero leaves behind to guard a town.
 const GUARD_SHARE_MAX := 0.25
 ## The main hero holds at least this share of the strongest hero's army.
@@ -4639,7 +4646,8 @@ static func _neutral_army(encounter: Dictionary) -> Dictionary:
 # --- Strength -----------------------------------------------------------------
 
 ## Rough fighting value: per creature sqrt(hp * average damage), scaled by
-## attack and defense, and by the leading hero's command and spells.
+## attack and defense, and by the leading hero's command and spells. A shooter
+## counts RANGED_POWER times: it shoots freely while melee closes in.
 static func army_power(stacks: Variant, commander: Variant = {}) -> float:
 	var total := 0.0
 	var damage_per_round := 0.0
@@ -4658,7 +4666,7 @@ static func army_power(stacks: Variant, commander: Variant = {}) -> float:
 		var per := sqrt(maxf(1.0, float(unit.get("hp", 1))) * maxf(0.5, damage))
 		per *= 1.0 + 0.03 * float(int(unit.get("attack", 0)) + int(unit.get("defense", 0)))
 		if bool(unit.get("ranged", false)):
-			per *= 1.15
+			per *= RANGED_POWER
 		total += per * float(count)
 		damage_per_round += damage * float(count)
 	if commander is Dictionary and not commander.is_empty():

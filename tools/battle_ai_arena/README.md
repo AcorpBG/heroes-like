@@ -180,7 +180,10 @@ On the realistic suites (`standard`, `--roles`):
   0.506 +/- 0.010. All kept.
 - With the current AI on both sides, an army built ranged does about 0.10 better in the 67
   hero battles of `standard` than its strength (`AiHeroRules.army_power`) predicts, and one built melee 0.12
-  worse: the battle AI's melee is the weak side against shooters.
+  worse: the battle AI's melee is the weak side against shooters. Since corrected: refitted on
+  2,880 realistic battles, a shooter counts 1.6 times in `army_power` instead of 1.15, which
+  calls the winner in 89% of them instead of 86% and leaves every build plan within 0.02 of
+  its prediction.
 - A melee stack heading for the enemy's shooters instead of the nearest enemy, up to eight
   turns further: no change at all. The field is 11 by 9 hexes, so melee meets the enemy within
   a turn or two whatever it heads for.

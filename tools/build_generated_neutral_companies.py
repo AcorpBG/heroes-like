@@ -204,7 +204,7 @@ def power(unit):
     damage = (float(unit.get("min_damage", 1)) + float(unit.get("max_damage", 1))) * 0.5
     value = math.sqrt(max(1.0, float(unit.get("hp", 1))) * max(0.5, damage))
     value *= 1.0 + 0.03 * float(int(unit.get("attack", 0)) + int(unit.get("defense", 0)))
-    return value * (1.15 if unit.get("ranged") else 1.0)
+    return value * (1.6 if unit.get("ranged") else 1.0)  # AiHeroRules.RANGED_POWER
 
 
 def pick(options, key):
