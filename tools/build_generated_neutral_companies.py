@@ -202,9 +202,10 @@ SHARES = {
 def power(unit):
     """Per-creature fighting value; mirrors AiHeroRules.army_power without a commander."""
     damage = (float(unit.get("min_damage", 1)) + float(unit.get("max_damage", 1))) * 0.5
-    value = math.sqrt(max(1.0, float(unit.get("hp", 1))) * max(0.5, damage))
-    value *= 1.0 + 0.03 * float(int(unit.get("attack", 0)) + int(unit.get("defense", 0)))
-    return value * (1.6 if unit.get("ranged") else 1.0)  # AiHeroRules.RANGED_POWER
+    # AiHeroRules.POWER_* and RANGED_POWER.
+    value = 0.7 * max(1.0, float(unit.get("hp", 1))) ** 0.3 * max(0.5, damage) ** 0.6
+    value *= math.exp(0.075 * int(unit.get("defense", 0)) + 0.06 * int(unit.get("speed", 0)) + 0.045 * int(unit.get("initiative", 0)))
+    return value * (1.65 if unit.get("ranged") else 1.0)
 
 
 def pick(options, key):

@@ -100,6 +100,48 @@ the ones the AI can swing. On `standard` that keeps 333 of 480; switching off he
 scores 0.436 there against 0.465 on all battles, and 15% of battles change winner with the
 AI instead of 5 to 7%. `tune.py` trains on contested battles by default.
 
+## Fitting the strength estimate
+
+```
+python tools/battle_ai_arena/power_fit.py                 # 7,200 battles, about 25 minutes
+python tools/battle_ai_arena/power_fit.py --ceiling 3     # also replays 720 battles with other dice
+python tools/battle_ai_arena/power_fit.py --games <run>/games.jsonl
+```
+
+`AiHeroRules.army_power` is how the computer players weigh armies: which guards and heroes to
+take on, threats, town defence, what to recruit and build. Generated guards are sized by it too.
+`power_fit.py` plays realistic battles once each with the battle AI on both sides. It then fits
+the estimate's terms to who won, with a logistic fit on the log strength ratio. It prints the
+terms and how often the game's current estimate and the refitted one call the winner of the
+battles left out of the fit. Copy the terms into `AiHeroRules.gd` and
+`tools/build_generated_neutral_companies.py`, then rebuild the company catalog. The worker
+records each side's hero (`player_commander`, `enemy_commander`), and a group's `dice`
+replays its battles with other damage rolls.
+
+The 2026-10-16 fit, tested on 2,400 battles the fit never saw:
+
+| Estimate | Winner called | Near-even battles (within 1.5x) |
+|---|---|---|
+| sqrt(health x damage), shooters x1.15 (before) | 86.7% | 70.8% |
+| the same, shooters x1.6 | 88.4% | 74.6% |
+| health^0.3 x damage^0.6, defense, speed, initiative, shooters x1.65, hero x1.7 | 90.0% | 78.2% |
+| a small neural network on 61 features a side (not used) | 90.7% | 79.9% |
+| the true odds of each battle (replayed with 9 dice) | 97.4% | |
+
+- Damage counts more than health. Each point of defense adds 7.5%, of speed 6% and of
+  initiative 4.5%.
+- Creature attack, strike-backs, shots and the unit abilities added nothing.
+- The hero's attack, defense and damage spells count about 1.7 times as much as before.
+- In guard battles the player does as well as 6% more strength would, and in sieges as 8% less.
+  The AI's margins cover this: `GUARD_WIN_RATIO` 1.3, `TOWN_ATTACK_RATIO` 1.4.
+- An abstract simulation of the battle (free shots while melee closes in, strikes and
+  strike-backs) called 86% and added nothing to the estimate.
+- Almost every miss is a near-even battle. With the new estimate, guards at 1.3 to 1.5x lose
+  93% of the time, and no battle at 2x or more was lost.
+- Before fighting a guard or another AI hero, the computer players already play the battle
+  itself in Quick Resolve (`AiHeroRules._fight_looks_good`). The estimate only shortlists
+  what they consider.
+
 ## How the variants are swapped
 
 The game calls the AI through `BattleAiRules`' static functions. Inside the worker, and only
@@ -180,10 +222,8 @@ On the realistic suites (`standard`, `--roles`):
   0.506 +/- 0.010. All kept.
 - With the current AI on both sides, an army built ranged does about 0.10 better in the 67
   hero battles of `standard` than its strength (`AiHeroRules.army_power`) predicts, and one built melee 0.12
-  worse: the battle AI's melee is the weak side against shooters. Since corrected: refitted on
-  2,880 realistic battles, a shooter counts 1.6 times in `army_power` instead of 1.15, which
-  calls the winner in 89% of them instead of 86% and leaves every build plan within 0.02 of
-  its prediction.
+  worse: the battle AI's melee is the weak side against shooters. Since corrected: see
+  "Fitting the strength estimate" below.
 - A melee stack heading for the enemy's shooters instead of the nearest enemy, up to eight
   turns further: no change at all. The field is 11 by 9 hexes, so melee meets the enemy within
   a turn or two whatever it heads for.

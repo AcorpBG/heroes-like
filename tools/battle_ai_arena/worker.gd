@@ -289,10 +289,20 @@ func _play_game(base: Dictionary, group: Dictionary, battle: Dictionary, ground:
 		row["error"] = "battle payload is empty"
 		_emit(row)
 		return
+	# The same battle with other dice (a group's "dice"): how much of a result
+	# is luck. The battle's damage rolls restart from the new seed.
+	var dice := int(group.get("dice", 0))
+	if dice != 0:
+		payload["combat_seed"] = hash([int(payload.get("combat_seed", 0)), dice])
+		for key in ["damage_rng_version", "damage_rng_state", "damage_rng_roll_count", "damage_rng_integrity"]:
+			payload.erase(key)
+		row["dice"] = dice
 	session.battle = payload
 	session.game_state = "battle"
 	_battle_rules.normalize_battle_state(session)
 	row["start_ledger"] = _battle_rules.battle_report_casualty_ledger_bridge(session.battle)
+	row["player_commander"] = _commander_features(session.battle.get("player_commander_state", {}))
+	row["enemy_commander"] = _commander_features(session.battle.get("enemy_hero", {}))
 	row["player_hero"] = not (session.battle.get("player_commander_state", {}) as Dictionary).is_empty()
 	if kind != "siege":
 		row["enemy_hero"] = not (session.battle.get("enemy_hero", {}) as Dictionary).is_empty() and kind == "hero"
@@ -355,3 +365,18 @@ func _remove_generated_packages(session) -> void:
 func _emit(row: Dictionary) -> void:
 	_out.store_line(JSON.stringify(row))
 	_out.flush()
+
+
+## A side's hero as the strength estimate sees it (AiHeroRules.army_power).
+func _commander_features(commander: Variant) -> Dictionary:
+	if not (commander is Dictionary) or (commander as Dictionary).is_empty():
+		return {}
+	var command: Dictionary = commander.get("command", {}) if commander.get("command", {}) is Dictionary else {}
+	return {
+		"level": int(commander.get("level", 0)),
+		"attack": int(command.get("attack", 0)),
+		"defense": int(command.get("defense", 0)),
+		"power": int(command.get("power", 0)),
+		"knowledge": int(command.get("knowledge", 0)),
+		"spell_damage": _ai_heroes._spell_damage_per_round(commander),
+	}

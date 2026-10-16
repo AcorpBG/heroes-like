@@ -56,9 +56,8 @@ const FAR_SEARCH_DAYS := 7
 const STRATEGIC_DAYS := 12
 const MIN_SEARCH_RADIUS := 14
 ## A guard is considered (and previewed) from this strength margin. With the
-## strength estimate calibrated on the 2026-10-08 battle stats, a 1.3x margin
-## wins about 86% of battles; the old estimate overrated a hero's attack and
-## defense and needed 1.5x.
+## strength estimate refitted 2026-10-16, guards fought at 1.3 to 1.5x lose
+## about 93% of battles in the battle AI arena, and none from 2x.
 const GUARD_WIN_RATIO := 1.3
 const HERO_ATTACK_RATIO := 1.3
 const TOWN_ATTACK_RATIO := 1.4
@@ -123,13 +122,28 @@ const THREAT_KILL_SHARE := 0.5
 ## A visible hostile hero this many times a hero's strength is a danger to it:
 ## the hero keeps out of its reach (`_dangers`).
 const DANGER_RATIO := 1.15
-## What a shooter is worth in army_power over a melee creature of the same
-## health, damage and stats. Fitted 2026-10-16 on 2,880 realistic battles of
-## the battle AI arena (tools/battle_ai_arena), both sides played by the battle
-## AI: 1.6 calls the winner in 89% of them where 1.15 called 86%, and armies
-## built melee no longer win a tenth less often than predicted (1.6 in guard
-## and hero battles alike, 1.35 in sieges, where walls shelter the defenders).
-const RANGED_POWER := 1.6
+## army_power's terms (see there). Fitted 2026-10-16 on 4,800 realistic battles
+## of the battle AI arena (tools/battle_ai_arena), both sides played by the
+## battle AI, and checked on 2,400 others: the estimate calls the winner of
+## 90% of them, against 88% with only shooters reweighed and 87% before. Most
+## misses are near-even battles; replayed with other dice, 3% of battles change
+## winner anyway. Creature attack and the unit abilities added nothing.
+## One creature: POWER_SCALE x health^POWER_HEALTH x damage^POWER_DAMAGE, and
+## per point of defense, speed and initiative a POWER_PER_* share more; the
+## scale keeps the average creature at its value before the fit.
+const POWER_SCALE := 0.7
+const POWER_HEALTH := 0.3
+const POWER_DAMAGE := 0.6
+const POWER_PER_DEFENSE := 0.075
+const POWER_PER_SPEED := 0.06
+const POWER_PER_INITIATIVE := 0.045
+## A shooter over a melee creature of the same stats: it shoots freely while
+## melee closes in.
+const RANGED_POWER := 1.65
+## The hero's attack and defense (the battle's own damage curve) and its
+## damage spells raise the army by these powers of what they add.
+const HERO_COMMAND_POWER := 0.85
+const HERO_SPELL_POWER := 0.95
 ## The most of its strength a main hero leaves behind to guard a town.
 const GUARD_SHARE_MAX := 0.25
 ## The main hero holds at least this share of the strongest hero's army.
@@ -4645,9 +4659,9 @@ static func _neutral_army(encounter: Dictionary) -> Dictionary:
 
 # --- Strength -----------------------------------------------------------------
 
-## Rough fighting value: per creature sqrt(hp * average damage), scaled by
-## attack and defense, and by the leading hero's command and spells. A shooter
-## counts RANGED_POWER times: it shoots freely while melee closes in.
+## Fighting value: per creature its health, damage, defense, speed and
+## initiative (POWER_* above), shooters RANGED_POWER times, raised by the
+## leading hero's command and spells.
 static func army_power(stacks: Variant, commander: Variant = {}) -> float:
 	var total := 0.0
 	var damage_per_round := 0.0
@@ -4663,29 +4677,24 @@ static func army_power(stacks: Variant, commander: Variant = {}) -> float:
 		if unit.is_empty():
 			continue
 		var damage := (float(unit.get("min_damage", 1)) + float(unit.get("max_damage", 1))) * 0.5
-		var per := sqrt(maxf(1.0, float(unit.get("hp", 1))) * maxf(0.5, damage))
-		per *= 1.0 + 0.03 * float(int(unit.get("attack", 0)) + int(unit.get("defense", 0)))
+		var per := POWER_SCALE * pow(maxf(1.0, float(unit.get("hp", 1))), POWER_HEALTH) * pow(maxf(0.5, damage), POWER_DAMAGE)
+		per *= exp(POWER_PER_DEFENSE * float(int(unit.get("defense", 0))) + POWER_PER_SPEED * float(int(unit.get("speed", 0))) + POWER_PER_INITIATIVE * float(int(unit.get("initiative", 0))))
 		if bool(unit.get("ranged", false)):
 			per *= RANGED_POWER
 		total += per * float(count)
 		damage_per_round += damage * float(count)
 	if commander is Dictionary and not commander.is_empty():
-		# Strength is the square root of health times damage. The hero's attack
-		# raises the army's damage and its defense cuts the damage it takes, by
-		# the battle's own curve (BattleDamageRules); its spells add to the
-		# army's damage per round, so a few casts barely move a big army and
-		# count for a lot behind a small one. Calibrated 2026-10-08 on 1,600
-		# auto-resolved battles of random hero-led armies after the battle stat
-		# scaling: it calls the winner in 83% of them (86% when one side is
-		# small), against 74% for the old 5% per attack and defense point
-		# without spells.
+		# The hero's attack raises the army's damage and its defense cuts the
+		# damage it takes, by the battle's own curve (BattleDamageRules); its
+		# spells add to the army's damage per round, so a few casts barely move
+		# a big army and count for a lot behind a small one.
 		var command: Dictionary = commander.get("command", {}) if commander.get("command", {}) is Dictionary else {}
 		var damage_dealt: float = BattleDamage.attack_defense_multiplier(maxi(0, int(command.get("attack", 0))), 0)
 		var damage_taken: float = BattleDamage.attack_defense_multiplier(0, maxi(0, int(command.get("defense", 0))))
-		total *= sqrt(damage_dealt / maxf(0.01, damage_taken))
+		total *= pow(damage_dealt / maxf(0.01, damage_taken), HERO_COMMAND_POWER)
 		var spell_damage := _spell_damage_per_round(commander)
 		if spell_damage > 0.0 and damage_per_round > 0.0:
-			total *= sqrt(1.0 + spell_damage / damage_per_round)
+			total *= pow(1.0 + spell_damage / damage_per_round, HERO_SPELL_POWER)
 	return total
 
 ## Damage a hero's spells add per round over a typical battle: the strongest
