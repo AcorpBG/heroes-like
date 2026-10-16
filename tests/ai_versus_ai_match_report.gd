@@ -23,7 +23,9 @@ extends Node
 # HEROES_AI_MATCH_GUARDS   guard strength: weak, normal (default, as a new
 #                          game from the main menu) or strong.
 # HEROES_AI_MATCH_SIZE     map size class (default homm3_small; homm3_medium,
-#                          homm3_large, homm3_extra_large), one level.
+#                          homm3_large, homm3_extra_large).
+# HEROES_AI_MATCH_WATER    land (default), normal_water or islands.
+# HEROES_AI_MATCH_LEVELS   1 (default) or 2 (with an underground level).
 
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
@@ -57,6 +59,16 @@ func _run() -> void:
 	var size_class := OS.get_environment("HEROES_AI_MATCH_SIZE").strip_edges()
 	if size_class == "":
 		size_class = "homm3_small"
+	var water := OS.get_environment("HEROES_AI_MATCH_WATER").strip_edges().to_lower()
+	if water == "":
+		water = "land"
+	if water not in ["land", "normal_water", "islands"]:
+		_fail("HEROES_AI_MATCH_WATER must be land, normal_water or islands, got %s." % water)
+		return
+	var levels := int(OS.get_environment("HEROES_AI_MATCH_LEVELS")) if OS.get_environment("HEROES_AI_MATCH_LEVELS") != "" else 1
+	if levels not in [1, 2]:
+		_fail("HEROES_AI_MATCH_LEVELS must be 1 or 2, got %d." % levels)
+		return
 	# Turn time by phase is always recorded; the ledger keeps it per player.
 	OS.set_environment("HEROES_STRATEGIC_AI_PROFILE", "1")
 	var trace := OS.get_environment("HEROES_AI_MATCH_TRACE").strip_edges() not in ["", "0"]
@@ -84,7 +96,7 @@ func _run() -> void:
 	if player_count != 2:
 		map_seed = "%s-p%d" % [map_seed, player_count]
 
-	var session = _start_session(map_seed, drawn[0], player_count, size_class, guards)
+	var session = _start_session(map_seed, drawn[0], player_count, size_class, guards, water, levels)
 	if session == null:
 		return
 	var seats := []
@@ -117,6 +129,8 @@ func _run() -> void:
 		"scenario_id": String(session.scenario_id),
 		"map_size": session.overworld.get("map_size", {}),
 		"guards": guards,
+		"water": water,
+		"levels": levels,
 		"start_treasury": _live_resources(start_treasury),
 		"seats": [],
 	}
@@ -200,9 +214,9 @@ func _run() -> void:
 	_cleanup()
 	get_tree().quit(0)
 
-func _start_session(map_seed: String, faction_id: String, player_count: int = 2, size_class: String = "homm3_small", guards: String = "normal"):
+func _start_session(map_seed: String, faction_id: String, player_count: int = 2, size_class: String = "homm3_small", guards: String = "normal", water: String = "land", levels: int = 1):
 	var config := ScenarioSelectRulesScript.build_random_map_player_config(
-		map_seed, "", "", player_count, "land", false, size_class,
+		map_seed, "", "", player_count, water, levels == 2, size_class,
 		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT,
 		faction_id, "", guards
 	)
