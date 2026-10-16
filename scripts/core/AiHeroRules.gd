@@ -2975,6 +2975,13 @@ static func _site_artifact_value(site: Dictionary) -> float:
 ## reach today. A human clears a road guard to get at the map behind it; the
 ## unexplored part is worth scouting and sites already seen there are worth
 ## taking. Measured once per search.
+## Ground that runs on to where the search stopped for distance is open to the
+## hero without the fight and opens nothing. On a large map a hero 28 tiles
+## from a weak guard took the ground past its search for ground behind the
+## guard and valued the guard at 11,000; ten tiles closer the search covered
+## that ground, the guard was worth a few hundred and the hero turned back,
+## again and again. The guard stood until day 109; without the mistake it fell
+## on day 42.
 static func _passage_value(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary, guard_index: int, needs: Dictionary) -> float:
 	var zones: Dictionary = search.get("guard_zones", {})
 	if not zones.has(guard_index) or not search.has("blocked"):
@@ -2987,31 +2994,54 @@ static func _passage_value(session: SessionStateStoreScript.SessionData, context
 	var blocked: PackedByteArray = search.blocked
 	var guard_mask: PackedByteArray = search.guard_mask
 	var known := _explored(session, context, LevelRules.level_of(entry))
+	var stop_mask: PackedByteArray = search.get("stop_mask", PackedByteArray())
+	var pass_mask: PackedByteArray = search.get("pass_mask", PackedByteArray())
+	var horizon := int(search.get("radius", -1)) if bool(search.get("capped", false)) else -1
 	# Flood out from the guard's zone over open ground the search did not reach,
-	# stopping at other guards' zones.
+	# stopping at other guards' zones, one stretch of ground at a time; a
+	# stretch that meets a tile where the search stopped for distance is not
+	# behind the guard.
 	var zone: Array = zones[guard_index]
 	var seen := {}
 	for zone_index in zone:
 		seen[int(zone_index)] = true
 	var region := []
-	var queue: Array = zone.duplicate()
-	var head := 0
-	while head < queue.size() and region.size() < PASSAGE_TILE_CAP:
-		var tile := int(queue[head])
-		head += 1
-		var x := tile % size.x
-		var y := tile / size.x
-		for direction in range(8):
-			var nx: int = x + NEIGHBOR_DX[direction]
-			var ny: int = y + NEIGHBOR_DY[direction]
-			if nx < 0 or ny < 0 or nx >= size.x or ny >= size.y:
+	var flooded := 0
+	for zone_index in zone:
+		for start_direction in range(8):
+			var sx: int = int(zone_index) % size.x + NEIGHBOR_DX[start_direction]
+			var sy: int = int(zone_index) / size.x + NEIGHBOR_DY[start_direction]
+			if sx < 0 or sy < 0 or sx >= size.x or sy >= size.y:
 				continue
-			var next := ny * size.x + nx
-			if seen.has(next) or dist[next] >= 0 or blocked[next] != 0 or guard_mask[next] != 0:
+			var start := sy * size.x + sx
+			if flooded >= PASSAGE_TILE_CAP or seen.has(start) or dist[start] >= 0 or blocked[start] != 0 or guard_mask[start] != 0:
 				continue
-			seen[next] = true
-			region.append(next)
-			queue.append(next)
+			seen[start] = true
+			var stretch := [start]
+			var head := 0
+			var open_to_hero := false
+			while head < stretch.size() and flooded < PASSAGE_TILE_CAP and not open_to_hero:
+				var tile := int(stretch[head])
+				head += 1
+				flooded += 1
+				var x := tile % size.x
+				var y := tile / size.x
+				for direction in range(8):
+					var nx: int = x + NEIGHBOR_DX[direction]
+					var ny: int = y + NEIGHBOR_DY[direction]
+					if nx < 0 or ny < 0 or nx >= size.x or ny >= size.y:
+						continue
+					var next := ny * size.x + nx
+					if dist[next] >= 0:
+						if horizon >= 0 and dist[next] >= horizon and (stop_mask.is_empty() or stop_mask[next] == 0 or pass_mask[next] != 0):
+							open_to_hero = true
+						continue
+					if seen.has(next) or blocked[next] != 0 or guard_mask[next] != 0:
+						continue
+					seen[next] = true
+					stretch.append(next)
+			if not open_to_hero:
+				region.append_array(stretch)
 	var value := 0.0
 	if not region.is_empty():
 		var static_stops: Dictionary = search.get("static_stops", {})
@@ -3899,6 +3929,7 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 		"order": queue,
 		"order_count": tail,
 		"capped": capped,
+		"radius": radius,
 		"blocked": blocked,
 		"stop_mask": stop_mask,
 		"pass_mask": pass_mask,

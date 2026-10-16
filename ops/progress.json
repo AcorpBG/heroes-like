@@ -115378,6 +115378,17 @@
         "tools/battle_ai_arena/README.md"
       ],
       "notes": "Owner request 2026-10-16: 89% of winners called is not good enough; improve the predictor. Measured the ceiling: 720 battles replayed with 9 dice each change winner often enough that knowing each battle's true odds calls 97.4%. Fitted on 4,800 arena battles (both sides the battle AI) and tested on 2,400 others: before 86.7%, shooters x1.6 88.4%, refitted 90.0% (near-even battles 70.8% -> 78.2%, log loss 0.282 -> 0.226). AiHeroRules.army_power is now POWER_SCALE x health^0.3 x damage^0.6 x exp(0.075 defense + 0.06 speed + 0.045 initiative), shooters x1.65, hero command and spell factors to the powers 0.85 and 0.95 (were 0.5); the scale keeps the average creature's value. Creature attack, strike-backs, shots and unit abilities added nothing; a neural network on 61 features a side reached 90.7% and an abstract battle simulation 86% (neither used). Checked on 1,440 fresh battles generated and played with the change: 88.1% against 86.7% for x1.6 on the same battles; Python recomputation matches the game's estimates exactly. tools/battle_ai_arena/power_fit.py plays and refits (worker logs each side's hero and can replay battles with other dice); build_generated_neutral_companies.py mirrors the terms and the catalog was rebuilt. Generated guards keep their power, so their creature counts shift by unit. The computer players already play out a fight in Quick Resolve before taking it; the estimate shortlists targets and weighs threats, defence, recruits and guards."
+    },
+    {
+      "id": "ai-guard-passage-horizon-20261016",
+      "title": "AI guard passage value ignores ground past the search horizon",
+      "status": "completed",
+      "classification": "gameplay",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md"
+      ],
+      "notes": "From the owner's 2026-10-16 batch of 5 large AI matches: on seed ai-match-862019147 player_1's heroes picked a 163-strength guard as their target from day 8 and turned back again and again; it fell on day 109. Replay with traces: _passage_value flooded from the guard's zone over every tile the search had not reached, including ground beyond the search radius, and counted it as behind the guard (11,300 with the hidden-rival share); ten tiles closer the search covered that ground and the value fell to a few hundred. The flood now goes one stretch at a time and drops a stretch that touches a tile where the search stopped for distance (_search records its radius). Same seed after the fix: the guard fell on day 42, and Thornwake won on day 104 where the original ran to the day cap. Validation: tests/ai_player_rules_report and tools/core_suite.py."
     }
   ],
   "project": "heroes-like",
