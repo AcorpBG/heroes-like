@@ -11,7 +11,7 @@ extends Node
 #
 # HEROES_AI_MATCH_SEED     match seed (factions and map); unset or "random"
 #                          draws one. The same seed replays the same match.
-# HEROES_AI_MATCH_MAX_DAYS day cap for an undecided match (default 160).
+# HEROES_AI_MATCH_MAX_DAYS day cap for an undecided match (default 320).
 # HEROES_AI_MATCH_OUT      where the JSON record goes (default user://).
 # HEROES_AI_MATCH_TRACE    1 prints each day's heroes, goals and towns.
 # HEROES_AI_MATCH_SWAP     1 plays the same map with the factions' starting
@@ -32,7 +32,7 @@ const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
 const AiSeatRulesScript = preload("res://scripts/core/AiSeatRules.gd")
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const REPORT_ID := "AI_VERSUS_AI_MATCH_REPORT"
-const DEFAULT_MAX_DAYS := 160
+const DEFAULT_MAX_DAYS := 320
 const DEFAULT_OUT := "user://ai_versus_ai_match.json"
 
 var _failed := false

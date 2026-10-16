@@ -35,11 +35,11 @@ Take these from the request; use the defaults for anything not given. Do not ask
 | size | `homm3_medium` | `homm3_small`, `homm3_medium`, `homm3_large`, `homm3_extra_large` |
 | line-ups | different random factions per match, no faction twice in a match | `--mirrors` allows repeats; or exact line-ups from the owner |
 | guards | `normal` (as a new game from the main menu) | `weak`, `normal`, `strong` |
-| day cap | 160 | an undecided game stops here |
+| day cap | 320 | an undecided game stops here (160 before 2026-10-16) |
 | subagent model | `haiku`, effort `high` | only change if the owner asks |
 
-Expected wall time per match: small 1–3 min, medium 3–12 min (longer games take longer), all
-matches in parallel.
+Expected wall time per match with 12 running: small 1–3 min, medium 3–12 min, large 6–40 min
+(median 18; a large game that runs to the 320-day cap takes 20–80 min), all matches in parallel.
 
 ## 2. Prepare
 

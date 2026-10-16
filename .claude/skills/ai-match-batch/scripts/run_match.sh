@@ -6,14 +6,14 @@
 #   players     number of computer players (2-8)
 #   size_class  homm3_small | homm3_medium | homm3_large | homm3_extra_large
 #   factions    comma-separated faction ids, one per seat, or "random"
-#   max_days    day cap (default 160)
+#   max_days    day cap (default 320)
 #   guards      weak | normal | strong (default normal, as a new game)
 #
 # Writes <run_id>.json (match record), <run_id>.log and, when finished,
 # <run_id>.done holding "exit=<code>". The map seed is drawn at random.
 # GODOT_BIN overrides the Godot binary.
 set -u
-OUT="$1"; RUN="$2"; PLAYERS="$3"; SIZE="$4"; FACTIONS="$5"; MAX_DAYS="${6:-160}"; GUARDS="${7:-normal}"
+OUT="$1"; RUN="$2"; PLAYERS="$3"; SIZE="$4"; FACTIONS="$5"; MAX_DAYS="${6:-320}"; GUARDS="${7:-normal}"
 REPO="$(cd "$(dirname "$0")/../../../.." && pwd)"
 if [ -z "${GODOT_BIN:-}" ]; then
 	if [ -x /d/Games/godot/Godot_v4.6.2-stable_win64_console.exe ]; then
@@ -36,5 +36,5 @@ export HEROES_AI_MATCH_MAX_DAYS="$MAX_DAYS" HEROES_AI_MATCH_OUT="$OUT/$RUN.json"
 if [ "$FACTIONS" != "random" ]; then
 	export HEROES_AI_MATCH_FACTIONS="$FACTIONS"
 fi
-timeout 3000 "$GODOT_BIN" --headless --path "$REPO" res://tests/ai_versus_ai_match_report.tscn > "$OUT/$RUN.log" 2>&1
+timeout 14400 "$GODOT_BIN" --headless --path "$REPO" res://tests/ai_versus_ai_match_report.tscn > "$OUT/$RUN.log" 2>&1
 echo "exit=$?" > "$OUT/$RUN.done"
