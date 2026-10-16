@@ -115389,6 +115389,17 @@
         "PLAN.md"
       ],
       "notes": "From the owner's 2026-10-16 batch of 5 large AI matches: on seed ai-match-862019147 player_1's heroes picked a 163-strength guard as their target from day 8 and turned back again and again; it fell on day 109. Replay with traces: _passage_value flooded from the guard's zone over every tile the search had not reached, including ground beyond the search radius, and counted it as behind the guard (11,300 with the hidden-rival share); ten tiles closer the search covered that ground and the value fell to a few hundred. The flood now goes one stretch at a time and drops a stretch that touches a tile where the search stopped for distance (_search records its radius). Same seed after the fix: the guard fell on day 42, and Thornwake won on day 104 where the original ran to the day cap. Validation: tests/ai_player_rules_report and tools/core_suite.py."
+    },
+    {
+      "id": "ai-free-guard-fights-20261016",
+      "title": "AI heroes fight weak guards they beat without losses at once",
+      "status": "completed",
+      "classification": "gameplay",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md"
+      ],
+      "notes": "Owner request 2026-10-16: guards that can be killed without losses should be killed instantly; the cost against the reward is infinite. Measured on 1,025 arena guard fights at 2-35% of the hero's strength: every one won; 83%/84%/80%/75%/65%/63%/57% cost no creature in the bands <3%, 3-5%, 5-8%, 8-12%, 12-17%, 17-25%, 25-35%, with mean losses 0.05%, 0.2%, 0.4%, 0.7%, 1.7%, 2.3%, 4.6% of the army. The old estimate charged at least 1.2% of the army (a 6,000 hero against a 163 guard: about 750, more than the guard pays), so strong heroes left weak guards standing. _expected_loss_value now adds LOSS_ESTIMATE_PER_RATIO (0.035) x the guard's share instead of the 1.2% floor (equal at 0.35, where the 2026-10-08 calibration sits). _free_fight: before the usual choice a hero previews up to two of the nearest guards within today's movement holding at most 25% of its strength (outside danger, not avoided) and takes the first whose preview wins without losing a creature; the preview is reused as the fight (same battle number and dice), a costly preview is cached for the turn per army. Replay of ai-match-862019147 (large, 3 players): guard fights 78 -> 183, 160 of 161 weak ones lossless, none lost, 365 previews over the game, slowest AI day 7.8 s (7.4 s before). Validation: tests/ai_player_rules_report, tools/core_suite.py."
     }
   ],
   "project": "heroes-like",

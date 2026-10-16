@@ -168,7 +168,19 @@ const CLEAR_WIN_RATIO := 3.0
 ## guards of the owner's large map (mean loss 8.7% at a guard of 0.3-0.4 of
 ## the hero's strength, 14% at 0.4-0.5, 22% at 0.5-0.6, 32% at 0.6-0.7).
 const LOSS_ESTIMATE_FACTOR := 1.3
-const LOSS_ESTIMATE_FLOOR := 0.012
+## The small loss grows with the guard's share of the hero's strength, as it
+## did at the 2026-10-08 calibration's 0.35. It was a fixed 1.2% of the army,
+## more than a weak guard pays a strong hero, so strong heroes walked past weak
+## guards: in 1,025 arena guard fights (2026-10-16) the winner lost 0.05% of
+## its army against guards under 3% of its strength, 0.4% at 5-8%, 0.7% at
+## 8-12%, 2.3% at 17-25% and 4.6% at 25-35%.
+const LOSS_ESTIMATE_PER_RATIO := 0.035
+## Guards up to this share of the hero's strength within its reach today are
+## previewed for a free fight (`_free_fight`): of the arena's fights against
+## them, 63% to 84% cost the winner no creature.
+const FREE_FIGHT_MAX_RATIO := 0.25
+## Free-fight previews a hero runs in one decision.
+const MAX_FREE_FIGHT_PREVIEWS := 2
 ## Fights a hero sizes up and turns down before settling on a decision.
 const MAX_FIGHT_VETOES := 3
 ## Dismissed fights an idle hero looks at again in one decision.
@@ -2065,6 +2077,12 @@ static func _choose_plan(session: SessionStateStoreScript.SessionData, context: 
 	if not step_aside.is_empty():
 		step_aside["path"] = _path_to(search, int(step_aside.tile_index))
 		return step_aside
+	# A guard it beats without losing a creature costs the hero nothing but
+	# the walk: it fights it first.
+	var free := _free_fight(session, context, entry, search)
+	if not free.is_empty():
+		free["path"] = _path_to(search, int(free.tile_index))
+		return free
 	started = Time.get_ticks_usec()
 	var best := _vetted_candidate(session, context, entry, search, movement_max)
 	_profile_add(context, "choose_ms", started)
@@ -2100,6 +2118,78 @@ static func _choose_plan(session: SessionStateStoreScript.SessionData, context: 
 		return {}
 	best["path"] = _path_to(search, int(best.tile_index))
 	return best
+
+## A weak guard the hero can reach today and beat without losing a creature:
+## the fight is worth whatever it pays, against no cost at all, so the hero
+## fights it at once, as a human clears the weak guards in reach. Strength alone
+## cannot promise that (about one fight in six against guards under 5% of the
+## hero's strength still costs a creature), so the nearest such guards are
+## previewed; the preview is this same battle, dice included, and the fight
+## that follows reuses it. A guard that would cost a creature is not previewed
+## again this turn while the army stays the same.
+static func _free_fight(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary) -> Dictionary:
+	var block: Dictionary = entry.get(AI_HERO_KEY, {})
+	var reach := int(block.get("movement", {}).get("current", 0))
+	var power := hero_power(entry)
+	if reach <= 0 or power <= 0.0:
+		return {}
+	var avoid: Dictionary = block.get("avoid", {}) if block.get("avoid", {}) is Dictionary else {}
+	var encounters: Array = session.overworld.get("encounters", [])
+	var dangers := _dangers(session, context, entry)
+	var size: Vector2i = context.map_size
+	var level := LevelRules.level_of(entry)
+	var nearest := {}
+	var stops: Dictionary = search.get("stops", {})
+	for tile_index in stops.keys():
+		var distance := int(search.dist[int(tile_index)])
+		if distance > reach or (not dangers.is_empty() and _in_danger(dangers, int(tile_index) % size.x, int(tile_index) / size.x, level)):
+			continue
+		for ref in stops[tile_index]:
+			if int(ref.kind) == STOP_ENCOUNTER and (not nearest.has(int(ref.index)) or distance < int(nearest[int(ref.index)].distance)):
+				nearest[int(ref.index)] = {"tile_index": int(tile_index), "distance": distance}
+	var options := []
+	for index in nearest.keys():
+		var guard: Dictionary = encounters[int(index)]
+		var guard_id := String(guard.get("placement_id", ""))
+		if PlayerRules.raid_controller_id(guard) != "" or int(avoid.get(guard_id, -1)) >= int(session.day):
+			continue
+		var guard_power := _guard_power(guard)
+		if guard_power <= 0.0 or guard_power > power * FREE_FIGHT_MAX_RATIO:
+			continue
+		options.append({"kind": "encounter", "id": guard_id, "index": int(index), "tile_index": int(nearest[index].tile_index), "distance": int(nearest[index].distance), "fight_power": guard_power})
+	if options.is_empty():
+		return {}
+	options.sort_custom(func(a, b): return int(a.distance) < int(b.distance))
+	if not context.has("costly_fights"):
+		context["costly_fights"] = {}
+	var costly: Dictionary = context.costly_fights
+	var needs := _resource_needs(session, context)
+	var stacks: Array = entry.get("enemy_army", {}).get("stacks", [])
+	var army_key := hash(stacks)
+	var previews := 0
+	for option in options:
+		if previews >= MAX_FREE_FIGHT_PREVIEWS:
+			break
+		var key := "%s|%s|%d" % [String(entry.get("placement_id", "")), String(option.id), army_key]
+		if costly.has(key):
+			continue
+		# What it pays, with nothing to take off for losses.
+		var value := _guard_fight_value(session, context, entry, int(option.index), power, needs, search)
+		if is_nan(value):
+			continue
+		previews += 1
+		var guard: Dictionary = encounters[int(option.index)]
+		var battle_number := int(context.get("auto_battle_count", 0)) + 1
+		context["preview_count"] = int(context.get("preview_count", 0)) + 1
+		var started := Time.get_ticks_usec()
+		var outcome := _simulate_battle(session, context, entry, guard, battle_number)
+		_profile_add(context, "preview_ms", started)
+		if bool(outcome.get("won", false)) and _creature_total(outcome.get("hero_survivors", [])) >= _creature_total(stacks):
+			context["fight_preview"] = {"key": _battle_key(entry, guard, battle_number), "outcome": outcome}
+			option["value"] = value + _expected_loss_value(power, float(option.fight_power))
+			return option
+		costly[key] = true
+	return {}
 
 ## Whether this hero is one of the player's armies (the main hero or a field
 ## army), the heroes that look across the map for the game's objectives.
@@ -2905,7 +2995,7 @@ static func _expected_loss_value(power: float, enemy_power: float) -> float:
 	if power <= 0.0 or enemy_power <= 0.0:
 		return 0.0
 	var ratio := minf(1.0, enemy_power / power)
-	var share := minf(1.0, LOSS_ESTIMATE_FACTOR * (1.0 - sqrt(1.0 - ratio * ratio)) + LOSS_ESTIMATE_FLOOR)
+	var share := minf(1.0, LOSS_ESTIMATE_FACTOR * (1.0 - sqrt(1.0 - ratio * ratio)) + LOSS_ESTIMATE_PER_RATIO * ratio)
 	return power * share * TROOP_VALUE_PER_POWER
 
 ## What a guard protects. A linked target counts on its own; otherwise (the
