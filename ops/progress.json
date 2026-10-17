@@ -115477,6 +115477,21 @@
       "notes": "Found while tracing split large maps (native-rmg-second-town-placement-20261017). _random_map_public_h3maped_launch_config rebuilds every config as catalog-auto and kept monster_strength only when the input was catalog-auto, so size-default callers such as tests/ai_versus_ai_match_report.gd launched weak and strong maps as normal. Probe on seed strength-probe-10184 (Small, size-default): before, weak/normal/strong all launched normal with 23 guards; after, they launch weak/normal/strong with 17/23/24 guards. build_random_map_player_config now records monster_strength_selected, and the launch keeps a chosen strength on every mode; unchosen size-default configs still get the default. AI batch results recorded as weak or strong before this fix were played at normal. Validation: new case in tests/random_map_small_2p_launch_report.gd (size-default and catalog-auto, Small and Large, weak/strong/unchosen) and tools/core_suite.py 16/16 on Windows.",
       "updatedAt": "2026-10-17T14:00:00Z",
       "validatedAt": "2026-10-17T14:00:00Z"
+    },
+    {
+      "id": "native-rmg-extra-town-type-20261017",
+      "title": "Native RMG: 0x4a901a builds the town from the type it resolves (XL Monk's Retreat town subtypes)",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "native_rmg_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/rmg-second-town-placement-parity.md",
+        "docs/lessons-learned.md"
+      ],
+      "notes": "Follow-up of native-rmg-second-town-placement-20261017. XL Monk's Retreat (3+3, seed 1778117359) matched in tiles and positions, but the treasure zones' second towns had subtypes 2/0/0 where H3MapEd has 4/7/6. 0x4a901a resolves the key (0x49b3c1 when +0x40 = 0 and selected index -1), takes the type-98 wrapper from generator +0x658 at that key (0x4a90a4) and builds the object from it (0x4a92b1/0x49ba89); 0x4a93a2 reads +0x658 at the same key. Winedbg trace: owners 6/7/8 get caller key 2/0/0, 0x49b3c1 returns 4/7/6, and the 0x4a92c0 object carries that key's wrapper. Native drew the same values but committed the caller's join. Fix: the weighted path and the scheduler's direct path rebuild the join from the 0x658 bucket entry when the resolved key differs. XL 1778117359 is now exact (0 cells, 5365 objects); 72-reference sweep 61/72 exact (was 60), no other row changed. Validation: h3maped_rmg_core_selftest on Windows and Linux; tools/core_suite.py 16/16 on Windows and Linux.",
+      "updatedAt": "2026-10-17T12:00:00Z",
+      "validatedAt": "2026-10-17T12:00:00Z"
     }
   ],
   "project": "heroes-like",

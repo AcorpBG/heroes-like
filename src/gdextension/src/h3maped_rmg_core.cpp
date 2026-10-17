@@ -27697,7 +27697,10 @@ WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(
 		if (!vector_state.source_pair_key_not_minus_one) {
 			return finish_blocked("0x4a901a_source_pair_key_arg_0x0c_minus_one");
 		}
-	if (!vector_state.descriptor_source_bridge_known) {
+	// 0x4a90a4/0x4a92b1: the object comes from the 0x658 bucket entry of the
+	// resolved selector, so a type drawn by 0x49b3c1 replaces the caller's.
+	if (!vector_state.descriptor_source_bridge_known
+			|| source_order_bucket_selector_arg_0x0c_4a93a2(active_join, -1) != resolved_source_pair_key_0x0c) {
 		std::string bridge_blocker;
 		active_join = source_type98_descriptor_bridge_from_bucket_selector_0x658(
 				state,
@@ -28088,6 +28091,20 @@ SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_from_source_rec
 				return false;
 			}
 			SourceObjectDescriptorJoinResult4903e8 direct_join = scheduler_join;
+			// 0x4a93eb..0x4a93f1: 0x4a93a2 takes its object from the 0x658
+			// bucket entry of the resolved selector.
+			if (source_order_descriptor_source_bridge_known_0x4a93a2(direct_join)
+					&& source_order_bucket_selector_arg_0x0c_4a93a2(direct_join, -1) != direct_source_bucket_selector_0x0c) {
+				std::string bridge_blocker;
+				const SourceObjectDescriptorJoinResult4903e8 selector_join =
+						source_type98_descriptor_bridge_from_bucket_selector_0x658(
+								state,
+								direct_source_bucket_selector_0x0c,
+								bridge_blocker);
+				if (source_order_descriptor_source_bridge_known_0x4a93a2(selector_join)) {
+					direct_join = selector_join;
+				}
+			}
 			if (!source_order_descriptor_source_bridge_known_0x4a93a2(direct_join)) {
 				std::string bridge_blocker;
 				direct_join = source_type98_descriptor_bridge_from_bucket_selector_0x658(

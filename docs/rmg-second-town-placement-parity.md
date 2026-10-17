@@ -90,9 +90,61 @@ route fields unset; the direct `0x4a93a2` cases still require them.
   change.
 - `h3maped_rmg_core_selftest` passes on Windows and Linux.
 
+## Follow-up: the town type drawn in `0x4a901a` picks the object (2026-10-17)
+
+Slice: `native-rmg-extra-town-type-20261017`.
+
+After the fix above, XL Monk's Retreat (3 human + 3 computer, seed 1778117359)
+matched H3MapEd in every tile and object position, but three towns had other
+subtypes:
+
+| town | zone owner | native before | H3MapEd |
+| --- | --- | --- | --- |
+| (78,142) | 6 | 2 Tower | 4 Necropolis |
+| (143,142) | 7 | 0 Castle | 7 Fortress |
+| (143,73) | 8 | 0 Castle | 6 Stronghold |
+
+They are the second towns of the three treasure zones (template zones 7-9: two
+neutral towns each, `+0x40` "same type" clear, all nine types allowed). Native gave
+each the type of the zone's first town.
+
+**Source.** `0x4a901a` resolves its town-type key first: with `+0x40` = 0 and
+selected index -1 it calls `0x49b3c1` (`0x4a9045`). It then takes the type-98
+wrapper from generator `+0x658` at that key (`0x4a9096..0x4a90a4`), keeps it in
+`[ebp-0x14]` and builds the new object from it (`0x4a92b1` push, `0x4a92bb` call
+`0x49ba89`). The direct branch `0x4a93a2` reads `+0x658` at the same key
+(`0x4a93eb..0x4a93f1`). The caller's descriptor never decides the object type.
+
+**Private state.** A winedbg trace of H3MapEd generating that seed under Wine
+(`traces/winedbg_xl1778117359_4a901a_town_type*`, script
+`tools/server_run_trace_xl.sh`) stops at `0x4a9027`, `0x4a904c`, `0x4a90ae` and
+`0x4a92c0`. For owners 6, 7 and 8 the caller passes key 2, 0 and 0. `0x49b3c1`
+returns 4, 7 and 6. At `0x4a92c0` the new object's `+0x04` is the `+0x658` wrapper
+of that key: `0x01676550` for type 4 (the wrapper owner 2's Necropolis uses),
+`0x01676250` for type 7 and `0x01676340` for type 6 (the wrapper of owners 0 and 3,
+Stronghold). Each zone's second call draws again (0, 8 and 6) and finds no candidate.
+
+**Native deviation.** `weighted_object_candidate_scan_0x4a901a` and the direct
+branch in the `0x4a8db2` scheduler drew the same values (the RNG stream already
+matched). But when the caller's join was already resolved, they committed the
+object from that join, so the drawn type was lost.
+
+**Fix** (`src/gdextension/src/h3maped_rmg_core.cpp`). When the resolved key differs
+from the caller's join, both paths rebuild the join from the `+0x658` bucket entry
+of the resolved key (`source_type98_descriptor_bridge_from_bucket_selector_0x658`).
+For the direct branch the rebuilt join is local to that call. Calls whose key does
+not change, such as same-type zones like m019, are unchanged.
+
+**Validation.**
+
+- XL Monk's Retreat 1778117359 equals the reference: 0 cells and all 5,365 objects.
+- 72-reference sweep: 61/72 exact (was 60). Only that row changed
+  (`traces/semsweep72_town_type_fix.json`).
+- `h3maped_rmg_core_selftest` passes on Windows and Linux.
+- `tools/core_suite.py`: 16/16 on Windows and on Linux.
+
 ## Open follow-ups (not fixed here)
 
-- XL Monk's Retreat seed 1778117359: three town subtypes at matching positions.
 - The final H3M header differs from H3MapEd in main-town designation and player slot
   6 (m010), and the definition table differs in order and count. Tiles and objects
   are unaffected.
