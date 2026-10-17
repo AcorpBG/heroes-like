@@ -5,6 +5,7 @@ extends Node
 # has seen nor ignores one as unseen. Until 2026-10-17 scouting tested the
 # anchor and the planners the doorway, and a town seen only by its anchor was
 # never attacked (seed ai-match-1305188145: 280 days next to a 320,000 army).
+# A guarded site the rival looted does not close the way to the rival either.
 
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
@@ -12,6 +13,7 @@ const AiSeatRulesScript = preload("res://scripts/core/AiSeatRules.gd")
 const EnemyTurnRulesScript = preload("res://scripts/core/EnemyTurnRules.gd")
 const LevelRules = preload("res://scripts/core/OverworldLevelRules.gd")
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
+const NodePayload = preload("res://scripts/core/ResourceNodePayloadRules.gd")
 const REPORT_ID := "AI_TOWN_KNOWLEDGE_REPORT"
 const SEED := "ai-town-knowledge-20261017"
 
@@ -27,6 +29,9 @@ func _run() -> void:
 		if _failed:
 			return
 	results["unseen"] = _check_unseen_town_is_scouted_for()
+	if _failed:
+		return
+	results["looted_site"] = _check_looted_site_is_crossed()
 	if _failed:
 		return
 	print("%s %s" % [REPORT_ID, JSON.stringify({"ok": true, "cases": results})])
@@ -75,6 +80,46 @@ func _check_unseen_town_is_scouted_for() -> Dictionary:
 		_fail("With nothing explored, the player counts the rival town as seen.")
 		return {}
 	return {"rival_towns_unknown": true}
+
+## A guarded site the rival looted stays standing and holds nothing for anyone:
+## the hero walks across its doorway as the looter does, so it never closes the
+## way to the rival. Before it is looted its guard must be fought. Until
+## 2026-10-17 only the looter crossed it, and a hero whose one way to the rival
+## ran over a looted bank stood idle (seed ai-match-2298949441: 250 days).
+func _check_looted_site_is_crossed() -> Dictionary:
+	var setup := _setup()
+	if setup.is_empty():
+		return {}
+	var session = setup.session
+	var context: Dictionary = setup.context
+	var controller := String(context.controller)
+	var rival := PlayerRules.town_controller_id(setup.town)
+	var surface: Dictionary = AiHeroRulesScript._level_surface(session, context, LevelRules.level_of(setup.entry))
+	for site_stop in surface.get("site_stops", []):
+		for ref in site_stop.refs:
+			if int(ref.kind) != AiHeroRulesScript.STOP_RESOURCE:
+				continue
+			var node: Dictionary = session.overworld.resource_nodes[int(ref.index)]
+			var site: Dictionary = NodePayload.site_for_node(node)
+			if not bool(site.get("guarded", false)) or bool(node.get("collected", false)):
+				continue
+			node["collected"] = true
+			node["collected_by_player_id"] = rival
+			if not OverworldRules.resource_node_is_present(node, site):
+				node["collected"] = false
+				node.erase("collected_by_player_id")
+				continue
+			if not AiHeroRulesScript._site_stop_passable(session, controller, ref):
+				_fail("The hero cannot cross %s, which the rival looted." % String(node.get("placement_id", "")))
+				return {}
+			node["collected"] = false
+			node.erase("collected_by_player_id")
+			if AiHeroRulesScript._site_stop_passable(session, controller, ref):
+				_fail("The hero walks across %s before its guard is beaten." % String(node.get("placement_id", "")))
+				return {}
+			return {"site": String(node.get("placement_id", ""))}
+	_fail("The map has no guarded site that stays standing once looted.")
+	return {}
 
 ## A small generated two-player map, both seats played by the computer, one day
 ## played. player_2's main hero is moved beside player_1's capital, whose heroes

@@ -4201,7 +4201,8 @@ static func _portal_leads_unseen(portal: Dictionary, seen_map: PackedByteArray) 
 	return false
 
 ## Whether a hero may cross this site's tile without stopping: the pickup is
-## gone, or the site is already this player's (or an ally's).
+## gone, the one-time site is looted, or the site is already this player's (or
+## an ally's).
 static func _site_stop_passable(session: SessionStateStoreScript.SessionData, controller: String, ref: Dictionary) -> bool:
 	match int(ref.kind):
 		STOP_ARTIFACT:
@@ -4223,6 +4224,12 @@ static func _site_stop_passable(session: SessionStateStoreScript.SessionData, co
 			# still stop there to visit. Otherwise a pocket whose only way out ran
 			# over such a doorway trapped the hero that entered it.
 			if String(site.get("family", "")) in WALK_ACROSS_SITE_FAMILIES:
+				return true
+			# A looted one-time site that stays standing (a guarded bank) holds
+			# nothing for anyone: whoever looted it does not own it. Until
+			# 2026-10-17 only the looter crossed it, and a rival whose one way
+			# out ran over it stood idle for 250 days (seed ai-match-2298949441).
+			if bool(node.get("collected", false)) and not _overworld_rules()._resource_site_is_persistent(site) and not _overworld_rules()._resource_site_is_repeatable(site):
 				return true
 			var owner := PlayerRules.resource_controller_id(node)
 			return owner != "" and PlayerRules.allied(session, controller, owner)

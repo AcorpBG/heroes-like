@@ -115414,6 +115414,18 @@
       "notes": "From the owner's 2026-10-16 batch of 60 large AI matches: on seed ai-match-1305188145 (6 players, land, one level) the last rival town, Duskfen Bastion, stood untaken from about day 40 to the 320-day cap. Probe: its anchor tile (5,45) was explored, its doorway (3,45) not. _rival_towns_unknown tested the anchor and counted the town as seen, so scouting stopped; _strategic_candidate, _best_candidate and _war_paths tested the doorway and left it out as unseen, though Sunvault's main army (320,000) could reach it and valued it at 273,000. All of them now use AiHeroRules._town_seen (anchor or doorway explored). New core test tests/ai_town_knowledge_report (a hero beside an undefended rival town of which only the anchor or only the doorway is seen takes it; nothing seen keeps the scouting on); it fails on the old code with the hero exploring instead. Validation: tests/ai_town_knowledge_report, tools/core_suite.py."
     },
     {
+      "id": "ai-looted-site-crossed-by-all-20261017",
+      "title": "AI heroes cross looted one-time sites whoever looted them",
+      "status": "completed",
+      "classification": "gameplay",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/ai-plays-by-player-rules.md"
+      ],
+      "notes": "From the owner's 2026-10-17 batch of 180 small two-player AI matches: m108 (seed ai-match-2298949441, Brasshollow vs Embercourt, one level, normal guards) ran to the 320-day cap with both players able to reach each other. Probe on day 75: every Brasshollow hero's route search stopped at (20,11), the doorway of an Amber Reliquary (guarded_reward_site, stays standing after its visit) that Embercourt looted on day 31 and the only passage north; Embercourt's three towns were at distance -1, so its main army (4,600) had no plan from day 70. _site_stop_passable treated collected_by_player_id as ownership, so only the looter walked across. A collected one-time site (not persistent, not repeatable) is now crossable by every player; mines and other persistent sites keep the ownership rule, an unlooted guarded site still has to be fought. New case in core test tests/ai_town_knowledge_report (fails on the old code). Replay of the seed: Brasshollow wins on day 61 with all 6 towns, slowest AI day 3.1 s. Validation: tests/ai_town_knowledge_report, tools/core_suite.py."
+    },
+    {
       "id": "balance-mireclaw-muster-embercourt-gold-20261017",
       "title": "Mireclaw grows more creatures at tiers 1-4; Embercourt's gold building pays 300",
       "status": "completed",
