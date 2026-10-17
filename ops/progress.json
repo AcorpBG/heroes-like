@@ -115414,6 +115414,18 @@
       "notes": "From the owner's 2026-10-16 batch of 60 large AI matches: on seed ai-match-1305188145 (6 players, land, one level) the last rival town, Duskfen Bastion, stood untaken from about day 40 to the 320-day cap. Probe: its anchor tile (5,45) was explored, its doorway (3,45) not. _rival_towns_unknown tested the anchor and counted the town as seen, so scouting stopped; _strategic_candidate, _best_candidate and _war_paths tested the doorway and left it out as unseen, though Sunvault's main army (320,000) could reach it and valued it at 273,000. All of them now use AiHeroRules._town_seen (anchor or doorway explored). New core test tests/ai_town_knowledge_report (a hero beside an undefended rival town of which only the anchor or only the doorway is seen takes it; nothing seen keeps the scouting on); it fails on the old code with the hero exploring instead. Validation: tests/ai_town_knowledge_report, tools/core_suite.py."
     },
     {
+      "id": "balance-embercourt-late-mireclaw-base-20261017",
+      "title": "Embercourt's head start moves into its late game; Mireclaw's base creatures harden",
+      "status": "completed",
+      "classification": "balance",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/common-town-building-template.md"
+      ],
+      "notes": "Owner decision 2026-10-17 from the balance review of 360 AI-against-AI games (small 2P, medium 2P, medium 3P). Embercourt: army 1.44-1.47x rivals on days 14-28, 1.31x on day 70, behind only from day 84; growth Ember Archer line 14->12, Bargebow Crews line 7->6 (map dwelling Bargebow Slipway too), Sluicefire Lindworms line 2->3 (map dwelling too). Mireclaw: 0.82-0.61x at every stage, base creatures 57-72% of their upgrades; Blackbranch Cutthroat hp 8->9 def 2->3, Reedsnare Kin hp 8->9 dmg 2-2->2-3, Bog Brute hp 13->14 def 5->6, Mudglass Slingers hp 9->10 def 3->4, Gorefen Ripper hp 13->15 def 4->5 dmg 4-8->5-9, Ferrychain Lashers hp 20->21 def 8->9 (71-79% of their upgrades); upgrades unchanged. Content change only; its effect is not measured yet and lands with ai-build-upgrade-counted-once-20261017. Validation: tools/core_suite.py (validate_repo)."
+    },
+    {
       "id": "ai-build-upgrade-counted-once-20261017",
       "title": "AI town planner counts a dwelling upgrade's gain once",
       "status": "completed",
