@@ -4087,9 +4087,8 @@ static func _raid_is_public(session: SessionStateStoreScript.SessionData, encoun
 # --- Multi-level path surfaces ----------------------------------------------
 # Distance fields over both map levels and native passages, with the occupancy
 # an army sees. Live play does not call these: AiHeroRules plans its own routes
-# on one level (AI level transit is a known gap, docs/ai-plays-by-player-rules.md).
-# The RMG transit and start placement validation tools plan journeys with them,
-# and they are the starting point for heroes that cross levels.
+# on one level and weighs subterranean gates separately (docs/ai-plays-by-player-rules.md).
+# The RMG transit and start placement validation tools plan journeys with them.
 
 static func _player_hero_sheltered_in_town(session: SessionStateStoreScript.SessionData, hero: Dictionary) -> bool:
 	if session == null or hero.is_empty():

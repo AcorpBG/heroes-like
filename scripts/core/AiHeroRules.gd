@@ -55,6 +55,9 @@ const FAR_SEARCH_DAYS := 7
 ## day cap that way.
 const STRATEGIC_DAYS := 12
 const MIN_SEARCH_RADIUS := 14
+## A hero weighs what lies past this many of the nearest subterranean gates it
+## can walk to (`_gate_candidate`); each costs a search of the other level.
+const MAX_GATES_WEIGHED := 3
 ## A guard is considered (and previewed) from this strength margin. With the
 ## strength estimate refitted 2026-10-16, guards fought at 1.3 to 1.5x lose
 ## about 93% of battles in the battle AI arena, and none from 2x.
@@ -2085,12 +2088,21 @@ static func _choose_plan(session: SessionStateStoreScript.SessionData, context: 
 	var best := _vetted_candidate(session, context, entry, search, movement_max)
 	_profile_add(context, "choose_ms", started)
 	# Main and field armies weigh what decides the game anywhere on the map
-	# against the best thing near them, by the same value per day of travel.
+	# against the best thing near them, by the same value per day of travel,
+	# and what lies past the subterranean gates they can walk to.
 	if _plans_far(session, context, entry):
 		started = Time.get_ticks_usec()
-		var far := _strategic_candidate(session, context, entry, movement_max, radius)
+		var wide := _search(session, context, entry, movement_max * STRATEGIC_DAYS)
+		var far := _strategic_candidate(session, context, entry, movement_max, radius, wide)
 		_profile_add(context, "strategic_ms", started)
-		if not far.is_empty() and float(far.get("score", 0.0)) > float(best.get("score", 0.0)):
+		started = Time.get_ticks_usec()
+		var gate := _gate_candidate(session, context, entry, wide, movement_max, movement_max * STRATEGIC_DAYS)
+		_profile_add(context, "gate_ms", started)
+		var near_score := float(best.get("score", 0.0))
+		if not gate.is_empty() and float(gate.score) > maxf(near_score, float(far.get("score", 0.0))) and _gate_fight_looks_good(session, context, entry, gate):
+			gate["path"] = _path_to(wide, int(gate.tile_index))
+			return gate
+		if not far.is_empty() and float(far.get("score", 0.0)) > near_score:
 			return far
 	if best.is_empty():
 		# Nothing worth doing nearby: look a week out before standing still.
@@ -2104,6 +2116,13 @@ static func _choose_plan(session: SessionStateStoreScript.SessionData, context: 
 		# A hero of the player's own stepped aside: look again.
 		search = _search(session, context, entry, movement_max * FAR_SEARCH_DAYS)
 		best = _vetted_candidate(session, context, entry, search, movement_max)
+	if best.is_empty():
+		# Nothing left on this level: the other one, through a gate.
+		started = Time.get_ticks_usec()
+		best = _gate_candidate(session, context, entry, search, movement_max, movement_max * FAR_SEARCH_DAYS)
+		if not best.is_empty() and not _gate_fight_looks_good(session, context, entry, best):
+			best = {}
+		_profile_add(context, "gate_ms", started)
 	if best.is_empty():
 		best = _evade(session, context, entry, search)
 	if best.is_empty():
@@ -2200,8 +2219,8 @@ static func _plans_far(session: SessionStateStoreScript.SessionData, context: Di
 ## known town (`_war_paths`), scored as everything else is, value per day of
 ## travel; or, while a rival's towns are unseen, the nearest unexplored ground.
 ## Carries the path there.
-static func _strategic_candidate(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, movement_max: int, local_radius: int) -> Dictionary:
-	var search := _search(session, context, entry, movement_max * STRATEGIC_DAYS)
+static func _strategic_candidate(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, movement_max: int, local_radius: int, wide: Dictionary = {}) -> Dictionary:
+	var search := wide if not wide.is_empty() else _search(session, context, entry, movement_max * STRATEGIC_DAYS)
 	var known := _explored(session, context, LevelRules.level_of(entry))
 	var power := hero_power(entry)
 	var needs := _resource_needs(session, context)
@@ -2282,6 +2301,145 @@ static func _strategic_candidate(session: SessionStateStoreScript.SessionData, c
 		block[BLOCKED_NEED_KEY] = 0.0 if blocked_need == INF else blocked_need
 		entry[AI_HERO_KEY] = block
 	return best
+
+## The best errand past a subterranean gate the hero can walk to. Its search
+## covers one level, so for each of the nearest gates (MAX_GATES_WEIGHED) the
+## hero looks at the other level as if it stood at the gate's exit, takes the
+## best candidate there (`_best_candidate`, fog-honest: unexplored ground is
+## worth scouting) and scores it by the whole way, to the gate and on from its
+## exit. Generated maps guard a gate at both ends: a guard whose zone covers
+## the gate here is fought first, worth what lies beyond as well (the plan is
+## that fight); the guard at the far end is fought on arrival (`_cross_gate`),
+## so the hero must beat it too and its expected losses count. The chosen plan's
+## next fight is previewed (`_gate_fight_looks_good`). Crossing keeps the errand
+## as the goal. Until 2026-10-17 heroes
+## never left their level: in the 2026-10-16 batch 22 of 32 two-level games ran
+## to the 160-day cap (6 of 60 one-level land games), main armies of 7,000 to
+## 280,000 strength idle while the rivals beyond the gates kept their towns.
+static func _gate_candidate(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary, movement_max: int, beyond_radius: int) -> Dictionary:
+	var level := LevelRules.level_of(entry)
+	var gates: Dictionary = _level_surface(session, context, level).get("gates", {})
+	if gates.is_empty() or not search.has("dist"):
+		return {}
+	var block: Dictionary = entry.get(AI_HERO_KEY, {})
+	var avoid: Dictionary = block.get("avoid", {}) if block.get("avoid", {}) is Dictionary else {}
+	var goal: Dictionary = block.get("goal", {}) if block.get("goal", {}) is Dictionary else {}
+	var dangers := _dangers(session, context, entry)
+	var size: Vector2i = context.map_size
+	var stops: Dictionary = search.get("stops", {})
+	var dist: PackedInt32Array = search.dist
+	var nodes: Array = session.overworld.get("resource_nodes", [])
+	var encounters: Array = session.overworld.get("encounters", [])
+	var power := hero_power(entry)
+	var reachable := []
+	for gate_tile in gates.keys():
+		var tile := int(gate_tile)
+		if tile >= dist.size() or dist[tile] < 0 or _in_hero_zone(search, tile):
+			continue
+		if not dangers.is_empty() and _in_danger(dangers, tile % size.x, tile / size.x, level):
+			continue
+		var id := "gate:%s" % String(nodes[int(gates[gate_tile].node)].get("placement_id", ""))
+		if int(avoid.get(id, -1)) >= int(session.day):
+			continue
+		var guard_index := -1
+		for ref in stops.get(tile, []):
+			if int(ref.kind) == STOP_ENCOUNTER:
+				guard_index = int(ref.index)
+				break
+		if guard_index >= 0 and int(avoid.get(String(encounters[guard_index].get("placement_id", "")), -1)) >= int(session.day):
+			continue
+		reachable.append({"tile": tile, "distance": int(dist[tile]), "id": id, "gate": gates[gate_tile], "guard": guard_index})
+	reachable.sort_custom(func(a, b): return int(a.distance) < int(b.distance))
+	var needs := _resource_needs(session, context)
+	var best := {}
+	var best_score := 0.0
+	for option in reachable.slice(0, MAX_GATES_WEIGHED):
+		var near := 0.0
+		if int(option.guard) >= 0:
+			near = _guard_fight_value(session, context, entry, int(option.guard), power, needs, search)
+			if is_nan(near):
+				continue
+		var beyond := _beyond_gate(session, context, entry, option.gate, movement_max, beyond_radius)
+		if beyond.is_empty():
+			continue
+		var value := near + float(beyond.value)
+		if value <= 0.0:
+			continue
+		var distance := int(option.distance) + int(beyond.distance)
+		var score := value / (1.0 + float(distance) / float(movement_max))
+		var plan := {"kind": "gate", "id": String(option.id), "index": int(option.gate.node), "value": value, "tile_index": int(option.tile), "distance": distance, "beyond": {"kind": String(beyond.kind), "id": String(beyond.id)}}
+		if int(option.guard) >= 0:
+			var guard: Dictionary = encounters[int(option.guard)]
+			var guard_power := _guard_power(guard)
+			plan.merge({"kind": "encounter", "id": String(guard.get("placement_id", "")), "index": int(option.guard), "fight_power": guard_power, "estimated_loss": _expected_loss_value(power, guard_power)}, true)
+		elif int(beyond.far_guard) >= 0:
+			plan.merge({"far_guard": int(beyond.far_guard), "far_fight_power": float(beyond.far_fight_power)}, true)
+		if String(goal.get("id", "")) in [String(option.id), String(plan.id)]:
+			score *= GOAL_CONTINUITY_BONUS
+		if score > best_score:
+			best_score = score
+			plan["score"] = score
+			best = plan
+	if not best.is_empty() and context.has("decision_alternatives"):
+		_note_alternative(context, best, best_score, int(best.distance))
+	return best
+
+## Whether the fight a gate plan leads to next, the guard in front of the gate
+## or the one at its far end, looks good in a preview (`_fight_looks_good`). A
+## bad one is left alone for a few days.
+static func _gate_fight_looks_good(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, plan: Dictionary) -> bool:
+	var fight := plan
+	if String(plan.kind) == "gate":
+		if not plan.has("far_guard"):
+			return true
+		var far_power := float(plan.far_fight_power)
+		fight = {"kind": "encounter", "index": int(plan.far_guard), "value": float(plan.value), "fight_power": far_power, "estimated_loss": _expected_loss_value(hero_power(entry), far_power)}
+	if _fight_looks_good(session, context, entry, fight):
+		return true
+	_avoid_target(session, String(entry.get("placement_id", "")), String(plan.id), int(session.day) + 3)
+	return false
+
+## The best candidate on the other level for a hero standing at this gate's
+## exit, plus what beating the guard whose zone covers the exit is worth (it
+## is fought on arrival, so its expected losses count); empty when that guard
+## is too strong. Kept for the turn while the hero's army stays the same.
+static func _beyond_gate(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, gate: Dictionary, movement_max: int, radius: int) -> Dictionary:
+	var exit: Vector3i = gate.exit
+	var cache: Dictionary = context.get("gate_beyond", {})
+	var key := "%s|%d,%d,%d|%d|%d" % [String(entry.get("placement_id", "")), exit.x, exit.y, exit.z, radius, hash(entry.get("enemy_army", {}).get("stacks", []))]
+	if cache.has(key):
+		return cache[key]
+	var traveller := entry.duplicate()
+	traveller["x"] = exit.x
+	traveller["y"] = exit.y
+	traveller["level"] = exit.z
+	# The other level's candidates are not this decision's alternatives.
+	var logged: Variant = context.get("decision_alternatives", null)
+	context.erase("decision_alternatives")
+	var far_search := _search(session, context, traveller, radius)
+	var far := _best_candidate(session, context, traveller, far_search, movement_max)
+	if logged != null:
+		context["decision_alternatives"] = logged
+	var result := {}
+	var guard: Dictionary = _overworld_rules()._find_guard_engagement_at_tile(session, exit.x, exit.y, exit.z, false)
+	var guard_index := int(guard.get("index", -1))
+	var guard_id := String(guard.encounter.get("placement_id", "")) if guard_index >= 0 else ""
+	var value := float(far.get("value", 0.0))
+	var guard_value := 0.0
+	if guard_index >= 0 and String(far.get("id", "")) != guard_id:
+		guard_value = _guard_fight_value(session, context, traveller, guard_index, hero_power(entry), _resource_needs(session, context), far_search)
+	if not is_nan(guard_value) and (not far.is_empty() or guard_index >= 0) and value + guard_value > 0.0:
+		result = {
+			"kind": String(far.get("kind", "encounter")),
+			"id": String(far.get("id", guard_id)),
+			"value": value + guard_value,
+			"distance": int(far.get("distance", 0)),
+			"far_guard": guard_index,
+			"far_fight_power": _guard_power(guard.encounter) if guard_index >= 0 else 0.0,
+		}
+	cache[key] = result
+	context["gate_beyond"] = cache
+	return result
 
 static func placement_is_main(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary) -> bool:
 	return String(entry.get("placement_id", "")) == _decision_main_id(session, context)
@@ -3747,7 +3905,24 @@ static func _level_surface(session: SessionStateStoreScript.SessionData, context
 		for tile in overworld_rules._resource_node_world_interaction_tiles(map_object, node):
 			if tile is Vector2i and tile.x >= 0 and tile.y >= 0 and tile.x < size.x and tile.y < size.y:
 				portals[tile.y * size.x + tile.x] = {"exits": exits, "node": index}
-	var surface := {"blocked": blocked, "stops": stops, "stop_mask": stop_mask, "site_stops": site_stops, "neutrals": neutrals, "portals": portals}
+	# Subterranean gates on this level, by entrance tile, with the tile on the
+	# other level a hero comes out on (`_gate_candidate`). The search stays on
+	# one level; a gate ends a route like any site.
+	var gates := {}
+	for index in range(resources.size()):
+		var node = resources[index]
+		if not (node is Dictionary) or LevelRules.level_of(node) != level or not NativeTransit.is_native(node):
+			continue
+		var link := NativeTransit.link_of(node)
+		if String(link.get("kind", "")) != "paired_cave":
+			continue
+		var entrance := NativeTransit.point(link.get("entry", {}))
+		var exit := NativeTransit.point(link.get("exit", {}))
+		if entrance.z != level or exit.z == level or exit.z < 0 or exit.x < 0 or exit.y < 0 or exit.x >= size.x or exit.y >= size.y:
+			continue
+		if entrance.x >= 0 and entrance.y >= 0 and entrance.x < size.x and entrance.y < size.y:
+			gates[entrance.y * size.x + entrance.x] = {"node": index, "exit": exit}
+	var surface := {"blocked": blocked, "stops": stops, "stop_mask": stop_mask, "site_stops": site_stops, "neutrals": neutrals, "portals": portals, "gates": gates}
 	levels[level] = surface
 	_profile_add(context, "surface_ms", surface_started)
 	return surface
@@ -4094,6 +4269,8 @@ static func _interact(session: SessionStateStoreScript.SessionData, context: Dic
 			return _meet_hero(session, context, index, plan)
 		"explore":
 			return {"arrived": true, "acted": true}
+		"gate":
+			return _cross_gate(session, context, index, plan)
 		"wait":
 			var waiting: Dictionary = session.overworld.encounters[index]
 			var waiting_block: Dictionary = waiting.get(AI_HERO_KEY, {})
@@ -4105,6 +4282,44 @@ static func _interact(session: SessionStateStoreScript.SessionData, context: Dic
 			_park(session, String(session.overworld.encounters[index].get("placement_id", "")), String(plan.get("id", "")))
 			return {"arrived": true, "acted": true}
 	return {"arrived": true}
+
+## Steps through the subterranean gate the hero stands on, under the human's
+## rule (`native_passage_travel_check`), and keeps the errand it crossed for as
+## its goal. A guard whose zone covers the far doorway is fought there on
+## arrival, as the human fights it; the hero plans again on the other level.
+static func _cross_gate(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, plan: Dictionary) -> Dictionary:
+	var entry: Dictionary = session.overworld.encounters[index]
+	var nodes: Array = session.overworld.get("resource_nodes", [])
+	var node_index := int(plan.get("index", -1))
+	var gate: Dictionary = _level_surface(session, context, LevelRules.level_of(entry)).get("gates", {}).get(_tile_index_of(entry, context.map_size), {})
+	if gate.is_empty() or int(gate.node) != node_index:
+		return {"arrived": true, "acted": false}
+	var far: Vector3i = gate.exit
+	var guard: Dictionary = _overworld_rules()._find_guard_engagement_at_tile(session, far.x, far.y, far.z, false)
+	var guard_index := int(guard.get("index", -1))
+	if guard_index >= 0 and hero_power(entry) < _guard_power(guard.encounter) * GUARD_WIN_RATIO:
+		return {"arrived": true, "acted": false}
+	var check: Dictionary = _overworld_rules().native_passage_travel_check(session, nodes[node_index], NativeTransit.point(entry), String(entry.get("placement_id", "")), "", guard_index >= 0)
+	if not bool(check.get("ok", false)):
+		return {"arrived": true, "acted": false}
+	var exit: Vector3i = check.exit
+	var before := LevelRules.position(entry)
+	entry["x"] = exit.x
+	entry["y"] = exit.y
+	entry["level"] = exit.z
+	var block: Dictionary = entry.get(AI_HERO_KEY, {})
+	block["goal"] = (plan.get("beyond", {}) as Dictionary).duplicate()
+	entry[AI_HERO_KEY] = block
+	TurnPlayback.move(session, entry, before)
+	_store_entry(session, index, entry)
+	_overworld_rules().invalidate_spatial_lookup(session)
+	_reveal(session, context, LevelRules.position(entry), _sight_radius(entry))
+	var ambushed := _hostile_hero_beside(session, context, Vector2i(exit.x, exit.y), exit.z)
+	if not ambushed.is_empty():
+		return _interact(session, context, index, ambushed)
+	if guard_index >= 0:
+		return _fight_neutral(session, context, index, {"kind": "encounter", "index": guard_index})
+	return {"arrived": false, "rerouted": true}
 
 static func _claim_resource(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, plan: Dictionary) -> Dictionary:
 	var controller := String(context.controller)
@@ -4722,6 +4937,7 @@ static func _log_decision(session: SessionStateStoreScript.SessionData, context:
 		"player_id": String(context.controller),
 		"hero": hero_name(entry),
 		"at": [int(entry.get("x", 0)), int(entry.get("y", 0))],
+		"level": LevelRules.level_of(entry),
 		"power": snappedf(hero_power(entry), 1.0),
 		"move": int(entry.get(AI_HERO_KEY, {}).get("movement", {}).get("current", 0)),
 		"plan": [String(plan.get("kind", "")), chosen, snappedf(float(plan.get("value", 0.0)), 1.0), int(plan.get("distance", -1))],

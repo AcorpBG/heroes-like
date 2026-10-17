@@ -34,6 +34,9 @@ const WIND_RIDGE_DAYS := 24
 const WIND_RIDGE_MIN_EXPLORED := 1000
 const WIND_RIDGE_POCKET_EXIT := Vector2i(71, 98)
 const WIND_RIDGE_POCKET_INSIDE := Vector2i(73, 100)
+## A small map with an underground level (map seed of the capped two-level
+## game m111 in the 2026-10-16 AI batch).
+const GATE_SEED := "359365613"
 
 var _failed := false
 
@@ -45,6 +48,13 @@ func _run() -> void:
 	var perf_size := OS.get_environment("HEROES_AI_RULES_PERF_SIZE").strip_edges()
 	if perf_size != "":
 		return _run_perf(perf_size, maxi(1, int(OS.get_environment("HEROES_AI_RULES_PERF_DAYS"))))
+	if OS.get_environment("HEROES_AI_RULES_ONLY").strip_edges() == "gate":
+		var gate_only := _check_gate_crossing()
+		if not _failed:
+			print("%s %s" % [REPORT_ID, JSON.stringify({"ok": true, "gate_crossing": gate_only})])
+			_cleanup()
+			get_tree().quit(0)
+		return
 	if OS.get_environment("HEROES_AI_RULES_ONLY").strip_edges() == "wind_ridge":
 		var only := _check_wind_ridge_reach()
 		if not _failed:
@@ -145,6 +155,9 @@ func _run() -> void:
 	var wind_ridge := _check_wind_ridge_reach()
 	if _failed:
 		return
+	var gate_crossing := _check_gate_crossing()
+	if _failed:
+		return
 
 	var payload := {
 		"ok": true,
@@ -159,6 +172,7 @@ func _run() -> void:
 		"garrison_swap": garrison_swap,
 		"battle_rewards": rewards,
 		"wind_ridge_reach": wind_ridge,
+		"gate_crossing": gate_crossing,
 		"captured_mines": captured_mines,
 		"guard_fights": fights,
 		"hero_tiles_per_day": float(hero_steps) / float(maxi(1, hero_days)),
@@ -253,14 +267,14 @@ func _run_perf(size_class_id: String, day_count: int) -> void:
 	_cleanup()
 	get_tree().quit(0)
 
-func _start_session(size_class_id: String = "homm3_small", player_count: int = 2, seed: String = SEED, hero_id: String = PLAYER_HERO_ID, faction_id: String = PLAYER_FACTION_ID):
+func _start_session(size_class_id: String = "homm3_small", player_count: int = 2, seed: String = SEED, hero_id: String = PLAYER_HERO_ID, faction_id: String = PLAYER_FACTION_ID, underground: bool = false):
 	var config := ScenarioSelectRulesScript.build_random_map_player_config(
 		seed,
 		"",
 		"",
 		player_count,
 		"land",
-		false,
+		underground,
 		size_class_id,
 		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT,
 		faction_id,
@@ -684,6 +698,74 @@ func _check_wind_ridge_reach() -> Dictionary:
 		if int(row.explored_tiles) < WIND_RIDGE_MIN_EXPLORED:
 			_fail("%s stayed boxed in on the owner's large map: %s" % [controller, JSON.stringify(row)])
 			return result
+	return result
+
+## A computer hero plans through a subterranean gate to the other level: it
+## beats the guard in front of the gate, steps through, fights the guard at the
+## far end on arrival and keeps the errand it crossed for. Until 2026-10-17
+## heroes never left their level, and most two-level games ran to the day cap
+## with the rivals out of each other's reach.
+func _check_gate_crossing() -> Dictionary:
+	ContentService.clear_generated_scenario_drafts()
+	var session = _start_session("homm3_small", 2, GATE_SEED, PLAYER_HERO_ID, PLAYER_FACTION_ID, true)
+	if session == null:
+		return {}
+	var controller := _ai_controller(session)
+	# The computer player hires its first hero on its first turn.
+	OverworldRules.end_turn(session)
+	var heroes: Array = AiHeroRulesScript.active_hero_entries(session, controller)
+	if heroes.is_empty():
+		_fail("The computer player has no hero on the two-level map.")
+		return {}
+	var placement_id := String(heroes[0].get("placement_id", ""))
+	var context: Dictionary = AiHeroRulesScript._new_context(session, _ai_config(session, controller), _state(session, controller))
+	var gates: Dictionary = AiHeroRulesScript._level_surface(session, context, 0).get("gates", {})
+	if gates.is_empty():
+		_fail("Seed %s generates no subterranean gate on the surface." % GATE_SEED)
+		return {}
+	# The hero stands on the first gate with an army that beats its guards.
+	var gate_tile := int(gates.keys().min())
+	var exit: Vector3i = gates[gate_tile].exit
+	var size: Vector2i = context.map_size
+	var index: int = AiHeroRulesScript._entry_index(session, placement_id)
+	var entry: Dictionary = session.overworld.encounters[index]
+	entry["x"] = gate_tile % size.x
+	entry["y"] = gate_tile / size.x
+	entry["level"] = 0
+	for stack in entry.get("enemy_army", {}).get("stacks", []):
+		stack["count"] = int(stack.get("count", 0)) * 40
+	session.overworld.encounters[index] = entry
+	OverworldRules.invalidate_spatial_lookup(session)
+	var steps := []
+	for _step in range(3):
+		index = AiHeroRulesScript._entry_index(session, placement_id)
+		entry = session.overworld.encounters[index]
+		if LevelRules.level_of(entry) == exit.z:
+			break
+		var block: Dictionary = entry.get("ai_hero", {})
+		var movement: Dictionary = block.get("movement", {})
+		movement["current"] = int(movement.get("max", 1))
+		block["movement"] = movement
+		entry["ai_hero"] = block
+		session.overworld.encounters[index] = entry
+		context = AiHeroRulesScript._new_context(session, _ai_config(session, controller), _state(session, controller))
+		var movement_max := maxi(1, int(movement.get("max", 1)))
+		var search: Dictionary = AiHeroRulesScript._search(session, context, entry, movement_max * AiHeroRulesScript.SEARCH_DAYS)
+		var plan: Dictionary = AiHeroRulesScript._gate_candidate(session, context, entry, search, movement_max, movement_max * AiHeroRulesScript.FAR_SEARCH_DAYS)
+		steps.append({"kind": plan.get("kind", ""), "id": String(plan.get("id", "")).get_slice("_object_", 1), "beyond": plan.get("beyond", {})})
+		if plan.is_empty() or not AiHeroRulesScript._gate_fight_looks_good(session, context, entry, plan):
+			break
+		plan["path"] = AiHeroRulesScript._path_to(search, int(plan.tile_index))
+		AiHeroRulesScript._follow_plan(session, context, index, plan)
+	entry = session.overworld.encounters[AiHeroRulesScript._entry_index(session, placement_id)]
+	var far_guard: Dictionary = OverworldRules._find_guard_engagement_at_tile(session, exit.x, exit.y, exit.z, false)
+	var result := {"gate": [gate_tile % size.x, gate_tile / size.x], "exit": [exit.x, exit.y, exit.z], "at": [int(entry.get("x", -1)), int(entry.get("y", -1)), LevelRules.level_of(entry)], "steps": steps, "goal": entry.get("ai_hero", {}).get("goal", {}), "far_guard_left": int(far_guard.get("index", -1))}
+	if LevelRules.level_of(entry) != exit.z or int(entry.get("x", -1)) != exit.x or int(entry.get("y", -1)) != exit.y:
+		_fail("A computer hero on a subterranean gate did not come out on its far side: %s" % JSON.stringify(result))
+	elif int(far_guard.get("index", -1)) >= 0:
+		_fail("A computer hero came out of a gate and left the guard there standing: %s" % JSON.stringify(result))
+	elif String(result.goal.get("id", "")) == "" or String(result.goal.get("id", "")) != String(steps[-1].beyond.get("id", "")):
+		_fail("A computer hero lost the errand it crossed a gate for: %s" % JSON.stringify(result))
 	return result
 
 ## Embercourt's capital sits in a pocket whose only way out is one tile beside

@@ -765,7 +765,9 @@ static func route_movement_preview(
 		"destination_tile": _route_tile_payload(destination_tile),
 	}
 
-static func native_passage_travel_check(session: SessionStateStoreScript.SessionData, node: Dictionary, actor_position: Vector3i, actor_id: String, target_id: String = "") -> Dictionary:
+## `fight_on_arrival`: a computer hero that means to fight the guard at the far
+## end (AiHeroRules._cross_gate) may come out in its zone, as the human does.
+static func native_passage_travel_check(session: SessionStateStoreScript.SessionData, node: Dictionary, actor_position: Vector3i, actor_id: String, target_id: String = "", fight_on_arrival: bool = false) -> Dictionary:
 	var resolved := NativeTransit.resolve(session.overworld.get("resource_nodes", []), node, target_id)
 	if not bool(resolved.get("ok", false)):
 		if bool(resolved.get("native_transit_random_exit", false)):
@@ -780,7 +782,7 @@ static func native_passage_travel_check(session: SessionStateStoreScript.Session
 	for endpoint in [node, resolved.peer]:
 		# Player arrivals can engage a hostile destination through BattleRules.
 		# AI movement has its own combat owner; never grant it an unchecked warp.
-		var combat_arrival: bool = endpoint == resolved.peer and actor_id != "" and actor_id == String(session.overworld.get("active_hero_id", ""))
+		var combat_arrival: bool = endpoint == resolved.peer and actor_id != "" and (fight_on_arrival or actor_id == String(session.overworld.get("active_hero_id", "")))
 		var safety := _native_passage_endpoint_safety(session, endpoint, actor_id, null, combat_arrival)
 		if not bool(safety.get("ok", false)):
 			return safety
