@@ -5698,7 +5698,6 @@ static RewardGuardProjectionChainResult49c0a6 reward_guard_projection_chain_0x49
 		projection_member.stamp_source_record_copy_known_0x49abd6 = true;
 		projection_member.stamp_source_record_copy_0x49abd6 = owned_source;
 		projection_member.stamp_source_cell_only_0x49abd6 = true;
-		projection_member.footprint_allows_existing_bit26_0x4aa603 = true;
 	}
 	static const uint32_t trace_projection_key_0x4ad947 = []() {
 		const char *value = rmg_trace_env("AURELION_RMG_TRACE_4AD947_KEY");
@@ -8455,7 +8454,7 @@ static void reward_guard_trace_wrapper_cell_state_0x4aa354(
 			? reward_guard_member_stamp_source_record_0x49abd6(*member)
 			: nullptr;
 	std::fprintf(stderr,
-			"RMG_TRACE_WRAPPER_CELL call=%d site=%s action=%s local=%d,%d,%d flat=%lld selected_members=%d candidates=%d final_mark=%d attached=%d before_known=%d before_w28=0x%08x before_bits=22:%d,23:%d,26:%d,27:%d before_w2c_known=%d before_w2c=0x%08x before_byte2a_known=%d before_byte2a=0x%02x before_refs=%d after_known=20:%d,24:%d,28:%d,2c:%d after_w20=0x%08x after_w24=0x%08x after_w28=0x%08x after_bits=22:%d,23:%d,26:%d,27:%d after_w2c=0x%08x after_byte2a_known=%d after_byte2a_mask=0x%02x after_byte2a=0x%02x after_refs_known=%d after_refs=%d member_known=%d member_rel=%d,%d,%d member_offset=%d,%d member_desc_type=%d member_key_known=%d member_key=%u stamp_cell_only=%d allow_existing_bit26=%d source_known=%d source_row=%d source_type=%d source_subtype=%d source_group=%d source_def=%s source_size=%d,%d\n",
+			"RMG_TRACE_WRAPPER_CELL call=%d site=%s action=%s local=%d,%d,%d flat=%lld selected_members=%d candidates=%d final_mark=%d attached=%d before_known=%d before_w28=0x%08x before_bits=22:%d,23:%d,26:%d,27:%d before_w2c_known=%d before_w2c=0x%08x before_byte2a_known=%d before_byte2a=0x%02x before_refs=%d after_known=20:%d,24:%d,28:%d,2c:%d after_w20=0x%08x after_w24=0x%08x after_w28=0x%08x after_bits=22:%d,23:%d,26:%d,27:%d after_w2c=0x%08x after_byte2a_known=%d after_byte2a_mask=0x%02x after_byte2a=0x%02x after_refs_known=%d after_refs=%d member_known=%d member_rel=%d,%d,%d member_offset=%d,%d member_desc_type=%d member_key_known=%d member_key=%u stamp_cell_only=%d source_known=%d source_row=%d source_type=%d source_subtype=%d source_group=%d source_def=%s source_size=%d,%d\n",
 			reward_guard_trace_current_materialization_call_0x4aa354,
 			site != nullptr ? site : "",
 			action != nullptr ? action : "",
@@ -8505,7 +8504,6 @@ static void reward_guard_trace_wrapper_cell_state_0x4aa354(
 			member != nullptr && member->object_record_key_known ? 1 : 0,
 			member != nullptr ? member->object_record_key : 0U,
 			member != nullptr && member->stamp_source_cell_only_0x49abd6 ? 1 : 0,
-			member != nullptr && member->footprint_allows_existing_bit26_0x4aa603 ? 1 : 0,
 			source != nullptr ? 1 : 0,
 			source != nullptr ? source->source_row : -1,
 			source != nullptr ? source->type_id_0x1c : -1,
@@ -9030,7 +9028,7 @@ static void reward_guard_trace_wrapper_members_0x4aa9b7(
 		const RewardGuardWrapperMember4aa3e9 &member = wrapper.selected_members_0x2c_0x30[member_index];
 		const SourceObjectRecord0x4c *source = member.source_record_copy_known_0x04 ? &member.source_record_copy : nullptr;
 		std::fprintf(stderr,
-				"RMG_TRACE_4AA9B7_WRAPPER_MEMBER call=%d stage=%s idx=%d key_known=%d key=%u vtable=0x%08x candidate_known=%d candidate_vtable=0x%08x seq_known=%d seq=%d value_known=%d value=%d enabled_known=%d enabled=0x%08x field20_known=%d field20=0x%08x field24_known=%d field24=0x%08x field28_known=%d field28=0x%08x rel=%d,%d,%d desc_type=%d offset=%d,%d projection_enabled=%d source_known=%d source_row=%d source_type=%d source_subtype=%d source_group=%d source_def=%s source_size=%d,%d stamp_source_known=%d stamp_source_row=%d stamp_source_type=%d stamp_cell_only=%d footprint_allow_bit26=%d wrapper_index=%d body_offsets_known=%d body_offsets=%d generated_desc_known=%d generated_desc_key=%d generated_desc_type=%d generated_desc_subtype=%d dyn_vector_known=%d dyn_vector_bytes=%d optional_known=%d optional=%d,0x%08x projection_object_known=%d\n",
+				"RMG_TRACE_4AA9B7_WRAPPER_MEMBER call=%d stage=%s idx=%d key_known=%d key=%u vtable=0x%08x candidate_known=%d candidate_vtable=0x%08x seq_known=%d seq=%d value_known=%d value=%d enabled_known=%d enabled=0x%08x field20_known=%d field20=0x%08x field24_known=%d field24=0x%08x field28_known=%d field28=0x%08x rel=%d,%d,%d desc_type=%d offset=%d,%d projection_enabled=%d source_known=%d source_row=%d source_type=%d source_subtype=%d source_group=%d source_def=%s source_size=%d,%d stamp_source_known=%d stamp_source_row=%d stamp_source_type=%d stamp_cell_only=%d wrapper_index=%d body_offsets_known=%d body_offsets=%d generated_desc_known=%d generated_desc_key=%d generated_desc_type=%d generated_desc_subtype=%d dyn_vector_known=%d dyn_vector_bytes=%d optional_known=%d optional=%d,0x%08x projection_object_known=%d\n",
 				call_index,
 				stage != nullptr ? stage : "",
 				int32_t(member_index),
@@ -9070,7 +9068,6 @@ static void reward_guard_trace_wrapper_members_0x4aa9b7(
 				member.stamp_source_record_copy_known_0x49abd6 ? member.stamp_source_record_copy_0x49abd6.source_row : -1,
 				member.stamp_source_record_copy_known_0x49abd6 ? member.stamp_source_record_copy_0x49abd6.type_id_0x1c : -1,
 				member.stamp_source_cell_only_0x49abd6 ? 1 : 0,
-				member.footprint_allows_existing_bit26_0x4aa603 ? 1 : 0,
 				member.selected_wrapper_index_0x4af785,
 				member.descriptor_body_offsets_0x49a6f9_known ? 1 : 0,
 				int32_t(member.descriptor_body_offsets_0x49a6f9.size()),
@@ -14126,7 +14123,8 @@ static bool reward_guard_generated_footprint_rejects_0x4aa603(
 		result.blocked_reason = "0x4aa603_relation_source_pointer_0x00_owner_missing";
 		return true;
 	}
-	const bool reject_existing_bit26 = !member.footprint_allows_existing_bit26_0x4aa603;
+	// 0x4aa603 passes a constant 1 (push 1 at 0x4aa646) to 0x49a6f9 for every member.
+	const bool reject_existing_bit26 = true;
 	const SourceDescriptorFootprintResult49a6f9 footprint =
 			source_descriptor_footprint_rejects_0x49a6f9(
 					state.generated_cell_buffer,
@@ -25649,6 +25647,9 @@ static RoadRiverObjectAdjacencyResult4ab52a road_river_object_adjacency_0x4ab52a
 			"AURELION_RMG_TRACE_POST_ROAD_GRID",
 			"after_0x4ab52a_0x4ac84b",
 			state.generated_cell_buffer);
+	if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+		std::fprintf(stderr, "RMG_TRACE_PHASE_RNG phase=after_0x4ab52a_0x4ac84b state=0x%08x\n", rng.state);
+	}
 	if (!river_object_post_pass_0x4ac4ae(state, rng, result, config)) {
 		return result;
 	}
@@ -25656,6 +25657,9 @@ static RoadRiverObjectAdjacencyResult4ab52a road_river_object_adjacency_0x4ab52a
 			"AURELION_RMG_TRACE_POST_RIVER_GRID",
 			"after_0x4ac4ae_0x4ac852",
 			state.generated_cell_buffer);
+	if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+		std::fprintf(stderr, "RMG_TRACE_PHASE_RNG phase=after_0x4ac4ae_0x4ac852 state=0x%08x\n", rng.state);
+	}
 	if (trace_road_callstream) {
 		std::fprintf(stderr,
 				"RMG_TRACE_ROAD_CALLSTREAM stage=complete calls=%d road_writes=%d road_rng_calls=%d rng=0x%08x\n",
@@ -42735,6 +42739,9 @@ static H3MapedRmgWorkflowResult run_h3maped_rmg_workflow_pass(const H3MapedRmgWo
 						decorative_flagged_cell_dispatch_0x49eb8d(result.generator_object_private_state, route_free_cell_rng);
 				profile_checkpoint("decorative_flagged_cell_dispatch_0x49eb8d");
 				trace_object_phase_count("after_0x49eb8d_0x4ac844", 0x004ac844U);
+				if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+					std::fprintf(stderr, "RMG_TRACE_PHASE_RNG phase=after_0x49eb8d_0x4ac844 state=0x%08x\n", route_free_cell_rng.state);
+				}
 				workflow_phase_full_grid_trace(
 						"AURELION_RMG_TRACE_POST_49EB8D_GRID",
 						"after_0x49eb8d_0x4ac844",

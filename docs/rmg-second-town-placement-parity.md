@@ -215,9 +215,36 @@ Result, in strict mode against Windows H3MapEd:
 - Seed 10 weak and normal still equal H3MapEd: 0 cells, all objects.
 - m024 now has H3MapEd's towns. The RNG matches at every marker through `0x4aab7e`
   (`0x4ac7ef` = `4d9f9479`), and terrain is identical.
-- 262 cells still differ on m024: roads (196), rivers (60) and decoration, after
-  `0x4aab7e`. This deviation is separate and not traced yet. The first divergent
-  function after `0x4ac7ef` is not named.
+- 262 cells still differed on m024. That was a separate deviation, fixed in the next
+  section.
+
+## Seer's Huts reject decoration cells (`native-rmg-seer-hut-bit26-reject-20261017`)
+
+After the anchor fix, m024 still differed from H3MapEd in 262 cells: roads, rivers and
+decoration. Comparing H3MapEd's private cell grid (`h3trace --dump` of `[esi+0x14]`,
+72x72x0x30 bytes, at every `0x4ac552` return marker) with native's grid traces:
+
+1. The RNG matched through `0x4aab7e` but differed after `0x49eb8d` (H3MapEd `5f82e832`,
+   native `4319dcf4`). Roads and rivers only follow from the decoration difference.
+2. The grids matched at `0x4ac7c4` (except one field, below). They then diverged inside
+   the `0x4aab7e` owner loop. In owner 7's pass, native put its two quest-hut projections
+   (type 83, `0x4ad947`) in zone 4 at (23,39) and (21,41). H3MapEd put them at (36,39)
+   and (26,42). Owner 9 then took the cells H3MapEd's owner 7 had used.
+3. Every `0x4aab7e` draw had the same call site in both. The difference is the `0x4aa9b7`
+   candidate set. Native accepted (23,39) and (22,40) with score 8. Both cells have bit
+   26 set in `+0x28`.
+4. Native exempted the type-83 projection member from 0x49a6f9's existing-bit-26
+   rejection (`footprint_allows_existing_bit26_0x4aa603`). H3MapEd has no such case:
+   `0x4aa603` passes a constant 1 to `0x49a6f9` (`push 1` at `0x4aa646`), and the
+   `0x4aaabd` call in `0x4aa9b7` is the only caller of `0x4aa603`.
+
+The exemption is removed, so every member rejects bit-26 cells, as `0x4aa603` does.
+m024 now equals the Windows H3MapEd map: 0 cells differ, all 1,268 objects are equal,
+and the RNG matches after `0x49eb8d`, `0x4ab52a` and `0x4ac4ae`. Seed 10 weak and
+normal are still exact.
+
+Not traced: H3MapEd sets `+0x2c` = 4 at cell (63,4) by `0x4ac771`, and native leaves it
+at 0. It does not reach the final map of m024.
 
 ## m003: a Small start zone that H3MapEd seals itself
 
