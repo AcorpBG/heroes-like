@@ -113,6 +113,16 @@ Rules:
   - Proof: forcing `+0xf5c` = 0 at generator entry reproduces all six desktop maps. The File-menu and toolbar runs match Wine.
   - Owner decision: keep the current behaviour (no Keymaster's Tents; native as is), or model Ctrl+N. Modelling it needs the unported tent projection branch `0x540b00`/`0x49c019`/`0x4adb72`/`0x4adef7` and its writeout. With `+0xf5c` = 0 alone, native reproduces five of the six desktop maps and stops on seed 2, where a tent is placed.
 
+### Split large maps: second-town placement
+
+`native-rmg-second-town-placement-20261017` (completed, native fix): traced the split Large maps from the 2026-10-16 AI batches. See `docs/rmg-second-town-placement-parity.md`.
+- m019 (Dwarven Tunnels, H3MapEd seed 1928029988) was native drift in the extra-town path `0x4a8db2` -> `0x4a901a`. A second town was walled in and cut off. There were three deviations, each proved with H3MapEd private state:
+  - `0x4a901a` samples owner and score at the descriptor's source cell and applies the 3x3 owner window `0x4a9174..0x4a9232`.
+  - Zone record `+0x40` is the template's "towns are of same type" flag.
+  - Only `0x4a93a2` writes the source pair's route anchor `+0x30..+0x3c`.
+- m019 and m010 now equal the H3MapEd references in tiles and every object. The 72-reference sweep stays 60/72 exact, no reference got worse, and XL Monk's Retreat 1778117359 went from 1,121 differing cells to 0.
+- m010 (Dragons, 386602547) splits the same way in H3MapEd: tree obstacles cover two links' passages. Whether to change that is an owner decision.
+
 ### Raid director removal
 
 `ai-raid-director-removal-20261007` (completed, follow-up of `ai-plays-by-player-rules-20261007`): the raid director nothing live called is removed from `EnemyAdventureRules`/`EnemyTurnRules` with its unit-level tests; the save migration, the AI site seizure and the multi-level path surfaces the RMG validation tools use stay. The headless harness raid cases (town and site defense, regroup, pressure coverage, objective targeting) are rewritten for heroes, and a computer player's own hero in a town's doorway no longer blocks hiring there. Open owner decision: the now inert Border Warden pillage resistance and `DifficultyRules` enemy pressure and raid knobs. See `docs/ai-plays-by-player-rules.md`.

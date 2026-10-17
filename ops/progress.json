@@ -115449,6 +115449,21 @@
         "docs/water-travel.md"
       ],
       "notes": "Owner: fix the gaps left by ai-subterranean-gates-20261017. (1) Water: AiHeroRules treated water as blocked; generated islands maps have no free boats but 5-10 shipyards, so no computer hero ever left its island (the 2026-10-16 batch excluded islands for that reason). _search now has a walk/sail/ashore phase per tile: a walking hero boards a free boat or the boat a shipyard it stands at builds (_launch_boat, 1,000 gold and 10 wood, with market trades from any owned town, _boat_market), sails open water (never through a boat), goes ashore onto open ground or a doorway; boarding and going ashore end the day (half a day's movement in the route cost, a bought boat one day more), one boarding per route. A route that buys a boat subtracts its price (1,800 gold-equivalent) from the errand's value (_boat_price), also for exploration and portal scouting. _follow_plan boards, sails and lands (_cross_shore); WaterTravelRules.normalize keeps AI-held boats (hero_id = placement id) and frees those of defeated heroes, run each AI turn; shipyards and whirlpools are no longer errands of their own (the AI used to pay for a shipyard visit and get nothing). Towns spent the treasury before heroes moved (wood almost never 10 on islands), so an idle main or field army with a shipyard in reach sets ai_boat_wanted_day and the towns hold the boat's price back for 2 days (_govern_towns, _hold_back). The map draws an AI hero aboard as a boat with its player's flag (OverworldMapView._draw_encounter_boat). Decision log records aboard. (2) Levels: an idle hero whose player holds no town on its level heads home through the gate with the shortest way to the doorway (_gate_home). Replays (160-day cap): islands small 2p normal day 49, small weak day 25, medium 2p normal day 111, medium 4p normal day 75; normal-water m047 (capped in the batch) day 135 with no boats bought, m093 day 70 (91 in the batch); slowest AI day unchanged (w47 11.9 s vs 13.2 s, w93 5.2 vs 4.9 s). Validation: tests/ai_player_rules_report sailing case (HEROES_AI_RULES_ONLY=sail) and gate case with the way home (HEROES_AI_RULES_ONLY=gate), one windowed screenshot of the boat drawing, tools/core_suite.py."
+    },
+    {
+      "id": "native-rmg-second-town-placement-20261017",
+      "title": "Native RMG: extra-town placement in 0x4a901a/0x4a8db2 matches H3MapEd (split large maps)",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "native_rmg_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/rmg-second-town-placement-parity.md",
+        "docs/lessons-learned.md"
+      ],
+      "notes": "From the 2026-10-16 AI batches: some Large maps split into walkable areas no route connects. m019 (Dwarven Tunnels, H3MapEd seed 1928029988) was native drift: three deviations in the extra-town path, each proved with winedbg private state and the Windows h3trace rand log. (1) 0x4a901a samples owner/score at the descriptor source cell (+0x2c/+0x30) and applies the 3x3 owner window 0x4a9174..0x4a9232. (2) Zone record +0x40 is the template's same_town_type flag, so 0x49b3c1 draws no rand when set. (3) Only 0x4a93a2 writes source pair +0x30..+0x3c; the weighted 0x4a901a commit does not. m019 and m010 now equal the H3MapEd references in tiles and all objects (2940, 2855); m019's rand stream equals Windows H3MapEd for all 122,550 draws. 72-reference sweep: 60/72 exact, no regressions; XL Monk's Retreat 1778117359 1121 cells -> 0. Validation: h3maped_rmg_core_selftest passes on Windows and Linux; tools/core_suite.py 16/16 on Windows and on Linux (there validate_repo first failed in a fresh clone only because the untracked maps/ folder did not exist yet, and passed once it did). m010 (Dragons, 386602547) is split in H3MapEd too (tree obstacles over two link passages): owner decision. Follow-ups: XL 1778117359 town subtypes, header main-town/player-slot and def-table drift, launch config dropping guard strength.",
+      "updatedAt": "2026-10-17T12:00:00Z",
+      "validatedAt": "2026-10-17T12:00:00Z"
     }
   ],
   "project": "heroes-like",

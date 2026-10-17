@@ -3719,12 +3719,14 @@ SourceOrderSchedulerSourceRecord4a8db2 source_order_scheduler_source_record_from
 	record.field_0x38 = payload.neutral_towns.town_density;
 	record.field_0x3c_known = true;
 	record.field_0x3c = payload.neutral_towns.castle_density;
-	// The source record is zero-initialized before template fields are copied.
-	// Explicit recovered +0x40 values override that concrete default.
+	// +0x40 is the template zone's "towns are of same type" flag. H3MapEd
+	// traces show it on Ready or Not medium seed 10 (zones 1..3 set, 4..7
+	// clear) and on Dwarven Tunnels large seed 1928029988 (zone 1 set), each
+	// matching the template column. Explicit recovered values still override.
 	record.selector_field_0x40_known = true;
 	record.selector_field_0x40 = runtime_zone.source_order_selector_field_0x40_known
 			? runtime_zone.source_order_selector_field_0x40
-			: 0U;
+			: (payload.same_town_type ? 1U : 0U);
 	record.allowed_town_mask_0x41_0x49_known = runtime_zone.source_index >= 0;
 	record.allowed_town_mask_0x41_0x49 = runtime_zone.source_order_allowed_town_mask_0x41_0x49_known
 			? runtime_zone.source_order_allowed_town_mask_0x41_0x49
@@ -27737,11 +27739,24 @@ WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(
 		return finish_blocked("0x4a901a_scan_bounds_empty_or_unordered");
 	}
 
+	// 0x4a90b3..0x4a90bd: the descriptor behind the 0x658 wrapper supplies
+	// the source (entry) cell offsets +0x2c/+0x30. 0x4a910c..0x4a9131 read the
+	// owner byte and score at the anchor minus these offsets, not at the
+	// anchor itself.
+	int32_t descriptor_source_cell_x_0x2c = 0;
+	int32_t descriptor_source_cell_y_0x30 = 0;
+	descriptor_source_cell_offset_from_secondary_mask_0x4906fb(
+			source_bucket_record_0x658,
+			descriptor_source_cell_x_0x2c,
+			descriptor_source_cell_y_0x30);
+
 	int32_t current_threshold = threshold_arg_0x18;
 	for (int32_t y = adjusted_scan_low_y; y < scan_high_y; ++y) {
 		for (int32_t x = adjusted_scan_low_x; x < scan_high_x; ++x) {
 			vector_state.scanned_cell_count += 1;
-			const int64_t flat = cell_index(state.width, state.height, x, y, level);
+			const int32_t source_x = x - descriptor_source_cell_x_0x2c;
+			const int32_t source_y = y - descriptor_source_cell_y_0x30;
+			const int64_t flat = cell_index(state.width, state.height, source_x, source_y, level);
 			if (flat < 0 || flat >= int64_t(state.generated_cell_buffer.records.size())) {
 				vector_state.out_of_bounds_cell_count += 1;
 				continue;
@@ -27770,6 +27785,23 @@ WeightedObjectCandidateScanResult4a901a weighted_object_candidate_scan_0x4a901a(
 						relation_owner_byte2,
 						source_record_identity_0x00)) {
 				vector_state.eligibility_reject_count_0x49aa93 += 1;
+				continue;
+			}
+			// 0x4a9174..0x4a9232: every cell of the 3x3 window around the
+			// source cell, clipped to the map, must belong to the zone.
+			bool source_window_owned = true;
+			for (int32_t window_y = std::max(source_y - 1, 0); window_y < std::min(state.height, source_y + 2); ++window_y) {
+				for (int32_t window_x = std::max(source_x - 1, 0); window_x < std::min(state.width, source_x + 2); ++window_x) {
+					const int64_t window_flat = cell_index(state.width, state.height, window_x, window_y, level);
+					const int32_t window_owner =
+							generated_cell_word20_owner_byte2_signed(state.generated_cell_buffer.records[size_t(window_flat)].word_0x20);
+					if (window_owner < 0 || window_owner != source_record_identity_0x00) {
+						source_window_owned = false;
+					}
+				}
+			}
+			if (!source_window_owned) {
+				vector_state.source_window_owner_reject_count_0x4a9174 += 1;
 				continue;
 			}
 			if (low_word_score > uint32_t(current_threshold)) {
@@ -28131,18 +28163,13 @@ SourceOrderSchedulerResult4a8db2 source_order_weighted_scheduler_from_source_rec
 			call.committed = scan.committed;
 			call.weighted_candidate_accepted_count_0x4a901a = scan.vector_state_0x4a901a.accepted_candidate_count;
 			call.blocked_reason = scan.blocked_reason;
+			// Only the 0x4a93a2 success path writes source-pair +0x30..+0x3c
+			// (0x4a95a1..0x4a95ae). The weighted commit (0x4a9325..0x4a937e)
+			// appends to 0x14b0 and stamps the cell below the entry, but
+			// leaves the pair's route anchor at the first town.
 			if (scan.committed) {
 				source_pair_success_byte_set = true;
 				result.source_pair_success_byte_0x3c_final = 1;
-				if (scan.post_commit_route_state_0x4a901a.source_record_route_fields_known_0x30_0x38) {
-					result.source_pair_post_commit_route_fields_known_0x30_0x38 = true;
-					result.source_pair_post_commit_route_x_0x30 =
-							scan.post_commit_route_state_0x4a901a.source_record_route_x_0x30;
-					result.source_pair_post_commit_route_y_0x34 =
-							scan.post_commit_route_state_0x4a901a.source_record_route_y_0x34;
-					result.source_pair_post_commit_route_level_0x38 =
-							scan.post_commit_route_state_0x4a901a.source_record_route_level_0x38;
-				}
 			}
 			call.source_pair_success_byte_0x3c_after = source_pair_success_byte_set ? 1 : 0;
 		lane.committed_call_count += scan.committed ? 1 : 0;

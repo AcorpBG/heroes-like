@@ -794,6 +794,7 @@ struct WeightedObjectCandidateVectorState4a901a {
 	int32_t owner_byte_reject_count = 0;
 	int32_t value_floor_reject_count = 0;
 	int32_t eligibility_reject_count_0x49aa93 = 0;
+	int32_t source_window_owner_reject_count_0x4a9174 = 0;
 	int32_t local_vector_clear_count_0x4ae52a = 0;
 	int32_t local_vector_append_count_0x4ae1fd = 0;
 	int32_t accepted_candidate_count = 0;

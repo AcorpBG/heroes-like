@@ -7677,7 +7677,8 @@ int main() {
 					&& scheduler_success.calls[0].weighted_candidate_vector_index_0x4a901a == 0
 					&& scheduler_success.calls[1].disabled_after_false
 					&& scheduler_success.source_pair_success_byte_0x3c_final == 1
-					&& scheduler_success.source_pair_post_commit_route_fields_known_0x30_0x38
+					// The weighted commit leaves pair +0x30..+0x38 to 0x4a93a2 (0x4a95a1).
+					&& !scheduler_success.source_pair_post_commit_route_fields_known_0x30_0x38
 					&& scheduler_success_state.object_record_allocation_count_0x4a93a2 == 1
 					&& scheduler_success_state.weighted_candidate_commit_count_0x4a901a == 1
 					&& scheduler_success_state.source_order_scheduler_commit_count_0x4a8db2 == 1
