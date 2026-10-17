@@ -35941,6 +35941,51 @@ static MineResourceSelectedObjectCallbackResult4a9911 mine_resource_support_foll
 	return result;
 }
 
+// Departure from H3MapEd (docs/rmg-cut-off-town-repair.md), repair pass only. The
+// game blocks every mine as three by two tiles with the visit tile at the bottom
+// middle, in place of the H3 body (scripts/core/CommonMineRules.gd). This copy of a
+// mine's record also marks that shape as blocked, so the 0x49a6f9 footprint and 0x49a09c
+// contour tests judge the cells the game blocks: a mine whose top row would close a
+// town door or split a passage is rejected the way H3MapEd rejects its own bodies.
+static SourceObjectRecord0x4c game_mine_shape_placement_record(const SourceObjectRecord0x4c &source) {
+	int32_t visit_col = -1;
+	int32_t visit_row = -1;
+	for (int32_t row = 0; row < 6 && visit_col < 0; ++row) {
+		for (int32_t col = 0; col < 8; ++col) {
+			if (source_object_descriptor_mask_bit_0x4268eb(source, col, row)) {
+				visit_col = col;
+				visit_row = row;
+				break;
+			}
+		}
+	}
+	if (visit_col < 1 || visit_col > 6 || visit_row > 4) {
+		return source;
+	}
+	SourceObjectRecord0x4c record = source;
+	record.descriptor_width_0x34 = std::max<int32_t>(record.descriptor_width_0x34, visit_col + 2);
+	record.descriptor_height_0x38 = std::max<int32_t>(record.descriptor_height_0x38, visit_row + 2);
+	for (int32_t row = 0; row < 6; ++row) {
+		for (int32_t col = 0; col < 8; ++col) {
+			// Cells outside the descriptor are passable; H3 body cells stay blocked.
+			bool passable = col >= source.descriptor_width_0x34 || row >= source.descriptor_height_0x38
+					|| source_object_descriptor_source_primary_mask_bit_0x41e951(source, col, row);
+			if (col >= visit_col - 1 && col <= visit_col + 1 && row >= visit_row && row <= visit_row + 1
+					&& !(col == visit_col && row == visit_row)) {
+				passable = false;
+			}
+			if (record.passability_mask.size() >= 48U) {
+				record.passability_mask[size_t((row * 8) + col)] = passable ? '1' : '0';
+			}
+			const uint64_t bit = uint64_t(1) << uint32_t(47 - (8 * row) - col);
+			record.descriptor_mask_a_0x3c_0x40 = passable
+					? (record.descriptor_mask_a_0x3c_0x40 | bit)
+					: (record.descriptor_mask_a_0x3c_0x40 & ~bit);
+		}
+	}
+	return record;
+}
+
 static MineResourceSelectedObjectCallbackResult4a9911 mine_resource_coordinate_builder_0x4a9641(
 		GeneratorObjectPrivateState &state,
 		const GeneratorRelationOwnerState4a218c &owner,
@@ -36008,6 +36053,10 @@ static MineResourceSelectedObjectCallbackResult4a9911 mine_resource_coordinate_b
 		const int32_t scan_start_x =
 				owner.scan_bound_low_x_0x20 + selected.source_record_copy.descriptor_width_0x34 - 1;
 		std::map<std::string, int32_t> debug_eligibility_reject_reasons;
+		const SourceObjectRecord0x4c placement_record =
+				state.route_join_departure_enabled && selected.descriptor_type_0x1c == 53
+				? game_mine_shape_placement_record(selected.source_record_copy)
+				: selected.source_record_copy;
 			for (int32_t y = scan_start_y; y < owner.scan_bound_high_y_0x2c; ++y) {
 				for (int32_t x = scan_start_x; x < owner.scan_bound_high_x_0x28; ++x) {
 				result.coordinate_builder_scanned_cell_count += 1;
@@ -36065,7 +36114,7 @@ static MineResourceSelectedObjectCallbackResult4a9911 mine_resource_coordinate_b
 				SourceDescriptorFootprintTrace49a6f9 debug_footprint_trace;
 				if (!mine_resource_coordinate_eligibility_0x49aa93(
 							state,
-							selected.source_record_copy,
+							placement_record,
 							x,
 							y,
 							level,

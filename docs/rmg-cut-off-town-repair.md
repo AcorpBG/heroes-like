@@ -51,6 +51,16 @@ RNG and no retries, so the repaired map is deterministic per seed. The later pha
 unchanged, but the protected cells change which candidates they see, so a repaired map
 differs from H3MapEd beyond the carved cells.
 
+0. **Place mines by the game's shape.** In `0x4a9641`, a mine (type 53) is tested by
+   the same `0x49a6f9` footprint and `0x49a09c` contour tests, on a copy of its record.
+   The copy blocks the H3 body plus the game's three-by-two shape around the visit tile.
+   - The contour test rejects a ring that touches another object's action cell (mines
+     may not), or that splits into two runs of bad cells.
+   - So a mine whose game top row would close a town door, or cut a passage, is
+     rejected the way H3MapEd rejects its own bodies.
+   - The mine is still stamped with its H3 body, and the rest of `0x4a9911` runs
+     unchanged. A smaller candidate set can change which cell a roll picks, so later
+     phases see a different map.
 1. **Keep unguarded passages (cause 1).** In `0x4a61bc`, for a link with guard budget
    0 that is not a border guard, the cells the source and target `0x4a5a23` chains
    stamp are recorded.
@@ -116,10 +126,22 @@ expose them as `metadata.cut_off_town_repair` (`applied`, `towns_cut_off_before`
       and small2p/m091.
     - medium3p/m082 goes from 2 to 0 towns cut off, where before it went from 2 to 1.
   - No other map changed.
+- **Mines placed by the game's shape** (the same 74 flagged configurations):
+  - The repair is now kept on 67 of them, and 65 end with no town cut off.
+  - 12 maps changed, all for the better:
+    - Eight of the nine mine-sealed maps now repair: small180/m103, m139 and m155;
+      small60/m060; small60_guards/m057; 2026-10-16/m102; small2p/m075; small2p/m103
+      (both towns).
+    - small2p/m036 goes from 2 to 0 (before, 2 to 1).
+    - medium3p/m080, which is cut off under the H3 body check too, goes from 1 to 0.
+    - Two of the six-town split maps improve: medium2p/m117 goes from 6 to 4, and
+      medium3p/m066 from 6 to 2.
+  - No other map changed.
 - **Strict mode:** with `AURELION_RMG_H3MAPED_STRICT=1`, m043 (seed 2851495868) is
   byte-identical to H3MapEd.
 - **Native selftest:** every H3MapEd parity case runs with the repair off and passes.
-  Added cases require the repair to join a cut-off town on XL seed 76 and on m095.
+  Added cases require the repair to join a cut-off town on XL seed 76, on m095, and on
+  m139, where it needs the mine placement step.
 - **Core test:** `random_map_small_2p_launch_report` generates seed 1727041229 (Small,
   land, weak, 1+1 players). It requires the repair to have run and to leave no town cut
   off. Every other seed it generates must also end with no town cut off.
@@ -157,21 +179,18 @@ yet player 3's start town at (60,24,0) could not be left on foot.
   one, and keeps the other in zones 15-19, which H3MapEd's links never join to the rest.
   Whether the template's link data or a missing gate link is the cause has not been
   traced.
-- **Mines below a town door.** On 8 maps the town's door is a one-tile pocket:
+- **Mines below a town door (fixed by step 0).** On 8 maps H3MapEd's town door was a
+  one-tile pocket:
   - the town body closes it on three sides;
   - a mine sits two rows below, so the game's top row of the mine covers the three
     tiles under the door.
   - In H3 those tiles are free, because the H3 body is only the mine's bottom row.
-  - No join can open the pocket, so these maps keep H3MapEd's map.
-  - The maps: small180/m103, m139 and m155; small60/m060; small60_guards/m057;
-    2026-10-16/m102; small2p/m075; small2p/m103 (both towns).
-  - On small180/m014, two mines' top rows close both exits of a 107-tile pocket.
-  - **Blocker:** the mine is placed by `0x4a9d6a`, before the joins run. Opening these
-    towns needs one of two changes:
-    - the repair pass keeps that mine off the cells below the door;
-    - or the game blocks a different mine shape, which is an owner decision.
-  - Neither is done.
-- **Cut off without mines.** medium2p/m024 and m079, and medium3p/m077 and m080 (two
-  towns), are cut off under the H3 body check too, and the repair does not help them.
-  The route joins do not cause it. This has not been traced map by map.
+  - Example: m139, crystal cavern at (21,11) below the door at (20,9).
+  - The repair pass now places those mines elsewhere, and all 8 repair.
+- **small180/m014** still keeps H3MapEd's map. On H3MapEd's map, two mines' top rows
+  close both exits of a 107-tile pocket. Why the repair pass still leaves a town cut
+  off has not been traced.
+- **Cut off without mines.** medium2p/m024 and m079, and medium3p/m077, are cut off
+  under the H3 body check too, and the repair does not help them. This has not been
+  traced map by map.
 - **Cost.** A repaired map is generated twice, and an unhelped one three times.
