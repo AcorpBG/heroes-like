@@ -115626,7 +115626,21 @@
       "sourceDocs": [
         "docs/rmg-cut-off-town-repair.md"
       ],
-      "notes": "m095 (medium 3P, map seed 4228448339-p3 = native 684022622) sealed player 3's start town at (60,24,0) but reported 0 cut off: the game blocks each mine as 3x2 around its visit tile (CommonMineRules.gd) in place of the H3 body; the check used H3 bodies, and two mines' upper rows closed the pocket's exits to the (69,2) gate. Check now uses the game shape: m095 before 1, after 0, repaired map walkable to all 8 towns in the game. 708 AI-batch configs: 74 flagged (57 also under the old check), repair kept on 50, 48 clean; 19 mine-sealed maps keep H3MapEd's map (route joins know only the H3 mine body). Sweep 64/72 repair on and strict. Selftest (new m095 case) and core_suite 16/16 pass on Windows and Linux.",
+      "notes": "m095 (medium 3P, map seed 4228448339-p3 = native 684022622) sealed player 3's start town at (60,24,0) but reported 0 cut off: the game blocks each mine as 3x2 around its visit tile (CommonMineRules.gd) in place of the H3 body; the check used H3 bodies, and two mines' upper rows closed the pocket's exits to the (69,2) gate. Check now uses the game shape: m095 before 1, after 0, repaired map walkable to all 8 towns in the game. 708 AI-batch configs: 74 flagged (57 also under the old check), repair kept on 50, 48 clean; 19 maps keep H3MapEd's map: 15 mine-sealed, 4 cut off without mines (corrected by native-rmg-route-join-mine-shape-20261017). Sweep 64/72 repair on and strict. Selftest (new m095 case) and core_suite 16/16 pass on Windows and Linux.",
+      "updatedAt": "2026-10-17T23:59:00Z",
+      "validatedAt": "2026-10-17T23:59:00Z"
+    },
+    {
+      "id": "native-rmg-route-join-mine-shape-20261017",
+      "title": "Cut-off repair route joins treat the game's mine shape as occupied",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "native_rmg_departure",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/rmg-cut-off-town-repair.md"
+      ],
+      "notes": "route_join_departure_join_zones marks each type-53 record in object_records_0xec4_ecc as occupying x-2..x, y-1..y minus the visit tile (x-1,y), per CommonMineRules.gd. 74 flagged AI-batch configs: repair kept on 56 (was 50), 55 clean (was 48); now repaired small180/m016, m060, m138, 2026-10-16/m115, m118, small2p/m091; medium3p/m082 2->0 (was 2->1); none worse. Blocker for 9 still-sealed maps: 0x4a9d6a places a mine at (town.x-1, town.y+2) whose game top row covers the door's only exits (m014: two mines close a 107-tile pocket); needs mine placement change in the repair pass or an owner decision on the mine shape. medium2p/m024, m079, medium3p/m077, m080 are cut off without mines. Sweep 64/72 repair on and strict (same rows). Selftest and core_suite 16/16 pass on Windows and Linux.",
       "updatedAt": "2026-10-17T23:59:00Z",
       "validatedAt": "2026-10-17T23:59:00Z"
     }
