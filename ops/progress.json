@@ -115659,6 +115659,19 @@
       "validatedAt": "2026-10-17T23:59:00Z"
     },
     {
+      "id": "native-rmg-repair-link-passages-20261017",
+      "title": "Cut-off repair pass keeps link passages free of mines, gates and reward objects",
+      "status": "in_progress",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "native_rmg_departure",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/rmg-cut-off-town-repair.md"
+      ],
+      "notes": "Repair pass only: 0x4a61bc passage = both endpoint cells + 0x4a5a23 chain stamps (a chain starting on a zero 0x1c distance word stamps nothing). Guard budget 0 and border-guard links (0x4a746b gets -1 from 0x4a5e73, stale +0xf5c) are protected cells. Every passage is a mask: mines (game shape) in 0x4a9641, two-level gate pairs in 0x4a6cf2, reward objects in 0x4a93a2/0x4a901a and 0x4aa603 cluster members are rejected on it. 74 flagged AI-batch configs: repair kept on 70 (was 67), 69 clean (was 65); medium2p/m024, m079, medium3p/m077 and small180/m014 now repair; medium2p/m117 worse (keeps H3MapEd's 6, its 6->4 came from a decoration gap between unlinked zones 5 and 7). Sweep 64/72 repair on and strict (same rows). Selftest adds m014. Left: Newcomers island maps (owner decision).",
+      "updatedAt": "2026-10-17T23:59:00Z"
+    },
+    {
       "id": "balance-phase-round-1-20261017",
       "title": "Balance round 1: every faction closer in each phase of the game",
       "status": "completed",

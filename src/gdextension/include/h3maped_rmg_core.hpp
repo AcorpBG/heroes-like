@@ -3374,6 +3374,8 @@ struct GeneratorObjectPrivateState {
 	// Departure state (docs/rmg-cut-off-town-repair.md), unused in H3MapEd order.
 	bool route_join_departure_enabled = false;
 	std::vector<int64_t> route_join_protected_cells;
+	// Repair pass: 1 on every cell a link passage (0x4a61bc chains) stamped.
+	std::vector<char> route_join_link_passage_cell;
 	int32_t route_join_carved_path_count = 0;
 	uint32_t generated_cell_buffer_offset_0x14 = 0x14U;
 	uint32_t width_offset_0x18 = 0x18U;

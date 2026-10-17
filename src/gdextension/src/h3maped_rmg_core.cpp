@@ -14093,6 +14093,35 @@ static int32_t terrain_repaint_loop_owner_byte2_0x4a3f27(int32_t relation_vector
 	return relation_vector_loop_index >= 0 ? relation_vector_loop_index : -1;
 }
 
+// Repair pass only: true when a blocked cell of the record lies on a link passage.
+// Mines pass the game's shape (a mine there closes the passage even when H3MapEd's own
+// tests accept it: m024, m014); two-level gates (m079) and reward objects (m057) pass
+// their H3 body.
+static bool object_record_covers_link_passage(
+		const GeneratorObjectPrivateState &state,
+		const SourceObjectRecord0x4c &placement_record,
+		int32_t x,
+		int32_t y,
+		int32_t level) {
+	const std::vector<char> &passage = state.route_join_link_passage_cell;
+	if (passage.empty()) {
+		return false;
+	}
+	for (int32_t row = 0; row < 6; ++row) {
+		for (int32_t col = 0; col < 8; ++col) {
+			if (source_object_descriptor_source_primary_mask_bit_0x41e951(placement_record, col, row)
+					|| source_object_descriptor_mask_bit_0x4268eb(placement_record, col, row)) {
+				continue;
+			}
+			const int64_t flat = cell_index(state.width, state.height, x - col, y - row, level);
+			if (flat >= 0 && flat < int64_t(passage.size()) && passage[size_t(flat)] != 0) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 static bool reward_guard_generated_footprint_rejects_0x4aa603(
 		const GeneratorObjectPrivateState &state,
 		const RewardGuardWrapperMember4aa3e9 &member,
@@ -14121,6 +14150,12 @@ static bool reward_guard_generated_footprint_rejects_0x4aa603(
 	if (relation_source_owner < 0) {
 		result.inputs_available = false;
 		result.blocked_reason = "0x4aa603_relation_source_pointer_0x00_owner_missing";
+		return true;
+	}
+	if (state.route_join_departure_enabled
+			&& object_record_covers_link_passage(state, *stamp_source, absolute_x, absolute_y, absolute_level)) {
+		// Departure: a reward-cluster member on a link passage closes it (m057).
+		result.blocked_reason = "0x4aa603_departure_link_passage_reject";
 		return true;
 	}
 	// 0x4aa603 passes a constant 1 (push 1 at 0x4aa646) to 0x49a6f9 for every member.
@@ -18376,11 +18411,35 @@ static ConnectionPairMaterializationPrefixResult4a61bc connection_pair_materiali
 
 		append_relation_owner_local_vector_record_0x404(target_owner, selected.neighbor_x, selected.neighbor_y);
 		result.local_vector_append_count_0x404 += 1;
-		if (state.route_join_departure_enabled && result.guard_budget_0x4a65a5 <= 0 && !source_endpoint.border_guard) {
-			// Departure: keep the passage of an unguarded link free of decoration and rock.
-			std::vector<int64_t> &kept = state.route_join_protected_cells;
-			kept.insert(kept.end(), source_chain.stamped_cells.begin(), source_chain.stamped_cells.end());
-			kept.insert(kept.end(), target_chain.stamped_cells.begin(), target_chain.stamped_cells.end());
+		if (state.route_join_departure_enabled) {
+			// Departure: the passage is both endpoint cells plus what the two chains stamped.
+			// A chain whose start cell has a zero 0x1c distance word stamps nothing, so the
+			// endpoint itself is added (m014).
+			std::vector<int64_t> passage_cells = source_chain.stamped_cells;
+			passage_cells.insert(passage_cells.end(), target_chain.stamped_cells.begin(), target_chain.stamped_cells.end());
+			for (const int64_t flat : {
+						cell_index(state.width, state.height, selected.source_x, selected.source_y, selected.level),
+						cell_index(state.width, state.height, selected.neighbor_x, selected.neighbor_y, selected.level) }) {
+				if (flat >= 0 && std::find(passage_cells.begin(), passage_cells.end(), flat) == passage_cells.end()) {
+					passage_cells.push_back(flat);
+				}
+			}
+			// Remember every link passage, guarded or not, so the repair pass places no
+			// mine, gate or reward object on it (object_record_covers_link_passage).
+			std::vector<char> &passage = state.route_join_link_passage_cell;
+			passage.resize(state.generated_cell_buffer.records.size(), 0);
+			for (const int64_t flat : passage_cells) {
+				if (flat < int64_t(passage.size())) {
+					passage[size_t(flat)] = 1;
+				}
+			}
+			if (result.guard_budget_0x4a65a5 <= 0) {
+				// Keep the passage of an unguarded link free of decoration and rock.
+				// A border-guard link counts as unguarded: its 0x4a746b writer gets -1 from
+				// 0x4a5e73 (stale +0xf5c cursor), so H3MapEd never places the border guard.
+				std::vector<int64_t> &kept = state.route_join_protected_cells;
+				kept.insert(kept.end(), passage_cells.begin(), passage_cells.end());
+			}
 		}
 
 		if (result.guard_budget_0x4a65a5 > 0) {
@@ -18996,6 +19055,14 @@ static ConnectionCrossLevelPairResult4a6cf2 connection_cross_level_pair_0x4a6cf2
 						target_reject_reason.c_str());
 			}
 			if (!source_eligible || !target_eligible) {
+				continue;
+			}
+			if (state.route_join_departure_enabled
+					&& (object_record_covers_link_passage(state, selected_descriptor.source_record_copy,
+								x, y, source_candidate.level)
+							|| object_record_covers_link_passage(state, selected_descriptor.source_record_copy,
+									x, y, target_candidate.level))) {
+				// Departure: a gate on a link passage closes it (m079).
 				continue;
 			}
 			result.eligibility_pass_count_0x49aa93 += 1;
@@ -26779,6 +26846,14 @@ static bool source_relation_object_coordinate_eligibility_0x49aa93(
 		}
 		return -1;
 	}();
+	if (state.route_join_departure_enabled
+			&& object_record_covers_link_passage(state, source_record, x, y, level)) {
+		// Departure: a reward object (0x4a93a2, 0x4a901a) on a link passage closes it (m057).
+		if (reject_reason != nullptr) {
+			*reject_reason = "departure_link_passage";
+		}
+		return false;
+	}
 	return source_relation_object_coordinate_eligibility_with_policy_0x49aa93(
 			state,
 			join,
@@ -36053,8 +36128,9 @@ static MineResourceSelectedObjectCallbackResult4a9911 mine_resource_coordinate_b
 		const int32_t scan_start_x =
 				owner.scan_bound_low_x_0x20 + selected.source_record_copy.descriptor_width_0x34 - 1;
 		std::map<std::string, int32_t> debug_eligibility_reject_reasons;
-		const SourceObjectRecord0x4c placement_record =
-				state.route_join_departure_enabled && selected.descriptor_type_0x1c == 53
+		const bool game_shape_placement =
+				state.route_join_departure_enabled && selected.descriptor_type_0x1c == 53;
+		const SourceObjectRecord0x4c placement_record = game_shape_placement
 				? game_mine_shape_placement_record(selected.source_record_copy)
 				: selected.source_record_copy;
 			for (int32_t y = scan_start_y; y < owner.scan_bound_high_y_0x2c; ++y) {
@@ -36138,6 +36214,11 @@ static MineResourceSelectedObjectCallbackResult4a9911 mine_resource_coordinate_b
 							debug_reject_reason,
 							false);
 					debug_eligibility_reject_reasons[debug_reject_reason] += 1;
+					result.coordinate_builder_eligibility_reject_count_0x49aa93 += 1;
+					continue;
+				}
+				if (game_shape_placement
+						&& object_record_covers_link_passage(state, placement_record, x, y, level)) {
 					result.coordinate_builder_eligibility_reject_count_0x49aa93 += 1;
 					continue;
 				}

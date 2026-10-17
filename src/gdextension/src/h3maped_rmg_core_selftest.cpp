@@ -9309,6 +9309,46 @@ int main() {
 			return 1;
 		}
 	}
+	// In the repair pass a link passage includes both endpoint cells, and no mine or
+	// gate may cover it: in AI match m014 (small, land, weak guards) the alchemist's lab
+	// and decoration close the unguarded 4-1 link at its zone-4 endpoint.
+	if (std::getenv("AURELION_RMG_H3MAPED_STRICT") == nullptr) {
+		H3MapedRmgWorkflowConfig m014_config;
+		m014_config.size_class = "small";
+		m014_config.water_mode = "land";
+		m014_config.width = 36;
+		m014_config.height = 36;
+		m014_config.level_count = 1;
+		m014_config.human_count = 1;
+		m014_config.player_count = 2;
+		m014_config.seed = 2056289388U;
+		m014_config.setup_object_0x34_known = true;
+		m014_config.setup_object_0x34 = 1;
+		m014_config.setup_object_0x38_known = true;
+		m014_config.setup_object_0x38 = 1;
+		m014_config.setup_object_0x3c_known = true;
+		m014_config.setup_object_0x3c = 1;
+		m014_config.setup_object_0x40_known = true;
+		m014_config.setup_object_0x40 = 0;
+		m014_config.setup_object_0x44_known = true;
+		m014_config.setup_object_0x44 = aurelion::h3maped_rmg_core::water_mode_code("land");
+		m014_config.setup_object_raw_0x48_known = true;
+		m014_config.setup_object_raw_0x48 = -1;
+		m014_config.setup_object_0x48_known = false;
+		m014_config.setup_object_0x4c_known = true;
+		m014_config.setup_object_0x4c = 2;
+		m014_config.setup_caller_arg_0x0c_known = true;
+		m014_config.setup_caller_arg_0x0c =
+				aurelion::h3maped_rmg_core::DIRECT_ENTRY_OPTIONAL_HANDLER_SENTINEL_0X4602C1;
+		const H3MapedRmgWorkflowResult m014_workflow =
+				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(m014_config);
+		if (!require(m014_workflow.cut_off_town_repair_applied
+					&& m014_workflow.cut_off_towns_before_repair == 1
+					&& m014_workflow.cut_off_towns_after_repair == 0,
+				"Small m014 map did not repair the link passage its mine closes")) {
+			return 1;
+		}
+	}
 
 	for (const auto &case_record : std::array<std::tuple<uint32_t, const char *, int32_t, int32_t, size_t>, 2> {{
 			{ 77U, "normal_water", 1, 609, 365777U },

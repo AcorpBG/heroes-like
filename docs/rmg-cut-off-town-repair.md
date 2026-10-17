@@ -61,9 +61,18 @@ differs from H3MapEd beyond the carved cells.
    - The mine is still stamped with its H3 body, and the rest of `0x4a9911` runs
      unchanged. A smaller candidate set can change which cell a roll picks, so later
      phases see a different map.
-1. **Keep unguarded passages (cause 1).** In `0x4a61bc`, for a link with guard budget
-   0 that is not a border guard, the cells the source and target `0x4a5a23` chains
-   stamp are recorded.
+1. **Keep link passages (cause 1).** In `0x4a61bc`, a link's passage is its two
+   endpoint cells plus the cells the source and target `0x4a5a23` chains stamp. (A
+   chain whose start cell has a zero `0x1c` distance word stamps nothing, so the
+   endpoint is added on its own.)
+   - **Unguarded links:** for guard budget 0 the passage cells are recorded for step 3.
+     A border-guard link counts as unguarded: its `0x4a746b` writer gets -1 from
+     `0x4a5e73` (stale `+0xf5c` cursor), so H3MapEd never places the border guard.
+   - **Every link:** no later object may cover a passage cell with a blocked cell. A
+     mine is tested with the game's shape (step 0), a two-level gate pair (`0x4a6cf2`)
+     with its H3 body on both levels, and reward objects with their H3 bodies: single
+     objects (`0x4a93a2`, `0x4a901a`) and every member of a reward cluster (`0x4aa603`).
+     A rejected cell is skipped like any other ineligible candidate.
 2. **Join each zone (cause 2).** Right after `0x4aab7e`, per zone:
    - **Route points:** the owner coordinate (anchor) and its `0x404` local-vector cells,
      kept if they are free or action cells and not water or rock; plus every town's
@@ -137,11 +146,22 @@ expose them as `metadata.cut_off_town_repair` (`applied`, `towns_cut_off_before`
     - Two of the six-town split maps improve: medium2p/m117 goes from 6 to 4, and
       medium3p/m066 from 6 to 2.
   - No other map changed.
+- **Link passages kept clear** (the same 74 flagged configurations):
+  - The repair is now kept on 70 of them, and 69 end with no town cut off.
+  - 4 maps now repair fully: medium2p/m024 and m079, medium3p/m077 (border-guard links;
+    a mine on m024's passage and a two-level gate on m079's), and small180/m014 (a mine
+    and decoration on the unguarded 4-1 link's zone-4 endpoint). small180/m057 still
+    repairs; it needed the reward-object check, since a dwelling moved onto its 1-4 link
+    endpoint.
+  - One map got worse: medium2p/m117 keeps H3MapEd's map again (6 cut off; before, 6 to
+    4). See Known limits.
+  - No other map changed. The sweep stays 64/72 with and without the repair, same rows.
 - **Strict mode:** with `AURELION_RMG_H3MAPED_STRICT=1`, m043 (seed 2851495868) is
   byte-identical to H3MapEd.
 - **Native selftest:** every H3MapEd parity case runs with the repair off and passes.
-  Added cases require the repair to join a cut-off town on XL seed 76, on m095, and on
-  m139, where it needs the mine placement step.
+  Added cases require the repair to join a cut-off town on XL seed 76, on m095, on
+  m139, where it needs the mine placement step, and on m014, where it needs the link
+  endpoint cells.
 - **Core test:** `random_map_small_2p_launch_report` generates seed 1727041229 (Small,
   land, weak, 1+1 players). It requires the repair to have run and to leave no town cut
   off. Every other seed it generates must also end with no town cut off.
@@ -187,10 +207,10 @@ yet player 3's start town at (60,24,0) could not be left on foot.
   - In H3 those tiles are free, because the H3 body is only the mine's bottom row.
   - Example: m139, crystal cavern at (21,11) below the door at (20,9).
   - The repair pass now places those mines elsewhere, and all 8 repair.
-- **small180/m014** still keeps H3MapEd's map. On H3MapEd's map, two mines' top rows
-  close both exits of a 107-tile pocket. Why the repair pass still leaves a town cut
-  off has not been traced.
-- **Cut off without mines.** medium2p/m024 and m079, and medium3p/m077, are cut off
-  under the H3 body check too, and the repair does not help them. This has not been
-  traced map by map.
+- **Six-town split maps (Newcomers).** medium2p/m117 (seed 154192373) and medium3p/m066
+  leave whole islands of zones whose links never join the rest, as on the Large
+  selftest map. On m117 the earlier 6-to-4 result came from a gap in the decoration
+  between zones 5 and 7, which have no link. After this change the decoration closes it
+  and the map keeps H3MapEd's six cut-off towns. The islands need an owner decision
+  (the template's link data, or a missing gate link).
 - **Cost.** A repaired map is generated twice, and an unhelped one three times.
