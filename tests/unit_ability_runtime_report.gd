@@ -209,9 +209,10 @@ func _probe_hookline(unit_id: String) -> Dictionary:
 	var authored_hp := int(attacker.get("unit_hp", 0))
 	var authored_count := int(attacker.get("base_count", 0))
 	var authored_total_health := int(attacker.get("total_health", 0))
+	var content_hp := int(ContentService.get_unit(unit_id).get("hp", 0))
 	var old_hp_control := attacker.duplicate(true)
-	old_hp_control["unit_hp"] = 21
-	old_hp_control["total_health"] = authored_count * 21
+	old_hp_control["unit_hp"] = content_hp + 1
+	old_hp_control["total_health"] = authored_count * (content_hp + 1)
 	var health_checkpoint := attacker.duplicate(true)
 	health_checkpoint["total_health"] = authored_total_health - 7
 	var health_checkpoint_battle := _battle_for_stacks([health_checkpoint, _defender_stack("enemy", 0)])
@@ -225,12 +226,13 @@ func _probe_hookline(unit_id: String) -> Dictionary:
 		String(health_checkpoint.get("battle_id", ""))
 	)
 	var health_contract_exact := (
-		authored_hp == 20
-		and authored_total_health == authored_count * 20
-		and int(old_hp_control.get("unit_hp", 0)) == 21
-		and int(old_hp_control.get("total_health", 0)) == authored_count * 21
+		content_hp > 0
+		and authored_hp == content_hp
+		and authored_total_health == authored_count * content_hp
+		and int(old_hp_control.get("unit_hp", 0)) == content_hp + 1
+		and int(old_hp_control.get("total_health", 0)) == authored_count * (content_hp + 1)
 		and health_restored_session.battle == health_checkpoint_battle
-		and int(health_restored.get("unit_hp", 0)) == 20
+		and int(health_restored.get("unit_hp", 0)) == content_hp
 		and int(health_restored.get("base_count", 0)) == authored_count
 		and int(health_restored.get("total_health", 0)) == authored_total_health - 7
 	)

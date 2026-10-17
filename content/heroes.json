@@ -1494,7 +1494,7 @@
       "roster_state": "live",
       "roster_summary": "Attrition contract marshal",
       "identity_summary": "Improves armored units and morale under attrition.",
-      "base_movement": 10,
+      "base_movement": 11,
       "recruit_cost": {
         "gold": 1250
       },
@@ -1531,7 +1531,7 @@
       "roster_state": "live",
       "roster_summary": "Artillery setup captain",
       "identity_summary": "Improves artillery setup and town assault pressure.",
-      "base_movement": 10,
+      "base_movement": 11,
       "recruit_cost": {
         "gold": 1250
       },
@@ -1568,7 +1568,7 @@
       "roster_state": "live",
       "roster_summary": "Mine-road enforcer",
       "identity_summary": "Improves movement between owned mines and towns.",
-      "base_movement": 10,
+      "base_movement": 12,
       "recruit_cost": {
         "gold": 1250
       },
@@ -1605,7 +1605,7 @@
       "roster_state": "live",
       "roster_summary": "Ore-site defense marshal",
       "identity_summary": "Improves ore-site defense and machine replacement.",
-      "base_movement": 10,
+      "base_movement": 11,
       "recruit_cost": {
         "gold": 1250
       },
@@ -1642,7 +1642,7 @@
       "roster_state": "live",
       "roster_summary": "Bodyguard armor foreman",
       "identity_summary": "Improves bodyguard rules and frontline armor.",
-      "base_movement": 10,
+      "base_movement": 11,
       "recruit_cost": {
         "gold": 1250
       },
@@ -1864,7 +1864,7 @@
       "roster_state": "live",
       "roster_summary": "Isolated-target admiral",
       "identity_summary": "Improves isolated-target damage and retreat control.",
-      "base_movement": 12,
+      "base_movement": 11,
       "recruit_cost": {
         "gold": 1250
       },
@@ -1901,7 +1901,7 @@
       "roster_state": "live",
       "roster_summary": "Displacement harpoon captain",
       "identity_summary": "Improves pulls, formation breaks, and anti-large tactics.",
-      "base_movement": 12,
+      "base_movement": 11,
       "recruit_cost": {
         "gold": 1250
       },
@@ -1975,7 +1975,7 @@
       "roster_state": "live",
       "roster_summary": "Scouting disruption thief",
       "identity_summary": "Improves scouting raids and enemy movement disruption.",
-      "base_movement": 12,
+      "base_movement": 11,
       "recruit_cost": {
         "gold": 1250
       },
@@ -2012,7 +2012,7 @@
       "roster_state": "live",
       "roster_summary": "Fragile-stack survival warden",
       "identity_summary": "Improves fragile-stack survival and controlled withdrawals.",
-      "base_movement": 12,
+      "base_movement": 11,
       "recruit_cost": {
         "gold": 1250
       },
@@ -2049,7 +2049,7 @@
       "roster_state": "live",
       "roster_summary": "Fog-lane prophet",
       "identity_summary": "Creates fog lanes and improves vision manipulation.",
-      "base_movement": 11,
+      "base_movement": 10,
       "recruit_cost": {
         "gold": 1250
       },
@@ -2086,7 +2086,7 @@
       "roster_state": "live",
       "roster_summary": "Salvage spell scribe",
       "identity_summary": "Turns kills, artifacts, and salvage into spell tempo.",
-      "base_movement": 11,
+      "base_movement": 10,
       "recruit_cost": {
         "gold": 1250
       },
@@ -2123,7 +2123,7 @@
       "roster_state": "live",
       "roster_summary": "Displacement navigator",
       "identity_summary": "Improves displacement spells and decoy effects.",
-      "base_movement": 11,
+      "base_movement": 10,
       "recruit_cost": {
         "gold": 1250
       },
@@ -2160,7 +2160,7 @@
       "roster_state": "live",
       "roster_summary": "Retaliation and morale hexer",
       "identity_summary": "Weakens enemy retaliation and morale-style momentum.",
-      "base_movement": 11,
+      "base_movement": 10,
       "recruit_cost": {
         "gold": 1250
       },
@@ -2318,7 +2318,7 @@
       "roster_state": "live",
       "roster_summary": "Gaugeplate bailiff muster captain",
       "identity_summary": "Balances every levy against the black bell before committing a reinforced company.",
-      "base_movement": 10,
+      "base_movement": 11,
       "recruit_cost": {"gold": 1300},
       "starting_spell_ids": ["spell_furnace_redline_overdrive", "spell_heat_rite", "spell_pressure_clause"],
       "starting_specialties": ["mustercaptain"],
@@ -2339,7 +2339,7 @@
       "roster_state": "live",
       "roster_summary": "Tidehook deckhand muster captain",
       "identity_summary": "Musters forgotten deck crews by bell memory and keeps their retreat lanes open.",
-      "base_movement": 12,
+      "base_movement": 11,
       "recruit_cost": {"gold": 1300},
       "starting_spell_ids": ["spell_veil_drowned_bell_verdict", "spell_fogwake_step", "spell_bulwark_litany"],
       "starting_specialties": ["mustercaptain"],

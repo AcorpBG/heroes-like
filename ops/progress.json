@@ -115643,6 +115643,18 @@
       "notes": "route_join_departure_join_zones marks each type-53 record in object_records_0xec4_ecc as occupying x-2..x, y-1..y minus the visit tile (x-1,y), per CommonMineRules.gd. 74 flagged AI-batch configs: repair kept on 56 (was 50), 55 clean (was 48); now repaired small180/m016, m060, m138, 2026-10-16/m115, m118, small2p/m091; medium3p/m082 2->0 (was 2->1); none worse. Blocker for 9 still-sealed maps: 0x4a9d6a places a mine at (town.x-1, town.y+2) whose game top row covers the door's only exits (m014: two mines close a 107-tile pocket); needs mine placement change in the repair pass or an owner decision on the mine shape. medium2p/m024, m079, medium3p/m077, m080 are cut off without mines. Sweep 64/72 repair on and strict (same rows). Selftest and core_suite 16/16 pass on Windows and Linux.",
       "updatedAt": "2026-10-17T23:59:00Z",
       "validatedAt": "2026-10-17T23:59:00Z"
+    },
+    {
+      "id": "balance-phase-round-1-20261017",
+      "title": "Balance round 1: every faction closer in each phase of the game",
+      "status": "completed",
+      "classification": "balance",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/common-town-building-template.md"
+      ],
+      "notes": "Owner decision 2026-10-17 from 120 land AI-against-AI games on medium maps (60 2P, 60 3P) after the town-planner fix: wins against a fair share by game length (to day 60 / 61-100 / past 100) were Embercourt 1.70/1.43/0.21, Veilmourn 1.44/1.38/1.80, Sunvault 0.94/1.25/1.14, Thornwake 0.44/0.92/0.86, Brasshollow 0.58/0.57/0.92, Mireclaw 0.70/0.51/1.00; two-level games are the long ones (19 of 24 past day 100). Embercourt: River Guard brace retaliation 1.3->1.15 and initiative -2->-1 (both forms); Fordhook Cadets upgrade's Chainford Cast strikes at 70% (was 100%); Sluicefire Lindworms hp 50->54 atk 13->14 dmg 9-14->10-15, upgrade hp 58->62 atk 14->15 dmg 9-15->10-16; Charter Colossus hp 102->112 dmg 16-26->18-28, upgrade hp 118->130 dmg 16-27->18-30. Veilmourn heroes base movement average 11.5->10.7 (its 12s to 11 except Cela Mist-Corsair, its four spellwrights 11->10): it won through map control with the fastest heroes while its creatures fought at average. Brasshollow heroes 10.0->10.6 (Kuld Varn 12; Marka, Oren, Selka, Daxis, Kestra 11): it fought well but lost the race for the map. Mireclaw fought 15% under its estimated power in every phase; its tier 1-4 upgrades that carried one ability gain a second (Blackbranch Knifeshade bloodrush, Reedsnare upgrade brace that roots, Bog Brute upgrade brace that staggers, Mudglass Slingers and Mireglass Reedcasters upgrades volley against snared/rooted/harried prey, Ferrychain Lashers upgrade backstab against rooted/snared). Thornwake started slowest (0.78-0.80 in week 1-2): growth Seedcutters 10->12, Pollenhook Whistlers 9->10, Thornwhip Carriers 6->7, Bramblekite Needlers 9->10 (both forms, Five-Bough veteran grove too). Sunvault unchanged. Content change only; not measured yet. Validation: tools/core_suite.py."
     }
   ],
   "project": "heroes-like",
