@@ -920,6 +920,9 @@ static func build_random_map_player_config(
 		# weak (-1). Without a chosen strength, catalog-auto setups use normal
 		# and explicit historical size profiles retain their prior weak setting.
 		"monster_strength": normalized_monster_strength,
+		# True when the caller chose the strength; the public launch rebuild keeps
+		# a chosen strength whatever the template selection mode.
+		"monster_strength_selected": random_map_monster_strength_id(monster_strength) != "",
 		"seed_identity": seed_record,
 		"size": {
 			"preset": "player_facing_skirmish_setup",
@@ -2637,11 +2640,12 @@ static func _random_map_public_h3maped_launch_config(input_config: Dictionary) -
 	var source_seed := String(input_config.get("seed", ""))
 	if seed_source != "auto_on_launch":
 		source_seed = String(input_config.get("seed_input", seed_identity.get("input_seed", source_seed)))
-	# A catalog-auto setup carries the player's monster strength across the
-	# rebuild. Other configs keep the catalog-auto default, as before.
+	# A catalog-auto setup, or any setup whose caller chose a strength, carries
+	# the monster strength across the rebuild. Other size-default configs hold
+	# only their historical weak fallback and keep the catalog-auto default.
 	var template_selection: Dictionary = input_config.get("template_selection", {}) if input_config.get("template_selection", {}) is Dictionary else {}
 	var monster_strength := ""
-	if String(template_selection.get("mode", "")) == RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO:
+	if String(template_selection.get("mode", "")) == RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO or bool(input_config.get("monster_strength_selected", false)):
 		monster_strength = String(input_config.get("monster_strength", ""))
 	var config := build_random_map_player_config(
 		source_seed,

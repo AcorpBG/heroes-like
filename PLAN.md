@@ -123,6 +123,8 @@ Rules:
 - m019 and m010 now equal the H3MapEd references in tiles and every object. The 72-reference sweep stays 60/72 exact, no reference got worse, and XL Monk's Retreat 1778117359 went from 1,121 differing cells to 0.
 - m010 (Dragons, 386602547) splits the same way in H3MapEd: tree obstacles cover two links' passages. Whether to change that is an owner decision.
 
+`rmg-launch-keeps-guard-strength-20261017` (completed, bug fix): the public launch rebuilds every generated config as catalog-auto. It kept the monster strength only for catalog-auto configs, so size-default callers lost it. The AI match runner is one: its weak and strong games ran on normal-strength maps. A config now records whether the caller chose a strength (`monster_strength_selected`), and the launch keeps a chosen strength on every mode. Unchosen size-default configs still get the default.
+
 ### Raid director removal
 
 `ai-raid-director-removal-20261007` (completed, follow-up of `ai-plays-by-player-rules-20261007`): the raid director nothing live called is removed from `EnemyAdventureRules`/`EnemyTurnRules` with its unit-level tests; the save migration, the AI site seizure and the multi-level path surfaces the RMG validation tools use stay. The headless harness raid cases (town and site defense, regroup, pressure coverage, objective targeting) are rewritten for heroes, and a computer player's own hero in a town's doorway no longer blocks hiring there. Open owner decision: the now inert Border Warden pillage resistance and `DifficultyRules` enemy pressure and raid knobs. See `docs/ai-plays-by-player-rules.md`.

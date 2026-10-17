@@ -7,6 +7,8 @@ func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	if not _assert_launch_keeps_chosen_monster_strength():
+		return
 	var retry_cases := _assert_two_player_retry_cases()
 	if retry_cases.is_empty():
 		return
@@ -43,6 +45,27 @@ func _run() -> void:
 		"retry_cases": retry_cases,
 	})])
 	get_tree().quit(0)
+
+# The public launch rebuilds every config as catalog-auto. A strength the caller
+# chose survives that on every template selection mode; an unchosen one gets the
+# default.
+func _assert_launch_keeps_chosen_monster_strength() -> bool:
+	var modes := [
+		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT,
+		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO,
+	]
+	for mode in modes:
+		for size_class in ["homm3_small", "homm3_large"]:
+			for strength in ["weak", "strong", ""]:
+				var config := ScenarioSelectRulesScript.build_random_map_player_config(
+					"launch-strength-10184", "", "", 2, "land", false, size_class, mode, "", "", strength
+				)
+				var launch: Dictionary = ScenarioSelectRulesScript._random_map_public_h3maped_launch_config(config)
+				var expected: String = strength if strength != "" else ScenarioSelectRulesScript.RANDOM_MAP_DEFAULT_MONSTER_STRENGTH
+				if String(launch.get("monster_strength", "")) != expected:
+					_fail("Launch config for %s %s chose '%s' but launches '%s'." % [mode, size_class, strength, String(launch.get("monster_strength", ""))])
+					return false
+	return true
 
 func _assert_two_player_retry_cases() -> Array:
 	var seeds := [

@@ -115464,6 +115464,19 @@
       "notes": "From the 2026-10-16 AI batches: some Large maps split into walkable areas no route connects. m019 (Dwarven Tunnels, H3MapEd seed 1928029988) was native drift: three deviations in the extra-town path, each proved with winedbg private state and the Windows h3trace rand log. (1) 0x4a901a samples owner/score at the descriptor source cell (+0x2c/+0x30) and applies the 3x3 owner window 0x4a9174..0x4a9232. (2) Zone record +0x40 is the template's same_town_type flag, so 0x49b3c1 draws no rand when set. (3) Only 0x4a93a2 writes source pair +0x30..+0x3c; the weighted 0x4a901a commit does not. m019 and m010 now equal the H3MapEd references in tiles and all objects (2940, 2855); m019's rand stream equals Windows H3MapEd for all 122,550 draws. 72-reference sweep: 60/72 exact, no regressions; XL Monk's Retreat 1778117359 1121 cells -> 0. Validation: h3maped_rmg_core_selftest passes on Windows and Linux; tools/core_suite.py 16/16 on Windows and on Linux (there validate_repo first failed in a fresh clone only because the untracked maps/ folder did not exist yet, and passed once it did). m010 (Dragons, 386602547) is split in H3MapEd too (tree obstacles over two link passages): owner decision. Follow-ups: XL 1778117359 town subtypes, header main-town/player-slot and def-table drift, launch config dropping guard strength.",
       "updatedAt": "2026-10-17T12:00:00Z",
       "validatedAt": "2026-10-17T12:00:00Z"
+    },
+    {
+      "id": "rmg-launch-keeps-guard-strength-20261017",
+      "title": "Generated-map launch keeps the chosen guard strength on every template selection mode",
+      "status": "completed",
+      "classification": "bug_fix",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md"
+      ],
+      "notes": "Found while tracing split large maps (native-rmg-second-town-placement-20261017). _random_map_public_h3maped_launch_config rebuilds every config as catalog-auto and kept monster_strength only when the input was catalog-auto, so size-default callers such as tests/ai_versus_ai_match_report.gd launched weak and strong maps as normal. Probe on seed strength-probe-10184 (Small, size-default): before, weak/normal/strong all launched normal with 23 guards; after, they launch weak/normal/strong with 17/23/24 guards. build_random_map_player_config now records monster_strength_selected, and the launch keeps a chosen strength on every mode; unchosen size-default configs still get the default. AI batch results recorded as weak or strong before this fix were played at normal. Validation: new case in tests/random_map_small_2p_launch_report.gd (size-default and catalog-auto, Small and Large, weak/strong/unchosen) and tools/core_suite.py 16/16 on Windows.",
+      "updatedAt": "2026-10-17T14:00:00Z",
+      "validatedAt": "2026-10-17T14:00:00Z"
     }
   ],
   "project": "heroes-like",

@@ -96,5 +96,6 @@ route fields unset; the direct `0x4a93a2` cases still require them.
 - The final H3M header differs from H3MapEd in main-town designation and player slot
   6 (m010), and the definition table differs in order and count. Tiles and objects
   are unaffected.
-- `tests/ai_versus_ai_match_report.gd` and the size-default launch config drop the
-  guard-strength setting (weak runs as normal).
+- Fixed separately (`rmg-launch-keeps-guard-strength-20261017`): the size-default launch
+  path dropped the guard strength, so the AI match runner's weak and strong maps ran
+  as normal.
