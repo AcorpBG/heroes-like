@@ -115615,6 +115615,20 @@
       "notes": "m024 (2962727902): H3MapEd private grids dumped at every 0x4ac552 marker matched native through 0x4ac7c4; in the 0x4aab7e loop owner 7's two type-83 0x4ad947 projections took (23,39)/(21,41) instead of (36,39)/(26,42). Native exempted that member from 0x49a6f9's existing-bit26 rejection; 0x4aa603 pushes a constant 1 (0x4aa646) and 0x4aaabd is its only caller. Exemption removed. m024 equals Windows H3MapEd (0 cells, 1268/1268 objects, RNG equal after 0x49eb8d/0x4ab52a/0x4ac4ae); seed 10 exact; sweep 64/72 same rows. Untraced: +0x2c=4 at (63,4) after 0x4ac771 (native 0), not in the final map. Selftest passes on Windows and Linux; core_suite 16/16 on Windows and Linux.",
       "updatedAt": "2026-10-17T23:00:00Z",
       "validatedAt": "2026-10-17T23:00:00Z"
+    },
+    {
+      "id": "native-rmg-cut-off-check-mine-shape-20261017",
+      "title": "Cut-off town check blocks the game's three-by-two mine shape",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "native_rmg_departure",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/rmg-cut-off-town-repair.md"
+      ],
+      "notes": "m095 (medium 3P, map seed 4228448339-p3 = native 684022622) sealed player 3's start town at (60,24,0) but reported 0 cut off: the game blocks each mine as 3x2 around its visit tile (CommonMineRules.gd) in place of the H3 body; the check used H3 bodies, and two mines' upper rows closed the pocket's exits to the (69,2) gate. Check now uses the game shape: m095 before 1, after 0, repaired map walkable to all 8 towns in the game. 708 AI-batch configs: 74 flagged (57 also under the old check), repair kept on 50, 48 clean; 19 mine-sealed maps keep H3MapEd's map (route joins know only the H3 mine body). Sweep 64/72 repair on and strict. Selftest (new m095 case) and core_suite 16/16 pass on Windows and Linux.",
+      "updatedAt": "2026-10-17T23:59:00Z",
+      "validatedAt": "2026-10-17T23:59:00Z"
     }
   ],
   "project": "heroes-like",

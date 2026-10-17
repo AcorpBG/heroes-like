@@ -73,8 +73,9 @@ The map then goes through the normal remaining phases and writeout.
 
 **Town check** (`cut_off_town_count_departure`), on the runtime projection: rock and
 object bodies block, water is walkable, action cells are open, and monoliths and
-two-level gates link their peers. It returns the number of towns outside the area that
-holds the most towns.
+two-level gates link their peers. A mine (type 53) blocks the game's three-by-two shape
+around its visit tile (`scripts/core/CommonMineRules.gd`) in place of its H3 body. It
+returns the number of towns outside the area that holds the most towns.
 
 **Reported state:** `H3MapedRmgWorkflowResult` carries `cut_off_town_repair_applied`,
 `cut_off_towns_before_repair` and `cut_off_towns_after_repair`. Generated map packages
@@ -85,7 +86,8 @@ expose them as `metadata.cut_off_town_repair` (`applied`, `towns_cut_off_before`
 
 - **72-reference sweep** (`windows_h3maped_parity_basis_20261009/tools/semsweep.py`):
   64 of 72 exact before and after, the same rows. No reference map has a town cut off
-  on land, so none of them is regenerated.
+  on land, so none of them is regenerated. This still holds with the mine shape, with
+  the repair on and with `AURELION_RMG_H3MAPED_STRICT=1`.
 - **AI-batch configurations** (344 parse; 4 do not parse in either mode). The batch
   script counts towns as the native check does, except that it links every
   subterranean gate to every other one, so it is more lenient on two-level maps.
@@ -93,13 +95,39 @@ expose them as `metadata.cut_off_town_repair` (`applied`, `towns_cut_off_before`
   - Exactly those 19 maps change. The other 325 are byte-identical to H3MapEd.
   - Each repaired map is byte-identical to the scratch prototype that was measured
     before implementation.
+- **With the mine shape** (708 configurations: the 344 above and the three 120-game
+  batches of 2026-10-17, all generated with the workflow's own check):
+  - 74 have a town cut off on H3MapEd's map. 57 of them were cut off under the old
+    check too; 17 only because of mine shapes.
+  - The repair is kept on 50 of them, and 48 end with no town cut off.
+  - Of the first 344, 32 are now flagged and 20 repaired. 18 of the old 19 still
+    repair; small180/m060 keeps H3MapEd's map.
+  - Of the 17 maps flagged only for mines, 3 are repaired (m095, small60/m049,
+    2026-10-16/m101). The other 14 keep H3MapEd's map.
 - **Strict mode:** with `AURELION_RMG_H3MAPED_STRICT=1`, m043 (seed 2851495868) is
   byte-identical to H3MapEd.
 - **Native selftest:** every H3MapEd parity case runs with the repair off and passes.
-  One added case requires the repair to join a cut-off town on XL seed 76.
+  Added cases require the repair to join a cut-off town on XL seed 76 and on m095.
 - **Core test:** `random_map_small_2p_launch_report` generates seed 1727041229 (Small,
   land, weak, 1+1 players). It requires the repair to have run and to leave no town cut
   off. Every other seed it generates must also end with no town cut off.
+
+## m095: mines seal a start town
+
+AI match m095 (2026-10-17 medium 3-player batch; map seed `4228448339-p3`, native seed
+684022622; medium, two levels, normal water, strong guards) reported no town cut off,
+yet player 3's start town at (60,24,0) could not be left on foot.
+
+- **Cause:** the game draws every mine as three by two tiles with the visit tile at the
+  bottom middle and blocks that shape in place of the H3 body. So it also blocks the
+  row above the H3 body, and leaves open any H3 body cell outside the shape (the
+  sawmill's fourth column). Two mines matter here: the crystal cavern at (64,12)
+  blocks (62,11) and (63,11), and the sawmill at (70,20) blocks (68,19). Those were the
+  pocket's only exits towards the subterranean gate at (69,2,0). The check used the H3
+  bodies, so it walked through them.
+- **Fix:** the check blocks the same three-by-two shape in place of the H3 body. m095
+  now reports one town cut off, and the repair joins it (`towns_cut_off_before` 1,
+  `towns_cut_off_after` 0). The repaired map keeps the eight towns where they were.
 
 ## Known limits
 
@@ -117,4 +145,9 @@ expose them as `metadata.cut_off_town_repair` (`applied`, `towns_cut_off_before`
   one, and keeps the other in zones 15-19, which H3MapEd's links never join to the rest.
   Whether the template's link data or a missing gate link is the cause has not been
   traced.
+- **Mine-sealed towns.** The route joins work on the generator grid, which knows only a
+  mine's H3 body, not the row above it that the game also blocks. So the repair can
+  leave a town sealed by a mine. 14 of the maps flagged only for mines keep H3MapEd's
+  map, and so do 5 maps that were cut off under the old check too: small180/m060,
+  medium2p/m024 and m079, medium3p/m077 and m080. This has not been traced map by map.
 - **Cost.** A repaired map is generated twice, and an unhelped one three times.
