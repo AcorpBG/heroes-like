@@ -143,6 +143,43 @@ not change, such as same-type zones like m019, are unchanged.
 - `h3maped_rmg_core_selftest` passes on Windows and Linux.
 - `tools/core_suite.py`: 16/16 on Windows and on Linux.
 
+## Follow-up: the two-level "reward drift" was a parser truncation (2026-10-17)
+
+Slice: `rmg-h3m-prison-body-parse-20261017`.
+
+Three two-level references matched in tiles and object count but not in the object
+multiset: L normal water 8MM6 1778117211, L no water 6LM10 1778117171 and M normal
+water 8MM0b 1778117057. For the Medium one, native seemed to have artifact 105 and a
+Pixie guard at (8,43,L1) where H3MapEd has Seer's Huts at (34,61) and (68,59).
+
+**No native drift.** The Windows H3MapEd run (`h3trace --water 2`) reproduces the
+stored reference exactly. H3MapEd makes 11 `0x49c0a6` -> `0x4ad947` -> `0x4ad7f7`
+projections, all inside the ninth `0x4aab7e` call. Native's payload
+(`AURELION_RMG_TRACE_FINAL_OBJECT_PAYLOAD`) has the same 11 huts. Each hut keeps
+its source artifact and guard on level 1, keyed by the source key with bit 31 set.
+Native and H3MapEd write the same objects. Only the order differs: H3MapEd writes
+the huts as one block (H3M indices 1284-1294), and native writes each hut after
+its artifact.
+
+**Comparison defect.** `tools/rmg_fast_audit.py` gave Prison records (type 62) only
+the 12-byte header. Its scan for the next object then found a false start, `(0,0,0)`
+plus a valid template index, inside the hero body's 16 trailing zero bytes. Each
+Prison added one phantom record, and the declared count then cut that many real
+objects off the end. Both maps lose their last objects this way, so a different
+write order looks like different objects (Medium: 4 Prisons, 4 objects cut).
+
+**Fix.** Hero-shaped records (34 hero, 62 prison, 70 random hero) in SoD files now
+get their real size from the flag-gated hero body. The fields are identifier, owner,
+type, then name, experience, portrait, skills, garrison, formation, artifacts,
+patrol, biography, sex, spells and primary skills, then 16 reserved bytes. RMG
+prisons are 50 bytes with experience and 46 bytes without.
+
+**Validation.** All three references are exact: equal tiles and all 1,862, 4,007 and
+4,050 objects. 72-reference sweep: 64/72 exact (was 61); only these three rows changed
+(`traces/semsweep72_prison_body.json`).
+`tests/rmg_fast_audit_h3m_anchor_regression.py` passes. Native code and binaries are
+unchanged.
+
 ## Open follow-ups (not fixed here)
 
 - The final H3M header differs from H3MapEd in main-town designation and player slot

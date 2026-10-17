@@ -51,6 +51,9 @@ H3M_OBJECT_INSTANCE_MINIMUM_BYTES_BY_TYPE = {
     98: 48,
     113: 16,
 }
+# Hero, prison and random hero share the hero body (variable size).
+H3M_HERO_SHAPED_TYPE_IDS = {34, 62, 70}
+H3M_FORMAT_SOD = 0x1C
 OBJECT_INSTANCE_TAIL_PARSE_MISSING_COUNT_TOLERANCE = 32
 OBJECT_INSTANCE_TAIL_PARSE_BYTE_TOLERANCE = 64
 H3M_BLOCKING_TERRAIN_TYPE_IDS = {8, 9}
@@ -178,9 +181,52 @@ def is_h3m_object_instance_start(data: bytes, pos: int, template_count: int, wid
     return all(data[pos + 7 + index] == 0 for index in range(5))
 
 
-def h3m_object_instance_minimum_bytes(record: dict[str, Any]) -> int:
+def h3m_sod_hero_instance_bytes(data: bytes, pos: int) -> int:
+    """Total size of an SoD hero-shaped record (hero, prison, random hero).
+
+    The body has optional blocks behind flag bytes, so its 16 trailing zero
+    bytes can look like an object start to the guarded scan.
+    """
+    cursor = pos + H3M_OBJECT_INSTANCE_BASE_BYTES + 4 + 1 + 1  # identifier, owner, hero type
+
+    def flag() -> int:
+        nonlocal cursor
+        value = data[cursor] if cursor < len(data) else 0
+        cursor += 1
+        return value
+
+    if flag():  # name
+        cursor += 4 + u32(data, cursor)
+    if flag():  # experience
+        cursor += 4
+    if flag():  # portrait
+        cursor += 1
+    if flag():  # secondary skills
+        cursor += 4 + 2 * u32(data, cursor)
+    if flag():  # garrison: 7 slots of creature u16 and count u16
+        cursor += 28
+    cursor += 1  # formation
+    if flag():  # artifacts: 19 equipped u16, backpack u16 count and u16 ids
+        cursor += 19 * 2
+        backpack = int.from_bytes(data[cursor:cursor + 2], "little") if cursor + 2 <= len(data) else 0
+        cursor += 2 + 2 * backpack
+    cursor += 1  # patrol radius
+    if flag():  # biography
+        cursor += 4 + u32(data, cursor)
+    cursor += 1  # sex
+    if flag():  # spells
+        cursor += 9
+    if flag():  # primary skills
+        cursor += 4
+    return cursor + 16 - pos
+
+
+def h3m_object_instance_minimum_bytes(record: dict[str, Any], data: bytes | None = None, pos: int = 0) -> int:
+    type_id = int(record.get("type_id", -1))
+    if type_id in H3M_HERO_SHAPED_TYPE_IDS and data is not None and u32(data, 0) == H3M_FORMAT_SOD:
+        return h3m_sod_hero_instance_bytes(data, pos)
     return H3M_OBJECT_INSTANCE_MINIMUM_BYTES_BY_TYPE.get(
-        int(record.get("type_id", -1)),
+        type_id,
         H3M_OBJECT_INSTANCE_BASE_BYTES,
     )
 
@@ -198,7 +244,7 @@ def parse_h3m_object_instances(data: bytes, offset: int, templates: list[dict[st
         record = dict(templates[template_index])
         record.update({"object_index": index, "x": data[pos], "y": data[pos + 1], "level": data[pos + 2]})
         records.append(record)
-        next_min = pos + h3m_object_instance_minimum_bytes(record)
+        next_min = pos + h3m_object_instance_minimum_bytes(record, data, pos)
         if index == count - 1:
             pos = next_min
             break

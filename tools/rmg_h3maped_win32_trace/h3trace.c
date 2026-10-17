@@ -6,7 +6,7 @@
  * the main window exists, logs every CRT rand() (0x4e727b, inside rand after
  * _getptd; state = ptd+0x14) and srand() (0x4e726e) call with the thread's
  * holdrand and caller stack, logs optional marker addresses, drives File > New
- * and the New Map dialog through window messages (SoD, no teams, water None),
+ * and the New Map dialog through window messages (SoD, no teams, water None unless --water),
  * saves through Save As and terminates the editor (no registry write-back).
  * Never point it at the HoMM3 install itself.
  *
@@ -35,6 +35,7 @@
  *   --set ADDR:REG:OFF:VALUE       write a dword at REG+OFF when ADDR is hit
  *   --detach ADDR:HIT              at that marker hit restore all breakpoints and detach (editor runs on)
  *   --size 36|72|108|144  --levels 1|2
+ *   --water 0..3                   water radio: 0 random, 1 none (default), 2 normal, 3 islands
  */
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -69,7 +70,7 @@ static DWORD detachAddr = 0, detachHit = 0; static int detachNow = 0; static HAN
 static DWORD doneAddr = 0x4ae082; static HANDLE evGenDone;
 typedef struct { DWORD addr, size; int pat; } Fill; static Fill fills[8]; static int nfill;
 typedef struct { DWORD addr, hit; int k; } Skip; static Skip skips[16]; static int nskip; static DWORD ptdMain;
-static int optRand = 1, optSize = 36, optLevels = 1, optHc = 1, optCo = 1, optMon = 2;
+static int optRand = 1, optSize = 36, optLevels = 1, optHc = 1, optCo = 1, optMon = 2, optWater = 1;
 static char savePath[MAX_PATH];
 
 static void logln(const char *fmt, ...) {
@@ -346,7 +347,7 @@ static DWORD WINAPI ui_thread(LPVOID unused) {
 		post_click(GetDlgItem(dlg, 1822)); Sleep(800);
 		combo_pick(dlg, 1852, optHc);
 		combo_pick(dlg, 1853, optCo + 1);
-		post_click(GetDlgItem(dlg, 1856));
+		{ static const int wids[] = { 1863, 1856, 1859, 1858 }; post_click(GetDlgItem(dlg, wids[optWater])); }
 		post_click(GetDlgItem(dlg, optMon == 1 ? 1860 : optMon == 2 ? 1861 : optMon == 3 ? 1862 : 1864));
 		Sleep(400);
 		fprintf(stderr, "ui: after clicks two-level=%d random=%d hc=%d co=%d t=%d t=%d water=%d mon=%d\n", (int)smt(db, BM_GETCHECK, 0, 0), (int)smt(GetDlgItem(dlg, 1822), BM_GETCHECK, 0, 0),
@@ -367,7 +368,8 @@ static DWORD WINAPI ui_thread(LPVOID unused) {
 	set_combo(dlg, 1853, optCo + 1);
 	set_combo(dlg, 1854, 1);
 	set_combo(dlg, 1855, 1);
-	set_radio(dlg, water, 4, 1856);
+	set_radio(dlg, water, 4, water[optWater]);
+	{ char wt[64] = ""; GetWindowTextA(GetDlgItem(dlg, water[optWater]), wt, sizeof wt); fprintf(stderr, "ui: water %d \"%s\"\n", optWater, wt); }
 	set_radio(dlg, mon, 4, mon[optMon]);
 	Sleep(300);
 	fprintf(stderr, "ui: combos hc=%d co=%d t=%d t=%d\n", (int)smt(GetDlgItem(dlg, 1852), CB_GETCURSEL, 0, 0),
@@ -474,6 +476,7 @@ int main(int argc, char **argv) {
 		else if (!strcmp(argv[i], "--repeat") && i + 1 < argc) optRepeat = atoi(argv[++i]);
 		else if (!strcmp(argv[i], "--size") && i + 1 < argc) optSize = atoi(argv[++i]);
 		else if (!strcmp(argv[i], "--levels") && i + 1 < argc) optLevels = atoi(argv[++i]);
+		else if (!strcmp(argv[i], "--water") && i + 1 < argc) { optWater = atoi(argv[++i]); if (optWater < 0 || optWater > 3) optWater = 1; }
 		else if (!strcmp(argv[i], "--poke") && i + 1 < argc) {
 			char *s = argv[++i]; char *colon = strchr(s, ':');
 			if (colon && npoke < 32) { *colon = 0; pokes[npoke][0] = parse_hex(s); pokes[npoke][1] = parse_hex(colon + 1); ++npoke; }

@@ -115492,6 +115492,21 @@
       "notes": "Follow-up of native-rmg-second-town-placement-20261017. XL Monk's Retreat (3+3, seed 1778117359) matched in tiles and positions, but the treasure zones' second towns had subtypes 2/0/0 where H3MapEd has 4/7/6. 0x4a901a resolves the key (0x49b3c1 when +0x40 = 0 and selected index -1), takes the type-98 wrapper from generator +0x658 at that key (0x4a90a4) and builds the object from it (0x4a92b1/0x49ba89); 0x4a93a2 reads +0x658 at the same key. Winedbg trace: owners 6/7/8 get caller key 2/0/0, 0x49b3c1 returns 4/7/6, and the 0x4a92c0 object carries that key's wrapper. Native drew the same values but committed the caller's join. Fix: the weighted path and the scheduler's direct path rebuild the join from the 0x658 bucket entry when the resolved key differs. XL 1778117359 is now exact (0 cells, 5365 objects); 72-reference sweep 61/72 exact (was 60), no other row changed. Validation: h3maped_rmg_core_selftest on Windows and Linux; tools/core_suite.py 16/16 on Windows and Linux.",
       "updatedAt": "2026-10-17T12:00:00Z",
       "validatedAt": "2026-10-17T12:00:00Z"
+    },
+    {
+      "id": "rmg-h3m-prison-body-parse-20261017",
+      "title": "RMG H3M parser: size hero-shaped records (Prison) so two-level references compare fully",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "native_rmg_validation_tooling",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/rmg-second-town-placement-parity.md",
+        "docs/lessons-learned.md"
+      ],
+      "notes": "Three two-level references (L 8MM6 1778117211, L 6LM10 1778117171, M 8MM0b 1778117057) matched in tiles and object count but not in the object multiset. No native drift: Windows H3MapEd (h3trace --water 2) reproduces the Medium reference, and native's final payload has the same 11 projected Seer's Huts (0x49c0a6 -> 0x4ad947 -> 0x4ad7f7 in the ninth 0x4aab7e call) and the same artifacts and guards. Only the write order differs: H3MapEd writes the huts as one block, native writes each hut after its artifact. tools/rmg_fast_audit.py gave Prison (type 62) records only the 12-byte header, found a phantom (0,0,0) record in the hero body's 16 trailing zero bytes, and the declared count then dropped the last real objects; with different write orders this looked like different objects. Fix: hero-shaped records (34, 62, 70) in SoD files get their real flag-gated body size. Validation: all three references exact (1862/4007/4050 objects); 72-reference sweep 64/72 exact (was 61), only those rows changed; tests/rmg_fast_audit_h3m_anchor_regression.py passes. Native code unchanged. h3trace gained --water for normal-water references.",
+      "updatedAt": "2026-10-17T14:00:00Z",
+      "validatedAt": "2026-10-17T14:00:00Z"
     }
   ],
   "project": "heroes-like",
