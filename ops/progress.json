@@ -115553,7 +115553,7 @@
     {
       "id": "native-rmg-ready-or-not-seed10-anchor-removal-20261017",
       "title": "Remove the seed-10 Ready or Not 0x4a93a2 anchor override",
-      "status": "in_progress",
+      "status": "completed",
       "phase": "phase-6-production-alpha-layer",
       "classification": "native_rmg_parity",
       "source": "PLAN.md",
@@ -115561,8 +115561,9 @@
         "docs/rmg-second-town-placement-parity.md",
         "docs/lessons-learned.md"
       ],
-      "notes": "apply_ready_or_not_medium_seed10_source_order_anchor_to_owner_4a93a2 overwrote +0x10..+0x18 with seed 10's anchors on every medium Ready or Not map (structure-only gate). Those anchors equal native's own 0x4a2ffa results for seed 10; the post-recenter reapply of the seed-10 0x4a3a03 footprint state had reset them. Both fixtures removed; 0x4a93a2 now uses the 0x4a2ffa coordinates. Seed 10 weak/normal still equal Windows H3MapEd; m024 (2962727902) now has H3MapEd's towns, with 262 road/river/decoration cells still differing after 0x4aab7e (not traced). Sweep 64/72.",
-      "updatedAt": "2026-10-17T20:00:00Z"
+      "notes": "apply_ready_or_not_medium_seed10_source_order_anchor_to_owner_4a93a2 overwrote +0x10..+0x18 with seed 10's anchors on every medium Ready or Not map (structure-only gate). Those anchors equal native's own 0x4a2ffa results for seed 10; the post-recenter reapply of the seed-10 0x4a3a03 footprint state had reset them. Both fixtures removed; 0x4a93a2 now uses the 0x4a2ffa coordinates. Seed 10 weak/normal still equal Windows H3MapEd; m024 (2962727902) now has H3MapEd's towns, with 262 road/river/decoration cells still differing after 0x4aab7e (not traced). Sweep 64/72. Selftest passes on Windows and Linux; core_suite 16/16 on Windows and Linux.",
+      "updatedAt": "2026-10-17T21:00:00Z",
+      "validatedAt": "2026-10-17T21:00:00Z"
     }
   ],
   "project": "heroes-like",

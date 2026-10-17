@@ -135,7 +135,7 @@ Rules:
 - Known limit: on m043 (seed 2851495868, strong) a cross-zone join opens a walk around the 2-4 guard. See `docs/rmg-cut-off-town-repair.md`.
 
 `native-rmg-ready-or-not-seed10-anchor-removal-20261017` (completed, native fix): every medium Ready or Not map placed its towns from seed 10's hard-coded `0x4a93a2` anchors, because that override's gate checked only template structure. The anchors are native's own `0x4a2ffa` results for seed 10; a second seed-10 fixture had reset them after the recenter. Both fixtures are gone, so `0x4a93a2` uses the `0x4a2ffa` coordinates, H3MapEd's last write to them.
-- Seed 10 weak and normal still equal Windows H3MapEd. AI-batch m024 (2962727902) now has H3MapEd's towns; its roads, rivers and decoration still differ after `0x4aab7e` (262 cells, not traced). The 72-reference sweep stays 64/72. See `docs/rmg-second-town-placement-parity.md`.
+- Seed 10 weak and normal still equal Windows H3MapEd. AI-batch m024 (2962727902) now has H3MapEd's towns; its roads, rivers and decoration still differ after `0x4aab7e` (262 cells, not traced). The 72-reference sweep stays 64/72; the selftest and `tools/core_suite.py` (16/16) pass on Windows and Linux. See `docs/rmg-second-town-placement-parity.md`.
 
 ### Raid director removal
 
