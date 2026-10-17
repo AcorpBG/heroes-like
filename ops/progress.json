@@ -115414,6 +115414,18 @@
       "notes": "From the owner's 2026-10-16 batch of 60 large AI matches: on seed ai-match-1305188145 (6 players, land, one level) the last rival town, Duskfen Bastion, stood untaken from about day 40 to the 320-day cap. Probe: its anchor tile (5,45) was explored, its doorway (3,45) not. _rival_towns_unknown tested the anchor and counted the town as seen, so scouting stopped; _strategic_candidate, _best_candidate and _war_paths tested the doorway and left it out as unseen, though Sunvault's main army (320,000) could reach it and valued it at 273,000. All of them now use AiHeroRules._town_seen (anchor or doorway explored). New core test tests/ai_town_knowledge_report (a hero beside an undefended rival town of which only the anchor or only the doorway is seen takes it; nothing seen keeps the scouting on); it fails on the old code with the hero exploring instead. Validation: tests/ai_town_knowledge_report, tools/core_suite.py."
     },
     {
+      "id": "ai-build-upgrade-counted-once-20261017",
+      "title": "AI town planner counts a dwelling upgrade's gain once",
+      "status": "completed",
+      "classification": "gameplay",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/ai-plays-by-player-rules.md"
+      ],
+      "notes": "From the owner's balance review of the 2026-10-17 batches (360 games). Armies are growth-bound early (every faction buys its towns out weekly; gold collected by day 14 is 33,000-39,000 for all). _build_choice added _upgrade_value on top of the trial growth that already holds the upgraded creature, so an upgrade was valued about twice its gain (Mireclaw T1: 1,651 against 930) and weak-base factions (Mireclaw, Thornwake, Veilmourn) upgraded T1 in week 1 instead of opening T2, and got T4 a week later (day 22 against 15). _upgrade_value now applies only to towns not on the current development rules. Replay of ai-match-858752826 to day 15: both seats have T4 by day 15 (before: none), recruited strength 744 and 537 against 657 and 441. New case in core test tests/ai_town_knowledge_report (fails on the old code). Faction content changes for Embercourt and Mireclaw were proposed to the owner separately. Validation: tests/ai_town_knowledge_report, tools/core_suite.py."
+    },
+    {
       "id": "ai-cross-level-monoliths-20261017",
       "title": "AI heroes cross monoliths whose exit is on the other level",
       "status": "completed",

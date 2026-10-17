@@ -6,7 +6,8 @@ extends Node
 # anchor and the planners the doorway, and a town seen only by its anchor was
 # never attacked (seed ai-match-1305188145: 280 days next to a 320,000 army).
 # A guarded site the rival looted does not close the way to the rival either,
-# and a monolith to the other level is a way like a subterranean gate.
+# and a monolith to the other level is a way like a subterranean gate. A town
+# planner counts what a dwelling upgrade adds once.
 
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
@@ -16,6 +17,7 @@ const LevelRules = preload("res://scripts/core/OverworldLevelRules.gd")
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const NodePayload = preload("res://scripts/core/ResourceNodePayloadRules.gd")
 const NativeTransit = preload("res://scripts/core/NativeTransitRules.gd")
+const TownDevelopment = preload("res://scripts/core/TownDevelopmentRules.gd")
 const REPORT_ID := "AI_TOWN_KNOWLEDGE_REPORT"
 const SEED := "ai-town-knowledge-20261017"
 # A small two-level map with two-way monoliths between the levels.
@@ -39,6 +41,9 @@ func _run() -> void:
 	if _failed:
 		return
 	results["portal_to_other_level"] = _check_portal_to_other_level_is_crossed()
+	if _failed:
+		return
+	results["upgrade_counted_once"] = _check_upgrade_counted_once()
 	if _failed:
 		return
 	print("%s %s" % [REPORT_ID, JSON.stringify({"ok": true, "cases": results})])
@@ -195,6 +200,64 @@ func _check_portal_to_other_level_is_crossed() -> Dictionary:
 		return {"portal": String(node.get("placement_id", "")), "exit_level": exit.z, "portals": portals}
 	_fail("The two-level map has no unguarded monolith between its levels (%d guarded)." % portals)
 	return {}
+
+## A computer player's town that stands a first dwelling values that dwelling's
+## upgrade at what the upgraded creatures add over the planning horizon, once.
+## Until 2026-10-17 the planner added the gain a second time, and factions
+## whose upgrades add much upgraded before opening a second dwelling.
+func _check_upgrade_counted_once() -> Dictionary:
+	ContentService.clear_generated_scenario_drafts()
+	var config := ScenarioSelectRulesScript.build_random_map_player_config(
+		SEED, "", "", 2, "land", false, "homm3_small",
+		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT,
+		"faction_embercourt", ""
+	)
+	var map_setup := ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(config, "normal", ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY)
+	if not bool(map_setup.get("ok", false)):
+		_fail("Generated setup failed: %s" % JSON.stringify(map_setup).left(400))
+		return {}
+	var session = ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(map_setup)
+	OverworldRules.normalize_overworld_state(session)
+	var town := {}
+	for candidate in session.overworld.get("towns", []):
+		if String(candidate.get("owner", "")) == "enemy" and TownDevelopment.is_current(candidate):
+			town = candidate
+			break
+	if town.is_empty():
+		_fail("The map has no computer player's town on the current development rules.")
+		return {}
+	var faction := TownDevelopment.faction_id(town)
+	var base := {}
+	var upgrade := {}
+	for building in ContentService.get_town(String(town.get("town_id", ""))).get("buildable_building_ids", []):
+		var record := ContentService.get_building(String(building))
+		if String(record.get("faction_id", "")) == faction and int(record.get("dwelling_tier", 0)) == 1 and int(record.get("stage", 0)) == 1 and base.is_empty():
+			base = record
+	for building in ContentService.get_town(String(town.get("town_id", ""))).get("buildable_building_ids", []):
+		var record := ContentService.get_building(String(building))
+		if String(record.get("upgrade_from", "")) == String(base.get("id", "")) and String(base.get("id", "")) != "":
+			upgrade = record
+	if upgrade.is_empty():
+		_fail("%s has no first dwelling with an upgrade." % faction)
+		return {}
+	town["built_buildings"] = ["building_town_hall", String(base.id)]
+	var values := {}
+	AiHeroRulesScript._build_choice(session, town, {"gold": 100000, "wood": 100, "ore": 100}, values)
+	if not values.has(String(upgrade.id)):
+		_fail("The planner did not weigh %s with %s built." % [String(upgrade.id), String(base.id)])
+		return {}
+	var trial_built: Array = town.built_buildings.duplicate()
+	trial_built.append(String(upgrade.id))
+	var trial := {"town_id": town.get("town_id", ""), "placement_id": town.get("placement_id", ""), "built_buildings": trial_built, "development_version": town.get("development_version", 0)}
+	var before := AiHeroRulesScript._recruit_set_value(AiHeroRulesScript._trial_growth(town))
+	var troops := (AiHeroRulesScript._recruit_set_value(AiHeroRulesScript._trial_growth(trial)) - before) * AiHeroRulesScript.BUILD_HORIZON_WEEKS
+	if before < AiHeroRulesScript.STARVED_TOWN_WEEKLY_TROOPS:
+		troops *= 1.5
+	var expected := troops + 100.0 * float(upgrade.get("readiness_bonus", 0)) + 150.0 * float(AiHeroRulesScript._opens_count(town, String(upgrade.id), trial_built))
+	if troops <= 0.0 or absf(float(values[String(upgrade.id)]) - expected) > 0.01:
+		_fail("The planner values %s at %.1f, not the %.1f its upgraded creatures add." % [String(upgrade.id), float(values[String(upgrade.id)]), expected])
+		return {}
+	return {"upgrade": String(upgrade.id), "value": snappedf(expected, 0.1)}
 
 ## A small generated two-player map, both seats played by the computer, one day
 ## played. player_2's main hero is moved beside player_1's capital, whose heroes

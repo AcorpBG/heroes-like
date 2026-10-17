@@ -862,7 +862,9 @@ static func _build_in_towns(session: SessionStateStoreScript.SessionData, contex
 		towns = session.overworld.get("towns", [])
 	return {"messages": messages, "events": events}
 
-static func _build_choice(session: SessionStateStoreScript.SessionData, town: Dictionary, treasury: Dictionary) -> Dictionary:
+## The building this town builds today: what it adds over BUILD_HORIZON_WEEKS
+## per its price. `values`, when given, gets each option's value by id.
+static func _build_choice(session: SessionStateStoreScript.SessionData, town: Dictionary, treasury: Dictionary, values: Dictionary = {}) -> Dictionary:
 	var overworld_rules = _overworld_rules()
 	var income_before := _trial_income(town)
 	var growth_before := _trial_growth(town)
@@ -904,8 +906,15 @@ static func _build_choice(session: SessionStateStoreScript.SessionData, town: Di
 		if income > value:
 			reason = "income"
 		value += income
+		# A town on the current development rules musters only the upgraded
+		# creature once the upgrade stands, so the troops above already hold what
+		# the upgrade adds. Until 2026-10-17 it was added a second time here, and
+		# factions whose upgrades add much (Mireclaw, Thornwake, Veilmourn)
+		# upgraded their first dwelling before opening a second: in week 2 they
+		# mustered one creature line where the others mustered two.
 		if String(building.get("upgrade_from", "")) != "" and String(building.get("unlock_unit_id", "")) != "":
-			value += _upgrade_value(town, building)
+			if not _turn_rules().TownDevelopment.is_current(town):
+				value += _upgrade_value(town, building)
 			reason = "troops"
 		if int(building.get("spell_tier", 0)) > 0:
 			value += 400.0 + 300.0 * float(building.get("spell_tier", 0))
@@ -919,6 +928,7 @@ static func _build_choice(session: SessionStateStoreScript.SessionData, town: Di
 		value += 150.0 * float(_opens_count(town, building_id, trial_built))
 		var cost_value := maxf(1.0, _build_value(cost))
 		var score := value / cost_value
+		values[building_id] = value
 		if score > best_score:
 			best_score = score
 			best = {"building_id": building_id, "reason": reason, "score": score}
