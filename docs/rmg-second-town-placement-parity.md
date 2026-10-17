@@ -189,6 +189,36 @@ unchanged.
   path dropped the guard strength, so the AI match runner's weak and strong maps ran
   as normal.
 
+## Ready or Not medium: seed-10 anchors removed (`native-rmg-ready-or-not-seed10-anchor-removal-20261017`)
+
+Case: AI-batch map m024 (seed 2962727902, Medium, one level, land, weak monsters, Ready
+or Not). Its start towns were 9 tiles apart; in the Windows H3MapEd map
+(`%TEMP%\h3tr\out\tw_m024.h3m`) they are 17 apart.
+
+Two seed-10 fixtures in `h3maped_rmg_core.cpp` cancelled each other out:
+
+1. After the `0x4a2ffa` recenter, the terrain step reapplied the recovered seed-10
+   footprint state (`apply_ready_or_not_medium_seed10_source_footprint_relation_owner_vector_4a3a03`).
+   That reset each owner's `+0x10..+0x18` to its pre-recenter footprint seed.
+2. `apply_ready_or_not_medium_seed10_source_order_anchor_to_owner_4a93a2` then wrote
+   fixed anchors back before `0x4a93a2`: (45,40) (62,39) (25,47) (25,11) (35,30) (8,29)
+   (57,13). Its gate checked only template structure, so it fired on every medium Ready
+   or Not map.
+
+These anchors are exactly native's own `0x4a2ffa` results for seed 10
+(`RMG_TRACE_4A2FFA` after values). So no H3MapEd write is missing between `0x4a2ffa`
+and `0x4a93a2`: the recenter is the last write, and both fixtures are removed. The
+`0x4a4c8e` recovered-state branch, gated on the recovered coordinates, is unchanged.
+
+Result, in strict mode against Windows H3MapEd:
+
+- Seed 10 weak and normal still equal H3MapEd: 0 cells, all objects.
+- m024 now has H3MapEd's towns. The RNG matches at every marker through `0x4aab7e`
+  (`0x4ac7ef` = `4d9f9479`), and terrain is identical.
+- 262 cells still differ on m024: roads (196), rivers (60) and decoration, after
+  `0x4aab7e`. This deviation is separate and not traced yet. The first divergent
+  function after `0x4ac7ef` is not named.
+
 ## m003: a Small start zone that H3MapEd seals itself
 
 Case (2026-10-17 Small guard batch): match `ai-match-633586641`, map seed and H3MapEd

@@ -28948,87 +28948,6 @@ static std::vector<RuntimeZoneFootprintInput4a3a03> ready_or_not_medium_seed10_n
 			const std::vector<GeneratorRelationOwnerState4a218c> &relation_owners,
 			bool require_recovered_coordinates = true);
 
-	static bool ready_or_not_medium_seed10_source_order_anchor_4a93a2(
-			const std::vector<GeneratorRelationOwnerState4a218c> &relation_owners,
-			const GeneratorRelationOwnerState4a218c &owner,
-			int32_t &anchor_x,
-			int32_t &anchor_y,
-			int32_t &anchor_level) {
-		if (!ready_or_not_medium_seed10_source_footprint_relation_owner_vector_applies_4a3a03(
-					relation_owners,
-					false)) {
-			return false;
-		}
-		const int32_t source_index = owner.source_index >= 0
-				? owner.source_index
-				: owner.source_pointer_source_index_0x00;
-		// H3MapEd 0x4a93a2 source-pair entry words for Medium seed-10
-		// setup-1 hc1/co1. These are later source-order anchors, not the
-		// earlier 0x4a2105 footprint seeds used for owner-grid materialization.
-		switch (source_index) {
-			case 0:
-				anchor_x = 45;
-				anchor_y = 40;
-				anchor_level = 0;
-				return true;
-			case 1:
-				anchor_x = 62;
-				anchor_y = 39;
-				anchor_level = 0;
-				return true;
-			case 2:
-				anchor_x = 25;
-				anchor_y = 47;
-				anchor_level = 0;
-				return true;
-			case 3:
-				anchor_x = 25;
-				anchor_y = 11;
-				anchor_level = 0;
-				return true;
-			case 4:
-				anchor_x = 35;
-				anchor_y = 30;
-				anchor_level = 0;
-				return true;
-			case 5:
-				anchor_x = 8;
-				anchor_y = 29;
-				anchor_level = 0;
-				return true;
-			case 6:
-				anchor_x = 57;
-				anchor_y = 13;
-				anchor_level = 0;
-				return true;
-			default:
-				return false;
-		}
-	}
-
-	static bool apply_ready_or_not_medium_seed10_source_order_anchor_to_owner_4a93a2(
-			const std::vector<GeneratorRelationOwnerState4a218c> &relation_owners,
-			GeneratorRelationOwnerState4a218c &owner) {
-		int32_t anchor_x = owner.coordinate_x_0x10;
-		int32_t anchor_y = owner.coordinate_y_0x14;
-		int32_t anchor_level = owner.coordinate_level_0x18;
-		if (!ready_or_not_medium_seed10_source_order_anchor_4a93a2(
-					relation_owners,
-					owner,
-					anchor_x,
-					anchor_y,
-					anchor_level)) {
-			return false;
-		}
-		// H3MapEd enters 0x4a93a2 and later 0x4aa9b7 with these words in
-		// the relation-owner record itself; preserve that private state beyond
-		// the local source-order replay call.
-		owner.coordinate_triple_0x10_0x18_known = true;
-		owner.coordinate_x_0x10 = anchor_x;
-		owner.coordinate_y_0x14 = anchor_y;
-		owner.coordinate_level_0x18 = anchor_level;
-		return true;
-	}
 
 static uint16_t ready_or_not_medium_seed10_source_terrain_mask_0x49b53d(int32_t source_index) {
 	// H3MapEd trace medium_seed10_setup1_hc1_co1_pre_boundary_rng_breakdown_20260709:
@@ -30299,17 +30218,12 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 				marker_owners_0x4a30c2.push_back(owner);
 			}
 		}
-			if (apply_ready_or_not_source_footprint_state_4a3a03
-					|| apply_ready_or_not_recovered_state_4a4c8e) {
-				if (apply_ready_or_not_source_footprint_state_4a3a03) {
-					apply_ready_or_not_medium_seed10_source_footprint_relation_owner_vector_4a3a03(
-							prepared_relation_owners,
-							false);
-				} else {
+			// The 0x4a2ffa recenter above is H3MapEd's last write to +0x10..+0x18
+			// before 0x4a93a2, so the seed-10 footprint state is not reapplied here.
+			if (apply_ready_or_not_recovered_state_4a4c8e) {
 				apply_ready_or_not_medium_seed10_recovered_relation_owner_state_4a4c8e(
 						prepared_relation_owners,
 						true);
-				}
 				marker_owners_0x4a30c2.clear();
 				for (const GeneratorRelationOwnerState4a218c &owner : prepared_relation_owners) {
 				if (!relation_owner_slot_materialized_10e4(owner)) {
@@ -38145,9 +38059,6 @@ static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2
 							state,
 							owner.source_order_source_record_0x00.relation_selector_0x1c);
 				const int32_t relation_owner_byte2 = relation_owner_byte2_for_generated_cell_gate(owner);
-				(void)apply_ready_or_not_medium_seed10_source_order_anchor_to_owner_4a93a2(
-						state.relation_owner_vectors_10e4_10e8,
-						owner);
 				int32_t source_order_anchor_x_0x10 = owner.coordinate_x_0x10;
 				int32_t source_order_anchor_y_0x14 = owner.coordinate_y_0x14;
 				int32_t source_order_anchor_level_0x18 = owner.coordinate_level_0x18;
@@ -38299,9 +38210,6 @@ static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2
 				const int32_t source_pair_success_byte = type98_pair != nullptr
 						? type98_pair->source_pair_success_byte_0x3c
 						: owner.byte_0x3c;
-				(void)apply_ready_or_not_medium_seed10_source_order_anchor_to_owner_4a93a2(
-						state.relation_owner_vectors_10e4_10e8,
-						owner);
 				int32_t source_order_anchor_x_0x10 = owner.coordinate_x_0x10;
 				int32_t source_order_anchor_y_0x14 = owner.coordinate_y_0x14;
 				int32_t source_order_anchor_level_0x18 = owner.coordinate_level_0x18;
@@ -38462,9 +38370,6 @@ static void replay_live_type98_source_order_scheduler_0x4a8db2(GeneratorObjectPr
 				const int32_t source_selector = source_record.relation_selector_0x1c;
 				const int32_t lane_state_0xee4 =
 						source_order_lane_state_from_selector_0x4a8d2c_0x4a8db2(state, source_selector);
-				(void)apply_ready_or_not_medium_seed10_source_order_anchor_to_owner_4a93a2(
-						state.relation_owner_vectors_10e4_10e8,
-						*owner);
 				int32_t source_order_anchor_x_0x10 = owner->coordinate_x_0x10;
 				int32_t source_order_anchor_y_0x14 = owner->coordinate_y_0x14;
 				int32_t source_order_anchor_level_0x18 = owner->coordinate_level_0x18;
@@ -38522,9 +38427,6 @@ static void replay_live_type98_source_order_direct_0x4a8d2c(GeneratorObjectPriva
 						source_order_lane_state_from_selector_0x4a8d2c_0x4a8db2(state, source_selector);
 				const int32_t source_pair_key_0x0c =
 						source_order_bucket_selector_arg_0x0c_4a93a2(join, town_choice);
-				(void)apply_ready_or_not_medium_seed10_source_order_anchor_to_owner_4a93a2(
-						state.relation_owner_vectors_10e4_10e8,
-						*owner);
 				int32_t source_order_anchor_x_0x10 = owner->coordinate_x_0x10;
 				int32_t source_order_anchor_y_0x14 = owner->coordinate_y_0x14;
 				int32_t source_order_anchor_level_0x18 = owner->coordinate_level_0x18;
