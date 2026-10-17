@@ -9229,6 +9229,46 @@ int main() {
 			}
 		}
 	}
+	// The cut-off check uses the game's three-by-two mine shape: in AI match m095
+	// (medium, 3 players, two levels, normal water, strong guards) the row above two
+	// mines seals a start town that the H3 mine bodies leave open.
+	if (std::getenv("AURELION_RMG_H3MAPED_STRICT") == nullptr) {
+		H3MapedRmgWorkflowConfig m095_config;
+		m095_config.size_class = "medium";
+		m095_config.water_mode = "normal_water";
+		m095_config.width = 72;
+		m095_config.height = 72;
+		m095_config.level_count = 2;
+		m095_config.human_count = 1;
+		m095_config.player_count = 3;
+		m095_config.seed = 684022622U;
+		m095_config.setup_object_0x34_known = true;
+		m095_config.setup_object_0x34 = 1;
+		m095_config.setup_object_0x38_known = true;
+		m095_config.setup_object_0x38 = 1;
+		m095_config.setup_object_0x3c_known = true;
+		m095_config.setup_object_0x3c = 2;
+		m095_config.setup_object_0x40_known = true;
+		m095_config.setup_object_0x40 = 0;
+		m095_config.setup_object_0x44_known = true;
+		m095_config.setup_object_0x44 = aurelion::h3maped_rmg_core::water_mode_code("normal_water");
+		m095_config.setup_object_raw_0x48_known = true;
+		m095_config.setup_object_raw_0x48 = 1;
+		m095_config.setup_object_0x48_known = false;
+		m095_config.setup_object_0x4c_known = true;
+		m095_config.setup_object_0x4c = 2;
+		m095_config.setup_caller_arg_0x0c_known = true;
+		m095_config.setup_caller_arg_0x0c =
+				aurelion::h3maped_rmg_core::DIRECT_ENTRY_OPTIONAL_HANDLER_SENTINEL_0X4602C1;
+		const H3MapedRmgWorkflowResult m095_workflow =
+				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(m095_config);
+		if (!require(m095_workflow.cut_off_town_repair_applied
+					&& m095_workflow.cut_off_towns_before_repair == 1
+					&& m095_workflow.cut_off_towns_after_repair == 0,
+				"Medium three-player m095 map did not repair the town its mines seal")) {
+			return 1;
+		}
+	}
 
 	for (const auto &case_record : std::array<std::tuple<uint32_t, const char *, int32_t, int32_t, size_t>, 2> {{
 			{ 77U, "normal_water", 1, 609, 365777U },

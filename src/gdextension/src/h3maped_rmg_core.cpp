@@ -41746,7 +41746,8 @@ static void route_join_departure_join_zones(GeneratorObjectPrivateState &state) 
 
 // Towns outside the walkable area that holds the most towns. Rock and object
 // bodies block; water does not (boats), action tiles stay enterable, and
-// monoliths and subterranean gates join their peers.
+// monoliths and subterranean gates join their peers. Mines block the game's
+// three-by-two shape, not their H3 body.
 static int32_t cut_off_town_count_departure(const RuntimeMapPayloadProjection &projection) {
 	const int32_t width = projection.width;
 	const int32_t height = projection.height;
@@ -41767,6 +41768,23 @@ static int32_t cut_off_town_count_departure(const RuntimeMapPayloadProjection &p
 		blocked[size_t(flat)] = projection.terrain_type_codes[size_t(flat)] == 9 ? 1 : 0;
 	}
 	for (const RuntimeMapObjectProjection &object : projection.objects) {
+		// The game draws every mine as three by two tiles with the visit tile at
+		// the bottom middle (scripts/core/CommonMineRules.gd) and blocks that shape
+		// in place of the H3 body, so it also blocks the row above (m095, 2026-10-17).
+		if (object.type_id == 53 && !object.action_tiles.empty()) {
+			for (int32_t dy = -1; dy <= 0; ++dy) {
+				for (int32_t dx = -1; dx <= 1; ++dx) {
+					RuntimeMapTilePoint tile = object.action_tiles.front();
+					tile.x += dx;
+					tile.y += dy;
+					const int64_t flat = flat_of(tile);
+					if (flat >= 0) {
+						blocked[size_t(flat)] = 1;
+					}
+				}
+			}
+			continue;
+		}
 		for (const RuntimeMapTilePoint &tile : object.body_tiles) {
 			const int64_t flat = flat_of(tile);
 			if (flat >= 0) {
