@@ -12,6 +12,8 @@ func _run() -> void:
 	var retry_cases := _assert_two_player_retry_cases()
 	if retry_cases.is_empty():
 		return
+	if not _assert_cut_off_town_repaired():
+		return
 	var shell = load("res://scenes/menus/MainMenu.tscn").instantiate()
 	add_child(shell)
 	await get_tree().process_frame
@@ -116,12 +118,45 @@ func _assert_two_player_retry_cases() -> Array:
 		return []
 	return cases
 
-func _collect_neutral_town_factions(setup: Dictionary, factions: Dictionary) -> bool:
+# H3MapEd's own map for seed 1727041229 (Small, land, weak, 1+1 players) seals a start
+# zone. The generator then makes the map again with the zone route joins on
+# (docs/rmg-cut-off-town-repair.md). If a parity fix changes this map, pick another
+# seed whose H3MapEd map cuts a town off.
+func _assert_cut_off_town_repaired() -> bool:
+	var config := ScenarioSelectRulesScript.build_random_map_player_config(
+		"1727041229", "", "", 2, "land", false, "homm3_small",
+		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO, "", "", "weak"
+	)
+	var setup: Dictionary = ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(
+		config, "normal", ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY
+	)
+	if not bool(setup.get("ok", false)):
+		_fail("Seed 1727041229 setup failed: %s" % JSON.stringify(setup))
+		return false
+	var document = _load_setup_document(setup)
+	if document == null:
+		return false
+	var repair: Dictionary = document.get_metadata().get("cut_off_town_repair", {})
+	if not bool(repair.get("applied", false)) or int(repair.get("towns_cut_off_after", -1)) != 0:
+		_fail("Seed 1727041229 kept a town cut off: %s" % JSON.stringify(repair))
+		return false
+	return true
+
+func _load_setup_document(setup: Dictionary):
 	var startup: Dictionary = setup.get("package_startup", {}) if setup.get("package_startup", {}) is Dictionary else {}
 	var map_load: Dictionary = ClassDB.instantiate("MapPackageService").load_map_package(String(startup.get("map_path", "")))
 	var document = map_load.get("map_document", null)
 	if document == null:
 		_fail("Generated map package did not load: %s" % JSON.stringify(startup))
+	return document
+
+func _collect_neutral_town_factions(setup: Dictionary, factions: Dictionary) -> bool:
+	var document = _load_setup_document(setup)
+	if document == null:
+		return false
+	var repair: Dictionary = document.get_metadata().get("cut_off_town_repair", {})
+	if int(repair.get("towns_cut_off_after", -1)) != 0:
+		_fail("Generated map has a town cut off: %s" % JSON.stringify(repair))
 		return false
 	for index in range(int(document.get_object_count())):
 		var town: Dictionary = document.get_object_by_index(index)

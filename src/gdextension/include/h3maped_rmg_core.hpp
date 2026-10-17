@@ -891,6 +891,8 @@ struct ConnectionRegionWriterResult4a606b {
 
 struct ProjectedCellChainResult4a5a23 {
 	bool start_cell_in_bounds = false;
+	// Flat indices of the cells the chain stamped with bit27, in order.
+	std::vector<int64_t> stamped_cells;
 	bool stopped_on_low_word_zero = false;
 	bool stopped_on_low_word_limit = false;
 	bool stopped_on_out_of_bounds = false;
@@ -3369,6 +3371,10 @@ struct MineResourceMaterializationResult4a9d6a {
 };
 
 struct GeneratorObjectPrivateState {
+	// Departure state (docs/rmg-cut-off-town-repair.md), unused in H3MapEd order.
+	bool route_join_departure_enabled = false;
+	std::vector<int64_t> route_join_protected_cells;
+	int32_t route_join_carved_path_count = 0;
 	uint32_t generated_cell_buffer_offset_0x14 = 0x14U;
 	uint32_t width_offset_0x18 = 0x18U;
 	uint32_t height_offset_0x1c = 0x1cU;
@@ -3799,6 +3805,12 @@ struct H3MapedRmgWorkflowConfig {
 	std::string size_class;
 	std::string water_mode;
 	bool recovery_probe_scope_allowed = false;
+	// Departure from H3MapEd (docs/rmg-cut-off-town-repair.md). When the finished
+	// map leaves a town cut off, the workflow generates it again with
+	// route_join_departure set. AURELION_RMG_H3MAPED_STRICT=1 turns the repair off
+	// for H3MapEd parity work.
+	bool repair_cut_off_towns = true;
+	bool route_join_departure = false;
 	int32_t width = 0;
 	int32_t height = 0;
 	int32_t level_count = 0;
@@ -4089,6 +4101,11 @@ struct FinalPayloadWriteoutResult4ad1e3 {
 
 struct H3MapedRmgWorkflowResult {
 	H3MapedRmgWorkflowConfig config;
+	// Set when the H3MapEd map left towns cut off and this result is the
+	// regenerated map (docs/rmg-cut-off-town-repair.md).
+	bool cut_off_town_repair_applied = false;
+	int32_t cut_off_towns_before_repair = 0;
+	int32_t cut_off_towns_after_repair = 0;
 	bool supported_scope = false;
 	bool executed = false;
 	bool final_payload_owned = false;
@@ -4781,6 +4798,10 @@ GeneratorSetupModeResult49ecf2 generator_setup_mode_49ecf2(
 		bool setup_caller_arg_0x0c_known = false,
 		int32_t setup_caller_arg_0x0c = 0);
 H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3MapedRmgWorkflowConfig &config);
+// Same, and when projection is not null it also receives the runtime projection of
+// the returned result, which the cut-off town check builds anyway.
+H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(
+		const H3MapedRmgWorkflowConfig &config, RuntimeMapPayloadProjection *projection);
 RuntimeMapPayloadProjection project_runtime_map_from_parity_owned_final_payload(const H3MapedRmgWorkflowResult &workflow);
 RuntimeMapPayloadProjection project_runtime_map_from_native_owned_final_payload(const H3MapedRmgWorkflowResult &workflow);
 RuntimeMapPayloadProjection project_runtime_map_from_parity_owned_final_payload(

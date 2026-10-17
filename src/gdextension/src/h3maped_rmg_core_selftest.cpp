@@ -1,6 +1,7 @@
 #include "h3maped_rmg_core.hpp"
 
 #include <algorithm>
+#include <cstdlib>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -4849,6 +4850,8 @@ int main() {
 		return 1;
 	}
 	H3MapedRmgWorkflowConfig generator_state_workflow_config;
+	// H3MapEd parity check: no cut-off town repair (docs/rmg-cut-off-town-repair.md).
+	generator_state_workflow_config.repair_cut_off_towns = false;
 	generator_state_workflow_config.size_class = "small";
 	generator_state_workflow_config.water_mode = "land";
 	generator_state_workflow_config.width = 36;
@@ -8352,6 +8355,8 @@ int main() {
 	}
 	{
 		H3MapedRmgWorkflowConfig workflow_config;
+		// H3MapEd parity check: no cut-off town repair (docs/rmg-cut-off-town-repair.md).
+		workflow_config.repair_cut_off_towns = false;
 		workflow_config.size_class = "small";
 		workflow_config.water_mode = "land";
 		workflow_config.width = 36;
@@ -8554,6 +8559,8 @@ int main() {
 
 	{
 		H3MapedRmgWorkflowConfig islands_config;
+		// H3MapEd parity check: no cut-off town repair (docs/rmg-cut-off-town-repair.md).
+		islands_config.repair_cut_off_towns = false;
 		islands_config.size_class = "small";
 		islands_config.water_mode = "islands";
 		islands_config.width = 36;
@@ -8616,6 +8623,8 @@ int main() {
 
 	{
 		H3MapedRmgWorkflowConfig seed69_config;
+		// H3MapEd parity check: no cut-off town repair (docs/rmg-cut-off-town-repair.md).
+		seed69_config.repair_cut_off_towns = false;
 		seed69_config.size_class = "small";
 		seed69_config.water_mode = "normal_water";
 		seed69_config.width = 36;
@@ -8781,6 +8790,8 @@ int main() {
 
 	{
 		H3MapedRmgWorkflowConfig seed70_config;
+		// H3MapEd parity check: no cut-off town repair (docs/rmg-cut-off-town-repair.md).
+		seed70_config.repair_cut_off_towns = false;
 		seed70_config.size_class = "small";
 		seed70_config.water_mode = "islands";
 		seed70_config.width = 36;
@@ -8874,6 +8885,8 @@ int main() {
 
 	{
 		H3MapedRmgWorkflowConfig seed71_config;
+		// H3MapEd parity check: no cut-off town repair (docs/rmg-cut-off-town-repair.md).
+		seed71_config.repair_cut_off_towns = false;
 		seed71_config.size_class = "medium";
 		seed71_config.water_mode = "normal_water";
 		seed71_config.width = 72;
@@ -8924,6 +8937,8 @@ int main() {
 
 	{
 		H3MapedRmgWorkflowConfig seed72_config;
+		// H3MapEd parity check: no cut-off town repair (docs/rmg-cut-off-town-repair.md).
+		seed72_config.repair_cut_off_towns = false;
 		seed72_config.size_class = "medium";
 		seed72_config.water_mode = "islands";
 		seed72_config.width = 72;
@@ -8995,6 +9010,8 @@ int main() {
 
 	{
 		H3MapedRmgWorkflowConfig seed73_config;
+		// H3MapEd parity check: no cut-off town repair (docs/rmg-cut-off-town-repair.md).
+		seed73_config.repair_cut_off_towns = false;
 		seed73_config.size_class = "large";
 		seed73_config.water_mode = "land";
 		seed73_config.width = 108;
@@ -9045,6 +9062,8 @@ int main() {
 
 	{
 		H3MapedRmgWorkflowConfig seed74_config;
+		// H3MapEd parity check: no cut-off town repair (docs/rmg-cut-off-town-repair.md).
+		seed74_config.repair_cut_off_towns = false;
 		seed74_config.size_class = "large";
 		seed74_config.water_mode = "normal_water";
 		seed74_config.width = 108;
@@ -9093,6 +9112,8 @@ int main() {
 
 	{
 		H3MapedRmgWorkflowConfig seed75_config;
+		// H3MapEd parity check: no cut-off town repair (docs/rmg-cut-off-town-repair.md).
+		seed75_config.repair_cut_off_towns = false;
 		seed75_config.size_class = "large";
 		seed75_config.water_mode = "islands";
 		seed75_config.width = 108;
@@ -9141,6 +9162,8 @@ int main() {
 
 	{
 		H3MapedRmgWorkflowConfig seed76_config;
+		// H3MapEd parity check: no cut-off town repair (docs/rmg-cut-off-town-repair.md).
+		seed76_config.repair_cut_off_towns = false;
 		seed76_config.size_class = "xlarge";
 		seed76_config.water_mode = "land";
 		seed76_config.width = 144;
@@ -9189,6 +9212,22 @@ int main() {
 				"XLarge two-level land seed-76 workflow diverged from recovered final writeout or runtime projection")) {
 			return 1;
 		}
+		// Departure from H3MapEd (docs/rmg-cut-off-town-repair.md): H3MapEd's seed-76
+		// map leaves two towns cut off. The repair pass joins one; the other sits in
+		// zones 15-19, which H3MapEd's links never join to the rest.
+		if (std::getenv("AURELION_RMG_H3MAPED_STRICT") == nullptr) {
+			H3MapedRmgWorkflowConfig seed76_repair_config = seed76_config;
+			seed76_repair_config.repair_cut_off_towns = true;
+			const H3MapedRmgWorkflowResult seed76_repaired =
+					aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(seed76_repair_config);
+			if (!require(seed76_repaired.cut_off_town_repair_applied
+						&& seed76_repaired.cut_off_towns_before_repair > 0
+						&& seed76_repaired.cut_off_towns_after_repair < seed76_repaired.cut_off_towns_before_repair
+						&& seed76_repaired.final_payload_writeout_0x4ad1e3.payload_bytes.size() > 0U,
+					"XLarge two-level land seed-76 repair pass did not join a cut-off town")) {
+				return 1;
+			}
+		}
 	}
 
 	for (const auto &case_record : std::array<std::tuple<uint32_t, const char *, int32_t, int32_t, size_t>, 2> {{
@@ -9203,6 +9242,8 @@ int main() {
 		const int32_t expected_object_count = seed == 77U ? 2779 : 1998;
 
 		H3MapedRmgWorkflowConfig config;
+		// H3MapEd parity check: no cut-off town repair (docs/rmg-cut-off-town-repair.md).
+		config.repair_cut_off_towns = false;
 		config.size_class = "xlarge";
 		config.water_mode = water_mode;
 		config.width = 144;
@@ -9260,6 +9301,8 @@ int main() {
 
 	{
 		H3MapedRmgWorkflowConfig authority_join_config;
+		// H3MapEd parity check: no cut-off town repair (docs/rmg-cut-off-town-repair.md).
+		authority_join_config.repair_cut_off_towns = false;
 		authority_join_config.size_class = "medium";
 		authority_join_config.water_mode = "land";
 		authority_join_config.width = 72;

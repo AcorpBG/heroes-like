@@ -115534,6 +115534,21 @@
       "notes": "Requested 2026-10-17 after ai-match-633586641 (Small, land, 1 level, weak, 1+1 players) ran to the day cap: Mireclaw's start zone (runtime zone 0) had no walkable exit. Windows H3MapEd (h3trace, seed 1727041229, template 3SB0b) equals native: 0 tile cells differ and all 311 objects match. RNG state matches at every phase marker. Chain from native private state: (1) zone 0's only link 0-6 (3000) gets passage (8,34)/(7,33) from 0x4a61bc and guard value 0 at weak strength, so no guard; (2) after 0x4a79a3 both cells have word_0x28 bit27 set and bit26 clear; (3) zone 0's own 0x4aab7e reward/guard pass (owner 0) clears bit27 on both and sets bit26 on (8,34); (4) 0x49eb8d -> 0x49e700 places objects 119 AVLpntr7 and 118 AVLswmp5 over them. No unrecovered function; no native change. Keeping the passage open would depart from H3MapEd: owner decision. Evidence: reference map and trace excerpts in the shared notes folder of session local_a8c2da62.",
       "updatedAt": "2026-10-17T16:00:00Z",
       "validatedAt": "2026-10-17T16:00:00Z"
+    },
+    {
+      "id": "native-rmg-cut-off-town-repair-20261017",
+      "title": "Regenerate a map whose H3MapEd result leaves a town cut off, with zone route joins on",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "native_rmg_departure",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/rmg-cut-off-town-repair.md",
+        "docs/lessons-learned.md"
+      ],
+      "notes": "Owner decision 2026-10-17: a deliberate departure from H3MapEd, not parity. run_h3maped_rmg_entry_to_writeout_workflow keeps H3MapEd's map unless cut_off_town_count_departure finds a town cut off; then it reruns the same seed with route_join_departure: zero-guard 0x4a61bc passages kept, per-zone joins of anchor, 0x404 cells and town doors after 0x4aab7e, protection before 0x4a7ecc and 0x49eb8d. No RNG, no retries. AURELION_RMG_H3MAPED_STRICT=1 and controlled cases turn it off. Sweep 64/72 unchanged; AI batch 19 cut-off maps to 0, other 325 byte-identical. The repaired map is kept only when fewer towns are cut off (Large two-level seed 73 keeps H3MapEd: split zone link graph). Selftest parity cases run with the repair off; XL seed 76 repair case added; selftest passes on Windows and Linux. core_suite 16/16 on Windows and Linux. Known limit: m043 cross-zone join bypasses the 2-4 guard.",
+      "updatedAt": "2026-10-17T18:00:00Z",
+      "validatedAt": "2026-10-17T18:00:00Z"
     }
   ],
   "project": "heroes-like",

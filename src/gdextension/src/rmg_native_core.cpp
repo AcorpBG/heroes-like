@@ -148,6 +148,8 @@ bool supported_one_level_land_scope(const ControlledCase &controlled_case) {
 
 h3maped_rmg_core::H3MapedRmgWorkflowConfig to_h3maped_workflow_config(const ControlledCase &controlled_case) {
 	h3maped_rmg_core::H3MapedRmgWorkflowConfig config;
+	// Controlled cases compare against H3MapEd references: no cut-off town repair.
+	config.repair_cut_off_towns = false;
 	config.size_class = controlled_case.size_class;
 	config.water_mode = controlled_case.water_mode;
 	config.width = h3maped_rmg_core::map_width_for_size_class(controlled_case.size_class);

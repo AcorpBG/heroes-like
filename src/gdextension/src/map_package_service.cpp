@@ -3379,13 +3379,12 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	// The workflow result holds every private generator buffer (hundreds of MB
 	// on Large and XL maps). Only a few fields are read after projection, so
 	// copy those and free the rest before building the runtime documents.
+	// The workflow also projects the map: it checks the projection for towns cut off
+	// (docs/rmg-cut-off-town-repair.md), so the projection time is in its bucket.
+	aurelion::h3maped_rmg_core::RuntimeMapPayloadProjection projection;
 	auto workflow = std::make_unique<aurelion::h3maped_rmg_core::H3MapedRmgWorkflowResult>(
-			aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config));
+			aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config, &projection));
 	record_bucket("recovered_workflow", workflow_started_at);
-	const auto projection_started_at = SteadyClock::now();
-	const auto projection =
-			aurelion::h3maped_rmg_core::project_runtime_map_from_native_owned_final_payload(*workflow);
-	record_bucket("final_payload_projection", projection_started_at);
 	const String workflow_status = String(workflow->status.c_str());
 	const String workflow_phase = String(workflow->current_phase_id.c_str());
 	const String workflow_blocked_reason = String(workflow->blocked_reason.c_str());
@@ -3393,6 +3392,10 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	const int32_t final_payload_byte_count = workflow->final_payload_writeout_0x4ad1e3.total_payload_byte_count;
 	const int32_t selected_template_catalog_index = workflow->template_selection_0x4ac552.selected_source_catalog_index;
 	const int32_t runtime_zone_count = int32_t(workflow->template_selection_0x4ac552.runtime_seed.runtime_zone_seeds.size());
+	Dictionary cut_off_town_repair;
+	cut_off_town_repair["applied"] = workflow->cut_off_town_repair_applied;
+	cut_off_town_repair["towns_cut_off_before"] = workflow->cut_off_towns_before_repair;
+	cut_off_town_repair["towns_cut_off_after"] = workflow->cut_off_towns_after_repair;
 	workflow.reset();
 	if (!projection.applied) {
 		Dictionary blocked;
@@ -3438,6 +3441,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	metadata["source_template_id"] = source_template_id;
 	metadata["template_id"] = source_template_id;
 	metadata["full_generation_status"] = "native_runtime_ready";
+	metadata["cut_off_town_repair"] = cut_off_town_repair;
 	metadata["validation_status"] = "pass";
 	metadata["native_runtime_authoritative"] = true;
 	metadata["full_parity_claim"] = true;

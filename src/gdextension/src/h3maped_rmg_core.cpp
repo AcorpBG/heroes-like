@@ -6463,6 +6463,7 @@ ProjectedCellChainResult4a5a23 projected_cell_chain_with_object_branch_4a5a23(Ge
 			record.word_0x28 |= CELL_OCCUPIED_BLOCKED_BIT_27;
 			record.word_0x28 &= ~CELL_DECOR_CANDIDATE_BIT_26;
 			sync_generated_cell_byte_0x2b_from_word28(record);
+			result.stamped_cells.push_back(flat);
 				if (record.word_0x28 != before_branch_word_0x28) {
 					result.occupied_stamp_count += 1;
 				}
@@ -6494,6 +6495,7 @@ ProjectedCellChainResult4a5a23 projected_cell_chain_with_object_branch_4a5a23(Ge
 			record.word_0x28 |= CELL_OCCUPIED_BLOCKED_BIT_27;
 			record.word_0x28 &= ~CELL_DECOR_CANDIDATE_BIT_26;
 			sync_generated_cell_byte_0x2b_from_word28(record);
+			result.stamped_cells.push_back(flat);
 				if (record.word_0x28 != before_word_0x28) {
 					result.occupied_stamp_count += 1;
 				}
@@ -18376,6 +18378,12 @@ static ConnectionPairMaterializationPrefixResult4a61bc connection_pair_materiali
 
 		append_relation_owner_local_vector_record_0x404(target_owner, selected.neighbor_x, selected.neighbor_y);
 		result.local_vector_append_count_0x404 += 1;
+		if (state.route_join_departure_enabled && result.guard_budget_0x4a65a5 <= 0 && !source_endpoint.border_guard) {
+			// Departure: keep the passage of an unguarded link free of decoration and rock.
+			std::vector<int64_t> &kept = state.route_join_protected_cells;
+			kept.insert(kept.end(), source_chain.stamped_cells.begin(), source_chain.stamped_cells.end());
+			kept.insert(kept.end(), target_chain.stamped_cells.begin(), target_chain.stamped_cells.end());
+		}
 
 		if (result.guard_budget_0x4a65a5 > 0) {
 			const int32_t target_choice_rng = rng.next();
@@ -41592,7 +41600,362 @@ static void initialize_generator_object_private_state_from_workflow_entry_0x49ec
 	state.reward_guard_selector_0x4a9f1c_counter_limit_contract_ported = true;
 }
 
-H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3MapedRmgWorkflowConfig &config) {
+// Departure from H3MapEd (docs/rmg-cut-off-town-repair.md). These steps only run
+// when the finished H3MapEd map left a town cut off and the workflow generates the
+// map again with route_join_departure set. They use no RNG.
+static void route_join_departure_protect_cells(GeneratedCellRecordGrid0x30 &grid, const std::vector<int64_t> &cells) {
+	for (const int64_t flat : cells) {
+		if (flat < 0 || flat >= int64_t(grid.records.size())) {
+			continue;
+		}
+		GeneratedCellRecord0x30 &record = grid.records[size_t(flat)];
+		if (!record.word_0x28_known) {
+			continue;
+		}
+		record.word_0x28 |= CELL_OCCUPIED_BLOCKED_BIT_27;
+		record.word_0x28 &= ~CELL_DECOR_CANDIDATE_BIT_26;
+		sync_generated_cell_byte_0x2b_from_word28(record);
+	}
+}
+
+// After 0x4aab7e: within each zone, join the anchor, the 0x404 passage cells and
+// the town doors into one network of protected cells. A protected cell is one
+// 0x49e700 decoration and the 0x4a7ecc rock repaint leave alone. A zone whose
+// route points sit in separate ownership fragments may cross other zones.
+static void route_join_departure_join_zones(GeneratorObjectPrivateState &state) {
+	GeneratedCellRecordGrid0x30 &grid = state.generated_cell_buffer;
+	const int32_t width = grid.width;
+	const int32_t height = grid.height;
+	const int64_t cell_count = int64_t(grid.records.size());
+	if (width <= 0 || height <= 0 || grid.level_count <= 0
+			|| cell_count != int64_t(width) * height * grid.level_count) {
+		return;
+	}
+	std::vector<char> protected_cell(size_t(cell_count), 0);
+	for (const int64_t flat : state.route_join_protected_cells) {
+		if (flat >= 0 && flat < cell_count) {
+			protected_cell[size_t(flat)] = 1;
+		}
+	}
+	auto record_at = [&](int64_t flat) -> GeneratedCellRecord0x30 & { return grid.records[size_t(flat)]; };
+	auto owner_of = [&](int64_t flat) { return generated_cell_word20_owner_byte2_signed(record_at(flat).word_0x20); };
+	auto has_object = [&](int64_t flat) { return !record_at(flat).object_references_0x04_0x08.empty(); };
+	auto is_action = [&](int64_t flat) { return (record_at(flat).word_0x28 & CELL_ACTION_CONTROL_BIT_22) != 0U; };
+	auto water_or_rock = [&](int64_t flat) {
+		const uint32_t terrain = record_at(flat).word_0x24 & 0x3fU;
+		return terrain == 8U || terrain == 9U;
+	};
+
+	std::map<int32_t, std::vector<int64_t>> points_by_zone;
+	auto push_point = [&](int32_t zone, int64_t flat) {
+		std::vector<int64_t> &points = points_by_zone[zone];
+		if (std::find(points.begin(), points.end(), flat) == points.end()) {
+			points.push_back(flat);
+		}
+	};
+	for (const GeneratorRelationOwnerState4a218c &owner : state.relation_owner_vectors_10e4_10e8) {
+		if (!relation_owner_slot_materialized_10e4(owner) || !owner.coordinate_triple_0x10_0x18_known) {
+			continue;
+		}
+		const int32_t zone = relation_owner_byte2_for_generated_cell_gate(owner);
+		if (zone < 0) {
+			continue;
+		}
+		auto add_point = [&](int32_t x, int32_t y) {
+			const int64_t flat = cell_index(width, height, x, y, owner.coordinate_level_0x18);
+			if (flat < 0 || flat >= cell_count || (has_object(flat) && !is_action(flat)) || water_or_rock(flat)) {
+				return;
+			}
+			push_point(zone, flat);
+		};
+		add_point(owner.coordinate_x_0x10, owner.coordinate_y_0x14);
+		for (const RelationOwnerLocalVectorRecord0x404 &record : owner.owner_local_vector_records_0x404) {
+			add_point(record.x, record.y);
+		}
+	}
+	// 0x4a4c8e reopens a town door that sits on a zone border; join the door back.
+	for (const ObjectRecordReference4a54a7 &object : state.object_records_0xec4_ecc) {
+		if (object.descriptor_type_0x1c != 98) {
+			continue;
+		}
+		for (int32_t dx = 0; dx <= 4; ++dx) {
+			const int64_t flat = cell_index(width, height, object.x - dx, object.y, object.level);
+			if (flat < 0 || flat >= cell_count || !is_action(flat)) {
+				continue;
+			}
+			const int32_t zone = owner_of(flat);
+			if (zone >= 0) {
+				push_point(zone, flat);
+			}
+			break;
+		}
+	}
+
+	static constexpr int32_t DX[8] = { 1, 1, 0, -1, -1, -1, 0, 1 };
+	static constexpr int32_t DY[8] = { 0, 1, 1, 1, 0, -1, -1, -1 };
+	const int64_t plane = int64_t(width) * height;
+	auto neighbours = [&](int64_t flat, std::array<int64_t, 8> &out) {
+		const int32_t level = int32_t(flat / plane);
+		const int32_t x = int32_t(flat % plane) % width;
+		const int32_t y = int32_t(flat % plane) / width;
+		for (int32_t direction = 0; direction < 8; ++direction) {
+			const int32_t nx = x + DX[direction];
+			const int32_t ny = y + DY[direction];
+			out[size_t(direction)] = (nx < 0 || ny < 0 || nx >= width || ny >= height) ? -1 : cell_index(width, height, nx, ny, level);
+		}
+	};
+
+	for (auto &entry : points_by_zone) {
+		const int32_t zone = entry.first;
+		const std::vector<int64_t> &points = entry.second;
+		if (points.size() < 2) {
+			continue;
+		}
+		std::vector<char> is_point(size_t(cell_count), 0);
+		for (const int64_t flat : points) {
+			is_point[size_t(flat)] = 1;
+		}
+		auto open_cell = [&](int64_t flat) {
+			if (is_point[size_t(flat)]) {
+				return true;
+			}
+			if (has_object(flat) || water_or_rock(flat)) {
+				return false;
+			}
+			return protected_cell[size_t(flat)] != 0 || (record_at(flat).word_0x28 & CELL_OCCUPIED_BLOCKED_BIT_27) != 0U;
+		};
+		std::vector<int32_t> component;
+		auto label_components = [&]() {
+			component.assign(size_t(cell_count), -1);
+			int32_t next = 0;
+			std::array<int64_t, 8> around {};
+			for (const int64_t start : points) {
+				if (component[size_t(start)] >= 0) {
+					continue;
+				}
+				std::vector<int64_t> stack { start };
+				component[size_t(start)] = next;
+				while (!stack.empty()) {
+					const int64_t cell = stack.back();
+					stack.pop_back();
+					neighbours(cell, around);
+					for (const int64_t next_cell : around) {
+						if (next_cell < 0 || component[size_t(next_cell)] >= 0 || !open_cell(next_cell)) {
+							continue;
+						}
+						component[size_t(next_cell)] = next;
+						stack.push_back(next_cell);
+					}
+				}
+				next += 1;
+			}
+		};
+		label_components();
+		// The network to grow is the component holding the most route points.
+		std::map<int32_t, int32_t> points_per_component;
+		for (const int64_t flat : points) {
+			points_per_component[component[size_t(flat)]] += 1;
+		}
+		int64_t root_point = points.front();
+		for (const int64_t flat : points) {
+			if (points_per_component[component[size_t(flat)]] > points_per_component[component[size_t(root_point)]]) {
+				root_point = flat;
+			}
+		}
+		for (const int64_t target : points) {
+			const int32_t root = component[size_t(root_point)];
+			const int32_t target_component = component[size_t(target)];
+			if (target_component == root) {
+				continue;
+			}
+			// Cheapest path: protected cells cost 0, free cells of the zone 1, and
+			// only when the zone offers none, free cells of other zones 4.
+			for (int32_t pass = 0; pass < 2; ++pass) {
+				std::vector<int32_t> distance(size_t(cell_count), std::numeric_limits<int32_t>::max());
+				std::vector<int64_t> previous(size_t(cell_count), -1);
+				using QueueEntry = std::pair<int32_t, int64_t>;
+				std::priority_queue<QueueEntry, std::vector<QueueEntry>, std::greater<QueueEntry>> queue;
+				for (int64_t flat = 0; flat < cell_count; ++flat) {
+					if (component[size_t(flat)] == root) {
+						distance[size_t(flat)] = 0;
+						queue.push({ 0, flat });
+					}
+				}
+				int64_t reached = -1;
+				std::array<int64_t, 8> around {};
+				while (!queue.empty()) {
+					const QueueEntry top = queue.top();
+					queue.pop();
+					if (top.first != distance[size_t(top.second)]) {
+						continue;
+					}
+					if (component[size_t(top.second)] == target_component) {
+						reached = top.second;
+						break;
+					}
+					neighbours(top.second, around);
+					for (const int64_t next_cell : around) {
+						if (next_cell < 0) {
+							continue;
+						}
+						int32_t step = 0;
+						if (open_cell(next_cell) || component[size_t(next_cell)] == target_component) {
+							step = 0;
+						} else if (has_object(next_cell) || water_or_rock(next_cell)) {
+							continue;
+						} else if (owner_of(next_cell) == zone) {
+							step = 1;
+						} else if (pass == 1 && owner_of(next_cell) >= 0) {
+							step = 4;
+						} else {
+							continue;
+						}
+						const int32_t candidate = distance[size_t(top.second)] + step;
+						if (candidate < distance[size_t(next_cell)]) {
+							distance[size_t(next_cell)] = candidate;
+							previous[size_t(next_cell)] = top.second;
+							queue.push({ candidate, next_cell });
+						}
+					}
+				}
+				if (reached < 0) {
+					continue;
+				}
+				std::vector<int64_t> path;
+				for (int64_t cell = reached; cell >= 0; cell = previous[size_t(cell)]) {
+					path.push_back(cell);
+					if (!protected_cell[size_t(cell)]) {
+						protected_cell[size_t(cell)] = 1;
+						state.route_join_protected_cells.push_back(cell);
+					}
+				}
+				route_join_departure_protect_cells(grid, path);
+				state.route_join_carved_path_count += 1;
+				label_components();
+				break;
+			}
+		}
+	}
+}
+
+// Towns outside the walkable area that holds the most towns. Rock and object
+// bodies block; water does not (boats), action tiles stay enterable, and
+// monoliths and subterranean gates join their peers.
+static int32_t cut_off_town_count_departure(const RuntimeMapPayloadProjection &projection) {
+	const int32_t width = projection.width;
+	const int32_t height = projection.height;
+	const int64_t plane = int64_t(width) * height;
+	const int64_t cell_count = plane * projection.level_count;
+	if (width <= 0 || height <= 0 || projection.level_count <= 0
+			|| int64_t(projection.terrain_type_codes.size()) < cell_count) {
+		return 0;
+	}
+	auto flat_of = [&](const RuntimeMapTilePoint &tile) -> int64_t {
+		if (tile.x < 0 || tile.y < 0 || tile.x >= width || tile.y >= height || tile.level < 0 || tile.level >= projection.level_count) {
+			return -1;
+		}
+		return int64_t(tile.level) * plane + int64_t(tile.y) * width + tile.x;
+	};
+	std::vector<char> blocked(size_t(cell_count), 0);
+	for (int64_t flat = 0; flat < cell_count; ++flat) {
+		blocked[size_t(flat)] = projection.terrain_type_codes[size_t(flat)] == 9 ? 1 : 0;
+	}
+	for (const RuntimeMapObjectProjection &object : projection.objects) {
+		for (const RuntimeMapTilePoint &tile : object.body_tiles) {
+			const int64_t flat = flat_of(tile);
+			if (flat >= 0) {
+				blocked[size_t(flat)] = 1;
+			}
+		}
+	}
+	std::map<int32_t, int64_t> entry_by_serialized_index;
+	for (const RuntimeMapObjectProjection &object : projection.objects) {
+		for (const RuntimeMapTilePoint &tile : object.action_tiles) {
+			const int64_t flat = flat_of(tile);
+			if (flat >= 0) {
+				blocked[size_t(flat)] = 0;
+			}
+		}
+		if (!object.action_tiles.empty()) {
+			entry_by_serialized_index[object.serialized_index] = flat_of(object.action_tiles.front());
+		}
+	}
+	std::map<int64_t, std::vector<int64_t>> links;
+	auto link = [&](int32_t from_index, int32_t to_index) {
+		const auto from = entry_by_serialized_index.find(from_index);
+		const auto to = entry_by_serialized_index.find(to_index);
+		if (from == entry_by_serialized_index.end() || to == entry_by_serialized_index.end() || from->second < 0 || to->second < 0) {
+			return;
+		}
+		links[from->second].push_back(to->second);
+		links[to->second].push_back(from->second);
+	};
+	for (const RuntimeMapObjectProjection &object : projection.objects) {
+		for (const int32_t peer : object.monolith_destination_serialized_indices_0x4a7605) {
+			link(object.serialized_index, peer);
+		}
+		if (object.cross_level_peer_serialized_index_0x4a6cf2 >= 0) {
+			link(object.serialized_index, object.cross_level_peer_serialized_index_0x4a6cf2);
+		}
+	}
+	std::vector<int32_t> area(size_t(cell_count), -1);
+	int32_t area_count = 0;
+	for (int64_t start = 0; start < cell_count; ++start) {
+		if (area[size_t(start)] >= 0 || blocked[size_t(start)]) {
+			continue;
+		}
+		std::vector<int64_t> stack { start };
+		area[size_t(start)] = area_count;
+		while (!stack.empty()) {
+			const int64_t cell = stack.back();
+			stack.pop_back();
+			const int32_t level = int32_t(cell / plane);
+			const int32_t x = int32_t(cell % plane) % width;
+			const int32_t y = int32_t(cell % plane) / width;
+			auto visit = [&](int64_t next_cell) {
+				if (area[size_t(next_cell)] < 0 && !blocked[size_t(next_cell)]) {
+					area[size_t(next_cell)] = area_count;
+					stack.push_back(next_cell);
+				}
+			};
+			for (int32_t dy = -1; dy <= 1; ++dy) {
+				for (int32_t dx = -1; dx <= 1; ++dx) {
+					if ((dx != 0 || dy != 0) && x + dx >= 0 && y + dy >= 0 && x + dx < width && y + dy < height) {
+						visit(int64_t(level) * plane + int64_t(y + dy) * width + (x + dx));
+					}
+				}
+			}
+			const auto linked = links.find(cell);
+			if (linked != links.end()) {
+				for (const int64_t next_cell : linked->second) {
+					visit(next_cell);
+				}
+			}
+		}
+		area_count += 1;
+	}
+	std::map<int32_t, int32_t> towns_per_area;
+	int32_t town_count = 0;
+	for (const RuntimeMapObjectProjection &object : projection.objects) {
+		if (object.type_id != 98) {
+			continue;
+		}
+		town_count += 1;
+		const int64_t flat = object.action_tiles.empty() ? -1 : flat_of(object.action_tiles.front());
+		if (flat >= 0) {
+			towns_per_area[area[size_t(flat)]] += 1;
+		}
+	}
+	int32_t largest = 0;
+	for (const auto &entry : towns_per_area) {
+		if (entry.first >= 0) {
+			largest = std::max(largest, entry.second);
+		}
+	}
+	return town_count - largest;
+}
+
+static H3MapedRmgWorkflowResult run_h3maped_rmg_workflow_pass(const H3MapedRmgWorkflowConfig &config) {
 	H3MapedRmgWorkflowResult result;
 	result.config = config;
 	result.status = "blocked";
@@ -41848,6 +42211,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 			result.setup_mode_0x49ecf2,
 			result.template_selection_0x4ac552,
 			result.coordinate_owner_grid_0x4a218c);
+	result.generator_object_private_state.route_join_departure_enabled = config.route_join_departure;
 		if (!result.generator_object_private_state.generated_cell_buffer_owned) {
 			result.current_phase_id = "generator_object_private_state";
 			result.status = "blocked";
@@ -42326,6 +42690,14 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 				std::fprintf(stderr, "RMG_TRACE_PHASE_RNG phase=after_0x4aab7e state=0x%08x\n", route_free_cell_rng.state);
 			}
 			workflow_phase_cell_trace("after_reward_guard_source_stream_0x4aab7e", result.generator_object_private_state.generated_cell_buffer);
+			if (result.generator_object_private_state.route_join_departure_enabled) {
+				// Departure: 0x4aa3e9 may have cleared kept passage cells, and 0x4a7ecc
+				// paints rock on every underground cell without bit27.
+				route_join_departure_protect_cells(
+						result.generator_object_private_state.generated_cell_buffer,
+						result.generator_object_private_state.route_join_protected_cells);
+				route_join_departure_join_zones(result.generator_object_private_state);
+			}
 		result.generator_object_private_state.reward_guard_source_stream_0x4aab7e_input_known =
 				reward_guard_source_pointer_vector_0x10e4_0x10e8_known_for_0x4aab7e(result.generator_object_private_state)
 				&& std::all_of(
@@ -42447,6 +42819,11 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 						"AURELION_RMG_TRACE_POST_49A1EF_GRID",
 						"after_0x49a1ef_0x4ac83d",
 						result.generator_object_private_state.generated_cell_buffer);
+				if (result.generator_object_private_state.route_join_departure_enabled) {
+					route_join_departure_protect_cells(
+							result.generator_object_private_state.generated_cell_buffer,
+							result.generator_object_private_state.route_join_protected_cells);
+				}
 				workflow_phase_cell_trace("before_decorative_dispatch_0x49eb8d", result.generator_object_private_state.generated_cell_buffer);
 				if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 					std::fprintf(stderr, "RMG_TRACE_PHASE_RNG phase=before_0x49eb8d state=0x%08x\n", route_free_cell_rng.state);
@@ -43532,6 +43909,57 @@ RuntimeMapPayloadProjection project_runtime_map_from_parity_owned_final_payload(
 			workflow.final_tile_writeout_0x49b2b6,
 			workflow.final_object_writeout_0x4ad309_0x4ad3eb,
 			workflow.final_payload_writeout_0x4ad1e3), workflow);
+}
+
+H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3MapedRmgWorkflowConfig &config) {
+	return run_h3maped_rmg_entry_to_writeout_workflow(config, nullptr);
+}
+
+H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(
+		const H3MapedRmgWorkflowConfig &config, RuntimeMapPayloadProjection *projection_out) {
+	H3MapedRmgWorkflowResult result = run_h3maped_rmg_workflow_pass(config);
+	const bool repair = config.repair_cut_off_towns && !config.route_join_departure
+			&& rmg_trace_env("AURELION_RMG_H3MAPED_STRICT") == nullptr;
+	if (!repair && projection_out == nullptr) {
+		return result;
+	}
+	RuntimeMapPayloadProjection projection = project_runtime_map_from_native_owned_final_payload(result);
+	const int32_t cut_off = (repair && projection.applied) ? cut_off_town_count_departure(projection) : 0;
+	if (cut_off <= 0) {
+		if (projection_out != nullptr) {
+			*projection_out = std::move(projection);
+		}
+		return result;
+	}
+	// Departure from H3MapEd: the same seed again, with the zone route joins on.
+	// The H3MapEd result is freed first. It is rebuilt when the repair pass fails or
+	// leaves as many towns cut off, for example when the zone link graph itself is
+	// split (Large two-level seed 73).
+	projection = RuntimeMapPayloadProjection();
+	result = H3MapedRmgWorkflowResult();
+	H3MapedRmgWorkflowConfig repair_config = config;
+	repair_config.route_join_departure = true;
+	H3MapedRmgWorkflowResult repaired = run_h3maped_rmg_workflow_pass(repair_config);
+	RuntimeMapPayloadProjection repaired_projection = project_runtime_map_from_native_owned_final_payload(repaired);
+	const int32_t cut_off_after = repaired_projection.applied ? cut_off_town_count_departure(repaired_projection) : cut_off;
+	if (cut_off_after >= cut_off) {
+		repaired = H3MapedRmgWorkflowResult();
+		repaired_projection = RuntimeMapPayloadProjection();
+		result = run_h3maped_rmg_workflow_pass(config);
+		result.cut_off_towns_before_repair = cut_off;
+		result.cut_off_towns_after_repair = cut_off;
+		if (projection_out != nullptr) {
+			*projection_out = project_runtime_map_from_native_owned_final_payload(result);
+		}
+		return result;
+	}
+	repaired.cut_off_town_repair_applied = true;
+	repaired.cut_off_towns_before_repair = cut_off;
+	repaired.cut_off_towns_after_repair = cut_off_after;
+	if (projection_out != nullptr) {
+		*projection_out = std::move(repaired_projection);
+	}
+	return repaired;
 }
 
 RuntimeMapPayloadProjection project_runtime_map_from_native_owned_final_payload(
