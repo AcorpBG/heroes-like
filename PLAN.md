@@ -142,7 +142,11 @@ Rules:
 
 `native-rmg-cut-off-check-mine-shape-20261017` (completed, part of the cut-off repair departure): the game blocks every mine as three by two tiles around its visit tile (`scripts/core/CommonMineRules.gd`) in place of the H3 body, but the cut-off check used the H3 bodies. On AI match m095 (medium 3P, map seed `4228448339-p3`) two mines closed the only exits from player 3's start town, and the check reported none cut off. The check now blocks the game's shape; m095 reports one town cut off and the repair joins it.
 - Of 708 AI-batch configurations, 74 now have a town cut off on H3MapEd's map (57 under the old check too). The repair is kept on 50, and 48 end with none cut off. The 72-reference sweep stays 64/72 with and without the repair. The selftest adds the m095 case; it and `tools/core_suite.py` (16/16) pass on Windows and Linux.
-- Known limit: the route joins only know a mine's H3 body, so 19 maps with a mine-sealed town keep H3MapEd's map. See `docs/rmg-cut-off-town-repair.md`.
+- Corrected by the next slice: of the 19 maps that kept H3MapEd's map, 15 were sealed by mines and 4 (medium2p/m024 and m079, medium3p/m077 and m080) are cut off without mines.
+
+`native-rmg-route-join-mine-shape-20261017` (completed, part of the cut-off repair departure): the repair's route joins now treat the game's three-by-two mine shape as occupied, so a join no longer runs through the row above a mine's H3 body.
+- Of the 74 flagged AI-batch configurations, the repair is now kept on 56 and 55 end with none cut off (was 50 and 48). Six mine-sealed maps now repair, and medium3p/m082 now goes from 2 cut off to 0. No other map changed. The sweep stays 64/72 with and without the repair.
+- Blocker for the other 9 mine-sealed maps: `0x4a9d6a` places a mine two rows below the town door before the joins run. The game blocks the mine's top row, which covers the door's only exits. Opening them needs the repair pass to keep that mine off those cells, or an owner decision on the mine shape. See `docs/rmg-cut-off-town-repair.md`.
 
 ### Raid director removal
 

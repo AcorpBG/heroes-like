@@ -61,6 +61,10 @@ differs from H3MapEd beyond the carved cells.
      the zone that owns that cell.
    - **Components:** points are grouped over cells that are guaranteed walkable: a
      point, or a cell with no object, not water or rock, with bit27 set.
+   - **Mines:** every mine (type 53, from `object_records_0xec4_ecc`) blocks the game's
+     three-by-two shape (`scripts/core/CommonMineRules.gd`), minus its visit tile. The
+     joins treat those cells as occupied, so a join never runs through the row above a
+     mine's H3 body.
    - **Join:** each other component is joined to the one holding the most points by
      the cheapest path. Cells already walkable cost 0, free cells of the zone cost 1.
      If no path exists inside the zone, a second pass may cross other zones' free
@@ -104,6 +108,14 @@ expose them as `metadata.cut_off_town_repair` (`applied`, `towns_cut_off_before`
     repair; small180/m060 keeps H3MapEd's map.
   - Of the 17 maps flagged only for mines, 3 are repaired (m095, small60/m049,
     2026-10-16/m101). The other 14 keep H3MapEd's map.
+- **Route joins with the mine shape** (the same 708 configurations; only the 74 flagged
+  ones can change):
+  - The repair is now kept on 56 of them, and 55 end with no town cut off.
+  - 7 maps changed, all for the better:
+    - Six now repair fully: small180/m016, m060 and m138, 2026-10-16/m115 and m118,
+      and small2p/m091.
+    - medium3p/m082 goes from 2 to 0 towns cut off, where before it went from 2 to 1.
+  - No other map changed.
 - **Strict mode:** with `AURELION_RMG_H3MAPED_STRICT=1`, m043 (seed 2851495868) is
   byte-identical to H3MapEd.
 - **Native selftest:** every H3MapEd parity case runs with the repair off and passes.
@@ -145,9 +157,21 @@ yet player 3's start town at (60,24,0) could not be left on foot.
   one, and keeps the other in zones 15-19, which H3MapEd's links never join to the rest.
   Whether the template's link data or a missing gate link is the cause has not been
   traced.
-- **Mine-sealed towns.** The route joins work on the generator grid, which knows only a
-  mine's H3 body, not the row above it that the game also blocks. So the repair can
-  leave a town sealed by a mine. 14 of the maps flagged only for mines keep H3MapEd's
-  map, and so do 5 maps that were cut off under the old check too: small180/m060,
-  medium2p/m024 and m079, medium3p/m077 and m080. This has not been traced map by map.
+- **Mines below a town door.** On 8 maps the town's door is a one-tile pocket:
+  - the town body closes it on three sides;
+  - a mine sits two rows below, so the game's top row of the mine covers the three
+    tiles under the door.
+  - In H3 those tiles are free, because the H3 body is only the mine's bottom row.
+  - No join can open the pocket, so these maps keep H3MapEd's map.
+  - The maps: small180/m103, m139 and m155; small60/m060; small60_guards/m057;
+    2026-10-16/m102; small2p/m075; small2p/m103 (both towns).
+  - On small180/m014, two mines' top rows close both exits of a 107-tile pocket.
+  - **Blocker:** the mine is placed by `0x4a9d6a`, before the joins run. Opening these
+    towns needs one of two changes:
+    - the repair pass keeps that mine off the cells below the door;
+    - or the game blocks a different mine shape, which is an owner decision.
+  - Neither is done.
+- **Cut off without mines.** medium2p/m024 and m079, and medium3p/m077 and m080 (two
+  towns), are cut off under the H3 body check too, and the repair does not help them.
+  The route joins do not cause it. This has not been traced map by map.
 - **Cost.** A repaired map is generated twice, and an unhelped one three times.

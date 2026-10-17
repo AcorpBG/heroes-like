@@ -41543,9 +41543,36 @@ static void route_join_departure_join_zones(GeneratorObjectPrivateState &state) 
 			protected_cell[size_t(flat)] = 1;
 		}
 	}
+	// The game blocks every mine as three by two tiles with its visit tile, one left
+	// of the anchor, at the bottom middle (scripts/core/CommonMineRules.gd). Joins
+	// treat that shape as occupied, so they do not lean on the row above the H3 body.
+	std::vector<char> game_mine_cell(size_t(cell_count), 0);
+	for (const ObjectRecordReference4a54a7 &object : state.object_records_0xec4_ecc) {
+		if (object.descriptor_type_0x1c != 53) {
+			continue;
+		}
+		for (int32_t dy = -1; dy <= 0; ++dy) {
+			for (int32_t dx = -2; dx <= 0; ++dx) {
+				if (dx == -1 && dy == 0) {
+					continue;
+				}
+				const int32_t x = object.x + dx;
+				const int32_t y = object.y + dy;
+				if (x < 0 || y < 0 || x >= width || y >= height) {
+					continue;
+				}
+				const int64_t flat = cell_index(width, height, x, y, object.level);
+				if (flat >= 0 && flat < cell_count) {
+					game_mine_cell[size_t(flat)] = 1;
+				}
+			}
+		}
+	}
 	auto record_at = [&](int64_t flat) -> GeneratedCellRecord0x30 & { return grid.records[size_t(flat)]; };
 	auto owner_of = [&](int64_t flat) { return generated_cell_word20_owner_byte2_signed(record_at(flat).word_0x20); };
-	auto has_object = [&](int64_t flat) { return !record_at(flat).object_references_0x04_0x08.empty(); };
+	auto has_object = [&](int64_t flat) {
+		return !record_at(flat).object_references_0x04_0x08.empty() || game_mine_cell[size_t(flat)] != 0;
+	};
 	auto is_action = [&](int64_t flat) { return (record_at(flat).word_0x28 & CELL_ACTION_CONTROL_BIT_22) != 0U; };
 	auto water_or_rock = [&](int64_t flat) {
 		const uint32_t terrain = record_at(flat).word_0x24 & 0x3fU;
