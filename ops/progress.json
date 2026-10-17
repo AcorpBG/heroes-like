@@ -115549,6 +115549,20 @@
       "notes": "Owner decision 2026-10-17: a deliberate departure from H3MapEd, not parity. run_h3maped_rmg_entry_to_writeout_workflow keeps H3MapEd's map unless cut_off_town_count_departure finds a town cut off; then it reruns the same seed with route_join_departure: zero-guard 0x4a61bc passages kept, per-zone joins of anchor, 0x404 cells and town doors after 0x4aab7e, protection before 0x4a7ecc and 0x49eb8d. No RNG, no retries. AURELION_RMG_H3MAPED_STRICT=1 and controlled cases turn it off. Sweep 64/72 unchanged; AI batch 19 cut-off maps to 0, other 325 byte-identical. The repaired map is kept only when fewer towns are cut off (Large two-level seed 73 keeps H3MapEd: split zone link graph). Selftest parity cases run with the repair off; XL seed 76 repair case added; selftest passes on Windows and Linux. core_suite 16/16 on Windows and Linux. Known limit: m043 cross-zone join bypasses the 2-4 guard.",
       "updatedAt": "2026-10-17T18:00:00Z",
       "validatedAt": "2026-10-17T18:00:00Z"
+    },
+    {
+      "id": "native-rmg-ready-or-not-seed10-anchor-removal-20261017",
+      "title": "Remove the seed-10 Ready or Not 0x4a93a2 anchor override",
+      "status": "in_progress",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "native_rmg_parity",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/rmg-second-town-placement-parity.md",
+        "docs/lessons-learned.md"
+      ],
+      "notes": "apply_ready_or_not_medium_seed10_source_order_anchor_to_owner_4a93a2 overwrote +0x10..+0x18 with seed 10's anchors on every medium Ready or Not map (structure-only gate). Those anchors equal native's own 0x4a2ffa results for seed 10; the post-recenter reapply of the seed-10 0x4a3a03 footprint state had reset them. Both fixtures removed; 0x4a93a2 now uses the 0x4a2ffa coordinates. Seed 10 weak/normal still equal Windows H3MapEd; m024 (2962727902) now has H3MapEd's towns, with 262 road/river/decoration cells still differing after 0x4aab7e (not traced). Sweep 64/72.",
+      "updatedAt": "2026-10-17T20:00:00Z"
     }
   ],
   "project": "heroes-like",
