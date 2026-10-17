@@ -138,7 +138,7 @@ Rules:
 - Seed 10 weak and normal still equal Windows H3MapEd. AI-batch m024 (2962727902) now has H3MapEd's towns; its remaining 262-cell road, river and decoration difference is fixed by the next slice. The 72-reference sweep stays 64/72; the selftest and `tools/core_suite.py` (16/16) pass on Windows and Linux. See `docs/rmg-second-town-placement-parity.md`.
 
 `native-rmg-seer-hut-bit26-reject-20261017` (completed, native fix): native let the type-83 quest-hut projection from `0x4ad947` take cells whose `+0x28` bit 26 is set. H3MapEd's `0x4aa603` passes a constant 1 to the `0x49a6f9` footprint check for every member, so those cells are rejected. On m024, owner 7's two huts landed in the wrong cells of zone 4, which shifted owner 9's huts, the `0x49eb8d` decoration, roads and rivers. The exemption is removed.
-- m024 (2962727902) now equals Windows H3MapEd: 0 cells and all 1,268 objects, with the RNG matching after `0x49eb8d`, `0x4ab52a` and `0x4ac4ae`. Seed 10 stays exact; the 72-reference sweep stays 64/72 with the same rows. Not traced: H3MapEd's `+0x2c` = 4 at (63,4) after `0x4ac771` (native 0), which does not reach the final map.
+- m024 (2962727902) now equals Windows H3MapEd: 0 cells and all 1,268 objects, with the RNG matching after `0x49eb8d`, `0x4ab52a` and `0x4ac4ae`. Seed 10 stays exact; the 72-reference sweep stays 64/72 with the same rows; the selftest and `tools/core_suite.py` (16/16) pass on Windows and Linux. Not traced: H3MapEd's `+0x2c` = 4 at (63,4) after `0x4ac771` (native 0), which does not reach the final map.
 
 ### Raid director removal
 
