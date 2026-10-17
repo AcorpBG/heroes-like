@@ -188,3 +188,32 @@ unchanged.
 - Fixed separately (`rmg-launch-keeps-guard-strength-20261017`): the size-default launch
   path dropped the guard strength, so the AI match runner's weak and strong maps ran
   as normal.
+
+## m003: a Small start zone that H3MapEd seals itself
+
+Case (2026-10-17 Small guard batch): match `ai-match-633586641`, map seed and H3MapEd
+seed 1727041229. Small, land, one level, 1 human + 1 computer, weak monsters, template
+`3SB0b` (catalog index 44). Mireclaw's start zone (runtime zone 0, 73 walkable tiles)
+has no walkable way out, so the game ran to the day cap.
+
+The Windows H3MapEd map (`h3trace`, `phase_run.py` with hc 1, co 1, monster 1, size 36)
+equals native in every tile and all 311 objects. The RNG state also matches at every
+phase marker. The seal is therefore H3MapEd's own behaviour, not native drift, and no
+H3MapEd function is missing. This is how it happens (native private state):
+
+1. Zone 0 has exactly one template link, 0-6 (value 3000, not wide, no border guard).
+   The connection step `0x4a61bc` gives it the passage cell (8,34) in zone 0 next to
+   (7,33) in zone 6. At weak strength the link's guard value is 0, so no guard is
+   placed. The 3000-value links 1-4, 3-4, 3-6 and 4-5 get no guard either. Link 6-7
+   gets a monolith pair at (12,23) and (31,28).
+2. After `0x4a79a3`, both passage cells have bit 27 set and bit 26 clear in
+   `word_0x28`, which keeps them out of decoration.
+3. Zone 0's own reward/guard pass in `0x4aab7e` (owner 0, the first owner) clears
+   bit 27 on both cells and sets bit 26 (decoration candidate) on (8,34).
+4. `0x49eb8d -> 0x49e700` decoration then covers both cells:
+   - object 119 (`AVLpntr7`, anchor (8,35)) covers (7,33) and (8,34);
+   - object 118 (`AVLswmp5`, anchor (9,33)) also covers (7,33).
+
+No other link reaches zone 0, so the zone is closed. Keeping it open would mean
+departing from H3MapEd, for example by protecting a zero-guard link's passage from
+step 3 or 4. That is an owner decision. A connectivity retry or gate is excluded.
