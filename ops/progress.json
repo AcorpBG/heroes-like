@@ -115588,6 +115588,21 @@
       "notes": "apply_ready_or_not_medium_seed10_source_order_anchor_to_owner_4a93a2 overwrote +0x10..+0x18 with seed 10's anchors on every medium Ready or Not map (structure-only gate). Those anchors equal native's own 0x4a2ffa results for seed 10; the post-recenter reapply of the seed-10 0x4a3a03 footprint state had reset them. Both fixtures removed; 0x4a93a2 now uses the 0x4a2ffa coordinates. Seed 10 weak/normal still equal Windows H3MapEd; m024 (2962727902) now has H3MapEd's towns, with 262 road/river/decoration cells still differing after 0x4aab7e (not traced). Sweep 64/72. Selftest passes on Windows and Linux; core_suite 16/16 on Windows and Linux.",
       "updatedAt": "2026-10-17T21:00:00Z",
       "validatedAt": "2026-10-17T21:00:00Z"
+    },
+    {
+      "id": "native-rmg-seer-hut-bit26-reject-20261017",
+      "title": "Quest-hut projections reject existing bit-26 cells like H3MapEd 0x4aa603",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "native_rmg_parity",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/rmg-second-town-placement-parity.md",
+        "docs/lessons-learned.md"
+      ],
+      "notes": "m024 (2962727902): H3MapEd private grids dumped at every 0x4ac552 marker matched native through 0x4ac7c4; in the 0x4aab7e loop owner 7's two type-83 0x4ad947 projections took (23,39)/(21,41) instead of (36,39)/(26,42). Native exempted that member from 0x49a6f9's existing-bit26 rejection; 0x4aa603 pushes a constant 1 (0x4aa646) and 0x4aaabd is its only caller. Exemption removed. m024 equals Windows H3MapEd (0 cells, 1268/1268 objects, RNG equal after 0x49eb8d/0x4ab52a/0x4ac4ae); seed 10 exact; sweep 64/72 same rows. Untraced: +0x2c=4 at (63,4) after 0x4ac771 (native 0), not in the final map. Selftest passes on Windows and Linux; core_suite 16/16 on Windows and Linux.",
+      "updatedAt": "2026-10-17T23:00:00Z",
+      "validatedAt": "2026-10-17T23:00:00Z"
     }
   ],
   "project": "heroes-like",

@@ -135,7 +135,10 @@ Rules:
 - Known limit: on m043 (seed 2851495868, strong) a cross-zone join opens a walk around the 2-4 guard. See `docs/rmg-cut-off-town-repair.md`.
 
 `native-rmg-ready-or-not-seed10-anchor-removal-20261017` (completed, native fix): every medium Ready or Not map placed its towns from seed 10's hard-coded `0x4a93a2` anchors, because that override's gate checked only template structure. The anchors are native's own `0x4a2ffa` results for seed 10; a second seed-10 fixture had reset them after the recenter. Both fixtures are gone, so `0x4a93a2` uses the `0x4a2ffa` coordinates, H3MapEd's last write to them.
-- Seed 10 weak and normal still equal Windows H3MapEd. AI-batch m024 (2962727902) now has H3MapEd's towns; its roads, rivers and decoration still differ after `0x4aab7e` (262 cells, not traced). The 72-reference sweep stays 64/72; the selftest and `tools/core_suite.py` (16/16) pass on Windows and Linux. See `docs/rmg-second-town-placement-parity.md`.
+- Seed 10 weak and normal still equal Windows H3MapEd. AI-batch m024 (2962727902) now has H3MapEd's towns; its remaining 262-cell road, river and decoration difference is fixed by the next slice. The 72-reference sweep stays 64/72; the selftest and `tools/core_suite.py` (16/16) pass on Windows and Linux. See `docs/rmg-second-town-placement-parity.md`.
+
+`native-rmg-seer-hut-bit26-reject-20261017` (completed, native fix): native let the type-83 quest-hut projection from `0x4ad947` take cells whose `+0x28` bit 26 is set. H3MapEd's `0x4aa603` passes a constant 1 to the `0x49a6f9` footprint check for every member, so those cells are rejected. On m024, owner 7's two huts landed in the wrong cells of zone 4, which shifted owner 9's huts, the `0x49eb8d` decoration, roads and rivers. The exemption is removed.
+- m024 (2962727902) now equals Windows H3MapEd: 0 cells and all 1,268 objects, with the RNG matching after `0x49eb8d`, `0x4ab52a` and `0x4ac4ae`. Seed 10 stays exact; the 72-reference sweep stays 64/72 with the same rows; the selftest and `tools/core_suite.py` (16/16) pass on Windows and Linux. Not traced: H3MapEd's `+0x2c` = 4 at (63,4) after `0x4ac771` (native 0), which does not reach the final map.
 
 ### Raid director removal
 

@@ -4305,7 +4305,6 @@ struct RewardGuardWrapperMember4aa3e9 {
 	bool stamp_source_record_copy_known_0x49abd6 = false;
 	SourceObjectRecord0x4c stamp_source_record_copy_0x49abd6;
 	bool stamp_source_cell_only_0x49abd6 = false;
-	bool footprint_allows_existing_bit26_0x4aa603 = false;
 	int32_t selected_wrapper_index_0x4af785 = -1;
 	bool descriptor_body_offsets_0x49a6f9_known = false;
 	std::vector<CoordinateCandidate4a17f5> descriptor_body_offsets_0x49a6f9;
