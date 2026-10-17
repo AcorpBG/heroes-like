@@ -35,6 +35,8 @@ Take these from the request; use the defaults for anything not given. Do not ask
 | size | `homm3_medium` | `homm3_small`, `homm3_medium`, `homm3_large`, `homm3_extra_large` |
 | line-ups | different random factions per match, no faction twice in a match | `--mirrors` allows repeats; or exact line-ups from the owner |
 | guards | `normal` (as a new game from the main menu) | `weak`, `normal`, `strong` |
+| water | `land` (as a new game) | `land`, `normal_water`, `islands` |
+| levels | `1` (as a new game) | `1`, `2` (with the underground level) |
 | day cap | 320 | an undecided game stops here (160 before 2026-10-16) |
 | subagent model | `haiku`, effort `high` | only change if the owner asks |
 
@@ -62,11 +64,11 @@ You are running ONE headless AI-vs-AI game simulation for a Godot game and repor
 Do not edit any repository files. Only create files under OUT.
 
 REPO=<absolute repo path>   OUT=<output folder>   RUN=<run id, e.g. m1>
-PLAYERS=<n>   SIZE=<size class>   FACTIONS=<comma-separated line-up or random>   DAYS=<day cap>   GUARDS=<weak|normal|strong>
+PLAYERS=<n>   SIZE=<size class>   FACTIONS=<comma-separated line-up or random>   DAYS=<day cap>   GUARDS=<weak|normal|strong>   WATER=<land|normal_water|islands>   LEVELS=<1|2>
 
 Step 1. With the Bash tool and run_in_background: true (the match takes minutes; never run it in
 the foreground), run:
-bash "$REPO/.claude/skills/ai-match-batch/scripts/run_match.sh" "$OUT" "$RUN" "$PLAYERS" "$SIZE" "$FACTIONS" "$DAYS" "$GUARDS"
+bash "$REPO/.claude/skills/ai-match-batch/scripts/run_match.sh" "$OUT" "$RUN" "$PLAYERS" "$SIZE" "$FACTIONS" "$DAYS" "$GUARDS" "$WATER" "$LEVELS"
 (write the literal values in place of the variables).
 
 Step 2. Wait until "$OUT/$RUN.done" exists. If you get a background-task completion notification,
@@ -93,10 +95,13 @@ When all matches are in, give one table:
 
 | # | Setup | Factions | Towns on map | Winner | Day | Captures (no defender) | Winner's gold at end |
 
-(from each summary: players/`map_size`/`guards`, `factions`, `towns_on_map`, `winner_faction`/`winner`, `final_day`,
+(from each summary: players/`map_size`/`guards`/`water`/`levels`, `factions`, `towns_on_map`, `winner_faction`/`winner`, `final_day`,
 `town_captures`, `captures_without_defender`, `final_sides[winner].gold`), then a few bullets:
 
 - how many games were decided and the day range; any game that hit the cap;
+- water and underground maps are ordinary games: the AI sails and crosses subterranean gates (since
+  2026-10-17). A capped game there is a failure to explain like any other, not an expected gap;
+  a walkable-area check of such a map must cover both levels and the water;
 - recurring patterns: many captures without a defender, large unspent gold, very slow AI days
   (`slowest_ai_day_ms` over ~10 s);
 - anything that needs a closer look, by match seed.
@@ -132,6 +137,7 @@ Never run a match on the owner's real game profile; `run_match.sh` isolates it.
 
 - The runner and its options are documented in `docs/ai-plays-by-player-rules.md` (AI against AI).
 - Before 2026-10-09 the runner passed no guard strength, so its matches had weak guards.
+- Before 2026-10-17 `run_match.sh` took no water or levels, so its matches were land maps on one level.
 - Matches with the same seed must not run at the same time (they share the map package file);
   random seeds make that practically impossible.
 - On Linux set `GODOT_BIN` if `godot` is not on the PATH.
