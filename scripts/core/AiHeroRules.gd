@@ -4138,17 +4138,22 @@ static func _level_surface(session: SessionStateStoreScript.SessionData, context
 				portals[tile.y * size.x + tile.x] = {"exits": exits, "node": index}
 	# Subterranean gates on this level, by entrance tile, with the tile on the
 	# other level a hero comes out on (`_gate_candidate`). The search stays on
-	# one level; a gate ends a route like any site.
+	# one level; a gate ends a route like any site. A portal whose one exit is
+	# on the other level is such a gate too. Until 2026-10-17 heroes never used
+	# one: on two-level maps whose start region opened only through a monolith
+	# to the underground, its player stayed shut in and its rivals never came
+	# (seeds ai-match-1520175333 and ai-match-113824639, both to the 320-day cap).
 	var gates := {}
 	for index in range(resources.size()):
 		var node = resources[index]
 		if not (node is Dictionary) or LevelRules.level_of(node) != level or not NativeTransit.is_native(node):
 			continue
 		var link := NativeTransit.link_of(node)
-		if String(link.get("kind", "")) != "paired_cave":
+		var options := NativeTransit.destinations(node)
+		if String(link.get("kind", "")) != "paired_cave" and not (NativeTransit.portal_kind(node) in ["two_way_portal", "one_way_entrance"] and options.size() == 1):
 			continue
 		var entrance := NativeTransit.point(link.get("entry", {}))
-		var exit := NativeTransit.point(link.get("exit", {}))
+		var exit := NativeTransit.point(options[0].get("exit", {}) if not options.is_empty() else link.get("exit", {}))
 		if entrance.z != level or exit.z == level or exit.z < 0 or exit.x < 0 or exit.y < 0 or exit.x >= size.x or exit.y >= size.y:
 			continue
 		if entrance.x >= 0 and entrance.y >= 0 and entrance.x < size.x and entrance.y < size.y:

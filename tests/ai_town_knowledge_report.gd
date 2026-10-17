@@ -5,7 +5,8 @@ extends Node
 # has seen nor ignores one as unseen. Until 2026-10-17 scouting tested the
 # anchor and the planners the doorway, and a town seen only by its anchor was
 # never attacked (seed ai-match-1305188145: 280 days next to a 320,000 army).
-# A guarded site the rival looted does not close the way to the rival either.
+# A guarded site the rival looted does not close the way to the rival either,
+# and a monolith to the other level is a way like a subterranean gate.
 
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
@@ -14,8 +15,11 @@ const EnemyTurnRulesScript = preload("res://scripts/core/EnemyTurnRules.gd")
 const LevelRules = preload("res://scripts/core/OverworldLevelRules.gd")
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const NodePayload = preload("res://scripts/core/ResourceNodePayloadRules.gd")
+const NativeTransit = preload("res://scripts/core/NativeTransitRules.gd")
 const REPORT_ID := "AI_TOWN_KNOWLEDGE_REPORT"
 const SEED := "ai-town-knowledge-20261017"
+# A small two-level map with two-way monoliths between the levels.
+const PORTAL_SEED := "ai-town-knowledge-portal-2"
 
 var _failed := false
 
@@ -32,6 +36,9 @@ func _run() -> void:
 	if _failed:
 		return
 	results["looted_site"] = _check_looted_site_is_crossed()
+	if _failed:
+		return
+	results["portal_to_other_level"] = _check_portal_to_other_level_is_crossed()
 	if _failed:
 		return
 	print("%s %s" % [REPORT_ID, JSON.stringify({"ok": true, "cases": results})])
@@ -119,6 +126,74 @@ func _check_looted_site_is_crossed() -> Dictionary:
 				return {}
 			return {"site": String(node.get("placement_id", ""))}
 	_fail("The map has no guarded site that stays standing once looted.")
+	return {}
+
+## A monolith whose one exit is on the other level is planned and crossed like
+## a subterranean gate. Until 2026-10-17 heroes never used one, and on two-level
+## maps whose start region opened only through it, its player stayed shut in
+## and no rival came (seeds ai-match-1520175333 and ai-match-113824639: 320 days).
+func _check_portal_to_other_level_is_crossed() -> Dictionary:
+	ContentService.clear_generated_scenario_drafts()
+	var config := ScenarioSelectRulesScript.build_random_map_player_config(
+		PORTAL_SEED, "", "", 2, "land", true, "homm3_small",
+		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT,
+		"faction_embercourt", ""
+	)
+	var map_setup := ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(config, "normal", ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY)
+	if not bool(map_setup.get("ok", false)):
+		_fail("Generated two-level setup failed: %s" % JSON.stringify(map_setup).left(400))
+		return {}
+	var session = ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(map_setup)
+	if session == null or session.scenario_id == "":
+		_fail("Generated two-level session could not start.")
+		return {}
+	OverworldRules.normalize_overworld_state(session)
+	var handed := AiSeatRulesScript.hand_human_seat_to_ai(session)
+	OverworldRules.end_turn(session)
+	var controller := ""
+	for record in session.overworld.get("players", []):
+		if String(record.get("player_id", "")) != handed:
+			controller = String(record.get("player_id", ""))
+	var context := _context(session, controller)
+	AiHeroRulesScript._start_heroes_day(session, controller)
+	context["decision"] = {}
+	var index := AiHeroRulesScript._entry_index(session, AiHeroRulesScript._decision_main_id(session, context))
+	if index < 0:
+		_fail("%s has no main hero on the two-level map." % controller)
+		return {}
+	var size: Vector2i = context.map_size
+	var nodes: Array = session.overworld.resource_nodes
+	var portals := 0
+	for node_index in range(nodes.size()):
+		var node: Dictionary = nodes[node_index]
+		var options := NativeTransit.destinations(node)
+		if not NativeTransit.is_native(node) or NativeTransit.portal_kind(node) != "two_way_portal" or options.size() != 1:
+			continue
+		var entrance := NativeTransit.point(NativeTransit.link_of(node).get("entry", {}))
+		var exit := NativeTransit.point(options[0].get("exit", {}))
+		if exit.z == entrance.z:
+			continue
+		portals += 1
+		var gates: Dictionary = AiHeroRulesScript._level_surface(session, context, entrance.z).get("gates", {})
+		var gate: Dictionary = gates.get(entrance.y * size.x + entrance.x, {})
+		if gate.is_empty() or int(gate.node) != node_index or gate.exit != exit:
+			_fail("The monolith %s to the other level is not a way for the computer's heroes." % String(node.get("placement_id", "")))
+			return {}
+		if int(OverworldRules._find_guard_engagement_at_tile(session, exit.x, exit.y, exit.z, false).get("index", -1)) >= 0:
+			continue
+		var entry: Dictionary = session.overworld.encounters[index]
+		entry["x"] = entrance.x
+		entry["y"] = entrance.y
+		entry["level"] = entrance.z
+		session.overworld.encounters[index] = entry
+		OverworldRules.invalidate_spatial_lookup(session)
+		AiHeroRulesScript._cross_gate(session, context, index, {"kind": "gate", "index": node_index, "beyond": {}})
+		var crossed: Dictionary = session.overworld.encounters[index]
+		if NativeTransit.point(crossed) != exit:
+			_fail("The hero on monolith %s did not come out at %s on the other level." % [String(node.get("placement_id", "")), str(exit)])
+			return {}
+		return {"portal": String(node.get("placement_id", "")), "exit_level": exit.z, "portals": portals}
+	_fail("The two-level map has no unguarded monolith between its levels (%d guarded)." % portals)
 	return {}
 
 ## A small generated two-player map, both seats played by the computer, one day
