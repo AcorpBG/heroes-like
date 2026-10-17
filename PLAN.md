@@ -255,6 +255,10 @@ Rules:
 
 `ai-free-guard-fights-20261016` (completed, owner request: a guard beaten without losses is worth any reward): before choosing a plan, a hero previews the nearest guards it can reach today that hold at most a quarter of its strength (at most two a decision; a preview that costs a creature is not repeated that turn) and fights one its preview beats without losing a creature at once, reusing the preview as the fight. The fight-cost estimate (`_expected_loss_value`) no longer charges at least 1.2% of the army: the small loss grows with the guard's share of the hero (0.035 per unit share, the same as before at 0.35), after 1,025 arena guard fights in which guards under 5% of the hero cost it 0.05-0.2%. Strong heroes no longer walk past weak guards. On the large-map seed `ai-match-862019147` heroes fought 183 guards instead of 78, 160 of them weak and free, with no loss and the slowest AI day at 7.8 s (7.4 s before).
 
+### AI knows a town by its anchor or doorway
+
+`ai-town-seen-anchor-or-door-20261017` (completed, from the owner's 2026-10-16 batch of 60 large AI matches): a computer player counts a rival town as seen once its anchor tile or its doorway is explored, and every check uses that one rule (`AiHeroRules._town_seen`). Scouting tested the anchor and the planners the doorway, so a town seen only by its anchor was neither scouted for nor attacked: on seed `ai-match-1305188145` the last rival town stood 280 days next to a 320,000 army that valued it at 273,000. Core test `tests/ai_town_knowledge_report`.
+
 ### Full-army site claims
 
 `gameplay-site-recruit-overflow-20261008` (completed, owner playtest fix): a full army no longer blocks claiming a site that grants troops (Glassbound Eyrie, Railblock Camp and 66 others). The site is claimed and pays out; troops that fit join, and a dialog offers to dismiss a stack for the rest or leave them behind. AI heroes claim the same way and keep what fits. Free reward gates ask to Claim instead of "Pay nothing". See `docs/site-recruit-overflow.md`.

@@ -1898,9 +1898,7 @@ static func _rival_town_within(session: SessionStateStoreScript.SessionData, con
 			continue
 		if maxi(absi(int(other.get("x", 0)) - int(town.get("x", 0))), absi(int(other.get("y", 0)) - int(town.get("y", 0)))) > radius:
 			continue
-		var known := _explored(session, context, LevelRules.level_of(other))
-		var tile := int(other.get("y", 0)) * size.x + int(other.get("x", 0))
-		if tile >= 0 and tile < known.size() and known[tile] != 0:
+		if _town_seen(_explored(session, context, LevelRules.level_of(other)), other, size):
 			return true
 	return false
 
@@ -2226,7 +2224,7 @@ static func _strategic_candidate(session: SessionStateStoreScript.SessionData, c
 				continue
 			match int(ref.kind):
 				STOP_TOWN:
-					if known[int(tile_index)] == 0:
+					if not _town_seen(known, session.overworld.towns[int(ref.index)], context.map_size):
 						continue
 				STOP_HERO, STOP_AI_HERO:
 					pass
@@ -2709,7 +2707,10 @@ static func _best_candidate(session: SessionStateStoreScript.SessionData, contex
 			if guarded and not _guards_tile(ref):
 				continue
 			# Map objects count once explored; armies and heroes once in sight.
-			if int(ref.kind) not in [STOP_HERO, STOP_AI_HERO] and known[int(tile_index)] == 0:
+			if int(ref.kind) == STOP_TOWN:
+				if not _town_seen(known, session.overworld.towns[int(ref.index)], size):
+					continue
+			elif int(ref.kind) not in [STOP_HERO, STOP_AI_HERO] and known[int(tile_index)] == 0:
 				continue
 			var key := "%d:%d" % [int(ref.kind), int(ref.index)]
 			if seen.has(key) and int(seen[key]) <= distance:
@@ -3192,7 +3193,7 @@ static func _war_paths(session: SessionStateStoreScript.SessionData, context: Di
 			continue
 		var entrance := LevelRules.town_entrance(town)
 		var door := int(entrance.get("y", 0)) * size.x + int(entrance.get("x", 0))
-		if door < 0 or door >= count or dist[door] >= 0 or known[door] == 0:
+		if door < 0 or door >= count or dist[door] >= 0 or not _town_seen(known, town, size):
 			continue
 		var value := float(_town_candidate(session, context, entry, index, power).get("value", 0.0))
 		if value > 0.0:
@@ -3272,9 +3273,7 @@ static func _rival_towns_unknown(session: SessionStateStoreScript.SessionData, c
 		var rival := "player" if owner == "player" else PlayerRules.town_controller_id(town)
 		if rival == controller or PlayerRules.allied(session, controller, rival):
 			continue
-		var known := _explored(session, context, LevelRules.level_of(town))
-		var tile := int(town.get("y", 0)) * size.x + int(town.get("x", 0))
-		if tile >= 0 and tile < known.size() and known[tile] == 0:
+		if not _town_seen(_explored(session, context, LevelRules.level_of(town)), town, size):
 			result = true
 			break
 	cache["rival_towns_unknown"] = result
@@ -3401,6 +3400,21 @@ static func _explored(session: SessionStateStoreScript.SessionData, context: Dic
 	maps[level] = tiles
 	context["explored"] = maps
 	return tiles
+
+## Whether this player has seen the town: its anchor tile or its doorway. Every
+## check that asks whether a town is known uses this. Until 2026-10-17 the
+## scouting check (`_rival_towns_unknown`) tested the anchor and the planners the
+## doorway, so a rival town whose anchor was seen from one side and whose door
+## lay out of sight was neither scouted for nor attacked: on a 6-player large map
+## (seed ai-match-1305188145) the last rival's town stood 280 days against a main
+## army that grew to 320,000, reachable and worth 273,000 to it.
+static func _town_seen(known: PackedByteArray, town: Dictionary, size: Vector2i) -> bool:
+	var entrance := LevelRules.town_entrance(town)
+	for tile in [Vector2i(int(town.get("x", -1)), int(town.get("y", -1))), Vector2i(int(entrance.get("x", -1)), int(entrance.get("y", -1)))]:
+		var index: int = tile.y * size.x + tile.x
+		if tile.x >= 0 and tile.y >= 0 and tile.x < size.x and tile.y < size.y and index < known.size() and known[index] != 0:
+			return true
+	return false
 
 static func _store_explored(context: Dictionary) -> void:
 	var maps: Dictionary = context.get("explored", {})
