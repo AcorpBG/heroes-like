@@ -115645,6 +115645,20 @@
       "validatedAt": "2026-10-17T23:59:00Z"
     },
     {
+      "id": "native-rmg-repair-mine-placement-game-shape-20261017",
+      "title": "Cut-off repair pass places mines by the game's three-by-two shape",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "native_rmg_departure",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/rmg-cut-off-town-repair.md"
+      ],
+      "notes": "Repair pass only: 0x4a9641 tests type-53 mines with the 0x49a6f9 footprint and 0x49a09c contour tests on a record copy that blocks the H3 body plus the game's 3x2 shape (CommonMineRules.gd); the contour then rejects a ring touching a town door's action cell (type 53 has no allow-bit22 flags) or split into two bad runs. Mine still stamped with its H3 body. m139: crystal cavern at (21,11) under the door (20,9) moves. 74 flagged AI-batch configs: repair kept on 67 (was 56), 65 clean (was 55); 8 of 9 mine-sealed door maps repair, plus small2p/m036 2->0, medium3p/m080 1->0, medium2p/m117 6->4, medium3p/m066 6->2; none worse. Left: small180/m014 (untraced), medium2p/m024, m079, medium3p/m077, six-town split maps. Sweep 64/72 repair on and strict (same rows). Selftest (new m139 case) and core_suite 16/16 pass on Windows and Linux.",
+      "updatedAt": "2026-10-17T23:59:00Z",
+      "validatedAt": "2026-10-17T23:59:00Z"
+    },
+    {
       "id": "balance-phase-round-1-20261017",
       "title": "Balance round 1: every faction closer in each phase of the game",
       "status": "completed",
