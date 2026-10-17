@@ -4783,6 +4783,8 @@ func _town_sprite_draw_payload(asset_id: String, texture: Texture2D, footprint_r
 	return payload
 
 func _draw_encounter_sprite(encounter: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
+	if String(encounter.get(WaterTravelScript.HERO_BOAT_KEY, "")) != "" and _draw_encounter_boat(encounter, rect, remembered):
+		return true
 	if _draw_encounter_creature_idle(encounter, rect, remembered, tile):
 		return true
 	if _draw_generated_company_still(encounter, rect, remembered, tile):
@@ -4798,6 +4800,19 @@ func _draw_encounter_sprite(encounter: Dictionary, rect: Rect2, remembered: bool
 	if _draw_encounter_unit_icon(encounter, rect, remembered, tile):
 		return true
 	return _draw_object_sprite(_encounter_asset_id(encounter), rect, remembered, _encounter_object_profile(), tile)
+
+## A computer player's hero aboard a boat shows as the boat with its player's
+## flag at the masthead.
+func _draw_encounter_boat(encounter: Dictionary, rect: Rect2, remembered: bool) -> bool:
+	var texture = _object_texture_for_asset(WaterTravelScript.BOAT_ASSET_ID)
+	if not (texture is Texture2D):
+		return false
+	var extent := minf(rect.size.x, rect.size.y)
+	var ground := rect.position + Vector2(rect.size.x * 0.5, rect.size.y * 0.88)
+	var payload := _actor_sprite_payload(WaterTravelScript.BOAT_ASSET_ID, texture, ground + _moving_sprite_offset, maxf(16.0, extent * HERO_FIELD_SPRITE_EXTENT_FACTOR))
+	_draw_actor_art(payload, remembered)
+	_draw_boat_masthead_flag(payload.draw_rect, not remembered, _controller_flag_color(PlayerRules.raid_controller_id(encounter), "enemy"))
+	return true
 
 func _draw_preferred_encounter_landmark(encounter: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	return _draw_encounter_identity_landmark(encounter, rect, remembered, tile)
@@ -5725,16 +5740,15 @@ func _draw_hero_sprite(hero: Dictionary, rect: Rect2, tile: Vector2i) -> bool:
 	_draw_actor_art(_actor_sprite_payload(asset_id, texture, ground_center + _moving_sprite_offset, sprite_extent), false)
 	if asset_id == WaterTravelScript.BOAT_ASSET_ID:
 		var boat_payload := _actor_sprite_payload(asset_id, texture, ground_center + _moving_sprite_offset, sprite_extent)
-		_draw_boat_masthead_flag(boat_payload.draw_rect, bool(hero.get("is_active", false)))
+		_draw_boat_masthead_flag(boat_payload.draw_rect, bool(hero.get("is_active", false)), FrontierVisualKitScript.semantic_color("player", PLAYER_TOWN_COLOR))
 	_draw_hero_foreground_contact(anchor)
 	return true
 
 ## The owner's flag at the masthead tells a sailing hero's boat from an empty one.
-func _draw_boat_masthead_flag(boat_rect: Rect2, active: bool) -> void:
+func _draw_boat_masthead_flag(boat_rect: Rect2, active: bool, owner_color: Color) -> void:
 	var top := boat_rect.position + Vector2(boat_rect.size.x * BOAT_MASTHEAD_X, boat_rect.size.y * 0.01)
 	var length := boat_rect.size.x * 0.30
 	var drop := boat_rect.size.y * 0.15
-	var owner_color := FrontierVisualKitScript.semantic_color("player", PLAYER_TOWN_COLOR)
 	var cloth := PackedVector2Array([
 		top,
 		top + Vector2(length, drop * 0.18),

@@ -21,6 +21,7 @@ const VisitBuildings = preload("res://scripts/core/VisitBuildingRules.gd")
 const TownServices = preload("res://scripts/core/EnemyTownServices.gd")
 const AdventureRules = preload("res://scripts/core/EnemyAdventureRules.gd")
 const BattleDamage = preload("res://scripts/core/BattleDamageRules.gd")
+const WaterTravel = preload("res://scripts/core/WaterTravelRules.gd")
 
 const AI_HERO_KEY := "ai_hero"
 # Battle settings (terrain, length, rewards) for fights against an AI hero. The
@@ -58,6 +59,16 @@ const MIN_SEARCH_RADIUS := 14
 ## A hero weighs what lies past this many of the nearest subterranean gates it
 ## can walk to (`_gate_candidate`); each costs a search of the other level.
 const MAX_GATES_WEIGHED := 3
+## Boarding a boat or stepping ashore ends the hero's day, as for the human; a
+## route through either counts this share of a day's movement on top of the
+## step. Building the boat at a shipyard counts one more day (its price).
+const SHORE_STEP_SHARE := 0.5
+## The day a main or field army last found nothing to do with a shipyard in
+## reach and no means to pay for a boat: for BOAT_SAVING_DAYS after it the
+## player's towns keep the boat's price back (`_govern_towns`).
+const BOAT_WANTED_KEY := "ai_boat_wanted_day"
+const BOAT_SAVING_DAYS := 2
+const BOUGHT_BOAT := 4
 ## A guard is considered (and previewed) from this strength margin. With the
 ## strength estimate refitted 2026-10-16, guards fought at 1.3 to 1.5x lose
 ## about 93% of battles in the battle AI arena, and none from 2x.
@@ -523,6 +534,8 @@ static func run_faction_turn(
 	# Armies a scenario placed for this player since the save migration also
 	# play as heroes.
 	normalize_ai_heroes(session, controller)
+	# A hero defeated aboard a boat leaves it empty where it lay.
+	WaterTravel.normalize(session)
 	var towns: Array = session.overworld.get("towns", [])
 	var town_entries: Array = turn_rules._owned_town_entries(session, controller)
 	if town_entries.is_empty() and active_hero_count(session, controller) == 0:
@@ -746,6 +759,10 @@ static func _govern_towns(session: SessionStateStoreScript.SessionData, context:
 	if town_entries.is_empty():
 		return {"messages": messages, "events": events}
 	var started := Time.get_ticks_usec()
+	# An army stuck on its island saves for a boat before the towns spend.
+	var held := {}
+	if int(context.state.get(BOAT_WANTED_KEY, -1000)) >= int(session.day) - BOAT_SAVING_DAYS:
+		held = _hold_back(context.state.treasury, _level_surface(session, context, 0).get("boat_cost", {}))
 	var wanted := desired_hero_count(session, controller)
 	var heroes := active_hero_count(session, controller)
 	if heroes < wanted and not _faction_has_tavern(town_entries):
@@ -769,7 +786,18 @@ static func _govern_towns(session: SessionStateStoreScript.SessionData, context:
 	_append_all(messages, build_result.get("messages", []))
 	_append_all(events, build_result.get("events", []))
 	_profile_add(context, "build_ms", started)
+	_add_pool(context.state.treasury, held)
 	return {"messages": messages, "events": events}
+
+## Takes up to `amounts` out of the treasury and returns what it took.
+static func _hold_back(treasury: Dictionary, amounts: Dictionary) -> Dictionary:
+	var held := {}
+	for key in amounts.keys():
+		var take := mini(int(treasury.get(key, 0)), int(amounts[key]))
+		if take > 0:
+			treasury[key] = int(treasury.get(key, 0)) - take
+			held[key] = take
+	return held
 
 ## A main hero plus a collector, one more with a second town, and a fourth
 ## once the second week is under way.
@@ -1979,6 +2007,8 @@ static func _run_hero_day(session: SessionStateStoreScript.SessionData, context:
 		if logging:
 			_log_decision(session, context, entry, plan)
 			context.erase("decision_alternatives")
+		if plan.is_empty() or String(plan.get("kind", "")) == "wait":
+			_note_boat_need(session, context, entry)
 		if plan.is_empty():
 			break
 		var act_started := Time.get_ticks_usec()
@@ -2260,7 +2290,7 @@ static func _strategic_candidate(session: SessionStateStoreScript.SessionData, c
 				continue
 			if int(avoid.get(String(candidate.get("id", "")), -1)) >= int(session.day):
 				continue
-			var value := float(candidate.get("value", 0.0))
+			var value := float(candidate.get("value", 0.0)) - _boat_price(session, context, search, int(tile_index))
 			if value <= 0.0:
 				continue
 			var score := value / (1.0 + float(distance) / float(movement_max))
@@ -2382,6 +2412,70 @@ static func _gate_candidate(session: SessionStateStoreScript.SessionData, contex
 			best = plan
 	if not best.is_empty() and context.has("decision_alternatives"):
 		_note_alternative(context, best, best_score, int(best.distance))
+	return best
+
+## The way home for an idle hero whose player holds no town on its level: the
+## shortest way to the town's doorway through one of the nearest gates
+## (MAX_GATES_WEIGHED), fighting the guards at either end when the hero beats
+## them. Without it such a hero waited on its own level at the town's
+## coordinates, out of the way of every recruit.
+static func _gate_home(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary, town: Dictionary) -> Dictionary:
+	var level := LevelRules.level_of(entry)
+	var gates: Dictionary = _level_surface(session, context, level).get("gates", {})
+	if gates.is_empty() or not search.has("dist"):
+		return {}
+	var door := LevelRules.town_entrance(town)
+	var size: Vector2i = context.map_size
+	var door_index := int(door.get("y", 0)) * size.x + int(door.get("x", 0))
+	var stops: Dictionary = search.get("stops", {})
+	var dist: PackedInt32Array = search.dist
+	var encounters: Array = session.overworld.get("encounters", [])
+	var nodes: Array = session.overworld.get("resource_nodes", [])
+	var power := hero_power(entry)
+	var movement_max := maxi(1, int(entry.get(AI_HERO_KEY, {}).get("movement", {}).get("max", 1)))
+	var reachable := []
+	for gate_tile in gates.keys():
+		var tile := int(gate_tile)
+		if (gates[gate_tile].exit as Vector3i).z != LevelRules.level_of(door) or tile >= dist.size() or dist[tile] < 0 or _in_hero_zone(search, tile):
+			continue
+		reachable.append({"tile": tile, "distance": int(dist[tile]), "gate": gates[gate_tile]})
+	reachable.sort_custom(func(a, b): return int(a.distance) < int(b.distance))
+	var best := {}
+	for option in reachable.slice(0, MAX_GATES_WEIGHED):
+		var guard_index := -1
+		for ref in stops.get(int(option.tile), []):
+			if int(ref.kind) == STOP_ENCOUNTER:
+				guard_index = int(ref.index)
+				break
+		if guard_index >= 0 and power < _guard_power(encounters[guard_index]) * GUARD_WIN_RATIO:
+			continue
+		var exit: Vector3i = option.gate.exit
+		var far_guard: Dictionary = _overworld_rules()._find_guard_engagement_at_tile(session, exit.x, exit.y, exit.z, false)
+		var far_index := int(far_guard.get("index", -1))
+		if far_index >= 0 and power < _guard_power(far_guard.encounter) * GUARD_WIN_RATIO:
+			continue
+		var traveller := entry.duplicate()
+		traveller["x"] = exit.x
+		traveller["y"] = exit.y
+		traveller["level"] = exit.z
+		var far_search := _search(session, context, traveller, movement_max * FAR_SEARCH_DAYS)
+		# Where guards keep the doorway out of reach for now, the hero still
+		# goes up and waits nearer home; the straight way counts double.
+		var far_distance := int(far_search.dist[door_index]) if door_index >= 0 and door_index < far_search.dist.size() else -1
+		if far_distance < 0:
+			far_distance = 2 * maxi(absi(exit.x - int(door.get("x", 0))), absi(exit.y - int(door.get("y", 0)))) + movement_max * FAR_SEARCH_DAYS
+		var distance := int(option.distance) + far_distance
+		if not best.is_empty() and distance >= int(best.distance):
+			continue
+		var town_id := String(town.get("placement_id", ""))
+		best = {"kind": "gate", "id": "gate:%s" % String(nodes[int(option.gate.node)].get("placement_id", "")), "index": int(option.gate.node), "value": 0.0, "tile_index": int(option.tile), "distance": distance, "beyond": {"kind": "park", "id": town_id}}
+		if guard_index >= 0:
+			var guard_power := _guard_power(encounters[guard_index])
+			best.merge({"kind": "encounter", "id": String(encounters[guard_index].get("placement_id", "")), "index": guard_index, "value": 1.0, "fight_power": guard_power, "estimated_loss": _expected_loss_value(power, guard_power)}, true)
+		elif far_index >= 0:
+			best.merge({"value": 1.0, "far_guard": far_index, "far_fight_power": _guard_power(far_guard.encounter)}, true)
+	if best.is_empty() or not _gate_fight_looks_good(session, context, entry, best):
+		return {}
 	return best
 
 ## Whether the fight a gate plan leads to next, the guard in front of the gate
@@ -2698,8 +2792,14 @@ static func _wait_by_home(session: SessionStateStoreScript.SessionData, context:
 	var here_index := here.y * size.x + here.x
 	var home := here
 	var home_town: Dictionary = _find_town(session, String(entry.get(AI_HERO_KEY, {}).get("home_town_id", ""))).town
-	if home_town.is_empty() or String(home_town.get("owner", "")) != "enemy" or PlayerRules.town_controller_id(home_town) != controller:
+	if home_town.is_empty() or String(home_town.get("owner", "")) != "enemy" or PlayerRules.town_controller_id(home_town) != controller or LevelRules.level_of(LevelRules.town_entrance(home_town)) != level:
 		home_town = _nearest_owned_town(session, controller, here, level).get("town", {})
+	if not home_town.is_empty() and LevelRules.level_of(LevelRules.town_entrance(home_town)) != level and keep_clear.is_empty():
+		# Every town of the player stands on the other level: home is through
+		# a gate.
+		var homeward := _gate_home(session, context, entry, search, home_town)
+		if not homeward.is_empty():
+			return homeward
 	if not home_town.is_empty():
 		var entrance := LevelRules.town_entrance(home_town)
 		home = Vector2i(int(entrance.get("x", here.x)), int(entrance.get("y", here.y)))
@@ -2881,7 +2981,7 @@ static func _best_candidate(session: SessionStateStoreScript.SessionData, contex
 				continue
 			if in_danger and (String(candidate.get("kind", "")) != "town_own" or not _deters(session, entry, session.overworld.towns[int(candidate.index)], dangers)):
 				continue
-			var value := float(candidate.get("value", 0.0))
+			var value := float(candidate.get("value", 0.0)) - _boat_price(session, context, search, int(tile_index))
 			if value <= 0.0:
 				continue
 			var score := value / (1.0 + float(distance) / float(movement_max))
@@ -2928,26 +3028,32 @@ static func _exploration_candidate(session: SessionStateStoreScript.SessionData,
 	var order: PackedInt32Array = search.get("order", PackedInt32Array())
 	var size: Vector2i = context.map_size
 	var portals: Dictionary = _level_surface(session, context, LevelRules.level_of(entry)).get("portals", {})
+	# Ground reached only by buying a boat must be worth the boat's price.
+	var explore_value := _explore_value(session, context)
 	var portal_frontier := -1
 	for portal_tile in portals.keys():
 		var portal_distance := int(search.dist[int(portal_tile)]) if int(portal_tile) < search.dist.size() else -1
-		if portal_distance > 0 and not _in_hero_zone(search, int(portal_tile)) and _portal_leads_unseen(portals[portal_tile], known) and (portal_frontier < 0 or portal_distance < int(search.dist[portal_frontier])):
+		if portal_distance > 0 and not _in_hero_zone(search, int(portal_tile)) and _portal_leads_unseen(portals[portal_tile], known) and (portal_frontier < 0 or portal_distance < int(search.dist[portal_frontier])) 				and _boat_price(session, context, search, int(portal_tile)) < explore_value:
 			portal_frontier = int(portal_tile)
+	var portal_value := explore_value - _boat_price(session, context, search, portal_frontier)
 	for position in range(1, int(search.get("order_count", 0))):
 		var tile_index := order[position]
 		if portal_frontier >= 0 and int(search.dist[portal_frontier]) <= int(search.dist[tile_index]):
-			return {"kind": "explore", "id": "explore:%d" % portal_frontier, "index": portal_frontier, "value": _explore_value(session, context), "tile_index": portal_frontier, "distance": int(search.dist[portal_frontier])}
+			return {"kind": "explore", "id": "explore:%d" % portal_frontier, "index": portal_frontier, "value": portal_value, "tile_index": portal_frontier, "distance": int(search.dist[portal_frontier])}
 		var x := tile_index % size.x
 		var y := tile_index / size.x
+		var price := _boat_price(session, context, search, tile_index)
+		if price >= explore_value:
+			continue
 		for direction in range(8):
 			var nx: int = x + NEIGHBOR_DX[direction]
 			var ny: int = y + NEIGHBOR_DY[direction]
 			if nx < 0 or ny < 0 or nx >= size.x or ny >= size.y:
 				continue
 			if known[ny * size.x + nx] == 0:
-				return {"kind": "explore", "id": "explore:%d" % tile_index, "index": tile_index, "value": _explore_value(session, context), "tile_index": tile_index, "distance": int(search.dist[tile_index])}
+				return {"kind": "explore", "id": "explore:%d" % tile_index, "index": tile_index, "value": explore_value - price, "tile_index": tile_index, "distance": int(search.dist[tile_index])}
 	if portal_frontier >= 0:
-		return {"kind": "explore", "id": "explore:%d" % portal_frontier, "index": portal_frontier, "value": _explore_value(session, context), "tile_index": portal_frontier, "distance": int(search.dist[portal_frontier])}
+		return {"kind": "explore", "id": "explore:%d" % portal_frontier, "index": portal_frontier, "value": portal_value, "tile_index": portal_frontier, "distance": int(search.dist[portal_frontier])}
 	return {}
 
 static func _candidate(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, ref: Dictionary, power: float, needs: Dictionary, search: Dictionary = {}) -> Dictionary:
@@ -3061,6 +3167,9 @@ static func _resource_candidate(session: SessionStateStoreScript.SessionData, co
 		return {}
 	var site := NodePayload.site_for_node(node)
 	if site.is_empty() or bool(site.get("opens_route_on_claim", false)):
+		return {}
+	# A shipyard serves a route over water (`_search`), a whirlpool only a boat.
+	if String(site.get("id", "")) in [WaterTravel.SHIPYARD_SITE_ID, WaterTravel.WHIRLPOOL_SITE_ID]:
 		return {}
 	if not _overworld_rules().resource_node_is_present(node, site):
 		return {}
@@ -3637,6 +3746,7 @@ static func _follow_plan(session: SessionStateStoreScript.SessionData, context: 
 	var last := path.size() - 1
 	var arrived := false
 	var rerouted := false
+	var sailing := WaterTravel.hero_boat_id(entry) != ""
 	for step_index in range(path.size()):
 		if int(movement.get("current", 0)) <= 0:
 			break
@@ -3646,11 +3756,21 @@ static func _follow_plan(session: SessionStateStoreScript.SessionData, context: 
 			arrived = true
 			break
 		var before := LevelRules.position(entry)
-		plan["retreat_tile"] = Vector2i(int(before.get("x", 0)), int(before.get("y", 0)))
-		var through := _portal_step(session, context, entry, tile, level)
+		# Boarding a boat or stepping ashore ends the day's movement.
+		var shore := WaterTravel.is_water(session, tile.x, tile.y, level) != sailing
+		if shore:
+			if not _cross_shore(session, context, entry, tile, level):
+				movement["current"] = int(movement.get("current", 0)) + 1
+				break
+			plan.erase("retreat_tile")
+		else:
+			plan["retreat_tile"] = Vector2i(int(before.get("x", 0)), int(before.get("y", 0)))
+		var through := {} if shore else _portal_step(session, context, entry, tile, level)
 		var landed: Vector2i = through.get("exit", tile)
 		entry["x"] = landed.x
 		entry["y"] = landed.y
+		if WaterTravel.hero_boat_id(entry) != "":
+			WaterTravel.place_boat(session, WaterTravel.hero_boat_id(entry), String(entry.get("placement_id", "")), landed, level)
 		TurnPlayback.move(session, entry, before)
 		_reveal(session, context, LevelRules.position(entry), _sight_radius(entry))
 		# Next to a hostile hero the walk ends in a fight with it, whatever the
@@ -3660,6 +3780,11 @@ static func _follow_plan(session: SessionStateStoreScript.SessionData, context: 
 			if String(beside.kind) != String(plan.get("kind", "")) or int(beside.index) != int(plan.get("index", -1)):
 				plan = beside
 			arrived = true
+			break
+		if shore:
+			sailing = not sailing
+			movement["current"] = 0
+			arrived = step_index == last
 			break
 		if landed != tile:
 			# A random portal sent the hero elsewhere: it plans again from there.
@@ -3691,6 +3816,98 @@ static func _follow_plan(session: SessionStateStoreScript.SessionData, context: 
 	if not arrived:
 		return {"arrived": false, "rerouted": rerouted}
 	return _interact(session, context, index, plan)
+
+## Boards the boat at this water tile (a free one, or one the shipyard the hero
+## stands at builds for it) or, aboard, steps ashore and leaves the boat moored
+## where the hero was. False when there is no boat to take.
+static func _cross_shore(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, tile: Vector2i, level: int) -> bool:
+	var boat_id := WaterTravel.hero_boat_id(entry)
+	if boat_id != "":
+		WaterTravel.place_boat(session, boat_id, "", Vector2i(int(entry.get("x", 0)), int(entry.get("y", 0))), level)
+		entry.erase(WaterTravel.HERO_BOAT_KEY)
+		return true
+	var boat := WaterTravel.free_boat_at(session, tile, level)
+	if boat.is_empty():
+		boat = _launch_boat(session, context, entry, tile, level)
+	if boat.is_empty():
+		return false
+	WaterTravel.place_boat(session, String(boat.get("id", "")), String(entry.get("placement_id", "")), tile, level)
+	entry[WaterTravel.HERO_BOAT_KEY] = String(boat.get("id", ""))
+	return true
+
+## The shipyard the hero stands at builds a boat at its dock (this tile) for
+## the human's price, paid from the player's treasury after any trades at one
+## of its towns' markets (`_boat_market`).
+static func _launch_boat(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, tile: Vector2i, level: int) -> Dictionary:
+	var size: Vector2i = context.map_size
+	var surface := _level_surface(session, context, level)
+	var yard: Dictionary = surface.get("shipyards", {}).get(_tile_index_of(entry, size), {})
+	if yard.is_empty() or int(yard.dock) != tile.y * size.x + tile.x:
+		return {}
+	var cost: Dictionary = surface.get("boat_cost", {})
+	var treasury: Dictionary = context.state.treasury
+	var market := _boat_market(session, context, cost)
+	if market.is_empty():
+		return {}
+	var nodes: Array = session.overworld.get("resource_nodes", [])
+	if int(yard.node) >= nodes.size() or WaterTravel.dock_blocker(session, nodes[int(yard.node)]) != "":
+		return {}
+	if market.has("town_index"):
+		var towns: Array = session.overworld.get("towns", [])
+		var town: Dictionary = towns[int(market.town_index)]
+		if not _market_cover(session, town, treasury, cost, true):
+			return {}
+		towns[int(market.town_index)] = town
+		session.overworld["towns"] = towns
+	if WaterTravel.build_boat(session, nodes[int(yard.node)]) != "":
+		return {}
+	_turn_rules()._spend_from_pool(treasury, cost)
+	_economy_add(session, String(context.controller), "boat_gold", float(cost.get("gold", 0)))
+	TurnPlayback.action(session, entry, "builds a boat")
+	return WaterTravel.free_boat_at(session, tile, level)
+
+## How the player pays for a boat now: {"treasury": true} from the treasury,
+## {"town_index": i} with trades at that town's market first (as the human
+## trades from any of its towns), {} when it cannot. Kept per treasury state
+## for the turn.
+static func _boat_market(session: SessionStateStoreScript.SessionData, context: Dictionary, cost: Dictionary) -> Dictionary:
+	var state: Variant = context.get("state", {})
+	var treasury: Dictionary = state.get("treasury", {}) if state is Dictionary else {}
+	if cost.is_empty():
+		return {}
+	if _can_afford(treasury, cost):
+		return {"treasury": true}
+	var cache: Dictionary = context.get("boat_market", {})
+	var key := treasury.hash()
+	if cache.has(key):
+		return cache[key]
+	var found := {}
+	for entry in _turn_rules()._owned_town_entries(session, String(context.get("controller", ""))):
+		var town: Dictionary = entry.get("town", {})
+		if _market_cover(session, town, treasury, cost, false):
+			found = {"town_index": int(entry.get("index", -1))}
+			break
+	cache[key] = found
+	context["boat_market"] = cache
+	return found
+
+## A main or field army with nothing to do (no errand, or only waiting) while
+## a shipyard is in reach and the player cannot pay for a boat marks the day:
+## the towns then save the boat's price (`_govern_towns`).
+static func _note_boat_need(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary) -> void:
+	if int(context.state.get(BOAT_WANTED_KEY, -1000)) == int(session.day) or WaterTravel.hero_boat_id(entry) != "":
+		return
+	if not _plans_far(session, context, entry):
+		return
+	var surface := _level_surface(session, context, LevelRules.level_of(entry))
+	var shipyards: Dictionary = surface.get("shipyards", {})
+	if shipyards.is_empty() or not _boat_market(session, context, surface.get("boat_cost", {})).is_empty():
+		return
+	var search := _search(session, context, entry, _movement_max(entry) * FAR_SEARCH_DAYS)
+	for visit_index in shipyards.keys():
+		if int(search.dist[int(visit_index)]) >= 0:
+			context.state[BOAT_WANTED_KEY] = int(session.day)
+			return
 
 ## A step from a portal's entrance to a tile that is not next to it goes
 ## through the portal. A network with several exits rolls the exit with the
@@ -3799,12 +4016,25 @@ static func _level_surface(session: SessionStateStoreScript.SessionData, context
 	var size: Vector2i = context.map_size
 	var blocked := PackedByteArray()
 	blocked.resize(size.x * size.y)
+	var water := PackedByteArray()
+	water.resize(size.x * size.y)
+	var water_count := 0
+	var water_ids := {}
 	var rows: Array = LevelRules.terrain_rows(session, level)
 	for y in range(size.y):
 		var row: Array = rows[y] if y < rows.size() and rows[y] is Array else []
 		for x in range(size.x):
 			if x >= row.size() or not overworld_rules.terrain_id_is_passable(String(row[x])):
 				blocked[y * size.x + x] = 1
+			if x < row.size():
+				var terrain := String(row[x])
+				if not water_ids.has(terrain):
+					water_ids[terrain] = ContentService.normalize_terrain_id(terrain) == "water"
+				if bool(water_ids[terrain]):
+					water[y * size.x + x] = 1
+					water_count += 1
+	# Open water a boat sails over: water without an object's body on it.
+	var sea := water.duplicate()
 	var bodies: Dictionary = overworld_rules._build_blocked_tile_index(session, level, "", {})
 	var army_tiles := {}
 	for encounter in session.overworld.get("encounters", []):
@@ -3821,6 +4051,7 @@ static func _level_surface(session: SessionStateStoreScript.SessionData, context
 		var y := int(parts[1])
 		if x >= 0 and y >= 0 and x < size.x and y < size.y:
 			blocked[y * size.x + x] = 1
+			sea[y * size.x + x] = 0
 	var stops := {}
 	var resources: Array = session.overworld.get("resource_nodes", [])
 	for index in range(resources.size()):
@@ -3922,7 +4153,26 @@ static func _level_surface(session: SessionStateStoreScript.SessionData, context
 			continue
 		if entrance.x >= 0 and entrance.y >= 0 and entrance.x < size.x and entrance.y < size.y:
 			gates[entrance.y * size.x + entrance.x] = {"node": index, "exit": exit}
-	var surface := {"blocked": blocked, "stops": stops, "stop_mask": stop_mask, "site_stops": site_stops, "neutrals": neutrals, "portals": portals, "gates": gates}
+	# Shipyards on this level, by visit tile, with the dock where the boat they
+	# build is launched (`WaterTravelRules.dock_tile`).
+	var shipyards := {}
+	if water_count > 0:
+		for index in range(resources.size()):
+			var node = resources[index]
+			if not (node is Dictionary) or LevelRules.level_of(node) != level or String(node.get("site_id", "")) != WaterTravel.SHIPYARD_SITE_ID:
+				continue
+			var dock := WaterTravel.dock_tile(session, node)
+			if dock.is_empty():
+				continue
+			var map_object: Dictionary = overworld_rules._map_object_for_resource_node(node)
+			for tile in overworld_rules._resource_node_world_interaction_tiles(map_object, node):
+				if tile is Vector2i and tile.x >= 0 and tile.y >= 0 and tile.x < size.x and tile.y < size.y:
+					shipyards[tile.y * size.x + tile.x] = {"node": index, "dock": int(dock.y) * size.x + int(dock.x)}
+	var surface := {
+		"blocked": blocked, "stops": stops, "stop_mask": stop_mask, "site_stops": site_stops, "neutrals": neutrals, "portals": portals, "gates": gates,
+		"water": water, "water_count": water_count, "sea": sea, "shipyards": shipyards,
+		"boat_cost": VisitBuildings.cost(ContentService.get_resource_site(WaterTravel.SHIPYARD_SITE_ID), "build_boat"),
+	}
 	levels[level] = surface
 	_profile_add(context, "surface_ms", surface_started)
 	return surface
@@ -4024,7 +4274,7 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 		for zone_index in record.zone:
 			# Rock or an object's body inside the zone is no place to stand, as
 			# for the human; only a doorway or visit tile there can be entered.
-			if surface.blocked[int(zone_index)] != 0 and not static_stops.has(int(zone_index)):
+			if surface.blocked[int(zone_index)] != 0 and not static_stops.has(int(zone_index)) and not _is_water_index(surface, int(zone_index)):
 				continue
 			zone.append(int(zone_index))
 			stop_mask[int(zone_index)] = 1
@@ -4086,7 +4336,7 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 		var ref := {"kind": STOP_HERO if String(guard.ref_kind) == "hero" else STOP_AI_HERO, "index": int(guard.index), "zone": true}
 		for tile in _hero_zone_tiles(session, context, guard.tile, level):
 			var zone_index: int = tile.y * width + tile.x
-			if hero_tiles.has(zone_index) or army_tiles.has(zone_index) or (surface.blocked[zone_index] != 0 and not static_stops.has(zone_index)):
+			if hero_tiles.has(zone_index) or army_tiles.has(zone_index) or (surface.blocked[zone_index] != 0 and not static_stops.has(zone_index) and not _is_water_index(surface, zone_index)):
 				continue
 			hero_zone[zone_index] = 1
 			stop_mask[zone_index] = 1
@@ -4114,6 +4364,50 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 	var start_index := _tile_index_of(entry, size)
 	if start_index < 0:
 		return {"dist": dist, "parent": parent, "stops": reached_stops, "size": size, "start": -1}
+	# Water, as for the human (WaterTravelRules): a walking hero steps onto a
+	# free boat, or onto the boat a shipyard it stands at builds, and sails;
+	# a sailing hero moves over open water (never through another boat) and
+	# steps ashore onto open ground or a doorway. Boarding and going ashore each
+	# end the day, so they count `SHORE_STEP_SHARE` of a day more, and a route
+	# boards once. Phase per tile: 0 walking, 1 sailing, 2 ashore again, plus
+	# BOUGHT_BOAT when the route buys its boat at a shipyard (`_boat_price`).
+	var has_water := int(surface.get("water_count", 0)) > 0
+	var water: PackedByteArray = surface.get("water", PackedByteArray())
+	var phase := PackedByteArray()
+	var sea_open := PackedByteArray()
+	var boat_tiles := {}
+	var docks := {}
+	var shore_cost := 0
+	var dock_cost := 0
+	# Steps that board or go ashore, held back until the search reaches their
+	# distance: [distance, tile, parent, phase], in distance order.
+	var deferred := []
+	var deferred_head := 0
+	if has_water:
+		phase.resize(count)
+		sea_open = surface.sea.duplicate()
+		for army_index in army_tiles.keys():
+			sea_open[int(army_index)] = 0
+		for boat in WaterTravel.boats(session):
+			if not (boat is Dictionary) or int(boat.get("level", 0)) != level:
+				continue
+			var boat_index := _tile_index_of(boat, size)
+			if boat_index < 0:
+				continue
+			sea_open[boat_index] = 0
+			if String(boat.get("hero_id", "")) == "":
+				boat_tiles[boat_index] = true
+		if WaterTravel.hero_boat_id(entry) != "" and water[start_index] != 0:
+			phase[start_index] = 1
+		else:
+			if not surface.get("shipyards", {}).is_empty() and not _boat_market(session, context, surface.get("boat_cost", {})).is_empty():
+				for visit_index in surface.get("shipyards", {}).keys():
+					var dock := int(surface.shipyards[visit_index].dock)
+					if sea_open[dock] != 0 and not dynamic_stops.has(dock):
+						docks[int(visit_index)] = dock
+		var movement_max := _movement_max(entry)
+		shore_cost = maxi(1, int(round(float(movement_max) * SHORE_STEP_SHARE)))
+		dock_cost = shore_cost + movement_max
 	dist[start_index] = 0
 	var queue := PackedInt32Array()
 	queue.resize(count)
@@ -4139,7 +4433,28 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 	# Whether the radius cut the search short: if not, it reached every tile the
 	# hero can walk to.
 	var capped := false
-	while head < tail:
+	while head < tail or deferred_head < deferred.size():
+		if deferred_head < deferred.size():
+			# A held-back step joins the queue once the search has come within
+			# one step of its distance, which keeps the queue in distance order.
+			var limit: int = dist[queue[head]] + 1 if head < tail else int(deferred[deferred_head][0])
+			while deferred_head < deferred.size() and int(deferred[deferred_head][0]) <= limit:
+				var held: Array = deferred[deferred_head]
+				deferred_head += 1
+				var at := int(held[1])
+				if dist[at] >= 0:
+					continue
+				dist[at] = int(held[0])
+				parent[at] = int(held[2])
+				phase[at] = int(held[3])
+				if stop_mask[at] != 0:
+					reached.append(at)
+					if pass_mask[at] == 0:
+						continue
+				queue[tail] = at
+				tail += 1
+			if head >= tail:
+				continue
 		var current := queue[head]
 		head += 1
 		var next_distance := dist[current] + 1
@@ -4148,6 +4463,14 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 			continue
 		var cx := current % width
 		var cy := current / width
+		var here_phase := phase[current] if has_water else 0
+		var mode := here_phase & 3
+		if here_phase == 0 and docks.has(current) and dist[int(docks[current])] < 0:
+			# The shipyard here builds a boat at its dock and the hero boards it.
+			if dist[current] + 1 + dock_cost <= radius:
+				_hold_step(deferred, [dist[current] + 1 + dock_cost, int(docks[current]), current, 1 | BOUGHT_BOAT])
+			else:
+				capped = true
 		for direction in range(8):
 			var dx: int = NEIGHBOR_DX[direction]
 			var dy: int = NEIGHBOR_DY[direction]
@@ -4158,11 +4481,45 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 			var next := ny * width + nx
 			if dist[next] >= 0:
 				continue
+			if has_water:
+				if water[next] != 0:
+					if mode == 1:
+						if dx != 0 and dy != 0 and not native_corners and sea_open[cy * width + nx] == 0 and sea_open[ny * width + cx] == 0:
+							continue
+						if stop_mask[next] != 0:
+							dist[next] = next_distance
+							parent[next] = current
+							phase[next] = here_phase
+							reached.append(next)
+							if pass_mask[next] != 0:
+								queue[tail] = next
+								tail += 1
+						elif sea_open[next] != 0:
+							dist[next] = next_distance
+							parent[next] = current
+							phase[next] = here_phase
+							queue[tail] = next
+							tail += 1
+					elif here_phase == 0 and boat_tiles.has(next):
+						if next_distance + shore_cost <= radius:
+							_hold_step(deferred, [next_distance + shore_cost, next, current, 1])
+						else:
+							capped = true
+					continue
+				if mode == 1:
+					if stop_mask[next] != 0 or blocked[next] == 0:
+						if next_distance + shore_cost <= radius:
+							_hold_step(deferred, [next_distance + shore_cost, next, current, 2 | (here_phase & BOUGHT_BOAT)])
+						else:
+							capped = true
+					continue
 			if dx != 0 and dy != 0 and not native_corners and blocked[cy * width + nx] != 0 and blocked[ny * width + cx] != 0:
 				continue
 			if stop_mask[next] != 0:
 				dist[next] = next_distance
 				parent[next] = current
+				if has_water:
+					phase[next] = here_phase
 				reached.append(next)
 				if pass_mask[next] != 0:
 					queue[tail] = next
@@ -4175,6 +4532,8 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 						if dist[exit] < 0:
 							dist[exit] = next_distance + 1
 							parent[exit] = next
+							if has_water:
+								phase[exit] = here_phase
 							if hero_zone[exit] != 0:
 								reached.append(exit)
 								continue
@@ -4185,6 +4544,8 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 				continue
 			dist[next] = next_distance
 			parent[next] = current
+			if has_water:
+				phase[next] = here_phase
 			queue[tail] = next
 			tail += 1
 	# The hero's own tile counts as reached at distance zero (it may stand in a
@@ -4217,7 +4578,28 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 		"guard_zones": guard_zones,
 		"hero_zone": hero_zone,
 		"static_stops": static_stops,
+		"phase": phase,
 	}
+
+## What a route to this tile pays for a boat it buys at a shipyard, in the
+## gold-equivalent its errand's value is weighed in.
+static func _boat_price(session: SessionStateStoreScript.SessionData, context: Dictionary, search: Dictionary, tile_index: int) -> float:
+	var phase: PackedByteArray = search.get("phase", PackedByteArray())
+	if tile_index < 0 or tile_index >= phase.size() or (phase[tile_index] & BOUGHT_BOAT) == 0:
+		return 0.0
+	return _payload_value(_level_surface(session, context, 0).get("boat_cost", {}), {})
+
+static func _is_water_index(surface: Dictionary, tile_index: int) -> bool:
+	var water: PackedByteArray = surface.get("water", PackedByteArray())
+	return tile_index < water.size() and water[tile_index] != 0
+
+## Holds back a boarding or landing step in distance order (most arrive in
+## order already, so the scan from the back is short).
+static func _hold_step(deferred: Array, step: Array) -> void:
+	var at := deferred.size()
+	while at > 0 and int(deferred[at - 1][0]) > int(step[0]):
+		at -= 1
+	deferred.insert(at, step)
 
 static func _tile_index_of(point: Dictionary, size: Vector2i) -> int:
 	var x := int(point.get("x", -1))
@@ -4938,6 +5320,7 @@ static func _log_decision(session: SessionStateStoreScript.SessionData, context:
 		"hero": hero_name(entry),
 		"at": [int(entry.get("x", 0)), int(entry.get("y", 0))],
 		"level": LevelRules.level_of(entry),
+		"aboard": WaterTravel.hero_boat_id(entry) != "",
 		"power": snappedf(hero_power(entry), 1.0),
 		"move": int(entry.get(AI_HERO_KEY, {}).get("movement", {}).get("current", 0)),
 		"plan": [String(plan.get("kind", "")), chosen, snappedf(float(plan.get("value", 0.0)), 1.0), int(plan.get("distance", -1))],

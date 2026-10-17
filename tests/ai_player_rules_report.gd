@@ -37,6 +37,10 @@ const WIND_RIDGE_POCKET_INSIDE := Vector2i(73, 100)
 ## A small map with an underground level (map seed of the capped two-level
 ## game m111 in the 2026-10-16 AI batch).
 const GATE_SEED := "359365613"
+## A small islands map: every player starts on its own island and only boats
+## built at shipyards cross the water.
+const ISLANDS_SEED := "101"
+const WaterTravel = preload("res://scripts/core/WaterTravelRules.gd")
 
 var _failed := false
 
@@ -52,6 +56,13 @@ func _run() -> void:
 		var gate_only := _check_gate_crossing()
 		if not _failed:
 			print("%s %s" % [REPORT_ID, JSON.stringify({"ok": true, "gate_crossing": gate_only})])
+			_cleanup()
+			get_tree().quit(0)
+		return
+	if OS.get_environment("HEROES_AI_RULES_ONLY").strip_edges() == "sail":
+		var sail_only := _check_sailing()
+		if not _failed:
+			print("%s %s" % [REPORT_ID, JSON.stringify({"ok": true, "sailing": sail_only})])
 			_cleanup()
 			get_tree().quit(0)
 		return
@@ -158,6 +169,9 @@ func _run() -> void:
 	var gate_crossing := _check_gate_crossing()
 	if _failed:
 		return
+	var sailing := _check_sailing()
+	if _failed:
+		return
 
 	var payload := {
 		"ok": true,
@@ -173,6 +187,7 @@ func _run() -> void:
 		"battle_rewards": rewards,
 		"wind_ridge_reach": wind_ridge,
 		"gate_crossing": gate_crossing,
+		"sailing": sailing,
 		"captured_mines": captured_mines,
 		"guard_fights": fights,
 		"hero_tiles_per_day": float(hero_steps) / float(maxi(1, hero_days)),
@@ -267,13 +282,13 @@ func _run_perf(size_class_id: String, day_count: int) -> void:
 	_cleanup()
 	get_tree().quit(0)
 
-func _start_session(size_class_id: String = "homm3_small", player_count: int = 2, seed: String = SEED, hero_id: String = PLAYER_HERO_ID, faction_id: String = PLAYER_FACTION_ID, underground: bool = false):
+func _start_session(size_class_id: String = "homm3_small", player_count: int = 2, seed: String = SEED, hero_id: String = PLAYER_HERO_ID, faction_id: String = PLAYER_FACTION_ID, underground: bool = false, water: String = "land"):
 	var config := ScenarioSelectRulesScript.build_random_map_player_config(
 		seed,
 		"",
 		"",
 		player_count,
-		"land",
+		water,
 		underground,
 		size_class_id,
 		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT,
@@ -766,7 +781,114 @@ func _check_gate_crossing() -> Dictionary:
 		_fail("A computer hero came out of a gate and left the guard there standing: %s" % JSON.stringify(result))
 	elif String(result.goal.get("id", "")) == "" or String(result.goal.get("id", "")) != String(steps[-1].beyond.get("id", "")):
 		_fail("A computer hero lost the errand it crossed a gate for: %s" % JSON.stringify(result))
+	if _failed:
+		return result
+	# With nothing to do down there, the hero heads home through a gate: every
+	# town of its player stands on the surface.
+	index = AiHeroRulesScript._entry_index(session, placement_id)
+	entry = session.overworld.encounters[index]
+	var home_block: Dictionary = entry.get("ai_hero", {})
+	var home_movement: Dictionary = home_block.get("movement", {})
+	home_movement["current"] = int(home_movement.get("max", 1))
+	home_block["movement"] = home_movement
+	entry["ai_hero"] = home_block
+	session.overworld.encounters[index] = entry
+	context = AiHeroRulesScript._new_context(session, _ai_config(session, controller), _state(session, controller))
+	var home_search: Dictionary = AiHeroRulesScript._search(session, context, entry, maxi(1, int(home_movement.get("max", 1))) * AiHeroRulesScript.SEARCH_DAYS)
+	var homeward: Dictionary = AiHeroRulesScript._wait_by_home(session, context, entry, home_search)
+	result["homeward"] = {"kind": homeward.get("kind", ""), "beyond": homeward.get("beyond", {})}
+	if String(homeward.get("kind", "")) not in ["gate", "encounter"] or String(homeward.get("beyond", {}).get("kind", "")) != "park":
+		_fail("An idle computer hero on the level below its towns did not head home through a gate: %s" % JSON.stringify(result))
+		return result
+	homeward["path"] = AiHeroRulesScript._path_to(home_search, int(homeward.tile_index))
+	AiHeroRulesScript._follow_plan(session, context, index, homeward)
+	entry = session.overworld.encounters[AiHeroRulesScript._entry_index(session, placement_id)]
+	result["home_level"] = LevelRules.level_of(entry)
+	if LevelRules.level_of(entry) != 0:
+		_fail("An idle computer hero heading home did not come up through the gate: %s" % JSON.stringify(result))
 	return result
+
+## On an islands map a computer hero at a shipyard pays for a boat, boards it
+## (the day ends), sails and steps ashore on another island (the day ends
+## again), leaving the boat moored at the shore, as the human does.
+func _check_sailing() -> Dictionary:
+	ContentService.clear_generated_scenario_drafts()
+	var session = _start_session("homm3_small", 2, ISLANDS_SEED, PLAYER_HERO_ID, PLAYER_FACTION_ID, false, "islands")
+	if session == null:
+		return {}
+	var controller := _ai_controller(session)
+	OverworldRules.end_turn(session)
+	var heroes: Array = AiHeroRulesScript.active_hero_entries(session, controller)
+	if heroes.is_empty():
+		_fail("The computer player has no hero on the islands map.")
+		return {}
+	var placement_id := String(heroes[0].get("placement_id", ""))
+	var context: Dictionary = AiHeroRulesScript._new_context(session, _ai_config(session, controller), _state(session, controller))
+	var size: Vector2i = context.map_size
+	var shipyards: Dictionary = AiHeroRulesScript._level_surface(session, context, 0).get("shipyards", {})
+	if shipyards.is_empty():
+		_fail("Islands seed %s generates no shipyard with a dock." % ISLANDS_SEED)
+		return {}
+	var yard_tile := int(shipyards.keys().min())
+	var dock := int(shipyards[yard_tile].dock)
+	var index: int = AiHeroRulesScript._entry_index(session, placement_id)
+	var entry: Dictionary = session.overworld.encounters[index]
+	entry["x"] = yard_tile % size.x
+	entry["y"] = yard_tile / size.x
+	entry["level"] = 0
+	session.overworld.encounters[index] = entry
+	OverworldRules.invalidate_spatial_lookup(session)
+	var treasury: Dictionary = context.state.treasury
+	treasury["gold"] = maxi(int(treasury.get("gold", 0)), 5000)
+	treasury["wood"] = maxi(int(treasury.get("wood", 0)), 20)
+	var gold_before := int(treasury.gold)
+	# The nearest open shore tile the hero reaches only over water.
+	var movement_max := maxi(1, AiHeroRulesScript._movement_max(entry))
+	var search: Dictionary = AiHeroRulesScript._search(session, context, entry, movement_max * AiHeroRulesScript.STRATEGIC_DAYS)
+	var phase: PackedByteArray = search.get("phase", PackedByteArray())
+	var target := -1
+	for tile_index in range(phase.size()):
+		if (phase[tile_index] & 3) == 2 and int(search.dist[tile_index]) > 0 and not search.stops.has(tile_index) and (target < 0 or int(search.dist[tile_index]) < int(search.dist[target])):
+			target = tile_index
+	if target < 0:
+		_fail("A computer hero at a shipyard on the islands map finds no shore across the water.")
+		return {}
+	var result := {"shipyard": [yard_tile % size.x, yard_tile / size.x], "dock": [dock % size.x, dock / size.x], "target": [target % size.x, target / size.x], "days": []}
+	for day in range(12):
+		index = AiHeroRulesScript._entry_index(session, placement_id)
+		entry = session.overworld.encounters[index]
+		if _tile_index(entry, size) == target:
+			break
+		var block: Dictionary = entry.get("ai_hero", {})
+		var movement: Dictionary = block.get("movement", {})
+		movement["current"] = movement_max
+		block["movement"] = movement
+		entry["ai_hero"] = block
+		session.overworld.encounters[index] = entry
+		search = AiHeroRulesScript._search(session, context, entry, movement_max * AiHeroRulesScript.STRATEGIC_DAYS)
+		if int(search.dist[target]) < 0:
+			_fail("A computer hero lost its way to the far shore on day %d: %s" % [day, JSON.stringify(result)])
+			return result
+		var plan := {"kind": "wait", "id": "wait:%d" % target, "index": target, "value": 0.0, "tile_index": target, "path": AiHeroRulesScript._path_to(search, target)}
+		AiHeroRulesScript._follow_plan(session, context, index, plan)
+		entry = session.overworld.encounters[AiHeroRulesScript._entry_index(session, placement_id)]
+		result.days.append({"at": [int(entry.get("x", -1)), int(entry.get("y", -1))], "boat": WaterTravel.hero_boat_id(entry), "left": int(entry.get("ai_hero", {}).get("movement", {}).get("current", -1))})
+	var boats := WaterTravel.boats(session)
+	result["boats"] = boats
+	result["gold_spent"] = gold_before - int(treasury.get("gold", 0))
+	var days: Array = result.days
+	if days.is_empty() or String(days[0].boat) == "" or days[0].at != result.dock or int(days[0].left) != 0:
+		_fail("A computer hero at a shipyard did not build a boat and board it at the dock, ending its day: %s" % JSON.stringify(result))
+	elif int(result.gold_spent) != 1000:
+		_fail("A computer hero's boat did not cost its player the shipyard's price: %s" % JSON.stringify(result))
+	elif _tile_index(entry, size) != target or WaterTravel.hero_boat_id(entry) != "" or int(days[-1].left) != 0:
+		_fail("A computer hero did not step ashore on the far island, ending its day: %s" % JSON.stringify(result))
+	elif boats.size() != 1 or String(boats[0].get("hero_id", "x")) != "" or maxi(absi(int(boats[0].x) - target % size.x), absi(int(boats[0].y) - target / size.x)) != 1:
+		_fail("A computer hero that went ashore did not leave its boat moored beside it: %s" % JSON.stringify(result))
+	return result
+
+func _tile_index(point: Dictionary, size: Vector2i) -> int:
+	return int(point.get("y", 0)) * size.x + int(point.get("x", 0))
 
 ## Embercourt's capital sits in a pocket whose only way out is one tile beside
 ## the town. On 2026-10-08 a lesser hero waited there and held the main army in

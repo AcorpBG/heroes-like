@@ -14,7 +14,8 @@ A playtest found an "Ash Sluice Lock" standing in open grass by the sea, marked 
 - **Going ashore.** A sailing hero may end a route on open shore or a shore site (a town entrance, a pickup). Stepping off ends the day's movement; the boat stays moored on the last water tile for anyone to take.
 - **Shipyard.** A neutral visit building on the coast. Any visiting hero may build a boat for 1,000 gold and 10 wood (the HoMM3 price). The boat appears on the dock: the open water tile next to the visit tile, or next to the body, nearest the visit tile. A full dock refuses before anything is paid.
 - **Whirlpool.** A water site. Sailing into it throws the boat out on a free water tile beside another whirlpool on the same level, picked by a stable hash of the source, day and hero. The weakest stack (by total health) loses half its creatures, rounded down, never the army's last creature. A lone whirlpool spins the boat back where it entered.
-- **Rendering.** Moored boats use `mapobj_water_boat`; a sailing hero shows as the same boat with the owner's flag at the masthead and the hero's command pennant.
+- **Rendering.** Moored boats use `mapobj_water_boat`; a sailing hero shows as the same boat with the owner's flag at the masthead and the hero's command pennant. A computer player's hero aboard shows as the boat with its player's flag.
+- **Computer players** sail under the same rules (`AiHeroRules._search`, `_cross_shore`, `_launch_boat`): they board free boats, buy boats at shipyards they stand at, sail and go ashore, and boarding or going ashore ends their day. `docs/ai-plays-by-player-rules.md` ("Water") has how they weigh it.
 
 Saves keep `overworld.boats` and each hero's `boat_id`; normalization keeps them consistent (a boat follows the hero aboard; a hero whose boat is gone walks again).
 
@@ -45,7 +46,7 @@ Saves from older random maps are migrated once on load (`overworld.generated_tra
 
 ## Not yet
 
-- **AI heroes do not sail.** Enemy heroes still treat water as blocked and never board boats or build them. AI water travel is the next slice.
+- Computer heroes do not sail into whirlpools.
 - Sea battles, sea movement bonuses (HoMM3 Navigation, sea artifacts) and town shipyards are not modelled.
 
 ## Validation

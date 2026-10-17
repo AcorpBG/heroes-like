@@ -5,8 +5,10 @@ extends RefCounted
 ## only on water. Shipyards build a boat at their dock, and whirlpools throw a
 ## boat out at another whirlpool for half of the weakest stack.
 ##
-## Boats live in session.overworld.boats; a sailing hero carries boat_id.
-## OverworldRules owns route checks and calls these helpers.
+## Boats live in session.overworld.boats; a sailing hero carries boat_id, the
+## human's heroes and the computer players' heroes alike (AiHeroRules sails
+## those under the same rules). OverworldRules owns route checks and calls these
+## helpers.
 
 const Levels = preload("res://scripts/core/OverworldLevelRules.gd")
 
@@ -101,6 +103,22 @@ static func normalize(session) -> void:
 			continue
 		if not aboard.has(boat_id):
 			aboard[boat_id] = hero_value
+	# A computer player's hero aboard a boat; a defeated one leaves its boat
+	# empty where it lies.
+	var resolved := {}
+	for value in session.overworld.get("resolved_encounters", []):
+		resolved[String(value)] = true
+	for encounter in session.overworld.get("encounters", []):
+		if not (encounter is Dictionary) or not (encounter.get("ai_hero", null) is Dictionary):
+			continue
+		var boat_id := hero_boat_id(encounter)
+		if boat_id == "":
+			continue
+		var placement_id := String(encounter.get("placement_id", ""))
+		if not known.has(boat_id) or resolved.has(placement_id) or aboard.has(boat_id):
+			encounter.erase(HERO_BOAT_KEY)
+			continue
+		aboard[boat_id] = {"id": placement_id, "position": {"x": int(encounter.get("x", 0)), "y": int(encounter.get("y", 0)), "level": Levels.level_of(encounter)}}
 	for boat in cleaned:
 		var hero: Variant = aboard.get(String(boat.id))
 		if hero is Dictionary:
@@ -122,6 +140,17 @@ static func add_boat(session, tile: Vector2i, level: int, id_hint: String) -> Di
 	list.append(boat)
 	session.overworld[BOATS_KEY] = list
 	return boat
+
+## Puts a boat at this tile with this hero aboard ("" leaves it empty there).
+static func place_boat(session, boat_id: String, hero_id: String, tile: Vector2i, level: int) -> void:
+	var list := boats(session).duplicate(true)
+	for index in range(list.size()):
+		if String(list[index].get("id", "")) == boat_id:
+			list[index]["hero_id"] = hero_id
+			list[index]["x"] = tile.x
+			list[index]["y"] = tile.y
+			list[index]["level"] = level
+	session.overworld[BOATS_KEY] = list
 
 ## The active hero takes the boat at this tile.
 static func embark(session, boat: Dictionary) -> void:

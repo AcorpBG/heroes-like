@@ -267,6 +267,10 @@ Rules:
 
 `balance-mireclaw-muster-embercourt-gold-20261017` (completed, owner decision from 180 AI-against-AI games): Mireclaw won 12 games against a fair 23, Embercourt 31 against 21; the other four were within chance. Mireclaw's T1 and T2 lines grow two more a week, its T3 and T4 lines one more (base and upgrade, and the matching map dwellings); its fully built town now makes 2,059 power a week at Great Ramparts (was 1,880, the least; others 1,959-2,400). Embercourt's Convoy Charter pays 300 gold a day instead of 500. See `docs/common-town-building-template.md`.
 
+### AI heroes sail and go home across levels
+
+`ai-water-travel-20261017` (completed, the gaps left by `ai-subterranean-gates-20261017`): computer heroes treated water as impassable, so islands maps (left out of the 2026-10-16 batch for that reason) kept every player on its own island; and an idle hero whose towns all stood on the other level waited at their coordinates on its own level. Heroes now sail under the human's rules: the route search boards free boats or a boat bought at a shipyard the hero stands at (1,000 gold, 10 wood, market trades allowed), sails open water and goes ashore, boarding and going ashore each ending the day; a route that buys a boat pays its price out of the errand's value. An idle main or field army with a shipyard in reach makes its towns keep the boat's price back for two days. The map draws a computer hero aboard as a boat with its player's flag. Idle heroes head home through a gate (`_gate_home`). Replays on four islands maps end with a winner on days 25 to 111. See `docs/ai-plays-by-player-rules.md` and `docs/water-travel.md`.
+
 ### Full-army site claims
 
 `gameplay-site-recruit-overflow-20261008` (completed, owner playtest fix): a full army no longer blocks claiming a site that grants troops (Glassbound Eyrie, Railblock Camp and 66 others). The site is claimed and pays out; troops that fit join, and a dialog offers to dismiss a stack for the rest or leave them behind. AI heroes claim the same way and keep what fits. Free reward gates ask to Claim instead of "Pay nothing". See `docs/site-recruit-overflow.md`.
