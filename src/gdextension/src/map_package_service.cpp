@@ -1186,6 +1186,71 @@ const aurelion::h3maped_rmg_core::FinalHeaderPlayerSlot4ac857 *runtime_slot_for_
 	return nullptr;
 }
 
+// The project faction of each H3 town type, which a type-98 town record carries
+// as its subtype (0 castle, 1 rampart, 2 tower, 3 inferno, 4 necropolis,
+// 5 dungeon, 6 stronghold, 7 fortress, 8 conflux). The generator rolls a
+// neutral town's type in 0x4a901a: uniformly among the zone's allowed town
+// types (0x49b3c1 over mask +0x41..+0x49), or the zone's own town type when
+// the zone record's +0x40 byte asks for towns of the same type.
+// H3M_TOWN_TYPE_PROJECT_IDENTITY in NativeRandomMapPackageSessionBridge.gd
+// must name the same factions.
+constexpr int32_t H3M_TOWN_TYPE_COUNT = 9;
+const char *const H3M_TOWN_TYPE_FACTION_IDS[H3M_TOWN_TYPE_COUNT] = {
+	"faction_embercourt",
+	"faction_thornwake",
+	"faction_sunvault",
+	"faction_brasshollow",
+	"faction_veilmourn",
+	"faction_veilmourn",
+	"faction_brasshollow",
+	"faction_mireclaw",
+	"faction_sunvault",
+};
+
+// Player factions come from the setup, not from the town type the generator
+// gave the player's main town. A neutral town of that same type takes the
+// player's faction, so a zone's same-type towns stay one faction. When players
+// of different factions share a type, the type keeps its table faction.
+std::vector<String> runtime_town_type_faction_ids(
+		const aurelion::h3maped_rmg_core::RuntimeMapPayloadProjection &projection,
+		const Dictionary &normalized_config) {
+	std::vector<String> result(H3M_TOWN_TYPE_COUNT);
+	std::vector<String> player_factions(H3M_TOWN_TYPE_COUNT);
+	std::vector<bool> shared_by_factions(H3M_TOWN_TYPE_COUNT, false);
+	for (const auto &object : projection.objects) {
+		if (object.type_id != 98 || object.subtype < 0 || object.subtype >= H3M_TOWN_TYPE_COUNT) {
+			continue;
+		}
+		const auto *slot = runtime_slot_for_town(object, projection);
+		if (slot == nullptr) {
+			continue;
+		}
+		const String faction_id = configured_runtime_faction_id(slot, normalized_config);
+		String &claimed = player_factions[size_t(object.subtype)];
+		if (claimed.is_empty()) {
+			claimed = faction_id;
+		} else if (claimed != faction_id) {
+			shared_by_factions[size_t(object.subtype)] = true;
+		}
+	}
+	for (int32_t type = 0; type < H3M_TOWN_TYPE_COUNT; ++type) {
+		const bool player_type = !player_factions[size_t(type)].is_empty() && !shared_by_factions[size_t(type)];
+		result[size_t(type)] = player_type ? player_factions[size_t(type)] : String(H3M_TOWN_TYPE_FACTION_IDS[type]);
+	}
+	return result;
+}
+
+String runtime_neutral_town_faction_id(
+		const aurelion::h3maped_rmg_core::RuntimeMapObjectProjection &town,
+		const std::vector<String> &town_type_faction_ids) {
+	// The generator writes every town as type 98; a type-77 random town has no
+	// town type in its record.
+	if (town.type_id == 98 && town.subtype >= 0 && size_t(town.subtype) < town_type_faction_ids.size()) {
+		return town_type_faction_ids[size_t(town.subtype)];
+	}
+	return runtime_faction_id(nullptr);
+}
+
 String runtime_placement_id(const String &map_id, int32_t index) {
 	return map_id + String("_object_") + String::num_int64(index).pad_zeros(4);
 }
@@ -1248,6 +1313,7 @@ Dictionary runtime_objects(
 	const Dictionary source_type_pools = eligibility.get("source_type_pools", Dictionary());
 	const Dictionary source_kind_passthrough = eligibility.get("source_kind_passthrough", Dictionary());
 	const Dictionary source_type_exclusions = eligibility.get("source_type_exclusions", Dictionary());
+	const std::vector<String> town_type_faction_ids = runtime_town_type_faction_ids(projection, normalized_config);
 	Dictionary resolution_counts;
 	for (const auto &source : projection.objects) {
 		Dictionary object;
@@ -1479,8 +1545,14 @@ Dictionary runtime_objects(
 			object["player_type"] = slot == nullptr ? "neutral" : (slot->human ? "human" : "computer");
 			object["is_start_town"] = slot != nullptr;
 			object["start_anchor"] = slot != nullptr;
-			object["town_id"] = configured_runtime_town_id(slot, normalized_config);
-			object["faction_id"] = configured_runtime_faction_id(slot, normalized_config);
+			if (slot == nullptr) {
+				const String faction_id = runtime_neutral_town_faction_id(source, town_type_faction_ids);
+				object["town_id"] = town_for_faction(faction_id);
+				object["faction_id"] = faction_id;
+			} else {
+				object["town_id"] = configured_runtime_town_id(slot, normalized_config);
+				object["faction_id"] = configured_runtime_faction_id(slot, normalized_config);
+			}
 		} else if (kind == "guard") {
 			object["native_guard_quantity"] = source.guard_quantity;
 			object["native_guard_creature_subtype"] = source.subtype;

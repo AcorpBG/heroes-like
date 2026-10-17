@@ -11,15 +11,18 @@ const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
 const GeneratedNeutralRules = preload("res://scripts/persistence/GeneratedNeutralEncounterRules.gd")
 const GeneratedRewards = preload("res://scripts/persistence/GeneratedRewardRules.gd")
 
+## The project faction of each H3 town type. Native packages already resolve a
+## generated town's faction from its type-98 subtype with the same table
+## (H3M_TOWN_TYPE_FACTION_IDS in map_package_service.cpp); keep the two equal.
 const H3M_TOWN_TYPE_PROJECT_IDENTITY := {
 	"castle": {"faction_id": "faction_embercourt", "town_id": "town_riverwatch"},
-	"rampart": {"faction_id": "faction_mireclaw", "town_id": "town_duskfen"},
+	"rampart": {"faction_id": "faction_thornwake", "town_id": "town_thornwake_graftroot_caravan"},
 	"tower": {"faction_id": "faction_sunvault", "town_id": "town_prismhearth"},
-	"inferno": {"faction_id": "faction_veilmourn", "town_id": "town_veilmourn_bellwake_harbor"},
-	"necropolis": {"faction_id": "faction_mireclaw", "town_id": "town_nightglass_redoubt"},
-	"dungeon": {"faction_id": "faction_sunvault", "town_id": "town_halo_spire"},
-	"stronghold": {"faction_id": "faction_embercourt", "town_id": "town_highwater_keep"},
-	"fortress": {"faction_id": "faction_mireclaw", "town_id": "town_blackfen_gate"},
+	"inferno": {"faction_id": "faction_brasshollow", "town_id": "town_brasshollow_orevein_gantry"},
+	"necropolis": {"faction_id": "faction_veilmourn", "town_id": "town_veilmourn_bellwake_harbor"},
+	"dungeon": {"faction_id": "faction_veilmourn", "town_id": "town_veilmourn_bellwake_harbor"},
+	"stronghold": {"faction_id": "faction_brasshollow", "town_id": "town_brasshollow_orevein_gantry"},
+	"fortress": {"faction_id": "faction_mireclaw", "town_id": "town_duskfen"},
 	"elemental": {"faction_id": "faction_sunvault", "town_id": "town_prismhearth"},
 }
 ## Every player's start hero on a generated map leads its faction's starting

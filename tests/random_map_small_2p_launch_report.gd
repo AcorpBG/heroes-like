@@ -59,6 +59,7 @@ func _assert_two_player_retry_cases() -> Array:
 		"10184",
 	]
 	var cases := []
+	var neutral_factions := {}
 	for seed in seeds:
 		var config := ScenarioSelectRulesScript.build_random_map_player_config(
 			String(seed),
@@ -84,7 +85,32 @@ func _assert_two_player_retry_cases() -> Array:
 			"attempt_count": int(setup.get("retry_status", {}).get("attempt_count", 0)) if setup.get("retry_status", {}) is Dictionary else 0,
 			"template_id": String(setup.get("template_id", "")),
 		})
+		if not _collect_neutral_town_factions(setup, neutral_factions):
+			return []
+	# A neutral town's faction follows the town type the generator rolled for it.
+	if neutral_factions.size() < 3:
+		_fail("Neutral towns on generated maps fell back to too few factions: %s" % JSON.stringify(neutral_factions))
+		return []
 	return cases
+
+func _collect_neutral_town_factions(setup: Dictionary, factions: Dictionary) -> bool:
+	var startup: Dictionary = setup.get("package_startup", {}) if setup.get("package_startup", {}) is Dictionary else {}
+	var map_load: Dictionary = ClassDB.instantiate("MapPackageService").load_map_package(String(startup.get("map_path", "")))
+	var document = map_load.get("map_document", null)
+	if document == null:
+		_fail("Generated map package did not load: %s" % JSON.stringify(startup))
+		return false
+	for index in range(int(document.get_object_count())):
+		var town: Dictionary = document.get_object_by_index(index)
+		if String(town.get("kind", "")) != "town" or String(town.get("owner", "")) != "neutral":
+			continue
+		var faction_id := String(town.get("faction_id", ""))
+		var town_faction_id := String(ContentService.get_town(String(town.get("town_id", ""))).get("faction_id", ""))
+		if ContentService.get_faction(faction_id).is_empty() or town_faction_id != faction_id:
+			_fail("Neutral town has no matching faction and town: %s" % JSON.stringify(town))
+			return false
+		factions[faction_id] = int(factions.get(faction_id, 0)) + 1
+	return true
 
 func _fail(message: String) -> void:
 	push_error("%s failed: %s" % [REPORT_ID, message])
