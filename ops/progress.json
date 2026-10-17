@@ -115414,6 +115414,18 @@
       "notes": "From the owner's 2026-10-16 batch of 60 large AI matches: on seed ai-match-1305188145 (6 players, land, one level) the last rival town, Duskfen Bastion, stood untaken from about day 40 to the 320-day cap. Probe: its anchor tile (5,45) was explored, its doorway (3,45) not. _rival_towns_unknown tested the anchor and counted the town as seen, so scouting stopped; _strategic_candidate, _best_candidate and _war_paths tested the doorway and left it out as unseen, though Sunvault's main army (320,000) could reach it and valued it at 273,000. All of them now use AiHeroRules._town_seen (anchor or doorway explored). New core test tests/ai_town_knowledge_report (a hero beside an undefended rival town of which only the anchor or only the doorway is seen takes it; nothing seen keeps the scouting on); it fails on the old code with the hero exploring instead. Validation: tests/ai_town_knowledge_report, tools/core_suite.py."
     },
     {
+      "id": "balance-mireclaw-muster-embercourt-gold-20261017",
+      "title": "Mireclaw grows more creatures at tiers 1-4; Embercourt's gold building pays 300",
+      "status": "completed",
+      "classification": "balance",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/common-town-building-template.md"
+      ],
+      "notes": "Owner decision 2026-10-17 after the 2026-10-16 batches (120 mixed and 60 large AI games, 134 decided). Wins against the fair share of decided games: Embercourt 31/21.3, Veilmourn 29/22.5, Sunvault 20/21.0 (leads 18 of the 46 capped games), Thornwake 21/23.0, Brasshollow 21/23.4, Mireclaw 12/22.9; chi-square p = 0.04. Mireclaw trailed from week 2 (day-28 strength 0.57 of the table average) while buying every creature it could and putting the rest into buildings; with the AI's dwelling picks its T1-T4 base muster was 402 power a week against 457-538, its fully built upgraded town 1,880 at Great Ramparts against 1,959-2,400 (AiHeroRules.army_power, growth buildings included). The 2026-10-09 +1 for Mireclaw T1-T3 was reverted then as making it the strongest town; that was measured with the strength estimate replaced on 2026-10-16. Growth now: Blackbranch Cutthroat 10->12, Reedsnare Kin 11->13, Bog Brute 6->8, Mudglass Slingers 7->9, Gorefen Ripper 4->5, Bogplate Maulers 7->8, Ferrychain Lashers 5->6, Mireglass Reedcasters 5->6, each with its upgrade and the four matching map dwellings. T1-T4 base 466, all base 745 (others 728-844), fully built 2,059. Embercourt unique_1 (Convoy Charter) income 500 -> 300 gold a day. Not re-measured with AI matches. Validation: tools/core_suite.py."
+    },
+    {
       "id": "ai-subterranean-gates-20261017",
       "title": "AI heroes cross subterranean gates",
       "status": "completed",

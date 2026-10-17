@@ -263,6 +263,10 @@ Rules:
 
 `ai-subterranean-gates-20261017` (completed, from the owner's 2026-10-16 120-match AI batch): computer heroes never left their map level (`AiHeroRules` searched one level and dropped subterranean gates), so on two-level maps 22 of 32 games ran to the 160-day cap with main armies idle and rivals out of reach beyond the gates. Heroes now weigh the three nearest gates they can walk to (`_gate_candidate`): the best candidate on the other level seen from the gate's exit, scored by the whole way. Generated gates are guarded at both ends: the near guard is fought first, valued with what lies beyond; the far guard is fought on arrival under the human's passage rule (`native_passage_travel_check` with `fight_on_arrival`); the next fight is previewed. Main and field armies weigh gates every decision, other heroes when nothing on their level is worth doing. Replays of five capped seeds (small, medium; weak, normal, strong guards) now end with a winner on days 36 to 115. See `docs/ai-plays-by-player-rules.md`.
 
+### Mireclaw muster and Embercourt gold
+
+`balance-mireclaw-muster-embercourt-gold-20261017` (completed, owner decision from 180 AI-against-AI games): Mireclaw won 12 games against a fair 23, Embercourt 31 against 21; the other four were within chance. Mireclaw's T1 and T2 lines grow two more a week, its T3 and T4 lines one more (base and upgrade, and the matching map dwellings); its fully built town now makes 2,059 power a week at Great Ramparts (was 1,880, the least; others 1,959-2,400). Embercourt's Convoy Charter pays 300 gold a day instead of 500. See `docs/common-town-building-template.md`.
+
 ### Full-army site claims
 
 `gameplay-site-recruit-overflow-20261008` (completed, owner playtest fix): a full army no longer blocks claiming a site that grants troops (Glassbound Eyrie, Railblock Camp and 66 others). The site is claimed and pays out; troops that fit join, and a dialog offers to dismiss a stack for the rest or leave them behind. AI heroes claim the same way and keep what fits. Free reward gates ask to Claim instead of "Pay nothing". See `docs/site-recruit-overflow.md`.
