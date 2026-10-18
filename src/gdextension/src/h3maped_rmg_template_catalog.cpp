@@ -1947,17 +1947,24 @@ TemplateSelectionRuntimeResult4ac552 template_selection_and_runtime_seed_inputs_
 	if (repick_split_link_graph && !result.blocked && runtime_link_graph_split(result.runtime_seed)) {
 		// Departure from H3MapEd: 0x4a218c drops every link whose player filter fails, and
 		// nothing checks that the zones stay joined (8XM12 with 2 players leaves the
-		// second player's zone with no link). Take the next candidate after the rolled one
-		// that keeps them joined. No extra RNG draw; if every candidate is split, the
-		// rolled one stays.
+		// second player's zone with no link). The same roll picks among the candidates
+		// that keep them joined, in vector order, so the split template's share is spread
+		// evenly over them. No extra RNG draw; if every candidate is split, the rolled one
+		// stays.
 		const int32_t rolled_index = result.selected_vector_index;
 		const std::string rolled_name = result.selected_template_name;
-		bool replaced = false;
-		for (int32_t step = 1; step < result.accepted_template_count && !replaced; ++step) {
-			build_selected((rolled_index + step) % result.accepted_template_count);
-			replaced = !result.blocked && !runtime_link_graph_split(result.runtime_seed);
+		std::vector<int32_t> joined_indices;
+		for (int32_t index = 0; index < result.accepted_template_count; ++index) {
+			if (index == rolled_index) {
+				continue;
+			}
+			build_selected(index);
+			if (!result.blocked && !runtime_link_graph_split(result.runtime_seed)) {
+				joined_indices.push_back(index);
+			}
 		}
-		if (replaced) {
+		if (!joined_indices.empty()) {
+			build_selected(joined_indices[size_t(result.rng_value % int32_t(joined_indices.size()))]);
 			result.split_link_graph_repicked = true;
 			result.split_link_graph_rolled_template_name = rolled_name;
 		} else {

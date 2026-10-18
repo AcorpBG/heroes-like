@@ -57,11 +57,13 @@ With one human, the catalog has 13 such template and player-count combinations:
 
 So `template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b`
 (`h3maped_rmg_template_catalog.cpp`) checks the runtime links after the roll. If they
-leave the runtime zones in more than one group, it takes the next accepted candidate
-in vector order (wrapping) whose links join every zone. There is no extra RNG draw,
-so the choice is deterministic per seed. If every candidate is split, the rolled
-template stays. Only those combinations change; every other seed keeps H3MapEd's
-template.
+leave the runtime zones in more than one group, it lists the other accepted
+candidates whose links join every zone, in vector order, and takes entry
+`rng_value % joined_count` (owner decision, 2026-10-18). The same roll value is
+reused, so there is no extra RNG draw and the choice is deterministic per seed. Each
+joined template gets an even part of the split template's share, instead of all of it
+going to the template after it. If every candidate is split, the rolled template
+stays. Only those combinations change; every other seed keeps H3MapEd's template.
 
 The re-pick is on when the repair is on (`repair_cut_off_towns`) and
 `AURELION_RMG_H3MAPED_STRICT` is unset, so the parity paths keep H3MapEd's template.
@@ -187,14 +189,18 @@ returns the number of towns outside the area that holds the most towns.
   - No other map changed. The sweep stays 64/72 with and without the repair, same rows.
 - **Template re-pick** (the same 74 flagged configurations):
   - All 74 now end with no town cut off (before: 70 kept the repair, 69 clean).
-  - Five Newcomers maps are re-picked to Dwarven Tunnels: medium2p/m117 (6 cut off on
-    Newcomers; 0 on Dwarven Tunnels without the repair), and medium3p/m034, m066, m087
-    and m088 (each repairs fully on Dwarven Tunnels).
+  - Five Newcomers maps are re-picked, each to a different template: medium2p/m117 to
+    5SB0a, medium3p/m034 to 2SM2h(2), m066 to Ring and m088 to 8MM0e, all with no town
+    cut off; medium3p/m087 (normal water) to South of Hell, which the repair joins (1
+    to 0).
   - Large m003 (map seed 3507549692, 2 levels, weak, 1+1 players), whose Riverwatch Hold
-    sat in 8XM12's unlinked start zone, takes Ring and has no town cut off. H3MapEd's own
-    map for it (Windows reference `cut_m003L.h3m`) is identical to the strict native map.
-  - The Large selftest seed 73 takes Dwarven Tunnels in place of Newcomers and repairs
-    (1 to 0). XL seed 76 takes Ring in place of 8XM12 and has no town cut off.
+    sat in 8XM12's unlinked start zone, takes Meeting in Muzgob, which the repair joins
+    (3 to 0). H3MapEd's own map for it (Windows reference `cut_m003L.h3m`) is identical
+    to the strict native map.
+  - The Large selftest seed 73 takes Meeting in Muzgob in place of Newcomers, and XL
+    seed 76 takes 6LM10 in place of 8XM12; neither has a town cut off.
+  - The first version took the next candidate in vector order. It also left all 74
+    clean, but sent all five Newcomers maps to Dwarven Tunnels.
   - The sweep stays 64/72 with the repair on and with `AURELION_RMG_H3MAPED_STRICT=1`,
     the same rows: no reference map uses a split combination.
 - **Strict mode:** with `AURELION_RMG_H3MAPED_STRICT=1`, m043 (seed 2851495868) is
@@ -247,5 +253,5 @@ yet player 3's start town at (60,24,0) could not be left on foot.
   - The repair pass now places those mines elsewhere, and all 8 repair.
 - **Six-town split maps (Newcomers, fixed by the template re-pick).** medium2p/m117
   (seed 154192373) and medium3p/m066 left whole islands of zones whose links never join
-  the rest. Both now take Dwarven Tunnels and have no town cut off.
+  the rest. They now take 5SB0a and Ring and have no town cut off.
 - **Cost.** A repaired map is generated twice, and an unhelped one three times.
