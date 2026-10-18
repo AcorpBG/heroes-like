@@ -115708,7 +115708,7 @@
         "PLAN.md",
         "docs/common-town-building-template.md"
       ],
-      "notes": "Owner decision 2026-10-18 from round 1's measurement (60 medium 2P, 60 medium 3P, 60 large 2P land games). Wins/fair share before -> after round 1: Embercourt late 0.21 -> 1.07; Veilmourn 1.50 -> 0.76 (large 0.80); Thornwake 0.80 -> 1.35 (large 1.16); Sunvault 1.15 -> 1.35 (large 1.40); Brasshollow 0.65 -> 0.85 (large 1.00); Mireclaw 0.65 -> 0.46 (large 0.50). Changes: Veilmourn spellwrights (Morwen Wakeoracle, Thir Obituaryink, Sael Mirrorbell, Nacre Vowless) base movement 10->11 (faction average 11.1); Seedcutters growth 12->11 (both forms); Daybreak Colossus hp 91->84 dmg 16-26->14-23, upgrade hp 110->100 dmg 20-32->18-29 (army_power -9.5% / -8.5%). Mireclaw battle waiting traced: not an AI fault. Out-of-reach melee stacks wait/hold/advance ~52/18/29% in every faction (traced arena standard run); Mireclaw has 54% melee stacks vs 16-37%. Arena standard with --roles: no-wait variant 0.479, no-hold 0.489 vs current; Mireclaw side gain +0.000+-0.042 and +0.009+-0.017. No battle AI change. Content change only; not measured yet. Validation: unit_ability_runtime_report unchanged at 72 pre-existing failures; tools/core_suite.py.",
+      "notes": "Owner decision 2026-10-18 from round 1's measurement (60 medium 2P, 60 medium 3P, 60 large 2P land games). Wins/fair share before -> after round 1: Embercourt late 0.21 -> 1.07; Veilmourn 1.50 -> 0.76 (large 0.80); Thornwake 0.80 -> 1.35 (large 1.16); Sunvault 1.15 -> 1.35 (large 1.40); Brasshollow 0.65 -> 0.85 (large 1.00); Mireclaw 0.65 -> 0.46 (large 0.50). Changes: Veilmourn spellwrights (Morwen Wakeoracle, Thir Obituaryink, Sael Mirrorbell, Nacre Vowless) base movement 10->11 (faction average 11.1); Seedcutters growth 12->11 (both forms); Daybreak Colossus hp 91->84 dmg 16-26->14-23, upgrade hp 110->100 dmg 20-32->18-29 (army_power -9.5% / -8.5%). Mireclaw battle waiting traced: not an AI fault. Out-of-reach melee stacks wait/hold/advance ~52/18/29% in every faction (traced arena standard run); Mireclaw has 54% melee stacks vs 16-37%. Arena standard with --roles: no-wait variant 0.479, no-hold 0.489 vs current; Mireclaw side gain +0.000+-0.042 and +0.009+-0.017. No battle AI change. Content change only; measured 2026-10-18 with rounds 2-3 together by 50 medium land games (see balance-phase-round-4-20261018). Validation: unit_ability_runtime_report unchanged at 72 pre-existing failures; tools/core_suite.py.",
       "updatedAt": "2026-10-18T12:00:00Z",
       "validatedAt": "2026-10-18T12:00:00Z"
     },
@@ -115722,9 +115722,23 @@
         "PLAN.md",
         "docs/common-town-building-template.md"
       ],
-      "notes": "Owner decision 2026-10-18. Round-1 records (180 land games), guard fights: Mireclaw lost 2.2% of army power vs guards without shooters (others 1.0-1.8%), 3.3% vs some shooters (1.2-2.9%), 6.3% vs mostly shooters (2.4-4.2%; AI estimate 5.4%, the only faction above its estimate). Every Mireclaw melee line, both forms: defense +1, hp x1.1 rounded (Cutthroat 9->10, upgrade 10->11; Reedsnare Kin 9->10, 10->11; Bog Brute 14->15, 16->18; Ripper 15->16, 20->22; Bog-plate Maulers 14->15, 15->16; Ferrychain Lashers 21->23, 24->26; Fenbell Chainstalkers 31->34, 37->41; Gorefen Rippers 49->54, 59->65; Moonbite Mirehorn Breakers 52->57 (single form); Drowned Antler Sovereign 100->110, 120->132). Speed +1 on T3 (Ripper, Bog-plate Maulers), T6 (Gorefen Rippers, Mirehorn Breakers), T7 (Drowned Antler), the tiers without a ranged choice. Damage and shooters unchanged. army_power: +10-12% T1/T2/T4/T5 melee, +17-18% T3/T6/T7. Content change only; not measured yet. Validation: tools/core_suite.py.",
+      "notes": "Owner decision 2026-10-18. Round-1 records (180 land games), guard fights: Mireclaw lost 2.2% of army power vs guards without shooters (others 1.0-1.8%), 3.3% vs some shooters (1.2-2.9%), 6.3% vs mostly shooters (2.4-4.2%; AI estimate 5.4%, the only faction above its estimate). Every Mireclaw melee line, both forms: defense +1, hp x1.1 rounded (Cutthroat 9->10, upgrade 10->11; Reedsnare Kin 9->10, 10->11; Bog Brute 14->15, 16->18; Ripper 15->16, 20->22; Bog-plate Maulers 14->15, 15->16; Ferrychain Lashers 21->23, 24->26; Fenbell Chainstalkers 31->34, 37->41; Gorefen Rippers 49->54, 59->65; Moonbite Mirehorn Breakers 52->57 (single form); Drowned Antler Sovereign 100->110, 120->132). Speed +1 on T3 (Ripper, Bog-plate Maulers), T6 (Gorefen Rippers, Mirehorn Breakers), T7 (Drowned Antler), the tiers without a ranged choice. Damage and shooters unchanged. army_power: +10-12% T1/T2/T4/T5 melee, +17-18% T3/T6/T7. Content change only; measured 2026-10-18 with rounds 2-3 together by 50 medium land games (see balance-phase-round-4-20261018). Validation: tools/core_suite.py.",
       "updatedAt": "2026-10-18T14:00:00Z",
       "validatedAt": "2026-10-18T14:00:00Z"
+    },
+    {
+      "id": "balance-phase-round-4-20261018",
+      "title": "Balance round 4: Embercourt and Sunvault trimmed, Veilmourn's T6 and Mireclaw's approach helped",
+      "status": "completed",
+      "classification": "balance",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/common-town-building-template.md"
+      ],
+      "notes": "Owner decision 2026-10-18 from 50 medium land AI games after rounds 2-3 (30 2P, 20 3P; .artifacts/ai_batch_20261018_r23_medium*). Wins/fair share (round 1 -> now): Embercourt 1.22->1.40, Sunvault 1.35->1.32, Brasshollow 0.85->0.96, Thornwake 1.35->0.96, Veilmourn 0.76->0.77, Mireclaw 0.46->0.60. Day-56 towns: Embercourt 3.5 (most), Mireclaw 2.1 (fewest); guard-fight army loss share: Sunvault 0.027 (least), Mireclaw 0.054 (most; 0.086 vs mostly-shooter guards); Veilmourn banked ~10-11k gold at day 56 with towns bought out (lowest weekly creature output, 860). Changes: Sluicefire Lindworms back to pre-round-1 (hp 54->50 atk 14->13 dmg 10-15->9-14; upgrade hp 62->58 atk 15->14 dmg 10-16->9-15; 138->129 power/week); Zenith Lensbearers dmg 6-10->5-9, upgrade 8-12->7-11 (179->168/week); Mirrorkeel Reavers hp 49->55 def 11->12 dmg 9-13->10-15, upgrade hp 59->66 def 13->14 dmg 11-16->12-18 (100->~119/week); Mireclaw Reed Cover: shielding ranged_damage_multiplier 0.85 added to every melee line without shielding (both forms), Bog-plate Maulers 0.99->0.85, Bog Brute keeps 0.79; shield-bearers also get the Bog Brute upgrade's 8% contact screen. Content change only; not measured yet. Validation: unit_ability_runtime_report compared with main; tools/core_suite.py.",
+      "updatedAt": "2026-10-18T17:00:00Z",
+      "validatedAt": "2026-10-18T17:00:00Z"
     }
   ],
   "project": "heroes-like",
