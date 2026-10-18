@@ -8,7 +8,8 @@ extends Node
 # A guarded site the rival looted does not close the way to the rival either,
 # and a monolith to the other level is a way like a subterranean gate. A town
 # planner counts what a dwelling upgrade adds once. A main army shut in with
-# its rivals' towns unseen goes for a guard whose fight opens unexplored ground.
+# its rivals' towns unseen goes for a guard whose fight opens unexplored ground,
+# and one whose way to a rival town passes several gates takes the first.
 
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
@@ -24,6 +25,8 @@ const REPORT_ID := "AI_TOWN_KNOWLEDGE_REPORT"
 const SEED := "ai-town-knowledge-20261017"
 # A small two-level map with two-way monoliths between the levels.
 const PORTAL_SEED := "ai-town-knowledge-portal-2"
+# A small two-level map whose capitals lie two gates from some of its ground.
+const GATES_SEED := "ai-town-knowledge-gates-0"
 
 var _failed := false
 
@@ -49,6 +52,9 @@ func _run() -> void:
 	if _failed:
 		return
 	results["shut_in_fights_way_out"] = _check_shut_in_army_fights_way_out()
+	if _failed:
+		return
+	results["town_gates_away"] = _check_town_several_gates_away_is_weighed()
 	if _failed:
 		return
 	print("%s %s" % [REPORT_ID, JSON.stringify({"ok": true, "cases": results})])
@@ -376,6 +382,145 @@ func _check_shut_in_army_fights_way_out() -> Dictionary:
 		return {}
 	result["pickup_unexplored_opened"] = site_opened
 	return result
+
+## A main army stands on a stretch of ground from which the rival's capital is
+## reached only through two or more subterranean gates or monoliths. With the
+## whole map seen and the army strong enough for every guard, it heads for the
+## first gate of that way, the capital its errand beyond. Until 2026-10-18 a
+## hero weighed what lay one gate ahead only, and on a large two-level map
+## (seed ai-match-3718099446) a 372,000-strength army never went for a rival
+## town five gates away, from day 163 to the 320-day cap.
+func _check_town_several_gates_away_is_weighed() -> Dictionary:
+	ContentService.clear_generated_scenario_drafts()
+	var config := ScenarioSelectRulesScript.build_random_map_player_config(
+		GATES_SEED, "", "", 2, "land", true, "homm3_small",
+		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT,
+		"faction_embercourt", ""
+	)
+	var map_setup := ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(config, "normal", ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY)
+	if not bool(map_setup.get("ok", false)):
+		_fail("Generated two-level setup failed: %s" % JSON.stringify(map_setup).left(400))
+		return {}
+	var session = ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(map_setup)
+	OverworldRules.normalize_overworld_state(session)
+	var rival := AiSeatRulesScript.hand_human_seat_to_ai(session)
+	OverworldRules.end_turn(session)
+	var controller := ""
+	for record in session.overworld.get("players", []):
+		if String(record.get("player_id", "")) != rival:
+			controller = String(record.get("player_id", ""))
+	var context := _context(session, controller)
+	AiHeroRulesScript._start_heroes_day(session, controller)
+	context["decision"] = {}
+	var index := AiHeroRulesScript._entry_index(session, AiHeroRulesScript._decision_main_id(session, context))
+	if index < 0:
+		_fail("%s has no main hero on the two-level map." % controller)
+		return {}
+	var entry: Dictionary = session.overworld.encounters[index]
+	for stack in entry.get("enemy_army", {}).get("stacks", []):
+		stack["count"] = int(stack.get("count", 0)) * 1000
+	var size: Vector2i = context.map_size
+	var levels := LevelRules.level_count(session)
+	var explored := {}
+	for level in range(levels):
+		var tiles := PackedByteArray()
+		tiles.resize(size.x * size.y)
+		tiles.fill(1)
+		explored[level] = tiles
+	context["explored"] = explored
+	var town := {}
+	for candidate in session.overworld.get("towns", []):
+		if String(candidate.get("owner", "")) == "enemy" and PlayerRules.town_controller_id(candidate) == rival:
+			town = candidate
+	if town.is_empty():
+		_fail("The two-level map has no rival capital for %s." % controller)
+		return {}
+	# The capital is the one town left to take.
+	for other in session.overworld.get("towns", []):
+		if String(other.get("owner", "")) == "neutral":
+			other["owner"] = "enemy"
+			other["controlling_player_id"] = controller
+	# Gate hops from every stretch to the capital's, walking the gates backwards.
+	var links := {}
+	for level in range(levels):
+		var regions: PackedInt32Array = AiHeroRulesScript._level_regions(session, context, level)
+		var gates: Dictionary = AiHeroRulesScript._level_surface(session, context, level).get("gates", {})
+		for gate_tile in gates.keys():
+			var exit: Vector3i = gates[gate_tile].exit
+			var to := "%d:%d" % [exit.z, int(AiHeroRulesScript._level_regions(session, context, exit.z)[exit.y * size.x + exit.x])]
+			if not links.has(to):
+				links[to] = []
+			links[to].append("%d:%d" % [level, int(regions[int(gate_tile)])])
+	var door := LevelRules.town_entrance(town)
+	var town_key := "%d:%d" % [LevelRules.level_of(town), int(AiHeroRulesScript._level_regions(session, context, LevelRules.level_of(town))[int(door.get("y", 0)) * size.x + int(door.get("x", 0))])]
+	var hops := {town_key: 0}
+	var queue := [town_key]
+	while not queue.is_empty():
+		var current: String = queue.pop_front()
+		for previous in links.get(current, []):
+			if not hops.has(previous):
+				hops[previous] = int(hops[current]) + 1
+				queue.append(previous)
+	var start_key := ""
+	for region_key in hops.keys():
+		if int(hops[region_key]) >= 2 and (start_key == "" or int(hops[region_key]) > int(hops[start_key])):
+			start_key = region_key
+	if start_key == "":
+		_fail("No stretch of the two-level map lies two gates from the rival capital: %s." % JSON.stringify(hops))
+		return {}
+	# The army stands on an open tile of that stretch.
+	var start_level := int(start_key.get_slice(":", 0))
+	var start_region := int(start_key.get_slice(":", 1))
+	var regions: PackedInt32Array = AiHeroRulesScript._level_regions(session, context, start_level)
+	var surface: Dictionary = AiHeroRulesScript._level_surface(session, context, start_level)
+	var spot := -1
+	for tile in range(regions.size()):
+		if int(regions[tile]) == start_region and surface.blocked[tile] == 0 and surface.stop_mask[tile] == 0 				and int(OverworldRules._find_guard_engagement_at_tile(session, tile % size.x, tile / size.x, start_level, true).get("index", -1)) < 0:
+			spot = tile
+			break
+	if spot < 0:
+		_fail("The stretch %s has no open tile." % start_key)
+		return {}
+	entry["x"] = spot % size.x
+	entry["y"] = spot / size.x
+	entry["level"] = start_level
+	session.overworld.encounters[index] = entry
+	OverworldRules.invalidate_spatial_lookup(session)
+	context["decision"] = {}
+	var movement_max := maxi(1, int(entry.get(AiHeroRulesScript.AI_HERO_KEY, {}).get("movement", {}).get("max", 1)))
+	var wide: Dictionary = AiHeroRulesScript._search(session, context, entry, movement_max * AiHeroRulesScript.STRATEGIC_DAYS)
+	var routes: Dictionary = AiHeroRulesScript._gate_routes(session, context, entry, wide, movement_max)
+	var town_id := String(town.get("placement_id", ""))
+	var leads := false
+	for gate_tile in routes.keys():
+		if String(routes[gate_tile].id) == town_id:
+			leads = true
+	if not leads:
+		_fail("From %s, %d gates from the rival capital, no gate starts the way to it: %s." % [start_key, int(hops[start_key]), JSON.stringify(routes)])
+		return {}
+	# Guards in the way to that first gate carry the capital's worth; beaten,
+	# the gate itself is the plan.
+	var guards := []
+	var plan := {}
+	for attempt in range(6):
+		var war: Dictionary = AiHeroRulesScript._war_paths(session, context, entry, wide, AiHeroRulesScript._resource_needs(session, context))
+		var far: Dictionary = AiHeroRulesScript._strategic_candidate(session, context, entry, movement_max, 0, wide)
+		if String(far.get("kind", "")) != "encounter" or not war.has(int(far.index)):
+			plan = AiHeroRulesScript._gate_candidate(session, context, entry, wide, movement_max, movement_max * AiHeroRulesScript.STRATEGIC_DAYS)
+			break
+		guards.append(String(far.id))
+		var resolved: Array = session.overworld.get("resolved_encounters", [])
+		resolved.append(String(far.id))
+		session.overworld["resolved_encounters"] = resolved
+		OverworldRules.invalidate_spatial_lookup(session)
+		context = _context(session, controller)
+		context["explored"] = explored
+		context["decision"] = {}
+		wide = AiHeroRulesScript._search(session, context, entry, movement_max * AiHeroRulesScript.STRATEGIC_DAYS)
+	if String(plan.get("beyond", {}).get("id", "")) != town_id:
+		_fail("%d gates from the rival capital, past guards %s, the main army plans %s instead of the way to it." % [int(hops[start_key]), JSON.stringify(guards), JSON.stringify({"kind": plan.get("kind", ""), "id": plan.get("id", ""), "beyond": plan.get("beyond", {})})])
+		return {}
+	return {"gates_away": int(hops[start_key]), "guards_in_way": guards.size(), "plan": String(plan.kind), "distance": int(plan.get("distance", -1))}
 
 ## A small generated two-player map, both seats played by the computer, one day
 ## played. player_2's main hero is moved beside player_1's capital, whose heroes
