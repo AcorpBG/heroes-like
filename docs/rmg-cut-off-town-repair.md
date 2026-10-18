@@ -98,6 +98,11 @@ differs from H3MapEd beyond the carved cells.
    - **Unguarded links:** for guard budget 0 the passage cells are recorded for step 3.
      A border-guard link counts as unguarded: its `0x4a746b` writer gets -1 from
      `0x4a5e73` (stale `+0xf5c` cursor), so H3MapEd never places the border guard.
+   - **Guarded links:** after `0x4a5e03` places the monster, the passage cells in its
+     zone of control (its cell and the 8 around it) and the passage cells that touch
+     no other zone are recorded for step 3. A passage cell beside another zone's ground
+     outside the zone of control is left to H3MapEd's decoration, so keeping the
+     passage free never opens a step around the monster.
    - **Every link:** no later object may cover a passage cell with a blocked cell. A
      mine is tested with the game's shape (step 0), a two-level gate pair (`0x4a6cf2`)
      with its H3 body on both levels, and reward objects with their H3 bodies: single
@@ -215,13 +220,21 @@ returns the number of towns outside the area that holds the most towns.
   town cut off. Four repaired maps change because a monolith end now gets a partner:
   small180/m057, m060 (three partners), m139 and 2026-10-16/m077. The sweep stays
   64/72 with and without the repair, same rows.
+- **Guarded passages** (the same 74 flagged configurations): all 74 still end with no
+  town cut off. Eight repaired maps change (small2p/m103, medium2p/m026, m042, m082,
+  m083, medium3p/m035, m080, m087). On none of them does a kept passage cell open a
+  zone border outside a monster's zone of control. m103 and m026 each lose one such
+  border. medium3p/m035 gains one beside its 4-11 guard, at (38,52) on level 1, where
+  the reshuffled decoration left a cell open that the earlier repair had covered (see
+  Known limits). The sweep stays 64/72 with and without the repair, same rows.
 - **Strict mode:** with `AURELION_RMG_H3MAPED_STRICT=1`, m043 (seed 2851495868) is
   byte-identical to H3MapEd.
 - **Native selftest:** every H3MapEd parity case runs with the repair off and passes.
   Added cases require XL seed 76 to re-pick 8XM12 and end with no town cut off, and
   the repair to join a cut-off town on m095, on m139, where it needs the mine
-  placement step, on m014, where it needs the link endpoint cells, and on r23 m003,
-  where it needs the monolith partner.
+  placement step, on m014, where it needs the link endpoint cells, on r23 m003,
+  where it needs the monolith partner, and on r4 m030, where it needs the guarded
+  passage kept free.
 - **Core test:** `random_map_small_2p_launch_report` generates seed 1727041229 (Small,
   land, weak, 1+1 players). It requires the repair to have run and to leave no town cut
   off. Every other seed it generates must also end with no town cut off.
@@ -244,6 +257,20 @@ zone 0, a 508-cell area (x 32-71, y 0-30) walled off by rock and decoration.
 - **Fix:** the repair pass places the three missing ends: 0-8's in zone 4 at (39,60),
   8-9's and 8-11's in zone 0 at (37,6) and (51,16). The map now has no town cut off
   (`towns_cut_off_before` 2, `towns_cut_off_after` 0).
+
+## r4 m030: decoration closes the only guarded north-south link
+
+AI match m030 of the 2026-10-18 large 2-player batch (map seed 4202563664; large, two
+levels, land, strong guards, template Dragons, 1+1 players) left 7 towns cut off on
+H3MapEd's map, which equals the strict native map (3692 objects).
+
+- **Cause:** the repair joined the zones but its map was discarded. The only link
+  between the north half (zones 0-13) and the south is 12-14, guarded at (55,79) on
+  level 0 (8000). The repair pass kept only unguarded passages free, and its
+  decoration (AVLPNTR2) covered (54-56, 80-81), the passage just south of the monster.
+- **Fix:** a guarded link's passage is kept free inside the monster's zone of control
+  and where it touches no other zone (step 1). m030 now repairs from 7 to 0, and the
+  12-14 monster still stands between the two halves.
 
 ## m095: mines seal a start town
 
@@ -270,6 +297,10 @@ yet player 3's start town at (60,24,0) could not be left on foot.
 - **m174** (seed 767626670) has 6 zone pairs a hero can walk between without passing a
   monster's zone of control and without an unguarded link. H3MapEd's own map had 12.
   These come from the reshuffled decoration, not from carved paths.
+- **Decoration gaps beside a guard.** The repair pass reshuffles H3MapEd's decoration,
+  which can leave a cell open beside a monster's zone of control that H3MapEd's own
+  run happened to cover. medium3p/m035 (seed 220966679) gains one such step around
+  its 4-11 guard at (38,52) on level 1. The kept passages do not cause these.
 - **Split link graphs (fixed by the template re-pick).** Large seed 73 rolled Newcomers
   and XL seed 76 rolled 8XM12, whose player-filtered links leave zones unjoined. Joins
   inside zones cannot fix that; the re-pick takes another template for those seeds.

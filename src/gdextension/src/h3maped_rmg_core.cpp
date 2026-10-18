@@ -18453,11 +18453,12 @@ static ConnectionPairMaterializationPrefixResult4a61bc connection_pair_materiali
 
 		append_relation_owner_local_vector_record_0x404(target_owner, selected.neighbor_x, selected.neighbor_y);
 		result.local_vector_append_count_0x404 += 1;
+		std::vector<int64_t> passage_cells;
 		if (state.route_join_departure_enabled) {
 			// Departure: the passage is both endpoint cells plus what the two chains stamped.
 			// A chain whose start cell has a zero 0x1c distance word stamps nothing, so the
 			// endpoint itself is added (m014).
-			std::vector<int64_t> passage_cells = source_chain.stamped_cells;
+			passage_cells = source_chain.stamped_cells;
 			passage_cells.insert(passage_cells.end(), target_chain.stamped_cells.begin(), target_chain.stamped_cells.end());
 			for (const int64_t flat : {
 						cell_index(state.width, state.height, selected.source_x, selected.source_y, selected.level),
@@ -18518,6 +18519,49 @@ static ConnectionPairMaterializationPrefixResult4a61bc connection_pair_materiali
 						? "0x4a5e03_connection_monster_materialization_not_applied"
 						: constructor.blocked_reason;
 				return result;
+			}
+			if (state.route_join_departure_enabled) {
+				// Keep a guarded link's passage free of decoration and rock where that
+				// cannot open a way around the monster: in the monster's zone of control,
+				// and on cells that touch no other zone. H3MapEd's decoration can close the
+				// passage beyond the monster (large m030, seed 4202563664: the only
+				// north-south link), and a free passage cell beside another zone's open
+				// ground would let a hero step around it (medium m035, seed 220966679).
+				const GeneratedCellRecordGrid0x30 &grid = state.generated_cell_buffer;
+				const auto owner_at = [&](int32_t x, int32_t y, int32_t level) {
+					const int64_t flat = cell_index(state.width, state.height, x, y, level);
+					return flat >= 0 && flat < int64_t(grid.records.size())
+							? generated_cell_owner_byte2_signed_4a4142(grid.records[size_t(flat)].word_0x20)
+							: -1;
+				};
+				std::vector<int64_t> &kept = state.route_join_protected_cells;
+				const int64_t plane = int64_t(state.width) * state.height;
+				for (const int64_t flat : passage_cells) {
+					if (state.width <= 0 || flat < 0 || flat >= int64_t(grid.records.size())) {
+						continue;
+					}
+					const int32_t level = int32_t(flat / plane);
+					const int32_t y = int32_t((flat % plane) / state.width);
+					const int32_t x = int32_t((flat % plane) % state.width);
+					bool keep = std::abs(x - constructor_x) <= 1 && std::abs(y - constructor_y) <= 1;
+					if (!keep) {
+						const int32_t own = owner_at(x, y, level);
+						keep = true;
+						for (int32_t dy = -1; dy <= 1 && keep; ++dy) {
+							for (int32_t dx = -1; dx <= 1 && keep; ++dx) {
+								const int32_t nx = x + dx;
+								const int32_t ny = y + dy;
+								if ((dx != 0 || dy != 0) && nx >= 0 && ny >= 0 && nx < state.width
+										&& ny < state.height && owner_at(nx, ny, level) != own) {
+									keep = false;
+								}
+							}
+						}
+					}
+					if (keep) {
+						kept.push_back(flat);
+					}
+				}
 			}
 		}
 	}

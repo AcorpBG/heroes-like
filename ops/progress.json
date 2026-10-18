@@ -115701,6 +115701,19 @@
       "validatedAt": "2026-10-18T16:00:00Z"
     },
     {
+      "id": "native-rmg-repair-guarded-passages-20261018",
+      "title": "Cut-off repair pass keeps guarded link passages free of decoration",
+      "status": "in_progress",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "native_rmg_departure",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/rmg-cut-off-town-repair.md"
+      ],
+      "notes": "Owner decision 2026-10-18. r4 large2p m030 (map seed 4202563664, Dragons, 2 levels, strong, 1+1): H3MapEd map (h3tr/out/cut_m030L.h3m) equals strict native (3692 objects), 7 towns cut off; the repair's decoration (AVLPNTR2) covered (54-56,80-81) south of the 12-14 guard at (55,79,0), the only north-south link, so the repair was discarded. In 0x4a61bc, after 0x4a5e03 places a guarded link's monster, the repair pass now protects the passage cells in its zone of control and those that touch no other zone.",
+      "updatedAt": "2026-10-18T18:00:00Z"
+    },
+    {
       "id": "balance-phase-round-1-20261017",
       "title": "Balance round 1: every faction closer in each phase of the game",
       "status": "completed",

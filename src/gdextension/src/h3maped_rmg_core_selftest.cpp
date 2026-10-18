@@ -9393,6 +9393,46 @@ int main() {
 			return 1;
 		}
 	}
+	// In the repair pass a guarded link's passage is kept free of decoration too: in AI
+	// match r4 large2p m030 (large, two levels, land, strong guards) the repair's
+	// decoration closed the cells beyond the 12-14 guard, the only north-south link.
+	if (std::getenv("AURELION_RMG_H3MAPED_STRICT") == nullptr) {
+		H3MapedRmgWorkflowConfig m030_config;
+		m030_config.size_class = "large";
+		m030_config.water_mode = "land";
+		m030_config.width = 108;
+		m030_config.height = 108;
+		m030_config.level_count = 2;
+		m030_config.human_count = 1;
+		m030_config.player_count = 2;
+		m030_config.seed = 4202563664U;
+		m030_config.setup_object_0x34_known = true;
+		m030_config.setup_object_0x34 = 1;
+		m030_config.setup_object_0x38_known = true;
+		m030_config.setup_object_0x38 = 1;
+		m030_config.setup_object_0x3c_known = true;
+		m030_config.setup_object_0x3c = 1;
+		m030_config.setup_object_0x40_known = true;
+		m030_config.setup_object_0x40 = 0;
+		m030_config.setup_object_0x44_known = true;
+		m030_config.setup_object_0x44 = aurelion::h3maped_rmg_core::water_mode_code("land");
+		m030_config.setup_object_raw_0x48_known = true;
+		m030_config.setup_object_raw_0x48 = 1;
+		m030_config.setup_object_0x48_known = false;
+		m030_config.setup_object_0x4c_known = true;
+		m030_config.setup_object_0x4c = 2;
+		m030_config.setup_caller_arg_0x0c_known = true;
+		m030_config.setup_caller_arg_0x0c =
+				aurelion::h3maped_rmg_core::DIRECT_ENTRY_OPTIONAL_HANDLER_SENTINEL_0X4602C1;
+		const H3MapedRmgWorkflowResult m030_workflow =
+				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(m030_config);
+		if (!require(m030_workflow.cut_off_town_repair_applied
+					&& m030_workflow.cut_off_towns_before_repair == 7
+					&& m030_workflow.cut_off_towns_after_repair == 0,
+				"Large m030 map did not keep its guarded north-south passage open")) {
+			return 1;
+		}
+	}
 
 	for (const auto &case_record : std::array<std::tuple<uint32_t, const char *, int32_t, int32_t, size_t>, 2> {{
 			{ 77U, "normal_water", 1, 609, 365777U },
