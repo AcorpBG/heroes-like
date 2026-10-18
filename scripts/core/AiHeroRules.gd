@@ -208,7 +208,9 @@ const HOME_WAIT_RADIUS := 2
 const MEET_VALUE_CAP := 600.0
 const GOAL_CONTINUITY_BONUS := 1.25
 const TOWN_SIGHT_RADIUS := 8
-const EXPLORE_VALUE := 220.0
+## Scouting the nearest unexplored ground. Raised from 220 on 2026-10-18 at
+## the owner's request that computer players explore more.
+const EXPLORE_VALUE := 500.0
 ## While a rival still holds a town this player has never seen, the unexplored
 ## frontier is worth up to this much more, rising from HUNT_START_DAY to
 ## HUNT_FULL_DAY: early on heroes expand, later they go and find the enemy.
@@ -225,7 +227,7 @@ const HUNT_FULL_DAY := 56
 ## opening the way, plus each unexplored tile there, up to a cap (sites the
 ## player has already seen there count on top, at half their value).
 const PASSAGE_BASE_VALUE := 300.0
-const PASSAGE_UNEXPLORED_TILE_VALUE := 4.0
+const PASSAGE_UNEXPLORED_TILE_VALUE := 8.0
 const PASSAGE_KNOWN_SITE_SHARE := 0.5
 const PASSAGE_VALUE_CAP := 5000.0
 ## Unexplored ground behind a guard while a rival's towns are still unseen is
@@ -2257,8 +2259,13 @@ static func _plans_far(session: SessionStateStoreScript.SessionData, context: Di
 ## The best objective beyond the hero's daily search: a known rival or
 ## neutral town, a hostile hero, or a guard standing first in the way to a
 ## known town (`_war_paths`), scored as everything else is, value per day of
-## travel; or, while a rival's towns are unseen, the nearest unexplored ground.
-## Carries the path there.
+## travel; or, while a rival's towns are unseen, the nearest unexplored ground
+## and the guards whose fight opens unexplored ground. Carries the path there.
+## Until 2026-10-18 only guards on the way to a known town counted here: on a
+## large 3-player map (seed ai-match-147308053) the leader explored every tile
+## it could reach without a fight by day 116 and its 960,000-strength armies
+## then ran errands for 200 days, the last rival's towns unseen behind three
+## weak guards more than three days' walk away.
 static func _strategic_candidate(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, movement_max: int, local_radius: int, wide: Dictionary = {}) -> Dictionary:
 	var search := wide if not wide.is_empty() else _search(session, context, entry, movement_max * STRATEGIC_DAYS)
 	var known := _explored(session, context, LevelRules.level_of(entry))
@@ -2268,6 +2275,10 @@ static func _strategic_candidate(session: SessionStateStoreScript.SessionData, c
 	var avoid: Dictionary = block.get("avoid", {}) if block.get("avoid", {}) is Dictionary else {}
 	var goal: Dictionary = block.get("goal", {}) if block.get("goal", {}) is Dictionary else {}
 	var war := _war_paths(session, context, entry, search, needs)
+	# While a rival's towns are unseen, a guard whose fight opens unexplored
+	# ground is the way to them (`_passage_value`), however far.
+	var hunting := _rival_towns_unknown(session, context) and int(session.day) >= HUNT_START_DAY
+	var guard_candidates := {}
 	var stops: Dictionary = search.get("stops", {})
 	var best := {}
 	var best_score := 0.0
@@ -2281,21 +2292,45 @@ static func _strategic_candidate(session: SessionStateStoreScript.SessionData, c
 		for ref in stops[tile_index]:
 			if hero_guarded and not bool(ref.get("zone", false)):
 				continue
+			var candidate := {}
 			match int(ref.kind):
 				STOP_TOWN:
 					if not _town_seen(known, session.overworld.towns[int(ref.index)], context.map_size):
 						continue
 				STOP_HERO, STOP_AI_HERO:
 					pass
-				STOP_ENCOUNTER:
-					if not war.has(int(ref.index)):
+				STOP_RESOURCE, STOP_ARTIFACT:
+					# A site in the way to a known town, or to unexplored ground
+					# while a rival's towns are unseen.
+					var door := _site_door_key(int(tile_index))
+					if not _site_doors(search).has(int(tile_index)) or known[int(tile_index)] == 0 or not (war.has(door) or hunting):
 						continue
-					var guard_need := _guard_power(session.overworld.encounters[int(ref.index)]) * GUARD_WIN_RATIO
-					if guard_need > power:
-						blocked_need = minf(blocked_need, guard_need)
+					if _site_door_value(session, context, entry, search, int(tile_index), needs) <= 0.0 or not (war.has(door) or int(search.get("passage_unexplored", {}).get(door, 0)) > 0):
+						continue
+					candidate = _candidate(session, context, entry, ref, power, needs, search, int(tile_index))
+					if candidate.is_empty():
+						continue
+				STOP_ENCOUNTER:
+					var on_war_path := war.has(int(ref.index))
+					if not on_war_path and not (hunting and known[int(tile_index)] != 0):
+						continue
+					if on_war_path:
+						var guard_need := _guard_power(session.overworld.encounters[int(ref.index)]) * GUARD_WIN_RATIO
+						if guard_need > power:
+							blocked_need = minf(blocked_need, guard_need)
+					# One guard covers several tiles: weigh it once.
+					if not guard_candidates.has(int(ref.index)):
+						var weighed := _candidate(session, context, entry, ref, power, needs, search)
+						if not on_war_path and int(search.get("passage_unexplored", {}).get(int(ref.index), 0)) <= 0:
+							weighed = {}
+						guard_candidates[int(ref.index)] = weighed
+					candidate = guard_candidates[int(ref.index)].duplicate()
+					if candidate.is_empty():
+						continue
 				_:
 					continue
-			var candidate := _candidate(session, context, entry, ref, power, needs, search)
+			if candidate.is_empty():
+				candidate = _candidate(session, context, entry, ref, power, needs, search)
 			if candidate.is_empty() or String(candidate.get("kind", "")) in ["town_own", "meet"]:
 				continue
 			if int(avoid.get(String(candidate.get("id", "")), -1)) >= int(session.day):
@@ -2986,7 +3021,7 @@ static func _best_candidate(session: SessionStateStoreScript.SessionData, contex
 			seen[key] = distance
 			if in_danger and int(ref.kind) != STOP_TOWN:
 				continue
-			var candidate := _candidate(session, context, entry, ref, power, needs, search)
+			var candidate := _candidate(session, context, entry, ref, power, needs, search, int(tile_index))
 			if candidate.is_empty() or int(avoid.get(String(candidate.get("id", "")), -1)) >= int(session.day):
 				continue
 			if in_danger and (String(candidate.get("kind", "")) != "town_own" or not _deters(session, entry, session.overworld.towns[int(candidate.index)], dangers)):
@@ -3066,11 +3101,14 @@ static func _exploration_candidate(session: SessionStateStoreScript.SessionData,
 		return {"kind": "explore", "id": "explore:%d" % portal_frontier, "index": portal_frontier, "value": portal_value, "tile_index": portal_frontier, "distance": int(search.dist[portal_frontier])}
 	return {}
 
-static func _candidate(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, ref: Dictionary, power: float, needs: Dictionary, search: Dictionary = {}) -> Dictionary:
+## `tile_index` is the reached tile of the stop, when it is known: a site
+## standing in the way is worth the ground it opens as well (`_site_door_value`).
+static func _candidate(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, ref: Dictionary, power: float, needs: Dictionary, search: Dictionary = {}, tile_index: int = -1) -> Dictionary:
 	var controller := String(context.controller)
 	match int(ref.kind):
 		STOP_RESOURCE:
-			return _resource_candidate(session, controller, entry, int(ref.index), power, needs, context.state.treasury)
+			var opens := _site_door_value(session, context, entry, search, tile_index, needs) if not search.is_empty() else 0.0
+			return _resource_candidate(session, controller, entry, int(ref.index), power, needs, context.state.treasury, opens)
 		STOP_ARTIFACT:
 			var nodes: Array = session.overworld.get("artifact_nodes", [])
 			var node: Dictionary = nodes[int(ref.index)]
@@ -3078,7 +3116,8 @@ static func _candidate(session: SessionStateStoreScript.SessionData, context: Di
 				return {}
 			if not AdventureRules._artifact_guard_encounter_for_node(session, node).is_empty():
 				return {}
-			return {"kind": "artifact", "id": String(node.get("placement_id", "")), "index": int(ref.index), "value": 1100.0}
+			var opens := _site_door_value(session, context, entry, search, tile_index, needs) if not search.is_empty() else 0.0
+			return {"kind": "artifact", "id": String(node.get("placement_id", "")), "index": int(ref.index), "value": 1100.0 + opens}
 		STOP_TOWN:
 			return _town_candidate(session, context, entry, int(ref.index), power)
 		STOP_ENCOUNTER:
@@ -3170,7 +3209,7 @@ static func _split_for_handover(stacks: Variant) -> Dictionary:
 			give.append(rest)
 	return {"give": give, "keep": keep}
 
-static func _resource_candidate(session: SessionStateStoreScript.SessionData, controller: String, entry: Dictionary, index: int, power: float, needs: Dictionary, treasury: Dictionary) -> Dictionary:
+static func _resource_candidate(session: SessionStateStoreScript.SessionData, controller: String, entry: Dictionary, index: int, power: float, needs: Dictionary, treasury: Dictionary, opens: float = 0.0) -> Dictionary:
 	var nodes: Array = session.overworld.get("resource_nodes", [])
 	var node: Dictionary = nodes[index]
 	if NativeTransit.is_native(node):
@@ -3213,7 +3252,7 @@ static func _resource_candidate(session: SessionStateStoreScript.SessionData, co
 			var owner := PlayerRules.resource_controller_id(node)
 			if owner != "" and owner != controller:
 				value *= 1.3
-	value -= _expected_loss_value(power, fight)
+	value += opens - _expected_loss_value(power, fight)
 	if value <= 0.0:
 		return {}
 	# A guarded site is reached by beating its guard first (a separate target).
@@ -3352,11 +3391,59 @@ static func _site_artifact_value(site: Dictionary) -> float:
 ## on day 42.
 static func _passage_value(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary, guard_index: int, needs: Dictionary) -> float:
 	var zones: Dictionary = search.get("guard_zones", {})
-	if not zones.has(guard_index) or not search.has("blocked"):
+	if not zones.has(guard_index):
+		return 0.0
+	return _opened_value(session, context, entry, search, guard_index, zones[guard_index], needs)
+
+## A site the hero can reach whose tile ends every route over it until it is
+## claimed (a pickup, a mine's doorway, an artifact) and that stands in the way
+## to ground the hero cannot reach otherwise: claiming it opens that ground, as
+## beating a guard does (`_passage_value`), and it is worth what that ground is.
+## Until 2026-10-18 nothing counted it: on a large 3-player map (seed
+## ai-match-147308053) a spell scroll, worth nothing to the computer, lay in the
+## one corridor between the leader's ground and the last rival's, and neither
+## side's armies, 420,000 and 184,000 strong, ever met in 200 days.
+static func _site_door_value(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary, tile_index: int, needs: Dictionary) -> float:
+	if tile_index < 0 or not _site_doors(search).has(tile_index):
+		return 0.0
+	return _opened_value(session, context, entry, search, _site_door_key(tile_index), [tile_index], needs)
+
+## The key a site's doorway tile goes by among guard indices (`_opened_value`,
+## `_war_paths`).
+static func _site_door_key(tile_index: int) -> int:
+	return -10 - tile_index
+
+## Reached tiles of resource and artifact sites that end routes over them and
+## stand in no guard's or hostile hero's zone. Measured once per search.
+static func _site_doors(search: Dictionary) -> Dictionary:
+	if search.has("site_doors"):
+		return search["site_doors"]
+	var doors := {}
+	var pass_mask: PackedByteArray = search.get("pass_mask", PackedByteArray())
+	var guard_mask: PackedByteArray = search.get("guard_mask", PackedByteArray())
+	var hero_zone: PackedByteArray = search.get("hero_zone", PackedByteArray())
+	var stops: Dictionary = search.get("stops", {})
+	for tile_index in stops.keys():
+		var tile := int(tile_index)
+		if pass_mask.is_empty() or pass_mask[tile] != 0 or guard_mask[tile] != 0 or hero_zone[tile] != 0:
+			continue
+		for ref in stops[tile_index]:
+			if int(ref.kind) in [STOP_RESOURCE, STOP_ARTIFACT]:
+				doors[tile] = true
+				break
+	search["site_doors"] = doors
+	return doors
+
+## What opening the way from `origin` (a guard's zone or a site's doorway) is
+## worth: the ground beyond it the hero cannot reach today, measured once per
+## search under `key`.
+static func _opened_value(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary, key: int, origin: Array, needs: Dictionary) -> float:
+	if not search.has("blocked"):
 		return 0.0
 	var cache: Dictionary = search.get("passage_cache", {})
-	if cache.has(guard_index):
-		return float(cache[guard_index])
+	if cache.has(key):
+		return float(cache[key])
+	var opened: Dictionary = search.get("passage_unexplored", {})
 	var size: Vector2i = search.size
 	var dist: PackedInt32Array = search.dist
 	var blocked: PackedByteArray = search.blocked
@@ -3369,7 +3456,7 @@ static func _passage_value(session: SessionStateStoreScript.SessionData, context
 	# stopping at other guards' zones, one stretch of ground at a time; a
 	# stretch that meets a tile where the search stopped for distance is not
 	# behind the guard.
-	var zone: Array = zones[guard_index]
+	var zone: Array = origin
 	var seen := {}
 	for zone_index in zone:
 		seen[int(zone_index)] = true
@@ -3433,16 +3520,20 @@ static func _passage_value(session: SessionStateStoreScript.SessionData, context
 		# unexplored ground is where they are.
 		if unexplored > 0 and _rival_towns_unknown(session, context):
 			value += ELIMINATION_VALUE * HIDDEN_RIVAL_SHARE * minf(1.0, float(unexplored) / float(HIDDEN_RIVAL_TILES))
+		opened[key] = unexplored
+		search["passage_unexplored"] = opened
 	# The guard that stands first on the way to a town out of reach opens the
 	# road to it, however many guards lie beyond.
-	value += float(_war_paths(session, context, entry, search, needs).get(guard_index, 0.0)) * PASSAGE_KNOWN_SITE_SHARE
-	cache[guard_index] = value
+	value += float(_war_paths(session, context, entry, search, needs).get(key, 0.0)) * PASSAGE_KNOWN_SITE_SHARE
+	cache[key] = value
 	search["passage_cache"] = cache
 	return value
 
 ## For each guard, the value of the most valuable known town (a rival's or a
 ## neutral one) the hero cannot reach today whose shortest way, walking through
-## guard zones as if they were beaten, enters this guard's zone first. Measured
+## guard zones as if they were beaten, enters this guard's zone first; a site
+## doorway in the way (`_site_doors`) counts as such a guard, under
+## `_site_door_key`. Measured
 ## once per search. On a medium map the leading player's armies of 5,000 to
 ## 14,000 spent 60 days collecting weekly sites on their half while the last
 ## rival's two towns lay a few guards away: no single guard's own ground was
@@ -3482,6 +3573,8 @@ static func _war_paths(session: SessionStateStoreScript.SessionData, context: Di
 	for guard_index in zones.keys():
 		for tile in zones[guard_index]:
 			guard_at[int(tile)] = int(guard_index)
+	for door in _site_doors(search).keys():
+		guard_at[int(door)] = _site_door_key(int(door))
 	# Breadth-first from everything reachable today; zone tiles are walkable
 	# and the first zone entered is carried along.
 	var first := PackedInt32Array()
@@ -3514,12 +3607,12 @@ static func _war_paths(session: SessionStateStoreScript.SessionData, context: Di
 			if blocked[next] != 0 and not guard_at.has(next) and not is_target:
 				continue
 			var carried := first[current]
-			if carried < 0 and guard_at.has(next):
+			if carried == -1 and guard_at.has(next):
 				carried = int(guard_at[next])
 			first[next] = carried
 			if is_target:
 				found += 1
-				if carried >= 0:
+				if carried != -1:
 					result[carried] = maxf(float(result.get(carried, 0.0)), float(targets[next]))
 				continue
 			queue[tail] = next

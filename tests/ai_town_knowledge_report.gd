@@ -7,7 +7,8 @@ extends Node
 # never attacked (seed ai-match-1305188145: 280 days next to a 320,000 army).
 # A guarded site the rival looted does not close the way to the rival either,
 # and a monolith to the other level is a way like a subterranean gate. A town
-# planner counts what a dwelling upgrade adds once.
+# planner counts what a dwelling upgrade adds once. A main army shut in with
+# its rivals' towns unseen goes for a guard whose fight opens unexplored ground.
 
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
@@ -18,6 +19,7 @@ const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const NodePayload = preload("res://scripts/core/ResourceNodePayloadRules.gd")
 const NativeTransit = preload("res://scripts/core/NativeTransitRules.gd")
 const TownDevelopment = preload("res://scripts/core/TownDevelopmentRules.gd")
+const AdventureRules = preload("res://scripts/core/EnemyAdventureRules.gd")
 const REPORT_ID := "AI_TOWN_KNOWLEDGE_REPORT"
 const SEED := "ai-town-knowledge-20261017"
 # A small two-level map with two-way monoliths between the levels.
@@ -44,6 +46,9 @@ func _run() -> void:
 	if _failed:
 		return
 	results["upgrade_counted_once"] = _check_upgrade_counted_once()
+	if _failed:
+		return
+	results["shut_in_fights_way_out"] = _check_shut_in_army_fights_way_out()
 	if _failed:
 		return
 	print("%s %s" % [REPORT_ID, JSON.stringify({"ok": true, "cases": results})])
@@ -258,6 +263,119 @@ func _check_upgrade_counted_once() -> Dictionary:
 		_fail("The planner values %s at %.1f, not the %.1f its upgraded creatures add." % [String(upgrade.id), float(values[String(upgrade.id)]), expected])
 		return {}
 	return {"upgrade": String(upgrade.id), "value": snappedf(expected, 0.1)}
+
+## Every tile the main hero can walk to without a fight is explored, with the
+## tiles around them; the player holds every neutral town and has seen no rival
+## town. The main army, a hundred times its start, weighs what lies beyond its
+## daily search (local radius 0 here) and plans a guard fight that opens
+## unexplored ground. Until 2026-10-18 only guards on the way to a known town
+## counted there, and on a large map (seed ai-match-147308053) the leader's
+## 960,000-strength armies ran errands for 200 days with the last rival's towns
+## behind three weak guards. Then the guard is gone and pickups lie on every
+## tile of its zone: the main army goes to take one, for the ground it opens.
+## Until then a site in the way counted for nothing, and on that large map a
+## spell scroll, worth nothing to the computer, closed the one corridor between
+## the leader and the last rival for 200 days.
+func _check_shut_in_army_fights_way_out() -> Dictionary:
+	ContentService.clear_generated_scenario_drafts()
+	var config := ScenarioSelectRulesScript.build_random_map_player_config(
+		SEED, "", "", 2, "land", false, "homm3_small",
+		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT,
+		"faction_embercourt", ""
+	)
+	var map_setup := ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(config, "normal", ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY)
+	if not bool(map_setup.get("ok", false)):
+		_fail("Generated setup failed: %s" % JSON.stringify(map_setup).left(400))
+		return {}
+	var session = ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(map_setup)
+	OverworldRules.normalize_overworld_state(session)
+	var rival := AiSeatRulesScript.hand_human_seat_to_ai(session)
+	OverworldRules.end_turn(session)
+	var controller := ""
+	for record in session.overworld.get("players", []):
+		if String(record.get("player_id", "")) != rival:
+			controller = String(record.get("player_id", ""))
+	var context := _context(session, controller)
+	AiHeroRulesScript._start_heroes_day(session, controller)
+	context["decision"] = {}
+	var index := AiHeroRulesScript._entry_index(session, AiHeroRulesScript._decision_main_id(session, context))
+	if index < 0:
+		_fail("%s has no main hero." % controller)
+		return {}
+	var entry: Dictionary = session.overworld.encounters[index]
+	for stack in entry.get("enemy_army", {}).get("stacks", []):
+		stack["count"] = int(stack.get("count", 0)) * 100
+	session.day = AiHeroRulesScript.HUNT_FULL_DAY
+	for town in session.overworld.get("towns", []):
+		if String(town.get("owner", "")) == "neutral":
+			town["owner"] = "enemy"
+			town["controlling_player_id"] = controller
+			town["garrison"] = []
+	var movement_max := maxi(1, int(entry.get(AiHeroRulesScript.AI_HERO_KEY, {}).get("movement", {}).get("max", 1)))
+	var wide: Dictionary = AiHeroRulesScript._search(session, context, entry, movement_max * AiHeroRulesScript.STRATEGIC_DAYS)
+	var size: Vector2i = context.map_size
+	var tiles := PackedByteArray()
+	tiles.resize(size.x * size.y)
+	for tile in range(tiles.size()):
+		if int(wide.dist[tile]) < 0:
+			continue
+		for dy in range(-1, 2):
+			for dx in range(-1, 2):
+				var x: int = tile % size.x + dx
+				var y: int = tile / size.x + dy
+				if x >= 0 and y >= 0 and x < size.x and y < size.y:
+					tiles[y * size.x + x] = 1
+	context["explored"] = {LevelRules.level_of(entry): tiles}
+	context["decision"] = {}
+	if not AiHeroRulesScript._rival_towns_unknown(session, context):
+		_fail("The rival's towns stand in ground %s reaches without a fight." % controller)
+		return {}
+	if not AiHeroRulesScript._exploration_candidate(session, context, entry, wide).is_empty():
+		_fail("With everything in reach explored, the hero still finds ground to scout.")
+		return {}
+	var plan: Dictionary = AiHeroRulesScript._strategic_candidate(session, context, entry, movement_max, 0, wide)
+	if String(plan.get("kind", "")) != "encounter":
+		_fail("Shut in with the rival's towns unseen, the main army plans %s instead of a guard fight." % JSON.stringify({"kind": plan.get("kind", ""), "id": plan.get("id", "")}))
+		return {}
+	var opened := int(wide.get("passage_unexplored", {}).get(int(plan.index), 0))
+	if opened <= 0:
+		_fail("The main army plans to fight %s, which opens no unexplored ground." % String(plan.id))
+		return {}
+	var result := {"guard": String(plan.id), "unexplored_opened": opened, "distance": int(plan.get("distance", -1))}
+	var pickup := {}
+	for node in session.overworld.get("artifact_nodes", []):
+		if not bool(node.get("collected", false)) and LevelRules.level_of(node) == LevelRules.level_of(entry) and AdventureRules._artifact_guard_encounter_for_node(session, node).is_empty():
+			pickup = node
+			break
+	if pickup.is_empty():
+		_fail("The map has no unguarded artifact to lay in the guard's place.")
+		return {}
+	var resolved: Array = session.overworld.get("resolved_encounters", [])
+	resolved.append(String(plan.id))
+	session.overworld["resolved_encounters"] = resolved
+	var placed := {}
+	for zone_tile in wide.guard_zones[int(plan.index)]:
+		var copy: Dictionary = pickup.duplicate(true)
+		copy["placement_id"] = "%s_door_%d" % [String(pickup.get("placement_id", "")), int(zone_tile)]
+		copy["x"] = int(zone_tile) % size.x
+		copy["y"] = int(zone_tile) / size.x
+		session.overworld.artifact_nodes.append(copy)
+		placed[String(copy.placement_id)] = true
+	OverworldRules.invalidate_spatial_lookup(session)
+	var site_context := _context(session, controller)
+	site_context["explored"] = {LevelRules.level_of(entry): tiles}
+	site_context["decision"] = {}
+	var site_wide: Dictionary = AiHeroRulesScript._search(session, site_context, entry, movement_max * AiHeroRulesScript.STRATEGIC_DAYS)
+	var site_plan: Dictionary = AiHeroRulesScript._strategic_candidate(session, site_context, entry, movement_max, 0, site_wide)
+	if String(site_plan.get("kind", "")) != "artifact" or not placed.has(String(site_plan.get("id", ""))):
+		_fail("With pickups closing the way where the guard stood, the main army plans %s instead of taking one." % JSON.stringify({"kind": site_plan.get("kind", ""), "id": site_plan.get("id", "")}))
+		return {}
+	var site_opened := int(site_wide.get("passage_unexplored", {}).get(AiHeroRulesScript._site_door_key(int(site_plan.tile_index)), 0))
+	if site_opened <= 0:
+		_fail("The main army plans to take %s, which opens no unexplored ground." % String(site_plan.id))
+		return {}
+	result["pickup_unexplored_opened"] = site_opened
+	return result
 
 ## A small generated two-player map, both seats played by the computer, one day
 ## played. player_2's main hero is moved beside player_1's capital, whose heroes
