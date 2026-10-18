@@ -265,6 +265,11 @@ const STOP_TOWN := 3
 const STOP_ENCOUNTER := 4
 const STOP_HERO := 5
 const STOP_AI_HERO := 6
+## A spell a hero learns from a site, for that one hero: below a loose
+## artifact (1,100) even at tier 4, against 400 + 300 a tier that a mage guild
+## level teaching every hero is worth to the town planner.
+const SCROLL_SPELL_BASE_VALUE := 150.0
+const SCROLL_SPELL_TIER_VALUE := 150.0
 ## Site families that stand after a visit and can be walked across.
 const WALK_ACROSS_SITE_FAMILIES := ["visit_building", "shrine", "frontier_shrine", "support_producer", "sign_waypoint", "scouting_structure"]
 const RESOURCE_VALUES := {
@@ -3530,7 +3535,7 @@ static func _resource_candidate(session: SessionStateStoreScript.SessionData, co
 		value = 250.0 + float(VisitBuildings.ai_value(site))
 	else:
 		value = _payload_value(AdventureRules._resource_site_claim_rewards(site), needs)
-		value += _recruit_set_value(_recruit_dict(site.get("claim_recruits", {}))) + _site_artifact_value(site)
+		value += _recruit_set_value(_recruit_dict(site.get("claim_recruits", {}))) + _site_artifact_value(site) + _site_spell_value(site, entry)
 		if bool(site.get("persistent_control", false)):
 			value += _payload_value(site.get("control_income", {}), needs) * 12.0 + 250.0
 			# A site that musters troops every week is worth a week of them.
@@ -3658,6 +3663,20 @@ static func _guarded_node_value(session: SessionStateStoreScript.SessionData, no
 	if CreatureDwellings.is_dwelling(site):
 		value += 500.0
 	return value * 0.8
+
+## The spells a site teaches (a spell scroll) that the hero does not know yet,
+## each worth SCROLL_SPELL_BASE_VALUE plus SCROLL_SPELL_TIER_VALUE a tier.
+## Until 2026-10-18 a scroll was worth nothing to the computer and its heroes
+## never read one.
+static func _site_spell_value(site: Dictionary, entry: Dictionary) -> float:
+	var commander: Dictionary = entry.get("enemy_commander_state", {}) if entry.get("enemy_commander_state", {}) is Dictionary else {}
+	var value := 0.0
+	for spell_id in _overworld_rules()._resource_site_spell_ids(site):
+		var spell := ContentService.get_spell(String(spell_id))
+		if spell.is_empty() or SpellRulesScript.knows_spell(commander, String(spell_id)):
+			continue
+		value += SCROLL_SPELL_BASE_VALUE + SCROLL_SPELL_TIER_VALUE * float(maxi(1, int(spell.get("tier", 1))))
+	return value
 
 ## The artifacts a generated bank or tomb holds, each worth a loose artifact.
 static func _site_artifact_value(site: Dictionary) -> float:
