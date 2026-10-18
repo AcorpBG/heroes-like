@@ -115687,6 +115687,20 @@
       "validatedAt": "2026-10-18T14:00:00Z"
     },
     {
+      "id": "native-rmg-repair-monolith-partner-20261018",
+      "title": "Cut-off repair pass places the monolith end H3MapEd cannot place",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "native_rmg_departure",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/rmg-cut-off-town-repair.md"
+      ],
+      "notes": "Owner decision 2026-10-18. 0x4a7605 places a two-way monolith in each zone of a link via 0x4a7312; an empty candidate vector (0x49aa93 contour rejects) places nothing and leaves the other end unpaired. r23 medium2p m003 (map seed 3541848141, 8SM0c, weak, 1+1): zone 8 is map row y=71 plus 3 cells, so links 0-8, 8-9 and 8-11 lose their zone-8 ends; zone 0's only link is 0-8, sealing Bellwake Harbor (320-day capped match). Windows H3MapEd map (h3tr/out/cut_m003M.h3m) equals the strict native map (tiles + 1236 objects). Repair pass only: the missing end goes to the first zone in the failed zone's 0xc8 endpoint record order where 0x4a7312 finds a cell (skipping the link's zones and policy-8 zones), same connection ordinal and guard rule; counted in route_join_monolith_partner_count. m003: before 2, after 0 (was after 1). 74 flagged AI-batch configs all clean; 4 repaired maps change (small180/m057, m060, m139, 2026-10-16/m077). Sweep 64/72 repair on and strict (same rows). Selftest (new m003 case) and core_suite 16/16 pass on Windows and Linux.",
+      "updatedAt": "2026-10-18T16:00:00Z",
+      "validatedAt": "2026-10-18T16:00:00Z"
+    },
+    {
       "id": "balance-phase-round-1-20261017",
       "title": "Balance round 1: every faction closer in each phase of the game",
       "status": "completed",
