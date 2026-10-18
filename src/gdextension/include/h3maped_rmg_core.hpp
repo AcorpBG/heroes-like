@@ -3381,6 +3381,9 @@ struct GeneratorObjectPrivateState {
 	// Repair pass: 1 on every cell a link passage (0x4a61bc chains) stamped.
 	std::vector<char> route_join_link_passage_cell;
 	int32_t route_join_carved_path_count = 0;
+	// Repair pass: monolith ends placed in a neighbouring zone because 0x4a7312 found no
+	// cell in the connection's own zone.
+	int32_t route_join_monolith_partner_count = 0;
 	uint32_t generated_cell_buffer_offset_0x14 = 0x14U;
 	uint32_t width_offset_0x18 = 0x18U;
 	uint32_t height_offset_0x1c = 0x1cU;

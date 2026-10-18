@@ -18056,10 +18056,12 @@ static ConnectionDirectEndpointDispatchResult4a7605 connection_direct_endpoint_d
 	}
 
 	SourceObjectResolverState4af785 &resolver_state = ensure_source_object_resolver_state_4af785(state);
+	bool last_place_found_no_cell = false;
 	auto place = [&](const GeneratorDescriptorVectorEntry0x398 &entry,
 			GeneratorRelationOwnerState4a218c &owner,
 			bool companion_placement,
 			bool apply_guard) -> bool {
+		last_place_found_no_cell = false;
 		if (!entry.descriptor_source_cell_offsets_0x2c_0x30_known || !entry.descriptor_dimensions_known) {
 			result.blocked_reason = "0x4a7605_selected_descriptor_geometry_unrecovered";
 			return false;
@@ -18113,6 +18115,7 @@ static ConnectionDirectEndpointDispatchResult4a7605 connection_direct_endpoint_d
 			}
 			if (!picker.committed_through_vtable_slot_0x04) {
 			if (picker.blocked_reason == "0x4a7312_candidate_vector_empty_after_source_relation_and_0x49aa93_filters") {
+				last_place_found_no_cell = true;
 				return true;
 			}
 			result.blocked_reason = picker.blocked_reason.empty()
@@ -18199,13 +18202,52 @@ static ConnectionDirectEndpointDispatchResult4a7605 connection_direct_endpoint_d
 		return true;
 	};
 
-	if (!place(*primary, source_owner, false, true)
-			|| !place(*primary, target_owner, false, true)) {
+	// Departure (docs/rmg-cut-off-town-repair.md), repair pass only: when 0x4a7312 finds
+	// no cell for one end, H3MapEd leaves the other end with no partner (medium m003,
+	// seed 3541848141: zone 8 is one map row, so zone 0's only link keeps one monolith).
+	// The missing end goes to the first zone, in the failed zone's 0xc8 endpoint record
+	// order, that has a cell; the connection's own two zones are skipped.
+	auto place_pair = [&](const GeneratorDescriptorVectorEntry0x398 &entry,
+			bool companion_placement,
+			bool apply_guard) -> bool {
+		if (!place(entry, source_owner, companion_placement, apply_guard)) {
+			return false;
+		}
+		const bool source_found = !last_place_found_no_cell;
+		if (!place(entry, target_owner, companion_placement, apply_guard)) {
+			return false;
+		}
+		const bool target_found = !last_place_found_no_cell;
+		if (!state.route_join_departure_enabled || source_found == target_found) {
+			return true;
+		}
+		const GeneratorRelationOwnerState4a218c &failed = source_found ? target_owner : source_owner;
+		std::vector<int32_t> tried { source_owner.runtime_zone_index, target_owner.runtime_zone_index };
+		for (size_t index = 0; index < failed.source_endpoint_records_0xc8_0xcc.size(); ++index) {
+			const int32_t owner_index = failed.source_endpoint_records_0xc8_0xcc[index].target_relation_owner_vector_index_0x00;
+			if (owner_index < 0 || owner_index >= int32_t(state.relation_owner_vectors_10e4_10e8.size())) {
+				continue;
+			}
+			GeneratorRelationOwnerState4a218c &neighbour = state.relation_owner_vectors_10e4_10e8[size_t(owner_index)];
+			if (neighbour.terrain_policy_0x0c == 8
+					|| std::find(tried.begin(), tried.end(), neighbour.runtime_zone_index) != tried.end()) {
+				continue;
+			}
+			tried.push_back(neighbour.runtime_zone_index);
+			if (!place(entry, neighbour, companion_placement, apply_guard)) {
+				return false;
+			}
+			if (!last_place_found_no_cell) {
+				state.route_join_monolith_partner_count += 1;
+				break;
+			}
+		}
+		return true;
+	};
+	if (!place_pair(*primary, false, true)) {
 		return result;
 	}
-	if (companion != nullptr
-			&& (!place(*companion, source_owner, true, false)
-					|| !place(*companion, target_owner, true, false))) {
+	if (companion != nullptr && !place_pair(*companion, true, false)) {
 		return result;
 	}
 	state.source_pair_records_edc = resolver_state.source_pairs_0xedc;
