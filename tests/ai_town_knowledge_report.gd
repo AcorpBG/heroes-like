@@ -9,6 +9,7 @@ extends Node
 # and a monolith to the other level is a way like a subterranean gate. A town
 # planner counts what a dwelling upgrade adds once. A main army shut in with
 # its rivals' towns unseen goes for a guard whose fight opens unexplored ground.
+# A hero values a spell scroll it has not read and knows its spell once read.
 
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
@@ -20,8 +21,10 @@ const NodePayload = preload("res://scripts/core/ResourceNodePayloadRules.gd")
 const NativeTransit = preload("res://scripts/core/NativeTransitRules.gd")
 const TownDevelopment = preload("res://scripts/core/TownDevelopmentRules.gd")
 const AdventureRules = preload("res://scripts/core/EnemyAdventureRules.gd")
+const SpellRules = preload("res://scripts/core/SpellRules.gd")
 const REPORT_ID := "AI_TOWN_KNOWLEDGE_REPORT"
 const SEED := "ai-town-knowledge-20261017"
+const SCROLL_SPELL := "spell_beacon_path"
 # A small two-level map with two-way monoliths between the levels.
 const PORTAL_SEED := "ai-town-knowledge-portal-2"
 
@@ -49,6 +52,9 @@ func _run() -> void:
 	if _failed:
 		return
 	results["shut_in_fights_way_out"] = _check_shut_in_army_fights_way_out()
+	if _failed:
+		return
+	results["scroll_read"] = _check_scroll_is_read()
 	if _failed:
 		return
 	print("%s %s" % [REPORT_ID, JSON.stringify({"ok": true, "cases": results})])
@@ -376,6 +382,55 @@ func _check_shut_in_army_fights_way_out() -> Dictionary:
 		return {}
 	result["pickup_unexplored_opened"] = site_opened
 	return result
+
+## A computer player's hero weighs a spell scroll whose spell it does not know,
+## and once it claims the scroll it knows the spell, as the human's hero does.
+## Until 2026-10-18 scrolls were worth nothing to the computer. A one-time
+## pickup on the map is turned into the scroll, its spell taken out of the
+## hero's spellbook.
+func _check_scroll_is_read() -> Dictionary:
+	var setup := _setup()
+	if setup.is_empty():
+		return {}
+	var session = setup.session
+	var context: Dictionary = setup.context
+	var entry: Dictionary = setup.entry
+	var commander: Dictionary = SpellRules.ensure_hero_spellbook(entry.get("enemy_commander_state", {}))
+	var spellbook: Dictionary = commander.get("spellbook", {})
+	var known: Array = spellbook.get("known_spell_ids", [])
+	known.erase(SCROLL_SPELL)
+	spellbook["known_spell_ids"] = known
+	commander["spellbook"] = spellbook
+	entry["enemy_commander_state"] = commander
+	var nodes: Array = session.overworld.resource_nodes
+	for node_index in range(nodes.size()):
+		var node: Dictionary = nodes[node_index]
+		var pickup: Dictionary = NodePayload.site_for_node(node)
+		if NativeTransit.is_native(node) or String(pickup.get("family", "")) not in ["", "one_shot_pickup"] or bool(pickup.get("persistent_control", false)) or bool(node.get("collected", false)):
+			continue
+		for key in NodePayload.PAYLOAD_KEYS:
+			node.erase(key)
+		node["site_id"] = "site_spell_scroll"
+		node[NodePayload.PAYLOAD_SPELL_IDS] = [SCROLL_SPELL]
+		var site: Dictionary = NodePayload.site_for_node(node)
+		var spells: Array = OverworldRules._resource_site_spell_ids(site)
+		if spells != [SCROLL_SPELL] or SpellRules.knows_spell(entry.get("enemy_commander_state", {}), SCROLL_SPELL):
+			_fail("Could not lay a scroll of %s the hero has not read (%s)." % [SCROLL_SPELL, JSON.stringify(spells)])
+			return {}
+		var power := AiHeroRulesScript.hero_power(entry)
+		var weighed: Dictionary = AiHeroRulesScript._resource_candidate(session, String(context.controller), entry, node_index, power, {}, context.state.get("treasury", {}))
+		if float(weighed.get("value", 0.0)) <= 0.0:
+			_fail("The hero sees nothing in scroll %s, whose spell %s it does not know." % [String(node.get("placement_id", "")), String(spells[0])])
+			return {}
+		var index := AiHeroRulesScript._entry_index(session, String(entry.get("placement_id", "")))
+		AiHeroRulesScript._claim_resource(session, context, index, {"index": node_index})
+		var reader: Dictionary = session.overworld.encounters[index]
+		if not SpellRules.knows_spell(reader.get("enemy_commander_state", {}), String(spells[0])):
+			_fail("The hero claimed scroll %s and does not know its spell %s." % [String(node.get("placement_id", "")), String(spells[0])])
+			return {}
+		return {"scroll": String(node.get("placement_id", "")), "spell": String(spells[0]), "value": snappedf(float(weighed.value), 1.0)}
+	_fail("The map has no one-time pickup to turn into a spell scroll.")
+	return {}
 
 ## A small generated two-player map, both seats played by the computer, one day
 ## played. player_2's main hero is moved beside player_1's capital, whose heroes

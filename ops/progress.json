@@ -115779,6 +115779,18 @@
         "docs/ai-plays-by-player-rules.md"
       ],
       "notes": "From the owner's 2026-10-18 large 3P round-4 batch (.artifacts/ai_batch_20261018_r4_large3p_60/m035, seed ai-match-147308053, map 1374275706-p3): Embercourt held 17 towns and Mireclaw 7 for 200 days with no battle between them. Probe on day 130 of a replay: every guard bordering either side was beaten, but the corridor between them held two site_spell_scroll pickups at (39,87) and (42,91). The search ends routes on unclaimed sites, scrolls are worth 0 to the AI, so nobody took them. A blocking site (_site_doors) is now worth the ground it opens (_site_door_value via _opened_value, shared with guard _passage_value); _war_paths credits it as a first step; _strategic_candidate weighs those sites and guards opening unexplored ground map-wide while a rival's towns are unseen (from HUNT_START_DAY). Owner request: explore more: EXPLORE_VALUE 220->500, PASSAGE_UNEXPLORED_TILE_VALUE 4->8. Replay: Mireclaw took the scrolls day 22, Embercourt won day 180 (197 captures); slowest AI day 13.2 s vs 7.3 s, from fight previews (strategic step 0.57 s vs 0.47 s). Core test tests/ai_town_knowledge_report case shut_in_fights_way_out (guard part and blocking-pickup part, each fails on the code before it). Validation: tests/ai_town_knowledge_report, tools/core_suite.py 16/16."
+    },
+    {
+      "id": "ai-values-spell-scrolls-20261018",
+      "title": "AI heroes value spell scrolls they have not read",
+      "status": "completed",
+      "classification": "gameplay",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/ai-plays-by-player-rules.md"
+      ],
+      "notes": "Follow-up of ai-shut-in-opens-way-20261018: scrolls were worth 0 to AI heroes. AiHeroRules._site_spell_value adds SCROLL_SPELL_BASE_VALUE 150 + SCROLL_SPELL_TIER_VALUE 150 x tier per taught spell the hero does not know (OverworldRules._resource_site_spell_ids on the node's effective site) in _resource_candidate. Learning on claim already worked (EnemyAdventureRules._secure_resource_target -> _apply_resource_site_spell_reward_to_commander). Core test tests/ai_town_knowledge_report case scroll_read (a pickup turned into a scroll of spell_beacon_path; fails on the old code with the scroll worth nothing; checks the hero knows the spell after _claim_resource). Validation: tools/core_suite.py 16/16."
     }
   ],
   "project": "heroes-like",
