@@ -3,7 +3,8 @@
 Document role: design and validation of an owner-approved departure from H3MapEd
 (owner decision, 2026-10-17). This is not a parity fix.
 Slice: `native-rmg-cut-off-town-repair-20261017`; template re-pick:
-`native-rmg-split-template-repick-20261018` (owner decision, 2026-10-18).
+`native-rmg-split-template-repick-20261018` (owner decision, 2026-10-18); monolith partners:
+`native-rmg-repair-monolith-partner-20261018` (owner decision, 2026-10-18).
 Evidence (outside the repo): the shared notes of session `local_a8c2da62`,
 `zero_guard_passage_prototype/` (`remaining_splits_trace.md`, `all_three_causes_measurement.md`).
 
@@ -102,6 +103,13 @@ differs from H3MapEd beyond the carved cells.
      with its H3 body on both levels, and reward objects with their H3 bodies: single
      objects (`0x4a93a2`, `0x4a901a`) and every member of a reward cluster (`0x4aa603`).
      A rejected cell is skipped like any other ineligible candidate.
+   - **Monolith links:** `0x4a7605` places one monolith in each zone of a link through
+     `0x4a7312`. When `0x4a7312` finds no cell in a zone, H3MapEd places nothing there
+     and the other monolith leads nowhere. In the repair pass the missing end goes to
+     the first zone, in the failed zone's `0xc8` endpoint record order, where
+     `0x4a7312` finds a cell (the link's own two zones and policy-8 zones are skipped).
+     It gets the same connection, so it pairs with the placed end, and the same guard
+     rule. `route_join_monolith_partner_count` counts these ends.
 2. **Join each zone (cause 2).** Right after `0x4aab7e`, per zone:
    - **Route points:** the owner coordinate (anchor) and its `0x404` local-vector cells,
      kept if they are free or action cells and not water or rock; plus every town's
@@ -203,15 +211,39 @@ returns the number of towns outside the area that holds the most towns.
     clean, but sent all five Newcomers maps to Dwarven Tunnels.
   - The sweep stays 64/72 with the repair on and with `AURELION_RMG_H3MAPED_STRICT=1`,
     the same rows: no reference map uses a split combination.
+- **Monolith partners** (the same 74 flagged configurations): all 74 still end with no
+  town cut off. Four repaired maps change because a monolith end now gets a partner:
+  small180/m057, m060 (three partners), m139 and 2026-10-16/m077. The sweep stays
+  64/72 with and without the repair, same rows.
 - **Strict mode:** with `AURELION_RMG_H3MAPED_STRICT=1`, m043 (seed 2851495868) is
   byte-identical to H3MapEd.
 - **Native selftest:** every H3MapEd parity case runs with the repair off and passes.
   Added cases require XL seed 76 to re-pick 8XM12 and end with no town cut off, and
   the repair to join a cut-off town on m095, on m139, where it needs the mine
-  placement step, and on m014, where it needs the link endpoint cells.
+  placement step, on m014, where it needs the link endpoint cells, and on r23 m003,
+  where it needs the monolith partner.
 - **Core test:** `random_map_small_2p_launch_report` generates seed 1727041229 (Small,
   land, weak, 1+1 players). It requires the repair to have run and to leave no town cut
   off. Every other seed it generates must also end with no town cut off.
+
+## r23 m003: a monolith with no partner seals a start town
+
+AI match m003 of the 2026-10-18 medium 2-player batch (map seed 3541848141, match
+ai-match-1205901623; medium, one level, land, weak guards, template 8SM0c) ran 320 days
+without either player reaching the other: Veilmourn's Bellwake Harbor (52,14) sits in
+zone 0, a 508-cell area (x 32-71, y 0-30) walled off by rock and decoration.
+
+- **Cause:** zone 0's only link is 0-8, and zones 0 and 8 do not touch, so the link is
+  a two-way monolith pair from `0x4a7605`. Zone 8 is the bottom map row plus three
+  cells. `0x4a7312` rejects every one of them for the 2x2 monolith (`0x49aa93`
+  contour test), so H3MapEd places only zone 0's monolith at (46,3). The 8-9 and 8-11
+  links lose their zone-8 ends the same way.
+- **H3MapEd:** its own Windows map for this seed equals the strict native map (tiles and
+  all 1236 objects) and seals both start towns. The repair joined Riverwatch Hold but
+  had no passage to keep for zone 0 (1 town still cut off).
+- **Fix:** the repair pass places the three missing ends: 0-8's in zone 4 at (39,60),
+  8-9's and 8-11's in zone 0 at (37,6) and (51,16). The map now has no town cut off
+  (`towns_cut_off_before` 2, `towns_cut_off_after` 0).
 
 ## m095: mines seal a start town
 
