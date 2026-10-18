@@ -42176,7 +42176,10 @@ static H3MapedRmgWorkflowResult run_h3maped_rmg_workflow_pass(const H3MapedRmgWo
 					result.setup_mode_0x49ecf2.rng_state_before_template_selection,
 					score,
 					config.human_count,
-					config.player_count);
+					config.player_count,
+					0xffU,
+					// Departure: re-pick a template whose filtered links split its zones.
+					config.repair_cut_off_towns && rmg_trace_env("AURELION_RMG_H3MAPED_STRICT") == nullptr);
 	result.executed = true;
 	if (result.template_selection_0x4ac552.blocked
 			|| result.template_selection_0x4ac552.runtime_seed.blocked

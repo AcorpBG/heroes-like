@@ -1845,9 +1845,42 @@ bool template_player_owner_counts_allow_49ba1b(
 			&& human_owner_count + computer_owner_count >= player_count;
 }
 
+// True when the runtime links leave the runtime zones in more than one group.
+static bool runtime_link_graph_split(const RuntimeSeedBuildResult4a218c &runtime_seed) {
+	const size_t zone_count = runtime_seed.runtime_zone_seeds.size();
+	if (zone_count <= 1U) {
+		return false;
+	}
+	std::vector<std::vector<int32_t>> neighbors(zone_count);
+	for (const RuntimeLinkSeedInput4a218c &link : runtime_seed.runtime_links) {
+		if (link.from_index >= 0 && link.to_index >= 0
+				&& size_t(link.from_index) < zone_count && size_t(link.to_index) < zone_count) {
+			neighbors[size_t(link.from_index)].push_back(link.to_index);
+			neighbors[size_t(link.to_index)].push_back(link.from_index);
+		}
+	}
+	std::vector<char> reached(zone_count, 0);
+	std::vector<int32_t> stack { 0 };
+	reached[0] = 1;
+	size_t reached_count = 1;
+	while (!stack.empty()) {
+		const int32_t zone = stack.back();
+		stack.pop_back();
+		for (const int32_t next : neighbors[size_t(zone)]) {
+			if (!reached[size_t(next)]) {
+				reached[size_t(next)] = 1;
+				reached_count += 1;
+				stack.push_back(next);
+			}
+		}
+	}
+	return reached_count < zone_count;
+}
+
 } // namespace
 
-TemplateSelectionRuntimeResult4ac552 template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b(uint32_t seed, int32_t size_score, int32_t human_count, int32_t player_count, uint8_t selected_color_mask) {
+
+TemplateSelectionRuntimeResult4ac552 template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b(uint32_t seed, int32_t size_score, int32_t human_count, int32_t player_count, uint8_t selected_color_mask, bool repick_split_link_graph) {
 	TemplateSelectionRuntimeResult4ac552 result;
 	result.size_score = size_score;
 	result.human_count = std::max<int32_t>(0, human_count);
@@ -1885,28 +1918,52 @@ TemplateSelectionRuntimeResult4ac552 template_selection_and_runtime_seed_inputs_
 	result.rng_value = rng.next();
 	result.rng_state_after_template_selection = rng.state;
 	result.selected_vector_index = result.rng_value % result.accepted_template_count;
-	const TemplateCandidateContainerRecord4ac552 &selected_candidate = result.accepted_candidate_containers_10d4_10d8[size_t(result.selected_vector_index)];
-	const CatalogTemplateRecord4ac552 &selected_template = CATALOG_TEMPLATES_4AC552[selected_candidate.source_catalog_index];
-	result.selected_source_catalog_index = selected_template.source_catalog_index;
-	result.selected_template_name = selected_template.name;
-	result.source_zone_record_count = recovered_template_source_zone_count_4ac552(selected_template);
-	result.source_link_record_count = selected_template.link_count;
-	template_owner_masks_4ac552(selected_template, result.human_count, result.player_count, result.human_capable_source_owner_mask, result.player_capable_source_owner_mask);
-	result.player_assignment = player_slot_assignment_4ac62a_4ac6ec(
-			result.human_count,
-			result.player_count,
-			result.human_capable_source_owner_mask,
-			result.player_capable_source_owner_mask,
-			selected_color_mask);
+	auto build_selected = [&](int32_t vector_index) {
+		result.selected_vector_index = vector_index;
+		const TemplateCandidateContainerRecord4ac552 &selected_candidate = result.accepted_candidate_containers_10d4_10d8[size_t(vector_index)];
+		const CatalogTemplateRecord4ac552 &selected_template = CATALOG_TEMPLATES_4AC552[selected_candidate.source_catalog_index];
+		result.selected_source_catalog_index = selected_template.source_catalog_index;
+		result.selected_template_name = selected_template.name;
+		result.source_zone_record_count = recovered_template_source_zone_count_4ac552(selected_template);
+		result.source_link_record_count = selected_template.link_count;
+		template_owner_masks_4ac552(selected_template, result.human_count, result.player_count, result.human_capable_source_owner_mask, result.player_capable_source_owner_mask);
+		result.player_assignment = player_slot_assignment_4ac62a_4ac6ec(
+				result.human_count,
+				result.player_count,
+				result.human_capable_source_owner_mask,
+				result.player_capable_source_owner_mask,
+				selected_color_mask);
 
-	std::vector<TemplateZoneRecord4a218c> zones = selected_template_source_zones_4ac552(selected_template);
-	std::vector<TemplateLinkRecord4a1f3b> links;
-	links.reserve(size_t(selected_template.link_count));
-	for (int32_t offset = 0; offset < selected_template.link_count; ++offset) {
-		links.push_back(CATALOG_LINKS_4A1F3B[selected_template.link_begin + offset]);
+		std::vector<TemplateZoneRecord4a218c> zones = selected_template_source_zones_4ac552(selected_template);
+		std::vector<TemplateLinkRecord4a1f3b> links;
+		links.reserve(size_t(selected_template.link_count));
+		for (int32_t offset = 0; offset < selected_template.link_count; ++offset) {
+			links.push_back(CATALOG_LINKS_4A1F3B[selected_template.link_begin + offset]);
+		}
+		result.runtime_seed = runtime_seed_inputs_from_template_records_4a218c_4a1f3b(zones, links, result.player_assignment, result.human_count, result.player_count);
+		result.blocked = !result.player_assignment.complete || result.runtime_seed.blocked || result.runtime_seed.runtime_zone_seeds.empty();
+	};
+	build_selected(result.selected_vector_index);
+	if (repick_split_link_graph && !result.blocked && runtime_link_graph_split(result.runtime_seed)) {
+		// Departure from H3MapEd: 0x4a218c drops every link whose player filter fails, and
+		// nothing checks that the zones stay joined (8XM12 with 2 players leaves the
+		// second player's zone with no link). Take the next candidate after the rolled one
+		// that keeps them joined. No extra RNG draw; if every candidate is split, the
+		// rolled one stays.
+		const int32_t rolled_index = result.selected_vector_index;
+		const std::string rolled_name = result.selected_template_name;
+		bool replaced = false;
+		for (int32_t step = 1; step < result.accepted_template_count && !replaced; ++step) {
+			build_selected((rolled_index + step) % result.accepted_template_count);
+			replaced = !result.blocked && !runtime_link_graph_split(result.runtime_seed);
+		}
+		if (replaced) {
+			result.split_link_graph_repicked = true;
+			result.split_link_graph_rolled_template_name = rolled_name;
+		} else {
+			build_selected(rolled_index);
+		}
 	}
-	result.runtime_seed = runtime_seed_inputs_from_template_records_4a218c_4a1f3b(zones, links, result.player_assignment, result.human_count, result.player_count);
-	result.blocked = !result.player_assignment.complete || result.runtime_seed.blocked || result.runtime_seed.runtime_zone_seeds.empty();
 	return result;
 }
 

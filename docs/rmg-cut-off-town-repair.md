@@ -2,7 +2,8 @@
 
 Document role: design and validation of an owner-approved departure from H3MapEd
 (owner decision, 2026-10-17). This is not a parity fix.
-Slice: `native-rmg-cut-off-town-repair-20261017`.
+Slice: `native-rmg-cut-off-town-repair-20261017`; template re-pick:
+`native-rmg-split-template-repick-20261018` (owner decision, 2026-10-18).
 Evidence (outside the repo): the shared notes of session `local_a8c2da62`,
 `zero_guard_passage_prototype/` (`remaining_splits_trace.md`, `all_three_causes_measurement.md`).
 
@@ -39,6 +40,32 @@ H3MapEd parity on every map that already works and repairs only the broken ones.
 `AURELION_RMG_H3MAPED_STRICT=1` turns the repair off for parity work. The
 controlled-case parity tools (`rmg_native_core` controlled cases and the batch export
 CLI) always run without it, because they compare against H3MapEd references.
+
+## Template re-pick for split link graphs
+
+Some templates cannot be joined by any repair. `0x4a218c` builds the runtime zones and
+links and drops every link whose player filter (min/max humans, min/max players) fails.
+H3MapEd does not check that the remaining links still join every zone. It does not
+reject the template or roll again: the trace shows a single `0x4ac552` selection.
+With one human, the catalog has 13 such template and player-count combinations:
+
+- Newcomers, 2-4 players: zones 3, 4, 6 and 10-13 lose all their links (islands that
+  hold towns but no start).
+- 8XM12, 2 players: zone 2 (a start zone) and zones 28-32; 3 players: zones 28-32;
+  4 players: zones 29, 31 and 32.
+- 8XM8, 2-8 players: start zone 8 has no link in the template at all.
+
+So `template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b`
+(`h3maped_rmg_template_catalog.cpp`) checks the runtime links after the roll. If they
+leave the runtime zones in more than one group, it takes the next accepted candidate
+in vector order (wrapping) whose links join every zone. There is no extra RNG draw,
+so the choice is deterministic per seed. If every candidate is split, the rolled
+template stays. Only those combinations change; every other seed keeps H3MapEd's
+template.
+
+The re-pick is on when the repair is on (`repair_cut_off_towns`) and
+`AURELION_RMG_H3MAPED_STRICT` is unset, so the parity paths keep H3MapEd's template.
+The repair pass reruns with the same config, so it uses the re-picked template too.
 
 ## The repair pass
 
@@ -101,9 +128,11 @@ around its visit tile (`scripts/core/CommonMineRules.gd`) in place of its H3 bod
 returns the number of towns outside the area that holds the most towns.
 
 **Reported state:** `H3MapedRmgWorkflowResult` carries `cut_off_town_repair_applied`,
-`cut_off_towns_before_repair` and `cut_off_towns_after_repair`. Generated map packages
-expose them as `metadata.cut_off_town_repair` (`applied`, `towns_cut_off_before`,
-`towns_cut_off_after`).
+`cut_off_towns_before_repair` and `cut_off_towns_after_repair`, and its
+`template_selection_0x4ac552` carries `split_link_graph_repicked` and
+`split_link_graph_rolled_template_name`. Generated map packages expose them as
+`metadata.cut_off_town_repair` (`applied`, `towns_cut_off_before`,
+`towns_cut_off_after`, `split_template_repicked_from`; empty when not re-picked).
 
 ## Validation
 
@@ -156,12 +185,24 @@ expose them as `metadata.cut_off_town_repair` (`applied`, `towns_cut_off_before`
   - One map got worse: medium2p/m117 keeps H3MapEd's map again (6 cut off; before, 6 to
     4). See Known limits.
   - No other map changed. The sweep stays 64/72 with and without the repair, same rows.
+- **Template re-pick** (the same 74 flagged configurations):
+  - All 74 now end with no town cut off (before: 70 kept the repair, 69 clean).
+  - Five Newcomers maps are re-picked to Dwarven Tunnels: medium2p/m117 (6 cut off on
+    Newcomers; 0 on Dwarven Tunnels without the repair), and medium3p/m034, m066, m087
+    and m088 (each repairs fully on Dwarven Tunnels).
+  - Large m003 (map seed 3507549692, 2 levels, weak, 1+1 players), whose Riverwatch Hold
+    sat in 8XM12's unlinked start zone, takes Ring and has no town cut off. H3MapEd's own
+    map for it (Windows reference `cut_m003L.h3m`) is identical to the strict native map.
+  - The Large selftest seed 73 takes Dwarven Tunnels in place of Newcomers and repairs
+    (1 to 0). XL seed 76 takes Ring in place of 8XM12 and has no town cut off.
+  - The sweep stays 64/72 with the repair on and with `AURELION_RMG_H3MAPED_STRICT=1`,
+    the same rows: no reference map uses a split combination.
 - **Strict mode:** with `AURELION_RMG_H3MAPED_STRICT=1`, m043 (seed 2851495868) is
   byte-identical to H3MapEd.
 - **Native selftest:** every H3MapEd parity case runs with the repair off and passes.
-  Added cases require the repair to join a cut-off town on XL seed 76, on m095, on
-  m139, where it needs the mine placement step, and on m014, where it needs the link
-  endpoint cells.
+  Added cases require XL seed 76 to re-pick 8XM12 and end with no town cut off, and
+  the repair to join a cut-off town on m095, on m139, where it needs the mine
+  placement step, and on m014, where it needs the link endpoint cells.
 - **Core test:** `random_map_small_2p_launch_report` generates seed 1727041229 (Small,
   land, weak, 1+1 players). It requires the repair to have run and to leave no town cut
   off. Every other seed it generates must also end with no town cut off.
@@ -191,14 +232,11 @@ yet player 3's start town at (60,24,0) could not be left on foot.
 - **m174** (seed 767626670) has 6 zone pairs a hero can walk between without passing a
   monster's zone of control and without an unguarded link. H3MapEd's own map had 12.
   These come from the reshuffled decoration, not from carved paths.
-- **Split link graphs.** On the Large two-level selftest map (seed 73, weak, 1+1
-  players), H3MapEd's own links never join zones 2 and 12, or zones 3, 9 and 11, to the
-  rest. Joins inside zones cannot fix that, so the generator keeps H3MapEd's map and
-  reports `towns_cut_off_before` = `towns_cut_off_after` with `applied` false. On the XL
-  two-level selftest map (seed 76) H3MapEd leaves two towns cut off. The repair joins
-  one, and keeps the other in zones 15-19, which H3MapEd's links never join to the rest.
-  Whether the template's link data or a missing gate link is the cause has not been
-  traced.
+- **Split link graphs (fixed by the template re-pick).** Large seed 73 rolled Newcomers
+  and XL seed 76 rolled 8XM12, whose player-filtered links leave zones unjoined. Joins
+  inside zones cannot fix that; the re-pick takes another template for those seeds.
+  If every candidate for a size and player count were split, the rolled template would
+  keep its cut-off towns; no combination in the catalog is like that.
 - **Mines below a town door (fixed by step 0).** On 8 maps H3MapEd's town door was a
   one-tile pocket:
   - the town body closes it on three sides;
@@ -207,10 +245,7 @@ yet player 3's start town at (60,24,0) could not be left on foot.
   - In H3 those tiles are free, because the H3 body is only the mine's bottom row.
   - Example: m139, crystal cavern at (21,11) below the door at (20,9).
   - The repair pass now places those mines elsewhere, and all 8 repair.
-- **Six-town split maps (Newcomers).** medium2p/m117 (seed 154192373) and medium3p/m066
-  leave whole islands of zones whose links never join the rest, as on the Large
-  selftest map. On m117 the earlier 6-to-4 result came from a gap in the decoration
-  between zones 5 and 7, which have no link. After this change the decoration closes it
-  and the map keeps H3MapEd's six cut-off towns. The islands need an owner decision
-  (the template's link data, or a missing gate link).
+- **Six-town split maps (Newcomers, fixed by the template re-pick).** medium2p/m117
+  (seed 154192373) and medium3p/m066 left whole islands of zones whose links never join
+  the rest. Both now take Dwarven Tunnels and have no town cut off.
 - **Cost.** A repaired map is generated twice, and an unhelped one three times.

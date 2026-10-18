@@ -3396,6 +3396,9 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	cut_off_town_repair["applied"] = workflow->cut_off_town_repair_applied;
 	cut_off_town_repair["towns_cut_off_before"] = workflow->cut_off_towns_before_repair;
 	cut_off_town_repair["towns_cut_off_after"] = workflow->cut_off_towns_after_repair;
+	cut_off_town_repair["split_template_repicked_from"] = workflow->template_selection_0x4ac552.split_link_graph_repicked
+			? String(workflow->template_selection_0x4ac552.split_link_graph_rolled_template_name.c_str())
+			: String();
 	workflow.reset();
 	if (!projection.applied) {
 		Dictionary blocked;

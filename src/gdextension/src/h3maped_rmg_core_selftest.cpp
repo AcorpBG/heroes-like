@@ -9212,19 +9212,22 @@ int main() {
 				"XLarge two-level land seed-76 workflow diverged from recovered final writeout or runtime projection")) {
 			return 1;
 		}
-		// Departure from H3MapEd (docs/rmg-cut-off-town-repair.md): H3MapEd's seed-76
-		// map leaves two towns cut off. The repair pass joins one; the other sits in
-		// zones 15-19, which H3MapEd's links never join to the rest.
+		// Departure from H3MapEd (docs/rmg-cut-off-town-repair.md): seed 76 rolls 8XM12,
+		// whose two-player links leave some of its zones unjoined, so H3MapEd's map leaves towns
+		// cut off. The game takes the next candidate template whose links join every zone.
 		if (std::getenv("AURELION_RMG_H3MAPED_STRICT") == nullptr) {
 			H3MapedRmgWorkflowConfig seed76_repair_config = seed76_config;
 			seed76_repair_config.repair_cut_off_towns = true;
 			const H3MapedRmgWorkflowResult seed76_repaired =
 					aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(seed76_repair_config);
-			if (!require(seed76_repaired.cut_off_town_repair_applied
-						&& seed76_repaired.cut_off_towns_before_repair > 0
-						&& seed76_repaired.cut_off_towns_after_repair < seed76_repaired.cut_off_towns_before_repair
+			if (!require(seed76_workflow.template_selection_0x4ac552.selected_template_name == "8XM12"
+						&& !seed76_workflow.template_selection_0x4ac552.split_link_graph_repicked
+						&& seed76_repaired.template_selection_0x4ac552.split_link_graph_repicked
+						&& seed76_repaired.template_selection_0x4ac552.split_link_graph_rolled_template_name == "8XM12"
+						&& seed76_repaired.template_selection_0x4ac552.selected_template_name != "8XM12"
+						&& seed76_repaired.cut_off_towns_after_repair == 0
 						&& seed76_repaired.final_payload_writeout_0x4ad1e3.payload_bytes.size() > 0U,
-					"XLarge two-level land seed-76 repair pass did not join a cut-off town")) {
+					"XLarge two-level land seed-76 did not re-pick a template whose links join every zone")) {
 				return 1;
 			}
 		}

@@ -115673,6 +115673,19 @@
       "validatedAt": "2026-10-17T23:59:00Z"
     },
     {
+      "id": "native-rmg-split-template-repick-20261018",
+      "title": "Template selection re-picks templates whose player-filtered links leave zones unjoined",
+      "status": "in_progress",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "native_rmg_departure",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/rmg-cut-off-town-repair.md"
+      ],
+      "notes": "Owner decision 2026-10-18. 0x4a218c drops links whose player filter fails; H3MapEd neither checks connectivity nor rerolls (single 0x4ac552 pass). 13 split combos with one human: Newcomers 2-4P, 8XM12 2-4P, 8XM8 2-8P. With repair_cut_off_towns on and AURELION_RMG_H3MAPED_STRICT unset, template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b takes the next accepted candidate (vector order, wrapping, no RNG draw) whose runtime links join every runtime zone; parity paths unchanged. 74 flagged AI-batch configs: all 74 clean (was 69); medium2p/m117, medium3p/m034/m066/m087/m088 Newcomers->Dwarven Tunnels; large m003 (map seed 3507549692) 8XM12->Ring; selftest seed 73 Newcomers->Dwarven Tunnels, seed 76 8XM12->Ring. Sweep 64/72 repair on and strict (same rows). Package metadata cut_off_town_repair.split_template_repicked_from.",
+      "updatedAt": "2026-10-18T12:00:00Z"
+    },
+    {
       "id": "balance-phase-round-1-20261017",
       "title": "Balance round 1: every faction closer in each phase of the game",
       "status": "completed",
