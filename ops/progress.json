@@ -115703,15 +115703,16 @@
     {
       "id": "native-rmg-repair-guarded-passages-20261018",
       "title": "Cut-off repair pass keeps guarded link passages free of decoration",
-      "status": "in_progress",
+      "status": "completed",
       "phase": "phase-6-production-alpha-layer",
       "classification": "native_rmg_departure",
       "source": "PLAN.md",
       "sourceDocs": [
         "docs/rmg-cut-off-town-repair.md"
       ],
-      "notes": "Owner decision 2026-10-18. r4 large2p m030 (map seed 4202563664, Dragons, 2 levels, strong, 1+1): H3MapEd map (h3tr/out/cut_m030L.h3m) equals strict native (3692 objects), 7 towns cut off; the repair's decoration (AVLPNTR2) covered (54-56,80-81) south of the 12-14 guard at (55,79,0), the only north-south link, so the repair was discarded. In 0x4a61bc, after 0x4a5e03 places a guarded link's monster, the repair pass now protects the passage cells in its zone of control and those that touch no other zone.",
-      "updatedAt": "2026-10-18T18:00:00Z"
+      "notes": "Owner decision 2026-10-18. r4 large2p m030 (map seed 4202563664, Dragons, 2 levels, strong, 1+1): H3MapEd map (h3tr/out/cut_m030L.h3m) equals strict native (3692 objects), 7 towns cut off; the repair's decoration (AVLPNTR2) covered (54-56,80-81) south of the 12-14 guard at (55,79,0), the only north-south link, so the repair was discarded. In 0x4a61bc, after 0x4a5e03 places a guarded link's monster, the repair pass now protects the passage cells in its zone of control and those that touch no other zone. m030: before 7, after 0; the 12-14 monster still separates the halves. 74 flagged AI-batch configs all clean; 8 repaired maps change (small2p/m103, medium2p/m026 m042 m082 m083, medium3p/m035 m080 m087), none gains a zone border crossing from a kept cell (m103 and m026 lose one; m035 gains one at (38,52,1) from reshuffled decoration, a known limit). Sweep 64/72 repair on and strict (same rows). Selftest (new m030 case) and core_suite 16/16 pass on Windows and Linux.",
+      "updatedAt": "2026-10-18T19:00:00Z",
+      "validatedAt": "2026-10-18T19:00:00Z"
     },
     {
       "id": "balance-phase-round-1-20261017",
