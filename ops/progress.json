@@ -115682,9 +115682,9 @@
       "sourceDocs": [
         "docs/rmg-cut-off-town-repair.md"
       ],
-      "notes": "Owner decision 2026-10-18. 0x4a218c drops links whose player filter fails; H3MapEd neither checks connectivity nor rerolls (single 0x4ac552 pass). 13 split combos with one human: Newcomers 2-4P, 8XM12 2-4P, 8XM8 2-8P. With repair_cut_off_towns on and AURELION_RMG_H3MAPED_STRICT unset, template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b takes the next accepted candidate (vector order, wrapping, no RNG draw) whose runtime links join every runtime zone; parity paths unchanged. 74 flagged AI-batch configs: all 74 clean (was 69); medium2p/m117, medium3p/m034/m066/m087/m088 Newcomers->Dwarven Tunnels; large m003 (map seed 3507549692) 8XM12->Ring; selftest seed 73 Newcomers->Dwarven Tunnels, seed 76 8XM12->Ring. Sweep 64/72 repair on and strict (same rows). Package metadata cut_off_town_repair.split_template_repicked_from. Selftest and core_suite 16/16 pass on Windows and Linux.",
-      "updatedAt": "2026-10-18T12:00:00Z",
-      "validatedAt": "2026-10-18T12:00:00Z"
+      "notes": "Owner decision 2026-10-18. 0x4a218c drops links whose player filter fails; H3MapEd neither checks connectivity nor rerolls (single 0x4ac552 pass). 13 split combos with one human: Newcomers 2-4P, 8XM12 2-4P, 8XM8 2-8P. With repair_cut_off_towns on and AURELION_RMG_H3MAPED_STRICT unset, template_selection_and_runtime_seed_inputs_4ac552_4a218c_4a1f3b reuses the roll over the accepted candidates whose runtime links join every runtime zone (rng_value % joined_count, vector order, no extra RNG draw; owner follow-up 2026-10-18 spreads the split share evenly); parity paths unchanged. 74 flagged AI-batch configs: all 74 clean (was 69); medium2p/m117->5SB0a, medium3p/m034->2SM2h(2), m066->Ring, m087->South of Hell (repair 1->0), m088->8MM0e (all from Newcomers); large m003 (map seed 3507549692) 8XM12->Meeting in Muzgob (repair 3->0); selftest seed 73 Newcomers->Meeting in Muzgob, seed 76 8XM12->6LM10. Sweep 64/72 repair on and strict (same rows). Package metadata cut_off_town_repair.split_template_repicked_from. Selftest and core_suite 16/16 pass on Windows and Linux.",
+      "updatedAt": "2026-10-18T14:00:00Z",
+      "validatedAt": "2026-10-18T14:00:00Z"
     },
     {
       "id": "balance-phase-round-1-20261017",
