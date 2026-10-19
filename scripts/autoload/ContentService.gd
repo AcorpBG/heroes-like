@@ -42,6 +42,9 @@ const MAP_OBJECT_SITE_INDEX_KEY := "%s#resource_site_id" % MAP_OBJECTS_PATH
 
 var _cache: Dictionary = {}
 var _lookup_indexes: Dictionary = {}
+# Per path, the "items" by "id" index of _lookup_indexes with what it was built
+# from: [raw content, its items array, the array's size, rows by id].
+var _fast_rows: Dictionary = {}
 var _generated_scenario_drafts: Dictionary = {}
 var _generated_terrain_layer_drafts: Dictionary = {}
 var _content_revision := 0
@@ -52,6 +55,7 @@ func _ready() -> void:
 func clear_cache() -> void:
 	_cache.clear()
 	_lookup_indexes.clear()
+	_fast_rows.clear()
 	_content_revision += 1
 
 func get_content_revision() -> int:
@@ -368,8 +372,18 @@ func get_encounter(id: String) -> Dictionary:
 	return encounter
 
 func get_content_by_id(path: String, id: String, list_key: String = "items") -> Dictionary:
-	if path == TOWNS_PATH and list_key == "items":
-		id = canonical_town_id(id)
+	if list_key == "items":
+		if path == TOWNS_PATH:
+			id = canonical_town_id(id)
+		# Rules ask for rows by id millions of times a game. While the cached
+		# content and its items array are the ones the index was built from, at
+		# the same size, read the index directly; anything else rebuilds below.
+		var fast: Variant = _fast_rows.get(path)
+		if fast != null and is_same(_cache.get(path), fast[0]):
+			var items: Variant = fast[0].get("items")
+			if is_same(items, fast[1]) and items.size() == fast[2]:
+				var row: Variant = fast[3].get(id)
+				return row if row != null else {}
 	return _indexed_content_row(path, id, list_key, "id")
 
 func _indexed_content_row(path: String, id: String, list_key: String, id_field: String) -> Dictionary:
@@ -395,6 +409,11 @@ func _indexed_content_row(path: String, id: String, list_key: String, id_field: 
 		list_indexes[id_field] = cached
 		path_indexes[list_key] = list_indexes
 		_lookup_indexes[path] = path_indexes
+	if list_key == "items" and id_field == "id":
+		if is_same(raw.get("items"), items):
+			_fast_rows[path] = [raw, items, items.size(), cached["by_id"]]
+		else:
+			_fast_rows.erase(path)
 	return cached.get("by_id", {}).get(id, {})
 
 func _scenario_dependency_record_from_source(id: String, scenario: Dictionary, generated: bool) -> Dictionary:

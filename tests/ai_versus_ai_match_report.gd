@@ -149,6 +149,10 @@ func _run() -> void:
 	var winner := ""
 	var town_weeks := [_town_snapshot(session)]
 	ledger.append(_day_row(session, seats))
+	# Between days the runner only reads the session and empties the decision
+	# log, which the overworld normalize does not read, so each end_turn can
+	# skip renormalizing the session the previous one left normalized.
+	session.set_meta(OverworldRules.SESSION_UNTOUCHED_BETWEEN_DAYS_META, true)
 	while int(session.day) < max_days:
 		var started := Time.get_ticks_msec()
 		var turn: Dictionary = OverworldRules.end_turn(session)

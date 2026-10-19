@@ -102,12 +102,13 @@ static func build_spellbook(hero_template: Dictionary) -> Dictionary:
 
 static func ensure_hero_spellbook(hero_state: Dictionary, hero_template: Dictionary = {}) -> Dictionary:
 	var max_mana := mana_max_from_hero(hero_state)
-	var default_known_spells := _normalize_spell_ids(hero_template.get("starting_spell_ids", []))
+	var default_known_spells := _normalize_spell_ids(hero_template.get("starting_spell_ids", [])) if not hero_template.is_empty() else []
 	var spellbook = hero_state.get("spellbook", {})
 	if not (spellbook is Dictionary):
 		spellbook = {}
 
-	var known_spell_ids: Array = _normalize_spell_ids(spellbook.get("known_spell_ids", default_known_spells))
+	# The template's list is normalized already; only a stored list needs it.
+	var known_spell_ids: Array = _normalize_spell_ids(spellbook["known_spell_ids"]) if spellbook.has("known_spell_ids") else default_known_spells
 	if known_spell_ids.is_empty() and not default_known_spells.is_empty():
 		known_spell_ids = default_known_spells
 
@@ -153,18 +154,25 @@ static func mana_state(hero_state: Dictionary) -> Dictionary:
 	return hero.get("spellbook", {}).get("mana", {})
 
 static func adjusted_spell_mana_cost(hero_state: Dictionary, spell: Variant) -> int:
-	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
 	var spell_dict: Dictionary = spell if spell is Dictionary else ContentService.get_spell(String(spell))
 	if spell_dict.is_empty():
 		return 0
+	# The cost reads the hero's specialties and artifacts, not its spellbook.
+	# The artifact bonuses normalize the hero's top-level artifacts key in
+	# place, so they get a shallow copy.
+	var hero := hero_state.duplicate()
 	var base_cost := int(spell_dict.get("mana_cost", 0))
 	var progression_cost := HeroProgressionRulesScript.adjusted_mana_cost(hero, base_cost, String(spell_dict.get("school_id", "")))
 	var artifact_delta := ArtifactRulesScript.spell_mana_cost_delta(hero, spell_dict)
 	return max(0, progression_cost + artifact_delta)
 
 static func knows_spell(hero_state: Dictionary, spell_id: String) -> bool:
-	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
-	return _knows_spell(hero, spell_id)
+	# The list ensure_hero_spellbook gives a copy of the hero, read in place:
+	# without a template it is the stored list, normalized, or none.
+	var spellbook = hero_state.get("spellbook", {})
+	if not (spellbook is Dictionary) or not spellbook.has("known_spell_ids"):
+		return false
+	return _normalize_spell_ids(spellbook["known_spell_ids"]).has(spell_id)
 
 static func learn_spell(hero_state: Dictionary, spell_id: String) -> Dictionary:
 	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
@@ -1271,6 +1279,15 @@ static func validate_battle_spell(
 ) -> Dictionary:
 	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
 	var spell_dict: Dictionary = spell if spell is Dictionary else ContentService.get_spell(String(spell))
+	var cast_check := battle_spell_cast_check(hero, spell_dict, active_stack, acting_side)
+	if not bool(cast_check.get("ok", false)):
+		return cast_check
+	return battle_spell_target_check(battle, active_stack, target_stack, spell_dict, acting_side)
+
+## The checks of validate_battle_spell that do not depend on the target: the
+## spell, whose turn it is and the mana. `hero` has been through
+## ensure_hero_spellbook. Scoring every target of one spell checks this once.
+static func battle_spell_cast_check(hero: Dictionary, spell_dict: Dictionary, active_stack: Dictionary, acting_side: String) -> Dictionary:
 	if spell_dict.is_empty():
 		return {"ok": false, "message": "That spell is not known."}
 	if String(spell_dict.get("context", "")) != CONTEXT_BATTLE:
@@ -1279,7 +1296,17 @@ static func validate_battle_spell(
 		return {"ok": false, "message": "It is not this side's turn."}
 	if not _has_mana(hero, adjusted_spell_mana_cost(hero, spell_dict)):
 		return {"ok": false, "message": "Insufficient mana."}
+	return {"ok": true}
 
+## The rest of validate_battle_spell, for a spell that passed
+## battle_spell_cast_check: whether target_stack is one it can be cast on.
+static func battle_spell_target_check(
+	battle: Dictionary,
+	active_stack: Dictionary,
+	target_stack: Dictionary,
+	spell_dict: Dictionary,
+	acting_side: String
+) -> Dictionary:
 	var effect = spell_dict.get("effect", {})
 	match String(effect.get("type", "")):
 		"damage_enemy":
@@ -1328,8 +1355,17 @@ static func has_effect_id(stack: Dictionary, battle: Dictionary, effect_id: Stri
 	if effect_id == "":
 		return false
 	var current_round := int(battle.get("round", 1))
-	for effect in active_effects_for_round(stack, current_round):
-		if String(effect.get("effect_id", "")) == effect_id:
+	# active_effects_for_round without normalizing whole effects: the id and
+	# expiry are read as _normalize_effects reads them.
+	var effects = stack.get("effects", [])
+	if not (effects is Array):
+		return false
+	for effect in effects:
+		if not (effect is Dictionary):
+			continue
+		if int(effect.get("expires_after_round", 0)) < current_round:
+			continue
+		if String(effect.get("effect_id", String(effect.get("spell_id", effect.get("kind", ""))))) == effect_id:
 			return true
 	return false
 
@@ -1468,8 +1504,11 @@ static func battle_spell_status_resolution(
 	return resolution
 
 static func active_effects_for_round(stack: Dictionary, round_number: int) -> Array:
+	var effects = stack.get("effects", [])
+	if effects is Array and effects.is_empty():
+		return []
 	var results := []
-	for effect in _normalize_effects(stack.get("effects", [])):
+	for effect in _normalize_effects(effects):
 		if int(effect.get("expires_after_round", 0)) >= round_number:
 			results.append(effect)
 	return results

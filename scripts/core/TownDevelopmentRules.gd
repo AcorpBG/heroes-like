@@ -20,28 +20,30 @@ static func is_current(town: Dictionary) -> bool:
 ## times per refresh (every build status, growth, income and tier check). The
 ## answers depend only on the town template, the built list and authored
 ## content, so they are memoized by those and dropped whenever the content
-## cache reloads. Callers get copies.
+## cache reloads. Callers get copies, except from satisfied_ids.
 static var _active_memo := {}
 static var _satisfied_memo := {}
 static var _memo_sources := []
 
 static func _sync_memo_sources() -> void:
-	var sources := [
-		ContentService.get_content_revision(),
-		ContentService.load_json(ContentService.BUILDINGS_PATH),
-		ContentService.load_json(ContentService.TOWNS_PATH),
-		data(),
-	]
-	if _memo_sources.size() != sources.size() or _memo_sources[0] != sources[0] or not is_same(_memo_sources[1], sources[1]) or not is_same(_memo_sources[2], sources[2]) or not is_same(_memo_sources[3], sources[3]):
-		_active_memo = {}
-		_satisfied_memo = {}
-		_memo_sources = sources
+	var revision := ContentService.get_content_revision()
+	var buildings := ContentService.load_json(ContentService.BUILDINGS_PATH)
+	var towns := ContentService.load_json(ContentService.TOWNS_PATH)
+	var development := ContentService.load_json(DATA_PATH)
+	if _memo_sources.size() == 4 and _memo_sources[0] == revision and is_same(_memo_sources[1], buildings) and is_same(_memo_sources[2], towns) and is_same(_memo_sources[3], development):
+		return
+	_active_memo = {}
+	_satisfied_memo = {}
+	_memo_sources = [revision, buildings, towns, development]
 
 static func satisfies(built: Array, required: String) -> bool:
 	return _satisfied_ids(built).has(required)
 
 ## Every building a built list satisfies: each built stage and the stages it
-## upgraded from.
+## upgraded from. The memo's own dictionary: callers must not change it.
+static func satisfied_ids(built: Array) -> Dictionary:
+	return _satisfied_ids(built)
+
 static func _satisfied_ids(built: Array) -> Dictionary:
 	_sync_memo_sources()
 	var key_parts := PackedStringArray()
@@ -95,24 +97,41 @@ static func _compute_active_buildings(town: Dictionary) -> Array:
 			choices[group] = branch
 		if id not in result: result.append(id)
 	# Persist only the active stage. Its ancestry satisfies prerequisites without
-	# contributing income, growth or duplicate scene layers.
+	# contributing income, growth or duplicate scene layers. A stage is ancestry
+	# when the upgrade chain of another listed stage passes through it; each
+	# chain also holds its own stage, so ancestry is held by two chains or more.
+	var chain_counts := {}
+	for id in result:
+		var chain := {}
+		var cursor := String(id)
+		while cursor != "" and not chain.has(cursor):
+			chain[cursor] = true
+			chain_counts[cursor] = int(chain_counts.get(cursor, 0)) + 1
+			cursor = String(ContentService.get_building(cursor).get("upgrade_from", ""))
 	var active: Array = []
 	for id in result:
-		var others := result.duplicate()
-		others.erase(id)
-		if not satisfies(others, String(id)): active.append(id)
+		if int(chain_counts.get(String(id), 0)) < 2: active.append(id)
 	return active
 
 static func choice_blocked(town: Dictionary, building: Dictionary) -> bool:
+	if String(building.get("choice_group", "")) == "": return false
+	return choice_blocked_among(active_buildings(town), building)
+
+## choice_blocked for a town whose active stages are already at hand.
+static func choice_blocked_among(active: Array, building: Dictionary) -> bool:
 	var group := String(building.get("choice_group", ""))
 	if group == "": return false
-	for id in active_buildings(town):
+	for id in active:
 		var b := ContentService.get_building(String(id))
 		if b.get("choice_group", "") == group and b.get("choice_branch", 0) != building.get("choice_branch", 0): return true
 	return false
 
 static func has_dwelling_tier(town: Dictionary, tier: int) -> bool:
-	for id in active_buildings(town):
+	return has_dwelling_tier_among(active_buildings(town), tier)
+
+## has_dwelling_tier for a town whose active stages are already at hand.
+static func has_dwelling_tier_among(active: Array, tier: int) -> bool:
+	for id in active:
 		if int(ContentService.get_building(String(id)).get("dwelling_tier", 0)) == tier: return true
 	return false
 

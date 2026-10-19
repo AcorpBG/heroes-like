@@ -139,9 +139,15 @@ static func player_autoplay_decision(
 	)
 
 
+## stop_below_player_creatures > 0 ends the battle early, unresolved, once the
+## player side has fewer creatures standing than that: for a caller that only
+## asks whether the player wins without a loss. Nothing brings a fallen
+## creature back before the battle ends except the victory recovery of the
+## player's hero, so with that the battle always runs to its end.
 static func resolve_active_battle(
 	session: SessionStateStoreScript.SessionData,
-	step_limit: int = DEFAULT_STEP_LIMIT
+	step_limit: int = DEFAULT_STEP_LIMIT,
+	stop_below_player_creatures: int = 0
 ) -> Dictionary:
 	if session == null:
 		return _resolve_result(null, false, "invalid_session", "invalid", 0, 0, 0, 0, 0, {}, {}, {})
@@ -149,6 +155,8 @@ static func resolve_active_battle(
 		return _resolve_result(session, false, "no_active_battle", "invalid", 0, 0, 0, 0, 0, {}, {}, {})
 	if step_limit <= 0:
 		return _resolve_result(session, false, "invalid_step_limit", "invalid", 0, 0, 0, 0, 0, {}, {}, {})
+	if stop_below_player_creatures > 0 and int(BattleRulesScript._hero_payload_for_side(session.battle, "player").get("victory_recovery_pct", 0)) > 0:
+		stop_below_player_creatures = 0
 
 	var steps := 0
 	var player_orders := 0
@@ -161,6 +169,9 @@ static func resolve_active_battle(
 	var last_result := {}
 	var terminal_result := {}
 	while steps < step_limit and not session.battle.is_empty():
+		if stop_below_player_creatures > 0 and _player_creatures_standing(session.battle) < stop_below_player_creatures:
+			stop_reason = "player_losses"
+			break
 		steps += 1
 		var ready_result: Dictionary = BattleRulesScript.resolve_if_battle_ready(session)
 		last_result = ready_result.duplicate(true)
@@ -239,6 +250,14 @@ static func resolve_active_battle(
 
 static func is_terminal_state(state: String) -> bool:
 	return state in TERMINAL_STATES
+
+
+static func _player_creatures_standing(battle: Dictionary) -> int:
+	var total := 0
+	for stack in battle.get("stacks", []):
+		if stack is Dictionary and String(stack.get("side", "")) == "player":
+			total += BattleRulesScript._alive_count(stack)
+	return total
 
 
 static func _perform_player_order(

@@ -30,6 +30,89 @@ const CLOCK_PRESSURE_ROUNDS := 3
 
 static var _weights: Dictionary = {}
 
+# The memos of one AI decision (_open_scoring_scope). Never saved.
+static var _scoring_scope_depth := 0
+# Per side: [payload source, commander source, scoring payload, trait set or null].
+static var _scoring_payloads: Dictionary = {}
+# Per side: entries [stacks array, the side's living stacks in it, how many of them are not ranged].
+static var _scoring_living: Dictionary = {}
+# Per stack battle_id: entries [stack, battle, total].
+static var _scoring_cohesion: Dictionary = {}
+static var _scoring_momentum: Dictionary = {}
+# Per "attacker>target" battle ids: entries [attacker, target, battle, is_ranged, score].
+static var _scoring_attack_scores: Dictionary = {}
+# Per "defended>target" battle ids: entries [defended stack, target, battle, score].
+static var _scoring_threats: Dictionary = {}
+# Per "attacker>defender" battle ids: entries [attacker, defender, battle,
+# is_ranged, is_retaliation, attack_distance, damage].
+static var _scoring_damage: Dictionary = {}
+# Per "term|stack battle_id": entries [stack, battle, value] of one stack's
+# terms (_stack_term_memo); per "synergy|side|status": entries [battle, battle,
+# score] of _allied_status_synergy_score.
+static var _scoring_stack_terms: Dictionary = {}
+
+## Opens the scope of one AI decision: choose_enemy_action,
+## choose_stack_tactical_order and the advance entry points score inside one.
+## Scoring never changes the battle, its stacks or its hero payloads: it reads
+## them, works on copies, and the BattleRules reads it calls write nothing
+## either. So inside the scope a value worked out from the same dictionaries
+## stays right, and the memos key on their identity. Scopes nest; the memos
+## are cleared when the outermost one opens and when it closes. Every open
+## needs its _close_scoring_scope().
+static func _open_scoring_scope() -> void:
+	if _scoring_scope_depth <= 0:
+		_scoring_scope_depth = 0
+		_clear_scoring_memos()
+	_scoring_scope_depth += 1
+
+static func _close_scoring_scope() -> void:
+	_scoring_scope_depth -= 1
+	if _scoring_scope_depth <= 0:
+		_scoring_scope_depth = 0
+		_clear_scoring_memos()
+
+static func _clear_scoring_memos() -> void:
+	_scoring_payloads.clear()
+	_scoring_living.clear()
+	_scoring_cohesion.clear()
+	_scoring_momentum.clear()
+	_scoring_attack_scores.clear()
+	_scoring_threats.clear()
+	_scoring_damage.clear()
+	_scoring_stack_terms.clear()
+
+## Inside a scoring scope, the entry of entries_by_key[key] that holds the same
+## dictionaries as the given ones, or [] when none does yet.
+static func _scoring_memo_entry(entries_by_key: Dictionary, key: String, first: Dictionary, second: Dictionary) -> Array:
+	for entry in entries_by_key.get(key, []):
+		if is_same(entry[0], first) and is_same(entry[1], second):
+			return entry
+	return []
+
+static func _add_scoring_memo_entry(entries_by_key: Dictionary, key: String, entry: Array) -> void:
+	if entries_by_key.has(key):
+		(entries_by_key[key] as Array).append(entry)
+	else:
+		entries_by_key[key] = [entry]
+
+## Inside a scoring scope, the memo entry of term for stack on battle in
+## _scoring_stack_terms: [stack, battle, value] once worked out, else a new
+## [stack, battle] that _keep_stack_term completes. [] outside a scope.
+static func _stack_term_memo(term: String, stack: Dictionary, battle: Dictionary) -> Array:
+	if _scoring_scope_depth <= 0:
+		return []
+	var key := term + "|" + String(stack.get("battle_id", ""))
+	var entry := _scoring_memo_entry(_scoring_stack_terms, key, stack, battle)
+	if not entry.is_empty():
+		return entry
+	entry = [stack, battle]
+	_add_scoring_memo_entry(_scoring_stack_terms, key, entry)
+	return entry
+
+static func _keep_stack_term(entry: Array, value: Variant) -> void:
+	if entry.size() == 2:
+		entry.append(value)
+
 ## The weight named key in WEIGHTS_PATH, read once.
 static func _w(key: String) -> float:
 	if _weights.is_empty():
@@ -72,6 +155,14 @@ static func _fights_in_melee(stack: Dictionary) -> bool:
 ## contact by it, not the closest pair anywhere on the field
 ## (battle["distance"], which field objectives still read).
 static func _stack_contact_band(stack: Dictionary, battle: Dictionary) -> int:
+	var memo := _stack_term_memo("contact_band", stack, battle)
+	if memo.size() == 3:
+		return memo[2]
+	var value := _stack_contact_band_on(stack, battle)
+	_keep_stack_term(memo, value)
+	return value
+
+static func _stack_contact_band_on(stack: Dictionary, battle: Dictionary) -> int:
 	var nearest := 999
 	for enemy in _alive_stacks_for_side(battle, _opposing_side(String(stack.get("side", "")))):
 		nearest = mini(nearest, _stack_hex_distance(stack, enemy))
@@ -483,6 +574,12 @@ static func _field_objective_action_influence(
 ## _hero_cast_worthwhile), else the stack's own order. With allow_hero_cast
 ## false, or once the hero has cast this round, only the stack's order.
 static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, enemy_hero: Dictionary, allow_hero_cast: bool = true) -> Dictionary:
+	_open_scoring_scope()
+	var action := _enemy_action_choice(battle, active_stack, enemy_hero, allow_hero_cast)
+	_close_scoring_scope()
+	return action
+
+static func _enemy_action_choice(battle: Dictionary, active_stack: Dictionary, enemy_hero: Dictionary, allow_hero_cast: bool) -> Dictionary:
 	if active_stack.is_empty() or String(active_stack.get("side", "")) != "enemy":
 		return {}
 
@@ -580,6 +677,12 @@ static func _stack_order_choice(scoring_battle: Dictionary, active_stack: Dictio
 ## walks first. {} when no enemy is in reach. advance_plan carries out an
 ## advance order with it.
 static func best_reachable_strike(battle: Dictionary, active_stack: Dictionary) -> Dictionary:
+	_open_scoring_scope()
+	var strike := _best_reachable_strike(battle, active_stack)
+	_close_scoring_scope()
+	return strike
+
+static func _best_reachable_strike(battle: Dictionary, active_stack: Dictionary) -> Dictionary:
 	if active_stack.is_empty() or _alive_count(active_stack) <= 0 or not _fights_in_melee(active_stack):
 		return {}
 	var side := String(active_stack.get("side", ""))
@@ -616,6 +719,12 @@ static func should_wait_for_contact(battle: Dictionary, active_stack: Dictionary
 ## {"action": "wait"}, {"action": "advance"} or {"action": "defend"}.
 ## BattleRules.ai_advance_plan is the game's entry point.
 static func advance_plan(battle: Dictionary, stack: Dictionary) -> Dictionary:
+	_open_scoring_scope()
+	var plan := _advance_plan(battle, stack)
+	_close_scoring_scope()
+	return plan
+
+static func _advance_plan(battle: Dictionary, stack: Dictionary) -> Dictionary:
 	var rules := _battle_rules()
 	if stack.is_empty() or _alive_count(stack) <= 0 or rules._stack_is_rooted(stack, battle):
 		return {"action": "defend"}
@@ -717,6 +826,12 @@ static func best_advance_destination(
 ## to (that shooter fires at x0.6). Ties keep the earlier cell, which walks no
 ## further. Returns {} when cells is empty.
 static func choose_melee_approach(battle: Dictionary, stack: Dictionary, target: Dictionary, cells: Array) -> Dictionary:
+	_open_scoring_scope()
+	var approach := _melee_approach_choice(battle, stack, target, cells)
+	_close_scoring_scope()
+	return approach
+
+static func _melee_approach_choice(battle: Dictionary, stack: Dictionary, target: Dictionary, cells: Array) -> Dictionary:
 	var best := {}
 	var best_score := 0.0
 	for cell in cells:
@@ -980,6 +1095,12 @@ static func _stack_by_battle_id(battle: Dictionary, battle_id: String) -> Dictio
 ## battles and the suggested order: the hero's free cast first when it should
 ## cast now, else the stack's own order (see choose_enemy_action).
 static func choose_stack_tactical_order(battle: Dictionary, active_stack: Dictionary, target_side: String = "", commander_payload: Dictionary = {}, allow_hero_cast: bool = true) -> Dictionary:
+	_open_scoring_scope()
+	var order := _stack_tactical_order(battle, active_stack, target_side, commander_payload, allow_hero_cast)
+	_close_scoring_scope()
+	return order
+
+static func _stack_tactical_order(battle: Dictionary, active_stack: Dictionary, target_side: String, commander_payload: Dictionary, allow_hero_cast: bool) -> Dictionary:
 	if battle.is_empty() or active_stack.is_empty() or _alive_count(active_stack) <= 0:
 		return {}
 	var acting_side := String(active_stack.get("side", ""))
@@ -1189,7 +1310,7 @@ static func battle_spell_choice_report(battle: Dictionary, active_stack: Diction
 	var family_counts := {}
 	var hook_counts := {}
 	if errors.is_empty():
-		for candidate in _battle_spell_candidates(scoring_battle, active_stack, resolved_enemy_hero, targets):
+		for candidate in _battle_spell_candidates(scoring_battle, active_stack, resolved_enemy_hero, targets, []):
 			if not (candidate is Dictionary):
 				continue
 			var spell := ContentService.get_spell(String(candidate.get("spell_id", "")))
@@ -1233,9 +1354,16 @@ static func _best_spell_action(
 	if _commander_spell_cast_this_round(battle, String(active_stack.get("side", ""))):
 		return {}
 	var best := {}
-	for candidate in _battle_spell_candidates(battle, active_stack, enemy_hero, targets):
-		if candidate is Dictionary and _spell_candidate_beats(candidate, best, battle, enemy_hero):
+	var best_lethal := false
+	var lethal_flags := []
+	var candidates := _battle_spell_candidates(battle, active_stack, enemy_hero, targets, lethal_flags)
+	# _spell_candidate_beats, with each candidate's lethality worked out once.
+	for index in range(candidates.size()):
+		var candidate: Dictionary = candidates[index]
+		var lethal: bool = lethal_flags[index]
+		if best.is_empty() or (lethal and not best_lethal) or (lethal == best_lethal and _candidate_beats(candidate, best)):
 			best = candidate
+			best_lethal = lethal
 	return best
 
 static func _spell_candidate_beats(candidate: Dictionary, current_best: Dictionary, battle: Dictionary, enemy_hero: Dictionary) -> bool:
@@ -1247,43 +1375,49 @@ static func _spell_candidate_beats(candidate: Dictionary, current_best: Dictiona
 		return candidate_lethal
 	return _candidate_beats(candidate, current_best)
 
+## Every spell the hero can cast now on every target it can take, scored.
+## lethal_flags gets one entry per candidate: whether it is a damage spell
+## that destroys its target (_candidate_is_lethal_damage_spell).
 static func _battle_spell_candidates(
 	battle: Dictionary,
 	active_stack: Dictionary,
 	enemy_hero: Dictionary,
-	targets: Array
+	targets: Array,
+	lethal_flags: Array
 ) -> Array:
 	var candidates := []
 	var acting_side := String(active_stack.get("side", ""))
 	var allies := _alive_stacks_for_side(battle, String(active_stack.get("side", "")))
+	var hostiles := _alive_stacks_for_side(battle, _opposing_side(acting_side))
+	# validate_battle_spell in two parts: the checks that do not depend on the
+	# target run once per spell, on one ready copy of the hero.
+	var caster := SpellRulesScript.ensure_hero_spellbook(enemy_hero.duplicate(true))
 	for spell in SpellRulesScript.known_spells(enemy_hero, SpellRulesScript.CONTEXT_BATTLE):
 		if not (spell is Dictionary):
 			continue
 		var behavior := SpellRulesScript.battle_spell_behavior(spell)
 		if behavior.is_empty() or String(behavior.get("resolution_type", "")) == "unsupported":
 			continue
+		if not bool(SpellRulesScript.battle_spell_cast_check(caster, spell, active_stack, acting_side).get("ok", false)):
+			continue
+		var role_modifier := _commander_spell_role_modifier(enemy_hero, behavior)
 		match String(behavior.get("effect_type", "")):
 			"damage_enemy", "control_enemy":
+				var damages := String(behavior.get("effect_type", "")) == "damage_enemy"
 				for target in targets:
 					if not (target is Dictionary):
 						continue
-					var validation := SpellRulesScript.validate_battle_spell(
-						enemy_hero,
-						battle,
-						active_stack,
-						target,
-						spell,
-						acting_side
-					)
-					if not bool(validation.get("ok", false)):
+					if not bool(SpellRulesScript.battle_spell_target_check(battle, active_stack, target, spell, acting_side).get("ok", false)):
 						continue
+					var projection := SpellRulesScript.battle_spell_damage_projection(enemy_hero, battle, target, spell) if damages else {}
 					var candidate := {
 						"action": "cast_spell",
 						"spell_id": String(spell.get("id", "")),
 						"target_battle_id": String(target.get("battle_id", "")),
-						"score": _spell_candidate_score(enemy_hero, battle, active_stack, target, spell, behavior),
+						"score": _spell_candidate_score(enemy_hero, battle, active_stack, target, spell, behavior, hostiles, role_modifier, projection),
 					}
 					candidates.append(candidate)
+					lethal_flags.append(_damage_candidate_is_lethal(candidate, battle, enemy_hero, target, projection) if damages else false)
 			"defense_buff", "recover_ally", "cleanse_ally":
 				for ally in allies:
 					if not (ally is Dictionary):
@@ -1292,47 +1426,49 @@ static func _battle_spell_candidates(
 						continue
 					if _allied_spell_candidate_suppressed_by_active_buff(String(behavior.get("effect_type", "")), ally, battle, spell):
 						continue
-					var validation := SpellRulesScript.validate_battle_spell(
-						enemy_hero,
-						battle,
-						active_stack,
-						ally,
-						spell,
-						acting_side
-					)
-					if not bool(validation.get("ok", false)):
+					if not bool(SpellRulesScript.battle_spell_target_check(battle, active_stack, ally, spell, acting_side).get("ok", false)):
 						continue
 					var defense_candidate := {
 						"action": "cast_spell",
 						"spell_id": String(spell.get("id", "")),
 						"target_battle_id": String(ally.get("battle_id", "")),
-						"score": _spell_candidate_score(enemy_hero, battle, active_stack, ally, spell, behavior),
+						"score": _spell_candidate_score(enemy_hero, battle, active_stack, ally, spell, behavior, hostiles, role_modifier),
 					}
 					candidates.append(defense_candidate)
+					lethal_flags.append(false)
 			"initiative_buff", "attack_buff":
 				for ally in allies:
 					if not (ally is Dictionary):
 						continue
 					if _spell_buff_already_active(ally, battle, spell):
 						continue
-					var validation := SpellRulesScript.validate_battle_spell(
-						enemy_hero,
-						battle,
-						active_stack,
-						ally,
-						spell,
-						acting_side
-					)
-					if not bool(validation.get("ok", false)):
+					if not bool(SpellRulesScript.battle_spell_target_check(battle, active_stack, ally, spell, acting_side).get("ok", false)):
 						continue
 					var initiative_candidate := {
 						"action": "cast_spell",
 						"spell_id": String(spell.get("id", "")),
 						"target_battle_id": String(ally.get("battle_id", "")),
-						"score": _spell_candidate_score(enemy_hero, battle, active_stack, ally, spell, behavior),
+						"score": _spell_candidate_score(enemy_hero, battle, active_stack, ally, spell, behavior, hostiles, role_modifier),
 					}
 					candidates.append(initiative_candidate)
+					lethal_flags.append(false)
 	return candidates
+
+## _candidate_is_lethal_damage_spell for a damage candidate scored on target,
+## from the projection its score used. A target that is not the battle's stack
+## of that id is looked up again.
+static func _damage_candidate_is_lethal(
+	candidate: Dictionary,
+	battle: Dictionary,
+	enemy_hero: Dictionary,
+	target: Dictionary,
+	projection: Dictionary
+) -> bool:
+	if not is_same(_stack_by_battle_id(battle, String(candidate.get("target_battle_id", ""))), target):
+		return _candidate_is_lethal_damage_spell(candidate, battle, enemy_hero)
+	if _alive_count(target) <= 0:
+		return false
+	return int(projection.get("final_damage", 0)) >= int(target.get("total_health", 0))
 
 static func _allied_spell_candidate_suppressed_by_active_buff(
 	effect_type: String,
@@ -1422,7 +1558,20 @@ static func _creature_threat_weight(battle: Dictionary, target: Dictionary) -> f
 static func _creature_average_damage(stack: Dictionary) -> float:
 	return max(0.5, (float(int(stack.get("min_damage", 1))) + float(int(stack.get("max_damage", 1)))) / 2.0)
 
+## Each damage and control spell scores its target with the shot's score, so
+## inside a scoring scope one pair's score is worked out once.
 static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dictionary, is_ranged: bool) -> float:
+	if _scoring_scope_depth <= 0:
+		return _attack_score_on(attacker, target, battle, is_ranged)
+	var key := String(attacker.get("battle_id", "")) + ">" + String(target.get("battle_id", ""))
+	for entry in _scoring_attack_scores.get(key, []):
+		if is_same(entry[0], attacker) and is_same(entry[1], target) and is_same(entry[2], battle) and bool(entry[3]) == is_ranged:
+			return entry[4]
+	var score := _attack_score_on(attacker, target, battle, is_ranged)
+	_add_scoring_memo_entry(_scoring_attack_scores, key, [attacker, target, battle, is_ranged, score])
+	return score
+
+static func _attack_score_on(attacker: Dictionary, target: Dictionary, battle: Dictionary, is_ranged: bool) -> float:
 	var attack_distance := _attack_distance_for_action(attacker, target, battle, is_ranged)
 	var damage := _estimate_damage(attacker, target, battle, is_ranged, false, attack_distance)
 	var target_health: int = max(1, int(target.get("total_health", 0)))
@@ -1588,14 +1737,18 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 		score -= (float(retaliation_damage) / float(max(1, int(attacker.get("unit_hp", 1))))) * _w("attack_strike_back")
 	return score
 
+## damage_projection is the spell's battle_spell_damage_projection on target
+## when the caller has it already.
 static func _damage_spell_score(
 	enemy_hero: Dictionary,
 	battle: Dictionary,
 	active_stack: Dictionary,
 	target: Dictionary,
-	spell: Dictionary
+	spell: Dictionary,
+	damage_projection: Dictionary = {}
 ) -> float:
-	var damage_projection := SpellRulesScript.battle_spell_damage_projection(enemy_hero, battle, target, spell)
+	if damage_projection.is_empty():
+		damage_projection = SpellRulesScript.battle_spell_damage_projection(enemy_hero, battle, target, spell)
 	var damage := int(damage_projection.get("final_damage", 0))
 	var raw_damage: int = max(1, int(damage_projection.get("raw_damage", damage)))
 	var resistance_pct: int = int(damage_projection.get("resistance_pct", 0))
@@ -1639,19 +1792,26 @@ static func _damage_spell_score(
 	score -= float(int(spell.get("mana_cost", 0))) * 0.25
 	return score
 
+## One candidate's score. The caller works out once per decision what does
+## not change with the target: hostiles, the acting side's opponents'
+## living stacks, and role_modifier, the spell's
+## _commander_spell_role_modifier; damage_projection as _damage_spell_score.
 static func _spell_candidate_score(
 	enemy_hero: Dictionary,
 	battle: Dictionary,
 	active_stack: Dictionary,
 	target: Dictionary,
 	spell: Dictionary,
-	behavior: Dictionary
+	behavior: Dictionary,
+	hostiles: Array,
+	role_modifier: float,
+	damage_projection: Dictionary = {}
 ) -> float:
 	var effect_type := String(behavior.get("effect_type", ""))
 	var score := 0.0
 	match effect_type:
 		"damage_enemy":
-			score = _damage_spell_score(enemy_hero, battle, active_stack, target, spell)
+			score = _damage_spell_score(enemy_hero, battle, active_stack, target, spell, damage_projection)
 		"control_enemy":
 			score = _control_spell_score(battle, active_stack, target, spell)
 		"recover_ally":
@@ -1659,10 +1819,10 @@ static func _spell_candidate_score(
 		"cleanse_ally":
 			score = _cleanse_spell_score_for_target(battle, active_stack, target, spell)
 		"defense_buff", "initiative_buff", "attack_buff":
-			score = _buff_spell_score(battle, active_stack, target, _alive_stacks_for_side(battle, _opposing_side(String(active_stack.get("side", "")))), spell)
+			score = _buff_spell_score(battle, active_stack, target, hostiles, spell)
 		_:
 			score = -9999.0
-	return score + _spell_metadata_value_modifier(battle, active_stack, target, spell, behavior) + _commander_spell_role_modifier(enemy_hero, behavior)
+	return score + _spell_metadata_value_modifier(battle, active_stack, target, spell, behavior) + role_modifier
 
 static func _commander_spell_role_modifier(enemy_hero: Dictionary, behavior: Dictionary) -> float:
 	if enemy_hero.is_empty() or behavior.is_empty():
@@ -1744,6 +1904,17 @@ static func _status_tactical_value(status_id: String, target: Dictionary) -> flo
 	return 0.0
 
 static func _target_immediate_threat_score(defended_stack: Dictionary, target: Dictionary, battle: Dictionary) -> float:
+	if _scoring_scope_depth <= 0:
+		return _target_threat_on(defended_stack, target, battle)
+	var key := String(defended_stack.get("battle_id", "")) + ">" + String(target.get("battle_id", ""))
+	for entry in _scoring_threats.get(key, []):
+		if is_same(entry[0], defended_stack) and is_same(entry[1], target) and is_same(entry[2], battle):
+			return entry[3]
+	var threat := _target_threat_on(defended_stack, target, battle)
+	_add_scoring_memo_entry(_scoring_threats, key, [defended_stack, target, battle, threat])
+	return threat
+
+static func _target_threat_on(defended_stack: Dictionary, target: Dictionary, battle: Dictionary) -> float:
 	if defended_stack.is_empty() or target.is_empty():
 		return 0.0
 	if String(defended_stack.get("side", "")) == "" or String(defended_stack.get("side", "")) == String(target.get("side", "")):
@@ -2326,6 +2497,31 @@ static func _estimate_damage(
 	is_retaliation: bool = false,
 	attack_distance: int = -1
 ) -> int:
+	if _scoring_scope_depth <= 0:
+		return _estimate_damage_on(attacker, defender, battle, is_ranged, is_retaliation, attack_distance)
+	var key := String(attacker.get("battle_id", "")) + ">" + String(defender.get("battle_id", ""))
+	for entry in _scoring_damage.get(key, []):
+		if (
+			is_same(entry[0], attacker)
+			and is_same(entry[1], defender)
+			and is_same(entry[2], battle)
+			and bool(entry[3]) == is_ranged
+			and bool(entry[4]) == is_retaliation
+			and int(entry[5]) == attack_distance
+		):
+			return entry[6]
+	var damage := _estimate_damage_on(attacker, defender, battle, is_ranged, is_retaliation, attack_distance)
+	_add_scoring_memo_entry(_scoring_damage, key, [attacker, defender, battle, is_ranged, is_retaliation, attack_distance, damage])
+	return damage
+
+static func _estimate_damage_on(
+	attacker: Dictionary,
+	defender: Dictionary,
+	battle: Dictionary,
+	is_ranged: bool,
+	is_retaliation: bool,
+	attack_distance: int
+) -> int:
 	var attacker_count: int = max(1, _alive_count(attacker))
 	var min_damage: int = int(attacker.get("min_damage", 1))
 	var max_damage: int = max(min_damage, int(attacker.get("max_damage", 1)))
@@ -2382,6 +2578,25 @@ static var _hero_payload_cache: Dictionary = {}
 
 ## Read-only: the result may be shared with later calls on an unchanged side.
 static func _hero_payload_for_side(battle: Dictionary, side: String) -> Dictionary:
+	if _scoring_scope_depth > 0:
+		return _scoring_payload_entry(battle, side)[2]
+	return _side_hero_payload(battle, side)
+
+## Inside a scoring scope, the side's entry in _scoring_payloads: the payload
+## stays the one worked out for the same source dictionaries, without
+## comparing their contents again.
+static func _scoring_payload_entry(battle: Dictionary, side: String) -> Array:
+	var cache_side := "player" if side == "player" else "enemy"
+	var payload_value = battle.get("player_hero" if cache_side == "player" else "enemy_hero_payload")
+	var commander_value = battle.get("player_commander_state" if cache_side == "player" else "enemy_hero")
+	var entry: Array = _scoring_payloads.get(cache_side, [])
+	if not entry.is_empty() and is_same(entry[0], payload_value) and is_same(entry[1], commander_value):
+		return entry
+	entry = [payload_value, commander_value, _side_hero_payload(battle, side), null]
+	_scoring_payloads[cache_side] = entry
+	return entry
+
+static func _side_hero_payload(battle: Dictionary, side: String) -> Dictionary:
 	var cache_side := "player" if side == "player" else "enemy"
 	var payload_value = battle.get("player_hero" if cache_side == "player" else "enemy_hero_payload", {})
 	var commander_value = battle.get("player_commander_state" if cache_side == "player" else "enemy_hero", {})
@@ -2427,6 +2642,14 @@ static func _side_payload_with_commander_fallback(existing_payload_value: Varian
 	return merged
 
 static func _contextual_attack_bonus(stack: Dictionary, battle: Dictionary) -> int:
+	var memo := _stack_term_memo("attack_bonus", stack, battle)
+	if memo.size() == 3:
+		return memo[2]
+	var value := _contextual_attack_bonus_on(stack, battle)
+	_keep_stack_term(memo, value)
+	return value
+
+static func _contextual_attack_bonus_on(stack: Dictionary, battle: Dictionary) -> int:
 	var bonus := 0
 	var side := String(stack.get("side", ""))
 	var round_number := int(battle.get("round", 1))
@@ -2465,6 +2688,14 @@ static func _contextual_attack_bonus(stack: Dictionary, battle: Dictionary) -> i
 	return bonus
 
 static func _contextual_defense_bonus(stack: Dictionary, battle: Dictionary) -> int:
+	var memo := _stack_term_memo("defense_bonus", stack, battle)
+	if memo.size() == 3:
+		return memo[2]
+	var value := _contextual_defense_bonus_on(stack, battle)
+	_keep_stack_term(memo, value)
+	return value
+
+static func _contextual_defense_bonus_on(stack: Dictionary, battle: Dictionary) -> int:
 	var bonus := 0
 	var side := String(stack.get("side", ""))
 	var round_number := int(battle.get("round", 1))
@@ -2484,6 +2715,28 @@ static func _contextual_defense_bonus(stack: Dictionary, battle: Dictionary) -> 
 	return bonus
 
 static func _stack_cohesion_total(stack: Dictionary, battle: Dictionary) -> int:
+	if _scoring_scope_depth <= 0:
+		return _stack_cohesion_sum(stack, battle)
+	var key := String(stack.get("battle_id", ""))
+	var entry := _scoring_memo_entry(_scoring_cohesion, key, stack, battle)
+	if not entry.is_empty():
+		return entry[2]
+	var total := _stack_cohesion_sum(stack, battle)
+	_add_scoring_memo_entry(_scoring_cohesion, key, [stack, battle, total])
+	return total
+
+static func _stack_momentum_total(stack: Dictionary, battle: Dictionary) -> int:
+	if _scoring_scope_depth <= 0:
+		return _stack_momentum_sum(stack, battle)
+	var key := String(stack.get("battle_id", ""))
+	var entry := _scoring_memo_entry(_scoring_momentum, key, stack, battle)
+	if not entry.is_empty():
+		return entry[2]
+	var total := _stack_momentum_sum(stack, battle)
+	_add_scoring_memo_entry(_scoring_momentum, key, [stack, battle, total])
+	return total
+
+static func _stack_cohesion_sum(stack: Dictionary, battle: Dictionary) -> int:
 	var total: int = (
 		int(stack.get("cohesion", stack.get("cohesion_base", 5)))
 		+ SpellRulesScript.effect_bonus_for_kind(stack, battle, "cohesion")
@@ -2491,7 +2744,7 @@ static func _stack_cohesion_total(stack: Dictionary, battle: Dictionary) -> int:
 	)
 	return clamp(total, COHESION_MIN, COHESION_MAX)
 
-static func _stack_momentum_total(stack: Dictionary, battle: Dictionary) -> int:
+static func _stack_momentum_sum(stack: Dictionary, battle: Dictionary) -> int:
 	var total: int = (
 		int(stack.get("momentum", 0))
 		+ SpellRulesScript.effect_bonus_for_kind(stack, battle, "momentum")
@@ -2576,12 +2829,43 @@ static func _contextual_momentum_bonus(stack: Dictionary, battle: Dictionary) ->
 	bonus += _field_objective_momentum_bonus(stack, battle)
 	return bonus
 
+## Read-only: inside a scoring scope the array is shared with later calls.
 static func _alive_stacks_for_side(battle: Dictionary, side: String) -> Array:
+	var entry := _scoring_living_entry(battle, side)
+	if not entry.is_empty():
+		return entry[1]
+	return _living_stacks_of_side(battle.get("stacks", []), side)
+
+static func _living_stacks_of_side(stacks: Variant, side: String) -> Array:
 	var alive := []
-	for stack in battle.get("stacks", []):
+	for stack in stacks:
 		if stack is Dictionary and String(stack.get("side", "")) == side and _alive_count(stack) > 0:
 			alive.append(stack)
 	return alive
+
+## Inside a scoring scope, the side's entry for the battle's stacks array:
+## [stacks array, its living stacks of that side, how many of them are not
+## ranged]. [] outside a scope or when the battle holds no stacks array.
+static func _scoring_living_entry(battle: Dictionary, side: String) -> Array:
+	if _scoring_scope_depth <= 0:
+		return []
+	var stacks = battle.get("stacks")
+	if not (stacks is Array):
+		return []
+	for entry in _scoring_living.get(side, []):
+		if is_same(entry[0], stacks):
+			return entry
+	var alive := _living_stacks_of_side(stacks, side)
+	var not_ranged := 0
+	for stack in alive:
+		if not bool(stack.get("ranged", false)):
+			not_ranged += 1
+	var entry := [stacks, alive, not_ranged]
+	if _scoring_living.has(side):
+		(_scoring_living[side] as Array).append(entry)
+	else:
+		_scoring_living[side] = [entry]
+	return entry
 
 static func _charter_retaliation_aura_context(stack: Dictionary, battle: Dictionary) -> Dictionary:
 	if stack.is_empty() or bool(stack.get("ranged", false)):
@@ -2618,9 +2902,12 @@ static func _side_positive_effect_count(battle: Dictionary, side: String) -> int
 			total += 1
 	return total
 
+# Integer ceiling division: the same count as ceil() of the float quotient for
+# any health below 2^53.
+@warning_ignore("integer_division")
 static func _alive_count(stack: Dictionary) -> int:
-	var unit_hp: int = max(1, int(stack.get("unit_hp", 1)))
-	return int(ceil(float(max(0, int(stack.get("total_health", 0)))) / float(unit_hp)))
+	var unit_hp: int = maxi(1, int(stack.get("unit_hp", 1)))
+	return (maxi(0, int(stack.get("total_health", 0))) + unit_hp - 1) / unit_hp
 
 static func _stack_missing_health(stack: Dictionary) -> int:
 	return SpellRulesScript.battle_spell_recoverable_health(stack)
@@ -2659,10 +2946,16 @@ static func _can_make_melee_attack(stack: Dictionary, battle: Dictionary, target
 	if stack.is_empty() or _alive_count(stack) <= 0:
 		return false
 	if target.is_empty():
+		var memo := _stack_term_memo("melee_any", stack, battle)
+		if memo.size() == 3:
+			return memo[2]
+		var can_attack := false
 		for candidate in _alive_stacks_for_side(battle, _opposing_side(String(stack.get("side", "")))):
 			if _can_make_melee_attack(stack, battle, candidate):
-				return true
-		return false
+				can_attack = true
+				break
+		_keep_stack_term(memo, can_attack)
+		return can_attack
 	if _alive_count(target) <= 0 or String(stack.get("side", "")) == String(target.get("side", "")):
 		return false
 	var hex_distance := _stack_hex_distance(stack, target)
@@ -3198,9 +3491,22 @@ static func _status_effect_from_spell(spell: Dictionary) -> Dictionary:
 		return status_effect
 	return {}
 
+## The same for every target of one spell, so inside a scoring scope it is
+## worked out once per side and status.
 static func _allied_status_synergy_score(battle: Dictionary, side: String, status_id: String) -> float:
 	if status_id == "":
 		return 0.0
+	if _scoring_scope_depth <= 0:
+		return _allied_status_synergy_on(battle, side, status_id)
+	var key := "synergy|" + side + "|" + status_id
+	var entry := _scoring_memo_entry(_scoring_stack_terms, key, battle, battle)
+	if not entry.is_empty():
+		return entry[2]
+	var score := _allied_status_synergy_on(battle, side, status_id)
+	_add_scoring_memo_entry(_scoring_stack_terms, key, [battle, battle, score])
+	return score
+
+static func _allied_status_synergy_on(battle: Dictionary, side: String, status_id: String) -> float:
 	var score := 0.0
 	for stack in _alive_stacks_for_side(battle, side):
 		if _has_ability(stack, "backstab") and _ability_by_id(stack, "backstab").get("status_ids", []).has(status_id):
@@ -3403,6 +3709,15 @@ static func _stack_is_assault_side(stack: Dictionary, battle: Dictionary) -> boo
 static func _hero_has_trait(battle: Dictionary, side: String, trait_id: String) -> bool:
 	if trait_id == "":
 		return false
+	if _scoring_scope_depth > 0:
+		# The payload's traits as a set, kept with the scope's payload.
+		var entry := _scoring_payload_entry(battle, side)
+		if not (entry[3] is Dictionary):
+			var traits := {}
+			for value in (entry[2] as Dictionary).get("battle_traits", []):
+				traits[String(value)] = true
+			entry[3] = traits
+		return (entry[3] as Dictionary).has(trait_id)
 	for value in _hero_payload_for_side(battle, side).get("battle_traits", []):
 		if String(value) == trait_id:
 			return true
@@ -3467,6 +3782,9 @@ static func _allied_ranged_count(battle: Dictionary, side: String) -> int:
 	return total
 
 static func _allied_melee_count(battle: Dictionary, side: String) -> int:
+	var entry := _scoring_living_entry(battle, side)
+	if not entry.is_empty():
+		return entry[2]
 	var total := 0
 	for stack in _alive_stacks_for_side(battle, side):
 		if not bool(stack.get("ranged", false)):
@@ -3477,6 +3795,13 @@ static func _stack_is_isolated(battle: Dictionary, stack: Dictionary) -> bool:
 	if stack.is_empty():
 		return false
 	var side := String(stack.get("side", ""))
+	var entry := _scoring_living_entry(battle, side)
+	if not entry.is_empty():
+		if (entry[1] as Array).size() <= 1:
+			return true
+		if bool(stack.get("ranged", false)):
+			return int(entry[2]) <= 0
+		return false
 	var living_allies := _alive_stacks_for_side(battle, side)
 	if living_allies.size() <= 1:
 		return true
@@ -3486,6 +3811,14 @@ static func _stack_is_isolated(battle: Dictionary, stack: Dictionary) -> bool:
 
 ## BattleRules._stack_is_engaged: a shooter next to a living enemy shoots at x0.6.
 static func _stack_is_engaged(stack: Dictionary, battle: Dictionary) -> bool:
+	var memo := _stack_term_memo("engaged", stack, battle)
+	if memo.size() == 3:
+		return memo[2]
+	var value := _stack_engaged_on(stack, battle)
+	_keep_stack_term(memo, value)
+	return value
+
+static func _stack_engaged_on(stack: Dictionary, battle: Dictionary) -> bool:
 	if stack.is_empty() or _stack_hex(stack).is_empty():
 		return false
 	for enemy in _alive_stacks_for_side(battle, _opposing_side(String(stack.get("side", "")))):

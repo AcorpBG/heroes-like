@@ -61,6 +61,11 @@ const DAILY_INCOME_RESOURCE_IDS := [
 	"memory_salt",
 ]
 
+## The sets whose bonuses are active, each as [set record, its piece ids], in
+## catalog order; shared and read-only, rebuilt when the content changes.
+static var _active_set_catalog := []
+static var _active_set_sources := []
+
 static func ensure_hero_artifacts(hero_state: Dictionary) -> Dictionary:
 	var artifacts = normalize_hero_artifacts(hero_state.get("artifacts", {}))
 	hero_state["artifacts"] = artifacts
@@ -177,7 +182,9 @@ static func aggregate_bonuses(hero_state: Dictionary) -> Dictionary:
 		var artifact := ContentService.get_artifact(artifact_id)
 		_apply_bonus_payload(totals, artifact.get("bonuses", {}), artifact, artifact_id)
 
-	var active_sets := artifact_set_runtime_state(hero_state)
+	# The artifacts were just normalized in place, and normalizing them again
+	# gives the same slots.
+	var active_sets := _set_states_for_equipped(equipped)
 	for set_state_value in active_sets:
 		if not (set_state_value is Dictionary):
 			continue
@@ -193,9 +200,11 @@ static func aggregate_bonuses(hero_state: Dictionary) -> Dictionary:
 	return totals
 
 static func artifact_set_runtime_state(hero_state: Dictionary) -> Array:
-	var hero := ensure_hero_artifacts(hero_state.duplicate(true))
+	# Normalizing reads the artifacts only, so the hero needs no copy.
+	return _set_states_for_equipped(normalize_hero_artifacts(hero_state.get("artifacts", {})).get("equipped", {}))
+
+static func _set_states_for_equipped(equipped: Variant) -> Array:
 	var equipped_ids := []
-	var equipped = hero.get("artifacts", {}).get("equipped", {})
 	for slot in EQUIPMENT_SLOTS:
 		var artifact_id := String(equipped.get(slot, ""))
 		if artifact_id != "" and artifact_id not in equipped_ids:
@@ -204,16 +213,23 @@ static func artifact_set_runtime_state(hero_state: Dictionary) -> Array:
 	var raw := ContentService.load_json(ContentService.ARTIFACTS_PATH)
 	var sets = raw.get("sets", [])
 	var result := []
-	if not (sets is Array):
+	# No set has a piece equipped without an equipped artifact.
+	if not (sets is Array) or equipped_ids.is_empty():
 		return result
-	for set_value in sets:
-		if not (set_value is Dictionary):
-			continue
-		var artifact_set: Dictionary = set_value
-		var runtime_policy = artifact_set.get("runtime_policy", {})
-		if not (runtime_policy is Dictionary) or not bool(runtime_policy.get("set_bonuses_active", false)):
-			continue
-		var piece_ids := _string_array(artifact_set.get("piece_ids", []))
+	var revision: int = ContentService.get_content_revision()
+	if _active_set_sources.size() != 4 or _active_set_sources[0] != revision or not is_same(_active_set_sources[1], raw) or not is_same(_active_set_sources[2], sets) or int(_active_set_sources[3]) != sets.size():
+		_active_set_catalog = []
+		for set_value in sets:
+			if not (set_value is Dictionary):
+				continue
+			var runtime_policy = set_value.get("runtime_policy", {})
+			if not (runtime_policy is Dictionary) or not bool(runtime_policy.get("set_bonuses_active", false)):
+				continue
+			_active_set_catalog.append([set_value, _string_array(set_value.get("piece_ids", []))])
+		_active_set_sources = [revision, raw, sets, sets.size()]
+	for entry in _active_set_catalog:
+		var artifact_set: Dictionary = entry[0]
+		var piece_ids: Array = entry[1]
 		var equipped_piece_ids := []
 		for piece_id in piece_ids:
 			if piece_id in equipped_ids:

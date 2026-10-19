@@ -1510,7 +1510,9 @@ static func market_conversion_give_amount(rate: Dictionary, receive_amount: int)
 ## received by a conversion. Pure: reads only the market state, this week's
 ## normalized market usage and the stockpile. `max_amount` is the most the
 ## stores and weekly limits allow; `ok` says whether `amount` can trade now.
-static func market_trade_quote(market: Dictionary, usage: Dictionary, stock: Dictionary, give_id: String, receive_id: String, amount: int) -> Dictionary:
+## With `with_text` false the reason, label and other texts stay empty, for
+## callers that only weigh the numbers.
+static func market_trade_quote(market: Dictionary, usage: Dictionary, stock: Dictionary, give_id: String, receive_id: String, amount: int, with_text: bool = true) -> Dictionary:
 	var mode := market_trade_mode(market, give_id, receive_id)
 	var quote := {
 		"mode": mode,
@@ -1529,7 +1531,8 @@ static func market_trade_quote(market: Dictionary, usage: Dictionary, stock: Dic
 		"limit_text": "",
 	}
 	if mode == "":
-		quote["reason"] = _market_pair_reason(market, give_id, receive_id)
+		if with_text:
+			quote["reason"] = _market_pair_reason(market, give_id, receive_id)
 		return quote
 	var reset_day := int(usage.get("week", 1)) * 7 + 1
 	var usage_town := {"market_usage": usage}
@@ -1542,22 +1545,24 @@ static func market_trade_quote(market: Dictionary, usage: Dictionary, stock: Dic
 				if int(OverworldRulesScript._market_quote_from_state(market, "buy", receive_id, count).get("gold_value", 0)) > gold:
 					break
 				quote["max_amount"] = count
-			var price := int(unit.get("gold_value", 0))
-			quote["unit_text"] = "%s gold" % _format_market_amount(price)
-			quote["rate_text"] = "%s gold each%s" % [_format_market_amount(price), _market_bulk_text(market, "buy", receive_id)]
-			quote["limit_text"] = "%s bought this week: %d of %d" % [_market_resource_title(receive_id), int(cap.get("used", 0)), int(cap.get("limit", 0))]
-			if int(quote.max_amount) <= 0:
-				quote["reason"] = _market_limit_reason("buy", receive_id, cap, reset_day) if int(cap.get("remaining", 0)) <= 0 else "Not enough gold: 1 %s costs %s gold." % [_market_resource_name(receive_id), _format_market_amount(price)]
+			if with_text:
+				var price := int(unit.get("gold_value", 0))
+				quote["unit_text"] = "%s gold" % _format_market_amount(price)
+				quote["rate_text"] = "%s gold each%s" % [_format_market_amount(price), _market_bulk_text(market, "buy", receive_id)]
+				quote["limit_text"] = "%s bought this week: %d of %d" % [_market_resource_title(receive_id), int(cap.get("used", 0)), int(cap.get("limit", 0))]
+				if int(quote.max_amount) <= 0:
+					quote["reason"] = _market_limit_reason("buy", receive_id, cap, reset_day) if int(cap.get("remaining", 0)) <= 0 else "Not enough gold: 1 %s costs %s gold." % [_market_resource_name(receive_id), _format_market_amount(price)]
 		"sell":
 			var unit: Dictionary = OverworldRulesScript._market_quote_from_state(market, "sell", give_id, 1)
 			var cap: Dictionary = OverworldRulesScript._market_cap_state_for_quote(usage_town, market, unit, -1)
 			quote["max_amount"] = maxi(0, mini(int(cap.get("remaining", 0)), int(stock.get(give_id, 0))))
-			var price := int(unit.get("gold_value", 0))
-			quote["unit_text"] = "%s per %s" % [_format_market_amount(price), _market_resource_name(give_id)]
-			quote["rate_text"] = "%s gold each%s" % [_format_market_amount(price), _market_bulk_text(market, "sell", give_id)]
-			quote["limit_text"] = "%s sold this week: %d of %d" % [_market_resource_title(give_id), int(cap.get("used", 0)), int(cap.get("limit", 0))]
-			if int(quote.max_amount) <= 0:
-				quote["reason"] = _market_limit_reason("sell", give_id, cap, reset_day) if int(cap.get("remaining", 0)) <= 0 else "No %s to sell." % _market_resource_name(give_id)
+			if with_text:
+				var price := int(unit.get("gold_value", 0))
+				quote["unit_text"] = "%s per %s" % [_format_market_amount(price), _market_resource_name(give_id)]
+				quote["rate_text"] = "%s gold each%s" % [_format_market_amount(price), _market_bulk_text(market, "sell", give_id)]
+				quote["limit_text"] = "%s sold this week: %d of %d" % [_market_resource_title(give_id), int(cap.get("used", 0)), int(cap.get("limit", 0))]
+				if int(quote.max_amount) <= 0:
+					quote["reason"] = _market_limit_reason("sell", give_id, cap, reset_day) if int(cap.get("remaining", 0)) <= 0 else "No %s to sell." % _market_resource_name(give_id)
 		"convert":
 			var rate := market_conversion_rate(market, give_id, receive_id)
 			var numerator := int(rate.get("numerator", 0))
@@ -1567,24 +1572,25 @@ static func market_trade_quote(market: Dictionary, usage: Dictionary, stock: Dic
 			var give_limit := maxi(0, mini(int(stock.get(give_id, 0)), int(sell_cap.get("remaining", 0))))
 			if numerator > 0 and denominator > 0:
 				quote["max_amount"] = maxi(0, mini(int(buy_cap.get("remaining", 0)), (give_limit * denominator) / numerator))
-			var per_unit := float(numerator) / float(maxi(1, denominator))
-			quote["unit_text"] = "%s %s" % [_market_ratio_text(per_unit), _market_resource_name(give_id)]
-			# Read as "1 ore for 1.7 wood" or, for a valuable give, "1.2 wood for 1 aetherglass".
-			if per_unit >= 1.0:
-				quote["rate_text"] = "1 %s for %s %s" % [_market_resource_name(receive_id), _market_ratio_text(per_unit), _market_resource_name(give_id)]
-			else:
-				quote["rate_text"] = "%s %s for 1 %s" % [_market_ratio_text(1.0 / per_unit), _market_resource_name(receive_id), _market_resource_name(give_id)]
-			quote["limit_text"] = "%s sold this week: %d of %d · %s bought: %d of %d" % [_market_resource_title(give_id), int(sell_cap.get("used", 0)), int(sell_cap.get("limit", 0)), _market_resource_name(receive_id), int(buy_cap.get("used", 0)), int(buy_cap.get("limit", 0))]
-			if int(quote.max_amount) <= 0:
-				if int(buy_cap.get("remaining", 0)) <= 0:
-					quote["reason"] = _market_limit_reason("buy", receive_id, buy_cap, reset_day)
-				elif int(sell_cap.get("remaining", 0)) <= 0:
-					quote["reason"] = _market_limit_reason("sell", give_id, sell_cap, reset_day)
+			if with_text:
+				var per_unit := float(numerator) / float(maxi(1, denominator))
+				quote["unit_text"] = "%s %s" % [_market_ratio_text(per_unit), _market_resource_name(give_id)]
+				# Read as "1 ore for 1.7 wood" or, for a valuable give, "1.2 wood for 1 aetherglass".
+				if per_unit >= 1.0:
+					quote["rate_text"] = "1 %s for %s %s" % [_market_resource_name(receive_id), _market_ratio_text(per_unit), _market_resource_name(give_id)]
 				else:
-					quote["reason"] = "Needs %d %s for 1 %s." % [market_conversion_give_amount(rate, 1), _market_resource_name(give_id), _market_resource_name(receive_id)]
+					quote["rate_text"] = "%s %s for 1 %s" % [_market_ratio_text(1.0 / per_unit), _market_resource_name(receive_id), _market_resource_name(give_id)]
+				quote["limit_text"] = "%s sold this week: %d of %d · %s bought: %d of %d" % [_market_resource_title(give_id), int(sell_cap.get("used", 0)), int(sell_cap.get("limit", 0)), _market_resource_name(receive_id), int(buy_cap.get("used", 0)), int(buy_cap.get("limit", 0))]
+				if int(quote.max_amount) <= 0:
+					if int(buy_cap.get("remaining", 0)) <= 0:
+						quote["reason"] = _market_limit_reason("buy", receive_id, buy_cap, reset_day)
+					elif int(sell_cap.get("remaining", 0)) <= 0:
+						quote["reason"] = _market_limit_reason("sell", give_id, sell_cap, reset_day)
+					else:
+						quote["reason"] = "Needs %d %s for 1 %s." % [market_conversion_give_amount(rate, 1), _market_resource_name(give_id), _market_resource_name(receive_id)]
 	var count := int(quote.amount)
 	if count <= 0 or count > int(quote.max_amount):
-		if String(quote.reason) == "":
+		if with_text and String(quote.reason) == "":
 			quote["reason"] = "Choose from 1 to %d." % int(quote.max_amount)
 		return quote
 	match mode:
@@ -1594,15 +1600,21 @@ static func market_trade_quote(market: Dictionary, usage: Dictionary, stock: Dic
 			quote["action_id"] = "market:buy:%s:%d" % [receive_id, count]
 		"sell":
 			quote["give_amount"] = count
-			quote["receive_amount"] = int(OverworldRulesScript._market_quote_from_state(market, "sell", give_id, count).get("gold_value", 0))
+			quote["receive_amount"] = market_sale_gold(market, give_id, count)
 			quote["action_id"] = "market:sell:%s:%d" % [give_id, count]
 		"convert":
 			quote["give_amount"] = market_conversion_give_amount(market_conversion_rate(market, give_id, receive_id), count)
 			quote["receive_amount"] = count
 			quote["action_id"] = "market:convert:%s:%s:%d" % [give_id, receive_id, count]
-	quote["label"] = "Trade %s %s for %s %s" % [_format_market_amount(int(quote.give_amount)), _market_resource_name(give_id), _format_market_amount(int(quote.receive_amount)), _market_resource_name(receive_id)]
+	if with_text:
+		quote["label"] = "Trade %s %s for %s %s" % [_format_market_amount(int(quote.give_amount)), _market_resource_name(give_id), _format_market_amount(int(quote.receive_amount)), _market_resource_name(receive_id)]
 	quote["ok"] = true
 	return quote
+
+## The gold a sale of `count` units of `give_id` receives when
+## market_trade_quote allows it.
+static func market_sale_gold(market: Dictionary, give_id: String, count: int) -> int:
+	return int(OverworldRulesScript._market_quote_from_state(market, "sell", give_id, count).get("gold_value", 0))
 
 ## The active town's market popout: the resources the desk takes and offers
 ## with the player's stock, and every pair's terms with a quote for each amount

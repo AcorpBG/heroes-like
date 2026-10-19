@@ -315,7 +315,10 @@ static func _specialty_row(specialty_id: String) -> Dictionary:
 
 ## The catalog rows by id, shared and read-only; rebuilt when the content changes.
 static func _specialty_catalog() -> Dictionary:
-	var items := specialties()
+	# specialties(), read here directly: bonus checks ask for the catalog often.
+	var items = ContentService.load_json(SPECIALTIES_PATH).get("items", [])
+	if not (items is Array):
+		items = []
 	if not is_same(items, _catalog_source):
 		_catalog_source = items
 		_catalog_index = {}
@@ -327,8 +330,9 @@ static func _specialty_catalog() -> Dictionary:
 static func has_specialty(specialty_id: String) -> bool:
 	return not _specialty_row(specialty_id).is_empty()
 
-static func _rank_bonuses(specialty_id: String, rank: int) -> Dictionary:
-	var ranks: Array = _specialty_row(specialty_id).get("ranks", [])
+## The bonuses of a specialty's catalog row at `rank`.
+static func _rank_bonuses(row: Dictionary, rank: int) -> Dictionary:
+	var ranks: Array = row.get("ranks", [])
 	if rank < 1 or ranks.is_empty():
 		return {}
 	var bonuses = ranks[mini(rank, ranks.size()) - 1].get("bonuses", {})
@@ -379,7 +383,6 @@ static func max_rank_for_specialty(specialty_id: String) -> int:
 static func aggregate_bonuses(hero_state: Dictionary) -> Dictionary:
 	# Reads the hero only. Of what ensure_hero_progression settles, the bonuses
 	# depend on the normalized specialties alone.
-	var specialty_ids := _normalize_specialties(hero_state.get("specialties", []))
 	var bonuses := {
 		"overworld_movement": 0,
 		"scouting_radius": 0,
@@ -393,13 +396,18 @@ static func aggregate_bonuses(hero_state: Dictionary) -> Dictionary:
 		"recruit_cost_delta": 0.0,
 		"raid_pillage_resistance": 0.0,
 	}
+	var raw_specialty_ids: Variant = hero_state.get("specialties", [])
+	if not (raw_specialty_ids is Array) or raw_specialty_ids.is_empty():
+		return bonuses
+	var catalog := _specialty_catalog()
+	var specialty_ids := _normalize_specialties_in(catalog, raw_specialty_ids)
 	var counted := {}
 	for specialty_id_value in specialty_ids:
 		var specialty_id := String(specialty_id_value)
 		if counted.has(specialty_id):
 			continue
 		counted[specialty_id] = true
-		_merge_bonuses(bonuses, _rank_bonuses(specialty_id, _rank_in_array(specialty_ids, specialty_id)), hero_state)
+		_merge_bonuses(bonuses, _rank_bonuses(catalog.get(specialty_id, {}), _rank_in_array(specialty_ids, specialty_id)), hero_state)
 	return bonuses
 
 static func _merge_bonuses(target: Dictionary, source: Dictionary, hero_state: Dictionary) -> void:
@@ -495,9 +503,11 @@ static func rank_label(rank: int) -> String:
 	return RANK_LABELS[min(rank - 1, RANK_LABELS.size() - 1)]
 
 static func _normalize_specialties(value: Variant) -> Array:
+	return _normalize_specialties_in(_specialty_catalog() if value is Array else {}, value)
+
+static func _normalize_specialties_in(catalog: Dictionary, value: Variant) -> Array:
 	var normalized := []
 	if value is Array:
-		var catalog := _specialty_catalog()
 		for specialty_id_value in value:
 			var specialty_id := String(specialty_id_value)
 			var row: Dictionary = catalog.get(specialty_id, {})

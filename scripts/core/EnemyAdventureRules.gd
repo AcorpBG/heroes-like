@@ -196,6 +196,10 @@ const RAID_RECENT_EXPLORATION_TARGET_LIMIT := 12
 # Session meta, not saved: placement id -> the day a fallen AI hero was first
 # seen resolved.
 const FALLEN_HERO_SEEN_DAY_META := &"_enemy_fallen_hero_seen_day"
+# Session meta, not saved, present only while EnemyTurnRules.normalize_enemy_states
+# runs: the roster entries normalized so far, keyed by everything an entry is
+# built from (see _normalize_commander_roster_entries).
+const COMMANDER_ENTRY_MEMO_META := &"_enemy_commander_entry_memo"
 
 static func normalize_enemy_known_world_memory(value: Variant, current_day: int = 0) -> Dictionary:
 	if not (value is Dictionary):
@@ -638,10 +642,34 @@ static func _normalize_commander_roster_entries(
 	var normalized := []
 	var session_day := int(session.day) if session != null else 0
 	var hero_ids: Array = selected_hero_ids if selected_hero_ids is Array else _faction_commander_ids(PlayerRules.faction_id(session, faction_id))
+	# The enemy state normalization rebuilds each roster several times over,
+	# mostly from entries it built a moment before. An entry is a function of
+	# the existing entry, the active commander, the controller's identity, the
+	# day and the content; while that normalization runs, those inputs, the
+	# entries serialized with their exact types and key order, key the entry
+	# built from them.
+	var use_memo := session != null and session.has_meta(COMMANDER_ENTRY_MEMO_META)
+	var memo: Dictionary = session.get_meta(COMMANDER_ENTRY_MEMO_META, {}) if use_memo else {}
+	var memo_identity := var_to_bytes(PlayerRules.identity_fields(session, faction_id)) if use_memo else PackedByteArray()
+	var memo_revision := ContentService.get_content_revision() if use_memo else -1
 	for roster_hero_id in hero_ids:
 		var existing = existing_map.get(roster_hero_id, {})
 		if not (existing is Dictionary):
 			existing = {}
+		var memo_key: Array = []
+		if use_memo:
+			memo_key = [
+				faction_id,
+				roster_hero_id,
+				session_day,
+				memo_identity,
+				memo_revision,
+				var_to_bytes(existing),
+				var_to_bytes(active_map.get(roster_hero_id)),
+			]
+			if memo.has(memo_key):
+				normalized.append(memo[memo_key].duplicate(true))
+				continue
 		var active_entry: Dictionary = active_map.get(roster_hero_id, {})
 		var active_commander_state = active_entry.get("commander_state", {})
 		if not (active_commander_state is Dictionary):
@@ -695,6 +723,8 @@ static func _normalize_commander_roster_entries(
 			if existing_status == COMMANDER_STATUS_RECOVERING and recovery_day > session_day:
 				entry["status"] = COMMANDER_STATUS_RECOVERING
 				entry["recovery_day"] = recovery_day
+		if use_memo:
+			memo[memo_key] = entry.duplicate(true)
 		normalized.append(entry)
 	return normalized
 
@@ -1644,8 +1674,10 @@ static func _active_commander_map(
 			"placement_id": String(encounter.get("placement_id", "")),
 			"commander_state": commander_state.duplicate(true),
 		}
+	# Only a site or town holding a defender's state can add one (see the
+	# defender entries), so the rest are skipped before the full check.
 	for town in session.overworld.get("towns", []):
-		if not (town is Dictionary):
+		if not (town is Dictionary) or not town.has("ai_defender_commander_state"):
 			continue
 		var defender_entry := _active_town_defender_entry(session, town, faction_id)
 		if defender_entry.is_empty():
@@ -1656,7 +1688,7 @@ static func _active_commander_map(
 			continue
 		active[defender_roster_hero_id] = defender_entry
 	for node in session.overworld.get("resource_nodes", []):
-		if not (node is Dictionary):
+		if not (node is Dictionary) or not node.has("ai_defender_commander_state"):
 			continue
 		var defender_entry := _active_resource_defender_entry(session, node, faction_id)
 		if defender_entry.is_empty():
@@ -3820,11 +3852,20 @@ static func _guard_link_for_encounter(encounter: Dictionary) -> Dictionary:
 			return guard
 	return {}
 
-static func _artifact_guard_encounter_for_node(session: SessionStateStoreScript.SessionData, node: Dictionary) -> Dictionary:
+## positions: an Array limits the scan to the encounters at these list
+## positions, in ascending order, for a caller that knows no other encounter can
+## match (AiHeroRules._encounter_guard_index); null scans them all.
+static func _artifact_guard_encounter_for_node(session: SessionStateStoreScript.SessionData, node: Dictionary, positions: Variant = null) -> Dictionary:
 	if session == null or node.is_empty():
 		return {}
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
-	for encounter_value in session.overworld.get("encounters", []):
+	var encounters = session.overworld.get("encounters", [])
+	if positions is Array:
+		var listed := []
+		for position in positions:
+			listed.append(encounters[int(position)])
+		encounters = listed
+	for encounter_value in encounters:
 		if not (encounter_value is Dictionary):
 			continue
 		var encounter: Dictionary = encounter_value

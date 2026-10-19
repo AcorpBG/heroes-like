@@ -78,6 +78,18 @@ const BLOCKED_TILE_INDEX_META := &"_overworld_blocked_tile_indexes"
 const SPATIAL_LOOKUP_INDEX_META := &"_overworld_spatial_lookup_indexes"
 const SPATIAL_LOOKUP_SIGNATURE_META := &"_overworld_spatial_lookup_signature"
 const RESOLVED_LOOKUP_META := &"_overworld_resolved_encounter_lookup"
+const BLOCKED_SCENERY_LAYERS_META := &"_overworld_blocked_scenery_layers"
+const SPATIAL_RESOURCE_SECTIONS_META := &"_overworld_spatial_resource_sections"
+# Stands for a key a resource node does not have in its spatial fingerprint;
+# saved state is JSON and never holds a StringName.
+const SPATIAL_FINGERPRINT_MISSING := &"_overworld_spatial_fingerprint_missing"
+# Session meta, not saved. A caller that changes nothing between two end_turn
+# calls (the AI match runner) sets SESSION_UNTOUCHED_BETWEEN_DAYS_META; end_turn
+# then skips its opening normalize while the session is still as the previous
+# end_turn's closing normalize left it, on the day CLOSING_NORMALIZE_DAY_META
+# records.
+const SESSION_UNTOUCHED_BETWEEN_DAYS_META := &"_overworld_session_untouched_between_days"
+const CLOSING_NORMALIZE_DAY_META := &"_overworld_end_turn_closing_normalize_day"
 static var _fog_read_scope_session_id := 0
 static var _fog_read_scope_depth := 0
 static var _fog_read_scope_frame := -1
@@ -1465,7 +1477,11 @@ static func execute_prevalidated_route(
 	return result
 
 static func end_turn(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	normalize_overworld_state(session)
+	if not (
+		bool(session.get_meta(SESSION_UNTOUCHED_BETWEEN_DAYS_META, false))
+		and int(session.get_meta(CLOSING_NORMALIZE_DAY_META, -1)) == int(session.day)
+	):
+		normalize_overworld_state(session)
 	HeroCommandRulesScript.commit_active_hero(session)
 	session.day += 1
 
@@ -1538,6 +1554,7 @@ static func end_turn(session: SessionStateStoreScript.SessionData) -> Dictionary
 	messages.append_array(PlayerEliminationRulesScript.apply_daily(session))
 	var result := _finalize_action_result(session, true, " ".join(messages))
 	normalize_overworld_state(session)
+	session.set_meta(CLOSING_NORMALIZE_DAY_META, int(session.day))
 	result["enemy_activity_summary"] = enemy_activity_summary
 	result["enemy_activity_events"] = _compact_enemy_activity_events(enemy_turn_result.get("events", []), 10)
 	if enemy_turn_result.get("profile", {}) is Dictionary and not enemy_turn_result.get("profile", {}).is_empty():
@@ -3988,21 +4005,10 @@ static func _build_spatial_lookup_index(session: SessionStateStoreScript.Session
 					town_by_tile[_tile_key(Vector2i(int(visit_tile.get("x", -1)), int(visit_tile.get("y", -1))))] = town_index
 	var resources = session.overworld.get("resource_nodes", [])
 	if resources is Array:
-		for node_index in range(resources.size()):
-			var node = resources[node_index]
-			if not (node is Dictionary):
-				continue
-			var resource_placement_id := String(node.get("placement_id", ""))
-			if resource_placement_id != "":
-				index["resource_by_placement"][resource_placement_id] = node_index
-			if not OverworldLevelRulesScript.on_level(node, level):
-				continue
-			var node_tile_key := _tile_key(Vector2i(int(node.get("x", -1)), int(node.get("y", -1))))
-			_append_spatial_lookup_entry(index["resource_by_tile"], node_tile_key, node_index)
-			var map_object := _map_object_for_resource_node(node)
-			for interaction_tile in _resource_node_world_interaction_tiles(map_object, node):
-				if interaction_tile is Vector2i:
-					_append_spatial_lookup_entry(index["resource_by_interaction_tile"], _tile_key(interaction_tile), node_index)
+		var resource_section := _spatial_resource_section(session, resources, level)
+		index["resource_by_tile"] = resource_section[0]
+		index["resource_by_interaction_tile"] = resource_section[1]
+		index["resource_by_placement"] = resource_section[2]
 	var artifacts = session.overworld.get("artifact_nodes", [])
 	if artifacts is Array:
 		for artifact_index in range(artifacts.size()):
@@ -4045,6 +4051,69 @@ static func _build_spatial_lookup_index(session: SessionStateStoreScript.Session
 					for zone_tile in hero_guard_zone_tiles(session, Vector2i(int(encounter.get("x", -1)), int(encounter.get("y", -1))), level):
 						_append_spatial_lookup_entry(index["guard_engagement_by_tile"], _tile_key(zone_tile), encounter_index)
 	return index
+
+## The resource tables of one level's spatial index: [by tile, by interaction
+## tile, by placement]. AI moves drop the whole index many times a day while the
+## sites keep their places, so a level's tables are kept for as long as every
+## node still has the fields they are built from, and the site and object
+## content is unchanged. Nothing edits the tables after they are built.
+static func _spatial_resource_section(session: SessionStateStoreScript.SessionData, resources: Array, level: int) -> Array:
+	# Every node field the tables read: the placement id, the tile and level,
+	# and what picks the map object and its interaction tiles.
+	var fingerprint := []
+	for node in resources:
+		fingerprint.append([
+			node.get("placement_id", SPATIAL_FINGERPRINT_MISSING),
+			node.get("x", SPATIAL_FINGERPRINT_MISSING),
+			node.get("y", SPATIAL_FINGERPRINT_MISSING),
+			node.get("level", SPATIAL_FINGERPRINT_MISSING),
+			node.get("position", SPATIAL_FINGERPRINT_MISSING),
+			node.get("visit_tile", SPATIAL_FINGERPRINT_MISSING),
+			node.get("primary_tile", SPATIAL_FINGERPRINT_MISSING),
+			node.get("kind", SPATIAL_FINGERPRINT_MISSING),
+			node.get("site_id", SPATIAL_FINGERPRINT_MISSING),
+			node.get("object_id", SPATIAL_FINGERPRINT_MISSING),
+		] if node is Dictionary else null)
+	var revision := ContentService.get_content_revision()
+	var map_objects := ContentService.load_json(ContentService.MAP_OBJECTS_PATH)
+	var resource_sites := ContentService.load_json(ContentService.RESOURCE_SITES_PATH)
+	# level -> [content revision, map objects, resource sites, fingerprint copy, tables]
+	var sections: Dictionary = session.get_meta(SPATIAL_RESOURCE_SECTIONS_META, {})
+	var cached: Array = sections.get(level, [])
+	if (
+		cached.size() == 5
+		and int(cached[0]) == revision
+		and is_same(cached[1], map_objects)
+		and is_same(cached[2], resource_sites)
+		and cached[3] == fingerprint
+	):
+		return cached[4]
+	var section := _build_spatial_resource_section(resources, level)
+	# The copy keeps the fields as they are now, should a node be edited in place.
+	sections[level] = [revision, map_objects, resource_sites, fingerprint.duplicate(true), section]
+	session.set_meta(SPATIAL_RESOURCE_SECTIONS_META, sections)
+	return section
+
+static func _build_spatial_resource_section(resources: Array, level: int) -> Array:
+	var by_tile := {}
+	var by_interaction_tile := {}
+	var by_placement := {}
+	for node_index in range(resources.size()):
+		var node = resources[node_index]
+		if not (node is Dictionary):
+			continue
+		var resource_placement_id := String(node.get("placement_id", ""))
+		if resource_placement_id != "":
+			by_placement[resource_placement_id] = node_index
+		if not OverworldLevelRulesScript.on_level(node, level):
+			continue
+		var node_tile_key := _tile_key(Vector2i(int(node.get("x", -1)), int(node.get("y", -1))))
+		_append_spatial_lookup_entry(by_tile, node_tile_key, node_index)
+		var map_object := _map_object_for_resource_node(node)
+		for interaction_tile in _resource_node_world_interaction_tiles(map_object, node):
+			if interaction_tile is Vector2i:
+				_append_spatial_lookup_entry(by_interaction_tile, _tile_key(interaction_tile), node_index)
+	return [by_tile, by_interaction_tile, by_placement]
 
 static func _append_spatial_lookup_entry(index_value: Variant, key: String, entry_index: int) -> void:
 	if not (index_value is Dictionary) or key == "":
@@ -4163,16 +4232,8 @@ static func _build_blocked_tile_index(session: SessionStateStoreScript.SessionDa
 		if not OverworldLevelRulesScript.on_level(encounter, level) or is_encounter_resolved(session, encounter):
 			continue
 		_append_generated_body_tiles_to_blocked_index(index, encounter, bool(encounter.get("blocking_body", true)))
-	for object_value in session.overworld.get("map_objects", []):
-		if not (object_value is Dictionary):
-			continue
-		var object: Dictionary = object_value
-		if not OverworldLevelRulesScript.on_level(object, level):
-			continue
-		var kind := String(object.get("kind", ""))
-		var family := String(object.get("object_family_id", object.get("family_id", "")))
-		var blocks_body := bool(object.get("blocking_body", kind == "decorative_obstacle" or family == "decorative_obstacle"))
-		_append_generated_body_tiles_to_blocked_index(index, object, blocks_body)
+	# The same keys set to true, in the same order, as walking the objects here.
+	index.merge(_blocked_scenery_layer(session, level), true)
 	for node_value in session.overworld.get("resource_nodes", []):
 		if not (node_value is Dictionary):
 			continue
@@ -4202,6 +4263,39 @@ static func _build_blocked_tile_index(session: SessionStateStoreScript.SessionDa
 				var id := String(node.get("placement_id", ""))
 				index[key] = id if NativeTransit.is_native(node) and id != "" and not index.has(key) else true
 	return index
+
+## The tiles the map objects block on one level, each set to true in the order
+## the blocked index first meets them. Map objects are scenery: the session is
+## built with them and nothing edits one in place, so a level's layer is kept
+## until the list is replaced, resized or has an entry replaced.
+static func _blocked_scenery_layer(session: SessionStateStoreScript.SessionData, level: int) -> Dictionary:
+	var objects: Variant = session.overworld.get("map_objects", [])
+	if not (objects is Array):
+		return _build_blocked_scenery_layer(objects, level)
+	# [list, a shallow copy of it, level -> layer]. Comparing the copy is cheap:
+	# an entry that is still the same dictionary compares equal at once.
+	var cached: Array = session.get_meta(BLOCKED_SCENERY_LAYERS_META, [])
+	if cached.size() != 3 or not is_same(cached[0], objects) or cached[1] != objects:
+		cached = [objects, objects.duplicate(), {}]
+		session.set_meta(BLOCKED_SCENERY_LAYERS_META, cached)
+	var layers: Dictionary = cached[2]
+	if not layers.has(level):
+		layers[level] = _build_blocked_scenery_layer(objects, level)
+	return layers[level]
+
+static func _build_blocked_scenery_layer(objects: Variant, level: int) -> Dictionary:
+	var layer := {}
+	for object_value in objects:
+		if not (object_value is Dictionary):
+			continue
+		var object: Dictionary = object_value
+		if not OverworldLevelRulesScript.on_level(object, level):
+			continue
+		var kind := String(object.get("kind", ""))
+		var family := String(object.get("object_family_id", object.get("family_id", "")))
+		var blocks_body := bool(object.get("blocking_body", kind == "decorative_obstacle" or family == "decorative_obstacle"))
+		_append_generated_body_tiles_to_blocked_index(layer, object, blocks_body)
+	return layer
 
 static func _append_generated_body_tiles_to_blocked_index(index: Dictionary, placement: Dictionary, blocks_body: bool) -> void:
 	for body_tile in _generated_body_tiles_for_placement(placement, blocks_body):
@@ -7057,6 +7151,27 @@ static func _build_status_copy(status: Dictionary) -> Dictionary:
 	return copy
 
 static func _town_build_status(town: Dictionary, building_id: String, current_day: int = -1) -> Dictionary:
+	return _town_build_status_in(_town_build_context(town), town, building_id, current_day)
+
+## What every build status of one town reads from the town and its template:
+## the built stages as the rules count them, the stages they satisfy, the
+## template's buildable ids and the town's faction. Read-only.
+static func _town_build_context(town: Dictionary) -> Dictionary:
+	var current := TownDevelopment.is_current(town)
+	var built_buildings := _normalize_built_buildings_for_town_state(town)
+	var town_template := ContentService.get_town(String(town.get("town_id", "")))
+	var buildable_ids := []
+	for buildable_id_value in town_template.get("buildable_building_ids", []):
+		buildable_ids.append(String(buildable_id_value))
+	return {
+		"current": current,
+		"built": built_buildings,
+		"satisfied": TownDevelopment.satisfied_ids(built_buildings),
+		"buildable_ids": buildable_ids,
+		"faction_id": String(town_template.get("faction_id", "")),
+	}
+
+static func _town_build_status_in(context: Dictionary, town: Dictionary, building_id: String, current_day: int) -> Dictionary:
 	var building := ContentService.get_building(building_id)
 	if building.is_empty():
 		return {
@@ -7065,24 +7180,23 @@ static func _town_build_status(town: Dictionary, building_id: String, current_da
 			"blocked_message": "That building has no authored data.",
 		}
 
-	var built_buildings = _normalize_built_buildings_for_town_state(town)
+	var built_buildings: Array = context["built"]
+	var satisfied: Dictionary = context["satisfied"]
+	# A current town's built stages are its active stages.
+	var current := bool(context["current"])
 	var blockers := []
-	var town_template := ContentService.get_town(String(town.get("town_id", "")))
-	var buildable_ids := []
-	for buildable_id_value in town_template.get("buildable_building_ids", []):
-		buildable_ids.append(String(buildable_id_value))
-	if building_id not in buildable_ids:
+	if building_id not in context["buildable_ids"]:
 		blockers.append("Not authored for this town.")
-	if TownDevelopment.satisfies(built_buildings, building_id):
+	if satisfied.has(building_id):
 		blockers.append("Already built.")
-	if TownDevelopment.choice_blocked(town, building):
+	if (TownDevelopment.choice_blocked_among(built_buildings, building) if current else TownDevelopment.choice_blocked(town, building)):
 		blockers.append("The other dwelling at this tier has already been chosen.")
 	var required_tier := int(building.get("requires_dwelling_tier", 0))
-	if required_tier > 0 and not TownDevelopment.has_dwelling_tier(town, required_tier):
+	if required_tier > 0 and not (TownDevelopment.has_dwelling_tier_among(built_buildings, required_tier) if current else TownDevelopment.has_dwelling_tier(town, required_tier)):
 		blockers.append("Requires either tier-%d dwelling." % required_tier)
 	if current_day > 0 and int(town.get("last_build_day", 0)) == current_day:
 		blockers.append("Already built in this town today.")
-	var missing_requirements := _missing_build_requirements(building, built_buildings)
+	var missing_requirements := _missing_build_requirements_among(building, satisfied)
 	for requirement_id in missing_requirements:
 		var requirement := ContentService.get_building(String(requirement_id))
 		var requirement_name := String(requirement.get("name", requirement_id))
@@ -7092,7 +7206,7 @@ static func _town_build_status(town: Dictionary, building_id: String, current_da
 			blockers.append("Requires %s." % requirement_name)
 
 	var building_faction_id := String(building.get("faction_id", ""))
-	var town_faction_id := _town_faction_id(town)
+	var town_faction_id := String(context["faction_id"])
 	if building_faction_id != "" and town_faction_id != "" and building_faction_id != town_faction_id:
 		var faction_name := String(ContentService.get_faction(building_faction_id).get("name", building_faction_id))
 		blockers.append("Belongs to %s towns." % faction_name)
@@ -7103,6 +7217,19 @@ static func _town_build_status(town: Dictionary, building_id: String, current_da
 		"blocked_message": " ".join(blockers),
 		"building": building,
 	}
+
+## _missing_build_requirements with the stages the built list satisfies at hand.
+static func _missing_build_requirements_among(building: Dictionary, satisfied: Dictionary) -> Array:
+	var missing := []
+	var upgrade_from := String(building.get("upgrade_from", ""))
+	if upgrade_from != "" and not satisfied.has(upgrade_from):
+		missing.append(upgrade_from)
+	for requirement_value in building.get("requires", []):
+		var requirement := String(requirement_value)
+		if requirement == "" or satisfied.has(requirement) or requirement in missing:
+			continue
+		missing.append(requirement)
+	return missing
 
 static func get_context_actions(session: SessionStateStoreScript.SessionData) -> Array:
 	var actions := []
@@ -7430,9 +7557,13 @@ static func choose_specialty(session: SessionStateStoreScript.SessionData, speci
 static func get_town_build_options(town: Dictionary, current_day: int = -1) -> Array:
 	var options := []
 	var town_template := ContentService.get_town(String(town.get("town_id", "")))
+	# Outside a read scope each status is computed afresh, so they can share
+	# one reading of the town.
+	var context := _town_build_context(town) if _normalized_read_scope_depth <= 0 else {}
 	for building_id_value in town_template.get("buildable_building_ids", []):
 		var building_id := String(building_id_value)
-		if bool(get_town_build_status(town, building_id, current_day).get("buildable", false)):
+		var status := get_town_build_status(town, building_id, current_day) if context.is_empty() else _town_build_status_in(context, town, building_id, current_day)
+		if bool(status.get("buildable", false)):
 			options.append(building_id)
 	return options
 
@@ -8571,15 +8702,25 @@ static func _resource_site_guard_or_contest_line(
 		return "Hostile pressure is contesting this site"
 	return ""
 
+## positions: an Array limits the scan to the encounters at these list
+## positions, in ascending order, for a caller that knows no other encounter can
+## match (AiHeroRules._encounter_guard_index); null scans them all.
 static func _resource_site_guard_encounter(
 	session: SessionStateStoreScript.SessionData,
 	node: Dictionary,
-	site: Dictionary
+	site: Dictionary,
+	positions: Variant = null
 ) -> Dictionary:
 	if session == null:
 		return {}
 	var guard_front_id := String(node.get("guard_front_id", ""))
-	for encounter in session.overworld.get("encounters", []):
+	var encounters = session.overworld.get("encounters", [])
+	if positions is Array:
+		var listed := []
+		for position in positions:
+			listed.append(encounters[int(position)])
+		encounters = listed
+	for encounter in encounters:
 		if not (encounter is Dictionary) or is_encounter_resolved(session, encounter):
 			continue
 		if guard_front_id != "" and guard_front_id == String(encounter.get("placement_id", "")):
@@ -8600,12 +8741,14 @@ static func _resource_site_guard_blocks_node(encounter: Dictionary, node: Dictio
 	var guard_link := _resource_site_guard_link_for_encounter(encounter)
 	return bool(guard_link.get("clear_required_for_target", false))
 
+## positions: see _resource_site_guard_encounter.
 static func resource_site_blocking_guard(
 	session: SessionStateStoreScript.SessionData,
 	node: Dictionary,
-	site: Dictionary
+	site: Dictionary,
+	positions: Variant = null
 ) -> Dictionary:
-	var encounter := _resource_site_guard_encounter(session, node, site)
+	var encounter := _resource_site_guard_encounter(session, node, site, positions)
 	return encounter if _resource_site_guard_blocks_node(encounter, node) else {}
 
 static func _resource_site_contest_encounter(

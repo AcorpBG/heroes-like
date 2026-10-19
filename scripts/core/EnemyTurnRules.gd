@@ -60,6 +60,18 @@ static func build_enemy_states(configs: Variant) -> Array:
 static func normalize_enemy_states(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null or session.scenario_id == "":
 		return
+	# Roster entries built during this normalization are reused within it (see
+	# EnemyAdventureRules._normalize_commander_roster_entries); the outermost
+	# call owns the memo and drops it at the end, even when the body stops on
+	# a script error.
+	var owns_entry_memo := not session.has_meta(EnemyAdventureRulesScript.COMMANDER_ENTRY_MEMO_META)
+	if owns_entry_memo:
+		session.set_meta(EnemyAdventureRulesScript.COMMANDER_ENTRY_MEMO_META, {})
+	_normalize_enemy_states_body(session)
+	if owns_entry_memo:
+		session.remove_meta(EnemyAdventureRulesScript.COMMANDER_ENTRY_MEMO_META)
+
+static func _normalize_enemy_states_body(session: SessionStateStoreScript.SessionData) -> void:
 	DifficultyRulesScript.normalize_session(session)
 
 	var configs = _enemy_faction_configs_for_session(session)

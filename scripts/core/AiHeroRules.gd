@@ -326,7 +326,8 @@ static func active_hero_entries(session: SessionStateStoreScript.SessionData, co
 		return result
 	var resolved := _resolved_lookup(session)
 	for entry in session.overworld.get("encounters", []):
-		if not is_ai_hero(entry) or resolved.has(String(entry.get("placement_id", ""))):
+		# is_ai_hero, inline: this runs for every encounter many times a turn.
+		if not (entry is Dictionary) or not (entry.get(AI_HERO_KEY, null) is Dictionary) or resolved.has(String(entry.get("placement_id", ""))):
 			continue
 		if controller != "" and PlayerRules.raid_controller_id(entry) != controller:
 			continue
@@ -714,6 +715,7 @@ static func clear_shared_surfaces() -> void:
 	_surface_cache_key = ""
 	_surface_cache = {}
 	_guard_cache = {}
+	_guard_index = {}
 
 ## Whether a guard still blocks a site, as the human's claim check decides it.
 ## Remembered for the enemy turn until another army is beaten.
@@ -722,8 +724,89 @@ static var _guard_cache: Dictionary = {}
 static func _resource_guarded(session: SessionStateStoreScript.SessionData, node: Dictionary, site: Dictionary) -> bool:
 	var key := "%d|%s" % [session.overworld.get("resolved_encounters", []).size(), String(node.get("placement_id", ""))]
 	if not _guard_cache.has(key):
-		_guard_cache[key] = not _overworld_rules().resource_site_blocking_guard(session, node, site).is_empty()
+		var index := _encounter_guard_index(session)
+		var positions := _guard_positions([
+			index.by_placement.get(String(node.get("guard_front_id", "")), []),
+			index.by_site_target.get(String(node.get("placement_id", "")), []),
+			index.by_site_target.get(String(site.get("id", node.get("site_id", ""))), []),
+		])
+		_guard_cache[key] = not _overworld_rules().resource_site_blocking_guard(session, node, site, positions).is_empty()
 	return bool(_guard_cache[key])
+
+## The guard that keeps a hero from an artifact, as the human's pickup check
+## finds it.
+static func _artifact_guard(session: SessionStateStoreScript.SessionData, node: Dictionary) -> Dictionary:
+	var index := _encounter_guard_index(session)
+	var positions := _guard_positions([
+		index.by_artifact_target.get(String(node.get("placement_id", "")), []),
+		index.by_artifact_target.get(String(node.get("artifact_id", "")), []),
+	])
+	return AdventureRules._artifact_guard_encounter_for_node(session, node, positions)
+
+## The encounters that may guard a site or an artifact, by every value the
+## guard checks match a target on: their placement id (a site's guard_front_id),
+## the target placement and target id of their guard link as the site check
+## reads it (OverworldRules._resource_site_guard_link_for_encounter), and for
+## artifacts the target placement and target id of their guard link as the
+## artifact check reads it (EnemyAdventureRules._guard_link_for_encounter) and
+## the object they guard. Lists hold encounter positions in list order; the
+## checks run on those encounters only, resolved or not as they are then. The
+## enemy turn changes none of these fields in place, so the index holds while
+## the encounter list is the same array of the same size.
+static var _guard_index: Dictionary = {}
+
+static func _encounter_guard_index(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var encounters: Array = session.overworld.get("encounters", [])
+	if not _guard_index.is_empty() and is_same(_guard_index.encounters, encounters) and int(_guard_index.size) == encounters.size():
+		return _guard_index
+	var overworld_rules = _overworld_rules()
+	var by_placement := {}
+	var by_site_target := {}
+	var by_artifact_target := {}
+	for position in range(encounters.size()):
+		var encounter = encounters[position]
+		if not (encounter is Dictionary):
+			continue
+		_add_guard_position(by_placement, String(encounter.get("placement_id", "")), position)
+		var site_link: Dictionary = overworld_rules._resource_site_guard_link_for_encounter(encounter)
+		if not site_link.is_empty():
+			_add_guard_position(by_site_target, String(site_link.get("target_placement_id", "")), position)
+			_add_guard_position(by_site_target, String(site_link.get("target_id", "")), position)
+		var artifact_link: Dictionary = AdventureRules._guard_link_for_encounter(encounter)
+		if not artifact_link.is_empty():
+			_add_guard_position(by_artifact_target, String(artifact_link.get("target_placement_id", "")), position)
+			_add_guard_position(by_artifact_target, String(artifact_link.get("target_id", "")), position)
+		_add_guard_position(by_artifact_target, String(encounter.get("guarded_object_placement_id", "")), position)
+	_guard_index = {
+		"encounters": encounters,
+		"size": encounters.size(),
+		"by_placement": by_placement,
+		"by_site_target": by_site_target,
+		"by_artifact_target": by_artifact_target,
+	}
+	return _guard_index
+
+static func _add_guard_position(lookup: Dictionary, key: String, position: int) -> void:
+	if key == "":
+		return
+	if not lookup.has(key):
+		lookup[key] = [position]
+	elif int(lookup[key].back()) != position:
+		lookup[key].append(position)
+
+## The positions of several index lists, ascending, each once.
+static func _guard_positions(lists: Array) -> Array:
+	var positions := []
+	for list in lists:
+		positions.append_array(list)
+	if positions.size() < 2:
+		return positions
+	positions.sort()
+	var unique := [positions[0]]
+	for position in positions:
+		if int(position) != int(unique.back()):
+			unique.append(position)
+	return unique
 
 # --- Towns --------------------------------------------------------------------
 
@@ -898,6 +981,7 @@ static func _build_choice(session: SessionStateStoreScript.SessionData, town: Di
 	var best_score := 0.0
 	# Resources the treasury lacks for something this town could build now.
 	var short := {}
+	var market_memo := {}
 	for building_id_value in options:
 		var listed: Dictionary = ContentService.get_building(String(building_id_value)).get("cost", {})
 		for key in listed.keys():
@@ -905,12 +989,11 @@ static func _build_choice(session: SessionStateStoreScript.SessionData, town: Di
 				short[String(key)] = true
 	for building_id_value in options:
 		var building_id := String(building_id_value)
-		var status: Dictionary = overworld_rules.get_town_build_status(town, building_id)
-		if not bool(status.get("buildable", false)):
-			continue
-		var building: Dictionary = status.get("building", {})
+		# Buildable today, so buildable on any day too; the town is not changed
+		# here, so its status would only hand back the building record.
+		var building := ContentService.get_building(building_id)
 		var cost: Dictionary = building.get("cost", {})
-		if not _market_cover(session, town, treasury, cost, false):
+		if not _market_cover(session, town, treasury, cost, false, market_memo):
 			continue
 		var trial_built: Array = built.duplicate()
 		trial_built.append(building_id)
@@ -1055,13 +1138,18 @@ static func _town_rules() -> Variant:
 ## convert orders. Spare resources convert first (wood and ore before rare
 ## ones), gold buys the rest, and spare resources sell when gold is short.
 ## With `apply` false it only checks; otherwise the trades move `pool` and the
-## town's usage.
-static func _market_cover(session: SessionStateStoreScript.SessionData, town: Dictionary, pool: Dictionary, cost: Dictionary, apply: bool) -> bool:
+## town's usage. Checks that ask about one town in a row, with nothing built in
+## between, can share a `market_memo` dictionary that keeps its market state.
+static func _market_cover(session: SessionStateStoreScript.SessionData, town: Dictionary, pool: Dictionary, cost: Dictionary, apply: bool, market_memo: Variant = null) -> bool:
 	if _can_afford(pool, cost):
 		return true
 	var overworld_rules = _overworld_rules()
 	var town_rules = _town_rules()
-	var market: Dictionary = overworld_rules.town_market_state(town)
+	var market: Dictionary = market_memo.get("market", {}) if market_memo is Dictionary else {}
+	if market.is_empty():
+		market = overworld_rules.town_market_state(town)
+		if market_memo is Dictionary:
+			market_memo["market"] = market
 	if not bool(market.get("active", false)):
 		return false
 	var usage: Dictionary = overworld_rules._normalize_town_market_usage_state(town.get("market_usage", {}), int(session.day)).duplicate(true)
@@ -1087,13 +1175,13 @@ static func _market_cover(session: SessionStateStoreScript.SessionData, town: Di
 				var spare := int(stock.get(other, 0)) - int(cost.get(other, 0))
 				if other == key or spare <= 0 or deficit <= 0:
 					continue
-				var terms: Dictionary = town_rules.market_trade_quote(market, usage, {other: spare}, other, key, 1)
+				var terms: Dictionary = town_rules.market_trade_quote(market, usage, {other: spare}, other, key, 1, false)
 				var count := mini(deficit, int(terms.get("max_amount", 0)))
-				if count > 0 and _market_trade(town_rules.market_trade_quote(market, usage, {other: spare}, other, key, count), stock, usage):
+				if count > 0 and _market_trade(town_rules.market_trade_quote(market, usage, {other: spare}, other, key, count, false), stock, usage):
 					deficit -= count
 		if deficit > 0 and key in tradable:
 			var spare_gold := maxi(0, int(stock.get("gold", 0)) - int(cost.get("gold", 0)))
-			if not _market_trade(town_rules.market_trade_quote(market, usage, {"gold": spare_gold}, "gold", key, deficit), stock, usage):
+			if not _market_trade(town_rules.market_trade_quote(market, usage, {"gold": spare_gold}, "gold", key, deficit, false), stock, usage):
 				return false
 			deficit = 0
 		if deficit > 0:
@@ -1106,15 +1194,17 @@ static func _market_cover(session: SessionStateStoreScript.SessionData, town: Di
 		var spare := int(stock.get(other, 0)) - int(cost.get(other, 0))
 		if spare <= 0:
 			continue
-		var terms: Dictionary = town_rules.market_trade_quote(market, usage, {other: spare}, other, "gold", 1)
+		var terms: Dictionary = town_rules.market_trade_quote(market, usage, {other: spare}, other, "gold", 1, false)
 		var count := 0
+		# Every amount up to max_amount is a sale the quote allows, for the gold
+		# market_sale_gold names.
 		for amount in range(1, int(terms.get("max_amount", 0)) + 1):
 			count = amount
-			if int(town_rules.market_trade_quote(market, usage, {other: spare}, other, "gold", amount).get("receive_amount", 0)) >= gold_deficit:
+			if town_rules.market_sale_gold(market, other, amount) >= gold_deficit:
 				break
 		if count <= 0:
 			continue
-		var sale: Dictionary = town_rules.market_trade_quote(market, usage, {other: spare}, other, "gold", count)
+		var sale: Dictionary = town_rules.market_trade_quote(market, usage, {other: spare}, other, "gold", count, false)
 		if _market_trade(sale, stock, usage):
 			gold_deficit -= int(sale.get("receive_amount", 0))
 	if not _can_afford(stock, cost):
@@ -1151,9 +1241,10 @@ static func _market_trade(quote: Dictionary, stock: Dictionary, usage: Dictionar
 static func _max_affordable_with_market(session: SessionStateStoreScript.SessionData, town: Dictionary, pool: Dictionary, unit_cost: Dictionary, available: int) -> int:
 	var low := 0
 	var high := maxi(0, available)
+	var market_memo := {}
 	while low < high:
 		var middle := (low + high + 1) / 2
-		if _market_cover(session, town, pool, _turn_rules()._scale_resource_pool(unit_cost, middle), false):
+		if _market_cover(session, town, pool, _turn_rules()._scale_resource_pool(unit_cost, middle), false, market_memo):
 			low = middle
 		else:
 			high = middle - 1
@@ -2130,7 +2221,27 @@ static func _own_town_at(session: SessionStateStoreScript.SessionData, controlle
 
 ## Utility choice over everything the hero can reach: value for the faction,
 ## discounted by days of travel, with fights only when the estimate is safe.
+## While the hero decides, nothing on the map changes until another hero is
+## moved out of the way (`_clear_way`, `_gate_walk`): no site changes hands and
+## no hero of the player is hired, beaten or given anything. The decision's
+## searches share each site's passability (SITE_PASS_DECISION_KEY) and its
+## sight questions each own hero's scouting radius (SCOUT_RADII_KEY); both are
+## dropped before any hero moves and when the decision ends.
 static func _choose_plan(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary) -> Dictionary:
+	_open_decision_memos(context)
+	var plan := _decide_plan(session, context, entry)
+	_close_decision_memos(context)
+	return plan
+
+static func _open_decision_memos(context: Dictionary) -> void:
+	context[SITE_PASS_DECISION_KEY] = {}
+	context[SCOUT_RADII_KEY] = {}
+
+static func _close_decision_memos(context: Dictionary) -> void:
+	context.erase(SITE_PASS_DECISION_KEY)
+	context.erase(SCOUT_RADII_KEY)
+
+static func _decide_plan(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary) -> Dictionary:
 	var movement: Dictionary = entry.get(AI_HERO_KEY, {}).get("movement", {})
 	var movement_max := maxi(1, int(movement.get("max", 1)))
 	var radius := maxi(MIN_SEARCH_RADIUS, movement_max * SEARCH_DAYS)
@@ -2166,6 +2277,7 @@ static func _choose_plan(session: SessionStateStoreScript.SessionData, context: 
 		_profile_add(context, "gate_ms", started)
 		var near_score := float(best.get("score", 0.0))
 		if not gate.is_empty() and float(gate.score) > maxf(near_score, float(far.get("score", 0.0))) and _gate_fight_looks_good(session, context, entry, gate):
+			_close_decision_memos(context)
 			return _gate_walk(session, context, entry, gate, wide)
 		if not far.is_empty() and float(far.get("score", 0.0)) > near_score:
 			return far
@@ -2177,10 +2289,14 @@ static func _choose_plan(session: SessionStateStoreScript.SessionData, context: 
 		started = Time.get_ticks_usec()
 		best = _vetted_candidate(session, context, entry, search, movement_max)
 		_profile_add(context, "choose_ms", started)
-	if best.is_empty() and _clear_way(session, context, entry, movement_max * FAR_SEARCH_DAYS, movement_max):
-		# A hero of the player's own stepped aside: look again.
-		search = _search(session, context, entry, movement_max * FAR_SEARCH_DAYS)
-		best = _vetted_candidate(session, context, entry, search, movement_max)
+	if best.is_empty():
+		_close_decision_memos(context)
+		var cleared := _clear_way(session, context, entry, movement_max * FAR_SEARCH_DAYS, movement_max)
+		_open_decision_memos(context)
+		if cleared:
+			# A hero of the player's own stepped aside: look again.
+			search = _search(session, context, entry, movement_max * FAR_SEARCH_DAYS)
+			best = _vetted_candidate(session, context, entry, search, movement_max)
 	if best.is_empty():
 		# Nothing left on this level: the other one, through a gate.
 		started = Time.get_ticks_usec()
@@ -2188,6 +2304,7 @@ static func _choose_plan(session: SessionStateStoreScript.SessionData, context: 
 		if not best.is_empty() and not _gate_fight_looks_good(session, context, entry, best):
 			best = {}
 		if not best.is_empty() and best.has("past_path"):
+			_close_decision_memos(context)
 			return _gate_walk(session, context, entry, best, search)
 		_profile_add(context, "gate_ms", started)
 	if best.is_empty():
@@ -2266,7 +2383,9 @@ static func _free_fight(session: SessionStateStoreScript.SessionData, context: D
 		var battle_number := int(context.get("auto_battle_count", 0)) + 1
 		context["preview_count"] = int(context.get("preview_count", 0)) + 1
 		var started := Time.get_ticks_usec()
-		var outcome := _simulate_battle(session, context, entry, guard, battle_number)
+		# The preview stops at the first creature the hero loses: the guard is
+		# costly then, and the cut-short outcome is never used.
+		var outcome := _simulate_battle(session, context, entry, guard, battle_number, _creature_total(stacks))
 		_profile_add(context, "preview_ms", started)
 		if bool(outcome.get("won", false)) and _creature_total(outcome.get("hero_survivors", [])) >= _creature_total(stacks):
 			context["fight_preview"] = {"key": _battle_key(entry, guard, battle_number), "outcome": outcome}
@@ -2827,6 +2946,13 @@ static func _level_regions(session: SessionStateStoreScript.SessionData, context
 	var portals: Dictionary = surface.get("portals", {})
 	var native_corners := NativeTransit.uses_native_adjacency(session)
 	var resolved := _resolved_lookup(session)
+	# Tiles no patch takes: rock and bodies that do not end a route, and water.
+	var water: PackedByteArray = surface.get("water", PackedByteArray())
+	var closed := PackedByteArray()
+	closed.resize(count)
+	for tile in range(count):
+		if (blocked[tile] != 0 and not static_stops.has(tile)) or (tile < water.size() and water[tile] != 0):
+			closed[tile] = 1
 	var patches := PackedInt32Array()
 	patches.resize(count)
 	patches.fill(-1)
@@ -2839,6 +2965,7 @@ static func _level_regions(session: SessionStateStoreScript.SessionData, context
 			armies.append({"id": String(record.id), "power": _guard_power(encounters[int(record.index)]), "tiles": record.zone + record.body})
 	# Rival heroes stand still through this player's turn and end a route
 	# where they stand, as the search has it.
+	var sight := _sight_context(String(context.controller))
 	for hero_guard in _hero_guards(session, context, level):
 		if not bool(hero_guard.hostile):
 			continue
@@ -2848,17 +2975,17 @@ static func _level_regions(session: SessionStateStoreScript.SessionData, context
 		var army := {"id": String(hero_guard.id), "tiles": tiles}
 		if String(hero_guard.ref_kind) == "ai_hero":
 			var other: Dictionary = encounters[int(hero_guard.index)]
-			army.merge({"power": hero_power(other), "commander": other.get("enemy_commander_state", {}), "seen": _position_seen(session, context, LevelRules.position(other))})
+			army.merge({"power": hero_power(other), "commander": other.get("enemy_commander_state", {}), "seen": _position_seen(session, sight, LevelRules.position(other))})
 		else:
 			var hero: Dictionary = session.overworld.player_heroes[int(hero_guard.index)]
-			army.merge({"power": army_power(hero.get("army", {}).get("stacks", []), hero), "commander": hero, "seen": _player_hero_seen(session, context, hero)})
+			army.merge({"power": army_power(hero.get("army", {}).get("stacks", []), hero), "commander": hero, "seen": _player_hero_seen(session, sight, hero)})
 		armies.append(army)
 	for army in armies:
 		var patch := starts.size()
 		var tiles := []
 		for tile in army.tiles:
 			var guard_tile := int(tile)
-			if guard_tile < 0 or guard_tile >= count or patches[guard_tile] >= 0 or (blocked[guard_tile] != 0 and not static_stops.has(guard_tile)) or _is_water_index(surface, guard_tile):
+			if guard_tile < 0 or guard_tile >= count or patches[guard_tile] >= 0 or closed[guard_tile] != 0:
 				continue
 			patches[guard_tile] = patch
 			tiles.append(guard_tile)
@@ -2870,8 +2997,11 @@ static func _level_regions(session: SessionStateStoreScript.SessionData, context
 		guards.append(guard_record)
 	var queue := PackedInt32Array()
 	queue.resize(count)
+	var width := size.x
+	var height := size.y
+	var step_offset := _step_offsets(width)
 	for start in range(count):
-		if patches[start] >= 0 or (blocked[start] != 0 and not static_stops.has(start)) or _is_water_index(surface, start):
+		if patches[start] >= 0 or closed[start] != 0:
 			continue
 		var patch := starts.size()
 		starts.append(start)
@@ -2891,17 +3021,18 @@ static func _level_regions(session: SessionStateStoreScript.SessionData, context
 						tail += 1
 					elif patches[exit] < guards.size():
 						guards[patches[exit]].links[patch] = true
-			var cx := current % size.x
-			var cy := current / size.x
+			var cx := current % width
+			var cy := current / width
+			var on_edge := cx == 0 or cy == 0 or cx == width - 1 or cy == height - 1
 			for direction in range(8):
-				var nx: int = cx + NEIGHBOR_DX[direction]
-				var ny: int = cy + NEIGHBOR_DY[direction]
-				if nx < 0 or ny < 0 or nx >= size.x or ny >= size.y:
+				var dx: int = NEIGHBOR_DX[direction]
+				var dy: int = NEIGHBOR_DY[direction]
+				if on_edge and (cx + dx < 0 or cy + dy < 0 or cx + dx >= width or cy + dy >= height):
 					continue
-				var next := ny * size.x + nx
-				if patches[next] >= 0 or (blocked[next] != 0 and not static_stops.has(next)) or _is_water_index(surface, next):
+				var next := current + step_offset[direction]
+				if patches[next] >= 0 or closed[next] != 0:
 					continue
-				if nx != cx and ny != cy and not native_corners and blocked[cy * size.x + nx] != 0 and blocked[ny * size.x + cx] != 0:
+				if dx != 0 and dy != 0 and not native_corners and blocked[current + dx] != 0 and blocked[current + dy * width] != 0:
 					continue
 				patches[next] = patch
 				queue[tail] = next
@@ -3729,21 +3860,31 @@ static func _exploration_candidate(session: SessionStateStoreScript.SessionData,
 		if portal_distance > 0 and not _in_hero_zone(search, int(portal_tile)) and _portal_leads_unseen(portals[portal_tile], known) and (portal_frontier < 0 or portal_distance < int(search.dist[portal_frontier])) 				and _boat_price(session, context, search, int(portal_tile)) < explore_value:
 			portal_frontier = int(portal_tile)
 	var portal_value := explore_value - _boat_price(session, context, search, portal_frontier)
+	var dist: PackedInt32Array = search.get("dist", PackedInt32Array())
+	var phase: PackedByteArray = search.get("phase", PackedByteArray())
+	var width := size.x
+	var height := size.y
+	var step_offset := _step_offsets(width)
 	for position in range(1, int(search.get("order_count", 0))):
 		var tile_index := order[position]
-		if portal_frontier >= 0 and int(search.dist[portal_frontier]) <= int(search.dist[tile_index]):
+		if portal_frontier >= 0 and dist[portal_frontier] <= dist[tile_index]:
 			return {"kind": "explore", "id": "explore:%d" % portal_frontier, "index": portal_frontier, "value": portal_value, "tile_index": portal_frontier, "distance": int(search.dist[portal_frontier])}
-		var x := tile_index % size.x
-		var y := tile_index / size.x
-		var price := _boat_price(session, context, search, tile_index)
+		var x := tile_index % width
+		var y := tile_index / width
+		# Only a tile reached by buying a boat has a price (`_boat_price`).
+		var price := 0.0
+		if tile_index < phase.size() and (phase[tile_index] & BOUGHT_BOAT) != 0:
+			price = _boat_price(session, context, search, tile_index)
 		if price >= explore_value:
 			continue
+		var on_edge := x == 0 or y == 0 or x == width - 1 or y == height - 1
 		for direction in range(8):
-			var nx: int = x + NEIGHBOR_DX[direction]
-			var ny: int = y + NEIGHBOR_DY[direction]
-			if nx < 0 or ny < 0 or nx >= size.x or ny >= size.y:
-				continue
-			if known[ny * size.x + nx] == 0:
+			if on_edge:
+				var nx: int = x + NEIGHBOR_DX[direction]
+				var ny: int = y + NEIGHBOR_DY[direction]
+				if nx < 0 or ny < 0 or nx >= width or ny >= height:
+					continue
+			if known[tile_index + step_offset[direction]] == 0:
 				return {"kind": "explore", "id": "explore:%d" % tile_index, "index": tile_index, "value": explore_value - price, "tile_index": tile_index, "distance": int(search.dist[tile_index])}
 	if portal_frontier >= 0:
 		return {"kind": "explore", "id": "explore:%d" % portal_frontier, "index": portal_frontier, "value": portal_value, "tile_index": portal_frontier, "distance": int(search.dist[portal_frontier])}
@@ -3762,7 +3903,7 @@ static func _candidate(session: SessionStateStoreScript.SessionData, context: Di
 			var node: Dictionary = nodes[int(ref.index)]
 			if bool(node.get("collected", false)):
 				return {}
-			if not AdventureRules._artifact_guard_encounter_for_node(session, node).is_empty():
+			if not _artifact_guard(session, node).is_empty():
 				return {}
 			var opens := _site_door_value(session, context, entry, search, tile_index, needs) if not search.is_empty() else 0.0
 			return {"kind": "artifact", "id": String(node.get("placement_id", "")), "index": int(ref.index), "value": 1100.0 + opens}
@@ -4138,9 +4279,10 @@ static func _opened_value(session: SessionStateStoreScript.SessionData, context:
 	# stretch that meets a tile where the search stopped for distance is not
 	# behind the guard.
 	var zone: Array = origin
-	var seen := {}
+	var seen := PackedByteArray()
+	seen.resize(size.x * size.y)
 	for zone_index in zone:
-		seen[int(zone_index)] = true
+		seen[int(zone_index)] = 1
 	var region := []
 	var flooded := 0
 	for zone_index in zone:
@@ -4150,9 +4292,9 @@ static func _opened_value(session: SessionStateStoreScript.SessionData, context:
 			if sx < 0 or sy < 0 or sx >= size.x or sy >= size.y:
 				continue
 			var start := sy * size.x + sx
-			if flooded >= PASSAGE_TILE_CAP or seen.has(start) or dist[start] >= 0 or blocked[start] != 0 or guard_mask[start] != 0:
+			if flooded >= PASSAGE_TILE_CAP or seen[start] != 0 or dist[start] >= 0 or blocked[start] != 0 or guard_mask[start] != 0:
 				continue
-			seen[start] = true
+			seen[start] = 1
 			var stretch := [start]
 			var head := 0
 			var open_to_hero := false
@@ -4172,9 +4314,9 @@ static func _opened_value(session: SessionStateStoreScript.SessionData, context:
 						if horizon >= 0 and dist[next] >= horizon and (stop_mask.is_empty() or stop_mask[next] == 0 or pass_mask[next] != 0):
 							open_to_hero = true
 						continue
-					if seen.has(next) or blocked[next] != 0 or guard_mask[next] != 0:
+					if seen[next] != 0 or blocked[next] != 0 or guard_mask[next] != 0:
 						continue
-					seen[next] = true
+					seen[next] = 1
 					stretch.append(next)
 			if not open_to_hero:
 				region.append_array(stretch)
@@ -4286,6 +4428,25 @@ static func _war_paths(session: SessionStateStoreScript.SessionData, context: Di
 	# share of it, and its hero crossed a gate back and forth for five days.
 	var portals: Dictionary = _level_surface(session, context, level).get("portals", {})
 	var seen_map := _explored(session, context, level) if not portals.is_empty() else PackedByteArray()
+	# The walk reads guards, targets and portals by tile.
+	var guarded := PackedByteArray()
+	guarded.resize(count)
+	var guard_key := PackedInt32Array()
+	guard_key.resize(count)
+	for tile in guard_at.keys():
+		if int(tile) >= 0 and int(tile) < count:
+			guarded[int(tile)] = 1
+			guard_key[int(tile)] = int(guard_at[tile])
+	var is_target := PackedByteArray()
+	is_target.resize(count)
+	for tile in targets.keys():
+		if int(tile) >= 0 and int(tile) < count:
+			is_target[int(tile)] = 1
+	var is_portal := PackedByteArray()
+	is_portal.resize(count)
+	for tile in portals.keys():
+		if int(tile) >= 0 and int(tile) < count:
+			is_portal[int(tile)] = 1
 	var first := PackedInt32Array()
 	first.resize(count)
 	first.fill(-2)
@@ -4293,44 +4454,74 @@ static func _war_paths(session: SessionStateStoreScript.SessionData, context: Di
 	queue.resize(count)
 	var head := 0
 	var tail := 0
-	for tile in range(count):
-		if dist[tile] >= 0 and not guard_at.has(tile):
+	# Every tile the search reached, in tile order: those it queued and the
+	# stops where it ended a route (each has a reference there).
+	var reached: PackedInt32Array = search.order.slice(0, int(search.order_count))
+	for tile in search.stops.keys():
+		reached.append(int(tile))
+	reached.sort()
+	var previous := -1
+	for tile in reached:
+		if tile == previous:
+			continue
+		previous = tile
+		if guarded[tile] == 0:
 			first[tile] = -1
 			queue[tail] = tile
 			tail += 1
 	var found := 0
-	while head < tail and found < targets.size():
+	var target_count := targets.size()
+	var width := size.x
+	var height := size.y
+	var step_offset := _step_offsets(width)
+	while head < tail and found < target_count:
 		var current := queue[head]
 		head += 1
-		var cx := current % size.x
-		var cy := current / size.x
-		var steps := []
+		var carried_here := first[current]
+		var cx := current % width
+		var cy := current / width
+		var on_edge := cx == 0 or cy == 0 or cx == width - 1 or cy == height - 1
+		# The neighbours, then where a portal here leads.
 		for direction in range(8):
-			var nx: int = cx + NEIGHBOR_DX[direction]
-			var ny: int = cy + NEIGHBOR_DY[direction]
-			if nx < 0 or ny < 0 or nx >= size.x or ny >= size.y:
-				continue
-			steps.append(ny * size.x + nx)
-		if portals.has(current):
-			steps.append_array(_portal_exits(portals[current], seen_map))
-		for step in steps:
-			var next := int(step)
+			if on_edge:
+				var nx: int = cx + NEIGHBOR_DX[direction]
+				var ny: int = cy + NEIGHBOR_DY[direction]
+				if nx < 0 or ny < 0 or nx >= width or ny >= height:
+					continue
+			var next := current + step_offset[direction]
 			if first[next] != -2:
 				continue
-			var is_target := targets.has(next)
-			if blocked[next] != 0 and not guard_at.has(next) and not is_target and not portals.has(next):
+			if blocked[next] != 0 and guarded[next] == 0 and is_target[next] == 0 and is_portal[next] == 0:
 				continue
-			var carried := first[current]
-			if carried == -1 and guard_at.has(next):
-				carried = int(guard_at[next])
+			var carried := carried_here
+			if carried == -1 and guarded[next] != 0:
+				carried = guard_key[next]
 			first[next] = carried
-			if is_target:
+			if is_target[next] != 0:
 				found += 1
 				if carried != -1:
 					result[carried] = maxf(float(result.get(carried, 0.0)), float(targets[next]))
 				continue
 			queue[tail] = next
 			tail += 1
+		if is_portal[current] != 0:
+			for exit in _portal_exits(portals[current], seen_map):
+				var next := int(exit)
+				if first[next] != -2:
+					continue
+				if blocked[next] != 0 and guarded[next] == 0 and is_target[next] == 0 and is_portal[next] == 0:
+					continue
+				var carried := carried_here
+				if carried == -1 and guarded[next] != 0:
+					carried = guard_key[next]
+				first[next] = carried
+				if is_target[next] != 0:
+					found += 1
+					if carried != -1:
+						result[carried] = maxf(float(result.get(carried, 0.0)), float(targets[next]))
+					continue
+				queue[tail] = next
+				tail += 1
 	return result
 
 ## What scouting the nearest unexplored ground is worth (see HUNT_EXPLORE_VALUE).
@@ -4426,11 +4617,30 @@ static func _player_hero_seen(session: SessionStateStoreScript.SessionData, cont
 	return _position_seen(session, context, hero.get("position", {}) if hero.get("position", {}) is Dictionary else {})
 
 ## Whether one of the player's heroes or towns can see this spot right now.
+## A context made for a run of these questions (`_sight_context`) keeps the
+## player's heroes, and it or a decision (`_choose_plan`) keeps each one's
+## scouting radius, by its place among them, from the first time it is needed.
 static func _position_seen(session: SessionStateStoreScript.SessionData, context: Dictionary, position: Dictionary) -> bool:
-	for entry in active_hero_entries(session, String(context.controller)):
+	var radii = context.get(SCOUT_RADII_KEY)
+	var own: Array
+	var listed = context.get(SIGHT_HEROES_KEY)
+	if listed is Array:
+		own = listed
+	else:
+		own = active_hero_entries(session, String(context.controller))
+		if context.has(SIGHT_HEROES_KEY):
+			context[SIGHT_HEROES_KEY] = own
+	for own_index in range(own.size()):
+		var entry: Dictionary = own[own_index]
 		if not LevelRules.same_level(entry, position):
 			continue
-		var radius := HeroCommandRulesScript.scouting_radius_for_hero(entry.get("enemy_commander_state", {}))
+		var radius := -1
+		if radii is Dictionary:
+			radius = int(radii.get(own_index, -1))
+		if radius < 0:
+			radius = HeroCommandRulesScript.scouting_radius_for_hero(entry.get("enemy_commander_state", {}))
+			if radii is Dictionary:
+				radii[own_index] = radius
 		if HeroCommandRulesScript.within_scout_radius(int(position.get("x", 0)) - int(entry.get("x", 0)), int(position.get("y", 0)) - int(entry.get("y", 0)), radius):
 			return true
 	for town in session.overworld.get("towns", []):
@@ -4439,10 +4649,19 @@ static func _position_seen(session: SessionStateStoreScript.SessionData, context
 				return true
 	return false
 
+## A context for a run of `_position_seen` questions during which no hero of
+## the player moves or changes: the player's active heroes are listed once and
+## each one's scouting radius is worked out once, by its place in that list.
+const SCOUT_RADII_KEY := "scout_radii"
+const SIGHT_HEROES_KEY := "sight_heroes"
+
+static func _sight_context(controller: String) -> Dictionary:
+	return {"controller": controller, SCOUT_RADII_KEY: {}, SIGHT_HEROES_KEY: null}
+
 ## Hostile heroes the controller can see, with their strength and reach.
 static func _hostile_heroes(session: SessionStateStoreScript.SessionData, controller: String) -> Array:
 	var result := []
-	var context := {"controller": controller}
+	var context := _sight_context(controller)
 	for hero in session.overworld.get("player_heroes", []):
 		if not (hero is Dictionary) or PlayerRules.allied(session, controller, "player"):
 			continue
@@ -4794,7 +5013,7 @@ static func _hero_guards(session: SessionStateStoreScript.SessionData, context: 
 	var resolved := _resolved_lookup(session)
 	for index in range(encounters.size()):
 		var other = encounters[index]
-		if not is_ai_hero(other) or LevelRules.level_of(other) != level or resolved.has(String(other.get("placement_id", ""))):
+		if not (other is Dictionary) or not (other.get(AI_HERO_KEY, null) is Dictionary) or LevelRules.level_of(other) != level or resolved.has(String(other.get("placement_id", ""))):
 			continue
 		var other_controller := PlayerRules.raid_controller_id(other)
 		var hostile := other_controller != controller and not PlayerRules.allied(session, controller, other_controller)
@@ -4836,28 +5055,39 @@ static func _level_surface(session: SessionStateStoreScript.SessionData, context
 	var water := PackedByteArray()
 	water.resize(size.x * size.y)
 	var water_count := 0
-	var water_ids := {}
+	# Per terrain id: [passable, water].
+	var terrain_kinds := {}
 	var rows: Array = LevelRules.terrain_rows(session, level)
 	for y in range(size.y):
 		var row: Array = rows[y] if y < rows.size() and rows[y] is Array else []
 		for x in range(size.x):
-			if x >= row.size() or not overworld_rules.terrain_id_is_passable(String(row[x])):
+			if x >= row.size():
 				blocked[y * size.x + x] = 1
-			if x < row.size():
-				var terrain := String(row[x])
-				if not water_ids.has(terrain):
-					water_ids[terrain] = ContentService.normalize_terrain_id(terrain) == "water"
-				if bool(water_ids[terrain]):
-					water[y * size.x + x] = 1
-					water_count += 1
+				continue
+			var terrain := String(row[x])
+			var kind = terrain_kinds.get(terrain)
+			if kind == null:
+				kind = [overworld_rules.terrain_id_is_passable(terrain), ContentService.normalize_terrain_id(terrain) == "water"]
+				terrain_kinds[terrain] = kind
+			if not bool(kind[0]):
+				blocked[y * size.x + x] = 1
+			if bool(kind[1]):
+				water[y * size.x + x] = 1
+				water_count += 1
 	# Open water a boat sails over: water without an object's body on it.
 	var sea := water.duplicate()
-	var bodies: Dictionary = overworld_rules._build_blocked_tile_index(session, level, "", {})
+	# Armies move and are added for each search: every army body on the level is
+	# left out of the static bodies, so the index skips all encounters.
 	var army_tiles := {}
+	var every_encounter := {}
 	for encounter in session.overworld.get("encounters", []):
-		if encounter is Dictionary and LevelRules.level_of(encounter) == level:
+		if not (encounter is Dictionary):
+			continue
+		every_encounter[overworld_rules.encounter_key(encounter)] = true
+		if LevelRules.level_of(encounter) == level:
 			for tile in overworld_rules._generated_body_tiles_for_placement(encounter, bool(encounter.get("blocking_body", true))):
 				army_tiles[overworld_rules._tile_key(tile)] = true
+	var bodies: Dictionary = overworld_rules._build_blocked_tile_index(session, level, "", every_encounter)
 	for key in bodies.keys():
 		if army_tiles.has(key):
 			continue
@@ -4925,7 +5155,7 @@ static func _level_surface(session: SessionStateStoreScript.SessionData, context
 		for tile in engagement:
 			if tile is Vector2i and tile.x >= 0 and tile.y >= 0 and tile.x < size.x and tile.y < size.y:
 				zone.append(tile.y * size.x + tile.x)
-		neutrals.append({"id": String(encounter.get("placement_id", "")), "index": index, "body": body, "zone": zone})
+		neutrals.append({"id": String(encounter.get("placement_id", "")), "index": index, "body": body, "zone": zone, "ref": {"kind": STOP_ENCOUNTER, "index": index}})
 	# Portals on this level, by entrance tile: their exits on this level and the
 	# portal node. Stepping in comes out at an exit, as for the human; a network
 	# with several exits sends the hero to a random one (`_search` plans with the
@@ -4999,6 +5229,30 @@ static func _level_surface(session: SessionStateStoreScript.SessionData, context
 	_profile_add(context, "surface_ms", surface_started)
 	return surface
 
+## Each neutral army's zone (by its place in surface.neutrals) without the
+## tiles no one can stand on: rock or an object's body, unless a doorway or visit
+## tile is there or it is water. Kept with the surface until a claim opens a body
+## (`_clear_static_body`).
+static func _open_guard_zones(surface: Dictionary) -> Array:
+	if surface.has("open_zones"):
+		return surface["open_zones"]
+	var blocked: PackedByteArray = surface.blocked
+	var water: PackedByteArray = surface.get("water", PackedByteArray())
+	var static_stops: Dictionary = surface.stops
+	var zones := []
+	for record in surface.neutrals:
+		var zone := []
+		for zone_index in record.zone:
+			# Rock or an object's body inside the zone is no place to stand, as
+			# for the human; only a doorway or visit tile there can be entered.
+			var tile := int(zone_index)
+			if blocked[tile] != 0 and not static_stops.has(tile) and not (tile < water.size() and water[tile] != 0):
+				continue
+			zone.append(tile)
+		zones.append(zone)
+	surface["open_zones"] = zones
+	return zones
+
 ## Where a portal can take a hero, as far as its player knows: the one exit of a
 ## fixed portal; for a network with several exits (one picked at random, as for
 ## the human) the exits on ground this player has seen, which the network's
@@ -5024,15 +5278,15 @@ static func _portal_leads_unseen(portal: Dictionary, seen_map: PackedByteArray) 
 
 ## Whether a hero may cross this site's tile without stopping: the pickup is
 ## gone, the one-time site is looted, or the site is already this player's (or
-## an ally's). The caller runs _sync_site_pass_memo first.
-static func _site_stop_passable(session: SessionStateStoreScript.SessionData, controller: String, ref: Dictionary) -> bool:
+## an ally's). The caller runs _sync_site_pass_memo first and passes the
+## session's resource and artifact nodes, and `allies`, where whether each
+## owner is allied to the controller is kept while nothing changes.
+static func _site_stop_passable(session: SessionStateStoreScript.SessionData, controller: String, ref: Dictionary, nodes: Array, artifacts: Array, allies: Dictionary) -> bool:
 	match int(ref.kind):
 		STOP_ARTIFACT:
-			var artifacts: Array = session.overworld.get("artifact_nodes", [])
 			var artifact = artifacts[int(ref.index)] if int(ref.index) < artifacts.size() else {}
 			return artifact is Dictionary and bool(artifact.get("collected", false))
 		STOP_RESOURCE:
-			var nodes: Array = session.overworld.get("resource_nodes", [])
 			var node = nodes[int(ref.index)] if int(ref.index) < nodes.size() else {}
 			if not (node is Dictionary) or NativeTransit.is_native(node):
 				return false
@@ -5053,7 +5307,11 @@ static func _site_stop_passable(session: SessionStateStoreScript.SessionData, co
 			if bool(node.get("collected", false)) and not bool(site_class[SITE_PASS_KEPT]):
 				return true
 			var owner := PlayerRules.resource_controller_id(node)
-			return owner != "" and PlayerRules.allied(session, controller, owner)
+			if owner == "":
+				return false
+			if not allies.has(owner):
+				allies[owner] = PlayerRules.allied(session, controller, owner)
+			return bool(allies[owner])
 	return false
 
 ## What a resource site's content row says about crossing it, by site id:
@@ -5066,6 +5324,23 @@ const SITE_PASS_WALK_ACROSS := 1
 const SITE_PASS_KEPT := 2
 static var _site_pass_memo := {}
 static var _site_pass_sources := []
+
+## The decision's record of which site stops on this level are open
+## (`_choose_plan`), shared by every search of the decision; empty outside a
+## decision. Kept with the level's site list it was made for.
+const SITE_PASS_DECISION_KEY := "decision_site_pass"
+
+static func _decision_site_pass(context: Dictionary, level: int, sites: Array) -> PackedByteArray:
+	var by_level = context.get(SITE_PASS_DECISION_KEY)
+	if not (by_level is Dictionary):
+		return PackedByteArray()
+	var record: Dictionary = by_level.get(level, {})
+	if record.is_empty() or not is_same(record.sites, sites):
+		var open := PackedByteArray()
+		open.resize(sites.size())
+		record = {"sites": sites, "open": open}
+		by_level[level] = record
+	return record.open
 
 static func _sync_site_pass_memo() -> void:
 	var sources := [ContentService.get_content_revision(), ContentService.load_json(ContentService.RESOURCE_SITES_PATH)]
@@ -5122,29 +5397,33 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 	var guard_mask := PackedByteArray()
 	guard_mask.resize(count)
 	var guard_zones := {}
-	for record in surface.neutrals:
+	var surface_blocked: PackedByteArray = surface.blocked
+	var water: PackedByteArray = surface.get("water", PackedByteArray())
+	var neutrals: Array = surface.neutrals
+	var open_zones := _open_guard_zones(surface)
+	for record_position in range(neutrals.size()):
+		var record: Dictionary = neutrals[record_position]
 		if resolved.has(String(record.id)):
 			continue
 		for body_index in record.body:
 			blocked[int(body_index)] = 1
 			army_tiles[int(body_index)] = true
-		var zone := []
-		for zone_index in record.zone:
-			# Rock or an object's body inside the zone is no place to stand, as
-			# for the human; only a doorway or visit tile there can be entered.
-			if surface.blocked[int(zone_index)] != 0 and not static_stops.has(int(zone_index)) and not _is_water_index(surface, int(zone_index)):
-				continue
-			zone.append(int(zone_index))
-			stop_mask[int(zone_index)] = 1
-			guard_mask[int(zone_index)] = 1
-			_add_stop_index(dynamic_stops, int(zone_index), {"kind": STOP_ENCOUNTER, "index": int(record.index)})
+		var zone: Array = open_zones[record_position]
+		var zone_ref: Dictionary = record.ref
+		for zone_index in zone:
+			stop_mask[zone_index] = 1
+			guard_mask[zone_index] = 1
+			if dynamic_stops.has(zone_index):
+				dynamic_stops[zone_index].append(zone_ref)
+			else:
+				dynamic_stops[zone_index] = [zone_ref]
 		guard_zones[int(record.index)] = zone
 	for index in range(encounters.size()):
 		var other = encounters[index]
-		if not (other is Dictionary) or LevelRules.level_of(other) != level:
+		if not (other is Dictionary):
 			continue
 		var other_controller := PlayerRules.raid_controller_id(other)
-		if other_controller == "":
+		if other_controller == "" or LevelRules.level_of(other) != level:
 			continue
 		var other_id := String(other.get("placement_id", ""))
 		if other_id == actor_id or resolved.has(other_id):
@@ -5194,7 +5473,7 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 		var ref := {"kind": STOP_HERO if String(guard.ref_kind) == "hero" else STOP_AI_HERO, "index": int(guard.index), "zone": true}
 		for tile in _hero_zone_tiles(session, context, guard.tile, level):
 			var zone_index: int = tile.y * width + tile.x
-			if hero_tiles.has(zone_index) or army_tiles.has(zone_index) or (surface.blocked[zone_index] != 0 and not static_stops.has(zone_index) and not _is_water_index(surface, zone_index)):
+			if hero_tiles.has(zone_index) or army_tiles.has(zone_index) or (surface_blocked[zone_index] != 0 and not static_stops.has(zone_index) and not (zone_index < water.size() and water[zone_index] != 0)):
 				continue
 			hero_zone[zone_index] = 1
 			stop_mask[zone_index] = 1
@@ -5202,15 +5481,28 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 	var pass_mask := PackedByteArray()
 	pass_mask.resize(count)
 	_sync_site_pass_memo()
-	for site in surface.get("site_stops", []):
+	var resource_nodes: Array = session.overworld.get("resource_nodes", [])
+	var artifact_nodes: Array = session.overworld.get("artifact_nodes", [])
+	var site_allies := {}
+	var sites: Array = surface.get("site_stops", [])
+	# Per site: 0 not yet known this decision, 1 open, 2 closed.
+	var site_open := _decision_site_pass(context, level, sites)
+	var shared := not site_open.is_empty()
+	for site_position in range(sites.size()):
+		var site: Dictionary = sites[site_position]
 		var site_tile := int(site.tile)
 		if dynamic_stops.has(site_tile) or army_tiles.has(site_tile):
 			continue
 		var open := true
-		for ref in site.refs:
-			if not _site_stop_passable(session, controller, ref):
-				open = false
-				break
+		if shared and site_open[site_position] != 0:
+			open = site_open[site_position] == 1
+		else:
+			for ref in site.refs:
+				if not _site_stop_passable(session, controller, ref, resource_nodes, artifact_nodes, site_allies):
+					open = false
+					break
+			if shared:
+				site_open[site_position] = 1 if open else 2
 		if open:
 			pass_mask[site_tile] = 1
 	var dist := PackedInt32Array()
@@ -5231,7 +5523,6 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 	# boards once. Phase per tile: 0 walking, 1 sailing, 2 ashore again, plus
 	# BOUGHT_BOAT when the route buys its boat at a shipyard (`_boat_price`).
 	var has_water := int(surface.get("water_count", 0)) > 0
-	var water: PackedByteArray = surface.get("water", PackedByteArray())
 	var phase := PackedByteArray()
 	var sea_open := PackedByteArray()
 	var boat_tiles := {}
@@ -5276,6 +5567,8 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 	var native_corners := NativeTransit.uses_native_adjacency(session)
 	var portals: Dictionary = surface.get("portals", {})
 	var seen_map := _explored(session, context, level) if not portals.is_empty() else PackedByteArray()
+	var height := size.y
+	var step_offset := _step_offsets(width)
 	# A hero that stopped on a portal goes through it first thing.
 	var reached := []
 	if portals.has(start_index):
@@ -5322,6 +5615,8 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 			continue
 		var cx := current % width
 		var cy := current / width
+		# Only a tile on the map's edge has neighbours off the map.
+		var on_edge := cx == 0 or cy == 0 or cx == width - 1 or cy == height - 1
 		var here_phase := phase[current] if has_water else 0
 		var mode := here_phase & 3
 		if here_phase == 0 and docks.has(current) and dist[int(docks[current])] < 0:
@@ -5333,17 +5628,15 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 		for direction in range(8):
 			var dx: int = NEIGHBOR_DX[direction]
 			var dy: int = NEIGHBOR_DY[direction]
-			var nx := cx + dx
-			var ny := cy + dy
-			if nx < 0 or ny < 0 or nx >= width or ny >= size.y:
+			if on_edge and (cx + dx < 0 or cy + dy < 0 or cx + dx >= width or cy + dy >= height):
 				continue
-			var next := ny * width + nx
+			var next := current + step_offset[direction]
 			if dist[next] >= 0:
 				continue
 			if has_water:
 				if water[next] != 0:
 					if mode == 1:
-						if dx != 0 and dy != 0 and not native_corners and sea_open[cy * width + nx] == 0 and sea_open[ny * width + cx] == 0:
+						if dx != 0 and dy != 0 and not native_corners and sea_open[current + dx] == 0 and sea_open[current + dy * width] == 0:
 							continue
 						if stop_mask[next] != 0:
 							dist[next] = next_distance
@@ -5372,7 +5665,7 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 						else:
 							capped = true
 					continue
-			if dx != 0 and dy != 0 and not native_corners and blocked[cy * width + nx] != 0 and blocked[ny * width + cx] != 0:
+			if dx != 0 and dy != 0 and not native_corners and blocked[current + dx] != 0 and blocked[current + dy * width] != 0:
 				continue
 			if stop_mask[next] != 0:
 				dist[next] = next_distance
@@ -5466,6 +5759,14 @@ static func _tile_index_of(point: Dictionary, size: Vector2i) -> int:
 	if x < 0 or y < 0 or x >= size.x or y >= size.y:
 		return -1
 	return y * size.x + x
+
+## The tile index step to each neighbour (NEIGHBOR_DX, NEIGHBOR_DY) on a map
+## this wide, for a tile whose neighbours all lie on the map.
+static func _step_offsets(width: int) -> PackedInt32Array:
+	var offsets := PackedInt32Array()
+	for direction in range(8):
+		offsets.append(int(NEIGHBOR_DY[direction]) * width + int(NEIGHBOR_DX[direction]))
+	return offsets
 
 static func _add_stop_index(stops: Dictionary, tile_index: int, ref: Dictionary) -> void:
 	if not stops.has(tile_index):
@@ -5637,6 +5938,7 @@ static func _clear_static_body(session: SessionStateStoreScript.SessionData, con
 			var terrain := String(LevelRules.terrain_rows(session, level)[tile.y][tile.x])
 			blocked[tile.y * size.x + tile.x] = 0 if overworld_rules.terrain_id_is_passable(terrain) else 1
 	surface["blocked"] = blocked
+	surface.erase("open_zones")
 
 static func _take_artifact(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, plan: Dictionary) -> Dictionary:
 	var controller := String(context.controller)
@@ -5970,8 +6272,9 @@ static func _battle_key(entry: Dictionary, defender: Dictionary, battle_number: 
 	return "%s|%s|%d|%d|%d" % [String(entry.get("placement_id", "")), String(defender.get("placement_id", "")), battle_number, hash(entry.get("enemy_army", {}).get("stacks", [])), hash(_neutral_army(defender).get("stacks", []) if PlayerRules.raid_controller_id(defender) == "" else defender.get("enemy_army", {}).get("stacks", []))]
 
 ## One auto-resolved battle on a scratch session: the hero attacks `defender`.
-## Pure: the live session is not touched.
-static func _simulate_battle(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, defender: Dictionary, battle_number: int) -> Dictionary:
+## Pure: the live session is not touched. stop_below_creatures > 0 ends the
+## battle unresolved (not won) once the hero has fewer creatures standing.
+static func _simulate_battle(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, defender: Dictionary, battle_number: int, stop_below_creatures: int = 0) -> Dictionary:
 	var hero := _battle_hero(entry)
 	var defender_copy := defender.duplicate(true)
 	defender_copy["x"] = 0
@@ -6014,7 +6317,7 @@ static func _simulate_battle(session: SessionStateStoreScript.SessionData, conte
 		return {"ok": false, "won": false}
 	scratch.battle = payload
 	scratch.game_state = "battle"
-	var resolution: Dictionary = _auto_resolve_rules().resolve_active_battle(scratch)
+	var resolution: Dictionary = _auto_resolve_rules().resolve_active_battle(scratch, _auto_resolve_rules().DEFAULT_STEP_LIMIT, stop_below_creatures)
 	var final_state := String(resolution.get("state", ""))
 	var won := final_state == "victory"
 	var hero_after := {}

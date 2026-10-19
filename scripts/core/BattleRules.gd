@@ -36,6 +36,10 @@ static var _board_read_scope_battle: Dictionary = {}
 static var _board_read_scope_cache: Dictionary = {}
 static var _validation_board_read_cache_disabled := false
 static var _board_read_cache_hits := 0
+# The presentation queue _append_presentation_event stored last, never changed
+# in place afterwards: all its entries but the last are normalized, so the next
+# append onto it normalizes only that one. Never saved.
+static var _presentation_queue_written: Array = []
 
 const STATUS_HARRIED := "status_harried"
 const STATUS_STAGGERED := "status_staggered"
@@ -9426,29 +9430,33 @@ static func _obstacle_cells_clear(cells: Array, blocked: Dictionary) -> bool:
 
 ## A two-hex body of either side can still walk from its own edge to the other.
 static func _obstacle_field_stays_open(blocked: Dictionary) -> bool:
+	var neighbor_ids := _hex_neighbor_ids()
 	for side in ["player", "enemy"]:
 		var body := {"side": side, "battle_footprint": 2}
 		var start_q := 1 if side == "player" else BATTLE_HEX_COLUMNS - 2
 		var goal_q := BATTLE_HEX_COLUMNS - 1 if side == "player" else 0
-		var frontier := []
-		var seen := {}
+		var fit := _hex_fit_mask(body, blocked)
+		var frontier := PackedInt32Array()
+		var seen := PackedByteArray()
+		seen.resize(BATTLE_HEX_COLUMNS * BATTLE_HEX_ROWS)
 		for r in range(BATTLE_HEX_ROWS):
-			var start := _hex_cell(start_q, r)
-			if Footprint.fits(body, start, blocked, BATTLE_HEX_COLUMNS, BATTLE_HEX_ROWS):
-				frontier.append(start)
-				seen[_hex_key(start)] = true
+			var start_id := start_q * BATTLE_HEX_ROWS + r
+			if fit[start_id] == 1:
+				frontier.append(start_id)
+				seen[start_id] = 1
 		var crossed := false
-		while not frontier.is_empty() and not crossed:
-			var cell: Dictionary = frontier.pop_front()
-			if int(cell.get("q", -1)) == goal_q:
+		var index := 0
+		while index < frontier.size():
+			var cell_id := frontier[index]
+			index += 1
+			if cell_id / BATTLE_HEX_ROWS == goal_q:
 				crossed = true
 				break
-			for neighbor in _hex_neighbors(cell):
-				var key := _hex_key(neighbor)
-				if seen.has(key) or not Footprint.fits(body, neighbor, blocked, BATTLE_HEX_COLUMNS, BATTLE_HEX_ROWS):
+			for neighbor_id in neighbor_ids[cell_id]:
+				if seen[neighbor_id] == 1 or fit[neighbor_id] == 0:
 					continue
-				seen[key] = true
-				frontier.append(neighbor)
+				seen[neighbor_id] = 1
+				frontier.append(neighbor_id)
 		if not crossed:
 			return false
 	return true
@@ -9646,6 +9654,55 @@ static func _hex_neighbors(cell: Dictionary) -> Array:
 			neighbors.append(_hex_cell(next_q, next_r))
 	return neighbors
 
+# The walks below run on hex ids (q * BATTLE_HEX_ROWS + r) instead of "q,r"
+# keys and cell dictionaries. Never saved.
+static var _hex_neighbor_id_table: Array = []
+static var _hex_id_by_key: Dictionary = {}
+
+## Per hex id, the ids _hex_neighbors lists for that hex, in the same order.
+static func _hex_neighbor_ids() -> Array:
+	if _hex_neighbor_id_table.is_empty():
+		var table := []
+		var ids := {}
+		for q in range(BATTLE_HEX_COLUMNS):
+			for r in range(BATTLE_HEX_ROWS):
+				var neighbor_ids := PackedInt32Array()
+				for neighbor in _hex_neighbors({"q": q, "r": r}):
+					neighbor_ids.append(int(neighbor.q) * BATTLE_HEX_ROWS + int(neighbor.r))
+				table.append(neighbor_ids)
+				ids[_hex_key_from_coords(q, r)] = q * BATTLE_HEX_ROWS + r
+		_hex_id_by_key = ids
+		_hex_neighbor_id_table = table
+	return _hex_neighbor_id_table
+
+## Per hex id, 1 where the stack's body fits by Footprint.fits against this
+## blocking map ("q,r" -> blocker id), else 0. A blocker carrying the stack's
+## own battle id does not block it.
+static func _hex_fit_mask(stack: Dictionary, occupied: Dictionary) -> PackedByteArray:
+	_hex_neighbor_ids()
+	var count := BATTLE_HEX_COLUMNS * BATTLE_HEX_ROWS
+	var open := PackedByteArray()
+	open.resize(count)
+	open.fill(1)
+	var identity := String(stack.get("battle_id", ""))
+	for key in occupied:
+		var id: int = _hex_id_by_key.get(key, -1)
+		if id >= 0 and (identity.is_empty() or String(occupied[key]) != identity):
+			open[id] = 0
+	if Footprint.width(stack) != 2:
+		return open
+	var tail_step := 1 if String(stack.get("side", "player")) == "enemy" else -1
+	var fit := PackedByteArray()
+	fit.resize(count)
+	for q in range(BATTLE_HEX_COLUMNS):
+		var tail_q := q + tail_step
+		if tail_q < 0 or tail_q >= BATTLE_HEX_COLUMNS:
+			continue
+		for r in range(BATTLE_HEX_ROWS):
+			if open[q * BATTLE_HEX_ROWS + r] == 1 and open[tail_q * BATTLE_HEX_ROWS + r] == 1:
+				fit[q * BATTLE_HEX_ROWS + r] = 1
+	return fit
+
 static func _reachable_empty_hexes(battle: Dictionary, stack: Dictionary, max_steps: int) -> Array:
 	var start := _stack_hex(stack)
 	if start.is_empty() or max_steps <= 0:
@@ -9653,25 +9710,29 @@ static func _reachable_empty_hexes(battle: Dictionary, stack: Dictionary, max_st
 	var occupied := _build_blocking_map(battle)
 	var start_key := _hex_key(start)
 	occupied.erase(start_key)
-	var frontier := [{"cell": start, "steps": 0}]
-	var seen := {start_key: 0}
+	var fit := _hex_fit_mask(stack, occupied)
+	var neighbor_ids := _hex_neighbor_ids()
+	var steps_by_id := PackedInt32Array()
+	steps_by_id.resize(BATTLE_HEX_COLUMNS * BATTLE_HEX_ROWS)
+	steps_by_id.fill(-1)
+	var start_id := int(start.q) * BATTLE_HEX_ROWS + int(start.r)
+	steps_by_id[start_id] = 0
+	var frontier := PackedInt32Array([start_id])
 	var reachable := []
-	while not frontier.is_empty():
-		var current: Dictionary = frontier.pop_front()
-		var current_cell: Dictionary = current.get("cell", {})
-		var steps := int(current.get("steps", 0))
+	var index := 0
+	while index < frontier.size():
+		var current_id := frontier[index]
+		index += 1
+		var steps := steps_by_id[current_id]
 		if steps >= max_steps:
 			continue
-		for neighbor in _hex_neighbors(current_cell):
-			var key := _hex_key(neighbor)
-			if seen.has(key) or not Footprint.fits(stack, neighbor, occupied, BATTLE_HEX_COLUMNS, BATTLE_HEX_ROWS):
+		for neighbor_id in neighbor_ids[current_id]:
+			if steps_by_id[neighbor_id] >= 0 or fit[neighbor_id] == 0:
 				continue
 			var next_steps := steps + 1
-			seen[key] = next_steps
-			var entry: Dictionary = neighbor.duplicate(true)
-			entry["steps"] = next_steps
-			reachable.append(entry)
-			frontier.append({"cell": neighbor, "steps": next_steps})
+			steps_by_id[neighbor_id] = next_steps
+			reachable.append({"q": neighbor_id / BATTLE_HEX_ROWS, "r": neighbor_id % BATTLE_HEX_ROWS, "steps": next_steps})
+			frontier.append(neighbor_id)
 	return reachable
 
 static func _stack_hex_distance(lhs: Dictionary, rhs: Dictionary) -> int:
@@ -9720,45 +9781,48 @@ static func _walk_steps_to_target(battle: Dictionary, stack: Dictionary, target:
 	var cached: Variant = _board_read_cache_get(cache_key)
 	if cached != null:
 		return cached
-	var fit_cells := _walk_fit_cells(battle, stack)
-	var steps := {}
-	var frontier := []
-	for key in fit_cells:
-		if Footprint.distance(stack, target, fit_cells[key]) == gap:
-			steps[key] = 0
-			frontier.append(fit_cells[key])
+	# The walk runs over the hexes the stack's body fits on, around obstacles and
+	# the other stacks, starting from every such hex gap hexes from target.
+	var fit := _walk_fit_mask(battle, stack)
+	var neighbor_ids := _hex_neighbor_ids()
+	var steps_by_id := PackedInt32Array()
+	steps_by_id.resize(BATTLE_HEX_COLUMNS * BATTLE_HEX_ROWS)
+	steps_by_id.fill(-1)
+	var frontier := PackedInt32Array()
+	for cell_id in range(BATTLE_HEX_COLUMNS * BATTLE_HEX_ROWS):
+		if fit[cell_id] == 1 and Footprint.distance(stack, target, {"q": cell_id / BATTLE_HEX_ROWS, "r": cell_id % BATTLE_HEX_ROWS}) == gap:
+			steps_by_id[cell_id] = 0
+			frontier.append(cell_id)
 	var index := 0
 	while index < frontier.size():
-		var current: Dictionary = frontier[index]
+		var current_id := frontier[index]
 		index += 1
-		var next_steps := int(steps[_hex_key(current)]) + 1
-		for neighbor in _hex_neighbors(current):
-			var key := _hex_key(neighbor)
-			if steps.has(key) or not fit_cells.has(key):
+		var next_steps := steps_by_id[current_id] + 1
+		for neighbor_id in neighbor_ids[current_id]:
+			if steps_by_id[neighbor_id] >= 0 or fit[neighbor_id] == 0:
 				continue
-			steps[key] = next_steps
-			frontier.append(neighbor)
+			steps_by_id[neighbor_id] = next_steps
+			frontier.append(neighbor_id)
+	var steps := {}
+	for cell_id in frontier:
+		steps[_hex_key_from_coords(cell_id / BATTLE_HEX_ROWS, cell_id % BATTLE_HEX_ROWS)] = steps_by_id[cell_id]
 	if cache_key != "":
 		_board_read_scope_cache[cache_key] = steps.duplicate()
 	return steps
 
-## The hexes the stack's body fits on, around obstacles and the other stacks:
-## {_hex_key: cell}. Every walk to a target searches over them.
-static func _walk_fit_cells(battle: Dictionary, stack: Dictionary) -> Dictionary:
-	var cache_key := _board_read_cache_key(battle, "walk_fit_cells", String(stack.get("battle_id", "")))
-	var cached: Variant = _board_read_cache_get(cache_key)
-	if cached != null:
-		return cached
-	var occupied := _build_blocking_map(battle)
-	var fit_cells := {}
-	for q in range(BATTLE_HEX_COLUMNS):
-		for r in range(BATTLE_HEX_ROWS):
-			var cell := {"q": q, "r": r}
-			if Footprint.fits(stack, cell, occupied, BATTLE_HEX_COLUMNS, BATTLE_HEX_ROWS):
-				fit_cells[_hex_key(cell)] = cell
+## _hex_fit_mask of the stack against the battle's obstacles and stacks. Every
+## walk to a target searches over it.
+static func _walk_fit_mask(battle: Dictionary, stack: Dictionary) -> PackedByteArray:
+	var cache_key := _board_read_cache_key(battle, "walk_fit_mask", String(stack.get("battle_id", "")))
+	# Read past _board_read_cache_get without a copy: the returned mask is the
+	# cached one, shared, so callers only read it and never write into it.
+	if cache_key != "" and _board_read_scope_cache.has(cache_key):
+		_board_read_cache_hits += 1
+		return _board_read_scope_cache[cache_key]
+	var fit := _hex_fit_mask(stack, _build_blocking_map(battle))
 	if cache_key != "":
-		_board_read_scope_cache[cache_key] = fit_cells.duplicate(true)
-	return fit_cells
+		_board_read_scope_cache[cache_key] = fit
+	return fit
 
 static func _destination_is_legal(battle: Dictionary, stack: Dictionary, destination: Dictionary) -> bool:
 	return not _legal_destination_for_stack(battle, stack, destination).is_empty()
@@ -12105,6 +12169,19 @@ static func _hero_has_trait(battle: Dictionary, side: String, trait_id: String) 
 			return true
 	return false
 
+## The side hero's battle traits, read once for a caller that checks several:
+## _has_battle_trait on them answers as _hero_has_trait does.
+static func _hero_battle_traits(battle: Dictionary, side: String) -> Variant:
+	return _hero_payload_for_side(battle, side).get("battle_traits", [])
+
+static func _has_battle_trait(traits: Variant, trait_id: String) -> bool:
+	if trait_id == "":
+		return false
+	for value in traits:
+		if String(value) == trait_id:
+			return true
+	return false
+
 static func _side_max_ability_float(
 	battle: Dictionary,
 	side: String,
@@ -13208,7 +13285,8 @@ static func _health_ratio(stack: Dictionary) -> float:
 static func _alive_stacks_for_side(battle: Dictionary, side: String) -> Array:
 	var alive = []
 	for stack in battle.get("stacks", []):
-		if stack is Dictionary and String(stack.get("side", "")) == side and _alive_count(stack) > 0:
+		# _alive_count(stack) > 0 exactly when the stack has health left.
+		if stack is Dictionary and String(stack.get("side", "")) == side and int(stack.get("total_health", 0)) > 0:
 			alive.append(stack)
 	return alive
 
@@ -13656,13 +13734,14 @@ static func _contextual_cohesion_bonus(stack: Dictionary, battle: Dictionary) ->
 	var shielding = _ability_by_id(stack, "shielding")
 	if not shielding.is_empty():
 		bonus += max(0, int(shielding.get("cohesion_hold_bonus", 0)))
-	if _hero_has_trait(battle, side, "linekeeper") and (bool(stack.get("defending", false)) or _brace_available(stack, battle) or _has_ability(stack, "formation_guard")):
+	var traits = _hero_battle_traits(battle, side)
+	if _has_battle_trait(traits, "linekeeper") and (bool(stack.get("defending", false)) or _brace_available(stack, battle) or _has_ability(stack, "formation_guard")):
 		bonus += 1
-	if _hero_has_trait(battle, side, "artillerist") and bool(stack.get("ranged", false)) and _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]):
+	if _has_battle_trait(traits, "artillerist") and bool(stack.get("ranged", false)) and _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]):
 		bonus += 1
-	if _hero_has_trait(battle, side, "bogwise") and (_battle_has_tag(battle, "bog_channels") or String(battle.get("terrain", "")) == "mire") and not _stack_is_isolated(battle, stack):
+	if _has_battle_trait(traits, "bogwise") and (_battle_has_tag(battle, "bog_channels") or String(battle.get("terrain", "")) == "mire") and not _stack_is_isolated(battle, stack):
 		bonus += 1
-	if _hero_has_trait(battle, side, "ambusher") and not bool(stack.get("ranged", false)) and int(battle.get("round", 1)) <= 2 and _battle_has_any_tags(battle, ["ambush_cover"]):
+	if _has_battle_trait(traits, "ambusher") and not bool(stack.get("ranged", false)) and int(battle.get("round", 1)) <= 2 and _battle_has_any_tags(battle, ["ambush_cover"]):
 		bonus += 1
 	if String(stack.get("faction_id", "")) == "faction_embercourt" and _side_has_role_mix(battle, side) and not _stack_is_isolated(battle, stack):
 		bonus += 1
@@ -13697,17 +13776,18 @@ static func _contextual_initiative_bonus(stack: Dictionary, battle: Dictionary) 
 		bonus += 1
 	if _battle_has_tag(battle, "bog_channels") and (_has_ability(stack, "harry") or _has_ability(stack, "backstab") or _has_ability(stack, "bloodrush")):
 		bonus += 1
-	if _hero_has_trait(battle, side, "linekeeper") and (bool(stack.get("defending", false)) or _battle_has_any_tags(battle, ["chokepoint", "fortified_line"])):
+	var traits = _hero_battle_traits(battle, side)
+	if _has_battle_trait(traits, "linekeeper") and (bool(stack.get("defending", false)) or _battle_has_any_tags(battle, ["chokepoint", "fortified_line"])):
 		bonus += 1
-	if _hero_has_trait(battle, side, "artillerist") and bool(stack.get("ranged", false)) and _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]):
+	if _has_battle_trait(traits, "artillerist") and bool(stack.get("ranged", false)) and _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]):
 		bonus += 1
-	if _hero_has_trait(battle, side, "ambusher") and not bool(stack.get("ranged", false)) and (String(battle.get("terrain", "")) == "forest" or _battle_has_tag(battle, "ambush_cover")) and int(battle.get("round", 1)) <= 2:
+	if _has_battle_trait(traits, "ambusher") and not bool(stack.get("ranged", false)) and (String(battle.get("terrain", "")) == "forest" or _battle_has_tag(battle, "ambush_cover")) and int(battle.get("round", 1)) <= 2:
 		bonus += 1
-	if _hero_has_trait(battle, side, "bogwise") and (_battle_has_tag(battle, "bog_channels") or String(battle.get("terrain", "")) == "mire") and (_has_ability(stack, "harry") or _has_ability(stack, "backstab") or _has_ability(stack, "bloodrush")):
+	if _has_battle_trait(traits, "bogwise") and (_battle_has_tag(battle, "bog_channels") or String(battle.get("terrain", "")) == "mire") and (_has_ability(stack, "harry") or _has_ability(stack, "backstab") or _has_ability(stack, "bloodrush")):
 		bonus += 1
-	if _hero_has_trait(battle, side, "packhunter") and _enemy_wounded_count(battle, side) > 0 and not bool(stack.get("ranged", false)):
+	if _has_battle_trait(traits, "packhunter") and _enemy_wounded_count(battle, side) > 0 and not bool(stack.get("ranged", false)):
 		bonus += 1
-	if _hero_has_trait(battle, side, "vanguard") and not bool(stack.get("ranged", false)) and int(battle.get("round", 1)) <= 2:
+	if _has_battle_trait(traits, "vanguard") and not bool(stack.get("ranged", false)) and int(battle.get("round", 1)) <= 2:
 		bonus += 1
 	return bonus
 
@@ -13727,15 +13807,16 @@ static func _contextual_momentum_bonus(stack: Dictionary, battle: Dictionary) ->
 		bonus += 1
 	if _battle_has_tag(battle, "wall_pressure") and _stack_is_assault_side(stack, battle) and not bool(stack.get("ranged", false)) and round_number >= 3:
 		bonus += 1
-	if _hero_has_trait(battle, side, "packhunter") and _enemy_wounded_count(battle, side) > 0 and not bool(stack.get("ranged", false)):
+	var traits = _hero_battle_traits(battle, side)
+	if _has_battle_trait(traits, "packhunter") and _enemy_wounded_count(battle, side) > 0 and not bool(stack.get("ranged", false)):
 		bonus += 1
-	if _hero_has_trait(battle, side, "vanguard") and not bool(stack.get("ranged", false)) and (int(battle.get("round", 1)) <= 2 or _battle_has_tag(battle, "open_lane")):
+	if _has_battle_trait(traits, "vanguard") and not bool(stack.get("ranged", false)) and (int(battle.get("round", 1)) <= 2 or _battle_has_tag(battle, "open_lane")):
 		bonus += 1
-	if _hero_has_trait(battle, side, "ambusher") and not bool(stack.get("ranged", false)) and int(battle.get("round", 1)) <= 2 and (String(battle.get("terrain", "")) == "forest" or _battle_has_tag(battle, "ambush_cover")):
+	if _has_battle_trait(traits, "ambusher") and not bool(stack.get("ranged", false)) and int(battle.get("round", 1)) <= 2 and (String(battle.get("terrain", "")) == "forest" or _battle_has_tag(battle, "ambush_cover")):
 		bonus += 1
-	if _hero_has_trait(battle, side, "artillerist") and bool(stack.get("ranged", false)) and _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]):
+	if _has_battle_trait(traits, "artillerist") and bool(stack.get("ranged", false)) and _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]):
 		bonus += 1
-	if _hero_has_trait(battle, side, "bogwise") and (_battle_has_tag(battle, "bog_channels") or String(battle.get("terrain", "")) == "mire") and (_has_ability(stack, "harry") or _has_ability(stack, "backstab") or _has_ability(stack, "bloodrush")):
+	if _has_battle_trait(traits, "bogwise") and (_battle_has_tag(battle, "bog_channels") or String(battle.get("terrain", "")) == "mire") and (_has_ability(stack, "harry") or _has_ability(stack, "backstab") or _has_ability(stack, "bloodrush")):
 		bonus += 1
 	if String(stack.get("faction_id", "")) == "faction_sunvault" and _stack_has_positive_effect(stack, battle):
 		bonus += 1
@@ -15636,11 +15717,19 @@ static func _append_presentation_event(battle: Dictionary, event_type: String, v
 	}
 	if context.has("cleansed_effect_count"):
 		record["cleansed_effect_count"] = max(0, int(context.get("cleansed_effect_count", 0)))
-	var events := _normalize_presentation_event_queue(battle.get(PRESENTATION_EVENT_QUEUE_KEY, []))
+	var queue: Variant = battle.get(PRESENTATION_EVENT_QUEUE_KEY, [])
+	var events: Array
+	if queue is Array and not queue.is_empty() and is_same(queue, _presentation_queue_written):
+		# Every entry but the record appended last is normalized already.
+		events = queue.slice(0, queue.size() - 1)
+		events.append_array(_normalize_presentation_event_queue([queue[queue.size() - 1]]))
+	else:
+		events = _normalize_presentation_event_queue(queue)
 	events.push_back(record)
 	while events.size() > PRESENTATION_EVENT_QUEUE_LIMIT:
 		events.pop_front()
 	battle[PRESENTATION_EVENT_QUEUE_KEY] = events
+	_presentation_queue_written = events
 
 static func _append_damage_presentation_event(
 	battle: Dictionary,
