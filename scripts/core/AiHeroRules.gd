@@ -2167,8 +2167,7 @@ static func _choose_plan(session: SessionStateStoreScript.SessionData, context: 
 		_profile_add(context, "gate_ms", started)
 		var near_score := float(best.get("score", 0.0))
 		if not gate.is_empty() and float(gate.score) > maxf(near_score, float(far.get("score", 0.0))) and _gate_fight_looks_good(session, context, entry, gate):
-			gate["path"] = _path_to(wide, int(gate.tile_index))
-			return gate
+			return _gate_walk(session, context, entry, gate, wide)
 		if not far.is_empty() and float(far.get("score", 0.0)) > near_score:
 			return far
 	if best.is_empty():
@@ -2189,6 +2188,8 @@ static func _choose_plan(session: SessionStateStoreScript.SessionData, context: 
 		best = _gate_candidate(session, context, entry, search, movement_max, movement_max * FAR_SEARCH_DAYS)
 		if not best.is_empty() and not _gate_fight_looks_good(session, context, entry, best):
 			best = {}
+		if not best.is_empty() and best.has("past_path"):
+			return _gate_walk(session, context, entry, best, search)
 		_profile_add(context, "gate_ms", started)
 	if best.is_empty():
 		best = _evade(session, context, entry, search)
@@ -2454,6 +2455,33 @@ static func _gate_candidate(session: SessionStateStoreScript.SessionData, contex
 	# weighed too, however far they lie.
 	var routes := _gate_routes(session, context, entry, search, movement_max) if _plans_far(session, context, entry) else {}
 	var options := reachable.slice(0, MAX_GATES_WEIGHED)
+	# A gate that starts such a way but lies past the player's own heroes is
+	# weighed at the walk with them stepped aside; taking it asks them to
+	# (`_gate_walk`), as `_clear_way` does for an errand on the level. A route
+	# leads past them (`_level_regions`), so the hero must be able to go there.
+	var past := {}
+	for route_tile in routes.keys():
+		var tile := int(route_tile)
+		if tile >= dist.size() or dist[tile] >= 0 or not gates.has(tile):
+			continue
+		if past.is_empty():
+			past = _search(session, context, entry, int(search.get("radius", movement_max * STRATEGIC_DAYS)), true)
+		var past_dist: PackedInt32Array = past.dist
+		if past_dist[tile] < 0 or _in_hero_zone(past, tile):
+			continue
+		if not dangers.is_empty() and _in_danger(dangers, tile % size.x, tile / size.x, level):
+			continue
+		var id := "gate:%s" % String(nodes[int(gates[tile].node)].get("placement_id", ""))
+		if int(avoid.get(id, -1)) >= int(session.day):
+			continue
+		var guard_index := -1
+		for ref in past.get("stops", {}).get(tile, []):
+			if int(ref.kind) == STOP_ENCOUNTER:
+				guard_index = int(ref.index)
+				break
+		if guard_index >= 0 and int(avoid.get(String(encounters[guard_index].get("placement_id", "")), -1)) >= int(session.day):
+			continue
+		options.append({"tile": tile, "distance": int(past_dist[tile]), "id": id, "gate": gates[tile], "guard": guard_index, "past_path": _path_to(past, tile)})
 	for option in reachable.slice(MAX_GATES_WEIGHED):
 		if routes.has(int(option.tile)):
 			options.append(option)
@@ -2479,6 +2507,12 @@ static func _gate_candidate(session: SessionStateStoreScript.SessionData, contex
 		if not route.is_empty():
 			var route_value := near + float(route.value)
 			var route_distance := maxi(int(option.distance), int(route.distance))
+			# Past this one gate the way is walked from its exit, as the
+			# hero will walk it there: the straight line made each level's
+			# objective look nearer from the other one.
+			var far_dist := _gate_far_dist(context, entry, option.gate, beyond_radius)
+			if bool(route.get("direct", false)) and int(route.tile) >= 0 and int(route.tile) < far_dist.size() and far_dist[int(route.tile)] >= 0:
+				route_distance = int(option.distance) + 1 + far_dist[int(route.tile)]
 			if beyond.is_empty() or route_value / (1.0 + float(route_distance) / float(movement_max)) > value / (1.0 + float(distance) / float(movement_max)):
 				value = route_value
 				distance = route_distance
@@ -2487,6 +2521,8 @@ static func _gate_candidate(session: SessionStateStoreScript.SessionData, contex
 			continue
 		var score := value / (1.0 + float(distance) / float(movement_max))
 		var plan := {"kind": "gate", "id": String(option.id), "index": int(option.gate.node), "value": value, "tile_index": int(option.tile), "distance": distance, "beyond": target}
+		if option.has("past_path"):
+			plan["past_path"] = option.past_path
 		if beyond.is_empty():
 			var exit: Vector3i = option.gate.exit
 			var far_guard: Dictionary = _overworld_rules()._find_guard_engagement_at_tile(session, exit.x, exit.y, exit.z, false)
@@ -2514,7 +2550,7 @@ static func _gate_candidate(session: SessionStateStoreScript.SessionData, contex
 ## unseen ground (worth what scouting is while hunting, plus a share of the
 ## hidden rival as in `_opened_value`). The way may pass any number of gates;
 ## every gate on it must have guards the hero beats at both ends
-## (GUARD_WIN_RATIO), and every army between them must be one it would fight
+## (`_route_gate_open`), and every army between them must be one it would fight
 ## for that objective (`_level_stretches`). A way never comes back onto the
 ## hero's own stretch. Keyed by the first gate's tile: the best objective it
 ## leads to, its value and the whole way's length. Kept for the decision.
@@ -2576,7 +2612,7 @@ static func _route_through(session: SessionStateStoreScript.SessionData, context
 	var level := LevelRules.level_of(entry)
 	var start_tile := _tile_index_of(entry, size)
 	var gates: Array = map.gates
-	var home_key := _stretch_key(session, context, level, start_tile, power, limit)
+	var home_key := _stretch_key(session, context, level, start_tile, power, limit, entry)
 	if home_key == "":
 		return
 	# The gates out of each stretch, and where each comes out.
@@ -2584,8 +2620,8 @@ static func _route_through(session: SessionStateStoreScript.SessionData, context
 	var exit_keys := []
 	for gate_index in range(gates.size()):
 		var gate: Dictionary = gates[gate_index]
-		var region_key := _stretch_key(session, context, int(gate.level), int(gate.tile), power, limit)
-		exit_keys.append(_stretch_key(session, context, int(gate.exit_level), int(gate.exit_tile), power, limit))
+		var region_key := _stretch_key(session, context, int(gate.level), int(gate.tile), power, limit, entry)
+		exit_keys.append(_stretch_key(session, context, int(gate.exit_level), int(gate.exit_tile), power, limit, entry))
 		if region_key == "" or exit_keys[gate_index] == "":
 			continue
 		if not by_region.has(region_key):
@@ -2593,7 +2629,7 @@ static func _route_through(session: SessionStateStoreScript.SessionData, context
 		by_region[region_key].append(gate_index)
 	var targets := {}
 	for town in towns:
-		var town_key := _stretch_key(session, context, int(town.level), int(town.tile), power, limit)
+		var town_key := _stretch_key(session, context, int(town.level), int(town.tile), power, limit, entry)
 		if town_key == "" or town_key == home_key:
 			continue
 		if not targets.has(town_key):
@@ -2617,7 +2653,7 @@ static func _route_through(session: SessionStateStoreScript.SessionData, context
 	var dist: PackedInt32Array = search.dist
 	for gate_index in by_region.get(home_key, []):
 		var tile := int(gates[gate_index].tile)
-		if float(gates[gate_index].guard_power) * GUARD_WIN_RATIO > power:
+		if not _route_gate_open(gates[gate_index], power, limit):
 			continue
 		cost[gate_index] = float(dist[tile]) if tile < dist.size() and dist[tile] >= 0 else _tile_span(start_tile, tile, size) * ROUTE_DETOUR
 		first[gate_index] = gate_index
@@ -2643,14 +2679,20 @@ static func _route_through(session: SessionStateStoreScript.SessionData, context
 			var score := float(target.value) / (1.0 + total / float(movement_max))
 			var known: Dictionary = result.get(int(start_gate.tile), {})
 			if known.is_empty() or score > float(known.score):
-				result[int(start_gate.tile)] = {"kind": String(target.kind), "id": String(target.id), "value": float(target.value), "distance": int(ceil(total)), "score": score}
+				result[int(start_gate.tile)] = {"kind": String(target.kind), "id": String(target.id), "value": float(target.value), "distance": int(ceil(total)), "score": score, "tile": int(target.tile), "direct": int(first[current]) == current}
 		for next_index in by_region.get(String(exit_keys[current]), []):
-			if bool(settled[next_index]) or float(gates[next_index].guard_power) * GUARD_WIN_RATIO > power:
+			if bool(settled[next_index]) or not _route_gate_open(gates[next_index], power, limit):
 				continue
 			var through := arrived + _tile_span(int(gate.exit_tile), int(gates[next_index].tile), size) * ROUTE_DETOUR
 			if through < float(cost[next_index]):
 				cost[next_index] = through
 				first[next_index] = first[current]
+
+## Whether a route may pass this gate: the hero beats the guards at its ends
+## (GUARD_WIN_RATIO) at no greater expected loss than the objective's limit, as
+## for the armies between gates (`_level_stretches`).
+static func _route_gate_open(gate: Dictionary, power: float, limit: float) -> bool:
+	return float(gate.guard_power) * GUARD_WIN_RATIO <= power and _expected_loss_value(power, float(gate.guard_power)) <= limit
 
 ## The gates, towns and unseen ground `_gate_routes` works with, built once a
 ## turn: every gate with the tiles at its ends and the stronger of the guards
@@ -2701,16 +2743,23 @@ static func _route_map(session: SessionStateStoreScript.SessionData, context: Di
 	return map
 
 ## The towns `_gate_routes` may lead to: seen towns the hero can take
-## (`_town_candidate`), with their doorways.
+## (`_town_candidate`) out of a much stronger hostile hero's reach, with their
+## doorways.
 static func _route_towns(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, power: float, map: Dictionary) -> Array:
 	var towns := []
 	var block: Dictionary = entry.get(AI_HERO_KEY, {})
 	var avoid: Dictionary = block.get("avoid", {}) if block.get("avoid", {}) is Dictionary else {}
+	var dangers := _dangers(session, context, entry)
+	var size: Vector2i = context.map_size
 	for town_ref in map.towns:
 		var candidate := _town_candidate(session, context, entry, int(town_ref.index), power)
 		if String(candidate.get("kind", "")) not in ["town_hostile", "town_neutral"] or float(candidate.get("value", 0.0)) <= 0.0:
 			continue
 		if int(avoid.get(String(candidate.id), -1)) >= int(session.day):
+			continue
+		# Within a much stronger hostile hero's reach it is left alone there
+		# (`_best_candidate`), so no way leads to it either.
+		if not dangers.is_empty() and _in_danger(dangers, int(town_ref.door) % size.x, int(town_ref.door) / size.x, int(town_ref.level)):
 			continue
 		towns.append({"kind": String(candidate.kind), "id": String(candidate.id), "value": float(candidate.value), "level": int(town_ref.level), "tile": int(town_ref.door)})
 	return towns
@@ -2724,7 +2773,7 @@ static func _route_unseen(session: SessionStateStoreScript.SessionData, context:
 	var explore_value := _explore_value(session, context)
 	var unseen := {}
 	for target_level in map.unseen.keys():
-		var stretches := _level_stretches(session, context, int(target_level), power, limit)
+		var stretches := _level_stretches(session, context, int(target_level), power, limit, entry)
 		for patch in map.unseen[target_level].keys():
 			var stretch_key := "%d:%d" % [int(target_level), stretches[int(patch)]]
 			unseen[stretch_key] = int(unseen.get(stretch_key, 0)) + int(map.unseen[target_level][patch])
@@ -2749,7 +2798,7 @@ static func _note_route_visit(session: SessionStateStoreScript.SessionData, cont
 	for region_key in known.keys():
 		if int(known[region_key]) + ROUTE_REVISIT_DAYS > int(session.day):
 			visits[region_key] = int(known[region_key])
-	var here := _stretch_key(session, context, LevelRules.level_of(entry), tile, hero_power(entry), _route_loss_limit(_explore_value(session, context)))
+	var here := _stretch_key(session, context, LevelRules.level_of(entry), tile, hero_power(entry), _route_loss_limit(_explore_value(session, context)), entry)
 	if here != "":
 		visits[here] = int(session.day)
 	block[ROUTE_VISITS_KEY] = visits
@@ -2788,7 +2837,7 @@ static func _level_regions(session: SessionStateStoreScript.SessionData, context
 	var encounters: Array = session.overworld.get("encounters", [])
 	for record in surface.neutrals:
 		if not resolved.has(String(record.id)):
-			armies.append({"id": String(record.id), "ratio": GUARD_WIN_RATIO, "power": _guard_power(encounters[int(record.index)]), "tiles": record.zone + record.body})
+			armies.append({"id": String(record.id), "power": _guard_power(encounters[int(record.index)]), "tiles": record.zone + record.body})
 	# Rival heroes stand still through this player's turn and end a route
 	# where they stand, as the search has it.
 	for hero_guard in _hero_guards(session, context, level):
@@ -2797,8 +2846,14 @@ static func _level_regions(session: SessionStateStoreScript.SessionData, context
 		var tiles := [int(hero_guard.tile.y) * size.x + int(hero_guard.tile.x)]
 		for zone_tile in _hero_zone_tiles(session, context, hero_guard.tile, level):
 			tiles.append(int(zone_tile.y) * size.x + int(zone_tile.x))
-		var hero_army: float = hero_power(encounters[int(hero_guard.index)]) if String(hero_guard.ref_kind) == "ai_hero" else army_power(session.overworld.player_heroes[int(hero_guard.index)].get("army", {}).get("stacks", []), session.overworld.player_heroes[int(hero_guard.index)])
-		armies.append({"id": String(hero_guard.id), "ratio": HERO_ATTACK_RATIO, "power": hero_army, "tiles": tiles})
+		var army := {"id": String(hero_guard.id), "tiles": tiles}
+		if String(hero_guard.ref_kind) == "ai_hero":
+			var other: Dictionary = encounters[int(hero_guard.index)]
+			army.merge({"power": hero_power(other), "commander": other.get("enemy_commander_state", {}), "seen": _position_seen(session, context, LevelRules.position(other))})
+		else:
+			var hero: Dictionary = session.overworld.player_heroes[int(hero_guard.index)]
+			army.merge({"power": army_power(hero.get("army", {}).get("stacks", []), hero), "commander": hero, "seen": _player_hero_seen(session, context, hero)})
+		armies.append(army)
 	for army in armies:
 		var patch := starts.size()
 		var tiles := []
@@ -2811,7 +2866,9 @@ static func _level_regions(session: SessionStateStoreScript.SessionData, context
 		if tiles.is_empty():
 			continue
 		starts.append(tiles.min())
-		guards.append({"id": army.id, "ratio": army.ratio, "power": army.power, "tiles": tiles, "links": {}})
+		var guard_record: Dictionary = army.duplicate()
+		guard_record.merge({"tiles": tiles, "links": {}}, true)
+		guards.append(guard_record)
 	var queue := PackedInt32Array()
 	queue.resize(count)
 	for start in range(count):
@@ -2879,11 +2936,13 @@ static func _level_regions(session: SessionStateStoreScript.SessionData, context
 ## A level's stretches of ground for a hero of this strength on its way to an
 ## objective whose fights may cost up to `loss_limit` (`_route_loss_limit`):
 ## the patches of `_level_regions` joined across the armies it beats
-## (GUARD_WIN_RATIO, as for the guards at gates; HERO_ATTACK_RATIO for rival
-## heroes) at no greater expected loss (`_expected_loss_value`), or that are
-## beaten already. The hero, standing
-## before such an army, fights it for that objective (`_war_paths`). Each
-## stretch is named by its first tile; per patch, kept for the turn. Until
+## (GUARD_WIN_RATIO, as for the guards at gates; a rival hero as `_candidate`
+## attacks one: in sight, by HERO_ATTACK_RATIO after its spells' damage) at no
+## greater expected loss (`_expected_loss_value`), or that are beaten already.
+## An army the hero leaves alone today (`_avoided_today`) parts them. The hero,
+## standing before such an army, fights it for that objective (`_war_paths`,
+## `_hero_war_value`). Each stretch is named by its first tile; per patch and
+## hero, kept for the turn. Until
 ## 2026-10-19 armies did not part stretches: on a large two-level map (seed
 ## ai-match-462267043) gate 2232 led a 1,632-strength army into a pocket closed
 ## by guards of 8,000 and more, and the stretch beyond counted as reached. The
@@ -2893,8 +2952,11 @@ static func _level_regions(session: SessionStateStoreScript.SessionData, context
 ## an expected loss above what the unseen ground beyond was worth, and it went
 ## on crossing back and forth. Another army crossed for a town a stronger rival
 ## hero kept it from, and crossed back.
-static func _level_stretches(session: SessionStateStoreScript.SessionData, context: Dictionary, level: int, power: float, loss_limit: float) -> PackedInt32Array:
-	var key := "%d|%d|%d" % [level, int(power), int(loss_limit)]
+static func _level_stretches(session: SessionStateStoreScript.SessionData, context: Dictionary, level: int, power: float, loss_limit: float, entry: Dictionary = {}) -> PackedInt32Array:
+	var avoided := _avoided_today(session, entry)
+	var avoided_ids := avoided.keys()
+	avoided_ids.sort()
+	var key := "%d|%d|%d|%s|%s" % [level, int(power), int(loss_limit), String(entry.get("placement_id", "")), ",".join(avoided_ids)]
 	var cache: Dictionary = context.get("level_stretches", {})
 	if cache.has(key):
 		return cache[key]
@@ -2906,7 +2968,16 @@ static func _level_stretches(session: SessionStateStoreScript.SessionData, conte
 	beaten.resize(guards.size())
 	for guard_patch in range(guards.size()):
 		var guard: Dictionary = guards[guard_patch]
-		if resolved.has(String(guard.id)) or (float(guard.power) * float(guard.ratio) <= power and _expected_loss_value(power, float(guard.power)) <= loss_limit):
+		if resolved.has(String(guard.id)):
+			beaten[guard_patch] = 1
+		elif avoided.has(String(guard.id)) or _expected_loss_value(power, float(guard.power)) > loss_limit:
+			continue
+		elif not guard.has("commander"):
+			if float(guard.power) * GUARD_WIN_RATIO <= power:
+				beaten[guard_patch] = 1
+		# A rival hero as `_candidate` attacks one: seen, and beaten after the
+		# damage its spells do.
+		elif bool(guard.seen) and power * (1.0 - _burst_share(entry, guard.commander)) >= float(guard.power) * HERO_ATTACK_RATIO:
 			beaten[guard_patch] = 1
 	var parent := range(starts.size())
 	for guard_patch in range(guards.size()):
@@ -2942,11 +3013,21 @@ static func _patch_root(parent: Array, patch: int) -> int:
 
 ## The stretch ("level:first tile") a tile lies on for a hero of this
 ## strength and loss limit (`_level_stretches`), "" where nothing stands.
-static func _stretch_key(session: SessionStateStoreScript.SessionData, context: Dictionary, level: int, tile: int, power: float, loss_limit: float) -> String:
+static func _stretch_key(session: SessionStateStoreScript.SessionData, context: Dictionary, level: int, tile: int, power: float, loss_limit: float, entry: Dictionary = {}) -> String:
 	var patches: PackedInt32Array = _level_regions(session, context, level).patches
 	if tile < 0 or tile >= patches.size() or patches[tile] < 0:
 		return ""
-	return "%d:%d" % [level, _level_stretches(session, context, level, power, loss_limit)[patches[tile]]]
+	return "%d:%d" % [level, _level_stretches(session, context, level, power, loss_limit, entry)[patches[tile]]]
+
+## The targets the hero leaves alone today (`_avoid_target`), a fight whose
+## preview went badly among them.
+static func _avoided_today(session: SessionStateStoreScript.SessionData, entry: Dictionary) -> Dictionary:
+	var avoid: Dictionary = entry.get(AI_HERO_KEY, {}).get("avoid", {}) if entry.get(AI_HERO_KEY, {}).get("avoid", {}) is Dictionary else {}
+	var result := {}
+	for id in avoid.keys():
+		if int(avoid[id]) >= int(session.day):
+			result[String(id)] = true
+	return result
 
 ## The way home for an idle hero whose player holds no town on its level: the
 ## shortest way to the town's doorway through one of the nearest gates
@@ -3035,7 +3116,7 @@ static func _gate_fight_looks_good(session: SessionStateStoreScript.SessionData,
 static func _beyond_gate(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, gate: Dictionary, movement_max: int, radius: int) -> Dictionary:
 	var exit: Vector3i = gate.exit
 	var cache: Dictionary = context.get("gate_beyond", {})
-	var key := "%s|%d,%d,%d|%d|%d" % [String(entry.get("placement_id", "")), exit.x, exit.y, exit.z, radius, hash(entry.get("enemy_army", {}).get("stacks", []))]
+	var key := _beyond_key(entry, gate, radius)
 	if cache.has(key):
 		return cache[key]
 	var traveller := entry.duplicate()
@@ -3047,7 +3128,21 @@ static func _beyond_gate(session: SessionStateStoreScript.SessionData, context: 
 	var logged: Variant = context.get("decision_alternatives", null)
 	context.erase("decision_alternatives")
 	var far_search := _search(session, context, traveller, radius)
-	var far := _best_candidate(session, context, traveller, far_search, movement_max)
+	var far_dists: Dictionary = context.get("gate_far", {})
+	far_dists[key] = far_search.get("dist", PackedInt32Array())
+	context["gate_far"] = far_dists
+	# Judged as the hero will judge it there (`_choose_plan`): errands within its
+	# daily search, or a week out when none is; towns and heroes farther for a
+	# main or field army. Until 2026-10-19 everything in this wider search
+	# counted: on a large two-level map (seed ai-match-1951169169) a hero
+	# crossed for its own threatened town 47 tiles past the gate, out of the
+	# reach it judges errands in once there, and crossed back to scout, for
+	# nine days.
+	var near_radius := maxi(MIN_SEARCH_RADIUS, movement_max * SEARCH_DAYS)
+	var far_kinds := _plans_far(session, context, entry)
+	var far := _best_candidate(session, context, traveller, far_search, movement_max, near_radius, far_kinds)
+	if far.is_empty():
+		far = _best_candidate(session, context, traveller, far_search, movement_max, maxi(near_radius, movement_max * FAR_SEARCH_DAYS), far_kinds)
 	if logged != null:
 		context["decision_alternatives"] = logged
 	var result := {}
@@ -3070,6 +3165,15 @@ static func _beyond_gate(session: SessionStateStoreScript.SessionData, context: 
 	cache[key] = result
 	context["gate_beyond"] = cache
 	return result
+
+static func _beyond_key(entry: Dictionary, gate: Dictionary, radius: int) -> String:
+	var exit: Vector3i = gate.exit
+	return "%s|%d,%d,%d|%d|%d" % [String(entry.get("placement_id", "")), exit.x, exit.y, exit.z, radius, hash(entry.get("enemy_army", {}).get("stacks", []))]
+
+## The walking distances from a gate's exit that `_beyond_gate` measured for
+## this hero this turn; empty before it did.
+static func _gate_far_dist(context: Dictionary, entry: Dictionary, gate: Dictionary, radius: int) -> PackedInt32Array:
+	return context.get("gate_far", {}).get(_beyond_key(entry, gate, radius), PackedInt32Array())
 
 ## Drops what `_beyond_gate` kept for the turn about a target just taken. On a
 ## large two-level map (seed ai-match-462267043) a hero crossed a gate for a
@@ -3186,6 +3290,41 @@ static func _clear_way(session: SessionStateStoreScript.SessionData, context: Di
 		if _make_way(session, context, String(other.get("placement_id", "")), keep_clear):
 			moved = true
 	return moved
+
+## A gate plan with its way. Past the player's own heroes (`_gate_candidate`)
+## they are asked to step aside (`_make_way`); while one cannot move today the
+## hero walks up to it and goes on once it has.
+static func _gate_walk(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, plan: Dictionary, search: Dictionary) -> Dictionary:
+	if not plan.has("past_path"):
+		plan["path"] = _path_to(search, int(plan.tile_index))
+		return plan
+	var path: Array = plan.past_path
+	var size: Vector2i = context.map_size
+	var level := LevelRules.level_of(entry)
+	var keep_clear := {}
+	for tile in path:
+		keep_clear[tile.y * size.x + tile.x] = true
+	var doors := _own_town_doors(session, String(context.controller), level, size)
+	for other in active_hero_entries(session, String(context.controller)):
+		if String(other.get("placement_id", "")) == String(entry.get("placement_id", "")) or LevelRules.level_of(other) != level:
+			continue
+		var other_index := int(other.get("y", 0)) * size.x + int(other.get("x", 0))
+		if keep_clear.has(other_index) and not doors.has(other_index):
+			_make_way(session, context, String(other.get("placement_id", "")), keep_clear)
+	var standing := {}
+	for other in active_hero_entries(session, String(context.controller)):
+		if String(other.get("placement_id", "")) != String(entry.get("placement_id", "")) and LevelRules.level_of(other) == level:
+			standing[int(other.get("y", 0)) * size.x + int(other.get("x", 0))] = true
+	for step in range(path.size()):
+		var tile: Vector2i = path[step]
+		if standing.has(tile.y * size.x + tile.x) and not doors.has(tile.y * size.x + tile.x):
+			if step == 0:
+				return {}
+			var stop: Vector2i = path[step - 1]
+			var stop_index := stop.y * size.x + stop.x
+			return {"kind": "wait", "id": "wait:%d" % stop_index, "index": stop_index, "value": 0.0, "tile_index": stop_index, "distance": step, "path": path.slice(0, step)}
+	plan["path"] = path
+	return plan
 
 ## Moves a hero off the tiles another hero needs, into its town when there is
 ## room, or books the move for its next turn when it cannot move today.
@@ -3488,7 +3627,10 @@ static func _profile_add(context: Dictionary, key: String, started: int) -> void
 	profile[key] = float(profile.get(key, 0.0)) + float(Time.get_ticks_usec() - started) / 1000.0
 	context["profile"] = profile
 
-static func _best_candidate(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary, movement_max: int) -> Dictionary:
+## With `reach` set, stops farther away count only for `far_kinds`: towns to
+## take and hostile heroes, and unexplored ground while a rival's towns are
+## unseen, as `_strategic_candidate` weighs them (`_beyond_gate`).
+static func _best_candidate(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary, movement_max: int, reach: int = -1, far_kinds: bool = false) -> Dictionary:
 	var goal: Dictionary = entry.get(AI_HERO_KEY, {}).get("goal", {})
 	var avoid: Dictionary = entry.get(AI_HERO_KEY, {}).get("avoid", {}) if entry.get(AI_HERO_KEY, {}).get("avoid", {}) is Dictionary else {}
 	var seen := {}
@@ -3527,6 +3669,8 @@ static func _best_candidate(session: SessionStateStoreScript.SessionData, contex
 			var candidate := _candidate(session, context, entry, ref, power, needs, search, int(tile_index))
 			if candidate.is_empty() or int(avoid.get(String(candidate.get("id", "")), -1)) >= int(session.day):
 				continue
+			if reach >= 0 and distance > reach and not (far_kinds and String(candidate.get("kind", "")) in ["town_hostile", "town_neutral", "hero", "ai_hero"]):
+				continue
 			if in_danger and (String(candidate.get("kind", "")) != "town_own" or not _deters(session, entry, session.overworld.towns[int(candidate.index)], dangers)):
 				continue
 			var value := float(candidate.get("value", 0.0)) - _boat_price(session, context, search, int(tile_index))
@@ -3545,6 +3689,8 @@ static func _best_candidate(session: SessionStateStoreScript.SessionData, contex
 				best = candidate
 	var explore := _exploration_candidate(session, context, entry, search)
 	if not explore.is_empty() and not dangers.is_empty() and _in_danger(dangers, int(explore.tile_index) % size.x, int(explore.tile_index) / size.x, LevelRules.level_of(entry)):
+		explore = {}
+	if not explore.is_empty() and reach >= 0 and int(explore.distance) > reach and not (far_kinds and _rival_towns_unknown(session, context)):
 		explore = {}
 	if not explore.is_empty():
 		var explore_score := float(explore.value) / (1.0 + float(explore.distance) / float(movement_max))
@@ -3633,7 +3779,7 @@ static func _candidate(session: SessionStateStoreScript.SessionData, context: Di
 			var hero_power_value := army_power(hero.get("army", {}).get("stacks", []), hero)
 			if power * (1.0 - _burst_share(entry, hero)) < hero_power_value * HERO_ATTACK_RATIO:
 				return {}
-			return {"kind": "hero", "id": String(hero.get("id", "")), "index": int(ref.index), "value": 1500.0 + hero_power_value * TROOP_VALUE_PER_POWER * 0.5 + _last_stand_share(session, "player", "player")}
+			return {"kind": "hero", "id": String(hero.get("id", "")), "index": int(ref.index), "value": 1500.0 + hero_power_value * TROOP_VALUE_PER_POWER * 0.5 + _last_stand_share(session, "player", "player") + _hero_war_value(session, context, entry, search, needs, "hero", int(ref.index))}
 		STOP_AI_HERO:
 			var encounters: Array = session.overworld.get("encounters", [])
 			var other: Dictionary = encounters[int(ref.index)]
@@ -3645,8 +3791,22 @@ static func _candidate(session: SessionStateStoreScript.SessionData, context: Di
 			if power * (1.0 - _burst_share(entry, other.get("enemy_commander_state", {}))) < other_power * HERO_ATTACK_RATIO:
 				return {}
 			var other_controller := PlayerRules.raid_controller_id(other)
-			return {"kind": "ai_hero", "id": String(other.get("placement_id", "")), "index": int(ref.index), "value": 1200.0 + other_power * TROOP_VALUE_PER_POWER * 0.5 + _threatened_town_share(session, context, other) + _last_stand_share(session, "enemy", other_controller), "fight_power": other_power}
+			return {"kind": "ai_hero", "id": String(other.get("placement_id", "")), "index": int(ref.index), "value": 1200.0 + other_power * TROOP_VALUE_PER_POWER * 0.5 + _threatened_town_share(session, context, other) + _last_stand_share(session, "enemy", other_controller) + _hero_war_value(session, context, entry, search, needs, "ai_hero", int(ref.index)), "fight_power": other_power}
 	return {}
+
+## What beating a hostile hero opens: the share of the town or gate route it
+## stands first in the way to (`_war_paths`) that a guard there is credited
+## with. `_level_stretches` joins stretches across the heroes a hero beats, so
+## a route through a gate can lead past one. Until 2026-10-19 that fight was
+## worth only the hero's troops: on large two-level maps (seeds
+## ai-match-8934130, ai-match-2045434390) armies crossed a gate for a rival
+## town such a hero stood before, valued the fight at a few thousand, crossed
+## back for other errands and were sent through again, up to three times a day
+## for weeks.
+static func _hero_war_value(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary, needs: Dictionary, ref_kind: String, index: int) -> float:
+	if search.is_empty():
+		return 0.0
+	return float(_war_paths(session, context, entry, search, needs).get(_hero_war_key(ref_kind, index), 0.0)) * PASSAGE_KNOWN_SITE_SHARE
 
 ## A lesser hero walks its troops over to the main hero, the way a human
 ## chains reinforcements forward, keeping one creature to stay in the field.
@@ -3930,6 +4090,11 @@ static func _site_door_value(session: SessionStateStoreScript.SessionData, conte
 static func _site_door_key(tile_index: int) -> int:
 	return -10 - tile_index
 
+## `_war_paths` key of a hostile hero: the computer players' heroes
+## ("ai_hero") and the human's ("hero") by their index.
+static func _hero_war_key(ref_kind: String, index: int) -> int:
+	return (-1000000 if ref_kind == "ai_hero" else -2000000) - index
+
 ## Reached tiles of resource and artifact sites that end routes over them and
 ## stand in no guard's or hostile hero's zone. Measured once per search.
 static func _site_doors(search: Dictionary) -> Dictionary:
@@ -4050,7 +4215,8 @@ static func _opened_value(session: SessionStateStoreScript.SessionData, context:
 ## neutral one) the hero cannot reach today whose shortest way, walking through
 ## guard zones as if they were beaten, enters this guard's zone first; a site
 ## doorway in the way (`_site_doors`) counts as such a guard, under
-## `_site_door_key`. Measured
+## `_site_door_key`, and so does a hostile hero, under `_hero_war_key` (a
+## doorway in its zone is out of reach until it is beaten). Measured
 ## once per search. On a medium map the leading player's armies of 5,000 to
 ## 14,000 spent 60 days collecting weekly sites on their half while the last
 ## rival's two towns lay a few guards away: no single guard's own ground was
@@ -4078,7 +4244,8 @@ static func _war_paths(session: SessionStateStoreScript.SessionData, context: Di
 			continue
 		var entrance := LevelRules.town_entrance(town)
 		var door := int(entrance.get("y", 0)) * size.x + int(entrance.get("x", 0))
-		if door < 0 or door >= count or dist[door] >= 0 or not _town_seen(known, town, size):
+		# A doorway in a hostile hero's zone is reached through that fight.
+		if door < 0 or door >= count or (dist[door] >= 0 and not _in_hero_zone(search, door)) or not _town_seen(known, town, size):
 			continue
 		var value := float(_town_candidate(session, context, entry, index, power).get("value", 0.0))
 		if value > 0.0:
@@ -4100,8 +4267,26 @@ static func _war_paths(session: SessionStateStoreScript.SessionData, context: Di
 			guard_at[int(tile)] = int(guard_index)
 	for door in _site_doors(search).keys():
 		guard_at[int(door)] = _site_door_key(int(door))
+	# A hostile hero in the way is fought there like a guard, under
+	# `_hero_war_key`.
+	for hero_guard in _hero_guards(session, context, level):
+		if not bool(hero_guard.hostile):
+			continue
+		var hero_key := _hero_war_key(String(hero_guard.ref_kind), int(hero_guard.index))
+		var hero_tiles := [hero_guard.tile]
+		hero_tiles.append_array(_hero_zone_tiles(session, context, hero_guard.tile, level))
+		for zone_tile in hero_tiles:
+			var zone_index: int = int(zone_tile.y) * size.x + int(zone_tile.x)
+			if zone_index >= 0 and zone_index < count and not guard_at.has(zone_index):
+				guard_at[zone_index] = hero_key
 	# Breadth-first from everything reachable today; zone tiles are walkable
-	# and the first zone entered is carried along.
+	# and the first zone entered is carried along. A portal leads on to its
+	# exits, as in the search (`_portal_exits`) and in `_level_regions`. Until
+	# 2026-10-19 it did not: on a large two-level map (seed ai-match-8934130) a
+	# guard standing by a monolith was the way to a route's rival town, got no
+	# share of it, and its hero crossed a gate back and forth for five days.
+	var portals: Dictionary = _level_surface(session, context, level).get("portals", {})
+	var seen_map := _explored(session, context, level) if not portals.is_empty() else PackedByteArray()
 	var first := PackedInt32Array()
 	first.resize(count)
 	first.fill(-2)
@@ -4120,16 +4305,21 @@ static func _war_paths(session: SessionStateStoreScript.SessionData, context: Di
 		head += 1
 		var cx := current % size.x
 		var cy := current / size.x
+		var steps := []
 		for direction in range(8):
 			var nx: int = cx + NEIGHBOR_DX[direction]
 			var ny: int = cy + NEIGHBOR_DY[direction]
 			if nx < 0 or ny < 0 or nx >= size.x or ny >= size.y:
 				continue
-			var next := ny * size.x + nx
+			steps.append(ny * size.x + nx)
+		if portals.has(current):
+			steps.append_array(_portal_exits(portals[current], seen_map))
+		for step in steps:
+			var next := int(step)
 			if first[next] != -2:
 				continue
 			var is_target := targets.has(next)
-			if blocked[next] != 0 and not guard_at.has(next) and not is_target:
+			if blocked[next] != 0 and not guard_at.has(next) and not is_target and not portals.has(next):
 				continue
 			var carried := first[current]
 			if carried == -1 and guard_at.has(next):
