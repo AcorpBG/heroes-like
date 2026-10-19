@@ -45,7 +45,7 @@ CORE_TESTS: list[tuple[str, int, str]] = [
     ("battle_deterministic_rng_state_report", 180, "battles are deterministic"),
     ("battle_ai_flow_report", 300, "the battle AI acts and battles end"),
     ("player_elimination_rules_report", 180, "players are eliminated and games end"),
-    ("ai_town_knowledge_report", 180, "computer players find and reach rival towns and plan their towns"),
+    ("ai_town_knowledge_report", 180, "computer players attack rival towns they have seen"),
     ("pickups_income_rules_report", 180, "pickups and daily income"),
     ("town_build_per_town_turn_limit_report", 180, "town building rules"),
     ("save_summary_deferred_payload_report", 180, "save summaries and payloads"),

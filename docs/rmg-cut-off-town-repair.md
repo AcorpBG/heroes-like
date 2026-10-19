@@ -235,9 +235,9 @@ returns the number of towns outside the area that holds the most towns.
   placement step, on m014, where it needs the link endpoint cells, on r23 m003,
   where it needs the monolith partner, and on r4 m030, where it needs the guarded
   passage kept free.
-- **Core test:** `random_map_small_2p_launch_report` generates seed 1727041229 (Small,
-  land, weak, 1+1 players). It requires the repair to have run and to leave no town cut
-  off. Every other seed it generates must also end with no town cut off.
+- **Core test:** every map `random_map_small_2p_launch_report` generates must end with no
+  town cut off. The seeds that need the repair are covered by the native selftest above,
+  not by a core test (owner decision, 2026-10-19: core tests carry no fix-specific cases).
 
 ## r23 m003: a monolith with no partner seals a start town
 
