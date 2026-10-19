@@ -115783,6 +115783,20 @@
       "validatedAt": "2026-10-19T08:10:00Z"
     },
     {
+      "id": "balance-mireclaw-round-6-20261019",
+      "title": "Balance round 6: Mireclaw's base forms keep lower too",
+      "status": "completed",
+      "classification": "balance",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/common-town-building-template.md"
+      ],
+      "notes": "Owner decision 2026-10-19 (\"slightly improve Mireclaw again\") after round 5's 30 large 4P games (.artifacts/ai_batch_20261019_r5_large4p_30): Mireclaw won 0.60 of a fair share; its PvP exchange was 0.54 against Sunvault and 0.84 against Brasshollow (0.99-1.25 against the others). Change: base-form Reed Cover ranged_damage_multiplier 0.85->0.80 on 9 base melee lines, Bog Brute's Bogplate Bulk 0.79->0.76; upgrades unchanged (0.75, Ironfen Bulwark 0.72). Validation: tools/core_suite.py. Measurement on 60 large 4P games pending.",
+      "updatedAt": "2026-10-19T13:30:00Z",
+      "validatedAt": "2026-10-19T13:30:00Z"
+    },
+    {
       "id": "ai-shut-in-opens-way-20261018",
       "title": "AI opens the way past sites and guards when shut in",
       "status": "completed",
