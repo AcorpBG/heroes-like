@@ -1,20 +1,20 @@
 ---
 name: ai-match-batch
-description: Owner-requested evaluation only. Runs a batch of headless AI-vs-AI matches on random generated maps (one cheap subagent per match, in parallel) and reports one comparison table. Use only when the owner explicitly asks for AI matches in this conversation, e.g. "run N AI matches", "test the AI on medium/large maps", "AI vs AI with 3/4 players", "how does the AI do now". Never use it on your own initiative to validate a code, AI, balance or content change; that is what tools/core_suite.py is for.
+description: Owner-requested evaluation only. Runs a batch of headless AI-vs-AI matches on random generated maps with tools/ai_match_batch.py (many at once, balanced line-ups) and reports its summary. Use only when the owner explicitly asks for AI matches in this conversation, e.g. "run N AI matches", "test the AI on medium/large maps", "AI vs AI with 3/4 players", "how does the AI do now". Never use it on your own initiative to validate a code, AI, balance or content change; that is what tools/core_suite.py is for.
 ---
 
 # AI match batch
 
-Plays several complete AI-vs-AI games at once with `tests/ai_versus_ai_match_report.tscn` and
-compares them. Every game gets its own random map; faction line-ups differ between matches unless
-the owner asks otherwise. One subagent per match runs the game and returns a fixed JSON summary;
-you collect the summaries and report.
+Plays many complete AI-vs-AI games at once with `tests/ai_versus_ai_match_report.tscn` and
+compares them. `tools/ai_match_batch.py` plans the batch (an explicit seed, setup and line-up per
+match), runs the matches from one queue in throwaway user profiles, and writes `summary.md`. You
+start it, relay its progress lines and report from the summary.
 
 ## When to use it
 
-- **Only when the owner asks for AI matches.** A batch costs 5–60 minutes and one subagent per
-  match. It is an evaluation tool for the owner to see how the computer players behave, not a
-  regression test (owner decision, 2026-10-10; AGENTS.md "Validation budget").
+- **Only when the owner asks for AI matches.** A batch takes the whole machine for minutes to a
+  couple of hours. It is an evaluation tool for the owner to see how the computer players behave,
+  not a regression test (owner decision, 2026-10-10; AGENTS.md "Validation budget").
 - **Not as validation.** Do not run it, `run_match.sh` or `tests/ai_versus_ai_match_report.tscn`
   to check your own change, including AI, balance or content changes. Verify those with the focused
   tests for the code you touched and `python tools/core_suite.py`. If you think a batch would
@@ -28,85 +28,101 @@ you collect the summaries and report.
 
 Take these from the request; use the defaults for anything not given. Do not ask about defaults.
 
-| Parameter | Default | Values |
+| Parameter | Default | Option |
 |---|---|---|
-| matches | 5 | 1–12 (one Godot process each; ~1 CPU core per match) |
-| players | 3 | 2–8 computer players |
-| size | `homm3_medium` | `homm3_small`, `homm3_medium`, `homm3_large`, `homm3_extra_large` |
-| line-ups | different random factions per match, no faction twice in a match | `--mirrors` allows repeats; or exact line-ups from the owner |
-| guards | `normal` (as a new game from the main menu) | `weak`, `normal`, `strong` |
-| water | `land` (as a new game) | `land`, `normal_water`, `islands` |
-| levels | `1` (as a new game) | `1`, `2` (with the underground level) |
-| day cap | 320 | an undecided game stops here (160 before 2026-10-16) |
-| subagent model | `haiku`, effort `high` | only change if the owner asks |
+| matches | 5 | `--matches N`, any number |
+| players | 3 | `--players 2`-`8` |
+| size | medium | `--size small`, `medium`, `large`, `xl` |
+| several setups in one queue | | `--group 3:medium:30 --group 4:large:30` (players:size:matches) |
+| line-ups | balanced | `--lineups random` (distinct sets), `mirrors` (a faction may repeat), or `--lineup a,b,c` per line-up in seat order |
+| guards | normal (as a new game) | `--guards weak,normal,strong` |
+| water | land (as a new game) | `--water land,normal_water,islands` |
+| levels | 1 (as a new game) | `--levels 1,2` (2 adds the underground) |
+| day cap | 320 | `--days N` (160 before 2026-10-16) |
+| matches at once | 16 | `--slots N`; lowered by itself when other Godot processes are running |
+| timeout per match | small 30, medium 90, large 180, xl 360 min | `--timeout-min N` |
+| plan seed | random | `--seed N`: the same seed and options give the same plan |
 
-Expected wall time per match with 12 running: small 1–3 min, medium 3–12 min, large 6–40 min
-(median 18; a large game that runs to the 320-day cap takes 20–80 min), all matches in parallel.
+- **Player counts follow the map size** (owner, 2026-10-18): small 2, medium 2-3, large 3-4,
+  xl 5-6. Never large maps with 2 players; the tool warns about it.
+- **Lists are crossed.** `--guards weak,normal,strong --levels 1,2` spreads the line-ups evenly
+  over all six setups, so consecutive seat rotations of one faction set get different setups.
+- **Balanced line-ups** play each set of factions in every seat rotation, each set once before
+  any set repeats, so every faction gets the same games and first seats. A full cycle of the six
+  factions is 30 games for 2P, 60 for 3P (30 balances too), 60 for 4P, 30 for 5P and 6 for 6P.
+  Batches meant to measure balance should be whole cycles.
+
+Time, measured 2026-10-19 on the owner's 16-core machine: 60 large 4P games, half on two levels,
+are about 21-23 match-hours (a two-level game takes about 27 min, a one-level one 15, a game that
+reaches the cap up to an hour). That is 2 h 7 min at 12 at once and about 1 h 45 min at 16. More
+slots add throughput slowly: relative to 12, 16 gives +20%, 24 gives +35% and 30 gives +42%, while
+each match slows by x1.11, x1.48 and x1.75. Each Godot process uses about 0.85 GB. Small games take
+1-3 min, medium 3-12 min.
 
 ## 2. Prepare
 
 1. The worktree must be current with `origin/main` (the owner changes balance and content often).
    In an app-made worktree use the `sync_with_base_branch` tool; otherwise
-   `git fetch && git status`. Report the commit the batch runs on.
-2. Pick the line-ups:
-   `python .claude/skills/ai-match-batch/scripts/pick_lineups.py <matches> <players>`
-   (one comma-separated line per match).
-3. Choose an output folder in your scratchpad, e.g. `<scratchpad>/ai_batch_<date>`.
+   `git fetch && git status`. Commit or set aside your own edits first: `plan.json` records the
+   commit, and a dirty tree means the batch does not match it.
+2. Choose an output folder that outlives this session, in the main checkout's `.artifacts/`
+   (ignored by git), e.g. `D:/Games/godot/heroes-like/.artifacts/ai_batch_<yyyymmdd>_<label>`.
+   The folder must not hold a plan yet.
 
-## 3. Launch one subagent per match, all in one message
+## 3. Run
 
-Use the Agent tool with `model: "haiku"` and `effort: "high"` (the owner chose these), one call per
-match, all in the same message so they run in parallel. Fill in the placeholders; keep the rest of
-the prompt as is:
+Start the runner with the Bash tool and `run_in_background: true` (never in the foreground):
 
 ```
-You are running ONE headless AI-vs-AI game simulation for a Godot game and reporting the result.
-Do not edit any repository files. Only create files under OUT.
-
-REPO=<absolute repo path>   OUT=<output folder>   RUN=<run id, e.g. m1>
-PLAYERS=<n>   SIZE=<size class>   FACTIONS=<comma-separated line-up or random>   DAYS=<day cap>   GUARDS=<weak|normal|strong>   WATER=<land|normal_water|islands>   LEVELS=<1|2>
-
-Step 1. With the Bash tool and run_in_background: true (the match takes minutes; never run it in
-the foreground), run:
-bash "$REPO/.claude/skills/ai-match-batch/scripts/run_match.sh" "$OUT" "$RUN" "$PLAYERS" "$SIZE" "$FACTIONS" "$DAYS" "$GUARDS" "$WATER" "$LEVELS"
-(write the literal values in place of the variables).
-
-Step 2. Wait until "$OUT/$RUN.done" exists. If you get a background-task completion notification,
-use it. Otherwise run in the foreground with a Bash timeout of 590000 ms, repeating until it
-prints DONE:
-timeout 580 bash -c "until [ -f '$OUT/$RUN.done' ]; do sleep 15; done"; [ -f "$OUT/$RUN.done" ] && echo DONE && cat "$OUT/$RUN.done" || echo STILL_RUNNING
-
-Step 3. Run: grep -m5 "SCRIPT ERROR" "$OUT/$RUN.log" ; python "$REPO/.claude/skills/ai-match-batch/scripts/summarize_match.py" "$OUT/$RUN.json"
-
-Step 4. Reply with the exit code, any SCRIPT ERROR lines (or "none"), the JSON summary exactly as
-printed, and 2-4 plain sentences on how the game went: who won and on which day (or that nobody
-won by the day cap), when each loser was knocked out, and notable facts such as captures without a
-defender or large unspent gold. Battles are logged from the attacker's side, so few lost battles is
-normal; last_day_standing is the final day for the winner. Do not speculate about bugs. If the
-match failed, give the last 30 lines of "$OUT/$RUN.log" instead. Do not delete any files.
+python tools/ai_match_batch.py <out> --players 4 --size large --matches 60 --guards weak,normal,strong --levels 1,2
 ```
 
-While they run, tell the owner the line-ups and that results come in as each match finishes.
-Relay each finished match in one or two lines; do not wait silently.
+It prints, in order:
+
+- `PLAN`: games per faction, first seats and setups, as soon as `plan.json` is written;
+- `START`: the commit and how many run at once, with a warning first if it lowered the slots;
+- one line per finished match: run, setup, line-up, `-> winner day N` (or `no winner by day N`,
+  `FAILED: ...`, `TIMEOUT: ...`), minutes and `[done/total, running]`;
+- `DONE` with the path of `summary.md`.
+
+Tell the owner the plan line and the expected wall time. Then wait: you are notified when the
+background command exits, so do not poll or sleep. When the owner asks how it is going, or you
+have a natural moment, read the last lines of its output (the same lines are in
+`<out>/runner.log`) and relay the new finished matches in a line or two. Do not open the match
+records while it runs.
+
+If the run was cut off (the session ended, the machine restarted), rerun with
+`python tools/ai_match_batch.py <out> --resume`. It plays only the matches `results.jsonl` lacks,
+from the start with their planned seeds. It refuses a different commit, and refuses while Godot
+processes of the interrupted run are still going.
 
 ## 4. Report
 
-When all matches are in, give one table:
+When the runner prints `DONE`, read `<out>/summary.md`, not the match records. It holds:
 
-| # | Setup | Factions | Towns on map | Winner | Day | Captures (no defender) | Winner's gold at end |
+- **Factions**: place points by elimination order (3-2-1-0 with four players, ties share) and wins
+  in decided games, each against a fair share with the ±1 sd band for equal factions. A `*` marks a
+  gap beyond 2 sd. Place points are the main figure: wins alone swing 0.3-0.8 between two batches
+  of the same code (owner, 2026-10-19). Show the raw counts and the band. Call a shift between
+  batches real only beyond about 2 sd, or when it repeats.
+- **Look closer**: the day range of decided games, every capped, failed or timed-out match and every
+  match with script errors (by seed), AI days over 10 s, captures without a defender, the winners'
+  unspent gold, and minutes per setup.
+- **Matches**: one row per match:
+  `| # | Setup | Factions | Towns on map | Winner | Day | Captures (no defender) | Winner's gold at end |`.
 
-(from each summary: players/`map_size`/`guards`/`water`/`levels`, `factions`, `towns_on_map`, `winner_faction`/`winner`, `final_day`,
-`town_captures`, `captures_without_defender`, `final_sides[winner].gold`), then a few bullets:
+Give the owner the faction table and the match table. For a batch of more than about 15 matches,
+link `summary.md` instead of pasting the match table and quote only the rows your bullets name.
+Then add a few bullets:
 
 - how many games were decided and the day range; any game that hit the cap;
 - water and underground maps are ordinary games: the AI sails and crosses subterranean gates (since
   2026-10-17). A capped game there is a failure to explain like any other, not an expected gap;
   a walkable-area check of such a map must cover both levels and the water;
-- recurring patterns: many captures without a defender, large unspent gold, very slow AI days
-  (`slowest_ai_day_ms` over ~10 s);
+- recurring patterns: many captures without a defender, large unspent gold, very slow AI days;
 - anything that needs a closer look, by match seed.
 
-Diagnosing a stalled or odd game is your job, not the subagents'. Read the match record first;
+Diagnosing a stalled or odd game is your job. Read that match's record `<out>/<run>.json` first;
 it is written with full tracing on, so a replay is rarely needed:
 
 - `ledger[day].decisions`: every hero decision of the day: player, hero, position, strength,
@@ -122,22 +138,36 @@ it is written with full tracing on, so a replay is rarely needed:
 - `battles`, `timeline`: every auto-resolved fight (both commanders' stats, spells, how it ended)
   and every capture, hire and fallen hero.
 
-Only when the record cannot answer it, replay the `match_seed` with the same parameters
-(`HEROES_AI_MATCH_SEED=<seed>`, players, size, guards, factions) and add temporary prints. A seed
-replays exactly only on the same commit: content and balance changes alter the map. If the owner
-wants a report page, build an artifact from these records.
+`results.jsonl` has each match's plan entry, status, minutes, first script errors and the fixed
+summary (`summarize_match.py <record>` prints the same for one record). Only when the record
+cannot answer it, replay the match alone with its seed and parameters from `plan.json`, and add
+temporary prints:
+
+```
+bash .claude/skills/ai-match-batch/scripts/run_match.sh <scratch> <run> <players> <size> <factions> <days> <guards> <water> <levels> <seed>
+```
+
+A seed replays exactly only on the same commit: content and balance changes alter the map. Never
+replay a seed while a match with that seed is running: both write the same map package under
+`maps/`. If the owner wants a report page, build an artifact from these records.
 
 ## 5. Clean up
 
-After reporting, delete the batch's `profile_*` folders, `.log` and `.done` files. Keep the
-`.json` records only while a follow-up (replay, report page) may need them, then delete them too.
-Never run a match on the owner's real game profile; `run_match.sh` isolates it.
+The runner deletes each match's profile when it ends, its log unless it failed or printed script
+errors, and the map package it wrote under `maps/`. If `DONE` warns that `maps/` holds files no
+finished match names, they come from a failed match or from someone else's game. Those packages
+can be the owner's saves: compare their mtimes with the failed match's times and list running
+Godot processes before deleting any.
+
+Keep the batch folder while a follow-up may need it (a replay, a report page, comparing with the
+next round). Then delete the whole folder. Never run a match on the owner's real game profile;
+the runner and `run_match.sh` both isolate it.
 
 ## Notes
 
 - The runner and its options are documented in `docs/ai-plays-by-player-rules.md` (AI against AI).
 - Before 2026-10-09 the runner passed no guard strength, so its matches had weak guards.
 - Before 2026-10-17 `run_match.sh` took no water or levels, so its matches were land maps on one level.
-- Matches with the same seed must not run at the same time (they share the map package file);
-  random seeds make that practically impossible.
-- On Linux set `GODOT_BIN` if `godot` is not on the PATH.
+- Until 2026-10-19 the skill ran 1-12 matches through one haiku subagent each, with random seeds;
+  larger batches used untracked drivers that ran 12 at once.
+- On Linux set `GODOT_BIN` (or pass `--godot`) if `godot` is not on the PATH.
