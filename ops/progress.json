@@ -115792,8 +115792,8 @@
         "PLAN.md",
         "docs/common-town-building-template.md"
       ],
-      "notes": "Owner decision 2026-10-19 (\"slightly improve Mireclaw again\") after round 5's 30 large 4P games (.artifacts/ai_batch_20261019_r5_large4p_30): Mireclaw won 0.60 of a fair share; its PvP exchange was 0.54 against Sunvault and 0.84 against Brasshollow (0.99-1.25 against the others). Change: base-form Reed Cover ranged_damage_multiplier 0.85->0.80 on 9 base melee lines, Bog Brute's Bogplate Bulk 0.79->0.76; upgrades unchanged (0.75, Ironfen Bulwark 0.72). Validation: tools/core_suite.py. Measurement on 60 large 4P games pending.",
-      "updatedAt": "2026-10-19T13:30:00Z",
+      "notes": "Owner decision 2026-10-19 (\"slightly improve Mireclaw again\") after round 5's 30 large 4P games (.artifacts/ai_batch_20261019_r5_large4p_30): Mireclaw won 0.60 of a fair share; its PvP exchange was 0.54 against Sunvault and 0.84 against Brasshollow (0.99-1.25 against the others). Change: base-form Reed Cover ranged_damage_multiplier 0.85->0.80 on 9 base melee lines, Bog Brute's Bogplate Bulk 0.79->0.76; upgrades unchanged (0.75, Ironfen Bulwark 0.72). Validation: tools/core_suite.py. Measured 2026-10-19 on abddcde2c + gate fix 45392756c (.artifacts/ai_batch_20261019_r6_large4p_60; 60 large 4P land, all four rotations of every set, L1/L2, all guards): wins/fair share Sunvault 1.40, Thornwake 1.33, Veilmourn 1.10, Mireclaw 0.82, Embercourt 0.72, Brasshollow 0.62 (r5 30 games 1.47/0.63/0.63/0.60/1.26/1.40; r4 60 games 1.89/1.20/0.43/0.54/0.84/1.05). Mireclaw PvP exchange vs Sunvault 0.54->0.86, vs Brasshollow 0.84->0.94, overall 0.90; days 41-90 guard fights 16/game (others 19-28), best hero level day 100 8 (others 11-15). Two day-320 games: m036 Mireclaw won on day 320 (349 captures); m027 (ai-match-2288436850) undecided three-way war, 267 captures (123 of empty towns), Brasshollow ahead only after day 280. Same-day gate recrossings 11 hero-days/game (r5 42, r4 2.5), longest 16 days.",
+      "updatedAt": "2026-10-19T14:00:00Z",
       "validatedAt": "2026-10-19T13:30:00Z"
     },
     {
