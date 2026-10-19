@@ -38,6 +38,7 @@ const SPELL_SCHOOL_ICONS_PATH := "%s/spell_school_icons.json" % CONTENT_DIR
 const BUILDING_CATEGORY_ICONS_PATH := "%s/building_category_icons.json" % CONTENT_DIR
 const CAMPAIGNS_PATH := "%s/campaigns.json" % AUTHORED_ARCHIVE_DIR
 const BIOME_TERRAIN_INDEX_KEY := "%s#map_tile_ids" % BIOMES_PATH
+const MAP_OBJECT_SITE_INDEX_KEY := "%s#resource_site_id" % MAP_OBJECTS_PATH
 
 var _cache: Dictionary = {}
 var _lookup_indexes: Dictionary = {}
@@ -244,18 +245,29 @@ func get_map_object_for_resource_site(site_id: String) -> Dictionary:
 	var normalized_site_id := site_id.strip_edges()
 	if normalized_site_id == "":
 		return {}
-	var best := {}
-	for item in _items_from_raw(load_json(MAP_OBJECTS_PATH)):
+	var items := _items_from_raw(load_json(MAP_OBJECTS_PATH))
+	var index: Variant = _lookup_indexes.get(MAP_OBJECT_SITE_INDEX_KEY)
+	if index == null or not is_same(index["source"], items) or int(index["count"]) != items.size():
+		index = _build_map_object_site_index(items)
+	var best: Variant = index["by_site"].get(normalized_site_id)
+	return best if best != null else {}
+
+# Presence and route checks ask for a resource node's map object per node, so
+# index each site's object: the largest footprint, the first of equals in
+# authored order, as a scan of the list picks it. Like the biome index it lives
+# in the lookup indexes, and a replaced object list rebuilds it.
+func _build_map_object_site_index(items: Array) -> Dictionary:
+	var by_site := {}
+	for item in items:
 		if not (item is Dictionary):
 			continue
-		if String(item.get("resource_site_id", "")).strip_edges() != normalized_site_id:
-			continue
-		if best.is_empty():
-			best = item
-			continue
-		if _map_object_footprint_area(item) > _map_object_footprint_area(best):
-			best = item
-	return best
+		var key := String(item.get("resource_site_id", "")).strip_edges()
+		var best: Variant = by_site.get(key)
+		if best == null or _map_object_footprint_area(item) > _map_object_footprint_area(best):
+			by_site[key] = item
+	var index := {"source": items, "count": items.size(), "by_site": by_site}
+	_lookup_indexes[MAP_OBJECT_SITE_INDEX_KEY] = index
+	return index
 
 func get_neutral_dwelling(id: String) -> Dictionary:
 	return get_content_by_id(NEUTRAL_DWELLINGS_PATH, id)

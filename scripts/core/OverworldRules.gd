@@ -77,6 +77,7 @@ static var _active_town_visit_indexes: Dictionary = {}
 const BLOCKED_TILE_INDEX_META := &"_overworld_blocked_tile_indexes"
 const SPATIAL_LOOKUP_INDEX_META := &"_overworld_spatial_lookup_indexes"
 const SPATIAL_LOOKUP_SIGNATURE_META := &"_overworld_spatial_lookup_signature"
+const RESOLVED_LOOKUP_META := &"_overworld_resolved_encounter_lookup"
 static var _fog_read_scope_session_id := 0
 static var _fog_read_scope_depth := 0
 static var _fog_read_scope_frame := -1
@@ -188,8 +189,8 @@ static func _seed_scenario_recruits_for_town_state(town: Dictionary) -> Dictiona
 static func _scenario_unit_growth(unit_id: String) -> int:
 	return _scenario_factory()._unit_growth(unit_id)
 
-static func _normalize_scenario_state_rules(session: SessionStateStoreScript.SessionData) -> void:
-	_scenario_rules().normalize_scenario_state(session)
+static func _normalize_scenario_state_rules(session: SessionStateStoreScript.SessionData, normalize_enemies: bool = true) -> void:
+	_scenario_rules().normalize_scenario_state(session, normalize_enemies)
 
 static func _normalize_active_town_visit_context(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
@@ -236,7 +237,9 @@ static func _normalize_enemy_states(session: SessionStateStoreScript.SessionData
 	_enemy_turn_rules().normalize_enemy_states(session)
 
 static func _run_enemy_turn_cycle(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	return _enemy_turn_rules().run_enemy_turn(session)
+	# end_turn evaluates the scenario right after, which normalizes the enemy
+	# states and their commander rosters again.
+	return _enemy_turn_rules().run_enemy_turn(session, false)
 
 static func _describe_enemy_threats(session: SessionStateStoreScript.SessionData) -> String:
 	return _enemy_turn_rules().describe_threats(session)
@@ -322,9 +325,10 @@ static func normalize_overworld_state(session: SessionStateStoreScript.SessionDa
 	_refresh_blocked_tile_index(session)
 	_normalize_fog_of_war(session)
 	_normalize_command_briefing(session)
+	# The forecast normalizes the enemy states first; the scenario rules reuse them.
 	_normalize_command_risk_forecast(session)
 
-	_normalize_scenario_state_rules(session)
+	_normalize_scenario_state_rules(session, false)
 	_mark_runtime_normalized(session)
 
 ## Older random-map saves picked a random transit object for HoMM3 boats,
@@ -3345,7 +3349,36 @@ static func encounter_display_name(encounter: Dictionary) -> String:
 
 static func is_encounter_resolved(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> bool:
 	var resolved = session.overworld.get("resolved_encounters", [])
-	return resolved is Array and encounter_key(encounter) in resolved
+	if not (resolved is Array):
+		return false
+	var cached := _resolved_lookup_entry(session)
+	if not bool(cached[3]):
+		return encounter_key(encounter) in resolved
+	return cached[2].has(encounter_key(encounter))
+
+## The resolved encounter keys as a set: shared, read-only. The list only ever
+## grows in place, so the set is rebuilt when it grows or is replaced.
+static func resolved_encounter_lookup(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	return _resolved_lookup_entry(session)[2]
+
+## [list, its size, set of String(key), whether every key is a String or
+## StringName], kept in session meta.
+static func _resolved_lookup_entry(session: SessionStateStoreScript.SessionData) -> Array:
+	var resolved = session.overworld.get("resolved_encounters", [])
+	var size: int = resolved.size() if resolved is Array else -1
+	var cached: Array = session.get_meta(RESOLVED_LOOKUP_META, [])
+	if cached.size() == 4 and is_same(cached[0], resolved) and int(cached[1]) == size:
+		return cached
+	var lookup := {}
+	var strings_only := true
+	if resolved is Array:
+		for value in resolved:
+			lookup[String(value)] = true
+			if not (value is String or value is StringName):
+				strings_only = false
+	cached = [resolved, size, lookup, strings_only]
+	session.set_meta(RESOLVED_LOOKUP_META, cached)
+	return cached
 
 static func encounter_key(encounter: Dictionary) -> String:
 	var placement_id := String(encounter.get("placement_id", ""))
@@ -8545,10 +8578,10 @@ static func _resource_site_guard_encounter(
 ) -> Dictionary:
 	if session == null:
 		return {}
+	var guard_front_id := String(node.get("guard_front_id", ""))
 	for encounter in session.overworld.get("encounters", []):
 		if not (encounter is Dictionary) or is_encounter_resolved(session, encounter):
 			continue
-		var guard_front_id := String(node.get("guard_front_id", ""))
 		if guard_front_id != "" and guard_front_id == String(encounter.get("placement_id", "")):
 			return encounter
 		var guard := _resource_site_guard_link_for_encounter(encounter)

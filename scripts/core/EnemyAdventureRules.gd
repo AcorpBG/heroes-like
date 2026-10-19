@@ -193,6 +193,9 @@ const AI_PUBLIC_EVENT_LOG_BLOCKED_TOKENS := [
 ]
 
 const RAID_RECENT_EXPLORATION_TARGET_LIMIT := 12
+# Session meta, not saved: placement id -> the day a fallen AI hero was first
+# seen resolved.
+const FALLEN_HERO_SEEN_DAY_META := &"_enemy_fallen_hero_seen_day"
 
 static func normalize_enemy_known_world_memory(value: Variant, current_day: int = 0) -> Dictionary:
 	if not (value is Dictionary):
@@ -516,6 +519,9 @@ static func normalize_raid_armies(session: SessionStateStoreScript.SessionData) 
 	var normalized = []
 	var changed = false
 	var occupied_commander_ids: Dictionary = {}
+	var resolved_lookup := _resolved_encounter_lookup(session.overworld.get("resolved_encounters", []))
+	var fallen_seen_day: Dictionary = session.get_meta(FALLEN_HERO_SEEN_DAY_META, {})
+	session.set_meta(FALLEN_HERO_SEEN_DAY_META, fallen_seen_day)
 	for encounter_value in encounters:
 		if not (encounter_value is Dictionary):
 			continue
@@ -531,6 +537,9 @@ static func normalize_raid_armies(session: SessionStateStoreScript.SessionData) 
 			continue
 		var encounter = encounter_value
 		if PlayerRules.raid_controller_id(encounter) != "":
+			if _fallen_hero_settled(session, encounter, resolved_lookup, fallen_seen_day):
+				normalized.append(encounter)
+				continue
 			var previous_army = encounter.get("enemy_army", {})
 			var previous_commander = encounter.get("enemy_commander_state", {})
 			encounter = ensure_raid_army(encounter, session, occupied_commander_ids)
@@ -542,6 +551,25 @@ static func normalize_raid_armies(session: SessionStateStoreScript.SessionData) 
 		normalized.append(encounter)
 	if changed:
 		session.overworld["encounters"] = normalized
+
+## A fallen hero's entry is normalized through the day it fell, when the day's
+## reports read it, and then kept as it is: nothing plays it again. An entry
+## without a roster hero is still normalized, since that can claim one.
+static func _fallen_hero_settled(
+	session: SessionStateStoreScript.SessionData,
+	encounter: Dictionary,
+	resolved_lookup: Dictionary,
+	fallen_seen_day: Dictionary
+) -> bool:
+	var placement_id := String(encounter.get("placement_id", ""))
+	if not resolved_lookup.has(placement_id):
+		return false
+	var commander_state = encounter.get("enemy_commander_state", {})
+	if not (commander_state is Dictionary) or String(commander_state.get("roster_hero_id", "")) == "":
+		return false
+	if not fallen_seen_day.has(placement_id):
+		fallen_seen_day[placement_id] = int(session.day)
+	return int(fallen_seen_day[placement_id]) < int(session.day)
 
 static func normalize_all_commander_rosters(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
@@ -606,7 +634,7 @@ static func _normalize_commander_roster_entries(
 			if roster_hero_id == "":
 				continue
 			existing_map[roster_hero_id] = entry_value
-	var active_map = _active_commander_map(session, faction_id)
+	var active_map = _active_commander_map(session, faction_id, selected_hero_ids)
 	var normalized := []
 	var session_day := int(session.day) if session != null else 0
 	var hero_ids: Array = selected_hero_ids if selected_hero_ids is Array else _faction_commander_ids(PlayerRules.faction_id(session, faction_id))
@@ -1063,20 +1091,19 @@ static func build_roster_commander_state(
 		if String(existing_state.get(key, "")) != "":
 			commander_state[key] = String(existing_state.get(key, ""))
 	commander_state = _normalize_enemy_progression(commander_state)
+	SpellRulesScript.ensure_hero_spellbook(
+		commander_state,
+		{
+			"command": commander_state.get("command", {}),
+			"starting_spell_ids": spell_ids_source,
+		}
+	)
+	# Full mana, as refresh_daily_mana would give; commander_state is a fresh copy.
+	var mana: Dictionary = commander_state["spellbook"]["mana"]
+	mana["current"] = int(mana.get("max", 0))
 	var with_metadata := _apply_commander_army_metadata(
 		_apply_commander_record_metadata(
-			_apply_commander_memory_metadata(
-				SpellRulesScript.refresh_daily_mana(
-					SpellRulesScript.ensure_hero_spellbook(
-						commander_state,
-						{
-							"command": commander_state.get("command", {}),
-							"starting_spell_ids": spell_ids_source,
-						}
-					)
-				),
-				target_memory
-			),
+			_apply_commander_memory_metadata(commander_state, target_memory),
 			record
 		),
 		army_continuity
@@ -1589,26 +1616,29 @@ static func _faction_commander_ids(faction_id: String) -> Array:
 			hero_ids.append(hero_id)
 	return hero_ids
 
+## hero_ids: an Array limits the map to those roster heroes (null: all).
 static func _active_commander_map(
 	session: SessionStateStoreScript.SessionData,
-	faction_id: String = ""
+	faction_id: String = "",
+	hero_ids: Variant = null
 ) -> Dictionary:
 	var active: Dictionary = {}
 	if session == null:
 		return active
-	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	var resolved_lookup := _resolved_encounter_lookup(session.overworld.get("resolved_encounters", []))
+	var limited := hero_ids is Array
 	for encounter in session.overworld.get("encounters", []):
 		if not (encounter is Dictionary):
 			continue
-		if resolved_encounters is Array and String(encounter.get("placement_id", "")) in resolved_encounters:
-			continue
 		if faction_id != "" and PlayerRules.raid_controller_id(encounter) != faction_id:
+			continue
+		if _placement_resolved(String(encounter.get("placement_id", "")), resolved_lookup):
 			continue
 		var commander_state = encounter.get("enemy_commander_state", {})
 		if not (commander_state is Dictionary) or commander_state.is_empty():
 			continue
 		var roster_hero_id := String(commander_state.get("roster_hero_id", ""))
-		if roster_hero_id == "":
+		if roster_hero_id == "" or (limited and roster_hero_id not in hero_ids):
 			continue
 		active[roster_hero_id] = {
 			"placement_id": String(encounter.get("placement_id", "")),
@@ -1622,7 +1652,7 @@ static func _active_commander_map(
 			continue
 		var defender_state: Dictionary = defender_entry.get("commander_state", {})
 		var defender_roster_hero_id := String(defender_state.get("roster_hero_id", ""))
-		if defender_roster_hero_id == "":
+		if defender_roster_hero_id == "" or (limited and defender_roster_hero_id not in hero_ids):
 			continue
 		active[defender_roster_hero_id] = defender_entry
 	for node in session.overworld.get("resource_nodes", []):
@@ -1633,7 +1663,7 @@ static func _active_commander_map(
 			continue
 		var defender_state: Dictionary = defender_entry.get("commander_state", {})
 		var defender_roster_hero_id := String(defender_state.get("roster_hero_id", ""))
-		if defender_roster_hero_id == "":
+		if defender_roster_hero_id == "" or (limited and defender_roster_hero_id not in hero_ids):
 			continue
 		active[defender_roster_hero_id] = defender_entry
 	return active
@@ -2298,7 +2328,8 @@ static func _army_headcount(stacks: Variant) -> int:
 static func _normalize_enemy_progression(commander_state: Dictionary) -> Dictionary:
 	var commander := HeroProgressionRulesScript.ensure_hero_progression(commander_state.duplicate(true))
 	var guard := 0
-	while HeroProgressionRulesScript.pending_choices_remaining(commander) > 0 and guard < 8:
+	# commander stays progression-ensured: the ensure above, then choose_specialty's result.
+	while HeroProgressionRulesScript.raw_pending_choices_remaining(commander) > 0 and guard < 8:
 		var pending_choice := HeroProgressionRulesScript.current_pending_choice(commander)
 		if pending_choice.is_empty():
 			break
@@ -2308,7 +2339,7 @@ static func _normalize_enemy_progression(commander_state: Dictionary) -> Diction
 		var choice_result := HeroProgressionRulesScript.choose_specialty(commander, chosen_specialty)
 		commander = choice_result.get("hero", commander)
 		guard += 1
-	return HeroProgressionRulesScript.ensure_hero_progression(commander)
+	return HeroProgressionRulesScript.ensure_hero_progression(commander) if guard > 0 else commander
 
 static func _award_enemy_commander_experience(commander_state: Dictionary, amount: int) -> Dictionary:
 	if amount <= 0:
@@ -2346,19 +2377,17 @@ static func _preferred_enemy_specialty_id(commander_state: Dictionary, pending_c
 	return best
 
 static func _normalized_specialty_ranks(primary: Variant, secondary: Variant = []) -> Array:
-	var hero_stub := {"specialties": []}
+	# Each known specialty up to its max rank, secondary first.
 	var normalized := []
 	for source in [secondary, primary]:
 		if not (source is Array):
 			continue
 		for specialty_value in source:
 			var specialty_id := String(specialty_value)
-			if HeroProgressionRulesScript.specialty_definition(specialty_id).is_empty():
+			if not HeroProgressionRulesScript.has_specialty(specialty_id):
 				continue
-			var trial := normalized.duplicate()
-			trial.append(specialty_id)
-			hero_stub["specialties"] = trial
-			normalized = HeroProgressionRulesScript.ensure_hero_progression(hero_stub).get("specialties", normalized)
+			if normalized.count(specialty_id) < HeroProgressionRulesScript.max_rank_for_specialty(specialty_id):
+				normalized.append(specialty_id)
 	return normalized
 
 static func _normalized_specialty_focus_ids(value: Variant) -> Array:
@@ -2369,7 +2398,7 @@ static func _normalized_specialty_focus_ids(value: Variant) -> Array:
 		var specialty_id := String(specialty_value)
 		if specialty_id == "" or specialty_id in normalized:
 			continue
-		if HeroProgressionRulesScript.specialty_definition(specialty_id).is_empty():
+		if not HeroProgressionRulesScript.has_specialty(specialty_id):
 			continue
 		normalized.append(specialty_id)
 	return normalized
@@ -4052,6 +4081,7 @@ static func _army_strength(stacks: Variant) -> int:
 	var total = 0
 	if not (stacks is Array):
 		return total
+	_sync_unit_strength_memo()
 	for stack_value in stacks:
 		if not (stack_value is Dictionary):
 			continue
@@ -4063,14 +4093,29 @@ static func _army_strength(stacks: Variant) -> int:
 	return total
 
 static func _unit_strength_value(unit_id: String) -> int:
-	var unit = ContentService.get_unit(unit_id)
-	return max(
-		6,
-		int(unit.get("hp", 1))
-		+ int(unit.get("min_damage", 1))
-		+ int(unit.get("max_damage", 1))
-		+ (3 if bool(unit.get("ranged", false)) else 0)
-	)
+	var strength = _unit_strength_memo.get(unit_id)
+	if strength == null:
+		var unit = ContentService.get_unit(unit_id)
+		strength = max(
+			6,
+			int(unit.get("hp", 1))
+			+ int(unit.get("min_damage", 1))
+			+ int(unit.get("max_damage", 1))
+			+ (3 if bool(unit.get("ranged", false)) else 0)
+		)
+		_unit_strength_memo[unit_id] = strength
+	return strength
+
+## Roster normalization weighs every commander's army each pass, so unit
+## strengths are memoized and dropped whenever the content cache reloads.
+static var _unit_strength_memo := {}
+static var _unit_strength_sources := []
+
+static func _sync_unit_strength_memo() -> void:
+	var sources := [ContentService.get_content_revision(), ContentService.load_json(ContentService.UNITS_PATH)]
+	if _unit_strength_sources.size() != sources.size() or _unit_strength_sources[0] != sources[0] or not is_same(_unit_strength_sources[1], sources[1]):
+		_unit_strength_memo = {}
+		_unit_strength_sources = sources
 
 static func _raid_is_public(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> bool:
 	if session == null:

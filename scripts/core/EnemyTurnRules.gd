@@ -196,7 +196,8 @@ static func normalize_optional_hero_task_state(value: Variant) -> Dictionary:
 		"observed_policy": "preserved_and_normalized",
 	}
 
-static func run_enemy_turn(session: SessionStateStoreScript.SessionData) -> Dictionary:
+## settle_rosters false: the caller normalizes the enemy states right after.
+static func run_enemy_turn(session: SessionStateStoreScript.SessionData, settle_rosters: bool = true) -> Dictionary:
 	var profile_enabled := _enemy_turn_profile_enabled()
 	var profile := {
 		"schema_id": "strategic_ai_enemy_turn_profile_v1",
@@ -251,9 +252,10 @@ static func run_enemy_turn(session: SessionStateStoreScript.SessionData) -> Dict
 	phase_started = _profile_timer(profile_enabled)
 	session.overworld["enemy_states"] = states
 	_profile_add_ms(profile, "state_writeback_ms", phase_started)
-	phase_started = _profile_timer(profile_enabled)
-	EnemyAdventureRulesScript.normalize_all_commander_rosters(session)
-	_profile_add_ms(profile, "final_commander_roster_normalize_ms", phase_started)
+	if settle_rosters:
+		phase_started = _profile_timer(profile_enabled)
+		EnemyAdventureRulesScript.normalize_all_commander_rosters(session)
+		_profile_add_ms(profile, "final_commander_roster_normalize_ms", phase_started)
 	AiHeroRulesScript.clear_shared_surfaces()
 	return _enemy_turn_result(true, " ".join(messages), events, profile_enabled, profile)
 

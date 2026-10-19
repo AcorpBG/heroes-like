@@ -264,7 +264,7 @@ static func summarize_specialty_ids(specialty_ids: Variant, use_short_names: boo
 
 static func pending_choices_remaining(hero_state: Dictionary) -> int:
 	var hero := ensure_hero_progression(hero_state.duplicate(true))
-	return _raw_pending_choices_remaining(hero)
+	return raw_pending_choices_remaining(hero)
 
 static func current_pending_choice(hero_state: Dictionary) -> Dictionary:
 	var hero := ensure_hero_progression(hero_state.duplicate(true))
@@ -311,6 +311,10 @@ static func rank_text(specialty_id: String, rank: int) -> String:
 	return String(ranks[rank - 1].get("text", ""))
 
 static func _specialty_row(specialty_id: String) -> Dictionary:
+	return _specialty_catalog().get(specialty_id, {})
+
+## The catalog rows by id, shared and read-only; rebuilt when the content changes.
+static func _specialty_catalog() -> Dictionary:
 	var items := specialties()
 	if not is_same(items, _catalog_source):
 		_catalog_source = items
@@ -318,7 +322,10 @@ static func _specialty_row(specialty_id: String) -> Dictionary:
 		for specialty in items:
 			if specialty is Dictionary:
 				_catalog_index[String(specialty.get("id", ""))] = specialty
-	return _catalog_index.get(specialty_id, {})
+	return _catalog_index
+
+static func has_specialty(specialty_id: String) -> bool:
+	return not _specialty_row(specialty_id).is_empty()
 
 static func _rank_bonuses(specialty_id: String, rank: int) -> Dictionary:
 	var ranks: Array = _specialty_row(specialty_id).get("ranks", [])
@@ -332,7 +339,7 @@ static func specialty_id_for_action(action_id: String) -> String:
 	if not action_id.begins_with(PREFIX):
 		return ""
 	var specialty_id := action_id.trim_prefix(PREFIX)
-	return specialty_id if not specialty_definition(specialty_id).is_empty() else ""
+	return specialty_id if has_specialty(specialty_id) else ""
 
 static func specialty_insignia_description(specialty_id: String) -> String:
 	return String(_specialty_row(specialty_id).get("icon_description", ""))
@@ -370,7 +377,9 @@ static func max_rank_for_specialty(specialty_id: String) -> int:
 	return max(1, int(_specialty_row(specialty_id).get("max_rank", 1)))
 
 static func aggregate_bonuses(hero_state: Dictionary) -> Dictionary:
-	var hero := ensure_hero_progression(hero_state.duplicate(true))
+	# Reads the hero only. Of what ensure_hero_progression settles, the bonuses
+	# depend on the normalized specialties alone.
+	var specialty_ids := _normalize_specialties(hero_state.get("specialties", []))
 	var bonuses := {
 		"overworld_movement": 0,
 		"scouting_radius": 0,
@@ -385,12 +394,12 @@ static func aggregate_bonuses(hero_state: Dictionary) -> Dictionary:
 		"raid_pillage_resistance": 0.0,
 	}
 	var counted := {}
-	for specialty_id_value in hero.get("specialties", []):
+	for specialty_id_value in specialty_ids:
 		var specialty_id := String(specialty_id_value)
 		if counted.has(specialty_id):
 			continue
 		counted[specialty_id] = true
-		_merge_bonuses(bonuses, _rank_bonuses(specialty_id, specialty_rank(hero, specialty_id)), hero)
+		_merge_bonuses(bonuses, _rank_bonuses(specialty_id, _rank_in_array(specialty_ids, specialty_id)), hero_state)
 	return bonuses
 
 static func _merge_bonuses(target: Dictionary, source: Dictionary, hero_state: Dictionary) -> void:
@@ -488,11 +497,13 @@ static func rank_label(rank: int) -> String:
 static func _normalize_specialties(value: Variant) -> Array:
 	var normalized := []
 	if value is Array:
+		var catalog := _specialty_catalog()
 		for specialty_id_value in value:
 			var specialty_id := String(specialty_id_value)
-			if specialty_definition(specialty_id).is_empty():
+			var row: Dictionary = catalog.get(specialty_id, {})
+			if row.is_empty():
 				continue
-			if _rank_in_array(normalized, specialty_id) >= max_rank_for_specialty(specialty_id):
+			if _rank_in_array(normalized, specialty_id) >= maxi(1, int(row.get("max_rank", 1))):
 				continue
 			normalized.append(specialty_id)
 	return normalized
@@ -502,7 +513,7 @@ static func _normalize_specialty_id_list(value: Variant) -> Array:
 	if value is Array:
 		for specialty_id_value in value:
 			var specialty_id := String(specialty_id_value)
-			if specialty_definition(specialty_id).is_empty() or specialty_id in normalized:
+			if not has_specialty(specialty_id) or specialty_id in normalized:
 				continue
 			normalized.append(specialty_id)
 	return normalized
@@ -510,6 +521,7 @@ static func _normalize_specialty_id_list(value: Variant) -> Array:
 static func _normalize_pending_choices(value: Variant, hero_state: Dictionary) -> Array:
 	var normalized := []
 	if value is Array:
+		var catalog := _specialty_catalog()
 		for pending_choice in value:
 			if not (pending_choice is Dictionary):
 				continue
@@ -517,9 +529,10 @@ static func _normalize_pending_choices(value: Variant, hero_state: Dictionary) -
 			var options := []
 			for specialty_id_value in pending_choice.get("options", []):
 				var specialty_id := String(specialty_id_value)
-				if specialty_definition(specialty_id).is_empty():
+				var row: Dictionary = catalog.get(specialty_id, {})
+				if row.is_empty():
 					continue
-				if specialty_rank(hero_state, specialty_id) >= max_rank_for_specialty(specialty_id):
+				if specialty_rank(hero_state, specialty_id) >= maxi(1, int(row.get("max_rank", 1))):
 					continue
 				if specialty_id in options:
 					continue
@@ -555,7 +568,7 @@ static func _reconcile_pending_choices(hero_state: Dictionary) -> Dictionary:
 static func _enqueue_missing_choice_groups(hero_state: Dictionary) -> Dictionary:
 	var hero := hero_state
 	var expected_choices := int(max(0, int(hero.get("level", 1)) - 1))
-	var allocated_choices := int(hero.get("specialties", []).size()) + _raw_pending_choices_remaining(hero)
+	var allocated_choices := int(hero.get("specialties", []).size()) + raw_pending_choices_remaining(hero)
 	var next_level := allocated_choices + 2
 	while allocated_choices < expected_choices:
 		var choice_group := _build_choice_group(hero, next_level)
@@ -711,7 +724,8 @@ static func _rank_in_array(specialty_ids: Array, specialty_id: String) -> int:
 			count += 1
 	return count
 
-static func _raw_pending_choices_remaining(hero_state: Dictionary) -> int:
+## The queued choices of a hero already passed through ensure_hero_progression.
+static func raw_pending_choices_remaining(hero_state: Dictionary) -> int:
 	var pending_choices = hero_state.get("pending_specialty_choices", [])
 	return pending_choices.size() if pending_choices is Array else 0
 

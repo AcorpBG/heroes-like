@@ -58,6 +58,7 @@ static func apply_daily(session: SessionStateStoreScript.SessionData) -> Array:
 	if not applies(session):
 		return messages
 	var since: Dictionary = session.overworld.get(TOWNLESS_SINCE_KEY, {}) if session.overworld.get(TOWNLESS_SINCE_KEY, {}) is Dictionary else {}
+	var rosters_settled := false
 	for player in session.overworld.get("players", []):
 		if not (player is Dictionary):
 			continue
@@ -82,6 +83,10 @@ static func apply_daily(session: SessionStateStoreScript.SessionData) -> Array:
 		if human:
 			_defeat_human(session, "Your realm has held no town for %d days." % TOWNLESS_DAYS)
 		else:
+			if not rosters_settled:
+				# The enemy turn leaves its rosters to the scenario check after this.
+				_enemy_adventure().normalize_all_commander_rosters(session)
+				rosters_settled = true
 			_remove_computer_player(session, player_id)
 			messages.append("%s has held no town for %d days and leaves the war." % [String(ContentService.get_faction(String(player.get("faction_id", ""))).get("name", player_id)), TOWNLESS_DAYS])
 	session.overworld[TOWNLESS_SINCE_KEY] = since
@@ -103,3 +108,6 @@ static func _remove_computer_player(session: SessionStateStoreScript.SessionData
 static func _ai_heroes():
 	# Loaded when needed: OverworldRules preloads this script.
 	return load("res://scripts/core/AiHeroRules.gd")
+
+static func _enemy_adventure():
+	return load("res://scripts/core/EnemyAdventureRules.gd")

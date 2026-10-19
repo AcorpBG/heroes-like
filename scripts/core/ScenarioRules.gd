@@ -29,7 +29,8 @@ static func _overworld_rules() -> Variant:
 	# Validator anchors: OverworldRules.describe_hero, OverworldRules.describe_army, OverworldRules.describe_resources
 	return load("res://scripts/core/OverworldRules.gd")
 
-static func normalize_scenario_state(session: SessionStateStoreScript.SessionData) -> void:
+## normalize_enemies false: the caller has just normalized the enemy states.
+static func normalize_scenario_state(session: SessionStateStoreScript.SessionData, normalize_enemies: bool = true) -> void:
 	if session == null:
 		return
 	if session.scenario_status == "":
@@ -37,7 +38,8 @@ static func normalize_scenario_state(session: SessionStateStoreScript.SessionDat
 	if session.scenario_summary == "":
 		session.scenario_summary = ""
 	_scenario_script_rules().normalize_script_state(session)
-	_enemy_turn_rules().normalize_enemy_states(session)
+	if normalize_enemies:
+		_enemy_turn_rules().normalize_enemy_states(session)
 
 static func scenario_record_for_session(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null or session.scenario_id == "":

@@ -350,11 +350,9 @@ static func explored_tile_count(state: Dictionary, level: int = 0) -> int:
 			bits >>= 1
 	return count
 
+## Shared and read-only: a caller that adds to it copies it first.
 static func _resolved_lookup(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	var lookup := {}
-	for value in session.overworld.get("resolved_encounters", []):
-		lookup[String(value)] = true
-	return lookup
+	return _overworld_rules().resolved_encounter_lookup(session)
 
 static func _entry_index(session: SessionStateStoreScript.SessionData, placement_id: String) -> int:
 	var encounters: Array = session.overworld.get("encounters", [])
@@ -403,7 +401,8 @@ static func normalize_ai_heroes(session: SessionStateStoreScript.SessionData, on
 	if session == null or not session.battle.is_empty():
 		return report
 	var encounters: Array = session.overworld.get("encounters", []) if session.overworld.get("encounters", []) is Array else []
-	var resolved := _resolved_lookup(session)
+	# A copy: heroes this pass resolves are added to it.
+	var resolved := _resolved_lookup(session).duplicate()
 	var changed := false
 	var columns := []
 	for index in range(encounters.size()):
@@ -2025,7 +2024,7 @@ static func _run_hero_day(session: SessionStateStoreScript.SessionData, context:
 		entry = session.overworld.encounters[index]
 		context["decision"] = {}
 		var home := _own_town_at(session, String(context.controller), entry)
-		if not home.is_empty() and _holds_gate(session, context, entry, home, placement_id == _main_hero_id(session, String(context.controller)) or _field_hero_ids(session, String(context.controller)).has(placement_id)):
+		if not home.is_empty() and _holds_gate(session, context, entry, home, placement_id == _decision_main_id(session, context) or _decision_field_ids(session, context).has(placement_id)):
 			# A hostile hero is a day away: the hero holds the gate, unless it
 			# can catch and beat that hero today. The goal says so.
 			entry = session.overworld.encounters[index]
@@ -5025,7 +5024,7 @@ static func _portal_leads_unseen(portal: Dictionary, seen_map: PackedByteArray) 
 
 ## Whether a hero may cross this site's tile without stopping: the pickup is
 ## gone, the one-time site is looted, or the site is already this player's (or
-## an ally's).
+## an ally's). The caller runs _sync_site_pass_memo first.
 static func _site_stop_passable(session: SessionStateStoreScript.SessionData, controller: String, ref: Dictionary) -> bool:
 	match int(ref.kind):
 		STOP_ARTIFACT:
@@ -5037,26 +5036,55 @@ static func _site_stop_passable(session: SessionStateStoreScript.SessionData, co
 			var node = nodes[int(ref.index)] if int(ref.index) < nodes.size() else {}
 			if not (node is Dictionary) or NativeTransit.is_native(node):
 				return false
-			var site := NodePayload.site_for_node(node)
-			if site.is_empty():
+			var site_class := _site_pass_class(String(node.get("site_id", "")))
+			if not bool(site_class[SITE_PASS_KNOWN]):
 				return false
-			if not _overworld_rules().resource_node_is_present(node, site):
-				return true
 			# A building a hero visits and leaves standing (a shrine, a school, a
 			# roadside producer) can be crossed on the way elsewhere; the hero may
 			# still stop there to visit. Otherwise a pocket whose only way out ran
 			# over such a doorway trapped the hero that entered it.
-			if String(site.get("family", "")) in WALK_ACROSS_SITE_FAMILIES:
+			if bool(site_class[SITE_PASS_WALK_ACROSS]):
 				return true
-			# A looted one-time site that stays standing (a guarded bank) holds
-			# nothing for anyone: whoever looted it does not own it. Until
-			# 2026-10-17 only the looter crossed it, and a rival whose one way
-			# out ran over it stood idle for 250 days (seed ai-match-2298949441).
-			if bool(node.get("collected", false)) and not _overworld_rules()._resource_site_is_persistent(site) and not _overworld_rules()._resource_site_is_repeatable(site):
+			# A collected pickup is gone. A looted one-time site that stays
+			# standing (a guarded bank) holds nothing for anyone: whoever looted it
+			# does not own it. Until 2026-10-17 only the looter crossed it, and a
+			# rival whose one way out ran over it stood idle for 250 days (seed
+			# ai-match-2298949441).
+			if bool(node.get("collected", false)) and not bool(site_class[SITE_PASS_KEPT]):
 				return true
 			var owner := PlayerRules.resource_controller_id(node)
 			return owner != "" and PlayerRules.allied(session, controller, owner)
 	return false
+
+## What a resource site's content row says about crossing it, by site id:
+## [known site, walk-across family, persistent or repeatable]. Searches check
+## every site stop on every search, so the rows are read once and the memo is
+## dropped whenever the content cache reloads. A node's payload never changes
+## these keys (ResourceNodePayloadRules.site_for_node).
+const SITE_PASS_KNOWN := 0
+const SITE_PASS_WALK_ACROSS := 1
+const SITE_PASS_KEPT := 2
+static var _site_pass_memo := {}
+static var _site_pass_sources := []
+
+static func _sync_site_pass_memo() -> void:
+	var sources := [ContentService.get_content_revision(), ContentService.load_json(ContentService.RESOURCE_SITES_PATH)]
+	if _site_pass_sources.size() != sources.size() or _site_pass_sources[0] != sources[0] or not is_same(_site_pass_sources[1], sources[1]):
+		_site_pass_memo = {}
+		_site_pass_sources = sources
+
+static func _site_pass_class(site_id: String) -> Array:
+	var site_class = _site_pass_memo.get(site_id)
+	if site_class == null:
+		var site := ContentService.get_resource_site(site_id)
+		var overworld_rules = _overworld_rules()
+		site_class = [
+			not site.is_empty(),
+			String(site.get("family", "")) in WALK_ACROSS_SITE_FAMILIES,
+			overworld_rules._resource_site_is_persistent(site) or overworld_rules._resource_site_is_repeatable(site),
+		]
+		_site_pass_memo[site_id] = site_class
+	return site_class
 
 static func _add_stop(stops: Dictionary, tile: Vector2i, size: Vector2i, ref: Dictionary) -> void:
 	if tile.x < 0 or tile.y < 0 or tile.x >= size.x or tile.y >= size.y:
@@ -5173,6 +5201,7 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 			_add_stop_index(dynamic_stops, zone_index, ref)
 	var pass_mask := PackedByteArray()
 	pass_mask.resize(count)
+	_sync_site_pass_memo()
 	for site in surface.get("site_stops", []):
 		var site_tile := int(site.tile)
 		if dynamic_stops.has(site_tile) or army_tiles.has(site_tile):
@@ -6231,22 +6260,22 @@ static func army_power(stacks: Variant, commander: Variant = {}) -> float:
 	var damage_per_round := 0.0
 	if not (stacks is Array):
 		return total
+	_sync_power_memos()
 	for stack in stacks:
 		if not (stack is Dictionary):
 			continue
 		var count := int(stack.get("count", 0))
 		if count <= 0:
 			continue
-		var unit := ContentService.get_unit(String(stack.get("unit_id", "")))
-		if unit.is_empty():
+		var unit_id := String(stack.get("unit_id", ""))
+		var figures = _unit_power_memo.get(unit_id)
+		if figures == null:
+			figures = _unit_power_figures(unit_id)
+			_unit_power_memo[unit_id] = figures
+		if figures.is_empty():
 			continue
-		var damage := (float(unit.get("min_damage", 1)) + float(unit.get("max_damage", 1))) * 0.5
-		var per := POWER_SCALE * pow(maxf(1.0, float(unit.get("hp", 1))), POWER_HEALTH) * pow(maxf(0.5, damage), POWER_DAMAGE)
-		per *= exp(POWER_PER_DEFENSE * float(int(unit.get("defense", 0))) + POWER_PER_SPEED * float(int(unit.get("speed", 0))) + POWER_PER_INITIATIVE * float(int(unit.get("initiative", 0))))
-		if bool(unit.get("ranged", false)):
-			per *= RANGED_POWER
-		total += per * float(count)
-		damage_per_round += damage * float(count)
+		total += float(figures[0]) * float(count)
+		damage_per_round += float(figures[1]) * float(count)
 	if commander is Dictionary and not commander.is_empty():
 		# The hero's attack raises the army's damage and its defense cuts the
 		# damage it takes, by the battle's own curve (BattleDamageRules); its
@@ -6263,7 +6292,7 @@ static func army_power(stacks: Variant, commander: Variant = {}) -> float:
 
 ## Damage a hero's spells add per round over a typical battle: the strongest
 ## battle damage spell it knows and can pay for, cast once a round while its
-## mana lasts.
+## mana lasts. army_power syncs the memos first.
 static func _spell_damage_per_round(commander: Dictionary) -> float:
 	var spellbook: Dictionary = commander.get("spellbook", {}) if commander.get("spellbook", {}) is Dictionary else {}
 	var known = spellbook.get("known_spell_ids", [])
@@ -6274,15 +6303,55 @@ static func _spell_damage_per_round(commander: Dictionary) -> float:
 	var power := maxi(0, int(commander.get("command", {}).get("power", 0)) if commander.get("command", {}) is Dictionary else 0)
 	var best := 0.0
 	for spell_id in known:
-		var spell := ContentService.get_spell(String(spell_id))
-		var effect: Dictionary = spell.get("effect", {}) if spell.get("effect", {}) is Dictionary else {}
-		if String(spell.get("context", "")) != "battle" or String(effect.get("type", "")) != "damage_enemy":
+		var figures = _damage_spell_memo.get(String(spell_id))
+		if figures == null:
+			figures = _damage_spell_figures(String(spell_id))
+			_damage_spell_memo[String(spell_id)] = figures
+		if figures.is_empty():
 			continue
-		var cost := maxi(1, int(spell.get("mana_cost", 1)))
-		var casts := mini(BATTLE_ROUNDS_ESTIMATE, mana / cost)
-		var per_cast := float(int(effect.get("base_damage", 0)) + power * int(effect.get("power_scale", 0)))
+		var casts := mini(BATTLE_ROUNDS_ESTIMATE, mana / int(figures[0]))
+		var per_cast := float(int(figures[1]) + power * int(figures[2]))
 		best = maxf(best, per_cast * float(casts))
 	return best / float(BATTLE_ROUNDS_ESTIMATE)
+
+## Per creature of a unit: [fighting value, average damage], or [] when the
+## unit is unknown.
+static func _unit_power_figures(unit_id: String) -> Array:
+	var unit := ContentService.get_unit(unit_id)
+	if unit.is_empty():
+		return []
+	var damage := (float(unit.get("min_damage", 1)) + float(unit.get("max_damage", 1))) * 0.5
+	var per := POWER_SCALE * pow(maxf(1.0, float(unit.get("hp", 1))), POWER_HEALTH) * pow(maxf(0.5, damage), POWER_DAMAGE)
+	per *= exp(POWER_PER_DEFENSE * float(int(unit.get("defense", 0))) + POWER_PER_SPEED * float(int(unit.get("speed", 0))) + POWER_PER_INITIATIVE * float(int(unit.get("initiative", 0))))
+	if bool(unit.get("ranged", false)):
+		per *= RANGED_POWER
+	return [per, damage]
+
+## A battle damage spell's [mana cost, base damage, power scale], or [] for any
+## other spell.
+static func _damage_spell_figures(spell_id: String) -> Array:
+	var spell := ContentService.get_spell(spell_id)
+	var effect: Dictionary = spell.get("effect", {}) if spell.get("effect", {}) is Dictionary else {}
+	if String(spell.get("context", "")) != "battle" or String(effect.get("type", "")) != "damage_enemy":
+		return []
+	return [maxi(1, int(spell.get("mana_cost", 1))), int(effect.get("base_damage", 0)), int(effect.get("power_scale", 0))]
+
+## army_power reads each unit and spell from content millions of times a game,
+## so their figures are memoized and dropped whenever the content cache reloads.
+static var _unit_power_memo := {}
+static var _damage_spell_memo := {}
+static var _power_memo_sources := []
+
+static func _sync_power_memos() -> void:
+	var sources := [
+		ContentService.get_content_revision(),
+		ContentService.load_json(ContentService.UNITS_PATH),
+		ContentService.load_json(ContentService.SPELLS_PATH),
+	]
+	if _power_memo_sources.size() != sources.size() or _power_memo_sources[0] != sources[0] or not is_same(_power_memo_sources[1], sources[1]) or not is_same(_power_memo_sources[2], sources[2]):
+		_unit_power_memo = {}
+		_damage_spell_memo = {}
+		_power_memo_sources = sources
 
 static func hero_power(entry: Dictionary) -> float:
 	return army_power(entry.get("enemy_army", {}).get("stacks", []) if entry.get("enemy_army", {}) is Dictionary else [], entry.get("enemy_commander_state", {}))

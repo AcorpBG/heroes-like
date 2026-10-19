@@ -2358,7 +2358,7 @@ static func _normalize_authored_specialties(value: Variant) -> Array:
 	if value is Array:
 		for specialty_id_value in value:
 			var specialty_id := String(specialty_id_value)
-			if HeroProgressionRulesScript.specialty_definition(specialty_id).is_empty() or specialty_id in normalized:
+			if not HeroProgressionRulesScript.has_specialty(specialty_id) or specialty_id in normalized:
 				continue
 			normalized.append(specialty_id)
 	return normalized
