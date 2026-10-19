@@ -374,6 +374,7 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 
 	_apply_hero_battle_boosts(session, stacks, player_commander_state)
 	battle["stacks"] = stacks
+	battle["battlefield_tags"] = _with_army_battlefield_tags(battle.get("battlefield_tags", []), stacks)
 	_apply_specialty_battle_starts(battle)
 	var town_context_type := String(battle_context.get("type", ""))
 	if town_context_type in ["town_defense", "town_assault"]:
@@ -1432,7 +1433,10 @@ static func normalize_battle_state(session: SessionStateStoreScript.SessionData)
 	if String(session.battle.get("enemy_army_name", "")).strip_edges() == "":
 		var normalized_enemy_army_name := _enemy_force_name_from_battle_army_id(session.battle, session)
 		session.battle["enemy_army_name"] = normalized_enemy_army_name if normalized_enemy_army_name != "" else "Enemy force"
-	session.battle["battlefield_tags"] = _normalized_battlefield_tags(encounter, session.battle.get("context", {}))
+	session.battle["battlefield_tags"] = _with_army_battlefield_tags(
+		_normalized_battlefield_tags(encounter, session.battle.get("context", {})),
+		session.battle.get("stacks", [])
+	)
 	session.battle[FIELD_OBJECTIVES_KEY] = _normalize_field_objectives(
 		session.battle.get(FIELD_OBJECTIVES_KEY, []),
 		encounter,
@@ -11916,7 +11920,7 @@ static func _terrain_tag_damage_modifier(
 		or SpellRulesScript.has_effect_id(defender, battle, STATUS_HARRIED)
 	):
 		modifier *= 1.08
-	if _battle_has_tag(battle, "fog_bank") and is_ranged and attack_distance > 0:
+	if _battle_has_tag(battle, "fog_bank") and is_ranged and attack_distance > 0 and not BattleAiRulesScript.faction_brings_tag(attacker, "fog_bank"):
 		modifier *= 0.88
 	return modifier
 
@@ -14550,6 +14554,18 @@ static func _normalized_specialty_ranks(primary: Variant, secondary: Variant = [
 
 static func _normalized_specialty_focus_ids(value: Variant) -> Array:
 	return EnemyAdventureRulesScript._normalized_specialty_focus_ids(value)
+
+## The ground's tags plus those the armies bring (factions.json
+## "brings_battlefield_tags"): a Veilmourn fleet fights in its own fog bank.
+static func _with_army_battlefield_tags(tags: Array, stacks: Array) -> Array:
+	var result := tags.duplicate()
+	for stack in stacks:
+		if not (stack is Dictionary):
+			continue
+		for tag_value in BattleAiRulesScript.faction_brought_tags(stack):
+			if String(tag_value) not in result:
+				result.append(String(tag_value))
+	return result
 
 static func _normalized_battlefield_tags(encounter: Dictionary, context: Variant = {}) -> Array:
 	var normalized = []

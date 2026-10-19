@@ -44,6 +44,19 @@ static func _opposing_side(side: String) -> String:
 		return "player"
 	return ""
 
+## The battlefield tags a stack's faction brings to every battle it fights
+## (factions.json "brings_battlefield_tags"). A Veilmourn fleet brings its fog
+## bank, and its own shooters fire through that fog without the penalty.
+static func faction_brought_tags(stack: Dictionary) -> Array:
+	var faction_id := String(stack.get("faction_id", ""))
+	if faction_id == "":
+		return []
+	var tags = ContentService.get_faction(faction_id).get("brings_battlefield_tags", [])
+	return tags if tags is Array else []
+
+static func faction_brings_tag(stack: Dictionary, tag: String) -> bool:
+	return faction_brought_tags(stack).has(tag)
+
 ## BattleRules, loaded when needed: it preloads this script, so this script
 ## cannot preload it back.
 static func _battle_rules() -> Script:
@@ -1451,7 +1464,7 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 		score += 1.25
 	if _battle_has_tag(battle, "elevated_fire") and is_ranged:
 		score += 2.0
-	if _battle_has_tag(battle, "fog_bank") and is_ranged and attack_distance > 0:
+	if _battle_has_tag(battle, "fog_bank") and is_ranged and attack_distance > 0 and not faction_brings_tag(attacker, "fog_bank"):
 		score -= 2.0
 	if _battle_has_any_tags(battle, ["chokepoint", "fortified_line"]) and not is_ranged:
 		score += 1.5
@@ -3114,7 +3127,7 @@ static func _terrain_tag_damage_modifier(
 		or SpellRulesScript.has_effect_id(defender, battle, STATUS_HARRIED)
 	):
 		modifier *= 1.08
-	if _battle_has_tag(battle, "fog_bank") and is_ranged and attack_distance > 0:
+	if _battle_has_tag(battle, "fog_bank") and is_ranged and attack_distance > 0 and not faction_brings_tag(attacker, "fog_bank"):
 		modifier *= 0.88
 	return modifier
 

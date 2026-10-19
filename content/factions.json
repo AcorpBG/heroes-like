@@ -795,6 +795,7 @@
       "id": "faction_veilmourn",
       "name": "Veilmourn Armada",
       "identity_summary": "Fog-bound funeral fleets that steal routes, salvage memory, and strike where maps claim no passage exists.",
+      "brings_battlefield_tags": ["fog_bank"],
       "economy": {},
       "recruitment": {},
       "enemy_strategy": {
