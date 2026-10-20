@@ -23,6 +23,13 @@ Line-ups (--lineups): balanced (default) plays sets of factions in every seat ro
 once before any repeats, picked so every faction gets an even share; random draws distinct sets;
 mirrors lets a faction appear twice; --lineup fixes them. Guards, levels and water are crossed over
 the line-ups. Windows and Linux; Godot comes from --godot, $GODOT_BIN, PATH or the owner's install.
+
+--release exports the "<Windows|Linux> AI Batch" preset (the release template, tests/ included) into
+OUT/game first and plays every match on that build instead of the editor binary. It needs the Godot
+export templates of the editor's version (Editor > Manage Export Templates, or --templates DIR);
+the export runs with a throwaway profile holding a copy of them. The release build writes its map
+packages into each match's throwaway user profile, not res://maps. OUT/game (about 5 GB) is deleted
+when the batch completes.
 """
 from __future__ import annotations
 
@@ -63,6 +70,9 @@ GUARDS = ("weak", "normal", "strong")
 WATER = ("land", "normal_water", "islands")
 SLOW_DAY_MS = 10000
 IS_WINDOWS = platform.system() == "Windows"
+BATCH_PRESET = "Windows AI Batch" if IS_WINDOWS else "Linux AI Batch"
+# The exported batch build in OUT/game: the Windows console wrapper keeps stdout, Linux runs the binary.
+GAME_BINARY = "heroes-like.console.exe" if IS_WINDOWS else "heroes-like.x86_64"
 
 
 def short(faction_id: str) -> str:
@@ -208,6 +218,7 @@ def make_plan(args: argparse.Namespace, groups: list[tuple[int, str, int]]) -> d
         "dirty": bool(git("status", "--porcelain", "--untracked-files=no")),
         "plan_seed": plan_seed,
         "days": args.days,
+        "build": "release" if args.release else "editor",
         "lineups": "fixed" if args.lineup else args.lineups,
         "groups": [{"players": p, "size": s, "matches": n} for p, s, n in groups],
         # Map packages already there are never deleted, even if a match writes the same name.
@@ -233,20 +244,20 @@ def godot_processes() -> dict[int, str]:
     if IS_WINDOWS:
         out = subprocess.run(["tasklist", "/FO", "CSV", "/NH"], capture_output=True, text=True, errors="replace").stdout
         for row in csv.reader(io.StringIO(out)):
-            if len(row) > 1 and row[0].lower().startswith("godot") and row[1].isdigit():
+            if len(row) > 1 and row[0].lower().startswith(("godot", "heroes-like")) and row[1].isdigit():
                 found[int(row[1])] = row[0]
     else:
         out = subprocess.run(["ps", "-eo", "pid=,comm="], capture_output=True, text=True, errors="replace").stdout
         for line in out.splitlines():
             pid, _, name = line.strip().partition(" ")
-            if pid.isdigit() and "godot" in name.lower():
+            if pid.isdigit() and ("godot" in name.lower() or name.lower().startswith("heroes-like")):
                 found[int(pid)] = name.strip()
     return found
 
 
 def count_games(processes: dict[int, str]) -> int:
-    # The Windows console build runs each game as a wrapper plus the game process.
-    return sum(1 for name in processes.values() if "_console" not in name.lower())
+    # The Windows console builds run each game as a wrapper plus the game process.
+    return sum(1 for name in processes.values() if "_console" not in name.lower() and ".console" not in name.lower())
 
 
 def kill(proc: subprocess.Popen) -> None:
@@ -274,7 +285,37 @@ class Running:
     deadline: float
 
 
-def launch(godot: str, out: Path, m: dict, days: int, timeout_min: float) -> Running:
+def export_batch_game(godot: str, dest: Path, templates: str | None) -> str:
+    """Export the AI batch preset with the release template into dest; returns the binary to run."""
+    version = ".".join(subprocess.run([godot, "--version"], capture_output=True, text=True).stdout.strip().split(".")[:4])  # "4.6.2.stable"
+    if templates:
+        source = Path(templates)
+    elif IS_WINDOWS:
+        source = Path(os.environ.get("APPDATA", "")) / "Godot" / "export_templates" / version
+    else:
+        source = Path(os.environ.get("XDG_DATA_HOME", Path.home() / ".local" / "share")) / "godot" / "export_templates" / version
+    needed = "windows_release_x86_64.exe" if IS_WINDOWS else "linux_release.x86_64"
+    if not (source / needed).exists():
+        sys.exit(f"--release needs the Godot {version} export templates: no {needed} in {source} "
+                 "(install them in the editor, Manage Export Templates, or pass --templates DIR)")
+    # A copy, so deleting the throwaway profile can never reach the real templates.
+    profile = Path(tempfile.mkdtemp(prefix="heroes-ai-export-"))
+    shutil.copytree(source, profile / ("Godot" if IS_WINDOWS else "godot") / "export_templates" / version)
+    shutil.rmtree(dest, ignore_errors=True)
+    dest.mkdir(parents=True)
+    binary = dest / ("heroes-like.exe" if IS_WINDOWS else "heroes-like.x86_64")
+    env = {**os.environ, "APPDATA": str(profile), "XDG_DATA_HOME": str(profile), "XDG_CONFIG_HOME": str(profile)}
+    started = time.time()
+    done = subprocess.run([godot, "--headless", "--path", str(ROOT), "--export-release", BATCH_PRESET, str(binary)],
+                          env=env, capture_output=True, text=True, errors="replace")
+    shutil.rmtree(profile, ignore_errors=True)
+    if done.returncode != 0 or not (dest / GAME_BINARY).exists():
+        sys.exit(f"export of {BATCH_PRESET} failed (exit {done.returncode}): {(done.stdout + done.stderr)[-1500:]}")
+    print(f"EXPORTED {BATCH_PRESET} to {dest} in {time.time() - started:.0f} s", flush=True)
+    return str(dest / GAME_BINARY)
+
+
+def launch(godot: str, out: Path, m: dict, days: int, timeout_min: float, game: str | None = None) -> Running:
     profile = tempfile.mkdtemp(prefix=f"heroes-ai-{m['run']}-")
     env = {k: v for k, v in os.environ.items() if not k.startswith("HEROES_AI_MATCH_")}
     env.update({
@@ -293,7 +334,10 @@ def launch(godot: str, out: Path, m: dict, days: int, timeout_min: float) -> Run
     })
     (out / f"{m['run']}.json").unlink(missing_ok=True)
     log = open(out / f"{m['run']}.log", "w", encoding="utf-8", errors="replace")
-    cmd = [godot, "--headless", "--path", str(ROOT), "--audio-driver", "Dummy", SCENE]
+    if game:
+        cmd = [game, "--headless", "--audio-driver", "Dummy"]  # the batch preset starts the match runner
+    else:
+        cmd = [godot, "--headless", "--path", str(ROOT), "--audio-driver", "Dummy", SCENE]
     extra = {} if IS_WINDOWS else {"start_new_session": True}
     proc = subprocess.Popen(cmd, env=env, stdout=log, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL, **extra)
     now = time.time()
@@ -409,7 +453,7 @@ class Output:
         self.file.flush()
 
 
-def run_batch(out: Path, plan: dict, godot: str, slots: int, timeout_override: float | None) -> int:
+def run_batch(out: Path, plan: dict, godot: str, slots: int, timeout_override: float | None, game: str | None = None) -> int:
     say = Output(out)
     done = {row["run"] for row in read_results(out)}
     queue = sorted((m for m in plan["matches"] if m["run"] not in done), key=expected_cost, reverse=True)
@@ -425,7 +469,7 @@ def run_batch(out: Path, plan: dict, godot: str, slots: int, timeout_override: f
     inflight_path = out / "inflight.json"
     started = time.time()
     say(f"START {len(queue)} of {total} matches on {plan['commit'][:9]}{' (dirty tree)' if plan.get('dirty') else ''}, "
-        f"{slots} at a time, at {time.strftime('%H:%M:%S')}")
+        f"{slots} at a time{' on the release build' if game else ''}, at {time.strftime('%H:%M:%S')}")
 
     def save_inflight() -> None:
         inflight_path.write_text(json.dumps({r: x.proc.pid for r, x in running.items()}), encoding="utf-8")
@@ -443,7 +487,7 @@ def run_batch(out: Path, plan: dict, godot: str, slots: int, timeout_override: f
                     break
                 queue.remove(job)
                 timeout_min = timeout_override or TIMEOUT_MIN[job["size"]]
-                running[job["run"]] = launch(godot, out, job, plan["days"], timeout_min)
+                running[job["run"]] = launch(godot, out, job, plan["days"], timeout_min, game)
                 seeds.add(job["seed"])
                 save_inflight()
             time.sleep(2)
@@ -554,7 +598,7 @@ def write_summary(out: Path, plan: dict) -> None:
         f"# AI match batch {out.name}",
         "",
         f"Commit {plan['commit'][:9]}{' (dirty tree)' if plan.get('dirty') else ''}, plan seed {plan['plan_seed']}, "
-        f"line-ups {plan['lineups']}, day cap {plan['days']}: {groups}.",
+        f"line-ups {plan['lineups']}, day cap {plan['days']}{', release build' if plan.get('build') == 'release' else ''}: {groups}.",
         f"{len(rows)} of {len(plan['matches'])} matches played: {len(decided)} decided, {len(capped)} at the day cap, "
         f"{len(failed)} failed or timed out.",
     ]
@@ -664,7 +708,9 @@ def main() -> int:
     parser.add_argument("--seed", type=int, help="plan seed (default random); the same seed and options give the same plan")
     parser.add_argument("--slots", type=int, default=16, help="matches at once (default 16)")
     parser.add_argument("--timeout-min", type=float, help="per-match timeout in minutes (default by size: %s)" % ", ".join(f"{short_size(k)} {v}" for k, v in TIMEOUT_MIN.items()))
-    parser.add_argument("--godot", help="Godot binary")
+    parser.add_argument("--godot", help="Godot editor binary")
+    parser.add_argument("--release", action="store_true", help="export the AI batch preset with the release template into OUT/game and play on it")
+    parser.add_argument("--templates", help="export templates folder for --release (default: the editor's own)")
     parser.add_argument("--resume", action="store_true", help="play the matches plan.json still lacks (same commit only)")
     parser.add_argument("--summarize", action="store_true", help="only rewrite summary.md")
     parser.add_argument("--plan-only", action="store_true", help="write plan.json and stop")
@@ -705,7 +751,16 @@ def main() -> int:
             print("WARNING: tracked files have uncommitted changes; the batch does not exactly match the commit")
         if args.plan_only:
             return 0
-    return run_batch(out, plan, find_godot(args.godot), max(1, args.slots), args.timeout_min)
+    godot = find_godot(args.godot)
+    game = None
+    if plan.get("build") == "release":
+        game = str(out / "game" / GAME_BINARY)
+        if not args.resume or not Path(game).exists():
+            game = export_batch_game(godot, out / "game", args.templates)
+    code = run_batch(out, plan, godot, max(1, args.slots), args.timeout_min, game)
+    if game and code == 0:
+        shutil.rmtree(out / "game", ignore_errors=True)  # about 5 GB; an interrupted batch keeps it for --resume
+    return code
 
 
 if __name__ == "__main__":

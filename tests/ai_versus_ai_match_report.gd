@@ -35,6 +35,10 @@ extends Node
 # HEROES_AI_MATCH_DUMP     with HEROES_AI_MATCH_DUMP_DAY: that day's session
 #                          JSON, exactly as digested, goes into this file and
 #                          the match stops there.
+# HEROES_AI_MATCH_DIGEST_SKIP comma-separated "overworld.<key>" or
+#                          "flags.<key>" left out of the digest and the dump
+#                          (rules_parity.py --portable: where the map package
+#                          was written differs between editor and export).
 
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
@@ -48,6 +52,7 @@ var _failed := false
 var _digest_file: FileAccess = null
 var _dump_path := ""
 var _dump_day := -1
+var _digest_skip := PackedStringArray()
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -97,6 +102,8 @@ func _run() -> void:
 	if _dump_path != "" and OS.get_environment("HEROES_AI_MATCH_DUMP_DAY").strip_edges() != "":
 		_dump_day = int(OS.get_environment("HEROES_AI_MATCH_DUMP_DAY"))
 		max_days = mini(max_days, _dump_day)
+	for item in OS.get_environment("HEROES_AI_MATCH_DIGEST_SKIP").split(",", false):
+		_digest_skip.append(item.strip_edges())
 
 	var rng := RandomNumberGenerator.new()
 	rng.seed = hash(match_seed)
@@ -247,6 +254,16 @@ func _run() -> void:
 func _digest_day(session) -> void:
 	if _digest_file == null and _dump_day != int(session.day):
 		return
+	var overworld: Dictionary = session.overworld
+	var flags: Dictionary = session.flags
+	if not _digest_skip.is_empty():
+		overworld = overworld.duplicate()
+		flags = flags.duplicate()
+		for item in _digest_skip:
+			if item.begins_with("overworld."):
+				overworld.erase(item.trim_prefix("overworld."))
+			elif item.begins_with("flags."):
+				flags.erase(item.trim_prefix("flags."))
 	var text := JSON.stringify({
 		"day": session.day,
 		"session_id": session.session_id,
@@ -254,9 +271,9 @@ func _digest_day(session) -> void:
 		"game_state": session.game_state,
 		"scenario_status": session.scenario_status,
 		"scenario_summary": session.scenario_summary,
-		"overworld": session.overworld,
+		"overworld": overworld,
 		"battle": session.battle,
-		"flags": session.flags,
+		"flags": flags,
 	}, "", false, true)
 	if _digest_file != null:
 		_digest_file.store_line("%d\t%s\t%d" % [int(session.day), text.sha256_text(), text.length()])

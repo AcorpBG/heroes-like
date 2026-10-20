@@ -163,6 +163,95 @@ profile. Large whole-game gains come only once the AI, day processing *and* the 
 | Fixed cost per match | 10% of CPU or less | bring Phase 6's GDScript part forward |
 | Developer loop | owner accepts the measured edit-to-local-match and edit-to-push times | owner decides |
 
+### Phase 0 results (measure slice, 2026-10-20)
+
+Measured at 329a8c490 on the owner's machine (16 cores, 32 threads), editor binary unless stated. No owner batch ran;
+another project's Godot processes (1-3) ran during the profile, not during the editor/release timing.
+
+- **Parity check** (`tools/rules_parity.py`, `HEROES_AI_MATCH_DIGEST` in the match runner). HEAD against a copy of
+  HEAD: identical daily digests and records on all six seeds, 5.3 min at 6 at once. A copy with
+  `ATTACK_BONUS_PER_POINT` 0.05 -> 0.0501 differs from day 2-5 per seed, first path `flags.ai_battle_log[3].power`,
+  6.4 min including the replays.
+- **Windows and Linux** (the 4.6.2 Linux editor binary on the server): identical daily digests on all six seeds. The
+  match records differ in the 15th significant digit of some floats (`power`, `defender_power`, `survivor_power`,
+  `estimated_loss_share`) in five seeds (s2 is byte-identical): the record is written at JSON's default precision, the
+  digest at full precision, so the numbers are equal and only their text differs. Compare across systems by digest.
+- **Script errors:** none, in the six seeds on both systems and in the nine owner batch folders of 2026-10-17 to
+  2026-10-20 (`ai_batch_20261017_*` to `ai_batch_20261020_r7_large4p_60`). Nothing on a path to be ported needs a
+  GDScript fix first.
+- **Release template.** The 4.6.2 export templates were not installed here (copied from the server into a scratch
+  profile for this). Official release templates refuse a scene on the command line (`disable_path_overrides`), so the
+  batch presets `Windows AI Batch` and `Linux AI Batch` (the release presets plus `tests/`, feature `ai_batch`) start
+  the match runner through `application/run/main_scene.ai_batch` in `project.godot`. The first export takes 3 min,
+  later ones 30-40 s, and writes a 4.7 GB pack.
+  - Identical to the editor binary on all six seeds: every daily digest and the match record, compared with
+    `rules_parity.py --portable`. That flag leaves out the 11 session keys that record where the map package was
+    written (`res://maps` under the editor, `user://maps` in an export) and the package signatures that include it;
+    nothing else differs on day 1, so the `template_release` native library builds the same maps.
+  - Speed, plain runs of the five profile games below, editor and release side by side (10 at once, nothing else
+    running): 2,221 s against 1,840 s, **1.21x** (1.20-1.21x per game), identical records. The six seeds during
+    the check: 1.20-1.27x.
+  - `tools/ai_match_batch.py --release` exports into `OUT/game`, plays on it and deletes it when the batch
+    completes; the editor binary stays the default until the owner decides. The Linux preset is not tested (the
+    server checkout has no import cache to export from).
+- **Profile.** Five full-length large 4P land games, the set-ups of owner round 7 (`ai_batch_20261020_r7_large4p_60`
+  m011, m044, m053, m013, m054; one or two levels, normal or strong guards) replayed at 329a8c490, where they end on
+  days 97, 135, 181, 222 and 320 (cap), 5 at once. Exclusive time per part: a wrapper on each listed function, so a
+  part includes the unwrapped helpers it calls. Percent of each process's time (one core per game). The probes cost
+  1.1%: the same games uninstrumented take 178, 193, 300, 549 and 965 s and end the same way.
+
+  | Part | m011 (day 97) | m044 (day 135) | m053 (day 181) | m013 (day 222) | m054 (day 320) | all five |
+  |---|---:|---:|---:|---:|---:|---:|
+  | Boot (engine, autoloads) | 2.2 | 2.0 | 1.3 | 0.7 | 0.4 | 0.9 |
+  | Content validation | 0.5 | 0.4 | 0.3 | 0.2 | 0.1 | 0.2 |
+  | Map generation | 2.0 | 1.6 | 1.3 | 1.0 | 1.0 | 1.2 |
+  | Session start, record write, exit | 1.4 | 1.0 | 0.7 | 0.6 | 0.3 | 0.6 |
+  | Normalize, opening (skipped by the runner) | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |
+  | Normalize, closing | 1.9 | 2.3 | 1.7 | 2.6 | 1.5 | 1.9 |
+  | Normalize, other callers | 2.6 | 2.5 | 2.0 | 2.7 | 1.7 | 2.1 |
+  | Player fog normalize | 2.3 | 1.6 | 1.3 | 1.9 | 1.4 | 1.6 |
+  | AI economy | 0.3 | 0.4 | 0.3 | 0.4 | 0.3 | 0.3 |
+  | AI towns (hire, recruit, build) | 1.9 | 2.6 | 4.7 | 1.9 | 2.7 | 2.7 |
+  | AI `_search` | 9.1 | 13.0 | 12.2 | 11.9 | 11.2 | 11.5 |
+  | AI `_vetted_candidate` (choosing a target) | 14.8 | 18.5 | 20.5 | 18.3 | 16.3 | 17.4 |
+  | AI `_strategic_candidate` | 3.0 | 4.9 | 5.7 | 3.5 | 3.6 | 3.9 |
+  | AI `_gate_candidate` (two-level games only) | 4.8 | 0.0 | 0.0 | 14.7 | 24.5 | 15.0 |
+  | AI `_level_surface` | 2.3 | 2.2 | 1.8 | 2.4 | 1.6 | 1.9 |
+  | AI fight checks, outside the battles | 4.2 | 2.0 | 2.1 | 2.4 | 1.2 | 1.9 |
+  | AI hero day, rest (moves, actions) | 7.4 | 7.7 | 8.2 | 8.6 | 8.0 | 8.1 |
+  | AI faction and enemy turn, rest | 0.6 | 0.8 | 1.3 | 1.0 | 1.2 | 1.1 |
+  | AI enemy-state and roster normalize | 7.9 | 10.4 | 9.1 | 7.6 | 6.2 | 7.4 |
+  | AI sight (fog) | 0.8 | 1.0 | 0.9 | 1.1 | 0.9 | 0.9 |
+  | Battles: payload | 1.3 | 1.2 | 1.3 | 0.7 | 0.5 | 0.8 |
+  | Battles: fight loop, rules | 10.9 | 8.8 | 7.0 | 5.1 | 4.6 | 5.9 |
+  | Battles: fight loop, battle AI | 14.6 | 11.9 | 12.5 | 8.4 | 8.9 | 10.0 |
+  | Battles: end of battle (finalize, read-back) | 0.9 | 0.7 | 0.7 | 0.5 | 0.4 | 0.5 |
+  | Battles: apply the outcome to the session | 1.8 | 1.6 | 2.3 | 1.3 | 1.0 | 1.4 |
+  | Scenario evaluation, elimination | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |
+  | End-of-day text | 0.0 | 0.1 | 0.0 | 0.0 | 0.0 | 0.0 |
+  | `end_turn`, rest | 0.3 | 0.4 | 0.3 | 0.4 | 0.3 | 0.3 |
+  | Runner bookkeeping | 0.2 | 0.3 | 0.3 | 0.3 | 0.2 | 0.2 |
+  | **Seconds** | 178 | 195 | 302 | 553 | 981 | 2,210 |
+
+- **G0 numbers.**
+  - Battle share: **18.6%** of match CPU over the five games (29.4, 24.2, 23.8, 15.9 and 15.4% per game, falling with
+    length), between the Go (20%) and stop (15%) thresholds. 3,911 AI battles (1,938 free-fight checks, 988 previews,
+    985 real), 105 ms each on average.
+  - Fight loop: **85.6%** of the battle work (rules 5.9 and battle AI 10.0 points of match CPU).
+  - Fixed cost per match: **2.8%** (1.8-6.0% per game), 10-17 s per game: boot 3.9 s, content validation 0.8 s, map
+    generation 3.1-9.7 s, session start 1.3-1.7 s, record and exit 0.6-1.5 s. Under the 10% threshold.
+  - The overworld AI is 71.4%; day processing outside it (normalize, player fog, scenario, text) is 5.9%. Dropping
+    the end-of-day text would save under 0.1%.
+- **JSON round trip of one day's changing state** (m054, every day, per top-level key: `JSON.stringify` at full
+  precision, then `JSON.parse_string`; a key has changed when its text has). The whole session is 25-30 MB and takes
+  1.75 s per day both ways, about 60 ms per MB. 5-7 of its 43 keys change on a day: `flags`, `encounters`,
+  `enemy_states`, `towns` and `command_risk_forecast` daily, `resolved_encounters` and `resource_nodes` on 208 and
+  139 days. They are 9.9 MB on the median day and cost **0.54 s** per day (0.27 each way), 173 s over the game,
+  against 3.0 s of play per day (965 s uninstrumented). Most of `flags` never changes: a 3-6 MB copy of the map
+  package record sits beside the growing AI battle log (0.8 MB by day 80 in mg-a). Without that copy, the changing
+  state is about 3.6 MB on the median day and 7 MB on day 320. A deep copy (`duplicate(true)`) of the changed keys
+  takes 0.10 s per day.
+
 ### Phase 1: native battle engine, one merge (30-60 days)
 
 - **Scope:** the rules part of BattleRules, all of BattleAiRules, in-battle SpellRules, BattleAutoResolveRules,
@@ -315,4 +404,5 @@ lines.
 Godot 4.6.2 internals (PCG bounded draw, `randf` width and draw count, String hash, `SortArray`, JSON float parsing);
 the C runtime of the official Windows binary; Windows/Linux identity of GDScript games today; whether caster profiles
 stay constant through a battle; which presentation keys nothing reads in AI battles; whether release templates run the
-match scene with identical results; the exclusive time split on full-length games.
+match scene with identical results; the exclusive time split on full-length games. Measured so far (Phase 0 results):
+Windows/Linux identity, release templates, the time split.

@@ -10,12 +10,14 @@
     python tools/rules_parity.py seeds
 
 A side is a project directory (run with the editor binary, --godot / --godot-a / --godot-b) or an
-exported game binary (run as it is; it loads the .pck beside it). Every match writes a digest line
-per day (HEROES_AI_MATCH_DIGEST in tests/ai_versus_ai_match_report.gd: sha256 of the whole session
-state as JSON with insertion order, int and float apart and full precision) and its match record.
-`check` compares the digests and the records (timing fields left out); for a seed that differs it
-plays both sides again to the first differing day with a full state dump and reports the first
-differing JSON paths.
+exported game binary of an AI batch preset (export_presets.cfg; it starts the match runner and
+loads the .pck beside it). An exported build writes its map package to user://maps, the editor to
+res://maps: compare the two with --portable, which leaves that location out. Every match writes a
+digest line per day (HEROES_AI_MATCH_DIGEST in tests/ai_versus_ai_match_report.gd: sha256 of the
+whole session state as JSON with insertion order, int and float apart and full precision) and its
+match record. `check` compares the digests and the records (timing fields left out); for a seed
+that differs it plays both sides again to the first differing day with a full state dump and
+reports the first differing JSON paths.
 
 Each Godot run gets its own throwaway user profile (APPDATA, XDG_DATA_HOME/CONFIG/CACHE) and its
 package under <project>/maps is deleted after it (matched by scenario id and time, never a file
@@ -68,6 +70,13 @@ SEEDS: dict[str, dict] = {
 }
 # Record fields that hold wall-clock time, left out of the comparison.
 TIMING_KEYS = ("ai_turn_ms_max", "turn_ms")
+# --portable: the session keys that record where the map package was written (res://maps under the
+# editor, user://maps in an exported build) and the package signatures that include it. They are set
+# when the session starts and never change; everything else is compared.
+PACKAGE_LOCATION_KEYS = ("map_package_ref", "scenario_package_ref", "native_random_map_runtime_scenario_record",
+                         "generated_random_map_provenance", "generated_random_map_replay_metadata")
+PORTABLE_SKIP = ",".join([f"overworld.{k}" for k in PACKAGE_LOCATION_KEYS + ("native_random_map_package_session_adoption",)]
+                         + [f"flags.{k}" for k in PACKAGE_LOCATION_KEYS])
 
 
 # ---------------------------------------------------------------- sides and runs
@@ -86,7 +95,8 @@ class Side:
     def command(self) -> list[str]:
         if self.is_project:
             return [self.godot, "--headless", "--path", str(self.path), "--audio-driver", "Dummy", SCENE]
-        return [str(self.path), "--headless", "--audio-driver", "Dummy", SCENE]
+        # Release templates take no scene argument; the AI batch presets start the match runner.
+        return [str(self.path), "--headless", "--audio-driver", "Dummy"]
 
 
 @dataclass
@@ -356,6 +366,10 @@ def make_side(name: str, path: str, godot: str | None, env: dict[str, str]) -> S
     return Side(name, p, find_godot(godot) if p.is_dir() else "", env)
 
 
+def portable(args, env: dict[str, str]) -> dict[str, str]:
+    return {**env, "HEROES_AI_MATCH_DIGEST_SKIP": PORTABLE_SKIP} if args.portable else env
+
+
 def make_work(text: str | None) -> Path:
     work = Path(text).resolve() if text else Path(tempfile.mkdtemp(prefix="heroes-rules-parity-"))
     work.mkdir(parents=True, exist_ok=True)
@@ -375,8 +389,8 @@ class Say:
 def cmd_check(args) -> int:
     work = make_work(args.work)
     say = Say(work / "parity.log")
-    a = make_side("A", args.a, args.godot_a or args.godot, parse_env(args.env_a))
-    b = make_side("B", args.b, args.godot_b or args.godot, parse_env(args.env_b))
+    a = make_side("A", args.a, args.godot_a or args.godot, portable(args, parse_env(args.env_a)))
+    b = make_side("B", args.b, args.godot_b or args.godot, portable(args, parse_env(args.env_b)))
     keys = pick_seeds(args.seeds)
     dirs = {"A": work / "A", "B": work / "B"}
     for d in dirs.values():
@@ -418,7 +432,7 @@ def cmd_check(args) -> int:
 def cmd_run(args) -> int:
     out = make_work(args.out)
     say = Say(out / "parity.log")
-    side = make_side("A", args.side, args.godot, parse_env(args.env))
+    side = make_side("A", args.side, args.godot, portable(args, parse_env(args.env)))
     keys = pick_seeds(args.seeds)
     say(f"RUN {', '.join(keys)} on {side.path}; output {out}")
     results = run_jobs([Job(side, k, out, args.dump_day) for k in keys], args.jobs, args.timeout_min, out, say)
@@ -497,6 +511,8 @@ def main() -> int:
         p.add_argument("--jobs", type=int, default=6, help="Godot runs at once (default 6)")
         p.add_argument("--timeout-min", type=float, default=60, help="per run (default 60)")
         p.add_argument("--godot", help="editor binary for project directories (default as tools/core_suite.py)")
+        p.add_argument("--portable", action="store_true",
+                       help="leave the map package's location out of the digest (editor against an exported build)")
         if with_side_env:
             p.add_argument("--env", action="append", metavar="NAME=VALUE", help="extra environment for the runs")
 

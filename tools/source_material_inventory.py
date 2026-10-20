@@ -91,6 +91,8 @@ def export_filters(root: Path):
     result = {}
     for section in config.sections():
         if re.fullmatch(r"preset\.\d+", section):
+            if "ai_batch" in json.loads(config[section].get("custom_features", '""')).split(","):
+                continue  # AI match batch builds (tests/ included) are never shipped
             if config[section].get("export_filter") != '"all_resources"':
                 raise ValueError("Inventory requires the reviewed all_resources export mode")
             name = json.loads(config[section]["name"])
