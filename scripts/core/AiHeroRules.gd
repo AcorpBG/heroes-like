@@ -240,6 +240,20 @@ const EXPLORE_VALUE := 500.0
 const HUNT_EXPLORE_VALUE := 20000.0
 const HUNT_START_DAY := 21
 const HUNT_FULL_DAY := 56
+## Every hostile hero a player has seen in the last SIGHTING_MEMORY_DAYS, with
+## its strength then (SIGHTINGS_KEY in its state), as a human remembers the
+## armies it has met. Once the player has found a rival's town and its main
+## army holds more than HERO_ATTACK_RATIO times all it knows of any one rival,
+## remembered heroes and seen garrisons together (`_far_ahead`), finding a
+## rival's unseen towns is worth what one of its own towns is worth
+## (`_hunt_value`) instead of HUNT_EXPLORE_VALUE. On a large two-level map
+## (seed ai-match-3844121282) the leader's 150,000-strength main army retook
+## the towns its rival's 5,000- to 17,000-strength raiders kept taking, each
+## worth about 275,000 to it against 20,500 for scouting, and never saw the
+## rival's other four towns: 203 captures from day 200 to the 320-day cap, 111
+## of them of empty towns.
+const SIGHTINGS_KEY := "ai_sightings"
+const SIGHTING_MEMORY_DAYS := 28
 ## Ground behind a guard that the hero cannot reach today: a base value for
 ## opening the way, plus each unexplored tile there, up to a cap (sites the
 ## player has already seen there count on top, at half their value).
@@ -578,6 +592,7 @@ static func run_faction_turn(
 	phase = Time.get_ticks_usec()
 	var context := _new_context(session, config, state)
 	_reveal_from_holdings(session, context)
+	_note_sightings(session, context)
 	_ensure_opening_stockpile(session, context)
 	var start_result := _ensure_starting_hero(session, context)
 	_append_all(messages, start_result.get("messages", []))
@@ -614,6 +629,8 @@ static func run_faction_turn(
 	phases["fight_previews"] = int(context.get("preview_count", 0))
 	for key in context.get("profile", {}).keys():
 		phases[key] = int(round(float(context.profile[key])))
+	# What the heroes see where they ended the day.
+	_note_sightings(session, context)
 	_store_explored(context)
 	if bool(context.get("topology_changed", false)):
 		_overworld_rules()._refresh_blocked_tile_index(session)
@@ -4529,7 +4546,29 @@ static func _explore_value(session: SessionStateStoreScript.SessionData, context
 	var ramp := clampf(float(int(session.day) - HUNT_START_DAY) / float(HUNT_FULL_DAY - HUNT_START_DAY), 0.0, 1.0)
 	if ramp <= 0.0 or not _rival_towns_unknown(session, context):
 		return EXPLORE_VALUE
-	return EXPLORE_VALUE + HUNT_EXPLORE_VALUE * ramp
+	return EXPLORE_VALUE + _hunt_value(session, context) * ramp
+
+## What finding a rival's unseen towns is worth: HUNT_EXPLORE_VALUE, or while
+## the player is far ahead (`_far_ahead`), what one of its own towns is worth
+## on average (`_town_worth`), as an unseen rival town is likely to be. Kept
+## for the decision.
+static func _hunt_value(session: SessionStateStoreScript.SessionData, context: Dictionary) -> float:
+	var far_ahead := _far_ahead(session, context)
+	var cache: Dictionary = context.get("decision", {})
+	if cache.has("hunt_value"):
+		return float(cache["hunt_value"])
+	var hunt := HUNT_EXPLORE_VALUE
+	if far_ahead:
+		var total := 0.0
+		var count := 0
+		for owned in _turn_rules()._owned_town_entries(session, String(context.controller)):
+			total += _town_worth(session, context, owned.get("town", {}))
+			count += 1
+		if count > 0:
+			hunt = maxf(hunt, total / float(count))
+	cache["hunt_value"] = hunt
+	context["decision"] = cache
+	return hunt
 
 ## Whether some rival still holds a town this player has never seen.
 static func _rival_towns_unknown(session: SessionStateStoreScript.SessionData, context: Dictionary) -> bool:
@@ -4669,7 +4708,7 @@ static func _hostile_heroes(session: SessionStateStoreScript.SessionData, contro
 			continue
 		var position: Dictionary = hero.get("position", {})
 		var movement: Dictionary = hero.get("movement", {}) if hero.get("movement", {}) is Dictionary else {}
-		result.append({"x": int(position.get("x", 0)), "y": int(position.get("y", 0)), "level": LevelRules.level_of(position), "power": army_power(hero.get("army", {}).get("stacks", []), hero), "reach": maxi(6, int(movement.get("max", 10)))})
+		result.append({"id": String(hero.get("id", "")), "owner": "player", "x": int(position.get("x", 0)), "y": int(position.get("y", 0)), "level": LevelRules.level_of(position), "power": army_power(hero.get("army", {}).get("stacks", []), hero), "reach": maxi(6, int(movement.get("max", 10)))})
 	# Other computer players' heroes threaten towns just as the human's do.
 	for entry in active_hero_entries(session):
 		var other := PlayerRules.raid_controller_id(entry)
@@ -4677,8 +4716,68 @@ static func _hostile_heroes(session: SessionStateStoreScript.SessionData, contro
 			continue
 		if not _position_seen(session, context, LevelRules.position(entry)):
 			continue
-		result.append({"x": int(entry.get("x", 0)), "y": int(entry.get("y", 0)), "level": LevelRules.level_of(entry), "power": hero_power(entry), "reach": maxi(6, _movement_max(entry))})
+		result.append({"id": String(entry.get("placement_id", "")), "owner": other, "x": int(entry.get("x", 0)), "y": int(entry.get("y", 0)), "level": LevelRules.level_of(entry), "power": hero_power(entry), "reach": maxi(6, _movement_max(entry))})
 	return result
+
+## Remembers the hostile heroes in sight now (SIGHTINGS_KEY) and forgets those
+## not seen for SIGHTING_MEMORY_DAYS.
+static func _note_sightings(session: SessionStateStoreScript.SessionData, context: Dictionary) -> void:
+	var day := int(session.day)
+	var known = context.state.get(SIGHTINGS_KEY, {})
+	var kept := {}
+	if known is Dictionary:
+		for id in known.keys():
+			var seen = known[id]
+			if seen is Dictionary and int(seen.get("day", -SIGHTING_MEMORY_DAYS)) + SIGHTING_MEMORY_DAYS > day:
+				kept[String(id)] = seen
+	for hostile in _hostile_heroes(session, String(context.controller)):
+		if String(hostile.id) != "":
+			kept[String(hostile.id)] = {"owner": String(hostile.owner), "power": snappedf(float(hostile.power), 0.1), "day": day}
+	context.state[SIGHTINGS_KEY] = kept
+
+## A hero this player has beaten is no longer out there.
+static func _forget_sighting(context: Dictionary, id: String) -> void:
+	var known = context.state.get(SIGHTINGS_KEY, {})
+	if known is Dictionary and known.has(id):
+		known.erase(id)
+
+## Whether the player has found a rival's town and its main army beats all it
+## knows of any one rival together by HERO_ATTACK_RATIO: the heroes it
+## remembers (SIGHTINGS_KEY) and the garrisons of the rival's towns it has
+## seen. Kept for the decision.
+static func _far_ahead(session: SessionStateStoreScript.SessionData, context: Dictionary) -> bool:
+	var main_id := _decision_main_id(session, context)
+	var cache: Dictionary = context.get("decision", {})
+	if cache.has("far_ahead"):
+		return bool(cache["far_ahead"])
+	var main_index := _entry_index(session, main_id)
+	var main_power := hero_power(session.overworld.encounters[main_index]) if main_index >= 0 else 0.0
+	var known := {}
+	var memory = context.state.get(SIGHTINGS_KEY, {})
+	if memory is Dictionary:
+		for id in memory.keys():
+			var seen = memory[id]
+			if seen is Dictionary:
+				var owner := String(seen.get("owner", ""))
+				known[owner] = float(known.get(owner, 0.0)) + float(seen.get("power", 0.0))
+	var controller := String(context.controller)
+	var size: Vector2i = context.map_size
+	var town_found := false
+	for town in session.overworld.get("towns", []):
+		if not (town is Dictionary) or String(town.get("owner", "neutral")) == "neutral":
+			continue
+		var rival := "player" if String(town.get("owner", "")) == "player" else PlayerRules.town_controller_id(town)
+		if rival == controller or PlayerRules.allied(session, controller, rival):
+			continue
+		if _town_seen(_explored(session, context, LevelRules.level_of(town)), town, size):
+			town_found = true
+			known[rival] = float(known.get(rival, 0.0)) + army_power(town.get("garrison", []))
+	var strongest := 0.0
+	for rival in known.keys():
+		strongest = maxf(strongest, float(known[rival]))
+	cache["far_ahead"] = town_found and main_power > strongest * HERO_ATTACK_RATIO
+	context["decision"] = cache
+	return bool(cache["far_ahead"])
 
 # --- Knowledge ----------------------------------------------------------------
 
@@ -6029,6 +6128,7 @@ static func _fight_ai_hero(session: SessionStateStoreScript.SessionData, context
 	if bool(fight.get("won", false)):
 		_mark_resolved(session, String(other.get("placement_id", "")))
 		_record_hero_defeat(session, other_controller, other)
+		_forget_sighting(context, String(other.get("placement_id", "")))
 	else:
 		var army: Dictionary = other.get("enemy_army", {})
 		army["stacks"] = fight.get("enemy_survivors", army.get("stacks", []))
