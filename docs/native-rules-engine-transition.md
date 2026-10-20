@@ -273,9 +273,10 @@ another project's Godot processes (1-3) ran during the profile, not during the e
 - `tools/build_native.py windows|linux` builds here with MSVC, or on the Linux server in a fresh `/tmp` directory at
   nice 19 (GCC 13.3, plus the self-test built with MinGW and run under Wine). Every file comes back sha256-checked, and
   PDBs and Linux debug files are archived per build id outside git (`heroes-like-native-symbols/`). The remote build
-  has a deadline (`--remote-timeout`, 120 min); a build that dies without an exit code, a removed directory or an
-  unreachable host stops the script, and every failure names the remote directory.
-- Exports leave out the debug libraries, PDBs, `rules_selftest` and the rules sources.
+  has a deadline (`--remote-timeout`, 120 min) and says whether stopping it worked. Each poll ends within a minute
+  (keep-alives and a timeout); a build that dies without an exit code, a removed directory or a host that does not
+  answer for 2 minutes stops the script, and every failure names the remote directory.
+- Exports leave out the debug libraries, PDBs, `rules_selftest`, `battle_sim_cli` and the rules sources.
 - `tools/build_release_candidate.py` (and with it the workflow) builds and tests the release rules library on both
   systems. The release export copies it beside the binary, as it does the map library, so `tools/package_release.py`
   and the Linux and Windows installers carry both libraries (fixed after review: the first push left them expecting

@@ -385,21 +385,32 @@ REMOTE_STATE = (
 )
 
 
+# Polls must end on their own: a dropped connection is noticed within 30 s, and one
+# call never takes more than a minute.
+POLL_SSH = ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=20", "-o", "ServerAliveInterval=15", "-o", "ServerAliveCountMax=2"]
+
+
+def poll_ssh(host: str, command: str) -> subprocess.CompletedProcess | None:
+	"""One short ssh call; None when it did not finish within a minute."""
+	try:
+		return subprocess.run([*POLL_SSH, host, command], capture_output=True, check=False, timeout=60)
+	except subprocess.TimeoutExpired:
+		return None
+
+
 def wait_for_remote_build(host: str, remote: str, deadline: float) -> int:
 	"""Polls until the remote build writes its exit code. Stops at the deadline, when the
-	build dies without one, or when the host stays unreachable; every failure names the
-	remote directory."""
-	unreachable_polls = 0
+	build dies without one, or when the host stays unreachable for 2 minutes."""
+	last_answer = time.time()
 	while True:
 		time.sleep(15)
-		result = subprocess.run(["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=20", host, REMOTE_STATE.format(remote=remote)], capture_output=True, check=False)
-		state = result.stdout.decode("utf-8", "replace").strip()
-		if result.returncode != 0 or not state:
-			unreachable_polls += 1
-			if unreachable_polls >= 8:
+		result = poll_ssh(host, REMOTE_STATE.format(remote=remote))
+		state = result.stdout.decode("utf-8", "replace").strip() if result is not None else ""
+		if result is None or result.returncode != 0 or not state:
+			if time.time() - last_answer >= 120:
 				raise SystemExit(f"build_native: {host} did not answer for 2 minutes; the build may still be running in {host}:{remote}")
 			continue
-		unreachable_polls = 0
+		last_answer = time.time()
 		if state.startswith("exit "):
 			return int(state.split()[1])
 		if state == "gone":
@@ -407,8 +418,12 @@ def wait_for_remote_build(host: str, remote: str, deadline: float) -> int:
 		if state == "dead":
 			raise SystemExit(f"build_native: the remote build stopped without an exit code (killed or out of memory); left {host}:{remote} for inspection")
 		if time.time() > deadline:
-			subprocess.run(["ssh", "-o", "BatchMode=yes", host, f'kill -TERM -- -"$(cat {remote}/.pid)"'], capture_output=True, check=False)
-			raise SystemExit(f"build_native: the remote build passed its deadline and was stopped; left {host}:{remote} for inspection")
+			# build.sh leads its own session (setsid), so its pid is the process group.
+			kill = poll_ssh(host, f'kill -TERM -- -"$(cat {remote}/.pid)"')
+			if kill is not None and kill.returncode == 0:
+				raise SystemExit(f"build_native: the remote build passed its deadline and was stopped; left {host}:{remote} for inspection")
+			detail = "no answer" if kill is None else (kill.stderr or b"").decode("utf-8", "replace").strip() or f"exit {kill.returncode}"
+			raise SystemExit(f"build_native: the remote build passed its deadline, but stopping it failed ({detail}); it may still be running in {host}:{remote}")
 
 
 def build_linux(parts: list[str], flavours: list[str], host: str, store: Path, keep_remote: bool, mingw_selftest: bool, timeout_minutes: int) -> None:
@@ -422,6 +437,22 @@ def build_linux(parts: list[str], flavours: list[str], host: str, store: Path, k
 	godot_cpp = subprocess.run(["git", "-C", str(cpp_root), "archive", "--format=tar", "HEAD"], check=True, capture_output=True).stdout
 	script = REMOTE_SCRIPT.replace("{commands}", remote_commands(parts, flavours, source_tree, cpp_commit, mingw_selftest))
 	print(f"build_native: remote directory {host}:{remote}", flush=True)
+	try:
+		built = run_remote_build(host, remote, sources, godot_cpp, script, parts, flavours, store, source_tree, keep_remote, timeout_minutes)
+	except SystemExit as error:
+		# Every failure from here on names the remote directory.
+		message = str(error.code).rstrip()
+		if remote not in message:
+			message += f"; left {host}:{remote} for inspection"
+		raise SystemExit(message) from None
+	except BaseException:
+		print(f"build_native: left {host}:{remote} for inspection", file=sys.stderr, flush=True)
+		raise
+	report(built)
+
+
+def run_remote_build(host: str, remote: str, sources: bytes, godot_cpp: bytes, script: str, parts: list[str], flavours: list[str], store: Path, source_tree: str, keep_remote: bool, timeout_minutes: int) -> list[Path]:
+	"""Uploads, builds, fetches and checks; returns the binaries copied into bin/."""
 	ssh(host, f"mkdir -p {remote}/third_party/godot-cpp && tar -x -C {remote}", input_bytes=sources)
 	ssh(host, f"tar -x -C {remote}/third_party/godot-cpp", input_bytes=godot_cpp)
 	ssh(host, f"cat > {remote}/build.sh && chmod +x {remote}/build.sh", input_bytes=script.replace("\r\n", "\n").encode("utf-8"))
@@ -475,7 +506,7 @@ def build_linux(parts: list[str], flavours: list[str], host: str, store: Path, k
 		print(f"build_native: kept {host}:{remote}")
 	else:
 		ssh(host, f"rm -rf -- {remote}")
-	report(built)
+	return built
 
 
 def report(built: list[Path]) -> None:
