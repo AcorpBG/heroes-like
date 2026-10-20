@@ -300,14 +300,14 @@ def launch(godot: str, out: Path, m: dict, days: int, timeout_min: float) -> Run
     return Running(m, proc, log, profile, now, now + timeout_min * 60)
 
 
-def remove_match_maps(scenario_id: str, since: float, keep: set[str]) -> list[str]:
+def remove_match_maps(scenario_id: str, since: float, keep: set[str], maps_dir: Path = MAPS_DIR) -> list[str]:
     """Delete the package pair one match wrote under res://maps: the .ascenario naming its
     scenario, written since the match started, and its .amap. Files in `keep` stay."""
     removed: list[str] = []
-    if not scenario_id or not MAPS_DIR.is_dir():
+    if not scenario_id or not maps_dir.is_dir():
         return removed
     needle = re.compile(r'"scenario_id":\s*"%s"' % re.escape(scenario_id))
-    for scenario in MAPS_DIR.glob("*.ascenario"):
+    for scenario in maps_dir.glob("*.ascenario"):
         try:
             if scenario.name in keep or scenario.stat().st_mtime < since - 2:
                 continue

@@ -26,6 +26,15 @@ extends Node
 #                          homm3_large, homm3_extra_large).
 # HEROES_AI_MATCH_WATER    land (default), normal_water or islands.
 # HEROES_AI_MATCH_LEVELS   1 (default) or 2 (with an underground level).
+# HEROES_AI_MATCH_DIGEST   file that gets one line per day, at the start and
+#                          after every end_turn: "day<TAB>sha256<TAB>length"
+#                          of the whole session state as JSON (insertion
+#                          order, int and float apart, full precision; length
+#                          in characters). For tools/rules_parity.py; off by
+#                          default, and the game is the same either way.
+# HEROES_AI_MATCH_DUMP     with HEROES_AI_MATCH_DUMP_DAY: that day's session
+#                          JSON, exactly as digested, goes into this file and
+#                          the match stops there.
 
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
@@ -36,6 +45,9 @@ const DEFAULT_MAX_DAYS := 320
 const DEFAULT_OUT := "user://ai_versus_ai_match.json"
 
 var _failed := false
+var _digest_file: FileAccess = null
+var _dump_path := ""
+var _dump_day := -1
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -75,6 +87,16 @@ func _run() -> void:
 	var out_path := OS.get_environment("HEROES_AI_MATCH_OUT").strip_edges()
 	if out_path == "":
 		out_path = DEFAULT_OUT
+	var digest_path := OS.get_environment("HEROES_AI_MATCH_DIGEST").strip_edges()
+	if digest_path != "":
+		_digest_file = FileAccess.open(digest_path, FileAccess.WRITE)
+		if _digest_file == null:
+			_fail("HEROES_AI_MATCH_DIGEST %s cannot be written." % digest_path)
+			return
+	_dump_path = OS.get_environment("HEROES_AI_MATCH_DUMP").strip_edges()
+	if _dump_path != "" and OS.get_environment("HEROES_AI_MATCH_DUMP_DAY").strip_edges() != "":
+		_dump_day = int(OS.get_environment("HEROES_AI_MATCH_DUMP_DAY"))
+		max_days = mini(max_days, _dump_day)
 
 	var rng := RandomNumberGenerator.new()
 	rng.seed = hash(match_seed)
@@ -153,6 +175,7 @@ func _run() -> void:
 	# log, which the overworld normalize does not read, so each end_turn can
 	# skip renormalizing the session the previous one left normalized.
 	session.set_meta(OverworldRules.SESSION_UNTOUCHED_BETWEEN_DAYS_META, true)
+	_digest_day(session)
 	while int(session.day) < max_days:
 		var started := Time.get_ticks_msec()
 		var turn: Dictionary = OverworldRules.end_turn(session)
@@ -160,6 +183,7 @@ func _run() -> void:
 		if String(session.game_state) != "overworld" or not session.battle.is_empty():
 			_fail("Day %d left the overworld (%s) with no human seat." % [int(session.day), String(session.game_state)])
 			return
+		_digest_day(session)
 		_note_changes(session, seats, captures_seen, heroes_seen, timeline)
 		if trace:
 			_print_trace(session, seats)
@@ -217,6 +241,31 @@ func _run() -> void:
 	print("%s %s" % [REPORT_ID, JSON.stringify(summary)])
 	_cleanup()
 	get_tree().quit(0)
+
+## The whole session state of the day, before the runner empties the decision
+## log; timings are kept outside the session, in the turn result.
+func _digest_day(session) -> void:
+	if _digest_file == null and _dump_day != int(session.day):
+		return
+	var text := JSON.stringify({
+		"day": session.day,
+		"session_id": session.session_id,
+		"scenario_id": session.scenario_id,
+		"game_state": session.game_state,
+		"scenario_status": session.scenario_status,
+		"scenario_summary": session.scenario_summary,
+		"overworld": session.overworld,
+		"battle": session.battle,
+		"flags": session.flags,
+	}, "", false, true)
+	if _digest_file != null:
+		_digest_file.store_line("%d\t%s\t%d" % [int(session.day), text.sha256_text(), text.length()])
+		_digest_file.flush()
+	if _dump_day == int(session.day):
+		var dump := FileAccess.open(_dump_path, FileAccess.WRITE)
+		if dump != null:
+			dump.store_string(text)
+			dump.close()
 
 func _start_session(map_seed: String, faction_id: String, player_count: int = 2, size_class: String = "homm3_small", guards: String = "normal", water: String = "land", levels: int = 1):
 	var config := ScenarioSelectRulesScript.build_random_map_player_config(
