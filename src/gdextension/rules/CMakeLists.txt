@@ -93,6 +93,7 @@ add_custom_target(aurelion_rules_source_tree
 
 add_library(aurelion_rules_core STATIC
 	core/battle_hex.cpp
+	core/battle_state.cpp
 	core/build_info.cpp
 	core/compat/godot_string.cpp
 )
@@ -104,6 +105,7 @@ set_target_properties(aurelion_rules_core PROPERTIES POSITION_INDEPENDENT_CODE O
 add_library(aurelion_rules SHARED
 	gdextension/register_types.cpp
 	gdextension/aurelion_rules_api.cpp
+	gdextension/battle_state_bridge.cpp
 )
 target_link_libraries(aurelion_rules PRIVATE aurelion_rules_core godot::cpp)
 target_compile_definitions(aurelion_rules PRIVATE "AURELION_RULES_FLAVOUR=\"${AURELION_GODOTCPP_TARGET}\"")

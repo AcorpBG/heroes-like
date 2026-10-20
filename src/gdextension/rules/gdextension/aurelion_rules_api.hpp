@@ -4,6 +4,7 @@
 #include <godot_cpp/variant/dictionary.hpp>
 #include <godot_cpp/variant/packed_byte_array.hpp>
 #include <godot_cpp/variant/packed_int32_array.hpp>
+#include <godot_cpp/variant/variant.hpp>
 
 namespace godot {
 
@@ -31,6 +32,22 @@ public:
 
 	// BattleRules._obstacle_field_stays_open over an open mask of the obstacles.
 	bool battle_hex_field_stays_open(const PackedByteArray &open) const;
+
+	// The native battle state's conversion (battle_state_bridge.hpp), for the
+	// round-trip proof. Mode 0 loads value and returns new containers written
+	// from the state; mode 1 writes the state back into value's own containers
+	// and returns value.
+	Variant state_round_trip(const Variant &value, int64_t mode);
+	// Loads target, replaces the state with source matched by path, and writes
+	// it back into target's containers. Returns target.
+	Variant state_overwrite(const Variant &target, const Variant &source);
+	// The last state call: {ok, error, values, shared_refs, arrays, dicts,
+	// atoms, opaque, types, load_usec, store_usec, reused_arrays, reused_dicts,
+	// rebuilt_dicts}.
+	Dictionary state_last_stats() const;
+
+private:
+	Dictionary last_state_stats_;
 };
 
 } // namespace godot
