@@ -35,15 +35,22 @@ extends Node
 # HEROES_AI_MATCH_DUMP     with HEROES_AI_MATCH_DUMP_DAY: that day's session
 #                          JSON, exactly as digested, goes into this file and
 #                          the match stops there.
-# HEROES_AI_MATCH_DIGEST_SKIP comma-separated "overworld.<key>" or
-#                          "flags.<key>" left out of the digest and the dump
-#                          (rules_parity.py --portable: where the map package
-#                          was written differs between editor and export).
+# HEROES_AI_MATCH_DIGEST_BLANK comma-separated; "overworld.<key>" and
+#                          "flags.<key>" entries name where to look, the other
+#                          entries are field names whose values become "" in
+#                          the digest and the dump, in nested dictionaries
+#                          under those keys (arrays are not entered).
+#                          rules_parity.py --portable: the map package's
+#                          location differs between the editor and an export.
+#
+# The match fails at once when the native rules library is not registered:
+# without it every battle hex search errors and battles play out wrong.
 
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
 const AiSeatRulesScript = preload("res://scripts/core/AiSeatRules.gd")
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
+const NativeRulesScript = preload("res://scripts/core/NativeRules.gd")
 const REPORT_ID := "AI_VERSUS_AI_MATCH_REPORT"
 const DEFAULT_MAX_DAYS := 320
 const DEFAULT_OUT := "user://ai_versus_ai_match.json"
@@ -52,12 +59,16 @@ var _failed := false
 var _digest_file: FileAccess = null
 var _dump_path := ""
 var _dump_day := -1
-var _digest_skip := PackedStringArray()
+var _blank_scopes := PackedStringArray()
+var _blank_fields := {}
 
 func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	if not NativeRulesScript.available():
+		_fail("The native rules library is not loaded: %s." % NativeRulesScript.REGISTER_HINT)
+		return
 	ContentService.clear_generated_scenario_drafts()
 	var match_seed := OS.get_environment("HEROES_AI_MATCH_SEED").strip_edges()
 	if match_seed in ["", "random"]:
@@ -102,8 +113,12 @@ func _run() -> void:
 	if _dump_path != "" and OS.get_environment("HEROES_AI_MATCH_DUMP_DAY").strip_edges() != "":
 		_dump_day = int(OS.get_environment("HEROES_AI_MATCH_DUMP_DAY"))
 		max_days = mini(max_days, _dump_day)
-	for item in OS.get_environment("HEROES_AI_MATCH_DIGEST_SKIP").split(",", false):
-		_digest_skip.append(item.strip_edges())
+	for item in OS.get_environment("HEROES_AI_MATCH_DIGEST_BLANK").split(",", false):
+		item = item.strip_edges()
+		if item.begins_with("overworld.") or item.begins_with("flags."):
+			_blank_scopes.append(item)
+		else:
+			_blank_fields[item] = true
 
 	var rng := RandomNumberGenerator.new()
 	rng.seed = hash(match_seed)
@@ -256,14 +271,14 @@ func _digest_day(session) -> void:
 		return
 	var overworld: Dictionary = session.overworld
 	var flags: Dictionary = session.flags
-	if not _digest_skip.is_empty():
+	if not _blank_scopes.is_empty():
 		overworld = overworld.duplicate()
 		flags = flags.duplicate()
-		for item in _digest_skip:
-			if item.begins_with("overworld."):
-				overworld.erase(item.trim_prefix("overworld."))
-			elif item.begins_with("flags."):
-				flags.erase(item.trim_prefix("flags."))
+		for scope in _blank_scopes:
+			var part: Dictionary = overworld if scope.begins_with("overworld.") else flags
+			var key := scope.get_slice(".", 1)
+			if part.get(key) is Dictionary:
+				part[key] = _blanked(part[key])
 	var text := JSON.stringify({
 		"day": session.day,
 		"session_id": session.session_id,
@@ -283,6 +298,20 @@ func _digest_day(session) -> void:
 		if dump != null:
 			dump.store_string(text)
 			dump.close()
+
+## A copy of value with every _blank_fields entry set to "", in nested
+## dictionaries only; insertion order kept.
+func _blanked(value: Dictionary) -> Dictionary:
+	var out := {}
+	for key in value:
+		var child = value[key]
+		if _blank_fields.has(String(key)):
+			out[key] = ""
+		elif child is Dictionary:
+			out[key] = _blanked(child)
+		else:
+			out[key] = child
+	return out
 
 func _start_session(map_seed: String, faction_id: String, player_count: int = 2, size_class: String = "homm3_small", guards: String = "normal", water: String = "land", levels: int = 1):
 	var config := ScenarioSelectRulesScript.build_random_map_player_config(

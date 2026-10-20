@@ -12,7 +12,7 @@
 A side is a project directory (run with the editor binary, --godot / --godot-a / --godot-b) or an
 exported game binary of an AI batch preset (export_presets.cfg; it starts the match runner and
 loads the .pck beside it). An exported build writes its map package to user://maps, the editor to
-res://maps: compare the two with --portable, which leaves that location out. Every match writes a
+res://maps: compare the two with --portable, which blanks the fields that hold that location. Every match writes a
 digest line per day (HEROES_AI_MATCH_DIGEST in tests/ai_versus_ai_match_report.gd: sha256 of the
 whole session state as JSON with insertion order, int and float apart and full precision) and its
 match record. `check` compares the digests and the records (timing fields left out); for a seed
@@ -26,9 +26,11 @@ would write the same map package. Runs default to 6 at once; never run this whil
 batch is running (AGENTS.md "Validation budget").
 
 `prepare` extracts `git archive REV` without art/ into DEST, links DEST/art to this checkout's art
-and DEST/.godot/imported to its import cache, and copies the small .godot files. A revision that
-adds or renames a class_name needs a headless --import in DEST first. Exit codes: 0 identical,
-1 different, 2 a run failed.
+and DEST/.godot/imported to its import cache, copies the small .godot files and registers the
+revision's own native libraries (src/gdextension/*.gdextension). A revision that adds or renames a
+class_name needs a headless --import in DEST first. A run fails when the match fails, times out or
+prints a SCRIPT ERROR line (the runner itself fails when the native rules library is not loaded).
+Exit codes: 0 identical, 1 different, 2 a run failed.
 """
 from __future__ import annotations
 
@@ -56,7 +58,7 @@ SCENE = "res://tests/ai_versus_ai_match_report.tscn"
 REPORT_ID = "AI_VERSUS_AI_MATCH_REPORT"
 IS_WINDOWS = platform.system() == "Windows"
 COPY_MARKER = ".rules_parity_copy"
-GODOT_SMALL_FILES = (".gdignore", "extension_list.cfg", "global_script_class_cache.cfg", "uid_cache.bin",
+GODOT_SMALL_FILES = (".gdignore", "global_script_class_cache.cfg", "uid_cache.bin",
                      "lossless-imports.json", "scene_groups_cache.cfg")
 
 # The committed seed set (2026-10-20). Guards normal everywhere; factions come from the seed.
@@ -70,13 +72,17 @@ SEEDS: dict[str, dict] = {
 }
 # Record fields that hold wall-clock time, left out of the comparison.
 TIMING_KEYS = ("ai_turn_ms_max", "turn_ms")
-# --portable: the session keys that record where the map package was written (res://maps under the
-# editor, user://maps in an exported build) and the package signatures that include it. They are set
-# when the session starts and never change; everything else is compared.
+# --portable: where the map package was written (res://maps under the editor, user://maps in an
+# exported build) shows up in these session keys, as the paths and the package signatures that include
+# them. The runner sets those fields to "" in the digest (HEROES_AI_MATCH_DIGEST_BLANK, nested
+# dictionaries only); the rest of each key, such as the runtime scenario record's objectives, player
+# slots and starting resources, is compared like everything else.
 PACKAGE_LOCATION_KEYS = ("map_package_ref", "scenario_package_ref", "native_random_map_runtime_scenario_record",
                          "generated_random_map_provenance", "generated_random_map_replay_metadata")
-PORTABLE_SKIP = ",".join([f"overworld.{k}" for k in PACKAGE_LOCATION_KEYS + ("native_random_map_package_session_adoption",)]
-                         + [f"flags.{k}" for k in PACKAGE_LOCATION_KEYS])
+PACKAGE_LOCATION_FIELDS = ("active_dir", "active_dir_kind", "map_package_path", "scenario_package_path", "package_path",
+                           "package_hash", "full_output_signature", "materialized_map_signature", "stable_signature")
+PORTABLE_BLANK = ",".join([f"overworld.{k}" for k in PACKAGE_LOCATION_KEYS + ("native_random_map_package_session_adoption",)]
+                          + [f"flags.{k}" for k in PACKAGE_LOCATION_KEYS] + list(PACKAGE_LOCATION_FIELDS))
 
 
 # ---------------------------------------------------------------- sides and runs
@@ -171,15 +177,20 @@ def finish(job: Job, proc: subprocess.Popen, profile: Path, started: float, time
             removed = remove_match_maps(scenario_id, started, keep_maps.get(str(job.side.path.resolve()), set()), job.side.path / "maps")
         except (ValueError, KeyError):
             pass
+    # A script error means the game ran a different path than intended (a missing class, a failed call),
+    # even when the match finished: such a run fails, so two sides with the same error never compare equal.
+    script_errors = [line.strip() for line in text.splitlines() if "SCRIPT ERROR" in line]
     problem = ""
     if timed_out:
         problem = "timed out"
     elif not report.get("ok"):
         problem = str(report.get("error") or f"exit {proc.returncode}, no report line")
+    elif script_errors:
+        problem = f"{len(script_errors)} SCRIPT ERROR lines, first: {script_errors[0]}"
     return {
         "side": job.side.name, "seed": job.key, "dump_day": job.dump_day, "ok": not problem, "problem": problem,
         "seconds": round(time.time() - started, 1), "final_day": report.get("final_day"),
-        "script_errors": [line.strip() for line in text.splitlines() if "SCRIPT ERROR" in line],
+        "script_errors": script_errors,
         "maps_removed": removed,
     }
 
@@ -367,7 +378,7 @@ def make_side(name: str, path: str, godot: str | None, env: dict[str, str]) -> S
 
 
 def portable(args, env: dict[str, str]) -> dict[str, str]:
-    return {**env, "HEROES_AI_MATCH_DIGEST_SKIP": PORTABLE_SKIP} if args.portable else env
+    return {**env, "HEROES_AI_MATCH_DIGEST_BLANK": PORTABLE_BLANK} if args.portable else env
 
 
 def make_work(text: str | None) -> Path:
@@ -482,6 +493,9 @@ def cmd_prepare(args) -> int:
     for name in GODOT_SMALL_FILES:
         if (ROOT / ".godot" / name).exists():
             shutil.copy2(ROOT / ".godot" / name, dest / ".godot" / name)
+    # The native libraries registered are the revision's own, not this checkout's (which may lack one).
+    extensions = sorted(f"res://{path.relative_to(dest).as_posix()}" for path in (dest / "src" / "gdextension").glob("*.gdextension"))
+    (dest / ".godot" / "extension_list.cfg").write_text("".join(f"{line}\n" for line in extensions), encoding="utf-8", newline="\n")
     link_dir(dest / ".godot" / "imported", (ROOT / ".godot" / "imported").resolve())
     (dest / "maps").mkdir(exist_ok=True)
     print(f"{dest}: {rev[:9]} without art/; art and .godot/imported linked to {ROOT}")
@@ -512,7 +526,7 @@ def main() -> int:
         p.add_argument("--timeout-min", type=float, default=60, help="per run (default 60)")
         p.add_argument("--godot", help="editor binary for project directories (default as tools/core_suite.py)")
         p.add_argument("--portable", action="store_true",
-                       help="leave the map package's location out of the digest (editor against an exported build)")
+                       help="blank the map package's location in the digest (editor against an exported build)")
         if with_side_env:
             p.add_argument("--env", action="append", metavar="NAME=VALUE", help="extra environment for the runs")
 
