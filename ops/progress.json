@@ -115979,8 +115979,151 @@
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Gate G0 passed (owner, 2026-10-20). Owner decisions 2026-10-20: D8 one port branch native-phase1-battle, merged once, dropped if G1 stays under 5x after the interface fix; D5/D10 battle code frozen until 7 days after the merge, urgent fixes in GDScript on main and ported on the branch, main tagged before the merge; D6 tests on deleted private battle functions retired at the merge. Scope, order, checkpoint G1 and exit in docs/native-rules-engine-transition.md, Phase 1. The first slice measures the porting rate.",
-      "updatedAt": "2026-10-20T18:01:00Z"
+      "notes": "Gate G0 passed (owner, 2026-10-20). Owner decisions 2026-10-20: D8 one port branch native-phase1-battle, merged once, dropped if G1 stays under 5x after the interface fix; D5/D10 battle code frozen until 7 days after the merge, urgent fixes in GDScript on main and ported on the branch, main tagged before the merge; D6 tests on deleted private battle functions retired at the merge. Scope, order, checkpoint G1 and exit in docs/native-rules-engine-transition.md, Phase 1. The first slice measures the porting rate. Inventory (transition doc, Phase 1 results (first slice)): 565 functions / 10,278 lines run in fights, cut into child slices native-rules-phase1-01..11 in the doc's order; section 11 answered.",
+      "updatedAt": "2026-10-20T19:35:00Z"
+    },
+    {
+      "id": "native-rules-phase1-01-foundation-hex-20261020",
+      "title": "Native battle engine 01: engine-exact helpers, native battle state, BattleEngine boundary, hex layer",
+      "status": "in_progress",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Branch native-phase1-battle. Done: ten engine-exact helpers (src/gdextension/rules/*/compat) fuzzed on 2^20 inputs each by tools/rules_compat/capture_vectors.gd and rules_selftest, identical to the official Godot 4.6.2 Windows and Linux engines (round() follows each platform: MinGW gives +-1 for +-0.49999999999999994, glibc +-0). Pending: native battle state round trip on every AI battle payload of the six seeds and both arena suites (JSON round-tripped too); BattleEngine boundary behind HEROES_NATIVE_BATTLE=gdscript|native|shadow; layer 1 (BattleRules 41/329, BattleFootprint 5/94, BattleAiRules copies 20/126) at 0 shadow mismatches; porting rate.",
+      "updatedAt": "2026-10-20T19:35:00Z"
+    },
+    {
+      "id": "native-rules-phase1-02-damage-chain-20261020",
+      "title": "Native battle engine 02: damage chain and stat totals",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Layer 2 without the AI copies: BattleRules 77 functions / 1,283 lines (stat totals and their bonuses, the multiplier chain in exact order, the damage stream, damage application), BattleDamageRules 3/21, native unit and ability tables. Callers: AiHeroRules, BattleAiRules, 10 tests.",
+      "updatedAt": "2026-10-20T19:35:00Z"
+    },
+    {
+      "id": "native-rules-phase1-03-movement-targeting-20261020",
+      "title": "Native battle engine 03: movement and targeting",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Layer 3: BattleRules 42/641 (legal destinations, melee approach, auto-advance, attack legality, selected target). Callers: BattleBoardView.gd, BattleShell.gd, BattleAiRules, BattleAutoResolveRules, 17 tests.",
+      "updatedAt": "2026-10-20T19:35:00Z"
+    },
+    {
+      "id": "native-rules-phase1-04-turn-order-effects-20261020",
+      "title": "Native battle engine 04: turn order and effects, then checkpoint G1",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Layer 4: BattleRules 26/391 (round preparation, turn order, waits, effects with SpellRules' effect helpers, outcome check without finalize). Callers: BattleBoardView.gd, BattleShell.gd, BattleAiRules, BattleAutoResolveRules, 43 tests. Checkpoint G1 follows; open for the owner: G1 as written times a native loop that exists only after layers 5-10; proposal: time the four ported layers natively against GDScript on the arena corpus, conversion included.",
+      "updatedAt": "2026-10-20T19:35:00Z"
+    },
+    {
+      "id": "native-rules-phase1-05-attacks-abilities-20261020",
+      "title": "Native battle engine 05: attacks and the abilities",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Layer 5: BattleRules 33/1,189 (attack resolution, retaliation, the ability hooks). Callers: BattleShell.gd and BattleAutoResolveRules (perform_player_action), 13 tests.",
+      "updatedAt": "2026-10-20T19:35:00Z"
+    },
+    {
+      "id": "native-rules-phase1-06-cohesion-town-20261020",
+      "title": "Native battle engine 06: cohesion, momentum, field objectives, town defences",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Layers 6 and 7: BattleRules 16/457, TownBattleRules 7/41. Callers: BattleRules, SpellRules, 2 tests.",
+      "updatedAt": "2026-10-20T19:35:00Z"
+    },
+    {
+      "id": "native-rules-phase1-07-spells-commanders-20261020",
+      "title": "Native battle engine 07: in-battle spells and commander payloads",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Layer 8, likely two sessions: SpellRules 57/769, BattleRules 19/513, and the payload's ArtifactRules 20/328, HeroProgressionRules 10/105, DifficultyRules 7/21, ScenarioSelectRules 2/8 (or caster profiles built in GDScript, rebuilt after each enemy cast). Callers: 3 scenes, 8 scripts, 40 tests, the arena worker.",
+      "updatedAt": "2026-10-20T19:35:00Z"
+    },
+    {
+      "id": "native-rules-phase1-08-ai-estimates-20261020",
+      "title": "Native battle engine 08: battle AI estimates",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "BattleAiRules' copies of layers 1-6 (95 functions / 1,347 lines), its scoring scope and memos.",
+      "updatedAt": "2026-10-20T19:35:00Z"
+    },
+    {
+      "id": "native-rules-phase1-09-ai-decisions-20261020",
+      "title": "Native battle engine 09: battle AI decisions and enemy turns",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Likely two sessions: the other 106 BattleAiRules functions (2,023 lines) and the BattleRules enemy turn 9/348. Callers: BattleShell.gd, BattleRules, BattleAutoResolveRules, 15 tests.",
+      "updatedAt": "2026-10-20T19:35:00Z"
+    },
+    {
+      "id": "native-rules-phase1-10-autoplay-events-api-20261020",
+      "title": "Native battle engine 10: autoplay, structured events, player-battle API and UI queries",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "BattleAutoResolveRules 8/316; events as structured records with a GDScript formatter (516 lines of event code today); the order-by-order API and battle UI queries, shadow mode on the human-seat corpus.",
+      "updatedAt": "2026-10-20T19:35:00Z"
+    },
+    {
+      "id": "native-rules-phase1-11-exit-20261020",
+      "title": "Native battle engine 11: exit and the single merge",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "The transition doc's Phase 1 exit list, then the single merge with the owner (main tagged first).",
+      "updatedAt": "2026-10-20T19:35:00Z"
     }
   ],
   "project": "heroes-like",

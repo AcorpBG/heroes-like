@@ -386,6 +386,110 @@ Release packaging still stops on the 4.7 GB export pack, which predates the rule
   core suite on Windows and Linux, project.md ownership updated.
 - **Gain:** large for battle-only work (the tuner); modest for whole games, bounded by the battle share from Phase 0.
 
+### Phase 1 results (first slice: inventory, section 11, engine-exact helpers, 2026-10-20)
+
+**Inventory.** A call counter on every function of the battle scripts, with a phase flag, ran over the arena's
+`standard` and `holdout` suites (480 games each) and the six parity seeds (1,536 AI battle resolutions). It counted
+every function run inside `resolve_active_battle`, with `_finalize_*` left out. Those functions number 565, with
+10,278 lines, in the doc's order:
+
+| Layer | Functions | Lines | Where |
+|---|---:|---:|---|
+| 1 hex geometry and board reads | 66 | 549 | BattleRules 41/329, BattleFootprint 5/94, BattleAiRules 20/126 |
+| 2 damage chain and stat totals | 130 | 2,157 | BattleRules 77/1,283, BattleDamageRules 3/21, BattleAiRules 50/853 |
+| 3 movement and targeting | 50 | 721 | BattleRules 42/641, BattleAiRules 8/80 |
+| 4 turn order and effects | 26 | 391 | BattleRules |
+| 5 attacks and the abilities | 49 | 1,380 | BattleRules 33/1,189, BattleAiRules 16/191 |
+| 6 cohesion, momentum, field objectives | 16 | 552 | BattleRules 15/455, BattleAiRules 1/97 |
+| 7 town defences | 8 | 43 | TownBattleRules 7/41, BattleRules 1/2 |
+| 8 in-battle spells, commander payloads | 76 | 1,282 | SpellRules 57/769, BattleRules 19/513 |
+| 9 enemy turns and battle AI | 115 | 2,371 | BattleAiRules 106/2,023, BattleRules 9/348 |
+| 10 autoplay | 8 | 316 | BattleAutoResolveRules |
+| presentation and events | 21 | 516 | BattleRules 20/477, BattleActionPlayback 1/39 |
+
+- **AI copies.** BattleAiRules has its own copy of 95 helpers from layers 1-6 (1,347 lines), for example
+  `_ability_damage_modifier` (156 lines) and `_faction_damage_modifier`. Each copy is ported on its own.
+- **Called from the fight outside the battle scripts** (536 lines): ArtifactRules 20/328, HeroProgressionRules 10/105,
+  ContentService 8/67, DifficultyRules 7/21, ScenarioSelectRules 2/8. The fight rebuilds the commander payloads from
+  the hero: HeroProgressionRules `aggregate_bonuses` ran 591,940 times and ArtifactRules `aggregate_bonuses` 142,750
+  times. Caster profiles exist to avoid this work. ContentService `get_content_by_id` ran 1.5M times and `get_unit`
+  1.07M times.
+- **Not run in fights.** BattleRules: finalize-only 71/1,582, outside the fight 67/1,917, never in this corpus
+  267/6,001 (player-battle UI and `describe_*`). BattleAiRules: never 13/144. SpellRules: never 54/1,313, outside the
+  fight 4/44. `normalize_battle_state` does not run inside the fight.
+- **Callers outside the defining files** (name match, so a few hits are same-named helpers):
+  `scenes/battle/BattleBoardView.gd` and `BattleShell.gd` (board reads, targeting, `perform_player_action`,
+  `cast_player_spell`, `player_autoplay_decision`), `scenes/shared/SpellbookView.gd`, `AiHeroRules.gd`
+  (`resolve_active_battle`, `attack_defense_multiplier`, `ensure_hero_spellbook`), five overworld scripts
+  (`ensure_hero_spellbook`, `known_spells`, `mana_max_from_hero`), `tools/battle_ai_arena/worker.gd`, and about 100
+  test files, most of them on layers 1, 4 and 8. Each slice's brief lists its own callers.
+
+**Section 11 answers** (Godot 4.6.2-stable sources and the official binaries):
+- **`randi_range(from, to)`** binds C `int`: both bounds are cut to 32 bits, equal bounds return `from`, and the
+  result is a 32-bit int. Otherwise it returns `pcg32_boundedrand_r(max - min + 1) + min`: a rejection loop below
+  `-bound % bound`, one or more draws. A span of 2^32 takes one raw draw.
+- **`randf()`** returns `real_t`, a 32-bit float in the official builds, which GDScript widens. It takes two draws, or
+  one when the first is 0: `ldexp((float)(second | 0x80000001), -32 - clz(first))`. The obstacle test
+  `rng.randf() < 0.4` compares that widened float with the double 0.4.
+- **`String.hash()`** is djb2 over the UTF-32 code points, stopping at a NUL.
+- **`int(String)`** is `String::to_int`: it reads the digits before the first `.` and skips every other character. A
+  `-` before the first non-zero digit flips the sign, so `"a-1b2"` gives -12. Past 19 digits it prints an error and
+  returns INT64_MAX or INT64_MIN.
+- **`is_valid_int`** accepts one optional sign, never alone, followed by digits only.
+- **`sort_custom`** runs the `SortArray` introsort with validation on: threshold 16, median of three, depth
+  2·log2(n), heap-sort fallback, final insertion sort, and a loop stop on an inconsistent comparator. It is not
+  stable, so a port must reproduce the algorithm to keep the tie order. The battle code has two call sites
+  (`BattleRules.gd:11084-11085`). `_sorted_turn_order` is its own selection sort.
+- **JSON** reads every number as a float with Godot's `built_in_strtod`, a Tcl-derived parser that is not correctly
+  rounded (it cuts the mantissa at 18 digits and scales by powers of ten in doubles). GDScript float literals go
+  through the same parser:
+  - All 94 distinct float literals in the battle scripts (1,018 uses) parse to the correctly rounded double, so C++
+    literals equal them.
+  - The literal `-0.0` folds to +0.0 in GDScript. The battle code has none.
+  - Native code never parses text.
+- **`round`** is `std::round`, and the two official builds disagree on one input pair. The Windows build (MinGW) gives
+  ±1 for ±0.49999999999999994, like `trunc(x + copysign(0.5, x))`; the Linux build (glibc) gives ±0. The helper copies
+  each platform's answer, so GDScript and native agree on both, and differ between the platforms exactly as GDScript
+  does.
+- **Other number functions:**
+  - `floor` and `ceil` are exact.
+  - `posmod` is `%` with a sign fix; a zero divisor gives 0 and prints an error.
+  - `snappedf` is `floor(x / step + 0.5) * step`.
+  - `int(float)` truncates; NaN and out-of-range values give INT64_MIN, as x86-64 does.
+  - The untyped `max`/`min`/`clamp` return the winning argument as it came, int or float. The first argument wins
+    ties, and an int meets a float as a double.
+  - `maxf`/`minf`/`clampf`/`maxi`/... are the engine's MAX/MIN/CLAMP templates: the second argument wins ties, and
+    `clampf` returns `lo` when `lo > hi` where `clamp` returns `hi`.
+  - `str(int)` and `"%d" % x` are the same digits (a float is truncated first).
+  - Floats become text only through `String::num` in the adapter.
+- **C runtime.** The official Windows binary is MinGW-w64 GCC (GNU ld 2.45) on `msvcrt.dll`, which supplies `acos`,
+  `asin`, `atan`, `ceil`, `cosh`, `log10`, `sinh`, `tan`, `tanh`, `_hypot` and `_nextafter`. The battle code calls no
+  transcendental function. Inside the engine, float-to-text (`log10` plus `snprintf`) is the only path that depends on
+  the C runtime.
+- **Caster profiles.** Over 480 arena games (7,240 loop steps), mana aside:
+  - `player_commander_state`, `player_hero` and `player_commander_source` never change during a battle.
+  - `enemy_hero` and `enemy_hero_payload` are replaced after each enemy spell (`_cast_enemy_spell`,
+    `BattleRules.gd:7458`) by the AI's normalized payload. It adds hero-template keys such as `command.initiative`,
+    seen in 126 steps.
+  - A profile built once per battle must therefore be rebuilt after an enemy cast, or built from the replaced payload.
+- **Presentation keys.** The six seeds were played with `_append_presentation_event`, `_mark_stack_animation_event`,
+  `_append_animation_event_record` and `_record_event` turned into no-ops. All daily digests and match records came
+  out identical, so nothing in AI battles reads the presentation events, animation states or recent events. The
+  terminal message is read: the AI battle log stores `resolution.message`.
+- **Board-read cache.** Its keys hash the stacks with the Variant `hash()` (`BattleRules.gd:1610`). It is a pure cache
+  with a switch to turn it off, so native code needs no copy of it.
+
+**Engine-exact helpers** (`src/gdextension/rules/{core,include/aurelion_rules}/compat/`):
+- **What they are.** `GodotPcg` (seed/state, `randi`, `randi_range`, `randf`), `itos`, `to_int`, `is_valid_int`,
+  `string_hash`, `sha256_text`, `posmod`, int division, `int(float)`, `round`/`floor`/`ceil`, `snappedf`, the
+  Variant-typed `max`/`min`/`clamp` on `Number`, the typed `maxf`/`clampi`/..., and `sort_custom`.
+- **How they are fuzzed.** `tools/rules_compat/capture_vectors.gd` runs each helper on 2^20 inputs in the engine:
+  integer edge modes, random bit patterns, NaN, ±0, infinities, mixed int/float ties, and 0-40 element sorts full of
+  ties. It prints one SHA-256 per helper over the answers. `rules_selftest` draws the same inputs
+  (`selftest/compat_fuzz.cpp`) and checks every digest (`selftest/compat_digests.inc`).
+- **Results.** All ten digests are identical between the official Windows and Linux engines and this C++, except
+  `float_round`, which has one digest per platform (see `round` above).
+
 ### Phase 2: one payload builder, AI preview as one call, the battle tool
 
 - Battle payload creation (`BattleRules.gd:256-402`), stack and hero payloads, obstacles, and the end-of-battle numbers
@@ -516,5 +620,6 @@ lines.
 Godot 4.6.2 internals (PCG bounded draw, `randf` width and draw count, String hash, `SortArray`, JSON float parsing);
 the C runtime of the official Windows binary; Windows/Linux identity of GDScript games today; whether caster profiles
 stay constant through a battle; which presentation keys nothing reads in AI battles; whether release templates run the
-match scene with identical results; the exclusive time split on full-length games. Measured so far (Phase 0 results):
+match scene with identical results; the exclusive time split on full-length games. The Godot internals, the C
+runtime, caster profiles and presentation keys are answered in "Phase 1 results (first slice)". Measured so far (Phase 0 results):
 Windows/Linux identity, release templates, the time split.
