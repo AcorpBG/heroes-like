@@ -26,6 +26,8 @@ const TRACKED_RESOURCES := [
 	"brass_scrip",
 	"memory_salt",
 ]
+# rebuild_pressure_request comes only from older saves (nothing writes it any
+# more); it lapses after this many days.
 const REBUILD_PRESSURE_LAUNCH_WINDOW_DAYS := 5
 
 static func _scenario_factory() -> Variant:

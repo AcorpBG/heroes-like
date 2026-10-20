@@ -5,8 +5,8 @@ Plays realistic battles (scenarios.py) once each with the current battle AI on b
 fits army_power's terms to who won (a logistic fit on the log strength ratio, the battle
 type as an offset), and prints the fitted terms and how often each estimate calls the
 winner on battles the fit never saw. Copy the terms into content/ai_hero_weights.json
-("army_power": power_*, ranged_power, hero_*) and tools/build_generated_neutral_companies.py
-by hand.
+("army_power": power_*, ranged_power, hero_*), then rebuild the generated company catalog
+with tools/build_generated_neutral_companies.py, which reads them from there.
 
     python tools/battle_ai_arena/power_fit.py                    # 30 maps of battles, ~25 min
     python tools/battle_ai_arena/power_fit.py --games <run>/games.jsonl   # refit played battles
@@ -35,9 +35,13 @@ import router  # noqa: E402
 import scenarios  # noqa: E402
 
 TYPES = ["guard", "hero", "siege"]
-# Fitted terms, their starting values (the 2026-10-16 fit) and how they enter army_power.
-TERMS = {"health": 0.3, "damage": 0.6, "ranged": math.log(1.65), "defense": 0.075, "speed": 0.06,
-         "initiative": 0.045, "hero_command": 0.85, "hero_spell": 0.95}
+# Fitted terms, their starting values (the game's, content/ai_hero_weights.json "army_power")
+# and how they enter army_power.
+ARMY_POWER = json.loads((arena.ROOT / "content" / "ai_hero_weights.json").read_text(encoding="utf-8"))["army_power"]
+TERMS = {"health": ARMY_POWER["power_health"], "damage": ARMY_POWER["power_damage"],
+         "ranged": math.log(ARMY_POWER["ranged_power"]), "defense": ARMY_POWER["power_per_defense"],
+         "speed": ARMY_POWER["power_per_speed"], "initiative": ARMY_POWER["power_per_initiative"],
+         "hero_command": ARMY_POWER["hero_command_power"], "hero_spell": ARMY_POWER["hero_spell_power"]}
 
 
 def play(out: Path, first: int, seeds: int, dice: list[int], workers: int) -> Path:
@@ -188,8 +192,9 @@ def main() -> int:
     terms, w = fit_terms(train, ua)
     lp = log_power(terms, test, ua)
     report("refitted terms", w[0] * (lp[:, 0] - lp[:, 1]) + test.T @ w[1:], test)
-    print("Fitted terms (AiHeroRules): POWER_HEALTH %.3f, POWER_DAMAGE %.3f, POWER_PER_DEFENSE %.3f, POWER_PER_SPEED %.3f, "
-          "POWER_PER_INITIATIVE %.3f, RANGED_POWER %.3f, HERO_COMMAND_POWER %.3f, HERO_SPELL_POWER %.3f" % (
+    print("Fitted terms (content/ai_hero_weights.json army_power): power_health %.3f, power_damage %.3f, "
+          "power_per_defense %.3f, power_per_speed %.3f, power_per_initiative %.3f, ranged_power %.3f, "
+          "hero_command_power %.3f, hero_spell_power %.3f" % (
               terms["health"], terms["damage"], terms["defense"], terms["speed"], terms["initiative"],
               math.exp(terms["ranged"]), terms["hero_command"], terms["hero_spell"]))
     print("Battle type against the estimate (x strength): guard %.3f, siege %.3f" % (

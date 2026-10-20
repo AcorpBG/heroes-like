@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "about": "Overworld AI weights (scripts/core/AiHeroRules.gd, _apply_weights): searches, fight ratios, target and build values. army_power holds the strength estimate's terms, the same for every player because battle rewards and generated guards use it too (fitted with tools/battle_ai_arena/power_fit.py). sets.default is what every computer player plays with; a named set lists only the values it changes (resource_values merge by resource). A match assigns a set per computer player (enemy state ai_weight_set; HEROES_AI_MATCH_WEIGHTS in tests/ai_versus_ai_match_report.gd). Values written without a decimal point are whole numbers in the game.",
+  "about": "Overworld AI weights (scripts/core/AiHeroRules.gd, _apply_weights): searches, fight ratios, target and build values, and the values AI heroes put on dwellings, visit buildings and town services (apply_ai_weights in CreatureDwellingRules, VisitBuildingRules, EnemyAdventureRules, EnemyTownServices and FactionTownServices). army_power holds the strength estimate's terms, the same for every player because battle rewards and generated guards use it too (fitted with tools/battle_ai_arena/power_fit.py); specialty_pick holds how computer heroes choose specialties, the same for every player because they also level up in battles outside their own turn (EnemyAdventureRules._preferred_enemy_specialty_id). sets.default is what every computer player plays with; a named set lists only the values it changes (resource_values and loadout_values merge by key). A match assigns a set per computer player (enemy state ai_weight_set; HEROES_AI_MATCH_WEIGHTS in tests/ai_versus_ai_match_report.gd). Values written without a decimal point are whole numbers in the game.",
   "army_power": {
     "power_scale": 0.7,
     "power_health": 0.3,
@@ -12,6 +12,12 @@
     "hero_command_power": 0.85,
     "hero_spell_power": 0.95,
     "battle_rounds_estimate": 4
+  },
+  "specialty_pick": {
+    "focus": 4.0,
+    "path": 2.0,
+    "not_adventure": 1.0,
+    "rank_up": 1.5
   },
   "sets": {
     "default": {
@@ -112,6 +118,36 @@
       "guarded_neutral_town_value": 4000.0,
       "guarded_rival_town_value": 6000.0,
       "human_town_bonus": 2000.0,
+      "dwelling_hire_min_value": 300,
+      "dwelling_creature_min_value": 40,
+      "visit_stat_value": 600,
+      "visit_experience_share": 0.5,
+      "visit_level_value": 900,
+      "visit_spell_tier_value": 300,
+      "visit_cost_share": 0.5,
+      "gold_reserve": 2000,
+      "town_spend_share": 0.5,
+      "min_purchase_gain": 5.0,
+      "loadout_values": {
+        "battle_attack": 10.0,
+        "battle_defense": 10.0,
+        "battle_initiative": 9.0,
+        "overworld_movement": 12.0,
+        "scouting_radius": 7.0,
+        "battle_spell_resistance_pct": 0.7,
+        "battle_control_resistance_pct": 0.7
+      },
+      "loadout_gold_income_value": 0.04,
+      "loadout_income_value": 4.0,
+      "loadout_school_resistance_value": 0.25,
+      "loadout_spell_effect_value": 2.0,
+      "loadout_mana_cost_value": 3.0,
+      "service_gold_reserve": 2000,
+      "restore_mana_share": 0.5,
+      "experience_service_min_gold": 4000,
+      "exchange_min_kept": 10,
+      "exchange_gold_cap": 8000,
+      "exchange_low_stock": 4,
       "resource_values": {
         "gold": 1.0,
         "wood": 80.0,

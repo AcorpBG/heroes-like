@@ -53,6 +53,8 @@ const COMMANDER_EXPERIENCE_OBJECTIVE_SECURED := 90
 const COMMANDER_EXPERIENCE_SITE_DEFENDED := 45
 const COMMANDER_EXPERIENCE_TOWN_DEFENDED := 65
 const COMMANDER_VETERANCY_LABELS := ["", "Blooded", "Veteran", "War-hardened"]
+# known_world_memory comes only from older saves (nothing writes it any more);
+# these bound it while it expires.
 const RAID_ADVENTURE_SCOUTING_MEMORY_DAYS := 7
 const RAID_ADVENTURE_SCOUTING_MAX_TARGET_RECORDS := 24
 const AI_HERO_SIGHTING_MEMORY_DAYS := 3
@@ -73,7 +75,23 @@ const PATH_MOVEMENT_DELTAS := [
 # posture, pressure) comes back from AiHeroRules.run_faction_turn.
 const SESSION_OWNED_ENEMY_STATE_KEYS := ["commander_roster", "known_world_memory", "hero_task_state", "rebuild_pressure_request"]
 const LOGISTICS_SITE_FAMILIES := ["faction_outpost", "frontier_shrine"]
-const DWELLING_HIRE_MIN_VALUE := 300
+## AI weight (content/ai_hero_weights.json): an own dwelling is worth a trip
+## while its week of creatures is worth this much
+## (_resource_node_contestable_by_faction). AiHeroRules puts a computer
+## player's set in place (apply_ai_weights); until it does, the default set.
+static var DWELLING_HIRE_MIN_VALUE: int
+static var _ai_weights_ready := false
+## How computer heroes choose specialties (_preferred_enemy_specialty_id):
+## "specialty_pick" in content/ai_hero_weights.json, the same for every player
+## because heroes also level up in battles outside their own turn. Read again
+## whenever the content revision changes.
+static var SPECIALTY_FOCUS_SCORE: float
+static var SPECIALTY_PATH_SCORE: float
+static var SPECIALTY_NOT_ADVENTURE_SCORE: float
+static var SPECIALTY_RANK_UP_SCORE: float
+static var _specialty_pick_revision := -1
+# Only the event log's reason codes read these, and only whether a value is
+# above zero (_resource_target_reason_codes).
 const AI_RESOURCE_VALUE_BY_ID := {
 	"gold": 1,
 	"wood": 350,
@@ -2387,6 +2405,7 @@ static func _preferred_enemy_specialty_id(commander_state: Dictionary, pending_c
 	var options = pending_choice.get("options", [])
 	if not (options is Array) or options.is_empty():
 		return ""
+	_sync_specialty_pick()
 	var focus: Array = commander_state.get("specialty_focus_ids", []) if commander_state.get("specialty_focus_ids", []) is Array else []
 	var path := HeroProgressionRulesScript.command_path(commander_state)
 	var best := String(options[0])
@@ -2396,17 +2415,34 @@ static func _preferred_enemy_specialty_id(commander_state: Dictionary, pending_c
 		var specialty := HeroProgressionRulesScript.specialty_definition(specialty_id)
 		var score := 0.0
 		if specialty_id in focus:
-			score += 4.0
+			score += SPECIALTY_FOCUS_SCORE
 		if String(specialty.get("path", "any")) == path:
-			score += 2.0
+			score += SPECIALTY_PATH_SCORE
 		if String(specialty.get("group", "")) != "adventure":
-			score += 1.0
+			score += SPECIALTY_NOT_ADVENTURE_SCORE
 		if HeroProgressionRulesScript.specialty_rank(commander_state, specialty_id) > 0:
-			score += 1.5
+			score += SPECIALTY_RANK_UP_SCORE
 		if score > best_score:
 			best_score = score
 			best = specialty_id
 	return best
+
+static func _sync_specialty_pick() -> void:
+	var revision: int = ContentService.get_content_revision()
+	if revision == _specialty_pick_revision:
+		return
+	var pick: Dictionary = ContentService.load_json(ContentService.AI_HERO_WEIGHTS_PATH)["specialty_pick"]
+	SPECIALTY_FOCUS_SCORE = float(pick["focus"])
+	SPECIALTY_PATH_SCORE = float(pick["path"])
+	SPECIALTY_NOT_ADVENTURE_SCORE = float(pick["not_adventure"])
+	SPECIALTY_RANK_UP_SCORE = float(pick["rank_up"])
+	_specialty_pick_revision = revision
+
+## The AI weights read here (DWELLING_HIRE_MIN_VALUE) from a computer player's
+## weight set; AiHeroRules._apply_weights calls it.
+static func apply_ai_weights(weights: Dictionary) -> void:
+	DWELLING_HIRE_MIN_VALUE = int(weights["dwelling_hire_min_value"])
+	_ai_weights_ready = true
 
 static func _normalized_specialty_ranks(primary: Variant, secondary: Variant = []) -> Array:
 	# Each known specialty up to its max rank, secondary first.
@@ -3922,6 +3958,8 @@ static func _resource_node_contestable_by_faction(node: Dictionary, site: Dictio
 			and bool(VisitBuildings.readiness(node, site, _visit_key(faction_id), session.day).get("ok", false))
 		)
 	if CreatureDwellings.is_dwelling(site) and session != null and PlayerRules.resource_controller_id(node) == faction_id:
+		if not _ai_weights_ready:
+			apply_ai_weights(ContentService.default_ai_hero_weights())
 		return CreatureDwellings.week_value(node, site, session.day, true) >= DWELLING_HIRE_MIN_VALUE
 	if _resource_site_is_persistent(site):
 		return not PlayerRules.allied(session, PlayerRules.resource_controller_id(node), faction_id)

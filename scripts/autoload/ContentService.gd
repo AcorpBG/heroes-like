@@ -38,6 +38,22 @@ const SPELL_SCHOOL_ICONS_PATH := "%s/spell_school_icons.json" % CONTENT_DIR
 const BUILDING_CATEGORY_ICONS_PATH := "%s/building_category_icons.json" % CONTENT_DIR
 const CAMPAIGNS_PATH := "%s/campaigns.json" % AUTHORED_ARCHIVE_DIR
 const AI_HERO_WEIGHTS_PATH := "%s/ai_hero_weights.json" % CONTENT_DIR
+## The AI weights document's tables shared by every player (beside "sets").
+const AI_HERO_WEIGHT_TABLES := ["army_power", "specialty_pick"]
+## The AI weights the game reads as whole numbers (int() in AiHeroRules'
+## _apply_weights and _apply_power_terms and in the helpers' apply_ai_weights;
+## written without a decimal point in the document).
+const AI_HERO_WHOLE_WEIGHTS := [
+	"battle_rounds_estimate", "max_decisions_per_day", "search_days", "far_search_days", "strategic_days",
+	"min_search_radius", "max_gates_weighed", "route_unexplored_min", "route_revisit_days", "boat_saving_days",
+	"field_army_max", "defense_horizon_days", "max_free_fight_previews", "max_fight_vetoes", "max_idle_previews",
+	"home_wait_radius", "hunt_start_day", "hunt_full_day", "sighting_memory_days", "hidden_rival_tiles",
+	"passage_tile_cap", "hero_count_town_max", "extra_hero_day", "threat_reach_margin", "threat_min_reach",
+	"rival_town_tiles_per_day", "avoid_days", "gate_home_detour", "dwelling_hire_min_value",
+	"dwelling_creature_min_value", "visit_stat_value", "visit_level_value", "visit_spell_tier_value", "gold_reserve",
+	"service_gold_reserve", "experience_service_min_gold", "exchange_min_kept", "exchange_gold_cap",
+	"exchange_low_stock",
+]
 const BIOME_TERRAIN_INDEX_KEY := "%s#map_tile_ids" % BIOMES_PATH
 const MAP_OBJECT_SITE_INDEX_KEY := "%s#resource_site_id" % MAP_OBJECTS_PATH
 
@@ -142,51 +158,65 @@ func clear_content_overrides() -> void:
 	_overrides.clear()
 	clear_cache()
 
+## The default overworld AI weight set (AiHeroRules, "Weights").
+func default_ai_hero_weights() -> Dictionary:
+	return load_json(AI_HERO_WEIGHTS_PATH).get("sets", {}).get("default", {})
+
 ## What is wrong with an overworld AI weights document (AiHeroRules,
-## "Weights"): every army_power term and default value a number (or, for a
-## table such as resource_values, numbers by key); every other set changing
-## only values the default has, a number for a number and a table for a table;
-## and, given the shipped document, every term and default value it has.
+## "Weights"): every value of a shared table (AI_HERO_WEIGHT_TABLES) and of the
+## default set a number, or for a table such as resource_values numbers by key;
+## every other set changing only values the default has, down to the keys of
+## its tables, a number for a number and a table for a table; a whole number
+## for every AI_HERO_WHOLE_WEIGHTS value; and, given the shipped document,
+## exactly its shared values and default values, tables included.
 func ai_hero_weights_errors(doc: Dictionary, shipped: Dictionary = {}) -> Array[String]:
 	var errors: Array[String] = []
-	var terms = doc.get("army_power")
-	if not (terms is Dictionary):
-		errors.append("army_power must be an object")
-		terms = {}
-	for key in terms:
-		if not _is_finite_number(terms[key]):
-			errors.append("army_power.%s must be a number" % key)
+	for table_name in AI_HERO_WEIGHT_TABLES:
+		if doc.get(table_name) is Dictionary:
+			_ai_hero_weight_errors(table_name, doc[table_name], shipped.get(table_name), "shipped document", errors)
+		else:
+			errors.append("%s must be an object" % table_name)
 	var sets = doc.get("sets")
 	if not (sets is Dictionary) or not (sets.get("default") is Dictionary):
 		errors.append("sets.default must be an object")
 		return errors
-	var default_set: Dictionary = sets["default"]
-	for set_name in sets:
-		var weight_set = sets[set_name]
-		if not (weight_set is Dictionary):
-			errors.append("sets.%s must be an object" % set_name)
-			continue
-		for key in weight_set:
-			var value = weight_set[key]
-			var label := "sets.%s.%s" % [set_name, key]
-			if not default_set.has(key):
-				errors.append("%s is not in the default set" % label)
-			elif value is Dictionary and default_set[key] is Dictionary:
-				for item in value:
-					if not _is_finite_number(value[item]):
-						errors.append("%s.%s must be a number" % [label, item])
-			elif not _is_finite_number(value) or default_set[key] is Dictionary:
-				errors.append("%s must be %s" % [label, "a table of numbers" if default_set[key] is Dictionary else "a number"])
-	if shipped.get("army_power") is Dictionary:
-		for key in shipped["army_power"]:
-			if not terms.has(key):
-				errors.append("army_power.%s is missing" % key)
 	var shipped_sets = shipped.get("sets")
-	if shipped_sets is Dictionary and shipped_sets.get("default") is Dictionary:
-		for key in shipped_sets["default"]:
-			if not default_set.has(key):
-				errors.append("sets.default.%s is missing" % key)
+	var shipped_default = shipped_sets.get("default") if shipped_sets is Dictionary else null
+	_ai_hero_weight_errors("sets.default", sets["default"], shipped_default, "shipped document", errors)
+	for set_name in sets:
+		if set_name == "default":
+			continue
+		if sets[set_name] is Dictionary:
+			_ai_hero_weight_errors("sets.%s" % set_name, sets[set_name], sets["default"], "default set", errors)
+		else:
+			errors.append("sets.%s must be an object" % set_name)
 	return errors
+
+## One table of AI weights against its reference, when there is one: only the
+## reference's keys, a table where it has a table and a number where it has a
+## number, and, against the shipped document, every key it has. Without one,
+## numbers or tables of numbers.
+func _ai_hero_weight_errors(label: String, values: Dictionary, reference: Variant, reference_name: String, errors: Array[String]) -> void:
+	var checked := reference is Dictionary
+	for key in values:
+		var path := "%s.%s" % [label, key]
+		if checked and not reference.has(key):
+			errors.append("%s is not in the %s" % [path, reference_name])
+			continue
+		var value = values[key]
+		if (reference[key] if checked else value) is Dictionary:
+			if value is Dictionary:
+				_ai_hero_weight_errors(path, value, reference[key] if checked else null, reference_name, errors)
+			else:
+				errors.append("%s must be a table of numbers" % path)
+		elif not _is_finite_number(value):
+			errors.append("%s must be a number" % path)
+		elif String(key) in AI_HERO_WHOLE_WEIGHTS and float(value) != floorf(float(value)):
+			errors.append("%s must be a whole number" % path)
+	if checked and reference_name == "shipped document":
+		for key in reference:
+			if not values.has(key):
+				errors.append("%s.%s is missing" % [label, key])
 
 func _is_finite_number(value: Variant) -> bool:
 	return (value is int or value is float) and is_finite(float(value))

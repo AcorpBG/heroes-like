@@ -24,6 +24,15 @@ const NODE_KEYS := [POPULATION, POPULATION_WEEK, GUARD_BEATEN, GUARD_SURVIVORS]
 
 static var _refugee_pool: Array = []
 static var _base_by_upgrade: Dictionary = {}
+## AI weight (content/ai_hero_weights.json): the least week_value counts a
+## creature worth. AiHeroRules puts a computer player's set in place
+## (apply_ai_weights); until it does, the default set.
+static var AI_CREATURE_MIN_VALUE: int
+static var _ai_weights_ready := false
+
+static func apply_ai_weights(weights: Dictionary) -> void:
+	AI_CREATURE_MIN_VALUE = int(weights["dwelling_creature_min_value"])
+	_ai_weights_ready = true
 
 static func is_dwelling(site: Dictionary) -> bool:
 	return String(site.get("family", "")) == FAMILY
@@ -217,6 +226,8 @@ static func summary(node: Dictionary, site: Dictionary, day: int) -> String:
 
 ## Gold-equivalent value of a week's creatures, for AI targeting.
 static func week_value(node: Dictionary, site: Dictionary, day: int, available_only: bool = false) -> int:
+	if not _ai_weights_ready:
+		apply_ai_weights(ContentService.default_ai_hero_weights())
 	var value := 0
 	var counts := population(node, site, day) if available_only else weekly_growth(node, site, day)
 	for unit_id in counts.keys():
@@ -225,7 +236,7 @@ static func week_value(node: Dictionary, site: Dictionary, day: int, available_o
 		var cost = unit.get("cost", {})
 		if cost is Dictionary:
 			price = int(cost.get("gold", 0))
-		value += int(counts[unit_id]) * max(40, price)
+		value += int(counts[unit_id]) * max(AI_CREATURE_MIN_VALUE, price)
 	return value
 
 static func _stable_roll(key: String, size: int) -> int:

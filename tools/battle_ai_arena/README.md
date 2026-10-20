@@ -113,8 +113,9 @@ take on, threats, town defence, what to recruit and build. Generated guards are 
 `power_fit.py` plays realistic battles once each with the battle AI on both sides. It then fits
 the estimate's terms to who won, with a logistic fit on the log strength ratio. It prints the
 terms and how often the game's current estimate and the refitted one call the winner of the
-battles left out of the fit. Copy the terms into `AiHeroRules.gd` and
-`tools/build_generated_neutral_companies.py`, then rebuild the company catalog. The worker
+battles left out of the fit. Copy the terms into `content/ai_hero_weights.json` (`army_power`),
+then rebuild the company catalog with `tools/build_generated_neutral_companies.py`, which reads
+them from there. The worker
 records each side's hero (`player_commander`, `enemy_commander`), and a group's `dice`
 replays its battles with other damage rolls.
 

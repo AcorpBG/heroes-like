@@ -22,6 +22,24 @@ const WEEK_LENGTH := 7
 const STAT_KEYS := ["attack", "defense", "power", "knowledge"]
 const BOOST_KEYS := ["cohesion", "momentum"]
 const BOOST_CAP := 3
+## AI weights (content/ai_hero_weights.json) for ai_value: gold per stat point,
+## the share of experience and of the price that counts, gold per level and per
+## spell tier. AiHeroRules puts a computer player's set in place
+## (apply_ai_weights); until it does, the default set.
+static var AI_STAT_VALUE: int
+static var AI_EXPERIENCE_SHARE: float
+static var AI_LEVEL_VALUE: int
+static var AI_SPELL_TIER_VALUE: int
+static var AI_COST_SHARE: float
+static var _ai_weights_ready := false
+
+static func apply_ai_weights(weights: Dictionary) -> void:
+	AI_STAT_VALUE = int(weights["visit_stat_value"])
+	AI_EXPERIENCE_SHARE = float(weights["visit_experience_share"])
+	AI_LEVEL_VALUE = int(weights["visit_level_value"])
+	AI_SPELL_TIER_VALUE = int(weights["visit_spell_tier_value"])
+	AI_COST_SHARE = float(weights["visit_cost_share"])
+	_ai_weights_ready = true
 
 static func is_visit_building(site: Dictionary) -> bool:
 	return String(site.get("family", "")) == FAMILY and site.get("visit", {}) is Dictionary
@@ -224,6 +242,8 @@ static func add_battle_boosts(hero: Dictionary, boosts: Dictionary) -> Dictionar
 ## AI weighting in gold-equivalent value, so computer heroes seek stat, spell
 ## and growth buildings the way they seek pickups.
 static func ai_value(site: Dictionary) -> int:
+	if not _ai_weights_ready:
+		apply_ai_weights(ContentService.default_ai_hero_weights())
 	var effect := effects(site)
 	if not choices(site).is_empty():
 		var first = choices(site)[0]
@@ -232,13 +252,13 @@ static func ai_value(site: Dictionary) -> int:
 	var stats = effect.get("stats", {})
 	if stats is Dictionary:
 		for key in STAT_KEYS:
-			value += 600 * max(0, int(stats.get(key, 0)))
-	value += int(effect.get("experience", 0)) / 2
-	value += 900 * max(0, int(effect.get("levels", 0)))
-	value += 300 * max(0, int(effect.get("spell_tier", 0)))
+			value += AI_STAT_VALUE * max(0, int(stats.get(key, 0)))
+	value += int(float(int(effect.get("experience", 0))) * AI_EXPERIENCE_SHARE)
+	value += AI_LEVEL_VALUE * max(0, int(effect.get("levels", 0)))
+	value += AI_SPELL_TIER_VALUE * max(0, int(effect.get("spell_tier", 0)))
 	# Commanders keep only lasting growth; boosts, mana and movement are worth
 	# nothing to them yet.
-	value -= int(cost(site).get("gold", 0)) / 2
+	value -= int(float(int(cost(site).get("gold", 0))) * AI_COST_SHARE)
 	return max(0, value)
 
 static func _resource_text(resources: Dictionary) -> String:

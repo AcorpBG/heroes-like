@@ -8,7 +8,8 @@ many of each unit a guard fields.
 
 Sources: content/units.json (faction upgrade lines, neutral units),
 content/generated_neutral_encounter_profiles.json and content/army_groups.json
-(the 51 authored companies, kept as they are), and the vocabulary below.
+(the 51 authored companies, kept as they are), the strength estimate's terms
+in content/ai_hero_weights.json ("army_power"), and the vocabulary below.
 Writes content/generated_neutral_companies.json; --check only compares.
 """
 import argparse
@@ -19,6 +20,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "content" / "generated_neutral_companies.json"
+ARMY_POWER = json.loads((ROOT / "content" / "ai_hero_weights.json").read_text(encoding="utf-8"))["army_power"]
 
 # Faction company names: "<lead> <suffix>". Several suffixes per kind so a
 # faction's companies do not all share one word; the unit id picks one.
@@ -201,11 +203,12 @@ SHARES = {
 
 def power(unit):
     """Per-creature fighting value; mirrors AiHeroRules.army_power without a commander."""
+    terms = ARMY_POWER
     damage = (float(unit.get("min_damage", 1)) + float(unit.get("max_damage", 1))) * 0.5
-    # AiHeroRules' strength terms (content/ai_hero_weights.json, "army_power").
-    value = 0.7 * max(1.0, float(unit.get("hp", 1))) ** 0.3 * max(0.5, damage) ** 0.6
-    value *= math.exp(0.075 * int(unit.get("defense", 0)) + 0.06 * int(unit.get("speed", 0)) + 0.045 * int(unit.get("initiative", 0)))
-    return value * (1.65 if unit.get("ranged") else 1.0)
+    value = terms["power_scale"] * max(1.0, float(unit.get("hp", 1))) ** terms["power_health"] * max(0.5, damage) ** terms["power_damage"]
+    value *= math.exp(terms["power_per_defense"] * int(unit.get("defense", 0)) + terms["power_per_speed"] * int(unit.get("speed", 0))
+                      + terms["power_per_initiative"] * int(unit.get("initiative", 0)))
+    return value * (terms["ranged_power"] if unit.get("ranged") else 1.0)
 
 
 def pick(options, key):

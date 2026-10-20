@@ -532,7 +532,24 @@ computer player's enemy state picks its set; `ContentService.set_content_overrid
 this document so far); `HEROES_AI_MATCH_WEIGHTS` and `ai_match_batch.py --weights` assign sets per seat. JSON float
 parsing checked for these values: all 117 reach the code with the old literals' type and bits. Six seeds identical
 against main on Windows and Linux; plain runs of the six seeds (main, change, change, main; 6 at once) took 750 and 754
-s on main and 743 and 734 s with the change, not slower.
+s on main and 743 and 734 s with the change, not slower. This covered `AiHeroRules.gd` only; the AI numbers in its
+helpers followed the same day (below).
+
+**Follow-up (2026-10-20, done):** the AI numbers outside `AiHeroRules.gd` that live play reaches are in set `default`
+too, 28 values: the dwelling-hire floor (`EnemyAdventureRules`), what a hero spends and buys in its own towns and how it
+scores a loadout (`EnemyTownServices`), when it uses a faction service (`FactionTownServices.useful_to_ai`), and what
+visit buildings and dwelling creatures are worth to it (`VisitBuildingRules.ai_value`,
+`CreatureDwellingRules.week_value`). Each helper keeps them in typed static vars that `AiHeroRules._apply_weights` fills
+with the controller's set, the default set until it does. How computer heroes pick specialties is a second shared table,
+`specialty_pick` (4 values), because they also level up in battles outside their own turn. The integer halves (`x / 2`,
+`c * 2 <= m`) became shares of 0.5, identical for every value below 2^53. Kept in code: the scouting and sighting memory
+caps and the rebuild-pressure window (only older saves carry that memory), the resource values of the event log's reason
+codes (only their sign is read), the commander deploy floor (public summaries only: AI heroes always have a roster
+hero), the dwelling-guard threshold (the AI fights the guard first), the one-tile attack step in reach checks, and
+AI-only rules that are not decisions (commander experience and recovery days). The validator now also refuses unknown or
+missing keys inside tables and a fraction for any of the 39 whole-number weights; the company generator and
+`power_fit.py` read `army_power` from the document. Proof: every moved value reaches the code with the old type and
+value; the six seeds are identical against main on Windows and Linux, with the same digests on both.
 
 ### Phase 3: overworld kernels by rule
 
@@ -597,7 +614,7 @@ Sizes are the proposal's unmeasured agent-day guesses, useful only to compare ph
 |---|---|
 | Content JSON balance | Always open; the native tables rebuild per content revision. |
 | Battle-AI weights (`content/battle_ai_weights.json`) | Always open; per side; much faster to tune from Phase 2. |
-| Overworld AI numbers | Open; data per controller after Phase A. |
+| Overworld AI numbers | Open; data after Phase A and its follow-up, per controller except the shared `army_power` and `specialty_pick`. Numbers only older saves, the event log or AI-only rules read stay in code (Phase A results). |
 | Battle rule or battle-AI code | Frozen during Phase 1. An urgent fix lands in GDScript on main, is ported on the branch and passes shadow mode again. After Phase 1 it is a C++ change in its own commit. |
 | Overworld AI code | GDScript and open until Phase 4; frozen only during its slice. |
 | New unit abilities | C++ changes after Phase 1. |

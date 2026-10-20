@@ -4,7 +4,39 @@ const Development = preload("res://scripts/core/TownDevelopmentRules.gd")
 const Artifacts = preload("res://scripts/core/ArtifactRules.gd")
 const Levels = preload("res://scripts/core/OverworldLevelRules.gd")
 const Players = preload("res://scripts/core/PlayerIdentityRules.gd")
-const GOLD_RESERVE := 2000
+## AI weights (content/ai_hero_weights.json): a hero in its own town spends at
+## most TOWN_SPEND_SHARE of the gold above GOLD_RESERVE on upgrades and on an
+## artifact, buys one only for a loadout gain of MIN_PURCHASE_GAIN or more, and
+## scores loadouts with the LOADOUT_ values. AiHeroRules puts a computer
+## player's set in place (apply_ai_weights, which passes it on to the faction
+## services' useful_to_ai); until it does, the default set.
+static var GOLD_RESERVE: int
+static var TOWN_SPEND_SHARE: float
+static var MIN_PURCHASE_GAIN: float
+static var LOADOUT_VALUES: Dictionary = {}
+static var LOADOUT_GOLD_INCOME_VALUE: float
+static var LOADOUT_INCOME_VALUE: float
+static var LOADOUT_SCHOOL_RESISTANCE_VALUE: float
+static var LOADOUT_SPELL_EFFECT_VALUE: float
+static var LOADOUT_MANA_COST_VALUE: float
+static var _ai_weights_ready := false
+
+static func apply_ai_weights(weights: Dictionary) -> void:
+	GOLD_RESERVE = int(weights["gold_reserve"])
+	TOWN_SPEND_SHARE = float(weights["town_spend_share"])
+	MIN_PURCHASE_GAIN = float(weights["min_purchase_gain"])
+	var loadout_values := {}
+	var values: Dictionary = weights["loadout_values"]
+	for key in values:
+		loadout_values[String(key)] = float(values[key])
+	LOADOUT_VALUES = loadout_values
+	LOADOUT_GOLD_INCOME_VALUE = float(weights["loadout_gold_income_value"])
+	LOADOUT_INCOME_VALUE = float(weights["loadout_income_value"])
+	LOADOUT_SCHOOL_RESISTANCE_VALUE = float(weights["loadout_school_resistance_value"])
+	LOADOUT_SPELL_EFFECT_VALUE = float(weights["loadout_spell_effect_value"])
+	LOADOUT_MANA_COST_VALUE = float(weights["loadout_mana_cost_value"])
+	Development.FactionServices.apply_ai_weights(weights)
+	_ai_weights_ready = true
 
 static func can_visit(town: Dictionary, raid: Dictionary, controller: String) -> bool:
 	if town.get("owner", "neutral") != "enemy" or Players.town_controller_id(town) != controller:
@@ -16,9 +48,11 @@ static func can_visit(town: Dictionary, raid: Dictionary, controller: String) ->
 	return Levels.same_level(entrance, raid) and absi(int(entrance.x) - int(raid.get("x", -999))) + absi(int(entrance.y) - int(raid.get("y", -999))) <= 1
 
 static func upgrade_stacks(town: Dictionary, stacks: Array, treasury: Dictionary) -> Dictionary:
+	if not _ai_weights_ready:
+		apply_ai_weights(ContentService.default_ai_hero_weights())
 	var result := stacks.duplicate(true)
 	var upgrades: Array = []
-	var budget := maxi(0, (int(treasury.get("gold", 0)) - GOLD_RESERVE) / 2)
+	var budget := maxi(0, int(float(int(treasury.get("gold", 0)) - GOLD_RESERVE) * TOWN_SPEND_SHARE))
 	var candidates: Array = []
 	for stack in stacks:
 		var base := String(stack.get("unit_id", ""))
@@ -44,16 +78,17 @@ static func upgrade_stacks(town: Dictionary, stacks: Array, treasury: Dictionary
 	return {"stacks": result, "upgrades": upgrades}
 
 static func loadout_value(hero: Dictionary) -> float:
+	if not _ai_weights_ready:
+		apply_ai_weights(ContentService.default_ai_hero_weights())
 	# Compare actual equipped effects, including set thresholds and penalties.
 	var bonuses := Artifacts.aggregate_bonuses(hero.duplicate(true))
 	var score := 0.0
-	var weights := {"battle_attack": 10.0, "battle_defense": 10.0, "battle_initiative": 9.0, "overworld_movement": 12.0, "scouting_radius": 7.0, "battle_spell_resistance_pct": 0.7, "battle_control_resistance_pct": 0.7}
-	for key in weights: score += float(bonuses.get(key, 0)) * float(weights[key])
+	for key in LOADOUT_VALUES: score += float(bonuses.get(key, 0)) * float(LOADOUT_VALUES[key])
 	for key in bonuses.get("daily_income", {}):
-		score += float(bonuses.daily_income[key]) * (0.04 if key == "gold" else 4.0)
-	for value in bonuses.get("battle_school_resistance_pct", {}).values(): score += float(value) * 0.25
+		score += float(bonuses.daily_income[key]) * (LOADOUT_GOLD_INCOME_VALUE if key == "gold" else LOADOUT_INCOME_VALUE)
+	for value in bonuses.get("battle_school_resistance_pct", {}).values(): score += float(value) * LOADOUT_SCHOOL_RESISTANCE_VALUE
 	for modifier in bonuses.get("spell_modifiers", []):
-		score += float(modifier.get("effect_amount_delta", 0)) * 2.0 - float(modifier.get("mana_cost_delta", 0)) * 3.0
+		score += float(modifier.get("effect_amount_delta", 0)) * LOADOUT_SPELL_EFFECT_VALUE - float(modifier.get("mana_cost_delta", 0)) * LOADOUT_MANA_COST_VALUE
 	return score
 
 static func best_equipment(hero: Dictionary, artifact_id: String) -> Dictionary:
@@ -75,6 +110,8 @@ static func best_equipment(hero: Dictionary, artifact_id: String) -> Dictionary:
 	return best
 
 static func visit(town: Dictionary, raid: Dictionary, treasury: Dictionary, day: int, controller: String) -> Dictionary:
+	if not _ai_weights_ready:
+		apply_ai_weights(ContentService.default_ai_hero_weights())
 	var changes: Array = []
 	var sold_ids: Array = []
 	if not can_visit(town, raid, controller): return {"changes": changes}
@@ -108,7 +145,7 @@ static func visit(town: Dictionary, raid: Dictionary, treasury: Dictionary, day:
 				hero = equipment.hero
 				changes.append("equipped " + Artifacts.artifact_name(String(id)))
 		var best := {}
-		var budget := maxi(0, (int(treasury.get("gold", 0)) - GOLD_RESERVE) / 2)
+		var budget := maxi(0, int(float(int(treasury.get("gold", 0)) - GOLD_RESERVE) * TOWN_SPEND_SHARE))
 		var sold: Array = town.get("artifact_shop_purchases", {}).get(str(maxi(0, (day - 1) / 7)), [])
 		for id in Development.offers(town, day):
 			var artifact := ContentService.get_artifact(String(id))
@@ -118,7 +155,7 @@ static func visit(town: Dictionary, raid: Dictionary, treasury: Dictionary, day:
 			if not claimed.ok: continue
 			var equipment := best_equipment(claimed.hero, String(id))
 			var value := float(equipment.gain) / float(maxi(1, cost))
-			if float(equipment.gain) >= 5.0 and (best.is_empty() or value > float(best.value)):
+			if float(equipment.gain) >= MIN_PURCHASE_GAIN and (best.is_empty() or value > float(best.value)):
 				best = {"id": id, "value": value}
 		if not best.is_empty():
 			var bought := Development.trade_artifact(hero, town, day, String(best.id), true, treasury)

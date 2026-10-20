@@ -318,6 +318,9 @@ const LIVE_RESOURCE_KEYS := [
 ## WEIGHT_SET_KEY, the default when it names none; a match runner can add sets
 ## for one run through ContentService.set_content_override. Until 2026-10-20
 ## they were constants here (docs/native-rules-engine-transition.md, Phase A).
+## The set also carries what the AI values at dwellings, visit buildings and
+## in its own towns, read by the helpers it calls (apply_ai_weights in
+## AdventureRules, TownServices, VisitBuildings and CreatureDwellings).
 const WEIGHTS_PATH := "res://content/ai_hero_weights.json"
 const WEIGHT_SET_KEY := "ai_weight_set"
 const DEFAULT_WEIGHT_SET := "default"
@@ -529,6 +532,10 @@ static func _apply_weights(weights: Dictionary) -> void:
 	for key in values:
 		resource_values[String(key)] = float(values[key])
 	RESOURCE_VALUES = resource_values
+	AdventureRules.apply_ai_weights(weights)
+	TownServices.apply_ai_weights(weights)
+	VisitBuildings.apply_ai_weights(weights)
+	CreatureDwellings.apply_ai_weights(weights)
 
 ## The strength estimate's terms; army_power reads them again whenever the
 ## content cache reloads (`_sync_power_memos`).
