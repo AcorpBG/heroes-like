@@ -42,6 +42,15 @@ extends Node
 #                          under those keys (arrays are not entered).
 #                          rules_parity.py --portable: the map package's
 #                          location differs between the editor and an export.
+# HEROES_AI_MATCH_WEIGHTS  comma-separated, one entry per seat: the overworld
+#                          AI weight set each seat plays with (AiHeroRules,
+#                          "Weights"). An entry is empty or "default", the
+#                          name of a set in content/ai_hero_weights.json, or
+#                          the absolute path of a .json file holding one set
+#                          (only the values it changes, as a named set there),
+#                          added for this run only. Unset, every seat plays
+#                          the default set and the record is as before; set,
+#                          setup.seats[].weights records each seat's set.
 #
 # The match fails at once when the native rules library is not registered:
 # without it every battle hex search errors and battles play out wrong.
@@ -135,6 +144,9 @@ func _run() -> void:
 		if drawn.size() != player_count or drawn.any(func(id): return not faction_ids.has(id)):
 			_fail("HEROES_AI_MATCH_FACTIONS needs %d of %s, got %s." % [player_count, JSON.stringify(faction_ids), chosen])
 			return
+	var seat_weights := _seat_weights(OS.get_environment("HEROES_AI_MATCH_WEIGHTS"), player_count)
+	if _failed:
+		return
 	var map_seed := str(rng.randi())
 	# A two-player match keeps the map seed it always drew.
 	if player_count != 2:
@@ -161,6 +173,10 @@ func _run() -> void:
 		if PlayerRules.faction_id(session, seats[index]) != String(seat_factions[index]):
 			_refound_seat(session, seats[index], String(seat_factions[index]))
 	session.flags[AiHeroRulesScript.BATTLE_LOG_FLAG] = true
+	for index in range(seat_weights.size()):
+		var weight_set := String(seat_weights[index].set)
+		if weight_set != AiHeroRulesScript.DEFAULT_WEIGHT_SET:
+			_state(session, String(seats[index]))[AiHeroRulesScript.WEIGHT_SET_KEY] = weight_set
 
 	var handover := _check_handover(session, seats, seat_factions, start_treasury)
 	if _failed:
@@ -184,6 +200,8 @@ func _run() -> void:
 		for entry in _towns_of(session, seat):
 			capitals.append({"placement_id": String(entry.get("placement_id", "")), "name": _town_name(entry), "x": int(entry.get("x", 0)), "y": int(entry.get("y", 0))})
 		setup.seats.append({"player_id": seat, "faction_id": PlayerRules.faction_id(session, seat), "faction": String(faction.get("name", "")), "towns": capitals})
+		if not seat_weights.is_empty():
+			setup.seats[setup.seats.size() - 1]["weights"] = seat_weights[setup.seats.size() - 1]
 
 	var ledger := []
 	var timeline := []
@@ -396,6 +414,43 @@ func _check_handover(session, seats: Array, drawn: Array, start_treasury: Dictio
 		result[seat] = {"faction": String(drawn[index]), "towns": _towns_of(session, seat).size()}
 	return result
 
+## Each seat's weight set from HEROES_AI_MATCH_WEIGHTS, [] when it is unset.
+## Sets from files join the content document for this run
+## (ContentService.set_content_override), named by seat.
+func _seat_weights(spec: String, player_count: int) -> Array:
+	if spec.strip_edges() == "":
+		return []
+	var entries := Array(spec.split(",")).map(func(item): return String(item).strip_edges())
+	if entries.size() != player_count:
+		_fail("HEROES_AI_MATCH_WEIGHTS needs %d entries, got %s." % [player_count, spec])
+		return []
+	var doc: Dictionary = ContentService.load_json(AiHeroRulesScript.WEIGHTS_PATH).duplicate(true)
+	var sets: Dictionary = doc.get("sets", {})
+	var result := []
+	var added := false
+	for index in range(entries.size()):
+		var entry := String(entries[index])
+		if entry == "":
+			entry = AiHeroRulesScript.DEFAULT_WEIGHT_SET
+		if entry.ends_with(".json"):
+			var parsed = JSON.parse_string(FileAccess.get_file_as_string(entry)) if FileAccess.file_exists(entry) else null
+			if not (parsed is Dictionary):
+				_fail("HEROES_AI_MATCH_WEIGHTS: %s holds no JSON object." % entry)
+				return []
+			var set_name := "match_seat_%d" % (index + 1)
+			sets[set_name] = parsed
+			result.append({"set": set_name, "file": entry, "values": parsed})
+			added = true
+		elif sets.has(entry):
+			result.append({"set": entry})
+		else:
+			_fail("HEROES_AI_MATCH_WEIGHTS: %s has no weight set %s." % [AiHeroRulesScript.WEIGHTS_PATH, entry])
+			return []
+	if added and not ContentService.set_content_override(AiHeroRulesScript.WEIGHTS_PATH, doc):
+		_fail("HEROES_AI_MATCH_WEIGHTS: the weight sets do not fit %s." % AiHeroRulesScript.WEIGHTS_PATH)
+		return []
+	return result
+
 func _state(session, seat: String) -> Dictionary:
 	for state in session.overworld.get("enemy_states", []):
 		if state is Dictionary and PlayerRules.controller_id(state) == seat:
@@ -537,6 +592,7 @@ func _day_row(session, seats: Array) -> Dictionary:
 
 func _cleanup() -> void:
 	ContentService.clear_generated_scenario_drafts()
+	ContentService.clear_content_overrides()
 
 func _fail(message: String) -> void:
 	if _failed:

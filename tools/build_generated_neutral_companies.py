@@ -202,7 +202,7 @@ SHARES = {
 def power(unit):
     """Per-creature fighting value; mirrors AiHeroRules.army_power without a commander."""
     damage = (float(unit.get("min_damage", 1)) + float(unit.get("max_damage", 1))) * 0.5
-    # AiHeroRules.POWER_* and RANGED_POWER.
+    # AiHeroRules' strength terms (content/ai_hero_weights.json, "army_power").
     value = 0.7 * max(1.0, float(unit.get("hp", 1))) ** 0.3 * max(0.5, damage) ** 0.6
     value *= math.exp(0.075 * int(unit.get("defense", 0)) + 0.06 * int(unit.get("speed", 0)) + 0.045 * int(unit.get("initiative", 0)))
     return value * (1.65 if unit.get("ranged") else 1.0)

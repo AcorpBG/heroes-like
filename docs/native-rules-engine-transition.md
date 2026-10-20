@@ -507,6 +507,15 @@ The tuning numbers among the 99 constants at `AiHeroRules.gd:26-297`, and inline
 sets per controller. Proof: identical digests with every controller on the default set. AI number tuning then needs no
 code edit, before or after the AI goes native, and a genetic algorithm can give each seat its own genome.
 
+**Result (2026-10-20, done):** `content/ai_hero_weights.json` holds 97 per-controller numbers (61 constants, 36 inline
+literals) plus the resource values as set `default`, and the 10 `army_power` terms shared by all players (battle rewards
+and generated guards use them). Sets are applied once per faction turn and decision context; `ai_weight_set` in a
+computer player's enemy state picks its set; `ContentService.set_content_override` is the override layer (validated for
+this document so far); `HEROES_AI_MATCH_WEIGHTS` and `ai_match_batch.py --weights` assign sets per seat. JSON float
+parsing checked for these values: all 117 reach the code with the old literals' type and bits. Six seeds identical
+against main on Windows and Linux; plain runs of the six seeds (main, change, change, main; 6 at once) took 750 and 754
+s on main and 743 and 734 s with the change, not slower.
+
 ### Phase 3: overworld kernels by rule
 
 A kernel moves only if it is 3% or more of match CPU, takes packed arrays and scalars, uses no transcendental math, hash
@@ -622,4 +631,4 @@ the C runtime of the official Windows binary; Windows/Linux identity of GDScript
 stay constant through a battle; which presentation keys nothing reads in AI battles; whether release templates run the
 match scene with identical results; the exclusive time split on full-length games. The Godot internals, the C
 runtime, caster profiles and presentation keys are answered in "Phase 1 results (first slice)". Measured so far (Phase 0 results):
-Windows/Linux identity, release templates, the time split.
+Windows/Linux identity, release templates, the time split; JSON float parsing for the AI weights (Phase A).

@@ -115959,15 +115959,15 @@
     {
       "id": "native-rules-phaseA-ai-weights-data-20261020",
       "title": "Native rules engine, Phase A: overworld AI numbers into data",
-      "status": "pending",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Gate G0 passed (owner, 2026-10-20). GDScript only: the tuning numbers among the 99 constants at the top of AiHeroRules.gd and its inline literals move to content/ai_hero_weights.json, with weight sets per controller. Proof: identical daily digests on the six seeds (tools/rules_parity.py) with every controller on the default set.",
-      "updatedAt": "2026-10-20T18:15:00Z"
+      "notes": "Gate G0 passed (owner, 2026-10-20). Done: content/ai_hero_weights.json holds the overworld AI tuning numbers, 61 of the AiHeroRules.gd top constants and 36 inline literals plus the resource values as weight set default, and the 10 strength-estimate terms as army_power (shared: battle rewards and generated guards use army_power). AiHeroRules reads them as typed static vars (int where the constant was an int), applied once per faction turn and decision context per controller and content revision; enemy state ai_weight_set names a controller's set (default when absent). ContentService.set_content_override/clear_content_overrides: one in-memory override layer, validated for the AI weights document, bumps the content revision. Match runner HEROES_AI_MATCH_WEIGHTS and ai_match_batch.py --weights assign a set or set file per seat. Proof: scratch probe, 117 values with the same type and bits as the old literals; tools/rules_parity.py check against origin/main identical daily digests and match records on all six seeds on Windows and on Linux (the Linux digests equal the Windows ones, no script errors); plain timing runs of the six seeds in the order main, change, change, main at 6 at once on an idle machine: per-seed seconds summed 750.4 and 754.3 on main, 743.2 and 734.3 with the change (0.98x), not slower; scratch sensitivity run on s2 with a set file on seat 2 only: seat 2's decisions differ from day 1, seat 1's identical through day 3, the game ends differently; focused ai_player_rules_report passes. Follow-up: AI numbers in EnemyAdventureRules.gd, EnemyTownServices.gd and EnemyTurnRules.gd not moved.",
+      "updatedAt": "2026-10-20T19:30:00Z"
     },
     {
       "id": "native-rules-phase1-battle-engine-20261020",

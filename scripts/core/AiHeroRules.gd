@@ -44,9 +44,11 @@ const BATTLE_LOG_KEY := "ai_battle_log"
 const BATTLE_LOG_OWNER_KEY := "battle_log_owner"
 const CAPTURE_LOG_KEY := "ai_capture_log"
 const AI_DIFFICULTY := "normal"
-const MAX_DECISIONS_PER_DAY := 6
-const SEARCH_DAYS := 3
-const FAR_SEARCH_DAYS := 7
+## The typed static vars below are tuning numbers from
+## content/ai_hero_weights.json ("Weights" below).
+static var MAX_DECISIONS_PER_DAY: int
+static var SEARCH_DAYS: int
+static var FAR_SEARCH_DAYS: int
 ## Main and field armies also look this many days of movement out for what
 ## decides the game (`_strategic_candidate`): rival and neutral towns, hostile
 ## heroes and the guards in the way to a known town. On large maps the leading
@@ -54,24 +56,24 @@ const FAR_SEARCH_DAYS := 7
 ## resources there every day, and never went for the rival towns in the far
 ## corners, each worth a hundred mines; four of ten large-map games ran to the
 ## day cap that way.
-const STRATEGIC_DAYS := 12
-const MIN_SEARCH_RADIUS := 14
+static var STRATEGIC_DAYS: int
+static var MIN_SEARCH_RADIUS: int
 ## A hero weighs what lies past this many of the nearest subterranean gates it
 ## can walk to (`_gate_candidate`); each costs a search of the other level.
-const MAX_GATES_WEIGHED := 3
+static var MAX_GATES_WEIGHED: int
 ## Main and field armies also route through any number of gates to a town they
 ## can take, or to ground not yet seen while a rival's towns are unseen
 ## (`_gate_routes`). The way between two gates of one stretch of ground counts
 ## its straight distance times ROUTE_DETOUR; a stretch counts as unexplored
 ## from ROUTE_UNEXPLORED_MIN unseen tiles.
-const ROUTE_DETOUR := 1.5
-const ROUTE_UNEXPLORED_MIN := 12
+static var ROUTE_DETOUR: float
+static var ROUTE_UNEXPLORED_MIN: int
 ## A stretch a main or field army stood on within ROUTE_REVISIT_DAYS is no
 ## errand for scouting through a gate (`ROUTE_VISITS_KEY` in its block): what
 ## it could not see there lay behind guards it weighs where it stands. Without
 ## this, armies whose stretches on either side of a gate both kept ground
 ## behind guards unseen went back and forth through that gate for 25 days.
-const ROUTE_REVISIT_DAYS := 14
+static var ROUTE_REVISIT_DAYS: int
 const ROUTE_VISITS_KEY := "route_visits"
 ## Set on the copy of a hero weighed as if it stood elsewhere (`_beyond_gate`,
 ## `_gate_home`).
@@ -79,40 +81,40 @@ const TRAVELLER_KEY := "ai_traveller"
 ## Boarding a boat or stepping ashore ends the hero's day, as for the human; a
 ## route through either counts this share of a day's movement on top of the
 ## step. Building the boat at a shipyard counts one more day (its price).
-const SHORE_STEP_SHARE := 0.5
+static var SHORE_STEP_SHARE: float
 ## The day a main or field army last found nothing to do with a shipyard in
 ## reach and no means to pay for a boat: for BOAT_SAVING_DAYS after it the
 ## player's towns keep the boat's price back (`_govern_towns`).
 const BOAT_WANTED_KEY := "ai_boat_wanted_day"
-const BOAT_SAVING_DAYS := 2
+static var BOAT_SAVING_DAYS: int
 const BOUGHT_BOAT := 4
 ## A guard is considered (and previewed) from this strength margin. With the
 ## strength estimate refitted 2026-10-16, guards fought at 1.3 to 1.5x lose
 ## about 93% of battles in the battle AI arena, and none from 2x.
-const GUARD_WIN_RATIO := 1.3
-const HERO_ATTACK_RATIO := 1.3
-const TOWN_ATTACK_RATIO := 1.4
-const THREAT_RATIO := 1.15
+static var GUARD_WIN_RATIO: float
+static var HERO_ATTACK_RATIO: float
+static var TOWN_ATTACK_RATIO: float
+static var THREAT_RATIO: float
 ## A town is worth this much plus TOWN_HORIZON_WEEKS of its income and troop
 ## growth (`_town_worth`); a faction that has lost every town values one twice
 ## as much. Towns are the most valuable thing on the map: they pay and muster
 ## every week for the rest of the game. Until 2026-10-09 a town was worth 4,000
 ## plus two weeks, little more than a good mine, and on a medium map neutral
 ## towns with 24 defenders stood untaken for 40 to 70 days.
-const TOWN_BASE_VALUE := 10000.0
-const TOWN_HORIZON_WEEKS := 4.0
+static var TOWN_BASE_VALUE: float
+static var TOWN_HORIZON_WEEKS: float
 ## Knocking a rival out of the game is worth this much, shared among what it
 ## still holds: its towns, or its heroes once it has no town left. A player's
 ## last town is worth this much more; when it holds two, each is worth half.
 ## On a medium map a beaten player kept its last town 40 days against an army
 ## twenty times its own while the winner cleared guards and mines.
-const ELIMINATION_VALUE := 20000.0
+static var ELIMINATION_VALUE: float
 ## Lesser heroes that keep an army of their own (`_field_hero_ids`): one per
 ## town held beyond the first, at most this many. They take garrisons along,
 ## defend towns and take what they can beat instead of handing their troops to
 ## the main hero; captured towns of other factions muster creatures the main
 ## army has no slot for.
-const FIELD_ARMY_MAX := 3
+static var FIELD_ARMY_MAX: int
 ## Leaving a defender (`_leave_defense`). A hero leaving one of its towns keeps
 ## enough troops there to stop the hostile heroes that could reach it within
 ## DEFENSE_HORIZON_DAYS (they need TOWN_ATTACK_RATIO over the garrison), or,
@@ -132,34 +134,34 @@ const FIELD_ARMY_MAX := 3
 ## two-level map (seed ai-match-4265064792) the last rival's heroes of about
 ## 1,000 strength took the leader's towns 15 times from day 247, 11 of them
 ## empty, and kept it in the game until day 276.
-const DEFENSE_HORIZON_DAYS := 2
-const DEFENSE_MARGIN := 1.15
-const DEFENSE_BASELINE_PER_WEEK := 40.0
-const DEFENSE_SHARE_MAX := 0.5
-const DEFENSE_SHARE_MAX_MAIN := 0.3
+static var DEFENSE_HORIZON_DAYS: int
+static var DEFENSE_MARGIN: float
+static var DEFENSE_BASELINE_PER_WEEK: float
+static var DEFENSE_SHARE_MAX: float
+static var DEFENSE_SHARE_MAX_MAIN: float
 ## What a field army joining the main army is worth on top of the troops,
 ## when the main army alone cannot beat a hostile hero or town (`_main_shortfall`).
-const JOIN_BASE_VALUE := 3000.0
+static var JOIN_BASE_VALUE: float
 ## A field army keeps at most this share of the main army's strength; above
 ## it, it goes and joins the main army, which takes the stronger stacks. One
 ## army wins the war; field armies hold ground behind it. On large maps every
 ## player's strength sat in three or four armies of 5,000 to 30,000, none of
 ## them able to clear the strong guards on the way to a rival, and the last
 ## three of eight players never attacked each other in the final 40 days.
-const FIELD_SHARE_MAX := 0.35
+static var FIELD_SHARE_MAX: float
 ## The main hero remembers the strength it lacked to clear the guard standing
 ## first in its way to a known rival town (`_strategic_candidate`), so field
 ## armies come to join it (`_main_shortfall`).
 const BLOCKED_NEED_KEY := "blocked_need"
 ## A defending hero whose single strongest spell would take this share of the
 ## attacker's health is never attacked unseen: the fight is previewed.
-const SPELL_BURST_PREVIEW_SHARE := 0.25
-const HOMELESS_TOWN_MULTIPLIER := 2.0
+static var SPELL_BURST_PREVIEW_SHARE: float
+static var HOMELESS_TOWN_MULTIPLIER: float
 ## Killing a hero that threatens one of our towns is worth this share of the town.
-const THREAT_KILL_SHARE := 0.5
+static var THREAT_KILL_SHARE: float
 ## A visible hostile hero this many times a hero's strength is a danger to it:
 ## the hero keeps out of its reach (`_dangers`).
-const DANGER_RATIO := 1.15
+static var DANGER_RATIO: float
 ## army_power's terms (see there). Fitted 2026-10-16 on 4,800 realistic battles
 ## of the battle AI arena (tools/battle_ai_arena), both sides played by the
 ## battle AI, and checked on 2,400 others: the estimate calls the winner of
@@ -169,72 +171,72 @@ const DANGER_RATIO := 1.15
 ## One creature: POWER_SCALE x health^POWER_HEALTH x damage^POWER_DAMAGE, and
 ## per point of defense, speed and initiative a POWER_PER_* share more; the
 ## scale keeps the average creature at its value before the fit.
-const POWER_SCALE := 0.7
-const POWER_HEALTH := 0.3
-const POWER_DAMAGE := 0.6
-const POWER_PER_DEFENSE := 0.075
-const POWER_PER_SPEED := 0.06
-const POWER_PER_INITIATIVE := 0.045
+static var POWER_SCALE: float
+static var POWER_HEALTH: float
+static var POWER_DAMAGE: float
+static var POWER_PER_DEFENSE: float
+static var POWER_PER_SPEED: float
+static var POWER_PER_INITIATIVE: float
 ## A shooter over a melee creature of the same stats: it shoots freely while
 ## melee closes in.
-const RANGED_POWER := 1.65
+static var RANGED_POWER: float
 ## The hero's attack and defense (the battle's own damage curve) and its
 ## damage spells raise the army by these powers of what they add.
-const HERO_COMMAND_POWER := 0.85
-const HERO_SPELL_POWER := 0.95
+static var HERO_COMMAND_POWER: float
+static var HERO_SPELL_POWER: float
 ## The most of its strength a main hero leaves behind to guard a town.
-const GUARD_SHARE_MAX := 0.25
+static var GUARD_SHARE_MAX: float
 ## The main hero holds at least this share of the strongest hero's army.
-const MAIN_ARMY_SHARE := 0.5
+static var MAIN_ARMY_SHARE: float
 ## Rounds a battle lasts for the strength estimate of a hero's spells.
-const BATTLE_ROUNDS_ESTIMATE := 4
-const TROOP_VALUE_PER_POWER := 10.0
+static var BATTLE_ROUNDS_ESTIMATE: int
+static var TROOP_VALUE_PER_POWER: float
 ## Builds weigh a dwelling's troops and a building's income over two weeks.
-const BUILD_HORIZON_WEEKS := 2.0
+static var BUILD_HORIZON_WEEKS: float
 ## Each market stage is worth as much to a town as this building's income.
 const MARKET_PEER_BUILDING_ID := "building_dev_storehouse_1"
 ## A resource the faction lacks for its build list counts this much more.
-const SHORT_RESOURCE_MULTIPLIER := 1.8
+static var SHORT_RESOURCE_MULTIPLIER: float
 ## A town whose dwellings muster less than this (gold value) a week is short
 ## of troops.
-const STARVED_TOWN_WEEKLY_TROOPS := 1500.0
+static var STARVED_TOWN_WEEKLY_TROOPS: float
 ## With this margin a fight is won without a second look.
-const CLEAR_WIN_RATIO := 3.0
+static var CLEAR_WIN_RATIO: float
 ## The square law runs about a third short of what auto-resolve costs, with a
 ## small loss even against weak guards: calibrated 2026-10-08 on 1,262
 ## auto-resolved fights of the three computer players' main heroes against the
 ## guards of the owner's large map (mean loss 8.7% at a guard of 0.3-0.4 of
 ## the hero's strength, 14% at 0.4-0.5, 22% at 0.5-0.6, 32% at 0.6-0.7).
-const LOSS_ESTIMATE_FACTOR := 1.3
+static var LOSS_ESTIMATE_FACTOR: float
 ## The small loss grows with the guard's share of the hero's strength, as it
 ## did at the 2026-10-08 calibration's 0.35. It was a fixed 1.2% of the army,
 ## more than a weak guard pays a strong hero, so strong heroes walked past weak
 ## guards: in 1,025 arena guard fights (2026-10-16) the winner lost 0.05% of
 ## its army against guards under 3% of its strength, 0.4% at 5-8%, 0.7% at
 ## 8-12%, 2.3% at 17-25% and 4.6% at 25-35%.
-const LOSS_ESTIMATE_PER_RATIO := 0.035
+static var LOSS_ESTIMATE_PER_RATIO: float
 ## Guards up to this share of the hero's strength within its reach today are
 ## previewed for a free fight (`_free_fight`): of the arena's fights against
 ## them, 63% to 84% cost the winner no creature.
-const FREE_FIGHT_MAX_RATIO := 0.25
+static var FREE_FIGHT_MAX_RATIO: float
 ## Free-fight previews a hero runs in one decision.
-const MAX_FREE_FIGHT_PREVIEWS := 2
+static var MAX_FREE_FIGHT_PREVIEWS: int
 ## Fights a hero sizes up and turns down before settling on a decision.
-const MAX_FIGHT_VETOES := 3
+static var MAX_FIGHT_VETOES: int
 ## Dismissed fights an idle hero looks at again in one decision.
-const MAX_IDLE_PREVIEWS := 2
+static var MAX_IDLE_PREVIEWS: int
 ## An idle hero takes a fight its preview wins keeping this share of its
 ## strength, even when the guard holds less than the troops it costs.
-const IDLE_FIGHT_MIN_KEPT := 0.75
+static var IDLE_FIGHT_MIN_KEPT: float
 ## How close to its town's doorway an idle hero waits.
-const HOME_WAIT_RADIUS := 2
+static var HOME_WAIT_RADIUS: int
 ## A hand-over of troops is worth at most what a modest site is worth.
-const MEET_VALUE_CAP := 600.0
-const GOAL_CONTINUITY_BONUS := 1.25
+static var MEET_VALUE_CAP: float
+static var GOAL_CONTINUITY_BONUS: float
 const TOWN_SIGHT_RADIUS := 8
 ## Scouting the nearest unexplored ground. Raised from 220 on 2026-10-18 at
 ## the owner's request that computer players explore more.
-const EXPLORE_VALUE := 500.0
+static var EXPLORE_VALUE: float
 ## While a rival still holds a town this player has never seen, the unexplored
 ## frontier is worth up to this much more, rising from HUNT_START_DAY to
 ## HUNT_FULL_DAY: early on heroes expand, later they go and find the enemy.
@@ -244,9 +246,9 @@ const EXPLORE_VALUE := 500.0
 ## in a four-player medium game the
 ## leading player (32,000 strength) never scouted the corners where its two
 ## rivals held one weakly guarded town each, and the game ran to its day cap.
-const HUNT_EXPLORE_VALUE := 20000.0
-const HUNT_START_DAY := 21
-const HUNT_FULL_DAY := 56
+static var HUNT_EXPLORE_VALUE: float
+static var HUNT_START_DAY: int
+static var HUNT_FULL_DAY: int
 ## Every hostile hero a player has seen in the last SIGHTING_MEMORY_DAYS, with
 ## its strength then (SIGHTINGS_KEY in its state), as a human remembers the
 ## armies it has met. Once the player has found a rival's town and its main
@@ -260,23 +262,23 @@ const HUNT_FULL_DAY := 56
 ## rival's other four towns: 203 captures from day 200 to the 320-day cap, 111
 ## of them of empty towns.
 const SIGHTINGS_KEY := "ai_sightings"
-const SIGHTING_MEMORY_DAYS := 28
+static var SIGHTING_MEMORY_DAYS: int
 ## Ground behind a guard that the hero cannot reach today: a base value for
 ## opening the way, plus each unexplored tile there, up to a cap (sites the
 ## player has already seen there count on top, at half their value).
-const PASSAGE_BASE_VALUE := 300.0
-const PASSAGE_UNEXPLORED_TILE_VALUE := 8.0
-const PASSAGE_KNOWN_SITE_SHARE := 0.5
-const PASSAGE_VALUE_CAP := 5000.0
+static var PASSAGE_BASE_VALUE: float
+static var PASSAGE_UNEXPLORED_TILE_VALUE: float
+static var PASSAGE_KNOWN_SITE_SHARE: float
+static var PASSAGE_VALUE_CAP: float
 ## Unexplored ground behind a guard while a rival's towns are still unseen is
 ## worth up to this share of ELIMINATION_VALUE, in full from this many
 ## unexplored tiles. On a medium map the leading player's heroes, 5,000 to
 ## 16,000 strong, stayed on their half for 60 days chasing mines while the last
 ## rival's two towns lay unseen behind a guard: the 5,000 a passage could be
 ## worth never paid for the troops the fight would cost.
-const HIDDEN_RIVAL_SHARE := 0.5
-const HIDDEN_RIVAL_TILES := 200
-const PASSAGE_TILE_CAP := 400
+static var HIDDEN_RIVAL_SHARE: float
+static var HIDDEN_RIVAL_TILES: int
+static var PASSAGE_TILE_CAP: int
 const EXPLORED_KEY := "ai_explored"
 const NEIGHBOR_DX := [1, -1, 0, 0, 1, 1, -1, -1]
 const NEIGHBOR_DY := [0, 0, 1, -1, 1, -1, 1, -1]
@@ -289,22 +291,11 @@ const STOP_AI_HERO := 6
 ## A spell a hero learns from a site, for that one hero: below a loose
 ## artifact (1,100) even at tier 4, against 400 + 300 a tier that a mage guild
 ## level teaching every hero is worth to the town planner.
-const SCROLL_SPELL_BASE_VALUE := 150.0
-const SCROLL_SPELL_TIER_VALUE := 150.0
+static var SCROLL_SPELL_BASE_VALUE: float
+static var SCROLL_SPELL_TIER_VALUE: float
 ## Site families that stand after a visit and can be walked across.
 const WALK_ACROSS_SITE_FAMILIES := ["visit_building", "shrine", "frontier_shrine", "support_producer", "sign_waypoint", "scouting_structure"]
-const RESOURCE_VALUES := {
-	"gold": 1.0,
-	"wood": 80.0,
-	"ore": 80.0,
-	"aetherglass": 200.0,
-	"embergrain": 160.0,
-	"peatwax": 160.0,
-	"verdant_grafts": 160.0,
-	"brass_scrip": 160.0,
-	"memory_salt": 200.0,
-	"experience": 1.5,
-}
+static var RESOURCE_VALUES: Dictionary = {}
 const LIVE_RESOURCE_KEYS := [
 	"gold",
 	"wood",
@@ -316,6 +307,243 @@ const LIVE_RESOURCE_KEYS := [
 	"brass_scrip",
 	"memory_salt",
 ]
+
+# --- Weights ------------------------------------------------------------------
+
+## The tuning numbers (the static vars above and below) live in WEIGHTS_PATH:
+## "army_power" holds the strength estimate's terms, the same for every player
+## because battle rewards and generated guards use army_power too; "sets" holds
+## weight sets, "default" complete and every other set with only the values it
+## changes. A computer player plays with the set its enemy state names under
+## WEIGHT_SET_KEY, the default when it names none; a match runner can add sets
+## for one run through ContentService.set_content_override. Until 2026-10-20
+## they were constants here (docs/native-rules-engine-transition.md, Phase A).
+const WEIGHTS_PATH := "res://content/ai_hero_weights.json"
+const WEIGHT_SET_KEY := "ai_weight_set"
+const DEFAULT_WEIGHT_SET := "default"
+## desired_hero_count: a main hero, one more per town up to
+## HERO_COUNT_TOWN_MAX towns, and one more from day EXTRA_HERO_DAY.
+static var HERO_COUNT_TOWN_MAX: int
+static var EXTRA_HERO_DAY: int
+## Town building (`_build_choice`, `_upgrade_value`): new troops count this
+## much more in a town mustering under STARVED_TOWN_WEEKLY_TROOPS a week; a
+## mage guild level is worth a base plus a share per spell tier; each point of
+## readiness and each building a choice opens count a fixed value; a creature
+## upgrade is worth its strength gain over UPGRADE_VALUE_WEEKS weeks plus a base.
+static var STARVED_TOWN_TROOP_MULTIPLIER: float
+static var MAGE_GUILD_BASE_VALUE: float
+static var MAGE_GUILD_TIER_VALUE: float
+static var READINESS_VALUE: float
+static var OPENS_BUILDING_VALUE: float
+static var UPGRADE_VALUE_WEEKS: float
+static var UPGRADE_BASE_VALUE: float
+## Threats to a town: a hostile hero reaches at least THREAT_MIN_REACH tiles a
+## day and threatens a town THREAT_REACH_MARGIN tiles beyond that; a rival town
+## within RIVAL_TOWN_TILES_PER_DAY tiles per defense day calls for the baseline
+## garrison (`_town_defense_need`).
+static var THREAT_MIN_REACH: int
+static var THREAT_REACH_MARGIN: int
+static var RIVAL_TOWN_TILES_PER_DAY: int
+## A target given up on is left alone for AVOID_DAYS days (`_avoid_target`).
+static var AVOID_DAYS: int
+## A doorway out of reach past a gate counts its straight distance this many
+## times (`_gate_home`).
+static var GATE_HOME_DETOUR: int
+## Idle fights rank by value less this much per tile of distance.
+static var IDLE_FIGHT_DISTANCE_COST: float
+## A previewed fight that leaves less than this share of the army is refused
+## (`_fight_looks_good`).
+static var FIGHT_MIN_KEPT: float
+## Target values: a loose artifact, an artifact behind a guard or in a bank,
+## beating a human or a computer hero (plus HERO_KILL_TROOP_SHARE of its
+## troops' value), troops handed over, picked up from a garrison or carried to
+## the main army, and below MIN_TROOP_ERRAND_VALUE no errand at all; a
+## dwelling's base and share of its week, a visit building's base, a controlled
+## site's income over SITE_INCOME_DAYS days plus its control, more when a rival
+## holds it; a guard fight's base; what a guard holds counts GUARDED_VALUE_SHARE,
+## a town behind it its neutral or rival value; a human's town HUMAN_TOWN_BONUS
+## more.
+static var ARTIFACT_VALUE: float
+static var ARTIFACT_PRIZE_VALUE: float
+static var PLAYER_HERO_KILL_VALUE: float
+static var AI_HERO_KILL_VALUE: float
+static var HERO_KILL_TROOP_SHARE: float
+static var HANDOVER_TROOP_SHARE: float
+static var GARRISON_PICKUP_SHARE: float
+static var COURIER_TROOP_SHARE: float
+static var MIN_TROOP_ERRAND_VALUE: float
+static var DWELLING_BASE_VALUE: float
+static var DWELLING_WEEK_SHARE: float
+static var VISIT_BUILDING_BASE_VALUE: float
+static var SITE_INCOME_DAYS: float
+static var SITE_CONTROL_VALUE: float
+static var RIVAL_SITE_MULTIPLIER: float
+static var GUARD_FIGHT_BASE_VALUE: float
+static var GUARDED_VALUE_SHARE: float
+static var GUARDED_NEUTRAL_TOWN_VALUE: float
+static var GUARDED_RIVAL_TOWN_VALUE: float
+static var HUMAN_TOWN_BONUS: float
+## The weight set in the static vars, the content revision it was read at, and
+## the sets resolved at that revision by name.
+static var _weight_set_name := ""
+static var _weight_set_revision := -1
+static var _weight_sets: Dictionary = {}
+
+## Puts a computer player's weight set in the static vars: once per faction
+## turn and decision context, so no tuning number is looked up in a loop.
+## Nothing changes when the set and the content revision are the ones in place.
+static func _use_weights(state: Dictionary) -> void:
+	var set_name := String(state.get(WEIGHT_SET_KEY, ""))
+	if set_name == "":
+		set_name = DEFAULT_WEIGHT_SET
+	var revision: int = ContentService.get_content_revision()
+	if set_name == _weight_set_name and revision == _weight_set_revision:
+		return
+	if revision != _weight_set_revision:
+		_weight_sets = {}
+		_weight_set_revision = revision
+	if not _weight_sets.has(set_name):
+		_weight_sets[set_name] = _resolved_weight_set(set_name)
+	_apply_weights(_weight_sets[set_name])
+	_weight_set_name = set_name
+
+## The default set with a named set's values over it (resource_values merge by
+## resource); an unknown name plays the default.
+static func _resolved_weight_set(set_name: String) -> Dictionary:
+	var sets: Dictionary = ContentService.load_json(WEIGHTS_PATH).get("sets", {})
+	var resolved: Dictionary = sets.get(DEFAULT_WEIGHT_SET, {}).duplicate(true)
+	if set_name == DEFAULT_WEIGHT_SET:
+		return resolved
+	if not (sets.get(set_name) is Dictionary):
+		push_error("AI weight set %s is not in %s; the default set plays." % [set_name, WEIGHTS_PATH])
+		return resolved
+	var changes: Dictionary = sets[set_name]
+	for key in changes:
+		if changes[key] is Dictionary and resolved.get(key) is Dictionary:
+			resolved[key].merge(changes[key], true)
+		else:
+			resolved[key] = changes[key]
+	return resolved
+
+## JSON numbers arrive as floats: whole-number weights go back to int here.
+static func _apply_weights(weights: Dictionary) -> void:
+	MAX_DECISIONS_PER_DAY = int(weights["max_decisions_per_day"])
+	SEARCH_DAYS = int(weights["search_days"])
+	FAR_SEARCH_DAYS = int(weights["far_search_days"])
+	STRATEGIC_DAYS = int(weights["strategic_days"])
+	MIN_SEARCH_RADIUS = int(weights["min_search_radius"])
+	MAX_GATES_WEIGHED = int(weights["max_gates_weighed"])
+	ROUTE_DETOUR = float(weights["route_detour"])
+	ROUTE_UNEXPLORED_MIN = int(weights["route_unexplored_min"])
+	ROUTE_REVISIT_DAYS = int(weights["route_revisit_days"])
+	SHORE_STEP_SHARE = float(weights["shore_step_share"])
+	BOAT_SAVING_DAYS = int(weights["boat_saving_days"])
+	GUARD_WIN_RATIO = float(weights["guard_win_ratio"])
+	HERO_ATTACK_RATIO = float(weights["hero_attack_ratio"])
+	TOWN_ATTACK_RATIO = float(weights["town_attack_ratio"])
+	THREAT_RATIO = float(weights["threat_ratio"])
+	TOWN_BASE_VALUE = float(weights["town_base_value"])
+	TOWN_HORIZON_WEEKS = float(weights["town_horizon_weeks"])
+	ELIMINATION_VALUE = float(weights["elimination_value"])
+	FIELD_ARMY_MAX = int(weights["field_army_max"])
+	DEFENSE_HORIZON_DAYS = int(weights["defense_horizon_days"])
+	DEFENSE_MARGIN = float(weights["defense_margin"])
+	DEFENSE_BASELINE_PER_WEEK = float(weights["defense_baseline_per_week"])
+	DEFENSE_SHARE_MAX = float(weights["defense_share_max"])
+	DEFENSE_SHARE_MAX_MAIN = float(weights["defense_share_max_main"])
+	JOIN_BASE_VALUE = float(weights["join_base_value"])
+	FIELD_SHARE_MAX = float(weights["field_share_max"])
+	SPELL_BURST_PREVIEW_SHARE = float(weights["spell_burst_preview_share"])
+	HOMELESS_TOWN_MULTIPLIER = float(weights["homeless_town_multiplier"])
+	THREAT_KILL_SHARE = float(weights["threat_kill_share"])
+	DANGER_RATIO = float(weights["danger_ratio"])
+	GUARD_SHARE_MAX = float(weights["guard_share_max"])
+	MAIN_ARMY_SHARE = float(weights["main_army_share"])
+	TROOP_VALUE_PER_POWER = float(weights["troop_value_per_power"])
+	BUILD_HORIZON_WEEKS = float(weights["build_horizon_weeks"])
+	SHORT_RESOURCE_MULTIPLIER = float(weights["short_resource_multiplier"])
+	STARVED_TOWN_WEEKLY_TROOPS = float(weights["starved_town_weekly_troops"])
+	CLEAR_WIN_RATIO = float(weights["clear_win_ratio"])
+	LOSS_ESTIMATE_FACTOR = float(weights["loss_estimate_factor"])
+	LOSS_ESTIMATE_PER_RATIO = float(weights["loss_estimate_per_ratio"])
+	FREE_FIGHT_MAX_RATIO = float(weights["free_fight_max_ratio"])
+	MAX_FREE_FIGHT_PREVIEWS = int(weights["max_free_fight_previews"])
+	MAX_FIGHT_VETOES = int(weights["max_fight_vetoes"])
+	MAX_IDLE_PREVIEWS = int(weights["max_idle_previews"])
+	IDLE_FIGHT_MIN_KEPT = float(weights["idle_fight_min_kept"])
+	HOME_WAIT_RADIUS = int(weights["home_wait_radius"])
+	MEET_VALUE_CAP = float(weights["meet_value_cap"])
+	GOAL_CONTINUITY_BONUS = float(weights["goal_continuity_bonus"])
+	EXPLORE_VALUE = float(weights["explore_value"])
+	HUNT_EXPLORE_VALUE = float(weights["hunt_explore_value"])
+	HUNT_START_DAY = int(weights["hunt_start_day"])
+	HUNT_FULL_DAY = int(weights["hunt_full_day"])
+	SIGHTING_MEMORY_DAYS = int(weights["sighting_memory_days"])
+	PASSAGE_BASE_VALUE = float(weights["passage_base_value"])
+	PASSAGE_UNEXPLORED_TILE_VALUE = float(weights["passage_unexplored_tile_value"])
+	PASSAGE_KNOWN_SITE_SHARE = float(weights["passage_known_site_share"])
+	PASSAGE_VALUE_CAP = float(weights["passage_value_cap"])
+	HIDDEN_RIVAL_SHARE = float(weights["hidden_rival_share"])
+	HIDDEN_RIVAL_TILES = int(weights["hidden_rival_tiles"])
+	PASSAGE_TILE_CAP = int(weights["passage_tile_cap"])
+	SCROLL_SPELL_BASE_VALUE = float(weights["scroll_spell_base_value"])
+	SCROLL_SPELL_TIER_VALUE = float(weights["scroll_spell_tier_value"])
+	HERO_COUNT_TOWN_MAX = int(weights["hero_count_town_max"])
+	EXTRA_HERO_DAY = int(weights["extra_hero_day"])
+	STARVED_TOWN_TROOP_MULTIPLIER = float(weights["starved_town_troop_multiplier"])
+	MAGE_GUILD_BASE_VALUE = float(weights["mage_guild_base_value"])
+	MAGE_GUILD_TIER_VALUE = float(weights["mage_guild_tier_value"])
+	READINESS_VALUE = float(weights["readiness_value"])
+	OPENS_BUILDING_VALUE = float(weights["opens_building_value"])
+	UPGRADE_VALUE_WEEKS = float(weights["upgrade_value_weeks"])
+	UPGRADE_BASE_VALUE = float(weights["upgrade_base_value"])
+	THREAT_REACH_MARGIN = int(weights["threat_reach_margin"])
+	THREAT_MIN_REACH = int(weights["threat_min_reach"])
+	RIVAL_TOWN_TILES_PER_DAY = int(weights["rival_town_tiles_per_day"])
+	AVOID_DAYS = int(weights["avoid_days"])
+	GATE_HOME_DETOUR = int(weights["gate_home_detour"])
+	IDLE_FIGHT_DISTANCE_COST = float(weights["idle_fight_distance_cost"])
+	FIGHT_MIN_KEPT = float(weights["fight_min_kept"])
+	ARTIFACT_VALUE = float(weights["artifact_value"])
+	ARTIFACT_PRIZE_VALUE = float(weights["artifact_prize_value"])
+	PLAYER_HERO_KILL_VALUE = float(weights["player_hero_kill_value"])
+	AI_HERO_KILL_VALUE = float(weights["ai_hero_kill_value"])
+	HERO_KILL_TROOP_SHARE = float(weights["hero_kill_troop_share"])
+	HANDOVER_TROOP_SHARE = float(weights["handover_troop_share"])
+	GARRISON_PICKUP_SHARE = float(weights["garrison_pickup_share"])
+	COURIER_TROOP_SHARE = float(weights["courier_troop_share"])
+	MIN_TROOP_ERRAND_VALUE = float(weights["min_troop_errand_value"])
+	DWELLING_BASE_VALUE = float(weights["dwelling_base_value"])
+	DWELLING_WEEK_SHARE = float(weights["dwelling_week_share"])
+	VISIT_BUILDING_BASE_VALUE = float(weights["visit_building_base_value"])
+	SITE_INCOME_DAYS = float(weights["site_income_days"])
+	SITE_CONTROL_VALUE = float(weights["site_control_value"])
+	RIVAL_SITE_MULTIPLIER = float(weights["rival_site_multiplier"])
+	GUARD_FIGHT_BASE_VALUE = float(weights["guard_fight_base_value"])
+	GUARDED_VALUE_SHARE = float(weights["guarded_value_share"])
+	GUARDED_NEUTRAL_TOWN_VALUE = float(weights["guarded_neutral_town_value"])
+	GUARDED_RIVAL_TOWN_VALUE = float(weights["guarded_rival_town_value"])
+	HUMAN_TOWN_BONUS = float(weights["human_town_bonus"])
+	var resource_values := {}
+	var values: Dictionary = weights["resource_values"]
+	for key in values:
+		resource_values[String(key)] = float(values[key])
+	RESOURCE_VALUES = resource_values
+
+## The strength estimate's terms; army_power reads them again whenever the
+## content cache reloads (`_sync_power_memos`).
+static func _apply_power_terms() -> void:
+	var terms: Dictionary = ContentService.load_json(WEIGHTS_PATH)["army_power"]
+	POWER_SCALE = float(terms["power_scale"])
+	POWER_HEALTH = float(terms["power_health"])
+	POWER_DAMAGE = float(terms["power_damage"])
+	POWER_PER_DEFENSE = float(terms["power_per_defense"])
+	POWER_PER_SPEED = float(terms["power_per_speed"])
+	POWER_PER_INITIATIVE = float(terms["power_per_initiative"])
+	RANGED_POWER = float(terms["ranged_power"])
+	HERO_COMMAND_POWER = float(terms["hero_command_power"])
+	HERO_SPELL_POWER = float(terms["hero_spell_power"])
+	BATTLE_ROUNDS_ESTIMATE = int(terms["battle_rounds_estimate"])
 
 static func _overworld_rules() -> Variant:
 	return load("res://scripts/core/OverworldRules.gd")
@@ -569,6 +797,7 @@ static func run_faction_turn(
 	profile_enabled: bool = false
 ) -> Dictionary:
 	var started := Time.get_ticks_usec()
+	_use_weights(state)
 	var controller := PlayerRules.controller_id(config)
 	var turn_rules = _turn_rules()
 	var messages := []
@@ -711,6 +940,7 @@ static func _movement_max(entry: Dictionary) -> int:
 	return HeroCommandRulesScript.movement_max_for_hero(hero, AI_DIFFICULTY)
 
 static func _new_context(session: SessionStateStoreScript.SessionData, config: Dictionary, state: Dictionary) -> Dictionary:
+	_use_weights(state)
 	return {
 		"config": config,
 		"state": state,
@@ -893,7 +1123,7 @@ static func _govern_towns(session: SessionStateStoreScript.SessionData, context:
 	var held := {}
 	if int(context.state.get(BOAT_WANTED_KEY, -1000)) >= int(session.day) - BOAT_SAVING_DAYS:
 		held = _hold_back(context.state.treasury, _level_surface(session, context, 0).get("boat_cost", {}))
-	var wanted := desired_hero_count(session, controller)
+	var wanted := _desired_hero_count(session, controller)
 	var heroes := active_hero_count(session, controller)
 	if heroes < wanted and not _faction_has_tavern(town_entries):
 		var tavern_result := _build_tavern(session, context, town_entries)
@@ -932,8 +1162,12 @@ static func _hold_back(treasury: Dictionary, amounts: Dictionary) -> Dictionary:
 ## A main hero plus a collector, one more with a second town, and a fourth
 ## once the second week is under way.
 static func desired_hero_count(session: SessionStateStoreScript.SessionData, controller: String) -> int:
+	_use_weights(_turn_rules()._find_state(session.overworld.get("enemy_states", []), controller))
+	return _desired_hero_count(session, controller)
+
+static func _desired_hero_count(session: SessionStateStoreScript.SessionData, controller: String) -> int:
 	var towns: int = _turn_rules()._owned_town_count(session, controller)
-	var wanted := 1 + mini(towns, 2) + (1 if int(session.day) >= 14 else 0)
+	var wanted := 1 + mini(towns, HERO_COUNT_TOWN_MAX) + (1 if int(session.day) >= EXTRA_HERO_DAY else 0)
 	return clampi(wanted, 1, HeroCommandRulesScript.HERO_LIMIT)
 
 static func _faction_has_tavern(town_entries: Array) -> bool:
@@ -1028,7 +1262,7 @@ static func _build_choice(session: SessionStateStoreScript.SessionData, town: Di
 		# musters little wants dwellings first, as a human would.
 		var troops := (_recruit_set_value(_trial_growth(trial)) - weekly_troops_before) * BUILD_HORIZON_WEEKS
 		if weekly_troops_before < STARVED_TOWN_WEEKLY_TROOPS:
-			troops *= 1.5
+			troops *= STARVED_TOWN_TROOP_MULTIPLIER
 		if troops > 0.0:
 			value += troops
 			reason = "troops"
@@ -1047,15 +1281,15 @@ static func _build_choice(session: SessionStateStoreScript.SessionData, town: Di
 				value += _upgrade_value(town, building)
 			reason = "troops"
 		if int(building.get("spell_tier", 0)) > 0:
-			value += 400.0 + 300.0 * float(building.get("spell_tier", 0))
+			value += MAGE_GUILD_BASE_VALUE + MAGE_GUILD_TIER_VALUE * float(building.get("spell_tier", 0))
 			if value > 0.0 and reason == "development":
 				reason = "spells"
-		value += 100.0 * float(building.get("readiness_bonus", 0))
+		value += READINESS_VALUE * float(building.get("readiness_bonus", 0))
 		var market := _market_value(building, short)
 		if market > 0.0:
 			value += market
 			reason = "market"
-		value += 150.0 * float(_opens_count(town, building_id, trial_built))
+		value += OPENS_BUILDING_VALUE * float(_opens_count(town, building_id, trial_built))
 		var cost_value := maxf(1.0, _build_value(cost))
 		var score := value / cost_value
 		values[building_id] = value
@@ -1100,7 +1334,7 @@ static func _upgrade_value(town: Dictionary, building: Dictionary) -> float:
 		return 0.0
 	var weekly := int(ContentService.get_unit(base_unit).get("growth", 1))
 	var gain := army_power([{"unit_id": upgraded, "count": weekly}]) - army_power([{"unit_id": base_unit, "count": weekly}])
-	return maxf(0.0, gain) * TROOP_VALUE_PER_POWER * 2.0 + 100.0
+	return maxf(0.0, gain) * TROOP_VALUE_PER_POWER * UPGRADE_VALUE_WEEKS + UPGRADE_BASE_VALUE
 
 ## Buildings of the town's tree that this one opens up: they need it and have
 ## every other requirement once it stands. None of them can be built before it,
@@ -1891,7 +2125,7 @@ static func _town_threatened(session: SessionStateStoreScript.SessionData, conte
 		if int(threat.get("level", 0)) != LevelRules.level_of(entrance):
 			continue
 		var distance := maxi(absi(int(threat.x) - int(entrance.get("x", 0))), absi(int(threat.y) - int(entrance.get("y", 0))))
-		if distance <= int(threat.get("reach", 10)) + 2 and float(threat.power) > defense * THREAT_RATIO:
+		if distance <= int(threat.get("reach", 10)) + THREAT_REACH_MARGIN and float(threat.power) > defense * THREAT_RATIO:
 			threatened = true
 			if float(threat.power) > strongest:
 				strongest = float(threat.power)
@@ -2060,7 +2294,7 @@ static func _town_defense_need(session: SessionStateStoreScript.SessionData, con
 	var need := 0.0
 	if strongest > 0.0:
 		need = strongest * DEFENSE_MARGIN / TOWN_ATTACK_RATIO
-	elif _rival_town_within(session, context, town, 12 * DEFENSE_HORIZON_DAYS):
+	elif _rival_town_within(session, context, town, RIVAL_TOWN_TILES_PER_DAY * DEFENSE_HORIZON_DAYS):
 		need = DEFENSE_BASELINE_PER_WEEK * ceilf(float(int(session.day)) / 7.0)
 	return maxf(need, _townless_raider(session, context) * DEFENSE_MARGIN / TOWN_ATTACK_RATIO)
 
@@ -2134,7 +2368,7 @@ static func _town_worth(session: SessionStateStoreScript.SessionData, context: D
 static func _threatened_town_share(session: SessionStateStoreScript.SessionData, context: Dictionary, other: Dictionary) -> float:
 	var best := 0.0
 	var power := hero_power(other)
-	var reach := maxi(6, _movement_max(other))
+	var reach := maxi(THREAT_MIN_REACH, _movement_max(other))
 	for town in session.overworld.get("towns", []):
 		if not (town is Dictionary) or String(town.get("owner", "")) != "enemy" or PlayerRules.town_controller_id(town) != String(context.controller):
 			continue
@@ -2142,7 +2376,7 @@ static func _threatened_town_share(session: SessionStateStoreScript.SessionData,
 		if not LevelRules.same_level(entrance, other):
 			continue
 		var distance := maxi(absi(int(other.get("x", 0)) - int(entrance.get("x", 0))), absi(int(other.get("y", 0)) - int(entrance.get("y", 0))))
-		if distance <= reach + 2 and power > army_power(town.get("garrison", [])) * THREAT_RATIO:
+		if distance <= reach + THREAT_REACH_MARGIN and power > army_power(town.get("garrison", [])) * THREAT_RATIO:
 			best = maxf(best, _town_worth(session, context, town) * THREAT_KILL_SHARE)
 	return best
 
@@ -2210,7 +2444,7 @@ static func _run_hero_day(session: SessionStateStoreScript.SessionData, context:
 		if not acted:
 			# Nothing came of it (a site that cannot serve this hero today):
 			# leave it alone for a few days instead of returning every turn.
-			_avoid_target(session, placement_id, String(plan.get("id", "")), int(session.day) + 3)
+			_avoid_target(session, placement_id, String(plan.get("id", "")), int(session.day) + AVOID_DAYS)
 	return {"messages": messages, "events": events}
 
 static func _avoid_target(session: SessionStateStoreScript.SessionData, placement_id: String, target_id: String, until_day: int) -> void:
@@ -3267,7 +3501,7 @@ static func _gate_home(session: SessionStateStoreScript.SessionData, context: Di
 		# goes up and waits nearer home; the straight way counts double.
 		var far_distance := int(far_search.dist[door_index]) if door_index >= 0 and door_index < far_search.dist.size() else -1
 		if far_distance < 0:
-			far_distance = 2 * maxi(absi(exit.x - int(door.get("x", 0))), absi(exit.y - int(door.get("y", 0)))) + movement_max * FAR_SEARCH_DAYS
+			far_distance = GATE_HOME_DETOUR * maxi(absi(exit.x - int(door.get("x", 0))), absi(exit.y - int(door.get("y", 0)))) + movement_max * FAR_SEARCH_DAYS
 		var distance := int(option.distance) + far_distance
 		if not best.is_empty() and distance >= int(best.distance):
 			continue
@@ -3294,7 +3528,7 @@ static func _gate_fight_looks_good(session: SessionStateStoreScript.SessionData,
 		fight = {"kind": "encounter", "index": int(plan.far_guard), "value": float(plan.value), "fight_power": far_power, "estimated_loss": _expected_loss_value(hero_power(entry), far_power)}
 	if _fight_looks_good(session, context, entry, fight):
 		return true
-	_avoid_target(session, String(entry.get("placement_id", "")), String(plan.id), int(session.day) + 3)
+	_avoid_target(session, String(entry.get("placement_id", "")), String(plan.id), int(session.day) + AVOID_DAYS)
 	return false
 
 ## The best candidate on the other level for a hero standing at this gate's
@@ -3565,7 +3799,7 @@ static func _vetted_candidate(session: SessionStateStoreScript.SessionData, cont
 	for _veto in range(MAX_FIGHT_VETOES):
 		if best.is_empty() or _fight_looks_good(session, context, entry, best):
 			return best
-		_avoid_target(session, String(entry.get("placement_id", "")), String(best.get("id", "")), int(session.day) + 3)
+		_avoid_target(session, String(entry.get("placement_id", "")), String(best.get("id", "")), int(session.day) + AVOID_DAYS)
 		best = _best_candidate(session, context, entry, search, movement_max)
 	return best if best.is_empty() or _fight_looks_good(session, context, entry, best) else {}
 
@@ -3635,11 +3869,11 @@ static func _idle_fight(session: SessionStateStoreScript.SessionData, context: D
 			continue
 		var guard_power := _guard_power(guard)
 		options.append({"kind": "encounter", "id": String(guard.get("placement_id", "")), "index": int(index), "value": value, "tile_index": int(nearest[index].tile_index), "distance": int(nearest[index].distance), "fight_power": guard_power, "estimated_loss": _expected_loss_value(power, guard_power)})
-	options.sort_custom(func(a, b): return float(a.value) - float(a.distance) * 10.0 > float(b.value) - float(b.distance) * 10.0)
+	options.sort_custom(func(a, b): return float(a.value) - float(a.distance) * IDLE_FIGHT_DISTANCE_COST > float(b.value) - float(b.distance) * IDLE_FIGHT_DISTANCE_COST)
 	for option in options.slice(0, MAX_IDLE_PREVIEWS):
 		if _fight_looks_good(session, context, entry, option, true):
 			return option
-		_avoid_target(session, String(entry.get("placement_id", "")), String(option.id), int(session.day) + 3)
+		_avoid_target(session, String(entry.get("placement_id", "")), String(option.id), int(session.day) + AVOID_DAYS)
 	return {}
 
 ## A hero with nothing to do walks back, over as many days as it takes, to its
@@ -3964,7 +4198,7 @@ static func _candidate(session: SessionStateStoreScript.SessionData, context: Di
 			if not _artifact_guard(session, node).is_empty():
 				return {}
 			var opens := _site_door_value(session, context, entry, search, tile_index, needs) if not search.is_empty() else 0.0
-			return {"kind": "artifact", "id": String(node.get("placement_id", "")), "index": int(ref.index), "value": 1100.0 + opens}
+			return {"kind": "artifact", "id": String(node.get("placement_id", "")), "index": int(ref.index), "value": ARTIFACT_VALUE + opens}
 		STOP_TOWN:
 			return _town_candidate(session, context, entry, int(ref.index), power)
 		STOP_ENCOUNTER:
@@ -3977,7 +4211,7 @@ static func _candidate(session: SessionStateStoreScript.SessionData, context: Di
 			var hero_power_value := army_power(hero.get("army", {}).get("stacks", []), hero)
 			if power * (1.0 - _burst_share(entry, hero)) < hero_power_value * HERO_ATTACK_RATIO:
 				return {}
-			return {"kind": "hero", "id": String(hero.get("id", "")), "index": int(ref.index), "value": 1500.0 + hero_power_value * TROOP_VALUE_PER_POWER * 0.5 + _last_stand_share(session, "player", "player") + _hero_war_value(session, context, entry, search, needs, "hero", int(ref.index))}
+			return {"kind": "hero", "id": String(hero.get("id", "")), "index": int(ref.index), "value": PLAYER_HERO_KILL_VALUE + hero_power_value * TROOP_VALUE_PER_POWER * HERO_KILL_TROOP_SHARE + _last_stand_share(session, "player", "player") + _hero_war_value(session, context, entry, search, needs, "hero", int(ref.index))}
 		STOP_AI_HERO:
 			var encounters: Array = session.overworld.get("encounters", [])
 			var other: Dictionary = encounters[int(ref.index)]
@@ -3989,7 +4223,7 @@ static func _candidate(session: SessionStateStoreScript.SessionData, context: Di
 			if power * (1.0 - _burst_share(entry, other.get("enemy_commander_state", {}))) < other_power * HERO_ATTACK_RATIO:
 				return {}
 			var other_controller := PlayerRules.raid_controller_id(other)
-			return {"kind": "ai_hero", "id": String(other.get("placement_id", "")), "index": int(ref.index), "value": 1200.0 + other_power * TROOP_VALUE_PER_POWER * 0.5 + _threatened_town_share(session, context, other) + _last_stand_share(session, "enemy", other_controller) + _hero_war_value(session, context, entry, search, needs, "ai_hero", int(ref.index)), "fight_power": other_power}
+			return {"kind": "ai_hero", "id": String(other.get("placement_id", "")), "index": int(ref.index), "value": AI_HERO_KILL_VALUE + other_power * TROOP_VALUE_PER_POWER * HERO_KILL_TROOP_SHARE + _threatened_town_share(session, context, other) + _last_stand_share(session, "enemy", other_controller) + _hero_war_value(session, context, entry, search, needs, "ai_hero", int(ref.index)), "fight_power": other_power}
 	return {}
 
 ## What beating a hostile hero opens: the share of the town or gate route it
@@ -4022,15 +4256,15 @@ static func _meet_candidate(session: SessionStateStoreScript.SessionData, contex
 		var swap := _garrison_pickup(other.get("enemy_army", {}).get("stacks", []).duplicate(true), entry.get("enemy_army", {}).get("stacks", []).duplicate(true))
 		if float(swap.gain) <= 0.0:
 			return {}
-		return {"kind": "meet", "id": String(other.get("placement_id", "")), "index": other_index, "value": JOIN_BASE_VALUE + float(swap.gain) * TROOP_VALUE_PER_POWER * 0.6, "swap": true}
+		return {"kind": "meet", "id": String(other.get("placement_id", "")), "index": other_index, "value": JOIN_BASE_VALUE + float(swap.gain) * TROOP_VALUE_PER_POWER * HANDOVER_TROOP_SHARE, "swap": true}
 	var split := _split_for_handover(entry.get("enemy_army", {}).get("stacks", []))
 	if split.give.is_empty():
 		return {}
 	var fits := _merge_stacks_into(other.get("enemy_army", {}).get("stacks", []), split.give)
 	# Moving troops creates nothing by itself: a lesser hero finishes its own
 	# errands first and brings its troops over when nothing else is worth more.
-	var value := minf((army_power(split.give) - army_power(fits.left)) * TROOP_VALUE_PER_POWER * 0.6, MEET_VALUE_CAP)
-	if value <= 50.0:
+	var value := minf((army_power(split.give) - army_power(fits.left)) * TROOP_VALUE_PER_POWER * HANDOVER_TROOP_SHARE, MEET_VALUE_CAP)
+	if value <= MIN_TROOP_ERRAND_VALUE:
 		return {}
 	return {"kind": "meet", "id": String(other.get("placement_id", "")), "index": other_index, "value": value}
 
@@ -4095,24 +4329,24 @@ static func _resource_candidate(session: SessionStateStoreScript.SessionData, co
 			if power < guard_power * GUARD_WIN_RATIO:
 				return {}
 			fight = guard_power
-		value = 500.0 + float(CreatureDwellings.week_value(node, site, session.day)) * 0.6
+		value = DWELLING_BASE_VALUE + float(CreatureDwellings.week_value(node, site, session.day)) * DWELLING_WEEK_SHARE
 	elif VisitBuildings.is_visit_building(site):
 		# The human's rules: a building asks for a hero level and a price.
 		if int(entry.get("enemy_commander_state", {}).get("level", 1)) < VisitBuildings.required_level(site):
 			return {}
 		if not _can_afford(treasury, VisitBuildings.cost(site)):
 			return {}
-		value = 250.0 + float(VisitBuildings.ai_value(site))
+		value = VISIT_BUILDING_BASE_VALUE + float(VisitBuildings.ai_value(site))
 	else:
 		value = _payload_value(AdventureRules._resource_site_claim_rewards(site), needs)
 		value += _recruit_set_value(_recruit_dict(site.get("claim_recruits", {}))) + _site_artifact_value(site) + _site_spell_value(site, entry)
 		if bool(site.get("persistent_control", false)):
-			value += _payload_value(site.get("control_income", {}), needs) * 12.0 + 250.0
+			value += _payload_value(site.get("control_income", {}), needs) * SITE_INCOME_DAYS + SITE_CONTROL_VALUE
 			# A site that musters troops every week is worth a week of them.
 			value += _recruit_set_value(_recruit_dict(site.get("weekly_recruits", {})))
 			var owner := PlayerRules.resource_controller_id(node)
 			if owner != "" and owner != controller:
-				value *= 1.3
+				value *= RIVAL_SITE_MULTIPLIER
 	value += opens - _expected_loss_value(power, fight)
 	if value <= 0.0:
 		return {}
@@ -4152,7 +4386,7 @@ static func _guard_fight_value(session: SessionStateStoreScript.SessionData, con
 		return NAN
 	# What beating it pays, by its strength, as the battle will pay it.
 	var rewards: Dictionary = _battle_rules().battle_rewards_for_strength(template, _neutral_army(guard).get("stacks", []), template.get("enemy_commander", {}))
-	var value := _payload_value(rewards, needs) + 300.0
+	var value := _payload_value(rewards, needs) + GUARD_FIGHT_BASE_VALUE
 	value += _guarded_object_value(session, guard, needs, search, index, String(context.get("controller", "")))
 	value += _passage_value(session, context, entry, search, index, needs)
 	return value - _expected_loss_value(power, guard_power)
@@ -4190,7 +4424,7 @@ static func _guarded_object_value(session: SessionStateStoreScript.SessionData, 
 			return _guarded_node_value(session, linked, needs, controller)
 		var artifact: Dictionary = AdventureRules._find_artifact_by_placement(session, target_id).get("node", {})
 		if not artifact.is_empty() and not bool(artifact.get("collected", false)):
-			return 900.0
+			return ARTIFACT_PRIZE_VALUE
 		return 0.0
 	var zones: Dictionary = search.get("guard_zones", {})
 	if not zones.has(guard_index):
@@ -4207,16 +4441,16 @@ static func _guarded_object_value(session: SessionStateStoreScript.SessionData, 
 					value += _guarded_node_value(session, nodes[int(ref.index)], needs, controller)
 				STOP_ARTIFACT:
 					if not bool(artifacts[int(ref.index)].get("collected", false)):
-						value += 900.0
+						value += ARTIFACT_PRIZE_VALUE
 				STOP_TOWN:
 					# A town whose doorway the guard holds: worth what taking it is.
 					var town: Dictionary = towns[int(ref.index)]
 					var owner := String(town.get("owner", "neutral"))
 					var town_controller := "player" if owner == "player" else PlayerRules.town_controller_id(town)
 					if owner == "neutral":
-						value += 4000.0 * 0.8
+						value += GUARDED_NEUTRAL_TOWN_VALUE * GUARDED_VALUE_SHARE
 					elif owner in ["player", "enemy"] and town_controller != controller and not PlayerRules.allied(session, controller, town_controller):
-						value += 6000.0 * 0.8
+						value += GUARDED_RIVAL_TOWN_VALUE * GUARDED_VALUE_SHARE
 	return value
 
 static func _guarded_node_value(session: SessionStateStoreScript.SessionData, node: Dictionary, needs: Dictionary, controller: String) -> float:
@@ -4229,10 +4463,10 @@ static func _guarded_node_value(session: SessionStateStoreScript.SessionData, no
 	# A creature bank can pay in troops and artifacts alone.
 	value += _recruit_set_value(_recruit_dict(site.get("claim_recruits", {}))) + _site_artifact_value(site)
 	if bool(site.get("persistent_control", false)):
-		value += _payload_value(site.get("control_income", {}), needs) * 12.0 + 250.0
+		value += _payload_value(site.get("control_income", {}), needs) * SITE_INCOME_DAYS + SITE_CONTROL_VALUE
 	if CreatureDwellings.is_dwelling(site):
-		value += 500.0
-	return value * 0.8
+		value += DWELLING_BASE_VALUE
+	return value * GUARDED_VALUE_SHARE
 
 ## The spells a site teaches (a spell scroll) that the hero does not know yet,
 ## each worth SCROLL_SPELL_BASE_VALUE plus SCROLL_SPELL_TIER_VALUE a tier.
@@ -4251,7 +4485,7 @@ static func _site_spell_value(site: Dictionary, entry: Dictionary) -> float:
 ## The artifacts a generated bank or tomb holds, each worth a loose artifact.
 static func _site_artifact_value(site: Dictionary) -> float:
 	var classes = site.get(NodePayload.CLAIM_ARTIFACT_CLASSES, [])
-	return 900.0 * float(classes.size()) if classes is Array else 0.0
+	return ARTIFACT_PRIZE_VALUE * float(classes.size()) if classes is Array else 0.0
 
 ## What beating a guard opens: ground beyond its zone that the hero cannot
 ## reach today. A human clears a road guard to get at the map behind it; the
@@ -4661,16 +4895,16 @@ static func _town_candidate(session: SessionStateStoreScript.SessionData, contex
 		var after: Dictionary = _leave_defense(session, context, town, pickup.stacks, pickup.left, main_id == "" or main_id == String(entry.get("placement_id", "")))
 		var gain: float = army_power(after.stacks) - army_power(own_stacks)
 		if main_id == "" or main_id == String(entry.get("placement_id", "")) or _decision_field_ids(session, context).has(String(entry.get("placement_id", ""))):
-			value = gain * TROOP_VALUE_PER_POWER * 0.5
+			value = gain * TROOP_VALUE_PER_POWER * GARRISON_PICKUP_SHARE
 		elif _ferries_from(session, context, town, main_id):
-			value = minf(gain * TROOP_VALUE_PER_POWER * 0.3, MEET_VALUE_CAP)
+			value = minf(gain * TROOP_VALUE_PER_POWER * COURIER_TROOP_SHARE, MEET_VALUE_CAP)
 		else:
 			var stacks: Array = entry.get("enemy_army", {}).get("stacks", [])
 			if stacks.size() > 1:
-				value = (army_power(stacks) - army_power([stacks[_weakest_stack_index(stacks)]])) * TROOP_VALUE_PER_POWER * 0.3
+				value = (army_power(stacks) - army_power([stacks[_weakest_stack_index(stacks)]])) * TROOP_VALUE_PER_POWER * COURIER_TROOP_SHARE
 		if _town_threatened(session, context, town) and _would_hold_gate(session, context, entry, town, main_id == String(entry.get("placement_id", "")) or _decision_field_ids(session, context).has(String(entry.get("placement_id", "")))):
 			value += maxf(TOWN_BASE_VALUE, _town_worth(session, context, town) * THREAT_KILL_SHARE)
-		if value <= 50.0:
+		if value <= MIN_TROOP_ERRAND_VALUE:
 			return {}
 		return {"kind": "town_own", "id": id, "index": index, "value": value}
 	if owner != "neutral" and PlayerRules.allied(session, controller, town_controller if owner == "enemy" else "player"):
@@ -4686,7 +4920,7 @@ static func _town_candidate(session: SessionStateStoreScript.SessionData, contex
 		return {}
 	# A town is worth its income and troops, the human's most of all; a faction
 	# with no town left needs one to recruit at all.
-	var value := _town_worth(session, context, town) + (2000.0 if owner == "player" else 0.0)
+	var value := _town_worth(session, context, town) + (HUMAN_TOWN_BONUS if owner == "player" else 0.0)
 	if _turn_rules()._owned_town_entries(session, controller).is_empty():
 		value *= HOMELESS_TOWN_MULTIPLIER
 	if owner != "neutral":
@@ -4749,7 +4983,7 @@ static func _hostile_heroes(session: SessionStateStoreScript.SessionData, contro
 			continue
 		var position: Dictionary = hero.get("position", {})
 		var movement: Dictionary = hero.get("movement", {}) if hero.get("movement", {}) is Dictionary else {}
-		result.append({"id": String(hero.get("id", "")), "owner": "player", "x": int(position.get("x", 0)), "y": int(position.get("y", 0)), "level": LevelRules.level_of(position), "power": army_power(hero.get("army", {}).get("stacks", []), hero), "reach": maxi(6, int(movement.get("max", 10)))})
+		result.append({"id": String(hero.get("id", "")), "owner": "player", "x": int(position.get("x", 0)), "y": int(position.get("y", 0)), "level": LevelRules.level_of(position), "power": army_power(hero.get("army", {}).get("stacks", []), hero), "reach": maxi(THREAT_MIN_REACH, int(movement.get("max", 10)))})
 	# Other computer players' heroes threaten towns just as the human's do.
 	for entry in active_hero_entries(session):
 		var other := PlayerRules.raid_controller_id(entry)
@@ -4757,7 +4991,7 @@ static func _hostile_heroes(session: SessionStateStoreScript.SessionData, contro
 			continue
 		if not _position_seen(session, context, LevelRules.position(entry)):
 			continue
-		result.append({"id": String(entry.get("placement_id", "")), "owner": other, "x": int(entry.get("x", 0)), "y": int(entry.get("y", 0)), "level": LevelRules.level_of(entry), "power": hero_power(entry), "reach": maxi(6, _movement_max(entry))})
+		result.append({"id": String(entry.get("placement_id", "")), "owner": other, "x": int(entry.get("x", 0)), "y": int(entry.get("y", 0)), "level": LevelRules.level_of(entry), "power": hero_power(entry), "reach": maxi(THREAT_MIN_REACH, _movement_max(entry))})
 	return result
 
 ## Remembers the hostile heroes in sight now (SIGHTINGS_KEY) and forgets those
@@ -6135,7 +6369,7 @@ static func _fight_neutral(session: SessionStateStoreScript.SessionData, context
 		var hero_id := String(session.overworld.encounters[index].get("placement_id", ""))
 		if not _is_resolved(session, hero_id):
 			_step_back_from_guard(session, index, plan)
-			_avoid_target(session, hero_id, String(guard.get("placement_id", "")), int(session.day) + 3)
+			_avoid_target(session, hero_id, String(guard.get("placement_id", "")), int(session.day) + AVOID_DAYS)
 	return {"arrived": true, "events": events}
 
 ## After a fight that left the guard standing, the hero falls back to the tile
@@ -6396,7 +6630,7 @@ static func _fight_looks_good(session: SessionStateStoreScript.SessionData, cont
 		return false
 	var army_before := army_power(entry.get("enemy_army", {}).get("stacks", []))
 	var army_after := army_power(outcome.get("hero_survivors", []))
-	if army_after < army_before * 0.5:
+	if army_after < army_before * FIGHT_MIN_KEPT:
 		return false
 	# With nothing else worth doing, a clean win beats standing still: it pays
 	# experience and opens the ground behind the guard.
@@ -6647,6 +6881,7 @@ static func _commander_brief(commander: Variant) -> Dictionary:
 		return {}
 	var command: Dictionary = commander.get("command", {}) if commander.get("command", {}) is Dictionary else {}
 	var spellbook: Dictionary = commander.get("spellbook", {}) if commander.get("spellbook", {}) is Dictionary else {}
+	_sync_power_memos()
 	return {
 		"level": int(commander.get("level", 1)),
 		"attack": int(command.get("attack", 0)),
@@ -6796,6 +7031,7 @@ static func _sync_power_memos() -> void:
 		_unit_power_memo = {}
 		_damage_spell_memo = {}
 		_power_memo_sources = sources
+		_apply_power_terms()
 
 static func hero_power(entry: Dictionary) -> float:
 	return army_power(entry.get("enemy_army", {}).get("stacks", []) if entry.get("enemy_army", {}) is Dictionary else [], entry.get("enemy_commander_state", {}))

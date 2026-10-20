@@ -4,8 +4,9 @@
 Plays realistic battles (scenarios.py) once each with the current battle AI on both sides,
 fits army_power's terms to who won (a logistic fit on the log strength ratio, the battle
 type as an offset), and prints the fitted terms and how often each estimate calls the
-winner on battles the fit never saw. Copy the terms into AiHeroRules.gd (POWER_*,
-RANGED_POWER, HERO_*) and tools/build_generated_neutral_companies.py by hand.
+winner on battles the fit never saw. Copy the terms into content/ai_hero_weights.json
+("army_power": power_*, ranged_power, hero_*) and tools/build_generated_neutral_companies.py
+by hand.
 
     python tools/battle_ai_arena/power_fit.py                    # 30 maps of battles, ~25 min
     python tools/battle_ai_arena/power_fit.py --games <run>/games.jsonl   # refit played battles

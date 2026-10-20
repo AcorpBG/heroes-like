@@ -30,6 +30,11 @@ export templates of the editor's version (Editor > Manage Export Templates, or -
 the export runs with a throwaway profile holding a copy of them. The release build writes its map
 packages into each match's throwaway user profile, not res://maps. OUT/game (about 5 GB) is deleted
 when the batch completes.
+
+--weights W1,W2,... gives each seat its overworld AI weight set in every match (seat order, one per
+player): "default", the name of a set in content/ai_hero_weights.json, or a .json file holding one
+set (only the values it changes). Each match record names its seats' sets (setup.seats[].weights);
+without --weights every seat plays the default set.
 """
 from __future__ import annotations
 
@@ -202,6 +207,8 @@ def make_plan(args: argparse.Namespace, groups: list[tuple[int, str, int]]) -> d
         for k, lineup in enumerate(lineups):
             guards, levels, water = combos[(k + offset) % len(combos)]
             rows.append({"players": players, "size": size, "guards": guards, "levels": levels, "water": water, "factions": lineup})
+            if args.weights:
+                rows[-1]["weights"] = args.weights
     rng.shuffle(rows)
     seeds: set[str] = set()
     matches_out = []
@@ -332,6 +339,8 @@ def launch(godot: str, out: Path, m: dict, days: int, timeout_min: float, game: 
         "HEROES_AI_MATCH_MAX_DAYS": str(days),
         "HEROES_AI_MATCH_OUT": (out / f"{m['run']}.json").as_posix(),
     })
+    if m.get("weights"):
+        env["HEROES_AI_MATCH_WEIGHTS"] = ",".join(m["weights"])
     (out / f"{m['run']}.json").unlink(missing_ok=True)
     log = open(out / f"{m['run']}.log", "w", encoding="utf-8", errors="replace")
     if game:
@@ -706,6 +715,7 @@ def main() -> int:
     parser.add_argument("--lineups", choices=("balanced", "random", "mirrors"), default="balanced")
     parser.add_argument("--lineup", action="append", metavar="F1,F2,...", help="fixed line-up, seat order; repeat for several (cycled)")
     parser.add_argument("--seed", type=int, help="plan seed (default random); the same seed and options give the same plan")
+    parser.add_argument("--weights", metavar="W1,W2,...", help="overworld AI weight set per seat: default, a set name or a .json file")
     parser.add_argument("--slots", type=int, default=16, help="matches at once (default 16)")
     parser.add_argument("--timeout-min", type=float, help="per-match timeout in minutes (default by size: %s)" % ", ".join(f"{short_size(k)} {v}" for k, v in TIMEOUT_MIN.items()))
     parser.add_argument("--godot", help="Godot editor binary")
@@ -740,6 +750,14 @@ def main() -> int:
         if plan_path.exists():
             sys.exit(f"{plan_path} exists; use --resume, --summarize or a new folder")
         groups = parse_groups(args)
+        if args.weights:
+            args.weights = [w.strip() or "default" for w in args.weights.split(",")]
+            args.weights = [Path(w).resolve().as_posix() if w.endswith(".json") else w for w in args.weights]
+            for w in args.weights:
+                if w.endswith(".json") and not Path(w).is_file():
+                    sys.exit(f"--weights: no file {w}")
+            if any(players != len(args.weights) for players, _, _ in groups):
+                sys.exit(f"--weights names {len(args.weights)} seats; every group needs that many players")
         for players, size, _ in groups:
             if players not in FITTING_PLAYERS[size]:
                 print(f"WARNING: {short_size(size)} maps are played with {' or '.join(map(str, FITTING_PLAYERS[size]))} players, not {players}")
