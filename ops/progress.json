@@ -115940,8 +115940,8 @@
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Owner decision 2026-10-20 (D1-D3): the rules move to C++ subsystem by subsystem. Done: tools/rules_parity.py and the runner's daily digest (six seeds; --portable for editor against export), proven identical HEAD vs HEAD and sensitive to a one-constant change; Windows/Linux GDScript games identical by digest; no script errors; release-template batch presets identical to the editor and 1.21x faster, opt-in tools/ai_match_batch.py --release (owner decision 2026-10-20: the editor binary stays the batch default; Linux preset untested); exclusive profile of five full-length games: AI battles 18.6% of match CPU, fight loop 85.6% of that, fixed cost 2.8%, overworld AI 71.4%. Numbers in docs/native-rules-engine-transition.md, Phase 0 results. Feeds gate G0.",
-      "updatedAt": "2026-10-20T16:51:00Z"
+      "notes": "Owner decision 2026-10-20 (D1-D3): the rules move to C++ subsystem by subsystem. Done: tools/rules_parity.py and the runner's daily digest (six seeds; --portable blanks the map package's location for editor against export; a run with a SCRIPT ERROR fails and the runner stops without the native rules library), proven identical HEAD vs HEAD and sensitive to a one-constant change; Windows/Linux GDScript games identical by digest; no script errors; release-template batch presets identical to the editor and 1.21x faster, opt-in tools/ai_match_batch.py --release (owner decision 2026-10-20: the editor binary stays the batch default; Linux preset untested); exclusive profile of five full-length games: AI battles 18.6% of match CPU, fight loop 85.6% of that, fixed cost 2.8%, overworld AI 72.3%. Numbers in docs/native-rules-engine-transition.md, Phase 0 results. Feeds gate G0.",
+      "updatedAt": "2026-10-20T17:22:00Z"
     },
     {
       "id": "native-rules-phase0-toolchain-20261020",

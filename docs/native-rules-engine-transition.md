@@ -171,7 +171,9 @@ another project's Godot processes (1-3) ran during the profile, not during the e
 - **Parity check** (`tools/rules_parity.py`, `HEROES_AI_MATCH_DIGEST` in the match runner). HEAD against a copy of
   HEAD: identical daily digests and records on all six seeds, 5.3 min at 6 at once. A copy with
   `ATTACK_BONUS_PER_POINT` 0.05 -> 0.0501 differs from day 2-5 per seed, first path `flags.ai_battle_log[3].power`,
-  6.4 min including the replays.
+  6.4 min including the replays. A run fails when it prints a SCRIPT ERROR line, and the match runner stops at once
+  when the native rules library is not registered (`NativeRules.available()`), so two copies broken the same way
+  never compare identical. `prepare` registers the prepared revision's own `.gdextension` files.
 - **Windows and Linux** (the 4.6.2 Linux editor binary on the server): identical daily digests on all six seeds. The
   match records differ in the 15th significant digit of some floats (`power`, `defender_power`, `survivor_power`,
   `estimated_loss_share`) in five seeds (s2 is byte-identical): the record is written at JSON's default precision, the
@@ -185,9 +187,13 @@ another project's Godot processes (1-3) ran during the profile, not during the e
   the match runner through `application/run/main_scene.ai_batch` in `project.godot`. The first export takes 3 min,
   later ones 30-40 s, and writes a 4.7 GB pack.
   - Identical to the editor binary on all six seeds: every daily digest and the match record, compared with
-    `rules_parity.py --portable`. That flag leaves out the 11 session keys that record where the map package was
-    written (`res://maps` under the editor, `user://maps` in an export) and the package signatures that include it;
-    nothing else differs on day 1, so the `template_release` native library builds the same maps.
+    `rules_parity.py --portable`. That flag blanks the 9 kinds of field that hold where the map package was written
+    (`res://maps` under the editor, `user://maps` in an export): its paths and the package signatures that include
+    them, 68 values on day 1 inside the package keys (`map_package_ref`, `native_random_map_runtime_scenario_record`,
+    the provenance and others); the rest of those keys, such as the runtime scenario record's objectives, player
+    slots and starting resources, is compared. Nothing else differs on day 1, so the `template_release` native
+    library builds the same maps. (Measured with the first version of the flag, which left those keys out whole;
+    the 68 values it blanks now are the 68 that differed.)
   - Speed, plain runs of the five profile games below, editor and release side by side (10 at once, nothing else
     running): 2,221 s against 1,840 s, **1.21x** (1.20-1.21x per game), identical records. The six seeds during
     the check: 1.20-1.27x.
@@ -215,7 +221,7 @@ another project's Godot processes (1-3) ran during the profile, not during the e
   | AI `_search` | 9.1 | 13.0 | 12.2 | 11.9 | 11.2 | 11.5 |
   | AI `_vetted_candidate` (choosing a target) | 14.8 | 18.5 | 20.5 | 18.3 | 16.3 | 17.4 |
   | AI `_strategic_candidate` | 3.0 | 4.9 | 5.7 | 3.5 | 3.6 | 3.9 |
-  | AI `_gate_candidate` (two-level games only) | 4.8 | 0.0 | 0.0 | 14.7 | 24.5 | 15.0 |
+  | AI `_gate_candidate` (two-level games only; 19.3% of their time) | 4.8 | 0.0 | 0.0 | 14.7 | 24.5 | 15.0 |
   | AI `_level_surface` | 2.3 | 2.2 | 1.8 | 2.4 | 1.6 | 1.9 |
   | AI fight checks, outside the battles | 4.2 | 2.0 | 2.1 | 2.4 | 1.2 | 1.9 |
   | AI hero day, rest (moves, actions) | 7.4 | 7.7 | 8.2 | 8.6 | 8.0 | 8.1 |
@@ -240,8 +246,8 @@ another project's Godot processes (1-3) ran during the profile, not during the e
   - Fight loop: **85.6%** of the battle work (rules 5.9 and battle AI 10.0 points of match CPU).
   - Fixed cost per match: **2.8%** (1.8-6.0% per game), 10-17 s per game: boot 3.9 s, content validation 0.8 s, map
     generation 3.1-9.7 s, session start 1.3-1.7 s, record and exit 0.6-1.5 s. Under the 10% threshold.
-  - The overworld AI is 71.4%; day processing outside it (normalize, player fog, scenario, text) is 5.9%. Dropping
-    the end-of-day text would save under 0.1%.
+  - The overworld AI is 72.3% (the AI rows, its sight included); day processing outside it (normalize, player fog,
+    scenario, text, the rest of `end_turn`) is 6.0%. Dropping the end-of-day text would save under 0.1%.
 - **JSON round trip of one day's changing state** (m054, every day, per top-level key: `JSON.stringify` at full
   precision, then `JSON.parse_string`; a key has changed when its text has). The whole session is 25-30 MB and takes
   1.75 s per day both ways, about 60 ms per MB. 5-7 of its 43 keys change on a day: `flags`, `encounters`,
