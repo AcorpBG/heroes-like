@@ -62,6 +62,9 @@ Owner decision, 2026-10-10. Testing had grown to about half of all agent time, m
 - Avoid direct cloning of copyrighted names, assets, maps, factions, unit art, music, or text.
 - Use original placeholder content where needed.
 - No temporary git worktrees. Work directly in this repo.
+- **Native rules port** (owner decisions D5, D8, D10, 2026-10-20; `docs/native-rules-engine-transition.md`):
+  - Phase 1 (the native battle engine) lives on the branch `native-phase1-battle` on GitHub, an exception to working on main. Its slices push there, not to main, and rebase it on main at least weekly. It merges to main once, when every battle is native and identical; main is tagged before that merge.
+  - Battle code is frozen from 2026-10-20 until 7 days after that merge: no behaviour changes to `BattleRules`, `BattleAiRules`, the in-battle parts of `SpellRules`, `BattleAutoResolveRules`, `BattleFootprint`, `BattleDamageRules` or `TownBattleRules`. An urgent fix lands in GDScript on main, and the Phase 1 branch ports it. Content JSON (units, spells) and `content/battle_ai_weights.json` stay open.
 - Local commits are fine when they are coherent. Always push completed validated work to GitHub and merge it into the default branch when there are no conflicts, unless AcOrP explicitly says otherwise for that slice. If working directly on the default branch, push it without creating an unnecessary merge. If conflicts occur, report them rather than forcing the merge or overwriting remote changes.
 - The owner plays and tests from the main checkout (`D:\Games\godot\heroes-like` on Windows), not from agent worktrees. After pushing to the default branch from a worktree or another clone, bring that checkout up to date in the same run, so GitHub is never ahead of the build the owner plays:
   - It must be on the default branch with no local-only commits (`git rev-list --count origin/main..HEAD` is 0).

@@ -1,7 +1,8 @@
 # Moving the rules engine to C++: transition plan
 
-Status: approved by the owner on 2026-10-20 with decisions D1-D3 (section 8); Phase 0 is started. Later phases start
-only through their gates. Line references are as of commit 50929125a; each slice brief re-checks them.
+Status: approved by the owner on 2026-10-20 with decisions D1-D3 (section 8). Phase 0 is done and the owner passed
+gate G0 on 2026-10-20: Phase 1 starts with decisions D5, D6, D8 and D10 made, and Phase A runs alongside. Later phases
+start only through their gates. Line references are as of commit 50929125a; each slice brief re-checks them.
 
 ## 1. Why, and what "done" means
 
@@ -127,11 +128,13 @@ Every match and tuner record carries the native build id, content hash and overr
 
 ## 6. Phases
 
-Effort is in agent-days, unmeasured, and likely off by 50% either way; G3 replaces it with Phase 1's measured rate. The
+The sizes in "Totals" are the proposal's unmeasured guesses, not a schedule. Phase 0, guessed at 6-12 agent-days,
+took 2 h 20 min from the start to both slices on main, two sessions in parallel (3 h 20 min with the review fixes). The
+first Phase 1 slice measures the porting rate; G1 and G3 re-plan from it, and only measured times are quoted. The
 whole-game gain of porting a part is bounded by `1 / (1 - share of match CPU it removes)`, filled in from the Phase 0
 profile. Large whole-game gains come only once the AI, day processing *and* the fixed cost per match are native.
 
-### Phase 0: measure, decide, prove the pipeline (6-12 days)
+### Phase 0: measure, decide, prove the pipeline
 
 - **Cheap levers first, all GDScript, each proven with identical digests:**
   - Run batches on the release export template instead of the editor binary (batches use
@@ -345,7 +348,17 @@ shape Phase 1 removes: battle state and the open mask live natively, and callers
     digests from an earlier run saves the second side; running main too adds about 6 min (24 min in all).
 - **For comparison:** a GDScript port change needs only the Windows parity check and core suite: 5.6 min.
 
-### Phase 1: native battle engine, one merge (30-60 days)
+### Gate G0 result (owner, 2026-10-20): passed
+
+Row by row, after an independent review of both slices and its fixes (8b9adbdb6, bd8d2ddf0, 26f83c7d4,
+7ccb4bf9b): spike correctness and compilers are Go; per call through the boundary the walk and field checks are Go and
+the reachable search is in "fix the interface first", which Phase 1 does by keeping battle state native; the battle
+share (18.6%, between the 15% and 20% thresholds) and the developer loop were accepted by the owner; fixed cost is Go.
+Expected gain, from the profile: battles alone bound whole games at about 1.23x (1.18x on the longest games); Phase 2's
+battle tool serves battle-level balance work; the large whole-game gain needs the overworld AI (72.3%), Phases 3-5.
+Release packaging still stops on the 4.7 GB export pack, which predates the rules library.
+
+### Phase 1: native battle engine, one merge
 
 - **Scope:** the rules part of BattleRules, all of BattleAiRules, in-battle SpellRules, BattleAutoResolveRules,
   BattleFootprint, BattleDamageRules, TownBattleRules, the order-by-order API for battles the player fights, and the UI
@@ -369,7 +382,7 @@ shape Phase 1 removes: battle state and the open mask live natively, and callers
   core suite on Windows and Linux, project.md ownership updated.
 - **Gain:** large for battle-only work (the tuner); modest for whole games, bounded by the battle share from Phase 0.
 
-### Phase 2: one payload builder, AI preview as one call, the battle tool (14-28 days)
+### Phase 2: one payload builder, AI preview as one call, the battle tool
 
 - Battle payload creation (`BattleRules.gd:256-402`), stack and hero payloads, obstacles, and the end-of-battle numbers
   (survivors, experience, recovery, level-ups, `army_power`) move native; every payload caller switches.
@@ -380,13 +393,13 @@ shape Phase 1 removes: battle state and the open mask live natively, and callers
 - **Gate G2:** a battles-per-second target the owner sets (the synthesis proposes 1M battles in 2 h on this machine).
   **Battle-level genetic algorithms (unit stats, battle-AI weights) run at full speed from here.**
 
-### Phase A: overworld AI numbers into data (2-4 days, GDScript only, any time after G0)
+### Phase A: overworld AI numbers into data (GDScript only, any time after G0)
 
 The tuning numbers among the 99 constants at `AiHeroRules.gd:26-297`, and inline literals, move to `content/ai_hero_weights.json`, with weight
 sets per controller. Proof: identical digests with every controller on the default set. AI number tuning then needs no
 code edit, before or after the AI goes native, and a genetic algorithm can give each seat its own genome.
 
-### Phase 3: overworld kernels by rule (0-15 days)
+### Phase 3: overworld kernels by rule
 
 A kernel moves only if it is 3% or more of match CPU, takes packed arrays and scalars, uses no transcendental math, hash
 or RNG, and had no behaviour commit for 7 days. Candidates: `_level_surface`, `_war_paths`, fog `_explored`/`_reveal`.
@@ -397,7 +410,7 @@ Re-estimate Phases 4-7 from Phase 1's measured rate (lines per day, mismatches p
 behaviour commits on more than 4 of the last 14 days, do Phase 5 before Phase 4, keeping the AI in GDScript longer. The
 owner decides whether to continue toward whole-game speed.
 
-### Phase 4: the overworld AI faction turn (25-50 days)
+### Phase 4: the overworld AI faction turn
 
 AiHeroRules, the AI paths of EnemyAdventureRules and EnemyTurnRules, and the rule functions they reach. One native
 `run_faction_turn` per faction turn: load a view of the session, run, patch back, clear caches. Functions with human or
@@ -406,13 +419,13 @@ order, the tavern and spawn RNG, and the decision and battle logs. Proof adds a 
 (`to_dict(from_dict(d)) == d` with types and key order) on every day of the six seeds and on owner-approved save copies.
 AI code is frozen during the slice; the Phase A numbers stay open.
 
-### Phase 5: day processing (20-40 days)
+### Phase 5: day processing
 
 `normalize_overworld_state`, `commit_active_hero`, town occupation and recovery, income, growth, reserve deliveries,
 `PlayerEliminationRules.apply_daily`, `ScenarioRules.evaluate_session`, and `_finalize_*` for human battles: one native
 call per day. The end-turn confirmation dry run in `OverworldShell.gd:1464-1529` must invalidate native caches too.
 
-### Phase 6: match throughput (4-10 days)
+### Phase 6: match throughput
 
 The runner keeps a native session handle across days and writes Dictionaries back only for the digest and record (with
 a check that runner mode and game mode give the same digests); several matches per Godot process (match N identical in a
@@ -420,22 +433,24 @@ reused and a fresh process); a pre-generated map corpus for genetic-algorithm wo
 and move forward if G0 finds a high fixed cost. **Whole-game genetic algorithms become practical here, if the measured
 gain is there.**
 
-### Phase 7: human-side actions and the last GDScript rules (35-70 days)
+### Phase 7: human-side actions and the last GDScript rules
 
 Movement, routes, context actions, overworld spells, town actions, hero transfers and artifact equipping: about 378
 functions the UI calls, at 1,221 call sites. Needed for the one-copy end state, not for speed, so it can interleave with
 other work. Merging the separate human and AI forms of heroes, treasury and fog is a later save-schema slice.
 
-### Phase 8 (optional): a match runner without Godot (5-12 days)
+### Phase 8 (optional): a match runner without Godot
 
 The same core as a command-line tool. Needs the copied Variant hash and either deterministic math or accepted last-bit
 differences against the game.
 
 ### Totals
 
-| Up to | Agent-days (unmeasured) | What it buys |
+Sizes are the proposal's unmeasured agent-day guesses, useful only to compare phases (see section 6).
+
+| Up to | Size guess (unmeasured) | What it buys |
 |---|---|---|
-| Phase 0 | 6-12 | a measured go/no-go, cheap GDScript levers |
+| Phase 0 | 6-12 (measured: 2 h 20 min, two sessions) | a measured go/no-go, cheap GDScript levers |
 | Phases 1-2 | 44-88 more | battle-level genetic algorithms at native speed |
 | Phases A, 3 | 2-19 more | AI numbers as data; some overworld kernels |
 | Phases 4-6 | 49-100 more | whole-game speed (the large gain) |
@@ -461,12 +476,12 @@ differences against the game.
 | D2 | **Decided 2026-10-20:** parity runs are allowed on port slices, never while an owner batch is running (AGENTS.md "Validation budget") | Phase 0 |
 | D3 | **Decided 2026-10-20:** native binaries stay committed; the Linux debug library is stripped (50.8 MB today) and its debug info kept outside git | Phase 0 |
 | D4 | Math: engine math through godot-cpp in the game, or a later deterministic-math behaviour change | Phase 2 |
-| D5 | Freeze windows for battle code (Phase 1) and AI code (Phase 4) | before each |
-| D6 | Retire tests that call private battle functions (`docs/rmg-test-retirement.md` process) | Phase 1 |
+| D5 | **Phase 1 decided 2026-10-20:** battle-rule and battle-AI code take no behaviour changes from the start of Phase 1 to its merge; an urgent fix lands in GDScript on main and is ported on the branch; content JSON and `battle_ai_weights.json` stay open (AGENTS.md "Native rules port"). AI code: decided before Phase 4 | before each |
+| D6 | **Decided 2026-10-20:** tests that call private battle functions the port deletes are retired at the Phase 1 merge by the `docs/rmg-test-retirement.md` process; the parity corpus and the core suite cover battles | Phase 1 |
 | D7 | Whether a tool built from the same core counts under "no simulator outside Godot" (`PLAN.md:328`), or an in-Godot threaded runner instead | Phase 2 |
-| D8 | An exception to "work directly in this repo" for a 30-60-day port branch, with weekly rebase and an abandonment criterion | Phase 1 |
-| D9 | Where owner-save copies for the codec proof live (outside git) | Phase 1 |
-| D10 | Rollback: a tag before each port merge, a rollback window with no behaviour commits to that subsystem, or a time-limited switch defaulting to native | each merge |
+| D8 | **Decided 2026-10-20:** Phase 1 lives on one port branch, `native-phase1-battle` on GitHub, rebased on main at least weekly and before each slice, and merges to main once, when every battle is native and identical; it is dropped if checkpoint G1 stays under 5x after the interface fix (AGENTS.md "Native rules port") | Phase 1 |
+| D9 | Where owner-save copies for the codec proof live (outside git); asked when a slice first needs owner saves | Phase 1 |
+| D10 | **Decided 2026-10-20:** main is tagged before each port merge, and the merged subsystem takes no behaviour commits for 7 days after it | each merge |
 
 ## 9. Risks and how the plan contains them
 
