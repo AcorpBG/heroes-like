@@ -491,7 +491,7 @@ every function run inside `resolve_active_battle`, with `_finalize_*` left out. 
   `float_round`, which has one digest per platform (see `round` above).
 
 **Native battle state** (`battle_state.{hpp,cpp}`, `gdextension/battle_state_bridge.cpp`; branch commits
-2175f97af..7c9224780):
+52181b480 and 1e24480be):
 - **What it is.** Tagged values over pooled arrays and dictionaries, with interned strings. Loading keeps key order,
   int/float, String/StringName, typed containers, read-only flags and shared references. Storing writes a copy, or
   writes in place: known keys keep their slot, new keys are appended in GDScript's order, and the original arrays and
@@ -507,6 +507,47 @@ every function run inside `resolve_active_battle`, with `_finalize_*` left out. 
   storing a copy 0.33 ms and storing in place 0.62 ms, against 9.0 ms for a GDScript step. Converting on every step
   would cap the speed-up near 7x, under G1's 10x. So the native engine converts once per resolve: about 1.3 ms against
   a battle's ~65 ms, which caps it near 50x.
+
+**Layer 1: hex geometry and board reads** (`core/port/`, `gdextension/battle_port_bridge.cpp`,
+`scripts/core/BattleEngine.gd`, `tools/native_battle_switch.py`; branch commits dda9a7d04 and a6bbe2fec):
+- **What it is.** 56 of the layer's 66 functions (417 of its 549 lines) are in C++ under their GDScript names, with
+  GDScript's semantics: key order, int/float typing, the order of operations and the cases where GDScript stops with an
+  error. 54 have a switch, set per process by `HEROES_NATIVE_BATTLE`: `gdscript` (the default) runs GDScript, `native`
+  the port, and `shadow` runs GDScript and compares every call with the port, including types, key order, read-only
+  flags and container identity, and for the two functions that write into their arguments, the arguments afterwards.
+  `_hex_open_mask` and `_walk_open_mask` became internals of the two native searches. `tools/native_battle_switch.py`
+  writes the switches from the port registry and keeps each GDScript body as `<name>__gd`. A native call loads its
+  arguments lazily, so it converts only what the port reads. `BattleEngine.gd` holds the mode and the native and
+  shadow calls; `resolve` and the order-by-order API join it when the loop is native (slice 10).
+- **Not ported.** The board-read memo (`begin_board_read_scope`, `end_board_read_scope`, `_board_read_cache_get`,
+  `_board_read_cache_key`), and the memo inside BattleAiRules' `_alive_stacks_for_side`. Shadow mode ran with both
+  memos live on the GDScript side, so 0 mismatches show they change no answer.
+- **Moved to other slices.** BattleRules `_stack_is_isolated` and `_stack_is_hex_isolated` call `_allied_melee_count`
+  (layer 2): slice 02. Their BattleAiRules copies read the scoring memo: slice 08. `_ensure_battle_hex_state` (with
+  `_default_stack_hex`, `_first_open_body_near`, `_hex_board_descriptor`) and `_set_stack_hex` (with
+  `_presentation_walk_path`): slice 03, and `_set_stack_hex`'s ActionPlayback capture with slice 10's events.
+- **Results, shadow mode:** 0 mismatches and 0 errors.
+  - Six seeds: 23,882,826 checks over 52 functions.
+  - Arena: 19,171,698 checks on `standard` and 20,257,744 on `holdout`.
+  - An edge probe: 1,211,139 checks over all 54 functions, on inputs the corpora never reach. These are off-board and
+    negative hexes, float, string and bool coordinates, missing keys, `Vector2i` cells, and stacks without a side or
+    a hex. It is the only run that reaches `_hex_distance` and `_offset_to_cube`.
+- **Results, native mode:** 0 errors, with 11,432,825 native calls on the six seeds and 9,020,200 and 9,461,204 on the
+  two arena suites. In both modes every daily digest and match record of the six seeds and all 960 arena game records
+  are identical to GDScript. On Linux, with the official 4.6.2 binary, the six-seed check of shadow against native
+  mode was identical: 23,882,826 shadow checks, 0 mismatches, the same count as on Windows. The core suite passed on
+  both platforms.
+- **Cost.** Shadow mode takes 25 s on seed s2, against 20 s for GDScript.
+- **Porting rate.** About one hour of wall time, 19:07-20:07Z, shared with committing the battle state. It produced
+  417 GDScript lines as 896 C++ lines, plus parts every layer reuses:
+  - the GDScript runtime (`port/gd`, 372 lines);
+  - the argument bridge (653);
+  - the registry (150);
+  - `BattleEngine.gd` (96);
+  - the switch generator (180).
+
+  The first build compiled and the first shadow run had 0 mismatches: 0 mismatches per 1,000 lines. Layer 1 has no
+  RNG and no damage arithmetic, so its rate is not a forecast for layer 2.
 
 ### Phase 2: one payload builder, AI preview as one call, the battle tool
 
