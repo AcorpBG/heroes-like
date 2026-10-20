@@ -97,8 +97,11 @@ if errorlevel 1 (
   goto :install_fail
 )
 
-if not exist "%INSTALL_PARENT%\NUL" mkdir "%INSTALL_PARENT%" >nul 2>&1
-if not exist "%INSTALL_PARENT%\NUL" (
+rem "<dir>\*" exists only for a directory, empty or not, on Windows and under Wine.
+rem (A quoted "<dir>\NUL" is false for existing directories on current Windows 10,
+rem and Wine takes "<file>\" for a directory.) INSTALL_PARENT ends in a backslash.
+if not exist "%INSTALL_PARENT%*" mkdir "%INSTALL_PARENT%" >nul 2>&1
+if not exist "%INSTALL_PARENT%*" (
   echo heroes-like installer: install parent directory is unavailable 1>&2
   goto :install_fail
 )
@@ -111,7 +114,7 @@ if errorlevel 1 (
 set "STAGE_OWNED=1"
 
 if exist "%INSTALL_ROOT%" (
-  if not exist "%INSTALL_ROOT%\NUL" (
+  if not exist "%INSTALL_ROOT%\*" (
     echo heroes-like installer: install directory path is not a directory 1>&2
     goto :install_fail
   )
@@ -187,12 +190,12 @@ if /i "%HEROES_LIKE_INSTALL_FAIL_PHASE%"=="precommit" (
   echo heroes-like installer: injected precommit failure 1>&2
   goto :install_fail
 )
-if not exist "%START_MENU_ROOT%\NUL" (
+if not exist "%START_MENU_ROOT%\*" (
   mkdir "%START_MENU_ROOT%" >nul 2>&1
-  if not exist "%START_MENU_ROOT%\NUL" goto :install_fail
+  if not exist "%START_MENU_ROOT%\*" goto :install_fail
   set "START_MENU_CREATED=1"
 )
-if not exist "%START_MENU_ROOT%\NUL" (
+if not exist "%START_MENU_ROOT%\*" (
   echo heroes-like installer: Start Menu path is not a directory 1>&2
   goto :install_fail
 )

@@ -81,7 +81,10 @@ if errorlevel 1 (
   echo heroes-like uninstaller: install and Start Menu directories must not overlap 1>&2
   exit /b 1
 )
-if not exist "%INSTALL_ROOT%\NUL" (
+rem "<dir>\*" exists only for a directory, empty or not, on Windows and under Wine.
+rem (A quoted "<dir>\NUL" is false for existing directories on current Windows 10,
+rem and Wine takes "<file>\" for a directory.)
+if not exist "%INSTALL_ROOT%\*" (
   echo heroes-like uninstaller: owned install directory is missing 1>&2
   exit /b 1
 )
@@ -126,7 +129,7 @@ if errorlevel 1 (
   goto :uninstall_fail
 )
 
-if exist "%START_MENU_ROOT%" if not exist "%START_MENU_ROOT%\NUL" (
+if exist "%START_MENU_ROOT%" if not exist "%START_MENU_ROOT%\*" (
   echo heroes-like uninstaller: Start Menu path is not a directory 1>&2
   goto :uninstall_fail
 )

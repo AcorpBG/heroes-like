@@ -530,7 +530,13 @@ def stage_platform(
         source = installer_dir / installer_name
         if not source.is_file() or source.stat().st_size <= 0:
             raise RuntimeError(f"missing installer payload for {spec.platform_id}: {source}")
-        shutil.copy2(source, bundle_root / installer_name)
+        if installer_name.endswith(".cmd"):
+            # cmd misses labels in LF-only batch files, and a Linux checkout has LF.
+            data = source.read_bytes().replace(b"\r\n", b"\n").replace(b"\n", b"\r\n")
+            (bundle_root / installer_name).write_bytes(data)
+            shutil.copystat(source, bundle_root / installer_name)
+        else:
+            shutil.copy2(source, bundle_root / installer_name)
     if spec.platform_id.startswith("linux"):
         if not LINUX_DESKTOP_ICON_SOURCE.is_file() or LINUX_DESKTOP_ICON_SOURCE.stat().st_size <= 0:
             raise RuntimeError(f"missing Linux desktop icon payload: {LINUX_DESKTOP_ICON_SOURCE}")
