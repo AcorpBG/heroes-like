@@ -266,10 +266,18 @@ another project's Godot processes (1-3) ran during the profile, not during the e
 `-O2 -ffp-contract=off`. Other pieces:
 - `tools/build_native.py windows|linux` builds here with MSVC, or on the Linux server in a fresh `/tmp` directory at
   nice 19 (GCC 13.3, plus the self-test built with MinGW and run under Wine). Every file comes back sha256-checked, and
-  PDBs and Linux debug files are archived per build id outside git (`heroes-like-native-symbols/`).
+  PDBs and Linux debug files are archived per build id outside git (`heroes-like-native-symbols/`). The remote build
+  has a deadline (`--remote-timeout`, 120 min); a build that dies without an exit code, a removed directory or an
+  unreachable host stops the script, and every failure names the remote directory.
 - Exports leave out the debug libraries, PDBs, `rules_selftest` and the rules sources.
 - `tools/build_release_candidate.py` (and with it the workflow) builds and tests the release rules library on both
-  systems.
+  systems. The release export copies it beside the binary, as it does the map library, so `tools/package_release.py`
+  and the Linux and Windows installers carry both libraries (fixed after review: the first push left them expecting
+  one). Checked by exporting both release presets: the payload check passes, the pack lists `rules.gdextension`, and
+  the exported Windows game loads both libraries.
+- Release packaging still stops before the archives, for a reason older than this slice: the export writes a 4.7 GB
+  pack, above the 2 GB bound of `tools/compact_export_pck.py` and the 2 GiB archive-member bound of
+  `package_release.py`. A headless boot of that export also fails some preloads (a town shader, result textures).
 - `tools/core_suite.py` runs `rules_selftest` and fails when a checkout has not registered a `.gdextension`.
 - Worktrees take godot-cpp from the main checkout when it is at the pinned commit.
 
@@ -316,7 +324,8 @@ What the numbers say:
   keys.
 - In a game, the GDScript that builds the battle's blocking map before each search costs the most. It stays GDScript
   in this spike and is shared by both columns.
-- So the whole-function gain is 1.15x for the reachable search and 3x for the walk.
+- So the whole-function gain is 1.13x on Windows (1.15x on Linux) for the reachable search and 3.0x (3.3x) for
+  the walk.
 
 By the G0 table, the call through the boundary is a go for the walk and field checks and is in "fix the interface
 first" for the reachable search. With the Dictionaries, the reachable search falls below 5x. That is the interface
