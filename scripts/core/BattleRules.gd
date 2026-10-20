@@ -21,6 +21,8 @@ const DamageRules = preload("res://scripts/core/BattleDamageRules.gd")
 const ScenarioRulesScript = preload("res://scripts/core/ScenarioRules.gd")
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 const NativeRules = preload("res://scripts/core/NativeRules.gd")
+const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
+static var _battle_engine_mode: int = BattleEngine.mode
 
 # One immutable battle snapshot, bounded target/action entries. Never saved;
 # repeated hover and the legacy summaries share the same exact exchange.
@@ -1512,6 +1514,15 @@ static func resolve_if_battle_ready(session: SessionStateStoreScript.SessionData
 	return _drain_enemy_turns(session)
 
 static func get_active_stack(battle: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return get_active_stack__gd(battle)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules.get_active_stack", [battle])
+	var result = get_active_stack__gd(battle)
+	BattleEngine.check(&"BattleRules.get_active_stack", [battle], result)
+	return result
+
+static func get_active_stack__gd(battle: Dictionary) -> Dictionary:
 	return _get_stack_by_id(battle, String(battle.get("active_stack_id", "")))
 
 static func get_selected_target(battle: Dictionary) -> Dictionary:
@@ -9340,6 +9351,15 @@ static func _ensure_battle_hex_state(battle: Dictionary) -> void:
 	_sync_occupied_hexes(battle)
 
 static func _alive_stack_count_for_side(battle: Dictionary, side: String) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _alive_stack_count_for_side__gd(battle, side)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._alive_stack_count_for_side", [battle, side])
+	var result = _alive_stack_count_for_side__gd(battle, side)
+	BattleEngine.check(&"BattleRules._alive_stack_count_for_side", [battle, side], result)
+	return result
+
+static func _alive_stack_count_for_side__gd(battle: Dictionary, side: String) -> int:
 	var total := 0
 	for stack in battle.get("stacks", []):
 		if stack is Dictionary and String(stack.get("side", "")) == side and _alive_count(stack) > 0:
@@ -9470,6 +9490,15 @@ static func battle_obstacle_cells(battle: Dictionary) -> Dictionary:
 	return _obstacle_cell_map(battle)
 
 static func _obstacle_cell_map(battle: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _obstacle_cell_map__gd(battle)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._obstacle_cell_map", [battle])
+	var result = _obstacle_cell_map__gd(battle)
+	BattleEngine.check(&"BattleRules._obstacle_cell_map", [battle], result)
+	return result
+
+static func _obstacle_cell_map__gd(battle: Dictionary) -> Dictionary:
 	var blocked := {}
 	var obstacles: Variant = battle.get(OBSTACLES_KEY, [])
 	if not (obstacles is Array):
@@ -9486,17 +9515,44 @@ static func _obstacle_cell_map(battle: Dictionary) -> Dictionary:
 ## What a body can neither stand on nor walk through: living stacks and obstacles.
 ## The occupancy map stays stack-only for target and body reads.
 static func _build_blocking_map(battle: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _build_blocking_map__gd(battle)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._build_blocking_map", [battle])
+	var result = _build_blocking_map__gd(battle)
+	BattleEngine.check(&"BattleRules._build_blocking_map", [battle], result)
+	return result
+
+static func _build_blocking_map__gd(battle: Dictionary) -> Dictionary:
 	var blocked := _obstacle_cell_map(battle)
 	blocked.merge(_build_occupancy_map(battle), true)
 	return blocked
 
 static func _hex_cell(q: int, r: int) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _hex_cell__gd(q, r)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._hex_cell", [q, r])
+	var result = _hex_cell__gd(q, r)
+	BattleEngine.check(&"BattleRules._hex_cell", [q, r], result)
+	return result
+
+static func _hex_cell__gd(q: int, r: int) -> Dictionary:
 	return {
 		"q": clamp(q, 0, BATTLE_HEX_COLUMNS - 1),
 		"r": clamp(r, 0, BATTLE_HEX_ROWS - 1),
 	}
 
 static func _normalize_hex_cell(value: Variant) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _normalize_hex_cell__gd(value)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._normalize_hex_cell", [value])
+	var result = _normalize_hex_cell__gd(value)
+	BattleEngine.check(&"BattleRules._normalize_hex_cell", [value], result)
+	return result
+
+static func _normalize_hex_cell__gd(value: Variant) -> Dictionary:
 	if value is Vector2i:
 		return _hex_cell(value.x, value.y)
 	if value is Dictionary:
@@ -9507,12 +9563,39 @@ static func _normalize_hex_cell(value: Variant) -> Dictionary:
 	return {}
 
 static func _hex_in_bounds(q: int, r: int) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _hex_in_bounds__gd(q, r)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._hex_in_bounds", [q, r])
+	var result = _hex_in_bounds__gd(q, r)
+	BattleEngine.check(&"BattleRules._hex_in_bounds", [q, r], result)
+	return result
+
+static func _hex_in_bounds__gd(q: int, r: int) -> bool:
 	return q >= 0 and q < BATTLE_HEX_COLUMNS and r >= 0 and r < BATTLE_HEX_ROWS
 
 static func _hex_key(cell: Dictionary) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _hex_key__gd(cell)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._hex_key", [cell])
+	var result = _hex_key__gd(cell)
+	BattleEngine.check(&"BattleRules._hex_key", [cell], result)
+	return result
+
+static func _hex_key__gd(cell: Dictionary) -> String:
 	return "%d,%d" % [int(cell.get("q", -1)), int(cell.get("r", -1))]
 
 static func _hex_key_from_coords(q: int, r: int) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _hex_key_from_coords__gd(q, r)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._hex_key_from_coords", [q, r])
+	var result = _hex_key_from_coords__gd(q, r)
+	BattleEngine.check(&"BattleRules._hex_key_from_coords", [q, r], result)
+	return result
+
+static func _hex_key_from_coords__gd(q: int, r: int) -> String:
 	return "%d,%d" % [q, r]
 
 static func _first_open_body_near(stack: Dictionary, preferred: Dictionary, used: Dictionary) -> Dictionary:
@@ -9530,6 +9613,15 @@ static func _first_open_body_near(stack: Dictionary, preferred: Dictionary, used
 	return {}
 
 static func _stack_hex(stack: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _stack_hex__gd(stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._stack_hex", [stack])
+	var result = _stack_hex__gd(stack)
+	BattleEngine.check(&"BattleRules._stack_hex", [stack], result)
+	return result
+
+static func _stack_hex__gd(stack: Dictionary) -> Dictionary:
 	return _normalize_hex_cell(stack.get(STACK_HEX_KEY, {}))
 
 static func _stack_movement_points(stack: Dictionary, battle: Dictionary = {}) -> int:
@@ -9542,6 +9634,15 @@ static func _stack_is_rooted(stack: Dictionary, battle: Dictionary) -> bool:
 	return SpellRulesScript.has_effect_id(stack, battle, STATUS_ROOTED)
 
 static func _build_occupancy_map(battle: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _build_occupancy_map__gd(battle)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._build_occupancy_map", [battle])
+	var result = _build_occupancy_map__gd(battle)
+	BattleEngine.check(&"BattleRules._build_occupancy_map", [battle], result)
+	return result
+
+static func _build_occupancy_map__gd(battle: Dictionary) -> Dictionary:
 	var occupied := {}
 	for stack in battle.get("stacks", []):
 		if not (stack is Dictionary) or _alive_count(stack) <= 0:
@@ -9554,6 +9655,16 @@ static func _build_occupancy_map(battle: Dictionary) -> Dictionary:
 	return occupied
 
 static func _sync_occupied_hexes(battle: Dictionary) -> void:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		_sync_occupied_hexes__gd(battle)
+	elif _battle_engine_mode == BattleEngine.NATIVE:
+		BattleEngine.native_writing(&"BattleRules._sync_occupied_hexes", [battle])
+	else:
+		var before := BattleEngine.before_writing([battle])
+		_sync_occupied_hexes__gd(battle)
+		BattleEngine.check_writing(&"BattleRules._sync_occupied_hexes", before, [battle], null)
+
+static func _sync_occupied_hexes__gd(battle: Dictionary) -> void:
 	battle[OCCUPIED_HEXES_KEY] = _build_occupancy_map(battle)
 
 static func _set_stack_hex(battle: Dictionary, battle_id: String, cell: Dictionary) -> void:
@@ -9596,6 +9707,15 @@ static func _presentation_walk_path(battle: Dictionary, start: Dictionary, desti
 	return []
 
 static func _hex_neighbors(cell: Dictionary) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _hex_neighbors__gd(cell)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._hex_neighbors", [cell])
+	var result = _hex_neighbors__gd(cell)
+	BattleEngine.check(&"BattleRules._hex_neighbors", [cell], result)
+	return result
+
+static func _hex_neighbors__gd(cell: Dictionary) -> Array:
 	var q := int(cell.get("q", -1))
 	var r := int(cell.get("r", -1))
 	var offsets: Array[Vector2i] = []
@@ -9654,9 +9774,27 @@ static func _hex_open_mask(stack: Dictionary, occupied: Dictionary) -> PackedByt
 
 ## The column a two-hex body's tail stands at from its anchor (BattleFootprint.cells).
 static func _hex_tail_step(stack: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _hex_tail_step__gd(stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._hex_tail_step", [stack])
+	var result = _hex_tail_step__gd(stack)
+	BattleEngine.check(&"BattleRules._hex_tail_step", [stack], result)
+	return result
+
+static func _hex_tail_step__gd(stack: Dictionary) -> int:
 	return 1 if String(stack.get("side", "player")) == "enemy" else -1
 
 static func _reachable_empty_hexes(battle: Dictionary, stack: Dictionary, max_steps: int) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _reachable_empty_hexes__gd(battle, stack, max_steps)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._reachable_empty_hexes", [battle, stack, max_steps])
+	var result = _reachable_empty_hexes__gd(battle, stack, max_steps)
+	BattleEngine.check(&"BattleRules._reachable_empty_hexes", [battle, stack, max_steps], result)
+	return result
+
+static func _reachable_empty_hexes__gd(battle: Dictionary, stack: Dictionary, max_steps: int) -> Array:
 	var start := _stack_hex(stack)
 	if start.is_empty() or max_steps <= 0:
 		return []
@@ -9671,9 +9809,27 @@ static func _reachable_empty_hexes(battle: Dictionary, stack: Dictionary, max_st
 	return reachable
 
 static func _stack_hex_distance(lhs: Dictionary, rhs: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _stack_hex_distance__gd(lhs, rhs)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._stack_hex_distance", [lhs, rhs])
+	var result = _stack_hex_distance__gd(lhs, rhs)
+	BattleEngine.check(&"BattleRules._stack_hex_distance", [lhs, rhs], result)
+	return result
+
+static func _stack_hex_distance__gd(lhs: Dictionary, rhs: Dictionary) -> int:
 	return Footprint.distance(lhs, rhs)
 
 static func _hex_distance(lhs: Dictionary, rhs: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _hex_distance__gd(lhs, rhs)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._hex_distance", [lhs, rhs])
+	var result = _hex_distance__gd(lhs, rhs)
+	BattleEngine.check(&"BattleRules._hex_distance", [lhs, rhs], result)
+	return result
+
+static func _hex_distance__gd(lhs: Dictionary, rhs: Dictionary) -> int:
 	if lhs.is_empty() or rhs.is_empty():
 		return 999
 	var lhs_cube := _offset_to_cube(int(lhs.get("q", 0)), int(lhs.get("r", 0)))
@@ -9687,12 +9843,30 @@ static func _hex_distance(lhs: Dictionary, rhs: Dictionary) -> int:
 	)
 
 static func _offset_to_cube(q: int, r: int) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _offset_to_cube__gd(q, r)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._offset_to_cube", [q, r])
+	var result = _offset_to_cube__gd(q, r)
+	BattleEngine.check(&"BattleRules._offset_to_cube", [q, r], result)
+	return result
+
+static func _offset_to_cube__gd(q: int, r: int) -> Dictionary:
 	var x := q - int((r - (r % 2)) / 2)
 	var z := r
 	var y := -x - z
 	return {"x": x, "y": y, "z": z}
 
 static func _distance_band_from_hex_distance(hex_distance: int) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _distance_band_from_hex_distance__gd(hex_distance)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._distance_band_from_hex_distance", [hex_distance])
+	var result = _distance_band_from_hex_distance__gd(hex_distance)
+	BattleEngine.check(&"BattleRules._distance_band_from_hex_distance", [hex_distance], result)
+	return result
+
+static func _distance_band_from_hex_distance__gd(hex_distance: int) -> int:
 	if hex_distance <= 1:
 		return 0
 	if hex_distance <= 5:
@@ -9700,6 +9874,16 @@ static func _distance_band_from_hex_distance(hex_distance: int) -> int:
 	return 2
 
 static func _sync_distance_from_hexes(battle: Dictionary) -> void:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		_sync_distance_from_hexes__gd(battle)
+	elif _battle_engine_mode == BattleEngine.NATIVE:
+		BattleEngine.native_writing(&"BattleRules._sync_distance_from_hexes", [battle])
+	else:
+		var before := BattleEngine.before_writing([battle])
+		_sync_distance_from_hexes__gd(battle)
+		BattleEngine.check_writing(&"BattleRules._sync_distance_from_hexes", before, [battle], null)
+
+static func _sync_distance_from_hexes__gd(battle: Dictionary) -> void:
 	var best := 999
 	for player_stack in _alive_stacks_for_side(battle, "player"):
 		for enemy_stack in _alive_stacks_for_side(battle, "enemy"):
@@ -9712,6 +9896,15 @@ static func _sync_distance_from_hexes(battle: Dictionary) -> void:
 ## _hex_key. Hexes with no such walk are missing; so is every hex when all the
 ## hexes gap from target are taken.
 static func _walk_steps_to_target(battle: Dictionary, stack: Dictionary, target: Dictionary, gap: int) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _walk_steps_to_target__gd(battle, stack, target, gap)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._walk_steps_to_target", [battle, stack, target, gap])
+	var result = _walk_steps_to_target__gd(battle, stack, target, gap)
+	BattleEngine.check(&"BattleRules._walk_steps_to_target", [battle, stack, target, gap], result)
+	return result
+
+static func _walk_steps_to_target__gd(battle: Dictionary, stack: Dictionary, target: Dictionary, gap: int) -> Dictionary:
 	var cache_key := _board_read_cache_key(battle, "walk_steps", "%s>%s|%d" % [String(stack.get("battle_id", "")), String(target.get("battle_id", "")), gap])
 	var cached: Variant = _board_read_cache_get(cache_key)
 	if cached != null:
@@ -10057,11 +10250,29 @@ static func _advance_stalled_by_obstruction(stack: Dictionary, battle: Dictionar
 	return int(battle.get("distance", 1)) > 0 and _advance_distance_delta(stack, battle) <= 0
 
 static func _hex_label(cell: Dictionary) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _hex_label__gd(cell)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._hex_label", [cell])
+	var result = _hex_label__gd(cell)
+	BattleEngine.check(&"BattleRules._hex_label", [cell], result)
+	return result
+
+static func _hex_label__gd(cell: Dictionary) -> String:
 	if cell.is_empty():
 		return "unknown hex"
 	return "hex %d,%d" % [int(cell.get("q", 0)), int(cell.get("r", 0))]
 
 static func _projected_min_opposing_hex_distance(battle: Dictionary, stack: Dictionary, destination: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _projected_min_opposing_hex_distance__gd(battle, stack, destination)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._projected_min_opposing_hex_distance", [battle, stack, destination])
+	var result = _projected_min_opposing_hex_distance__gd(battle, stack, destination)
+	BattleEngine.check(&"BattleRules._projected_min_opposing_hex_distance", [battle, stack, destination], result)
+	return result
+
+static func _projected_min_opposing_hex_distance__gd(battle: Dictionary, stack: Dictionary, destination: Dictionary) -> int:
 	var best := 999
 	for target in _alive_stacks_for_side(battle, _opposing_side(String(stack.get("side", "")))):
 		best = min(best, Footprint.distance(stack, target, destination))
@@ -13191,16 +13402,43 @@ static func _army_strength_from_stacks(stacks: Variant) -> int:
 	return total
 
 static func _alive_count(stack: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _alive_count__gd(stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._alive_count", [stack])
+	var result = _alive_count__gd(stack)
+	BattleEngine.check(&"BattleRules._alive_count", [stack], result)
+	return result
+
+static func _alive_count__gd(stack: Dictionary) -> int:
 	var unit_hp = max(1, int(stack.get("unit_hp", 1)))
 	return int(ceil(float(max(0, int(stack.get("total_health", 0)))) / float(unit_hp)))
 
 static func _health_ratio(stack: Dictionary) -> float:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _health_ratio__gd(stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._health_ratio", [stack])
+	var result = _health_ratio__gd(stack)
+	BattleEngine.check(&"BattleRules._health_ratio", [stack], result)
+	return result
+
+static func _health_ratio__gd(stack: Dictionary) -> float:
 	if stack.is_empty():
 		return 0.0
 	var max_health = max(1, int(stack.get("base_count", 0)) * max(1, int(stack.get("unit_hp", 1))))
 	return clampf(float(max(0, int(stack.get("total_health", 0)))) / float(max_health), 0.0, 1.0)
 
 static func _alive_stacks_for_side(battle: Dictionary, side: String) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _alive_stacks_for_side__gd(battle, side)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._alive_stacks_for_side", [battle, side])
+	var result = _alive_stacks_for_side__gd(battle, side)
+	BattleEngine.check(&"BattleRules._alive_stacks_for_side", [battle, side], result)
+	return result
+
+static func _alive_stacks_for_side__gd(battle: Dictionary, side: String) -> Array:
 	var alive = []
 	for stack in battle.get("stacks", []):
 		# _alive_count(stack) > 0 exactly when the stack has health left.
@@ -13320,6 +13558,15 @@ static func _distance_label(distance: int) -> String:
 			return "Long approach"
 
 static func _side_label(side: String) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _side_label__gd(side)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._side_label", [side])
+	var result = _side_label__gd(side)
+	BattleEngine.check(&"BattleRules._side_label", [side], result)
+	return result
+
+static func _side_label__gd(side: String) -> String:
 	return "Enemy" if side == "enemy" else "Player"
 
 static func _commander_state_for_side(battle: Dictionary, side: String) -> Dictionary:
@@ -14049,6 +14296,15 @@ static func _stack_is_isolated(battle: Dictionary, stack: Dictionary) -> bool:
 ## Standing next to a living enemy: a shooter there shoots at x0.6, whichever
 ## stack it aims at.
 static func _stack_is_engaged(stack: Dictionary, battle: Dictionary) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _stack_is_engaged__gd(stack, battle)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._stack_is_engaged", [stack, battle])
+	var result = _stack_is_engaged__gd(stack, battle)
+	BattleEngine.check(&"BattleRules._stack_is_engaged", [stack, battle], result)
+	return result
+
+static func _stack_is_engaged__gd(stack: Dictionary, battle: Dictionary) -> bool:
 	if stack.is_empty() or _stack_hex(stack).is_empty():
 		return false
 	for enemy in _alive_stacks_for_side(battle, _opposing_side(String(stack.get("side", "")))):
@@ -14602,6 +14858,15 @@ static func _normalize_side_token(side: String, allow_neutral: bool = true) -> S
 			return "neutral" if allow_neutral else ""
 
 static func _opposing_side(side: String) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _opposing_side__gd(side)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._opposing_side", [side])
+	var result = _opposing_side__gd(side)
+	BattleEngine.check(&"BattleRules._opposing_side", [side], result)
+	return result
+
+static func _opposing_side__gd(side: String) -> String:
 	if side == "player":
 		return "enemy"
 	if side == "enemy":
@@ -16087,6 +16352,15 @@ static func _record_event(battle: Dictionary, message: String) -> void:
 	battle["recent_events"] = events
 
 static func _get_stack_by_id(battle: Dictionary, battle_id: String) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _get_stack_by_id__gd(battle, battle_id)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._get_stack_by_id", [battle, battle_id])
+	var result = _get_stack_by_id__gd(battle, battle_id)
+	BattleEngine.check(&"BattleRules._get_stack_by_id", [battle, battle_id], result)
+	return result
+
+static func _get_stack_by_id__gd(battle: Dictionary, battle_id: String) -> Dictionary:
 	if battle_id == "":
 		return {}
 	for stack in battle.get("stacks", []):
@@ -16095,6 +16369,15 @@ static func _get_stack_by_id(battle: Dictionary, battle_id: String) -> Dictionar
 	return {}
 
 static func _stack_label(stack: Dictionary) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _stack_label__gd(stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._stack_label", [stack])
+	var result = _stack_label__gd(stack)
+	BattleEngine.check(&"BattleRules._stack_label", [stack], result)
+	return result
+
+static func _stack_label__gd(stack: Dictionary) -> String:
 	return String(stack.get("name", stack.get("unit_id", "Stack")))
 
 static func _stack_summary_line(stack: Dictionary, battle: Dictionary, active_id: String, selected_id: String) -> String:

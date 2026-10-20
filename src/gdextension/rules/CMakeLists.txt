@@ -96,6 +96,11 @@ add_library(aurelion_rules_core STATIC
 	core/battle_state.cpp
 	core/build_info.cpp
 	core/compat/godot_string.cpp
+	core/port/battle_ai_rules.cpp
+	core/port/battle_footprint.cpp
+	core/port/battle_rules.cpp
+	core/port/gd.cpp
+	core/port/registry.cpp
 )
 add_dependencies(aurelion_rules_core aurelion_rules_source_tree)
 target_include_directories(aurelion_rules_core PUBLIC include PRIVATE "${AURELION_RULES_GENERATED_DIR}")
@@ -105,6 +110,7 @@ set_target_properties(aurelion_rules_core PROPERTIES POSITION_INDEPENDENT_CODE O
 add_library(aurelion_rules SHARED
 	gdextension/register_types.cpp
 	gdextension/aurelion_rules_api.cpp
+	gdextension/battle_port_bridge.cpp
 	gdextension/battle_state_bridge.cpp
 )
 target_link_libraries(aurelion_rules PRIVATE aurelion_rules_core godot::cpp)

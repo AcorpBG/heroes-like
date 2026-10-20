@@ -1,15 +1,22 @@
 #include "aurelion_rules_api.hpp"
 
+#include "battle_port_bridge.hpp"
 #include "battle_state_bridge.hpp"
 
 #include "aurelion_rules/battle_hex.hpp"
 #include "aurelion_rules/build_info.hpp"
+#include "aurelion_rules/port/registry.hpp"
 
+#include <godot_cpp/classes/os.hpp>
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
 #include <chrono>
+#include <cstdio>
+#include <cstring>
 #include <exception>
+#include <filesystem>
+#include <fstream>
 #include <vector>
 
 #ifndef AURELION_RULES_FLAVOUR
@@ -91,6 +98,29 @@ void AurelionRules::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("state_round_trip", "value", "mode"), &AurelionRules::state_round_trip);
 	ClassDB::bind_method(D_METHOD("state_overwrite", "target", "source"), &AurelionRules::state_overwrite);
 	ClassDB::bind_method(D_METHOD("state_last_stats"), &AurelionRules::state_last_stats);
+	ClassDB::bind_method(D_METHOD("battle_port_call", "name", "args", "write_back"), &AurelionRules::battle_port_call);
+	ClassDB::bind_method(D_METHOD("battle_port_check", "name", "args", "gdscript_result"), &AurelionRules::battle_port_check);
+	ClassDB::bind_method(D_METHOD("battle_port_report", "name", "mismatch"), &AurelionRules::battle_port_report);
+	ClassDB::bind_method(D_METHOD("battle_port_stats"), &AurelionRules::battle_port_stats);
+}
+
+AurelionRules::AurelionRules() :
+		port_(std::make_unique<aurelion::rules::bridge::PortBridge>()) {
+	size_t count = 0;
+	aurelion::rules::port::functions(count);
+	port_stats_.resize(count);
+	OS *os = OS::get_singleton();
+	if (os != nullptr) {
+		const String folder = os->get_environment("HEROES_NATIVE_BATTLE_LOG");
+		if (!folder.is_empty()) {
+			const CharString utf8 = folder.path_join("shadow_" + String::num_int64(os->get_process_id()) + ".json").utf8();
+			port_log_path_.assign(utf8.get_data(), static_cast<size_t>(utf8.length()));
+		}
+	}
+}
+
+AurelionRules::~AurelionRules() {
+	write_port_stats();
 }
 
 Dictionary AurelionRules::get_build_info() const {
@@ -204,6 +234,218 @@ Variant AurelionRules::state_overwrite(const Variant &target, const Variant &sou
 
 Dictionary AurelionRules::state_last_stats() const {
 	return last_state_stats_;
+}
+
+namespace {
+
+std::string utf8_text(const String &text) {
+	const CharString utf8 = text.utf8();
+	return std::string(utf8.get_data(), static_cast<size_t>(utf8.length()));
+}
+
+void append_json_string(std::string &out, const std::string &text) {
+	out += '"';
+	for (const char c : text) {
+		switch (c) {
+			case '"':
+				out += "\\\"";
+				break;
+			case '\\':
+				out += "\\\\";
+				break;
+			case '\n':
+				out += "\\n";
+				break;
+			default:
+				if (static_cast<unsigned char>(c) < 0x20) {
+					char escaped[8];
+					std::snprintf(escaped, sizeof(escaped), "\\u%04x", static_cast<unsigned>(static_cast<unsigned char>(c)));
+					out += escaped;
+				} else {
+					out += c;
+				}
+		}
+	}
+	out += '"';
+}
+
+constexpr int kMaxPortArgs = 8;
+constexpr size_t kKeptMismatches = 20;
+constexpr int64_t kStatsEvery = 65536;
+
+} // namespace
+
+const aurelion::rules::port::Function *AurelionRules::port_function(const StringName &name) {
+	uint64_t id = 0;
+	std::memcpy(&id, name._native_ptr(), sizeof(id));
+	const auto found = port_names_.find(id);
+	if (found != port_names_.end()) {
+		return found->second.second;
+	}
+	const aurelion::rules::port::Function *function = aurelion::rules::port::find_function(utf8_text(String(name)));
+	if (function == nullptr) {
+		UtilityFunctions::push_error(String("AurelionRules: not a ported battle function: ") + String(name));
+	}
+	port_names_.emplace(id, std::make_pair(name, function));
+	return function;
+}
+
+AurelionRules::PortStats &AurelionRules::stats_of(const aurelion::rules::port::Function *function) {
+	size_t count = 0;
+	return port_stats_[static_cast<size_t>(function - aurelion::rules::port::functions(count))];
+}
+
+void AurelionRules::record_mismatch(PortStats &stats, const std::string &text) {
+	++stats.mismatches;
+	if (stats.first.size() < kKeptMismatches) {
+		stats.first.push_back(text);
+	}
+	write_port_stats();
+}
+
+void AurelionRules::count_port_use() {
+	if (++port_uses_ % kStatsEvery == 0) {
+		write_port_stats();
+	}
+}
+
+void AurelionRules::write_port_stats() const {
+	if (port_log_path_.empty()) {
+		return;
+	}
+	size_t count = 0;
+	const aurelion::rules::port::Function *table = aurelion::rules::port::functions(count);
+	std::string out = "{\"functions\": {";
+	bool first_entry = true;
+	for (size_t index = 0; index < count; ++index) {
+		const PortStats &stats = port_stats_[index];
+		if (stats.calls == 0 && stats.checks == 0) {
+			continue;
+		}
+		if (!first_entry) {
+			out += ", ";
+		}
+		first_entry = false;
+		append_json_string(out, table[index].name);
+		out += ": {\"calls\": " + std::to_string(stats.calls) + ", \"checks\": " + std::to_string(stats.checks) + ", \"mismatches\": " + std::to_string(stats.mismatches) + ", \"errors\": " + std::to_string(stats.errors) + ", \"first\": [";
+		for (size_t line = 0; line < stats.first.size(); ++line) {
+			if (line != 0) {
+				out += ", ";
+			}
+			append_json_string(out, stats.first[line]);
+		}
+		out += "]}";
+	}
+	out += "}}\n";
+	std::ofstream file(std::filesystem::u8path(port_log_path_), std::ios::binary | std::ios::trunc);
+	file << out;
+}
+
+Variant AurelionRules::battle_port_call(const StringName &name, const Array &args, bool write_back) {
+	const aurelion::rules::port::Function *function = port_function(name);
+	if (function == nullptr) {
+		return Variant();
+	}
+	PortStats &stats = stats_of(function);
+	++stats.calls;
+	count_port_use();
+	std::string problem;
+	try {
+		if (args.size() != function->arity || function->arity > kMaxPortArgs) {
+			problem = std::string(function->name) + " takes " + std::to_string(function->arity) + " arguments, got " + std::to_string(args.size());
+		} else {
+			port_->begin();
+			aurelion::rules::state::Value values[kMaxPortArgs];
+			for (int index = 0; index < function->arity; ++index) {
+				values[index] = port_->load(args[index]);
+			}
+			const aurelion::rules::state::Value result = function->call(port_->state(), values);
+			if (write_back) {
+				port_->write_back();
+			} else if (port_->changed_a_source()) {
+				problem = std::string(function->name) + ": native wrote into an argument";
+			}
+			if (problem.empty()) {
+				return port_->export_value(result);
+			}
+		}
+	} catch (const aurelion::rules::state::ScriptError &error) {
+		problem = std::string(function->name) + ": native script error: " + error.what();
+	} catch (const std::exception &error) {
+		problem = std::string(function->name) + ": native exception: " + error.what();
+	}
+	++stats.errors;
+	UtilityFunctions::push_error(String("AurelionRules.battle_port_call: ") + String::utf8(problem.c_str()));
+	return Variant();
+}
+
+String AurelionRules::battle_port_check(const StringName &name, const Array &args, const Variant &gdscript_result) {
+	const aurelion::rules::port::Function *function = port_function(name);
+	if (function == nullptr) {
+		return String("not a ported battle function");
+	}
+	PortStats &stats = stats_of(function);
+	++stats.checks;
+	count_port_use();
+	std::string mismatch;
+	try {
+		if (args.size() != function->arity || function->arity > kMaxPortArgs) {
+			mismatch = std::string("takes ") + std::to_string(function->arity) + " arguments, got " + std::to_string(args.size());
+		} else {
+			port_->begin();
+			aurelion::rules::state::Value values[kMaxPortArgs];
+			for (int index = 0; index < function->arity; ++index) {
+				values[index] = port_->load(args[index]);
+			}
+			const aurelion::rules::state::Value result = function->call(port_->state(), values);
+			if (port_->changed_a_source()) {
+				mismatch = "native wrote into an argument";
+			} else {
+				mismatch = port_->diff(result, gdscript_result);
+			}
+		}
+	} catch (const aurelion::rules::state::ScriptError &error) {
+		mismatch = std::string("native script error: ") + error.what();
+	} catch (const std::exception &error) {
+		mismatch = std::string("native exception: ") + error.what();
+	}
+	if (mismatch.empty()) {
+		return String();
+	}
+	record_mismatch(stats, mismatch);
+	return String::utf8(mismatch.c_str());
+}
+
+void AurelionRules::battle_port_report(const StringName &name, const String &mismatch) {
+	const aurelion::rules::port::Function *function = port_function(name);
+	if (function == nullptr) {
+		return;
+	}
+	PortStats &stats = stats_of(function);
+	++stats.checks;
+	count_port_use();
+	if (!mismatch.is_empty()) {
+		record_mismatch(stats, utf8_text(mismatch));
+	}
+}
+
+Dictionary AurelionRules::battle_port_stats() const {
+	size_t count = 0;
+	const aurelion::rules::port::Function *table = aurelion::rules::port::functions(count);
+	Dictionary result;
+	for (size_t index = 0; index < count; ++index) {
+		const PortStats &stats = port_stats_[index];
+		if (stats.calls == 0 && stats.checks == 0) {
+			continue;
+		}
+		Dictionary entry;
+		entry["calls"] = stats.calls;
+		entry["checks"] = stats.checks;
+		entry["mismatches"] = stats.mismatches;
+		entry["errors"] = stats.errors;
+		result[String(table[index].name)] = entry;
+	}
+	return result;
 }
 
 } // namespace godot

@@ -1,6 +1,8 @@
 #include "battle_state_bridge.hpp"
 
 #include <cstring>
+
+#include <godot_cpp/variant/vector2i.hpp>
 #include <string_view>
 
 namespace aurelion::rules::bridge {
@@ -15,23 +17,6 @@ using state::Kind;
 using state::Value;
 
 namespace {
-
-// An Array or Dictionary is a pointer to the engine's shared data; two Variants
-// hold the same container when the pointers match (is_same in GDScript).
-static_assert(sizeof(Array) == sizeof(uint64_t), "Array is one pointer");
-static_assert(sizeof(Dictionary) == sizeof(uint64_t), "Dictionary is one pointer");
-
-uint64_t identity_of(const Array &array) {
-	uint64_t id = 0;
-	std::memcpy(&id, array._native_ptr(), sizeof(id));
-	return id;
-}
-
-uint64_t identity_of(const Dictionary &dict) {
-	uint64_t id = 0;
-	std::memcpy(&id, dict._native_ptr(), sizeof(id));
-	return id;
-}
 
 enum class Probe {
 	Known,
@@ -60,7 +45,7 @@ Probe probe_key(const Variant &key, const state::State &state, Value &out) {
 		case Variant::STRING_NAME: {
 			const CharString utf8 = static_cast<String>(key).utf8();
 			uint32_t atom = 0;
-			if (!state.lookup(std::string_view(utf8.get_data(), static_cast<size_t>(utf8.length())), atom)) {
+			if (!state.find_atom(std::string_view(utf8.get_data(), static_cast<size_t>(utf8.length())), atom)) {
 				return Probe::Absent;
 			}
 			out = Value::of_ref(key.get_type() == Variant::STRING ? Kind::String : Kind::StringName, atom);
@@ -81,6 +66,22 @@ int64_t find_key(const Value &key, const state::DictNode &node) {
 }
 
 } // namespace
+
+// An Array or Dictionary is a pointer to the engine's shared data.
+static_assert(sizeof(Array) == sizeof(uint64_t), "Array is one pointer");
+static_assert(sizeof(Dictionary) == sizeof(uint64_t), "Dictionary is one pointer");
+
+uint64_t identity_of(const Array &array) {
+	uint64_t id = 0;
+	std::memcpy(&id, array._native_ptr(), sizeof(id));
+	return id;
+}
+
+uint64_t identity_of(const Dictionary &dict) {
+	uint64_t id = 0;
+	std::memcpy(&id, dict._native_ptr(), sizeof(id));
+	return id;
+}
 
 bool StateBridge::fail(const std::string &message) {
 	if (error_.empty()) {
@@ -122,6 +123,10 @@ Value StateBridge::load_value(const Variant &value, state::State &state) {
 			return load_string(static_cast<String>(value), Kind::String, state);
 		case Variant::STRING_NAME:
 			return load_string(static_cast<String>(value), Kind::StringName, state);
+		case Variant::VECTOR2I: {
+			const godot::Vector2i vector = value;
+			return Value::of_vector2i(vector.x, vector.y);
+		}
 		case Variant::ARRAY:
 			return load_array(static_cast<Array>(value), state);
 		case Variant::DICTIONARY:
@@ -349,6 +354,8 @@ Variant StateBridge::write_value(const Value &value, const state::State &state, 
 			return string_variant(value.ref, false, state);
 		case Kind::StringName:
 			return string_variant(value.ref, true, state);
+		case Kind::Vector2i:
+			return Variant(godot::Vector2i(value.vx(), value.vy()));
 		case Kind::Array:
 			return write_array(value.ref, state, in_place);
 		case Kind::Dict:
@@ -430,8 +437,8 @@ Variant StateBridge::write_dict(uint32_t node, const state::State &state, bool i
 	}
 	if (reuse) {
 		++reused_dicts_;
-		if (!target.is_read_only()) {
-			fill_dict_in_place(target, source, state, keys, values);
+		if (!target.is_read_only() && fill_dict_in_place(target, source, state, keys, values)) {
+			++rebuilt_dicts_;
 		}
 		return target;
 	}
@@ -444,7 +451,7 @@ Variant StateBridge::write_dict(uint32_t node, const state::State &state, bool i
 	return target;
 }
 
-void StateBridge::fill_dict_in_place(Dictionary &dict, const state::DictNode &node, const state::State &state, const std::vector<Variant> &keys, const std::vector<Variant> &values) {
+bool fill_dict_in_place(Dictionary &dict, const state::DictNode &node, const state::State &state, const std::vector<Variant> &keys, const std::vector<Variant> &values) {
 	const size_t count = node.keys.size();
 	const Array current = dict.keys();
 	const int64_t current_size = current.size();
@@ -487,7 +494,6 @@ void StateBridge::fill_dict_in_place(Dictionary &dict, const state::DictNode &no
 		}
 	}
 	if (rebuild) {
-		++rebuilt_dicts_;
 		dict.clear();
 	} else if (!same_order) {
 		for (int64_t index = 0; index < current_size; ++index) {
@@ -499,6 +505,7 @@ void StateBridge::fill_dict_in_place(Dictionary &dict, const state::DictNode &no
 	for (size_t index = 0; index < count; ++index) {
 		dict[keys[index]] = values[index];
 	}
+	return rebuild;
 }
 
 } // namespace aurelion::rules::bridge

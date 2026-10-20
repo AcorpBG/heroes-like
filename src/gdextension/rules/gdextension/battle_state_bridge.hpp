@@ -31,6 +31,17 @@
 
 namespace aurelion::rules::bridge {
 
+// The engine object an Array or Dictionary holds: two Variants hold the same
+// container when these match (is_same in GDScript).
+uint64_t identity_of(const godot::Array &array);
+uint64_t identity_of(const godot::Dictionary &dict);
+
+// Writes node into dict, which ends with node's keys in node's order, as the
+// exported keys and values. When the keys dict keeps are already in that
+// order, the dropped ones are erased and the new ones appended; otherwise dict
+// is cleared and refilled, and the answer is true.
+bool fill_dict_in_place(godot::Dictionary &dict, const state::DictNode &node, const state::State &state, const std::vector<godot::Variant> &keys, const std::vector<godot::Variant> &values);
+
 struct LoadCounts {
 	int64_t values = 0;
 	int64_t shared_refs = 0; // container references that reached an existing node
@@ -80,7 +91,6 @@ private:
 	godot::Variant write_dict(uint32_t node, const state::State &state, bool in_place);
 	godot::Array fresh_array(const state::ArrayNode &node) const;
 	godot::Dictionary fresh_dict(const state::DictNode &node) const;
-	void fill_dict_in_place(godot::Dictionary &dict, const state::DictNode &node, const state::State &state, const std::vector<godot::Variant> &keys, const std::vector<godot::Variant> &values);
 	bool fail(const std::string &message);
 
 	// The containers load() read, by node; nodes added later have none.
