@@ -490,6 +490,24 @@ every function run inside `resolve_active_battle`, with `_finalize_*` left out. 
 - **Results.** All ten digests are identical between the official Windows and Linux engines and this C++, except
   `float_round`, which has one digest per platform (see `round` above).
 
+**Native battle state** (`battle_state.{hpp,cpp}`, `gdextension/battle_state_bridge.cpp`; branch commits
+2175f97af..7c9224780):
+- **What it is.** Tagged values over pooled arrays and dictionaries, with interned strings. Loading keeps key order,
+  int/float, String/StringName, typed containers, read-only flags and shared references. Storing writes a copy, or
+  writes in place: known keys keep their slot, new keys are appended in GDScript's order, and the original arrays and
+  dictionaries are reused, so `is_same()` holds.
+- **How it is proven.** A probe ran before every AI battle step of the six parity seeds and both arena suites. It
+  loaded the battle state, stored it as a copy and in place, and compared both with the original by `var_to_bytes`.
+  The same ran on every payload after a JSON round trip, and on a mutated state written over the original. The probe
+  kept its in-place store as the live state, so the battles went on from the native copy.
+- **Results.** 0 failures over 2,496 battles: 25,805 steps, 8,934 JSON payloads, and 25,751 overwrites, 29,312 of them
+  dictionaries rebuilt in place. The six seeds' daily digests and match records stayed identical. The battle state
+  holds no shared containers and no StringNames, and only Dictionary, Array, String, int, float and bool.
+- **Cost.** On the six seeds a battle state holds about 3,000 values and 200 containers. Loading takes 0.70 ms,
+  storing a copy 0.33 ms and storing in place 0.62 ms, against 9.0 ms for a GDScript step. Converting on every step
+  would cap the speed-up near 7x, under G1's 10x. So the native engine converts once per resolve: about 1.3 ms against
+  a battle's ~65 ms, which caps it near 50x.
+
 ### Phase 2: one payload builder, AI preview as one call, the battle tool
 
 - Battle payload creation (`BattleRules.gd:256-402`), stack and hero payloads, obstacles, and the end-of-battle numbers

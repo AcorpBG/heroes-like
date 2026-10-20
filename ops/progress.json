@@ -115992,8 +115992,8 @@
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Branch native-phase1-battle. Done: ten engine-exact helpers (src/gdextension/rules/*/compat) fuzzed on 2^20 inputs each by tools/rules_compat/capture_vectors.gd and rules_selftest, identical to the official Godot 4.6.2 Windows and Linux engines (round() follows each platform: MinGW gives +-1 for +-0.49999999999999994, glibc +-0). Pending: native battle state round trip on every AI battle payload of the six seeds and both arena suites (JSON round-tripped too); BattleEngine boundary behind HEROES_NATIVE_BATTLE=gdscript|native|shadow; layer 1 (BattleRules 41/329, BattleFootprint 5/94, BattleAiRules copies 20/126) at 0 shadow mismatches; porting rate.",
-      "updatedAt": "2026-10-20T19:35:00Z"
+      "notes": "Branch native-phase1-battle. Done: ten engine-exact helpers (src/gdextension/rules/*/compat) fuzzed on 2^20 inputs each by tools/rules_compat/capture_vectors.gd and rules_selftest, identical to the official Godot 4.6.2 Windows and Linux engines (round() follows each platform: MinGW gives +-1 for +-0.49999999999999994, glibc +-0). Native battle state (battle_state.cpp, battle_state_bridge.cpp): round trip as copy and in place with 0 failures over 2,496 battles, 25,805 steps, 8,934 JSON round-tripped payloads and 25,751 overwrites; six-seed digests identical with the native copy kept as the live state; load 0.70 ms and store 0.33-0.62 ms against a 9.0 ms GDScript step, so the engine converts once per resolve. Pending: BattleEngine boundary behind HEROES_NATIVE_BATTLE=gdscript|native|shadow; layer 1 (BattleRules 41/329, BattleFootprint 5/94, BattleAiRules copies 20/126) at 0 shadow mismatches; porting rate.",
+      "updatedAt": "2026-10-20T19:32:00Z"
     },
     {
       "id": "native-rules-phase1-02-damage-chain-20261020",
