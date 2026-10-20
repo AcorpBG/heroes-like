@@ -94,6 +94,7 @@ add_custom_target(aurelion_rules_source_tree
 add_library(aurelion_rules_core STATIC
 	core/battle_hex.cpp
 	core/build_info.cpp
+	core/compat/godot_string.cpp
 )
 add_dependencies(aurelion_rules_core aurelion_rules_source_tree)
 target_include_directories(aurelion_rules_core PUBLIC include PRIVATE "${AURELION_RULES_GENERATED_DIR}")
@@ -113,6 +114,7 @@ endif()
 
 add_executable(rules_selftest
 	selftest/rules_selftest.cpp
+	selftest/compat_fuzz.cpp
 )
 target_link_libraries(rules_selftest PRIVATE aurelion_rules_core)
 

@@ -5,11 +5,15 @@
 //    files are read.
 // 2. A sweep over generated boards, digested; the digest must be the same
 //    under MSVC, GCC and MinGW and from one run to the next.
+// 3. The engine-exact helpers (core/compat) on 2^20 inputs each, digested and
+//    compared with the engine's digests (compat_digests.inc, captured by
+//    tools/rules_compat/capture_vectors.gd).
 //
 // Exit 0 and a RULES_SELFTEST ok line, or exit 1 with the first difference.
 
 #include "aurelion_rules/battle_hex.hpp"
 #include "aurelion_rules/build_info.hpp"
+#include "compat_fuzz.hpp"
 
 #include <cstdint>
 #include <cstdio>
@@ -22,6 +26,7 @@ namespace hex = aurelion::rules::battle_hex;
 namespace {
 
 #include "battle_hex_vectors.inc"
+#include "compat_digests.inc"
 
 // The sweep's digest on every compiler (FNV-1a 64 over every answer).
 constexpr uint64_t kSweepDigest = 0xc6f6ecf4989d40bdULL;
@@ -245,6 +250,22 @@ int main(int argc, char **argv) {
 		std::printf("RULES_SELFTEST failed: sweep digest %016llx, expected %016llx\n", static_cast<unsigned long long>(first), static_cast<unsigned long long>(kSweepDigest));
 		return 1;
 	}
-	std::printf("RULES_SELFTEST ok vectors=%lld\n", static_cast<long long>(checked));
+
+	int64_t helpers = 0;
+	for (const CompatDigest &digest : compat_digests(kCompatCount)) {
+		const char *expected = nullptr;
+		for (const CompatExpected &entry : kCompatExpected) {
+			if (digest.helper == entry.helper) {
+				expected = entry.sha256;
+			}
+		}
+		std::printf("rules_selftest: compat %s %s\n", digest.helper.c_str(), digest.sha256.c_str());
+		if (!print_only && (expected == nullptr || digest.sha256 != expected)) {
+			std::printf("RULES_SELFTEST failed: compat helper %s digest %s, engine %s\n", digest.helper.c_str(), digest.sha256.c_str(), expected == nullptr ? "(none)" : expected);
+			return 1;
+		}
+		helpers += 1;
+	}
+	std::printf("RULES_SELFTEST ok vectors=%lld compat_helpers=%lld\n", static_cast<long long>(checked), static_cast<long long>(helpers));
 	return 0;
 }
