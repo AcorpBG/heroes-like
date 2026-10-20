@@ -191,8 +191,10 @@ del /f /q "%TEMP_HELPER%" "%TEMP_CLEANUP%" "%EXPECTED_LAUNCHER%" >nul 2>&1
 exit /b 1
 
 :validate_required_payload
+rem Files every release ships. The rules library is newer, so an older install lacks it;
+rem the helper's manifest check covers every file the install owns.
 setlocal DisableDelayedExpansion
-for %%F in (heroes-like.exe heroes-like.pck aurelion_map_persistence.windows.template_release.x86_64.dll aurelion_rules.windows.template_release.x86_64.dll README.txt build-info.json install.cmd uninstall.cmd heroes-like-installer-helper.exe) do (
+for %%F in (heroes-like.exe heroes-like.pck aurelion_map_persistence.windows.template_release.x86_64.dll README.txt build-info.json install.cmd uninstall.cmd heroes-like-installer-helper.exe) do (
   if not exist "%~1\%%F" (
     echo heroes-like uninstaller: required manifest-owned payload "%%F" is missing 1>&2
     endlocal & exit /b 1
