@@ -192,7 +192,7 @@ another project's Godot processes (1-3) ran during the profile, not during the e
     running): 2,221 s against 1,840 s, **1.21x** (1.20-1.21x per game), identical records. The six seeds during
     the check: 1.20-1.27x.
   - `tools/ai_match_batch.py --release` exports into `OUT/game`, plays on it and deletes it when the batch
-    completes; the editor binary stays the default until the owner decides. The Linux preset is not tested (the
+    completes. Owner decision 2026-10-20: the editor binary stays the batch default, `--release` is opt-in. The Linux preset is not tested (the
     server checkout has no import cache to export from).
 - **Profile.** Five full-length large 4P land games, the set-ups of owner round 7 (`ai_batch_20261020_r7_large4p_60`
   m011, m044, m053, m013, m054; one or two levels, normal or strong guards) replayed at 329a8c490, where they end on
