@@ -46,7 +46,7 @@ Documentation is not implementation unless a slice is explicitly documentation-o
 Locked stack for the current production foundation:
 
 - Engine: Godot 4 stable series.
-- Gameplay language: GDScript for in-game runtime behavior.
+- Gameplay language: GDScript for in-game runtime behavior, with the rules moving to C++ subsystem by subsystem (owner decision, 2026-10-20; `docs/native-rules-engine-transition.md`). A ported subsystem's rules live only in the `aurelion_rules` GDExtension, one copy on main; UI, text and file I/O stay GDScript, and saves keep the session Dictionary format.
 - Tooling language: Python for tests, reports, audits, and export/validation helpers.
 - Rendering: 2D-first scenes and UI.
 - Authored content: JSON files under `content/` until a selected migration replaces specific domains.

@@ -115929,6 +115929,32 @@
       "notes": "Brief from the owner's 2026-10-20 batch (.artifacts/ai_batch_20261020_large4p_60), m060 ai-match-4265064792 (weak guards), the late finish ai-far-ahead-hunts-rival-towns-20261020 left; its premise, a leader that knows its rival's towns but leaves its strength in garrisons, was only half right. Replay of m060 on b02beb996 with scratch probes: (1) Sunvault had not seen two of Embercourt's last towns (2263 at 68,97 and 2267 at 83,50) until about day 229; (2) _far_ahead counts only the main army, 4,000-13,000 from day 150 to 220 against Brasshollow raiders of 10,000-17,000, while Sunvault's garrisons held 55,000-190,000, so the hunt stayed at 20,500 until day 222; (3) those garrisons were mostly other factions' creatures (captured towns muster their own units) that the main army's seven slots only swap for stronger stacks, and own-town pickups are weighed only in the 3-day search at half troop value; (4) from day 247 Embercourt held no town and its heroes of about 1,000 took Sunvault's towns 15 times (11 empty) until day 276, because _town_defense_need counted a townless rival only when visible within two days. Fix in AiHeroRules: _town_defense_need is at least _townless_raider x DEFENSE_MARGIN / TOWN_ATTACK_RATIO; _townless_raider is the strongest ai_sightings entry of a rival (human or computer) that holds no town, while that hero is still on the map, kept for the decision. The _leave_defense budget (30% of a main army, 50% of a field army, at most the town's worth) is unchanged. Same rule for every faction, no day timers or caps, no new saved state. Evidence: the rule switched on at day 246 of m060 (same game until then) ends it on day 259 instead of 276, 4 captures after day 246 instead of 24. Replays from day 1 with the batch settings, without -> with (last day, captures/empty, first decision difference): on b02beb996 m060 276 -> 217, 464/201 -> 308/107, day 120; m006 ai-match-737604772 147 -> 140, 133/65 -> 142/74, day 98; m054 ai-match-3080264325 205 -> 205, 249/99 -> 233/92, day 165. On main 8b9aa4438 after balance-sunvault-round-7-20261020: m006 262 -> 160, 313/172 -> 121/55, day 43; m060 cap -> cap, 719/361 -> 718/360, day 311; m054 cap -> cap, 649/280 -> 622/276, day 126. Dropped variants (last day of m060/m006/m054 on b02beb996, baseline 276/147/205; first differences day 16-43): own garrisons added to the main army in _far_ahead 192/176/258; far ahead also when main army plus garrisons exceed CLEAR_WIN_RATIO (3x) 203/167/cap; a main hero's visit home worth the average town for its share of the main army's gap to 1.3x the strongest rival, when main army plus garrisons cover it 265/212/216, when garrisons alone cover it 204/187/cap, when they exceed 3x 215/168/225; garrisons in _far_ahead plus the visit 319/cap/222. Open, not this slice: on main after the trim m060 and m054 run to the cap with the leaders' strength in captured towns' garrisons of other factions' creatures that no hero carries out; in m060 57,000-91,000 each against main armies mostly of 5,000-27,000, 259 of 485 captures after day 150 empty. Validation: the replays above, tools/core_suite.py 16/16 on Windows (ai_town_knowledge_report and player_elimination_rules_report among them).",
       "updatedAt": "2026-10-20T10:45:00Z",
       "validatedAt": "2026-10-20T10:35:00Z"
+    },
+    {
+      "id": "native-rules-phase0-measure-20261020",
+      "title": "Native rules engine, Phase 0: parity check, release template, profile and baselines",
+      "status": "in_progress",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Owner decision 2026-10-20 (D1-D3): the rules move to C++ subsystem by subsystem. This slice: the committed six-seed parity check (per-day digest in the match runner, tools/rules_parity.py), batches on the release export template if games are identical, an exclusive profile on full-length games, the Windows/Linux GDScript baseline, script errors on paths to be ported. Feeds gate G0.",
+      "updatedAt": "2026-10-20T14:22:00Z"
+    },
+    {
+      "id": "native-rules-phase0-toolchain-20261020",
+      "title": "Native rules engine, Phase 0: aurelion_rules toolchain and the battle hex search spike",
+      "status": "in_progress",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Owner decision 2026-10-20 (D1-D3). This slice: the aurelion_rules core library and GDExtension, rules_selftest, compiler flags, a repo script for the remote Linux build, debug info outside git, the stripped Linux debug library (D3); then the spike: BattleRules hex search in C++, proven identical by the parity check, per-call speed measured. Feeds gate G0.",
+      "updatedAt": "2026-10-20T14:22:00Z"
     }
   ],
   "project": "heroes-like",

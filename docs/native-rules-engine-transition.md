@@ -1,8 +1,7 @@
 # Moving the rules engine to C++: transition plan
 
-Status: proposal for an owner decision, 2026-10-20. Nothing here is approved or implemented. Approving it changes
-`project.md:49` ("Gameplay language: GDScript for in-game runtime behavior") subsystem by subsystem. Line references
-are as of commit 50929125a; each slice brief re-checks them.
+Status: approved by the owner on 2026-10-20 with decisions D1-D3 (section 8); Phase 0 is started. Later phases start
+only through their gates. Line references are as of commit 50929125a; each slice brief re-checks them.
 
 ## 1. Why, and what "done" means
 
@@ -148,8 +147,10 @@ profile. Large whole-game gains come only once the AI, day processing *and* the 
   default").
 - **Foundations:** the rules library layout, flags, server build script, symbol archive, worktree submodule fix.
 - **Spike:** move one integer kernel end to end (edit, build on both systems, sync, digest, delete the GDScript loop).
-  Candidates: the BFS core of `AiHeroRules._search` (`:5508-5702`, up to 13-27 s per large game; changed on 10-17, so it
-  needs an exemption from the quiet-code rule), or the battle hex search, which Phase 1 needs anyway but saves less.
+  Chosen: the battle hex search (`BattleRules` `_reachable_empty_hexes`, `_walk_steps_to_target`,
+  `_obstacle_field_stays_open`). Battle code is quiet and Phase 1 needs it anyway. It saves less per game than the BFS core
+  of `AiHeroRules._search` (`:5508-5702`, up to 13-27 s), but AiHeroRules changes almost daily and would need an
+  exemption from the quiet-code rule.
 
 **Gate G0** (thresholds are proposals for the owner):
 
@@ -274,9 +275,9 @@ differences against the game.
 
 | | Decision | When |
 |---|---|---|
-| D1 | Change `project.md:49, 57-59` and the ownership list to native rules, subsystem by subsystem | before Phase 0 code |
-| D2 | A standing exception to the Validation budget for parity runs during port slices | Phase 0 |
-| D3 | Binary policy: strip the Linux debug library (50.8 MB today), LFS, or CI-built binaries | Phase 0 |
+| D1 | **Decided 2026-10-20:** `project.md:49` records the move to C++ subsystem by subsystem; the ownership list changes as each phase lands | before Phase 0 code |
+| D2 | **Decided 2026-10-20:** parity runs are allowed on port slices, never while an owner batch is running (AGENTS.md "Validation budget") | Phase 0 |
+| D3 | **Decided 2026-10-20:** native binaries stay committed; the Linux debug library is stripped (50.8 MB today) and its debug info kept outside git | Phase 0 |
 | D4 | Math: engine math through godot-cpp in the game, or a later deterministic-math behaviour change | Phase 2 |
 | D5 | Freeze windows for battle code (Phase 1) and AI code (Phase 4) | before each |
 | D6 | Retire tests that call private battle functions (`docs/rmg-test-retirement.md` process) | Phase 1 |
