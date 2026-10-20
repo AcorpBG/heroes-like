@@ -175,8 +175,11 @@ another project's Godot processes (1-3) ran during the profile, not during the e
   HEAD: identical daily digests and records on all six seeds, 5.3 min at 6 at once. A copy with
   `ATTACK_BONUS_PER_POINT` 0.05 -> 0.0501 differs from day 2-5 per seed, first path `flags.ai_battle_log[3].power`,
   6.4 min including the replays. A run fails when it prints a SCRIPT ERROR line, and the match runner stops at once
-  when the native rules library is not registered (`NativeRules.available()`), so two copies broken the same way
-  never compare identical. `prepare` registers the prepared revision's own `.gdextension` files.
+  when the native rules library is not registered (`NativeRules.available()`); `check`, and `compare` of two `run`
+  outputs, report a seed with a failed run as FAILED (exit 2). So two editor copies broken the same way never compare
+  identical. A release export prints no SCRIPT ERROR lines (the GDScript VM reports them only in debug builds), so on
+  an exported side only the runner's own failures count. `prepare` registers the prepared revision's own
+  `.gdextension` files.
 - **Windows and Linux** (the 4.6.2 Linux editor binary on the server): identical daily digests on all six seeds. The
   match records differ in the 15th significant digit of some floats (`power`, `defender_power`, `survivor_power`,
   `estimated_loss_share`) in five seeds (s2 is byte-identical): the record is written at JSON's default precision, the

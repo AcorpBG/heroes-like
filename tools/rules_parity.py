@@ -28,8 +28,13 @@ batch is running (AGENTS.md "Validation budget").
 `prepare` extracts `git archive REV` without art/ into DEST, links DEST/art to this checkout's art
 and DEST/.godot/imported to its import cache, copies the small .godot files and registers the
 revision's own native libraries (src/gdextension/*.gdextension). A revision that adds or renames a
-class_name needs a headless --import in DEST first. A run fails when the match fails, times out or
-prints a SCRIPT ERROR line (the runner itself fails when the native rules library is not loaded).
+class_name needs a headless --import in DEST first.
+
+A run fails when the match fails, times out or prints a SCRIPT ERROR line (the runner itself fails
+when the native rules library is not loaded). `check` and `compare` report a seed with a failed run
+on either side as FAILED, never identical; `compare` reads each folder's runs.json and its logs
+again. Only debug builds print SCRIPT ERROR lines: on an editor side a script error fails the run,
+on a release export (template_release) it goes unseen and only the runner's own failures count.
 Exit codes: 0 identical, 1 different, 2 a run failed.
 """
 from __future__ import annotations
@@ -159,9 +164,8 @@ def start(job: Job, profiles: Path) -> tuple[subprocess.Popen, Path, float]:
     return proc, profile, time.time()
 
 
-def finish(job: Job, proc: subprocess.Popen, profile: Path, started: float, timed_out: bool, keep_maps: dict[str, set[str]]) -> dict:
-    shutil.rmtree(profile, ignore_errors=True)
-    text = (job.out / f"{job.stem}.log").read_text(encoding="utf-8", errors="replace")
+def log_verdict(text: str, returncode: int | None = None, timed_out: bool = False) -> tuple[str, list[str], dict]:
+    """A run's problem ("" when it is clean), its SCRIPT ERROR lines and its report, from its log."""
     report = {}
     for line in text.splitlines():
         if line.startswith(REPORT_ID + " "):
@@ -169,6 +173,24 @@ def finish(job: Job, proc: subprocess.Popen, profile: Path, started: float, time
                 report = json.loads(line[len(REPORT_ID) + 1:])
             except ValueError:
                 pass
+    # A script error means the game ran a different path than intended (a missing class, a failed call),
+    # even when the match finished: such a run fails, so two sides with the same error never compare equal.
+    # Only debug builds (the editor binary) print them; a release export's log has none.
+    script_errors = [line.strip() for line in text.splitlines() if "SCRIPT ERROR" in line]
+    problem = ""
+    if timed_out:
+        problem = "timed out"
+    elif not report.get("ok"):
+        problem = str(report.get("error") or ("no report line" if returncode is None else f"exit {returncode}, no report line"))
+    elif script_errors:
+        problem = f"{len(script_errors)} SCRIPT ERROR lines, first: {script_errors[0]}"
+    return problem, script_errors, report
+
+
+def finish(job: Job, proc: subprocess.Popen, profile: Path, started: float, timed_out: bool, keep_maps: dict[str, set[str]]) -> dict:
+    shutil.rmtree(profile, ignore_errors=True)
+    text = (job.out / f"{job.stem}.log").read_text(encoding="utf-8", errors="replace")
+    problem, script_errors, report = log_verdict(text, proc.returncode, timed_out)
     record_path = job.out / f"{job.stem}.json"
     removed: list[str] = []
     if job.side.is_project and record_path.exists():
@@ -177,16 +199,6 @@ def finish(job: Job, proc: subprocess.Popen, profile: Path, started: float, time
             removed = remove_match_maps(scenario_id, started, keep_maps.get(str(job.side.path.resolve()), set()), job.side.path / "maps")
         except (ValueError, KeyError):
             pass
-    # A script error means the game ran a different path than intended (a missing class, a failed call),
-    # even when the match finished: such a run fails, so two sides with the same error never compare equal.
-    script_errors = [line.strip() for line in text.splitlines() if "SCRIPT ERROR" in line]
-    problem = ""
-    if timed_out:
-        problem = "timed out"
-    elif not report.get("ok"):
-        problem = str(report.get("error") or f"exit {proc.returncode}, no report line")
-    elif script_errors:
-        problem = f"{len(script_errors)} SCRIPT ERROR lines, first: {script_errors[0]}"
     return {
         "side": job.side.name, "seed": job.key, "dump_day": job.dump_day, "ok": not problem, "problem": problem,
         "seconds": round(time.time() - started, 1), "final_day": report.get("final_day"),
@@ -303,17 +315,35 @@ def differences(a, b, path: str = "", out: list | None = None, limit: int = 12) 
     return out
 
 
-def compare_seed(key: str, dir_a: Path, dir_b: Path) -> dict:
+def compare_seed(key: str, dir_a: Path, dir_b: Path, failed: list[str]) -> dict:
+    """failed: why a run of this seed on either side failed; such a seed is never identical."""
     da, db = read_digest(dir_a / f"{key}.digest"), read_digest(dir_b / f"{key}.digest")
-    row = {"seed": key, "days_a": len(da), "days_b": len(db), "first_day": first_differing_day(da, db), "record": []}
+    row = {"seed": key, "days_a": len(da), "days_b": len(db), "first_day": first_differing_day(da, db), "record": [],
+           "failed": failed}
     ra, rb = dir_a / f"{key}.json", dir_b / f"{key}.json"
     if ra.exists() and rb.exists():
         row["record"] = differences(strip_timing(json.loads(ra.read_text(encoding="utf-8"))),
                                     strip_timing(json.loads(rb.read_text(encoding="utf-8"))), limit=6)
     else:
         row["record"] = [f"record missing: A {ra.exists()}, B {rb.exists()}"]
-    row["identical"] = bool(da) and row["first_day"] is None and not row["record"]
+    row["identical"] = bool(da) and row["first_day"] is None and not row["record"] and not failed
     return row
+
+
+def run_failures(folder: Path, key: str) -> list[str]:
+    """Why the run of a seed in a `run` output folder failed: its runs.json entry and its log, read again
+    (a runs.json from before a rule existed does not apply it). A seed with neither counts as failed."""
+    runs = json.loads((folder / "runs.json").read_text(encoding="utf-8")) if (folder / "runs.json").exists() else []
+    entry = next((r for r in runs if r.get("seed") == key and r.get("dump_day") is None), None)
+    problems = [str(entry.get("problem") or "failed")] if entry and not entry.get("ok") else []
+    log = folder / f"{key}.log"
+    if log.exists():
+        problem = log_verdict(log.read_text(encoding="utf-8", errors="replace"))[0]
+        if problem and problem not in problems:
+            problems.append(problem)
+    elif entry is None:
+        problems.append(f"no {key}.log and no runs.json entry")
+    return problems
 
 
 def explain_dump(key: str, day: int, dir_a: Path, dir_b: Path, first_a: list, first_b: list) -> dict:
@@ -347,7 +377,11 @@ def print_rows(rows: list[dict], say) -> None:
             say(f"{row['seed']:5} identical: {row['days_a']} daily digests and the match record")
             continue
         where = f"first differing day {row['first_day']}" if row["first_day"] is not None else "daily digests identical"
-        say(f"{row['seed']:5} DIFFERENT: {where} (A {row['days_a']} days, B {row['days_b']} days)")
+        if row["failed"]:
+            say(f"{row['seed']:5} FAILED: {'; '.join(row['failed'])[:220]}")
+            say(f"        {where} (A {row['days_a']} days, B {row['days_b']} days)")
+        else:
+            say(f"{row['seed']:5} DIFFERENT: {where} (A {row['days_a']} days, B {row['days_b']} days)")
         for text in row["record"][:3]:
             say(f"        record {text}")
         dump = row.get("dump")
@@ -411,7 +445,8 @@ def cmd_check(args) -> int:
     started = time.time()
     jobs = [Job(side, k, dirs[side.name]) for k in keys for side in (a, b)]
     results = run_jobs(jobs, args.jobs, args.timeout_min, work, say)
-    rows = [compare_seed(k, dirs["A"], dirs["B"]) for k in keys]
+    rows = [compare_seed(k, dirs["A"], dirs["B"], [f"{r['side']} {r['problem']}" for r in results if r["seed"] == k and not r["ok"]])
+            for k in keys]
     differing = [r for r in rows if r["first_day"] is not None and r["days_a"] and r["days_b"]]
     if differing and not args.no_dump:
         say(f"REPLAY to the first differing day with a full state dump: {', '.join(r['seed'] for r in differing)}")
@@ -454,12 +489,19 @@ def cmd_run(args) -> int:
 def cmd_compare(args) -> int:
     da, db = Path(args.a).resolve(), Path(args.b).resolve()
     keys = [k for k in pick_seeds(args.seeds) if (da / f"{k}.digest").exists() or (db / f"{k}.digest").exists()]
-    rows = [compare_seed(k, da, db) for k in keys]
+    rows = [compare_seed(k, da, db, [f"{name} {problem}" for name, folder in (("A", da), ("B", db)) for problem in run_failures(folder, k)])
+            for k in keys]
     for r in rows:
         if r["first_day"] is not None and (da / f"{r['seed']}.dump{r['first_day']}.state.json").exists():
             r["dump"] = explain_dump(r["seed"], r["first_day"], da, db, read_digest(da / f"{r['seed']}.digest"), read_digest(db / f"{r['seed']}.digest"))
     print_rows(rows, print)
-    return 0 if rows and all(r["identical"] for r in rows) else 1
+    failed = [r["seed"] for r in rows if r["failed"]]
+    if failed:
+        print(f"{len(failed)} seeds FAILED: {', '.join(failed)}")
+        return 2
+    same = bool(rows) and all(r["identical"] for r in rows)
+    print("IDENTICAL" if same else "DIFFERENT")
+    return 0 if same else 1
 
 
 def link_dir(link: Path, target: Path) -> None:
