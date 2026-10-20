@@ -59,7 +59,7 @@ class PlatformSpec:
     platform_id: str
     preset: str
     binary_name: str
-    native_name: str
+    native_names: tuple[str, ...]
     archive_suffix: str
     installer_names: tuple[str, str]
 
@@ -72,7 +72,7 @@ class PlatformSpec:
 
     @property
     def required_names(self) -> tuple[str, ...]:
-        return self.binary_name, f"{PRODUCT_ID}.pck", self.native_name
+        return self.binary_name, f"{PRODUCT_ID}.pck", *self.native_names
 
     @property
     def staged_names(self) -> tuple[str, ...]:
@@ -86,7 +86,12 @@ PLATFORMS = (
         platform_id="linux-x86_64",
         preset="Linux Release",
         binary_name="heroes-like.x86_64",
-        native_name="libaurelion_map_persistence.linux.template_release.x86_64.so",
+        # The GDExtension libraries the export copies beside the binary: map persistence
+        # and the rules library (src/gdextension/rules.gdextension).
+        native_names=(
+            "libaurelion_map_persistence.linux.template_release.x86_64.so",
+            "libaurelion_rules.linux.template_release.x86_64.so",
+        ),
         archive_suffix="tar.gz",
         installer_names=("install.sh", "uninstall.sh"),
     ),
@@ -94,7 +99,10 @@ PLATFORMS = (
         platform_id="windows-x86_64",
         preset="Windows Release",
         binary_name="heroes-like.exe",
-        native_name="aurelion_map_persistence.windows.template_release.x86_64.dll",
+        native_names=(
+            "aurelion_map_persistence.windows.template_release.x86_64.dll",
+            "aurelion_rules.windows.template_release.x86_64.dll",
+        ),
         archive_suffix="zip",
         installer_names=("install.cmd", "uninstall.cmd"),
     ),
@@ -473,11 +481,11 @@ def validate_platform_files(spec: PlatformSpec, export_dir: Path, version: str) 
         if path.stat().st_size <= 0:
             raise RuntimeError(f"empty release artifact: {path}")
     binary = export_dir / spec.binary_name
-    native = export_dir / spec.native_name
     if spec.platform_id.startswith("linux"):
         binary.chmod(binary.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
     verify_binary_header(spec, binary.read_bytes()[:4096], spec.binary_name)
-    verify_binary_header(spec, native.read_bytes()[:4096], spec.native_name)
+    for native_name in spec.native_names:
+        verify_binary_header(spec, (export_dir / native_name).read_bytes()[:4096], native_name)
     if spec.platform_id.startswith("windows"):
         verify_windows_pe_version(binary, version)
     return files
@@ -1639,7 +1647,8 @@ def verify_platform_archive(
         if int(row["mode"]) != expected_mode:
             raise RuntimeError(f"archive payload mode mismatch for {spec.platform_id}/{name}")
     verify_binary_header(spec, bytes(archive_rows[spec.binary_name]["head"]), spec.binary_name)
-    verify_binary_header(spec, bytes(archive_rows[spec.native_name]["head"]), spec.native_name)
+    for native_name in spec.native_names:
+        verify_binary_header(spec, bytes(archive_rows[native_name]["head"]), native_name)
     return {
         "platform": spec.platform_id,
         "archive": archive_path.name,

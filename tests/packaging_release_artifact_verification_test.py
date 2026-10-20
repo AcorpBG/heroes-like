@@ -53,7 +53,8 @@ class ReleaseArtifactVerificationTest(unittest.TestCase):
         linux_binary.write_bytes(elf)
         linux_binary.chmod(0o755)
         (linux / "heroes-like.pck").write_bytes(b"GDPC" + (b"P" * 128))
-        (linux / "libaurelion_map_persistence.linux.template_release.x86_64.so").write_bytes(elf)
+        for native_name in package_release_module.PLATFORMS[0].native_names:
+            (linux / native_name).write_bytes(elf)
 
         numeric_version = package_release_module.windows_numeric_version(VERSION)
         numeric_commas = ",".join(numeric_version.split("."))
@@ -118,7 +119,8 @@ END
         object_path.unlink()
         pe = (windows / "heroes-like.exe").read_bytes()
         (windows / "heroes-like.pck").write_bytes(b"GDPC" + (b"P" * 128))
-        (windows / "aurelion_map_persistence.windows.template_release.x86_64.dll").write_bytes(pe)
+        for native_name in package_release_module.PLATFORMS[1].native_names:
+            (windows / native_name).write_bytes(pe)
 
     def _run(self, *args: str, expect_ok: bool = True) -> subprocess.CompletedProcess[str]:
         env = os.environ.copy()

@@ -43,6 +43,7 @@ BUNDLE_SPECS = (
             "heroes-like.x86_64": MIN_BINARY_BYTES,
             "heroes-like.pck": MIN_PCK_BYTES,
             "libaurelion_map_persistence.linux.template_release.x86_64.so": MIN_NATIVE_BYTES,
+            "libaurelion_rules.linux.template_release.x86_64.so": MIN_NATIVE_BYTES,
         },
     ),
     BundleSpec(
@@ -55,6 +56,7 @@ BUNDLE_SPECS = (
             "heroes-like.exe": MIN_BINARY_BYTES,
             "heroes-like.pck": MIN_PCK_BYTES,
             "aurelion_map_persistence.windows.template_release.x86_64.dll": MIN_NATIVE_BYTES,
+            "aurelion_rules.windows.template_release.x86_64.dll": MIN_NATIVE_BYTES,
         },
     ),
 )

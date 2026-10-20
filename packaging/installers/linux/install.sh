@@ -5,6 +5,7 @@ MARKER_TEXT=heroes-like-user-local-install-v1
 EXPECTED_PAYLOADS='heroes-like.x86_64
 heroes-like.pck
 libaurelion_map_persistence.linux.template_release.x86_64.so
+libaurelion_rules.linux.template_release.x86_64.so
 README.txt
 build-info.json
 install.sh

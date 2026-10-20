@@ -304,6 +304,7 @@ REMOTE_SCRIPT = r"""#!/bin/bash
 # Written by tools/build_native.py; runs in its own directory on the build server.
 set -euo pipefail
 DIR="$(cd "$(dirname "$0")" && pwd)"
+echo $$ > "$DIR/.pid"
 trap 'echo $? > "$DIR/.exit"' EXIT
 cd "$DIR"
 JOBS="$(nproc)"
@@ -373,7 +374,44 @@ def ssh(host: str, command: str, *, input_bytes: bytes | None = None, capture: b
 	return run(["ssh", "-o", "BatchMode=yes", host, command], capture=capture, input_bytes=input_bytes)
 
 
-def build_linux(parts: list[str], flavours: list[str], host: str, store: Path, keep_remote: bool, mingw_selftest: bool) -> None:
+# One poll of a detached remote build: "exit <code>", "running", "dead" (no exit code
+# and the process is gone: killed, OOM) or "gone" (the directory was removed).
+REMOTE_STATE = (
+	'if [ ! -d {remote} ]; then echo gone; '
+	'elif [ -f {remote}/.exit ]; then echo "exit $(cat {remote}/.exit)"; '
+	'elif kill -0 "$(cat {remote}/.pid 2>/dev/null)" 2>/dev/null; then echo running; '
+	'elif [ -f {remote}/.exit ]; then echo "exit $(cat {remote}/.exit)"; '
+	'else echo dead; fi'
+)
+
+
+def wait_for_remote_build(host: str, remote: str, deadline: float) -> int:
+	"""Polls until the remote build writes its exit code. Stops at the deadline, when the
+	build dies without one, or when the host stays unreachable; every failure names the
+	remote directory."""
+	unreachable_polls = 0
+	while True:
+		time.sleep(15)
+		result = subprocess.run(["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=20", host, REMOTE_STATE.format(remote=remote)], capture_output=True, check=False)
+		state = result.stdout.decode("utf-8", "replace").strip()
+		if result.returncode != 0 or not state:
+			unreachable_polls += 1
+			if unreachable_polls >= 8:
+				raise SystemExit(f"build_native: {host} did not answer for 2 minutes; the build may still be running in {host}:{remote}")
+			continue
+		unreachable_polls = 0
+		if state.startswith("exit "):
+			return int(state.split()[1])
+		if state == "gone":
+			raise SystemExit(f"build_native: {host}:{remote} was removed during the build")
+		if state == "dead":
+			raise SystemExit(f"build_native: the remote build stopped without an exit code (killed or out of memory); left {host}:{remote} for inspection")
+		if time.time() > deadline:
+			subprocess.run(["ssh", "-o", "BatchMode=yes", host, f'kill -TERM -- -"$(cat {remote}/.pid)"'], capture_output=True, check=False)
+			raise SystemExit(f"build_native: the remote build passed its deadline and was stopped; left {host}:{remote} for inspection")
+
+
+def build_linux(parts: list[str], flavours: list[str], host: str, store: Path, keep_remote: bool, mingw_selftest: bool, timeout_minutes: int) -> None:
 	cpp_root = godot_cpp_root()
 	cpp_commit = git("rev-parse", "HEAD", cwd=cpp_root)
 	source_tree = rules_source_tree()
@@ -388,14 +426,11 @@ def build_linux(parts: list[str], flavours: list[str], host: str, store: Path, k
 	ssh(host, f"tar -x -C {remote}/third_party/godot-cpp", input_bytes=godot_cpp)
 	ssh(host, f"cat > {remote}/build.sh && chmod +x {remote}/build.sh", input_bytes=script.replace("\r\n", "\n").encode("utf-8"))
 	started = time.time()
-	# Detached, so a long build never holds the ssh channel; poll for the exit file.
-	ssh(host, f"(nohup {remote}/build.sh > {remote}/build.log 2>&1 < /dev/null &)")
-	exit_code = None
-	while exit_code is None:
-		time.sleep(15)
-		state = ssh(host, f"cat {remote}/.exit 2>/dev/null || true").stdout.decode().strip()
-		if state:
-			exit_code = int(state)
+	# Detached in its own session, so a long build never holds the ssh channel and the
+	# deadline can stop all of it; build.sh writes its pid before it starts work.
+	ssh(host, f"(setsid nohup {remote}/build.sh > {remote}/build.log 2>&1 < /dev/null &); "
+		f"for i in $(seq 50); do [ -s {remote}/.pid ] && exit 0; sleep 0.2; done; echo 'build.sh did not start' >&2; exit 1")
+	exit_code = wait_for_remote_build(host, remote, started + timeout_minutes * 60)
 	log = ssh(host, f"cat {remote}/build.log").stdout.decode("utf-8", "replace")
 	print(log[-6000:])
 	print(f"build_native: remote build took {time.time() - started:.0f} s")
@@ -458,6 +493,7 @@ def main() -> int:
 	parser.add_argument("--symbols-dir", default=None, help="symbol store (default: HEROES_NATIVE_SYMBOLS or heroes-like-native-symbols next to the main checkout)")
 	parser.add_argument("--keep-remote", action="store_true", help="leave the remote build directory")
 	parser.add_argument("--no-mingw", action="store_true", help="skip the MinGW/Wine self-test on Linux")
+	parser.add_argument("--remote-timeout", type=int, default=120, metavar="MINUTES", help="stop the remote Linux build after this long (default 120)")
 	parser.add_argument("--no-selftest", action="store_true", help="skip bin/rules_selftest.exe on Windows")
 	args = parser.parse_args()
 	parts = ["rules", "map"] if args.part == "all" else [args.part]
@@ -466,7 +502,7 @@ def main() -> int:
 	if args.system == "windows":
 		build_windows(parts, flavours, args.jobs, store, not args.no_selftest)
 	else:
-		build_linux(parts, flavours, args.host, store, args.keep_remote, not args.no_mingw)
+		build_linux(parts, flavours, args.host, store, args.keep_remote, not args.no_mingw, args.remote_timeout)
 	return 0
 
 

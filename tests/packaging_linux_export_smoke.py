@@ -43,6 +43,7 @@ BOOT_TIMEOUT_SECONDS = 90
 BOOT_QUIT_AFTER_SECONDS = 20
 REQUIRED_LINUX_LIBRARIES = (
     "libaurelion_map_persistence.linux.template_release.x86_64.so",
+    "libaurelion_rules.linux.template_release.x86_64.so",
 )
 FORBIDDEN_TERRAIN_PCK_PREFIXES = (
     "art/overworld/runtime/homm3_local_prototype/",

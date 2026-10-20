@@ -83,7 +83,7 @@ set "NEW_COMMITTED=0"
 set "LAUNCHER_PUBLISHED=0"
 set "START_MENU_CREATED=0"
 
-call :validate_required_payload "%SOURCE_ROOT%"
+call :validate_required_payload "%SOURCE_ROOT%" aurelion_rules.windows.template_release.x86_64.dll
 if errorlevel 1 goto :install_fail
 "%HELPER%" verify "%SOURCE_MANIFEST%" "%SOURCE_ROOT%" windows-x86_64 release-manifest.json
 if errorlevel 1 (
@@ -252,8 +252,9 @@ if "%START_MENU_CREATED%"=="1" rmdir "%START_MENU_ROOT%" >nul 2>&1
 exit /b %PRIMARY_RC%
 
 :validate_required_payload
+rem The second argument names payloads a prior install may lack (the rules library).
 setlocal DisableDelayedExpansion
-for %%F in (heroes-like.exe heroes-like.pck aurelion_map_persistence.windows.template_release.x86_64.dll README.txt build-info.json install.cmd uninstall.cmd heroes-like-installer-helper.exe) do (
+for %%F in (heroes-like.exe heroes-like.pck aurelion_map_persistence.windows.template_release.x86_64.dll README.txt build-info.json install.cmd uninstall.cmd heroes-like-installer-helper.exe %~2) do (
   if not exist "%~1\%%F" (
     echo heroes-like installer: required manifest-owned payload "%%F" is missing 1>&2
     endlocal & exit /b 1

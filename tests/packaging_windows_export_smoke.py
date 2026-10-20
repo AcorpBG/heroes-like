@@ -50,6 +50,7 @@ WINEBOOT_BINARY = shutil.which("wineboot") or ""
 WINESERVER_BINARY = shutil.which("wineserver") or ""
 REQUIRED_WINDOWS_DLLS = (
     "aurelion_map_persistence.windows.template_release.x86_64.dll",
+    "aurelion_rules.windows.template_release.x86_64.dll",
 )
 FORBIDDEN_TERRAIN_PCK_PREFIXES = (
     "art/overworld/runtime/homm3_local_prototype/",
