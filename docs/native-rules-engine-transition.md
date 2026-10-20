@@ -1,0 +1,317 @@
+# Moving the rules engine to C++: transition plan
+
+Status: proposal for an owner decision, 2026-10-20. Nothing here is approved or implemented. Approving it changes
+`project.md:49` ("Gameplay language: GDScript for in-game runtime behavior") subsystem by subsystem. Line references
+are as of commit 50929125a; each slice brief re-checks them.
+
+## 1. Why, and what "done" means
+
+- **Goal.** AI-vs-AI games an order of magnitude cheaper, so balance work can use 600-6,000 full games per change and
+  genetic algorithms can use tens of thousands of games or millions of battles.
+- **Today, measured** after the round-2 speed-up: 60 large 4P games took 29 minutes at 16 at once (on 50929125a) and
+  40 minutes at 10 at once (round 7, on 7fa4a228d), both recorded in PLAN.md. That is about 7-8 slot-minutes per game,
+  since batch games run to day 107-320. At that rate 600 games take about 5-7 h and 6,000 about 2-3 days on this
+  machine, which also becomes barely usable at 16 at once.
+- **Battles today.** The battle-AI tuner (`tools/battle_ai_arena`, already a generation-by-generation weight search)
+  plays its 480-battle `standard` suite in about 75 s on 24 workers (`tools/battle_ai_arena/README.md:58`).
+- **Not a second simulator.** C++ *replaces* the GDScript, one subsystem at a time. Main always holds one copy of
+  every rule; the game, the match runner, the battle tuner and any command-line tool run the same native code.
+- **End state.**
+  - **Native** (`aurelion::rules`, a pure C++ core in a new `aurelion_rules` GDExtension for Windows and Linux): battles,
+    battle AI, battle payloads, the overworld AI faction turn, day processing, and the human-side rule actions.
+  - **GDScript keeps:** UI and scenes, `describe_*` text built on native queries, SaveService file I/O, ContentService
+    parsing (feeding the native content tables), the map editor.
+  - **Unchanged contracts:** save version 9 (`SessionStateStore.gd:4`), the session Dictionary shape, the battle RNG
+    stream format.
+  - **AI tuning numbers** live in content JSON, per controller, so tuning them never needs a C++ build.
+
+## 2. Scope
+
+A match executes at most about 42k GDScript lines per day (a reachability trace, an upper bound; Phase 0 records what
+actually runs):
+
+| Part | Lines | Notes |
+|---|---|---|
+| Battle core | about 15k | BattleRules (10.1k reachable of 16.2k), BattleAiRules 3.7k, battle parts of SpellRules 0.9k, BattleAutoResolve, footprint, damage, town battle |
+| Overworld AI | about 11k | AiHeroRules 6.4k, EnemyAdventureRules 3.8k, EnemyTurnRules 0.8k |
+| Day processing and shared rules | about 16k | OverworldRules 9.1k reachable, HeroCommand, Artifact, HeroProgression, Scenario, town development, water travel, transit |
+| Text built during the day | about 2.8k | `end_turn` builds message text even in headless matches |
+
+How often it changes (commits since 2026-09-01): the rules layer was rebuilt until Oct 10 and has been quiet since
+(7 commits after Oct 11, all alongside AI work). The AI is the hot spot: AiHeroRules is 13 days old with 43 commits.
+Balance mostly lives in content JSON (33 content commits since Oct 1). All 22 unit ability ids are named in code, so a
+*new* ability is a code change. The battle code has no `pow`, `exp`, `log` or `sqrt` at all.
+
+## 3. Rules for every phase
+
+1. **One copy on main.** During a slice, the GDScript reference lives only on the slice's branch behind a
+   `HEROES_NATIVE_<SUBSYSTEM>=gdscript|native|shadow` switch. The merge switches every caller and deletes the replaced
+   GDScript. Deleting it is an exit criterion (the RMG precedent: `RandomMapGeneratorRules.gd` is still used).
+2. **Port semantics, not a redesign** (`docs/lessons-learned.md`, lesson 3). Keep Dictionary key order, int/float typing,
+   sort tie order, the order of float operations, and per-call-site defaults. Typed rewrites, deterministic math and
+   merging duplicate code (for example the AI's own damage estimate, `BattleAiRules.gd:2492-2567`) come later, each as a
+   separate behaviour commit with owner approval and a new baseline.
+3. **Fix the first function that differs**, found at the finest checkpoint (per call, then per action, then per day).
+   After three failed fixes on the same function, stop and name it as a blocker in PLAN.md. Never tune toward win ratios.
+4. **Bugs found while porting** are recorded by name and fixed in their own commit, never inside a port commit.
+5. **Progress means native code runs the game.** Digest tools, corpora and switches are support work and land only with
+   the slice that uses them (AGENTS.md "Implementation progress discipline").
+6. **Speed claims are measured only:** plain runs, HEAD against the change, same concurrency, idle machine, in the binary
+   flavour batches actually load. Estimates in this document are bounds, never promises.
+7. **Pure, thread-safe core:** no mutable globals, caches per engine instance, read-only content tables (the map
+   generator's pattern, `h3maped_rmg_core.cpp:58-87`).
+8. **No builds, parity runs or timing while an owner batch is running.** Builds go to the Linux server or CI at low
+   priority; batches run from a frozen copy of `bin/` so a sync never hits a locked DLL.
+
+## 4. Architecture shared by all phases
+
+**Code layout.** `src/gdextension/rules/` builds once as a static/object library and links into the `aurelion_rules`
+GDExtension (its own `rules.gdextension`), `rules_selftest`, and later `battle_sim_cli`. Keeping it out of the map
+persistence library means rules commits never rebuild the 45k-line `h3maped_rmg_core.cpp` (today compiled three times,
+`src/gdextension/CMakeLists.txt:49-68`) or recommit the map generator binaries.
+
+**Engine-exact helpers** (`rules/compat/`), copied from Godot 4.6.2 and each landed with the first slice that needs it:
+PCG32 seed/state and `randi_range`, `randf` (which very likely returns a 32-bit float that GDScript widens; obstacles
+test `rng.randf() < 0.4`, `BattleRules.gd:9403`), `String.hash`, `SortArray` tie order, `round` (half away from zero),
+`posmod`, `snappedf`, `str()` of numbers, int64 wraparound. Each is fuzzed against the engine (at least 1M inputs)
+before it is trusted. Seeds built from Variant `hash([...])` (`BattleRules.gd:15444`, `AiHeroRules.gd:1303, 1433`)
+stay computed in GDScript, so the Variant hash may never need copying. Memo keys built from `hash()` only need the same
+hit/miss behaviour.
+
+**C++ determinism checklist.** `int64_t` everywhere (`long` is 32-bit on Windows); no locale-dependent functions
+(`std::to_string(double)`, `printf("%f")`, `strtod`, `tolower`), ASCII-only lowering; no `unordered_*` iteration or
+`std::hash` reaching any output; no behaviour depending on `DEBUG_ENABLED` (godot-cpp makes it public in
+`template_debug`); `/fp:precise`, `-ffp-contract=off`, no fast-math, no `-march=native`; checked division; every
+exception caught at the adapter. Numbers become text only in the Godot adapter, through godot-cpp `String::num`/`JSON`.
+
+**Content.** A native content table is built once per content revision from the Dictionaries ContentService has already
+parsed (no second JSON parser), keeping first-id-wins, file order and per-field presence (defaults differ per call
+site). Genetic-algorithm overrides go through one in-memory override layer *in ContentService* that bumps the content
+revision, so GDScript and native code never see two different contents in one match. Overrides are validated (no zero
+hit points, reversed damage ranges and similar) at that boundary.
+
+**State.** The session Dictionaries stay the save and UI format throughout. Native calls convert in, compute on a copy,
+and write back only on success: known keys in place, new keys appended in GDScript's order, int/float types kept, array
+identity kept (29 `is_same()` uses), unknown keys carried through. After each write-back a listed set of session-meta
+caches is cleared (for example `_resolved_lookup_entry` assumes `resolved_encounters` only grows in place,
+`OverworldRules.gd:3376-3398`). On failure the call returns `{ok: false, error}` and leaves the session untouched, so the
+game can still save.
+
+**Build and binaries.** The rules target compiles at `/O2 /Ob2` (`-O2` on GCC) in both flavours (batches load the
+`template_debug` library, today `/Ob1`). The Linux debug `.so` is stripped; PDBs and Linux debug info are archived
+outside git per build id. A repo script replaces the remote Linux build procedure that today exists only in the owner's
+notes. Native slices run one at a time, because committed binaries conflict between branches. A new `.gdextension`
+needs one `--headless --import` in every checkout; the runner and tuner check `ClassDB.class_exists` and fail loudly.
+Release export excludes the rules debug library, `rules_selftest` and `battle_sim_cli` (`export_presets.cfg:10,34`),
+and the release-candidate build (`tools/build_release_candidate.py`) builds and tests the rules library on both systems.
+
+**Debugging.** An input-capture switch dumps each native call's input to a ring buffer written out on error or crash;
+the input replays in `rules_selftest` or the CLI. ASan/UBSan builds of the CLI and self-test run on the Linux server.
+Every match and tuner record carries the native build id, content hash and override hash, so results can be reproduced.
+
+## 5. The standing parity check
+
+1. **Corpus (committed):** the six seed setups with exact seed strings (large 4P one and two levels, large 4P with water
+   on two levels, medium 3P with water, medium 3P on two levels, small 2P); the tuner's `standard` and `holdout` suites;
+   about 200 battle payloads whose fixtures carry their own content rows (so balance edits to `units.json` do not break
+   them); a scripted human-seat corpus that drives the public player APIs with turn playback on; and "save on day N, load,
+   continue" for every phase (JSON load turns numbers into floats, which no AI match exercises).
+2. **Digest:** a canonical serialization that keeps insertion order and int/float types, full float precision, timing
+   fields left out (`tests/ai_versus_ai_match_report.gd:159, 171-173`), fixed map sections once on day 0, changing
+   sections daily, plus the match record. Sorted output is only for reporting where it differs.
+3. **`tools/rules_parity.py`:** finds the first differing day, replays to it with a full dump and reports the first
+   differing path.
+4. **When:** every port or speed change on Windows (HEAD against change); once on Linux per native change; the payload
+   corpus gives identical bytes under MSVC, GCC 13.3 and MinGW/Wine. `rules_selftest` (helper vectors and "two runs are
+   equal") joins `tools/core_suite.py`.
+5. **Behaviour changes** record a new baseline in the same commit, with owner approval.
+
+## 6. Phases
+
+Effort is in agent-days, unmeasured, and likely off by 50% either way; G3 replaces it with Phase 1's measured rate. The
+whole-game gain of porting a part is bounded by `1 / (1 - share of match CPU it removes)`, filled in from the Phase 0
+profile. Large whole-game gains come only once the AI, day processing *and* the fixed cost per match are native.
+
+### Phase 0: measure, decide, prove the pipeline (6-12 days)
+
+- **Cheap levers first, all GDScript, each proven with identical digests:**
+  - Run batches on the release export template instead of the editor binary (batches use
+    `Godot_v4.6.2-stable_win64_console.exe`, `tools/core_suite.py:35`; a batch preset that includes `tests/`). The rules
+    have no debug-only branches, so games should be identical; measure the gain.
+  - Delete code no match or player path reaches, and stop building end-of-day text nobody reads in headless matches,
+    each only if digests stay identical.
+- **Exclusive profile** on length-weighted games including a long (day 300) one: boot, content validation, map
+  generation, opening/closing normalize, each AI phase, AI battles split into payload / fight loop / finalize, scenario
+  evaluation, fog, the runner's bookkeeping, and the cost of converting one day's changing state.
+- **Baselines:** are GDScript-only games identical on Windows and Linux today? Collect script errors from recent
+  batches; an error on a path to be ported is fixed in GDScript first (C++ cannot imitate "abort the function, return a
+  default").
+- **Foundations:** the rules library layout, flags, server build script, symbol archive, worktree submodule fix.
+- **Spike:** move one integer kernel end to end (edit, build on both systems, sync, digest, delete the GDScript loop).
+  Candidates: the BFS core of `AiHeroRules._search` (`:5508-5702`, up to 13-27 s per large game; changed on 10-17, so it
+  needs an exemption from the quiet-code rule), or the battle hex search, which Phase 1 needs anyway but saves less.
+
+**Gate G0** (thresholds are proposals for the owner):
+
+| Check | Go | Otherwise |
+|---|---|---|
+| Spike correctness | 0 shadow mismatches on every call in the six seeds; identical daily digests | name the first differing function, do not merge |
+| Across compilers | Linux digests equal the Linux GDScript baseline; fixtures identical under MSVC, GCC, MinGW | fix flags; if GDScript itself differs between systems, identity becomes per system |
+| Speed per call, boundary included | 20x or more | 5-20x: fix the interface first; under 5x: stop the C++ route |
+| Battle share | AI battle work is 20% or more of match CPU, fight loop half of that | under 15%: do overworld phases first, or stop |
+| Fixed cost per match | 10% of CPU or less | bring Phase 6's GDScript part forward |
+| Developer loop | owner accepts the measured edit-to-local-match and edit-to-push times | owner decides |
+
+### Phase 1: native battle engine, one merge (30-60 days)
+
+- **Scope:** the rules part of BattleRules, all of BattleAiRules, in-battle SpellRules, BattleAutoResolveRules,
+  BattleFootprint, BattleDamageRules, TownBattleRules, the order-by-order API for battles the player fights, and the UI
+  queries. Events become structured records turned into today's strings by a GDScript formatter (exactly, or excluded
+  only with owner approval, because presentation events are saved state in player battles). About 6k lines of
+  `describe_*` stay GDScript.
+- **Boundary:** a `BattleEngine` class: `resolve(battle, caster_profiles, step_limit, stop_below)` replacing the loop in
+  `BattleAutoResolveRules.gd:147`; `apply_player_order`, `cast_player_spell`, `move_active_stack_to_hex`,
+  `drain_enemy_turns`; queries for legal hexes, approach cells, damage ranges, turn-order forecast and the Auto decision.
+  The combat seed, obstacles and `_finalize_*` stay GDScript in this phase.
+- **Order:** hex geometry, damage (the multiplier chain in exact order), movement, turn order and effects, attacks and
+  the 22 abilities, cohesion and momentum, town defences, in-battle spells, enemy turns and battle AI, autoplay.
+- **Checkpoint G1** after the hex, damage, movement and turn layers: the native loop, conversion included, is 10x or
+  more faster on the tuner's corpus. Under 5x: fix the interface before porting the AI part.
+- **Identity:** per-action stream (order taken, RNG state and roll count, simulation-key digest) on the tuner suites,
+  every AI battle in the six seeds, and JSON round-tripped payloads; shadow mode on every resolve; daily digests; the
+  payload corpus across compilers; mid-battle save/load both ways between the native build and the tagged pre-merge
+  build; every battle UI query compared in shadow mode on the human-seat corpus.
+- **Exit:** all battles native, the GDScript fight loop and BattleAiRules deleted, every deleted name grepped across
+  `tests/` and `tools/` (`core_script_compile_check` covers only `scripts/` and `scenes/`), the runner and tuner run,
+  core suite on Windows and Linux, project.md ownership updated.
+- **Gain:** large for battle-only work (the tuner); modest for whole games, bounded by the battle share from Phase 0.
+
+### Phase 2: one payload builder, AI preview as one call, the battle tool (14-28 days)
+
+- Battle payload creation (`BattleRules.gd:256-402`), stack and hero payloads, obstacles, and the end-of-battle numbers
+  (survivors, experience, recovery, level-ups, `army_power`) move native; every payload caller switches.
+- `AiHeroRules._simulate_battle` becomes one native call with no scratch session, if shadow mode proves the read-back
+  fields identical.
+- Transcendental math first appears here (`army_power`, `HeroProgressionRules.gd:646`): decision D4.
+- `battle_sim_cli` (or an in-Godot threaded runner, decision D7) becomes a backend for `tune.py` and `arena.py`.
+- **Gate G2:** a battles-per-second target the owner sets (the synthesis proposes 1M battles in 2 h on this machine).
+  **Battle-level genetic algorithms (unit stats, battle-AI weights) run at full speed from here.**
+
+### Phase A: overworld AI numbers into data (2-4 days, GDScript only, any time after G0)
+
+The tuning numbers among the 99 constants at `AiHeroRules.gd:26-297`, and inline literals, move to `content/ai_hero_weights.json`, with weight
+sets per controller. Proof: identical digests with every controller on the default set. AI number tuning then needs no
+code edit, before or after the AI goes native, and a genetic algorithm can give each seat its own genome.
+
+### Phase 3: overworld kernels by rule (0-15 days)
+
+A kernel moves only if it is 3% or more of match CPU, takes packed arrays and scalars, uses no transcendental math, hash
+or RNG, and had no behaviour commit for 7 days. Candidates: `_level_surface`, `_war_paths`, fog `_explored`/`_reveal`.
+
+### Gate G3: re-plan from measurements
+
+Re-estimate Phases 4-7 from Phase 1's measured rate (lines per day, mismatches per 1,000 lines). If AiHeroRules had
+behaviour commits on more than 4 of the last 14 days, do Phase 5 before Phase 4, keeping the AI in GDScript longer. The
+owner decides whether to continue toward whole-game speed.
+
+### Phase 4: the overworld AI faction turn (25-50 days)
+
+AiHeroRules, the AI paths of EnemyAdventureRules and EnemyTurnRules, and the rule functions they reach. One native
+`run_faction_turn` per faction turn: load a view of the session, run, patch back, clear caches. Functions with human or
+UI callers keep a thin GDScript wrapper. Must reproduce sort ties, first-wins comparisons on float scores, `stops.keys()`
+order, the tavern and spawn RNG, and the decision and battle logs. Proof adds a codec round trip
+(`to_dict(from_dict(d)) == d` with types and key order) on every day of the six seeds and on owner-approved save copies.
+AI code is frozen during the slice; the Phase A numbers stay open.
+
+### Phase 5: day processing (20-40 days)
+
+`normalize_overworld_state`, `commit_active_hero`, town occupation and recovery, income, growth, reserve deliveries,
+`PlayerEliminationRules.apply_daily`, `ScenarioRules.evaluate_session`, and `_finalize_*` for human battles: one native
+call per day. The end-turn confirmation dry run in `OverworldShell.gd:1464-1529` must invalidate native caches too.
+
+### Phase 6: match throughput (4-10 days)
+
+The runner keeps a native session handle across days and writes Dictionaries back only for the digest and record (with
+a check that runner mode and game mode give the same digests); several matches per Godot process (match N identical in a
+reused and a fresh process); a pre-generated map corpus for genetic-algorithm work. The GDScript parts do not need C++
+and move forward if G0 finds a high fixed cost. **Whole-game genetic algorithms become practical here, if the measured
+gain is there.**
+
+### Phase 7: human-side actions and the last GDScript rules (35-70 days)
+
+Movement, routes, context actions, overworld spells, town actions, hero transfers and artifact equipping: about 378
+functions the UI calls, at 1,221 call sites. Needed for the one-copy end state, not for speed, so it can interleave with
+other work. Merging the separate human and AI forms of heroes, treasury and fog is a later save-schema slice.
+
+### Phase 8 (optional): a match runner without Godot (5-12 days)
+
+The same core as a command-line tool. Needs the copied Variant hash and either deterministic math or accepted last-bit
+differences against the game.
+
+### Totals
+
+| Up to | Agent-days (unmeasured) | What it buys |
+|---|---|---|
+| Phase 0 | 6-12 | a measured go/no-go, cheap GDScript levers |
+| Phases 1-2 | 44-88 more | battle-level genetic algorithms at native speed |
+| Phases A, 3 | 2-19 more | AI numbers as data; some overworld kernels |
+| Phases 4-6 | 49-100 more | whole-game speed (the large gain) |
+| Phase 7 | 35-70 more | one copy of every rule |
+
+## 7. AI and balance changes during the transition
+
+| Change | Policy |
+|---|---|
+| Content JSON balance | Always open; the native tables rebuild per content revision. |
+| Battle-AI weights (`content/battle_ai_weights.json`) | Always open; per side; much faster to tune from Phase 2. |
+| Overworld AI numbers | Open; data per controller after Phase A. |
+| Battle rule or battle-AI code | Frozen during Phase 1. An urgent fix lands in GDScript on main, is ported on the branch and passes shadow mode again. After Phase 1 it is a C++ change in its own commit. |
+| Overworld AI code | GDScript and open until Phase 4; frozen only during its slice. |
+| New unit abilities | C++ changes after Phase 1. |
+| Comparing AI code variants | Build `battle_sim_cli` from two git revisions under a namespace macro; nothing extra on main. |
+
+## 8. Owner decisions
+
+| | Decision | When |
+|---|---|---|
+| D1 | Change `project.md:49, 57-59` and the ownership list to native rules, subsystem by subsystem | before Phase 0 code |
+| D2 | A standing exception to the Validation budget for parity runs during port slices | Phase 0 |
+| D3 | Binary policy: strip the Linux debug library (50.8 MB today), LFS, or CI-built binaries | Phase 0 |
+| D4 | Math: engine math through godot-cpp in the game, or a later deterministic-math behaviour change | Phase 2 |
+| D5 | Freeze windows for battle code (Phase 1) and AI code (Phase 4) | before each |
+| D6 | Retire tests that call private battle functions (`docs/rmg-test-retirement.md` process) | Phase 1 |
+| D7 | Whether a tool built from the same core counts under "no simulator outside Godot" (`PLAN.md:328`), or an in-Godot threaded runner instead | Phase 2 |
+| D8 | An exception to "work directly in this repo" for a 30-60-day port branch, with weekly rebase and an abandonment criterion | Phase 1 |
+| D9 | Where owner-save copies for the codec proof live (outside git) | Phase 1 |
+| D10 | Rollback: a tag before each port merge, a rollback window with no behaviour commits to that subsystem, or a time-limited switch defaulting to native | each merge |
+
+## 9. Risks and how the plan contains them
+
+- **Parity debugging eats the schedule.** Finest-checkpoint diffing, the three-strikes blocker rule, and G1/G3 re-plans
+  from measured rates.
+- **The AI changes faster than it can be ported.** The AI stays GDScript until the order rule allows it; its numbers
+  move to data first.
+- **Builds compete with batches for the machine.** Builds on the server or CI at low priority; batches from a frozen
+  `bin/` copy.
+- **A native crash takes the game down.** Copy-in/copy-out calls, caught exceptions, input capture, archived symbols.
+- **Saves strand after a revert.** No subsystem version bump inside a port slice (`damage_rng_version`,
+  `ai_heroes_version`); two-way save tests at every merge.
+- **Engine upgrades.** The copied helpers are tied to Godot 4.6.2 and godot-cpp is pinned to `10.0.0-rc1`; any bump
+  re-runs the helper fuzz and full parity. Move godot-cpp to a release tag before rules ship.
+- **A stopped phase leaves dead code.** If a gate says stop, delete whatever no live path uses.
+
+## 10. Brief for each port slice
+
+The exact functions to port (from Phase 0's executed-function list), every caller in `scenes/`, `scripts/`, `tests/` and
+`tools/`, the boundary signature, the corpus and parity commands, the freeze notice, what is forbidden (redesign, fixes
+inside port commits, builds or parity runs during an owner batch), the blocker format, and "done": native code runs in
+the game, the GDScript is deleted, callers are updated, parity is identical, the core suite passes on Windows and Linux,
+cleanup is done. Slices are cut small enough for an agent to hold their functions in context; BattleRules alone is 16k
+lines.
+
+## 11. To verify in Phase 0 before relying on this plan
+
+Godot 4.6.2 internals (PCG bounded draw, `randf` width and draw count, String hash, `SortArray`, JSON float parsing);
+the C runtime of the official Windows binary; Windows/Linux identity of GDScript games today; whether caster profiles
+stay constant through a battle; which presentation keys nothing reads in AI battles; whether release templates run the
+match scene with identical results; the exclusive time split on full-length games.
