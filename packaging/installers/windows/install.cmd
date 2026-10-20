@@ -82,6 +82,12 @@ set "BACKUP_MOVED=0"
 set "NEW_COMMITTED=0"
 set "LAUNCHER_PUBLISHED=0"
 set "START_MENU_CREATED=0"
+rem Set once this run created the item. A name that already exists belongs to another
+rem run (%RANDOM% repeats for runs started in the same second), so failure paths touch
+rem only what this run owns.
+set "STAGE_OWNED=0"
+set "LAUNCHER_NEW_OWNED=0"
+set "LAUNCHER_BACKUP_OWNED=0"
 
 call :validate_required_payload "%SOURCE_ROOT%" aurelion_rules.windows.template_release.x86_64.dll
 if errorlevel 1 goto :install_fail
@@ -90,6 +96,19 @@ if errorlevel 1 (
   echo heroes-like installer: release payload failed exact manifest verification 1>&2
   goto :install_fail
 )
+
+if not exist "%INSTALL_PARENT%\NUL" mkdir "%INSTALL_PARENT%" >nul 2>&1
+if not exist "%INSTALL_PARENT%\NUL" (
+  echo heroes-like installer: install parent directory is unavailable 1>&2
+  goto :install_fail
+)
+rem Claim the staging name before anything else: mkdir fails when it exists.
+mkdir "%STAGE_ROOT%" >nul 2>&1
+if errorlevel 1 (
+  echo heroes-like installer: staging directory collision 1>&2
+  goto :install_fail
+)
+set "STAGE_OWNED=1"
 
 if exist "%INSTALL_ROOT%" (
   if not exist "%INSTALL_ROOT%\NUL" (
@@ -122,8 +141,8 @@ if exist "%LAUNCHER%" (
     echo heroes-like installer: refusing to replace an unowned Start Menu launcher 1>&2
     goto :install_fail
   )
-  >"%LAUNCHER_NEW%" echo @echo off
-  >>"%LAUNCHER_NEW%" echo start "" "%INSTALL_ROOT%\heroes-like.exe" %%*
+  call :write_launcher_new
+  if errorlevel 1 goto :install_fail
   "%SystemRoot%\System32\fc.exe" /b "%LAUNCHER%" "%LAUNCHER_NEW%" >nul
   if errorlevel 1 (
     echo heroes-like installer: refusing to replace a modified Start Menu launcher 1>&2
@@ -135,8 +154,8 @@ if exist "%LEGACY_LAUNCHER%" (
     echo heroes-like installer: refusing to replace an unowned legacy Start Menu launcher 1>&2
     goto :install_fail
   )
-  >"%LAUNCHER_NEW%" echo @echo off
-  >>"%LAUNCHER_NEW%" echo start "" "%INSTALL_ROOT%\heroes-like.exe" %%*
+  call :write_launcher_new
+  if errorlevel 1 goto :install_fail
   "%SystemRoot%\System32\fc.exe" /b "%LEGACY_LAUNCHER%" "%LAUNCHER_NEW%" >nul
   if errorlevel 1 (
     echo heroes-like installer: refusing to replace a modified legacy Start Menu launcher 1>&2
@@ -147,18 +166,8 @@ if exist "%LAUNCHER_BACKUP%" (
   echo heroes-like installer: launcher backup collision 1>&2
   goto :install_fail
 )
-
-if exist "%STAGE_ROOT%" (
-  echo heroes-like installer: staging directory collision 1>&2
-  goto :install_fail
-)
 if exist "%BACKUP_ROOT%" (
   echo heroes-like installer: backup directory collision 1>&2
-  goto :install_fail
-)
-if not exist "%INSTALL_PARENT%\NUL" mkdir "%INSTALL_PARENT%" >nul 2>&1
-if not exist "%INSTALL_PARENT%\NUL" (
-  echo heroes-like installer: install parent directory is unavailable 1>&2
   goto :install_fail
 )
 "%HELPER%" copy "%SOURCE_MANIFEST%" "%SOURCE_ROOT%" "%STAGE_ROOT%" windows-x86_64
@@ -187,10 +196,8 @@ if not exist "%START_MENU_ROOT%\NUL" (
   echo heroes-like installer: Start Menu path is not a directory 1>&2
   goto :install_fail
 )
-if not exist "%LAUNCHER_NEW%" (
-  >"%LAUNCHER_NEW%" echo @echo off
-  >>"%LAUNCHER_NEW%" echo start "" "%INSTALL_ROOT%\heroes-like.exe" %%*
-)
+call :write_launcher_new
+if errorlevel 1 goto :install_fail
 if "%INSTALL_EXISTED%"=="1" (
   move "%INSTALL_ROOT%" "%BACKUP_ROOT%" >nul
   if errorlevel 1 goto :install_fail
@@ -203,13 +210,16 @@ if /i "%HEROES_LIKE_INSTALL_FAIL_PHASE%"=="after_backup" (
 move "%STAGE_ROOT%" "%INSTALL_ROOT%" >nul
 if errorlevel 1 goto :install_fail
 set "NEW_COMMITTED=1"
+set "STAGE_OWNED=0"
 
 if exist "%LAUNCHER%" (
   move "%LAUNCHER%" "%LAUNCHER_BACKUP%" >nul
   if errorlevel 1 goto :install_fail
+  set "LAUNCHER_BACKUP_OWNED=1"
 )
 move "%LAUNCHER_NEW%" "%LAUNCHER%" >nul
 if errorlevel 1 goto :install_fail
+set "LAUNCHER_NEW_OWNED=0"
 set "LAUNCHER_PUBLISHED=1"
 
 if exist "%LEGACY_LAUNCHER%" del /f /q "%LEGACY_LAUNCHER%" >nul 2>&1
@@ -217,13 +227,13 @@ if exist "%LEGACY_LAUNCHER%" goto :install_fail
 
 rem The new program and launcher are committed. Cleanup failures after this
 rem point must never roll back from a partially removed prior backup.
-if exist "%BACKUP_ROOT%" rmdir /s /q "%BACKUP_ROOT%"
-if exist "%LAUNCHER_BACKUP%" del /f /q "%LAUNCHER_BACKUP%" >nul 2>&1
-if exist "%BACKUP_ROOT%" (
+if "%BACKUP_MOVED%"=="1" if exist "%BACKUP_ROOT%" rmdir /s /q "%BACKUP_ROOT%"
+if "%LAUNCHER_BACKUP_OWNED%"=="1" if exist "%LAUNCHER_BACKUP%" del /f /q "%LAUNCHER_BACKUP%" >nul 2>&1
+if "%BACKUP_MOVED%"=="1" if exist "%BACKUP_ROOT%" (
   echo heroes-like installer: install committed, but prior backup cleanup failed at "%BACKUP_ROOT%" 1>&2
   exit /b 1
 )
-if exist "%LAUNCHER_BACKUP%" (
+if "%LAUNCHER_BACKUP_OWNED%"=="1" if exist "%LAUNCHER_BACKUP%" (
   echo heroes-like installer: install committed, but launcher backup cleanup failed 1>&2
   exit /b 1
 )
@@ -234,22 +244,40 @@ exit /b 0
 :install_fail
 set "PRIMARY_RC=1"
 if "%LAUNCHER_PUBLISHED%"=="1" if exist "%LAUNCHER%" del /f /q "%LAUNCHER%" >nul 2>&1
-if exist "%LAUNCHER_BACKUP%" move "%LAUNCHER_BACKUP%" "%LAUNCHER%" >nul 2>&1
+if "%LAUNCHER_BACKUP_OWNED%"=="1" if exist "%LAUNCHER_BACKUP%" move "%LAUNCHER_BACKUP%" "%LAUNCHER%" >nul 2>&1
+rem The committed new program goes back under the staging name and is removed there.
+rem If another run holds that name, it is removed in place instead.
 if "%NEW_COMMITTED%"=="1" if exist "%INSTALL_ROOT%" (
-  move "%INSTALL_ROOT%" "%STAGE_ROOT%" >nul 2>&1
-  if exist "%STAGE_ROOT%" rmdir /s /q "%STAGE_ROOT%"
+  if not exist "%STAGE_ROOT%" (
+    move "%INSTALL_ROOT%" "%STAGE_ROOT%" >nul 2>&1
+    if not exist "%INSTALL_ROOT%" set "STAGE_OWNED=1"
+  )
+  if exist "%INSTALL_ROOT%" rmdir /s /q "%INSTALL_ROOT%"
 )
+rem A move onto an existing directory would nest the prior install inside it.
 if "%BACKUP_MOVED%"=="1" if exist "%BACKUP_ROOT%" (
-  move "%BACKUP_ROOT%" "%INSTALL_ROOT%" >nul 2>&1
-  if not exist "%INSTALL_ROOT%" (
+  if not exist "%INSTALL_ROOT%" move "%BACKUP_ROOT%" "%INSTALL_ROOT%" >nul 2>&1
+  if exist "%BACKUP_ROOT%" (
     echo heroes-like installer: rollback failed; prior install remains at "%BACKUP_ROOT%" 1>&2
     set "PRIMARY_RC=2"
   )
 )
-if exist "%STAGE_ROOT%" rmdir /s /q "%STAGE_ROOT%"
-if exist "%LAUNCHER_NEW%" del /f /q "%LAUNCHER_NEW%" >nul 2>&1
+if "%STAGE_OWNED%"=="1" if exist "%STAGE_ROOT%" rmdir /s /q "%STAGE_ROOT%"
+if "%LAUNCHER_NEW_OWNED%"=="1" if exist "%LAUNCHER_NEW%" del /f /q "%LAUNCHER_NEW%" >nul 2>&1
 if "%START_MENU_CREATED%"=="1" rmdir "%START_MENU_ROOT%" >nul 2>&1
 exit /b %PRIMARY_RC%
+
+:write_launcher_new
+rem Writes the new launcher once, under a name no other run holds.
+if "%LAUNCHER_NEW_OWNED%"=="1" exit /b 0
+if exist "%LAUNCHER_NEW%" (
+  echo heroes-like installer: launcher staging-file collision 1>&2
+  exit /b 1
+)
+set "LAUNCHER_NEW_OWNED=1"
+>"%LAUNCHER_NEW%" echo @echo off
+>>"%LAUNCHER_NEW%" echo start "" "%INSTALL_ROOT%\heroes-like.exe" %%*
+exit /b 0
 
 :validate_required_payload
 rem The second argument names payloads a prior install may lack (the rules library).

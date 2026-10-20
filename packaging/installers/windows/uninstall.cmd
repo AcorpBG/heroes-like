@@ -45,6 +45,11 @@ if errorlevel 1 (
 rem Transfer control instead of CALLing. Keeping the installed batch on the
 rem command stack would hold its program directory open during final removal.
 "%TEMP_UNINSTALL%" --heroes-like-staged "%HEROES_LIKE_UNINSTALL_TOKEN%"
+rem Reached only when the staged copy could not start. Never fall through to the
+rem uninstall itself: it would run from the program directory without the staged state.
+echo heroes-like uninstaller: could not start the staged uninstaller 1>&2
+del /f /q "%TEMP_UNINSTALL%" >nul 2>&1
+exit /b 1
 
 :uninstall_main
 for %%I in ("%HEROES_LIKE_INSTALL_DIR%") do set "INSTALL_ROOT=%%~fI"
@@ -92,6 +97,12 @@ set "TEMP_CLEANUP=%TEMP%\heroes-like-uninstall-cleanup-%TOKEN%.cmd"
 set "EXPECTED_LAUNCHER=%START_MENU_ROOT%\.Aurelion Reach.cmd.expected-%TOKEN%"
 set "LAUNCHER=%START_MENU_ROOT%\Aurelion Reach.cmd"
 set "LEGACY_LAUNCHER=%START_MENU_ROOT%\Heroes Like.cmd"
+rem Set once this run created the file. A name that already exists belongs to another
+rem run (%RANDOM% repeats for runs started in the same second), so failure paths
+rem delete only what this run owns.
+set "OWN_TEMP_HELPER=0"
+set "OWN_EXPECTED_LAUNCHER=0"
+set "OWN_TEMP_CLEANUP=0"
 
 call :validate_marker "%INSTALL_ROOT%\.heroes-like-install"
 if errorlevel 1 goto :uninstall_fail
@@ -106,6 +117,7 @@ if exist "%TEMP_HELPER%" (
   echo heroes-like uninstaller: temporary helper collision 1>&2
   goto :uninstall_fail
 )
+set "OWN_TEMP_HELPER=1"
 copy /y "%HELPER%" "%TEMP_HELPER%" >nul
 if errorlevel 1 goto :uninstall_fail
 "%SystemRoot%\System32\fc.exe" /b "%HELPER%" "%TEMP_HELPER%" >nul
@@ -119,31 +131,12 @@ if exist "%START_MENU_ROOT%" if not exist "%START_MENU_ROOT%\NUL" (
   goto :uninstall_fail
 )
 if exist "%LAUNCHER%" (
-  if exist "%EXPECTED_LAUNCHER%" (
-    echo heroes-like uninstaller: launcher validation-file collision 1>&2
-    goto :uninstall_fail
-  )
-  >"%EXPECTED_LAUNCHER%" echo @echo off
-  >>"%EXPECTED_LAUNCHER%" echo start "" "%INSTALL_ROOT%\heroes-like.exe" %%*
-  "%SystemRoot%\System32\fc.exe" /b "%LAUNCHER%" "%EXPECTED_LAUNCHER%" >nul
-  if errorlevel 1 (
-    echo heroes-like uninstaller: refusing to remove a modified Start Menu launcher 1>&2
-    goto :uninstall_fail
-  )
+  call :matches_expected_launcher "%LAUNCHER%" "Start Menu launcher"
+  if errorlevel 1 goto :uninstall_fail
 )
 if exist "%LEGACY_LAUNCHER%" (
-  if exist "%EXPECTED_LAUNCHER%" (
-    echo heroes-like uninstaller: launcher validation-file collision 1>&2
-    goto :uninstall_fail
-  )
-  >"%EXPECTED_LAUNCHER%" echo @echo off
-  >>"%EXPECTED_LAUNCHER%" echo start "" "%INSTALL_ROOT%\heroes-like.exe" %%*
-  "%SystemRoot%\System32\fc.exe" /b "%LEGACY_LAUNCHER%" "%EXPECTED_LAUNCHER%" >nul
-  if errorlevel 1 (
-    echo heroes-like uninstaller: refusing to remove a modified legacy Start Menu launcher 1>&2
-    goto :uninstall_fail
-  )
-  del /f /q "%EXPECTED_LAUNCHER%" >nul 2>&1
+  call :matches_expected_launcher "%LEGACY_LAUNCHER%" "legacy Start Menu launcher"
+  if errorlevel 1 goto :uninstall_fail
 )
 
 if exist "%LAUNCHER%" del /f /q "%LAUNCHER%" >nul 2>&1
@@ -165,17 +158,23 @@ del /f /q "%INSTALL_ROOT%\release-manifest.json" "%INSTALL_ROOT%\.heroes-like-in
 if exist "%INSTALL_ROOT%\release-manifest.json" goto :uninstall_fail
 if exist "%INSTALL_ROOT%\.heroes-like-install" goto :uninstall_fail
 cd /d "%TEMP%"
-del /f /q "%EXPECTED_LAUNCHER%" >nul 2>&1
+if "%OWN_EXPECTED_LAUNCHER%"=="1" del /f /q "%EXPECTED_LAUNCHER%" >nul 2>&1
+set "OWN_EXPECTED_LAUNCHER=0"
 rmdir "%START_MENU_ROOT%" >nul 2>&1
-del /f /q "%TEMP_HELPER%" >nul 2>&1
+if "%OWN_TEMP_HELPER%"=="1" del /f /q "%TEMP_HELPER%" >nul 2>&1
+set "OWN_TEMP_HELPER=0"
 if exist "%TEMP_CLEANUP%" (
   echo heroes-like uninstaller: temporary cleanup collision 1>&2
   goto :uninstall_fail
 )
+set "OWN_TEMP_CLEANUP=1"
 >"%TEMP_CLEANUP%" echo @echo off
 >>"%TEMP_CLEANUP%" echo ping 127.0.0.1 -n 2 ^>nul
 >>"%TEMP_CLEANUP%" echo rmdir "%INSTALL_ROOT%" ^>nul 2^>^&1
->>"%TEMP_CLEANUP%" echo del /f /q "%EXPECTED_UNINSTALL%" ^>nul 2^>^&1
+rem The cleanup runs in %TEMP%, where a del of an empty name removes every file.
+if defined EXPECTED_UNINSTALL (
+  >>"%TEMP_CLEANUP%" echo del /f /q "%EXPECTED_UNINSTALL%" ^>nul 2^>^&1
+)
 >>"%TEMP_CLEANUP%" echo del /f /q "%TEMP_CLEANUP%" ^>nul 2^>^&1
 start "" /b "%ComSpec%" /d /c ""%TEMP_CLEANUP%""
 if errorlevel 1 (
@@ -187,8 +186,28 @@ echo Saved games, settings, generated maps, and runtime logs were preserved.
 exit /b 0
 
 :uninstall_fail
-del /f /q "%TEMP_HELPER%" "%TEMP_CLEANUP%" "%EXPECTED_LAUNCHER%" >nul 2>&1
+if "%OWN_TEMP_HELPER%"=="1" del /f /q "%TEMP_HELPER%" >nul 2>&1
+if "%OWN_TEMP_CLEANUP%"=="1" del /f /q "%TEMP_CLEANUP%" >nul 2>&1
+if "%OWN_EXPECTED_LAUNCHER%"=="1" del /f /q "%EXPECTED_LAUNCHER%" >nul 2>&1
 exit /b 1
+
+:matches_expected_launcher
+rem Writes the expected launcher once, under a name no other run holds, and compares.
+if "%OWN_EXPECTED_LAUNCHER%"=="1" goto :matches_expected_launcher_compare
+if exist "%EXPECTED_LAUNCHER%" (
+  echo heroes-like uninstaller: launcher validation-file collision 1>&2
+  exit /b 1
+)
+set "OWN_EXPECTED_LAUNCHER=1"
+>"%EXPECTED_LAUNCHER%" echo @echo off
+>>"%EXPECTED_LAUNCHER%" echo start "" "%INSTALL_ROOT%\heroes-like.exe" %%*
+:matches_expected_launcher_compare
+"%SystemRoot%\System32\fc.exe" /b "%~1" "%EXPECTED_LAUNCHER%" >nul
+if errorlevel 1 (
+  echo heroes-like uninstaller: refusing to remove a modified %~2 1>&2
+  exit /b 1
+)
+exit /b 0
 
 :validate_required_payload
 rem Files every release ships. The rules library is newer, so an older install lacks it;
