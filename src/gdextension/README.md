@@ -195,6 +195,59 @@ It includes `*.editor.x86_64` entries for editor/headless execution and keeps
 directories should stay in `.artifacts/` so Godot does not scan CMake output as
 project content.
 
+## Rules Library (aurelion_rules)
+
+`src/gdextension/rules/` is the native rules engine (owner decision 2026-10-20,
+`docs/native-rules-engine-transition.md`). It is its own CMake project, so a rules
+change never rebuilds the map generator:
+
+- `core/`, `include/aurelion_rules/`: the rules core, plain C++17 with `std::` only,
+  built once as the static library `aurelion_rules_core`.
+- `gdextension/`: the GDExtension `aurelion_rules` (class `AurelionRules`, manifest
+  `src/gdextension/rules.gdextension`, entry `aurelion_rules_init`), which converts
+  packed arrays at the boundary and calls the core.
+- `selftest/`: `rules_selftest`, which runs the core without Godot against golden
+  vectors that carry their own inputs and against a pinned sweep digest. The same
+  digest must come out of MSVC, GCC and MinGW (run under Wine).
+
+`AurelionRules.get_build_info()` returns `api`, `source_tree` (the git tree id of
+`src/gdextension/rules` the binary was built from; it equals
+`git rev-parse HEAD:src/gdextension/rules` when the binary matches the sources),
+`godot_cpp`, `compiler` and `flavour`. GDScript reaches the class through
+`scripts/core/NativeRules.gd`. Tools that need it call `NativeRules.available()` and
+stop with an error when it is missing.
+
+A checkout that gets a new `.gdextension` file must register it once with
+`godot --headless --path . --import`. Until then `.godot/extension_list.cfg` does not
+list it, the class is missing, and `tools/core_suite.py` fails its native check.
+
+Both flavours use `/O2 /Ob2 /fp:precise` (MSVC) or `-O2 -ffp-contract=off` (GCC), and
+never fast-math or `-march=native`. The debug flavour differs only in the godot-cpp
+template it links. Build both with:
+
+```sh
+python tools/build_native.py windows            # MSVC here, then bin/rules_selftest.exe
+python tools/build_native.py linux              # GCC and MinGW on the Linux build server
+python tools/build_native.py linux --part all   # also rebuild and strip the map library
+```
+
+`linux` copies the working tree's sources and the pinned godot-cpp to a new `/tmp`
+directory on the build server, builds there at nice 19, runs the self-tests, strips
+every ELF output, copies `bin/` back, checks each file's sha256, and deletes the
+remote directory. Debug info never goes into git. PDBs and the split Linux debug
+files go into the symbol store per build id: `HEROES_NATIVE_SYMBOLS`, by default
+`heroes-like-native-symbols` next to the main checkout. That holds
+`windows/<pdb>/<GUID><age>/<pdb>` (a Microsoft symbol store),
+`linux/.build-id/xx/<rest>.debug` (point gdb's `debug-file-directory` at `linux/`),
+and `index.jsonl`.
+
+Exports leave out the debug libraries, PDBs, `rules_selftest` and the rules sources
+(`export_presets.cfg`).
+
+In a worktree without the godot-cpp submodule, both CMake projects use the main
+checkout's `third_party/godot-cpp` when it is at the pinned commit
+(`cmake/AurelionGodotCpp.cmake`). `GODOT_CPP_ROOT` overrides this.
+
 ## Release Candidate Build
 
 Run the complete clean-source Linux and Windows release-candidate path from the
@@ -204,7 +257,7 @@ repository root after committing tracked changes:
 python3 tools/build_release_candidate.py --version 0.1.0-rc1
 ```
 
-The driver rebuilds both release GDExtensions and native self-tests, runs the
+The driver rebuilds the release map and rules GDExtensions and native self-tests, runs the
 Linux self-test directly and the Windows self-test under Wine, parses the Godot
 project, runs repository validation, then delegates export, installer creation,
 provenance binding, and final verification to `tools/package_release.py`.

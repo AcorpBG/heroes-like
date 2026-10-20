@@ -1,0 +1,164 @@
+cmake_minimum_required(VERSION 3.22)
+project(aurelion_rules LANGUAGES CXX)
+
+# The game's rules in C++ (docs/native-rules-engine-transition.md). A project of
+# its own, so a rules change never rebuilds the map generator, and its flags
+# apply to this tree only.
+#
+#   aurelion_rules_core  pure std:: core, compiled once per tree
+#   aurelion_rules       the GDExtension (src/gdextension/rules.gdextension)
+#   rules_selftest       golden vectors without Godot
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+get_property(AURELION_MULTI_CONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+if(NOT AURELION_MULTI_CONFIG AND NOT CMAKE_BUILD_TYPE)
+	set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "Build type" FORCE)
+endif()
+
+# Both flavours are optimized alike and keep debug info, which the build
+# scripts archive outside git (tools/build_native.py). Release and
+# RelWithDebInfo compile the same code; only the godot-cpp flavour differs.
+# No fast-math, no FMA contraction, no -march: results must match on MSVC, GCC
+# and MinGW.
+if(MSVC)
+	set(AURELION_RULES_OPT_FLAGS "/O2 /Ob2 /DNDEBUG /Zi /fp:precise")
+else()
+	set(AURELION_RULES_OPT_FLAGS "-O2 -g -DNDEBUG -ffp-contract=off")
+endif()
+foreach(AURELION_CONFIG RELEASE RELWITHDEBINFO MINSIZEREL)
+	set(CMAKE_CXX_FLAGS_${AURELION_CONFIG} "${AURELION_RULES_OPT_FLAGS}")
+	if(MSVC)
+		# A PDB in both flavours, without the incremental-link padding.
+		set(CMAKE_SHARED_LINKER_FLAGS_${AURELION_CONFIG} "/DEBUG:FULL /INCREMENTAL:NO /OPT:REF /OPT:ICF")
+		set(CMAKE_EXE_LINKER_FLAGS_${AURELION_CONFIG} "/DEBUG:FULL /INCREMENTAL:NO /OPT:REF /OPT:ICF")
+	endif()
+endforeach()
+
+set(AURELION_GODOTCPP_TARGET "template_debug" CACHE STRING "godot-cpp flavour: template_debug or template_release")
+set_property(CACHE AURELION_GODOTCPP_TARGET PROPERTY STRINGS "template_debug;template_release")
+if(NOT AURELION_GODOTCPP_TARGET STREQUAL "template_debug" AND NOT AURELION_GODOTCPP_TARGET STREQUAL "template_release")
+	message(FATAL_ERROR "AURELION_GODOTCPP_TARGET must be template_debug or template_release, got '${AURELION_GODOTCPP_TARGET}'.")
+endif()
+set(GODOTCPP_TARGET "${AURELION_GODOTCPP_TARGET}" CACHE STRING "godot-cpp flavour" FORCE)
+# The adapter catches every exception the core throws, so the STL must keep
+# them (godot-cpp turns them off by default, _HAS_EXCEPTIONS=0 on MSVC).
+set(GODOTCPP_DISABLE_EXCEPTIONS OFF CACHE BOOL "Keep C++ exceptions for the rules adapter" FORCE)
+
+set(AURELION_PROJECT_ROOT "${CMAKE_CURRENT_LIST_DIR}/../../.." CACHE PATH "Godot project root.")
+get_filename_component(AURELION_PROJECT_ROOT "${AURELION_PROJECT_ROOT}" ABSOLUTE)
+set(AURELION_RULES_SOURCE_TREE "" CACHE STRING "Tree id of src/gdextension/rules when building from an archive without .git")
+include("${CMAKE_CURRENT_LIST_DIR}/../cmake/AurelionGodotCpp.cmake")
+aurelion_resolve_godot_cpp_root("${AURELION_PROJECT_ROOT}" AURELION_GODOT_CPP_ROOT)
+set(AURELION_GODOT_CPP_COMMIT "" CACHE STRING "godot-cpp commit when building from an archive without .git")
+set(AURELION_GODOT_CPP_COMMIT_RESOLVED "${AURELION_GODOT_CPP_COMMIT}")
+if(AURELION_GODOT_CPP_COMMIT_RESOLVED STREQUAL "")
+	find_package(Git QUIET)
+	if(GIT_FOUND)
+		execute_process(
+			COMMAND "${GIT_EXECUTABLE}" -C "${AURELION_GODOT_CPP_ROOT}" rev-parse HEAD
+			OUTPUT_VARIABLE AURELION_GODOT_CPP_COMMIT_RESOLVED OUTPUT_STRIP_TRAILING_WHITESPACE
+			RESULT_VARIABLE AURELION_GODOT_CPP_COMMIT_RESULT ERROR_QUIET)
+		if(NOT AURELION_GODOT_CPP_COMMIT_RESULT EQUAL 0)
+			set(AURELION_GODOT_CPP_COMMIT_RESOLVED "")
+		endif()
+	endif()
+endif()
+if(AURELION_GODOT_CPP_COMMIT_RESOLVED STREQUAL "")
+	set(AURELION_GODOT_CPP_COMMIT_RESOLVED "unknown")
+endif()
+
+if(NOT MSVC)
+	# No build paths in the binaries: the same sources give the same bytes in
+	# any directory. The last matching map wins, so the innermost comes last.
+	string(APPEND CMAKE_CXX_FLAGS " -ffile-prefix-map=${AURELION_PROJECT_ROOT}/= -ffile-prefix-map=${AURELION_GODOT_CPP_ROOT}/=godot-cpp/ -ffile-prefix-map=${CMAKE_BINARY_DIR}/=build/")
+endif()
+
+# godot-cpp first: it sets the MSVC runtime the targets below inherit.
+add_subdirectory("${AURELION_GODOT_CPP_ROOT}" "${CMAKE_CURRENT_BINARY_DIR}/godot-cpp")
+
+set(AURELION_RULES_GENERATED_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
+add_custom_target(aurelion_rules_source_tree
+	COMMAND "${CMAKE_COMMAND}"
+		"-DROOT=${AURELION_PROJECT_ROOT}"
+		"-DOUT=${AURELION_RULES_GENERATED_DIR}/aurelion_rules_source_tree.hpp"
+		"-DOVERRIDE=${AURELION_RULES_SOURCE_TREE}"
+		-P "${CMAKE_CURRENT_LIST_DIR}/cmake/source_tree.cmake"
+	WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+	BYPRODUCTS "${AURELION_RULES_GENERATED_DIR}/aurelion_rules_source_tree.hpp"
+	COMMENT "Rules source tree id"
+	VERBATIM)
+
+add_library(aurelion_rules_core STATIC
+	core/battle_hex.cpp
+	core/build_info.cpp
+)
+add_dependencies(aurelion_rules_core aurelion_rules_source_tree)
+target_include_directories(aurelion_rules_core PUBLIC include PRIVATE "${AURELION_RULES_GENERATED_DIR}")
+target_compile_definitions(aurelion_rules_core PRIVATE "AURELION_GODOT_CPP_COMMIT=\"${AURELION_GODOT_CPP_COMMIT_RESOLVED}\"")
+set_target_properties(aurelion_rules_core PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+add_library(aurelion_rules SHARED
+	gdextension/register_types.cpp
+	gdextension/aurelion_rules_api.cpp
+)
+target_link_libraries(aurelion_rules PRIVATE aurelion_rules_core godot::cpp)
+target_compile_definitions(aurelion_rules PRIVATE "AURELION_RULES_FLAVOUR=\"${AURELION_GODOTCPP_TARGET}\"")
+get_target_property(AURELION_GODOT_CPP_INCLUDES godot::cpp INTERFACE_INCLUDE_DIRECTORIES)
+if(AURELION_GODOT_CPP_INCLUDES)
+	target_include_directories(aurelion_rules SYSTEM PRIVATE ${AURELION_GODOT_CPP_INCLUDES})
+endif()
+
+add_executable(rules_selftest
+	selftest/rules_selftest.cpp
+)
+target_link_libraries(rules_selftest PRIVATE aurelion_rules_core)
+
+foreach(AURELION_RULES_TARGET aurelion_rules_core aurelion_rules rules_selftest)
+	if(MSVC)
+		target_compile_options(${AURELION_RULES_TARGET} PRIVATE /W4)
+	else()
+		target_compile_options(${AURELION_RULES_TARGET} PRIVATE -Wall -Wextra)
+	endif()
+endforeach()
+
+if(WIN32 AND NOT MSVC)
+	target_link_options(rules_selftest PRIVATE -static -static-libgcc -static-libstdc++)
+endif()
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+	set(AURELION_GODOT_PLATFORM "linux")
+	set(AURELION_OUTPUT_PREFIX "lib")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR WIN32)
+	set(AURELION_GODOT_PLATFORM "windows")
+	set(AURELION_OUTPUT_PREFIX "")
+else()
+	message(FATAL_ERROR "Unsupported GDExtension target platform '${CMAKE_SYSTEM_NAME}'.")
+endif()
+
+set(AURELION_BIN_OUTPUT_DIR "${AURELION_PROJECT_ROOT}/bin")
+set_target_properties(aurelion_rules PROPERTIES
+	PREFIX "${AURELION_OUTPUT_PREFIX}"
+	OUTPUT_NAME "aurelion_rules.${AURELION_GODOT_PLATFORM}.${AURELION_GODOTCPP_TARGET}.x86_64"
+)
+foreach(AURELION_RULES_OUTPUT aurelion_rules rules_selftest)
+	set_target_properties(${AURELION_RULES_OUTPUT} PROPERTIES
+		LIBRARY_OUTPUT_DIRECTORY "${AURELION_BIN_OUTPUT_DIR}"
+		RUNTIME_OUTPUT_DIRECTORY "${AURELION_BIN_OUTPUT_DIR}"
+		PDB_OUTPUT_DIRECTORY "${AURELION_BIN_OUTPUT_DIR}"
+	)
+	foreach(AURELION_CONFIG DEBUG RELEASE RELWITHDEBINFO MINSIZEREL)
+		set_target_properties(${AURELION_RULES_OUTPUT} PROPERTIES
+			LIBRARY_OUTPUT_DIRECTORY_${AURELION_CONFIG} "${AURELION_BIN_OUTPUT_DIR}"
+			RUNTIME_OUTPUT_DIRECTORY_${AURELION_CONFIG} "${AURELION_BIN_OUTPUT_DIR}"
+			PDB_OUTPUT_DIRECTORY_${AURELION_CONFIG} "${AURELION_BIN_OUTPUT_DIR}"
+		)
+	endforeach()
+endforeach()
+# Import libraries and exports stay in the build tree, not in bin/.
+set_target_properties(aurelion_rules PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib")
+foreach(AURELION_CONFIG DEBUG RELEASE RELWITHDEBINFO MINSIZEREL)
+	set_target_properties(aurelion_rules PROPERTIES ARCHIVE_OUTPUT_DIRECTORY_${AURELION_CONFIG} "${CMAKE_CURRENT_BINARY_DIR}/lib")
+endforeach()

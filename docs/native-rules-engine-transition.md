@@ -252,6 +252,84 @@ another project's Godot processes (1-3) ran during the profile, not during the e
   state is about 3.6 MB on the median day and 7 MB on day 320. A deep copy (`duplicate(true)`) of the changed keys
   takes 0.10 s per day.
 
+### Phase 0 results (toolchain and spike slice, 2026-10-20)
+
+**Toolchain.** `src/gdextension/rules/` is its own CMake project. It builds the `aurelion_rules_core` static library
+(std:: only), the `aurelion_rules` GDExtension (`rules.gdextension`, class `AurelionRules`, `get_build_info()`) and
+`rules_selftest`, so rules commits never rebuild the map generator. Both flavours use `/O2 /Ob2 /fp:precise` or
+`-O2 -ffp-contract=off`. Other pieces:
+- `tools/build_native.py windows|linux` builds here with MSVC, or on the Linux server in a fresh `/tmp` directory at
+  nice 19 (GCC 13.3, plus the self-test built with MinGW and run under Wine). Every file comes back sha256-checked, and
+  PDBs and Linux debug files are archived per build id outside git (`heroes-like-native-symbols/`).
+- Exports leave out the debug libraries, PDBs, `rules_selftest` and the rules sources.
+- `tools/build_release_candidate.py` (and with it the workflow) builds and tests the release rules library on both
+  systems.
+- `tools/core_suite.py` runs `rules_selftest` and fails when a checkout has not registered a `.gdextension`.
+- Worktrees take godot-cpp from the main checkout when it is at the pinned commit.
+
+**D3.** The Linux map debug library was rebuilt with the script and stripped: 50.8 MB → 4.2 MB.
+- The rebuilt map self-test and CLI are byte-identical to the committed ones.
+- The library's read-only strings differ only in embedded source paths.
+- The six seeds play identically with the old and the new library on Linux.
+
+**Determinism.** Two checks pass identically under MSVC 19.44 (VS 17.14), GCC 13.3 and MinGW 13 (Wine), with sweep digest
+`c6f6ecf4989d40bd`:
+- 587 golden vectors carrying their own inputs, picked from 42,019 distinct calls of the GDScript search. The calls
+  come from the arena suites, the six seeds, the battle core tests and 70 hand-made obstacle boards.
+- A 20,000-board sweep.
+
+**Correctness (G0 row 1).** Shadow mode ran both searches on every call and compared the answers, int/float types
+and key order included:
+
+| Run | Calls compared | Mismatches |
+|---|---|---|
+| Battle AI arena `standard` suite (Windows) | 72,590 | 0 |
+| Battle AI arena `holdout` suite (Windows) | 75,286 | 0 |
+| Six parity seeds (Linux) | 91,466 | 0 |
+| Six parity seeds (Windows) | 91,466 | 0 |
+
+`tools/rules_parity.py` gives identical daily digests and match records for the final native build against main on all
+six seeds, on Windows and on Linux (415 game days per system). The core suite passes on both systems.
+
+**Speed per call (G0 row 3).** The captured calls were replayed through the GDScript loop and through the native call
+(`PackedByteArray` in, `PackedInt32Array` out), 5 passes, idle machine. The last column comes from the shadow runs
+of the six seeds (six games at once). All values are µs per call.
+
+| Search | System | GDScript | Native, boundary included | Native + the game's Dictionaries | Whole function, six seeds (shadow) |
+|---|---|---|---|---|---|
+| `_reachable_empty_hexes` | Windows | 25.2 | 1.44 (17.5x) | 13.6 (1.85x) | 99.7 → 88.2 (1.13x) |
+| | Linux | 23.6 | 1.28 (18x) | 11.5 (2.0x) | 91.7 → 79.6 (1.15x) |
+| `_walk_steps_to_target` | Windows | 278.6 | 2.97 (94x) | 48.5 (5.7x) | 431.7 → 145.7 (3.0x) |
+| | Linux | 246.8 | 2.73 (90x) | 32.3 (7.6x) | 408.5 → 124.5 (3.3x) |
+| `_obstacle_field_stays_open` | Windows | 91.3 | 1.63 (56x) | 1.69 (54x) | 118.7 → 7.7 (15x) |
+| | Linux | 94.6 | 1.81 (52x) | 1.85 (51x) | 123.5 → 9.4 (13x) |
+
+What the numbers say:
+- The search itself crosses the boundary cheaply: 17-94x.
+- Turning its answer into the game's format costs more than the search: one Dictionary per cell, or `"q,r"` string
+  keys.
+- In a game, the GDScript that builds the battle's blocking map before each search costs the most. It stays GDScript
+  in this spike and is shared by both columns.
+- So the whole-function gain is 1.15x for the reachable search and 3x for the walk.
+
+By the G0 table, the call through the boundary is a go for the walk and field checks and is in "fix the interface
+first" for the reachable search. With the Dictionaries, the reachable search falls below 5x. That is the interface
+shape Phase 1 removes: battle state and the open mask live natively, and callers read id/step arrays.
+
+**Developer loop (G0 row 6).** Measured on this slice's own changes.
+- **Edit to local match: about 25 s.** A one-line change in `battle_hex.cpp` takes 5.1 s for the incremental MSVC
+  build of the debug flavour plus the self-test. The small 2P match that follows (seed s2, 33 days) takes 19.3 s. A
+  GDScript change skips the 5 s.
+- **Edit to push on both systems: about 18 min**, the sum of the measured steps on the critical path below. Commit,
+  push and syncing the owner's checkout are not included. The steps:
+  - Windows: both flavours 9 s, parity check 5.0 min, core suite 36 s.
+  - Linux build on the server: 8-10 min (490-584 s). It runs in parallel with the Windows steps. The script builds in a
+    fresh directory every time, so godot-cpp compiles twice; a persistent remote build tree would avoid that (not
+    measured).
+  - Linux checks: upload 35 s, the six seeds 5.5 min per side on its 4 cores, core suite 58 s. Comparing against main's
+    digests from an earlier run saves the second side; running main too adds about 6 min (24 min in all).
+- **For comparison:** a GDScript port change needs only the Windows parity check and core suite: 5.6 min.
+
 ### Phase 1: native battle engine, one merge (30-60 days)
 
 - **Scope:** the rules part of BattleRules, all of BattleAiRules, in-battle SpellRules, BattleAutoResolveRules,

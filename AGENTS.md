@@ -67,6 +67,8 @@ Owner decision, 2026-10-10. Testing had grown to about half of all agent time, m
   - It must be on the default branch with no local-only commits (`git rev-list --count origin/main..HEAD` is 0).
   - Incoming files must not overlap the owner's uncommitted changes in `git status --short`. Never stash, reset, checkout or discard the owner's local edits or deletions.
   - Update with `git merge --ff-only origin/main`. If it cannot fast-forward, stop and report it instead of forcing.
+  - If the update brought a new `src/gdextension/*.gdextension` file, run `godot --headless --path . --import` there once, with a throwaway user profile. Without it Godot does not load the new native library.
+  - Do not replace native libraries in `bin/` while a Godot started from that checkout has them loaded.
   - Tell the owner to restart Godot or the running game.
 
 ## Screen composition hard rules

@@ -12,6 +12,9 @@ or the owner's Windows install. Every test gets a throwaway user profile (APPDAT
 Windows, XDG_DATA_HOME on Linux), so the real saves and settings are never touched.
 
 The content check (tests/validate_repo.py, a few seconds) runs first and needs no Godot.
+The native check runs bin/rules_selftest (the native rules core's golden vectors, no Godot)
+and fails when this checkout has not registered every src/gdextension/*.gdextension: run
+`godot --headless --path . --import` once after a pull that brings a new one.
 A failing test listed in tests/known_failures.txt is reported as KNOWN and does not fail
 the run. See AGENTS.md "Validation budget" for what belongs here and what does not.
 """
@@ -59,6 +62,7 @@ CORE_TESTS: list[tuple[str, int, str]] = [
 # main_menu_lean_boot_save_guard (authored domain / pre-existing saves).
 
 CONTENT_CHECK = "validate_repo"
+NATIVE_CHECK = "rules_selftest"
 
 FAILURE_TEXT = re.compile(r"^(SCRIPT ERROR|Parse Error|ERROR: Failed to load script)", re.M)
 
@@ -89,6 +93,21 @@ def run_content_check() -> tuple[str, bool, float, str]:
     cmd = [sys.executable, str(ROOT / "tests" / "validate_repo.py")]
     proc = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=300)
     return CONTENT_CHECK, proc.returncode == 0, time.monotonic() - started, proc.stdout + proc.stderr
+
+
+def run_native_check() -> tuple[str, bool, float, str]:
+    started = time.monotonic()
+    problems = []
+    extension_list = ROOT / ".godot" / "extension_list.cfg"
+    listed = set(extension_list.read_text(encoding="utf-8").split()) if extension_list.exists() else set()
+    for manifest in sorted((ROOT / "src" / "gdextension").glob("*.gdextension")):
+        resource = "res://" + manifest.relative_to(ROOT).as_posix()
+        if resource not in listed:
+            problems.append(f"{resource} is not registered in .godot/extension_list.cfg: run godot --headless --path . --import once in this checkout")
+    selftest = ROOT / "bin" / ("rules_selftest.exe" if platform.system() == "Windows" else "rules_selftest")
+    proc = subprocess.run([str(selftest)], capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=300)
+    output = proc.stdout + proc.stderr + "".join(f"\n{problem}" for problem in problems)
+    return NATIVE_CHECK, proc.returncode == 0 and not problems, time.monotonic() - started, output
 
 
 def run_test(godot: str, name: str, timeout: int) -> tuple[str, bool, float, str]:
@@ -122,23 +141,28 @@ def main() -> int:
 
     if args.list:
         print(f"{CONTENT_CHECK:55s} content parses, ids and references resolve, runtime files exist")
+        print(f"{NATIVE_CHECK:55s} native rules core matches its golden vectors; extensions are registered")
         for name, timeout, why in CORE_TESTS:
             print(f"{name:55s} {why}")
         return 0
     tests = CORE_TESTS
     content_check = True
+    native_check = True
     if args.only:
-        unknown = set(args.only) - {t[0] for t in CORE_TESTS} - {CONTENT_CHECK}
+        unknown = set(args.only) - {t[0] for t in CORE_TESTS} - {CONTENT_CHECK, NATIVE_CHECK}
         if unknown:
             sys.exit(f"Not core tests: {', '.join(sorted(unknown))}")
         tests = [t for t in CORE_TESTS if t[0] in args.only]
         content_check = CONTENT_CHECK in args.only
+        native_check = NATIVE_CHECK in args.only
 
     known = load_known_failures()
     started = time.monotonic()
     failed: list[str] = []
     if content_check:
         failed += report(*run_content_check(), known)
+    if native_check:
+        failed += report(*run_native_check(), known)
     note = ""
     if tests:
         godot = find_godot(args.godot)
@@ -149,7 +173,7 @@ def main() -> int:
         finally:
             removed = remove_new_maps(maps_before, run_started_at)
         note = f"; removed {removed} generated map files the tests wrote" if removed else ""
-    total = len(tests) + (1 if content_check else 0)
+    total = len(tests) + (1 if content_check else 0) + (1 if native_check else 0)
     print(f"\n{total - len(failed)}/{total} core tests passed in {time.monotonic() - started:.0f}s{note}")
     return 1 if failed else 0
 

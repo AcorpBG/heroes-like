@@ -20,6 +20,7 @@ const Footprint = preload("res://scripts/core/BattleFootprint.gd")
 const DamageRules = preload("res://scripts/core/BattleDamageRules.gd")
 const ScenarioRulesScript = preload("res://scripts/core/ScenarioRules.gd")
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
+const NativeRules = preload("res://scripts/core/NativeRules.gd")
 
 # One immutable battle snapshot, bounded target/action entries. Never saved;
 # repeated hover and the legacy summaries share the same exact exchange.
@@ -9430,36 +9431,7 @@ static func _obstacle_cells_clear(cells: Array, blocked: Dictionary) -> bool:
 
 ## A two-hex body of either side can still walk from its own edge to the other.
 static func _obstacle_field_stays_open(blocked: Dictionary) -> bool:
-	var neighbor_ids := _hex_neighbor_ids()
-	for side in ["player", "enemy"]:
-		var body := {"side": side, "battle_footprint": 2}
-		var start_q := 1 if side == "player" else BATTLE_HEX_COLUMNS - 2
-		var goal_q := BATTLE_HEX_COLUMNS - 1 if side == "player" else 0
-		var fit := _hex_fit_mask(body, blocked)
-		var frontier := PackedInt32Array()
-		var seen := PackedByteArray()
-		seen.resize(BATTLE_HEX_COLUMNS * BATTLE_HEX_ROWS)
-		for r in range(BATTLE_HEX_ROWS):
-			var start_id := start_q * BATTLE_HEX_ROWS + r
-			if fit[start_id] == 1:
-				frontier.append(start_id)
-				seen[start_id] = 1
-		var crossed := false
-		var index := 0
-		while index < frontier.size():
-			var cell_id := frontier[index]
-			index += 1
-			if cell_id / BATTLE_HEX_ROWS == goal_q:
-				crossed = true
-				break
-			for neighbor_id in neighbor_ids[cell_id]:
-				if seen[neighbor_id] == 1 or fit[neighbor_id] == 0:
-					continue
-				seen[neighbor_id] = 1
-				frontier.append(neighbor_id)
-		if not crossed:
-			return false
-	return true
+	return NativeRules.api().battle_hex_field_stays_open(_hex_open_mask({}, blocked))
 
 static func _normalize_battle_obstacles(value: Variant) -> Array:
 	var normalized := []
@@ -9654,85 +9626,48 @@ static func _hex_neighbors(cell: Dictionary) -> Array:
 			neighbors.append(_hex_cell(next_q, next_r))
 	return neighbors
 
-# The walks below run on hex ids (q * BATTLE_HEX_ROWS + r) instead of "q,r"
-# keys and cell dictionaries. Never saved.
-static var _hex_neighbor_id_table: Array = []
+# The battle hex searches (_reachable_empty_hexes, _walk_steps_to_target,
+# _obstacle_field_stays_open) run in the native rules library (AurelionRules,
+# src/gdextension/rules/core/battle_hex.cpp) on hex ids (q * BATTLE_HEX_ROWS + r)
+# instead of "q,r" keys and cell dictionaries. Never saved.
 static var _hex_id_by_key: Dictionary = {}
 
-## Per hex id, the ids _hex_neighbors lists for that hex, in the same order.
-static func _hex_neighbor_ids() -> Array:
-	if _hex_neighbor_id_table.is_empty():
-		var table := []
+## Per hex id, 1 where no blocker of this blocking map ("q,r" -> blocker id)
+## stands, else 0. A blocker carrying the stack's own battle id does not block
+## it. The native searches fit the stack's body over it.
+static func _hex_open_mask(stack: Dictionary, occupied: Dictionary) -> PackedByteArray:
+	if _hex_id_by_key.is_empty():
 		var ids := {}
 		for q in range(BATTLE_HEX_COLUMNS):
 			for r in range(BATTLE_HEX_ROWS):
-				var neighbor_ids := PackedInt32Array()
-				for neighbor in _hex_neighbors({"q": q, "r": r}):
-					neighbor_ids.append(int(neighbor.q) * BATTLE_HEX_ROWS + int(neighbor.r))
-				table.append(neighbor_ids)
 				ids[_hex_key_from_coords(q, r)] = q * BATTLE_HEX_ROWS + r
 		_hex_id_by_key = ids
-		_hex_neighbor_id_table = table
-	return _hex_neighbor_id_table
-
-## Per hex id, 1 where the stack's body fits by Footprint.fits against this
-## blocking map ("q,r" -> blocker id), else 0. A blocker carrying the stack's
-## own battle id does not block it.
-static func _hex_fit_mask(stack: Dictionary, occupied: Dictionary) -> PackedByteArray:
-	_hex_neighbor_ids()
-	var count := BATTLE_HEX_COLUMNS * BATTLE_HEX_ROWS
 	var open := PackedByteArray()
-	open.resize(count)
+	open.resize(BATTLE_HEX_COLUMNS * BATTLE_HEX_ROWS)
 	open.fill(1)
 	var identity := String(stack.get("battle_id", ""))
 	for key in occupied:
 		var id: int = _hex_id_by_key.get(key, -1)
 		if id >= 0 and (identity.is_empty() or String(occupied[key]) != identity):
 			open[id] = 0
-	if Footprint.width(stack) != 2:
-		return open
-	var tail_step := 1 if String(stack.get("side", "player")) == "enemy" else -1
-	var fit := PackedByteArray()
-	fit.resize(count)
-	for q in range(BATTLE_HEX_COLUMNS):
-		var tail_q := q + tail_step
-		if tail_q < 0 or tail_q >= BATTLE_HEX_COLUMNS:
-			continue
-		for r in range(BATTLE_HEX_ROWS):
-			if open[q * BATTLE_HEX_ROWS + r] == 1 and open[tail_q * BATTLE_HEX_ROWS + r] == 1:
-				fit[q * BATTLE_HEX_ROWS + r] = 1
-	return fit
+	return open
+
+## The column a two-hex body's tail stands at from its anchor (BattleFootprint.cells).
+static func _hex_tail_step(stack: Dictionary) -> int:
+	return 1 if String(stack.get("side", "player")) == "enemy" else -1
 
 static func _reachable_empty_hexes(battle: Dictionary, stack: Dictionary, max_steps: int) -> Array:
 	var start := _stack_hex(stack)
 	if start.is_empty() or max_steps <= 0:
 		return []
 	var occupied := _build_blocking_map(battle)
-	var start_key := _hex_key(start)
-	occupied.erase(start_key)
-	var fit := _hex_fit_mask(stack, occupied)
-	var neighbor_ids := _hex_neighbor_ids()
-	var steps_by_id := PackedInt32Array()
-	steps_by_id.resize(BATTLE_HEX_COLUMNS * BATTLE_HEX_ROWS)
-	steps_by_id.fill(-1)
+	occupied.erase(_hex_key(start))
 	var start_id := int(start.q) * BATTLE_HEX_ROWS + int(start.r)
-	steps_by_id[start_id] = 0
-	var frontier := PackedInt32Array([start_id])
+	var pairs: PackedInt32Array = NativeRules.api().battle_hex_reachable(_hex_open_mask(stack, occupied), Footprint.width(stack), _hex_tail_step(stack), start_id, max_steps)
 	var reachable := []
-	var index := 0
-	while index < frontier.size():
-		var current_id := frontier[index]
-		index += 1
-		var steps := steps_by_id[current_id]
-		if steps >= max_steps:
-			continue
-		for neighbor_id in neighbor_ids[current_id]:
-			if steps_by_id[neighbor_id] >= 0 or fit[neighbor_id] == 0:
-				continue
-			var next_steps := steps + 1
-			steps_by_id[neighbor_id] = next_steps
-			reachable.append({"q": neighbor_id / BATTLE_HEX_ROWS, "r": neighbor_id % BATTLE_HEX_ROWS, "steps": next_steps})
-			frontier.append(neighbor_id)
+	for index in range(0, pairs.size(), 2):
+		var cell_id := pairs[index]
+		reachable.append({"q": cell_id / BATTLE_HEX_ROWS, "r": cell_id % BATTLE_HEX_ROWS, "steps": pairs[index + 1]})
 	return reachable
 
 static func _stack_hex_distance(lhs: Dictionary, rhs: Dictionary) -> int:
@@ -9783,46 +9718,29 @@ static func _walk_steps_to_target(battle: Dictionary, stack: Dictionary, target:
 		return cached
 	# The walk runs over the hexes the stack's body fits on, around obstacles and
 	# the other stacks, starting from every such hex gap hexes from target.
-	var fit := _walk_fit_mask(battle, stack)
-	var neighbor_ids := _hex_neighbor_ids()
-	var steps_by_id := PackedInt32Array()
-	steps_by_id.resize(BATTLE_HEX_COLUMNS * BATTLE_HEX_ROWS)
-	steps_by_id.fill(-1)
-	var frontier := PackedInt32Array()
-	for cell_id in range(BATTLE_HEX_COLUMNS * BATTLE_HEX_ROWS):
-		if fit[cell_id] == 1 and Footprint.distance(stack, target, {"q": cell_id / BATTLE_HEX_ROWS, "r": cell_id % BATTLE_HEX_ROWS}) == gap:
-			steps_by_id[cell_id] = 0
-			frontier.append(cell_id)
-	var index := 0
-	while index < frontier.size():
-		var current_id := frontier[index]
-		index += 1
-		var next_steps := steps_by_id[current_id] + 1
-		for neighbor_id in neighbor_ids[current_id]:
-			if steps_by_id[neighbor_id] >= 0 or fit[neighbor_id] == 0:
-				continue
-			steps_by_id[neighbor_id] = next_steps
-			frontier.append(neighbor_id)
+	var placed := Footprint.placed_columns(target)
+	var pairs: PackedInt32Array = NativeRules.api().battle_hex_walk_steps(_walk_open_mask(battle, stack), Footprint.width(stack), _hex_tail_step(stack), int(placed[0]), int(placed[1]), int(placed[2]), gap)
 	var steps := {}
-	for cell_id in frontier:
-		steps[_hex_key_from_coords(cell_id / BATTLE_HEX_ROWS, cell_id % BATTLE_HEX_ROWS)] = steps_by_id[cell_id]
+	for index in range(0, pairs.size(), 2):
+		var cell_id := pairs[index]
+		steps[_hex_key_from_coords(cell_id / BATTLE_HEX_ROWS, cell_id % BATTLE_HEX_ROWS)] = pairs[index + 1]
 	if cache_key != "":
 		_board_read_scope_cache[cache_key] = steps.duplicate()
 	return steps
 
-## _hex_fit_mask of the stack against the battle's obstacles and stacks. Every
+## _hex_open_mask of the stack against the battle's obstacles and stacks. Every
 ## walk to a target searches over it.
-static func _walk_fit_mask(battle: Dictionary, stack: Dictionary) -> PackedByteArray:
-	var cache_key := _board_read_cache_key(battle, "walk_fit_mask", String(stack.get("battle_id", "")))
+static func _walk_open_mask(battle: Dictionary, stack: Dictionary) -> PackedByteArray:
+	var cache_key := _board_read_cache_key(battle, "walk_open_mask", String(stack.get("battle_id", "")))
 	# Read past _board_read_cache_get without a copy: the returned mask is the
 	# cached one, shared, so callers only read it and never write into it.
 	if cache_key != "" and _board_read_scope_cache.has(cache_key):
 		_board_read_cache_hits += 1
 		return _board_read_scope_cache[cache_key]
-	var fit := _hex_fit_mask(stack, _build_blocking_map(battle))
+	var open := _hex_open_mask(stack, _build_blocking_map(battle))
 	if cache_key != "":
-		_board_read_scope_cache[cache_key] = fit
-	return fit
+		_board_read_scope_cache[cache_key] = open
+	return open
 
 static func _destination_is_legal(battle: Dictionary, stack: Dictionary, destination: Dictionary) -> bool:
 	return not _legal_destination_for_stack(battle, stack, destination).is_empty()

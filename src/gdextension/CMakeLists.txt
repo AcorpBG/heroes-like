@@ -38,13 +38,10 @@ endif()
 set(GODOTCPP_TARGET "${AURELION_RESOLVED_GODOTCPP_TARGET}" CACHE STRING "Which target to generate. valid values are: template_debug, template_release, and editor" FORCE)
 
 set(AURELION_PROJECT_ROOT "${CMAKE_CURRENT_LIST_DIR}/../.." CACHE PATH "Godot project root.")
-set(GODOT_CPP_ROOT "${AURELION_PROJECT_ROOT}/third_party/godot-cpp" CACHE PATH "Pinned Godot 4 godot-cpp checkout.")
+include("${CMAKE_CURRENT_LIST_DIR}/cmake/AurelionGodotCpp.cmake")
+aurelion_resolve_godot_cpp_root("${AURELION_PROJECT_ROOT}" AURELION_GODOT_CPP_ROOT)
 
-if(NOT EXISTS "${GODOT_CPP_ROOT}/CMakeLists.txt")
-	message(FATAL_ERROR "Missing pinned godot-cpp checkout at ${GODOT_CPP_ROOT}. Run: git submodule update --init --recursive")
-endif()
-
-add_subdirectory("${GODOT_CPP_ROOT}" "${CMAKE_CURRENT_BINARY_DIR}/godot-cpp")
+add_subdirectory("${AURELION_GODOT_CPP_ROOT}" "${CMAKE_CURRENT_BINARY_DIR}/godot-cpp")
 
 add_library(aurelion_map_persistence SHARED
 	src/register_types.cpp

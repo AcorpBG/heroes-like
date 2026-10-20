@@ -45,20 +45,28 @@ class ReleaseCandidatePipelineTest(unittest.TestCase):
 				"configure_linux_release",
 				"build_linux_release",
 				"selftest_linux_release",
+				"configure_linux_rules_release",
+				"build_linux_rules_release",
+				"selftest_linux_rules",
 				"configure_windows_release",
 				"build_windows_release",
 				"selftest_windows_release",
+				"configure_windows_rules_release",
+				"build_windows_rules_release",
+				"selftest_windows_rules",
 				"parse_project",
 				"validate_repository",
 				"package_release",
 				"verify_release",
 			],
 		)
-		windows_configure = plan[3].command
-		self.assertIn("-DCMAKE_SYSTEM_NAME=Windows", windows_configure)
-		self.assertIn("-DCMAKE_SYSTEM_PROCESSOR=x86_64", windows_configure)
-		self.assertEqual(plan[5].command[0], tools["wine"])
-		package = plan[8].command
+		steps = {step.id: step.command for step in plan}
+		for configure in ("configure_windows_release", "configure_windows_rules_release"):
+			self.assertIn("-DCMAKE_SYSTEM_NAME=Windows", steps[configure])
+			self.assertIn("-DCMAKE_SYSTEM_PROCESSOR=x86_64", steps[configure])
+		self.assertEqual(steps["selftest_windows_release"][0], tools["wine"])
+		self.assertEqual(steps["selftest_windows_rules"][0], tools["wine"])
+		package = steps["package_release"]
 		self.assertIn("--source-revision", package)
 		self.assertEqual(package[package.index("--source-revision") + 1], REVISION)
 		self.assertIn("--godot", package)

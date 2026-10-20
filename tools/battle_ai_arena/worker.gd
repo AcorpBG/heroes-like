@@ -63,6 +63,9 @@ func _run() -> int:
 	if not (job is Dictionary):
 		printerr("ARENA cannot read job %s" % args[0])
 		return 2
+	# The battle rules call the native rules library; without it every battle fails.
+	if not load("res://scripts/core/NativeRules.gd").available():
+		return 2
 	_out = FileAccess.open(String(args[1]), FileAccess.WRITE)
 	if _out == null:
 		printerr("ARENA cannot write %s" % args[1])

@@ -48,28 +48,26 @@ class CommandStep:
 	command: tuple[str, ...]
 
 
-NATIVE_OUTPUTS = (
-	NativeOutput(
-		"linux-x86_64",
-		ROOT / "bin" / "libaurelion_map_persistence.linux.template_release.x86_64.so",
-		"elf64-x86_64",
+# The release outputs each build step writes and the candidate checks.
+NATIVE_OUTPUTS_BY_STEP = {
+	"build_linux_release": (
+		NativeOutput("linux-x86_64", ROOT / "bin" / "libaurelion_map_persistence.linux.template_release.x86_64.so", "elf64-x86_64"),
+		NativeOutput("linux-x86_64", ROOT / "bin" / "h3maped_rmg_core_selftest", "elf64-x86_64"),
 	),
-	NativeOutput(
-		"linux-x86_64",
-		ROOT / "bin" / "h3maped_rmg_core_selftest",
-		"elf64-x86_64",
+	"build_linux_rules_release": (
+		NativeOutput("linux-x86_64", ROOT / "bin" / "libaurelion_rules.linux.template_release.x86_64.so", "elf64-x86_64"),
+		NativeOutput("linux-x86_64", ROOT / "bin" / "rules_selftest", "elf64-x86_64"),
 	),
-	NativeOutput(
-		"windows-x86_64",
-		ROOT / "bin" / "aurelion_map_persistence.windows.template_release.x86_64.dll",
-		"pe32plus-x86_64",
+	"build_windows_release": (
+		NativeOutput("windows-x86_64", ROOT / "bin" / "aurelion_map_persistence.windows.template_release.x86_64.dll", "pe32plus-x86_64"),
+		NativeOutput("windows-x86_64", ROOT / "bin" / "h3maped_rmg_core_selftest.exe", "pe32plus-x86_64"),
 	),
-	NativeOutput(
-		"windows-x86_64",
-		ROOT / "bin" / "h3maped_rmg_core_selftest.exe",
-		"pe32plus-x86_64",
+	"build_windows_rules_release": (
+		NativeOutput("windows-x86_64", ROOT / "bin" / "aurelion_rules.windows.template_release.x86_64.dll", "pe32plus-x86_64"),
+		NativeOutput("windows-x86_64", ROOT / "bin" / "rules_selftest.exe", "pe32plus-x86_64"),
 	),
-)
+}
+NATIVE_OUTPUTS = tuple(output for outputs in NATIVE_OUTPUTS_BY_STEP.values() for output in outputs)
 
 
 def safe_revision(value: str) -> str:
@@ -145,9 +143,18 @@ def command_plan(
 	tools: dict[str, str],
 ) -> list[CommandStep]:
 	linux_build = build_root / "linux-release"
+	linux_rules_build = build_root / "linux-rules-release"
 	windows_build = build_root / "windows-release"
+	windows_rules_build = build_root / "windows-rules-release"
+	rules_source = str(ROOT / "src" / "gdextension" / "rules")
 	cmake = tools["cmake"]
 	python = tools["python"]
+	mingw = (
+		"-DCMAKE_SYSTEM_NAME=Windows",
+		"-DCMAKE_SYSTEM_PROCESSOR=x86_64",
+		f"-DCMAKE_C_COMPILER={tools['c_compiler']}",
+		f"-DCMAKE_CXX_COMPILER={tools['cxx_compiler']}",
+	)
 	return [
 		CommandStep(
 			"configure_linux_release",
@@ -176,6 +183,20 @@ def command_plan(
 		CommandStep(
 			"selftest_linux_release",
 			(str(ROOT / "bin" / "h3maped_rmg_core_selftest"),),
+		),
+		# The rules library: its Release flags match the debug flavour's and
+		# godot-cpp strips the library at link time.
+		CommandStep(
+			"configure_linux_rules_release",
+			(cmake, "-S", rules_source, "-B", str(linux_rules_build), "-DCMAKE_BUILD_TYPE=Release", "-DAURELION_GODOTCPP_TARGET=template_release"),
+		),
+		CommandStep(
+			"build_linux_rules_release",
+			(cmake, "--build", str(linux_rules_build), "--target", "aurelion_rules", "rules_selftest", "--parallel", str(jobs)),
+		),
+		CommandStep(
+			"selftest_linux_rules",
+			(str(ROOT / "bin" / "rules_selftest"),),
 		),
 		CommandStep(
 			"configure_windows_release",
@@ -208,6 +229,18 @@ def command_plan(
 		CommandStep(
 			"selftest_windows_release",
 			(tools["wine"], str(ROOT / "bin" / "h3maped_rmg_core_selftest.exe")),
+		),
+		CommandStep(
+			"configure_windows_rules_release",
+			(cmake, "-S", rules_source, "-B", str(windows_rules_build), *mingw, "-DCMAKE_BUILD_TYPE=Release", "-DAURELION_GODOTCPP_TARGET=template_release"),
+		),
+		CommandStep(
+			"build_windows_rules_release",
+			(cmake, "--build", str(windows_rules_build), "--target", "aurelion_rules", "rules_selftest", "--parallel", str(jobs)),
+		),
+		CommandStep(
+			"selftest_windows_rules",
+			(tools["wine"], str(ROOT / "bin" / "rules_selftest.exe")),
 		),
 		CommandStep(
 			"parse_project",
@@ -453,10 +486,8 @@ def main() -> int:
 		capture_json = step.id in {"package_release", "verify_release"}
 		step_result, payload = run_step(step, env, capture_json)
 		step_results.append(step_result)
-		if step.id == "build_linux_release":
-			native_outputs.extend(verify_native_output(output, build_started_ns) for output in NATIVE_OUTPUTS[:2])
-		elif step.id == "build_windows_release":
-			native_outputs.extend(verify_native_output(output, build_started_ns) for output in NATIVE_OUTPUTS[2:])
+		if step.id in NATIVE_OUTPUTS_BY_STEP:
+			native_outputs.extend(verify_native_output(output, build_started_ns) for output in NATIVE_OUTPUTS_BY_STEP[step.id])
 		elif step.id == "package_release":
 			package_payload = payload
 		elif step.id == "verify_release":

@@ -1,0 +1,12 @@
+[configuration]
+entry_symbol = "aurelion_rules_init"
+compatibility_minimum = "4.6"
+reloadable = true
+
+[libraries]
+linux.editor.x86_64 = "res://bin/libaurelion_rules.linux.template_debug.x86_64.so"
+linux.debug.x86_64 = "res://bin/libaurelion_rules.linux.template_debug.x86_64.so"
+linux.release.x86_64 = "res://bin/libaurelion_rules.linux.template_release.x86_64.so"
+windows.editor.x86_64 = "res://bin/aurelion_rules.windows.template_debug.x86_64.dll"
+windows.debug.x86_64 = "res://bin/aurelion_rules.windows.template_debug.x86_64.dll"
+windows.release.x86_64 = "res://bin/aurelion_rules.windows.template_release.x86_64.dll"

@@ -43,6 +43,24 @@ static func fits(stack: Dictionary, anchor: Dictionary, occupied: Dictionary, co
 		if occupied.has(key) and (identity.is_empty() or String(occupied[key]) != identity): return false
 	return true
 
+## The columns and row distance() reads for a placed stack, for the native
+## searches: [anchor q, r, tail q]. q or r is below 0 when it has no hex; the
+## tail q equals q for a one-hex body.
+static func placed_columns(stack: Dictionary) -> Array:
+	var origin: Variant = stack.get("hex", {})
+	var q := -1
+	var r := -1
+	if origin is Vector2i:
+		q = origin.x
+		r = origin.y
+	elif origin is Dictionary and not origin.is_empty():
+		q = int(origin.get("q", origin.get("x", -1)))
+		r = int(origin.get("r", origin.get("y", -1)))
+	var tail := q
+	if int(stack.get("battle_footprint", 1)) == 2:
+		tail = q + (1 if String(stack.get("side", "player")) == "enemy" else -1)
+	return [q, r, tail]
+
 static func distance(lhs: Dictionary, rhs: Dictionary, lhs_anchor: Dictionary = {}) -> int:
 	var origin: Variant = lhs.get("hex", {}) if lhs_anchor.is_empty() else lhs_anchor
 	var a_q := -1
