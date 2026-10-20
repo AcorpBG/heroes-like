@@ -115972,7 +115972,7 @@
     {
       "id": "native-rules-phase1-battle-engine-20261020",
       "title": "Native rules engine, Phase 1: native battle engine",
-      "status": "pending",
+      "status": "in_progress",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
@@ -115980,7 +115980,7 @@
         "docs/native-rules-engine-transition.md"
       ],
       "notes": "Gate G0 passed (owner, 2026-10-20). Owner decisions 2026-10-20: D8 one port branch native-phase1-battle, merged once, dropped if G1 stays under 5x after the interface fix; D5/D10 battle code frozen until 7 days after the merge, urgent fixes in GDScript on main and ported on the branch, main tagged before the merge; D6 tests on deleted private battle functions retired at the merge. Scope, order, checkpoint G1 and exit in docs/native-rules-engine-transition.md, Phase 1. The first slice measures the porting rate.",
-      "updatedAt": "2026-10-20T18:15:00Z"
+      "updatedAt": "2026-10-20T18:01:00Z"
     }
   ],
   "project": "heroes-like",
