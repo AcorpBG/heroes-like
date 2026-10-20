@@ -117,14 +117,21 @@ const FIELD_ARMY_MAX := 3
 ## enough troops there to stop the hostile heroes that could reach it within
 ## DEFENSE_HORIZON_DAYS (they need TOWN_ATTACK_RATIO over the garrison), or,
 ## with none in sight but a rival town near, the raider a rival musters by this
-## week (DEFENSE_BASELINE_PER_WEEK a week). It does so only while the troops
-## left cost no more than the town is worth and at most DEFENSE_SHARE_MAX of
-## its army (DEFENSE_SHARE_MAX_MAIN for the main hero); otherwise taking the
-## whole garrison is the better trade. Until 2026-10-09 heroes always took the
-## whole garrison of a town not under threat: in four-player medium games 41
-## of 76 captures met an empty town, small heroes walking in behind the armies,
-## and a player with 5 towns and 14,000 strength could not finish two players
-## holding one town each in 160 days.
+## week (DEFENSE_BASELINE_PER_WEEK a week). Every town is also held against
+## the strongest remembered hero of a rival that holds no town, however far
+## (`_townless_raider`): such a rival musters nothing and is out after
+## PlayerEliminationRules.TOWNLESS_DAYS unless it takes a town back. It does so
+## only while the troops left cost no more than the town is worth and at most
+## DEFENSE_SHARE_MAX of its army (DEFENSE_SHARE_MAX_MAIN for the main hero);
+## otherwise taking the whole garrison is the better trade. Until 2026-10-09
+## heroes always took the whole garrison of a town not under threat: in
+## four-player medium games 41 of 76 captures met an empty town, small heroes
+## walking in behind the armies, and a player with 5 towns and 14,000 strength
+## could not finish two players holding one town each in 160 days. Until
+## 2026-10-20 a townless rival counted only when seen near: on a large
+## two-level map (seed ai-match-4265064792) the last rival's heroes of about
+## 1,000 strength took the leader's towns 15 times from day 247, 11 of them
+## empty, and kept it in the game until day 276.
 const DEFENSE_HORIZON_DAYS := 2
 const DEFENSE_MARGIN := 1.15
 const DEFENSE_BASELINE_PER_WEEK := 40.0
@@ -2034,7 +2041,8 @@ static func _unit_power(stack: Dictionary) -> float:
 ## The garrison that stops the raiders that could reach this town soon: the
 ## strongest visible hostile hero within DEFENSE_HORIZON_DAYS of its doorway,
 ## or, with none in sight but a known rival town that near, a raider of
-## DEFENSE_BASELINE_PER_WEEK for each week of the game.
+## DEFENSE_BASELINE_PER_WEEK for each week of the game; and, wherever it was
+## seen, the strongest hero of a rival that holds no town (`_townless_raider`).
 static func _town_defense_need(session: SessionStateStoreScript.SessionData, context: Dictionary, town: Dictionary) -> float:
 	var cache: Dictionary = context.get("decision", {})
 	if not cache.has("hostile"):
@@ -2049,11 +2057,44 @@ static func _town_defense_need(session: SessionStateStoreScript.SessionData, con
 		var distance := maxi(absi(int(threat.x) - int(entrance.get("x", 0))), absi(int(threat.y) - int(entrance.get("y", 0))))
 		if distance <= int(threat.get("reach", 10)) * DEFENSE_HORIZON_DAYS + 1:
 			strongest = maxf(strongest, float(threat.power))
+	var need := 0.0
 	if strongest > 0.0:
-		return strongest * DEFENSE_MARGIN / TOWN_ATTACK_RATIO
-	if _rival_town_within(session, context, town, 12 * DEFENSE_HORIZON_DAYS):
-		return DEFENSE_BASELINE_PER_WEEK * ceilf(float(int(session.day)) / 7.0)
-	return 0.0
+		need = strongest * DEFENSE_MARGIN / TOWN_ATTACK_RATIO
+	elif _rival_town_within(session, context, town, 12 * DEFENSE_HORIZON_DAYS):
+		need = DEFENSE_BASELINE_PER_WEEK * ceilf(float(int(session.day)) / 7.0)
+	return maxf(need, _townless_raider(session, context) * DEFENSE_MARGIN / TOWN_ATTACK_RATIO)
+
+## The strongest hero this player remembers (SIGHTINGS_KEY) of a rival that
+## holds no town, while that hero is still on the map. Kept for the decision.
+static func _townless_raider(session: SessionStateStoreScript.SessionData, context: Dictionary) -> float:
+	var cache: Dictionary = context.get("decision", {})
+	if cache.has("townless_raider"):
+		return float(cache["townless_raider"])
+	var strongest := 0.0
+	var memory = context.state.get(SIGHTINGS_KEY, {})
+	if memory is Dictionary:
+		var townless := {}
+		for id in memory.keys():
+			var seen = memory[id]
+			if not (seen is Dictionary):
+				continue
+			var owner := String(seen.get("owner", ""))
+			if not townless.has(owner):
+				var heroes := {}
+				if _towns_held_by(session, "player" if owner == "player" else "enemy", owner) <= 0:
+					if owner == "player":
+						for hero in session.overworld.get("player_heroes", []):
+							if hero is Dictionary:
+								heroes[String(hero.get("id", ""))] = true
+					else:
+						for entry in active_hero_entries(session, owner):
+							heroes[String(entry.get("placement_id", ""))] = true
+				townless[owner] = heroes
+			if (townless[owner] as Dictionary).has(String(id)):
+				strongest = maxf(strongest, float(seen.get("power", 0.0)))
+	cache["townless_raider"] = strongest
+	context["decision"] = cache
+	return strongest
 
 ## Whether a rival's town this player knows of lies within `radius` tiles.
 static func _rival_town_within(session: SessionStateStoreScript.SessionData, context: Dictionary, town: Dictionary, radius: int) -> bool:
