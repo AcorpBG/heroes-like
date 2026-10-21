@@ -123,10 +123,12 @@ Every match and tuner record carries the native build id, content hash and overr
    sections daily, plus the match record. Sorted output is only for reporting where it differs.
 3. **`tools/rules_parity.py`:** finds the first differing day, replays to it with a full dump and reports the first
    differing path.
-4. **When:** every port or speed change on Windows (HEAD against change); once on Linux per native change, paused until
-   the owner's Linux pass (owner decision 2026-10-21: Windows only until then, AGENTS.md "Validation budget"); the payload
-   corpus gives identical bytes under MSVC, GCC 13.3 and MinGW/Wine. `rules_selftest` (helper vectors and "two runs are
-   equal") joins `tools/core_suite.py`.
+4. **When** (owner decisions 2026-10-21: Windows only until the owner's Linux pass, and fewer checks; AGENTS.md
+   "Validation budget"): per slice on Windows, shadow mode on the six seeds while working, then before pushing one
+   six-seed check of native mode against main (HEAD against change) and the core suite. The arena suites, the payload
+   corpus, edge probes and the human-seat corpus run only for the formal G1 and before a phase merges. The compiler
+   comparison (GCC 13.3, MinGW/Wine) and Linux runs wait for the Linux pass. `rules_selftest` (helper vectors and "two
+   runs are equal") joins `tools/core_suite.py`.
 5. **Behaviour changes** record a new baseline in the same commit, with owner approval.
 
 ## 6. Phases
@@ -388,6 +390,9 @@ Release packaging still stops on the 4.7 GB export pack, which predates the rule
     - Conversion is timed at resolve start and end, at the pool size the replay reached: c = T_conv / T_gd.
     - The projection is S = 1 / (c + 1/r). 10x needs r of at least 1/(0.1 - c), about 12.5 at c = 0.02.
     - Under about 12.5, the C++ value layer is sped up before layer 2, without changing ported semantics.
+    - Owner decision 2026-10-21, after slice 01b (r 10.4-10.7, S 9.1-9.9): layer 2 starts. The formal G1 after layer 4
+      decides. On the arena the gap to 10x is within run-to-run noise; on the six seeds S is clearly under 10. c also
+      leaves out the GDScript event formatter, which is unmeasured and probably under 1% of T_gd.
   - The formal G1 follows layer 4, with r per layer from the same replay harness. Per-call native-mode run times and
     single-function benchmarks are not G1: they time the per-call bridge, which the native loop does not have.
 - **Identity:** per-action stream (order taken, RNG state and roll count, simulation-key digest) on the tuner suites,

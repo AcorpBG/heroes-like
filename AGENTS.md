@@ -50,7 +50,12 @@ Owner decision, 2026-10-10. Testing had grown to about half of all agent time, m
 - **What a test may assert:** behavior that rarely changes and breaks the game when wrong. Examples are scripts compiling, boot, deterministic generation and battles, a generated game launching, save/load, elimination and victory, economy and town rules, and content schemas. Never assert exact UI strings, layout coordinates, balance numbers designers tune, or the source text of other files.
 - **Probes and match runners:** write them only to debug a specific failure. Keep them in the scratchpad and delete them at the end.
 - **Unchanged:** native RMG parity checks per `docs/lessons-learned.md`, and full export/packaging validation on both platforms for release candidates.
-- **Native rules port parity** (owner decision, 2026-10-20): slices of `docs/native-rules-engine-transition.md` run its six-seed parity check on every port change, on Windows (Linux waits for the Linux pass). Never run parity checks, timing runs or native builds on this machine while an owner AI batch is running.
+- **Native rules port checks** (owner decisions, 2026-10-20 and 2026-10-21; fewer checks). For each slice of `docs/native-rules-engine-transition.md`, on Windows:
+  - while working, run shadow mode on the six seeds;
+  - before pushing, run one six-seed check of native mode against main, plus the core suite.
+  - The arena suites, the holdout suite, edge probes, the payload corpus and timing runs are only for the formal G1 and before a phase merges.
+  - Write no review or fact-check workflows for slice docs or reports. A slice's doc entry says what changed and gives its check counts, and nothing more.
+  - Never run parity checks, timing runs or native builds on this machine while an owner AI batch is running.
 
 ## Engineering rules
 - Default engine assumption: Godot 4 unless a documented decision in `project.md` changes it.
