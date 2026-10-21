@@ -1095,6 +1095,15 @@ functions. ScenarioRules 5: `_objective_met`, `evaluate_session`, `normalize_sce
 GDScript and are not frozen by this slice: script hooks and pending reinforcements, other objective types, a scenario's
 completion, the rival count of a human game, the human player's townless days and defeat, a computer player's removal.
 
+**Slice 03, frozen functions** (2026-10-21, until the Phase 5 merge; AGENTS.md): `HeroCommandRules.commit_active_hero`
+(every caller) and what it runs in AI matches beyond slices 01, 04 and 05's functions, 17 functions. HeroCommandRules
+12: `_hero_index_by_id`, `_normalize_army`, `_normalize_authored_specialties`, `_normalize_movement`,
+`_normalize_player_hero`, `_normalize_position`, `_sync_active_hero_mirror`, `_week_bonus`, `active_hero`,
+`commit_active_hero`, `movement_max_for_hero`, `new_growth_seed`. DifficultyRules 3: `movement_bonus`,
+`profile_for_difficulty`, `profile_for_session`. HeroProgressionRules 1: `has_specialty`. ContentService 1: `get_hero`.
+Six of them are also Phase 3's: the three DifficultyRules ones, `movement_max_for_hero`, `_week_bonus` and
+`_normalize_position`.
+
 **Inventory and boundary** (2026-10-21, main 6d7471276; every function of `scripts/core` and ContentService probed on
 the six seeds; times from l1, a large four-player game to day 90, on a machine shared with Phase 1's runs):
 - Reach: the Phase 5 entries reach 440 functions, 6,020 lines; 311 of them also run outside day processing, nearly all
