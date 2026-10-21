@@ -22,6 +22,7 @@ const TownServices = preload("res://scripts/core/EnemyTownServices.gd")
 const AdventureRules = preload("res://scripts/core/EnemyAdventureRules.gd")
 const BattleDamage = preload("res://scripts/core/BattleDamageRules.gd")
 const WaterTravel = preload("res://scripts/core/WaterTravelRules.gd")
+const NativeRules = preload("res://scripts/core/NativeRules.gd")
 
 const AI_HERO_KEY := "ai_hero"
 # Battle settings (terrain, length, rewards) for fights against an AI hero. The
@@ -5750,12 +5751,78 @@ static func _add_stop(stops: Dictionary, tile: Vector2i, size: Vector2i, ref: Di
 		stops[tile_index] = []
 	stops[tile_index].append(ref)
 
+## The level's tables for the native search (`_search`), kept with the
+## surface: the neutral armies' bodies and open zones as lists, which armies'
+## zones cover each tile, the site stops' tiles and the portals by entrance.
+## Which armies still stand, and their zones by encounter index, are kept until
+## the resolved encounters change.
+const SEARCH_TABLES_KEY := "search_tables"
+
+static func _search_tables(surface: Dictionary, resolved: Dictionary) -> Dictionary:
+	var neutrals: Array = surface.neutrals
+	var tables: Dictionary = surface.get(SEARCH_TABLES_KEY, {})
+	if tables.is_empty():
+		var body_offsets := PackedInt32Array([0])
+		var body_tiles := PackedInt32Array()
+		for record in neutrals:
+			for body_index in record.body:
+				body_tiles.append(int(body_index))
+			body_offsets.append(body_tiles.size())
+		var site_tiles := PackedInt32Array()
+		for site in surface.get("site_stops", []):
+			site_tiles.append(int(site.tile))
+		# [entrance, exit count, exits...] per portal.
+		var portal_list := PackedInt32Array()
+		var portals: Dictionary = surface.get("portals", {})
+		for tile_index in portals.keys():
+			var exits: PackedInt32Array = portals[tile_index].exits
+			portal_list.append(int(tile_index))
+			portal_list.append(exits.size())
+			portal_list.append_array(exits)
+		tables = {"body_offsets": body_offsets, "body_tiles": body_tiles, "site_tiles": site_tiles, "portals": portal_list}
+		surface[SEARCH_TABLES_KEY] = tables
+	var open_zones := _open_guard_zones(surface)
+	if not is_same(tables.get("open_zones"), open_zones):
+		var zone_offsets := PackedInt32Array([0])
+		var zone_tiles := PackedInt32Array()
+		# Per zone tile, the armies (places in surface.neutrals) whose zone holds it, in order.
+		var zone_records := {}
+		for record_position in range(open_zones.size()):
+			for zone_index in open_zones[record_position]:
+				zone_tiles.append(int(zone_index))
+				if zone_records.has(int(zone_index)):
+					zone_records[int(zone_index)].append(record_position)
+				else:
+					zone_records[int(zone_index)] = [record_position]
+			zone_offsets.append(zone_tiles.size())
+		tables["open_zones"] = open_zones
+		tables["zone_offsets"] = zone_offsets
+		tables["zone_tiles"] = zone_tiles
+		tables["zone_records"] = zone_records
+		tables.erase("resolved")
+	if not is_same(tables.get("resolved"), resolved):
+		var neutral_open := PackedByteArray()
+		neutral_open.resize(neutrals.size())
+		var guard_zones := {}
+		for record_position in range(neutrals.size()):
+			var record: Dictionary = neutrals[record_position]
+			if resolved.has(String(record.id)):
+				continue
+			neutral_open[record_position] = 1
+			guard_zones[int(record.index)] = open_zones[record_position]
+		tables["resolved"] = resolved
+		tables["neutral_open"] = neutral_open
+		tables["guard_zones"] = guard_zones
+	return tables
+
 ## Breadth-first search over the hero's level. Object entrances, armies,
 ## guard zones and heroes end a route: they can be the destination, never a
 ## tile to walk through. Each step costs one movement point, as for the human.
 ## The player's own heroes inside its towns stand in no one's way. With
 ## `past_own_heroes` the player's other heroes do not count at all: the search
-## then shows what the hero could reach if they stepped aside.
+## then shows what the hero could reach if they stepped aside. The masks and
+## the walk run in the native rules library (AurelionRules.ai_search_masks and
+## ai_search_walk, src/gdextension/rules/core/ai_search.cpp).
 static func _search(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, radius: int, past_own_heroes: bool = false) -> Dictionary:
 	context["search_count"] = int(context.get("search_count", 0)) + 1
 	var level := LevelRules.level_of(entry)
@@ -5767,38 +5834,16 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 	var actor_id := String(entry.get("placement_id", ""))
 	var controller := String(context.controller)
 	var own_doors := _own_town_doors(session, controller, level, size)
-	# Blocking and route-ending tiles for this search: the day's static masks
-	# plus every army and hero where it stands now.
-	var blocked: PackedByteArray = surface.blocked.duplicate()
-	var stop_mask: PackedByteArray = surface.stop_mask.duplicate()
-	var dynamic_stops := {}
-	var army_tiles := {}
 	var resolved := _resolved_lookup(session)
 	var encounters: Array = session.overworld.get("encounters", [])
-	var guard_mask := PackedByteArray()
-	guard_mask.resize(count)
-	var guard_zones := {}
-	var surface_blocked: PackedByteArray = surface.blocked
 	var water: PackedByteArray = surface.get("water", PackedByteArray())
-	var neutrals: Array = surface.neutrals
-	var open_zones := _open_guard_zones(surface)
-	for record_position in range(neutrals.size()):
-		var record: Dictionary = neutrals[record_position]
-		if resolved.has(String(record.id)):
-			continue
-		for body_index in record.body:
-			blocked[int(body_index)] = 1
-			army_tiles[int(body_index)] = true
-		var zone: Array = open_zones[record_position]
-		var zone_ref: Dictionary = record.ref
-		for zone_index in zone:
-			stop_mask[zone_index] = 1
-			guard_mask[zone_index] = 1
-			if dynamic_stops.has(zone_index):
-				dynamic_stops[zone_index].append(zone_ref)
-			else:
-				dynamic_stops[zone_index] = [zone_ref]
-		guard_zones[int(record.index)] = zone
+	var tables := _search_tables(surface, resolved)
+	# Every army and hero where it stands now: tiles no one walks through, and
+	# tiles that end a route. Route-ending refs by tile, for the armies and
+	# heroes (the neutral armies' zones are in `tables`).
+	var unit_blocked := PackedInt32Array()
+	var unit_stops := PackedInt32Array()
+	var dynamic_stops := {}
 	for index in range(encounters.size()):
 		var other = encounters[index]
 		if not (other is Dictionary):
@@ -5818,10 +5863,9 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 		if meetable and is_ai_hero(other) and (past_own_heroes or own_doors.has(tile_index)):
 			continue
 		if not is_ai_hero(other) or (not meetable and PlayerRules.allied(session, controller, other_controller)):
-			blocked[tile_index] = 1
-			army_tiles[tile_index] = true
+			unit_blocked.append(tile_index)
 		else:
-			stop_mask[tile_index] = 1
+			unit_stops.append(tile_index)
 			_add_stop_index(dynamic_stops, tile_index, {"kind": STOP_AI_HERO, "index": index})
 	var heroes: Array = session.overworld.get("player_heroes", [])
 	var human_allied := PlayerRules.allied(session, controller, "player")
@@ -5834,33 +5878,27 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 		if hero_index < 0:
 			continue
 		if human_allied:
-			blocked[hero_index] = 1
-			army_tiles[hero_index] = true
+			unit_blocked.append(hero_index)
 		else:
-			stop_mask[hero_index] = 1
+			unit_stops.append(hero_index)
 			_add_stop_index(dynamic_stops, hero_index, {"kind": STOP_HERO, "index": index})
 	# Heroes guard the tiles around them (OverworldRules.hero_guard_zone_tiles):
 	# stepping next to a hostile hero means fighting it, so its zone ends a
 	# route like a neutral army's and is never walked through.
-	var hero_zone := PackedByteArray()
-	hero_zone.resize(count)
 	var guards := _hero_guards(session, context, level)
-	var hero_tiles := {}
+	var hero_tiles := PackedInt32Array()
 	for guard in guards:
-		hero_tiles[guard.tile.y * width + guard.tile.x] = true
+		hero_tiles.append(guard.tile.y * width + guard.tile.x)
+	var guard_offsets := PackedInt32Array([0])
+	var guard_tiles := PackedInt32Array()
+	var guard_refs := []
 	for guard in guards:
 		if not bool(guard.hostile):
 			continue
-		var ref := {"kind": STOP_HERO if String(guard.ref_kind) == "hero" else STOP_AI_HERO, "index": int(guard.index), "zone": true}
+		guard_refs.append({"kind": STOP_HERO if String(guard.ref_kind) == "hero" else STOP_AI_HERO, "index": int(guard.index), "zone": true})
 		for tile in _hero_zone_tiles(session, context, guard.tile, level):
-			var zone_index: int = tile.y * width + tile.x
-			if hero_tiles.has(zone_index) or army_tiles.has(zone_index) or (surface_blocked[zone_index] != 0 and not static_stops.has(zone_index) and not (zone_index < water.size() and water[zone_index] != 0)):
-				continue
-			hero_zone[zone_index] = 1
-			stop_mask[zone_index] = 1
-			_add_stop_index(dynamic_stops, zone_index, ref)
-	var pass_mask := PackedByteArray()
-	pass_mask.resize(count)
+			guard_tiles.append(tile.y * width + tile.x)
+		guard_offsets.append(guard_tiles.size())
 	_sync_site_pass_memo()
 	var resource_nodes: Array = session.overworld.get("resource_nodes", [])
 	var artifact_nodes: Array = session.overworld.get("artifact_nodes", [])
@@ -5869,33 +5907,40 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 	# Per site: 0 not yet known this decision, 1 open, 2 closed.
 	var site_open := _decision_site_pass(context, level, sites)
 	var shared := not site_open.is_empty()
-	for site_position in range(sites.size()):
+	var has_water := int(surface.get("water_count", 0)) > 0
+	var masks: Array = NativeRules.api().ai_search_masks(width, size.y, surface.blocked, surface.stop_mask, water, surface.sea if has_water else PackedByteArray(),
+			tables.body_offsets, tables.body_tiles, tables.zone_offsets, tables.zone_tiles, tables.neutral_open,
+			unit_blocked, unit_stops, hero_tiles, guard_offsets, guard_tiles, tables.site_tiles, site_open)
+	var blocked: PackedByteArray = masks[0]
+	var stop_mask: PackedByteArray = masks[1]
+	var guard_mask: PackedByteArray = masks[2]
+	var hero_zone: PackedByteArray = masks[3]
+	var pass_mask: PackedByteArray = masks[4]
+	var zone_stops: PackedInt32Array = masks[6]
+	for at in range(0, zone_stops.size(), 2):
+		_add_stop_index(dynamic_stops, zone_stops[at + 1], guard_refs[zone_stops[at]])
+	# The sites the decision has not checked yet: crossed where nothing more
+	# waits there for the hero.
+	for site_position in masks[7]:
 		var site: Dictionary = sites[site_position]
-		var site_tile := int(site.tile)
-		if dynamic_stops.has(site_tile) or army_tiles.has(site_tile):
-			continue
 		var open := true
-		if shared and site_open[site_position] != 0:
-			open = site_open[site_position] == 1
-		else:
-			for ref in site.refs:
-				if not _site_stop_passable(session, controller, ref, resource_nodes, artifact_nodes, site_allies):
-					open = false
-					break
-			if shared:
-				site_open[site_position] = 1 if open else 2
+		for ref in site.refs:
+			if not _site_stop_passable(session, controller, ref, resource_nodes, artifact_nodes, site_allies):
+				open = false
+				break
+		if shared:
+			site_open[site_position] = 1 if open else 2
 		if open:
-			pass_mask[site_tile] = 1
-	var dist := PackedInt32Array()
-	dist.resize(count)
-	dist.fill(-1)
-	var parent := PackedInt32Array()
-	parent.resize(count)
-	parent.fill(-1)
-	var reached_stops := {}
+			pass_mask[int(site.tile)] = 1
 	var start_index := _tile_index_of(entry, size)
 	if start_index < 0:
-		return {"dist": dist, "parent": parent, "stops": reached_stops, "size": size, "start": -1}
+		var dist := PackedInt32Array()
+		dist.resize(count)
+		dist.fill(-1)
+		var parent := PackedInt32Array()
+		parent.resize(count)
+		parent.fill(-1)
+		return {"dist": dist, "parent": parent, "stops": {}, "size": size, "start": -1}
 	# Water, as for the human (WaterTravelRules): a walking hero steps onto a
 	# free boat, or onto the boat a shipyard it stands at builds, and sails;
 	# a sailing hero moves over open water (never through another boat) and
@@ -5903,22 +5948,15 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 	# end the day, so they count `SHORE_STEP_SHARE` of a day more, and a route
 	# boards once. Phase per tile: 0 walking, 1 sailing, 2 ashore again, plus
 	# BOUGHT_BOAT when the route buys its boat at a shipyard (`_boat_price`).
-	var has_water := int(surface.get("water_count", 0)) > 0
-	var phase := PackedByteArray()
-	var sea_open := PackedByteArray()
-	var boat_tiles := {}
-	var docks := {}
+	var start_phase := 0
+	var sea_open: PackedByteArray = masks[5]
+	var boat_tiles := PackedByteArray()
+	# [shipyard visit tile, dock] per shipyard whose boat the player can buy.
+	var docks := PackedInt32Array()
 	var shore_cost := 0
 	var dock_cost := 0
-	# Steps that board or go ashore, held back until the search reaches their
-	# distance: [distance, tile, parent, phase], in distance order.
-	var deferred := []
-	var deferred_head := 0
 	if has_water:
-		phase.resize(count)
-		sea_open = surface.sea.duplicate()
-		for army_index in army_tiles.keys():
-			sea_open[int(army_index)] = 0
+		boat_tiles.resize(count)
 		for boat in WaterTravel.boats(session):
 			if not (boat is Dictionary) or int(boat.get("level", 0)) != level:
 				continue
@@ -5927,191 +5965,62 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 				continue
 			sea_open[boat_index] = 0
 			if String(boat.get("hero_id", "")) == "":
-				boat_tiles[boat_index] = true
+				boat_tiles[boat_index] = 1
 		if WaterTravel.hero_boat_id(entry) != "" and water[start_index] != 0:
-			phase[start_index] = 1
+			start_phase = 1
 		else:
 			if not surface.get("shipyards", {}).is_empty() and not _boat_market(session, context, surface.get("boat_cost", {})).is_empty():
 				for visit_index in surface.get("shipyards", {}).keys():
 					var dock := int(surface.shipyards[visit_index].dock)
-					if sea_open[dock] != 0 and not dynamic_stops.has(dock):
-						docks[int(visit_index)] = dock
+					if sea_open[dock] != 0 and guard_mask[dock] == 0 and not dynamic_stops.has(dock):
+						docks.append(int(visit_index))
+						docks.append(dock)
 		var movement_max := _movement_max(entry)
 		shore_cost = maxi(1, int(round(float(movement_max) * SHORE_STEP_SHARE)))
 		dock_cost = shore_cost + movement_max
-	dist[start_index] = 0
-	var queue := PackedInt32Array()
-	queue.resize(count)
-	var head := 0
-	var tail := 1
-	queue[0] = start_index
 	var native_corners := NativeTransit.uses_native_adjacency(session)
 	var portals: Dictionary = surface.get("portals", {})
 	var seen_map := _explored(session, context, level) if not portals.is_empty() else PackedByteArray()
-	var height := size.y
-	var step_offset := _step_offsets(width)
-	# A hero that stopped on a portal goes through it first thing.
-	var reached := []
-	if portals.has(start_index):
-		for start_exit in _portal_exits(portals[start_index], seen_map):
-			if dist[start_exit] < 0:
-				dist[start_exit] = 1
-				parent[start_exit] = start_index
-				# An exit beside a hostile hero is as far as the hero gets.
-				if hero_zone[start_exit] != 0:
-					reached.append(start_exit)
-					continue
-				queue[tail] = start_exit
-				tail += 1
-	# Whether the radius cut the search short: if not, it reached every tile the
-	# hero can walk to.
-	var capped := false
-	while head < tail or deferred_head < deferred.size():
-		if deferred_head < deferred.size():
-			# A held-back step joins the queue once the search has come within
-			# one step of its distance, which keeps the queue in distance order.
-			var limit: int = dist[queue[head]] + 1 if head < tail else int(deferred[deferred_head][0])
-			while deferred_head < deferred.size() and int(deferred[deferred_head][0]) <= limit:
-				var held: Array = deferred[deferred_head]
-				deferred_head += 1
-				var at := int(held[1])
-				if dist[at] >= 0:
-					continue
-				dist[at] = int(held[0])
-				parent[at] = int(held[2])
-				phase[at] = int(held[3])
-				if stop_mask[at] != 0:
-					reached.append(at)
-					if pass_mask[at] == 0:
-						continue
-				queue[tail] = at
-				tail += 1
-			if head >= tail:
-				continue
-		var current := queue[head]
-		head += 1
-		var next_distance := dist[current] + 1
-		if next_distance > radius:
-			capped = true
-			continue
-		var cx := current % width
-		var cy := current / width
-		# Only a tile on the map's edge has neighbours off the map.
-		var on_edge := cx == 0 or cy == 0 or cx == width - 1 or cy == height - 1
-		var here_phase := phase[current] if has_water else 0
-		var mode := here_phase & 3
-		if here_phase == 0 and docks.has(current) and dist[int(docks[current])] < 0:
-			# The shipyard here builds a boat at its dock and the hero boards it.
-			if dist[current] + 1 + dock_cost <= radius:
-				_hold_step(deferred, [dist[current] + 1 + dock_cost, int(docks[current]), current, 1 | BOUGHT_BOAT])
-			else:
-				capped = true
-		for direction in range(8):
-			var dx: int = NEIGHBOR_DX[direction]
-			var dy: int = NEIGHBOR_DY[direction]
-			if on_edge and (cx + dx < 0 or cy + dy < 0 or cx + dx >= width or cy + dy >= height):
-				continue
-			var next := current + step_offset[direction]
-			if dist[next] >= 0:
-				continue
-			if has_water:
-				if water[next] != 0:
-					if mode == 1:
-						if dx != 0 and dy != 0 and not native_corners and sea_open[current + dx] == 0 and sea_open[current + dy * width] == 0:
-							continue
-						if stop_mask[next] != 0:
-							dist[next] = next_distance
-							parent[next] = current
-							phase[next] = here_phase
-							reached.append(next)
-							if pass_mask[next] != 0:
-								queue[tail] = next
-								tail += 1
-						elif sea_open[next] != 0:
-							dist[next] = next_distance
-							parent[next] = current
-							phase[next] = here_phase
-							queue[tail] = next
-							tail += 1
-					elif here_phase == 0 and boat_tiles.has(next):
-						if next_distance + shore_cost <= radius:
-							_hold_step(deferred, [next_distance + shore_cost, next, current, 1])
-						else:
-							capped = true
-					continue
-				if mode == 1:
-					if stop_mask[next] != 0 or blocked[next] == 0:
-						if next_distance + shore_cost <= radius:
-							_hold_step(deferred, [next_distance + shore_cost, next, current, 2 | (here_phase & BOUGHT_BOAT)])
-						else:
-							capped = true
-					continue
-			if dx != 0 and dy != 0 and not native_corners and blocked[current + dx] != 0 and blocked[current + dy * width] != 0:
-				continue
-			if stop_mask[next] != 0:
-				dist[next] = next_distance
-				parent[next] = current
-				if has_water:
-					phase[next] = here_phase
-				reached.append(next)
-				if pass_mask[next] != 0:
-					queue[tail] = next
-					tail += 1
-				elif portals.has(next) and hero_zone[next] == 0:
-					# Through the portal: the hero comes out standing on an exit
-					# (usually another portal of the network) and the route goes
-					# on from there.
-					for exit in _portal_exits(portals[next], seen_map):
-						if dist[exit] < 0:
-							dist[exit] = next_distance + 1
-							parent[exit] = next
-							if has_water:
-								phase[exit] = here_phase
-							if hero_zone[exit] != 0:
-								reached.append(exit)
-								continue
-							queue[tail] = exit
-							tail += 1
-				continue
-			if blocked[next] != 0:
-				continue
-			dist[next] = next_distance
-			parent[next] = current
-			if has_water:
-				phase[next] = here_phase
-			queue[tail] = next
-			tail += 1
-	# The hero's own tile counts as reached at distance zero (it may stand in a
-	# town entrance or on a site it can still act on).
-	if stop_mask[start_index] != 0:
-		reached.append(start_index)
-	for tile_index in reached:
+	var walk: Array = NativeRules.api().ai_search_walk(width, size.y, start_index, start_phase, radius, native_corners, blocked, stop_mask, pass_mask, hero_zone,
+			tables.portals, seen_map, water if has_water else PackedByteArray(), sea_open, boat_tiles, docks, shore_cost, dock_cost)
+	# Every route-ending tile reached, the hero's own included, with what ends
+	# the route there: the level's objects, the neutral armies whose zone holds
+	# it, then the armies and heroes.
+	var reached_stops := {}
+	var neutrals: Array = surface.neutrals
+	var neutral_open: PackedByteArray = tables.neutral_open
+	var zone_records: Dictionary = tables.zone_records
+	for tile_index in walk[6]:
 		var refs: Array = []
 		if static_stops.has(tile_index):
 			refs.append_array(static_stops[tile_index])
+		if guard_mask[tile_index] != 0:
+			for record_position in zone_records[tile_index]:
+				if neutral_open[record_position] != 0:
+					refs.append(neutrals[record_position].ref)
 		if dynamic_stops.has(tile_index):
 			refs.append_array(dynamic_stops[tile_index])
 		if not refs.is_empty():
 			reached_stops[tile_index] = refs
 	return {
-		"dist": dist,
-		"parent": parent,
+		"dist": walk[0],
+		"parent": walk[1],
 		"stops": reached_stops,
 		"size": size,
 		"start": start_index,
-		"order": queue,
-		"order_count": tail,
-		"capped": capped,
+		"order": walk[2],
+		"order_count": walk[3],
+		"capped": walk[4],
 		"radius": radius,
 		"blocked": blocked,
 		"stop_mask": stop_mask,
 		"pass_mask": pass_mask,
 		"native_corners": native_corners,
 		"guard_mask": guard_mask,
-		"guard_zones": guard_zones,
+		"guard_zones": tables.guard_zones,
 		"hero_zone": hero_zone,
 		"static_stops": static_stops,
-		"phase": phase,
+		"phase": walk[5],
 	}
 
 ## What a route to this tile pays for a boat it buys at a shipyard, in the
@@ -6125,14 +6034,6 @@ static func _boat_price(session: SessionStateStoreScript.SessionData, context: D
 static func _is_water_index(surface: Dictionary, tile_index: int) -> bool:
 	var water: PackedByteArray = surface.get("water", PackedByteArray())
 	return tile_index < water.size() and water[tile_index] != 0
-
-## Holds back a boarding or landing step in distance order (most arrive in
-## order already, so the scan from the back is short).
-static func _hold_step(deferred: Array, step: Array) -> void:
-	var at := deferred.size()
-	while at > 0 and int(deferred[at - 1][0]) > int(step[0]):
-		at -= 1
-	deferred.insert(at, step)
 
 static func _tile_index_of(point: Dictionary, size: Vector2i) -> int:
 	var x := int(point.get("x", -1))

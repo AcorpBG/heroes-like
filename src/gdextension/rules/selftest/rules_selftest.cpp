@@ -1,8 +1,8 @@
 // rules_selftest: the native rules core without Godot.
 //
 // 1. Golden vectors: inputs with GDScript's answers, captured from the game's
-//    own GDScript searches in shadow mode (battle_hex_vectors.inc). No content
-//    files are read.
+//    own GDScript searches in shadow mode (battle_hex_vectors.inc,
+//    ai_search_vectors.inc). No content files are read.
 // 2. A sweep over generated boards, digested; the digest must be the same
 //    under MSVC, GCC and MinGW and from one run to the next.
 // 3. The engine-exact helpers (core/compat) on 2^20 inputs each, digested and
@@ -11,6 +11,7 @@
 //
 // Exit 0 and a RULES_SELFTEST ok line, or exit 1 with the first difference.
 
+#include "ai_search_selftest.hpp"
 #include "aurelion_rules/battle_hex.hpp"
 #include "aurelion_rules/build_info.hpp"
 #include "compat_fuzz.hpp"
@@ -250,6 +251,13 @@ int main(int argc, char **argv) {
 		std::printf("RULES_SELFTEST failed: sweep digest %016llx, expected %016llx\n", static_cast<unsigned long long>(first), static_cast<unsigned long long>(kSweepDigest));
 		return 1;
 	}
+	std::string search_message;
+	int64_t search_checked = 0;
+	if (!ai_search_selftest(print_only, search_message, search_checked)) {
+		std::printf("RULES_SELFTEST failed: %s\n", search_message.c_str());
+		return 1;
+	}
+	checked += search_checked;
 
 	int64_t helpers = 0;
 	for (const CompatDigest &digest : compat_digests(kCompatCount)) {

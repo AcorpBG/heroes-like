@@ -3,6 +3,7 @@
 #include "battle_port_bridge.hpp"
 #include "battle_state_bridge.hpp"
 
+#include "aurelion_rules/ai_search.hpp"
 #include "aurelion_rules/battle_hex.hpp"
 #include "aurelion_rules/build_info.hpp"
 #include "aurelion_rules/port/registry.hpp"
@@ -14,6 +15,7 @@
 
 #include <algorithm>
 #include <chrono>
+#include <cstdint>
 #include <cstdio>
 #include <cstring>
 #include <exception>
@@ -30,6 +32,7 @@ namespace godot {
 namespace {
 
 namespace hex = aurelion::rules::battle_hex;
+namespace search = aurelion::rules::ai_search;
 
 bool valid_open_mask(const PackedByteArray &open, const char *method) {
 	if (open.size() == hex::kCellCount) {
@@ -102,6 +105,54 @@ Dictionary state_stats(const aurelion::rules::bridge::StateBridge &bridge, const
 	return stats;
 }
 
+search::Span span_of(const PackedInt32Array &items) {
+	return search::Span{ items.ptr(), items.size() };
+}
+
+search::Bytes bytes_of(const PackedByteArray &items) {
+	return search::Bytes{ items.ptr(), items.size() };
+}
+
+// Offsets (count + 1, or empty for none) and items as one list of lists.
+bool lists_of(const PackedInt32Array &offsets, const PackedInt32Array &items, search::Lists &lists, const char *method, const char *what) {
+	if (offsets.is_empty()) {
+		if (!items.is_empty()) {
+			UtilityFunctions::push_error(String("AurelionRules.") + method + ": " + what + " has items and no offsets");
+			return false;
+		}
+		lists = search::Lists{};
+		return true;
+	}
+	lists = search::Lists{ offsets.ptr(), offsets.size() - 1, items.ptr(), items.size() };
+	return true;
+}
+
+bool valid_tile_mask(const PackedByteArray &mask, int64_t count, bool may_be_empty, const char *method, const char *what) {
+	if (mask.size() == count || (may_be_empty && mask.is_empty())) {
+		return true;
+	}
+	UtilityFunctions::push_error(String("AurelionRules.") + method + ": " + what + " has " + String::num_int64(mask.size()) + " bytes, expected " + String::num_int64(count));
+	return false;
+}
+
+bool valid_map(int64_t width, int64_t height, const char *method) {
+	if (width > 0 && height > 0 && width <= 1 << 20 && height <= 1 << 20 && width * height <= INT32_MAX) {
+		return true;
+	}
+	UtilityFunctions::push_error(String("AurelionRules.") + method + ": bad map size " + String::num_int64(width) + "x" + String::num_int64(height));
+	return false;
+}
+
+PackedInt32Array to_packed(const std::vector<int32_t> &items) {
+	PackedInt32Array packed;
+	packed.resize(static_cast<int64_t>(items.size()));
+	int32_t *out = packed.ptrw();
+	for (int32_t item : items) {
+		*out++ = item;
+	}
+	return packed;
+}
+
 } // namespace
 
 void AurelionRules::_bind_methods() {
@@ -118,6 +169,8 @@ void AurelionRules::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("port_report", "name", "mismatch"), &AurelionRules::port_report);
 	ClassDB::bind_method(D_METHOD("port_copy", "args"), &AurelionRules::port_copy);
 	ClassDB::bind_method(D_METHOD("port_stats"), &AurelionRules::port_stats);
+	ClassDB::bind_method(D_METHOD("ai_search_masks", "width", "height", "surface_blocked", "surface_stops", "water", "sea", "body_offsets", "body_tiles", "zone_offsets", "zone_tiles", "neutral_open", "unit_blocked", "unit_stops", "hero_tiles", "guard_offsets", "guard_tiles", "site_tiles", "site_open"), &AurelionRules::ai_search_masks);
+	ClassDB::bind_method(D_METHOD("ai_search_walk", "width", "height", "start", "start_phase", "radius", "native_corners", "blocked", "stop_mask", "pass_mask", "hero_zone", "portals", "seen", "water", "sea_open", "boats", "docks", "shore_cost", "dock_cost"), &AurelionRules::ai_search_walk);
 }
 
 AurelionRules::AurelionRules() {
@@ -620,6 +673,143 @@ Dictionary AurelionRules::port_stats() const {
 	} catch (...) {
 		report_port_failure("port_stats", "unknown native exception");
 	}
+	return result;
+}
+
+Array AurelionRules::ai_search_masks(int64_t width, int64_t height, const PackedByteArray &surface_blocked, const PackedByteArray &surface_stops, const PackedByteArray &water, const PackedByteArray &sea, const PackedInt32Array &body_offsets, const PackedInt32Array &body_tiles, const PackedInt32Array &zone_offsets, const PackedInt32Array &zone_tiles, const PackedByteArray &neutral_open, const PackedInt32Array &unit_blocked, const PackedInt32Array &unit_stops, const PackedInt32Array &hero_tiles, const PackedInt32Array &guard_offsets, const PackedInt32Array &guard_tiles, const PackedInt32Array &site_tiles, const PackedByteArray &site_open) const {
+	const char *method = "ai_search_masks";
+	if (!valid_map(width, height, method)) {
+		return Array();
+	}
+	const int64_t count = width * height;
+	if (!valid_tile_mask(surface_blocked, count, false, method, "surface_blocked") || !valid_tile_mask(surface_stops, count, false, method, "surface_stops") || !valid_tile_mask(sea, count, true, method, "sea")) {
+		return Array();
+	}
+	search::PrepareInput in;
+	in.width = width;
+	in.height = height;
+	if (!lists_of(body_offsets, body_tiles, in.bodies, method, "bodies") || !lists_of(zone_offsets, zone_tiles, in.zones, method, "zones") || !lists_of(guard_offsets, guard_tiles, in.guard_zones, method, "guard zones")) {
+		return Array();
+	}
+	if (neutral_open.size() != in.bodies.count) {
+		UtilityFunctions::push_error(String("AurelionRules.ai_search_masks: neutral_open has ") + String::num_int64(neutral_open.size()) + " entries for " + String::num_int64(in.bodies.count) + " armies");
+		return Array();
+	}
+	in.surface_blocked = surface_blocked.ptr();
+	in.surface_stops = surface_stops.ptr();
+	in.water = bytes_of(water);
+	in.sea = sea.is_empty() ? nullptr : sea.ptr();
+	in.neutral_open = neutral_open.ptr();
+	in.unit_blocked = span_of(unit_blocked);
+	in.unit_stops = span_of(unit_stops);
+	in.hero_tiles = span_of(hero_tiles);
+	in.site_tiles = span_of(site_tiles);
+	in.site_open = bytes_of(site_open);
+	PackedByteArray blocked;
+	PackedByteArray stop_mask;
+	PackedByteArray guard_mask;
+	PackedByteArray hero_zone;
+	PackedByteArray pass_mask;
+	PackedByteArray sea_open;
+	blocked.resize(count);
+	stop_mask.resize(count);
+	guard_mask.resize(count);
+	hero_zone.resize(count);
+	pass_mask.resize(count);
+	if (!sea.is_empty()) {
+		sea_open.resize(count);
+	}
+	search::PrepareOutput out;
+	out.blocked = blocked.ptrw();
+	out.stop_mask = stop_mask.ptrw();
+	out.guard_mask = guard_mask.ptrw();
+	out.hero_zone = hero_zone.ptrw();
+	out.pass_mask = pass_mask.ptrw();
+	out.sea_open = sea.is_empty() ? nullptr : sea_open.ptrw();
+	try {
+		search::prepare(in, out);
+	} catch (const std::exception &error) {
+		report_exception(method, error.what());
+		return Array();
+	} catch (...) {
+		report_exception(method, "unknown");
+		return Array();
+	}
+	Array result;
+	result.append(blocked);
+	result.append(stop_mask);
+	result.append(guard_mask);
+	result.append(hero_zone);
+	result.append(pass_mask);
+	result.append(sea_open);
+	result.append(to_packed(out.zone_stops));
+	result.append(to_packed(out.pending_sites));
+	return result;
+}
+
+Array AurelionRules::ai_search_walk(int64_t width, int64_t height, int64_t start, int64_t start_phase, int64_t radius, bool native_corners, const PackedByteArray &blocked, const PackedByteArray &stop_mask, const PackedByteArray &pass_mask, const PackedByteArray &hero_zone, const PackedInt32Array &portals, const PackedByteArray &seen, const PackedByteArray &water, const PackedByteArray &sea_open, const PackedByteArray &boats, const PackedInt32Array &docks, int64_t shore_cost, int64_t dock_cost) const {
+	const char *method = "ai_search_walk";
+	if (!valid_map(width, height, method)) {
+		return Array();
+	}
+	const int64_t count = width * height;
+	const bool has_water = !water.is_empty();
+	if (!valid_tile_mask(blocked, count, false, method, "blocked") || !valid_tile_mask(stop_mask, count, false, method, "stop_mask") || !valid_tile_mask(pass_mask, count, false, method, "pass_mask") || !valid_tile_mask(hero_zone, count, false, method, "hero_zone") || !valid_tile_mask(water, count, true, method, "water")) {
+		return Array();
+	}
+	if (has_water && (!valid_tile_mask(sea_open, count, false, method, "sea_open") || !valid_tile_mask(boats, count, false, method, "boats"))) {
+		return Array();
+	}
+	search::Board board;
+	board.width = width;
+	board.height = height;
+	board.blocked = blocked.ptr();
+	board.stop_mask = stop_mask.ptr();
+	board.pass_mask = pass_mask.ptr();
+	board.hero_zone = hero_zone.ptr();
+	board.native_corners = native_corners;
+	board.portals = span_of(portals);
+	board.seen = bytes_of(seen);
+	if (has_water) {
+		board.water = water.ptr();
+		board.sea_open = sea_open.ptr();
+		board.boats = boats.ptr();
+		board.docks = span_of(docks);
+	}
+	board.shore_cost = shore_cost;
+	board.dock_cost = dock_cost;
+	PackedInt32Array dist;
+	PackedInt32Array parent;
+	PackedInt32Array order;
+	PackedByteArray phase;
+	dist.resize(count);
+	parent.resize(count);
+	order.resize(count);
+	if (has_water) {
+		phase.resize(count);
+	}
+	search::Output out;
+	out.dist = dist.ptrw();
+	out.parent = parent.ptrw();
+	out.order = order.ptrw();
+	out.phase = has_water ? phase.ptrw() : nullptr;
+	try {
+		search::search(board, start, start_phase, radius, out);
+	} catch (const std::exception &error) {
+		report_exception(method, error.what());
+		return Array();
+	} catch (...) {
+		report_exception(method, "unknown");
+		return Array();
+	}
+	Array result;
+	result.append(dist);
+	result.append(parent);
+	result.append(order);
+	result.append(out.order_count);
+	result.append(out.capped);
+	result.append(phase);
+	result.append(to_packed(out.reached));
 	return result;
 }
 

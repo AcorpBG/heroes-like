@@ -7,7 +7,7 @@
 namespace aurelion::rules {
 
 // Raised by every change to the native API the game calls.
-constexpr int kRulesApiVersion = 1;
+constexpr int kRulesApiVersion = 2;
 
 struct BuildInfo {
 	std::string source_tree; // git tree id of src/gdextension/rules
