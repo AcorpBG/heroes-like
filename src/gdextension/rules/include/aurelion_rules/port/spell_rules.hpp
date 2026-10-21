@@ -1,10 +1,11 @@
 #pragma once
 
 // scripts/core/SpellRules.gd, ported function by function under the GDScript
-// names (docs/native-rules-engine-transition.md, Phase 1). Layer 2: the effect
+// names (docs/native-rules-engine-transition.md). Phase 1, layer 2: the effect
 // reads of a battle stack, the normalizers they use and
 // normalize_school_resistance. Layer 4: status immunity and normalizing and
-// purging a stack's effects.
+// purging a stack's effects. _normalize_spell_ids is a shared helper on main
+// (spell_rules.cpp).
 
 #include "aurelion_rules/port/gd.hpp"
 
@@ -42,5 +43,8 @@ ArrayRef stack_status_immunity_ids(State &state, DictRef stack, DictRef battle);
 bool target_is_immune_to_status(State &state, DictRef target_stack, DictRef battle, Atom status_id);
 DictRef normalize_stack_effects(State &state, DictRef stack);
 DictRef purge_expired_stack_effects(State &state, DictRef stack, int64_t round_number);
+
+// A list of spell ids, the empty ones dropped (spell_rules.cpp).
+ArrayRef _normalize_spell_ids(State &state, const Value &value);
 
 } // namespace aurelion::rules::port::spell_rules

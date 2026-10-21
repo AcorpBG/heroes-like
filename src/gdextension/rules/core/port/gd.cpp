@@ -1207,6 +1207,19 @@ Atom stringify(State &state, const Value &value) {
 	}
 }
 
+Atom stringify_or_fallback(State &state, const Value &value) {
+	switch (value.kind) {
+		case Kind::Nil:
+		case Kind::Bool:
+		case Kind::Int:
+		case Kind::String:
+		case Kind::StringName:
+			return stringify(state, value);
+		default:
+			throw state::NotPorted(std::string("left to GDScript: String(") + type_name(value) + ")");
+	}
+}
+
 bool is_valid_int(const State &state, Atom atom) {
 	return compat::is_valid_int(state.text(atom));
 }

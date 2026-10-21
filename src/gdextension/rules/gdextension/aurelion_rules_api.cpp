@@ -425,7 +425,20 @@ void append_json_string(std::string &out, const std::string &text) {
 	out += '"';
 }
 
-constexpr int kMaxPortArgs = 8;
+// The most arguments a ported function may take (AiHeroRules._route_through
+// takes 11).
+constexpr int kMaxPortArgs = 16;
+
+// Why a call cannot go to the function: "" when it can.
+std::string arity_problem(const aurelion::rules::port::Function &function, int64_t given) {
+	if (function.arity > kMaxPortArgs) {
+		return "takes " + std::to_string(function.arity) + " arguments, more than the adapter's " + std::to_string(kMaxPortArgs);
+	}
+	if (given != function.arity) {
+		return "takes " + std::to_string(function.arity) + " arguments, got " + std::to_string(given);
+	}
+	return std::string();
+}
 constexpr size_t kKeptMismatches = 20;
 constexpr int64_t kStatsEvery = 65536;
 
@@ -541,8 +554,9 @@ Variant AurelionRules::port_call(const StringName &name, const Array &args, bool
 			if (port_ == nullptr) {
 				throw std::runtime_error("the port did not start");
 			}
-			if (args.size() != function->arity || function->arity > kMaxPortArgs) {
-				problem = std::string(function->name) + " takes " + std::to_string(function->arity) + " arguments, got " + std::to_string(args.size());
+			const std::string arity = arity_problem(*function, args.size());
+			if (!arity.empty()) {
+				problem = std::string(function->name) + " " + arity;
 			} else {
 				port_->begin();
 				aurelion::rules::state::Value values[kMaxPortArgs];
@@ -597,9 +611,10 @@ String AurelionRules::port_check(const StringName &name, const Array &args, cons
 			if (port_ == nullptr) {
 				throw std::runtime_error("the port did not start");
 			}
-			if (args.size() != function->arity || function->arity > kMaxPortArgs) {
+			const std::string arity = arity_problem(*function, args.size());
+			if (!arity.empty()) {
 				error = true;
-				mismatch = std::string("takes ") + std::to_string(function->arity) + " arguments, got " + std::to_string(args.size());
+				mismatch = arity;
 			} else {
 				port_->begin();
 				aurelion::rules::state::Value values[kMaxPortArgs];
@@ -693,8 +708,9 @@ int64_t AurelionRules::port_validate_begin(const StringName &name, const Array &
 		++stats.checks;
 		count_port_use();
 		try {
-			if (args.size() != function->arity || function->arity > kMaxPortArgs) {
-				check.error = std::string("takes ") + std::to_string(function->arity) + " arguments, got " + std::to_string(args.size());
+			const std::string arity = arity_problem(*function, args.size());
+			if (!arity.empty()) {
+				check.error = arity;
 			} else {
 				check.bridge.begin(true);
 				for (int index = 0; index < function->arity; ++index) {

@@ -616,11 +616,6 @@ DictRef profile_for_session(State &state, const Value &session) {
 	return profile_for_difficulty(state, gd::member(state, session, key::difficulty));
 }
 
-Atom _default_difficulty_id(State &) {
-	// ScenarioSelectRules.default_difficulty_id().
-	return key::normal;
-}
-
 DictRef profile_for_difficulty(State &state, const Value &difficulty_id) {
 	const Atom normalized_id = normalize_difficulty(state, difficulty_id);
 	// DIFFICULTY_PROFILES.get(normalized_id, DIFFICULTY_PROFILES[_default_difficulty_id()]).duplicate(true):
@@ -628,17 +623,6 @@ DictRef profile_for_difficulty(State &state, const Value &difficulty_id) {
 	const Atom fallback_id = _default_difficulty_id(state);
 	const bool known = normalized_id == key::story || normalized_id == key::normal || normalized_id == key::hard;
 	return difficulty_profile(state, known ? normalized_id : fallback_id);
-}
-
-Atom normalize_difficulty(State &state, const Value &value) {
-	// ScenarioSelectRules.normalize_difficulty(value): the ids of DIFFICULTY_OPTIONS.
-	const Atom difficulty_id = gd::to_string(value);
-	for (const Atom option_id : { key::story, key::normal, key::hard }) {
-		if (option_id == difficulty_id) {
-			return difficulty_id;
-		}
-	}
-	return _default_difficulty_id(state);
 }
 
 } // namespace difficulty_rules

@@ -340,6 +340,10 @@ bool ends_with(const State &state, Atom text, Atom suffix);
 // str(x) and String(x) of Nil, bool, int, String and StringName (float and the
 // containers are not ported: a ScriptError).
 Atom stringify(State &state, const Value &value);
+// String(x) in a function whose switch falls back to GDScript (the day and AI
+// subsystems): stringify(), with a float or a container throwing NotPorted,
+// so the GDScript body converts it instead of the port reporting an error.
+Atom stringify_or_fallback(State &state, const Value &value);
 // x.is_valid_int() and int(x) of a String.
 bool is_valid_int(const State &state, Atom text);
 // pattern % values (String::sprintf) with the conversions the ported code
@@ -372,6 +376,12 @@ DictRef content_row(State &state, state::ContentTable table, Atom id);
 DictRef content_file(State &state, Atom path);
 // ContentService.get_content_revision().
 inline int64_t content_revision(State &state) { return state.host().content_revision(state); }
+
+// GDScript's pow(base, exponent), exp(x) and log(x): the engine's, so the last
+// bit matches whatever C runtime the game's build uses (Backing::math_pow).
+inline double engine_pow(State &state, double base, double exponent) { return state.host().math_pow(base, exponent); }
+inline double engine_exp(State &state, double x) { return state.host().math_exp(x); }
+inline double engine_log(State &state, double x) { return state.host().math_log(x); }
 
 // Time.get_ticks_usec(), for the timings scripts keep (a steady clock's
 // microseconds: only differences mean anything).

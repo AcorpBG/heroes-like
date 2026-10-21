@@ -655,6 +655,13 @@ public:
 	// The defaults write to stderr.
 	virtual void print_error(const std::string &text);
 	virtual void print_warning(const std::string &text);
+	// GDScript's pow(), exp() and log(): the engine's own, because the C
+	// runtime that answers them differs between builds (the official Windows
+	// build is MinGW's, this library's MSVC's) and may round differently in
+	// the last bit. The defaults are this library's C runtime.
+	virtual double math_pow(double base, double exponent);
+	virtual double math_exp(double x);
+	virtual double math_log(double x);
 };
 
 class State {
