@@ -18,6 +18,11 @@ using state::Value;
 
 // The commander payload: a side's hero payload, its specialty bonuses and
 // difficulty terms (commander_payload.cpp).
+//
+// _specialty_catalog keeps GDScript's memo in HeroProgressionRules' static
+// vars (_catalog_source, _catalog_index): the call that builds the index
+// assigns them, so a ported function that reaches it is a writing one, and its
+// shadow runs the native call first (a validating subsystem).
 DictRef aggregate_bonuses(State &state, DictRef hero_state);
 void _merge_bonuses(State &state, DictRef target, DictRef source, DictRef hero_state);
 ArrayRef _normalize_specialties_in(State &state, DictRef catalog, const Value &value);

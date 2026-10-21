@@ -20,6 +20,7 @@
 #include <godot_cpp/variant/vector2i.hpp>
 #include <godot_cpp/variant/vector3i.hpp>
 
+#include <algorithm>
 #include <cmath>
 #include <cstdio>
 #include <cstring>
@@ -201,6 +202,8 @@ void PortBridge::begin(bool validating) {
 	array_snapshots_.clear();
 	dict_snapshots_.clear();
 	packed_snapshots_.clear();
+	rng_states_.clear();
+	made_rngs_.clear();
 }
 
 state::TypeRef PortBridge::register_type(int64_t builtin, const StringName &class_name, const Variant &script) {
@@ -354,6 +357,9 @@ bool PortBridge::rng_get(uint32_t slot, uint64_t &seed, uint64_t &state) {
 	}
 	seed = rng->get_seed();
 	state = rng->get_state();
+	if (uint64_t *kept = validating_state(rng)) {
+		state = *kept;
+	}
 	return true;
 }
 
@@ -362,7 +368,28 @@ void PortBridge::rng_set_state(uint32_t slot, uint64_t state) {
 	if (rng == nullptr) {
 		throw state::ScriptError("Invalid call: set_state on a value that is not a RandomNumberGenerator");
 	}
+	if (uint64_t *kept = validating_state(rng)) {
+		*kept = state;
+		return;
+	}
 	rng->set_state(state);
+}
+
+uint64_t *PortBridge::validating_state(RandomNumberGenerator *rng) {
+	if (!validating_) {
+		return nullptr;
+	}
+	const uint64_t id = static_cast<uint64_t>(rng->get_instance_id());
+	if (std::find(made_rngs_.begin(), made_rngs_.end(), id) != made_rngs_.end()) {
+		return nullptr;
+	}
+	for (auto &kept : rng_states_) {
+		if (kept.first == id) {
+			return &kept.second;
+		}
+	}
+	rng_states_.emplace_back(id, rng->get_state());
+	return &rng_states_.back().second;
 }
 
 uint32_t PortBridge::rng_new(uint64_t seed, uint64_t state) {
@@ -370,6 +397,9 @@ uint32_t PortBridge::rng_new(uint64_t seed, uint64_t state) {
 	rng.instantiate();
 	rng->set_seed(seed);
 	rng->set_state(state);
+	if (validating_) {
+		made_rngs_.push_back(static_cast<uint64_t>(rng->get_instance_id()));
+	}
 	opaque_.push_back(Variant(rng));
 	return static_cast<uint32_t>(opaque_.size() - 1);
 }
@@ -1233,6 +1263,12 @@ std::string PortBridge::verify(const Value &result, const Variant &gdscript_resu
 		diff_value(var.value, now, path, out);
 		if (!out.empty()) {
 			return "static vars afterwards: " + out;
+		}
+	}
+	for (const auto &kept : rng_states_) {
+		const RandomNumberGenerator *rng = Object::cast_to<RandomNumberGenerator>(godot::ObjectDB::get_instance(godot::ObjectID(kept.first)));
+		if (rng != nullptr && rng->get_state() != kept.second) {
+			return "a RandomNumberGenerator afterwards: native state " + std::to_string(kept.second) + ", GDScript " + std::to_string(rng->get_state());
 		}
 	}
 	return out;
