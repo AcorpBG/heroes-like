@@ -397,6 +397,12 @@ Release packaging still stops on the 4.7 GB export pack, which predates the rule
     single-function benchmarks are not G1: they time the per-call bridge, which the native loop does not have.
   - Formal G1, 2026-10-21 ("Formal G1 after layer 4"): S is 3.47 to 4.98, under 5x on both corpora. Layers 2 and 4
     are at r of about 4. The owner decides.
+  - With GDScript's memos ported (2026-10-21, "G1 on `standard` with the memos", measured under sibling load): S is
+    5.58 to 6.16 on `standard`, over 5x and under 10x. Layers 2 and 4 rose to r 7.38 and 10.75; layers 1 and 3 fell to
+    6.22 and 5.18. The owner decides.
+  - Owner decision 2026-10-21: slice 04c replaces the ported board-read cache with a native one (a state change
+    counter, no whole-array hashing, no deep copy, none where recomputing is cheaper), re-measures G1 on `standard` with
+    Phases 3 and 5 paused, then layer 5 starts whatever the number.
 - **Identity:** per-action stream (order taken, RNG state and roll count, simulation-key digest) on the tuner suites,
   every AI battle in the six seeds, and JSON round-tripped payloads; shadow mode on every resolve; daily digests; the
   payload corpus across compilers; mid-battle save/load both ways between the native build and the tagged pre-merge
@@ -680,6 +686,7 @@ every function run inside `resolve_active_battle`, with `_finalize_*` left out. 
     DifficultyRules 6/21, with ScenarioSelectRules' two functions inlined.
 - **Not ported:** `DifficultyRules._scenario_select_rules`, which returns a script. The memos `_hero_payload_cache`
   and HeroProgressionRules' specialty catalog index are not ported either; the native calls compute without them.
+  Slice 04b ported them ("Layers 1 to 4 with GDScript's memos").
 - **Moved:** `_apply_ranged_damage_return` to slice 06, since it calls the damage pressure and the presentation events.
   The native unit and ability tables go to slice 10.
   - Here a native call reads each content row once per call through ContentService's index.
@@ -710,6 +717,7 @@ every function run inside `resolve_active_battle`, with `_finalize_*` left out. 
     SpellRules' status immunity and effect normalize and purge 4/20, `_weakest_stack_by_cohesion` and `_role` 2/30,
     and the presentation and animation event records 5/175.
 - **Not ported:** the board-read memos and the presentation queue memo; the native calls take the uncached path.
+  Slice 04b ported them.
   `_apply_melee_approach` moves to slice 06 and `_apply_auto_advance_movement` to slice 09. `_complete_action`,
   `_evaluate_outcome` and `resolve_if_battle_ready` stay GDScript until slice 10. BattleAiRules' 8 copies of layer 3
   functions go to slice 08.
@@ -769,6 +777,99 @@ every function run inside `resolve_active_battle`, with `_finalize_*` left out. 
   - Layers 1 and 3 stay above 10. Layers 2 and 4 are at about 4.
   - By the checkpoint, the interface is fixed before the AI part. By D8, the branch is dropped if G1 stays under 5x
     after that fix. The owner decides.
+
+**Layers 1 to 4 with GDScript's memos** (slice 04b, 2026-10-21; owner: port every GDScript memo the ported layers rely
+on, then re-measure G1 on `standard` only; runtime on main b8c32e69d, merged into the branch in fb9b1ef0f; branch
+commits 32e428314 port, ca2f2b058 harness, f4407189e Windows binaries):
+- **Ported:** every static memo that the GDScript of layers 1 to 4 reads. The port keeps them in GDScript's own static
+  vars through the host, with GDScript's lifetime and invalidation:
+  - BattleRules' board-read memo: the scope's cache, battle and depth, the validation switch and the hit count. Legal
+    destinations, the melee approach, attack legality, the attack target ids, the walk steps and the walk mask read and
+    fill it under GDScript's keys.
+  - `_hero_payload_cache`: a side's payload is reused while its payload and commander sources are equal.
+  - `_presentation_queue_written`: an append to the queue it last wrote normalizes only the last event.
+  - BattleAiRules' scoring scope: the living stacks per side and the stack terms (contact band, engaged).
+  - HeroProgressionRules' specialty catalog index.
+  - Not ported: `_hex_id_by_key`, a constant table; native uses the State's fixed atoms. GDScript callers open and
+    close the scopes, so their begin and end stay GDScript.
+- **Registry:** the 55 ported functions that reach a memo count as writing, and the battle switch runs them validating.
+  In shadow mode the native call runs first on the arguments themselves and writes nothing back. The check then
+  compares the result, the containers it loaded, the static vars it read or set and the RandomNumberGenerators it used
+  with what GDScript left.
+  - A function marked as only reading cannot set a static var, so one that reaches a memo fails in native mode when
+    the memo is cold. Shadow mode does not see this when GDScript warmed the memo first.
+- **Runtime:** the validating check accepts a RandomNumberGenerator that both calls made, when its seed and state match.
+- **Harness:** a capture's writing entry holds the memos as they were before it and their signature after it. The
+  replay hands each call its entry's memos and refuses them to an entry the registry marks as only reading.
+- **Found, not fixed:** the arena plays each side's BattleAiRules as its own compiled copy behind a router at the
+  script's path, so the scoring memos live in the copies. In arena native or shadow mode the port would read them from
+  the router, which has none: `_alive_stacks_for_side`, `_stack_contact_band`, `_stack_contact_band_on`,
+  `_stack_engaged_on` and `_stack_is_engaged` would fail. The interface has to say whose memos a call reads before any
+  arena native run. The game, the six seeds and the G1 replay are not affected.
+  - No ported function reads the weights. None of the 26 ported BattleAiRules functions calls `_w` or reads
+    `_weights`, and the port code reads no weights. The arena bakes each variant's weights into its own compiled copy
+    (`arena.py` rewrites `static var _weights`).
+  - The router declares only `_arena_policies`, `_arena_default` and `_arena_calls`, so a read of any other
+    BattleAiRules static by path gets Nil. Every scoring memo read starts at the scope depth, whose `int` conversion
+    stops on Nil with an error. A game silently played with the wrong weights cannot happen today. Slices 08 and 09
+    port `_w`'s users and must keep that read strict.
+  - Options, needed before the merge's arena check. (a) The port asks the router which variant plays the acting side
+    and reads that copy's statics; this ties the native engine to an arena tool and to the GDScript copies it replaces.
+    (b) Native keeps its own memos and takes each side's weights as data; this fits Phase 2's battle tool but cannot
+    play `git:<rev>` code variants. (c) The pre-merge parity check runs the arena without the router, one plain
+    BattleAiRules on both sides.
+  - Recommended: (c) for the merge check, then (b) in Phase 2. Parity compares native with GDScript on the same code,
+    so A/B variants add nothing to it, and (c) needs only a worker switch in the arena tools, with no change to frozen
+    battle code or to the port. Weight variants at native speed come with Phase 2's battle tool; code variants stay a
+    GDScript-mode tool.
+- **Checks:**
+  - Shadow on the six seeds: 0 mismatches and 0 errors in 55,236,025 checks over 275 of the 281 functions, 6,648,709
+    of them in the 55 memo users, all reached. Not reached: `_brace_has_held_objective`, `_hex_distance`,
+    `_offset_to_cube`, `_player_input_locked_summary`, `_presentation_walk_path` and `_side_has_linked_unit`.
+  - Native mode against main: every daily digest (415) and match record of the six seeds is identical.
+  - Core suite: 17/17 on Windows.
+  - The Linux libraries in `bin/` are not rebuilt.
+
+**G1 on `standard` with the memos** (2026-10-21, 21:10 to 21:18):
+- **How it is measured:** as in "Formal G1 after layer 4". 82 of the 480 resolves are captured, with 6 jobs. The
+  baseline is main at b8c32e69d; the battle GDScript is unchanged since the branch point.
+  - Load: sibling sessions' AI match runs (4 Godot commands, 6 to 8 game processes) ran during every timed part. After
+    more than 10 minutes of waiting, the timed parts ran anyway, as the owner allowed. Every number below was measured
+    under that load, on both sides.
+  - Every round of both replays: 0 mismatches and 0 errors.
+- **Share of T_gd:** the ported functions take 61.8% of T_gd (88.35 s over 480 resolves).
+
+| Corpus | Previous resolve: r / S | New State: r / S | Same resolve again: r / S | c | r for 10x | r for 5x |
+|---|---:|---:|---:|---:|---:|---:|
+| standard, with the memos | 5.84 / 5.58 | 5.93 / 5.66 | 6.48 / 6.16 | 0.0080 | 10.88 | 5.21 |
+| standard, formal G1 | 3.76 / 3.61 | 3.61 / 3.47 | 5.09 / 4.82 | 0.0107 | 11.2 | 5.28 |
+
+  The new-State replay's median rounds, a second run of the same-resolve case, gave 6.41 / 6.10.
+- **r per layer** (warm pass, same resolve again; the new-State replay in brackets):
+
+  | Layer | Share | r with the memos | r in the formal G1 |
+  |---|---:|---:|---:|
+  | 1, hex | 14.8% | 6.22 (6.24) | 11.0 |
+  | 2, damage and stat totals | 22.2% | 7.38 (7.71) | 3.95 |
+  | 3, movement and targeting | 25.8% | 5.18 (5.31) | 12.6 |
+  | 4, turn order and effects | 37.2% | 10.75 (11.31) | 3.99 |
+
+- **Where native is slow** (warm, `standard`; 1.37 s native in all):
+  - The board-read memo's users: `melee_approach_cells` r 3.88 with 0.41 s native (30% of the native time),
+    `_walk_steps_to_target` 2.06 (0.097 s) and `legal_destinations_for_stack` 3.43. Before the memos, their native
+    calls took the uncached path, and layers 1 and 3 fell from 11.0 and 12.6 to 6.22 and 5.18.
+    - Each memo read builds GDScript's key, which hashes the battle's whole stacks and field-objective arrays, and
+      returns a deep copy of the cached answer, as GDScript does. GDScript's `hash` is the engine's C++; the port's
+      walks the State. How much of the time the key and the copy take is not measured.
+  - The two functions that were slower than GDScript: `_append_presentation_event` went from r 0.69 to 5.57 and
+    `_hero_has_trait` from 0.84 to 3.01.
+  - Their callers: `_resolve_wait` went from 3.93 to 13.58, `_calculate_damage` from 2.61 to 9.19,
+    `_apply_stack_effect` from 3.94 to 10.96, `_stack_cohesion_total` from 3.79 to 8.08 and `_stack_momentum_total`
+    from 2.74 to 6.97.
+  - The calls made 1,477,556 Dictionaries and 864,912 Arrays over the same 908,907 entries (4,161,058 and 2,085,064
+    before).
+- **Result:** S is 5.58 to 6.16 on `standard`: over 5x in every case, under 10x (r 10.88 needed). The six seeds were not
+  re-measured. The owner decides.
 
 ### Phase 2: one payload builder, AI preview as one call, the battle tool
 
@@ -941,6 +1042,8 @@ its metadata under "meta"). Shadow mode on the six seeds checked them on the bra
   float or a container leaves the call to GDScript instead of failing it. Phase 1 drops its `difficulty_rules`
   definitions from `commander_payload.cpp` and the 29 keys of `day_keys.inc`'s second "Also in battle_keys.inc" block
   from its list.
+- Slice 05's shared helpers (2026-10-21; Phase 3 handed them over): AiHeroRules `active_hero_entries` and
+  `_resolved_lookup` in `ai_hero_rules.cpp`, with the day-only `active_hero_count`.
 
 **Slice 04, frozen functions** (2026-10-21, until the Phase 5 merge; AGENTS.md): `EnemyTurnRules.normalize_enemy_states`
 (every caller: the AI turn, scenario evaluation, the threat and pressure readers, the risk forecast) and what it runs in
@@ -981,6 +1084,16 @@ PlayerIdentityRules 7: `controller_id`, `enemy_configs`, `faction_id`, `identity
 1: `canonical_spatial_records`. The paths AI matches never run stay GDScript and are not frozen by this slice: a roster
 memo already open, legacy raid hosts and support columns, defender commanders in towns and sites, scouted targets and
 hero sightings from old saves, hero task boards, enemy configs without player records.
+
+**Slice 05, frozen functions** (2026-10-21, until the Phase 5 merge; AGENTS.md): `ScenarioRules.evaluate_session` and
+`PlayerEliminationRules.apply_daily` (every caller) and what they run in AI matches beyond slice 04's functions, 20
+functions. ScenarioRules 5: `_objective_met`, `evaluate_session`, `normalize_scenario_state`, `objective_definitions`,
+`scenario_record_for_session`. ScenarioScriptRules 5: `_join_messages`, `_retry_pending_reinforcements`,
+`_sorted_hooks`, `normalize_script_state`, `process_hooks`. GeneratedScenarioObjectiveRules 3: `definitions`,
+`progress`, `uses_kind`. PlayerEliminationRules 4: `applies`, `apply_daily`, `heroes_held`, `towns_held`. AiHeroRules 3
+(also Phase 3's): `_resolved_lookup`, `active_hero_count`, `active_hero_entries`. The paths AI matches never run stay
+GDScript and are not frozen by this slice: script hooks and pending reinforcements, other objective types, a scenario's
+completion, the rival count of a human game, the human player's townless days and defeat, a computer player's removal.
 
 **Inventory and boundary** (2026-10-21, main 6d7471276; every function of `scripts/core` and ContentService probed on
 the six seeds; times from l1, a large four-player game to day 90, on a machine shared with Phase 1's runs):
