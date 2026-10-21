@@ -79,14 +79,18 @@ public:
 	// when write_back is set; a native script error is reported and answered
 	// with null. port_check runs it and compares the result with GDScript's: ""
 	// when they match, else the first difference. port_report counts a check the
-	// engine script made itself (mismatch "" when it matched).
+	// engine script made itself (mismatch "" when it matched). A call that
+	// reached a path the port leaves to GDScript (state::NotPorted) changes
+	// nothing and returns null, and port_not_ported() is true until the next
+	// port_call; such a check is counted as not ported and matches.
 	Variant port_call(const StringName &name, const Array &args, bool write_back);
+	bool port_not_ported() const { return last_not_ported_; }
 	String port_check(const StringName &name, const Array &args, const Variant &gdscript_result);
 	void port_report(const StringName &name, const String &mismatch);
 	// Shadow: the arguments of a function that writes into them, copied for its
 	// native run before GDScript runs (bridge::copy_for_shadow).
 	Array port_copy(const Array &args);
-	// {name: {calls, checks, mismatches, errors}}, plus "unknown_calls" when a
+	// {name: {calls, checks, mismatches, errors, not_ported}}, plus "unknown_calls" when a
 	// name was not in the registry. With a subsystem's log variable set to a
 	// folder (HEROES_NATIVE_BATTLE_LOG), the same goes to shadow_<pid>.json
 	// there, with the first mismatches and unknown names, every 65,536 uses, on
@@ -113,6 +117,7 @@ private:
 		int64_t checks = 0;
 		int64_t mismatches = 0;
 		int64_t errors = 0;
+		int64_t not_ported = 0;
 		std::vector<std::string> first;
 	};
 
@@ -131,6 +136,7 @@ private:
 	// One file per distinct folder the subsystems' log variables name.
 	std::vector<std::string> port_log_paths_;
 	int64_t port_uses_ = 0;
+	bool last_not_ported_ = false;
 	int64_t unknown_calls_ = 0;
 	std::vector<std::string> unknown_names_;
 	size_t reported_mismatches_ = 0;
