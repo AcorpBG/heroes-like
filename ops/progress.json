@@ -116150,6 +116150,45 @@
       ],
       "notes": "The transition doc's Phase 1 exit list, then the single merge with the owner (main tagged first).",
       "updatedAt": "2026-10-20T19:35:00Z"
+    },
+    {
+      "id": "native-rules-shared-runtime-main-20261021",
+      "title": "Shared C++ rules runtime on main",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Owner decision 2026-10-21. The value layer, its Dictionary bridge, the GDScript-semantics helpers, the port adapter and the switch generator move from native-phase1-battle to main, with no behaviour change. Runtime changes land on main first after that.",
+      "updatedAt": "2026-10-21T16:00:00Z"
+    },
+    {
+      "id": "native-rules-phase5-day-processing-20261021",
+      "title": "Native day processing (Phase 5)",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Owner decision 2026-10-21: beside Phase 1 on branch native-phase5-day, merged once, G3 skipped, Windows only, lean checks. _finalize_* waits for the Phase 1 merge.",
+      "updatedAt": "2026-10-21T16:00:00Z"
+    },
+    {
+      "id": "native-rules-phase3-search-kernel-20261021",
+      "title": "Native AiHeroRules._search kernel (Phase 3)",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Owner decision 2026-10-21: beside Phase 1 on branch native-phase3-search, merged to main when its games are identical, G3 skipped, Windows only, lean checks.",
+      "updatedAt": "2026-10-21T16:00:00Z"
     }
   ],
   "project": "heroes-like",

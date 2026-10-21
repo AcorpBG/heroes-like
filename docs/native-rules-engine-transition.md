@@ -715,6 +715,9 @@ hash or RNG. Its code takes no behaviour changes while its port runs; there is n
 decision 2026-10-21). Candidates: `AiHeroRules._search` (11.5%), `_level_surface`, `_war_paths`, fog
 `_explored`/`_reveal`.
 
+Owner decision 2026-10-21: the `_search` kernel starts now beside Phase 1, on its own branch `native-phase3-search`,
+merged to main once its games are identical. G3 is skipped for it.
+
 ### Gate G3: re-plan from measurements
 
 Re-estimate Phases 4-7 from Phase 1's measured rate (lines per day, mismatches per 1,000 lines). The owner picks the
@@ -735,6 +738,13 @@ AI code is frozen during the slice; the Phase A numbers stay open.
 `normalize_overworld_state`, `commit_active_hero`, town occupation and recovery, income, growth, reserve deliveries,
 `PlayerEliminationRules.apply_daily`, `ScenarioRules.evaluate_session`, and `_finalize_*` for human battles: one native
 call per day. The end-turn confirmation dry run in `OverworldShell.gd:1464-1529` must invalidate native caches too.
+
+Owner decision 2026-10-21: Phase 5 starts now beside Phase 1, on its own branch `native-phase5-day`, merged once like
+Phase 1. G3 is skipped for it. First, the shared C++ runtime moves from the Phase 1 branch to main, with no behaviour
+change. That runtime is the value layer, its Dictionary bridge, the GDScript-semantics helpers, the port adapter and the
+switch generator. From then on, a branch that changes the runtime lands that change on main as its own commit, and the
+other branches take it from main. `_finalize_*` stays in `BattleRules`, which is frozen until the Phase 1 merge, so
+Phase 5 ports it after that merge.
 
 ### Phase 6: match throughput
 

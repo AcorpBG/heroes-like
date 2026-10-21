@@ -368,6 +368,10 @@ Owner decision, 2026-10-20: the rules move from GDScript to C++ inside the game,
   - `native-rules-phase1-09-ai-decisions-20261020` (pending, likely two sessions): the other 106 BattleAiRules functions (2,023 lines: action choice; attack, spell, buff, defend, advance and withdrawal scores) and the BattleRules enemy turn 9/348. Callers: `BattleShell.gd`, BattleRules, BattleAutoResolveRules, 15 tests.
   - `native-rules-phase1-10-autoplay-events-api-20261020` (pending): BattleAutoResolveRules 8/316; events as structured records with a GDScript formatter (516 lines of event code today), including `_set_stack_hex`'s ActionPlayback capture; the order-by-order API and the battle UI queries, with shadow mode on the human-seat corpus.
   - `native-rules-phase1-11-exit-20261020` (pending): the doc's exit list, then the single merge with the owner.
+- Owner decision 2026-10-21: two more C++ tracks run beside Phase 1, each on its own branch, Windows only, with lean checks and G3 skipped (transition doc, Phases 3 and 5):
+  - `native-rules-shared-runtime-main-20261021` (pending): the shared C++ runtime moves from `native-phase1-battle` to main with no behaviour change. It covers the value layer, its Dictionary bridge, the GDScript-semantics helpers, the port adapter and the switch generator. From then on, runtime changes land on main first.
+  - `native-rules-phase5-day-processing-20261021` (pending): day processing in C++ on branch `native-phase5-day`, merged once. `_finalize_*` waits for the Phase 1 merge.
+  - `native-rules-phase3-search-kernel-20261021` (pending): the `AiHeroRules._search` kernel (11.5% of match CPU) on branch `native-phase3-search`, merged to main when its games are identical.
 
 ### Balance round 7: Sunvault's shooter lines trimmed
 
