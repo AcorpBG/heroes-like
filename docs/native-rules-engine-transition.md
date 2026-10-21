@@ -400,6 +400,9 @@ Release packaging still stops on the 4.7 GB export pack, which predates the rule
   - With GDScript's memos ported (2026-10-21, "G1 on `standard` with the memos", measured under sibling load): S is
     5.58 to 6.16 on `standard`, over 5x and under 10x. Layers 2 and 4 rose to r 7.38 and 10.75; layers 1 and 3 fell to
     6.22 and 5.18. The owner decides.
+  - Owner decision 2026-10-21: slice 04c replaces the ported board-read cache with a native one (a state change
+    counter, no whole-array hashing, no deep copy, none where recomputing is cheaper), re-measures G1 on `standard` with
+    Phases 3 and 5 paused, then layer 5 starts whatever the number.
 - **Identity:** per-action stream (order taken, RNG state and roll count, simulation-key digest) on the tuner suites,
   every AI battle in the six seeds, and JSON round-tripped payloads; shadow mode on every resolve; daily digests; the
   payload corpus across compilers; mid-battle save/load both ways between the native build and the tagged pre-merge
@@ -803,6 +806,22 @@ commits 32e428314 port, ca2f2b058 harness, f4407189e Windows binaries):
   the router, which has none: `_alive_stacks_for_side`, `_stack_contact_band`, `_stack_contact_band_on`,
   `_stack_engaged_on` and `_stack_is_engaged` would fail. The interface has to say whose memos a call reads before any
   arena native run. The game, the six seeds and the G1 replay are not affected.
+  - No ported function reads the weights. None of the 26 ported BattleAiRules functions calls `_w` or reads
+    `_weights`, and the port code reads no weights. The arena bakes each variant's weights into its own compiled copy
+    (`arena.py` rewrites `static var _weights`).
+  - The router declares only `_arena_policies`, `_arena_default` and `_arena_calls`, so a read of any other
+    BattleAiRules static by path gets Nil. Every scoring memo read starts at the scope depth, whose `int` conversion
+    stops on Nil with an error. A game silently played with the wrong weights cannot happen today. Slices 08 and 09
+    port `_w`'s users and must keep that read strict.
+  - Options, needed before the merge's arena check. (a) The port asks the router which variant plays the acting side
+    and reads that copy's statics; this ties the native engine to an arena tool and to the GDScript copies it replaces.
+    (b) Native keeps its own memos and takes each side's weights as data; this fits Phase 2's battle tool but cannot
+    play `git:<rev>` code variants. (c) The pre-merge parity check runs the arena without the router, one plain
+    BattleAiRules on both sides.
+  - Recommended: (c) for the merge check, then (b) in Phase 2. Parity compares native with GDScript on the same code,
+    so A/B variants add nothing to it, and (c) needs only a worker switch in the arena tools, with no change to frozen
+    battle code or to the port. Weight variants at native speed come with Phase 2's battle tool; code variants stay a
+    GDScript-mode tool.
 - **Checks:**
   - Shadow on the six seeds: 0 mismatches and 0 errors in 55,236,025 checks over 275 of the 281 functions, 6,648,709
     of them in the 55 memo users, all reached. Not reached: `_brace_has_held_objective`, `_hex_distance`,
