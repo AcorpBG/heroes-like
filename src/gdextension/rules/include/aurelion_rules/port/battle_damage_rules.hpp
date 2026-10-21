@@ -2,8 +2,8 @@
 
 // scripts/core/BattleDamageRules.gd, ported function by function under the
 // GDScript names (docs/native-rules-engine-transition.md, Phase 1). Layer 2:
-// the attack and defense multiplier, the hero damage multiplier and the town
-// assault side.
+// the hero damage multiplier and the town assault side. The attack and defense
+// multiplier is a shared helper on main (battle_damage_rules_ai.hpp).
 
 #include "aurelion_rules/port/gd.hpp"
 
@@ -19,7 +19,6 @@ using state::Value;
 
 // The effect reads of a stack, the town assault effects and the damage rules'
 // multipliers (spell_effects.cpp).
-double attack_defense_multiplier(int64_t attack_stat, int64_t defense_stat);
 double hero_damage_multiplier(State &state, DictRef attacker_hero, DictRef defender_hero, bool is_ranged, bool is_retaliation, bool is_town_assault);
 Atom town_assault_side(State &state, DictRef battle);
 

@@ -18,7 +18,7 @@
 
 namespace aurelion::rules::ai_search {
 
-constexpr int64_t kBoughtBoat = 4; // AiHeroRules.BOUGHT_BOAT
+constexpr int64_t kBoughtBoat = 4; // a step that buys its boat, added to its kind
 
 struct Lists {
 	const int32_t *offsets = nullptr; // count + 1 entries

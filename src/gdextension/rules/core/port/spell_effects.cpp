@@ -389,25 +389,7 @@ int64_t absorb(State &state, DictRef stack, int64_t damage) {
 namespace aurelion::rules::port::battle_damage_rules {
 
 using compat::engine_max;
-using compat::engine_min;
 using gd::str;
-
-namespace {
-
-constexpr double ATTACK_BONUS_PER_POINT = 0.05;
-constexpr double ATTACK_BONUS_MAX = 3.0;
-constexpr double DEFENSE_REDUCTION_PER_POINT = 0.025;
-constexpr double DEFENSE_REDUCTION_MAX = 0.7;
-
-} // namespace
-
-double attack_defense_multiplier(int64_t attack_stat, int64_t defense_stat) {
-	const int64_t difference = gd::sub(attack_stat, defense_stat);
-	if (difference >= 0) {
-		return 1.0 + engine_min<double>(static_cast<double>(difference) * ATTACK_BONUS_PER_POINT, ATTACK_BONUS_MAX);
-	}
-	return 1.0 - engine_min<double>(static_cast<double>(gd::neg(difference)) * DEFENSE_REDUCTION_PER_POINT, DEFENSE_REDUCTION_MAX);
-}
 
 double hero_damage_multiplier(State &state, DictRef attacker_hero, DictRef defender_hero, bool is_ranged, bool is_retaliation, bool is_town_assault) {
 	int64_t pct = gd::int_field(state, attacker_hero, is_ranged ? static_cast<Atom>(key::ranged_damage_pct) : static_cast<Atom>(key::melee_damage_pct), 0);

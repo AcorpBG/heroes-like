@@ -5,6 +5,7 @@
 namespace aurelion::rules::port {
 
 // Each defined in its subsystem's registry file.
+Table ai_table();
 Table battle_table();
 
 namespace {
@@ -13,6 +14,7 @@ namespace {
 // registry file.
 const std::vector<Table> &all_tables() {
 	static const std::vector<Table> tables = {
+		ai_table(),
 		battle_table(),
 	};
 	return tables;

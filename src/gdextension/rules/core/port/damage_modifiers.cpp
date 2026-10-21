@@ -2,6 +2,7 @@
 
 #include "aurelion_rules/port/battle_ai_rules.hpp"
 #include "aurelion_rules/port/battle_damage_rules.hpp"
+#include "aurelion_rules/port/battle_damage_rules_ai.hpp"
 #include "aurelion_rules/port/battle_rules.hpp"
 #include "aurelion_rules/port/spell_rules.hpp"
 #include "aurelion_rules/port/town_battle_rules.hpp"
@@ -99,7 +100,7 @@ double _damage_modifier(State &state, DictRef attacker, DictRef defender, DictRe
 		defense_stat = gd::add(defense_stat, gd::add(2, gd::int_field(state, defender_hero, key::defend_defense_bonus, 0)));
 	}
 
-	double modifier = battle_damage_rules::attack_defense_multiplier(attack_stat, defense_stat);
+	double modifier = battle_damage_rules::attack_defense_multiplier(state, attack_stat, defense_stat);
 	const int64_t resolved_distance = attack_distance < 0 ? gd::int_field(state, battle, key::distance, 1) : attack_distance;
 	if (is_ranged && gd::string_field(state, battle, key::terrain, key::empty) == key::forest) {
 		modifier *= 0.8;

@@ -3,6 +3,7 @@
 #include "aurelion_rules/port/battle_ai_rules.hpp"
 #include "aurelion_rules/port/battle_rules.hpp"
 #include "aurelion_rules/port/difficulty_rules.hpp"
+#include "aurelion_rules/port/difficulty_rules_ai.hpp"
 #include "aurelion_rules/port/hero_progression_rules.hpp"
 #include "aurelion_rules/port/spell_rules.hpp"
 
@@ -178,39 +179,6 @@ bool ends_with_colon_token(const std::string &text, const std::string &suffix) {
 	}
 	const size_t start = text.size() - length;
 	return text[start] == ':' && text.compare(start + 1, suffix.size(), suffix) == 0;
-}
-
-// The profile of DifficultyRules.DIFFICULTY_PROFILES[id].duplicate(true): a new
-// Dictionary in the const's key order and types.
-DictRef difficulty_profile(State &state, Atom id) {
-	struct Profile {
-		int64_t movement_bonus;
-		double income_multiplier;
-		double reward_multiplier;
-		int64_t enemy_pressure_bonus;
-		int64_t raid_threshold_offset;
-		double raid_pillage_multiplier;
-		double player_damage_multiplier;
-		double enemy_damage_multiplier;
-		int64_t player_initiative_bonus;
-		int64_t enemy_initiative_bonus;
-	};
-	static constexpr Profile kStory{ 2, 1.25, 1.25, -1, 1, 0.75, 1.1, 0.9, 1, 0 };
-	static constexpr Profile kNormal{ 0, 1.0, 1.0, 0, 0, 1.0, 1.0, 1.0, 0, 0 };
-	static constexpr Profile kHard{ -1, 0.85, 0.85, 1, -1, 1.25, 0.95, 1.05, 0, 1 };
-	const Profile &profile = id == key::story ? kStory : (id == key::hard ? kHard : kNormal);
-	const DictRef result = state.new_dict();
-	state.set(result, str(key::movement_bonus), int_value(profile.movement_bonus));
-	state.set(result, str(key::income_multiplier), gd::float_value(profile.income_multiplier));
-	state.set(result, str(key::reward_multiplier), gd::float_value(profile.reward_multiplier));
-	state.set(result, str(key::enemy_pressure_bonus), int_value(profile.enemy_pressure_bonus));
-	state.set(result, str(key::raid_threshold_offset), int_value(profile.raid_threshold_offset));
-	state.set(result, str(key::raid_pillage_multiplier), gd::float_value(profile.raid_pillage_multiplier));
-	state.set(result, str(key::player_damage_multiplier), gd::float_value(profile.player_damage_multiplier));
-	state.set(result, str(key::enemy_damage_multiplier), gd::float_value(profile.enemy_damage_multiplier));
-	state.set(result, str(key::player_initiative_bonus), int_value(profile.player_initiative_bonus));
-	state.set(result, str(key::enemy_initiative_bonus), int_value(profile.enemy_initiative_bonus));
-	return result;
 }
 
 // `for trait_value in source: var trait_id = String(trait_value); if trait_id != ""
@@ -607,22 +575,6 @@ int64_t initiative_bonus_for_side(State &state, const Value &session, Atom side)
 	const DictRef profile = profile_for_session(state, session);
 	const Atom field = side == key::player ? key::player_initiative_bonus : key::enemy_initiative_bonus;
 	return gd::int_field(state, profile, field, 0);
-}
-
-DictRef profile_for_session(State &state, const Value &session) {
-	if (session.kind == state::Kind::Nil) {
-		return profile_for_difficulty(state, str(_default_difficulty_id(state)));
-	}
-	return profile_for_difficulty(state, gd::member(state, session, key::difficulty));
-}
-
-DictRef profile_for_difficulty(State &state, const Value &difficulty_id) {
-	const Atom normalized_id = normalize_difficulty(state, difficulty_id);
-	// DIFFICULTY_PROFILES.get(normalized_id, DIFFICULTY_PROFILES[_default_difficulty_id()]).duplicate(true):
-	// normalize_difficulty only answers the profiles' own ids.
-	const Atom fallback_id = _default_difficulty_id(state);
-	const bool known = normalized_id == key::story || normalized_id == key::normal || normalized_id == key::hard;
-	return difficulty_profile(state, known ? normalized_id : fallback_id);
 }
 
 } // namespace difficulty_rules

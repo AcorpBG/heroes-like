@@ -2,9 +2,11 @@
 
 #include "aurelion_rules/port/battle_ai_rules.hpp"
 #include "aurelion_rules/port/battle_damage_rules.hpp"
+#include "aurelion_rules/port/battle_damage_rules_ai.hpp"
 #include "aurelion_rules/port/battle_footprint.hpp"
 #include "aurelion_rules/port/battle_rules.hpp"
 #include "aurelion_rules/port/difficulty_rules.hpp"
+#include "aurelion_rules/port/difficulty_rules_ai.hpp"
 #include "aurelion_rules/port/hero_progression_rules.hpp"
 #include "aurelion_rules/port/spell_rules.hpp"
 #include "aurelion_rules/port/town_battle_rules.hpp"
@@ -103,7 +105,7 @@ const Function kFunctions[] = {
 	PORT(BattleAiRules, _stack_is_engaged, 2, true, return bool_value(ai::_stack_is_engaged(s, D(a, 0), D(a, 1)))),
 	PORT(BattleAiRules, faction_brings_tag, 2, false, return bool_value(ai::faction_brings_tag(s, D(a, 0), S(a, 1)))),
 	PORT(BattleAiRules, faction_brought_tags, 1, false, return array_value(ai::faction_brought_tags(s, D(a, 0)))),
-	PORT(BattleDamageRules, attack_defense_multiplier, 2, false, return float_value(dmg::attack_defense_multiplier(I(a, 0), I(a, 1)))),
+	PORT(BattleDamageRules, attack_defense_multiplier, 2, false, return float_value(dmg::attack_defense_multiplier(s, I(a, 0), I(a, 1)))),
 	PORT(BattleDamageRules, hero_damage_multiplier, 5, false, return float_value(dmg::hero_damage_multiplier(s, D(a, 0), D(a, 1), B(a, 2), B(a, 3), B(a, 4)))),
 	PORT(BattleDamageRules, town_assault_side, 1, false, return str(dmg::town_assault_side(s, D(a, 0)))),
 	PORT(BattleFootprint, cells, 2, false, return array_value(fp::cells(s, D(a, 0), dict_value(D(a, 1))))),

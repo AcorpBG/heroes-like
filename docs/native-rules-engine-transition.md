@@ -1053,18 +1053,17 @@ merged to main once its games are identical. G3 is skipped for it.
   - `rules_parity.py check` against main: identical on 6/6 seeds (415 daily digests and the match records);
   - core suite 17/17 on Windows.
 
-**AI targets** (started 2026-10-21, branch `native-phase3-ai-targets`; owner decision 2026-10-21: `_vetted_candidate`
-and `_gate_candidate` in C++ with the shared runtime, games identical):
+**AI targets** (completed 2026-10-21, branch `native-phase3-ai-targets` merged; owner decision 2026-10-21:
+`_vetted_candidate` and `_gate_candidate` in C++ with the shared runtime, games identical; owner decision 2026-10-21:
+merged although whole games got no faster):
 - Profile on main 37d547fac, six seeds: `_vetted_candidate` takes 20.5% of match time and `_gate_candidate` 6.7% (15.6%
   on l2, 12.5% on mg-b). Under them the battle previews take 8.4%, `_search` 0.9% and the scoring 17.8%.
 - Boundary: `_best_candidate` and `_gate_candidate` run native. `_vetted_candidate` keeps its veto loop in GDScript,
-  because its previews (`_fight_looks_good`, `_simulate_battle`) are Phase 1's battle engine. Switch
-  `HEROES_NATIVE_AI=gdscript|native|shadow`, log `HEROES_NATIVE_AI_LOG`, registry `core/port/ai_registry.cpp`, keys
-  `ai_keys.inc`.
+  because its previews (`_fight_looks_good`, `_simulate_battle`) are Phase 1's battle engine.
 - Shared helpers (coordinator, 2026-10-21): ports of other scripts' functions live on main in their own files, one
   namespace per script, with nothing on main switched to them; each helper has one owner, claimed in the coordination
   notes, and the branch that first switches it proves it in shadow mode.
-- Moved, and frozen until the merge: the static call closure of the two entries, 445 functions, 7,188 lines:
+- The static call closure of the two entries, 445 functions, 7,188 lines, frozen from the slice's start to the merge:
   - AiHeroRules (135): `_add_guard_position`, `_add_stop`, `_add_stop_index`, `_apply_power_terms`, `_artifact_guard`, `_avoided_today`, `_best_candidate`, `_beyond_gate`, `_beyond_key`, `_boat_market`, `_boat_price`, `_build_value`, `_burst_share`, `_can_afford`, `_can_hire_any`, `_candidate`, `_damage_spell_figures`, `_dangers`, `_decision_field_ids`, `_decision_main_id`, `_decision_site_pass`, `_deters`, `_encounter_candidate`, `_encounter_guard_index`, `_entry_index`, `_expected_loss_value`, `_exploration_candidate`, `_explore_value`, `_explored`, `_far_ahead`, `_ferries_from`, `_field_hero_ids`, `_garrison_pickup`, `_gate_candidate`, `_gate_far_dist`, `_gate_routes`, `_guard_fight_value`, `_guard_positions`, `_guard_power`, `_guarded_node_value`, `_guarded_object_value`, `_guards_tile`, `_hero_guards`, `_hero_war_key`, `_hero_war_value`, `_hero_zone_tiles`, `_hostile_heroes`, `_hunt_value`, `_in_danger`, `_in_hero_zone`, `_last_stand_share`, `_leave_defense`, `_level_regions`, `_level_stretches`, `_level_surface`, `_main_hero_id`, `_main_shortfall`, `_market_cover`, `_market_trade`, `_meet_candidate`, `_merge_stacks_into`, `_movement_max`, `_neutral_army`, `_note_alternative`, `_open_guard_zones`, `_opened_value`, `_overworld_rules`, `_own_town_doors`, `_passage_value`, `_patch_root`, `_path_to`, `_payload_value`, `_plans_far`, `_player_hero_seen`, `_portal_exits`, `_portal_leads_unseen`, `_position_seen`, `_profile_add`, `_recruit_dict`, `_recruit_set_value`, `_resolved_lookup`, `_resource_candidate`, `_resource_guarded`, `_resource_needs`, `_rival_town_within`, `_rival_towns_unknown`, `_route_gate_open`, `_route_loss_limit`, `_route_map`, `_route_through`, `_route_towns`, `_route_unseen`, `_search`, `_search_tables`, `_sight_context`, `_site_artifact_value`, `_site_door_key`, `_site_door_value`, `_site_doors`, `_site_pass_class`, `_site_spell_value`, `_site_stop_passable`, `_spell_burst`, `_spell_damage_per_round`, `_split_for_handover`, `_step_offsets`, `_stretch_key`, `_strongest_threat`, `_sync_power_memos`, `_sync_site_pass_memo`, `_threatened_town_share`, `_tile_index_of`, `_tile_span`, `_town_candidate`, `_town_defense_need`, `_town_entrance_free`, `_town_hero_defender_index`, `_town_rules`, `_town_seen`, `_town_threatened`, `_town_worth`, `_townless_raider`, `_towns_held_by`, `_trial_growth`, `_turn_rules`, `_unit_power`, `_unit_power_figures`, `_war_paths`, `_weakest_stack_index`, `_would_hold_gate`, `_zone_guarded`, `active_hero_entries`, `army_power`, `hero_power`, `is_ai_hero`.
   - OverworldRules (113): `_add_resource_sets`, `_ai_hero_guards_against_player`, `_append_building_with_requirements`, `_append_generated_body_tiles_to_blocked_index`, `_append_spatial_lookup_entry`, `_apply_resource_percent_scale`, `_blocked_scenery_layer`, `_build_blocked_scenery_layer`, `_build_blocked_tile_index`, `_build_spatial_lookup_index`, `_build_spatial_resource_section`, `_build_status_copy`, `_building_category`, `_building_category_counts`, `_calculate_town_income`, `_collection_size`, `_compute_town_logistics_state`, `_default_logistics_requirements_for_role`, `_default_logistics_support_radius`, `_economy_profile_income`, `_empty_live_resource_stockpile`, `_empty_market_usage_bucket`, `_empty_town_logistics_state`, `_encounter_has_guard_engagement_surface`, `_encounter_neutral_metadata`, `_find_guard_engagement_at_tile`, `_generated_body_tiles_for_placement`, `_guard_engagement_world_tiles`, `_map_object_blocks_body_tiles`, `_map_object_footprint_origin`, `_map_object_for_resource_node`, `_map_object_world_body_tiles`, `_map_object_world_interaction_tiles`, `_market_bulk_resources`, `_market_cap_state_for_quote`, `_market_caps_for_profile`, `_market_quote_from_state`, `_market_rate_adjustment`, `_market_resource_abundance_score`, `_market_value_scale`, `_missing_build_requirements_among`, `_multiply_cost`, `_normalize_built_buildings_for_town_state`, `_normalize_market_usage_bucket`, `_normalize_recruit_payload`, `_normalize_resource_dict`, `_normalize_support_requirements`, `_normalize_town_market_usage_state`, `_normalize_town_occupation_state`, `_read_scope_town_digest`, `_recruit_payload_total`, `_resolved_lookup_entry`, `_resource_node_blocks_body_tiles`, `_resource_node_has_runtime_object_contract`, `_resource_node_has_runtime_visit_tile`, `_resource_node_linked_town`, `_resource_node_world_interaction_tiles`, `_resource_site_delivery_line`, `_resource_site_delivery_state`, `_resource_site_family_short_label`, `_resource_site_guard_link_for_encounter`, `_resource_site_is_persistent`, `_resource_site_is_repeatable`, `_resource_site_response_state`, `_resource_site_spell_ids`, `_resource_site_town_support`, `_resource_site_under_threat`, `_seed_recruits_for_town`, `_seed_scenario_recruits_for_town_state`, `_spatial_lookup_entries`, `_spatial_lookup_index`, `_spatial_lookup_signature`, `_spatial_resource_section`, `_support_requirement_progress`, `_terrain_id_is_passable_uncached`, `_tile_key`, `_town_build_context`, `_town_build_status`, `_town_build_status_in`, `_town_content_read_scope_key`, `_town_controller_id`, `_town_entrance_at`, `_town_faction_id`, `_town_logistics_gap_penalties`, `_town_logistics_plan`, `_town_logistics_state`, `_town_market_state`, `_town_name`, `_town_occupation_front_proxy`, `_town_occupation_relief_per_day`, `_town_occupation_state`, `_town_pressure_label`, `_town_read_scope_cache_get`, `_town_read_scope_cache_has`, `_town_read_scope_cache_key`, `_town_read_scope_cache_store`, `_town_recovery_state`, `_town_strategic_role`, `_week_of_day`, `_world_tiles_from_payload_array`, `derive_map_size`, `encounter_key`, `get_town_build_options`, `get_town_build_status`, `hero_guard_zone_tiles`, `is_encounter_resolved`, `resolved_encounter_lookup`, `resource_definition`, `resource_node_is_present`, `resource_site_blocking_guard`, `terrain_id_is_passable`, `town_income`, `town_market_state`.
   - ContentService (26): `_build_biome_terrain_index`, `_build_map_object_site_index`, `_indexed_content_row`, `_items_from_raw`, `_map_object_footprint_area`, `_scan_biome_for_terrain`, `canonical_town_id`, `default_ai_hero_weights`, `get_army_group`, `get_artifact`, `get_biome_for_terrain`, `get_building`, `get_content_by_id`, `get_content_revision`, `get_encounter`, `get_faction`, `get_hero`, `get_map_object`, `get_map_object_for_resource_site`, `get_resource`, `get_resource_site`, `get_spell`, `get_town`, `get_unit`, `load_json`, `normalize_terrain_id`.
@@ -1090,6 +1089,45 @@ and `_gate_candidate` in C++ with the shared runtime, games identical):
   - MineRules (4): `block_tiles`, `entry_tile`, `origin`, `resource`.
   - ScenarioSelectRules (2): `default_difficulty_id`, `normalize_difficulty`.
   - BattleDamageRules (1): `attack_defense_multiplier`.
+- What runs native: the whole closure, in `core/port/ai_hero_rules_*.cpp` and one `<script>_ai.cpp` per other script
+  beside Phase 5's `<script>.cpp` (the coordination notes name each function's file). Registry `core/port/ai_registry.cpp`
+  (64 entries), keys `ai_keys.inc`. `AiEngine.gd` makes a session's view and calls the port; a call that reaches a path
+  the port leaves out prints an error. The `HEROES_NATIVE_AI` switch and shadow mode went with the merge;
+  `HEROES_NATIVE_AI_LOG` still collects the port's call and not-ported counts.
+  - AiHeroRules: 131 functions' GDScript is deleted. 64 of them (the entries and 62 that GDScript outside the closure
+    still calls, such as `_search`, `_candidate`, `army_power`) are wrappers that call their native port.
+  - EnemyAdventureRules `_find_artifact_by_placement`: deleted (no caller left).
+  - Two copies: the closure's other 313 functions keep their GDScript, which day processing, the UI and the battle
+    code still call, beside the C++ port the AI calls. 214 were ported and switched here (OverworldRules 92,
+    CreatureDwellingRules 20, HeroCommandRules 14, TownDevelopmentRules 14, EnemyAdventureRules 13, TownRules 13,
+    VisitBuildingRules 11, PlayerIdentityRules 8, 9 more 29; AiHeroRules `is_ai_hero` among them), 63 are Phase 5's
+    shared helpers, 26 ContentService reads, and 10 more: BattleRules 2, SpellRules 2 and BattleDamageRules 1 (frozen
+    until Phase 1's merge), AiHeroRules' 3 script loaders and ScenarioSelectRules 2. A behaviour change to one of them
+    changes both copies (AGENTS.md), until its script's port deletes the GDScript.
+  - The ported functions keep their static vars (the weights, memos and caches) in their scripts, where the port reads
+    and writes them, so those declarations stay.
+  - Runtime on main first (cba124b9c): the engine's pow, exp and log for ported code, calls of up to 16 arguments.
+  - Paths the port leaves out, none of which the AI reaches: non-ASCII `to_lower`/`to_upper` (shipped content is ASCII
+    where the AI lowercases), `_market_ratio_text` of a fraction (only with texts, which the AI never asks for), the
+    read-scope town digest and cache key (no read scope is open during an AI turn), `_town_occupation_relief_per_day`
+    with no front (its one caller always passes one), packed arrays where GDScript converts them to Array.
+- Speed: whole games are not measurably faster. Six seeds at once, editor binary, in the order main, change, change,
+  main, on a machine shared with other sessions' runs: 804, 868, 860 and 844 s; the final parity check, both sides at
+  once, took 911 s on main and 864 s with the change. Profiled on l1, l2 and mg-a: `_choose_plan` went
+  from 236 to 197 s, `_best_candidate` from 105 to 40 s and `_gate_candidate` from 39 to 24 s, but the 1.65M calls
+  from GDScript into the port take 151 s. The bridge loads a call's arguments lazily and starts empty on every call,
+  so each call reads the session from Godot again. Of 141 s in the port, 64 s are 240M Dictionary reads (266 ns
+  each), 13 s Array reads, 17 s whole-container fills, 5 s content rows and statics, and 14 s the calls' start and
+  write-back; the C++ work itself is about 25 s. Within one call 48% of the Dictionary reads and 31% of the Array
+  reads repeat, so a per-call read cache would save about 3 to 5% of match time. The gain needs the session loaded
+  once per faction turn (Phase 4).
+- Checks:
+  - shadow mode on the six seeds with all 346 ported functions switched: 94,431,208 checks, 0 mismatches, 0 errors,
+    0 not ported; 307 of the 346 are called from GDScript, the other 39 only from other ported functions;
+  - `rules_parity.py compare` of the measured runs against main: identical on 6/6 seeds (415 daily digests and the
+    match records); `rules_parity.py check` against main 4ea29c0dd after the rebase: identical on 6/6 seeds (415
+    daily digests and the match records);
+  - core suite 17/17 on Windows. The Linux libraries in `bin/` wait for the Linux pass.
 
 ### Gate G3: re-plan from measurements
 

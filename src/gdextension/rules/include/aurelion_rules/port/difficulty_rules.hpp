@@ -3,7 +3,8 @@
 // scripts/core/DifficultyRules.gd, ported function by function under the
 // GDScript names (docs/native-rules-engine-transition.md). Phase 1, layer 2:
 // the battle initiative and damage of a session's difficulty. The difficulty
-// id is a shared helper on main (difficulty_rules.cpp).
+// id (difficulty_rules.cpp) and the difficulty profiles (difficulty_rules_ai.hpp)
+// are shared helpers on main.
 // ScenarioSelectRules' default_difficulty_id and normalize_difficulty are
 // inlined: _scenario_select_rules returns the script, so it is not ported.
 
@@ -23,8 +24,6 @@ using state::Value;
 // difficulty terms (commander_payload.cpp).
 double damage_multiplier_for_side(State &state, const Value &session, Atom side);
 int64_t initiative_bonus_for_side(State &state, const Value &session, Atom side);
-DictRef profile_for_session(State &state, const Value &session);
-DictRef profile_for_difficulty(State &state, const Value &difficulty_id);
 
 // A difficulty id (difficulty_rules.cpp).
 Atom _default_difficulty_id(State &state);
