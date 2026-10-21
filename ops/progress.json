@@ -116293,6 +116293,19 @@
       ],
       "notes": "Owner decision 2026-10-21: beside Phase 1 on branch native-phase3-search, merged to main when its games are identical, G3 skipped, Windows only, lean checks. Completed 2026-10-21: AiHeroRules._search calls ai_search_masks and ai_search_walk (core/ai_search.cpp, rules API 2); GDScript keeps the pending site stops (_site_stop_passable) and the stop refs; _hold_step removed. Measured on the six seeds (main, change, change, main): _search 68.0 to 35.1 s in total (1.94x), whole games 778 to 725 s. Checks: shadow mode 18,211 calls with 0 differences, rules_selftest 58 vectors and a 3,000-board sweep, rules_parity check identical on 6/6 seeds against main, core suite 17/17 on Windows. Linux libraries wait for the Linux pass.",
       "updatedAt": "2026-10-21T22:00:00Z"
+    },
+    {
+      "id": "native-rules-phase3-ai-targets-20261021",
+      "title": "Native AiHeroRules._best_candidate and _gate_candidate (Phase 3)",
+      "status": "in_progress",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Owner decision 2026-10-21: port _vetted_candidate and _gate_candidate with the shared runtime on branch native-phase3-ai-targets, games identical, Windows only, lean checks. Started 2026-10-21: profile on main 37d547fac, six seeds: _vetted_candidate 20.5% of match time, _gate_candidate 6.7%; under them battle previews 8.4% (stay GDScript), _search 0.9%, scoring 17.8%. Native entries _best_candidate and _gate_candidate; static closure 445 functions, 7,188 lines, frozen until the merge. Shared helpers go to main unswitched, one owner each (coordination notes).",
+      "updatedAt": "2026-10-21T23:00:00Z"
     }
   ],
   "project": "heroes-like",

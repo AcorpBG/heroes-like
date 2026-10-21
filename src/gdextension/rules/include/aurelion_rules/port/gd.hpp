@@ -8,9 +8,12 @@
 
 #include "aurelion_rules/battle_state.hpp"
 #include "aurelion_rules/compat/godot_math.hpp"
+#include "aurelion_rules/compat/sort_array.hpp"
 
 #include <cstdint>
+#include <initializer_list>
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace aurelion::rules::gd {
@@ -216,6 +219,24 @@ ArrayRef deep_duplicate_array(State &state, ArrayRef array);
 // x.duplicate(deep) of an untyped value: containers copied, others as they are.
 Value duplicate_value(State &state, const Value &value, bool deep);
 inline bool is_empty(const State &state, DictRef dict) { return state.dict_size(dict) == 0; }
+// a.slice(begin, end): a new Array with a's element type (Array::slice; the
+// bounds are Godot's 32-bit ints, and a step against the bounds prints an
+// error and answers an empty Array).
+ArrayRef slice(State &state, ArrayRef array, int64_t begin, int64_t end = 2147483647);
+// a.sort_custom(func(x, y): return less(x, y)) with Godot's unstable introsort
+// (compat/sort_array.hpp). A read-only Array prints an error and stays as it is.
+template <typename Less>
+void sort_custom(State &state, ArrayRef array, Less less) {
+	if (state.array(array).read_only) {
+		state.print_error("Array is in read-only state.");
+		return;
+	}
+	state::ValueList items = state.array(array).items;
+	compat::sort_custom(items.begin(), static_cast<int64_t>(items.size()), std::move(less));
+	state::ArrayNode &node = state.array_node(array);
+	node.items = std::move(items);
+	node.dirty = true;
+}
 
 // "%d,%d" % [a, b] for ints.
 std::string format_pair(int64_t a, int64_t b);
@@ -231,6 +252,18 @@ bool ends_with(const State &state, Atom text, Atom suffix);
 Atom stringify(State &state, const Value &value);
 // x.is_valid_int() and int(x) of a String.
 bool is_valid_int(const State &state, Atom text);
+// pattern % values (String::sprintf) with the conversions the ported code
+// uses: %s is String(value) as stringify() converts it, %d an int or a float
+// truncated, %% a percent sign. Flags, widths and the other conversions throw
+// "not ported". A format error (a missing, extra or non-number value) prints
+// "String formatting error" and answers the pattern, as Godot's validated
+// operator does.
+Atom format(State &state, Atom pattern, std::initializer_list<Value> values);
+// s.capitalize() of ASCII text (other text throws: the Unicode case tables
+// are not ported), s.replace(key, with) and s.trim_prefix(prefix).
+Atom capitalize(State &state, Atom text);
+Atom replace(State &state, Atom text, Atom key, Atom with);
+Atom trim_prefix(State &state, Atom text, Atom prefix);
 
 // object.property of an object value (an opaque Variant): the host reads it.
 Value member(State &state, const Value &object, Atom property);

@@ -299,6 +299,18 @@ Value PortBridge::content_row(state::State &state, state::ContentTable table, ui
 		case state::ContentTable::Scenario:
 			method = "get_scenario_readonly";
 			break;
+		case state::ContentTable::Resource:
+			method = "get_resource";
+			break;
+		case state::ContentTable::MapObjectForResourceSite:
+			method = "get_map_object_for_resource_site";
+			break;
+		case state::ContentTable::BiomeForTerrain:
+			method = "get_biome_for_terrain";
+			break;
+		case state::ContentTable::TerrainLayersForScenario:
+			method = "get_terrain_layers_for_scenario";
+			break;
 	}
 	const uint64_t memo = (static_cast<uint64_t>(table) + 1) << 32 | id;
 	const auto found = content_.find(memo);
@@ -308,7 +320,8 @@ Value PortBridge::content_row(state::State &state, state::ContentTable table, ui
 	const std::string &text = state.text(id);
 	const Variant row = content_service()->call(StringName(method), String::utf8(text.data(), static_cast<int64_t>(text.size())));
 	const Value loaded = load(row);
-	if (loaded.kind == Kind::Dict && state.dict_size(loaded.ref) != 0) {
+	// Terrain layers are a new copy on every call, so they are asked for again.
+	if (loaded.kind == Kind::Dict && state.dict_size(loaded.ref) != 0 && table != state::ContentTable::TerrainLayersForScenario) {
 		content_.emplace(memo, loaded);
 	}
 	return loaded;

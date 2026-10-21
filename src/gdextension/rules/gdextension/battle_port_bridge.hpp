@@ -17,8 +17,8 @@
 // rows from the ContentService autoload, loaded as the containers they are.
 // A row or document is asked for once per call: within a call no GDScript
 // runs, so ContentService would return the same object again. Its empty
-// results (an unknown id, a missing file) are new objects each time, so they
-// are asked for again.
+// results (an unknown id, a missing file) and a scenario's terrain layers are
+// new objects each time, so they are asked for again.
 //
 // diff() compares the native result with GDScript's: the same types (int and
 // float, String and StringName apart), the same key order, typing and
