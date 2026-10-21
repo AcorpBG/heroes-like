@@ -82,6 +82,11 @@ DictRef profile_for_session(State &state, const Value &session) {
 	if (session.kind == Kind::Nil) {
 		return profile_for_difficulty(state, str(_default_difficulty_id(state)));
 	}
+	// session.difficulty: the AI targets pass the session's view, the battle port
+	// the SessionData object.
+	if (session.kind == Kind::Opaque) {
+		return profile_for_difficulty(state, gd::member(state, session, key::difficulty));
+	}
 	return profile_for_difficulty(state, gd::index(state, gd::as_dict(session), str(key::difficulty)));
 }
 

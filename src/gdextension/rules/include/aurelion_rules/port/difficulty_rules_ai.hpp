@@ -23,7 +23,8 @@ using state::Value;
 
 // Ported in difficulty_rules_ai.cpp.
 DictRef profile_for_difficulty(State &state, const Value &difficulty_id);
-// A null session is GDScript's null SessionData.
+// A null session is GDScript's null SessionData. The battle port passes the
+// SessionData object itself, not its view.
 DictRef profile_for_session(State &state, const Value &session);
 int64_t movement_bonus(State &state, const Value &session);
 
