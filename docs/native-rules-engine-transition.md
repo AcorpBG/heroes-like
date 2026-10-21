@@ -1022,6 +1022,23 @@ a20d0c371):
   - Core suite: 17/17 on Windows.
   - The Linux libraries in `bin/` are not rebuilt.
 
+**Layers 6 and 7: the pressure of an advance and a defend, the melee approach, the town defences** (slice 06,
+2026-10-22; branch commits b888d2336 port, 649d181a7 Windows binaries; merge of main 6924ce383):
+- **Ported:** 5 functions, 80 lines. The rest of layers 6 and 7 came earlier: the damage pressure and the field
+  objectives in 05, the town effects in 02 to 04.
+  - BattleRules 4/79: `_apply_advance_pressure`, `_apply_defend_pressure`, `_apply_melee_approach` (from 03) and
+    `_is_town_assault_context`.
+  - TownBattleRules `spell_resistance`, 1/1.
+- **Moved:** BattleAiRules' layer 6 copy `_field_objective_action_influence` (97 lines) stays with the other copies for
+  08.
+- **Review:** a review against the GDScript found no divergence.
+- **Checks:**
+  - Shadow on the six seeds: 0 mismatches, 0 errors and 0 paths left to GDScript in 63,734,372 checks over 335 of the
+    344 functions. 65,069 of them are slice 06's, over all 5.
+  - Native mode against main: every daily digest (415) and match record of the six seeds is identical.
+  - Core suite: 17/17 on Windows.
+  - The Linux libraries in `bin/` are not rebuilt.
+
 ### Phase 2: one payload builder, AI preview as one call, the battle tool
 
 - Battle payload creation (`BattleRules.gd:256-402`), stack and hero payloads, obstacles, and the end-of-battle numbers
@@ -1335,26 +1352,28 @@ and are not frozen by this slice.
 
 **Slice 02, frozen functions** (2026-10-22, until the Phase 5 merge; AGENTS.md): the day's economy steps of
 `OverworldRules.end_turn` (town occupation and recovery, town, hero and site income, site musters, reserve deliveries,
-difficulty scaling) and what they run in AI matches beyond the earlier slices' functions and Phase 3's, 18 functions.
-OverworldRules 15: `_add_resources`, `_advance_all_town_occupations`, `_advance_all_town_recovery`,
-`_advance_player_reserve_deliveries`, `_describe_recruit_delta`, `_player_hero_states`, `_player_heroes_daily_income`,
-`_refresh_all_player_heroes_for_new_day`, `_resource_node_matches_controller`, `_resource_site_control_income_for_day`,
-`_resource_site_delivery_target_label`, `_resource_site_weekly_recruits`, `_weighted_recruit_value`,
-`apply_controlled_resource_site_musters`, `controlled_resource_site_income`. DifficultyRules 3: `_scale_amount`,
-`scale_income_resources`, `scale_resource_payload`. Two of them, `_describe_recruit_delta` and
-`_weighted_recruit_value`, are also private helpers in Phase 3's port (`overworld_rules_ai_sites.cpp`); those copies
+difficulty scaling) and what they run in AI matches beyond the earlier slices' functions and Phase 3's, 24 functions.
+OverworldRules 19: `_add_recruit_growth`, `_add_resources`, `_advance_all_town_occupations`,
+`_advance_all_town_recovery`, `_advance_player_reserve_deliveries`, `_clear_resource_site_delivery`,
+`_describe_recruit_delta`, `_find_encounter_by_placement`, `_movement_max_from_hero`, `_player_hero_states`,
+`_player_heroes_daily_income`, `_refresh_all_player_heroes_for_new_day`, `_resource_node_matches_controller`,
+`_resource_site_control_income_for_day`, `_resource_site_delivery_target_label`, `_resource_site_weekly_recruits`,
+`_weighted_recruit_value`, `apply_controlled_resource_site_musters`, `controlled_resource_site_income`. DifficultyRules
+3: `_scale_amount`, `scale_income_resources`, `scale_resource_payload`. SpellRules 1: `refresh_daily_mana`.
+HeroProgressionRules 1: `daily_income_bonus`. Three of them, `_describe_recruit_delta`, `_find_encounter_by_placement`
+and `_weighted_recruit_value`, are also private helpers in Phase 3's port (`overworld_rules_ai_sites.cpp`); those copies
 fold into Phase 5's at its merge. The paths AI matches never run stay GDScript and are not frozen by this slice.
 
 **Slice 07, frozen functions** (2026-10-22, until the Phase 5 merge; AGENTS.md): `OverworldRules.end_turn` and
 `_finalize_action_result` (every caller) and what they run in AI matches beyond the earlier slices' functions and Phase
-3's, 21 functions. OverworldRules 14: `_compact_enemy_activity_events`, `_describe_resource_delta`,
+3's, 21 functions. OverworldRules 15: `_compact_enemy_activity_events`, `_describe_resource_delta`,
 `_end_turn_muster_summary`, `_end_turn_resolution_summary`, `_end_turn_town_economy_summary`, `_enemy_activity_line`,
 `_enemy_activity_public_text`, `_evaluate_scenario_state`, `_finalize_action_result`, `_resource_keys_for_payload`,
-`_short_player_text`, `describe_enemy_activity`, `end_turn`, `is_weekly_growth_day`. EnemyAdventureRules 5:
-`_public_event_log_text`, `_public_reason_from_codes`, `ai_public_event_log`, `ai_public_event_log_entry`,
-`ai_public_event_log_leak_check`. HeroProgressionRules 2: `pending_choices_remaining`, `rank_label`. The port splits
-`end_turn` around the AI turn (`_run_enemy_turn_cycle`) into two native calls; the paths AI matches never run stay
-GDScript and are not frozen by this slice.
+`_reveal_current_fog_sources`, `_short_player_text`, `describe_enemy_activity`, `end_turn`, `is_weekly_growth_day`.
+EnemyAdventureRules 6: `_ai_event_summary`, `_public_event_log_text`, `_public_reason_from_codes`,
+`ai_public_event_log`, `ai_public_event_log_entry`, `ai_public_event_log_leak_check`. The port splits `end_turn` around
+the AI turn (`_run_enemy_turn_cycle`) into two native calls; the paths AI matches never run stay GDScript and are not
+frozen by this slice.
 
 **Inventory and boundary** (2026-10-21, main 6d7471276; every function of `scripts/core` and ContentService probed on
 the six seeds; times from l1, a large four-player game to day 90, on a machine shared with Phase 1's runs):
