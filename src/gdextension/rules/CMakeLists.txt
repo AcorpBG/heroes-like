@@ -97,7 +97,15 @@ add_library(aurelion_rules_core STATIC
 	core/battle_state.cpp
 	core/build_info.cpp
 	core/compat/godot_string.cpp
+	core/port/artifact_rules.cpp
+	core/port/common_mine_rules.cpp
 	core/port/gd.cpp
+	core/port/hero_command_rules.cpp
+	core/port/hero_progression_rules.cpp
+	core/port/mine_rules.cpp
+	core/port/native_transit_rules.cpp
+	core/port/overworld_level_rules.cpp
+	core/port/overworld_rules.cpp
 	core/port/registry_tables.cpp
 )
 add_dependencies(aurelion_rules_core aurelion_rules_source_tree)

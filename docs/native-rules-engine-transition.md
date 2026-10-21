@@ -845,6 +845,20 @@ a78100003 without the battle port:
   `tools/native_battle_switch.py --subsystem` touches only the switches that read that subsystem's mode.
 - Nothing on main calls it. Checks: core suite 17/17 on Windows, `rules_selftest` digests unchanged.
 
+**Shared helpers from Phase 5** (2026-10-21): following the shared-helper rule (Phase 3, "AI targets"), Phase 5's
+ports of the 63 functions Phase 3's AI targets also reach moved here from `native-phase5-day`, unswitched on main:
+OverworldRules 21 (the map size, the blocked-tile index with its cached scenery layers and resolved-encounter set,
+resource-node presence, the recruit payload), ArtifactRules 17, HeroProgressionRules 8 (Phase 1's port, copied),
+OverworldLevelRules 7, CommonMineRules 5, MineRules 3, HeroCommandRules 1, NativeTransitRules 1, and 4 day-only
+functions that share their files. They live in `core/port/<script>.cpp` and `include/aurelion_rules/port/<script>.hpp`,
+their keys in `day_keys.inc`. A function that takes a session takes its view (`session_view.hpp`: SessionData's fields,
+its metadata under "meta"). Shadow mode on the six seeds checked them on the branch, 0 mismatches.
+- Also here, the runtime for paths a port leaves to GDScript: a native function throws `state::NotPorted` before any
+  host side effect; the call writes nothing back, `port_not_ported()` is true, the stats count it as `not_ported`,
+  and the switch generator writes a GDScript fallback for subsystems marked `fallback` (day only).
+- Phase 1 takes `hero_progression_rules` and the keys `day_keys.inc` shares with its branch from main and drops its
+  copies (in `commander_payload.cpp` and its `battle_keys.inc`).
+
 **Inventory and boundary** (2026-10-21, main 6d7471276; every function of `scripts/core` and ContentService probed on
 the six seeds; times from l1, a large four-player game to day 90, on a machine shared with Phase 1's runs):
 - Reach: the Phase 5 entries reach 440 functions, 6,020 lines; 311 of them also run outside day processing, nearly all
