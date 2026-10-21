@@ -395,6 +395,8 @@ Release packaging still stops on the 4.7 GB export pack, which predates the rule
       leaves out the GDScript event formatter, which is unmeasured and probably under 1% of T_gd.
   - The formal G1 follows layer 4, with r per layer from the same replay harness. Per-call native-mode run times and
     single-function benchmarks are not G1: they time the per-call bridge, which the native loop does not have.
+  - Formal G1, 2026-10-21 ("Formal G1 after layer 4"): S is 3.47 to 4.98, under 5x on both corpora. Layers 2 and 4
+    are at r of about 4. The owner decides.
 - **Identity:** per-action stream (order taken, RNG state and roll count, simulation-key digest) on the tuner suites,
   every AI battle in the six seeds, and JSON round-tripped payloads; shadow mode on every resolve; daily digests; the
   payload corpus across compilers; mid-battle save/load both ways between the native build and the tagged pre-merge
@@ -697,6 +699,77 @@ every function run inside `resolve_active_battle`, with `_finalize_*` left out. 
   - Core suite: 17/17 on Windows.
   - The Linux libraries in `bin/` are not rebuilt.
 
+**Layers 3 and 4** (slices 03 and 04, 2026-10-21; branch commits e4a7cc61e port, 4c5a72917 Windows binaries):
+- **Ported together,** since their functions call each other: 90 functions, 1,614 GDScript lines.
+  - Slice 03, movement and targeting, 48/758. BattleRules 47/755: board setup (hex state, deployment, formation rows,
+    the stack hex and its walk path), movement points and rooting, legal destinations, the melee approach, the advance
+    rules, attack legality and reach, and the legal and selected targets with their legality, click intent,
+    continuity and closing context. TownBattleRules `movement_penalty` 1/3.
+  - Slice 04, turn order and effects, 42/856: turn order and round preparation 23/374, the readiness writs and foundry
+    repair 3/130, pressure shifts, cohesion, momentum and field-objective round effects 4/109, `heal_round` 1/18,
+    SpellRules' status immunity and effect normalize and purge 4/20, `_weakest_stack_by_cohesion` and `_role` 2/30,
+    and the presentation and animation event records 5/175.
+- **Not ported:** the board-read memos and the presentation queue memo; the native calls take the uncached path.
+  `_apply_melee_approach` moves to slice 06 and `_apply_auto_advance_movement` to slice 09. `_complete_action`,
+  `_evaluate_outcome` and `resolve_if_battle_ready` stay GDScript until slice 10. BattleAiRules' 8 copies of layer 3
+  functions go to slice 08.
+- **Runtime:** String formatting, `capitalize`, `replace`, `trim_prefix`, `slice` and `sort_custom` in the gd layer. On
+  main since 9e84fff83 (Windows binaries db3c59b47); the branch merged it in c0205a359.
+- **Found, not fixed:** no GDScript bugs. Ported as they are: `advance_turn` runs `_assign_default_target` twice when
+  the round wraps, `_prepare_round` adds an empty `stacks` when the key is missing, and the last `selected` fallback
+  of `selected_target_closing_context` cannot be reached.
+- **Checks:**
+  - Shadow on the six seeds: 0 mismatches and 0 native errors in 55,236,025 checks over 275 functions, 2,374,591 of
+    them in the 90 new ones. Not reached: `_presentation_walk_path`, which needs a playback capture, and
+    `_player_input_locked_summary`.
+  - Native mode against main: every daily digest (415) and match record of the six seeds is identical.
+  - Core suite: 17/17 on Windows.
+  - The Linux libraries in `bin/` are not rebuilt.
+
+**Formal G1 after layer 4** (2026-10-21; `tools/battle_port_g1/`, harness commit e4350640a on the branch):
+- **How it is measured:** as in slice 01b, over the 281 functions of layers 1 to 4.
+  - Same machine, binaries and job count. The baseline is main at the branch point (db3c59b47).
+  - Captures: 82 of the 480 resolves on `standard` and 157 of the 1,536 on the six seeds.
+  - Captures now hold the session and RandomNumberGenerators as objects. The replay keeps the unit, hero, faction and
+    spell rows the port reads in its State.
+  - A sibling session's Godot runs overlapped two timed GDScript runs, and both were redone. No foreign Godot ran during
+    the timed runs used, the replays or the conversion.
+  - Every round of every replay: 0 mismatches and 0 errors.
+- **Share of T_gd:** the ported functions take 65.1% of T_gd on `standard` and 64.8% on the six seeds. At layer 1 it was
+  33.4% and 31.6%.
+
+| Corpus | Previous resolve: r / S | New State: r / S | Same resolve again: r / S | c | r for 10x | r for 5x |
+|---|---:|---:|---:|---:|---:|---:|
+| standard | 3.76 / 3.61 | 3.61 / 3.47 | 5.09 / 4.82 | 0.0107 | 11.2 | 5.28 |
+| six seeds | 3.95 / 3.62 | 3.81 / 3.50 | 5.45 / 4.84 | 0.0230 | 12.99 | 5.65 |
+
+  The new-State replay's median rounds, a second run of the same-resolve case, gave 5.23 / 4.96 and 5.62 / 4.98.
+- **r per layer** (warm pass, same resolve again). Each outermost entry counts in its own layer, with its calls into
+  other layers. The share is of the ported GDScript time.
+
+  | Layer | standard: share / r | six seeds: share / r |
+  |---|---:|---:|
+  | 1, hex | 15.0% / 11.0 | 13.6% / 10.8 |
+  | 2, damage and stat totals | 22.3% / 3.95 | 25.1% / 4.29 |
+  | 3, movement and targeting | 25.8% / 12.6 | 22.6% / 13.1 |
+  | 4, turn order and effects | 36.8% / 3.99 | 38.7% / 4.50 |
+
+- **Where native is slow** (warm, `standard`):
+  - Two functions are slower than GDScript: `_append_presentation_event` (r 0.69, 0.26 s native) and `_hero_has_trait`
+    (r 0.84, 0.085 s). In both, GDScript keeps a static memo that the port leaves out:
+    - With `_presentation_queue_written`, GDScript normalizes only the last queue entry. The port normalizes the whole
+      queue on every append.
+    - `_hero_payload_cache` returns the side's payload. The port rebuilds it and deep-copies it on every call.
+  - Next, by native time: `_resolve_wait` (r 3.93, 0.28 s), `_calculate_damage` (2.61, 0.25 s), `_apply_stack_effect`
+    (3.94), `_stack_cohesion_total` (3.79) and `_stack_momentum_total` (2.74). Each calls one or both of those paths.
+    How much of their time those paths take is not measured.
+  - The calls made 4,161,058 Dictionaries and 2,085,064 Arrays over 908,907 entries.
+- **Result:** S is 3.47 to 4.98 in every case, under 5x on both corpora.
+  - The shortfall is in r. Conversion takes c = 0.011 and 0.023.
+  - Layers 1 and 3 stay above 10. Layers 2 and 4 are at about 4.
+  - By the checkpoint, the interface is fixed before the AI part. By D8, the branch is dropped if G1 stays under 5x
+    after that fix. The owner decides.
+
 ### Phase 2: one payload builder, AI preview as one call, the battle tool
 
 - Battle payload creation (`BattleRules.gd:256-402`), stack and hero payloads, obstacles, and the end-of-battle numbers
@@ -844,6 +917,20 @@ a78100003 without the battle port:
   are `port_call`, `port_check`, `port_report` and `port_stats`, and each table names its log variable.
   `tools/native_battle_switch.py --subsystem` touches only the switches that read that subsystem's mode.
 - Nothing on main calls it. Checks: core suite 17/17 on Windows, `rules_selftest` digests unchanged.
+
+**Shared helpers from Phase 5** (2026-10-21): following the shared-helper rule (Phase 3, "AI targets"), Phase 5's
+ports of the 63 functions Phase 3's AI targets also reach moved here from `native-phase5-day`, unswitched on main:
+OverworldRules 21 (the map size, the blocked-tile index with its cached scenery layers and resolved-encounter set,
+resource-node presence, the recruit payload), ArtifactRules 17, HeroProgressionRules 8 (Phase 1's port, copied),
+OverworldLevelRules 7, CommonMineRules 5, MineRules 3, HeroCommandRules 1, NativeTransitRules 1, and 4 day-only
+functions that share their files. They live in `core/port/<script>.cpp` and `include/aurelion_rules/port/<script>.hpp`,
+their keys in `day_keys.inc`. A function that takes a session takes its view (`session_view.hpp`: SessionData's fields,
+its metadata under "meta"). Shadow mode on the six seeds checked them on the branch, 0 mismatches.
+- Also here, the runtime for paths a port leaves to GDScript: a native function throws `state::NotPorted` before any
+  host side effect; the call writes nothing back, `port_not_ported()` is true, the stats count it as `not_ported`,
+  and the switch generator writes a GDScript fallback for subsystems marked `fallback` (day only).
+- Phase 1 takes `hero_progression_rules` and the keys `day_keys.inc` shares with its branch from main and drops its
+  copies (in `commander_payload.cpp` and its `battle_keys.inc`).
 
 **Inventory and boundary** (2026-10-21, main 6d7471276; every function of `scripts/core` and ContentService probed on
 the six seeds; times from l1, a large four-player game to day 90, on a machine shared with Phase 1's runs):

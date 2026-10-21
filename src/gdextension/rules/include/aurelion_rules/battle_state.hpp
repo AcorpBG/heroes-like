@@ -9,7 +9,7 @@
 // Containers live in the State's pools and Values refer to them by index, so a
 // container reached from two places is one node, as it is one object in Godot.
 // Strings are interned: equal texts have one atom, and the texts the port
-// names in code (battle_keys.inc, day_keys.inc) have fixed atoms. Pool references stay valid
+// names in code (battle_keys.inc, day_keys.inc, ai_keys.inc) have fixed atoms. Pool references stay valid
 // while nodes are added (NodePool).
 //
 // A node can be backed: its contents still live in the adapter's container and
@@ -44,10 +44,20 @@ enum class Kind : uint8_t {
 	// A Variant the State does not model (an Object, a Vector2, ...): the
 	// adapter keeps it and writes it back unchanged. ref is its slot there.
 	Opaque,
+	// x and y in i, as a Vector2i's, and z in z.
+	Vector3i,
+	// PackedByteArray, PackedInt32Array and PackedStringArray: ref is a packed
+	// node. Godot shares one packed array between the Variants that hold it, so
+	// a node is that one array.
+	PackedByte,
+	PackedInt32,
+	PackedString,
 };
 
 struct Value {
 	Kind kind = Kind::Nil;
+	// A Vector3i's z (in the padding after kind).
+	int32_t z = 0;
 	union {
 		int64_t i;
 		double f;
@@ -91,11 +101,19 @@ struct Value {
 		v.i = static_cast<int64_t>(static_cast<uint64_t>(static_cast<uint32_t>(x)) | (static_cast<uint64_t>(static_cast<uint32_t>(y)) << 32));
 		return v;
 	}
+	static Value of_vector3i(int32_t x, int32_t y, int32_t z) {
+		Value v = of_vector2i(x, y);
+		v.kind = Kind::Vector3i;
+		v.z = z;
+		return v;
+	}
 	int32_t vx() const { return static_cast<int32_t>(static_cast<uint32_t>(static_cast<uint64_t>(i))); }
 	int32_t vy() const { return static_cast<int32_t>(static_cast<uint32_t>(static_cast<uint64_t>(i) >> 32)); }
+	int32_t vz() const { return z; }
 
 	bool is_string_like() const { return kind == Kind::String || kind == Kind::StringName; }
 	bool is_container() const { return kind == Kind::Array || kind == Kind::Dict; }
+	bool is_packed() const { return kind == Kind::PackedByte || kind == Kind::PackedInt32 || kind == Kind::PackedString; }
 };
 
 // The fixed atoms of the subsystems' key lists: key::hex is the atom of "hex".
@@ -105,6 +123,7 @@ enum : uint32_t {
 #define AURELION_KEY(name, text) name,
 #include "aurelion_rules/battle_keys.inc"
 #include "aurelion_rules/day_keys.inc"
+#include "aurelion_rules/ai_keys.inc"
 #undef AURELION_KEY
 	known_count,
 };
@@ -113,6 +132,16 @@ enum : uint32_t {
 // Where GDScript would stop with a runtime error (a bad conversion, an index
 // out of range): the port throws it and the caller reports it.
 class ScriptError : public std::runtime_error {
+public:
+	using std::runtime_error::runtime_error;
+};
+
+// A path a subsystem's port leaves to GDScript on purpose (Phase 5 ports what
+// AI matches run): the native call writes nothing back and its switch runs the
+// GDScript body instead. Thrown before any host side effect of the call (a
+// RandomNumberGenerator's state). A value a port cannot handle is a
+// ScriptError instead, reported as an error.
+class NotPorted : public std::runtime_error {
 public:
 	using std::runtime_error::runtime_error;
 };
@@ -131,10 +160,14 @@ enum : uint8_t {
 	FLOAT = 3,
 	STRING = 4,
 	VECTOR2I = 6,
+	VECTOR3I = 10,
 	STRING_NAME = 21,
 	OBJECT = 24,
 	DICTIONARY = 27,
 	ARRAY = 28,
+	PACKED_BYTE_ARRAY = 29,
+	PACKED_INT32_ARRAY = 30,
+	PACKED_STRING_ARRAY = 34,
 };
 } // namespace variant_type
 
@@ -507,6 +540,38 @@ struct DictNode {
 	}
 };
 
+// A packed array: its kind says which of the element lists it uses. A loaded
+// one is backed until something reads it, which copies its source's elements.
+struct PackedNode {
+	Kind kind = Kind::PackedInt32;
+	std::vector<uint8_t> bytes;
+	std::vector<int32_t> ints;
+	// PackedStringArray: the strings' atoms.
+	std::vector<uint32_t> atoms;
+	bool backed = false;
+	// Written since it was made or loaded.
+	bool dirty = false;
+
+	void reset() {
+		kind = Kind::PackedInt32;
+		bytes.clear();
+		ints.clear();
+		atoms.clear();
+		backed = false;
+		dirty = false;
+	}
+	size_t size() const {
+		switch (kind) {
+			case Kind::PackedByte:
+				return bytes.size();
+			case Kind::PackedString:
+				return atoms.size();
+			default:
+				return ints.size();
+		}
+	}
+};
+
 // Nodes in blocks of kBlock: making one rarely allocates, and references stay
 // valid while nodes are added. (std::deque holds one node per block on MSVC.)
 // clear() keeps the blocks, and the nodes their buffers, for the next nodes: a
@@ -554,6 +619,8 @@ public:
 	virtual Value array_at(State &state, uint32_t node, int64_t index) = 0;
 	virtual int64_t dict_size(uint32_t node) = 0;
 	virtual bool dict_lookup(State &state, uint32_t node, const Value &key, Value &out) = 0;
+	// Fill a backed packed node's elements; the State clears the flag.
+	virtual void fill_packed(State &state, uint32_t node);
 
 	// object.property of an opaque value (the session's battle, day, ...).
 	virtual Value object_get(State &state, uint32_t slot, uint32_t property);
@@ -567,6 +634,14 @@ public:
 	// ContentService.load_json(path).
 	virtual Value content_row(State &state, ContentTable table, uint32_t id);
 	virtual Value content_file(State &state, uint32_t path);
+	// ContentService.get_content_revision(): it moves on each content reload.
+	virtual int64_t content_revision(State &state);
+	// A GDScript static var, by its script's res:// path and its name: its
+	// value, the same node on every read of the call, and an assignment, which
+	// the host applies with the call's write-back (so a call that writes
+	// nothing back changes no static var).
+	virtual Value static_get(State &state, uint32_t script, uint32_t name);
+	virtual void static_set(State &state, uint32_t script, uint32_t name, const Value &value);
 	// Godot's ERR_PRINT, for the container methods that fail without stopping
 	// the script (append to a read-only Array), and a script's push_warning.
 	// The defaults write to stderr.
@@ -606,6 +681,17 @@ public:
 	// for new nodes): writes here are not checked and do not mark it dirty.
 	ArrayNode &array_node(uint32_t node) const { return arrays_[node]; }
 	DictNode &dict_node(uint32_t node) const { return dicts_[node]; }
+
+	// Packed arrays (PackedNode): PackedByteArray, PackedInt32Array and
+	// PackedStringArray, a new one empty. Their operations are gd's packed_*.
+	uint32_t new_packed(Kind kind);
+	size_t packed_count() const { return packeds_.size(); }
+	// The whole node, to read; a backed node is filled first.
+	const PackedNode &packed(uint32_t node) const;
+	// The whole node, to write: filled first and marked dirty.
+	PackedNode &packed_write(uint32_t node);
+	// The node as it is, to build or load: not filled, not marked dirty.
+	PackedNode &packed_node(uint32_t node) const { return packeds_[node]; }
 
 	void set_backing(Backing *backing) { backing_ = backing; }
 	Backing *backing() const { return backing_; }
@@ -681,6 +767,7 @@ private:
 	// The backed paths of the inline operations below.
 	void fill_array(uint32_t node) const;
 	void fill_dict(uint32_t node) const;
+	void fill_packed(uint32_t node) const;
 	bool backed_lookup(uint32_t dict_node, const Value &key, Value &out) const;
 	[[noreturn]] static void out_of_bounds(int64_t index);
 	// The typed or read-only paths of set() and append().
@@ -696,6 +783,7 @@ private:
 	std::unordered_map<uint64_t, uint32_t> joined_;
 	NodePool<ArrayNode> arrays_;
 	NodePool<DictNode> dicts_;
+	NodePool<PackedNode> packeds_;
 	Backing *backing_ = nullptr;
 	std::vector<uint8_t> type_builtins_;
 };
@@ -717,6 +805,30 @@ inline const ArrayNode &State::array(uint32_t node) const {
 	if (found.backed) {
 		fill_array(node);
 	}
+	return found;
+}
+
+inline uint32_t State::new_packed(Kind kind) {
+	packeds_.emplace_back();
+	const uint32_t node = static_cast<uint32_t>(packeds_.size() - 1);
+	packeds_[node].kind = kind;
+	return node;
+}
+
+inline const PackedNode &State::packed(uint32_t node) const {
+	const PackedNode &found = packeds_[node];
+	if (found.backed) {
+		fill_packed(node);
+	}
+	return found;
+}
+
+inline PackedNode &State::packed_write(uint32_t node) {
+	PackedNode &found = packeds_[node];
+	if (found.backed) {
+		fill_packed(node);
+	}
+	found.dirty = true;
 	return found;
 }
 

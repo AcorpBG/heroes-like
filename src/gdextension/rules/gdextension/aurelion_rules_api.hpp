@@ -79,14 +79,29 @@ public:
 	// when write_back is set; a native script error is reported and answered
 	// with null. port_check runs it and compares the result with GDScript's: ""
 	// when they match, else the first difference. port_report counts a check the
-	// engine script made itself (mismatch "" when it matched).
+	// engine script made itself (mismatch "" when it matched). A call that
+	// reached a path the port leaves to GDScript (state::NotPorted) changes
+	// nothing and returns null, and port_not_ported() is true until the next
+	// port_call; such a check is counted as not ported and matches.
 	Variant port_call(const StringName &name, const Array &args, bool write_back);
+	bool port_not_ported() const { return last_not_ported_; }
 	String port_check(const StringName &name, const Array &args, const Variant &gdscript_result);
 	void port_report(const StringName &name, const String &mismatch);
 	// Shadow: the arguments of a function that writes into them, copied for its
 	// native run before GDScript runs (bridge::copy_for_shadow).
 	Array port_copy(const Array &args);
-	// {name: {calls, checks, mismatches, errors}}, plus "unknown_calls" when a
+	// Shadow of a function that writes into its arguments without copying them
+	// (the AI targets, whose sessions cost too much to copy on every call):
+	// port_validate_begin runs the native port on args and writes nothing back;
+	// the engine script then runs the GDScript body and passes its result and
+	// the arguments afterwards (sessions as views again) to port_validate_end,
+	// which checks them (bridge::PortBridge::verify) and counts the check: ""
+	// when they match. begin returns the check's handle, -1 for no function. A
+	// GDScript body can run such a check inside another: each open check has
+	// its own bridge, and ending one ends the checks opened inside it.
+	int64_t port_validate_begin(const StringName &name, const Array &args);
+	String port_validate_end(int64_t handle, const Variant &gdscript_result, const Array &args);
+	// {name: {calls, checks, mismatches, errors, not_ported}}, plus "unknown_calls" when a
 	// name was not in the registry. With a subsystem's log variable set to a
 	// folder (HEROES_NATIVE_BATTLE_LOG), the same goes to shadow_<pid>.json
 	// there, with the first mismatches and unknown names, every 65,536 uses, on
@@ -108,11 +123,13 @@ public:
 	Array ai_search_walk(int64_t width, int64_t height, int64_t start, int64_t start_phase, int64_t radius, bool native_corners, const PackedByteArray &blocked, const PackedByteArray &stop_mask, const PackedByteArray &pass_mask, const PackedByteArray &hero_zone, const PackedInt32Array &portals, const PackedByteArray &seen, const PackedByteArray &water, const PackedByteArray &sea_open, const PackedByteArray &boats, const PackedInt32Array &docks, int64_t shore_cost, int64_t dock_cost) const;
 
 private:
+	struct Validation;
 	struct PortStats {
 		int64_t calls = 0;
 		int64_t checks = 0;
 		int64_t mismatches = 0;
 		int64_t errors = 0;
+		int64_t not_ported = 0;
 		std::vector<std::string> first;
 	};
 
@@ -125,12 +142,16 @@ private:
 
 	Dictionary last_state_stats_;
 	std::unique_ptr<aurelion::rules::bridge::PortBridge> port_;
+	// port_validate_*: the open checks are the first open_validations_.
+	std::vector<std::unique_ptr<Validation>> validations_;
+	size_t open_validations_ = 0;
 	// Keyed by the StringName's engine data, which the held StringName keeps.
 	std::unordered_map<uint64_t, std::pair<StringName, const aurelion::rules::port::Function *>> port_names_;
 	std::vector<PortStats> port_stats_;
 	// One file per distinct folder the subsystems' log variables name.
 	std::vector<std::string> port_log_paths_;
 	int64_t port_uses_ = 0;
+	bool last_not_ported_ = false;
 	int64_t unknown_calls_ = 0;
 	std::vector<std::string> unknown_names_;
 	size_t reported_mismatches_ = 0;

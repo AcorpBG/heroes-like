@@ -35,6 +35,13 @@ namespace aurelion::rules::bridge {
 // container when these match (is_same in GDScript).
 uint64_t identity_of(const godot::Array &array);
 uint64_t identity_of(const godot::Dictionary &dict);
+// The same for a Variant holding a packed array: the engine's PackedArrayRef,
+// which every Variant holding that array shares.
+uint64_t identity_of_packed(const godot::Variant &packed);
+// The packed Variant of a node's elements: a new packed array.
+godot::Variant packed_variant(const state::State &state, const state::PackedNode &node);
+// A packed array's elements into a node (one of the State's packed kinds).
+void fill_packed_node(state::State &state, state::PackedNode &node, const godot::Variant &packed);
 
 // Writes node into dict, which ends with node's keys in node's order, as the
 // exported keys and values. When the keys dict keeps are already in that

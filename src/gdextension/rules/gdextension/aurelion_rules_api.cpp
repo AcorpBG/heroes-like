@@ -165,13 +165,28 @@ void AurelionRules::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("state_last_stats"), &AurelionRules::state_last_stats);
 	ClassDB::bind_method(D_METHOD("state_conversion_timing", "start", "end", "made_arrays", "made_dicts", "rounds"), &AurelionRules::state_conversion_timing);
 	ClassDB::bind_method(D_METHOD("port_call", "name", "args", "write_back"), &AurelionRules::port_call);
+	ClassDB::bind_method(D_METHOD("port_not_ported"), &AurelionRules::port_not_ported);
 	ClassDB::bind_method(D_METHOD("port_check", "name", "args", "gdscript_result"), &AurelionRules::port_check);
 	ClassDB::bind_method(D_METHOD("port_report", "name", "mismatch"), &AurelionRules::port_report);
 	ClassDB::bind_method(D_METHOD("port_copy", "args"), &AurelionRules::port_copy);
+	ClassDB::bind_method(D_METHOD("port_validate_begin", "name", "args"), &AurelionRules::port_validate_begin);
+	ClassDB::bind_method(D_METHOD("port_validate_end", "handle", "gdscript_result", "args"), &AurelionRules::port_validate_end);
 	ClassDB::bind_method(D_METHOD("port_stats"), &AurelionRules::port_stats);
 	ClassDB::bind_method(D_METHOD("ai_search_masks", "width", "height", "surface_blocked", "surface_stops", "water", "sea", "body_offsets", "body_tiles", "zone_offsets", "zone_tiles", "neutral_open", "unit_blocked", "unit_stops", "hero_tiles", "guard_offsets", "guard_tiles", "site_tiles", "site_open"), &AurelionRules::ai_search_masks);
 	ClassDB::bind_method(D_METHOD("ai_search_walk", "width", "height", "start", "start_phase", "radius", "native_corners", "blocked", "stop_mask", "pass_mask", "hero_zone", "portals", "seen", "water", "sea_open", "boats", "docks", "shore_cost", "dock_cost"), &AurelionRules::ai_search_walk);
 }
+
+// One open port_validate check: the native run's result and arguments, kept in
+// its bridge's State until the GDScript call has run.
+struct AurelionRules::Validation {
+	aurelion::rules::bridge::PortBridge bridge;
+	const aurelion::rules::port::Function *function = nullptr;
+	aurelion::rules::state::Value result;
+	std::vector<aurelion::rules::state::Value> args;
+	// A native failure, reported when the check ends.
+	std::string error;
+	bool not_ported = false;
+};
 
 AurelionRules::AurelionRules() {
 	try {
@@ -474,7 +489,7 @@ void AurelionRules::write_port_stats() const {
 	bool first_entry = true;
 	for (size_t index = 0; index < count && index < port_stats_.size(); ++index) {
 		const PortStats &stats = port_stats_[index];
-		if (stats.calls == 0 && stats.checks == 0) {
+		if (stats.calls == 0 && stats.checks == 0 && stats.not_ported == 0) {
 			continue;
 		}
 		if (!first_entry) {
@@ -482,7 +497,7 @@ void AurelionRules::write_port_stats() const {
 		}
 		first_entry = false;
 		append_json_string(out, table[index].name);
-		out += ": {\"calls\": " + std::to_string(stats.calls) + ", \"checks\": " + std::to_string(stats.checks) + ", \"mismatches\": " + std::to_string(stats.mismatches) + ", \"errors\": " + std::to_string(stats.errors) + ", \"first\": [";
+		out += ": {\"calls\": " + std::to_string(stats.calls) + ", \"checks\": " + std::to_string(stats.checks) + ", \"mismatches\": " + std::to_string(stats.mismatches) + ", \"errors\": " + std::to_string(stats.errors) + ", \"not_ported\": " + std::to_string(stats.not_ported) + ", \"first\": [";
 		for (size_t line = 0; line < stats.first.size(); ++line) {
 			if (line != 0) {
 				out += ", ";
@@ -512,6 +527,7 @@ void AurelionRules::write_port_stats() const {
 
 Variant AurelionRules::port_call(const StringName &name, const Array &args, bool write_back) {
 	std::string problem;
+	last_not_ported_ = false;
 	try {
 		const aurelion::rules::port::Function *function = port_function(name);
 		if (function == nullptr) {
@@ -543,6 +559,10 @@ Variant AurelionRules::port_call(const StringName &name, const Array &args, bool
 					return port_->export_value(result);
 				}
 			}
+		} catch (const aurelion::rules::state::NotPorted &) {
+			++stats.not_ported;
+			last_not_ported_ = true;
+			return Variant();
 		} catch (const aurelion::rules::state::ScriptError &error) {
 			problem = std::string(function->name) + ": native script error: " + error.what();
 		} catch (const std::exception &error) {
@@ -593,6 +613,10 @@ String AurelionRules::port_check(const StringName &name, const Array &args, cons
 					mismatch = port_->diff(result, gdscript_result);
 				}
 			}
+		} catch (const aurelion::rules::state::NotPorted &) {
+			--stats.checks;
+			++stats.not_ported;
+			return String();
 		} catch (const aurelion::rules::state::ScriptError &failure) {
 			error = true;
 			mismatch = std::string("native script error: ") + failure.what();
@@ -648,6 +672,101 @@ Array AurelionRules::port_copy(const Array &args) {
 	return args.duplicate(true);
 }
 
+int64_t AurelionRules::port_validate_begin(const StringName &name, const Array &args) {
+	try {
+		const aurelion::rules::port::Function *function = port_function(name);
+		if (function == nullptr) {
+			record_unknown(name, "port_validate_begin");
+			return -1;
+		}
+		if (open_validations_ == validations_.size()) {
+			validations_.push_back(std::make_unique<Validation>());
+		}
+		const size_t handle = open_validations_++;
+		Validation &check = *validations_[handle];
+		check.function = function;
+		check.result = aurelion::rules::state::Value();
+		check.args.clear();
+		check.error.clear();
+		check.not_ported = false;
+		PortStats &stats = stats_of(function);
+		++stats.checks;
+		count_port_use();
+		try {
+			if (args.size() != function->arity || function->arity > kMaxPortArgs) {
+				check.error = std::string("takes ") + std::to_string(function->arity) + " arguments, got " + std::to_string(args.size());
+			} else {
+				check.bridge.begin(true);
+				for (int index = 0; index < function->arity; ++index) {
+					check.args.push_back(check.bridge.load(args[index]));
+				}
+				check.result = function->call(check.bridge.state(), check.args.data());
+			}
+		} catch (const aurelion::rules::state::NotPorted &) {
+			--stats.checks;
+			++stats.not_ported;
+			check.not_ported = true;
+		} catch (const aurelion::rules::state::ScriptError &failure) {
+			check.error = std::string("native script error: ") + failure.what();
+		} catch (const std::exception &failure) {
+			check.error = std::string("native exception: ") + failure.what();
+		} catch (...) {
+			check.error = "unknown native exception";
+		}
+		return static_cast<int64_t>(handle);
+	} catch (const std::exception &error) {
+		report_port_failure("port_validate_begin", std::string("native exception outside the port: ") + error.what());
+	} catch (...) {
+		report_port_failure("port_validate_begin", "unknown native exception outside the port");
+	}
+	return -1;
+}
+
+String AurelionRules::port_validate_end(int64_t handle, const Variant &gdscript_result, const Array &args) {
+	try {
+		if (handle < 0) {
+			// begin failed, and said so.
+			return String();
+		}
+		if (static_cast<size_t>(handle) >= open_validations_) {
+			report_port_failure("port_validate_end", "no open check " + std::to_string(handle));
+			return String("no open check");
+		}
+		// Checks opened inside this one and never ended (their GDScript call
+		// stopped on an error) end with it, unchecked.
+		open_validations_ = static_cast<size_t>(handle);
+		Validation &check = *validations_[static_cast<size_t>(handle)];
+		std::string mismatch;
+		bool error = false;
+		if (!check.not_ported) {
+			if (!check.error.empty()) {
+				mismatch = check.error;
+				error = true;
+			} else {
+				try {
+					mismatch = check.bridge.verify(check.result, gdscript_result, check.args.data(), check.args.size(), args);
+				} catch (const std::exception &failure) {
+					mismatch = std::string("native exception in the check: ") + failure.what();
+					error = true;
+				}
+			}
+		}
+		// Lets go of the arguments.
+		check.bridge.begin();
+		check.args.clear();
+		if (mismatch.empty()) {
+			return String();
+		}
+		record_mismatch(stats_of(check.function), check.function->name, mismatch, error);
+		return String::utf8(mismatch.c_str());
+	} catch (const std::exception &error) {
+		report_port_failure("port_validate_end", std::string("native exception outside the port: ") + error.what());
+	} catch (...) {
+		report_port_failure("port_validate_end", "unknown native exception outside the port");
+	}
+	return String("native exception outside the port");
+}
+
 Dictionary AurelionRules::port_stats() const {
 	Dictionary result;
 	try {
@@ -655,7 +774,7 @@ Dictionary AurelionRules::port_stats() const {
 		const aurelion::rules::port::Function *table = aurelion::rules::port::functions(count);
 		for (size_t index = 0; index < count && index < port_stats_.size(); ++index) {
 			const PortStats &stats = port_stats_[index];
-			if (stats.calls == 0 && stats.checks == 0) {
+			if (stats.calls == 0 && stats.checks == 0 && stats.not_ported == 0) {
 				continue;
 			}
 			Dictionary entry;
@@ -663,6 +782,7 @@ Dictionary AurelionRules::port_stats() const {
 			entry["checks"] = stats.checks;
 			entry["mismatches"] = stats.mismatches;
 			entry["errors"] = stats.errors;
+			entry["not_ported"] = stats.not_ported;
 			result[String(table[index].name)] = entry;
 		}
 		if (unknown_calls_ != 0) {
