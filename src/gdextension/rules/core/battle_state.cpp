@@ -220,6 +220,168 @@ void State::clear_nodes() {
 	dicts_.clear();
 	packeds_.clear();
 	root = Value();
+	memo_.clear();
+	memo_epoch_ = watched_writes_;
+}
+
+bool State::memo_find(const MemoKey &key, std::initializer_list<Value> roots, Value &answer, uint64_t &since) {
+	for (const Value &from : roots) {
+		watch(from);
+	}
+	if (memo_epoch_ != watched_writes_) {
+		memo_.clear();
+		memo_epoch_ = watched_writes_;
+	}
+	since = watched_writes_;
+	const auto found = memo_.find(key);
+	if (found == memo_.end()) {
+		return false;
+	}
+	answer = found->second;
+	return true;
+}
+
+void State::memo_keep(const MemoKey &key, const Value &answer, uint64_t since) {
+	// Its reading wrote into what it read: a new reading may differ.
+	if (watched_writes_ != since) {
+		return;
+	}
+	freeze(answer);
+	memo_[key] = answer;
+}
+
+void State::watch_loaded(const Value &value) {
+	switch (value.kind) {
+		case Kind::Array:
+			arrays_[value.ref].guard |= kWatched;
+			break;
+		case Kind::Dict:
+			dicts_[value.ref].guard |= kWatched;
+			break;
+		case Kind::PackedByte:
+		case Kind::PackedInt32:
+		case Kind::PackedString:
+			packeds_[value.ref].guard |= kWatched;
+			break;
+		default:
+			break;
+	}
+}
+
+void State::replace_items(uint32_t array_node, ValueList items) {
+	ArrayNode &node = arrays_[array_node];
+	if (node.guard != 0) {
+		guarded_write(node.guard);
+	}
+	node.items = std::move(items);
+	node.dirty = true;
+}
+
+void State::guarded_write(uint8_t guard, const Value &key, const Value &value) {
+	if ((guard & kFrozen) != 0) {
+		throw ScriptError("a write into an answer the native memo keeps: every later hit hands out the same node (State::memo_keep)");
+	}
+	++watched_writes_;
+	watch(key);
+	watch(value);
+}
+
+// Every container the value holds, down to the nodes already watched (what
+// they hold is watched with them) and the backed ones (the host watches what
+// it loads into them, watch_loaded).
+void State::watch(const Value &value) {
+	if (!value.is_container() && !value.is_packed()) {
+		return;
+	}
+	marking_.clear();
+	marking_.push_back(value);
+	while (!marking_.empty()) {
+		const Value next = marking_.back();
+		marking_.pop_back();
+		if (next.is_packed()) {
+			packeds_[next.ref].guard |= kWatched;
+		} else if (next.kind == Kind::Array) {
+			ArrayNode &node = arrays_[next.ref];
+			if ((node.guard & kWatched) != 0) {
+				continue;
+			}
+			node.guard |= kWatched;
+			if (node.backed) {
+				continue;
+			}
+			for (const Value &item : node.items) {
+				if (item.is_container() || item.is_packed()) {
+					marking_.push_back(item);
+				}
+			}
+		} else if (next.kind == Kind::Dict) {
+			DictNode &node = dicts_[next.ref];
+			if ((node.guard & kWatched) != 0) {
+				continue;
+			}
+			node.guard |= kWatched;
+			if (node.backed) {
+				continue;
+			}
+			for (const Value &item : node.keys) {
+				if (item.is_container() || item.is_packed()) {
+					marking_.push_back(item);
+				}
+			}
+			for (const Value &item : node.values) {
+				if (item.is_container() || item.is_packed()) {
+					marking_.push_back(item);
+				}
+			}
+		}
+	}
+}
+
+// The answer and every container it holds. A watched node in it is part of
+// the state the answer was read from: freezing it would stop the game's own
+// writes, so it is a logic error of the memo's caller.
+void State::freeze(const Value &value) {
+	if (!value.is_container() && !value.is_packed()) {
+		return;
+	}
+	marking_.clear();
+	marking_.push_back(value);
+	while (!marking_.empty()) {
+		const Value next = marking_.back();
+		marking_.pop_back();
+		uint8_t *guard = nullptr;
+		const ValueList *first = nullptr;
+		const ValueList *second = nullptr;
+		if (next.is_packed()) {
+			guard = &packeds_[next.ref].guard;
+		} else if (next.kind == Kind::Array) {
+			ArrayNode &node = arrays_[next.ref];
+			guard = &node.guard;
+			first = &node.items;
+		} else {
+			DictNode &node = dicts_[next.ref];
+			guard = &node.guard;
+			first = &node.keys.list();
+			second = &node.values;
+		}
+		if ((*guard & kFrozen) != 0) {
+			continue;
+		}
+		if ((*guard & kWatched) != 0) {
+			throw std::logic_error("a memo answer holds a node of the state it was read from");
+		}
+		*guard |= kFrozen;
+		for (const ValueList *items : { first, second }) {
+			if (items == nullptr) {
+				continue;
+			}
+			for (const Value &item : *items) {
+				if (item.is_container() || item.is_packed()) {
+					marking_.push_back(item);
+				}
+			}
+		}
+	}
 }
 
 uint32_t State::intern(std::string_view text) {
@@ -403,6 +565,9 @@ void State::set_at(uint32_t array_node, int64_t index, const Value &value) {
 	if (position < 0 || position >= size) {
 		throw ScriptError("Out of bounds set index '" + std::to_string(index) + "' (on base: 'Array')");
 	}
+	if (node.guard != 0) {
+		guarded_write(node.guard, Value(), checked);
+	}
 	if (node.read_only) {
 		throw ScriptError("Invalid assignment of an index on a base object of type 'Array': it is in read-only state");
 	}
@@ -418,6 +583,9 @@ void State::insert_at(uint32_t array_node, int64_t position, const Value &value)
 	Value checked = value;
 	array(array_node);
 	ArrayNode &node = arrays_[array_node];
+	if (node.guard != 0) {
+		guarded_write(node.guard, Value(), checked);
+	}
 	// Array::insert checks read-only, then the type, then the position.
 	if (node.read_only) {
 		print_error("Array is in read-only state.");
@@ -445,6 +613,9 @@ void State::insert_at(uint32_t array_node, int64_t position, const Value &value)
 void State::remove_at(uint32_t array_node, int64_t position) {
 	array(array_node);
 	ArrayNode &node = arrays_[array_node];
+	if (node.guard != 0) {
+		guarded_write(node.guard);
+	}
 	if (node.read_only) {
 		print_error("Array is in read-only state.");
 		return;
@@ -462,6 +633,9 @@ void State::remove_at(uint32_t array_node, int64_t position) {
 Value State::pop_at(uint32_t array_node, bool front) {
 	array(array_node);
 	ArrayNode &node = arrays_[array_node];
+	if (node.guard != 0) {
+		guarded_write(node.guard);
+	}
 	if (node.read_only) {
 		print_error("Array is in read-only state.");
 		return Value();
@@ -488,6 +662,9 @@ bool State::erase(uint32_t dict_node, const Value &key) {
 	Value checked = key;
 	dict(dict_node);
 	DictNode &node = dicts_[dict_node];
+	if (node.guard != 0) {
+		guarded_write(node.guard);
+	}
 	// Dictionary::erase checks the key's type, then the read-only flag.
 	const uint8_t had = builtin_of(checked);
 	if (!validate_type(node.key_type, checked)) {

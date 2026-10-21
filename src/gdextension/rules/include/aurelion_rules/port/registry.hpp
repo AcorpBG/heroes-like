@@ -11,6 +11,7 @@
 #include "aurelion_rules/battle_state.hpp"
 
 #include <cstddef>
+#include <cstdint>
 #include <string_view>
 
 namespace aurelion::rules::port {
@@ -23,6 +24,12 @@ struct Function {
 	state::Value (*call)(state::State &state, const state::Value *args);
 };
 
+// A GDScript static var, by the atoms of its script's res:// path and its name.
+struct ScriptStatic {
+	uint32_t script;
+	uint32_t name;
+};
+
 // One subsystem's functions.
 struct Table {
 	// The environment variable naming the folder for the shadow statistics
@@ -30,6 +37,19 @@ struct Table {
 	const char *log_variable;
 	const Function *functions;
 	size_t count;
+	// The memos (static vars) of the subsystem's GDScript, by their part in
+	// the validating check (shadow mode: AurelionRules.port_validate_begin and
+	// port_validate_end).
+	// - GDScript's own: GDScript fills them for its GDScript callers. The native
+	//   port neither reads nor fills them (gd::static_var refuses them), so the
+	//   check never compares them.
+	// - Shared: the port reads and writes them as GDScript does. One the native
+	//   call read or set is compared by value; one it left alone must be as
+	//   GDScript's call left it, or the native port skipped what GDScript did.
+	const ScriptStatic *gdscript_only = nullptr;
+	size_t gdscript_only_count = 0;
+	const ScriptStatic *shared_memos = nullptr;
+	size_t shared_memo_count = 0;
 };
 
 // Every subsystem's table.
@@ -38,5 +58,7 @@ const Table *tables(size_t &count);
 // it is its slot in the adapter's statistics.
 const Function *functions(size_t &count);
 const Function *find_function(std::string_view name);
+// A static var that a table names as GDScript's own.
+bool gdscript_only_static(uint32_t script, uint32_t name);
 
 } // namespace aurelion::rules::port

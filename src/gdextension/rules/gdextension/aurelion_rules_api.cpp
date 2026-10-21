@@ -717,6 +717,7 @@ int64_t AurelionRules::port_validate_begin(const StringName &name, const Array &
 					check.args.push_back(check.bridge.load(args[index]));
 				}
 				check.result = function->call(check.bridge.state(), check.args.data());
+				check.bridge.keep_memo_shapes();
 			}
 		} catch (const aurelion::rules::state::NotPorted &) {
 			--stats.checks;
