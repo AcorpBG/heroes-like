@@ -665,6 +665,36 @@ every function run inside `resolve_active_battle`, with `_finalize_*` left out. 
   and 13.10 on `holdout` and the seeds in the second run). So slice 01b stops here and reports to the owner before
   layer 2.
 
+**Layer 2** (slice 02, 2026-10-21; branch commits 35482b17e runtime, 3609b2d11 port, b3310bc15 Windows binaries):
+- **Ported:** 137 functions, 1,923 GDScript lines.
+  - BattleRules 98/1,524: the damage stream (the damage RNG state with its integrity and canonical checks,
+    `_calculate_damage`, `_damage_for_roll`), damage application and restore, the event log, the multiplier chain in
+    exact order, the stat totals with their contextual, cohesion, momentum, faction and field-objective bonuses, and the
+    ability, tag, trait and side-count reads they use. `_stack_is_isolated` and `_stack_is_hex_isolated` came from
+    layer 1.
+  - BattleDamageRules 3/25 and TownBattleRules 4/18.
+  - From slice 04: SpellRules' effect reads and their normalizers, 10/122.
+  - From slice 07, the commander payload: BattleAiRules' payload merge 8/112, HeroProgressionRules 8/101,
+    DifficultyRules 6/21, with ScenarioSelectRules' two functions inlined.
+- **Not ported:** `DifficultyRules._scenario_select_rules`, which returns a script. The memos `_hero_payload_cache`
+  and HeroProgressionRules' specialty catalog index are not ported either; the native calls compute without them.
+- **Moved:** `_apply_ranged_damage_return` to slice 06, since it calls the damage pressure and the presentation events.
+  The native unit and ability tables go to slice 10.
+  - Here a native call reads each content row once per call through ContentService's index.
+  - A table kept across calls by content revision would go stale wherever code edits ContentService's cache in place
+    without a revision bump.
+- **Runtime:** the slice 01 review fixes, the Variant hash, the shadow copy for writing functions, `KeyList::push_back`
+  and `State::set` copying first, and const `State::array()`/`dict()` views. Shadow mismatches now print SCRIPT ERROR.
+- **Found, not fixed:** in `HeroProgressionRules._specialty_catalog`, `_catalog_source` is set before the index is
+  built. After a bad specialty id fails `String()` in the first build, later calls get a partial index with no error.
+  This only happens with bad content.
+- **Checks:**
+  - Shadow on the six seeds: 0 mismatches and 0 native errors in 52,861,434 checks over 187 functions. Not reached:
+    `_brace_has_held_objective` and `_side_has_linked_unit`, whose abilities no unit on the seeds has.
+  - Native mode against main: every daily digest (415) and match record of the six seeds is identical.
+  - Core suite: 17/17 on Windows.
+  - The Linux libraries in `bin/` are not rebuilt.
+
 ### Phase 2: one payload builder, AI preview as one call, the battle tool
 
 - Battle payload creation (`BattleRules.gd:256-402`), stack and hero payloads, obstacles, and the end-of-battle numbers
@@ -745,6 +775,16 @@ change. That runtime is the value layer, its Dictionary bridge, the GDScript-sem
 switch generator. From then on, a branch that changes the runtime lands that change on main as its own commit, and the
 other branches take it from main. `_finalize_*` stays in `BattleRules`, which is frozen until the Phase 1 merge, so
 Phase 5 ports it after that merge.
+
+**Shared runtime on main** (2026-10-21, 79056b04f source, f9c828eb4 Windows binaries), from `native-phase1-battle`
+a78100003 without the battle port:
+- What moved: the engine-exact helpers with their fuzz digests and capture tool, the value layer (`battle_state`,
+  `battle_keys.inc`), its Dictionary bridge, `port/gd`, the port adapter and the switch generator.
+- The split for a second subsystem: each subsystem lists its functions in a `Table` of its own file (`registry.hpp`;
+  the battle port's stays `core/port/registry.cpp`), and `registry_tables.cpp` joins the tables. The adapter's methods
+  are `port_call`, `port_check`, `port_report` and `port_stats`, and each table names its log variable.
+  `tools/native_battle_switch.py --subsystem` touches only the switches that read that subsystem's mode.
+- Nothing on main calls it. Checks: core suite 17/17 on Windows, `rules_selftest` digests unchanged.
 
 ### Phase 6: match throughput
 

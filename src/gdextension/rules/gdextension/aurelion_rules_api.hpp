@@ -65,35 +65,36 @@ public:
 	// atoms, opaque, types, load_usec, store_usec, reused_arrays, reused_dicts,
 	// rebuilt_dicts}.
 	Dictionary state_last_stats() const;
-	// G1 (tools/battle_port_g1): one resolve's whole-battle conversion, timed.
-	// Each round loads a deep copy of start (timed), turns the state into end
-	// (untimed: StateBridge::overwrite stands in for the native loop's changes),
-	// adds the nodes the ported calls made, unreachable, and writes the state
-	// back into the copy's containers (timed). {load_us, store_us} are medians;
-	// also every round and the pool sizes.
+	// One state's whole conversion, timed (the battle port's G1 times a
+	// resolve's). Each round loads a deep copy of start (timed), turns the state
+	// into end (untimed: StateBridge::overwrite stands in for the native code's
+	// changes), adds the nodes the ported calls made, unreachable, and writes the
+	// state back into the copy's containers (timed). {load_us, store_us} are
+	// medians; also every round and the pool sizes.
 	Dictionary state_conversion_timing(const Variant &start, const Variant &end, int64_t made_arrays, int64_t made_dicts, int64_t rounds);
 
-	// The ported battle functions (aurelion_rules/port/registry.hpp), for the
-	// switch in BattleEngine.gd. battle_port_call runs one on args and returns
-	// its result, writing what it changed back into args when write_back is set;
-	// a native script error is reported and answered with null.
-	// battle_port_check runs it and compares the result with GDScript's: "" when
-	// they match, else the first difference. battle_port_report counts a check
-	// BattleEngine.gd made itself (mismatch "" when it matched).
-	Variant battle_port_call(const StringName &name, const Array &args, bool write_back);
-	String battle_port_check(const StringName &name, const Array &args, const Variant &gdscript_result);
-	void battle_port_report(const StringName &name, const String &mismatch);
+	// The ported functions of every subsystem (aurelion_rules/port/registry.hpp),
+	// for the switches in BattleEngine.gd and the other engines. port_call runs
+	// one on args and returns its result, writing what it changed back into args
+	// when write_back is set; a native script error is reported and answered
+	// with null. port_check runs it and compares the result with GDScript's: ""
+	// when they match, else the first difference. port_report counts a check the
+	// engine script made itself (mismatch "" when it matched).
+	Variant port_call(const StringName &name, const Array &args, bool write_back);
+	String port_check(const StringName &name, const Array &args, const Variant &gdscript_result);
+	void port_report(const StringName &name, const String &mismatch);
 	// Shadow: the arguments of a function that writes into them, copied for its
 	// native run before GDScript runs (bridge::copy_for_shadow).
-	Array battle_port_copy(const Array &args);
+	Array port_copy(const Array &args);
 	// {name: {calls, checks, mismatches, errors}}, plus "unknown_calls" when a
-	// name was not in the registry. With HEROES_NATIVE_BATTLE_LOG set to a folder,
-	// the same goes to shadow_<pid>.json there, with the first mismatches and
-	// unknown names, every 65,536 uses, on each mismatch or failure and at exit.
-	// A native call that fails or names no ported function, a shadow mismatch
-	// (the first 20) and a stats file that cannot be written print a SCRIPT
-	// ERROR, which fails rules_parity runs and the core suite's tests.
-	Dictionary battle_port_stats() const;
+	// name was not in the registry. With a subsystem's log variable set to a
+	// folder (HEROES_NATIVE_BATTLE_LOG), the same goes to shadow_<pid>.json
+	// there, with the first mismatches and unknown names, every 65,536 uses, on
+	// each mismatch or failure and at exit. A native call that fails or names no
+	// ported function, a shadow mismatch (the first 20) and a stats file that
+	// cannot be written print a SCRIPT ERROR, which fails rules_parity runs and
+	// the core suite's tests.
+	Dictionary port_stats() const;
 
 private:
 	struct PortStats {
@@ -116,7 +117,8 @@ private:
 	// Keyed by the StringName's engine data, which the held StringName keeps.
 	std::unordered_map<uint64_t, std::pair<StringName, const aurelion::rules::port::Function *>> port_names_;
 	std::vector<PortStats> port_stats_;
-	std::string port_log_path_;
+	// One file per distinct folder the subsystems' log variables name.
+	std::vector<std::string> port_log_paths_;
 	int64_t port_uses_ = 0;
 	int64_t unknown_calls_ = 0;
 	std::vector<std::string> unknown_names_;

@@ -34,27 +34,27 @@ static func _mode_from_environment() -> int:
 
 ## The native port's result.
 static func native(name: StringName, args: Array) -> Variant:
-	return NativeRules.api().battle_port_call(name, args, false)
+	return NativeRules.api().port_call(name, args, false)
 
 ## The native port of a function that writes into its arguments, writing into them.
 static func native_writing(name: StringName, args: Array) -> Variant:
-	return NativeRules.api().battle_port_call(name, args, true)
+	return NativeRules.api().port_call(name, args, true)
 
 ## Shadow: checks GDScript's result against the native port's.
 static func check(name: StringName, args: Array, result: Variant) -> void:
-	NativeRules.api().battle_port_check(name, args, result)
+	NativeRules.api().port_check(name, args, result)
 
 ## Shadow, for a function that writes into its arguments: a copy of them as the
 ## GDScript call finds them. A container reached twice is one copy, and a
 ## RandomNumberGenerator or a session is copied too, so the native run changes
 ## nothing GDScript holds.
 static func before_writing(args: Array) -> Array:
-	return NativeRules.api().battle_port_copy(args)
+	return NativeRules.api().port_copy(args)
 
 ## Shadow: runs the native port on before and checks that it returns GDScript's
 ## result and leaves before as the GDScript call left args.
 static func check_writing(name: StringName, before: Array, args: Array, result: Variant) -> void:
-	var native_result: Variant = NativeRules.api().battle_port_call(name, before, true)
+	var native_result: Variant = NativeRules.api().port_call(name, before, true)
 	var mismatch := _first_difference(native_result, result, "result")
 	if mismatch != "":
 		mismatch = "result: " + mismatch
@@ -62,7 +62,7 @@ static func check_writing(name: StringName, before: Array, args: Array, result: 
 		mismatch = _first_difference(before, args, "args")
 		if mismatch != "":
 			mismatch = "arguments afterwards: " + mismatch
-	NativeRules.api().battle_port_report(name, mismatch)
+	NativeRules.api().port_report(name, mismatch)
 
 static func _first_difference(native_value: Variant, gdscript_value: Variant, path: String) -> String:
 	if var_to_bytes(native_value) == var_to_bytes(gdscript_value):

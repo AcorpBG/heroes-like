@@ -105,6 +105,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/damage_stream.cpp
 	core/port/gd.cpp
 	core/port/registry.cpp
+	core/port/registry_tables.cpp
 	core/port/spell_effects.cpp
 	core/port/stat_totals.cpp
 )

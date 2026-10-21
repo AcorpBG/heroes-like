@@ -272,18 +272,9 @@ const Function kFunctions[] = {
 
 } // namespace
 
-const Function *functions(size_t &count) {
-	count = sizeof(kFunctions) / sizeof(kFunctions[0]);
-	return kFunctions;
-}
-
-const Function *find_function(std::string_view name) {
-	for (const Function &function : kFunctions) {
-		if (name == function.name) {
-			return &function;
-		}
-	}
-	return nullptr;
+// The battle port's table, listed in registry_tables.cpp.
+Table battle_table() {
+	return {"HEROES_NATIVE_BATTLE_LOG", kFunctions, sizeof(kFunctions) / sizeof(kFunctions[0])};
 }
 
 } // namespace aurelion::rules::port

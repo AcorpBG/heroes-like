@@ -116024,15 +116024,15 @@
     {
       "id": "native-rules-phase1-02-damage-chain-20261020",
       "title": "Native battle engine 02: damage chain and stat totals",
-      "status": "pending",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Layer 2 without the AI copies: BattleRules 77 functions / 1,283 lines (stat totals and their bonuses, the multiplier chain in exact order, the damage stream, damage application), BattleDamageRules 3/21, native unit and ability tables. Callers: AiHeroRules, BattleAiRules, 10 tests.",
-      "updatedAt": "2026-10-20T19:35:00Z"
+      "notes": "Branch native-phase1-battle: 35482b17e runtime, 3609b2d11 port, b3310bc15 Windows binaries. 137 functions / 1,923 GDScript lines in C++: BattleRules 98/1,524, BattleDamageRules 3/25, TownBattleRules 4/18, SpellRules 10/122 (effect reads, from 04), BattleAiRules 8/112, HeroProgressionRules 8/101 and DifficultyRules 6/21 (commander payload, from 07). Not ported: DifficultyRules._scenario_select_rules (returns a script), the memos _hero_payload_cache and the specialty catalog index. Moved: _apply_ranged_damage_return to 06, native unit and ability tables to 10. Shadow on the six seeds 0 mismatches, 0 native errors, 52,861,434 checks over 187 functions; native mode identical to main (415 daily digests, 6 match records); core suite 17/17 on Windows. Linux libraries in bin/ not rebuilt (Windows only until the owner's Linux pass). Found, not fixed: HeroProgressionRules._specialty_catalog sets _catalog_source before the build (partial index after a bad id).",
+      "updatedAt": "2026-10-21T16:15:00Z"
     },
     {
       "id": "native-rules-phase1-03-movement-targeting-20261020",
@@ -116154,15 +116154,15 @@
     {
       "id": "native-rules-shared-runtime-main-20261021",
       "title": "Shared C++ rules runtime on main",
-      "status": "pending",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Owner decision 2026-10-21. The value layer, its Dictionary bridge, the GDScript-semantics helpers, the port adapter and the switch generator move from native-phase1-battle to main, with no behaviour change. Runtime changes land on main first after that.",
-      "updatedAt": "2026-10-21T16:00:00Z"
+      "notes": "Owner decision 2026-10-21. Completed 2026-10-21: 79056b04f (source) and f9c828eb4 (Windows binaries) on main. The engine-exact helpers, the value layer, its Dictionary bridge, the GDScript-semantics helpers, the port adapter and the switch generator moved from native-phase1-battle (a78100003), the battle port itself left there. Split for a second subsystem: a Table per subsystem (registry.hpp, registry_tables.cpp; the battle table stays core/port/registry.cpp), adapter methods port_call/port_check/port_report/port_stats with a log variable per table, tools/native_battle_switch.py --subsystem. Nothing on main calls the runtime. Core suite 17/17 and rules_selftest on Windows; Linux libraries wait for the Linux pass. Runtime changes land on main first from now on.",
+      "updatedAt": "2026-10-21T20:00:00Z"
     },
     {
       "id": "native-rules-phase5-day-processing-20261021",
