@@ -76,9 +76,12 @@ public:
 	Variant battle_port_call(const StringName &name, const Array &args, bool write_back);
 	String battle_port_check(const StringName &name, const Array &args, const Variant &gdscript_result);
 	void battle_port_report(const StringName &name, const String &mismatch);
-	// {name: {calls, checks, mismatches, errors}}. With HEROES_NATIVE_BATTLE_LOG
-	// set to a folder, the same goes to shadow_<pid>.json there, with the first
-	// mismatches, every 65,536 uses, on each mismatch and at exit.
+	// {name: {calls, checks, mismatches, errors}}, plus "unknown_calls" when a
+	// name was not in the registry. With HEROES_NATIVE_BATTLE_LOG set to a folder,
+	// the same goes to shadow_<pid>.json there, with the first mismatches and
+	// unknown names, every 65,536 uses, on each mismatch or failure and at exit.
+	// A native call that fails, or names no ported function, prints a SCRIPT
+	// ERROR, which fails rules_parity runs and the core suite's tests.
 	Dictionary battle_port_stats() const;
 
 private:
@@ -95,6 +98,7 @@ private:
 	void record_mismatch(PortStats &stats, const std::string &text);
 	void count_port_use();
 	void write_port_stats() const;
+	void record_unknown(const StringName &name, const char *method);
 
 	Dictionary last_state_stats_;
 	std::unique_ptr<aurelion::rules::bridge::PortBridge> port_;
@@ -103,6 +107,8 @@ private:
 	std::vector<PortStats> port_stats_;
 	std::string port_log_path_;
 	int64_t port_uses_ = 0;
+	int64_t unknown_calls_ = 0;
+	std::vector<std::string> unknown_names_;
 };
 
 } // namespace godot

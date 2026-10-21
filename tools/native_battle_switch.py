@@ -13,8 +13,10 @@ Phase 1). For each one, scripts/core/<Script>.gd gets:
         ...
 
 and every switched script gets the BattleEngine preload and its mode in a static
-var. Switches already written are left alone, so the tool runs again after each
-new port. --check only reports what it would change and exits 1 if anything.
+var. The tool runs again after each new port: a switch that no longer matches
+its registry entry or its GDScript signature is rewritten, and one whose entry
+was renamed or removed is taken out again (the `__gd` body gets its name back).
+--check only reports what it would change and exits 1 if anything.
 
     python tools/native_battle_switch.py
     python tools/native_battle_switch.py --check
@@ -33,6 +35,7 @@ SCRIPTS = ROOT / "scripts/core"
 ENGINE_CONST = 'const BattleEngine = preload("res://scripts/core/BattleEngine.gd")'
 MODE_VAR = "static var _battle_engine_mode: int = BattleEngine.mode"
 PORT_LINE = re.compile(r"^\s*PORT\((\w+), (\w+), (\d+), (true|false),")
+NEWLINE = chr(10)
 SIGNATURE = re.compile(r"^static func (\w+)\((.*)\)\s*(->\s*([\w\[\], ]+))?\s*:\s*$")
 
 
@@ -132,30 +135,60 @@ def add_engine_header(lines: list[str], path: Path) -> bool:
     return True
 
 
+def signature_of(path: Path, line: str, name: str) -> tuple[str, str]:
+    match = SIGNATURE.match(line)
+    if not match:
+        raise SystemExit(f"{path.name}: {name} has no one-line signature: {line!r}")
+    params, returns = match.group(2), (match.group(4) or "").strip()
+    if not returns:
+        raise SystemExit(f"{path.name}: {name} has no declared return type")
+    return params, returns
+
+
+def definitions(lines: list[str], name: str) -> list[int]:
+    return [i for i, line in enumerate(lines) if line.startswith(f"static func {name}(")]
+
+
 def switch_script(path: Path, functions: list[tuple[str, int, bool]], check: bool) -> list[str]:
-    lines = path.read_text(encoding="utf-8").split("\n")
+    lines = path.read_text(encoding="utf-8").split(NEWLINE)
+    registered = {name: (arity, writes) for name, arity, writes in functions}
     changes = []
-    if add_engine_header(lines, path):
+    if functions and add_engine_header(lines, path):
         changes.append(f"{path.name}: BattleEngine preload and mode")
-    for name, arity, writes in functions:
-        if any(line.startswith(f"static func {name}__gd(") for line in lines):
+    switched = [m.group(1) for m in (re.match(r"^static func (\w+)__gd\(", line) for line in lines) if m]
+    for name in switched:
+        gd = definitions(lines, f"{name}__gd")
+        tops = definitions(lines, name)
+        if len(gd) != 1 or len(tops) != 1 or tops[0] > gd[0]:
+            raise SystemExit(f"{path.name}: {name} must have one switch right above one {name}__gd")
+        params, returns = signature_of(path, lines[gd[0]], f"{name}__gd")
+        if name not in registered:
+            # Renamed or removed in registry.cpp: the switch would call a missing native function.
+            lines[gd[0]] = lines[gd[0]].replace(f"static func {name}__gd(", f"static func {name}(", 1)
+            del lines[tops[0]:gd[0]]
+            changes.append(f"{path.name}: {name} has no registry entry, switch removed")
             continue
-        starts = [i for i, line in enumerate(lines) if line.startswith(f"static func {name}(")]
-        if len(starts) != 1:
-            raise SystemExit(f"{path.name}: {len(starts)} definitions of {name}")
-        match = SIGNATURE.match(lines[starts[0]])
-        if not match:
-            raise SystemExit(f"{path.name}: {name} has no one-line signature: {lines[starts[0]]!r}")
-        params, returns = match.group(2), (match.group(4) or "").strip()
+        arity, writes = registered[name]
         if len(split_params(params)) != arity:
             raise SystemExit(f"{path.name}: {name} takes {len(split_params(params))} parameters, registry.cpp says {arity}")
-        if not returns:
-            raise SystemExit(f"{path.name}: {name} has no declared return type")
+        expected = switch_lines(path.stem, name, params, returns, writes)
+        if lines[tops[0]:gd[0]] != expected:
+            lines[tops[0]:gd[0]] = expected
+            changes.append(f"{path.name}: {name} switch rewritten (signature or registry entry changed)")
+    for name, (arity, writes) in registered.items():
+        if name in switched:
+            continue
+        starts = definitions(lines, name)
+        if len(starts) != 1:
+            raise SystemExit(f"{path.name}: {len(starts)} definitions of {name}")
+        params, returns = signature_of(path, lines[starts[0]], name)
+        if len(split_params(params)) != arity:
+            raise SystemExit(f"{path.name}: {name} takes {len(split_params(params))} parameters, registry.cpp says {arity}")
         lines[starts[0]] = lines[starts[0]].replace(f"static func {name}(", f"static func {name}__gd(", 1)
         lines[starts[0]:starts[0]] = switch_lines(path.stem, name, params, returns, writes)
         changes.append(f"{path.name}: {name}")
     if changes and not check:
-        path.write_text("\n".join(lines), encoding="utf-8", newline="\n")
+        path.write_text(NEWLINE.join(lines), encoding="utf-8", newline=NEWLINE)
     return changes
 
 
@@ -168,9 +201,15 @@ def main() -> int:
         by_script.setdefault(script, []).append((name, arity, writes))
     changes = []
     for script, functions in sorted(by_script.items()):
+        if not (SCRIPTS / f"{script}.gd").is_file():
+            raise SystemExit(f"registry.cpp names {script}, which is not a script in {SCRIPTS}")
         changes += switch_script(SCRIPTS / f"{script}.gd", functions, options.check)
+    # Scripts with switches but no registry entries left.
+    for path in sorted(SCRIPTS.glob("*.gd")):
+        if path.stem not in by_script and "__gd(" in path.read_text(encoding="utf-8"):
+            changes += switch_script(path, [], options.check)
     for change in changes:
-        print(("missing: " if options.check else "switched: ") + change)
+        print(("would change: " if options.check else "changed: ") + change)
     if not changes:
         print(f"every ported function is switched ({sum(len(f) for f in by_script.values())})")
     return 1 if options.check and changes else 0
