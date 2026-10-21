@@ -1432,6 +1432,41 @@ roster entry, with the 17 functions listed above and slices 01, 04 and 05's. The
 Phase 3's, from main. Checks: shadow on the six seeds 2,442 calls, 0 mismatches; core suite in shadow mode 17/17,
 92 calls, 0 mismatches; native mode against main on the six seeds identical; core suite 17/17.
 
+**Slice 06b, the rest of normalize_overworld_state** (2026-10-22, branch `native-phase5-day`): the day registry adds
+`OverworldRules.normalize_overworld_state` for every caller: the session's fields and heroes, its towns (occupation,
+recovery, fronts, capital projects, garrison heroes), resource and artifact nodes, transit networks and boats, blocked
+tiles, fog, the command briefing and risk forecast and the scenario state, with the 80 functions listed above and the
+earlier slices'; it records the runtime signature in `_runtime_normalized_signatures`. The scenario script state's hook
+list is built as `Array[String]` natively (`gd::new_typed_array`, on main f6d6d178c); before that, the untyped list of a
+new or loaded session sent 80% of the calls to GDScript. Left to GDScript: a session without towns or resource nodes, an
+artifact still to be drawn from a reward table, town fields of an odd type, a human primary hero missing from the
+roster, the garrison migration, generated rewards other than transit objects, the risk forecast's raid and objective
+items and a player town under threat, `to_lower()` of non-ASCII text, JSON edge cases and `_fog_grids` with a fog read
+scope open. Checks: shadow on the six seeds `normalize_overworld_state` 1,986 calls, 0 mismatches, none left to GDScript
+(19,826 day checks in all, 0 mismatches); core suite in shadow mode 17/17, 115 calls, 0 mismatches (3 left to GDScript:
+enemy configs without player records); native mode against main on the six seeds identical; core suite 17/17.
+
+**Slice 02, the day's economy** (2026-10-22, branch `native-phase5-day`): `OverworldRules.end_turn` is two native calls
+around the AI turn (`_run_enemy_turn_cycle`, GDScript): `_end_turn_open_day` closes the old day (the closing normalize,
+the hero commit) and opens the new one: town occupation and recovery, town, hero and site income scaled by difficulty,
+weekly growth and site musters, the heroes' daily refresh (movement, mana) and reserve deliveries, with the 24 functions
+listed above. Left to GDScript: a player town's weekly growth (`_growth_tick_town`), a player reserve delivery's arrival
+(interception), towns or nodes that are no Array, and the debug rules profile. Checks: shadow on the six seeds
+`_end_turn_open_day` 409 calls, 0 mismatches; core suite in shadow mode 17/17, 20 calls, 0 mismatches (1 left to
+GDScript: a player town's growth); native mode against main on the six seeds identical; core suite 17/17.
+
+**Slice 07, the day's close** (2026-10-22, branch `native-phase5-day`): `_end_turn_close_day` (elimination, the action
+result, the closing normalize, the day's summaries and the computer players' public event log with its leak check) and
+`_finalize_action_result` for every caller, with the 21 functions listed above. Sessions are views and no native state
+outlives a call, so `OverworldShell.gd` and the session-meta caches invalidate nothing. Left to GDScript: an action's
+scenario check narrowed to its event facts (`evaluate_session_for_event`, only the active hero's own actions), the human
+paths of slice 05 (a human game's rival count, the townless warning), JSON edge cases in the leak check and the debug
+rules profile. Checks: shadow on the six seeds `_end_turn_close_day` 405 calls and `_finalize_action_result` 409, 0
+mismatches (4 left to GDScript: a computer player's removal, slice 05); core suite in shadow mode 17/17, 9 calls, 0
+mismatches (40 human paths left to GDScript); native mode against main on the six seeds identical; core suite 17/17.
+Timing, from the native check on the six seeds (beside another session's parity run): whole games 728 s on main, 674 s
+with the day native (1.08x); l1 186 to 174 s, l2 194 to 181 s.
+
 ### Phase 6: match throughput
 
 The runner keeps a native session handle across days and writes Dictionaries back only for the digest and record (with
