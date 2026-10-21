@@ -246,6 +246,10 @@ int64_t adjusted_mana_cost(State &state, DictRef hero_state, int64_t base_cost, 
 	return compat::engine_max<int64_t>(0, gd::sub(base_cost, compat::engine_max<int64_t>(0, discount)));
 }
 
+int64_t mana_max_bonus(State &state, DictRef hero_state) {
+	return gd::int_field(state, aggregate_bonuses(state, hero_state), key::max_mana, 0);
+}
+
 } // namespace hero_progression_rules
 
 } // namespace aurelion::rules::port
