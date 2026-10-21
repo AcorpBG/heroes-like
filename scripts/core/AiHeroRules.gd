@@ -23,6 +23,8 @@ const AdventureRules = preload("res://scripts/core/EnemyAdventureRules.gd")
 const BattleDamage = preload("res://scripts/core/BattleDamageRules.gd")
 const WaterTravel = preload("res://scripts/core/WaterTravelRules.gd")
 const NativeRules = preload("res://scripts/core/NativeRules.gd")
+const AiEngine = preload("res://scripts/core/AiEngine.gd")
+static var _ai_engine_mode: int = AiEngine.mode
 
 const AI_HERO_KEY := "ai_hero"
 # Battle settings (terrain, length, rewards) for fights against an AI hero. The
@@ -5068,6 +5070,17 @@ static func _far_ahead(session: SessionStateStoreScript.SessionData, context: Di
 ## as the human does under fog. Explored tiles are kept per level in the enemy
 ## state as a bitset.
 static func _explored(session: SessionStateStoreScript.SessionData, context: Dictionary, level: int) -> PackedByteArray:
+	if _ai_engine_mode == AiEngine.GDSCRIPT:
+		return _explored__gd(session, context, level)
+	if _ai_engine_mode == AiEngine.NATIVE:
+		var native_result = AiEngine.native_writing(&"AiHeroRules._explored", [session, context, level])
+		return _explored__gd(session, context, level) if AiEngine.not_ported() else native_result
+	var before := AiEngine.before_writing(&"AiHeroRules._explored", [session, context, level])
+	var result = _explored__gd(session, context, level)
+	AiEngine.check_writing(&"AiHeroRules._explored", before, [session, context, level], result)
+	return result
+
+static func _explored__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, level: int) -> PackedByteArray:
 	var maps: Dictionary = context.get("explored", {})
 	if maps.has(level):
 		return maps[level]
@@ -5725,12 +5738,35 @@ static func _decision_site_pass(context: Dictionary, level: int, sites: Array) -
 	return record.open
 
 static func _sync_site_pass_memo() -> void:
+	if _ai_engine_mode == AiEngine.GDSCRIPT:
+		_sync_site_pass_memo__gd()
+	elif _ai_engine_mode == AiEngine.NATIVE:
+		AiEngine.native_writing(&"AiHeroRules._sync_site_pass_memo", [])
+		if AiEngine.not_ported():
+			_sync_site_pass_memo__gd()
+	else:
+		var before := AiEngine.before_writing(&"AiHeroRules._sync_site_pass_memo", [])
+		_sync_site_pass_memo__gd()
+		AiEngine.check_writing(&"AiHeroRules._sync_site_pass_memo", before, [], null)
+
+static func _sync_site_pass_memo__gd() -> void:
 	var sources := [ContentService.get_content_revision(), ContentService.load_json(ContentService.RESOURCE_SITES_PATH)]
 	if _site_pass_sources.size() != sources.size() or _site_pass_sources[0] != sources[0] or not is_same(_site_pass_sources[1], sources[1]):
 		_site_pass_memo = {}
 		_site_pass_sources = sources
 
 static func _site_pass_class(site_id: String) -> Array:
+	if _ai_engine_mode == AiEngine.GDSCRIPT:
+		return _site_pass_class__gd(site_id)
+	if _ai_engine_mode == AiEngine.NATIVE:
+		var native_result = AiEngine.native_writing(&"AiHeroRules._site_pass_class", [site_id])
+		return _site_pass_class__gd(site_id) if AiEngine.not_ported() else native_result
+	var before := AiEngine.before_writing(&"AiHeroRules._site_pass_class", [site_id])
+	var result = _site_pass_class__gd(site_id)
+	AiEngine.check_writing(&"AiHeroRules._site_pass_class", before, [site_id], result)
+	return result
+
+static func _site_pass_class__gd(site_id: String) -> Array:
 	var site_class = _site_pass_memo.get(site_id)
 	if site_class == null:
 		var site := ContentService.get_resource_site(site_id)

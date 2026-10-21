@@ -97,6 +97,8 @@ add_library(aurelion_rules_core STATIC
 	core/battle_state.cpp
 	core/build_info.cpp
 	core/compat/godot_string.cpp
+	core/port/ai_hero_rules_knowledge.cpp
+	core/port/ai_registry.cpp
 	core/port/artifact_rules.cpp
 	core/port/common_mine_rules.cpp
 	core/port/gd.cpp
