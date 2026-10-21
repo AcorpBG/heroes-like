@@ -327,6 +327,10 @@ bool ends_with(const State &state, Atom text, Atom suffix);
 // str(x) and String(x) of Nil, bool, int, String and StringName (float and the
 // containers are not ported: a ScriptError).
 Atom stringify(State &state, const Value &value);
+// String(x) in a function whose switch falls back to GDScript (the day and AI
+// subsystems): stringify(), with a float or a container throwing NotPorted,
+// so the GDScript body converts it instead of the port reporting an error.
+Atom stringify_or_fallback(State &state, const Value &value);
 // x.is_valid_int() and int(x) of a String.
 bool is_valid_int(const State &state, Atom text);
 // pattern % values (String::sprintf) with the conversions the ported code
