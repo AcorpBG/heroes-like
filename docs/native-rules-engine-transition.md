@@ -1293,6 +1293,38 @@ completion, the rival count of a human game, the human player's townless days an
 Six of them are also Phase 3's: the three DifficultyRules ones, `movement_max_for_hero`, `_week_bonus` and
 `_normalize_position`.
 
+**Slice 06b, frozen functions** (2026-10-22, until the Phase 5 merge; AGENTS.md): the rest of
+`OverworldRules.normalize_overworld_state` (every caller) and what it runs in AI matches beyond the earlier slices'
+functions and Phase 3's, 80 functions. OverworldRules 51: `_advance_town_occupation`, `_advance_town_recovery`,
+`_blank_project_vulnerability_penalties`, `_build_scenario_army_state`, `_command_risk_field_item`,
+`_command_risk_forecast`, `_command_risk_forecast_from_normalized_session`, `_command_risk_grade_label`,
+`_command_risk_items`, `_command_risk_logistics_items`, `_command_risk_objective_items`,
+`_command_risk_player_town_daybreak_contexts`, `_command_risk_posture_items`, `_command_risk_town_items`,
+`_copy_town_runtime_metadata`, `_fog_grids`, `_fog_grids_uncached`, `_fog_state_ready`, `_grid_cell`,
+`_mark_runtime_normalized`, `_migrate_generated_transit_meanings`, `_nearest_town_for_controller`,
+`_normalize_active_town_visit_context`, `_normalize_artifact_nodes`, `_normalize_command_briefing`,
+`_normalize_command_risk_forecast`, `_normalize_enemy_states`, `_normalize_generated_runtime_materialization`,
+`_normalize_live_resource_stockpile`, `_normalize_scenario_resources`, `_normalize_scenario_state_rules`,
+`_normalize_town_front_state`, `_normalize_town_recovery_state`, `_normalize_towns`, `_project_dependency_ids`,
+`_project_player_town_at_daybreak`, `_raid_is_public`, `_reduce_command_risk_items`, `_refresh_blocked_tile_index`,
+`_runtime_normalization_signature`, `_town_building_bonus_total`, `_town_capital_project_ids`,
+`_town_capital_project_recovery_relief`, `_town_capital_project_state`, `_town_command_risk_state`,
+`_town_matches_controller`, `_town_recovery_relief_rating`, `hero_position`, `is_tile_visible`,
+`normalize_overworld_state`, `town_strategic_role`. NativeTransitRules 9: `_network_colour_key`,
+`_portal_contract_error`, `assign_network_colours`, `contract_error`, `is_dead_end`, `network_index`, `nodes_by_id`,
+`normalize_legacy_session`, `validate`. HeroCommandRules 3: `_normalize_town_garrison_heroes`, `_replace_hero_in_array`,
+`normalize_session`. ArtifactRules 2: `build_artifact_nodes`, `normalize_artifact_nodes`. ContentService 2:
+`get_scenario_readonly`, `get_terrain_layers_for_scenario`. EnemyAdventureRules 2: `_raid_is_public`,
+`_sync_unit_strength_memo`. PlayerIdentityRules 2: `has_human_seat`, `normalize_compatibility`. ScenarioFactory 2:
+`_build_army_state`, `_normalize_resources`. TownDevelopmentRules 2: `convert_reserves`, `migrate_town`. DifficultyRules
+1: `normalize_session`. OverworldLevelRules 1: `canonical_spatial_records`. ScenarioRules 1: `objectives_for_session`.
+SessionStateStore 1: `normalize_launch_mode`. WaterTravelRules 1: `normalize`. Eight of them are also private helpers in
+Phase 3's port (`overworld_rules_ai_recovery.cpp`, `overworld_rules_ai_sites.cpp`): `_town_matches_controller`,
+`_nearest_town_for_controller`, `_normalize_town_recovery_state`, `_normalize_town_front_state`,
+`_town_building_bonus_total`, `_town_capital_project_recovery_relief`, `_town_recovery_relief_rating` and
+`_sync_unit_strength_memo`; those copies fold into Phase 5's at its merge. The paths AI matches never run stay GDScript
+and are not frozen by this slice.
+
 **Inventory and boundary** (2026-10-21, main 6d7471276; every function of `scripts/core` and ContentService probed on
 the six seeds; times from l1, a large four-player game to day 90, on a machine shared with Phase 1's runs):
 - Reach: the Phase 5 entries reach 440 functions, 6,020 lines; 311 of them also run outside day processing, nearly all

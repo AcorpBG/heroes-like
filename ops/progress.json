@@ -116271,15 +116271,15 @@
     {
       "id": "native-rules-phase5-06-normalize-20261021",
       "title": "Native day processing 06: overworld normalize",
-      "status": "pending",
+      "status": "in_progress",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "The rest of normalize_overworld_state, 144/2,058 (OverworldRules 94/1,484, NativeTransitRules 13/205, ContentService 9/65, WaterTravelRules 3/65, HeroCommandRules 5/53, ArtifactRules 2/50, 8 more 18/136).",
-      "updatedAt": "2026-10-21T21:00:00Z"
+      "notes": "The rest of normalize_overworld_state, 144/2,058 (OverworldRules 94/1,484, NativeTransitRules 13/205, ContentService 9/65, WaterTravelRules 3/65, HeroCommandRules 5/53, ArtifactRules 2/50, 8 more 18/136). Started 2026-10-22; frozen until the merge: the 80 functions of part 06b (transition doc, Phase 5, \"Slice 06b, frozen functions\").",
+      "updatedAt": "2026-10-22T01:00:00Z"
     },
     {
       "id": "native-rules-phase5-07-day-boundary-20261021",
