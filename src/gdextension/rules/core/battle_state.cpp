@@ -212,8 +212,8 @@ void State::clear_nodes() {
 }
 
 bool State::memo_find(const MemoKey &key, std::initializer_list<Value> roots, Value &answer, uint64_t &since) {
-	for (const Value &root : roots) {
-		watch(root);
+	for (const Value &from : roots) {
+		watch(from);
 	}
 	if (memo_epoch_ != watched_writes_) {
 		memo_.clear();
