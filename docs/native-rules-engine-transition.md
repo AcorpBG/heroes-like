@@ -746,6 +746,16 @@ switch generator. From then on, a branch that changes the runtime lands that cha
 other branches take it from main. `_finalize_*` stays in `BattleRules`, which is frozen until the Phase 1 merge, so
 Phase 5 ports it after that merge.
 
+**Shared runtime on main** (2026-10-21, 79056b04f source, f9c828eb4 Windows binaries), from `native-phase1-battle`
+a78100003 without the battle port:
+- What moved: the engine-exact helpers with their fuzz digests and capture tool, the value layer (`battle_state`,
+  `battle_keys.inc`), its Dictionary bridge, `port/gd`, the port adapter and the switch generator.
+- The split for a second subsystem: each subsystem lists its functions in a `Table` of its own file (`registry.hpp`;
+  the battle port's stays `core/port/registry.cpp`), and `registry_tables.cpp` joins the tables. The adapter's methods
+  are `port_call`, `port_check`, `port_report` and `port_stats`, and each table names its log variable.
+  `tools/native_battle_switch.py --subsystem` touches only the switches that read that subsystem's mode.
+- Nothing on main calls it. Checks: core suite 17/17 on Windows, `rules_selftest` digests unchanged.
+
 ### Phase 6: match throughput
 
 The runner keeps a native session handle across days and writes Dictionaries back only for the digest and record (with

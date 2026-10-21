@@ -116154,15 +116154,15 @@
     {
       "id": "native-rules-shared-runtime-main-20261021",
       "title": "Shared C++ rules runtime on main",
-      "status": "pending",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Owner decision 2026-10-21. The value layer, its Dictionary bridge, the GDScript-semantics helpers, the port adapter and the switch generator move from native-phase1-battle to main, with no behaviour change. Runtime changes land on main first after that.",
-      "updatedAt": "2026-10-21T16:00:00Z"
+      "notes": "Owner decision 2026-10-21. Completed 2026-10-21: 79056b04f (source) and f9c828eb4 (Windows binaries) on main. The engine-exact helpers, the value layer, its Dictionary bridge, the GDScript-semantics helpers, the port adapter and the switch generator moved from native-phase1-battle (a78100003), the battle port itself left there. Split for a second subsystem: a Table per subsystem (registry.hpp, registry_tables.cpp; the battle table stays core/port/registry.cpp), adapter methods port_call/port_check/port_report/port_stats with a log variable per table, tools/native_battle_switch.py --subsystem. Nothing on main calls the runtime. Core suite 17/17 and rules_selftest on Windows; Linux libraries wait for the Linux pass. Runtime changes land on main first from now on.",
+      "updatedAt": "2026-10-21T20:00:00Z"
     },
     {
       "id": "native-rules-phase5-day-processing-20261021",
