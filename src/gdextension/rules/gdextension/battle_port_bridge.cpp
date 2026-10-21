@@ -275,6 +275,30 @@ Value PortBridge::content_row(state::State &state, state::ContentTable table, ui
 		case state::ContentTable::Spell:
 			method = "get_spell";
 			break;
+		case state::ContentTable::Artifact:
+			method = "get_artifact";
+			break;
+		case state::ContentTable::ResourceSite:
+			method = "get_resource_site";
+			break;
+		case state::ContentTable::Building:
+			method = "get_building";
+			break;
+		case state::ContentTable::Town:
+			method = "get_town";
+			break;
+		case state::ContentTable::MapObject:
+			method = "get_map_object";
+			break;
+		case state::ContentTable::Encounter:
+			method = "get_encounter";
+			break;
+		case state::ContentTable::ArmyGroup:
+			method = "get_army_group";
+			break;
+		case state::ContentTable::Scenario:
+			method = "get_scenario_readonly";
+			break;
 	}
 	const uint64_t memo = (static_cast<uint64_t>(table) + 1) << 32 | id;
 	const auto found = content_.find(memo);

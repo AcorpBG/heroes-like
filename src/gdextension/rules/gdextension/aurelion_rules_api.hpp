@@ -96,6 +96,17 @@ public:
 	// the core suite's tests.
 	Dictionary port_stats() const;
 
+	// AiHeroRules._search, its masks (ai_search::prepare): [blocked, stop_mask,
+	// guard_mask, hero_zone, pass_mask, sea_open, zone_stops, pending_sites].
+	// Masks are one byte per tile; a list of lists is offsets (count + 1) and
+	// tiles. sea is empty when the level has no water, and sea_open then too.
+	Array ai_search_masks(int64_t width, int64_t height, const PackedByteArray &surface_blocked, const PackedByteArray &surface_stops, const PackedByteArray &water, const PackedByteArray &sea, const PackedInt32Array &body_offsets, const PackedInt32Array &body_tiles, const PackedInt32Array &zone_offsets, const PackedInt32Array &zone_tiles, const PackedByteArray &neutral_open, const PackedInt32Array &unit_blocked, const PackedInt32Array &unit_stops, const PackedInt32Array &hero_tiles, const PackedInt32Array &guard_offsets, const PackedInt32Array &guard_tiles, const PackedInt32Array &site_tiles, const PackedByteArray &site_open) const;
+
+	// AiHeroRules._search, its walk (ai_search::search): [dist, parent, order,
+	// order_count, capped, phase, reached]. water is empty when the level has
+	// none, and phase then too.
+	Array ai_search_walk(int64_t width, int64_t height, int64_t start, int64_t start_phase, int64_t radius, bool native_corners, const PackedByteArray &blocked, const PackedByteArray &stop_mask, const PackedByteArray &pass_mask, const PackedByteArray &hero_zone, const PackedInt32Array &portals, const PackedByteArray &seen, const PackedByteArray &water, const PackedByteArray &sea_open, const PackedByteArray &boats, const PackedInt32Array &docks, int64_t shore_cost, int64_t dock_cost) const;
+
 private:
 	struct PortStats {
 		int64_t calls = 0;

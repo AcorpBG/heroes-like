@@ -685,6 +685,8 @@ every function run inside `resolve_active_battle`, with `_finalize_*` left out. 
     without a revision bump.
 - **Runtime:** the slice 01 review fixes, the Variant hash, the shadow copy for writing functions, `KeyList::push_back`
   and `State::set` copying first, and const `State::array()`/`dict()` views. Shadow mismatches now print SCRIPT ERROR.
+  On main since e5006e81b (Windows binaries d7cd33045); the branch merged it in 4c296c997, after which shadow was
+  unchanged and native mode identical to main.
 - **Found, not fixed:** in `HeroProgressionRules._specialty_catalog`, `_catalog_source` is set before the index is
   built. After a bad specialty id fails `String()` in the first build, later calls get a partial index with no error.
   This only happens with bad content.
@@ -748,6 +750,25 @@ decision 2026-10-21). Candidates: `AiHeroRules._search` (11.5%), `_level_surface
 Owner decision 2026-10-21: the `_search` kernel starts now beside Phase 1, on its own branch `native-phase3-search`,
 merged to main once its games are identical. G3 is skipped for it.
 
+**`_search` kernel** (completed 2026-10-21, branch `native-phase3-search`):
+- Moved: `_search` calls two functions of the rules library on packed arrays (`core/ai_search.cpp`, rules API 2).
+  `ai_search_masks` builds the per-search masks: the surface's blocked and stop tiles, open neutral bodies and guard
+  zones, units, heroes and their hostile guard zones, the sea without armies, and the site stops the decision's site
+  record already answered. `ai_search_walk` is the breadth-first walk with GDScript's step order and tie breaks,
+  corners, portals, water, sailing, bought boats, docks and the radius cap. GDScript keeps the pending site stops
+  (`_site_stop_passable` reads node and artifact Dictionaries) and the stop refs of each reached tile. Tables that change
+  only with the surface, the open guard zones or the resolved encounters are cached on the surface.
+- Measured on the six seeds, main d7cd33045 against the change on it. Runs went in the order main, change, change,
+  main, six at once, on a machine shared with Phase 1's and Phase 5's runs, with a timer around `_search` only.
+  `_search` totals over the six games went from 68.0 s to 35.1 s (1.94x): l1 18.9 to 10.7, l2 20.6 to 11.4, mg-a 14.2
+  to 6.1, mg-b 9.7 to 4.4, mw 4.1 to 2.2, s2 0.66 to 0.39. Whole games went from 778 to 725 s (-6.8%); the two main
+  runs differed by 33 s. In one probe run the pending site stops took 4.1 of the 9.5 s left on l1.
+- Checks:
+  - shadow mode on the six seeds: 18,211 calls, 0 differences (types, key order and the site record included);
+  - `rules_selftest`: 58 captured vectors and a sweep of 3,000 generated boards;
+  - `rules_parity.py check` against main: identical on 6/6 seeds (415 daily digests and the match records);
+  - core suite 17/17 on Windows.
+
 ### Gate G3: re-plan from measurements
 
 Re-estimate Phases 4-7 from Phase 1's measured rate (lines per day, mismatches per 1,000 lines). The owner picks the
@@ -785,6 +806,30 @@ a78100003 without the battle port:
   are `port_call`, `port_check`, `port_report` and `port_stats`, and each table names its log variable.
   `tools/native_battle_switch.py --subsystem` touches only the switches that read that subsystem's mode.
 - Nothing on main calls it. Checks: core suite 17/17 on Windows, `rules_selftest` digests unchanged.
+
+**Inventory and boundary** (2026-10-21, main 6d7471276; every function of `scripts/core` and ContentService probed on
+the six seeds; times from l1, a large four-player game to day 90, on a machine shared with Phase 1's runs):
+- Reach: the Phase 5 entries reach 440 functions, 6,020 lines; 311 of them also run outside day processing, nearly all
+  in the AI turn. OverworldRules 156/2,408, EnemyAdventureRules 74/1,125, HeroProgressionRules 36/362, ArtifactRules
+  19/317, EnemyTurnRules 15/247, NativeTransitRules 13/205, HeroCommandRules 18/189, ScenarioScriptRules 5/171,
+  ContentService 20/144, GeneratedScenarioObjectiveRules 3/135, ScenarioRules 8/118, AiHeroRules 8/103, 14 more 65/496.
+- A day on l1: `end_turn` 1,408 ms, the AI turn 1,222 ms, day processing 186 ms. The closing normalize takes 106 (the
+  risk forecast with the enemy-state and roster normalize 55, the resource-node rebuild 33, the blocked-tile index 12,
+  fog 8.5), `_finalize_action_result` 71, the part before the AI turn 7, `apply_daily` 0.5; the 4.4 normalize calls
+  inside the AI turn 3. In AI matches every town belongs to a computer player, so player income, growth and deliveries
+  do almost nothing.
+- Converting the whole overworld (179,000 nodes, 1.64M values on day 90) into the value layer takes 392 ms and back
+  153 ms per day, three times the day processing itself. Its largest keys are ones day processing barely reads: flags
+  (573K values), the runtime scenario record (527K), the package source objects (481K), the map objects (333K).
+- Boundary: view and patch through the port bridge, no whole-state conversion. Two native calls per day around the AI
+  turn (`end_turn` before `_run_enemy_turn_cycle`, and after it), plus `normalize_overworld_state` where else it runs.
+  A call reads its arguments lazily, writes the containers it changed back in place and exports the ones it made, so it
+  costs the state it touches. `DayEngine.gd` hands a session over as a view (its fields, the very overworld, battle and
+  flags Dictionaries, its metadata) and writes the fields back; content comes from ContentService's own cached
+  documents in a context argument, so rows keep their identity. Estimate, unmeasured: the steps that rebuild data
+  value by value (the resource nodes, the fog grids) stay near their GDScript cost, the computing ones (enemy states
+  and forecast, scenario evaluation, the blocked-tile index) gain several times; Phase 5 alone gives under 1.1x on such
+  games, and Phase 6, keeping the session native across days, removes the conversion.
 
 ### Phase 6: match throughput
 

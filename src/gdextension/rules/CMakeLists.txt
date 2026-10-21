@@ -92,6 +92,7 @@ add_custom_target(aurelion_rules_source_tree
 	VERBATIM)
 
 add_library(aurelion_rules_core STATIC
+	core/ai_search.cpp
 	core/battle_hex.cpp
 	core/battle_state.cpp
 	core/build_info.cpp
@@ -128,6 +129,7 @@ if(AURELION_GODOT_CPP_INCLUDES)
 endif()
 
 add_executable(rules_selftest
+	selftest/ai_search_selftest.cpp
 	selftest/rules_selftest.cpp
 	selftest/compat_fuzz.cpp
 )
