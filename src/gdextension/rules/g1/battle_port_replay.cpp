@@ -24,6 +24,13 @@
 // rounds find the buffers of the same resolve. t_nat_us and t_nat_warm_us are
 // the median round, and the split by function is the median warm round's.
 //
+// The host is the capture's: its content (the unit, hero, faction and spell rows
+// and the files the port reads, decoded into the State before each round, as an
+// engine keeps its content resident) and its objects. g1_probe.gd writes a
+// RandomNumberGenerator as its seed and state and the session as the blobs of
+// the properties the port reads, so a property that is also an argument is the
+// same container.
+//
 //     battle_port_replay [--repeat N] [--prime OTHER.bin] CAPTURE.bin
 //
 // prints one JSON line. Exit 0, or 1 with the problem.
@@ -37,6 +44,7 @@
 #include <cstdio>
 #include <cstring>
 #include <fstream>
+#include <functional>
 #include <map>
 #include <stdexcept>
 #include <string>
@@ -143,12 +151,42 @@ void put_text(std::string &out, const std::string &text) {
 	out.append((4 - text.size() % 4) % 4, '\0');
 }
 
+// The markers g1_probe.gd writes for objects: {"__g1_rng__": [seed, state]} and
+// {"__g1_object__": {property: blob id}}.
+constexpr const char *kRngMarker = "__g1_rng__";
+constexpr const char *kObjectMarker = "__g1_object__";
+
+// An object of a capture: a RandomNumberGenerator, or the session as the
+// properties the port reads.
+struct ReplayObject {
+	bool rng = false;
+	uint64_t seed = 0;
+	uint64_t state = 0;
+	std::vector<std::pair<std::string, int64_t>> ids; // property, blob id, in the marker's order
+	std::vector<uint32_t> atoms; // the properties' atoms
+	std::vector<Value> values;
+};
+
 // Decodes var_to_bytes blobs into a State and encodes State values back the same
-// way. Types the battle state does not model are kept as their raw bytes.
+// way. Types the battle state does not model are kept as their raw bytes; the
+// object markers become opaque objects, whose property blobs `resolve` decodes.
 class Codec {
 public:
 	explicit Codec(State &state) :
 			state_(state) {}
+
+	std::function<Value(int64_t)> resolve;
+
+	ReplayObject *object(uint32_t ref) {
+		return ref < object_of_.size() && object_of_[ref] >= 0 ? &objects_[static_cast<size_t>(object_of_[ref])] : nullptr;
+	}
+
+	Value new_object(ReplayObject object) {
+		objects_.push_back(std::move(object));
+		object_of_.push_back(static_cast<int64_t>(objects_.size() - 1));
+		opaque_.emplace_back();
+		return Value::of_ref(Kind::Opaque, static_cast<uint32_t>(opaque_.size() - 1));
+	}
 
 	Value decode(const std::string &blob) {
 		Reader reader{ reinterpret_cast<const uint8_t *>(blob.data()), reinterpret_cast<const uint8_t *>(blob.data()) + blob.size() };
@@ -283,6 +321,16 @@ private:
 				const TypeRef key_type = read_type(reader, (header >> 16) & 3);
 				const TypeRef value_type = read_type(reader, (header >> 18) & 3);
 				const uint32_t count = reader.u32() & 0x7FFFFFFF;
+				if (count == 1 && key_type == 0 && value_type == 0) {
+					const uint8_t *mark = reader.at;
+					if (reader.u32() == STRING) {
+						const std::string marker = reader.text();
+						if (marker == kRngMarker || marker == kObjectMarker) {
+							return decode_object(reader, marker == kRngMarker);
+						}
+					}
+					reader.at = mark;
+				}
 				const uint32_t node = state_.new_dict();
 				state_.dict_node(node).key_type = key_type;
 				state_.dict_node(node).value_type = value_type;
@@ -348,6 +396,61 @@ private:
 			}
 			default:
 				fail("Variant type " + std::to_string(type) + " in a capture is not replayed");
+		}
+	}
+
+	// The value of a marker: [seed, state], or {property: blob id}.
+	Value decode_object(Reader &reader, bool rng) {
+		const auto bad = [] { fail("an object marker is not shaped as g1_probe.gd writes it"); };
+		ReplayObject object;
+		object.rng = rng;
+		const uint32_t header = reader.u32();
+		const uint32_t count = reader.u32() & 0x7FFFFFFF;
+		if (header != (rng ? ARRAY : DICTIONARY) || (rng && count != 2)) {
+			bad();
+		}
+		for (uint32_t index = 0; index < count; ++index) {
+			std::string name;
+			if (!rng) {
+				if (reader.u32() != STRING) {
+					bad();
+				}
+				name = reader.text();
+			}
+			const Value number = decode(reader);
+			if (number.kind != Kind::Int) {
+				bad();
+			}
+			if (rng) {
+				(index == 0 ? object.seed : object.state) = static_cast<uint64_t>(number.i);
+			} else {
+				object.ids.emplace_back(std::move(name), number.i);
+			}
+		}
+		for (const auto &item : object.ids) {
+			object.atoms.push_back(state_.intern(item.first));
+			object.values.push_back(resolve ? resolve(item.second) : Value());
+		}
+		return new_object(std::move(object));
+	}
+
+	void encode_object(const ReplayObject &object, std::string &out) const {
+		put_u32(out, DICTIONARY);
+		put_u32(out, 1);
+		put_u32(out, STRING);
+		put_text(out, object.rng ? kRngMarker : kObjectMarker);
+		put_u32(out, object.rng ? ARRAY : DICTIONARY);
+		if (object.rng) {
+			put_u32(out, 2);
+			encode(Value::of_int(static_cast<int64_t>(object.seed)), out);
+			encode(Value::of_int(static_cast<int64_t>(object.state)), out);
+			return;
+		}
+		put_u32(out, static_cast<uint32_t>(object.ids.size()));
+		for (const auto &item : object.ids) {
+			put_u32(out, STRING);
+			put_text(out, item.first);
+			encode(Value::of_int(item.second), out);
 		}
 	}
 
@@ -417,6 +520,10 @@ private:
 				return;
 			}
 			case Kind::Opaque:
+				if (value.ref < object_of_.size() && object_of_[value.ref] >= 0) {
+					encode_object(objects_[static_cast<size_t>(object_of_[value.ref])], out);
+					return;
+				}
 				out += opaque_[value.ref];
 				return;
 		}
@@ -425,6 +532,89 @@ private:
 	State &state_;
 	std::vector<ContainerType> types_;
 	std::vector<std::string> opaque_;
+	std::vector<ReplayObject> objects_;
+	std::vector<int64_t> object_of_; // per opaque slot: its object, or -1
+};
+
+// Whether a blob is an object marker (decoded per entry, never shared: a call
+// may roll an RNG it does not otherwise write).
+bool is_object_blob(const std::string &blob) {
+	if (blob.size() < 16) {
+		return false;
+	}
+	uint32_t word[3] = {};
+	std::memcpy(word, blob.data(), 12);
+	if (word[0] != DICTIONARY || word[1] != 1 || word[2] != STRING) {
+		return false;
+	}
+	Reader reader{ reinterpret_cast<const uint8_t *>(blob.data()) + 12, reinterpret_cast<const uint8_t *>(blob.data()) + blob.size() };
+	const std::string marker = reader.text();
+	return marker == kRngMarker || marker == kObjectMarker;
+}
+
+// The capture's host: its objects and its content. Containers are never backed.
+class ReplayHost : public aurelion::rules::state::Backing {
+public:
+	Codec *codec = nullptr;
+	std::map<std::pair<int, uint32_t>, Value> rows; // (table, id atom)
+	std::map<uint32_t, Value> files; // path atom
+
+	void fill_array(State &, uint32_t) override { fail("the replay has no backed Arrays"); }
+	void fill_dict(State &, uint32_t) override { fail("the replay has no backed Dictionaries"); }
+	int64_t array_size(uint32_t) override { fail("the replay has no backed Arrays"); }
+	Value array_at(State &, uint32_t, int64_t) override { fail("the replay has no backed Arrays"); }
+	int64_t dict_size(uint32_t) override { fail("the replay has no backed Dictionaries"); }
+	bool dict_lookup(State &, uint32_t, const Value &, Value &) override { fail("the replay has no backed Dictionaries"); }
+
+	Value object_get(State &state, uint32_t slot, uint32_t property) override {
+		const ReplayObject *object = codec->object(slot);
+		if (object != nullptr && !object->rng) {
+			for (size_t index = 0; index < object->atoms.size(); ++index) {
+				if (object->atoms[index] == property) {
+					return object->values[index];
+				}
+			}
+		}
+		throw aurelion::rules::state::ScriptError("the capture has no property " + state.text(property) + " of this object");
+	}
+	bool rng_get(uint32_t slot, uint64_t &seed, uint64_t &state) override {
+		const ReplayObject *object = codec->object(slot);
+		if (object == nullptr || !object->rng) {
+			return false;
+		}
+		seed = object->seed;
+		state = object->state;
+		return true;
+	}
+	void rng_set_state(uint32_t slot, uint64_t state) override {
+		ReplayObject *object = codec->object(slot);
+		if (object == nullptr || !object->rng) {
+			fail("rng_set_state on a slot that is not a RandomNumberGenerator");
+		}
+		object->state = state;
+	}
+	uint32_t rng_new(uint64_t seed, uint64_t state) override {
+		ReplayObject object;
+		object.rng = true;
+		object.seed = seed;
+		object.state = state;
+		return codec->new_object(std::move(object)).ref;
+	}
+	Value content_row(State &state, aurelion::rules::state::ContentTable table, uint32_t id) override {
+		using aurelion::rules::state::ContentTable;
+		if (table != ContentTable::Unit && table != ContentTable::Hero && table != ContentTable::Faction && table != ContentTable::Spell) {
+			fail("content table " + std::to_string(static_cast<int>(table)) + " is not in the capture (asked for " + state.text(id) + ")");
+		}
+		const auto found = rows.find({ static_cast<int>(table), id });
+		return found == rows.end() ? Value() : found->second;
+	}
+	Value content_file(State &state, uint32_t path) override {
+		const auto found = files.find(path);
+		if (found == files.end()) {
+			fail("content file " + state.text(path) + " is not in the capture");
+		}
+		return found->second;
+	}
 };
 
 std::string read_file(const char *path) {
@@ -467,9 +657,36 @@ struct Entry {
 
 struct Capture {
 	std::string key;
+	std::string content; // var_to_bytes of {"unit"|"hero"|"faction"|"spell": {id: row}, "files": {path: data}}
 	std::vector<std::string> blobs;
+	std::vector<bool> object_blob;
 	std::vector<Entry> entries;
 };
+
+// The property blob ids of a session marker, or false.
+bool object_ids(const std::string &blob, std::vector<std::pair<std::string, int64_t>> &ids) {
+	if (!is_object_blob(blob)) {
+		return false;
+	}
+	Reader reader{ reinterpret_cast<const uint8_t *>(blob.data()) + 12, reinterpret_cast<const uint8_t *>(blob.data()) + blob.size() };
+	if (reader.text() != kObjectMarker || reader.u32() != DICTIONARY) {
+		return false;
+	}
+	const uint32_t count = reader.u32() & 0x7FFFFFFF;
+	for (uint32_t index = 0; index < count; ++index) {
+		if (reader.u32() != STRING) {
+			return false;
+		}
+		std::string name = reader.text();
+		const uint32_t header = reader.u32();
+		if ((header & kTypeMask) != INT) {
+			return false;
+		}
+		const int64_t id = (header & kFlag64) != 0 ? static_cast<int64_t>(reader.u64()) : static_cast<int32_t>(reader.u32());
+		ids.emplace_back(std::move(name), id);
+	}
+	return true;
+}
 
 Capture read_capture(const char *path) {
 	State meta;
@@ -478,9 +695,11 @@ Capture read_capture(const char *path) {
 	Capture capture;
 	const Value key = field(meta, root, "key");
 	capture.key = meta.text(key.ref);
+	capture.content = codec.bytes_of(field(meta, root, "content"));
 	const Value blobs = field(meta, root, "blobs");
 	for (const Value &blob : items(meta, blobs)) {
 		capture.blobs.push_back(codec.bytes_of(blob));
+		capture.object_blob.push_back(is_object_blob(capture.blobs.back()));
 	}
 	std::map<std::string, const Function *> functions;
 	const Value rows = field(meta, root, "entries");
@@ -524,14 +743,46 @@ Capture read_capture(const char *path) {
 // One round of a resolve: every entry's arguments are decoded into the State and
 // every call runs in it, never cleared between calls. A blob that entries of
 // functions which only read their arguments share is decoded once; a function
-// that writes into its arguments gets its own copy per entry. The rounds share
-// one State, cleared between them, as the native engine keeps one State and its
-// memory from resolve to resolve.
+// that writes into its arguments gets its own copy per entry. An object is its
+// entry's own, and its properties are the entry's arguments of the same blob.
+// The rounds share one State, cleared between them, as the native engine keeps
+// one State and its memory from resolve to resolve.
 struct Loaded {
 	Loaded(const Capture &capture, State &state) :
 			capture(capture), state(state), offsets(capture.entries.size() + 1), shared(capture.blobs.size()), decoded(capture.blobs.size(), false) {
 		// As StateBridge::load starts a resolve: atoms and nodes cleared, node buffers kept.
 		state.clear();
+		host.codec = &codec;
+		state.set_backing(&host);
+		// The content, resident as the engine keeps it.
+		using aurelion::rules::state::ContentTable;
+		const Value content = codec.decode(capture.content);
+		const std::pair<const char *, ContentTable> tables[] = {
+			{ "unit", ContentTable::Unit },
+			{ "hero", ContentTable::Hero },
+			{ "faction", ContentTable::Faction },
+			{ "spell", ContentTable::Spell },
+		};
+		for (const auto &table : tables) {
+			const auto &rows = state.dict(field(state, content, table.first).ref);
+			for (size_t index = 0; index < rows.keys.size(); ++index) {
+				host.rows[{ static_cast<int>(table.second), rows.keys[index].ref }] = rows.values[index];
+			}
+		}
+		const auto &files = state.dict(field(state, content, "files").ref);
+		for (size_t index = 0; index < files.keys.size(); ++index) {
+			host.files[files.keys[index].ref] = files.values[index];
+		}
+		decoded_arrays = state.array_count();
+		decoded_dicts = state.dict_count();
+	}
+
+	Value shared_value(size_t blob) {
+		if (!decoded[blob]) {
+			shared[blob] = codec.decode(capture.blobs[blob]);
+			decoded[blob] = true;
+		}
+		return shared[blob];
 	}
 
 	// Entry `index`'s arguments, decoded now if they were not yet.
@@ -540,19 +791,44 @@ struct Loaded {
 			const size_t arrays = state.array_count();
 			const size_t dicts = state.dict_count();
 			const Entry &entry = capture.entries[prepared];
+			const bool writer = entry.function->mutates;
 			offsets[prepared] = args.size();
-			for (int64_t id : entry.args) {
-				const size_t blob = static_cast<size_t>(id);
-				if (entry.function->mutates) {
-					args.push_back(codec.decode(capture.blobs[blob]));
-					continue;
+			args.resize(args.size() + entry.args.size());
+			Value *slots = args.data() + offsets[prepared];
+			// A writer's copies by blob, for the object properties that are also its arguments.
+			std::map<int64_t, Value> own;
+			codec.resolve = [&](int64_t id) -> Value {
+				if (id < 0 || static_cast<size_t>(id) >= capture.blobs.size()) {
+					fail("an object property's blob id out of range");
 				}
-				if (!decoded[blob]) {
-					shared[blob] = codec.decode(capture.blobs[blob]);
-					decoded[blob] = true;
+				if (!writer) {
+					return shared_value(static_cast<size_t>(id));
 				}
-				args.push_back(shared[blob]);
+				const auto found = own.find(id);
+				if (found != own.end()) {
+					return found->second;
+				}
+				const Value value = codec.decode(capture.blobs[static_cast<size_t>(id)]);
+				own.emplace(id, value);
+				return value;
+			};
+			// Objects last, so that their properties find the arguments they share.
+			for (int pass = 0; pass < 2; ++pass) {
+				for (size_t arg = 0; arg < entry.args.size(); ++arg) {
+					const size_t blob = static_cast<size_t>(entry.args[arg]);
+					const bool object = capture.object_blob[blob];
+					if (object != (pass == 1)) {
+						continue;
+					}
+					if (object || writer) {
+						slots[arg] = codec.decode(capture.blobs[blob]);
+						own.emplace(entry.args[arg], slots[arg]);
+					} else {
+						slots[arg] = shared_value(blob);
+					}
+				}
 			}
+			codec.resolve = nullptr;
 			decoded_arrays += state.array_count() - arrays;
 			decoded_dicts += state.dict_count() - dicts;
 			++prepared;
@@ -566,6 +842,7 @@ struct Loaded {
 	const Capture &capture;
 	State &state;
 	Codec codec{ state };
+	ReplayHost host;
 	std::vector<Value> args; // per entry, arity values each
 	std::vector<size_t> offsets;
 	std::vector<Value> shared;
@@ -666,7 +943,22 @@ int run(int argc, char **argv) {
 				problem = "result";
 			}
 			for (size_t arg = 0; arg < entry.after.size() && problem.empty(); ++arg) {
-				if (loaded.codec.encode(loaded.args[loaded.offsets[index] + arg]) != capture.blobs[static_cast<size_t>(entry.after[arg])]) {
+				const Value &value = loaded.args[loaded.offsets[index] + arg];
+				const std::string &want = capture.blobs[static_cast<size_t>(entry.after[arg])];
+				const ReplayObject *object = value.kind == Kind::Opaque ? loaded.codec.object(value.ref) : nullptr;
+				bool same = true;
+				if (object != nullptr && !object->rng) {
+					// The session: each property against its blob afterwards.
+					std::vector<std::pair<std::string, int64_t>> then;
+					same = object_ids(want, then) && then.size() == object->ids.size();
+					for (size_t k = 0; same && k < then.size(); ++k) {
+						same = then[k].first == object->ids[k].first && then[k].second >= 0 && static_cast<size_t>(then[k].second) < capture.blobs.size() &&
+								loaded.codec.encode(object->values[k]) == capture.blobs[static_cast<size_t>(then[k].second)];
+					}
+				} else {
+					same = loaded.codec.encode(value) == want;
+				}
+				if (!same) {
 					problem = "argument " + std::to_string(arg) + " afterwards";
 				}
 			}

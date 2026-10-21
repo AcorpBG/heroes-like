@@ -10,6 +10,11 @@ extends RefCounted
 ## HEROES_G1_MODE picks the mode ("resolve", "ported" or "capture"), HEROES_G1_OUT the folder and
 ## HEROES_G1_CAPTURE_EVERY the share of resolves captured (those whose start digest is a multiple of it). Each process
 ## writes g1_<pid>.jsonl there, one line per resolve, and cap_<key>.bin per captured resolve.
+##
+## A capture also holds the content the port reads (the unit, hero, faction and spell rows by id and the files it
+## loads) and its objects as markers: a RandomNumberGenerator as {"__g1_rng__": [seed, state]}, another object (the
+## session) as {"__g1_object__": {property: blob id}} for the properties the port reads. battle_port_replay keeps the
+## content resident and decodes a property that is also an argument as the same container.
 
 static var mode: String = OS.get_environment("HEROES_G1_MODE")
 static var out_dir: String = OS.get_environment("HEROES_G1_OUT")
@@ -45,6 +50,18 @@ static var _start_bytes := PackedByteArray()
 static var _end_bytes := PackedByteArray()
 static var _seen := {}
 static var _file: FileAccess = null
+static var _content_bytes := PackedByteArray()
+
+## The session properties the port reads (gd::member).
+const _OBJECT_PROPERTIES := ["battle", "day", "difficulty", "session_id"]
+## ContentService rows the port reads (gd::content_row), by table, and the files it loads (gd::content_file).
+const _CONTENT_TABLES := {
+	"unit": ["res://content/units.json", "get_unit"],
+	"hero": ["res://content/heroes.json", "get_hero"],
+	"faction": ["res://content/factions.json", "get_faction"],
+	"spell": ["res://content/spells.json", "get_spell"],
+}
+const _CONTENT_FILES := ["res://content/hero_specialties.json"]
 
 
 static func begin_resolve(session) -> void:
@@ -114,6 +131,7 @@ static func end_resolve(session) -> void:
 			"end": _end_bytes,
 			"entries": _cap_entries,
 			"blobs": _blobs,
+			"content": _content(),
 		}))
 		capture.close()
 		_blob_ids = {}
@@ -182,13 +200,47 @@ static func capture_end(name: StringName, ids: Array, result, after: Array) -> v
 
 
 static func _blob(value) -> int:
-	var bytes := var_to_bytes(value)
+	var bytes := var_to_bytes(_marked(value))
 	var id: int = _blob_ids.get(bytes, -1)
 	if id < 0:
 		id = _blobs.size()
 		_blobs.append(bytes)
 		_blob_ids[bytes] = id
 	return id
+
+
+## A value as its blob holds it: an object as its marker.
+static func _marked(value):
+	if value is RandomNumberGenerator:
+		return {"__g1_rng__": [value.seed, value.state]}
+	if value is Object:
+		var properties := {}
+		for name in _OBJECT_PROPERTIES:
+			if name in value:
+				properties[name] = _blob(value.get(name))
+		return {"__g1_object__": properties}
+	return value
+
+
+## The content the port reads, as var_to_bytes, once per process.
+static func _content() -> PackedByteArray:
+	if _content_bytes.is_empty():
+		var content := {}
+		for table in _CONTENT_TABLES:
+			var source: Array = _CONTENT_TABLES[table]
+			var raw: Dictionary = ContentService.load_json(source[0])
+			var rows := {}
+			for item in raw.get("items", raw.get("entries", [])):
+				if item is Dictionary and item.has("id"):
+					var id := String(item["id"])
+					rows[id] = ContentService.call(source[1], id)
+			content[table] = rows
+		var files := {}
+		for path in _CONTENT_FILES:
+			files[path] = ContentService.load_json(path)
+		content["files"] = files
+		_content_bytes = var_to_bytes(content)
+	return _content_bytes
 
 
 ## What the timing adds to each measured entry: one clock read and the assignment around it.
