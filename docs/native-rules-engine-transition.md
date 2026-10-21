@@ -123,7 +123,8 @@ Every match and tuner record carries the native build id, content hash and overr
    sections daily, plus the match record. Sorted output is only for reporting where it differs.
 3. **`tools/rules_parity.py`:** finds the first differing day, replays to it with a full dump and reports the first
    differing path.
-4. **When:** every port or speed change on Windows (HEAD against change); once on Linux per native change; the payload
+4. **When:** every port or speed change on Windows (HEAD against change); once on Linux per native change, paused until
+   the owner's Linux pass (owner decision 2026-10-21: Windows only until then, AGENTS.md "Validation budget"); the payload
    corpus gives identical bytes under MSVC, GCC 13.3 and MinGW/Wine. `rules_selftest` (helper vectors and "two runs are
    equal") joins `tools/core_suite.py`.
 5. **Behaviour changes** record a new baseline in the same commit, with owner approval.
@@ -395,7 +396,7 @@ Release packaging still stops on the 4.7 GB export pack, which predates the rule
   build; every battle UI query compared in shadow mode on the human-seat corpus.
 - **Exit:** all battles native, the GDScript fight loop and BattleAiRules deleted, every deleted name grepped across
   `tests/` and `tools/` (`core_script_compile_check` covers only `scripts/` and `scenes/`), the runner and tuner run,
-  core suite on Windows and Linux, project.md ownership updated.
+  core suite on Windows (Linux in the owner's Linux pass), project.md ownership updated.
 - **Gain:** large for battle-only work (the tuner); modest for whole games, bounded by the battle share from Phase 0.
 
 ### Phase 1 results (first slice: inventory, section 11, engine-exact helpers, 2026-10-20)
@@ -806,7 +807,8 @@ Sizes are the proposal's unmeasured agent-day guesses, useful only to compare ph
 The exact functions to port (from Phase 0's executed-function list), every caller in `scenes/`, `scripts/`, `tests/` and
 `tools/`, the boundary signature, the corpus and parity commands, the freeze notice, what is forbidden (redesign, fixes
 inside port commits, builds or parity runs during an owner batch), the blocker format, and "done": native code runs in
-the game, the GDScript is deleted, callers are updated, parity is identical, the core suite passes on Windows and Linux,
+the game, the GDScript is deleted, callers are updated, parity is identical, the core suite passes on Windows (Linux waits
+for the owner's Linux pass),
 cleanup is done. Slices are cut small enough for an agent to hold their functions in context; BattleRules alone is 16k
 lines.
 
