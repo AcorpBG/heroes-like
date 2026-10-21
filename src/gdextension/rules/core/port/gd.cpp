@@ -1422,4 +1422,8 @@ void push_warning(State &state, const std::string &text) {
 	state.print_warning(text);
 }
 
+void refuse_gdscript_only_static(const State &state, Atom script, Atom name) {
+	fail(state.text(script) + "." + state.text(name) + " is GDScript's own memo: a native port neither reads nor fills it (its table's gdscript_only)");
+}
+
 } // namespace aurelion::rules::gd

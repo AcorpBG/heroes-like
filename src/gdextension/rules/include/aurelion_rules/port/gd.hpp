@@ -9,6 +9,7 @@
 #include "aurelion_rules/battle_state.hpp"
 #include "aurelion_rules/compat/godot_math.hpp"
 #include "aurelion_rules/compat/sort_array.hpp"
+#include "aurelion_rules/port/registry.hpp"
 
 #include <cstdint>
 #include <initializer_list>
@@ -255,9 +256,7 @@ void sort_custom(State &state, ArrayRef array, Less less) {
 	}
 	state::ValueList items = state.array(array).items;
 	compat::sort_custom(items.begin(), static_cast<int64_t>(items.size()), std::move(less));
-	state::ArrayNode &node = state.array_node(array);
-	node.items = std::move(items);
-	node.dirty = true;
+	state.replace_items(array, std::move(items));
 }
 
 // Packed arrays (PackedByteArray, PackedInt32Array, PackedStringArray), as
@@ -310,10 +309,24 @@ PackedRef base64_to_raw(State &state, Atom text);
 // sep.join(strings) of a PackedStringArray.
 Atom join_strings(State &state, Atom separator, PackedRef strings);
 
+// A GDScript memo that a table names as GDScript's own (Table::gdscript_only):
+// a ScriptError, for the port that reached it.
+[[noreturn]] void refuse_gdscript_only_static(const State &state, Atom script, Atom name);
+
 // Script.NAME of a GDScript static var (script: the script's res:// path),
 // and Script.NAME = value, which takes effect with the call's write-back.
-inline Value static_var(State &state, Atom script, Atom name) { return state.host().static_get(state, script, name); }
-inline void set_static_var(State &state, Atom script, Atom name, const Value &value) { state.host().static_set(state, script, name, value); }
+inline Value static_var(State &state, Atom script, Atom name) {
+	if (port::gdscript_only_static(script, name)) {
+		refuse_gdscript_only_static(state, script, name);
+	}
+	return state.host().static_get(state, script, name);
+}
+inline void set_static_var(State &state, Atom script, Atom name, const Value &value) {
+	if (port::gdscript_only_static(script, name)) {
+		refuse_gdscript_only_static(state, script, name);
+	}
+	state.host().static_set(state, script, name, value);
+}
 
 // "%d,%d" % [a, b] for ints.
 std::string format_pair(int64_t a, int64_t b);

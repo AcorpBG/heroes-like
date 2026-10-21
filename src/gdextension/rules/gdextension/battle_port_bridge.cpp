@@ -3,6 +3,7 @@
 #include "battle_state_bridge.hpp"
 
 #include "aurelion_rules/compat/godot_string.hpp"
+#include "aurelion_rules/port/registry.hpp"
 
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/global_constants.hpp>
@@ -198,6 +199,7 @@ void PortBridge::begin(bool validating) {
 	exported_packed_.clear();
 	statics_.clear();
 	static_slots_.clear();
+	memo_shapes_.clear();
 	validating_ = validating;
 	array_snapshots_.clear();
 	dict_snapshots_.clear();
@@ -610,6 +612,9 @@ Value PortBridge::load(const Variant &value) {
 			}
 			packed_sources_[node] = value;
 			state_.packed_node(node).backed = true;
+			// What GDScript holds: the native memo's answers read from it stay
+			// only while the port writes nothing into it (State::memo_find).
+			state_.watch_loaded(Value::of_ref(kind, node));
 			if (validating_) {
 				if (packed_snapshots_.size() <= node) {
 					packed_snapshots_.resize(node + 1);
@@ -637,6 +642,7 @@ Value PortBridge::load(const Variant &value) {
 				target.element_type = register_type(array.get_typed_builtin(), array.get_typed_class_name(), array.get_typed_script());
 			}
 			target.read_only = array.is_read_only();
+			state_.watch_loaded(Value::of_ref(Kind::Array, node));
 			if (validating_) {
 				if (array_snapshots_.size() <= node) {
 					array_snapshots_.resize(node + 1);
@@ -667,6 +673,7 @@ Value PortBridge::load(const Variant &value) {
 				target.value_type = register_type(dict.get_typed_value_builtin(), dict.get_typed_value_class_name(), dict.get_typed_value_script());
 			}
 			target.read_only = dict.is_read_only();
+			state_.watch_loaded(Value::of_ref(Kind::Dict, node));
 			if (validating_) {
 				if (dict_snapshots_.size() <= node) {
 					dict_snapshots_.resize(node + 1);
@@ -1239,12 +1246,64 @@ uint64_t container_identity(const Variant &value) {
 	}
 }
 
+// A memo's shape: each value's type, and for a container its identity and
+// size, `depth` levels further down; a value of another type by its hash. It
+// shows that a call replaced or filled the memo without comparing what it holds.
+void memo_shape(const Variant &value, int depth, std::vector<uint64_t> &out) {
+	out.push_back(static_cast<uint64_t>(value.get_type()));
+	const uint64_t id = container_identity(value);
+	if (id == 0) {
+		out.push_back(static_cast<uint64_t>(value.hash()));
+		return;
+	}
+	out.push_back(id);
+	if (value.get_type() == Variant::ARRAY) {
+		const Array array = value;
+		out.push_back(static_cast<uint64_t>(array.size()));
+		for (int64_t index = 0; depth > 0 && index < array.size(); ++index) {
+			memo_shape(array[index], depth - 1, out);
+		}
+	} else if (value.get_type() == Variant::DICTIONARY) {
+		const Dictionary dict = value;
+		out.push_back(static_cast<uint64_t>(dict.size()));
+		if (depth > 0) {
+			const Array values = dict.values();
+			for (int64_t index = 0; index < values.size(); ++index) {
+				memo_shape(values[index], depth - 1, out);
+			}
+		}
+	} else {
+		Variant packed = value;
+		out.push_back(static_cast<uint64_t>(static_cast<int64_t>(packed.call(StringName("size")))));
+	}
+}
+
+constexpr int kMemoShapeDepth = 2;
+
 bool is_meta_key(const Variant &key) {
 	const Variant::Type type = key.get_type();
 	return (type == Variant::STRING || type == Variant::STRING_NAME) && static_cast<String>(key) == String(kViewMeta);
 }
 
 } // namespace
+
+void PortBridge::keep_memo_shapes() {
+	memo_shapes_.clear();
+	size_t count = 0;
+	const port::Table *tables = port::tables(count);
+	for (size_t table = 0; table < count; ++table) {
+		for (size_t index = 0; index < tables[table].shared_memo_count; ++index) {
+			const port::ScriptStatic &var = tables[table].shared_memos[index];
+			if (static_slots_.count(static_cast<uint64_t>(var.script) << 32 | var.name) != 0) {
+				continue;
+			}
+			MemoShape &kept = memo_shapes_.emplace_back();
+			kept.script = var.script;
+			kept.name = var.name;
+			memo_shape(script_object(var.script)->get(static_name(var.name)), kMemoShapeDepth, kept.shape);
+		}
+	}
+}
 
 std::string PortBridge::verify(const Value &result, const Variant &gdscript_result, const Value *args, size_t count, const Array &after) {
 	matched_arrays_.clear();
@@ -1279,12 +1338,23 @@ std::string PortBridge::verify(const Value &result, const Variant &gdscript_resu
 	if (!out.empty()) {
 		return "arguments afterwards: " + out;
 	}
+	// The static vars the native call read or set. It cannot reach GDScript's
+	// own memos (port::Table::gdscript_only), which GDScript fills for its
+	// GDScript callers: they are never compared.
 	for (const StaticVar &var : statics_) {
 		path = state_.text(var.script) + "." + state_.text(var.name);
 		const Variant now = script_object(var.script)->get(static_name(var.name));
 		diff_value(var.value, now, path, out);
 		if (!out.empty()) {
 			return "static vars afterwards: " + out;
+		}
+	}
+	// The shared memos it left alone, as GDScript's call left them.
+	for (const MemoShape &kept : memo_shapes_) {
+		std::vector<uint64_t> now;
+		memo_shape(script_object(kept.script)->get(static_name(kept.name)), kMemoShapeDepth, now);
+		if (now != kept.shape) {
+			return "static vars afterwards: GDScript's call changed " + state_.text(kept.script) + "." + state_.text(kept.name) + ", which the native port left alone";
 		}
 	}
 	for (const auto &kept : rng_states_) {

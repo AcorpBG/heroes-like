@@ -4,7 +4,7 @@ Phase 1, "Checkpoint G1"; owner decision 2026-10-21).
 
     python tools/battle_port_g1/g1.py prepare MODE DEST [--rev REV]     # an instrumented copy of the branch point
     python tools/battle_port_g1/g1.py run DEST --corpus standard|holdout|seeds --out DIR [--jobs N] [--capture-every N]
-    python tools/battle_port_g1/g1.py replay CAPDIR... --out FILE [--jobs N] [--repeat N] [--prime previous|none] [--binary EXE]
+    python tools/battle_port_g1/g1.py replay CAPDIR... --out FILE [--jobs N] [--repeat N] [--prime previous|none] [--fresh-writers] [--binary EXE]
     python tools/battle_port_g1/g1.py convert --replay FILE --out FILE [--jobs N] [--rounds N]
     python tools/battle_port_g1/g1.py summarize --resolve DIR --ported DIR --replay FILE --convert FILE [--out FILE]
     python tools/battle_port_g1/g1.py remove DEST
@@ -535,6 +535,8 @@ def cmd_replay(args) -> int:
         other = primer(files, index) if args.prime == "previous" else None
         if other is not None:
             command += ["--prime", str(other)]
+        if args.fresh_writers:
+            command.append("--fresh-writers")
         proc = subprocess.run(command + [str(path)], capture_output=True, text=True, errors="replace")
         if proc.returncode != 0:
             return {"file": str(path), "error": (proc.stdout + proc.stderr)[-2000:]}
@@ -545,7 +547,8 @@ def cmd_replay(args) -> int:
     with ForeignGodot([]) as foreign, ThreadPoolExecutor(max_workers=args.jobs) as pool:
         rows = list(pool.map(one, range(len(files))))
     Path(args.out).write_text(NEWLINE.join(json.dumps(row) for row in rows) + NEWLINE, encoding="utf-8")
-    write_meta(args.out, {"jobs": args.jobs, "repeat": args.repeat, "prime": args.prime, "binary": str(binary), **foreign.report()})
+    write_meta(args.out, {"jobs": args.jobs, "repeat": args.repeat, "prime": args.prime, "fresh_writers": args.fresh_writers,
+                          "binary": str(binary), **foreign.report()})
     bad = [row for row in rows if "error" in row or row.get("mismatches")]
     print(f"replayed {len(rows)} resolves, {len(bad)} with errors or mismatches")
     for row in bad[:10]:
@@ -741,6 +744,8 @@ def main() -> int:
     p.add_argument("--prime", choices=["previous", "none"], default="previous",
                    help="the State the first round finds: as the previous capture left it, or new")
     p.add_argument("--binary", help="the replay binary (default: the build tree's battle_port_replay)")
+    p.add_argument("--fresh-writers", action="store_true",
+                   help="every writing entry decodes its own arguments, also one that left them as it found them")
     p.set_defaults(func=cmd_replay)
     p = sub.add_parser("convert", help="time the whole-battle conversion of the captured resolves")
     p.add_argument("capdir", nargs="*")

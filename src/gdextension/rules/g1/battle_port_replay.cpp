@@ -31,17 +31,22 @@
 // the properties the port reads, so a property that is also an argument is the
 // same container.
 //
-// The memos (GDScript's static vars the port reads and writes) are the
-// capture's too: a writing entry holds them as they were before it, decoded
-// with its arguments and its own, and the host hands the port that entry's.
-// A memo container that is one of the entry's arguments, or held in one, is
-// that argument's node; the specialty catalog is the resident content's. The
-// board-read cache arrives as the keys added since the last entry, kept here
-// and copied for each entry. After the calls, each writing entry's memos must
-// give the signature GDScript's left (the board-read hits and cache size, the
-// scoring memos' entries).
+// The memos the port shares with GDScript (its table's shared_memos) are the capture's
+// too: a writing entry holds them as they were before it, decoded with its
+// arguments and its own, and the host hands the port that entry's. A memo
+// container that is one of the entry's arguments, or held in one, is that
+// argument's node; the specialty catalog is the resident content's. After the
+// calls, each writing entry's memos must give the signature GDScript's left
+// (the scoring memos' entries). GDScript's own board-read memo
+// (the table's gdscript_only), which the capture still holds, is neither
+// decoded nor compared: the native board reads keep theirs in the State.
 //
-//     battle_port_replay [--repeat N] [--prime OTHER.bin] CAPTURE.bin
+// A writing entry that left its arguments as it found them reads them as a
+// reading entry does, from the nodes shared by blob, so that the State's memo
+// finds them from call to call as the native loop finds its battle;
+// --fresh-writers decodes them per entry, as every other writing entry.
+//
+//     battle_port_replay [--repeat N] [--prime OTHER.bin] [--fresh-writers] CAPTURE.bin
 //
 // prints one JSON line. Exit 0, or 1 with the problem.
 
@@ -187,12 +192,18 @@ constexpr const char *kStatics[][2] = {
 	{ "res://scripts/core/HeroProgressionRules.gd", "_catalog_index" },
 };
 constexpr size_t kStaticCount = sizeof(kStatics) / sizeof(kStatics[0]);
-constexpr size_t kCacheHits = 4;
-constexpr size_t kScopeCache = 5;
+// GDScript's own board-read memo: kStatics[1] to [5].
+constexpr size_t kGdscriptOnlyFirst = 1;
+constexpr size_t kGdscriptOnlyEnd = 6;
 constexpr size_t kScoringLiving = 8;
 constexpr size_t kScoringTerms = 9;
-// g1_probe.gd's _memo_signature: hits, cache keys, term entries, complete term entries, living entries.
+// g1_probe.gd's _memo_signature: board-read hits, board-read cache keys (both
+// GDScript's own, not compared), term entries, complete term entries, living entries.
 constexpr size_t kSignatureSize = 5;
+constexpr size_t kSignatureCompared = 2;
+
+// --fresh-writers: every writing entry decodes its own arguments.
+bool fresh_writers = false;
 
 // An object of a capture: a RandomNumberGenerator, or the session as the
 // properties the port reads.
@@ -846,8 +857,9 @@ Capture read_capture(const char *path) {
 
 // One round of a resolve: every entry's arguments are decoded into the State and
 // every call runs in it, never cleared between calls. A blob that entries of
-// functions which only read their arguments share is decoded once; a function
-// that writes into its arguments gets its own copy per entry. An object is its
+// functions which only read their arguments share is decoded once, and so is
+// one that a writing entry left as it found it; any other writing entry gets
+// its own copy of its arguments. An object is its
 // entry's own, and its properties are the entry's arguments of the same blob.
 // The rounds share one State, cleared between them, as the native engine keeps
 // one State and its memory from resolve to resolve.
@@ -898,7 +910,7 @@ struct Loaded {
 			const size_t arrays = state.array_count();
 			const size_t dicts = state.dict_count();
 			const Entry &entry = capture.entries[prepared];
-			const bool writer = entry.function->mutates;
+			const bool writer = entry.function->mutates && (fresh_writers || wrote_an_argument(entry));
 			offsets[prepared] = args.size();
 			args.resize(args.size() + entry.args.size());
 			Value *slots = args.data() + offsets[prepared];
@@ -946,23 +958,34 @@ struct Loaded {
 		return args.data() + offsets[index];
 	}
 
+	// GDScript's bytes of an argument afterwards are not its bytes before.
+	static bool wrote_an_argument(const Entry &entry) {
+		if (entry.after.size() != entry.args.size()) {
+			return true;
+		}
+		for (size_t arg = 0; arg < entry.args.size(); ++arg) {
+			if (entry.after[arg] != entry.args[arg]) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	// The host hands entry `index`'s memos to the call about to run.
 	void enter(size_t index) {
 		host.statics = statics[index].empty() ? nullptr : &statics[index];
 	}
 
-	// The signature of entry `index`'s memos now (g1_probe.gd's _memo_signature).
+	// Entry `index`'s memos now give `want`'s compared part (g1_probe.gd's _memo_signature).
+	bool same_signature(size_t index, const std::vector<int64_t> &want) const {
+		const std::vector<int64_t> now = signature(index);
+		return want.size() == kSignatureSize && std::equal(now.begin() + kSignatureCompared, now.end(), want.begin() + kSignatureCompared);
+	}
 	std::vector<int64_t> signature(size_t index) const {
 		const std::vector<Value> &memo = statics[index];
 		std::vector<int64_t> out(kSignatureSize, -1);
 		if (memo.size() != kStaticCount) {
 			return out;
-		}
-		if (memo[kCacheHits].kind == Kind::Int) {
-			out[0] = memo[kCacheHits].i;
-		}
-		if (memo[kScopeCache].kind == Kind::Dict) {
-			out[1] = static_cast<int64_t>(state.dict(memo[kScopeCache].ref).keys.size());
 		}
 		if (memo[kScoringTerms].kind == Kind::Dict) {
 			out[2] = 0;
@@ -1019,10 +1042,12 @@ private:
 		};
 		memo.resize(kStaticCount);
 		for (size_t index = 0; index < kStaticCount; ++index) {
+			if (index >= kGdscriptOnlyFirst && index < kGdscriptOnlyEnd) {
+				continue;
+			}
 			memo[index] = codec.decode(capture.blobs[static_cast<size_t>(entry.statics[index])]);
 		}
 		codec.alias = nullptr;
-		memo[kScopeCache] = scope_cache(memo[kScopeCache]);
 	}
 
 	// {"__g1_arg__": [argument, step...]}: the argument, then a session's
@@ -1101,39 +1126,7 @@ private:
 		return catalog;
 	}
 
-	// The board-read cache: [serial, keys before, {added keys}] onto the cache
-	// kept so far (a new one when the serial moves on), copied for the entry.
-	Value scope_cache(const Value &delta) {
-		const ValueList &parts = items(state, delta);
-		if (parts.size() != 3 || parts[0].kind != Kind::Int || parts[1].kind != Kind::Int || parts[2].kind != Kind::Dict) {
-			fail("a board-read cache delta is not shaped as g1_probe.gd writes it");
-		}
-		if (cache.kind == Kind::Nil || parts[0].i != cache_serial) {
-			cache = Value::of_ref(Kind::Dict, state.new_dict());
-			cache_serial = parts[0].i;
-		}
-		auto &kept = state.dict_node(cache.ref);
-		if (static_cast<int64_t>(kept.keys.size()) != parts[1].i) {
-			fail("a board-read cache delta does not follow the one before");
-		}
-		const auto &added = state.dict(parts[2].ref);
-		for (size_t index = 0; index < added.keys.size(); ++index) {
-			kept.keys.push_back(added.keys[index]);
-			kept.values.push_back(added.values[index]);
-		}
-		const uint32_t copy = state.new_dict();
-		auto &node = state.dict_node(copy);
-		node.keys = kept.keys;
-		node.values.reserve(kept.values.size());
-		for (const Value &value : kept.values) {
-			node.values.push_back(value);
-		}
-		return Value::of_ref(Kind::Dict, copy);
-	}
-
 	Value catalog;
-	Value cache;
-	int64_t cache_serial = -1;
 };
 
 double clock_overhead_ns() {
@@ -1173,12 +1166,14 @@ int run(int argc, char **argv) {
 			repeat = std::max(1, std::atoi(argv[++index]));
 		} else if (arg == "--prime" && index + 1 < argc) {
 			prime_path = argv[++index];
+		} else if (arg == "--fresh-writers") {
+			fresh_writers = true;
 		} else {
 			path = argv[index];
 		}
 	}
 	if (path == nullptr) {
-		std::fprintf(stderr, "usage: battle_port_replay [--repeat N] [--prime OTHER.bin] CAPTURE.bin\n");
+		std::fprintf(stderr, "usage: battle_port_replay [--repeat N] [--prime OTHER.bin] [--fresh-writers] CAPTURE.bin\n");
 		return 1;
 	}
 	const Capture capture = read_capture(path);
@@ -1247,7 +1242,7 @@ int run(int argc, char **argv) {
 					problem = "argument " + std::to_string(arg) + " afterwards";
 				}
 			}
-			if (problem.empty() && !entry.signature.empty() && loaded.signature(index) != entry.signature) {
+			if (problem.empty() && !entry.signature.empty() && !loaded.same_signature(index, entry.signature)) {
 				problem = "memos afterwards";
 			}
 			if (!problem.empty()) {

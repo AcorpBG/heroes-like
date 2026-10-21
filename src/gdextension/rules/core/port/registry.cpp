@@ -364,9 +364,33 @@ const Function kFunctions[] = {
 
 } // namespace
 
+namespace key = state::key;
+
+// GDScript's own memos: BattleRules' board-read memo. The native board reads
+// keep their answers in the State instead (State::memo_find, board_read_key).
+constexpr ScriptStatic kGdscriptOnly[] = {
+	{ key::battle_rules_script, key::_board_read_scope_depth },
+	{ key::battle_rules_script, key::_board_read_scope_battle },
+	{ key::battle_rules_script, key::_board_read_scope_cache },
+	{ key::battle_rules_script, key::_board_read_cache_hits },
+	{ key::battle_rules_script, key::_validation_board_read_cache_disabled },
+};
+
+// The memos the port shares with GDScript.
+constexpr ScriptStatic kSharedMemos[] = {
+	{ key::battle_rules_script, key::_presentation_queue_written },
+	{ key::battle_rules_script, key::_hero_payload_cache },
+	{ key::battle_ai_rules_script, key::_scoring_scope_depth },
+	{ key::battle_ai_rules_script, key::_scoring_living },
+	{ key::battle_ai_rules_script, key::_scoring_stack_terms },
+	{ key::hero_progression_rules_script, key::_catalog_source },
+	{ key::hero_progression_rules_script, key::_catalog_index },
+};
+
 // The battle port's table, listed in registry_tables.cpp.
 Table battle_table() {
-	return {"HEROES_NATIVE_BATTLE_LOG", kFunctions, sizeof(kFunctions) / sizeof(kFunctions[0])};
+	return {"HEROES_NATIVE_BATTLE_LOG", kFunctions, sizeof(kFunctions) / sizeof(kFunctions[0]), kGdscriptOnly, sizeof(kGdscriptOnly) / sizeof(kGdscriptOnly[0]), kSharedMemos,
+		sizeof(kSharedMemos) / sizeof(kSharedMemos[0])};
 }
 
 } // namespace aurelion::rules::port

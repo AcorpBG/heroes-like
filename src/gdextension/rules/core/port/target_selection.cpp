@@ -538,15 +538,14 @@ DictRef _preferred_default_target_for_active_stack(State &state, DictRef battle,
 
 ArrayRef _legal_attack_target_ids_for_active_stack(State &state, DictRef battle) {
 	const Atom active_id = string_or_empty(state, battle, key::active_stack_id);
-	const Atom cache_key = _board_read_scope_holds(state, battle) ? _board_read_cache_key(state, battle, "attack_target_ids", state.text(active_id)) : key::empty;
-	const Value cached = _board_read_cache_get(state, cache_key);
-	if (cached.kind != state::Kind::Nil) {
-		return gd::as_array(cached);
+	const State::MemoKey memo = board_read_key(BoardRead::attack_target_ids, battle, active_id);
+	Value kept;
+	uint64_t since = 0;
+	if (state.memo_find(memo, { dict_value(battle) }, kept, since)) {
+		return gd::as_array(kept);
 	}
 	const ArrayRef ids = _legal_attack_target_ids_for_active_stack_uncached(state, battle);
-	if (cache_key != key::empty) {
-		_board_read_cache_put(state, cache_key, array_value(gd::duplicate_array(state, ids)));
-	}
+	state.memo_keep(memo, array_value(ids), since);
 	return ids;
 }
 

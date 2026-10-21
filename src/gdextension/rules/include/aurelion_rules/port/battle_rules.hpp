@@ -6,19 +6,20 @@
 // what they read. Layers 3 and 4: movement and targeting, turn order and
 // effects.
 //
-// The memos are GDScript's static vars, read and written through the host
-// (gd::static_var) as the GDScript reads and writes them, so they keep its
-// lifetime: the board-read memo (_board_read_scope_*, _board_read_cache_hits,
-// _validation_board_read_cache_disabled), _hero_payload_cache and
-// _presentation_queue_written. A ported function that reaches one is a writing
-// function. _hex_id_by_key is the one memo left out: it maps the board's 99
-// "q,r" keys to fixed hex ids, built once, and the native code reads the same
-// ids off the State's fixed atoms.
+// _hero_payload_cache and _presentation_queue_written are GDScript's static
+// vars, read and written through the host (gd::static_var) as the GDScript
+// reads and writes them, so they keep its lifetime. A ported function that
+// reaches one is a writing function. The board reads keep their answers in a
+// native memo instead (board_read_key); GDScript's board-read memo
+// (_board_read_scope_*, _board_read_cache_hits,
+// _validation_board_read_cache_disabled) is GDScript's own, and the validating
+// check refuses a native read of it. _hex_id_by_key is left out: it maps the
+// board's 99 "q,r" keys to fixed hex ids, built once, and the native code reads
+// the same ids off the State's fixed atoms.
 //
 // Not ported, with the reason:
-// - begin_board_read_scope and end_board_read_scope: no ported function opens
-//   a board-read scope; GDScript's callers open it, and the native reads find
-//   it in the static vars.
+// - begin_board_read_scope and end_board_read_scope: they open GDScript's
+//   board-read memo, which the native board reads do not use.
 // - BattleActionPlayback.capture, the playback frames of a presented action:
 //   slice 10. It does nothing on a battle without the capture key; on one with
 //   it, the native callers (_set_stack_hex, _mark_stack_animation_event) stop
@@ -75,16 +76,23 @@ void _sync_occupied_hexes(State &state, DictRef battle);
 DictRef _walk_steps_to_target(State &state, DictRef battle, DictRef stack, DictRef target, int64_t gap);
 void _walk_open_mask(State &state, DictRef battle, DictRef stack, uint8_t *open);
 
-// The board-read memo (begin_board_read_scope). _board_read_cache_key is ""
-// (key::empty) unless _board_read_scope_holds: inside a scope, not disabled,
-// on the scope's battle. GDScript formats the key's id before it asks, but
-// making it cannot fail, so the native callers make it only for a key.
-bool _board_read_scope_holds(State &state, DictRef battle);
-Atom _board_read_cache_key(State &state, DictRef battle, const char *kind, const std::string &id);
-// The cached value's duplicate(true), counting the hit, or Nil.
-Value _board_read_cache_get(State &state, Atom cache_key);
-// _board_read_scope_cache[cache_key] = value.
-void _board_read_cache_put(State &state, Atom cache_key, const Value &value);
+// The board reads' native memo (slice 04c, State::memo_find), in place of
+// GDScript's board-read memo (begin_board_read_scope, _board_read_scope_cache),
+// which stays GDScript's own: the native port neither reads nor fills it. A
+// board read is kept by the battle and the stacks it was asked about, as nodes,
+// while nothing it read changes, so it needs no scope, no hash of the stacks
+// and no copies; GDScript's memo returns the same answers inside its scope.
+enum class BoardRead : uint64_t {
+	destinations = 1,
+	approach,
+	legality,
+	attack_target_ids,
+	walk_steps,
+	walk_open_mask,
+};
+inline State::MemoKey board_read_key(BoardRead kind, DictRef battle, uint64_t first, uint64_t second = 0, int64_t number = 0) {
+	return { static_cast<uint64_t>(kind) << 32 | battle, first << 32 | second, static_cast<uint64_t>(number) };
+}
 
 
 // Layer 2.

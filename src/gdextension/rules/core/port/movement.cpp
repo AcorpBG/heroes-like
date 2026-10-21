@@ -1,7 +1,8 @@
 // Layer 3: movement: legal destinations, melee approaches, the advance terms and attack legality.
 //
-// The board-read memo keys: legal destinations by battle id, melee approaches
-// and attack legality by hash() of the two stacks.
+// The board reads' native memo (board_read_key): legal destinations by the
+// battle and the stack's battle id, melee approaches and attack legality by the
+// battle and the two stacks.
 
 #include "aurelion_rules/port/battle_rules.hpp"
 
@@ -37,11 +38,6 @@ Atom stack_battle_id(const State &state, DictRef stack) {
 	return gd::string_field(state, stack, key::battle_id, key::empty);
 }
 
-// "%d|%d" % [hash(stack), hash(target)]
-std::string stack_pair_id(const State &state, DictRef stack, DictRef target) {
-	return compat::itos(gd::hash(state, dict_value(stack))) + "|" + compat::itos(gd::hash(state, dict_value(target)));
-}
-
 } // namespace
 
 ArrayRef legal_destinations_for_active_stack(State &state, DictRef battle) {
@@ -49,10 +45,11 @@ ArrayRef legal_destinations_for_active_stack(State &state, DictRef battle) {
 }
 
 ArrayRef legal_destinations_for_stack(State &state, DictRef battle, Atom battle_id) {
-	const Atom cache_key = _board_read_scope_holds(state, battle) ? _board_read_cache_key(state, battle, "destinations", state.text(battle_id)) : key::empty;
-	const Value cached = _board_read_cache_get(state, cache_key);
-	if (cached.kind != state::Kind::Nil) {
-		return gd::as_array(cached);
+	const State::MemoKey memo = board_read_key(BoardRead::destinations, battle, battle_id);
+	Value kept;
+	uint64_t since = 0;
+	if (state.memo_find(memo, { dict_value(battle) }, kept, since)) {
+		return gd::as_array(kept);
 	}
 	ArrayRef destinations;
 	const DictRef stack = _get_stack_by_id(state, battle, battle_id);
@@ -63,9 +60,7 @@ ArrayRef legal_destinations_for_stack(State &state, DictRef battle, Atom battle_
 	} else {
 		destinations = _reachable_empty_hexes(state, battle, stack, _stack_movement_points(state, stack, battle));
 	}
-	if (cache_key != key::empty) {
-		_board_read_cache_put(state, cache_key, array_value(gd::deep_duplicate_array(state, destinations)));
-	}
+	state.memo_keep(memo, array_value(destinations), since);
 	return destinations;
 }
 
@@ -76,10 +71,12 @@ DictRef melee_approach_destination(State &state, DictRef battle, DictRef stack, 
 	if (stack_side(state, stack) == stack_side(state, target) || _can_make_melee_attack(state, stack, battle, target)) {
 		return state.new_dict();
 	}
-	const Atom cache_key = _board_read_scope_holds(state, battle) ? _board_read_cache_key(state, battle, "approach", stack_pair_id(state, stack, target)) : key::empty;
-	const Value cached = _board_read_cache_get(state, cache_key);
-	if (cached.kind != state::Kind::Nil) {
-		return gd::as_dict(cached);
+	// A new Dictionary on every call, as GDScript returns (its memo's copies).
+	const State::MemoKey memo = board_read_key(BoardRead::approach, battle, stack, target);
+	Value kept;
+	uint64_t since = 0;
+	if (state.memo_find(memo, { dict_value(battle), dict_value(stack), dict_value(target) }, kept, since)) {
+		return gd::deep_duplicate_dict(state, gd::as_dict(kept));
 	}
 	// var best := {}: Nil stands for the empty literal until a cell is taken.
 	Value best;
@@ -98,9 +95,7 @@ DictRef melee_approach_destination(State &state, DictRef battle, DictRef stack, 
 		}
 	}
 	const DictRef best_dict = best.kind == state::Kind::Nil ? state.new_dict() : gd::as_dict(best);
-	if (cache_key != key::empty) {
-		_board_read_cache_put(state, cache_key, dict_value(gd::deep_duplicate_dict(state, best_dict)));
-	}
+	state.memo_keep(memo, dict_value(best_dict), since);
 	return gd::deep_duplicate_dict(state, best_dict);
 }
 
@@ -296,11 +291,12 @@ DictRef _attack_legality_for_target(State &state, DictRef active_stack, DictRef 
 		state.set(none, str(key::hex_distance), int_value(-1));
 		return none;
 	}
-	// Keyed by the exact stacks passed, so a moved projection is its own entry.
-	const Atom cache_key = _board_read_scope_holds(state, battle) ? _board_read_cache_key(state, battle, "legality", stack_pair_id(state, active_stack, target)) : key::empty;
-	const Value cached = _board_read_cache_get(state, cache_key);
-	if (cached.kind != state::Kind::Nil) {
-		return gd::as_dict(cached);
+	// Kept by the exact stacks passed, so a moved projection is its own entry.
+	const State::MemoKey memo = board_read_key(BoardRead::legality, battle, active_stack, target);
+	Value kept;
+	uint64_t since = 0;
+	if (state.memo_find(memo, { dict_value(battle), dict_value(active_stack), dict_value(target) }, kept, since)) {
+		return gd::as_dict(kept);
 	}
 	const int64_t hex_distance = _stack_hex_distance(state, active_stack, target);
 	const bool melee_legal = _can_melee_this_action(state, active_stack, battle, target);
@@ -313,9 +309,7 @@ DictRef _attack_legality_for_target(State &state, DictRef active_stack, DictRef 
 	state.set(legality, str(key::attackable), bool_value(melee_legal || ranged_legal));
 	state.set(legality, str(key::blocked), bool_value(!melee_legal && !ranged_legal));
 	state.set(legality, str(key::hex_distance), int_value(hex_distance));
-	if (cache_key != key::empty) {
-		_board_read_cache_put(state, cache_key, dict_value(gd::duplicate_dict(state, legality)));
-	}
+	state.memo_keep(memo, dict_value(legality), since);
 	return legality;
 }
 

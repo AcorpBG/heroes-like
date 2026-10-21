@@ -363,14 +363,15 @@ void _sync_occupied_hexes(State &state, DictRef battle) {
 }
 
 DictRef _walk_steps_to_target(State &state, DictRef battle, DictRef stack, DictRef target, int64_t gap) {
-	const Atom stack_id = gd::to_string(state.get(stack, str(key::battle_id), str(key::empty)));
-	const Atom target_id = gd::to_string(state.get(target, str(key::battle_id), str(key::empty)));
-	const Atom cache_key = _board_read_scope_holds(state, battle)
-			? _board_read_cache_key(state, battle, "walk_steps", state.text(stack_id) + ">" + state.text(target_id) + "|" + compat::itos(gap))
-			: key::empty;
-	const Value cached = _board_read_cache_get(state, cache_key);
-	if (cached.kind != Kind::Nil) {
-		return gd::as_dict(cached);
+	// GDScript's key names the stacks by battle id (String(), which cannot fail
+	// on a String); the memo keys them as nodes.
+	gd::to_string(state.get(stack, str(key::battle_id), str(key::empty)));
+	gd::to_string(state.get(target, str(key::battle_id), str(key::empty)));
+	const State::MemoKey memo = board_read_key(BoardRead::walk_steps, battle, stack, target, gap);
+	Value kept;
+	uint64_t since = 0;
+	if (state.memo_find(memo, { dict_value(battle), dict_value(stack), dict_value(target) }, kept, since)) {
+		return gd::as_dict(kept);
 	}
 	int64_t target_q = -1;
 	int64_t target_r = -1;
@@ -385,88 +386,24 @@ DictRef _walk_steps_to_target(State &state, DictRef battle, DictRef stack, DictR
 		const Atom cell_key = _hex_key_from_coords(state, int_div(pair.id, BATTLE_HEX_ROWS), int_mod(pair.id, BATTLE_HEX_ROWS));
 		state.set(steps, str(cell_key), int_value(pair.steps));
 	}
-	if (cache_key != key::empty) {
-		_board_read_cache_put(state, cache_key, dict_value(gd::duplicate_dict(state, steps)));
-	}
+	state.memo_keep(memo, dict_value(steps), since);
 	return steps;
 }
 
 void _walk_open_mask(State &state, DictRef battle, DictRef stack, uint8_t *open) {
-	const Atom stack_id = gd::to_string(state.get(stack, str(key::battle_id), str(key::empty)));
-	const Atom cache_key = _board_read_scope_holds(state, battle) ? _board_read_cache_key(state, battle, "walk_open_mask", state.text(stack_id)) : key::empty;
+	gd::to_string(state.get(stack, str(key::battle_id), str(key::empty)));
 	constexpr int64_t kCells = BATTLE_HEX_COLUMNS * BATTLE_HEX_ROWS;
-	if (cache_key != key::empty) {
-		// The cached mask itself, without a copy: it is only read.
-		const DictRef cache = gd::as_dict(gd::static_var(state, key::battle_rules_script, key::_board_read_scope_cache));
-		Value cached;
-		if (state.lookup(cache, str(cache_key), cached)) {
-			const int64_t hits = gd::to_int(state, gd::static_var(state, key::battle_rules_script, key::_board_read_cache_hits));
-			gd::set_static_var(state, key::battle_rules_script, key::_board_read_cache_hits, int_value(gd::add(hits, 1)));
-			const gd::PackedRef mask = gd::as_bytes(cached);
-			if (gd::packed_size(state, mask) != kCells) {
-				throw state::ScriptError("the board-read memo holds a walk mask of another size");
-			}
-			std::memcpy(open, gd::packed_bytes(state, mask), kCells);
-			return;
-		}
+	const State::MemoKey memo = board_read_key(BoardRead::walk_open_mask, battle, stack);
+	Value kept;
+	uint64_t since = 0;
+	if (state.memo_find(memo, { dict_value(battle), dict_value(stack) }, kept, since)) {
+		std::memcpy(open, gd::packed_bytes(state, gd::as_bytes(kept)), kCells);
+		return;
 	}
 	_hex_open_mask(state, stack, _build_blocking_map(state, battle), open);
-	if (cache_key != key::empty) {
-		const gd::PackedRef mask = gd::new_bytes(state);
-		state.packed_node(mask).bytes.assign(open, open + kCells);
-		_board_read_cache_put(state, cache_key, gd::bytes_value(mask));
-	}
-}
-
-bool _board_read_scope_holds(State &state, DictRef battle) {
-	if (gd::to_int(state, gd::static_var(state, key::battle_rules_script, key::_board_read_scope_depth)) <= 0) {
-		return false;
-	}
-	if (gd::to_bool(gd::static_var(state, key::battle_rules_script, key::_validation_board_read_cache_disabled))) {
-		return false;
-	}
-	return gd::is_same(state, dict_value(battle), gd::static_var(state, key::battle_rules_script, key::_board_read_scope_battle));
-}
-
-Atom _board_read_cache_key(State &state, DictRef battle, const char *kind, const std::string &id) {
-	// "%s|%s|%d|%d|%d|%d" % [kind, id, hash(battle.get("stacks", [])),
-	// hash(battle.get(FIELD_OBJECTIVES_KEY, [])), int(battle.get("distance", 1)),
-	// int(battle.get("round", 1))]
-	Value stacks;
-	if (!state.lookup(battle, str(key::stacks), stacks)) {
-		stacks = array_value(state.new_array());
-	}
-	Value objectives;
-	if (!state.lookup(battle, str(key::field_objectives), objectives)) {
-		objectives = array_value(state.new_array());
-	}
-	std::string text = kind;
-	text += "|";
-	text += id;
-	text += "|" + compat::itos(gd::hash(state, stacks));
-	text += "|" + compat::itos(gd::hash(state, objectives));
-	text += "|" + compat::itos(gd::int_field(state, battle, key::distance, 1));
-	text += "|" + compat::itos(gd::int_field(state, battle, key::round, 1));
-	return state.intern(text);
-}
-
-Value _board_read_cache_get(State &state, Atom cache_key) {
-	if (cache_key == key::empty) {
-		return Value();
-	}
-	const DictRef cache = gd::as_dict(gd::static_var(state, key::battle_rules_script, key::_board_read_scope_cache));
-	Value cached;
-	if (!state.lookup(cache, str(cache_key), cached)) {
-		return Value();
-	}
-	const int64_t hits = gd::to_int(state, gd::static_var(state, key::battle_rules_script, key::_board_read_cache_hits));
-	gd::set_static_var(state, key::battle_rules_script, key::_board_read_cache_hits, int_value(gd::add(hits, 1)));
-	return gd::duplicate_value(state, cached, true);
-}
-
-void _board_read_cache_put(State &state, Atom cache_key, const Value &value) {
-	const DictRef cache = gd::as_dict(gd::static_var(state, key::battle_rules_script, key::_board_read_scope_cache));
-	state.set(cache, str(cache_key), value);
+	const gd::PackedRef mask = gd::new_bytes(state);
+	state.packed_node(mask).bytes.assign(open, open + kCells);
+	state.memo_keep(memo, gd::bytes_value(mask), since);
 }
 
 } // namespace aurelion::rules::port::battle_rules

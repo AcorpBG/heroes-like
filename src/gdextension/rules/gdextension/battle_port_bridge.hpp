@@ -100,6 +100,10 @@ public:
 	// (a session's view, which the engine script makes again) is compared by
 	// its contents, and so is its "meta".
 	std::string verify(const state::Value &result, const godot::Variant &gdscript_result, const state::Value *args, size_t count, const godot::Array &after);
+	// A validating call, after the native call: the shape of each memo the
+	// native port shares with GDScript (port::Table::shared_memos) that the native call
+	// left alone, which verify then finds as GDScript's call left it.
+	void keep_memo_shapes();
 
 	void fill_array(state::State &state, uint32_t node) override;
 	void fill_dict(state::State &state, uint32_t node) override;
@@ -134,6 +138,11 @@ private:
 		uint32_t name = 0;
 		state::Value value;
 		bool assigned = false;
+	};
+	struct MemoShape {
+		uint32_t script = 0;
+		uint32_t name = 0;
+		std::vector<uint64_t> shape;
 	};
 
 	state::Value load_string(const godot::String &text, state::Kind kind);
@@ -174,6 +183,8 @@ private:
 	// (script << 32 | name).
 	std::vector<StaticVar> statics_;
 	std::unordered_map<uint64_t, size_t> static_slots_;
+	// A validating call: the shared memos the native call left alone (keep_memo_shapes).
+	std::vector<MemoShape> memo_shapes_;
 	// A validating call: each loaded container as it was loaded, by node
 	// (Array and Dictionary: duplicate(false); a packed array: duplicate()).
 	bool validating_ = false;
