@@ -685,6 +685,8 @@ every function run inside `resolve_active_battle`, with `_finalize_*` left out. 
     without a revision bump.
 - **Runtime:** the slice 01 review fixes, the Variant hash, the shadow copy for writing functions, `KeyList::push_back`
   and `State::set` copying first, and const `State::array()`/`dict()` views. Shadow mismatches now print SCRIPT ERROR.
+  On main since e5006e81b (Windows binaries d7cd33045); the branch merged it in 4c296c997, after which shadow was
+  unchanged and native mode identical to main.
 - **Found, not fixed:** in `HeroProgressionRules._specialty_catalog`, `_catalog_source` is set before the index is
   built. After a bad specialty id fails `String()` in the first build, later calls get a partial index with no error.
   This only happens with bad content.
