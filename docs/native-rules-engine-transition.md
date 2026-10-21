@@ -403,6 +403,8 @@ Release packaging still stops on the 4.7 GB export pack, which predates the rule
   - Owner decision 2026-10-21: slice 04c replaces the ported board-read cache with a native one (a state change
     counter, no whole-array hashing, no deep copy, none where recomputing is cheaper), re-measures G1 on `standard` with
     Phases 3 and 5 paused, then layer 5 starts whatever the number.
+  - With the native board-read memo (2026-10-21, "G1 on `standard` after the native memo", no other load): S is
+    7.89 to 9.45 on `standard`, over 5x and under 10x (r 10.79 needed). Layer 5 starts.
 - **Identity:** per-action stream (order taken, RNG state and roll count, simulation-key digest) on the tuner suites,
   every AI battle in the six seeds, and JSON round-tripped payloads; shadow mode on every resolve; daily digests; the
   payload corpus across compilers; mid-battle save/load both ways between the native build and the tagged pre-merge
@@ -870,6 +872,114 @@ commits 32e428314 port, ca2f2b058 harness, f4407189e Windows binaries):
     before).
 - **Result:** S is 5.58 to 6.16 on `standard`: over 5x in every case, under 10x (r 10.88 needed). The six seeds were not
   re-measured. The owner decides.
+
+**The board reads in a native memo** (slice 04c, 2026-10-21; owner: replace the ported board-read cache with a native
+one, then re-measure G1 on `standard` with Phases 3 and 5 paused; runtime on main 9746d75fa; branch commits c50c63f62
+port, 7cd5f6cca Windows binaries, 7027f1a5e warning fix):
+- **Changed:** six board reads keep their answers in the State (`State::memo_find`, `memo_keep`): legal destinations,
+  the melee approach, attack legality, the attack target ids, the walk steps and the walk mask. The key is the battle
+  and the stacks asked about, as nodes.
+  - An answer stays while nothing it read is written. The State counts every write into a node a memo watches, and a
+    changed count drops the memo.
+  - There is no hash of the stacks and no copy. The one exception is the melee approach, which still returns a new
+    Dictionary per call, as GDScript does.
+  - The port no longer reads or fills GDScript's board-read memo. GDScript callers keep it.
+  - All six kinds stay. On 40 of the captures, 5 rounds each:
+
+    | Memos on | Warm | Cold |
+    |---|---:|---:|
+    | all six | 322.2 ms | 408.9 ms |
+    | destinations only | 328.1 ms | 408.9 ms |
+    | none | 339.0 ms | 403.4 ms |
+
+    The cold pass decodes each entry's arguments as new nodes, which the memo has to start watching. The native loop
+    keeps one battle, as the warm pass does.
+- **Explicit memo rule:** the battle table lists GDScript's board-read memo as GDScript's own: the scope cache, battle
+  and depth, the hit count and the validation switch.
+  - `gd::static_var` refuses it to a native port, and the validating check never compares it.
+  - The table lists the other memos as shared: `_presentation_queue_written`, `_hero_payload_cache`, the scoring scope
+    and the specialty catalog. If the native call left a shared memo alone, it must be as GDScript's call left it, or
+    the check fails.
+- **Harness:** the replay ignores a capture's board-read memo. If a writing entry left its arguments as it found them,
+  the replay reads those arguments from the nodes shared by blob, as for a reading entry. `--fresh-writers` decodes them
+  per entry instead.
+- **Checks:**
+  - Shadow on the six seeds: 0 mismatches and 0 errors in 55,236,025 checks over 275 of the 281 functions. 7,807,636
+    of the checks are in the 101 writing functions.
+  - Checks per memo user:
+
+    | Function | Checks |
+    |---|---:|
+    | `legal_destinations_for_stack` | 110,921 |
+    | `melee_approach_cells` | 51,839 |
+    | `_legal_attack_target_ids_for_active_stack` | 19,431 |
+    | `melee_approach_destination` | 16,367 |
+    | `_walk_steps_to_target` | 6,987 |
+    | `_attack_legality_for_target` | 6,307 |
+    | `selected_target_legality` | 5,304 |
+
+  - Native mode against main: every daily digest (415) and match record of the six seeds is identical.
+  - The replay over the 82 `standard` captures: 0 mismatches, both with shared and with fresh writers.
+  - Core suite: 17/17 on Windows.
+  - The Linux libraries in `bin/` are not rebuilt.
+
+**G1 on `standard` after the native memo** (2026-10-21, 22:49 to 22:55):
+- **How it is measured:** as in "G1 on `standard` with the memos": the same baseline (main at b8c32e69d), the same 82
+  captured resolves and 6 jobs.
+  - Load: none. Phases 3 and 5 were paused. A sampler checked for Godot, Python and build processes every 5 seconds
+    and logged none during the timed parts. g1.py's own samples also found no other Godot.
+  - Every round of both replays: 0 mismatches and 0 errors.
+- **Share of T_gd:** the ported functions take 65.5% of T_gd (77.36 s over 480 resolves). The 04b figure, 61.8% of
+  88.35 s, was measured under load.
+
+| Corpus | Previous resolve: r / S | New State: r / S | Same resolve again: r / S | c | r for 10x | r for 5x |
+|---|---:|---:|---:|---:|---:|---:|
+| standard, native memo | 8.97 / 8.42 | 8.38 / 7.89 | 10.15 / 9.45 | 0.0073 | 10.79 | 5.19 |
+| standard, with the memos (under load) | 5.84 / 5.58 | 5.93 / 5.66 | 6.48 / 6.16 | 0.0080 | 10.88 | 5.21 |
+
+  The new-State replay's median rounds, a second run of the same-resolve case, gave 9.95 / 9.28. The second row ran
+  under sibling load on both sides, so the step between the rows mixes the memo with the load.
+- **r per layer** (warm pass, same resolve again; the new-State replay in brackets):
+
+  | Layer | Share | r, native memo | r with the memos |
+  |---|---:|---:|---:|
+  | 1, hex | 15.1% | 13.73 (13.95) | 6.22 |
+  | 2, damage and stat totals | 22.3% | 9.25 (9.38) | 7.38 |
+  | 3, movement and targeting | 25.9% | 17.69 (18.41) | 5.18 |
+  | 4, turn order and effects | 36.8% | 11.10 (11.35) | 10.75 |
+
+- **Where native is slow** (warm, `standard`): native takes 0.754 s in all, against 1.37 s with the ported memo.
+  - The memo's users:
+
+    | Function | r (with the memos) | Native time (with the memos) |
+    |---|---:|---:|
+    | `melee_approach_cells` | 19.1 (3.88) | 0.076 s (0.41 s) |
+    | `_walk_steps_to_target` | 16.68 (2.06) | |
+    | `legal_destinations_for_stack` | 17.41 (3.43) | |
+
+  - The most native time:
+
+    | Function | Native time | r |
+    |---|---:|---:|
+    | `_resolve_wait` | 0.087 s | 12.86 |
+    | `advance_turn` | 0.078 s | 12.04 |
+    | `melee_approach_cells` | 0.076 s | 19.1 |
+    | `_calculate_damage` | 0.069 s | 9.74 |
+    | `_mark_stack_animation_event` | 0.061 s | 6.72 |
+
+  - The lowest r among functions with over 3 ms native:
+
+    | Function | r |
+    |---|---:|
+    | `_hero_has_trait` | 4.03 |
+    | `_merged_commander_ai_payload` | 6.21 |
+    | `_damage_rng_for_battle` | 6.21 |
+    | `_append_presentation_event` | 6.30 |
+
+  - The calls made 1,009,330 Dictionaries and 819,444 Arrays over the same 908,907 entries. With the ported memo they
+    made 1,477,556 and 864,912.
+- **Result:** S is 7.89 to 9.45 on `standard`: over 5x in every case, under 10x (10x needs r 10.79). Layer 5 starts,
+  as the owner decided.
 
 ### Phase 2: one payload builder, AI preview as one call, the battle tool
 
