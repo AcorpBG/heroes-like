@@ -32,4 +32,8 @@ DictRef _specialty_catalog(State &state);
 Atom _resolve_bonus_key(State &state, Atom key, DictRef hero_state);
 Value _sum_bonus(State &state, const Value &current, const Value &added);
 
+// A spell's mana cost after the hero's specialty discounts, shared with the
+// battle port (hero_progression_rules.cpp).
+int64_t adjusted_mana_cost(State &state, DictRef hero_state, int64_t base_cost, Atom school_id);
+
 } // namespace aurelion::rules::port::hero_progression_rules

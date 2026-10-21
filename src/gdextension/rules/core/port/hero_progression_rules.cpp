@@ -236,6 +236,16 @@ Value _sum_bonus(State &state, const Value &current, const Value &added) {
 	return int_value(gd::add(current_int, gd::to_int(state, added)));
 }
 
+int64_t adjusted_mana_cost(State &state, DictRef hero_state, int64_t base_cost, Atom school_id) {
+	const DictRef bonuses = aggregate_bonuses(state, hero_state);
+	int64_t discount = gd::int_field(state, bonuses, key::mana_cost_discount, 0);
+	const Value school_discounts = get_or_new_dict(state, bonuses, key::school_mana_discount);
+	if (school_id != key::empty && gd::is_dict(school_discounts)) {
+		discount = gd::add(discount, gd::int_field(state, school_discounts.ref, school_id, 0));
+	}
+	return compat::engine_max<int64_t>(0, gd::sub(base_cost, compat::engine_max<int64_t>(0, discount)));
+}
+
 } // namespace hero_progression_rules
 
 } // namespace aurelion::rules::port
