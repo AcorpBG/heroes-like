@@ -31,6 +31,8 @@ const VISIBLE_TILES_KEY := "visible_tiles"
 const EXPLORED_TILES_KEY := "explored_tiles"
 const TOWN_VISION_RADIUS := 8
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
+const DayEngine = preload("res://scripts/core/DayEngine.gd")
+static var _day_engine_mode: int = DayEngine.mode
 const ACTIVE_TOWN_PLACEMENT_KEY := "active_town_placement_id"
 const COMMAND_BRIEFING_KEY := "command_briefing"
 const COMMAND_RISK_FORECAST_KEY := "command_risk_forecast"
@@ -14408,6 +14410,16 @@ static func _route_tile_payloads(tiles: Array) -> Array:
 	return payloads
 
 static func _normalize_fog_of_war(session: SessionStateStoreScript.SessionData) -> void:
+	if _day_engine_mode == DayEngine.GDSCRIPT:
+		_normalize_fog_of_war__gd(session)
+	elif _day_engine_mode == DayEngine.NATIVE:
+		DayEngine.native_writing(&"OverworldRules._normalize_fog_of_war", [session])
+	else:
+		var before := DayEngine.before_writing([session])
+		_normalize_fog_of_war__gd(session)
+		DayEngine.check_writing(&"OverworldRules._normalize_fog_of_war", before, [session], null)
+
+static func _normalize_fog_of_war__gd(session: SessionStateStoreScript.SessionData) -> void:
 	var map_size := derive_map_size(session)
 	if OverworldLevelRulesScript.level_count(session) > 1:
 		var levels := {}

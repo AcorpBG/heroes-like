@@ -4,12 +4,16 @@
 
 namespace aurelion::rules::port {
 
+// Each defined in its subsystem's registry file.
+Table day_table();
+
 namespace {
 
 // One line per subsystem: its table function, defined in the subsystem's
 // registry file.
 const std::vector<Table> &all_tables() {
 	static const std::vector<Table> tables = {
+		day_table(),
 	};
 	return tables;
 }
