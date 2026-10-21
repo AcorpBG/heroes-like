@@ -116258,15 +116258,15 @@
     {
       "id": "native-rules-phase5-05-scenario-elimination-20261021",
       "title": "Native day processing 05: scenario evaluation and elimination",
-      "status": "pending",
+      "status": "in_progress",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "ScenarioRules.evaluate_session and PlayerEliminationRules.apply_daily, 31/552 (ScenarioScriptRules 5/171, GeneratedScenarioObjectiveRules 3/135, ScenarioRules 8/118, PlayerEliminationRules 7/67, 4 more 8/61).",
-      "updatedAt": "2026-10-21T21:00:00Z"
+      "notes": "ScenarioRules.evaluate_session and PlayerEliminationRules.apply_daily, 31/552 (ScenarioScriptRules 5/171, GeneratedScenarioObjectiveRules 3/135, ScenarioRules 8/118, PlayerEliminationRules 7/67, 4 more 8/61). Started 2026-10-21; frozen until the merge: 20 functions (transition doc, Phase 5, \"Slice 05, frozen functions\").",
+      "updatedAt": "2026-10-21T23:45:00Z"
     },
     {
       "id": "native-rules-phase5-06-normalize-20261021",

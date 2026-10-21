@@ -1083,6 +1083,16 @@ PlayerIdentityRules 7: `controller_id`, `enemy_configs`, `faction_id`, `identity
 memo already open, legacy raid hosts and support columns, defender commanders in towns and sites, scouted targets and
 hero sightings from old saves, hero task boards, enemy configs without player records.
 
+**Slice 05, frozen functions** (2026-10-21, until the Phase 5 merge; AGENTS.md): `ScenarioRules.evaluate_session` and
+`PlayerEliminationRules.apply_daily` (every caller) and what they run in AI matches beyond slice 04's functions, 20
+functions. ScenarioRules 5: `_objective_met`, `evaluate_session`, `normalize_scenario_state`, `objective_definitions`,
+`scenario_record_for_session`. ScenarioScriptRules 5: `_join_messages`, `_retry_pending_reinforcements`,
+`_sorted_hooks`, `normalize_script_state`, `process_hooks`. GeneratedScenarioObjectiveRules 3: `definitions`,
+`progress`, `uses_kind`. PlayerEliminationRules 4: `applies`, `apply_daily`, `heroes_held`, `towns_held`. AiHeroRules 3
+(also Phase 3's): `_resolved_lookup`, `active_hero_count`, `active_hero_entries`. The paths AI matches never run stay
+GDScript and are not frozen by this slice: script hooks and pending reinforcements, other objective types, a scenario's
+completion, the rival count of a human game, the human player's townless days and defeat, a computer player's removal.
+
 **Inventory and boundary** (2026-10-21, main 6d7471276; every function of `scripts/core` and ContentService probed on
 the six seeds; times from l1, a large four-player game to day 90, on a machine shared with Phase 1's runs):
 - Reach: the Phase 5 entries reach 440 functions, 6,020 lines; 311 of them also run outside day processing, nearly all
