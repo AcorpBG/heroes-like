@@ -153,6 +153,14 @@ enum class ContentTable : uint8_t {
 	ArmyGroup,
 	// get_scenario_readonly: the authored row, else the generated draft.
 	Scenario,
+	Resource,
+	// get_map_object_for_resource_site: the site's object with the largest
+	// footprint.
+	MapObjectForResourceSite,
+	// get_biome_for_terrain, by the terrain id as given.
+	BiomeForTerrain,
+	// get_terrain_layers_for_scenario: a new deep copy on every call.
+	TerrainLayersForScenario,
 };
 
 bool same_key(const Value &a, const Value &b);
@@ -555,7 +563,8 @@ public:
 	// RandomNumberGenerator.new() with seed, then state, set: its opaque slot.
 	virtual uint32_t rng_new(uint64_t seed, uint64_t state);
 	// The content row with this id, the same node on every call (Nil when there
-	// is none), and ContentService.load_json(path).
+	// is none; terrain layers are a new node each time), and
+	// ContentService.load_json(path).
 	virtual Value content_row(State &state, ContentTable table, uint32_t id);
 	virtual Value content_file(State &state, uint32_t path);
 	// Godot's ERR_PRINT, for the container methods that fail without stopping
