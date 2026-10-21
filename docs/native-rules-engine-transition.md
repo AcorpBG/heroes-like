@@ -1042,6 +1042,8 @@ its metadata under "meta"). Shadow mode on the six seeds checked them on the bra
   float or a container leaves the call to GDScript instead of failing it. Phase 1 drops its `difficulty_rules`
   definitions from `commander_payload.cpp` and the 29 keys of `day_keys.inc`'s second "Also in battle_keys.inc" block
   from its list.
+- Slice 05's shared helpers (2026-10-21; Phase 3 handed them over): AiHeroRules `active_hero_entries` and
+  `_resolved_lookup` in `ai_hero_rules.cpp`, with the day-only `active_hero_count`.
 
 **Slice 04, frozen functions** (2026-10-21, until the Phase 5 merge; AGENTS.md): `EnemyTurnRules.normalize_enemy_states`
 (every caller: the AI turn, scenario evaluation, the threat and pressure readers, the risk forecast) and what it runs in
