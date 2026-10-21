@@ -9,7 +9,7 @@
 // Containers live in the State's pools and Values refer to them by index, so a
 // container reached from two places is one node, as it is one object in Godot.
 // Strings are interned: equal texts have one atom, and the texts the port
-// names in code (battle_keys.inc) have fixed atoms. Pool references stay valid
+// names in code (battle_keys.inc, day_keys.inc) have fixed atoms. Pool references stay valid
 // while nodes are added (NodePool).
 //
 // A node can be backed: its contents still live in the adapter's container and
@@ -98,11 +98,13 @@ struct Value {
 	bool is_container() const { return kind == Kind::Array || kind == Kind::Dict; }
 };
 
-// The fixed atoms of battle_keys.inc: key::hex is the atom of "hex".
+// The fixed atoms of the subsystems' key lists: key::hex is the atom of "hex".
+// A text is in one list only.
 namespace key {
 enum : uint32_t {
 #define AURELION_KEY(name, text) name,
 #include "aurelion_rules/battle_keys.inc"
+#include "aurelion_rules/day_keys.inc"
 #undef AURELION_KEY
 	known_count,
 };
@@ -142,6 +144,15 @@ enum class ContentTable : uint8_t {
 	Hero,
 	Faction,
 	Spell,
+	Artifact,
+	ResourceSite,
+	Building,
+	Town,
+	MapObject,
+	Encounter,
+	ArmyGroup,
+	// get_scenario_readonly: the authored row, else the generated draft.
+	Scenario,
 };
 
 bool same_key(const Value &a, const Value &b);

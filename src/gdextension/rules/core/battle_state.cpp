@@ -12,6 +12,7 @@ namespace {
 constexpr std::string_view kKnownKeys[] = {
 #define AURELION_KEY(name, text) text,
 #include "aurelion_rules/battle_keys.inc"
+#include "aurelion_rules/day_keys.inc"
 #undef AURELION_KEY
 };
 
@@ -150,7 +151,10 @@ void State::clear() {
 	atom_ids_.clear();
 	joined_.clear();
 	for (std::string_view text : kKnownKeys) {
-		intern(text);
+		const size_t next = atoms_.size();
+		if (intern(text) != next) {
+			throw std::logic_error("a known key is in two key lists: " + std::string(text));
+		}
 	}
 	for (int64_t q = 0; q < battle_hex::kColumns; ++q) {
 		for (int64_t r = 0; r < battle_hex::kRows; ++r) {
