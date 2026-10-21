@@ -3,6 +3,7 @@
 #include "aurelion_rules/compat/godot_math.hpp"
 #include "aurelion_rules/compat/godot_string.hpp"
 
+#include <cmath>
 #include <cstdio>
 
 namespace aurelion::rules::state {
@@ -148,6 +149,18 @@ void Backing::print_error(const std::string &text) {
 
 void Backing::print_warning(const std::string &text) {
 	std::fprintf(stderr, "WARNING: %s\n", text.c_str());
+}
+
+double Backing::math_pow(double base, double exponent) {
+	return std::pow(base, exponent);
+}
+
+double Backing::math_exp(double x) {
+	return std::exp(x);
+}
+
+double Backing::math_log(double x) {
+	return std::log(x);
 }
 
 bool same_key(const Value &a, const Value &b) {
