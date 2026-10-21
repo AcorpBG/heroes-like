@@ -277,6 +277,18 @@ static func _raid_is_public(session: SessionStateStoreScript.SessionData, encoun
 	return _enemy_adventure_rules()._raid_is_public(session, encounter)
 
 static func normalize_overworld_state(session: SessionStateStoreScript.SessionData) -> void:
+	if _day_engine_mode == DayEngine.GDSCRIPT:
+		normalize_overworld_state__gd(session)
+	elif _day_engine_mode == DayEngine.NATIVE:
+		DayEngine.native_writing(&"OverworldRules.normalize_overworld_state", [session])
+		if DayEngine.not_ported():
+			normalize_overworld_state__gd(session)
+	else:
+		var before := DayEngine.before_writing([session])
+		normalize_overworld_state__gd(session)
+		DayEngine.check_writing(&"OverworldRules.normalize_overworld_state", before, [session], null)
+
+static func normalize_overworld_state__gd(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
 		return
 	if _normalized_read_scope_depth > 0 and String(session.session_id) == _normalized_read_scope_session_id:
@@ -1479,6 +1491,13 @@ static func execute_prevalidated_route(
 	return result
 
 static func end_turn(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var opened := _end_turn_open_day(session)
+	var enemy_turn_result: Dictionary = _run_enemy_turn_cycle(session)
+	return _end_turn_close_day(session, opened, enemy_turn_result)
+
+## end_turn up to the AI turn: the closing normalize, the new day's economy
+## and its messages.
+static func _end_turn_open_day(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if not (
 		bool(session.get_meta(SESSION_UNTOUCHED_BETWEEN_DAYS_META, false))
 		and int(session.get_meta(CLOSING_NORMALIZE_DAY_META, -1)) == int(session.day)
@@ -1547,7 +1566,28 @@ static func end_turn(session: SessionStateStoreScript.SessionData) -> Dictionary
 	var delivery_messages := _advance_player_reserve_deliveries(session)
 	if not delivery_messages.is_empty():
 		messages.append("Reserve deliveries %s." % "; ".join(delivery_messages))
-	var enemy_turn_result: Dictionary = _run_enemy_turn_cycle(session)
+	return {
+		"messages": messages,
+		"occupation_messages": occupation_messages,
+		"recovery_messages": recovery_messages,
+		"weekly_growth_messages": weekly_growth_messages,
+		"site_muster_messages": site_muster_messages,
+		"delivery_messages": delivery_messages,
+		"total_income": total_income,
+		"movement_after": movement_after,
+	}
+
+## end_turn after the AI turn: elimination, the action result, the closing
+## normalize and the day's summaries.
+static func _end_turn_close_day(session: SessionStateStoreScript.SessionData, opened: Dictionary, enemy_turn_result: Dictionary) -> Dictionary:
+	var messages: Array = opened["messages"]
+	var occupation_messages: Array = opened["occupation_messages"]
+	var recovery_messages: Array = opened["recovery_messages"]
+	var weekly_growth_messages: Array = opened["weekly_growth_messages"]
+	var site_muster_messages: Array = opened["site_muster_messages"]
+	var delivery_messages: Array = opened["delivery_messages"]
+	var total_income: Dictionary = opened["total_income"]
+	var movement_after = opened["movement_after"]
 	var enemy_activity_summary := describe_enemy_activity(enemy_turn_result.get("events", []), 4)
 	var enemy_message := String(enemy_turn_result.get("message", ""))
 	if enemy_message != "":

@@ -62,6 +62,28 @@ const Function kFunctions[] = {
 	PORT(HeroCommandRules, commit_active_hero, 1, true,
 			if (a[0].kind == state::Kind::Nil) return nil();
 			hero_command_rules::commit_active_hero(s, D(a, 0)); return nil()),
+	// The whole session normalized: its fields, heroes, towns, nodes, transit,
+	// blocked tiles, fog, briefing, risk forecast and scenario state; writes the
+	// runtime signature into OverworldRules._runtime_normalized_signatures.
+	PORT(OverworldRules, normalize_overworld_state, 1, true,
+			if (a[0].kind == state::Kind::Nil) return nil();
+			overworld::normalize_overworld_state(s, D(a, 0)); return nil()),
+	// end_turn up to the AI turn: the closing normalize, the hero commit and the
+	// new day's economy; writes the session's day, towns, treasury, heroes and
+	// resource nodes, and returns the day's messages and income.
+	PORT(OverworldRules, _end_turn_open_day, 1, true,
+			if (a[0].kind == state::Kind::Nil) throw state::NotPorted("left to GDScript: a null session");
+			return gd::dict_value(overworld::_end_turn_open_day(s, D(a, 0)))),
+	// end_turn after the AI turn: elimination, the action result, the closing
+	// normalize and the day's summaries; appends to the opened messages.
+	PORT(OverworldRules, _end_turn_close_day, 3, true,
+			if (a[0].kind == state::Kind::Nil) throw state::NotPorted("left to GDScript: a null session");
+			return gd::dict_value(overworld::_end_turn_close_day(s, D(a, 0), D(a, 1), D(a, 2)))),
+	// An action's close: the hero committed, the fog refreshed, the scenario
+	// evaluated, the runtime signature recorded.
+	PORT(OverworldRules, _finalize_action_result, 6, true,
+			if (a[0].kind == state::Kind::Nil) throw state::NotPorted("left to GDScript: a null session");
+			return gd::dict_value(overworld::_finalize_action_result(s, D(a, 0), gd::to_bool(a[1]), S(a, 2), gd::to_bool(a[3]), gd::to_bool(a[4]), D(a, 5)))),
 };
 
 #undef PORT

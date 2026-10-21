@@ -118,6 +118,8 @@ add_library(aurelion_rules_core STATIC
 	core/port/common_mine_rules.cpp
 	core/port/content_service_ai.cpp
 	core/port/creature_dwelling_rules_ai.cpp
+	core/port/day_boundary.cpp
+	core/port/day_economy.cpp
 	core/port/day_registry.cpp
 	core/port/difficulty_rules.cpp
 	core/port/difficulty_rules_ai.cpp
@@ -135,6 +137,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/mine_rules_ai.cpp
 	core/port/native_transit_rules.cpp
 	core/port/native_transit_rules_ai.cpp
+	core/port/overworld_forecast.cpp
 	core/port/overworld_level_rules.cpp
 	core/port/overworld_level_rules_ai.cpp
 	core/port/overworld_normalize.cpp
@@ -146,6 +149,9 @@ add_library(aurelion_rules_core STATIC
 	core/port/overworld_rules_ai_recovery.cpp
 	core/port/overworld_rules_ai_sites.cpp
 	core/port/overworld_rules_ai_towns.cpp
+	core/port/overworld_state_normalize.cpp
+	core/port/overworld_towns_normalize.cpp
+	core/port/overworld_transit_normalize.cpp
 	core/port/player_elimination.cpp
 	core/port/player_identity_rules.cpp
 	core/port/player_identity_rules_ai.cpp

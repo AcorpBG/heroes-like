@@ -37,4 +37,9 @@ DictRef artifact_set_insignia_state(State &state, Atom set_id);
 DictRef artifact_set_record(State &state, Atom set_id);
 ArrayRef _string_array(State &state, const Value &value);
 
+
+// The map's artifact nodes (overworld_state_normalize.cpp).
+ArrayRef build_artifact_nodes(State &state, const Value &placements, Atom scenario_id = state::key::empty);
+ArrayRef normalize_artifact_nodes(State &state, const Value &nodes, Atom scenario_id = state::key::empty);
+
 } // namespace aurelion::rules::port::artifact_rules

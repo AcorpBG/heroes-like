@@ -12,6 +12,13 @@ namespace aurelion::rules::port {
 namespace scenario_rules {
 // The session is its view (session_view.hpp).
 gd::DictRef evaluate_session(state::State &state, gd::DictRef session);
+// The scenario's state normalized, its record and objectives
+// (scenario_evaluation.cpp; objectives_for_session in overworld_forecast.cpp).
+void normalize_scenario_state(state::State &state, gd::DictRef session, bool normalize_enemies);
+gd::DictRef scenario_record_for_session(state::State &state, gd::DictRef session);
+state::Value objective_definitions(state::State &state, gd::DictRef scenario);
+state::Value objectives_for_session(state::State &state, gd::DictRef session);
+
 } // namespace scenario_rules
 
 namespace player_elimination_rules {

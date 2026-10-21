@@ -32,4 +32,8 @@ DictRef _specialty_catalog(State &state);
 Atom _resolve_bonus_key(State &state, Atom key, DictRef hero_state);
 Value _sum_bonus(State &state, const Value &current, const Value &added);
 
+
+// A hero's daily income from artifacts and specialties (day_economy.cpp).
+DictRef daily_income_bonus(State &state, DictRef hero_state);
+
 } // namespace aurelion::rules::port::hero_progression_rules
