@@ -566,6 +566,99 @@ every function run inside `resolve_active_battle`, with `_finalize_*` left out. 
   The first build compiled and the first shadow run had 0 mismatches: 0 mismatches per 1,000 lines. Layer 1 has no
   RNG and no damage arithmetic, so its rate is not a forecast for layer 2.
 
+**G1 projected on layer 1** (slice 01b, owner decision 2026-10-21; `tools/battle_port_g1/`,
+`src/gdextension/rules/g1/battle_port_replay.cpp`; branch commits d3008d02f and a78100003):
+- **How it is measured.** Windows, Ryzen 9 5950X, the official Godot 4.6.2-stable editor binary headless, the rules
+  library's template_debug build (MSVC `/O2`). Every timed part ran 6 at once, GDScript and native alike, with no
+  other Godot process. Each GDScript run started only when none ran, and the check before the next run found none;
+  the one run after which a foreign batch was found was redone. The replay and the conversion were sampled every
+  20 s and saw none.
+  - Baseline: main at the branch point (d1ec73410), each corpus played three times. The plain run gives T_gd, the time
+    in `resolve_active_battle` without `_finalize_*` and `_resolve_result`. A clock on every outermost entry into the
+    54 switched functions gives T_gd_ported, less 0.034 µs of clock cost per entry. The third run captures the
+    entries of the resolves whose start-battle digest is a multiple of 7 (11 on the six seeds): arguments, results
+    and written arguments as `var_to_bytes`.
+  - The switched functions take 33.4% of T_gd on `standard` (480 resolves), 33.8% on `holdout` (480) and 31.6% on the
+    six seeds (1,536).
+  - `battle_port_replay`, native only, replays each captured resolve (82, 84 and 157) in two passes, warm then cold,
+    each in its own State and three rounds. The State is cleared at the start of a round as `StateBridge::load`
+    clears it, and never between calls. In every round, every result and every written argument must encode to
+    GDScript's bytes: 0 mismatches. r uses the cold pass: all arguments decoded first, then every call under one
+    clock.
+  - c is `StateBridge::load` of the start battle plus `store_in_place` of the end battle, in the branch library, the
+    median of 5 rounds on a new State each. The State also holds as many nodes as the replay's calls made; the
+    replay's decoded argument copies are left out, since an engine's calls read the State in place.
+- **The State the first call finds** decides the result, so three cases are reported:
+  - **previous resolve:** the State last held another resolve of the corpus, run untimed first: the capture before
+    it in file order (by start-battle digest, wrapping) that starts from a different battle. (The arena plays each
+    battle twice, and with the same AI on both sides the two games are identical, so the other game of the pair is
+    skipped.) An engine that keeps its State between resolves sees this, so it is the headline.
+  - **new State:** a State never used before.
+  - **same resolve again:** the median of the three rounds; the last two find the State that held the same resolve,
+    a best case.
+
+  "Before" is the value layer of slice 01. It freed every node when cleared, so it compares with "new State".
+
+| Corpus | Before: r / S | Previous resolve: r / S | New State: r / S | Same resolve again: r / S | c | r for 10x |
+|---|---:|---:|---:|---:|---:|---:|
+| standard | 5.65 / 5.44 | 10.44 / 9.75 | 10.36 / 9.68 | 11.82 / 10.94 | 0.0068 | 10.73 |
+| holdout | 5.65 / 5.44 | 10.65 / 9.88 | 10.33 / 9.62 | 11.79 / 10.86 | 0.0072 | 10.78 |
+| six seeds | 5.59 / 5.15 | 10.66 / 9.12 | 10.34 / 8.88 | 12.65 / 10.54 | 0.0159 | 11.89 |
+
+- **Warm pass.** Each entry's arguments are decoded just before its call, so the call finds its battle in cache, as a
+  native loop finds the battle it keeps updating. There r is 12.20, 13.07 and 12.75 in the previous-resolve case,
+  and 14.2-16.2 over two runs for the same resolve again.
+- **Per function** (warm, same resolve again, `standard`; the share is of the ported GDScript time):
+
+  | Function | Share | r |
+  |---|---:|---:|
+  | BattleFootprint `distance` | 28.5% | 18.7 |
+  | `_reachable_empty_hexes` | 21.5% | 12.4 |
+  | BattleRules `_alive_stacks_for_side` | 7.5% | 14.5 |
+  | BattleAiRules `_alive_stacks_for_side` | 5.1% | 7.1 |
+  | `_walk_steps_to_target` | 3.8% | 11.7 |
+
+  Beside them, the Phase 0 typed kernels (the search alone, on a packed board) reached 17.5x for the reachable search
+  and 94x for the walk. The gap to them is the Dictionary reads that build those boards: in a sampling profile of the
+  replay, key lookups take about 62% of native time.
+- **What changed in the value layer**, semantics kept:
+  - `ValueList` keeps four values inline.
+  - A Dictionary scans its string keys until its lookups add up to 8 scans per key. With more than 8 and fewer than
+    65,535 keys it then builds a 16-bit slot table, at most half full. An append updates it; it is dropped when an
+    append would fill it past half, on any other change, and at 65,535 keys.
+  - Nodes live in blocks of 256 that are reset and reused, so a clear is O(1) and a resolve reuses the last
+    resolve's buffers.
+  - The 99 board-cell keys (`"q,r"`) sit at fixed atoms, so a cell key is arithmetic. `"obstacle:" + id` is cached.
+  - The hot accessors are inline.
+  - Not done: node reclamation, which does not change call speed, and a native board-read memo. The memo needs the
+    read-scope boundaries, which captures do not hold, so it waits for the native loop (slice 10).
+- **What the figures leave out.**
+  - Each GDScript time is one run. Each replay figure is the first or the median of three rounds, and each
+    conversion the median of five. Two native runs of the same build differ by up to 6% in the cold pass (in the
+    new-State run the same-resolve median was 12.29, 12.52 and 13.10) and by up to 15% in the warm pass (14.18 and
+    16.24 on `holdout`).
+  - The cold pass runs in the same process after the warm pass of the same resolve, so its first round finds the code
+    and the allocator warm, which favours native.
+  - Besides the 8,698,084 entries on `standard`, 39,562 calls reached a wrapper while an entry was open. They are not
+    counted as entries, but their wrapper (the depth check, a re-entry count and one more call) runs inside the
+    outer entry's clock, so T_gd_ported holds a little wrapper time that a real GDScript run does not.
+  - c is timed on a new State, so a State kept between resolves converts no slower.
+- **Checks after the change:** the layer 1 checks again on the final build. Shadow mode had 0 mismatches and 0
+  errors: 23,882,826 checks on the six seeds, 19,171,698 on `standard` and 20,257,744 on `holdout`. Native mode had
+  0 errors: 11,432,825, 9,020,200 and 9,461,204 calls. Every daily digest and match record and all 960 arena games
+  are identical to GDScript. The core suite passed on Windows. On Linux, with the official 4.6.2 binary, the core
+  suite passed and the six-seed check of shadow against native mode was identical: 23,882,826 shadow checks, 0
+  mismatches.
+- **Harness.** The formal G1 after layer 4 reruns `tools/battle_port_g1/g1.py`; its docstring lists the steps. Captures
+  are not kept (2.8 GB for `holdout`): `g1.py prepare capture` and `g1.py run` make them again.
+- **Result.** In the previous-resolve case r is 10.44 on `standard`, 10.65 on `holdout` and 10.66 on the six seeds,
+  and S is 9.75, 9.88 and 9.12. A State kept from another resolve is barely faster than a new one (r 10.33-10.36). S
+  stays under 10 in both engine cases, and on the arena r is just under the 10.73-10.78 that 10x needs. The seeds'
+  conversion share is twice the arena's (c = 0.016), so they need r = 11.89. In the cold pass r stays under the
+  owner's 12.5 in both engine cases; only the same-resolve best case reaches it (12.65 on the six seeds, and 12.52
+  and 13.10 on `holdout` and the seeds in the second run). So slice 01b stops here and reports to the owner before
+  layer 2.
+
 ### Phase 2: one payload builder, AI preview as one call, the battle tool
 
 - Battle payload creation (`BattleRules.gd:256-402`), stack and hero payloads, obstacles, and the end-of-battle numbers

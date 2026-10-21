@@ -115992,8 +115992,8 @@
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Gate G0 passed (owner, 2026-10-20). Owner decisions 2026-10-20: D8 one port branch native-phase1-battle, merged once, dropped if G1 stays under 5x after the interface fix; D5/D10 battle code frozen until 7 days after the merge, urgent fixes in GDScript on main and ported on the branch, main tagged before the merge; D6 tests on deleted private battle functions retired at the merge. Scope, order, checkpoint G1 and exit in docs/native-rules-engine-transition.md, Phase 1. The first slice measures the porting rate. Inventory (transition doc, Phase 1 results (first slice)): 565 functions / 10,278 lines run in fights, cut into child slices native-rules-phase1-01..11 in the doc's order; section 11 answered. Slice 01 completed: helpers, battle state, the HEROES_NATIVE_BATTLE switch and layer 1 at 0 shadow mismatches; next 02. Owner decision 2026-10-21: G1 projected on layer 1 first (slice 01b); the formal G1 follows layer 4.",
-      "updatedAt": "2026-10-21T06:50:00Z"
+      "notes": "Gate G0 passed (owner, 2026-10-20). Owner decisions 2026-10-20: D8 one port branch native-phase1-battle, merged once, dropped if G1 stays under 5x after the interface fix; D5/D10 battle code frozen until 7 days after the merge, urgent fixes in GDScript on main and ported on the branch, main tagged before the merge; D6 tests on deleted private battle functions retired at the merge. Scope, order, checkpoint G1 and exit in docs/native-rules-engine-transition.md, Phase 1. The first slice measures the porting rate. Inventory (transition doc, Phase 1 results (first slice)): 565 functions / 10,278 lines run in fights, cut into child slices native-rules-phase1-01..11 in the doc's order; section 11 answered. Slice 01 completed: helpers, battle state, the HEROES_NATIVE_BATTLE switch and layer 1 at 0 shadow mismatches; next 02. Owner decision 2026-10-21: G1 projected on layer 1 first (slice 01b); the formal G1 follows layer 4. Slice 01b completed 2026-10-21: G1 projected on layer 1 after the value-layer speed-up, r 10.44-10.66 and S 9.12-9.88 when the State last held another resolve (r 5.59-5.65 and S 5.15-5.44 before); under 12.5, so the owner decides before slice 02.",
+      "updatedAt": "2026-10-21T13:30:00Z"
     },
     {
       "id": "native-rules-phase1-01-foundation-hex-20261020",
@@ -116011,15 +116011,15 @@
     {
       "id": "native-rules-phase1-01b-g1-projection-20261021",
       "title": "Native battle engine 01b: G1 projected on layer 1, value-layer speed-up if needed",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Owner decision 2026-10-21: measure G1 now on layer 1 as a projection (transition doc, Phase 1, Checkpoint G1). Baseline main at the branch point; outermost entries into the ported set timed, captured and replayed natively in one State per resolve; r = T_gd_ported / T_nat_ported, c = T_conv / T_gd, S = 1 / (c + 1/r). Under r of about 12.5 the C++ value layer is sped up before layer 2, shadow kept at 0 mismatches; if r stays well under 12.5, stop and report. The replay harness stays for the formal G1 after layer 4. Also the slice 01 review fixes (adapter exceptions, loud registry drift).",
-      "updatedAt": "2026-10-21T06:50:00Z"
+      "notes": "Owner decision 2026-10-21: G1 measured now on layer 1 as a projection (transition doc, Phase 1, \"G1 projected on layer 1\"). Baseline main at the branch point; outermost entries into the ported set timed, captured and replayed natively in one State per resolve, every result checked in every round; r = T_gd_ported / T_nat_ported, c = T_conv / T_gd, S = 1 / (c + 1/r); 6 jobs on both sides, no other Godot process (checked before and after each GDScript run, sampled during the replay and conversion), official 4.6.2 editor binary headless, template_debug library. Before: r 5.65/5.65/5.59, S 5.44/5.44/5.15 (standard/holdout/six seeds). Value layer sped up, semantics kept: shadow 0 mismatches (23,882,826 + 19,171,698 + 20,257,744 checks), native identical, all 960 arena games and every six-seed digest identical on Windows; Linux six-seed shadow vs native identical (23,882,826 checks, 0 mismatches); core suite passed on both. After, State last held another resolve: r 10.44/10.65/10.66, S 9.75/9.88/9.12; new State r 10.36/10.33/10.34; same resolve again 11.82/11.79/12.65 (12.29/12.52/13.10 in the second run); c 0.0068/0.0072/0.0159. Under 12.5 when the State last held another resolve or is new: stopped before layer 2 for the owner's decision. Harness kept in tools/battle_port_g1 for the formal G1.",
+      "updatedAt": "2026-10-21T13:30:00Z"
     },
     {
       "id": "native-rules-phase1-02-damage-chain-20261020",
