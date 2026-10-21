@@ -116232,15 +116232,15 @@
     {
       "id": "native-rules-phase5-03-hero-commit-20261021",
       "title": "Native day processing 03: hero commit",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "HeroCommandRules.commit_active_hero, 37/349 (HeroProgressionRules 20/184, HeroCommandRules 10/109, SpellRules 4/41 overworld spellbook only, 3 more 3/15). Started 2026-10-21; frozen until the merge: 17 functions (transition doc, Phase 5, \"Slice 03, frozen functions\").",
-      "updatedAt": "2026-10-21T20:00:00Z"
+      "notes": "Completed on branch native-phase5-day: HeroCommandRules.commit_active_hero native for every caller, 17 functions beyond slices 01, 04 and 05's (HeroCommandRules 12, DifficultyRules 3, HeroProgressionRules 1, ContentService 1); the six shared with Phase 3 are Phase 3's from main. Checks: shadow on the six seeds 2,442 calls, 0 mismatches; core suite in shadow mode 17/17 (92 calls, 0 mismatches); native mode against main on the six seeds identical; core suite 17/17.",
+      "updatedAt": "2026-10-22T00:30:00Z"
     },
     {
       "id": "native-rules-phase5-04-enemy-states-20261021",

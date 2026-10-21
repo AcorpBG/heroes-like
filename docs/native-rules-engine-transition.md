@@ -1319,6 +1319,13 @@ computer player's removal (4 calls on the six seeds), and a script state whose h
 (the value layer makes a typed Array only from one it holds). Checks: shadow on the six seeds `evaluate_session` 1,652
 calls, `apply_daily` 409, 0 mismatches; native mode against main on the six seeds identical; core suite 17/17.
 
+**Slice 03, hero commit** (2026-10-22, branch `native-phase5-day`): the day registry adds
+`HeroCommandRules.commit_active_hero` for every caller: the active hero's overworld mirrors (position, army,
+movement) written back into the player's roster, the hero normalized as a hire is, and the mirrors rebuilt from the
+roster entry, with the 17 functions listed above and slices 01, 04 and 05's. The six it shares with Phase 3 are
+Phase 3's, from main. Checks: shadow on the six seeds 2,442 calls, 0 mismatches; core suite in shadow mode 17/17,
+92 calls, 0 mismatches; native mode against main on the six seeds identical; core suite 17/17.
+
 ### Phase 6: match throughput
 
 The runner keeps a native session handle across days and writes Dictionaries back only for the digest and record (with
