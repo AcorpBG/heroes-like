@@ -1,5 +1,6 @@
 #include "aurelion_rules/port/registry.hpp"
 
+#include "aurelion_rules/port/enemy_states.hpp"
 #include "aurelion_rules/port/overworld_rules.hpp"
 
 namespace aurelion::rules::port {
@@ -41,6 +42,11 @@ const Function kFunctions[] = {
 			if (a[0].kind == state::Kind::Nil) return gd::dict_value(s.new_dict());
 			return gd::dict_value(overworld::_build_blocked_tile_index(s, D(a, 0), I(a, 1), S(a, 2), D(a, 3)))),
 	PORT(OverworldRules, _normalize_resource_nodes, 1, false, return gd::array_value(overworld::_normalize_resource_nodes(s, A(a, 0)))),
+	// The computer players' states, their raid hosts and commander rosters;
+	// writes the session's difficulty and the fallen heroes' days in its metadata.
+	PORT(EnemyTurnRules, normalize_enemy_states, 1, true,
+			if (a[0].kind == state::Kind::Nil) return nil();
+			enemy_turn_rules::normalize_enemy_states(s, D(a, 0)); return nil()),
 };
 
 #undef PORT

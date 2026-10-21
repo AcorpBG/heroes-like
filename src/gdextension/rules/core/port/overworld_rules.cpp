@@ -452,7 +452,7 @@ ArrayRef _resolved_lookup_entry(State &state, DictRef session) {
 	bool strings_only = true;
 	if (gd::is_array(resolved)) {
 		for (const Value &value : gd::items(state, resolved)) {
-			state.set(lookup, str(gd::to_string(value)), bool_value(true));
+			state.set(lookup, str(gd::stringify_or_fallback(state, value)), bool_value(true));
 			if (!value.is_string_like()) {
 				strings_only = false;
 			}
@@ -465,6 +465,11 @@ ArrayRef _resolved_lookup_entry(State &state, DictRef session) {
 	state.append(cached, bool_value(strings_only));
 	state.set(session_view::meta(state, session), gd::name_value(key::overworld_resolved_encounter_lookup), array_value(cached));
 	return cached;
+}
+
+DictRef resolved_encounter_lookup(State &state, DictRef session) {
+	// _resolved_lookup_entry(session)[2]: a Dictionary.
+	return gd::as_dict(state.at(_resolved_lookup_entry(state, session), 2));
 }
 
 Atom encounter_key(State &state, DictRef encounter) {
