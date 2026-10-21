@@ -114,8 +114,10 @@ add_library(aurelion_rules_core STATIC
 	core/port/overworld_level_rules.cpp
 	core/port/overworld_normalize.cpp
 	core/port/overworld_rules.cpp
+	core/port/player_elimination.cpp
 	core/port/player_identity_rules.cpp
 	core/port/registry_tables.cpp
+	core/port/scenario_evaluation.cpp
 	core/port/spell_rules.cpp
 )
 add_dependencies(aurelion_rules_core aurelion_rules_source_tree)

@@ -15,4 +15,10 @@ using state::Value;
 // (ai_hero_rules.cpp).
 bool is_ai_hero(State &state, const Value &entry);
 
+// The AI heroes on the map, unresolved, of one controller or ("") all; each
+// entry is the encounter itself (ai_hero_rules.cpp). The session is its view.
+gd::ArrayRef active_hero_entries(State &state, gd::DictRef session, gd::Atom controller);
+int64_t active_hero_count(State &state, gd::DictRef session, gd::Atom controller);
+gd::DictRef _resolved_lookup(State &state, gd::DictRef session);
+
 } // namespace aurelion::rules::port::ai_hero_rules

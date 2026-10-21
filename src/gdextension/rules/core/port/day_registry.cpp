@@ -2,6 +2,7 @@
 
 #include "aurelion_rules/port/enemy_states.hpp"
 #include "aurelion_rules/port/overworld_rules.hpp"
+#include "aurelion_rules/port/scenario_evaluation.hpp"
 
 namespace aurelion::rules::port {
 
@@ -47,6 +48,15 @@ const Function kFunctions[] = {
 	PORT(EnemyTurnRules, normalize_enemy_states, 1, true,
 			if (a[0].kind == state::Kind::Nil) return nil();
 			enemy_turn_rules::normalize_enemy_states(s, D(a, 0)); return nil()),
+	// The scenario's state and objectives: writes its status, its script state
+	// and the computer players' states.
+	PORT(ScenarioRules, evaluate_session, 1, true,
+			if (a[0].kind == state::Kind::Nil) throw state::NotPorted("left to GDScript: a null session");
+			return gd::dict_value(scenario_rules::evaluate_session(s, D(a, 0)))),
+	// The townless days: writes the session's townless_since.
+	PORT(PlayerEliminationRules, apply_daily, 1, true,
+			if (a[0].kind == state::Kind::Nil) return gd::array_value(s.new_array());
+			return gd::array_value(player_elimination_rules::apply_daily(s, D(a, 0)))),
 };
 
 #undef PORT
