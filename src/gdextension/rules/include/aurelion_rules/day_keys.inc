@@ -267,3 +267,7 @@ AURELION_KEY(dwelling_guard_beaten, "dwelling_guard_beaten")
 AURELION_KEY(dwelling_guard_survivors, "dwelling_guard_survivors")
 AURELION_KEY(site_last_visit_day, "site_last_visit_day")
 AURELION_KEY(generated_reward_translation, "generated_reward_translation")
+// HeroProgressionRules' static vars, the specialty catalog's memo.
+AURELION_KEY(hero_progression_rules_script, "res://scripts/core/HeroProgressionRules.gd")
+AURELION_KEY(_catalog_source, "_catalog_source")
+AURELION_KEY(_catalog_index, "_catalog_index")

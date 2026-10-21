@@ -34,11 +34,16 @@
 //
 // verify() is the shadow check of a function that writes into its arguments
 // when copying them for the native run would cost too much (the AI targets'
-// sessions): the native call runs first on the arguments themselves and
-// writes nothing back, then GDScript's call runs, and verify() compares what
-// GDScript left with what the native call would have written. A validating
+// sessions), or that keeps memos in static vars, which the native call must
+// find as GDScript's call does (the battle port): the native call runs first
+// on the arguments themselves and writes nothing back, then GDScript's call
+// runs, and verify() compares what GDScript left with what the native call
+// would have written. A validating
 // call (begin(true)) keeps each container as it loads it, one level deep,
-// for the containers the native code read only in part.
+// for the containers the native code read only in part. It rolls a
+// RandomNumberGenerator it loaded on its own record of the state, which
+// verify() compares with the state GDScript's call left, so GDScript's call
+// rolls from where the native call started.
 
 #include "aurelion_rules/battle_state.hpp"
 
@@ -51,7 +56,12 @@
 #include <optional>
 #include <string>
 #include <unordered_map>
+#include <utility>
 #include <vector>
+
+namespace godot {
+class RandomNumberGenerator;
+}
 
 namespace aurelion::rules::bridge {
 
@@ -140,6 +150,9 @@ private:
 	void diff_dict_items(const state::DictNode &node, const godot::Dictionary &dict, std::string &path, std::string &out);
 	godot::Object *script_object(uint32_t script);
 	godot::StringName static_name(uint32_t name) const;
+	// A validating call's record of a loaded generator's state, made on first use;
+	// null outside a validating call and for a generator the call made.
+	uint64_t *validating_state(godot::RandomNumberGenerator *rng);
 	void verify_view(uint32_t node, const godot::Dictionary &now, std::string &path, std::vector<bool> &views, int depth, std::string &out);
 	void verify_loaded(const godot::Array &after, const std::vector<bool> &views, std::string &out);
 	std::string where(const godot::Variant &container, const godot::Array &after);
@@ -166,6 +179,11 @@ private:
 	std::vector<godot::Variant> array_snapshots_;
 	std::vector<godot::Variant> dict_snapshots_;
 	std::vector<godot::Variant> packed_snapshots_;
+	// A validating call: each loaded RandomNumberGenerator it read or rolled, by
+	// object id, with the state the native call left it in; and the ones the
+	// native call made, which it rolls themselves.
+	std::vector<std::pair<uint64_t, uint64_t>> rng_states_;
+	std::vector<uint64_t> made_rngs_;
 	godot::ObjectID content_service_;
 	// Per call: the content rows and documents loaded, by table and id atom,
 	// and the content revision once read (-1 before).
