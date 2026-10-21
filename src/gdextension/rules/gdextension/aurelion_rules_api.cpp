@@ -165,6 +165,7 @@ void AurelionRules::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("state_last_stats"), &AurelionRules::state_last_stats);
 	ClassDB::bind_method(D_METHOD("state_conversion_timing", "start", "end", "made_arrays", "made_dicts", "rounds"), &AurelionRules::state_conversion_timing);
 	ClassDB::bind_method(D_METHOD("port_call", "name", "args", "write_back"), &AurelionRules::port_call);
+	ClassDB::bind_method(D_METHOD("port_not_ported"), &AurelionRules::port_not_ported);
 	ClassDB::bind_method(D_METHOD("port_check", "name", "args", "gdscript_result"), &AurelionRules::port_check);
 	ClassDB::bind_method(D_METHOD("port_report", "name", "mismatch"), &AurelionRules::port_report);
 	ClassDB::bind_method(D_METHOD("port_copy", "args"), &AurelionRules::port_copy);
@@ -474,7 +475,7 @@ void AurelionRules::write_port_stats() const {
 	bool first_entry = true;
 	for (size_t index = 0; index < count && index < port_stats_.size(); ++index) {
 		const PortStats &stats = port_stats_[index];
-		if (stats.calls == 0 && stats.checks == 0) {
+		if (stats.calls == 0 && stats.checks == 0 && stats.not_ported == 0) {
 			continue;
 		}
 		if (!first_entry) {
@@ -482,7 +483,7 @@ void AurelionRules::write_port_stats() const {
 		}
 		first_entry = false;
 		append_json_string(out, table[index].name);
-		out += ": {\"calls\": " + std::to_string(stats.calls) + ", \"checks\": " + std::to_string(stats.checks) + ", \"mismatches\": " + std::to_string(stats.mismatches) + ", \"errors\": " + std::to_string(stats.errors) + ", \"first\": [";
+		out += ": {\"calls\": " + std::to_string(stats.calls) + ", \"checks\": " + std::to_string(stats.checks) + ", \"mismatches\": " + std::to_string(stats.mismatches) + ", \"errors\": " + std::to_string(stats.errors) + ", \"not_ported\": " + std::to_string(stats.not_ported) + ", \"first\": [";
 		for (size_t line = 0; line < stats.first.size(); ++line) {
 			if (line != 0) {
 				out += ", ";
@@ -512,6 +513,7 @@ void AurelionRules::write_port_stats() const {
 
 Variant AurelionRules::port_call(const StringName &name, const Array &args, bool write_back) {
 	std::string problem;
+	last_not_ported_ = false;
 	try {
 		const aurelion::rules::port::Function *function = port_function(name);
 		if (function == nullptr) {
@@ -543,6 +545,10 @@ Variant AurelionRules::port_call(const StringName &name, const Array &args, bool
 					return port_->export_value(result);
 				}
 			}
+		} catch (const aurelion::rules::state::NotPorted &) {
+			++stats.not_ported;
+			last_not_ported_ = true;
+			return Variant();
 		} catch (const aurelion::rules::state::ScriptError &error) {
 			problem = std::string(function->name) + ": native script error: " + error.what();
 		} catch (const std::exception &error) {
@@ -593,6 +599,10 @@ String AurelionRules::port_check(const StringName &name, const Array &args, cons
 					mismatch = port_->diff(result, gdscript_result);
 				}
 			}
+		} catch (const aurelion::rules::state::NotPorted &) {
+			--stats.checks;
+			++stats.not_ported;
+			return String();
 		} catch (const aurelion::rules::state::ScriptError &failure) {
 			error = true;
 			mismatch = std::string("native script error: ") + failure.what();
@@ -655,7 +665,7 @@ Dictionary AurelionRules::port_stats() const {
 		const aurelion::rules::port::Function *table = aurelion::rules::port::functions(count);
 		for (size_t index = 0; index < count && index < port_stats_.size(); ++index) {
 			const PortStats &stats = port_stats_[index];
-			if (stats.calls == 0 && stats.checks == 0) {
+			if (stats.calls == 0 && stats.checks == 0 && stats.not_ported == 0) {
 				continue;
 			}
 			Dictionary entry;
@@ -663,6 +673,7 @@ Dictionary AurelionRules::port_stats() const {
 			entry["checks"] = stats.checks;
 			entry["mismatches"] = stats.mismatches;
 			entry["errors"] = stats.errors;
+			entry["not_ported"] = stats.not_ported;
 			result[String(table[index].name)] = entry;
 		}
 		if (unknown_calls_ != 0) {
