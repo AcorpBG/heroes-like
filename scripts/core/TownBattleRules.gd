@@ -63,6 +63,15 @@ static func damage_multiplier__gd(battle: Dictionary, attacker: Dictionary, defe
 	return multiplier
 
 static func movement_penalty(battle: Dictionary, stack: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return movement_penalty__gd(battle, stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"TownBattleRules.movement_penalty", [battle, stack])
+	var result = movement_penalty__gd(battle, stack)
+	BattleEngine.check(&"TownBattleRules.movement_penalty", [battle, stack], result)
+	return result
+
+static func movement_penalty__gd(battle: Dictionary, stack: Dictionary) -> int:
 	if defends(battle, stack): return 0
 	return int(effect(battle, "chainboom").get("movement_penalty", 0))
 
@@ -70,6 +79,16 @@ static func spell_resistance(battle: Dictionary, stack: Dictionary) -> int:
 	return int(effect(battle, "prism_ward").get("resistance_pct", 0)) if defends(battle, stack) else 0
 
 static func heal_round(battle: Dictionary) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return heal_round__gd(battle)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"TownBattleRules.heal_round", [battle])
+	var before := BattleEngine.before_writing([battle])
+	var result = heal_round__gd(battle)
+	BattleEngine.check_writing(&"TownBattleRules.heal_round", before, [battle], result)
+	return result
+
+static func heal_round__gd(battle: Dictionary) -> Array:
 	var restored: Array = []
 	var ward := effect(battle, "root_ward")
 	var round_number := int(battle.get("round", 1))

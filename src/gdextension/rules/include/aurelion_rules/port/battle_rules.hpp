@@ -3,15 +3,20 @@
 // scripts/core/BattleRules.gd, ported function by function under the GDScript
 // names (docs/native-rules-engine-transition.md, Phase 1). Layer 1: hex
 // geometry and board reads. Layer 2: the damage chain, the stat totals and
-// what they read.
+// what they read. Layers 3 and 4: movement and targeting, turn order and
+// effects.
 //
 // Not ported, with the reason:
 // - begin_board_read_scope, end_board_read_scope, _board_read_cache_get,
 //   _board_read_cache_key: the board-read memo. It is transparent, so the
 //   native reads go without it; the shadow checks prove it.
-// - _ensure_battle_hex_state: calls _default_stack_hex, _first_open_body_near
-//   and _hex_board_descriptor, which are not ported yet.
-// - _set_stack_hex: calls _presentation_walk_path and ActionPlayback.capture.
+// - BattleActionPlayback.capture, the playback frames of a presented action:
+//   slice 10. It does nothing on a battle without the capture key; on one with
+//   it, the native callers (_set_stack_hex, _mark_stack_animation_event) stop
+//   with an error.
+// - _presentation_queue_written: the memo of _append_presentation_event.
+//   Normalizing a normalized queue gives the same queue, so the native call
+//   normalizes all of it.
 // - _hero_payload_cache: the payload memo of _hero_payload_for_side. It is
 //   transparent (the payload depends only on the side's payload and commander
 //   state, which it compares), so the native call computes the payload.
@@ -182,5 +187,112 @@ Atom _damage_rng_integrity(State &state, int64_t seed, Atom state_text, int64_t 
 void _record_event(State &state, DictRef battle, Atom message);
 void _initialize_damage_rng_state(State &state, const Value &session, DictRef battle);
 ArrayRef _normalize_recent_events(State &state, const Value &value);
+
+// Layers 3 and 4.
+
+// The board setup: deployment hexes, the hex state of a battle, moving a stack
+// and its walk path (board_setup.cpp).
+void _ensure_battle_hex_state(State &state, DictRef battle);
+DictRef _default_stack_hex(State &state, Atom side, int64_t index, int64_t stack_count, DictRef stack);
+int64_t _deployment_column(State &state, Atom side, DictRef stack);
+ArrayRef _formation_rows(State &state, int64_t stack_count);
+DictRef _first_open_body_near(State &state, DictRef stack, DictRef preferred, DictRef used);
+DictRef _hex_board_descriptor(State &state);
+void _set_stack_hex(State &state, DictRef battle, Atom battle_id, DictRef cell);
+ArrayRef _presentation_walk_path(State &state, DictRef battle, DictRef start, DictRef destination);
+int64_t _stack_movement_points(State &state, DictRef stack, DictRef battle);
+bool _stack_is_rooted(State &state, DictRef stack, DictRef battle);
+
+// Movement: legal destinations, melee approaches, the advance terms and attack
+// legality (movement.cpp).
+ArrayRef legal_destinations_for_active_stack(State &state, DictRef battle);
+ArrayRef legal_destinations_for_stack(State &state, DictRef battle, Atom battle_id);
+DictRef melee_approach_destination(State &state, DictRef battle, DictRef stack, DictRef target);
+ArrayRef melee_approach_cells(State &state, DictRef battle, DictRef stack, DictRef target);
+DictRef _melee_approach_entry(State &state, DictRef stack, DictRef target, DictRef cell, int64_t steps);
+DictRef _matching_melee_approach(State &state, DictRef battle, DictRef stack, DictRef target, DictRef approach);
+bool extra_speed_reaches_strike(State &state, DictRef battle, DictRef stack, int64_t extra);
+int64_t _advance_desired_gap(State &state, DictRef stack, DictRef battle);
+bool _advance_stalled_by_obstruction(State &state, DictRef stack, DictRef battle);
+int64_t _advance_lateral_penalty(State &state, DictRef stack, DictRef destination);
+bool _stack_can_breach_obstruction(State &state, DictRef stack, DictRef battle);
+int64_t _advance_distance_delta(State &state, DictRef stack, DictRef battle);
+void _clear_post_move_transition_result_fields(State &state, DictRef result);
+bool _can_melee_this_action(State &state, DictRef stack, DictRef battle, DictRef target);
+DictRef _attack_legality_for_target(State &state, DictRef active_stack, DictRef target, DictRef battle);
+bool _can_make_ranged_attack(State &state, DictRef stack, DictRef battle, DictRef target);
+int64_t _attack_distance_for_action(State &state, DictRef attacker, DictRef target, DictRef battle, bool is_ranged);
+bool _can_make_melee_attack(State &state, DictRef stack, DictRef battle, DictRef target);
+
+// Target selection: legal targets, the selected target and its click,
+// continuity and closing contexts (target_selection.cpp).
+ArrayRef legal_attack_targets_for_active_stack(State &state, DictRef battle, bool ranged);
+DictRef selected_target_legality(State &state, DictRef battle);
+DictRef selected_target_board_click_intent(State &state, DictRef battle);
+DictRef selected_target_continuity_context(State &state, DictRef battle);
+DictRef selected_target_closing_context(State &state, DictRef battle, bool clear_stale);
+DictRef board_click_attack_intent_for_target(State &state, DictRef battle, Atom battle_id);
+Atom _player_input_locked_summary(State &state);
+void _clear_selected_target_continuity(State &state, DictRef battle);
+void _clear_selected_target_closing(State &state, DictRef battle);
+bool _clear_stale_selected_target_closing(State &state, DictRef battle, bool clear_attackable);
+bool _selected_target_closing_is_stale(State &state, DictRef battle, bool clear_attackable);
+void _set_selected_target(State &state, DictRef battle, Atom target_id, bool explicit_retarget);
+bool _selected_target_can_remain_for_active_stack(State &state, DictRef battle, DictRef active_stack, Atom target_id);
+void _assign_default_target(State &state, DictRef battle);
+DictRef _preferred_default_target_for_active_stack(State &state, DictRef battle, DictRef active_stack, ArrayRef targets);
+ArrayRef _legal_attack_target_ids_for_active_stack(State &state, DictRef battle);
+ArrayRef _legal_attack_target_ids_for_active_stack_uncached(State &state, DictRef battle);
+DictRef get_selected_target(State &state, DictRef battle);
+DictRef select_target(State &state, const Value &session, Atom battle_id);
+
+// Turn order: rounds, the turn order and its sort, waiting and the action
+// availability (turn_order.cpp).
+void _prepare_round(State &state, DictRef battle, int64_t round_number);
+ArrayRef _sorted_turn_order(State &state, DictRef battle);
+bool _compare_stack_order_keys(State &state, DictRef lhs, DictRef rhs);
+bool _compare_waiting_order_keys(State &state, DictRef lhs, DictRef rhs);
+Atom _advance_to_next_alive(State &state, DictRef battle, int64_t start_index);
+void advance_turn(State &state, DictRef battle);
+void _resort_remaining_turn_order(State &state, DictRef battle);
+ArrayRef _ordered_remaining_actors(State &state, DictRef battle, ArrayRef battle_ids, const Value &waited_override);
+ArrayRef waited_stack_ids(State &state, DictRef battle);
+bool stack_has_waited(State &state, DictRef battle, Atom battle_id);
+bool can_wait(State &state, DictRef battle);
+void _apply_wait(State &state, DictRef battle);
+int64_t _opposing_stacks_still_to_act(State &state, DictRef battle, DictRef stack);
+int64_t _stacks_ahead_after_wait(State &state, DictRef battle, Atom battle_id);
+Atom _resolve_wait(State &state, DictRef battle, DictRef active_stack);
+bool _battle_retreat_allowed(State &state, DictRef battle);
+bool _battle_surrender_allowed(State &state, DictRef battle);
+DictRef action_availability(State &state, DictRef battle);
+
+// Stack effects: applying, spending, expiring and cleansing effects, defending
+// and the readiness writ (stack_effects.cpp).
+DictRef _apply_stack_effect(State &state, DictRef battle, Atom battle_id, const Value &effect_payload);
+void spend_effect_turns(State &state, DictRef battle, Atom battle_id);
+int64_t _expired_stack_effect_count(State &state, DictRef stack, int64_t round_number);
+int64_t _cleanse_stack_effects(State &state, DictRef battle, Atom battle_id, const Value &effect_ids);
+void _set_stack_defending(State &state, DictRef battle, Atom battle_id);
+DictRef _consume_readiness_writ_preparation(State &state, DictRef battle, Atom battle_id, Atom incoming_effect_id);
+DictRef _readiness_writ_ability(State &state, DictRef stack);
+DictRef _weakest_stack_by_cohesion(State &state, DictRef battle, Atom side);
+DictRef _weakest_stack_by_role(State &state, DictRef battle, Atom side, bool prefer_ranged);
+
+// Round effects: foundry repair, town healing, pressure shifts, cohesion and
+// momentum (round_effects.cpp).
+int64_t _apply_foundry_aura_round_repair(State &state, DictRef battle);
+void _apply_round_pressure_shifts(State &state, DictRef battle);
+void _adjust_stack_cohesion(State &state, DictRef battle, Atom battle_id, int64_t amount);
+void _adjust_stack_momentum(State &state, DictRef battle, Atom battle_id, int64_t amount);
+void _apply_field_objective_round_effects(State &state, DictRef battle);
+
+// Presentation: the animation states and events and the presentation event
+// queue (presentation.cpp).
+void _mark_stack_animation_event(State &state, DictRef battle, Atom battle_id, Atom event_id, DictRef context);
+void _append_animation_event_record(State &state, DictRef battle, DictRef record);
+void _append_presentation_event(State &state, DictRef battle, Atom event_type, Atom visible_text, DictRef context);
+ArrayRef _normalize_presentation_event_queue(State &state, const Value &value);
+ArrayRef _normalize_animation_event_queue(State &state, const Value &value);
 
 } // namespace aurelion::rules::port::battle_rules

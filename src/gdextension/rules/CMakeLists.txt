@@ -101,14 +101,21 @@ add_library(aurelion_rules_core STATIC
 	core/port/battle_ai_rules.cpp
 	core/port/battle_footprint.cpp
 	core/port/battle_rules.cpp
+	core/port/board_setup.cpp
 	core/port/commander_payload.cpp
 	core/port/damage_modifiers.cpp
 	core/port/damage_stream.cpp
 	core/port/gd.cpp
+	core/port/movement.cpp
+	core/port/presentation.cpp
 	core/port/registry.cpp
 	core/port/registry_tables.cpp
+	core/port/round_effects.cpp
 	core/port/spell_effects.cpp
+	core/port/stack_effects.cpp
 	core/port/stat_totals.cpp
+	core/port/target_selection.cpp
+	core/port/turn_order.cpp
 )
 add_dependencies(aurelion_rules_core aurelion_rules_source_tree)
 target_include_directories(aurelion_rules_core PUBLIC include PRIVATE "${AURELION_RULES_GENERATED_DIR}")

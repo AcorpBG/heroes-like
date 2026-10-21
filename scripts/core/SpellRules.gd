@@ -1466,6 +1466,15 @@ static func normalize_school_resistance__gd(value: Variant) -> Dictionary:
 	return result
 
 static func stack_status_immunity_ids(stack: Dictionary, battle: Dictionary) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return stack_status_immunity_ids__gd(stack, battle)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules.stack_status_immunity_ids", [stack, battle])
+	var result = stack_status_immunity_ids__gd(stack, battle)
+	BattleEngine.check(&"SpellRules.stack_status_immunity_ids", [stack, battle], result)
+	return result
+
+static func stack_status_immunity_ids__gd(stack: Dictionary, battle: Dictionary) -> Array:
 	var ids := normalize_status_immunity_ids(stack.get("status_immunity_ids", []))
 	var current_round := int(battle.get("round", 1))
 	for effect in active_effects_for_round(stack, current_round):
@@ -1475,6 +1484,15 @@ static func stack_status_immunity_ids(stack: Dictionary, battle: Dictionary) -> 
 	return ids
 
 static func target_is_immune_to_status(target_stack: Dictionary, battle: Dictionary, status_id: String) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return target_is_immune_to_status__gd(target_stack, battle, status_id)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules.target_is_immune_to_status", [target_stack, battle, status_id])
+	var result = target_is_immune_to_status__gd(target_stack, battle, status_id)
+	BattleEngine.check(&"SpellRules.target_is_immune_to_status", [target_stack, battle, status_id], result)
+	return result
+
+static func target_is_immune_to_status__gd(target_stack: Dictionary, battle: Dictionary, status_id: String) -> bool:
 	return status_id != "" and status_id in stack_status_immunity_ids(target_stack, battle)
 
 static func spell_damage_resistance_pct(battle: Dictionary, target_stack: Dictionary, spell: Dictionary) -> int:
@@ -1595,10 +1613,30 @@ static func effect_summary(stack: Dictionary, battle: Dictionary) -> String:
 	return ", ".join(tags)
 
 static func normalize_stack_effects(stack: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return normalize_stack_effects__gd(stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"SpellRules.normalize_stack_effects", [stack])
+	var before := BattleEngine.before_writing([stack])
+	var result = normalize_stack_effects__gd(stack)
+	BattleEngine.check_writing(&"SpellRules.normalize_stack_effects", before, [stack], result)
+	return result
+
+static func normalize_stack_effects__gd(stack: Dictionary) -> Dictionary:
 	stack["effects"] = _normalize_effects(stack.get("effects", []))
 	return stack
 
 static func purge_expired_stack_effects(stack: Dictionary, round_number: int) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return purge_expired_stack_effects__gd(stack, round_number)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"SpellRules.purge_expired_stack_effects", [stack, round_number])
+	var before := BattleEngine.before_writing([stack, round_number])
+	var result = purge_expired_stack_effects__gd(stack, round_number)
+	BattleEngine.check_writing(&"SpellRules.purge_expired_stack_effects", before, [stack, round_number], result)
+	return result
+
+static func purge_expired_stack_effects__gd(stack: Dictionary, round_number: int) -> Dictionary:
 	var active := []
 	for effect in _normalize_effects(stack.get("effects", [])):
 		if int(effect.get("expires_after_round", 0)) >= round_number:

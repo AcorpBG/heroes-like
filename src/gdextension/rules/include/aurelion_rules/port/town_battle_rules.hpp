@@ -2,7 +2,8 @@
 
 // scripts/core/TownBattleRules.gd, ported function by function under the
 // GDScript names (docs/native-rules-engine-transition.md, Phase 1). Layer 2:
-// the town assault effects of a battle.
+// the town assault effects of a battle. Layers 3 and 4: the movement penalty
+// and the round's healing.
 
 #include "aurelion_rules/port/gd.hpp"
 
@@ -22,5 +23,15 @@ double damage_multiplier(State &state, DictRef battle, DictRef attacker, DictRef
 int64_t absorb(State &state, DictRef stack, int64_t damage);
 bool defends(State &state, DictRef battle, DictRef stack);
 DictRef effect(State &state, DictRef battle, Atom id);
+
+// Layers 3 and 4.
+
+// The board setup: deployment hexes, the hex state of a battle, moving a stack
+// and its walk path (board_setup.cpp).
+int64_t movement_penalty(State &state, DictRef battle, DictRef stack);
+
+// Round effects: foundry repair, town healing, pressure shifts, cohesion and
+// momentum (round_effects.cpp).
+ArrayRef heal_round(State &state, DictRef battle);
 
 } // namespace aurelion::rules::port::town_battle_rules
