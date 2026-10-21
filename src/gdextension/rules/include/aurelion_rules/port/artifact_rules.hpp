@@ -37,6 +37,11 @@ DictRef artifact_set_insignia_state(State &state, Atom set_id);
 DictRef artifact_set_record(State &state, Atom set_id);
 ArrayRef _string_array(State &state, const Value &value);
 
+// The spell modifiers of a hero's artifacts and the mana they take off a
+// spell, shared with the battle port (artifact_rules.cpp).
+ArrayRef spell_affinity_records(State &state, DictRef hero_state, DictRef spell);
+int64_t spell_mana_cost_delta(State &state, DictRef hero_state, DictRef spell);
+bool _spell_modifier_matches(State &state, DictRef modifier, DictRef spell);
 
 // The map's artifact nodes (overworld_state_normalize.cpp).
 ArrayRef build_artifact_nodes(State &state, const Value &placements, Atom scenario_id = state::key::empty);

@@ -116102,28 +116102,28 @@
     {
       "id": "native-rules-phase1-06-cohesion-town-20261020",
       "title": "Native battle engine 06: cohesion, momentum, field objectives, town defences",
-      "status": "pending",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Layers 6 and 7: BattleRules 16/457, TownBattleRules 7/41. Callers: BattleRules, SpellRules, 2 tests.",
-      "updatedAt": "2026-10-20T19:35:00Z"
+      "notes": "Layers 6 and 7: BattleRules 16/457, TownBattleRules 7/41. Callers: BattleRules, SpellRules, 2 tests. Done 2026-10-22 (branch native-phase1-battle: b888d2336 port, 649d181a7 Windows binaries; merge of main 6924ce383): 5 functions / 80 lines, the rest of layers 6 and 7 came in 02-05. BattleRules 4/79 (_apply_advance_pressure, _apply_defend_pressure, _apply_melee_approach from 03, _is_town_assault_context), TownBattleRules spell_resistance 1/1. BattleAiRules' layer 6 copy _field_objective_action_influence stays for 08. Shadow on the six seeds: 0 mismatches, 0 errors, 0 not ported in 63,734,372 checks over 335 of 344 functions, 65,069 in slice 06 (all 5 reached). Native mode vs main: 415 daily digests and match records identical. Core suite 17/17 (Windows; Linux libraries not rebuilt). Review against the GDScript: no divergence.",
+      "updatedAt": "2026-10-21T22:13:00Z"
     },
     {
       "id": "native-rules-phase1-07-spells-commanders-20261020",
       "title": "Native battle engine 07: in-battle spells and commander payloads",
-      "status": "pending",
+      "status": "in_progress",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Layer 8, likely two sessions: SpellRules 57/769, BattleRules 19/513, and the payload's ArtifactRules 20/328, HeroProgressionRules 10/105, DifficultyRules 7/21, ScenarioSelectRules 2/8 (or caster profiles built in GDScript, rebuilt after each enemy cast). Callers: 3 scenes, 8 scripts, 40 tests, the arena worker.",
-      "updatedAt": "2026-10-20T19:35:00Z"
+      "notes": "Layer 8, likely two sessions: SpellRules 57/769, BattleRules 19/513, and the payload's ArtifactRules 20/328, HeroProgressionRules 10/105, DifficultyRules 7/21, ScenarioSelectRules 2/8 (or caster profiles built in GDScript, rebuilt after each enemy cast). Callers: 3 scenes, 8 scripts, 40 tests, the arena worker. Started 2026-10-22: the commander payloads came in 02. Part 07a, 52/585 (SpellRules 35/352, BattleRules 13/190, ArtifactRules 3/37, HeroProgressionRules 1/6), with 12 of them shared helpers on main, frozen until the Phase 1 merge (PLAN.md). 07a done 2026-10-22 (branch native-phase1-battle: 387543a23 port, 3e11b0aed Windows binaries; merges of main 4ea510b0b and 8d1985999; the shared helpers on main 40cf5f12e, binaries 52c89b266): shadow 0 mismatches in 66,732,872 checks over 386 of 396 functions (2,998,500 in 07a's, 51 of 52 reached, not _stable_percent); native mode identical to main on the six seeds; core suite 17/17 (Windows only, Linux libraries not rebuilt). A review of the paths shadow did not reach found no divergence. Part 07b (resolve_battle_spell, validate_battle_spell, _consume_mana, known_spells, _player_spell_resolution) waits for Phase 5's ensure_hero_spellbook, mana_max_from_hero, mana_max_from_command and HeroProgressionRules.mana_max_bonus on main. cast_player_spell and _cast_enemy_spell move to 10.",
+      "updatedAt": "2026-10-21T23:13:00Z"
     },
     {
       "id": "native-rules-phase1-08-ai-estimates-20261020",

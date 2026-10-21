@@ -1022,6 +1022,50 @@ a20d0c371):
   - Core suite: 17/17 on Windows.
   - The Linux libraries in `bin/` are not rebuilt.
 
+**Layers 6 and 7: the pressure of an advance and a defend, the melee approach, the town defences** (slice 06,
+2026-10-22; branch commits b888d2336 port, 649d181a7 Windows binaries; merge of main 6924ce383):
+- **Ported:** 5 functions, 80 lines. The rest of layers 6 and 7 came earlier: the damage pressure and the field
+  objectives in 05, the town effects in 02 to 04.
+  - BattleRules 4/79: `_apply_advance_pressure`, `_apply_defend_pressure`, `_apply_melee_approach` (from 03) and
+    `_is_town_assault_context`.
+  - TownBattleRules `spell_resistance`, 1/1.
+- **Moved:** BattleAiRules' layer 6 copy `_field_objective_action_influence` (97 lines) stays with the other copies for
+  08.
+- **Review:** a review against the GDScript found no divergence.
+- **Checks:**
+  - Shadow on the six seeds: 0 mismatches, 0 errors and 0 paths left to GDScript in 63,734,372 checks over 335 of the
+    344 functions. 65,069 of them are slice 06's, over all 5.
+  - Native mode against main: every daily digest (415) and match record of the six seeds is identical.
+  - Core suite: 17/17 on Windows.
+  - The Linux libraries in `bin/` are not rebuilt.
+
+**Layer 8 without the casts: the battle spells' rules and events** (slice 07a, 2026-10-22; branch commits 387543a23
+port, 3e11b0aed Windows binaries; merges of main 4ea510b0b and 8d1985999):
+- **Ported:** 52 functions, 585 lines. The commander payloads came in 02.
+  - SpellRules 35/352: a spell's battle behaviour, the cast and target checks, spell and control resistance, the
+    damage projection, recovery, power and durations, the effect payloads, and the status resolution with its
+    resistance roll (`spell_battle.cpp`).
+  - BattleRules 13/190: the commander's cast of the round, the casting hero, the commit of a resistance roll, and the
+    cast's animation states and presentation events (`spell_events.cpp`).
+  - ArtifactRules 3/37 and HeroProgressionRules 1/6: the mana cost. With 8 of the SpellRules functions these are the
+    12 shared helpers, put on main unswitched (40cf5f12e, binaries 52c89b266) and switched here. ArtifactRules now
+    has the battle engine's switch.
+- **Moved:** `cast_player_spell` and `_cast_enemy_spell` to slice 10. The player's cast ends in `_complete_action`;
+  the enemy's reaches `_evaluate_outcome` and the battle AI's commander payload (08, 09).
+- **Waiting (07b):** `resolve_battle_spell`, `validate_battle_spell`, `_consume_mana`, `known_spells` and
+  `_player_spell_resolution`. They need Phase 5's `ensure_hero_spellbook`, `mana_max_from_hero`,
+  `mana_max_from_command` and `HeroProgressionRules.mana_max_bonus` on main.
+- **Review:** one reviewer on the paths shadow did not reach (`_stable_percent`, the fallback of a battle without a
+  seed, and that branch of `_status_resistance_roll` and `_battle_stream_rng`) found no divergence. A float or
+  container `resistance_seed` fails loudly in native mode where GDScript's `str()` converts it; nothing in the game
+  sets that field.
+- **Checks:**
+  - Shadow on the six seeds: 0 mismatches, 0 errors and 0 paths left to GDScript in 66,732,872 checks over 386 of
+    the 396 functions. 2,998,500 of them are slice 07a's, over 51 of its 52; `_stable_percent` was not reached.
+  - Native mode against main: every daily digest (415) and match record of the six seeds is identical.
+  - Core suite: 17/17 on Windows.
+  - The Linux libraries in `bin/` are not rebuilt.
+
 ### Phase 2: one payload builder, AI preview as one call, the battle tool
 
 - Battle payload creation (`BattleRules.gd:256-402`), stack and hero payloads, obstacles, and the end-of-battle numbers
