@@ -116219,15 +116219,15 @@
     {
       "id": "native-rules-phase5-04-enemy-states-20261021",
       "title": "Native day processing 04: enemy states and commander rosters",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Enemy-state and commander-roster normalization, 55 ms of the 186 per day on l1: 97/1,475 (EnemyAdventureRules 74/1,125, EnemyTurnRules 15/247, AiHeroRules 8/103). AI code frozen from this slice's start to the merge; Phase 4 takes the port.",
-      "updatedAt": "2026-10-21T21:00:00Z"
+      "notes": "Completed on branch native-phase5-day: EnemyTurnRules.normalize_enemy_states native for every caller with 126 functions (EnemyAdventureRules 60, HeroProgressionRules 25, EnemyTurnRules 15, PlayerIdentityRules 7, DifficultyRules 6, AiHeroRules 5, SpellRules 4, ScenarioSelectRules 2, OverworldRules 1, OverworldLevelRules 1); paths AI matches never run throw NotPorted and stay GDScript; shared helpers on main. Checks: shadow on the six seeds 2,511 calls, 0 mismatches; native mode against main on the six seeds identical; core suite 17/17.",
+      "updatedAt": "2026-10-21T23:30:00Z"
     },
     {
       "id": "native-rules-phase5-05-scenario-elimination-20261021",

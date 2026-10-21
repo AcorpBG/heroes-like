@@ -1031,6 +1031,14 @@ MineRules 3, NativeTransitRules 1). Ports that other ports share are in one file
 with Phase 3 are on main (above). Checks: shadow on the six seeds 10,243 calls, 0 mismatches; native mode against main
 on the six seeds identical; core suite 17/17.
 
+**Slice 04, enemy states** (2026-10-21, branch `native-phase5-day`): the day registry adds
+`EnemyTurnRules.normalize_enemy_states` for every caller: the computer players' states, raid hosts and commander
+rosters, with the 126 functions listed above (EnemyAdventureRules 60, HeroProgressionRules 25, EnemyTurnRules 15,
+PlayerIdentityRules 7, DifficultyRules 6, AiHeroRules 5, SpellRules 4, ScenarioSelectRules 2, OverworldRules 1,
+OverworldLevelRules 1); the paths AI matches never run throw `state::NotPorted`, and so does `String()` of a float or a
+container (`gd::stringify_or_fallback`). Checks: shadow on the six seeds 2,511 calls, 0 mismatches; native mode against
+main on the six seeds identical; core suite 17/17.
+
 ### Phase 6: match throughput
 
 The runner keeps a native session handle across days and writes Dictionaries back only for the digest and record (with
