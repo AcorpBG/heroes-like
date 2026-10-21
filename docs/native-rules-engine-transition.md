@@ -981,6 +981,47 @@ port, 7cd5f6cca Windows binaries, 7027f1a5e warning fix):
 - **Result:** S is 7.89 to 9.45 on `standard`: over 5x in every case, under 10x (10x needs r 10.79). Layer 5 starts,
   as the owner decided.
 
+**Layer 5: attacks, abilities, damage pressure and the attack events** (slice 05, 2026-10-22; branch commits
+8d2bccfef port, a25b226c3 Windows binaries; merges of main eb30586d8 and f2d8e46f4; switch generator fix on main
+a20d0c371):
+- **Ported:** 58 functions, 1,371 lines.
+  - BattleRules 37/1,162:
+    - the attack and retaliation ability effects, the hookline pull, the counter-ambush flare, strike-backs and the
+      retaliations and shots an attack spends;
+    - pressure artillery, the readiness writ, mending fire and the harry support;
+    - the damage pressure: the cohesion and momentum shifts of a hit, the shock of a destroyed stack, the field
+      objectives' action pressure and control push, and `_apply_ranged_damage_return` (moved here from 06);
+    - the post-attack target context and the damage and text presentation events.
+  - SpellRules `build_battle_effect`, 1/32.
+  - BattleAiRules' copies of the ability checks, 20/177, from 08. 14 of them call the BattleRules port.
+- **Moved:**
+  - `_resolve_attack_action` and `_resolve_ai_attack` go to 10, the attack orchestrators. They end in
+    `_complete_action` or `_complete_enemy_action`, which call `_evaluate_outcome` and the `_finalize_*` functions,
+    and those stay GDScript in Phase 1. A ported function calls only ported functions.
+  - BattleAiRules `_readiness_writ_available`, `_readiness_writ_target` and `_stack_cohesion_total` go to 08.
+- **Merges of main:**
+  - The branch calls main's shared helpers `_default_difficulty_id`, `normalize_difficulty` and
+    `_normalize_spell_ids`.
+  - The branch calls main's `DifficultyRules.profile_for_session` and `profile_for_difficulty`. Main's
+    `profile_for_session` now also takes the SessionData object (a2dc2bb61).
+  - The branch calls main's `BattleDamageRules.attack_defense_multiplier`. The branch's copies are gone.
+  - `battle_keys.inc` drops 60 keys that main's day and AI key lists hold with the same text.
+- **Switch generator:** a switch's locals (`result`, `before`, `native_result`) take a `switch_` prefix when a
+  parameter has the same name. `_attach_post_attack_target_context` takes `result`, and its script did not parse.
+- **Review:** a read-only review compared every function with its GDScript body, and a second agent tried to refute
+  each finding. Two divergences were confirmed; neither can happen in play:
+  - `PackedStringArray.has` was missing from two `variant_has` copies (`ability_helpers.cpp`,
+    `battle_ai_abilities.cpp`). It is added. Content gives Arrays.
+  - `float(String)` throws in the runtime's `gd::to_float` where GDScript converts. This is a runtime gap on main,
+    left open. Every bloodrush threshold is a float after the ability is normalized.
+- **Checks:**
+  - Shadow on the six seeds: 0 mismatches and 0 errors in 63,669,303 checks over 330 of the 339 functions. 10,633,092
+    of them are slice 05's, over 55 of its 58 functions.
+    - Not reached: `_apply_hookline_pull`, `stack_strike_backs` and `_lowest_health_stack`, plus the six from before.
+  - Native mode against main: every daily digest (415) and match record of the six seeds is identical.
+  - Core suite: 17/17 on Windows.
+  - The Linux libraries in `bin/` are not rebuilt.
+
 ### Phase 2: one payload builder, AI preview as one call, the battle tool
 
 - Battle payload creation (`BattleRules.gd:256-402`), stack and hero payloads, obstacles, and the end-of-battle numbers
