@@ -710,14 +710,16 @@ value; the six seeds are identical against main on Windows and Linux, with the s
 
 ### Phase 3: overworld kernels by rule
 
-A kernel moves only if it is 3% or more of match CPU, takes packed arrays and scalars, uses no transcendental math, hash
-or RNG, and had no behaviour commit for 7 days. Candidates: `_level_surface`, `_war_paths`, fog `_explored`/`_reveal`.
+A kernel moves only if it is 3% or more of match CPU, takes packed arrays and scalars, and uses no transcendental math,
+hash or RNG. Its code takes no behaviour changes while its port runs; there is no waiting period before it (owner
+decision 2026-10-21). Candidates: `AiHeroRules._search` (11.5%), `_level_surface`, `_war_paths`, fog
+`_explored`/`_reveal`.
 
 ### Gate G3: re-plan from measurements
 
-Re-estimate Phases 4-7 from Phase 1's measured rate (lines per day, mismatches per 1,000 lines). If AiHeroRules had
-behaviour commits on more than 4 of the last 14 days, do Phase 5 before Phase 4, keeping the AI in GDScript longer. The
-owner decides whether to continue toward whole-game speed.
+Re-estimate Phases 4-7 from Phase 1's measured rate (lines per day, mismatches per 1,000 lines). The owner picks the
+order of Phases 4 and 5 (the churn rule that picked it was removed on 2026-10-21) and decides whether to continue toward
+whole-game speed.
 
 ### Phase 4: the overworld AI faction turn
 
@@ -790,7 +792,7 @@ Sizes are the proposal's unmeasured agent-day guesses, useful only to compare ph
 | D7 | Whether a tool built from the same core counts under "no simulator outside Godot" (`PLAN.md:328`), or an in-Godot threaded runner instead | Phase 2 |
 | D8 | **Decided 2026-10-20:** Phase 1 lives on one port branch, `native-phase1-battle` on GitHub, rebased on main at least weekly and before each slice, and merges to main once, when every battle is native and identical; it is dropped if checkpoint G1 stays under 5x after the interface fix (AGENTS.md "Native rules port") | Phase 1 |
 | D9 | Where owner-save copies for the codec proof live (outside git); asked when a slice first needs owner saves | Phase 1 |
-| D10 | **Decided 2026-10-20:** main is tagged before each port merge, and the merged subsystem takes no behaviour commits for 7 days after it | each merge |
+| D10 | **Decided 2026-10-20:** main is tagged before each port merge. Owner 2026-10-21: no waiting period after it (the 7 days without behaviour commits was removed) | each merge |
 
 ## 9. Risks and how the plan contains them
 
