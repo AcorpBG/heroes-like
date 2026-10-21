@@ -115992,8 +115992,8 @@
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Gate G0 passed (owner, 2026-10-20). Owner decisions 2026-10-20: D8 one port branch native-phase1-battle, merged once, dropped if G1 stays under 5x after the interface fix; D5/D10 battle code frozen until 7 days after the merge, urgent fixes in GDScript on main and ported on the branch, main tagged before the merge; D6 tests on deleted private battle functions retired at the merge. Scope, order, checkpoint G1 and exit in docs/native-rules-engine-transition.md, Phase 1. The first slice measures the porting rate. Inventory (transition doc, Phase 1 results (first slice)): 565 functions / 10,278 lines run in fights, cut into child slices native-rules-phase1-01..11 in the doc's order; section 11 answered. Slice 01 completed: helpers, battle state, the HEROES_NATIVE_BATTLE switch and layer 1 at 0 shadow mismatches; next 02. Owner decision 2026-10-21: G1 projected on layer 1 first (slice 01b); the formal G1 follows layer 4. Slice 01b completed 2026-10-21: G1 projected on layer 1 after the value-layer speed-up, r 10.44-10.66 and S 9.12-9.88 when the State last held another resolve (r 5.59-5.65 and S 5.15-5.44 before); under 12.5, so the owner decides before slice 02.",
-      "updatedAt": "2026-10-21T13:30:00Z"
+      "notes": "Gate G0 passed (owner, 2026-10-20). Owner decisions 2026-10-20: D8 one port branch native-phase1-battle, merged once, dropped if G1 stays under 5x after the interface fix; D5/D10 battle code frozen until 7 days after the merge, urgent fixes in GDScript on main and ported on the branch, main tagged before the merge; D6 tests on deleted private battle functions retired at the merge. Scope, order, checkpoint G1 and exit in docs/native-rules-engine-transition.md, Phase 1. The first slice measures the porting rate. Inventory (transition doc, Phase 1 results (first slice)): 565 functions / 10,278 lines run in fights, cut into child slices native-rules-phase1-01..11 in the doc's order; section 11 answered. Slice 01 completed: helpers, battle state, the HEROES_NATIVE_BATTLE switch and layer 1 at 0 shadow mismatches; next 02. Owner decision 2026-10-21: G1 projected on layer 1 first (slice 01b); the formal G1 follows layer 4. Slice 01b completed 2026-10-21: G1 projected on layer 1 after the value-layer speed-up, r 10.44-10.66 and S 9.12-9.88 when the State last held another resolve (r 5.59-5.65 and S 5.15-5.44 before); under 12.5, so the owner decides before slice 02. Slices 02, 03 and 04 completed 2026-10-21. Formal G1 after layer 4: S 3.47-4.98 on standard and the six seeds, under 5x (layers 2 and 4 at r about 4, layers 1 and 3 above 10); the owner decides the next step.",
+      "updatedAt": "2026-10-21T19:45:00Z"
     },
     {
       "id": "native-rules-phase1-01-foundation-hex-20261020",
@@ -116037,28 +116037,28 @@
     {
       "id": "native-rules-phase1-03-movement-targeting-20261020",
       "title": "Native battle engine 03: movement and targeting",
-      "status": "pending",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Layer 3: BattleRules 42/641 (legal destinations, melee approach, auto-advance, attack legality, selected target). Callers: BattleBoardView.gd, BattleShell.gd, BattleAiRules, BattleAutoResolveRules, 17 tests.",
-      "updatedAt": "2026-10-20T19:35:00Z"
+      "notes": "Completed with 04 (their functions call each other). Branch native-phase1-battle: e4a7cc61e port, 4c5a72917 Windows binaries; runtime (gd String formatting, capitalize, replace, trim_prefix, slice, sort_custom) on main 9e84fff83 and db3c59b47, merged into the branch in c0205a359. Layer 3: 48 functions / 758 GDScript lines in C++, BattleRules 47/755 (board setup, movement points and rooting, legal destinations, melee approach, advance rules, attack legality and reach, legal and selected targets) and TownBattleRules.movement_penalty 1/3; from layer 1 _ensure_battle_hex_state and _set_stack_hex with their helpers. Not ported: the board-read memos (uncached path). Moved: _apply_melee_approach to 06, _apply_auto_advance_movement to 09, BattleAiRules' 8 layer-3 copies to 08. Checks in 04.",
+      "updatedAt": "2026-10-21T19:45:00Z"
     },
     {
       "id": "native-rules-phase1-04-turn-order-effects-20261020",
       "title": "Native battle engine 04: turn order and effects, then checkpoint G1",
-      "status": "pending",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Layer 4: BattleRules 26/391 (round preparation, turn order, waits, effects with SpellRules' effect helpers, outcome check without finalize). Callers: BattleBoardView.gd, BattleShell.gd, BattleAiRules, BattleAutoResolveRules, 43 tests. Checkpoint G1 follows; open for the owner: G1 as written times a native loop that exists only after layers 5-10; proposal: time the four ported layers natively against GDScript on the arena corpus, conversion included.",
-      "updatedAt": "2026-10-20T19:35:00Z"
+      "notes": "Completed with 03. Layer 4 and the effect pieces it calls: 42 functions / 856 GDScript lines in C++ (turn order and round preparation 23/374, readiness writs and foundry repair 3/130, round effects 4/109, heal_round 1/18, SpellRules status immunity and effect normalize/purge 4/20, _weakest_stack_by_cohesion and _role 2/30, presentation and animation event records 5/175). Not ported: the _presentation_queue_written memo. _complete_action, _evaluate_outcome and resolve_if_battle_ready stay GDScript until 10. No GDScript bugs found. Slices 03+04: shadow on the six seeds 0 mismatches, 0 native errors, 55,236,025 checks over 275 functions (2,374,591 in the 90 new; not reached _presentation_walk_path, _player_input_locked_summary); native mode identical to main (415 daily digests, 6 match records); core suite 17/17 on Windows. Linux libraries in bin/ not rebuilt. Formal G1 (transition doc, Phase 1 \"Formal G1 after layer 4\"; harness e4350640a): previous resolve r 3.76 / S 3.61 (standard) and 3.95 / 3.62 (six seeds), new State 3.61 / 3.47 and 3.81 / 3.50, same resolve again 5.09 / 4.82 and 5.45 / 4.84; c 0.0107 and 0.0230; every replay round 0 mismatches. r per layer (warm): 1 11.0/10.8, 2 3.95/4.29, 3 12.6/13.1, 4 3.99/4.50. Slower than GDScript: _append_presentation_event (r 0.69) and _hero_has_trait (0.84), whose GDScript static memos (_presentation_queue_written, _hero_payload_cache) the port leaves out. Under 5x: by the checkpoint the interface is fixed before the AI part; owner decides.",
+      "updatedAt": "2026-10-21T19:45:00Z"
     },
     {
       "id": "native-rules-phase1-05-attacks-abilities-20261020",
