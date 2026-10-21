@@ -1,6 +1,7 @@
 #include "aurelion_rules/port/registry.hpp"
 
 #include "aurelion_rules/port/enemy_states.hpp"
+#include "aurelion_rules/port/hero_commit.hpp"
 #include "aurelion_rules/port/overworld_rules.hpp"
 #include "aurelion_rules/port/scenario_evaluation.hpp"
 
@@ -57,6 +58,10 @@ const Function kFunctions[] = {
 	PORT(PlayerEliminationRules, apply_daily, 1, true,
 			if (a[0].kind == state::Kind::Nil) return gd::array_value(s.new_array());
 			return gd::array_value(player_elimination_rules::apply_daily(s, D(a, 0)))),
+	// The active hero's mirrors written back into the player's roster.
+	PORT(HeroCommandRules, commit_active_hero, 1, true,
+			if (a[0].kind == state::Kind::Nil) return nil();
+			hero_command_rules::commit_active_hero(s, D(a, 0)); return nil()),
 };
 
 #undef PORT

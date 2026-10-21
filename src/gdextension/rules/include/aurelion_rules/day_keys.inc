@@ -495,6 +495,21 @@ AURELION_KEY(veterancy_label, "veterancy_label")
 AURELION_KEY(veterancy_rank, "veterancy_rank")
 AURELION_KEY(war_hardened, "War-hardened")
 AURELION_KEY(week_bonuses, "week_bonuses")
+// Slice 03's shared helpers (main): DifficultyRules' profiles, also in
+// battle_keys.inc on native-phase1-battle, which drops them when it takes main;
+// then HeroCommandRules' movement points.
+AURELION_KEY(movement_bonus, "movement_bonus")
+AURELION_KEY(income_multiplier, "income_multiplier")
+AURELION_KEY(reward_multiplier, "reward_multiplier")
+AURELION_KEY(enemy_pressure_bonus, "enemy_pressure_bonus")
+AURELION_KEY(raid_threshold_offset, "raid_threshold_offset")
+AURELION_KEY(raid_pillage_multiplier, "raid_pillage_multiplier")
+AURELION_KEY(player_damage_multiplier, "player_damage_multiplier")
+AURELION_KEY(enemy_damage_multiplier, "enemy_damage_multiplier")
+AURELION_KEY(player_initiative_bonus, "player_initiative_bonus")
+AURELION_KEY(enemy_initiative_bonus, "enemy_initiative_bonus")
+AURELION_KEY(base_movement, "base_movement")
+AURELION_KEY(movement_carry, "movement_carry")
 // Slice 04: the computer commanders' specialty choices, EnemyAdventureRules'
 // pick weights in its static vars.
 AURELION_KEY(might, "might")
@@ -552,3 +567,10 @@ AURELION_KEY(player_identity_mode, "player_identity_mode")
 AURELION_KEY(legacy_generated_faction_v0, "legacy_generated_faction_v0")
 AURELION_KEY(native_random_map_package_session_adoption, "native_random_map_package_session_adoption")
 AURELION_KEY(townless_since, "townless_since")
+// Slice 03: the active hero's roster entry and mirrors (HeroCommandRules).
+AURELION_KEY(active_hero_id, "active_hero_id")
+AURELION_KEY(army, "army")
+AURELION_KEY(slot_index, "slot_index")
+AURELION_KEY(field_army, "Field Army")
+// Also in battle_keys.inc on native-phase1-battle, which drops it when it takes main.
+AURELION_KEY(session_id, "session_id")

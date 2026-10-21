@@ -108,6 +108,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/fog.cpp
 	core/port/gd.cpp
 	core/port/hero_command_rules.cpp
+	core/port/hero_commit.cpp
 	core/port/hero_progression_rules.cpp
 	core/port/mine_rules.cpp
 	core/port/native_transit_rules.cpp
