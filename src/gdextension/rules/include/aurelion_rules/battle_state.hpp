@@ -315,12 +315,14 @@ public:
 	const ValueList &list() const { return keys_; }
 
 	void push_back(const Value &key) {
-		keys_.push_back(key);
+		// key may be one of these keys: read it before the push can free them.
+		const Value copy = key;
+		keys_.push_back(copy);
 		if (indexed_) {
 			if (keys_.size() * 2 > table_.size() || keys_.size() >= kIndexBelow) {
 				drop_index();
-			} else if (key.is_string_like()) {
-				insert(key.ref, keys_.size() - 1);
+			} else if (copy.is_string_like()) {
+				insert(copy.ref, keys_.size() - 1);
 			}
 		}
 	}
@@ -653,13 +655,16 @@ inline int64_t State::dict_size(uint32_t dict_node) const {
 }
 
 inline void State::set(uint32_t dict_node, const Value &key, const Value &value) {
+	// key or value may be an entry of this node: copy both before a push frees it.
+	const Value key_copy = key;
+	const Value value_copy = value;
 	DictNode &node = dict(dict_node);
-	const int64_t index = node.keys.find(key);
+	const int64_t index = node.keys.find(key_copy);
 	if (index >= 0) {
-		node.values[static_cast<size_t>(index)] = value;
+		node.values[static_cast<size_t>(index)] = value_copy;
 	} else {
-		node.keys.push_back(key);
-		node.values.push_back(value);
+		node.keys.push_back(key_copy);
+		node.values.push_back(value_copy);
 	}
 	node.dirty = true;
 }

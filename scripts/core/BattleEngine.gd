@@ -7,8 +7,9 @@ extends RefCounted
 ## - shadow: the GDScript bodies, with every call checked against the native
 ##   port: the result with its types, key order and container identities, and
 ##   for a function that writes into its arguments, the arguments afterwards.
-## Mismatches go to push_error (the first 20) and, with HEROES_NATIVE_BATTLE_LOG
-## set to a folder, with every function's counts into shadow_<pid>.json there.
+## Mismatches and native failures print a SCRIPT ERROR (the first 20), which
+## fails rules_parity runs and the core suite, and, with HEROES_NATIVE_BATTLE_LOG
+## set to a folder, go with every function's counts into shadow_<pid>.json there.
 ## tools/native_battle_switch.py writes the switch into each ported function.
 
 const NativeRules = preload("res://scripts/core/NativeRules.gd")
@@ -17,10 +18,8 @@ const GDSCRIPT := 0
 const NATIVE := 1
 const SHADOW := 2
 const MODES := {"gdscript": GDSCRIPT, "native": NATIVE, "shadow": SHADOW}
-const REPORTED_MISMATCHES := 20
 
 static var mode: int = _mode_from_environment()
-static var _reported := 0
 
 static func _mode_from_environment() -> int:
 	var name := OS.get_environment("HEROES_NATIVE_BATTLE").strip_edges().to_lower()
@@ -43,9 +42,7 @@ static func native_writing(name: StringName, args: Array) -> Variant:
 
 ## Shadow: checks GDScript's result against the native port's.
 static func check(name: StringName, args: Array, result: Variant) -> void:
-	var mismatch: String = NativeRules.api().battle_port_check(name, args, result)
-	if mismatch != "":
-		_report(name, mismatch)
+	NativeRules.api().battle_port_check(name, args, result)
 
 ## Shadow, for a function that writes into its arguments: a copy of them as the
 ## GDScript call finds them.
@@ -62,13 +59,6 @@ static func check_writing(name: StringName, before: Array, args: Array, result: 
 	elif var_to_bytes(before) != var_to_bytes(args):
 		mismatch = "arguments afterwards: " + _first_difference(before, args, "args")
 	NativeRules.api().battle_port_report(name, mismatch)
-	if mismatch != "":
-		_report(name, mismatch)
-
-static func _report(name: StringName, mismatch: String) -> void:
-	_reported += 1
-	if _reported <= REPORTED_MISMATCHES:
-		push_error("Battle shadow mismatch in %s: %s" % [name, mismatch])
 
 static func _first_difference(native_value: Variant, gdscript_value: Variant, path: String) -> String:
 	if typeof(native_value) != typeof(gdscript_value):

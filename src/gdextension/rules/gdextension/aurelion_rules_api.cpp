@@ -131,6 +131,8 @@ AurelionRules::AurelionRules() {
 			if (!folder.is_empty()) {
 				const CharString utf8 = folder.path_join("shadow_" + String::num_int64(os->get_process_id()) + ".json").utf8();
 				port_log_path_.assign(utf8.get_data(), static_cast<size_t>(utf8.length()));
+				// At once, so a folder that cannot take the file fails the run.
+				write_port_stats();
 			}
 		}
 	} catch (const std::exception &error) {
@@ -384,12 +386,17 @@ AurelionRules::PortStats &AurelionRules::stats_of(const aurelion::rules::port::F
 	return port_stats_[static_cast<size_t>(function - aurelion::rules::port::functions(count))];
 }
 
-void AurelionRules::record_mismatch(PortStats &stats, const std::string &text) {
-	++stats.mismatches;
+void AurelionRules::record_mismatch(PortStats &stats, const char *name, const std::string &text, bool error) {
+	++(error ? stats.errors : stats.mismatches);
 	if (stats.first.size() < kKeptMismatches) {
 		stats.first.push_back(text);
 	}
 	write_port_stats();
+	// Shadow is the proof of the port: a mismatch fails the run like a failed call.
+	if (reported_mismatches_ < kKeptMismatches) {
+		++reported_mismatches_;
+		report_port_failure("battle shadow", std::string(error ? "native failure in " : "mismatch in ") + name + ": " + text);
+	}
 }
 
 void AurelionRules::count_port_use() {
@@ -435,6 +442,11 @@ void AurelionRules::write_port_stats() const {
 	out += "]}\n";
 	std::ofstream file(std::filesystem::u8path(port_log_path_), std::ios::binary | std::ios::trunc);
 	file << out;
+	file.flush();
+	if (!file && !port_log_failed_) {
+		port_log_failed_ = true;
+		report_port_failure("battle port stats", "cannot write " + port_log_path_ + " (HEROES_NATIVE_BATTLE_LOG must be an existing folder)");
+	}
 }
 
 Variant AurelionRules::battle_port_call(const StringName &name, const Array &args, bool write_back) {
@@ -499,11 +511,13 @@ String AurelionRules::battle_port_check(const StringName &name, const Array &arg
 		++stats.checks;
 		count_port_use();
 		std::string mismatch;
+		bool error = false;
 		try {
 			if (port_ == nullptr) {
 				throw std::runtime_error("the battle port did not start");
 			}
 			if (args.size() != function->arity || function->arity > kMaxPortArgs) {
+				error = true;
 				mismatch = std::string("takes ") + std::to_string(function->arity) + " arguments, got " + std::to_string(args.size());
 			} else {
 				port_->begin();
@@ -518,17 +532,20 @@ String AurelionRules::battle_port_check(const StringName &name, const Array &arg
 					mismatch = port_->diff(result, gdscript_result);
 				}
 			}
-		} catch (const aurelion::rules::state::ScriptError &error) {
-			mismatch = std::string("native script error: ") + error.what();
-		} catch (const std::exception &error) {
-			mismatch = std::string("native exception: ") + error.what();
+		} catch (const aurelion::rules::state::ScriptError &failure) {
+			error = true;
+			mismatch = std::string("native script error: ") + failure.what();
+		} catch (const std::exception &failure) {
+			error = true;
+			mismatch = std::string("native exception: ") + failure.what();
 		} catch (...) {
+			error = true;
 			mismatch = "unknown native exception";
 		}
 		if (mismatch.empty()) {
 			return String();
 		}
-		record_mismatch(stats, mismatch);
+		record_mismatch(stats, function->name, mismatch, error);
 		return String::utf8(mismatch.c_str());
 	} catch (const std::exception &error) {
 		report_port_failure("battle_port_check", std::string("native exception outside the port: ") + error.what());
@@ -549,7 +566,7 @@ void AurelionRules::battle_port_report(const StringName &name, const String &mis
 		++stats.checks;
 		count_port_use();
 		if (!mismatch.is_empty()) {
-			record_mismatch(stats, utf8_text(mismatch));
+			record_mismatch(stats, function->name, utf8_text(mismatch), false);
 		}
 	} catch (const std::exception &error) {
 		report_port_failure("battle_port_report", std::string("native exception: ") + error.what());
