@@ -122,6 +122,7 @@ public:
 	int64_t content_revision(state::State &state) override;
 	state::Value static_get(state::State &state, uint32_t script, uint32_t name) override;
 	void static_set(state::State &state, uint32_t script, uint32_t name, const state::Value &value) override;
+	state::TypeRef builtin_type(uint8_t builtin) override;
 	void print_error(const std::string &text) override;
 	void print_warning(const std::string &text) override;
 	// The engine's pow, exp and log (UtilityFunctions), as GDScript calls them.

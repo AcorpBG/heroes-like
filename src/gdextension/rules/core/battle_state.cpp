@@ -143,6 +143,10 @@ void Backing::static_set(State &, uint32_t, uint32_t, const Value &) {
 	no_host("A static var");
 }
 
+TypeRef Backing::builtin_type(uint8_t) {
+	no_host("A new typed Array");
+}
+
 void Backing::print_error(const std::string &text) {
 	std::fprintf(stderr, "ERROR: %s\n", text.c_str());
 }

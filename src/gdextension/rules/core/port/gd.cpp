@@ -1099,6 +1099,12 @@ ArrayRef duplicate_array(State &state, ArrayRef array) {
 	return copy;
 }
 
+ArrayRef new_typed_array(State &state, uint8_t builtin) {
+	const ArrayRef array = state.new_array();
+	state.array_node(array).element_type = state.host().builtin_type(builtin);
+	return array;
+}
+
 ArrayRef slice(State &state, ArrayRef array, int64_t begin64, int64_t end64) {
 	// Array::slice takes ints: GDScript's int64 arrives truncated to 32 bits.
 	const int begin_in = static_cast<int>(begin64);

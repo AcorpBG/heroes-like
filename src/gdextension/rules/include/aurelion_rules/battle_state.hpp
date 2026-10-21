@@ -652,6 +652,10 @@ public:
 	// nothing back changes no static var).
 	virtual Value static_get(State &state, uint32_t script, uint32_t name);
 	virtual void static_set(State &state, uint32_t script, uint32_t name, const Value &value);
+	// The element type of a builtin Variant type (not an Object), registered
+	// as a loaded typed Array's would be: for a new one, as GDScript's
+	// `var ids: Array[String] = []` makes it.
+	virtual TypeRef builtin_type(uint8_t builtin);
 	// Godot's ERR_PRINT, for the container methods that fail without stopping
 	// the script (append to a read-only Array), and a script's push_warning.
 	// The defaults write to stderr.
