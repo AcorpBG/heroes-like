@@ -788,6 +788,30 @@ a78100003 without the battle port:
   `tools/native_battle_switch.py --subsystem` touches only the switches that read that subsystem's mode.
 - Nothing on main calls it. Checks: core suite 17/17 on Windows, `rules_selftest` digests unchanged.
 
+**Inventory and boundary** (2026-10-21, main 6d7471276; every function of `scripts/core` and ContentService probed on
+the six seeds; times from l1, a large four-player game to day 90, on a machine shared with Phase 1's runs):
+- Reach: the Phase 5 entries reach 440 functions, 6,020 lines; 311 of them also run outside day processing, nearly all
+  in the AI turn. OverworldRules 156/2,408, EnemyAdventureRules 74/1,125, HeroProgressionRules 36/362, ArtifactRules
+  19/317, EnemyTurnRules 15/247, NativeTransitRules 13/205, HeroCommandRules 18/189, ScenarioScriptRules 5/171,
+  ContentService 20/144, GeneratedScenarioObjectiveRules 3/135, ScenarioRules 8/118, AiHeroRules 8/103, 14 more 65/496.
+- A day on l1: `end_turn` 1,408 ms, the AI turn 1,222 ms, day processing 186 ms. The closing normalize takes 106 (the
+  risk forecast with the enemy-state and roster normalize 55, the resource-node rebuild 33, the blocked-tile index 12,
+  fog 8.5), `_finalize_action_result` 71, the part before the AI turn 7, `apply_daily` 0.5; the 4.4 normalize calls
+  inside the AI turn 3. In AI matches every town belongs to a computer player, so player income, growth and deliveries
+  do almost nothing.
+- Converting the whole overworld (179,000 nodes, 1.64M values on day 90) into the value layer takes 392 ms and back
+  153 ms per day, three times the day processing itself. Its largest keys are ones day processing barely reads: flags
+  (573K values), the runtime scenario record (527K), the package source objects (481K), the map objects (333K).
+- Boundary: view and patch through the port bridge, no whole-state conversion. Two native calls per day around the AI
+  turn (`end_turn` before `_run_enemy_turn_cycle`, and after it), plus `normalize_overworld_state` where else it runs.
+  A call reads its arguments lazily, writes the containers it changed back in place and exports the ones it made, so it
+  costs the state it touches. `DayEngine.gd` hands a session over as a view (its fields, the very overworld, battle and
+  flags Dictionaries, its metadata) and writes the fields back; content comes from ContentService's own cached
+  documents in a context argument, so rows keep their identity. Estimate, unmeasured: the steps that rebuild data
+  value by value (the resource nodes, the fog grids) stay near their GDScript cost, the computing ones (enemy states
+  and forecast, scenario evaluation, the blocked-tile index) gain several times; Phase 5 alone gives under 1.1x on such
+  games, and Phase 6, keeping the session native across days, removes the conversion.
+
 ### Phase 6: match throughput
 
 The runner keeps a native session handle across days and writes Dictionaries back only for the digest and record (with

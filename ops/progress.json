@@ -116167,6 +116167,32 @@
     {
       "id": "native-rules-phase5-day-processing-20261021",
       "title": "Native day processing (Phase 5)",
+      "status": "in_progress",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Owner decision 2026-10-21: beside Phase 1 on branch native-phase5-day, merged once, G3 skipped, Windows only, lean checks. Inventory and boundary (transition doc, Phase 5): 440 functions / 6,020 lines reached; on l1 day processing 186 ms of a 1,408 ms day (closing normalize 106, _finalize_action_result 71); whole-state conversion 545 ms a day, so view and patch through the port bridge: two native calls per day around the AI turn plus normalize_overworld_state, sessions as views written back by DayEngine.gd, content from ContentService's cached documents. Switch HEROES_NATIVE_DAY, log HEROES_NATIVE_DAY_LOG, registry core/port/day_registry.cpp. A slice's functions are frozen from its start to the merge (AGENTS.md). _finalize_* in BattleRules waits for the Phase 1 merge.",
+      "updatedAt": "2026-10-21T21:00:00Z"
+    },
+    {
+      "id": "native-rules-phase5-01-boundary-fog-20261021",
+      "title": "Native day processing 01: day engine boundary and fog",
+      "status": "in_progress",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "DayEngine.gd, the day registry, the session view and the content context; refresh_fog_of_war and its reach, 52/639 (OverworldRules 16/172, ArtifactRules 17/267, HeroProgressionRules 8/96, ContentService 4/62, OverworldLevelRules 5/23, HeroCommandRules 2/19). The bonus functions overlap Phase 1 slice 07; the branch merged second takes the other's port.",
+      "updatedAt": "2026-10-21T21:00:00Z"
+    },
+    {
+      "id": "native-rules-phase5-02-economy-20261021",
+      "title": "Native day processing 02: town and site economy",
       "status": "pending",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
@@ -116174,8 +116200,86 @@
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Owner decision 2026-10-21: beside Phase 1 on branch native-phase5-day, merged once, G3 skipped, Windows only, lean checks. _finalize_* waits for the Phase 1 merge.",
-      "updatedAt": "2026-10-21T16:00:00Z"
+      "notes": "Town occupation and recovery, town and site income, growth, musters, hero income, reserve deliveries, difficulty scaling: 60/646 (OverworldRules 30/483, TownDevelopmentRules 7/76, DifficultyRules 8/31, PlayerIdentityRules 5/23, ContentService 5/13, 5 more 5/20).",
+      "updatedAt": "2026-10-21T21:00:00Z"
+    },
+    {
+      "id": "native-rules-phase5-03-hero-commit-20261021",
+      "title": "Native day processing 03: hero commit",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "HeroCommandRules.commit_active_hero, 37/349 (HeroProgressionRules 20/184, HeroCommandRules 10/109, SpellRules 4/41 overworld spellbook only, 3 more 3/15).",
+      "updatedAt": "2026-10-21T21:00:00Z"
+    },
+    {
+      "id": "native-rules-phase5-04-enemy-states-20261021",
+      "title": "Native day processing 04: enemy states and commander rosters",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Enemy-state and commander-roster normalization, 55 ms of the 186 per day on l1: 97/1,475 (EnemyAdventureRules 74/1,125, EnemyTurnRules 15/247, AiHeroRules 8/103). AI code frozen from this slice's start to the merge; Phase 4 takes the port.",
+      "updatedAt": "2026-10-21T21:00:00Z"
+    },
+    {
+      "id": "native-rules-phase5-05-scenario-elimination-20261021",
+      "title": "Native day processing 05: scenario evaluation and elimination",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "ScenarioRules.evaluate_session and PlayerEliminationRules.apply_daily, 31/552 (ScenarioScriptRules 5/171, GeneratedScenarioObjectiveRules 3/135, ScenarioRules 8/118, PlayerEliminationRules 7/67, 4 more 8/61).",
+      "updatedAt": "2026-10-21T21:00:00Z"
+    },
+    {
+      "id": "native-rules-phase5-06-normalize-20261021",
+      "title": "Native day processing 06: overworld normalize",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "The rest of normalize_overworld_state, 144/2,058 (OverworldRules 94/1,484, NativeTransitRules 13/205, ContentService 9/65, WaterTravelRules 3/65, HeroCommandRules 5/53, ArtifactRules 2/50, 8 more 18/136).",
+      "updatedAt": "2026-10-21T21:00:00Z"
+    },
+    {
+      "id": "native-rules-phase5-07-day-boundary-20261021",
+      "title": "Native day processing 07: one native call each side of the AI turn",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "_finalize_action_result and end_turn, 19/301; end_turn as two native calls around the AI turn; session-meta caches and the OverworldShell end-turn dry run invalidate native state; timing on the six seeds.",
+      "updatedAt": "2026-10-21T21:00:00Z"
+    },
+    {
+      "id": "native-rules-phase5-08-exit-20261021",
+      "title": "Native day processing 08: exit and the single merge",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "The single merge with the owner, main tagged first.",
+      "updatedAt": "2026-10-21T21:00:00Z"
     },
     {
       "id": "native-rules-phase3-search-kernel-20261021",
@@ -116848,7 +116952,7 @@
   ],
   "summary": "Owner-directed overworld actor readability completed: 112 original generated hero/creature sprites, full-size town visitors, painted-bound scale and cached alpha-edge contrast. Source/Linux/Windows visual/runtime acceptance, Large travel/AI/fog, existing reports, full repository and official exports/parity pass; 3.255 GB disposable outputs cleaned. Prior generated-world quality work remains completed; gameplay/native generation and save schema are unchanged. Broader production/release limits remain in project.md.",
   "taskId": "10236",
-  "updatedAt": "2026-10-08T14:00:00Z",
+  "updatedAt": "2026-10-21T21:00:00Z",
   "validation": {
     "id": "rmg-exploration-and-guarded-routes-20260918",
     "sliceId": "rmg-exploration-and-guarded-routes-20260918",
