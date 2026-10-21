@@ -379,7 +379,7 @@ Owner decision, 2026-10-20: the rules move from GDScript to C++ inside the game,
     - `native-rules-phase5-06-normalize-20261021` (pending): the rest of `normalize_overworld_state`, 144/2,058 (OverworldRules 94/1,484, NativeTransitRules 13/205, ContentService 9/65, WaterTravelRules 3/65, HeroCommandRules 5/53, ArtifactRules 2/50, 8 more 18/136).
     - `native-rules-phase5-07-day-boundary-20261021` (pending): `_finalize_action_result` and `end_turn`, 19/301; `end_turn` in two native calls around the AI turn; the session-meta caches and the end-turn dry run in `OverworldShell.gd` invalidate native state; timing on the six seeds.
     - `native-rules-phase5-08-exit-20261021` (pending): the single merge with the owner, main tagged first.
-  - `native-rules-phase3-search-kernel-20261021` (pending): the `AiHeroRules._search` kernel (11.5% of match CPU) on branch `native-phase3-search`, merged to main when its games are identical.
+  - `native-rules-phase3-search-kernel-20261021` (completed): `AiHeroRules._search` builds its masks and walks the map in the rules library (`ai_search_masks`, `ai_search_walk`); GDScript keeps the pending site stops and the stop refs. Measured on the six seeds: `_search` 68.0 to 35.1 s in total (1.94x), whole games 778 to 725 s. Shadow mode 18,211 calls with 0 differences, parity identical on 6/6 seeds, core suite 17/17; the Linux libraries wait for the Linux pass. Results in the transition doc, Phase 3.
 
 ### Balance round 7: Sunvault's shooter lines trimmed
 

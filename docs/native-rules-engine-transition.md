@@ -750,6 +750,25 @@ decision 2026-10-21). Candidates: `AiHeroRules._search` (11.5%), `_level_surface
 Owner decision 2026-10-21: the `_search` kernel starts now beside Phase 1, on its own branch `native-phase3-search`,
 merged to main once its games are identical. G3 is skipped for it.
 
+**`_search` kernel** (completed 2026-10-21, branch `native-phase3-search`):
+- Moved: `_search` calls two functions of the rules library on packed arrays (`core/ai_search.cpp`, rules API 2).
+  `ai_search_masks` builds the per-search masks: the surface's blocked and stop tiles, open neutral bodies and guard
+  zones, units, heroes and their hostile guard zones, the sea without armies, and the site stops the decision's site
+  record already answered. `ai_search_walk` is the breadth-first walk with GDScript's step order and tie breaks,
+  corners, portals, water, sailing, bought boats, docks and the radius cap. GDScript keeps the pending site stops
+  (`_site_stop_passable` reads node and artifact Dictionaries) and the stop refs of each reached tile. Tables that change
+  only with the surface, the open guard zones or the resolved encounters are cached on the surface.
+- Measured on the six seeds, main d7cd33045 against the change on it. Runs went in the order main, change, change,
+  main, six at once, on a machine shared with Phase 1's and Phase 5's runs, with a timer around `_search` only.
+  `_search` totals over the six games went from 68.0 s to 35.1 s (1.94x): l1 18.9 to 10.7, l2 20.6 to 11.4, mg-a 14.2
+  to 6.1, mg-b 9.7 to 4.4, mw 4.1 to 2.2, s2 0.66 to 0.39. Whole games went from 778 to 725 s (-6.8%); the two main
+  runs differed by 33 s. In one probe run the pending site stops took 4.1 of the 9.5 s left on l1.
+- Checks:
+  - shadow mode on the six seeds: 18,211 calls, 0 differences (types, key order and the site record included);
+  - `rules_selftest`: 58 captured vectors and a sweep of 3,000 generated boards;
+  - `rules_parity.py check` against main: identical on 6/6 seeds (415 daily digests and the match records);
+  - core suite 17/17 on Windows.
+
 ### Gate G3: re-plan from measurements
 
 Re-estimate Phases 4-7 from Phase 1's measured rate (lines per day, mismatches per 1,000 lines). The owner picks the

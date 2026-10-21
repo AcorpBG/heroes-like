@@ -116284,15 +116284,15 @@
     {
       "id": "native-rules-phase3-search-kernel-20261021",
       "title": "Native AiHeroRules._search kernel (Phase 3)",
-      "status": "pending",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Owner decision 2026-10-21: beside Phase 1 on branch native-phase3-search, merged to main when its games are identical, G3 skipped, Windows only, lean checks.",
-      "updatedAt": "2026-10-21T16:00:00Z"
+      "notes": "Owner decision 2026-10-21: beside Phase 1 on branch native-phase3-search, merged to main when its games are identical, G3 skipped, Windows only, lean checks. Completed 2026-10-21: AiHeroRules._search calls ai_search_masks and ai_search_walk (core/ai_search.cpp, rules API 2); GDScript keeps the pending site stops (_site_stop_passable) and the stop refs; _hold_step removed. Measured on the six seeds (main, change, change, main): _search 68.0 to 35.1 s in total (1.94x), whole games 778 to 725 s. Checks: shadow mode 18,211 calls with 0 differences, rules_selftest 58 vectors and a 3,000-board sweep, rules_parity check identical on 6/6 seeds against main, core suite 17/17 on Windows. Linux libraries wait for the Linux pass.",
+      "updatedAt": "2026-10-21T22:00:00Z"
     }
   ],
   "project": "heroes-like",
