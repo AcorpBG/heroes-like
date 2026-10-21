@@ -981,6 +981,47 @@ port, 7cd5f6cca Windows binaries, 7027f1a5e warning fix):
 - **Result:** S is 7.89 to 9.45 on `standard`: over 5x in every case, under 10x (10x needs r 10.79). Layer 5 starts,
   as the owner decided.
 
+**Layer 5: attacks, abilities, damage pressure and the attack events** (slice 05, 2026-10-22; branch commits
+8d2bccfef port, a25b226c3 Windows binaries; merges of main eb30586d8 and f2d8e46f4; switch generator fix on main
+a20d0c371):
+- **Ported:** 58 functions, 1,371 lines.
+  - BattleRules 37/1,162:
+    - the attack and retaliation ability effects, the hookline pull, the counter-ambush flare, strike-backs and the
+      retaliations and shots an attack spends;
+    - pressure artillery, the readiness writ, mending fire and the harry support;
+    - the damage pressure: the cohesion and momentum shifts of a hit, the shock of a destroyed stack, the field
+      objectives' action pressure and control push, and `_apply_ranged_damage_return` (moved here from 06);
+    - the post-attack target context and the damage and text presentation events.
+  - SpellRules `build_battle_effect`, 1/32.
+  - BattleAiRules' copies of the ability checks, 20/177, from 08. 14 of them call the BattleRules port.
+- **Moved:**
+  - `_resolve_attack_action` and `_resolve_ai_attack` go to 10, the attack orchestrators. They end in
+    `_complete_action` or `_complete_enemy_action`, which call `_evaluate_outcome` and the `_finalize_*` functions,
+    and those stay GDScript in Phase 1. A ported function calls only ported functions.
+  - BattleAiRules `_readiness_writ_available`, `_readiness_writ_target` and `_stack_cohesion_total` go to 08.
+- **Merges of main:**
+  - The branch calls main's shared helpers `_default_difficulty_id`, `normalize_difficulty` and
+    `_normalize_spell_ids`.
+  - The branch calls main's `DifficultyRules.profile_for_session` and `profile_for_difficulty`. Main's
+    `profile_for_session` now also takes the SessionData object (a2dc2bb61).
+  - The branch calls main's `BattleDamageRules.attack_defense_multiplier`. The branch's copies are gone.
+  - `battle_keys.inc` drops 60 keys that main's day and AI key lists hold with the same text.
+- **Switch generator:** a switch's locals (`result`, `before`, `native_result`) take a `switch_` prefix when a
+  parameter has the same name. `_attach_post_attack_target_context` takes `result`, and its script did not parse.
+- **Review:** a read-only review compared every function with its GDScript body, and a second agent tried to refute
+  each finding. Two divergences were confirmed; neither can happen in play:
+  - `PackedStringArray.has` was missing from two `variant_has` copies (`ability_helpers.cpp`,
+    `battle_ai_abilities.cpp`). It is added. Content gives Arrays.
+  - `float(String)` throws in the runtime's `gd::to_float` where GDScript converts. This is a runtime gap on main,
+    left open. Every bloodrush threshold is a float after the ability is normalized.
+- **Checks:**
+  - Shadow on the six seeds: 0 mismatches and 0 errors in 63,669,303 checks over 330 of the 339 functions. 10,633,092
+    of them are slice 05's, over 55 of its 58 functions.
+    - Not reached: `_apply_hookline_pull`, `stack_strike_backs` and `_lowest_health_stack`, plus the six from before.
+  - Native mode against main: every daily digest (415) and match record of the six seeds is identical.
+  - Core suite: 17/17 on Windows.
+  - The Linux libraries in `bin/` are not rebuilt.
+
 ### Phase 2: one payload builder, AI preview as one call, the battle tool
 
 - Battle payload creation (`BattleRules.gd:256-402`), stack and hero payloads, obstacles, and the end-of-battle numbers
@@ -1178,6 +1219,14 @@ its metadata under "meta"). Shadow mode on the six seeds checked them on the bra
 - Also here, the runtime for paths a port leaves to GDScript: a native function throws `state::NotPorted` before any
   host side effect; the call writes nothing back, `port_not_ported()` is true, the stats count it as `not_ported`,
   and the switch generator writes a GDScript fallback for subsystems marked `fallback` (day only).
+  - Since 2026-10-22 the subsystem's table says so too (`Table::fallback`; the day table sets it). In a subsystem
+    without that fallback (battle, AI) a NotPorted fails the call: a native null could pass for GDScript's result
+    and hide the gap from every later check. It is a native failure:
+    - in native mode and in shadow mode;
+    - a SCRIPT ERROR, which fails the core suite, rules_parity runs and G1;
+    - counted as an error in the port stats.
+  - The AI match runner (`tests/ai_versus_ai_match_report.gd`) fails its report on any error, mismatch or unknown
+    name in the port stats, because a release export prints no SCRIPT ERROR.
 - Phase 1 takes `hero_progression_rules` and the keys `day_keys.inc` shares with its branch from main and drops its
   copies (in `commander_payload.cpp` and its `battle_keys.inc`).
 - Slice 04's shared helpers (2026-10-21; Phase 3 had claimed them and handed them over): PlayerIdentityRules 6
@@ -1186,8 +1235,8 @@ its metadata under "meta"). Shadow mode on the six seeds checked them on the bra
   copied; ScenarioSelectRules' two functions inlined), SpellRules `_normalize_spell_ids`, EnemyTurnRules
   `_owned_town_entries` and `_town_controller_faction_id`, EnemyAdventureRules `_placement_resolved`, OverworldRules
   `resolved_encounter_lookup`, AiHeroRules `is_ai_hero` (`ai_hero_rules.cpp`; Phase 3 keeps its AiHeroRules ports in
-  `ai_hero_rules_*.cpp`). `gd::stringify_or_fallback` is `String()` for a port with a GDScript fallback (day, AI): a
-  float or a container leaves the call to GDScript instead of failing it. Phase 1 drops its `difficulty_rules`
+  `ai_hero_rules_*.cpp`). `gd::stringify_or_fallback` is `String()` for a port with a GDScript fallback (day): a float
+  or a container leaves the call to GDScript instead of failing it. In battle and AI calls it fails the call. Phase 1 drops its `difficulty_rules`
   definitions from `commander_payload.cpp` and the 29 keys of `day_keys.inc`'s second "Also in battle_keys.inc" block
   from its list.
 - Slice 05's shared helpers (2026-10-21; Phase 3 handed them over): AiHeroRules `active_hero_entries` and
@@ -1251,6 +1300,61 @@ completion, the rival count of a human game, the human player's townless days an
 `profile_for_difficulty`, `profile_for_session`. HeroProgressionRules 1: `has_specialty`. ContentService 1: `get_hero`.
 Six of them are also Phase 3's: the three DifficultyRules ones, `movement_max_for_hero`, `_week_bonus` and
 `_normalize_position`.
+
+**Slice 06b, frozen functions** (2026-10-22, until the Phase 5 merge; AGENTS.md): the rest of
+`OverworldRules.normalize_overworld_state` (every caller) and what it runs in AI matches beyond the earlier slices'
+functions and Phase 3's, 80 functions. OverworldRules 51: `_advance_town_occupation`, `_advance_town_recovery`,
+`_blank_project_vulnerability_penalties`, `_build_scenario_army_state`, `_command_risk_field_item`,
+`_command_risk_forecast`, `_command_risk_forecast_from_normalized_session`, `_command_risk_grade_label`,
+`_command_risk_items`, `_command_risk_logistics_items`, `_command_risk_objective_items`,
+`_command_risk_player_town_daybreak_contexts`, `_command_risk_posture_items`, `_command_risk_town_items`,
+`_copy_town_runtime_metadata`, `_fog_grids`, `_fog_grids_uncached`, `_fog_state_ready`, `_grid_cell`,
+`_mark_runtime_normalized`, `_migrate_generated_transit_meanings`, `_nearest_town_for_controller`,
+`_normalize_active_town_visit_context`, `_normalize_artifact_nodes`, `_normalize_command_briefing`,
+`_normalize_command_risk_forecast`, `_normalize_enemy_states`, `_normalize_generated_runtime_materialization`,
+`_normalize_live_resource_stockpile`, `_normalize_scenario_resources`, `_normalize_scenario_state_rules`,
+`_normalize_town_front_state`, `_normalize_town_recovery_state`, `_normalize_towns`, `_project_dependency_ids`,
+`_project_player_town_at_daybreak`, `_raid_is_public`, `_reduce_command_risk_items`, `_refresh_blocked_tile_index`,
+`_runtime_normalization_signature`, `_town_building_bonus_total`, `_town_capital_project_ids`,
+`_town_capital_project_recovery_relief`, `_town_capital_project_state`, `_town_command_risk_state`,
+`_town_matches_controller`, `_town_recovery_relief_rating`, `hero_position`, `is_tile_visible`,
+`normalize_overworld_state`, `town_strategic_role`. NativeTransitRules 9: `_network_colour_key`,
+`_portal_contract_error`, `assign_network_colours`, `contract_error`, `is_dead_end`, `network_index`, `nodes_by_id`,
+`normalize_legacy_session`, `validate`. HeroCommandRules 3: `_normalize_town_garrison_heroes`, `_replace_hero_in_array`,
+`normalize_session`. ArtifactRules 2: `build_artifact_nodes`, `normalize_artifact_nodes`. ContentService 2:
+`get_scenario_readonly`, `get_terrain_layers_for_scenario`. EnemyAdventureRules 2: `_raid_is_public`,
+`_sync_unit_strength_memo`. PlayerIdentityRules 2: `has_human_seat`, `normalize_compatibility`. ScenarioFactory 2:
+`_build_army_state`, `_normalize_resources`. TownDevelopmentRules 2: `convert_reserves`, `migrate_town`. DifficultyRules
+1: `normalize_session`. OverworldLevelRules 1: `canonical_spatial_records`. ScenarioRules 1: `objectives_for_session`.
+SessionStateStore 1: `normalize_launch_mode`. WaterTravelRules 1: `normalize`. Eight of them are also private helpers in
+Phase 3's port (`overworld_rules_ai_recovery.cpp`, `overworld_rules_ai_sites.cpp`): `_town_matches_controller`,
+`_nearest_town_for_controller`, `_normalize_town_recovery_state`, `_normalize_town_front_state`,
+`_town_building_bonus_total`, `_town_capital_project_recovery_relief`, `_town_recovery_relief_rating` and
+`_sync_unit_strength_memo`; those copies fold into Phase 5's at its merge. The paths AI matches never run stay GDScript
+and are not frozen by this slice.
+
+**Slice 02, frozen functions** (2026-10-22, until the Phase 5 merge; AGENTS.md): the day's economy steps of
+`OverworldRules.end_turn` (town occupation and recovery, town, hero and site income, site musters, reserve deliveries,
+difficulty scaling) and what they run in AI matches beyond the earlier slices' functions and Phase 3's, 18 functions.
+OverworldRules 15: `_add_resources`, `_advance_all_town_occupations`, `_advance_all_town_recovery`,
+`_advance_player_reserve_deliveries`, `_describe_recruit_delta`, `_player_hero_states`, `_player_heroes_daily_income`,
+`_refresh_all_player_heroes_for_new_day`, `_resource_node_matches_controller`, `_resource_site_control_income_for_day`,
+`_resource_site_delivery_target_label`, `_resource_site_weekly_recruits`, `_weighted_recruit_value`,
+`apply_controlled_resource_site_musters`, `controlled_resource_site_income`. DifficultyRules 3: `_scale_amount`,
+`scale_income_resources`, `scale_resource_payload`. Two of them, `_describe_recruit_delta` and
+`_weighted_recruit_value`, are also private helpers in Phase 3's port (`overworld_rules_ai_sites.cpp`); those copies
+fold into Phase 5's at its merge. The paths AI matches never run stay GDScript and are not frozen by this slice.
+
+**Slice 07, frozen functions** (2026-10-22, until the Phase 5 merge; AGENTS.md): `OverworldRules.end_turn` and
+`_finalize_action_result` (every caller) and what they run in AI matches beyond the earlier slices' functions and Phase
+3's, 21 functions. OverworldRules 14: `_compact_enemy_activity_events`, `_describe_resource_delta`,
+`_end_turn_muster_summary`, `_end_turn_resolution_summary`, `_end_turn_town_economy_summary`, `_enemy_activity_line`,
+`_enemy_activity_public_text`, `_evaluate_scenario_state`, `_finalize_action_result`, `_resource_keys_for_payload`,
+`_short_player_text`, `describe_enemy_activity`, `end_turn`, `is_weekly_growth_day`. EnemyAdventureRules 5:
+`_public_event_log_text`, `_public_reason_from_codes`, `ai_public_event_log`, `ai_public_event_log_entry`,
+`ai_public_event_log_leak_check`. HeroProgressionRules 2: `pending_choices_remaining`, `rank_label`. The port splits
+`end_turn` around the AI turn (`_run_enemy_turn_cycle`) into two native calls; the paths AI matches never run stay
+GDScript and are not frozen by this slice.
 
 **Inventory and boundary** (2026-10-21, main 6d7471276; every function of `scripts/core` and ContentService probed on
 the six seeds; times from l1, a large four-player game to day 90, on a machine shared with Phase 1's runs):

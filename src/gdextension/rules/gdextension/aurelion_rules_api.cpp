@@ -65,6 +65,12 @@ void report_port_failure(const char *method, const std::string &text) noexcept {
 	}
 }
 
+// A path the port leaves to GDScript (state::NotPorted) in a subsystem whose
+// switches have no GDScript fallback (port::Table::fallback): a failure.
+std::string not_ported_failure(const char *what) {
+	return std::string("reached a path the port leaves to GDScript (") + what + "), and its subsystem has no GDScript fallback";
+}
+
 PackedInt32Array to_pairs(const std::vector<hex::CellSteps> &cells) {
 	PackedInt32Array pairs;
 	pairs.resize(static_cast<int64_t>(cells.size()) * 2);
@@ -194,9 +200,17 @@ AurelionRules::AurelionRules() {
 		size_t count = 0;
 		aurelion::rules::port::functions(count);
 		port_stats_.resize(count);
-		OS *os = OS::get_singleton();
 		size_t table_count = 0;
 		const aurelion::rules::port::Table *tables = aurelion::rules::port::tables(table_count);
+		// The functions array holds the tables' functions in table order.
+		size_t first = 0;
+		for (size_t index = 0; index < table_count; ++index) {
+			for (size_t slot = 0; slot < tables[index].count && first + slot < port_stats_.size(); ++slot) {
+				port_stats_[first + slot].fallback = tables[index].fallback;
+			}
+			first += tables[index].count;
+		}
+		OS *os = OS::get_singleton();
 		for (size_t index = 0; os != nullptr && index < table_count; ++index) {
 			const String folder = os->get_environment(tables[index].log_variable);
 			if (!folder.is_empty()) {
@@ -573,10 +587,13 @@ Variant AurelionRules::port_call(const StringName &name, const Array &args, bool
 					return port_->export_value(result);
 				}
 			}
-		} catch (const aurelion::rules::state::NotPorted &) {
+		} catch (const aurelion::rules::state::NotPorted &reason) {
 			++stats.not_ported;
 			last_not_ported_ = true;
-			return Variant();
+			if (stats.fallback) {
+				return Variant();
+			}
+			problem = std::string(function->name) + ": " + not_ported_failure(reason.what());
 		} catch (const aurelion::rules::state::ScriptError &error) {
 			problem = std::string(function->name) + ": native script error: " + error.what();
 		} catch (const std::exception &error) {
@@ -628,10 +645,14 @@ String AurelionRules::port_check(const StringName &name, const Array &args, cons
 					mismatch = port_->diff(result, gdscript_result);
 				}
 			}
-		} catch (const aurelion::rules::state::NotPorted &) {
-			--stats.checks;
+		} catch (const aurelion::rules::state::NotPorted &reason) {
 			++stats.not_ported;
-			return String();
+			if (stats.fallback) {
+				--stats.checks;
+				return String();
+			}
+			error = true;
+			mismatch = not_ported_failure(reason.what());
 		} catch (const aurelion::rules::state::ScriptError &failure) {
 			error = true;
 			mismatch = std::string("native script error: ") + failure.what();
@@ -719,10 +740,14 @@ int64_t AurelionRules::port_validate_begin(const StringName &name, const Array &
 				check.result = function->call(check.bridge.state(), check.args.data());
 				check.bridge.keep_memo_shapes();
 			}
-		} catch (const aurelion::rules::state::NotPorted &) {
-			--stats.checks;
+		} catch (const aurelion::rules::state::NotPorted &reason) {
 			++stats.not_ported;
-			check.not_ported = true;
+			if (stats.fallback) {
+				--stats.checks;
+				check.not_ported = true;
+			} else {
+				check.error = not_ported_failure(reason.what());
+			}
 		} catch (const aurelion::rules::state::ScriptError &failure) {
 			check.error = std::string("native script error: ") + failure.what();
 		} catch (const std::exception &failure) {

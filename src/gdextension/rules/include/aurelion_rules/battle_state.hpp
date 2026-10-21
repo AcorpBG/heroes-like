@@ -138,8 +138,10 @@ public:
 };
 
 // A path a subsystem's port leaves to GDScript on purpose (Phase 5 ports what
-// AI matches run): the native call writes nothing back and its switch runs the
-// GDScript body instead. Thrown before any host side effect of the call (a
+// AI matches run): the native call writes nothing back and, in a subsystem
+// whose switches fall back to GDScript (port::Table::fallback, the day port),
+// its switch runs the GDScript body instead. In any other subsystem the call
+// fails as a native failure does. Thrown before any host side effect of the call (a
 // RandomNumberGenerator's state). A value a port cannot handle is a
 // ScriptError instead, reported as an error.
 class NotPorted : public std::runtime_error {
