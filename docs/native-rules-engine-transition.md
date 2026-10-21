@@ -75,8 +75,10 @@ PCG32 seed/state and `randi_range`, `randf` (which very likely returns a 32-bit 
 test `rng.randf() < 0.4`, `BattleRules.gd:9403`), `String.hash`, `SortArray` tie order, `round` (half away from zero),
 `posmod`, `snappedf`, `str()` of numbers, int64 wraparound. Each is fuzzed against the engine (at least 1M inputs)
 before it is trusted. Seeds built from Variant `hash([...])` (`BattleRules.gd:15444`, `AiHeroRules.gd:1303, 1433`)
-stay computed in GDScript, so the Variant hash may never need copying. Memo keys built from `hash()` only need the same
-hit/miss behaviour.
+stay computed in GDScript. The in-battle fallbacks for a `combat_seed` of 0 do need copies: `_resolved_damage_seed`
+hashes the session id, and SpellRules' `_stable_percent` takes `posmod` of `hash(text_parts)`, so the Variant and Array
+hash, `is_equal_approx` and `strip_edges` join the helpers with slices 02 and 07. Memo keys built from `hash()` only
+need the same hit/miss behaviour.
 
 **C++ determinism checklist.** `int64_t` everywhere (`long` is 32-bit on Windows); no locale-dependent functions
 (`std::to_string(double)`, `printf("%f")`, `strtod`, `tolower`), ASCII-only lowering; no `unordered_*` iteration or
@@ -377,6 +379,16 @@ Release packaging still stops on the 4.7 GB export pack, which predates the rule
   the 22 abilities, cohesion and momentum, town defences, in-battle spells, enemy turns and battle AI, autoplay.
 - **Checkpoint G1** after the hex, damage, movement and turn layers: the native loop, conversion included, is 10x or
   more faster on the tuner's corpus. Under 5x: fix the interface before porting the AI part.
+  - Owner decision 2026-10-21: G1 is first measured on layer 1 as a projection.
+    - The baseline is main at the branch point: per resolve, the time in `resolve_active_battle` without payload and
+      finalize (T_gd), and the inclusive GDScript time of each outermost entry into the ported functions (T_gd_ported).
+    - Those entries' inputs and results are captured and replayed in a native-only binary, in one State per resolve
+      that is never cleared, timing only the calls and checking every result: r = T_gd_ported / T_nat_ported.
+    - Conversion is timed at resolve start and end, at the pool size the replay reached: c = T_conv / T_gd.
+    - The projection is S = 1 / (c + 1/r). 10x needs r of at least 1/(0.1 - c), about 12.5 at c = 0.02.
+    - Under about 12.5, the C++ value layer is sped up before layer 2, without changing ported semantics.
+  - The formal G1 follows layer 4, with r per layer from the same replay harness. Per-call native-mode run times and
+    single-function benchmarks are not G1: they time the per-call bridge, which the native loop does not have.
 - **Identity:** per-action stream (order taken, RNG state and roll count, simulation-key digest) on the tuner suites,
   every AI battle in the six seeds, and JSON round-tripped payloads; shadow mode on every resolve; daily digests; the
   payload corpus across compilers; mid-battle save/load both ways between the native build and the tagged pre-merge
@@ -433,8 +445,8 @@ every function run inside `resolve_active_battle`, with `_finalize_*` left out. 
   `rng.randf() < 0.4` compares that widened float with the double 0.4.
 - **`String.hash()`** is djb2 over the UTF-32 code points, stopping at a NUL.
 - **`int(String)`** is `String::to_int`: it reads the digits before the first `.` and skips every other character. A
-  `-` before the first non-zero digit flips the sign, so `"a-1b2"` gives -12. Past 19 digits it prints an error and
-  returns INT64_MAX or INT64_MIN.
+  `-` before the first non-zero digit flips the sign, so `"a-1b2"` gives -12. A 19-digit value past the int64 range
+  wraps silently; from the 20th digit it prints an error and returns INT64_MAX or INT64_MIN.
 - **`is_valid_int`** accepts one optional sign, never alone, followed by digits only.
 - **`sort_custom`** runs the `SortArray` introsort with validation on: threshold 16, median of three, depth
   2·log2(n), heap-sort fallback, final insertion sort, and a loop stop on an inconsistent comparator. It is not
@@ -458,8 +470,8 @@ every function run inside `resolve_active_battle`, with `_finalize_*` left out. 
   - `int(float)` truncates; NaN and out-of-range values give INT64_MIN, as x86-64 does.
   - The untyped `max`/`min`/`clamp` return the winning argument as it came, int or float. The first argument wins
     ties, and an int meets a float as a double.
-  - `maxf`/`minf`/`clampf`/`maxi`/... are the engine's MAX/MIN/CLAMP templates: the second argument wins ties, and
-    `clampf` returns `lo` when `lo > hi` where `clamp` returns `hi`.
+  - `maxf`/`minf`/`clampf`/`maxi`/... are the engine's MAX/MIN/CLAMP templates: the second argument wins ties.
+    With `lo > hi`, `clampf` returns `lo` when `x < lo` and `hi` otherwise, where `clamp` always returns `hi`.
   - `str(int)` and `"%d" % x` are the same digits (a float is truncated first).
   - Floats become text only through `String::num` in the adapter.
 - **C runtime.** The official Windows binary is MinGW-w64 GCC (GNU ld 2.45) on `msvcrt.dll`, which supplies `acos`,
@@ -500,8 +512,9 @@ every function run inside `resolve_active_battle`, with `_finalize_*` left out. 
   loaded the battle state, stored it as a copy and in place, and compared both with the original by `var_to_bytes`.
   The same ran on every payload after a JSON round trip, and on a mutated state written over the original. The probe
   kept its in-place store as the live state, so the battles went on from the native copy.
-- **Results.** 0 failures over 2,496 battles: 25,805 steps, 8,934 JSON payloads, and 25,751 overwrites, 29,312 of them
-  dictionaries rebuilt in place. The six seeds' daily digests and match records stayed identical. The battle state
+- **Results.** 0 failures over 2,496 battles: 25,805 steps, 8,934 JSON payloads and 25,751 overwrites with a mutated
+  state. Over all in-place stores, 29,312 dictionaries were rebuilt (cleared and refilled, because their new key order
+  could not be reached by overwriting and appending). The six seeds' daily digests and match records stayed identical. The battle state
   holds no shared containers and no StringNames, and only Dictionary, Array, String, int, float and bool.
 - **Cost.** On the six seeds a battle state holds about 3,000 values and 200 containers. Loading takes 0.70 ms,
   storing a copy 0.33 ms and storing in place 0.62 ms, against 9.0 ms for a GDScript step. Converting on every step
@@ -511,17 +524,21 @@ every function run inside `resolve_active_battle`, with `_finalize_*` left out. 
 **Layer 1: hex geometry and board reads** (`core/port/`, `gdextension/battle_port_bridge.cpp`,
 `scripts/core/BattleEngine.gd`, `tools/native_battle_switch.py`; branch commits dda9a7d04 and a6bbe2fec):
 - **What it is.** 56 of the layer's 66 functions (417 of its 549 lines) are in C++ under their GDScript names, with
-  GDScript's semantics: key order, int/float typing, the order of operations and the cases where GDScript stops with an
-  error. 54 have a switch, set per process by `HEROES_NATIVE_BATTLE`: `gdscript` (the default) runs GDScript, `native`
+  GDScript's semantics: key order, int/float typing and the order of operations. Where GDScript stops with an error the
+  port throws; shadow mode cannot confirm those cases, because GDScript returns null there and a native error counts as
+  a mismatch. 54 have a switch, set per process by `HEROES_NATIVE_BATTLE`: `gdscript` (the default) runs GDScript, `native`
   the port, and `shadow` runs GDScript and compares every call with the port, including types, key order, read-only
-  flags and container identity, and for the two functions that write into their arguments, the arguments afterwards.
+  flags and container identity. For the two functions that write into their arguments it also compares the arguments
+  afterwards, by contents only (types and key order, not identity or read-only flags).
   `_hex_open_mask` and `_walk_open_mask` became internals of the two native searches. `tools/native_battle_switch.py`
   writes the switches from the port registry and keeps each GDScript body as `<name>__gd`. A native call loads its
   arguments lazily, so it converts only what the port reads. `BattleEngine.gd` holds the mode and the native and
   shadow calls; `resolve` and the order-by-order API join it when the loop is native (slice 10).
 - **Not ported.** The board-read memo (`begin_board_read_scope`, `end_board_read_scope`, `_board_read_cache_get`,
-  `_board_read_cache_key`), and the memo inside BattleAiRules' `_alive_stacks_for_side`. Shadow mode ran with both
-  memos live on the GDScript side, so 0 mismatches show they change no answer.
+  `_board_read_cache_key`), the memo inside BattleAiRules' `_alive_stacks_for_side`, and the `_stack_term_memo` lookups
+  in BattleAiRules' `_stack_contact_band` and `_stack_is_engaged`, which the port computes directly. Shadow mode ran with
+  these memos live on the GDScript side, so 0 mismatches show they change no answer while the scope contract holds:
+  memo keys leave out inputs that the recomputation reads.
 - **Moved to other slices.** BattleRules `_stack_is_isolated` and `_stack_is_hex_isolated` call `_allied_melee_count`
   (layer 2): slice 02. Their BattleAiRules copies read the scoring memo: slice 08. `_ensure_battle_hex_state` (with
   `_default_stack_hex`, `_first_open_body_near`, `_hex_board_descriptor`) and `_set_stack_hex` (with

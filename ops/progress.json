@@ -115992,8 +115992,8 @@
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Gate G0 passed (owner, 2026-10-20). Owner decisions 2026-10-20: D8 one port branch native-phase1-battle, merged once, dropped if G1 stays under 5x after the interface fix; D5/D10 battle code frozen until 7 days after the merge, urgent fixes in GDScript on main and ported on the branch, main tagged before the merge; D6 tests on deleted private battle functions retired at the merge. Scope, order, checkpoint G1 and exit in docs/native-rules-engine-transition.md, Phase 1. The first slice measures the porting rate. Inventory (transition doc, Phase 1 results (first slice)): 565 functions / 10,278 lines run in fights, cut into child slices native-rules-phase1-01..11 in the doc's order; section 11 answered. Slice 01 completed: helpers, battle state, the HEROES_NATIVE_BATTLE switch and layer 1 at 0 shadow mismatches; next 02.",
-      "updatedAt": "2026-10-20T20:58:00Z"
+      "notes": "Gate G0 passed (owner, 2026-10-20). Owner decisions 2026-10-20: D8 one port branch native-phase1-battle, merged once, dropped if G1 stays under 5x after the interface fix; D5/D10 battle code frozen until 7 days after the merge, urgent fixes in GDScript on main and ported on the branch, main tagged before the merge; D6 tests on deleted private battle functions retired at the merge. Scope, order, checkpoint G1 and exit in docs/native-rules-engine-transition.md, Phase 1. The first slice measures the porting rate. Inventory (transition doc, Phase 1 results (first slice)): 565 functions / 10,278 lines run in fights, cut into child slices native-rules-phase1-01..11 in the doc's order; section 11 answered. Slice 01 completed: helpers, battle state, the HEROES_NATIVE_BATTLE switch and layer 1 at 0 shadow mismatches; next 02. Owner decision 2026-10-21: G1 projected on layer 1 first (slice 01b); the formal G1 follows layer 4.",
+      "updatedAt": "2026-10-21T06:50:00Z"
     },
     {
       "id": "native-rules-phase1-01-foundation-hex-20261020",
@@ -116007,6 +116007,19 @@
       ],
       "notes": "Branch native-phase1-battle. Engine-exact helpers (src/gdextension/rules/*/compat): ten helpers fuzzed on 2^20 inputs each by tools/rules_compat/capture_vectors.gd and rules_selftest, identical to the official Godot 4.6.2 Windows and Linux engines (round() follows each platform). Native battle state (battle_state.cpp, battle_state_bridge.cpp): round trip as copy and in place with 0 failures over 2,496 battles and 25,805 steps; the engine converts once per resolve. Switch HEROES_NATIVE_BATTLE=gdscript|native|shadow (scripts/core/BattleEngine.gd, switches written by tools/native_battle_switch.py from core/port/registry.cpp, arguments loaded lazily by battle_port_bridge.cpp). Layer 1: 56 of 66 functions (417 of 549 lines) in C++; shadow mode 0 mismatches over 64.5M checks (six seeds 23.9M, arena standard 19.2M and holdout 20.3M, edge probe 1.2M over all 54 switched functions); native mode 0 errors; six-seed digests and records and all 960 arena games identical to GDScript in both modes. Linux (official 4.6.2): six-seed check shadow vs native identical, 23,882,826 checks, 0 mismatches; core suite 17/17 on Windows and Linux. Branch commits dda9a7d04 (source) and a6bbe2fec (binaries). Board-read memo not ported (transparent). Moved: _stack_is_isolated and _stack_is_hex_isolated to 02, their BattleAiRules copies to 08, _ensure_battle_hex_state and _set_stack_hex to 03. Porting rate: 417 GDScript lines in about one hour including the reusable runtime, bridge and generator, 0 mismatches per 1,000 lines (transition doc, Phase 1 results, Layer 1).",
       "updatedAt": "2026-10-20T20:58:00Z"
+    },
+    {
+      "id": "native-rules-phase1-01b-g1-projection-20261021",
+      "title": "Native battle engine 01b: G1 projected on layer 1, value-layer speed-up if needed",
+      "status": "in_progress",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Owner decision 2026-10-21: measure G1 now on layer 1 as a projection (transition doc, Phase 1, Checkpoint G1). Baseline main at the branch point; outermost entries into the ported set timed, captured and replayed natively in one State per resolve; r = T_gd_ported / T_nat_ported, c = T_conv / T_gd, S = 1 / (c + 1/r). Under r of about 12.5 the C++ value layer is sped up before layer 2, shadow kept at 0 mismatches; if r stays well under 12.5, stop and report. The replay harness stays for the formal G1 after layer 4. Also the slice 01 review fixes (adapter exceptions, loud registry drift).",
+      "updatedAt": "2026-10-21T06:50:00Z"
     },
     {
       "id": "native-rules-phase1-02-damage-chain-20261020",
