@@ -375,6 +375,13 @@ double damage_multiplier(State &state, DictRef battle, DictRef attacker, DictRef
 	return multiplier;
 }
 
+int64_t spell_resistance(State &state, DictRef battle, DictRef stack) {
+	if (!defends(state, battle, stack)) {
+		return 0;
+	}
+	return gd::int_field(state, effect(state, battle, key::prism_ward), key::resistance_pct, 0);
+}
+
 int64_t absorb(State &state, DictRef stack, int64_t damage) {
 	const int64_t absorbed = engine_min<int64_t>(engine_max<int64_t>(0, gd::int_field(state, stack, key::town_shield_hp, 0)), engine_max<int64_t>(0, damage));
 	if (absorbed > 0) {

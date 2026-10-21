@@ -1018,6 +1018,15 @@ static func _is_town_defense_context__gd(context: Variant) -> bool:
 	return context is Dictionary and String(context.get("type", "")) == "town_defense"
 
 static func _is_town_assault_context(context: Variant) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _is_town_assault_context__gd(context)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._is_town_assault_context", [context])
+	var result = _is_town_assault_context__gd(context)
+	BattleEngine.check(&"BattleRules._is_town_assault_context", [context], result)
+	return result
+
+static func _is_town_assault_context__gd(context: Variant) -> bool:
 	return context is Dictionary and String(context.get("type", "")) == "town_assault"
 
 static func _is_resource_assault_context(context: Variant) -> bool:
@@ -7189,6 +7198,16 @@ static func action_availability__gd(battle: Dictionary) -> Dictionary:
 	}
 
 static func _apply_melee_approach(battle: Dictionary, stack: Dictionary, destination: Dictionary) -> void:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		_apply_melee_approach__gd(battle, stack, destination)
+	elif _battle_engine_mode == BattleEngine.NATIVE:
+		BattleEngine.native_writing(&"BattleRules._apply_melee_approach", [battle, stack, destination])
+	else:
+		var before := BattleEngine.before_writing(&"BattleRules._apply_melee_approach", [battle, stack, destination])
+		_apply_melee_approach__gd(battle, stack, destination)
+		BattleEngine.check_writing(&"BattleRules._apply_melee_approach", before, [battle, stack, destination], null)
+
+static func _apply_melee_approach__gd(battle: Dictionary, stack: Dictionary, destination: Dictionary) -> void:
 	var start := _stack_hex(stack)
 	var id := String(stack.get("battle_id", ""))
 	_set_stack_hex(battle, id, destination)
@@ -11745,6 +11764,16 @@ static func _set_stack_defending__gd(battle: Dictionary, battle_id: String) -> v
 	battle["stacks"] = stacks
 
 static func _apply_advance_pressure(battle: Dictionary, battle_id: String) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_advance_pressure__gd(battle, battle_id)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_advance_pressure", [battle, battle_id])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_advance_pressure", [battle, battle_id])
+	var result = _apply_advance_pressure__gd(battle, battle_id)
+	BattleEngine.check_writing(&"BattleRules._apply_advance_pressure", before, [battle, battle_id], result)
+	return result
+
+static func _apply_advance_pressure__gd(battle: Dictionary, battle_id: String) -> String:
 	var stack = _get_stack_by_id(battle, battle_id)
 	if stack.is_empty() or _alive_count(stack) <= 0:
 		return ""
@@ -11786,6 +11815,16 @@ static func _apply_advance_pressure(battle: Dictionary, battle_id: String) -> St
 	return " ".join(notes)
 
 static func _apply_defend_pressure(battle: Dictionary, battle_id: String) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_defend_pressure__gd(battle, battle_id)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_defend_pressure", [battle, battle_id])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_defend_pressure", [battle, battle_id])
+	var result = _apply_defend_pressure__gd(battle, battle_id)
+	BattleEngine.check_writing(&"BattleRules._apply_defend_pressure", before, [battle, battle_id], result)
+	return result
+
+static func _apply_defend_pressure__gd(battle: Dictionary, battle_id: String) -> String:
 	var stack = _get_stack_by_id(battle, battle_id)
 	if stack.is_empty() or _alive_count(stack) <= 0:
 		return ""

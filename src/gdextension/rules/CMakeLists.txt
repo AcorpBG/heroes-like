@@ -98,6 +98,7 @@ add_library(aurelion_rules_core STATIC
 	core/build_info.cpp
 	core/compat/godot_string.cpp
 	core/port/ability_helpers.cpp
+	core/port/action_pressure.cpp
 	core/port/ai_hero_rules.cpp
 	core/port/ai_hero_rules_candidates.cpp
 	core/port/ai_hero_rules_defense.cpp

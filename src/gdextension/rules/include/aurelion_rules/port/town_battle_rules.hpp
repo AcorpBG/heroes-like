@@ -3,7 +3,7 @@
 // scripts/core/TownBattleRules.gd, ported function by function under the
 // GDScript names (docs/native-rules-engine-transition.md, Phase 1). Layer 2:
 // the town assault effects of a battle. Layers 3 and 4: the movement penalty
-// and the round's healing.
+// and the round's healing. Layer 7: the spell resistance of a defending stack.
 
 #include "aurelion_rules/port/gd.hpp"
 
@@ -33,5 +33,10 @@ int64_t movement_penalty(State &state, DictRef battle, DictRef stack);
 // Round effects: foundry repair, town healing, pressure shifts, cohesion and
 // momentum (round_effects.cpp).
 ArrayRef heal_round(State &state, DictRef battle);
+
+// Layer 7.
+
+// The prism ward's spell resistance (spell_effects.cpp).
+int64_t spell_resistance(State &state, DictRef battle, DictRef stack);
 
 } // namespace aurelion::rules::port::town_battle_rules

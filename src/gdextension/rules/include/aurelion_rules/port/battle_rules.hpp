@@ -5,7 +5,8 @@
 // geometry and board reads. Layer 2: the damage chain, the stat totals and
 // what they read. Layers 3 and 4: movement and targeting, turn order and
 // effects. Layer 5: the attack and ability effects, damage pressure and the
-// attack events.
+// attack events. Layers 6 and 7: the pressure of an advance and a defend, the
+// melee approach and the town assault check.
 //
 // _hero_payload_cache and _presentation_queue_written are GDScript's static
 // vars, read and written through the host (gd::static_var) as the GDScript
@@ -156,6 +157,7 @@ bool _stack_is_assault_side(State &state, DictRef stack, DictRef battle);
 bool _side_has_linked_unit(State &state, DictRef battle, Atom side, const Value &unit_ids);
 Atom _capital_front_anchor_side(State &state, DictRef battle);
 Atom _capital_front_assault_side(State &state, DictRef battle);
+bool _is_town_assault_context(State &state, const Value &context);
 bool _is_town_defense_context(State &state, const Value &context);
 
 // The stat totals and their contextual, cohesion, momentum, faction and
@@ -376,5 +378,13 @@ void _append_text_presentation_event(State &state, DictRef battle, Atom event_ty
 void _append_nonempty_message(State &state, ArrayRef messages, Atom message);
 Atom _join_messages(State &state, ArrayRef parts);
 void _mark_damage_target_animation(State &state, DictRef battle, Atom battle_id, bool had_status_effect, Atom source_battle_id, DictRef extra_context, DictRef target_before);
+
+// Layers 6 and 7.
+
+// Action pressure: the cohesion and momentum of an advance and a defend, and
+// the melee approach (action_pressure.cpp).
+Atom _apply_advance_pressure(State &state, DictRef battle, Atom battle_id);
+Atom _apply_defend_pressure(State &state, DictRef battle, Atom battle_id);
+void _apply_melee_approach(State &state, DictRef battle, DictRef stack, DictRef destination);
 
 } // namespace aurelion::rules::port::battle_rules

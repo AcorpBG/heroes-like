@@ -276,6 +276,10 @@ bool _stack_is_assault_side(State &state, DictRef stack, DictRef battle) {
 	return side == _capital_front_assault_side(state, battle);
 }
 
+bool _is_town_assault_context(State &state, const Value &context) {
+	return gd::is_dict(context) && gd::string_field(state, context.ref, key::type, key::empty) == key::town_assault;
+}
+
 bool _is_town_defense_context(State &state, const Value &context) {
 	return gd::is_dict(context) && gd::string_field(state, context.ref, key::type, key::empty) == key::town_defense;
 }

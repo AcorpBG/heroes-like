@@ -76,6 +76,15 @@ static func movement_penalty__gd(battle: Dictionary, stack: Dictionary) -> int:
 	return int(effect(battle, "chainboom").get("movement_penalty", 0))
 
 static func spell_resistance(battle: Dictionary, stack: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return spell_resistance__gd(battle, stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"TownBattleRules.spell_resistance", [battle, stack])
+	var result = spell_resistance__gd(battle, stack)
+	BattleEngine.check(&"TownBattleRules.spell_resistance", [battle, stack], result)
+	return result
+
+static func spell_resistance__gd(battle: Dictionary, stack: Dictionary) -> int:
 	return int(effect(battle, "prism_ward").get("resistance_pct", 0)) if defends(battle, stack) else 0
 
 static func heal_round(battle: Dictionary) -> Array:
