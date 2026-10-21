@@ -2,7 +2,7 @@
 
 // scripts/core/OverworldLevelRules.gd, ported function by function under the
 // GDScript names (docs/native-rules-engine-transition.md, Phase 5). A session is
-// its view (day_view.hpp).
+// its view (session_view.hpp).
 
 #include "aurelion_rules/port/gd.hpp"
 

@@ -1,7 +1,7 @@
 // Layer 2: a hero's specialty bonuses. A copy of the battle port's
 // HeroProgressionRules functions (commander_payload.cpp on branch
-// native-phase1-battle), which the day port reaches through a hero's scouting
-// radius: whichever port reaches main second drops its copy.
+// native-phase1-battle), shared on main: that branch drops its copy when it
+// takes main.
 
 #include "aurelion_rules/port/hero_progression_rules.hpp"
 

@@ -4207,6 +4207,17 @@ static func _spatial_lookup_entries(index: Dictionary, name: String, tile: Vecto
 	return table.get(_tile_key(tile), []) if table.get(_tile_key(tile), []) is Array else []
 
 static func _build_blocked_tile_index(session: SessionStateStoreScript.SessionData, level: int = -1, ignore_actor_id: String = "", combat_defenders: Dictionary = {}) -> Dictionary:
+	if _day_engine_mode == DayEngine.GDSCRIPT:
+		return _build_blocked_tile_index__gd(session, level, ignore_actor_id, combat_defenders)
+	if _day_engine_mode == DayEngine.NATIVE:
+		var native_result = DayEngine.native_writing(&"OverworldRules._build_blocked_tile_index", [session, level, ignore_actor_id, combat_defenders])
+		return _build_blocked_tile_index__gd(session, level, ignore_actor_id, combat_defenders) if DayEngine.not_ported() else native_result
+	var before := DayEngine.before_writing([session, level, ignore_actor_id, combat_defenders])
+	var result = _build_blocked_tile_index__gd(session, level, ignore_actor_id, combat_defenders)
+	DayEngine.check_writing(&"OverworldRules._build_blocked_tile_index", before, [session, level, ignore_actor_id, combat_defenders], result)
+	return result
+
+static func _build_blocked_tile_index__gd(session: SessionStateStoreScript.SessionData, level: int = -1, ignore_actor_id: String = "", combat_defenders: Dictionary = {}) -> Dictionary:
 	var index := {}
 	if session == null:
 		return index
@@ -7675,6 +7686,16 @@ static func _copy_town_runtime_metadata(target: Dictionary, source: Dictionary) 
 			target[key] = source[key].duplicate(true) if source[key] is Array or source[key] is Dictionary else source[key]
 
 static func _normalize_resource_nodes(nodes: Array) -> Array:
+	if _day_engine_mode == DayEngine.GDSCRIPT:
+		return _normalize_resource_nodes__gd(nodes)
+	if _day_engine_mode == DayEngine.NATIVE:
+		var native_result = DayEngine.native(&"OverworldRules._normalize_resource_nodes", [nodes])
+		return _normalize_resource_nodes__gd(nodes) if DayEngine.not_ported() else native_result
+	var result = _normalize_resource_nodes__gd(nodes)
+	DayEngine.check(&"OverworldRules._normalize_resource_nodes", [nodes], result)
+	return result
+
+static func _normalize_resource_nodes__gd(nodes: Array) -> Array:
 	var normalized := []
 	for node in nodes:
 		if not (node is Dictionary):
@@ -14414,6 +14435,8 @@ static func _normalize_fog_of_war(session: SessionStateStoreScript.SessionData) 
 		_normalize_fog_of_war__gd(session)
 	elif _day_engine_mode == DayEngine.NATIVE:
 		DayEngine.native_writing(&"OverworldRules._normalize_fog_of_war", [session])
+		if DayEngine.not_ported():
+			_normalize_fog_of_war__gd(session)
 	else:
 		var before := DayEngine.before_writing([session])
 		_normalize_fog_of_war__gd(session)

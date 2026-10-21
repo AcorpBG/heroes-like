@@ -1,16 +1,12 @@
 // Layer 2: fog of war, the grids of explored tiles each map level keeps, and
 // what the player's heroes, towns and held sites reveal in them.
 
-#include "aurelion_rules/port/artifact_rules.hpp"
-#include "aurelion_rules/port/day_view.hpp"
+#include "aurelion_rules/port/session_view.hpp"
 #include "aurelion_rules/port/hero_command_rules.hpp"
-#include "aurelion_rules/port/hero_progression_rules.hpp"
 #include "aurelion_rules/port/overworld_level_rules.hpp"
 #include "aurelion_rules/port/overworld_rules.hpp"
 
 #include "aurelion_rules/compat/godot_string.hpp"
-
-#include <cmath>
 
 namespace aurelion::rules::port {
 
@@ -28,8 +24,7 @@ using state::Value;
 namespace key = state::key;
 namespace level_rules = overworld_level_rules;
 
-// HeroCommandRules.BASE_SCOUT_RADIUS and OverworldRules.TOWN_VISION_RADIUS.
-constexpr int64_t kBaseScoutRadius = 6;
+// OverworldRules.TOWN_VISION_RADIUS.
 constexpr int64_t kTownVisionRadius = 8;
 
 // `a[index] if index >= 0 and index < a.size() else []`.
@@ -62,7 +57,7 @@ ArrayRef new_row(State &state, int64_t width, bool fill_value) {
 namespace overworld_rules {
 
 void refresh_fog_of_war(State &state, DictRef session) {
-	const DictRef overworld = day_view::overworld(state, session);
+	const DictRef overworld = session_view::overworld(state, session);
 	Value map;
 	if (!state.lookup(overworld, str(key::map), map) || !gd::is_array(map)) {
 		return;
@@ -72,7 +67,7 @@ void refresh_fog_of_war(State &state, DictRef session) {
 
 void _normalize_fog_of_war(State &state, DictRef session) {
 	const Vector2i map_size = derive_map_size(state, session);
-	const DictRef overworld = day_view::overworld(state, session);
+	const DictRef overworld = session_view::overworld(state, session);
 	if (level_rules::level_count(state, session) > 1) {
 		const DictRef levels = state.new_dict();
 		const int64_t level_count = level_rules::level_count(state, session);
@@ -111,7 +106,7 @@ void _normalize_fog_of_war(State &state, DictRef session) {
 
 DictRef fog_for_level(State &state, DictRef session, int64_t level) {
 	level = level_rules::query_level(state, session, level);
-	const DictRef overworld = day_view::overworld(state, session);
+	const DictRef overworld = session_view::overworld(state, session);
 	const Value fog_value = gd::field(state, overworld, key::fog);
 	const DictRef fog = gd::is_dict(fog_value) ? fog_value.ref : state.new_dict();
 	const Value levels_value = gd::field(state, fog, key::levels);
@@ -222,7 +217,7 @@ int64_t _count_grid(State &state, const Value &grid) {
 
 void _reveal_all_current_fog_sources(State &state, DictRef session, ArrayRef explored_tiles, Vector2i map_size, int64_t level) {
 	level = level_rules::query_level(state, session, level);
-	const DictRef overworld = day_view::overworld(state, session);
+	const DictRef overworld = session_view::overworld(state, session);
 	const Value heroes = gd::field(state, overworld, key::player_heroes);
 	if (gd::is_array(heroes)) {
 		for (const Value &hero : gd::items(state, heroes)) {
@@ -312,66 +307,10 @@ int64_t held_site_vision_radius(State &state, DictRef site) {
 	return compat::engine_max<int64_t>(0, gd::int_field(state, site, key::vision_radius, 0));
 }
 
-bool _resource_site_is_persistent(State &state, DictRef site) {
-	return gd::to_bool(gd::field_or(state, site, key::persistent_control, bool_value(false)));
-}
-
-Vector2i derive_map_size(State &state, DictRef session) {
-	const DictRef overworld = day_view::overworld(state, session);
-	Value stored_size;
-	if (state.lookup(overworld, str(key::map_size), stored_size) && gd::is_dict(stored_size)) {
-		const int64_t width = gd::int_field(state, stored_size.ref, key::width, 0);
-		const int64_t height = gd::int_field(state, stored_size.ref, key::height, 0);
-		if (width > 0 && height > 0) {
-			return {static_cast<int32_t>(width), static_cast<int32_t>(height)};
-		}
-	}
-
-	Value map_data;
-	const bool has_map = state.lookup(overworld, str(key::map), map_data) && gd::is_array(map_data);
-	const int64_t height_from_map = has_map ? state.array_size(map_data.ref) : 0;
-	int64_t width_from_map = 0;
-	if (height_from_map > 0) {
-		const Value first_row = state.at(map_data.ref, 0);
-		if (gd::is_array(first_row)) {
-			width_from_map = state.array_size(first_row.ref);
-		}
-	}
-	return {static_cast<int32_t>(compat::engine_max<int64_t>(width_from_map, 1)), static_cast<int32_t>(compat::engine_max<int64_t>(height_from_map, 1))};
-}
-
 int64_t hero_level(State &state, DictRef session) {
 	return level_rules::hero_level(state, session);
 }
 
 } // namespace overworld_rules
-
-namespace hero_command_rules {
-
-int64_t scouting_radius_for_hero(State &state, DictRef hero_state) {
-	const DictRef artifact_bonuses = artifact_rules::aggregate_bonuses(state, hero_state);
-	const DictRef specialty_bonuses = hero_progression_rules::aggregate_bonuses(state, hero_state);
-	const int64_t radius = gd::add(gd::add(kBaseScoutRadius, gd::int_field(state, artifact_bonuses, key::scouting_radius, 0)), gd::int_field(state, specialty_bonuses, key::scouting_radius, 0));
-	return compat::engine_max<int64_t>(1, radius);
-}
-
-// Sight covers a round area: a tile is in range when its centre lies within
-// radius + 1/2 tiles of the source, which keeps the rim free of one-tile nubs.
-int64_t scout_row_half_width(int64_t dy, int64_t radius) {
-	const int64_t remaining = gd::sub(gd::mul(radius, gd::add(radius, 1)), gd::mul(dy, dy));
-	if (remaining < 0) {
-		return -1;
-	}
-	int64_t half_width = compat::float_to_int(std::sqrt(static_cast<double>(remaining)));
-	while (gd::mul(gd::add(half_width, 1), gd::add(half_width, 1)) <= remaining) {
-		half_width = gd::add(half_width, 1);
-	}
-	while (gd::mul(half_width, half_width) > remaining) {
-		half_width = gd::sub(half_width, 1);
-	}
-	return half_width;
-}
-
-} // namespace hero_command_rules
 
 } // namespace aurelion::rules::port

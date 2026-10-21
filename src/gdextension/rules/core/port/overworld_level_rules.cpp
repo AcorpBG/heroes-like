@@ -2,7 +2,7 @@
 
 #include "aurelion_rules/port/overworld_level_rules.hpp"
 
-#include "aurelion_rules/port/day_view.hpp"
+#include "aurelion_rules/port/session_view.hpp"
 
 #include <string>
 
@@ -50,7 +50,7 @@ bool on_level(State &state, const Value &value, int64_t level) {
 int64_t hero_level(State &state, DictRef session) {
 	// level_of(session.overworld.get("hero_position", {})): {} is level 0.
 	Value hero_position;
-	if (!state.lookup(day_view::overworld(state, session), str(key::hero_position), hero_position)) {
+	if (!state.lookup(session_view::overworld(state, session), str(key::hero_position), hero_position)) {
 		return 0;
 	}
 	return level_of(state, hero_position);
@@ -59,7 +59,7 @@ int64_t hero_level(State &state, DictRef session) {
 int64_t level_count(State &state, DictRef session) {
 	// maxi(1, int(session.overworld.get("map_size", {}).get("level_count", 1))).
 	Value map_size;
-	if (!state.lookup(day_view::overworld(state, session), str(key::map_size), map_size)) {
+	if (!state.lookup(session_view::overworld(state, session), str(key::map_size), map_size)) {
 		return 1;
 	}
 	if (!gd::is_dict(map_size)) {

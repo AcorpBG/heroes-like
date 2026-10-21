@@ -15,6 +15,15 @@ namespace overworld = overworld_rules;
 gd::DictRef D(const Value *args, int index) {
 	return gd::as_dict(args[index]);
 }
+gd::ArrayRef A(const Value *args, int index) {
+	return gd::as_array(args[index]);
+}
+int64_t I(const Value *args, int index) {
+	return args[index].i;
+}
+gd::Atom S(const Value *args, int index) {
+	return gd::to_string(args[index]);
+}
 
 Value nil() {
 	return Value();
@@ -27,6 +36,11 @@ Value nil() {
 // reach run native inside them.
 const Function kFunctions[] = {
 	PORT(OverworldRules, _normalize_fog_of_war, 1, true, overworld::_normalize_fog_of_war(s, D(a, 0)); return nil()),
+	// Writes the session's cached scenery layers and resolved-encounter set.
+	PORT(OverworldRules, _build_blocked_tile_index, 4, true,
+			if (a[0].kind == state::Kind::Nil) return gd::dict_value(s.new_dict());
+			return gd::dict_value(overworld::_build_blocked_tile_index(s, D(a, 0), I(a, 1), S(a, 2), D(a, 3)))),
+	PORT(OverworldRules, _normalize_resource_nodes, 1, false, return gd::array_value(overworld::_normalize_resource_nodes(s, A(a, 0)))),
 };
 
 #undef PORT

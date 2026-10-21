@@ -12,7 +12,7 @@ namespace aurelion::rules::port::hero_command_rules {
 using gd::DictRef;
 using state::State;
 
-// A hero's sight (fog.cpp).
+// A hero's sight (hero_command_rules.cpp).
 int64_t scouting_radius_for_hero(State &state, DictRef hero_state);
 int64_t scout_row_half_width(int64_t dy, int64_t radius);
 

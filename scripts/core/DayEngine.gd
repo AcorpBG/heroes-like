@@ -13,6 +13,9 @@ extends RefCounted
 ## Mismatches and native failures print a SCRIPT ERROR (the first 20), which
 ## fails rules_parity runs and the core suite, and, with HEROES_NATIVE_DAY_LOG
 ## set to a folder, go with every function's counts into shadow_<pid>.json there.
+## A port leaves the paths AI matches never run to GDScript: a native call that
+## reaches one changes nothing, not_ported() says so and the switch runs the
+## GDScript body; shadow mode skips the check (counted as not_ported).
 ## tools/native_battle_switch.py writes the switch into each ported function.
 
 const NativeRules = preload("res://scripts/core/NativeRules.gd")
@@ -54,6 +57,10 @@ static func native_writing(name: StringName, args: Array) -> Variant:
 	_take_views(args, views)
 	return result
 
+## Whether the last native call reached a path the port leaves to GDScript.
+static func not_ported() -> bool:
+	return NativeRules.api().port_not_ported()
+
 ## Shadow: checks GDScript's result against the native port's.
 static func check(name: StringName, args: Array, result: Variant) -> void:
 	NativeRules.api().port_check(name, _views(args), result)
@@ -68,6 +75,8 @@ static func before_writing(args: Array) -> Array:
 ## result and leaves before as the GDScript call left args.
 static func check_writing(name: StringName, before: Array, args: Array, result: Variant) -> void:
 	var native_result: Variant = NativeRules.api().port_call(name, before, true)
+	if not_ported():
+		return
 	var mismatch := _first_difference(native_result, result, "result")
 	if mismatch != "":
 		mismatch = "result: " + mismatch
