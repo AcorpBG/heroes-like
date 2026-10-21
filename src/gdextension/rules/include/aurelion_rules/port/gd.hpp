@@ -242,6 +242,9 @@ ArrayRef deep_duplicate_array(State &state, ArrayRef array);
 // x.duplicate(deep) of an untyped value: containers copied, others as they are.
 Value duplicate_value(State &state, const Value &value, bool deep);
 inline bool is_empty(const State &state, DictRef dict) { return state.dict_size(dict) == 0; }
+// A new empty Array typed with a builtin Variant type (state::variant_type),
+// as GDScript's `var ids: Array[String] = []` makes it.
+ArrayRef new_typed_array(State &state, uint8_t builtin);
 // a.slice(begin, end): a new Array with a's element type (Array::slice; the
 // bounds are Godot's 32-bit ints, and a step against the bounds prints an
 // error and answers an empty Array).

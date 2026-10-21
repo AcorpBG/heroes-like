@@ -546,6 +546,11 @@ void PortBridge::static_set(state::State &, uint32_t script, uint32_t name, cons
 	static_slots_.emplace(slot, statics_.size() - 1);
 }
 
+state::TypeRef PortBridge::builtin_type(uint8_t builtin) {
+	// A builtin type has no class name and no script.
+	return register_type(builtin, StringName(), Variant());
+}
+
 int64_t PortBridge::content_revision(state::State &) {
 	if (content_revision_ < 0) {
 		content_revision_ = static_cast<int64_t>(content_service()->call(StringName("get_content_revision")));
