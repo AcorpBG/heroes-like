@@ -2,9 +2,8 @@
 // hosts and commander rosters. The day-only functions it reaches are defined
 // here under their scripts' namespaces; the shared ones are in their scripts'
 // files. The paths AI matches never run are left to GDScript (state::NotPorted):
-// a roster memo already open, legacy raid hosts, defender commanders, pending
-// specialty choices, old saves' memories and hero task boards, configs without
-// player records.
+// a roster memo already open, legacy raid hosts, defender commanders, old
+// saves' memories and hero task boards, configs without player records.
 
 #include "aurelion_rules/port/ai_hero_rules.hpp"
 #include "aurelion_rules/port/artifact_rules.hpp"
@@ -22,6 +21,7 @@
 #include "aurelion_rules/compat/godot_math.hpp"
 #include "aurelion_rules/compat/godot_string.hpp"
 
+#include <algorithm>
 #include <string>
 #include <vector>
 
@@ -210,6 +210,31 @@ constexpr Atom kCommanderMemoryKeys[] = {
 // AiHeroRules.MIGRATION_VERSION.
 constexpr int64_t kAiHeroesMigrationVersion = 1;
 
+// HeroProgressionRules.CHOICE_SIZE and the OFFER_*_WEIGHT draw weights.
+constexpr int64_t kChoiceSize = 3;
+constexpr double kOfferFocusWeight = 4.0;
+constexpr double kOfferPathWeight = 2.5;
+constexpr double kOfferOtherWeight = 1.0;
+
+// HeroProgressionRules.COMMAND_GAIN_WEIGHTS.has(path).
+bool is_command_path(Atom path) {
+	return path == key::might || path == key::magic;
+}
+
+// s.hex_to_int() of lower-case hex digits (a SHA-256 digest's prefix).
+int64_t hex_digits_to_int(const std::string &digits) {
+	int64_t value = 0;
+	for (const char c : digits) {
+		value = value * 16 + (c >= 'a' ? c - 'a' + 10 : c - '0');
+	}
+	return value;
+}
+
+// A static var of EnemyAdventureRules.
+Value adventure_static(State &state, Atom name) {
+	return gd::static_var(state, key::enemy_adventure_rules_script, name);
+}
+
 } // namespace
 
 // The day-only functions defined here, in their scripts' namespaces.
@@ -222,6 +247,22 @@ DictRef _reconcile_pending_choices(State &state, DictRef hero_state);
 DictRef _enqueue_missing_choice_groups(State &state, DictRef hero_state);
 int64_t raw_pending_choices_remaining(State &state, DictRef hero_state);
 int64_t mana_max_bonus(State &state, DictRef hero_state);
+DictRef _specialty_row(State &state, Atom specialty_id);
+int64_t max_rank_for_specialty(State &state, Atom specialty_id);
+int64_t specialty_rank(State &state, DictRef hero_state, Atom specialty_id);
+Value specialties(State &state);
+int64_t max_specialties_per_hero(State &state);
+int64_t _distinct_specialty_count(State &state, DictRef hero_state);
+bool _specialty_is_available(State &state, DictRef hero_state, Atom specialty_id);
+ArrayRef available_specialty_ids(State &state, DictRef hero_state);
+Atom growth_seed(State &state, DictRef hero_state);
+Atom command_path(State &state, DictRef hero_state);
+ArrayRef _normalize_specialty_id_list(State &state, const Value &value);
+ArrayRef _offer_order(State &state, DictRef hero_state, int64_t level_number);
+DictRef _build_choice_group(State &state, DictRef hero_state, int64_t level_number);
+DictRef current_pending_choice(State &state, DictRef hero_state);
+DictRef specialty_definition(State &state, Atom specialty_id);
+DictRef choose_specialty(State &state, DictRef hero_state, Atom specialty_id);
 } // namespace hero_progression_rules
 
 namespace spell_rules {
@@ -287,6 +328,8 @@ ArrayRef _merge_unique_strings(State &state, const Value &primary, const Value &
 ArrayRef _normalized_specialty_ranks(State &state, const Value &primary, const Value &secondary);
 ArrayRef _normalized_specialty_focus_ids(State &state, const Value &value);
 ArrayRef _hero_starting_spell_ids(State &state, DictRef hero_template);
+Atom _preferred_enemy_specialty_id(State &state, DictRef commander_state, DictRef pending_choice);
+void _sync_specialty_pick(State &state);
 } // namespace enemy_adventure_rules
 
 namespace enemy_turn_rules {
@@ -673,7 +716,7 @@ ArrayRef _normalize_specialties(State &state, const Value &value) {
 	return _normalize_specialties_in(state, gd::is_array(value) ? _specialty_catalog(state) : state.new_dict(), value);
 }
 
-ArrayRef _normalize_pending_choices(State &state, const Value &value, DictRef) {
+ArrayRef _normalize_pending_choices(State &state, const Value &value, DictRef hero_state) {
 	const ArrayRef normalized = state.new_array();
 	if (!gd::is_array(value)) {
 		return normalized;
@@ -683,39 +726,100 @@ ArrayRef _normalize_pending_choices(State &state, const Value &value, DictRef) {
 		if (!gd::is_dict(pending_choice)) {
 			continue;
 		}
-		for (const Value &specialty_id_value : gd::field_items(state, pending_choice.ref, str(key::options))) {
+		const int64_t level = imax(2, gd::int_field(state, pending_choice.ref, key::level, 2));
+		const Value saved_options = get_or_new_array(state, pending_choice.ref, key::options);
+		if (!gd::is_array(saved_options)) {
+			not_ported("a pending specialty choice whose options are not an Array");
+		}
+		const ArrayRef options = state.new_array();
+		for (const Value &specialty_id_value : gd::items(state, saved_options)) {
 			const Atom specialty_id = gd::stringify_or_fallback(state, specialty_id_value);
-			if (gd::is_empty(state, specialty_row(state, catalog, specialty_id))) {
+			const DictRef row = specialty_row(state, catalog, specialty_id);
+			if (gd::is_empty(state, row)) {
 				continue;
 			}
-			// specialty_rank and the offer it builds.
-			not_ported("a pending specialty choice");
+			if (specialty_rank(state, hero_state, specialty_id) >= imax(1, gd::int_field(state, row, key::max_rank, 1))) {
+				continue;
+			}
+			if (gd::array_has(state, options, str(specialty_id))) {
+				continue;
+			}
+			state.append(options, str(specialty_id));
+			if (state.array_size(options) >= kChoiceSize) {
+				break;
+			}
 		}
-		// Every option unknown: the choice is dropped.
+		if (state.array_size(options) > 0) {
+			const DictRef choice = state.new_dict();
+			state.set(choice, str(key::level), int_value(level));
+			state.set(choice, str(key::options), array_value(options));
+			state.append(normalized, dict_value(choice));
+		}
 	}
 	return normalized;
 }
 
 DictRef _reconcile_pending_choices(State &state, DictRef hero_state) {
-	for (const Value &pending_choice : gd::field_items(state, hero_state, str(key::pending_specialty_choices))) {
-		if (gd::is_dict(pending_choice)) {
-			// _specialty_is_available and _offer_order.
-			not_ported("a pending specialty choice");
+	const DictRef hero = hero_state;
+	const ArrayRef pending_choices = state.new_array();
+	for (const Value &pending_choice : gd::items(state, get_or_new_array(state, hero, key::pending_specialty_choices))) {
+		if (!gd::is_dict(pending_choice)) {
+			continue;
+		}
+		const int64_t level = imax(2, gd::int_field(state, pending_choice.ref, key::level, 2));
+		const ArrayRef options = state.new_array();
+		for (const Value &specialty_id_value : gd::items(state, get_or_new_array(state, pending_choice.ref, key::options))) {
+			const Atom specialty_id = gd::stringify_or_fallback(state, specialty_id_value);
+			if (_specialty_is_available(state, hero, specialty_id) && !gd::array_has(state, options, str(specialty_id))) {
+				state.append(options, str(specialty_id));
+			}
+		}
+		const ArrayRef offer = _offer_order(state, hero, level);
+		if (state.array_size(offer) > 0) {
+			// min(CHOICE_SIZE, available_specialty_ids(hero).size()): the same on
+			// every pass of the loop, as the hero does not change in it.
+			const int64_t wanted = std::min<int64_t>(kChoiceSize, state.array_size(available_specialty_ids(state, hero)));
+			for (const Value &specialty_id : gd::items(state, array_value(offer))) {
+				if (state.array_size(options) >= wanted) {
+					break;
+				}
+				if (!gd::array_has(state, options, specialty_id)) {
+					state.append(options, specialty_id);
+				}
+			}
+		}
+		if (state.array_size(options) > 0) {
+			const DictRef choice = state.new_dict();
+			state.set(choice, str(key::level), int_value(level));
+			state.set(choice, str(key::options), array_value(options));
+			state.append(pending_choices, dict_value(choice));
 		}
 	}
-	state.set(hero_state, str(key::pending_specialty_choices), array_value(state.new_array()));
-	return hero_state;
+	state.set(hero, str(key::pending_specialty_choices), array_value(pending_choices));
+	return hero;
 }
 
 DictRef _enqueue_missing_choice_groups(State &state, DictRef hero_state) {
-	const int64_t expected_choices = imax(0, gd::sub(gd::int_field(state, hero_state, key::level, 1), 1));
-	const Value specialties = get_or_new_array(state, hero_state, key::specialties);
-	const int64_t allocated_choices = gd::add(state.array_size(gd::as_array(specialties)), raw_pending_choices_remaining(state, hero_state));
-	if (allocated_choices < expected_choices) {
-		// _build_choice_group.
-		not_ported("a missing specialty choice");
+	const DictRef hero = hero_state;
+	const int64_t expected_choices = imax(0, gd::sub(gd::int_field(state, hero, key::level, 1), 1));
+	const Value specialties = get_or_new_array(state, hero, key::specialties);
+	int64_t allocated_choices = gd::add(state.array_size(gd::as_array(specialties)), raw_pending_choices_remaining(state, hero));
+	int64_t next_level = gd::add(allocated_choices, 2);
+	while (allocated_choices < expected_choices) {
+		const DictRef choice_group = _build_choice_group(state, hero, next_level);
+		if (gd::is_empty(state, choice_group)) {
+			break;
+		}
+		Value pending_choices = get_or_new_array(state, hero, key::pending_specialty_choices);
+		if (!gd::is_array(pending_choices)) {
+			pending_choices = array_value(state.new_array());
+		}
+		state.append(pending_choices.ref, dict_value(choice_group));
+		state.set(hero, str(key::pending_specialty_choices), pending_choices);
+		allocated_choices = gd::add(allocated_choices, 1);
+		next_level = gd::add(next_level, 1);
 	}
-	return hero_state;
+	return hero;
 }
 
 int64_t raw_pending_choices_remaining(State &state, DictRef hero_state) {
@@ -725,6 +829,219 @@ int64_t raw_pending_choices_remaining(State &state, DictRef hero_state) {
 
 int64_t mana_max_bonus(State &state, DictRef hero_state) {
 	return gd::int_field(state, aggregate_bonuses(state, hero_state), key::max_mana, 0);
+}
+
+DictRef _specialty_row(State &state, Atom specialty_id) {
+	return specialty_row(state, _specialty_catalog(state), specialty_id);
+}
+
+int64_t max_rank_for_specialty(State &state, Atom specialty_id) {
+	return imax(1, gd::int_field(state, _specialty_row(state, specialty_id), key::max_rank, 1));
+}
+
+int64_t specialty_rank(State &state, DictRef hero_state, Atom specialty_id) {
+	int64_t count = 0;
+	const Value specialties = get_or_new_array(state, hero_state, key::specialties);
+	if (gd::is_array(specialties)) {
+		for (const Value &specialty_id_value : gd::items(state, specialties)) {
+			if (gd::stringify_or_fallback(state, specialty_id_value) == specialty_id) {
+				++count;
+			}
+		}
+	}
+	return count;
+}
+
+Value specialties(State &state) {
+	// The catalog's specialties in authored order: its "items" if an Array, else [].
+	const Value items = state.get(gd::content_file(state, key::hero_specialties_path), str(key::items), array_value(state.new_array()));
+	return gd::is_array(items) ? items : array_value(state.new_array());
+}
+
+int64_t max_specialties_per_hero(State &state) {
+	return imax(1, gd::int_field(state, gd::content_file(state, key::hero_specialties_path), key::max_specialties_per_hero, 6));
+}
+
+int64_t _distinct_specialty_count(State &state, DictRef hero_state) {
+	const DictRef seen = state.new_dict();
+	for (const Value &specialty_id : gd::items(state, get_or_new_array(state, hero_state, key::specialties))) {
+		state.set(seen, str(gd::stringify_or_fallback(state, specialty_id)), bool_value(true));
+	}
+	return state.dict_size(seen);
+}
+
+bool _specialty_is_available(State &state, DictRef hero_state, Atom specialty_id) {
+	if (gd::is_empty(state, _specialty_row(state, specialty_id))) {
+		return false;
+	}
+	const int64_t rank = specialty_rank(state, hero_state, specialty_id);
+	if (rank >= max_rank_for_specialty(state, specialty_id)) {
+		return false;
+	}
+	return rank > 0 || _distinct_specialty_count(state, hero_state) < max_specialties_per_hero(state);
+}
+
+ArrayRef available_specialty_ids(State &state, DictRef hero_state) {
+	const ArrayRef available = state.new_array();
+	for (const Value &specialty : gd::items(state, specialties(state))) {
+		const Atom specialty_id = gd::stringify_or_fallback(state, variant_get(state, specialty, key::id, str(key::empty)));
+		if (_specialty_is_available(state, hero_state, specialty_id)) {
+			state.append(available, str(specialty_id));
+		}
+	}
+	return available;
+}
+
+Atom growth_seed(State &state, DictRef hero_state) {
+	const Atom stored = gd::strip_edges(state, text(state, hero_state, key::growth_seed, key::empty));
+	if (stored != key::empty) {
+		return stored;
+	}
+	for (const Atom field : { key::id, key::roster_hero_id, key::hero_id, key::name }) {
+		const Atom value = gd::strip_edges(state, text(state, hero_state, field, key::empty));
+		if (value != key::empty) {
+			return value;
+		}
+	}
+	return key::hero;
+}
+
+Atom command_path(State &state, DictRef hero_state) {
+	Atom path = gd::strip_edges(state, text(state, hero_state, key::command_path, key::empty));
+	if (!is_command_path(path)) {
+		for (const Atom field : { key::id, key::roster_hero_id, key::hero_id }) {
+			const Atom template_id = gd::strip_edges(state, text(state, hero_state, field, key::empty));
+			if (template_id != key::empty) {
+				path = text(state, gd::content_row(state, state::ContentTable::Hero, template_id), key::command_path, key::empty);
+				if (is_command_path(path)) {
+					break;
+				}
+			}
+		}
+	}
+	if (is_command_path(path)) {
+		return path;
+	}
+	const DictRef command = dict_field_or_new(state, hero_state, key::command);
+	const int64_t magic = gd::add(gd::int_field(state, command, key::power, 0), gd::int_field(state, command, key::knowledge, 0));
+	return magic > gd::add(gd::int_field(state, command, key::attack, 0), gd::int_field(state, command, key::defense, 0)) ? key::magic : key::might;
+}
+
+ArrayRef _normalize_specialty_id_list(State &state, const Value &value) {
+	const ArrayRef normalized = state.new_array();
+	if (!gd::is_array(value)) {
+		return normalized;
+	}
+	for (const Value &specialty_id_value : gd::items(state, value)) {
+		const Atom specialty_id = gd::stringify_or_fallback(state, specialty_id_value);
+		// has_specialty(specialty_id).
+		if (gd::is_empty(state, _specialty_row(state, specialty_id)) || gd::array_has(state, normalized, str(specialty_id))) {
+			continue;
+		}
+		state.append(normalized, str(specialty_id));
+	}
+	return normalized;
+}
+
+ArrayRef _offer_order(State &state, DictRef hero_state, int64_t level_number) {
+	// Each candidate's place is a weighted draw (Efraimidis-Spirakis keys)
+	// seeded by the hero's growth seed and the level; Godot's sort_custom
+	// orders the keys, largest first.
+	const ArrayRef available = available_specialty_ids(state, hero_state);
+	if (state.array_size(available) == 0) {
+		return available;
+	}
+	const ArrayRef focus = _normalize_specialty_id_list(state, get_or_new_array(state, hero_state, key::specialty_focus_ids));
+	const Atom path = command_path(state, hero_state);
+	const std::string seed_text = state.text(growth_seed(state, hero_state));
+	struct Keyed {
+		Atom id;
+		double key;
+	};
+	std::vector<Keyed> keyed;
+	for (const Value &specialty_id_value : gd::items(state, array_value(available))) {
+		const Atom specialty_id = gd::to_string(specialty_id_value);
+		double weight = kOfferOtherWeight;
+		if (gd::array_has(state, focus, str(specialty_id))) {
+			weight = kOfferFocusWeight;
+		} else if (text(state, _specialty_row(state, specialty_id), key::path, key::any) == path) {
+			weight = kOfferPathWeight;
+		}
+		// ("%s|offer|%d|%s" % [seed_text, level_number, specialty_id]).sha256_text()
+		const std::string digest = compat::sha256_text(seed_text + "|offer|" + compat::itos(level_number) + "|" + state.text(specialty_id));
+		const double draw = (static_cast<double>(hex_digits_to_int(digest.substr(0, 8))) + 1.0) / 4294967297.0;
+		keyed.push_back(Keyed{ specialty_id, gd::engine_pow(state, draw, 1.0 / weight) });
+	}
+	compat::sort_custom(keyed.data(), static_cast<int64_t>(keyed.size()), [](const Keyed &a, const Keyed &b) { return a.key > b.key; });
+	const ArrayRef result = state.new_array();
+	for (const bool want_held : { true, false }) {
+		for (const Keyed &entry : keyed) {
+			if ((specialty_rank(state, hero_state, entry.id) > 0) == want_held) {
+				state.append(result, str(entry.id));
+				break;
+			}
+		}
+	}
+	for (const Keyed &entry : keyed) {
+		if (!gd::array_has(state, result, str(entry.id))) {
+			state.append(result, str(entry.id));
+		}
+	}
+	return result;
+}
+
+DictRef _build_choice_group(State &state, DictRef hero_state, int64_t level_number) {
+	const ArrayRef options = _offer_order(state, hero_state, level_number);
+	const int64_t size = state.array_size(options);
+	if (size == 0) {
+		return state.new_dict();
+	}
+	const DictRef group = state.new_dict();
+	state.set(group, str(key::level), int_value(imax(2, level_number)));
+	state.set(group, str(key::options), array_value(gd::slice(state, options, 0, std::min<int64_t>(kChoiceSize, size))));
+	return group;
+}
+
+DictRef current_pending_choice(State &state, DictRef hero_state) {
+	const DictRef hero = ensure_hero_progression(state, gd::deep_duplicate_dict(state, hero_state));
+	const Value pending_choices = get_or_new_array(state, hero, key::pending_specialty_choices);
+	if (gd::is_array(pending_choices) && state.array_size(pending_choices.ref) > 0 && gd::is_dict(state.at(pending_choices.ref, 0))) {
+		return state.at(pending_choices.ref, 0).ref;
+	}
+	return state.new_dict();
+}
+
+DictRef specialty_definition(State &state, Atom specialty_id) {
+	const DictRef row = _specialty_row(state, specialty_id);
+	return gd::is_empty(state, row) ? state.new_dict() : gd::deep_duplicate_dict(state, row);
+}
+
+DictRef choose_specialty(State &state, DictRef hero_state, Atom specialty_id) {
+	// The result's "hero" (every outcome has one); its message is not built, as
+	// the one caller here reads only the hero.
+	DictRef hero = ensure_hero_progression(state, gd::deep_duplicate_dict(state, hero_state));
+	const Value pending_choices = get_or_new_array(state, hero, key::pending_specialty_choices);
+	if (!gd::is_array(pending_choices) || state.array_size(pending_choices.ref) == 0) {
+		return hero;
+	}
+	// var current_choice: Dictionary = pending_choices[0]
+	const DictRef current_choice = gd::as_dict(state.at(pending_choices.ref, 0));
+	const Value options = get_or_new_array(state, current_choice, key::options);
+	if (!gd::is_array(options) || !gd::array_has(state, options.ref, str(specialty_id))) {
+		return hero;
+	}
+	if (specialty_rank(state, hero, specialty_id) >= max_rank_for_specialty(state, specialty_id)) {
+		return hero;
+	}
+	Value specialties = get_or_new_array(state, hero, key::specialties);
+	if (!gd::is_array(specialties)) {
+		specialties = array_value(state.new_array());
+	}
+	state.append(specialties.ref, str(specialty_id));
+	state.set(hero, str(key::specialties), specialties);
+	gd::remove_at(state, pending_choices.ref, 0);
+	state.set(hero, str(key::pending_specialty_choices), pending_choices);
+	return ensure_hero_progression(state, hero);
 }
 
 } // namespace hero_progression_rules
@@ -1929,12 +2246,84 @@ DictRef _normalize_command_payload(State &state, const Value &value) {
 }
 
 DictRef _normalize_enemy_progression(State &state, DictRef commander_state) {
-	const DictRef commander = hero_progression_rules::ensure_hero_progression(state, gd::deep_duplicate_dict(state, commander_state));
-	if (hero_progression_rules::raw_pending_choices_remaining(state, commander) > 0) {
-		// current_pending_choice, _preferred_enemy_specialty_id, choose_specialty.
-		not_ported("a commander's pending specialty choice");
+	DictRef commander = hero_progression_rules::ensure_hero_progression(state, gd::deep_duplicate_dict(state, commander_state));
+	int64_t guard = 0;
+	// commander stays progression-ensured: the ensure above, then choose_specialty's result.
+	while (hero_progression_rules::raw_pending_choices_remaining(state, commander) > 0 && guard < 8) {
+		const DictRef pending_choice = hero_progression_rules::current_pending_choice(state, commander);
+		if (gd::is_empty(state, pending_choice)) {
+			break;
+		}
+		const Atom chosen_specialty = _preferred_enemy_specialty_id(state, commander, pending_choice);
+		if (chosen_specialty == key::empty) {
+			break;
+		}
+		commander = hero_progression_rules::choose_specialty(state, commander, chosen_specialty);
+		++guard;
 	}
-	return commander;
+	return guard > 0 ? hero_progression_rules::ensure_hero_progression(state, commander) : commander;
+}
+
+Atom _preferred_enemy_specialty_id(State &state, DictRef commander_state, DictRef pending_choice) {
+	// A computer commander's pick: its focus specialties first, then those of
+	// its command path, battle and magic ones over adventure ones, and ranking
+	// up what it holds over starting something new.
+	const Value options = get_or_new_array(state, pending_choice, key::options);
+	if (!gd::is_array(options) || state.array_size(options.ref) == 0) {
+		return key::empty;
+	}
+	_sync_specialty_pick(state);
+	const Value focus_value = get_or_new_array(state, commander_state, key::specialty_focus_ids);
+	const ArrayRef focus = gd::is_array(focus_value) ? focus_value.ref : state.new_array();
+	const Atom path = hero_progression_rules::command_path(state, commander_state);
+	Atom best = gd::stringify_or_fallback(state, state.at(options.ref, 0));
+	double best_score = -1.0;
+	for (const Value &option : gd::items(state, options)) {
+		const Atom specialty_id = gd::stringify_or_fallback(state, option);
+		const DictRef specialty = hero_progression_rules::specialty_definition(state, specialty_id);
+		double score = 0.0;
+		if (gd::array_has(state, focus, str(specialty_id))) {
+			score += gd::to_float(adventure_static(state, key::SPECIALTY_FOCUS_SCORE));
+		}
+		if (text(state, specialty, key::path, key::any) == path) {
+			score += gd::to_float(adventure_static(state, key::SPECIALTY_PATH_SCORE));
+		}
+		if (text(state, specialty, key::group, key::empty) != key::adventure) {
+			score += gd::to_float(adventure_static(state, key::SPECIALTY_NOT_ADVENTURE_SCORE));
+		}
+		if (hero_progression_rules::specialty_rank(state, commander_state, specialty_id) > 0) {
+			score += gd::to_float(adventure_static(state, key::SPECIALTY_RANK_UP_SCORE));
+		}
+		if (score > best_score) {
+			best_score = score;
+			best = specialty_id;
+		}
+	}
+	return best;
+}
+
+void _sync_specialty_pick(State &state) {
+	// The pick weights (content/ai_hero_weights.json, "specialty_pick") in the
+	// script's static vars, read again when the content revision changes.
+	const int64_t revision = gd::content_revision(state);
+	if (gd::equal(state, int_value(revision), adventure_static(state, key::_specialty_pick_revision))) {
+		return;
+	}
+	const DictRef pick = gd::as_dict(gd::index(state, gd::content_file(state, key::ai_hero_weights_path), str(key::specialty_pick)));
+	const Atom script = key::enemy_adventure_rules_script;
+	// SPECIALTY_*_SCORE = float(pick[field]), String weights left to GDScript.
+	const auto assign = [&](Atom name, Atom field) {
+		const Value weight = gd::index(state, pick, str(field));
+		if (weight.is_string_like()) {
+			not_ported("a specialty pick weight as a String");
+		}
+		gd::set_static_var(state, script, name, gd::float_value(gd::to_float(weight)));
+	};
+	assign(key::SPECIALTY_FOCUS_SCORE, key::focus);
+	assign(key::SPECIALTY_PATH_SCORE, key::path);
+	assign(key::SPECIALTY_NOT_ADVENTURE_SCORE, key::not_adventure);
+	assign(key::SPECIALTY_RANK_UP_SCORE, key::rank_up);
+	gd::set_static_var(state, script, key::_specialty_pick_revision, int_value(revision));
 }
 
 Atom _normalize_commander_status(State &state, const Value &value) {
