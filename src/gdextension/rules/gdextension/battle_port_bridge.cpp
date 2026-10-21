@@ -1138,11 +1138,33 @@ void PortBridge::diff_value(const Value &native, const Variant &gdscript, std::s
 			return;
 		}
 		case Kind::Opaque:
-			if (opaque_[native.ref] != gdscript) {
+			if (opaque_[native.ref] != gdscript && !same_made_rng(opaque_[native.ref], gdscript)) {
 				mismatch(describe(opaque_[native.ref]));
 			}
 			return;
 	}
+}
+
+bool PortBridge::same_made_rng(const Variant &made, const Variant &gdscript) const {
+	// A validating call's RandomNumberGenerator.new(): GDScript's call made its
+	// own, a new one too, with the same seed and state.
+	if (!validating_) {
+		return false;
+	}
+	RandomNumberGenerator *native = Object::cast_to<RandomNumberGenerator>(static_cast<Object *>(made));
+	RandomNumberGenerator *other = Object::cast_to<RandomNumberGenerator>(static_cast<Object *>(gdscript));
+	if (native == nullptr || other == nullptr) {
+		return false;
+	}
+	if (std::find(made_rngs_.begin(), made_rngs_.end(), static_cast<uint64_t>(native->get_instance_id())) == made_rngs_.end()) {
+		return false;
+	}
+	for (const Variant &loaded : opaque_) {
+		if (loaded == gdscript) {
+			return false;
+		}
+	}
+	return native->get_seed() == other->get_seed() && native->get_state() == other->get_state();
 }
 
 
