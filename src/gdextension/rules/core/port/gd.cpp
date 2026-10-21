@@ -685,6 +685,37 @@ ArrayRef duplicate_array(State &state, ArrayRef array) {
 	return copy;
 }
 
+ArrayRef slice(State &state, ArrayRef array, int64_t begin64, int64_t end64) {
+	// Array::slice takes ints: GDScript's int64 arrives truncated to 32 bits.
+	const int begin_in = static_cast<int>(begin64);
+	const int end_in = static_cast<int>(end64);
+	const ArrayRef result = state.new_array();
+	const state::ArrayNode &source = state.array(array);
+	state.array_node(result).element_type = source.element_type;
+	const int s = static_cast<int>(source.items.size());
+	if (s == 0 || begin_in >= s) {
+		return result;
+	}
+	int begin = begin_in < -s ? -s : (begin_in > s - 1 ? s - 1 : begin_in);
+	if (begin < 0) {
+		begin += s;
+	}
+	int end = end_in < -s - 1 ? -s - 1 : (end_in > s ? s : end_in);
+	if (end < 0) {
+		end += s;
+	}
+	if (begin > end) {
+		state.print_error("Slice step is positive, but bounds are decreasing.");
+		return result;
+	}
+	state::ValueList items;
+	for (int index = begin; index < end; ++index) {
+		items.push_back(source.items[static_cast<size_t>(index)]);
+	}
+	state.array_node(result).items = std::move(items);
+	return result;
+}
+
 DictRef deep_duplicate_dict(State &state, DictRef dict) {
 	return deep_dict(state, dict);
 }
@@ -761,6 +792,159 @@ Atom stringify(State &state, const Value &value) {
 
 bool is_valid_int(const State &state, Atom atom) {
 	return compat::is_valid_int(state.text(atom));
+}
+
+Atom format(State &state, Atom pattern, std::initializer_list<Value> values) {
+	const std::string &source = state.text(pattern);
+	std::string formatted;
+	const char *problem = nullptr;
+	size_t value_index = 0;
+	bool in_format = false;
+	for (const char c : source) {
+		if (!in_format) {
+			if (c == '%') {
+				in_format = true;
+			} else {
+				formatted += c;
+			}
+			continue;
+		}
+		in_format = false;
+		if (c == '%') {
+			formatted += '%';
+		} else if (c == 'd') {
+			if (value_index >= values.size()) {
+				problem = "not enough arguments for format string";
+				break;
+			}
+			const Value &value = values.begin()[value_index];
+			if (value.kind == Kind::Int) {
+				formatted += compat::itos(value.i);
+			} else if (value.kind == Kind::Float) {
+				formatted += compat::itos(compat::float_to_int(value.f));
+			} else {
+				problem = "a number is required";
+				break;
+			}
+			++value_index;
+		} else if (c == 's') {
+			if (value_index >= values.size()) {
+				problem = "not enough arguments for format string";
+				break;
+			}
+			formatted += state.text(stringify(state, values.begin()[value_index]));
+			++value_index;
+		} else {
+			fail(std::string("String format %") + c + " is not ported");
+		}
+	}
+	if (problem == nullptr && in_format) {
+		problem = "incomplete format";
+	}
+	if (problem == nullptr && value_index != values.size()) {
+		problem = "not all arguments converted during string formatting";
+	}
+	if (problem != nullptr) {
+		state.print_error(std::string("String formatting error: ") + problem + ".");
+		return pattern;
+	}
+	return state.intern(formatted);
+}
+
+Atom capitalize(State &state, Atom atom) {
+	const std::string &source = state.text(atom);
+	for (const char c : source) {
+		if (static_cast<unsigned char>(c) >= 0x80) {
+			fail("capitalize() of non-ASCII text is not ported");
+		}
+	}
+	const auto is_upper = [](char c) { return c >= 'A' && c <= 'Z'; };
+	const auto is_lower = [](char c) { return c >= 'a' && c <= 'z'; };
+	const auto is_digit = [](char c) { return c >= '0' && c <= '9'; };
+	// String::_separate_compound_words.
+	std::string words;
+	if (!source.empty()) {
+		size_t start = 0;
+		bool prev_upper = is_upper(source[0]);
+		bool prev_lower = is_lower(source[0]);
+		bool prev_digit = is_digit(source[0]);
+		for (size_t i = 1; i < source.size(); ++i) {
+			const bool upper = is_upper(source[i]);
+			const bool lower = is_lower(source[i]);
+			const bool digit = is_digit(source[i]);
+			const bool next_lower = i + 1 < source.size() && is_lower(source[i + 1]);
+			if ((prev_lower && upper) || ((prev_upper || prev_digit) && upper && next_lower) || (prev_digit && lower && next_lower) || ((prev_upper || prev_lower) && digit)) {
+				words += source.substr(start, i - start) + " ";
+				start = i;
+			}
+			prev_upper = upper;
+			prev_lower = lower;
+			prev_digit = digit;
+		}
+		words += source.substr(start);
+		for (char &c : words) {
+			if (c == ' ' || (c >= 0x09 && c <= 0x0d) || c == '_' || c == '-') {
+				c = ' ';
+			} else if (is_upper(c)) {
+				c = static_cast<char>(c - 'A' + 'a');
+			}
+		}
+	}
+	words = state.text(strip_edges(state, state.intern(words)));
+	// Each word with its first letter upper, joined by single spaces.
+	std::string result;
+	size_t index = 0;
+	size_t begin = 0;
+	while (begin <= words.size()) {
+		size_t end = words.find(' ', begin);
+		if (end == std::string::npos) {
+			end = words.size();
+		}
+		std::string word = words.substr(begin, end - begin);
+		if (!word.empty()) {
+			if (is_lower(word[0])) {
+				word[0] = static_cast<char>(word[0] - 'a' + 'A');
+			}
+			if (index > 0) {
+				result += ' ';
+			}
+			result += word;
+		}
+		++index;
+		begin = end + 1;
+	}
+	return state.intern(result);
+}
+
+Atom replace(State &state, Atom atom, Atom key, Atom with) {
+	const std::string &source = state.text(atom);
+	const std::string &find = state.text(key);
+	if (find.empty() || source.empty()) {
+		return atom;
+	}
+	// Byte search finds what Godot's code point search finds in valid UTF-8.
+	std::string result;
+	size_t from = 0;
+	size_t found = source.find(find, from);
+	if (found == std::string::npos) {
+		return atom;
+	}
+	const std::string &replacement = state.text(with);
+	while (found != std::string::npos) {
+		result.append(source, from, found - from);
+		result += replacement;
+		from = found + find.size();
+		found = source.find(find, from);
+	}
+	result.append(source, from, std::string::npos);
+	return state.intern(result);
+}
+
+Atom trim_prefix(State &state, Atom atom, Atom prefix) {
+	if (!begins_with(state, atom, prefix)) {
+		return atom;
+	}
+	return state.intern(std::string_view(state.text(atom)).substr(state.text(prefix).size()));
 }
 
 Value member(State &state, const Value &object, Atom property) {
