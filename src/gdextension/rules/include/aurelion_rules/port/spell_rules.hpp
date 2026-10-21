@@ -28,6 +28,13 @@ ArrayRef _normalize_string_array(State &state, const Value &value);
 bool _has_mana(State &state, DictRef hero_state, int64_t cost);
 bool _knows_spell(State &state, DictRef hero_state, Atom spell_id);
 
+// Shared with the battle port: a hero's spellbook (known spells, mana)
+// normalized in place, the template's starting spells for one that knows none,
+// returning the hero; its maximum mana (spell_rules.cpp).
+DictRef ensure_hero_spellbook(State &state, DictRef hero_state, DictRef hero_template);
+int64_t mana_max_from_hero(State &state, DictRef hero_state);
+int64_t mana_max_from_command(State &state, const Value &command);
+
 // A hero's mana at the start of a day (day_economy.cpp).
 gd::DictRef refresh_daily_mana(State &state, gd::DictRef hero_state);
 

@@ -25,11 +25,3 @@ gd::DictRef ensure_hero_progression(state::State &state, gd::DictRef hero_state)
 gd::DictRef _specialty_row(state::State &state, gd::Atom specialty_id);
 
 } // namespace aurelion::rules::port::hero_progression_rules
-
-namespace aurelion::rules::port::spell_rules {
-
-// A hero's spellbook (known spells, mana) normalized in place, the template's
-// starting spells for one that knows none; returns the hero.
-gd::DictRef ensure_hero_spellbook(state::State &state, gd::DictRef hero_state, gd::DictRef hero_template);
-
-} // namespace aurelion::rules::port::spell_rules

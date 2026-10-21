@@ -246,7 +246,6 @@ ArrayRef _normalize_pending_choices(State &state, const Value &value, DictRef he
 DictRef _reconcile_pending_choices(State &state, DictRef hero_state);
 DictRef _enqueue_missing_choice_groups(State &state, DictRef hero_state);
 int64_t raw_pending_choices_remaining(State &state, DictRef hero_state);
-int64_t mana_max_bonus(State &state, DictRef hero_state);
 DictRef _specialty_row(State &state, Atom specialty_id);
 int64_t max_rank_for_specialty(State &state, Atom specialty_id);
 int64_t specialty_rank(State &state, DictRef hero_state, Atom specialty_id);
@@ -264,12 +263,6 @@ DictRef current_pending_choice(State &state, DictRef hero_state);
 DictRef specialty_definition(State &state, Atom specialty_id);
 DictRef choose_specialty(State &state, DictRef hero_state, Atom specialty_id);
 } // namespace hero_progression_rules
-
-namespace spell_rules {
-DictRef ensure_hero_spellbook(State &state, DictRef hero_state, DictRef hero_template);
-int64_t mana_max_from_hero(State &state, DictRef hero_state);
-int64_t mana_max_from_command(State &state, const Value &command);
-} // namespace spell_rules
 
 namespace enemy_adventure_rules {
 void normalize_raid_armies(State &state, DictRef session);
@@ -827,10 +820,6 @@ int64_t raw_pending_choices_remaining(State &state, DictRef hero_state) {
 	return gd::is_array(pending_choices) ? state.array_size(pending_choices.ref) : 0;
 }
 
-int64_t mana_max_bonus(State &state, DictRef hero_state) {
-	return gd::int_field(state, aggregate_bonuses(state, hero_state), key::max_mana, 0);
-}
-
 DictRef _specialty_row(State &state, Atom specialty_id) {
 	return specialty_row(state, _specialty_catalog(state), specialty_id);
 }
@@ -1045,55 +1034,6 @@ DictRef choose_specialty(State &state, DictRef hero_state, Atom specialty_id) {
 }
 
 } // namespace hero_progression_rules
-
-// SpellRules.
-
-namespace spell_rules {
-
-DictRef ensure_hero_spellbook(State &state, DictRef hero_state, DictRef hero_template) {
-	const int64_t max_mana = mana_max_from_hero(state, hero_state);
-	const ArrayRef default_known_spells = !gd::is_empty(state, hero_template) ? _normalize_spell_ids(state, get_or_new_array(state, hero_template, key::starting_spell_ids)) : state.new_array();
-	const DictRef spellbook = dict_or_new(state, get_or_new_dict(state, hero_state, key::spellbook));
-
-	// The template's list is normalized already; only a stored list needs it.
-	Value stored_spell_ids;
-	ArrayRef known_spell_ids = state.lookup(spellbook, str(key::known_spell_ids), stored_spell_ids) ? _normalize_spell_ids(state, stored_spell_ids) : default_known_spells;
-	if (state.array_size(known_spell_ids) == 0 && state.array_size(default_known_spells) > 0) {
-		known_spell_ids = default_known_spells;
-	}
-
-	// var mana: Dictionary = spellbook.get("mana", {}).
-	const DictRef mana = gd::as_dict(get_or_new_dict(state, spellbook, key::mana));
-	int64_t current_mana = max_mana;
-	if (!gd::is_empty(state, mana)) {
-		current_mana = iclamp(gd::int_field(state, mana, key::current, max_mana), 0, max_mana);
-	}
-
-	const DictRef mana_state = state.new_dict();
-	state.set(mana_state, str(key::current), int_value(current_mana));
-	state.set(mana_state, str(key::max), int_value(max_mana));
-	const DictRef new_spellbook = state.new_dict();
-	state.set(new_spellbook, str(key::known_spell_ids), array_value(known_spell_ids));
-	state.set(new_spellbook, str(key::mana), dict_value(mana_state));
-	state.set(hero_state, str(key::spellbook), dict_value(new_spellbook));
-	return hero_state;
-}
-
-int64_t mana_max_from_hero(State &state, DictRef hero_state) {
-	const Value week_bonuses = get_or_new_dict(state, hero_state, key::week_bonuses);
-	const int64_t week_mana = gd::is_dict(week_bonuses) ? gd::int_field(state, week_bonuses.ref, key::mana, 0) : 0;
-	const int64_t command_mana = mana_max_from_command(state, get_or_new_dict(state, hero_state, key::command));
-	return gd::add(gd::add(command_mana, hero_progression_rules::mana_max_bonus(state, hero_state)), week_mana);
-}
-
-int64_t mana_max_from_command(State &state, const Value &command) {
-	if (!gd::is_dict(command)) {
-		return 8;
-	}
-	return imax(8, gd::add(8, gd::mul(imax(0, gd::int_field(state, command.ref, key::knowledge, 0)), 4)));
-}
-
-} // namespace spell_rules
 
 // EnemyAdventureRules.
 

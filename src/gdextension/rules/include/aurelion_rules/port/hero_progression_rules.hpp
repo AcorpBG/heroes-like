@@ -36,6 +36,10 @@ Value _sum_bonus(State &state, const Value &current, const Value &added);
 // battle port (hero_progression_rules.cpp).
 int64_t adjusted_mana_cost(State &state, DictRef hero_state, int64_t base_cost, Atom school_id);
 
+// A hero's extra maximum mana from its specialties, shared with the battle
+// port (hero_progression_rules.cpp).
+int64_t mana_max_bonus(State &state, DictRef hero_state);
+
 // A hero's daily income from artifacts and specialties (day_economy.cpp).
 DictRef daily_income_bonus(State &state, DictRef hero_state);
 
