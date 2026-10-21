@@ -887,6 +887,12 @@ the six seeds; times from l1, a large four-player game to day 90, on a machine s
 human player's towns, heroes and artifacts, scenario scripts), is about 712 functions / 9,100 lines, 1.5 times the
 probed reach. Each slice ports the whole closure of its entries, so no fallback to GDScript is needed. Slices go in the
 order of their cost in AI matches: 01, 06, 05, 04, 03, 02, 07.
+- Corrected after slice 01 (the first count missed functions reached through `load()` accessors): about 799 functions /
+  14,260 lines, 1.8 times the probed reach; the risk forecast's closure alone is 483 / 8,276 and `evaluate_session`'s
+  443 / 7,345. So a slice ports the paths AI matches run and leaves the others to GDScript: a native function throws
+  `state::NotPorted` where such a path starts, before any side effect, and the switch runs the GDScript body (shadow
+  mode counts the call as not ported). Slice 06 splits into 06a (the blocked-tile index and the resource nodes) and
+  06b (the rest, 164 / 2,444, almost nothing in AI matches). Order: 01, 06a, 04, 05, 03, 06b, 02, 07.
 
 **Slice 01, fog** (2026-10-21, branch `native-phase5-day`): `DayEngine.gd` hands sessions over as views; the day
 registry has `OverworldRules._normalize_fog_of_war` and its 54 functions (OverworldRules 17, ArtifactRules 20,
@@ -894,6 +900,13 @@ HeroProgressionRules 8 copied from Phase 1, OverworldLevelRules 7, HeroCommandRu
 4,047 calls, 0 mismatches; core suite in shadow mode 17/17, 182 calls, 0 mismatches; native mode against main on the
 six seeds identical (every daily digest and match record); core suite 17/17. One call on a 108x108 two-level map:
 12.8 ms in GDScript, 4.1 ms native.
+
+**Slice 06a, blocked tiles and resource nodes** (2026-10-21, branch `native-phase5-day`): the day registry adds
+`OverworldRules._build_blocked_tile_index` (it writes the cached scenery layers and the resolved-encounter set into the
+session's metadata) and `_normalize_resource_nodes`, with 31 more functions (OverworldRules 22, CommonMineRules 5,
+MineRules 3, NativeTransitRules 1). Ports that other ports share are in one file per script; their 63 functions shared
+with Phase 3 are on main (above). Checks: shadow on the six seeds 10,243 calls, 0 mismatches; native mode against main
+on the six seeds identical; core suite 17/17.
 
 ### Phase 6: match throughput
 

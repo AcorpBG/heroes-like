@@ -116174,7 +116174,7 @@
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Owner decision 2026-10-21: beside Phase 1 on branch native-phase5-day, merged once, G3 skipped, Windows only, lean checks. Inventory and boundary (transition doc, Phase 5): 440 functions / 6,020 lines reached; on l1 day processing 186 ms of a 1,408 ms day (closing normalize 106, _finalize_action_result 71); whole-state conversion 545 ms a day, so view and patch through the port bridge: two native calls per day around the AI turn plus normalize_overworld_state, sessions as views written back by DayEngine.gd, content from ContentService's cached documents. Switch HEROES_NATIVE_DAY, log HEROES_NATIVE_DAY_LOG, registry core/port/day_registry.cpp. Static closure of the reach (paths AI matches never run included): about 712 functions / 9,100 lines; slices port the whole closure of their entries and go in the order of their cost in AI matches: 01, 06, 05, 04, 03, 02, 07. A slice's functions are frozen from its start to the merge (AGENTS.md). _finalize_* in BattleRules waits for the Phase 1 merge.",
+      "notes": "Owner decision 2026-10-21: beside Phase 1 on branch native-phase5-day, merged once, G3 skipped, Windows only, lean checks. Inventory and boundary (transition doc, Phase 5): 440 functions / 6,020 lines reached; on l1 day processing 186 ms of a 1,408 ms day (closing normalize 106, _finalize_action_result 71); whole-state conversion 545 ms a day, so view and patch through the port bridge: two native calls per day around the AI turn plus normalize_overworld_state, sessions as views written back by DayEngine.gd, content from ContentService's cached documents. Switch HEROES_NATIVE_DAY, log HEROES_NATIVE_DAY_LOG, registry core/port/day_registry.cpp. Static closure of the reach (paths AI matches never run included): about 799 functions / 14,260 lines (712 / 9,100 first, corrected); slices port the paths AI matches run, and a path they never run throws state::NotPorted before any side effect so the switch runs the GDScript body. Order: 01, 06a, 04, 05, 03, 06b, 02, 07. A slice's functions are frozen from its start to the merge (AGENTS.md). _finalize_* in BattleRules waits for the Phase 1 merge.",
       "updatedAt": "2026-10-21T23:00:00Z"
     },
     {
@@ -116245,14 +116245,14 @@
     {
       "id": "native-rules-phase5-06-normalize-20261021",
       "title": "Native day processing 06: overworld normalize",
-      "status": "pending",
+      "status": "in_progress",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "The rest of normalize_overworld_state, 144/2,058 (OverworldRules 94/1,484, NativeTransitRules 13/205, ContentService 9/65, WaterTravelRules 3/65, HeroCommandRules 5/53, ArtifactRules 2/50, 8 more 18/136).",
+      "notes": "The rest of normalize_overworld_state, 144/2,058 (OverworldRules 94/1,484, NativeTransitRules 13/205, ContentService 9/65, WaterTravelRules 3/65, HeroCommandRules 5/53, ArtifactRules 2/50, 8 more 18/136), in two parts. 06a completed on the branch: _build_blocked_tile_index and _normalize_resource_nodes with 31 more functions; shadow on the six seeds 10,243 calls / 0 mismatches, native mode identical to main on the six seeds, core suite 17/17. 06b pending: the rest, static closure 164/2,444.",
       "updatedAt": "2026-10-21T21:00:00Z"
     },
     {
