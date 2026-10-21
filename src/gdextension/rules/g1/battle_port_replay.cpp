@@ -270,13 +270,13 @@ private:
 				const TypeRef element = read_type(reader, (header >> 16) & 3);
 				const uint32_t count = reader.u32() & 0x7FFFFFFF;
 				const uint32_t node = state_.new_array();
-				state_.array(node).element_type = element;
+				state_.array_node(node).element_type = element;
 				ValueList items;
 				items.reserve(count);
 				for (uint32_t index = 0; index < count; ++index) {
 					items.push_back(decode(reader));
 				}
-				state_.array(node).items = std::move(items);
+				state_.array_node(node).items = std::move(items);
 				return Value::of_ref(Kind::Array, node);
 			}
 			case DICTIONARY: {
@@ -284,8 +284,8 @@ private:
 				const TypeRef value_type = read_type(reader, (header >> 18) & 3);
 				const uint32_t count = reader.u32() & 0x7FFFFFFF;
 				const uint32_t node = state_.new_dict();
-				state_.dict(node).key_type = key_type;
-				state_.dict(node).value_type = value_type;
+				state_.dict_node(node).key_type = key_type;
+				state_.dict_node(node).value_type = value_type;
 				ValueList keys;
 				ValueList values;
 				keys.reserve(count);
@@ -294,8 +294,8 @@ private:
 					keys.push_back(decode(reader));
 					values.push_back(decode(reader));
 				}
-				state_.dict(node).keys = std::move(keys);
-				state_.dict(node).values = std::move(values);
+				state_.dict_node(node).keys = std::move(keys);
+				state_.dict_node(node).values = std::move(values);
 				return Value::of_ref(Kind::Dict, node);
 			}
 			case VECTOR2:

@@ -158,16 +158,17 @@ Value StateBridge::load_array(const Array &array, state::State &state) {
 	const uint32_t node = state.new_array();
 	array_nodes_.emplace(id, node);
 	source_arrays_.push_back(array);
-	state::ArrayNode &target = state.array(node);
+	state::ArrayNode &target = state.array_node(node);
 	if (array.is_typed()) {
 		target.element_type = register_type(array.get_typed_builtin(), array.get_typed_class_name(), array.get_typed_script());
+		state.set_type_builtin(target.element_type, static_cast<uint8_t>(array.get_typed_builtin()));
 	}
 	target.read_only = array.is_read_only();
 	const int64_t size = array.size();
 	target.items.resize(static_cast<size_t>(size));
 	for (int64_t index = 0; index < size; ++index) {
 		const Value item = load_value(array[index], state);
-		state.array(node).items[static_cast<size_t>(index)] = item;
+		state.array_node(node).items[static_cast<size_t>(index)] = item;
 	}
 	return Value::of_ref(Kind::Array, node);
 }
@@ -182,12 +183,14 @@ Value StateBridge::load_dict(const Dictionary &dict, state::State &state) {
 	const uint32_t node = state.new_dict();
 	dict_nodes_.emplace(id, node);
 	source_dicts_.push_back(dict);
-	state::DictNode &target = state.dict(node);
+	state::DictNode &target = state.dict_node(node);
 	if (dict.is_typed_key()) {
 		target.key_type = register_type(dict.get_typed_key_builtin(), dict.get_typed_key_class_name(), dict.get_typed_key_script());
+		state.set_type_builtin(target.key_type, static_cast<uint8_t>(dict.get_typed_key_builtin()));
 	}
 	if (dict.is_typed_value()) {
 		target.value_type = register_type(dict.get_typed_value_builtin(), dict.get_typed_value_class_name(), dict.get_typed_value_script());
+		state.set_type_builtin(target.value_type, static_cast<uint8_t>(dict.get_typed_value_builtin()));
 	}
 	target.read_only = dict.is_read_only();
 	const Array keys = dict.keys();
@@ -198,8 +201,8 @@ Value StateBridge::load_dict(const Dictionary &dict, state::State &state) {
 	for (int64_t index = 0; index < size; ++index) {
 		const Value key = load_value(keys[index], state);
 		const Value value = load_value(values[index], state);
-		state.dict(node).keys.push_back(key);
-		state.dict(node).values.push_back(value);
+		state.dict_node(node).keys.push_back(key);
+		state.dict_node(node).values.push_back(value);
 	}
 	return Value::of_ref(Kind::Dict, node);
 }
@@ -235,7 +238,7 @@ Value StateBridge::merge_value(const Variant &source, const Value &existing, sta
 			old_items = state.array(node).items;
 		} else {
 			node = state.new_array();
-			state.array(node).element_type = element_type;
+			state.array_node(node).element_type = element_type;
 		}
 		if (node >= array_taken_.size()) {
 			array_taken_.resize(node + 1, false);
@@ -249,8 +252,8 @@ Value StateBridge::merge_value(const Variant &source, const Value &existing, sta
 			const Value old_item = static_cast<size_t>(index) < old_items.size() ? old_items[static_cast<size_t>(index)] : Value();
 			items[static_cast<size_t>(index)] = merge_value(array[index], old_item, state);
 		}
-		state.array(node).items = std::move(items);
-		state.array(node).read_only = array.is_read_only();
+		state.array_node(node).items = std::move(items);
+		state.array_node(node).read_only = array.is_read_only();
 		return Value::of_ref(Kind::Array, node);
 	}
 	if (type == Variant::DICTIONARY) {
@@ -273,8 +276,8 @@ Value StateBridge::merge_value(const Variant &source, const Value &existing, sta
 			old.values = state.dict(node).values;
 		} else {
 			node = state.new_dict();
-			state.dict(node).key_type = key_type;
-			state.dict(node).value_type = value_type;
+			state.dict_node(node).key_type = key_type;
+			state.dict_node(node).value_type = value_type;
 		}
 		if (node >= dict_taken_.size()) {
 			dict_taken_.resize(node + 1, false);
@@ -295,9 +298,9 @@ Value StateBridge::merge_value(const Variant &source, const Value &existing, sta
 			new_keys[static_cast<size_t>(index)] = key;
 			new_values[static_cast<size_t>(index)] = merge_value(values[index], old_value, state);
 		}
-		state.dict(node).keys = std::move(new_keys);
-		state.dict(node).values = std::move(new_values);
-		state.dict(node).read_only = dict.is_read_only();
+		state.dict_node(node).keys = std::move(new_keys);
+		state.dict_node(node).values = std::move(new_values);
+		state.dict_node(node).read_only = dict.is_read_only();
 		return Value::of_ref(Kind::Dict, node);
 	}
 	return load_value(source, state);

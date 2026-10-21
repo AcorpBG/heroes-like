@@ -45,22 +45,28 @@ static func check(name: StringName, args: Array, result: Variant) -> void:
 	NativeRules.api().battle_port_check(name, args, result)
 
 ## Shadow, for a function that writes into its arguments: a copy of them as the
-## GDScript call finds them.
+## GDScript call finds them. A container reached twice is one copy, and a
+## RandomNumberGenerator or a session is copied too, so the native run changes
+## nothing GDScript holds.
 static func before_writing(args: Array) -> Array:
-	return args.duplicate(true)
+	return NativeRules.api().battle_port_copy(args)
 
 ## Shadow: runs the native port on before and checks that it returns GDScript's
 ## result and leaves before as the GDScript call left args.
 static func check_writing(name: StringName, before: Array, args: Array, result: Variant) -> void:
 	var native_result: Variant = NativeRules.api().battle_port_call(name, before, true)
-	var mismatch := ""
-	if var_to_bytes(native_result) != var_to_bytes(result):
-		mismatch = "result: " + _first_difference(native_result, result, "result")
-	elif var_to_bytes(before) != var_to_bytes(args):
-		mismatch = "arguments afterwards: " + _first_difference(before, args, "args")
+	var mismatch := _first_difference(native_result, result, "result")
+	if mismatch != "":
+		mismatch = "result: " + mismatch
+	else:
+		mismatch = _first_difference(before, args, "args")
+		if mismatch != "":
+			mismatch = "arguments afterwards: " + mismatch
 	NativeRules.api().battle_port_report(name, mismatch)
 
 static func _first_difference(native_value: Variant, gdscript_value: Variant, path: String) -> String:
+	if var_to_bytes(native_value) == var_to_bytes(gdscript_value):
+		return ""
 	if typeof(native_value) != typeof(gdscript_value):
 		return "%s: native %s %s, GDScript %s %s" % [path, type_string(typeof(native_value)), str(native_value), type_string(typeof(gdscript_value)), str(gdscript_value)]
 	if native_value is Array:
@@ -81,6 +87,17 @@ static func _first_difference(native_value: Variant, gdscript_value: Variant, pa
 			if found != "":
 				return found
 		return ""
-	if var_to_bytes(native_value) != var_to_bytes(gdscript_value):
-		return "%s: native %s, GDScript %s" % [path, str(native_value), str(gdscript_value)]
-	return ""
+	# Objects are copies on the native side: a RandomNumberGenerator matches by
+	# seed and state, a session by its script variables.
+	if native_value is RandomNumberGenerator and gdscript_value is RandomNumberGenerator:
+		if native_value.seed != gdscript_value.seed or native_value.state != gdscript_value.state:
+			return "%s: native seed %d state %d, GDScript seed %d state %d" % [path, native_value.seed, native_value.state, gdscript_value.seed, gdscript_value.state]
+		return ""
+	if native_value is Object and gdscript_value is Object and native_value.get_script() != null and native_value.get_script() == gdscript_value.get_script():
+		for property in native_value.get_property_list():
+			if int(property.usage) & PROPERTY_USAGE_SCRIPT_VARIABLE:
+				var found := _first_difference(native_value.get(property.name), gdscript_value.get(property.name), "%s.%s" % [path, property.name])
+				if found != "":
+					return found
+		return ""
+	return "%s: native %s, GDScript %s" % [path, str(native_value), str(gdscript_value)]

@@ -83,6 +83,9 @@ public:
 	Variant battle_port_call(const StringName &name, const Array &args, bool write_back);
 	String battle_port_check(const StringName &name, const Array &args, const Variant &gdscript_result);
 	void battle_port_report(const StringName &name, const String &mismatch);
+	// Shadow: the arguments of a function that writes into them, copied for its
+	// native run before GDScript runs (bridge::copy_for_shadow).
+	Array battle_port_copy(const Array &args);
 	// {name: {calls, checks, mismatches, errors}}, plus "unknown_calls" when a
 	// name was not in the registry. With HEROES_NATIVE_BATTLE_LOG set to a folder,
 	// the same goes to shadow_<pid>.json there, with the first mismatches and

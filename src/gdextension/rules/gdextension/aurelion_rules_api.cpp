@@ -116,6 +116,7 @@ void AurelionRules::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("battle_port_call", "name", "args", "write_back"), &AurelionRules::battle_port_call);
 	ClassDB::bind_method(D_METHOD("battle_port_check", "name", "args", "gdscript_result"), &AurelionRules::battle_port_check);
 	ClassDB::bind_method(D_METHOD("battle_port_report", "name", "mismatch"), &AurelionRules::battle_port_report);
+	ClassDB::bind_method(D_METHOD("battle_port_copy", "args"), &AurelionRules::battle_port_copy);
 	ClassDB::bind_method(D_METHOD("battle_port_stats"), &AurelionRules::battle_port_stats);
 }
 
@@ -573,6 +574,18 @@ void AurelionRules::battle_port_report(const StringName &name, const String &mis
 	} catch (...) {
 		report_port_failure("battle_port_report", "unknown native exception");
 	}
+}
+
+Array AurelionRules::battle_port_copy(const Array &args) {
+	try {
+		return aurelion::rules::bridge::copy_for_shadow(args);
+	} catch (const std::exception &error) {
+		report_port_failure("battle_port_copy", std::string("native exception: ") + error.what());
+	} catch (...) {
+		report_port_failure("battle_port_copy", "unknown native exception");
+	}
+	// The GDScript copy, so the shadow run goes on; the failure is reported.
+	return args.duplicate(true);
 }
 
 Dictionary AurelionRules::battle_port_stats() const {
