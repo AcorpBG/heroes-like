@@ -4,6 +4,8 @@ extends RefCounted
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const TownBattle = preload("res://scripts/core/TownBattleRules.gd")
+const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
+static var _battle_engine_mode: int = BattleEngine.mode
 
 const CONTEXT_OVERWORLD := "overworld"
 const CONTEXT_BATTLE := "battle"
@@ -1343,6 +1345,15 @@ static func battle_spell_target_check(
 			return {"ok": false, "message": "That battle spell effect is unsupported."}
 
 static func effect_bonus_for_kind(stack: Dictionary, battle: Dictionary, kind: String) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return effect_bonus_for_kind__gd(stack, battle, kind)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules.effect_bonus_for_kind", [stack, battle, kind])
+	var result = effect_bonus_for_kind__gd(stack, battle, kind)
+	BattleEngine.check(&"SpellRules.effect_bonus_for_kind", [stack, battle, kind], result)
+	return result
+
+static func effect_bonus_for_kind__gd(stack: Dictionary, battle: Dictionary, kind: String) -> int:
 	var total := 0
 	var current_round := int(battle.get("round", 1))
 	for effect in active_effects_for_round(stack, current_round):
@@ -1352,6 +1363,15 @@ static func effect_bonus_for_kind(stack: Dictionary, battle: Dictionary, kind: S
 	return total
 
 static func has_effect_id(stack: Dictionary, battle: Dictionary, effect_id: String) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return has_effect_id__gd(stack, battle, effect_id)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules.has_effect_id", [stack, battle, effect_id])
+	var result = has_effect_id__gd(stack, battle, effect_id)
+	BattleEngine.check(&"SpellRules.has_effect_id", [stack, battle, effect_id], result)
+	return result
+
+static func has_effect_id__gd(stack: Dictionary, battle: Dictionary, effect_id: String) -> bool:
 	if effect_id == "":
 		return false
 	var current_round := int(battle.get("round", 1))
@@ -1370,6 +1390,15 @@ static func has_effect_id(stack: Dictionary, battle: Dictionary, effect_id: Stri
 	return false
 
 static func has_any_effect_ids(stack: Dictionary, battle: Dictionary, effect_ids: Variant) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return has_any_effect_ids__gd(stack, battle, effect_ids)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules.has_any_effect_ids", [stack, battle, effect_ids])
+	var result = has_any_effect_ids__gd(stack, battle, effect_ids)
+	BattleEngine.check(&"SpellRules.has_any_effect_ids", [stack, battle, effect_ids], result)
+	return result
+
+static func has_any_effect_ids__gd(stack: Dictionary, battle: Dictionary, effect_ids: Variant) -> bool:
 	if not (effect_ids is Array):
 		return false
 	for effect_id_value in effect_ids:
@@ -1378,6 +1407,15 @@ static func has_any_effect_ids(stack: Dictionary, battle: Dictionary, effect_ids
 	return false
 
 static func normalize_status_immunity_ids(value: Variant) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return normalize_status_immunity_ids__gd(value)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules.normalize_status_immunity_ids", [value])
+	var result = normalize_status_immunity_ids__gd(value)
+	BattleEngine.check(&"SpellRules.normalize_status_immunity_ids", [value], result)
+	return result
+
+static func normalize_status_immunity_ids__gd(value: Variant) -> Array:
 	var ids := []
 	if value is Array:
 		for status_id_value in value:
@@ -1387,6 +1425,15 @@ static func normalize_status_immunity_ids(value: Variant) -> Array:
 	return ids
 
 static func normalize_blocked_status_ids(value: Variant) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return normalize_blocked_status_ids__gd(value)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules.normalize_blocked_status_ids", [value])
+	var result = normalize_blocked_status_ids__gd(value)
+	BattleEngine.check(&"SpellRules.normalize_blocked_status_ids", [value], result)
+	return result
+
+static func normalize_blocked_status_ids__gd(value: Variant) -> Array:
 	var ids := []
 	if value is Array:
 		for status_id_value in value:
@@ -1398,6 +1445,15 @@ static func normalize_blocked_status_ids(value: Variant) -> Array:
 	return ids
 
 static func normalize_school_resistance(value: Variant) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return normalize_school_resistance__gd(value)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules.normalize_school_resistance", [value])
+	var result = normalize_school_resistance__gd(value)
+	BattleEngine.check(&"SpellRules.normalize_school_resistance", [value], result)
+	return result
+
+static func normalize_school_resistance__gd(value: Variant) -> Dictionary:
 	var result := {}
 	if value is Dictionary:
 		for school_id_value in value.keys():
@@ -1504,6 +1560,15 @@ static func battle_spell_status_resolution(
 	return resolution
 
 static func active_effects_for_round(stack: Dictionary, round_number: int) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return active_effects_for_round__gd(stack, round_number)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules.active_effects_for_round", [stack, round_number])
+	var result = active_effects_for_round__gd(stack, round_number)
+	BattleEngine.check(&"SpellRules.active_effects_for_round", [stack, round_number], result)
+	return result
+
+static func active_effects_for_round__gd(stack: Dictionary, round_number: int) -> Array:
 	var effects = stack.get("effects", [])
 	if effects is Array and effects.is_empty():
 		return []
@@ -1630,6 +1695,15 @@ static func battle_spell_modifiers(spell: Dictionary) -> Dictionary:
 			return {}
 
 static func battle_spell_recoverable_health(stack: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return battle_spell_recoverable_health__gd(stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules.battle_spell_recoverable_health", [stack])
+	var result = battle_spell_recoverable_health__gd(stack)
+	BattleEngine.check(&"SpellRules.battle_spell_recoverable_health", [stack], result)
+	return result
+
+static func battle_spell_recoverable_health__gd(stack: Dictionary) -> int:
 	var current_health: int = max(0, int(stack.get("total_health", 0)))
 	if current_health <= 0:
 		return 0
@@ -2035,6 +2109,15 @@ static func _normalize_spell_ids(value: Variant) -> Array:
 	return ids
 
 static func _normalize_effects(value: Variant) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _normalize_effects__gd(value)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules._normalize_effects", [value])
+	var result = _normalize_effects__gd(value)
+	BattleEngine.check(&"SpellRules._normalize_effects", [value], result)
+	return result
+
+static func _normalize_effects__gd(value: Variant) -> Array:
 	var effects := []
 	if value is Array:
 		for effect in value:
@@ -2152,6 +2235,15 @@ static func _append_status_resolution_message(
 	return message
 
 static func _normalize_effect_modifiers(value: Variant) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _normalize_effect_modifiers__gd(value)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules._normalize_effect_modifiers", [value])
+	var result = _normalize_effect_modifiers__gd(value)
+	BattleEngine.check(&"SpellRules._normalize_effect_modifiers", [value], result)
+	return result
+
+static func _normalize_effect_modifiers__gd(value: Variant) -> Dictionary:
 	var modifiers := {}
 	if value is Dictionary:
 		for key in value.keys():

@@ -2,7 +2,8 @@
 
 // scripts/core/BattleRules.gd, ported function by function under the GDScript
 // names (docs/native-rules-engine-transition.md, Phase 1). Layer 1: hex
-// geometry and board reads.
+// geometry and board reads. Layer 2: the damage chain, the stat totals and
+// what they read.
 //
 // Not ported, with the reason:
 // - begin_board_read_scope, end_board_read_scope, _board_read_cache_get,
@@ -11,8 +12,9 @@
 // - _ensure_battle_hex_state: calls _default_stack_hex, _first_open_body_near
 //   and _hex_board_descriptor, which are not ported yet.
 // - _set_stack_hex: calls _presentation_walk_path and ActionPlayback.capture.
-// - _stack_is_isolated, _stack_is_hex_isolated: call _allied_melee_count
-//   (layer 2).
+// - _hero_payload_cache: the payload memo of _hero_payload_for_side. It is
+//   transparent (the payload depends only on the side's payload and commander
+//   state, which it compares), so the native call computes the payload.
 
 #include "aurelion_rules/port/gd.hpp"
 
@@ -63,5 +65,122 @@ void _sync_distance_from_hexes(State &state, DictRef battle);
 void _sync_occupied_hexes(State &state, DictRef battle);
 DictRef _walk_steps_to_target(State &state, DictRef battle, DictRef stack, DictRef target, int64_t gap);
 void _walk_open_mask(State &state, DictRef battle, DictRef stack, uint8_t *open);
+
+
+// Layer 2.
+
+// The commander payload: a side's hero payload, its specialty bonuses and
+// difficulty terms (commander_payload.cpp).
+bool _hero_has_trait(State &state, DictRef battle, Atom side, Atom trait_id);
+Value _hero_battle_traits(State &state, DictRef battle, Atom side);
+DictRef _hero_payload_for_side(State &state, DictRef battle, Atom side);
+DictRef _side_payload_with_commander_fallback(State &state, const Value &existing_payload_value, const Value &commander_state_value, Atom side);
+bool _has_battle_trait(State &state, const Value &traits, Atom trait_id);
+DictRef _enemy_hero_payload_from_state(State &state, DictRef hero_state, const Value &existing_payload, const Value &session);
+DictRef _hero_payload_from_state(State &state, DictRef hero_state, DictRef bonuses, const Value &session, Atom side);
+DictRef _merge_spell_school_resistance(State &state, const Value &left, const Value &right);
+ArrayRef _normalized_battle_traits(State &state, const Value &value);
+
+// The effect reads of a stack, the town assault effects and the damage rules'
+// multipliers (spell_effects.cpp).
+int64_t _side_positive_effect_count(State &state, DictRef battle, Atom side);
+bool _stack_has_positive_effect(State &state, DictRef stack, DictRef battle);
+
+// Abilities, battle tags, traits and the side counts the bonuses read
+// (ability_helpers.cpp).
+bool _stack_is_isolated(State &state, DictRef battle, DictRef stack);
+bool _stack_is_hex_isolated(State &state, DictRef battle, DictRef stack);
+bool _side_has_role_mix(State &state, DictRef battle, Atom side);
+int64_t _enemy_wounded_count(State &state, DictRef battle, Atom side);
+DictRef _side_resonance_relay(State &state, DictRef battle, Atom side);
+DictRef _charter_retaliation_aura_context(State &state, DictRef stack, DictRef battle);
+double _side_max_ability_float(State &state, DictRef battle, Atom side, Atom ability_id, Atom key, double default_value);
+bool _side_ability_bool(State &state, DictRef battle, Atom side, Atom ability_id, Atom key, bool default_value);
+DictRef _normalize_ability_modifiers(State &state, const Value &value);
+bool _battle_has_any_tags(State &state, DictRef battle, ArrayRef tags);
+DictRef _ability_by_id(State &state, DictRef stack, Atom ability_id);
+int64_t _side_max_ability_int(State &state, DictRef battle, Atom side, Atom ability_id, Atom key);
+int64_t _allied_melee_count(State &state, DictRef battle, Atom side);
+bool _battle_has_tag(State &state, DictRef battle, Atom tag);
+ArrayRef _side_ability_payloads(State &state, DictRef battle, Atom side, Atom ability_id);
+DictRef _authored_ability_by_id(State &state, DictRef stack, Atom ability_id);
+bool _brace_available(State &state, DictRef stack, DictRef battle);
+bool _brace_has_held_objective(State &state, DictRef stack, DictRef battle, DictRef brace);
+DictRef _bramble_ground_ability(State &state, DictRef stack);
+bool _bramble_ground_available(State &state, DictRef stack, DictRef battle, DictRef ability);
+DictRef _counter_ambush_flare_context(State &state, DictRef battle, DictRef protected_stack, Atom ambush_ability_id);
+DictRef _fog_screen_ability(State &state, DictRef stack);
+bool _fog_screen_available(State &state, DictRef stack, DictRef battle, DictRef ability);
+bool _has_ability(State &state, DictRef stack, Atom ability_id);
+bool _hookline_available(State &state, DictRef stack, DictRef battle);
+bool _reach_available(State &state, DictRef stack, DictRef battle);
+int64_t _side_defending_count(State &state, DictRef battle, Atom side);
+int64_t _side_max_authored_ability_int(State &state, DictRef battle, Atom side, Atom ability_id, Atom key);
+bool _volley_has_protected_lane(State &state, DictRef stack, DictRef battle, DictRef volley);
+bool _side_has_ability(State &state, DictRef battle, Atom side, Atom ability_id);
+bool _stack_is_anchor_side(State &state, DictRef stack, DictRef battle);
+bool _stack_is_assault_side(State &state, DictRef stack, DictRef battle);
+bool _side_has_linked_unit(State &state, DictRef battle, Atom side, const Value &unit_ids);
+Atom _capital_front_anchor_side(State &state, DictRef battle);
+Atom _capital_front_assault_side(State &state, DictRef battle);
+bool _is_town_defense_context(State &state, const Value &context);
+
+// The stat totals and their contextual, cohesion, momentum, faction and
+// field-objective bonuses (stat_totals.cpp).
+int64_t _stack_attack_total(State &state, DictRef stack, DictRef battle);
+int64_t _stack_defense_total(State &state, DictRef stack, DictRef battle);
+int64_t _stack_initiative_total(State &state, DictRef stack, DictRef battle);
+int64_t _stack_cohesion_total(State &state, DictRef stack, DictRef battle);
+int64_t _stack_momentum_total(State &state, DictRef stack, DictRef battle);
+DictRef _highest_momentum_stack_for_side(State &state, DictRef battle, Atom side);
+int64_t _reserve_wave_ready_round(State &state, DictRef battle, Atom side);
+bool _reserve_wave_is_active_for_side(State &state, DictRef battle, Atom side);
+Atom _field_objective_label(State &state, DictRef objective);
+int64_t _cohesion_attack_bonus(int64_t cohesion);
+int64_t _contextual_attack_bonus(State &state, DictRef stack, DictRef battle);
+int64_t _momentum_attack_bonus(int64_t momentum);
+int64_t _cohesion_defense_bonus(int64_t cohesion);
+int64_t _contextual_defense_bonus(State &state, DictRef stack, DictRef battle);
+int64_t _cohesion_initiative_bonus(int64_t cohesion);
+int64_t _contextual_initiative_bonus(State &state, DictRef stack, DictRef battle);
+int64_t _faction_initiative_bonus(State &state, DictRef stack, DictRef battle);
+int64_t _field_objective_initiative_bonus(State &state, DictRef stack, DictRef battle);
+int64_t _momentum_initiative_bonus(int64_t momentum);
+int64_t _contextual_cohesion_bonus(State &state, DictRef stack, DictRef battle);
+int64_t _contextual_momentum_bonus(State &state, DictRef stack, DictRef battle);
+bool _side_controls_field_objective_type(State &state, DictRef battle, Atom side, Atom objective_type);
+int64_t _field_objective_attack_bonus(State &state, DictRef stack, DictRef battle);
+int64_t _field_objective_defense_bonus(State &state, DictRef stack, DictRef battle);
+ArrayRef _field_objectives(State &state, DictRef battle);
+int64_t _field_objective_cohesion_bonus(State &state, DictRef stack, DictRef battle);
+int64_t _field_objective_momentum_bonus(State &state, DictRef stack, DictRef battle);
+
+// The damage multiplier chain (damage_modifiers.cpp).
+int64_t _damage_for_roll(State &state, DictRef attacker, DictRef defender, DictRef battle, int64_t base_roll, bool is_ranged, bool is_retaliation, int64_t attack_distance);
+double _damage_modifier(State &state, DictRef attacker, DictRef defender, DictRef battle, bool is_ranged, bool is_retaliation, int64_t attack_distance);
+double _ranged_damage_return_ratio(State &state, DictRef stack);
+double _ability_damage_modifier(State &state, DictRef attacker, DictRef defender, DictRef battle, bool is_ranged, bool is_retaliation, int64_t attack_distance);
+double _cohesion_damage_modifier(State &state, DictRef attacker, DictRef defender, DictRef battle, bool is_ranged, bool is_retaliation);
+double _commander_damage_modifier(State &state, DictRef attacker, DictRef defender, DictRef battle, bool is_ranged, int64_t attack_distance);
+double _faction_damage_modifier(State &state, DictRef attacker, DictRef defender, DictRef battle, bool is_ranged, int64_t attack_distance);
+double _field_objective_cover_damage_modifier(State &state, DictRef attacker, DictRef defender, DictRef battle, bool is_ranged, int64_t attack_distance);
+double _terrain_tag_damage_modifier(State &state, DictRef attacker, DictRef defender, DictRef battle, bool is_ranged, int64_t attack_distance);
+double _linked_ranged_attack_screen_multiplier(State &state, DictRef defender, DictRef battle);
+double _solar_array_lane_melee_multiplier(State &state, DictRef defender, DictRef battle);
+double _field_objective_commander_modifier(State &state, DictRef attacker, DictRef defender, DictRef battle);
+bool _stack_is_cover_screened(State &state, DictRef stack, DictRef battle);
+
+// The damage stream, damage application and the event log (damage_stream.cpp).
+int64_t _calculate_damage(State &state, DictRef attacker, DictRef defender, DictRef battle, const Value &rng, bool is_ranged, bool is_retaliation, int64_t attack_distance);
+void _apply_damage_to_stack(State &state, DictRef battle, Atom battle_id, int64_t damage);
+int64_t _restore_stack_health(State &state, DictRef battle, Atom battle_id, int64_t amount);
+int64_t _resolved_damage_seed(State &state, const Value &session, DictRef battle);
+void _ensure_damage_rng_state(State &state, const Value &session, DictRef battle);
+Value _damage_rng_for_battle(State &state, const Value &session);
+void _commit_damage_rng_roll(State &state, DictRef battle, const Value &rng);
+Atom _damage_rng_integrity(State &state, int64_t seed, Atom state_text, int64_t roll_count);
+void _record_event(State &state, DictRef battle, Atom message);
+void _initialize_damage_rng_state(State &state, const Value &session, DictRef battle);
+ArrayRef _normalize_recent_events(State &state, const Value &value);
 
 } // namespace aurelion::rules::port::battle_rules

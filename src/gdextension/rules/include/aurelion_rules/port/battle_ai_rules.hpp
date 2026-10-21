@@ -44,4 +44,21 @@ DictRef _stack_hex(State &state, DictRef stack);
 int64_t _stack_hex_distance(State &state, DictRef lhs, DictRef rhs);
 bool _stack_is_engaged(State &state, DictRef stack, DictRef battle);
 
+
+// Layer 2: the faction tags and the commander payload merge.
+
+// The commander payload: a side's hero payload, its specialty bonuses and
+// difficulty terms (commander_payload.cpp).
+DictRef _merged_commander_ai_payload(State &state, DictRef primary_payload, DictRef secondary_payload);
+bool _commander_payloads_can_merge(State &state, DictRef primary_payload, DictRef secondary_payload);
+DictRef _merge_commander_spellbooks_for_ai(State &state, DictRef merged, DictRef secondary_payload);
+ArrayRef _normalize_string_array(State &state, const Value &value);
+ArrayRef _commander_identity_tokens(State &state, DictRef payload);
+bool _commander_identity_tokens_match(State &state, Atom left_token, Atom right_token);
+
+// Abilities, battle tags, traits and the side counts the bonuses read
+// (ability_helpers.cpp).
+bool faction_brings_tag(State &state, DictRef stack, Atom tag);
+ArrayRef faction_brought_tags(State &state, DictRef stack);
+
 } // namespace aurelion::rules::port::battle_ai_rules

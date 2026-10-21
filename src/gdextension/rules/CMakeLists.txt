@@ -96,11 +96,17 @@ add_library(aurelion_rules_core STATIC
 	core/battle_state.cpp
 	core/build_info.cpp
 	core/compat/godot_string.cpp
+	core/port/ability_helpers.cpp
 	core/port/battle_ai_rules.cpp
 	core/port/battle_footprint.cpp
 	core/port/battle_rules.cpp
+	core/port/commander_payload.cpp
+	core/port/damage_modifiers.cpp
+	core/port/damage_stream.cpp
 	core/port/gd.cpp
 	core/port/registry.cpp
+	core/port/spell_effects.cpp
+	core/port/stat_totals.cpp
 )
 add_dependencies(aurelion_rules_core aurelion_rules_source_tree)
 target_include_directories(aurelion_rules_core PUBLIC include PRIVATE "${AURELION_RULES_GENERATED_DIR}")

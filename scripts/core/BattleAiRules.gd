@@ -142,6 +142,15 @@ static func _opposing_side__gd(side: String) -> String:
 ## (factions.json "brings_battlefield_tags"). A Veilmourn fleet brings its fog
 ## bank, and its own shooters fire through that fog without the penalty.
 static func faction_brought_tags(stack: Dictionary) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return faction_brought_tags__gd(stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleAiRules.faction_brought_tags", [stack])
+	var result = faction_brought_tags__gd(stack)
+	BattleEngine.check(&"BattleAiRules.faction_brought_tags", [stack], result)
+	return result
+
+static func faction_brought_tags__gd(stack: Dictionary) -> Array:
 	var faction_id := String(stack.get("faction_id", ""))
 	if faction_id == "":
 		return []
@@ -149,6 +158,15 @@ static func faction_brought_tags(stack: Dictionary) -> Array:
 	return tags if tags is Array else []
 
 static func faction_brings_tag(stack: Dictionary, tag: String) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return faction_brings_tag__gd(stack, tag)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleAiRules.faction_brings_tag", [stack, tag])
+	var result = faction_brings_tag__gd(stack, tag)
+	BattleEngine.check(&"BattleAiRules.faction_brings_tag", [stack, tag], result)
+	return result
+
+static func faction_brings_tag__gd(stack: Dictionary, tag: String) -> bool:
 	return faction_brought_tags(stack).has(tag)
 
 ## BattleRules, loaded when needed: it preloads this script, so this script
@@ -920,6 +938,15 @@ static func _enemy_hero_state_for_ai(battle: Dictionary, enemy_hero: Dictionary)
 	return {}
 
 static func _merged_commander_ai_payload(primary_payload: Dictionary, secondary_payload: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _merged_commander_ai_payload__gd(primary_payload, secondary_payload)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleAiRules._merged_commander_ai_payload", [primary_payload, secondary_payload])
+	var result = _merged_commander_ai_payload__gd(primary_payload, secondary_payload)
+	BattleEngine.check(&"BattleAiRules._merged_commander_ai_payload", [primary_payload, secondary_payload], result)
+	return result
+
+static func _merged_commander_ai_payload__gd(primary_payload: Dictionary, secondary_payload: Dictionary) -> Dictionary:
 	if primary_payload.is_empty():
 		return secondary_payload.duplicate(true)
 	if secondary_payload.is_empty():
@@ -957,6 +984,15 @@ static func _merged_commander_ai_payload(primary_payload: Dictionary, secondary_
 	return merged
 
 static func _commander_payloads_can_merge(primary_payload: Dictionary, secondary_payload: Dictionary) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _commander_payloads_can_merge__gd(primary_payload, secondary_payload)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleAiRules._commander_payloads_can_merge", [primary_payload, secondary_payload])
+	var result = _commander_payloads_can_merge__gd(primary_payload, secondary_payload)
+	BattleEngine.check(&"BattleAiRules._commander_payloads_can_merge", [primary_payload, secondary_payload], result)
+	return result
+
+static func _commander_payloads_can_merge__gd(primary_payload: Dictionary, secondary_payload: Dictionary) -> bool:
 	var primary_tokens := _commander_identity_tokens(primary_payload)
 	var secondary_tokens := _commander_identity_tokens(secondary_payload)
 	if primary_tokens.is_empty() or secondary_tokens.is_empty():
@@ -968,6 +1004,15 @@ static func _commander_payloads_can_merge(primary_payload: Dictionary, secondary
 	return false
 
 static func _commander_identity_tokens(payload: Dictionary) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _commander_identity_tokens__gd(payload)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleAiRules._commander_identity_tokens", [payload])
+	var result = _commander_identity_tokens__gd(payload)
+	BattleEngine.check(&"BattleAiRules._commander_identity_tokens", [payload], result)
+	return result
+
+static func _commander_identity_tokens__gd(payload: Dictionary) -> Array:
 	var tokens := []
 	for key in ["id", "roster_hero_id", "hero_id"]:
 		var token := String(payload.get(key, "")).strip_edges()
@@ -976,6 +1021,15 @@ static func _commander_identity_tokens(payload: Dictionary) -> Array:
 	return tokens
 
 static func _commander_identity_tokens_match(left_token: String, right_token: String) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _commander_identity_tokens_match__gd(left_token, right_token)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleAiRules._commander_identity_tokens_match", [left_token, right_token])
+	var result = _commander_identity_tokens_match__gd(left_token, right_token)
+	BattleEngine.check(&"BattleAiRules._commander_identity_tokens_match", [left_token, right_token], result)
+	return result
+
+static func _commander_identity_tokens_match__gd(left_token: String, right_token: String) -> bool:
 	if left_token == "" or right_token == "":
 		return false
 	if left_token == right_token:
@@ -983,6 +1037,16 @@ static func _commander_identity_tokens_match(left_token: String, right_token: St
 	return left_token.ends_with(":%s" % right_token) or right_token.ends_with(":%s" % left_token)
 
 static func _merge_commander_spellbooks_for_ai(merged: Dictionary, secondary_payload: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _merge_commander_spellbooks_for_ai__gd(merged, secondary_payload)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules._merge_commander_spellbooks_for_ai", [merged, secondary_payload])
+	var before := BattleEngine.before_writing([merged, secondary_payload])
+	var result = _merge_commander_spellbooks_for_ai__gd(merged, secondary_payload)
+	BattleEngine.check_writing(&"BattleAiRules._merge_commander_spellbooks_for_ai", before, [merged, secondary_payload], result)
+	return result
+
+static func _merge_commander_spellbooks_for_ai__gd(merged: Dictionary, secondary_payload: Dictionary) -> Dictionary:
 	var spellbook: Dictionary = merged.get("spellbook", {}) if merged.get("spellbook", {}) is Dictionary else {}
 	var secondary_spellbook: Dictionary = secondary_payload.get("spellbook", {}) if secondary_payload.get("spellbook", {}) is Dictionary else {}
 	if secondary_spellbook.is_empty():
@@ -4067,6 +4131,15 @@ static func _increment_count(counts: Dictionary, key: String) -> void:
 	counts[key] = int(counts.get(key, 0)) + 1
 
 static func _normalize_string_array(value: Variant) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _normalize_string_array__gd(value)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleAiRules._normalize_string_array", [value])
+	var result = _normalize_string_array__gd(value)
+	BattleEngine.check(&"BattleAiRules._normalize_string_array", [value], result)
+	return result
+
+static func _normalize_string_array__gd(value: Variant) -> Array:
 	var results := []
 	if value is Array:
 		for item in value:
