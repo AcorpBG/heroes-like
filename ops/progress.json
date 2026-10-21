@@ -115992,7 +115992,7 @@
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Gate G0 passed (owner, 2026-10-20). Owner decisions 2026-10-20: D8 one port branch native-phase1-battle, merged once, dropped if G1 stays under 5x after the interface fix; D5/D10 battle code frozen until 7 days after the merge, urgent fixes in GDScript on main and ported on the branch, main tagged before the merge; D6 tests on deleted private battle functions retired at the merge. Scope, order, checkpoint G1 and exit in docs/native-rules-engine-transition.md, Phase 1. The first slice measures the porting rate. Inventory (transition doc, Phase 1 results (first slice)): 565 functions / 10,278 lines run in fights, cut into child slices native-rules-phase1-01..11 in the doc's order; section 11 answered. Slice 01 completed: helpers, battle state, the HEROES_NATIVE_BATTLE switch and layer 1 at 0 shadow mismatches; next 02. Owner decision 2026-10-21: G1 projected on layer 1 first (slice 01b); the formal G1 follows layer 4. Slice 01b completed 2026-10-21: G1 projected on layer 1 after the value-layer speed-up, r 10.44-10.66 and S 9.12-9.88 when the State last held another resolve (r 5.59-5.65 and S 5.15-5.44 before); under 12.5, so the owner decides before slice 02. Slices 02, 03 and 04 completed 2026-10-21. Formal G1 after layer 4: S 3.47-4.98 on standard and the six seeds, under 5x (layers 2 and 4 at r about 4, layers 1 and 3 above 10); the owner decides the next step. Slice 04b (owner 2026-10-21) ported the GDScript memos layers 1-4 rely on: G1 on standard S 5.58-6.16, over 5x and under 10x (layers 1-4 r 6.22, 7.38, 5.18, 10.75); the owner decides. Owner decision 2026-10-21: slice 04c gives the board-read memo's native users a native cache, G1 on standard is re-measured with Phases 3 and 5 paused, then layer 5 starts whatever the number.",
+      "notes": "Gate G0 passed (owner, 2026-10-20). Owner decisions 2026-10-20: D8 one port branch native-phase1-battle, merged once, dropped if G1 stays under 5x after the interface fix; D5/D10 battle code frozen until 7 days after the merge, urgent fixes in GDScript on main and ported on the branch, main tagged before the merge; D6 tests on deleted private battle functions retired at the merge. Scope, order, checkpoint G1 and exit in docs/native-rules-engine-transition.md, Phase 1. The first slice measures the porting rate. Inventory (transition doc, Phase 1 results (first slice)): 565 functions / 10,278 lines run in fights, cut into child slices native-rules-phase1-01..11 in the doc's order; section 11 answered. Slice 01 completed: helpers, battle state, the HEROES_NATIVE_BATTLE switch and layer 1 at 0 shadow mismatches; next 02. Owner decision 2026-10-21: G1 projected on layer 1 first (slice 01b); the formal G1 follows layer 4. Slice 01b completed 2026-10-21: G1 projected on layer 1 after the value-layer speed-up, r 10.44-10.66 and S 9.12-9.88 when the State last held another resolve (r 5.59-5.65 and S 5.15-5.44 before); under 12.5, so the owner decides before slice 02. Slices 02, 03 and 04 completed 2026-10-21. Formal G1 after layer 4: S 3.47-4.98 on standard and the six seeds, under 5x (layers 2 and 4 at r about 4, layers 1 and 3 above 10); the owner decides the next step. Slice 04b (owner 2026-10-21) ported the GDScript memos layers 1-4 rely on: G1 on standard S 5.58-6.16, over 5x and under 10x (layers 1-4 r 6.22, 7.38, 5.18, 10.75); the owner decides. Owner decision 2026-10-21: slice 04c gives the board-read memo's native users a native cache, G1 on standard is re-measured with Phases 3 and 5 paused, then layer 5 starts whatever the number. Slice 04c completed 2026-10-21: the six board reads keep their answers in a native memo in the State; G1 on standard with no other load S 7.89-9.45, over 5x and under 10x (layers 1-4 r 13.73, 9.25, 17.69, 11.10). Slice 05 (layer 5) started.",
       "updatedAt": "2026-10-21T22:00:00Z"
     },
     {
@@ -116076,20 +116076,20 @@
     {
       "id": "native-rules-phase1-04c-native-board-cache-20261021",
       "title": "Native battle engine 04c: a native board-read cache, then G1 on standard with Phases 3 and 5 paused",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Owner decision 2026-10-21: replace the ported board-read cache with a native one (state change counter, no whole-array hashing, no deep copy; none where recomputing is cheaper), re-measure G1 on standard with Phases 3 and 5 paused, then go on to layer 5 whatever the number. Only the board-read memo's native users change (melee_approach_cells, _walk_steps_to_target, legal destinations, attack legality, the attack target ids, the walk mask); _hero_payload_cache, _presentation_queue_written, the scoring scope and the specialty catalog stay as in 04b. Games stay identical and a cache never changes a result; GDScript callers keep GDScript's memo, and the validating check states explicitly which GDScript memo statics the native side may leave unfilled.",
-      "updatedAt": "2026-10-21T22:00:00Z"
+      "notes": "Owner decision 2026-10-21: replace the ported board-read cache with a native one (state change counter, no whole-array hashing, no deep copy; none where recomputing is cheaper), re-measure G1 on standard with Phases 3 and 5 paused, then go on to layer 5 whatever the number. Only the board-read memo's native users change (melee_approach_cells, _walk_steps_to_target, legal destinations, attack legality, the attack target ids, the walk mask); _hero_payload_cache, _presentation_queue_written, the scoring scope and the specialty catalog stay as in 04b. Games stay identical and a cache never changes a result; GDScript callers keep GDScript's memo, and the validating check states explicitly which GDScript memo statics the native side may leave unfilled. Done: runtime on main 9746d75fa (State::memo_find and memo_keep, valid while the State's count of writes into watched nodes is unchanged; the battle table's gdscript_only and shared_memos lists, which gd::static_var and the validating check enforce). Branch native-phase1-battle: c50c63f62 port, 7cd5f6cca Windows binaries, 7027f1a5e warning fix. All six kinds kept (40 captures warm: all on 322.2 ms, destinations only 328.1, none 339.0). Shadow on the six seeds: 0 mismatches, 0 errors in 55,236,025 checks over 275 of 281 functions, 7,807,636 in the 101 writing functions. Native mode vs main: 415 daily digests and match records identical. Replay over the 82 standard captures: 0 mismatches with shared and fresh writers. Core suite 17/17 (Windows; Linux libraries not rebuilt). G1 on standard 2026-10-21 22:49-22:55, no other load (sampled): previous resolve r 8.97 / S 8.42, new State 8.38 / 7.89, same resolve 10.15 / 9.45, c 0.0073, r for 10x 10.79; layers 1-4 r 13.73, 9.25, 17.69, 11.10; every replay round 0 mismatches.",
+      "updatedAt": "2026-10-21T23:05:00Z"
     },
     {
       "id": "native-rules-phase1-05-attacks-abilities-20261020",
       "title": "Native battle engine 05: attacks and the abilities",
-      "status": "pending",
+      "status": "in_progress",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
@@ -116323,15 +116323,15 @@
     {
       "id": "native-rules-phase3-ai-targets-20261021",
       "title": "Native AiHeroRules._best_candidate and _gate_candidate (Phase 3)",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Owner decision 2026-10-21: port _vetted_candidate and _gate_candidate with the shared runtime on branch native-phase3-ai-targets, games identical, Windows only, lean checks. Started 2026-10-21: profile on main 37d547fac, six seeds: _vetted_candidate 20.5% of match time, _gate_candidate 6.7%; under them battle previews 8.4% (stay GDScript), _search 0.9%, scoring 17.8%. Native entries _best_candidate and _gate_candidate; static closure 445 functions, 7,188 lines, frozen until the merge. Shared helpers go to main unswitched, one owner each (coordination notes).",
-      "updatedAt": "2026-10-21T23:00:00Z"
+      "notes": "Owner decision 2026-10-21: port _vetted_candidate and _gate_candidate with the shared runtime on branch native-phase3-ai-targets, games identical, Windows only, lean checks. Profile on main 37d547fac, six seeds: _vetted_candidate 20.5% of match time, _gate_candidate 6.7%; battle previews 8.4% stay GDScript. Completed 2026-10-21 and merged (owner decision 2026-10-21: merged although whole games got no faster): _best_candidate, _gate_candidate and their static closure (445 functions) run in the rules library; AiHeroRules keeps 64 wrappers, 67 functions deleted; 313 closure functions keep a GDScript copy. Shadow mode on the six seeds 94,431,208 checks, 0 mismatches; parity identical 6/6; core suite 17/17. Six seeds 804/868/860/844 s (main, change, change, main, shared machine): the lazy bridge re-reads the session on every call (64 s of 141 s in 240M Dictionary reads on three seeds), so the gain needs Phase 4's once-per-turn load. Linux libraries wait for the Linux pass.",
+      "updatedAt": "2026-10-21T20:20:00Z"
     }
   ],
   "project": "heroes-like",

@@ -8,7 +8,7 @@
 
 #include "aurelion_rules/port/artifact_rules.hpp"
 #include "aurelion_rules/port/enemy_states.hpp"
-#include "aurelion_rules/port/hero_command_rules.hpp"
+#include "aurelion_rules/port/hero_command_rules_ai.hpp"
 #include "aurelion_rules/port/session_view.hpp"
 
 #include <string>

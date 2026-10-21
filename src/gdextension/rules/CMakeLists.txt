@@ -98,28 +98,67 @@ add_library(aurelion_rules_core STATIC
 	core/build_info.cpp
 	core/compat/godot_string.cpp
 	core/port/ai_hero_rules.cpp
+	core/port/ai_hero_rules_candidates.cpp
+	core/port/ai_hero_rules_defense.cpp
+	core/port/ai_hero_rules_entries.cpp
+	core/port/ai_hero_rules_knowledge.cpp
+	core/port/ai_hero_rules_power.cpp
+	core/port/ai_hero_rules_regions.cpp
+	core/port/ai_hero_rules_routes.cpp
+	core/port/ai_hero_rules_search.cpp
+	core/port/ai_hero_rules_sight.cpp
+	core/port/ai_hero_rules_surface.cpp
+	core/port/ai_hero_rules_values.cpp
+	core/port/ai_hero_rules_war.cpp
+	core/port/ai_port.cpp
+	core/port/ai_registry.cpp
 	core/port/artifact_rules.cpp
+	core/port/battle_damage_rules_ai.cpp
+	core/port/battle_rules_ai.cpp
 	core/port/common_mine_rules.cpp
+	core/port/content_service_ai.cpp
+	core/port/creature_dwelling_rules_ai.cpp
 	core/port/day_registry.cpp
 	core/port/difficulty_rules.cpp
+	core/port/difficulty_rules_ai.cpp
 	core/port/enemy_adventure_rules.cpp
+	core/port/enemy_adventure_rules_ai.cpp
 	core/port/enemy_states.cpp
 	core/port/enemy_turn_rules.cpp
 	core/port/fog.cpp
 	core/port/gd.cpp
 	core/port/hero_command_rules.cpp
+	core/port/hero_command_rules_ai.cpp
 	core/port/hero_commit.cpp
 	core/port/hero_progression_rules.cpp
 	core/port/mine_rules.cpp
+	core/port/mine_rules_ai.cpp
 	core/port/native_transit_rules.cpp
+	core/port/native_transit_rules_ai.cpp
 	core/port/overworld_level_rules.cpp
+	core/port/overworld_level_rules_ai.cpp
 	core/port/overworld_normalize.cpp
 	core/port/overworld_rules.cpp
+	core/port/overworld_rules_ai_economy.cpp
+	core/port/overworld_rules_ai_logistics.cpp
+	core/port/overworld_rules_ai_lookup.cpp
+	core/port/overworld_rules_ai_market.cpp
+	core/port/overworld_rules_ai_recovery.cpp
+	core/port/overworld_rules_ai_sites.cpp
+	core/port/overworld_rules_ai_towns.cpp
 	core/port/player_elimination.cpp
 	core/port/player_identity_rules.cpp
+	core/port/player_identity_rules_ai.cpp
 	core/port/registry_tables.cpp
+	core/port/resource_node_payload_rules_ai.cpp
 	core/port/scenario_evaluation.cpp
+	core/port/scenario_factory_ai.cpp
 	core/port/spell_rules.cpp
+	core/port/spell_rules_ai.cpp
+	core/port/town_development_rules_ai.cpp
+	core/port/town_rules_ai.cpp
+	core/port/visit_building_rules_ai.cpp
+	core/port/water_travel_rules_ai.cpp
 )
 add_dependencies(aurelion_rules_core aurelion_rules_source_tree)
 target_include_directories(aurelion_rules_core PUBLIC include PRIVATE "${AURELION_RULES_GENERATED_DIR}")

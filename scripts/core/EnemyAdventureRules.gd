@@ -4079,13 +4079,6 @@ static func _merge_strategy_dict(base: Dictionary, override: Dictionary) -> Dict
 			merged[String(key)] = value
 	return merged
 
-static func _find_artifact_by_placement(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
-	for index in range(session.overworld.get("artifact_nodes", []).size()):
-		var node = session.overworld.get("artifact_nodes", [])[index]
-		if node is Dictionary and String(node.get("placement_id", "")) == placement_id:
-			return {"index": index, "node": node}
-	return {"index": -1, "node": {}}
-
 static func _find_encounter_by_placement(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
 	for index in range(session.overworld.get("encounters", []).size()):
 		var encounter = session.overworld.get("encounters", [])[index]
