@@ -156,6 +156,16 @@ static func mana_state(hero_state: Dictionary) -> Dictionary:
 	return hero.get("spellbook", {}).get("mana", {})
 
 static func adjusted_spell_mana_cost(hero_state: Dictionary, spell: Variant) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return adjusted_spell_mana_cost__gd(hero_state, spell)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"SpellRules.adjusted_spell_mana_cost", [hero_state, spell])
+	var before := BattleEngine.before_writing(&"SpellRules.adjusted_spell_mana_cost", [hero_state, spell])
+	var result = adjusted_spell_mana_cost__gd(hero_state, spell)
+	BattleEngine.check_writing(&"SpellRules.adjusted_spell_mana_cost", before, [hero_state, spell], result)
+	return result
+
+static func adjusted_spell_mana_cost__gd(hero_state: Dictionary, spell: Variant) -> int:
 	var spell_dict: Dictionary = spell if spell is Dictionary else ContentService.get_spell(String(spell))
 	if spell_dict.is_empty():
 		return 0
@@ -273,15 +283,51 @@ static func spell_category_label(spell: Dictionary) -> String:
 	return "Unsorted Magic"
 
 static func spell_school_id(spell: Dictionary) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return spell_school_id__gd(spell)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules.spell_school_id", [spell])
+	var result = spell_school_id__gd(spell)
+	BattleEngine.check(&"SpellRules.spell_school_id", [spell], result)
+	return result
+
+static func spell_school_id__gd(spell: Dictionary) -> String:
 	return String(spell.get("school_id", ""))
 
 static func spell_tier(spell: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return spell_tier__gd(spell)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules.spell_tier", [spell])
+	var result = spell_tier__gd(spell)
+	BattleEngine.check(&"SpellRules.spell_tier", [spell], result)
+	return result
+
+static func spell_tier__gd(spell: Dictionary) -> int:
 	return int(spell.get("tier", 0))
 
 static func spell_primary_role(spell: Dictionary) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return spell_primary_role__gd(spell)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules.spell_primary_role", [spell])
+	var result = spell_primary_role__gd(spell)
+	BattleEngine.check(&"SpellRules.spell_primary_role", [spell], result)
+	return result
+
+static func spell_primary_role__gd(spell: Dictionary) -> String:
 	return String(spell.get("primary_role", ""))
 
 static func spell_role_categories(spell: Dictionary) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return spell_role_categories__gd(spell)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules.spell_role_categories", [spell])
+	var result = spell_role_categories__gd(spell)
+	BattleEngine.check(&"SpellRules.spell_role_categories", [spell], result)
+	return result
+
+static func spell_role_categories__gd(spell: Dictionary) -> Array:
 	return _normalize_string_array(spell.get("role_categories", []))
 
 static func spell_metadata_summary(spell: Dictionary) -> String:
@@ -347,6 +393,15 @@ static func spell_schema_report(spells: Array) -> Dictionary:
 	}
 
 static func battle_spell_behavior(spell: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return battle_spell_behavior__gd(spell)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules.battle_spell_behavior", [spell])
+	var result = battle_spell_behavior__gd(spell)
+	BattleEngine.check(&"SpellRules.battle_spell_behavior", [spell], result)
+	return result
+
+static func battle_spell_behavior__gd(spell: Dictionary) -> Dictionary:
 	if spell.is_empty() or String(spell.get("context", "")) != CONTEXT_BATTLE:
 		return {}
 	var effect = spell.get("effect", {})
@@ -1236,6 +1291,15 @@ static func resolve_battle_spell(
 			return {"ok": false, "hero": hero, "message": "That battle spell has no supported effect."}
 
 static func _battle_spell_ally_target(active_stack: Dictionary, target_stack: Dictionary, acting_side: String) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _battle_spell_ally_target__gd(active_stack, target_stack, acting_side)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules._battle_spell_ally_target", [active_stack, target_stack, acting_side])
+	var result = _battle_spell_ally_target__gd(active_stack, target_stack, acting_side)
+	BattleEngine.check(&"SpellRules._battle_spell_ally_target", [active_stack, target_stack, acting_side], result)
+	return result
+
+static func _battle_spell_ally_target__gd(active_stack: Dictionary, target_stack: Dictionary, acting_side: String) -> Dictionary:
 	if not target_stack.is_empty() and String(target_stack.get("side", "")) == acting_side:
 		return target_stack
 	return active_stack
@@ -1290,6 +1354,16 @@ static func validate_battle_spell(
 ## spell, whose turn it is and the mana. `hero` has been through
 ## ensure_hero_spellbook. Scoring every target of one spell checks this once.
 static func battle_spell_cast_check(hero: Dictionary, spell_dict: Dictionary, active_stack: Dictionary, acting_side: String) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return battle_spell_cast_check__gd(hero, spell_dict, active_stack, acting_side)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"SpellRules.battle_spell_cast_check", [hero, spell_dict, active_stack, acting_side])
+	var before := BattleEngine.before_writing(&"SpellRules.battle_spell_cast_check", [hero, spell_dict, active_stack, acting_side])
+	var result = battle_spell_cast_check__gd(hero, spell_dict, active_stack, acting_side)
+	BattleEngine.check_writing(&"SpellRules.battle_spell_cast_check", before, [hero, spell_dict, active_stack, acting_side], result)
+	return result
+
+static func battle_spell_cast_check__gd(hero: Dictionary, spell_dict: Dictionary, active_stack: Dictionary, acting_side: String) -> Dictionary:
 	if spell_dict.is_empty():
 		return {"ok": false, "message": "That spell is not known."}
 	if String(spell_dict.get("context", "")) != CONTEXT_BATTLE:
@@ -1302,7 +1376,17 @@ static func battle_spell_cast_check(hero: Dictionary, spell_dict: Dictionary, ac
 
 ## The rest of validate_battle_spell, for a spell that passed
 ## battle_spell_cast_check: whether target_stack is one it can be cast on.
-static func battle_spell_target_check(
+static func battle_spell_target_check(battle: Dictionary, active_stack: Dictionary, target_stack: Dictionary, spell_dict: Dictionary, acting_side: String) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return battle_spell_target_check__gd(battle, active_stack, target_stack, spell_dict, acting_side)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"SpellRules.battle_spell_target_check", [battle, active_stack, target_stack, spell_dict, acting_side])
+	var before := BattleEngine.before_writing(&"SpellRules.battle_spell_target_check", [battle, active_stack, target_stack, spell_dict, acting_side])
+	var result = battle_spell_target_check__gd(battle, active_stack, target_stack, spell_dict, acting_side)
+	BattleEngine.check_writing(&"SpellRules.battle_spell_target_check", before, [battle, active_stack, target_stack, spell_dict, acting_side], result)
+	return result
+
+static func battle_spell_target_check__gd(
 	battle: Dictionary,
 	active_stack: Dictionary,
 	target_stack: Dictionary,
@@ -1496,6 +1580,15 @@ static func target_is_immune_to_status__gd(target_stack: Dictionary, battle: Dic
 	return status_id != "" and status_id in stack_status_immunity_ids(target_stack, battle)
 
 static func spell_damage_resistance_pct(battle: Dictionary, target_stack: Dictionary, spell: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return spell_damage_resistance_pct__gd(battle, target_stack, spell)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules.spell_damage_resistance_pct", [battle, target_stack, spell])
+	var result = spell_damage_resistance_pct__gd(battle, target_stack, spell)
+	BattleEngine.check(&"SpellRules.spell_damage_resistance_pct", [battle, target_stack, spell], result)
+	return result
+
+static func spell_damage_resistance_pct__gd(battle: Dictionary, target_stack: Dictionary, spell: Dictionary) -> int:
 	var school_id := String(spell.get("school_id", ""))
 	var total := int(target_stack.get("spell_resistance_pct", 0))
 	total += TownBattle.spell_resistance(battle, target_stack)
@@ -1506,6 +1599,15 @@ static func spell_damage_resistance_pct(battle: Dictionary, target_stack: Dictio
 	return clamp(total, 0, MAX_SPELL_RESISTANCE_PCT)
 
 static func control_resistance_pct(battle: Dictionary, target_stack: Dictionary, spell: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return control_resistance_pct__gd(battle, target_stack, spell)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules.control_resistance_pct", [battle, target_stack, spell])
+	var result = control_resistance_pct__gd(battle, target_stack, spell)
+	BattleEngine.check(&"SpellRules.control_resistance_pct", [battle, target_stack, spell], result)
+	return result
+
+static func control_resistance_pct__gd(battle: Dictionary, target_stack: Dictionary, spell: Dictionary) -> int:
 	var school_id := String(spell.get("school_id", ""))
 	var total := int(target_stack.get("control_resistance_pct", 0))
 	total += int(normalize_school_resistance(target_stack.get("spell_school_resistance_pct", {})).get(school_id, 0))
@@ -1514,7 +1616,17 @@ static func control_resistance_pct(battle: Dictionary, target_stack: Dictionary,
 	total += int(normalize_school_resistance(hero.get("battle_school_resistance_pct", {})).get(school_id, 0))
 	return clamp(total, 0, MAX_CONTROL_RESISTANCE_PCT)
 
-static func battle_spell_damage_projection(
+static func battle_spell_damage_projection(hero_state: Dictionary, battle: Dictionary, target_stack: Dictionary, spell: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return battle_spell_damage_projection__gd(hero_state, battle, target_stack, spell)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"SpellRules.battle_spell_damage_projection", [hero_state, battle, target_stack, spell])
+	var before := BattleEngine.before_writing(&"SpellRules.battle_spell_damage_projection", [hero_state, battle, target_stack, spell])
+	var result = battle_spell_damage_projection__gd(hero_state, battle, target_stack, spell)
+	BattleEngine.check_writing(&"SpellRules.battle_spell_damage_projection", before, [hero_state, battle, target_stack, spell], result)
+	return result
+
+static func battle_spell_damage_projection__gd(
 	hero_state: Dictionary,
 	battle: Dictionary,
 	target_stack: Dictionary,
@@ -1531,7 +1643,17 @@ static func battle_spell_damage_projection(
 		"prevented_damage": max(0, raw_damage - final_damage),
 	}
 
-static func battle_spell_status_resolution(
+static func battle_spell_status_resolution(battle: Dictionary, active_stack: Dictionary, target_stack: Dictionary, spell: Dictionary, effect_payload: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return battle_spell_status_resolution__gd(battle, active_stack, target_stack, spell, effect_payload)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"SpellRules.battle_spell_status_resolution", [battle, active_stack, target_stack, spell, effect_payload])
+	var before := BattleEngine.before_writing(&"SpellRules.battle_spell_status_resolution", [battle, active_stack, target_stack, spell, effect_payload])
+	var result = battle_spell_status_resolution__gd(battle, active_stack, target_stack, spell, effect_payload)
+	BattleEngine.check_writing(&"SpellRules.battle_spell_status_resolution", before, [battle, active_stack, target_stack, spell, effect_payload], result)
+	return result
+
+static func battle_spell_status_resolution__gd(
 	battle: Dictionary,
 	active_stack: Dictionary,
 	target_stack: Dictionary,
@@ -1687,6 +1809,16 @@ static func build_battle_effect__gd(
 ## spell's buffs, debuffs and riders one round longer, up to
 ## MAX_POWER_EXTRA_ROUNDS extra rounds.
 static func spell_duration_bonus(hero_state: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return spell_duration_bonus__gd(hero_state)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"SpellRules.spell_duration_bonus", [hero_state])
+	var before := BattleEngine.before_writing(&"SpellRules.spell_duration_bonus", [hero_state])
+	var result = spell_duration_bonus__gd(hero_state)
+	BattleEngine.check_writing(&"SpellRules.spell_duration_bonus", before, [hero_state], result)
+	return result
+
+static func spell_duration_bonus__gd(hero_state: Dictionary) -> int:
 	return mini(MAX_POWER_EXTRA_ROUNDS, spell_power(hero_state) / POWER_PER_EXTRA_ROUND)
 
 ## A battle spell effect's rounds: its own, the power bonus, and the caster's
@@ -1694,6 +1826,16 @@ static func spell_duration_bonus(hero_state: Dictionary) -> int:
 ## mastery). `kind` is "buff" for effects on allies, "debuff" for control
 ## effects and damage riders.
 static func spell_duration_rounds(hero_state: Dictionary, base_rounds: Variant, spell: Dictionary = {}, kind: String = "buff") -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return spell_duration_rounds__gd(hero_state, base_rounds, spell, kind)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"SpellRules.spell_duration_rounds", [hero_state, base_rounds, spell, kind])
+	var before := BattleEngine.before_writing(&"SpellRules.spell_duration_rounds", [hero_state, base_rounds, spell, kind])
+	var result = spell_duration_rounds__gd(hero_state, base_rounds, spell, kind)
+	BattleEngine.check_writing(&"SpellRules.spell_duration_rounds", before, [hero_state, base_rounds, spell, kind], result)
+	return result
+
+static func spell_duration_rounds__gd(hero_state: Dictionary, base_rounds: Variant, spell: Dictionary = {}, kind: String = "buff") -> int:
 	var rounds: int = max(1, int(base_rounds)) + spell_duration_bonus(hero_state)
 	var bonuses := HeroProgressionRulesScript.aggregate_bonuses(hero_state)
 	rounds += int(bonuses.get("debuff_duration_bonus" if kind == "debuff" else "buff_duration_bonus", 0))
@@ -1702,11 +1844,30 @@ static func spell_duration_rounds(hero_state: Dictionary, base_rounds: Variant, 
 
 ## The caster's spell power: command power plus specialty spell power.
 static func spell_power(hero_state: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return spell_power__gd(hero_state)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"SpellRules.spell_power", [hero_state])
+	var before := BattleEngine.before_writing(&"SpellRules.spell_power", [hero_state])
+	var result = spell_power__gd(hero_state)
+	BattleEngine.check_writing(&"SpellRules.spell_power", before, [hero_state], result)
+	return result
+
+static func spell_power__gd(hero_state: Dictionary) -> int:
 	var command = hero_state.get("command", {})
 	var power: int = max(0, int(command.get("power", 0))) if command is Dictionary else 0
 	return power + max(0, int(HeroProgressionRulesScript.aggregate_bonuses(hero_state).get("battle_power", 0)))
 
 static func _school_bonus(bonuses: Dictionary, key: String, spell: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _school_bonus__gd(bonuses, key, spell)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules._school_bonus", [bonuses, key, spell])
+	var result = _school_bonus__gd(bonuses, key, spell)
+	BattleEngine.check(&"SpellRules._school_bonus", [bonuses, key, spell], result)
+	return result
+
+static func _school_bonus__gd(bonuses: Dictionary, key: String, spell: Dictionary) -> int:
 	var by_school = bonuses.get(key, {})
 	if not (by_school is Dictionary) or spell.is_empty():
 		return 0
@@ -1714,6 +1875,16 @@ static func _school_bonus(bonuses: Dictionary, key: String, spell: Dictionary) -
 
 ## Makes `effect` last `turns_left` turns of the stack it lands on.
 static func _counted_in_turns(effect: Dictionary, turns: int) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _counted_in_turns__gd(effect, turns)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"SpellRules._counted_in_turns", [effect, turns])
+	var before := BattleEngine.before_writing(&"SpellRules._counted_in_turns", [effect, turns])
+	var result = _counted_in_turns__gd(effect, turns)
+	BattleEngine.check_writing(&"SpellRules._counted_in_turns", before, [effect, turns], result)
+	return result
+
+static func _counted_in_turns__gd(effect: Dictionary, turns: int) -> Dictionary:
 	effect["turns_left"] = maxi(1, turns)
 	effect["expires_after_round"] = TURN_EFFECT_ROUND_SENTINEL
 	return effect
@@ -1726,6 +1897,15 @@ static func _turns_label(turns: int) -> String:
 	return "its next turn" if turns == 1 else "its next %d turns" % turns
 
 static func battle_spell_modifiers(spell: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return battle_spell_modifiers__gd(spell)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules.battle_spell_modifiers", [spell])
+	var result = battle_spell_modifiers__gd(spell)
+	BattleEngine.check(&"SpellRules.battle_spell_modifiers", [spell], result)
+	return result
+
+static func battle_spell_modifiers__gd(spell: Dictionary) -> Dictionary:
 	var effect = spell.get("effect", {})
 	match String(effect.get("type", "")):
 		"defense_buff":
@@ -1759,6 +1939,16 @@ static func battle_spell_recoverable_health__gd(stack: Dictionary) -> int:
 	return max(0, (living_creatures * unit_hp) - current_health)
 
 static func _effect_payload(spell: Dictionary, effect: Dictionary, battle: Dictionary, hero_state: Dictionary = {}) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _effect_payload__gd(spell, effect, battle, hero_state)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"SpellRules._effect_payload", [spell, effect, battle, hero_state])
+	var before := BattleEngine.before_writing(&"SpellRules._effect_payload", [spell, effect, battle, hero_state])
+	var result = _effect_payload__gd(spell, effect, battle, hero_state)
+	BattleEngine.check_writing(&"SpellRules._effect_payload", before, [spell, effect, battle, hero_state], result)
+	return result
+
+static func _effect_payload__gd(spell: Dictionary, effect: Dictionary, battle: Dictionary, hero_state: Dictionary = {}) -> Dictionary:
 	var modifiers := battle_spell_modifiers(spell)
 	return _counted_in_turns(build_battle_effect(
 		"spell:%s:%s" % [String(spell.get("id", "")), String(effect.get("type", ""))],
@@ -2120,6 +2310,15 @@ static func _increment_count(counts: Dictionary, key: String) -> void:
 	counts[normalized_key] = int(counts.get(normalized_key, 0)) + 1
 
 static func _normalize_string_array(value: Variant) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _normalize_string_array__gd(value)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules._normalize_string_array", [value])
+	var result = _normalize_string_array__gd(value)
+	BattleEngine.check(&"SpellRules._normalize_string_array", [value], result)
+	return result
+
+static func _normalize_string_array__gd(value: Variant) -> Array:
 	var results := []
 	if value is Array:
 		for entry in value:
@@ -2202,6 +2401,15 @@ static func _normalize_effects__gd(value: Variant) -> Array:
 	return effects
 
 static func _hero_payload_for_target_side(battle: Dictionary, target_stack: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _hero_payload_for_target_side__gd(battle, target_stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules._hero_payload_for_target_side", [battle, target_stack])
+	var result = _hero_payload_for_target_side__gd(battle, target_stack)
+	BattleEngine.check(&"SpellRules._hero_payload_for_target_side", [battle, target_stack], result)
+	return result
+
+static func _hero_payload_for_target_side__gd(battle: Dictionary, target_stack: Dictionary) -> Dictionary:
 	var side := String(target_stack.get("side", ""))
 	match side:
 		"player":
@@ -2223,7 +2431,17 @@ static func _hero_payload_for_target_side(battle: Dictionary, target_stack: Dict
 ## advancing it: a preview only peeks, and a cast commits "rng_state" (see
 ## BattleRules._commit_spell_resistance_roll). Battles without a seed, such as
 ## test fixtures, fall back to a hash of the cast.
-static func _status_resistance_roll(
+static func _status_resistance_roll(battle: Dictionary, active_stack: Dictionary, target_stack: Dictionary, spell: Dictionary, status_id: String) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _status_resistance_roll__gd(battle, active_stack, target_stack, spell, status_id)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"SpellRules._status_resistance_roll", [battle, active_stack, target_stack, spell, status_id])
+	var before := BattleEngine.before_writing(&"SpellRules._status_resistance_roll", [battle, active_stack, target_stack, spell, status_id])
+	var result = _status_resistance_roll__gd(battle, active_stack, target_stack, spell, status_id)
+	BattleEngine.check_writing(&"SpellRules._status_resistance_roll", before, [battle, active_stack, target_stack, spell, status_id], result)
+	return result
+
+static func _status_resistance_roll__gd(
 	battle: Dictionary,
 	active_stack: Dictionary,
 	target_stack: Dictionary,
@@ -2248,6 +2466,16 @@ static func _status_resistance_roll(
 	}
 
 static func _battle_stream_rng(battle: Dictionary) -> RandomNumberGenerator:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _battle_stream_rng__gd(battle)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"SpellRules._battle_stream_rng", [battle])
+	var before := BattleEngine.before_writing(&"SpellRules._battle_stream_rng", [battle])
+	var result = _battle_stream_rng__gd(battle)
+	BattleEngine.check_writing(&"SpellRules._battle_stream_rng", before, [battle], result)
+	return result
+
+static func _battle_stream_rng__gd(battle: Dictionary) -> RandomNumberGenerator:
 	var seed := int(battle.get("combat_seed", 0))
 	var state_text := String(battle.get(BATTLE_RNG_STATE_KEY, "")).strip_edges()
 	if seed == 0 and not state_text.is_valid_int():
@@ -2260,12 +2488,30 @@ static func _battle_stream_rng(battle: Dictionary) -> RandomNumberGenerator:
 	return rng
 
 static func _stable_percent(parts: Array) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _stable_percent__gd(parts)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules._stable_percent", [parts])
+	var result = _stable_percent__gd(parts)
+	BattleEngine.check(&"SpellRules._stable_percent", [parts], result)
+	return result
+
+static func _stable_percent__gd(parts: Array) -> int:
 	var text_parts := []
 	for part in parts:
 		text_parts.append(str(part))
 	return posmod(hash(text_parts), 100)
 
-static func _append_status_resolution_message(
+static func _append_status_resolution_message(message: String, target_stack: Dictionary, effect_payload: Dictionary, status_resolution: Dictionary) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _append_status_resolution_message__gd(message, target_stack, effect_payload, status_resolution)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules._append_status_resolution_message", [message, target_stack, effect_payload, status_resolution])
+	var result = _append_status_resolution_message__gd(message, target_stack, effect_payload, status_resolution)
+	BattleEngine.check(&"SpellRules._append_status_resolution_message", [message, target_stack, effect_payload, status_resolution], result)
+	return result
+
+static func _append_status_resolution_message__gd(
 	message: String,
 	target_stack: Dictionary,
 	effect_payload: Dictionary,
@@ -2301,12 +2547,31 @@ static func _normalize_effect_modifiers__gd(value: Variant) -> Dictionary:
 	return modifiers
 
 static func _spell_effect_modifiers(effect: Dictionary, default_kind: String, default_amount: int) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _spell_effect_modifiers__gd(effect, default_kind, default_amount)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules._spell_effect_modifiers", [effect, default_kind, default_amount])
+	var result = _spell_effect_modifiers__gd(effect, default_kind, default_amount)
+	BattleEngine.check(&"SpellRules._spell_effect_modifiers", [effect, default_kind, default_amount], result)
+	return result
+
+static func _spell_effect_modifiers__gd(effect: Dictionary, default_kind: String, default_amount: int) -> Dictionary:
 	var modifiers = effect.get("modifiers", {})
 	if modifiers is Dictionary and not modifiers.is_empty():
 		return _normalize_effect_modifiers(modifiers)
 	return _normalize_effect_modifiers({default_kind: max(1, default_amount)})
 
 static func _status_effect_from_spell_effect(spell: Dictionary, battle: Dictionary, hero_state: Dictionary = {}) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _status_effect_from_spell_effect__gd(spell, battle, hero_state)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"SpellRules._status_effect_from_spell_effect", [spell, battle, hero_state])
+	var before := BattleEngine.before_writing(&"SpellRules._status_effect_from_spell_effect", [spell, battle, hero_state])
+	var result = _status_effect_from_spell_effect__gd(spell, battle, hero_state)
+	BattleEngine.check_writing(&"SpellRules._status_effect_from_spell_effect", before, [spell, battle, hero_state], result)
+	return result
+
+static func _status_effect_from_spell_effect__gd(spell: Dictionary, battle: Dictionary, hero_state: Dictionary = {}) -> Dictionary:
 	var status_effect = spell.get("effect", {}).get("status_effect", {})
 	if not (status_effect is Dictionary) or status_effect.is_empty():
 		return {}
@@ -2325,6 +2590,16 @@ static func _status_effect_from_spell_effect(spell: Dictionary, battle: Dictiona
 	), spell_duration_rounds(hero_state, status_effect.get("duration_rounds", 1), spell, "debuff"))
 
 static func _battle_spell_damage(hero_state: Dictionary, spell: Dictionary, target_stack: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _battle_spell_damage__gd(hero_state, spell, target_stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"SpellRules._battle_spell_damage", [hero_state, spell, target_stack])
+	var before := BattleEngine.before_writing(&"SpellRules._battle_spell_damage", [hero_state, spell, target_stack])
+	var result = _battle_spell_damage__gd(hero_state, spell, target_stack)
+	BattleEngine.check_writing(&"SpellRules._battle_spell_damage", before, [hero_state, spell, target_stack], result)
+	return result
+
+static func _battle_spell_damage__gd(hero_state: Dictionary, spell: Dictionary, target_stack: Dictionary) -> int:
 	var effect = spell.get("effect", {})
 	var damage := int(max(1, int(effect.get("base_damage", 0)) + (spell_power(hero_state) * int(effect.get("power_scale", 0)))))
 	if _wounded_bonus_applies(effect, target_stack):
@@ -2334,6 +2609,15 @@ static func _battle_spell_damage(hero_state: Dictionary, spell: Dictionary, targ
 	return max(1, damage + damage * potency / 100)
 
 static func _wounded_bonus_applies(effect: Dictionary, target_stack: Dictionary) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _wounded_bonus_applies__gd(effect, target_stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules._wounded_bonus_applies", [effect, target_stack])
+	var result = _wounded_bonus_applies__gd(effect, target_stack)
+	BattleEngine.check(&"SpellRules._wounded_bonus_applies", [effect, target_stack], result)
+	return result
+
+static func _wounded_bonus_applies__gd(effect: Dictionary, target_stack: Dictionary) -> bool:
 	if target_stack.is_empty():
 		return false
 	var bonus_damage := int(effect.get("wounded_bonus_damage", 0))
@@ -2343,6 +2627,16 @@ static func _wounded_bonus_applies(effect: Dictionary, target_stack: Dictionary)
 	return _health_ratio(target_stack) <= threshold
 
 static func _battle_spell_recovery_amount(hero_state: Dictionary, spell: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _battle_spell_recovery_amount__gd(hero_state, spell)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"SpellRules._battle_spell_recovery_amount", [hero_state, spell])
+	var before := BattleEngine.before_writing(&"SpellRules._battle_spell_recovery_amount", [hero_state, spell])
+	var result = _battle_spell_recovery_amount__gd(hero_state, spell)
+	BattleEngine.check_writing(&"SpellRules._battle_spell_recovery_amount", before, [hero_state, spell], result)
+	return result
+
+static func _battle_spell_recovery_amount__gd(hero_state: Dictionary, spell: Dictionary) -> int:
 	var effect = spell.get("effect", {})
 	var amount: int = max(1, int(effect.get("base_restore", effect.get("amount", 0))) + (spell_power(hero_state) * int(effect.get("power_scale", 0))))
 	var potency := _school_bonus(HeroProgressionRulesScript.aggregate_bonuses(hero_state), "school_potency_pct", spell)
@@ -2392,6 +2686,15 @@ static func _signed_modifier_label(amount: int) -> String:
 	return "%d" % amount
 
 static func _has_mana(hero_state: Dictionary, cost: int) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _has_mana__gd(hero_state, cost)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules._has_mana", [hero_state, cost])
+	var result = _has_mana__gd(hero_state, cost)
+	BattleEngine.check(&"SpellRules._has_mana", [hero_state, cost], result)
+	return result
+
+static func _has_mana__gd(hero_state: Dictionary, cost: int) -> bool:
 	return int(hero_state.get("spellbook", {}).get("mana", {}).get("current", 0)) >= max(0, cost)
 
 static func _consume_mana(hero_state: Dictionary, cost: int) -> Dictionary:
@@ -2404,6 +2707,15 @@ static func _consume_mana(hero_state: Dictionary, cost: int) -> Dictionary:
 	return hero
 
 static func _knows_spell(hero_state: Dictionary, spell_id: String) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _knows_spell__gd(hero_state, spell_id)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules._knows_spell", [hero_state, spell_id])
+	var result = _knows_spell__gd(hero_state, spell_id)
+	BattleEngine.check(&"SpellRules._knows_spell", [hero_state, spell_id], result)
+	return result
+
+static func _knows_spell__gd(hero_state: Dictionary, spell_id: String) -> bool:
 	for known_spell_id in hero_state.get("spellbook", {}).get("known_spell_ids", []):
 		if String(known_spell_id) == spell_id:
 			return true
@@ -2435,6 +2747,15 @@ static func _alive_stacks_for_side(battle: Dictionary, side: String) -> Array:
 ## Living creatures in a battle stack, as BattleRules._alive_count: battle
 ## stacks keep base_count, unit_hp and total_health, not an army "count".
 static func _alive_count(stack: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _alive_count__gd(stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules._alive_count", [stack])
+	var result = _alive_count__gd(stack)
+	BattleEngine.check(&"SpellRules._alive_count", [stack], result)
+	return result
+
+static func _alive_count__gd(stack: Dictionary) -> int:
 	var unit_hp: int = max(1, int(stack.get("unit_hp", 1)))
 	return int(ceil(float(max(0, int(stack.get("total_health", 0)))) / float(unit_hp)))
 
@@ -2446,6 +2767,15 @@ static func _side_has_any_ability(battle: Dictionary, side: String, ability_ids:
 	return false
 
 static func _health_ratio(stack: Dictionary) -> float:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _health_ratio__gd(stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules._health_ratio", [stack])
+	var result = _health_ratio__gd(stack)
+	BattleEngine.check(&"SpellRules._health_ratio", [stack], result)
+	return result
+
+static func _health_ratio__gd(stack: Dictionary) -> float:
 	if stack.is_empty():
 		return 0.0
 	# Measured against the stack's starting size, as BattleRules._health_ratio.

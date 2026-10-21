@@ -163,7 +163,9 @@ add_library(aurelion_rules_core STATIC
 	core/port/resource_node_payload_rules_ai.cpp
 	core/port/round_effects.cpp
 	core/port/scenario_factory_ai.cpp
+	core/port/spell_battle.cpp
 	core/port/spell_effects.cpp
+	core/port/spell_events.cpp
 	core/port/spell_rules.cpp
 	core/port/spell_rules_ai.cpp
 	core/port/stack_effects.cpp

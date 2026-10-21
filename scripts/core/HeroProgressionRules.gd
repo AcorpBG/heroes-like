@@ -510,6 +510,16 @@ static func mana_max_bonus(hero_state: Dictionary) -> int:
 	return int(aggregate_bonuses(hero_state).get("max_mana", 0))
 
 static func adjusted_mana_cost(hero_state: Dictionary, base_cost: int, school_id: String = "") -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return adjusted_mana_cost__gd(hero_state, base_cost, school_id)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"HeroProgressionRules.adjusted_mana_cost", [hero_state, base_cost, school_id])
+	var before := BattleEngine.before_writing(&"HeroProgressionRules.adjusted_mana_cost", [hero_state, base_cost, school_id])
+	var result = adjusted_mana_cost__gd(hero_state, base_cost, school_id)
+	BattleEngine.check_writing(&"HeroProgressionRules.adjusted_mana_cost", before, [hero_state, base_cost, school_id], result)
+	return result
+
+static func adjusted_mana_cost__gd(hero_state: Dictionary, base_cost: int, school_id: String = "") -> int:
 	var bonuses := aggregate_bonuses(hero_state)
 	var discount := int(bonuses.get("mana_cost_discount", 0))
 	var school_discounts = bonuses.get("school_mana_discount", {})

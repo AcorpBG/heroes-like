@@ -6,7 +6,7 @@
 // what they read. Layers 3 and 4: movement and targeting, turn order and
 // effects. Layer 5: the attack and ability effects, damage pressure and the
 // attack events. Layers 6 and 7: the pressure of an advance and a defend, the
-// melee approach and the town assault check.
+// melee approach and the town assault check. Layer 8: a spell's battle events.
 //
 // _hero_payload_cache and _presentation_queue_written are GDScript's static
 // vars, read and written through the host (gd::static_var) as the GDScript
@@ -30,6 +30,9 @@
 //   slice 10. They end in _complete_action or _complete_enemy_action, which
 //   call _evaluate_outcome and the _finalize_* functions that stay GDScript in
 //   Phase 1.
+// - cast_player_spell and _cast_enemy_spell, the casts themselves: slice 10.
+//   The player's cast ends in _complete_action, the enemy's reaches
+//   BattleAiRules and _evaluate_outcome.
 
 #include "aurelion_rules/port/gd.hpp"
 
@@ -386,5 +389,24 @@ void _mark_damage_target_animation(State &state, DictRef battle, Atom battle_id,
 Atom _apply_advance_pressure(State &state, DictRef battle, Atom battle_id);
 Atom _apply_defend_pressure(State &state, DictRef battle, Atom battle_id);
 void _apply_melee_approach(State &state, DictRef battle, DictRef stack, DictRef destination);
+
+// Layer 8.
+
+// Spell events: the commander's cast of the round, the casting hero, the
+// commit of a resistance roll, and the cast's animation states and
+// presentation events (spell_events.cpp).
+DictRef _player_commander_state(State &state, const Value &session);
+DictRef _normalize_commander_spell_cast_rounds(State &state, const Value &value);
+bool _commander_spell_cast_this_round(State &state, DictRef battle, Atom side);
+void _mark_commander_spell_cast(State &state, DictRef battle, Atom side);
+Atom hero_actor_id(State &state, Atom side);
+Atom commander_name(State &state, DictRef battle, Atom side);
+DictRef _hero_caster(State &state, DictRef battle, Atom side);
+void _commit_spell_resistance_roll(State &state, DictRef battle, DictRef resolution);
+void _mark_spell_animation_states(State &state, DictRef battle, DictRef caster_stack, DictRef resolution);
+void _append_spell_presentation_events(State &state, DictRef battle, DictRef caster_stack, DictRef resolution, DictRef target_before, DictRef target_after, int64_t recovered_amount, int64_t cleansed_count, Atom action_id);
+void _append_spell_status_resolution_event(State &state, DictRef battle, DictRef resolution, DictRef base_context, Atom target_name, Atom prefix);
+void _append_spell_effect_event(State &state, DictRef battle, Atom event_type, const Value &effect_payload, DictRef base_context, Atom target_name);
+Atom _spell_effect_label(State &state, const Value &effect_payload);
 
 } // namespace aurelion::rules::port::battle_rules

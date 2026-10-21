@@ -4,7 +4,8 @@
 // names (docs/native-rules-engine-transition.md). Phase 1, layer 2: the effect
 // reads of a battle stack, the normalizers they use and
 // normalize_school_resistance. Layer 4: status immunity and normalizing and
-// purging a stack's effects. _normalize_spell_ids is a shared helper on main
+// purging a stack's effects. Layer 8: the battle spells. _normalize_spell_ids
+// and the spell helpers shared with the battle port are on main
 // (spell_rules.cpp).
 
 #include "aurelion_rules/port/gd.hpp"
@@ -60,5 +61,38 @@ bool _knows_spell(State &state, DictRef hero_state, Atom spell_id);
 
 // Layer 5: a battle effect built from an ability (attack_effects.cpp).
 DictRef build_battle_effect(State &state, Atom effect_id, Atom label, const Value &modifiers, int64_t duration_rounds, DictRef battle, Atom source_type, Atom source_id, const Value &status_immunity_ids);
+
+// Layer 8: the battle spells. A spell's battle behavior, the cast and target
+// checks, spell and control resistance, the damage, recovery and duration of
+// a cast, the effect payloads and the status resistance roll
+// (spell_battle.cpp). _battle_stream_rng answers a RandomNumberGenerator, or
+// Nil for a battle without a seed.
+DictRef battle_spell_behavior(State &state, DictRef spell);
+DictRef _battle_spell_ally_target(State &state, DictRef active_stack, DictRef target_stack, Atom acting_side);
+DictRef battle_spell_cast_check(State &state, DictRef hero, DictRef spell_dict, DictRef active_stack, Atom acting_side);
+DictRef battle_spell_target_check(State &state, DictRef battle, DictRef active_stack, DictRef target_stack, DictRef spell_dict, Atom acting_side);
+int64_t spell_damage_resistance_pct(State &state, DictRef battle, DictRef target_stack, DictRef spell);
+int64_t control_resistance_pct(State &state, DictRef battle, DictRef target_stack, DictRef spell);
+DictRef battle_spell_damage_projection(State &state, DictRef hero_state, DictRef battle, DictRef target_stack, DictRef spell);
+DictRef battle_spell_status_resolution(State &state, DictRef battle, DictRef active_stack, DictRef target_stack, DictRef spell, DictRef effect_payload);
+int64_t spell_duration_bonus(State &state, DictRef hero_state);
+int64_t spell_duration_rounds(State &state, DictRef hero_state, const Value &base_rounds, DictRef spell, Atom kind);
+int64_t spell_power(State &state, DictRef hero_state);
+int64_t _school_bonus(State &state, DictRef bonuses, Atom field, DictRef spell);
+DictRef _counted_in_turns(State &state, DictRef effect, int64_t turns);
+DictRef battle_spell_modifiers(State &state, DictRef spell);
+DictRef _effect_payload(State &state, DictRef spell, DictRef effect, DictRef battle, DictRef hero_state);
+DictRef _hero_payload_for_target_side(State &state, DictRef battle, DictRef target_stack);
+DictRef _status_resistance_roll(State &state, DictRef battle, DictRef active_stack, DictRef target_stack, DictRef spell, Atom status_id);
+Value _battle_stream_rng(State &state, DictRef battle);
+int64_t _stable_percent(State &state, ArrayRef parts);
+Atom _append_status_resolution_message(State &state, Atom message, DictRef target_stack, DictRef effect_payload, DictRef status_resolution);
+DictRef _spell_effect_modifiers(State &state, DictRef effect, Atom default_kind, int64_t default_amount);
+DictRef _status_effect_from_spell_effect(State &state, DictRef spell, DictRef battle, DictRef hero_state);
+int64_t _battle_spell_damage(State &state, DictRef hero_state, DictRef spell, DictRef target_stack);
+bool _wounded_bonus_applies(State &state, DictRef effect, DictRef target_stack);
+int64_t _battle_spell_recovery_amount(State &state, DictRef hero_state, DictRef spell);
+int64_t _alive_count(State &state, DictRef stack);
+double _health_ratio(State &state, DictRef stack);
 
 } // namespace aurelion::rules::port::spell_rules
