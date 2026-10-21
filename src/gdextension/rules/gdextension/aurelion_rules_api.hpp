@@ -1,9 +1,27 @@
 #pragma once
 
 #include <godot_cpp/classes/ref_counted.hpp>
+#include <godot_cpp/variant/array.hpp>
 #include <godot_cpp/variant/dictionary.hpp>
 #include <godot_cpp/variant/packed_byte_array.hpp>
 #include <godot_cpp/variant/packed_int32_array.hpp>
+#include <godot_cpp/variant/string.hpp>
+#include <godot_cpp/variant/string_name.hpp>
+#include <godot_cpp/variant/variant.hpp>
+
+#include <cstdint>
+#include <memory>
+#include <string>
+#include <unordered_map>
+#include <utility>
+#include <vector>
+
+namespace aurelion::rules::bridge {
+class PortBridge;
+}
+namespace aurelion::rules::port {
+struct Function;
+}
 
 namespace godot {
 
@@ -18,6 +36,9 @@ protected:
 	static void _bind_methods();
 
 public:
+	AurelionRules();
+	~AurelionRules() override;
+
 	// {api, source_tree, godot_cpp, compiler, flavour}
 	Dictionary get_build_info() const;
 
@@ -31,6 +52,72 @@ public:
 
 	// BattleRules._obstacle_field_stays_open over an open mask of the obstacles.
 	bool battle_hex_field_stays_open(const PackedByteArray &open) const;
+
+	// The native battle state's conversion (battle_state_bridge.hpp), for the
+	// round-trip proof. Mode 0 loads value and returns new containers written
+	// from the state; mode 1 writes the state back into value's own containers
+	// and returns value.
+	Variant state_round_trip(const Variant &value, int64_t mode);
+	// Loads target, replaces the state with source matched by path, and writes
+	// it back into target's containers. Returns target.
+	Variant state_overwrite(const Variant &target, const Variant &source);
+	// The last state call: {ok, error, values, shared_refs, arrays, dicts,
+	// atoms, opaque, types, load_usec, store_usec, reused_arrays, reused_dicts,
+	// rebuilt_dicts}.
+	Dictionary state_last_stats() const;
+	// One state's whole conversion, timed (the battle port's G1 times a
+	// resolve's). Each round loads a deep copy of start (timed), turns the state
+	// into end (untimed: StateBridge::overwrite stands in for the native code's
+	// changes), adds the nodes the ported calls made, unreachable, and writes the
+	// state back into the copy's containers (timed). {load_us, store_us} are
+	// medians; also every round and the pool sizes.
+	Dictionary state_conversion_timing(const Variant &start, const Variant &end, int64_t made_arrays, int64_t made_dicts, int64_t rounds);
+
+	// The ported functions of every subsystem (aurelion_rules/port/registry.hpp),
+	// for the switches in BattleEngine.gd and the other engines. port_call runs
+	// one on args and returns its result, writing what it changed back into args
+	// when write_back is set; a native script error is reported and answered
+	// with null. port_check runs it and compares the result with GDScript's: ""
+	// when they match, else the first difference. port_report counts a check the
+	// engine script made itself (mismatch "" when it matched).
+	Variant port_call(const StringName &name, const Array &args, bool write_back);
+	String port_check(const StringName &name, const Array &args, const Variant &gdscript_result);
+	void port_report(const StringName &name, const String &mismatch);
+	// {name: {calls, checks, mismatches, errors}}, plus "unknown_calls" when a
+	// name was not in the registry. With a subsystem's log variable set to a
+	// folder (HEROES_NATIVE_BATTLE_LOG), the same goes to shadow_<pid>.json
+	// there, with the first mismatches and unknown names, every 65,536 uses, on
+	// each mismatch or failure and at exit. A native call that fails, or names
+	// no ported function, prints a SCRIPT ERROR, which fails rules_parity runs
+	// and the core suite's tests.
+	Dictionary port_stats() const;
+
+private:
+	struct PortStats {
+		int64_t calls = 0;
+		int64_t checks = 0;
+		int64_t mismatches = 0;
+		int64_t errors = 0;
+		std::vector<std::string> first;
+	};
+
+	const aurelion::rules::port::Function *port_function(const StringName &name);
+	PortStats &stats_of(const aurelion::rules::port::Function *function);
+	void record_mismatch(PortStats &stats, const std::string &text);
+	void count_port_use();
+	void write_port_stats() const;
+	void record_unknown(const StringName &name, const char *method);
+
+	Dictionary last_state_stats_;
+	std::unique_ptr<aurelion::rules::bridge::PortBridge> port_;
+	// Keyed by the StringName's engine data, which the held StringName keeps.
+	std::unordered_map<uint64_t, std::pair<StringName, const aurelion::rules::port::Function *>> port_names_;
+	std::vector<PortStats> port_stats_;
+	// One file per distinct folder the subsystems' log variables name.
+	std::vector<std::string> port_log_paths_;
+	int64_t port_uses_ = 0;
+	int64_t unknown_calls_ = 0;
+	std::vector<std::string> unknown_names_;
 };
 
 } // namespace godot
