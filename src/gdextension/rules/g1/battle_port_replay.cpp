@@ -31,6 +31,16 @@
 // the properties the port reads, so a property that is also an argument is the
 // same container.
 //
+// The memos (GDScript's static vars the port reads and writes) are the
+// capture's too: a writing entry holds them as they were before it, decoded
+// with its arguments and its own, and the host hands the port that entry's.
+// A memo container that is one of the entry's arguments, or held in one, is
+// that argument's node; the specialty catalog is the resident content's. The
+// board-read cache arrives as the keys added since the last entry, kept here
+// and copied for each entry. After the calls, each writing entry's memos must
+// give the signature GDScript's left (the board-read hits and cache size, the
+// scoring memos' entries).
+//
 //     battle_port_replay [--repeat N] [--prime OTHER.bin] CAPTURE.bin
 //
 // prints one JSON line. Exit 0, or 1 with the problem.
@@ -155,6 +165,34 @@ void put_text(std::string &out, const std::string &text) {
 // {"__g1_object__": {property: blob id}}.
 constexpr const char *kRngMarker = "__g1_rng__";
 constexpr const char *kObjectMarker = "__g1_object__";
+// And for a memo: {"__g1_arg__": path} (an argument, or a container in one),
+// {"__g1_content__": [file, field]} and {"__g1_catalog_index__": file}.
+constexpr const char *kArgMarker = "__g1_arg__";
+constexpr const char *kContentMarker = "__g1_content__";
+constexpr const char *kCatalogIndexMarker = "__g1_catalog_index__";
+
+// The memos, in the order of g1_probe.gd's _STATICS.
+constexpr const char *kStatics[][2] = {
+	{ "res://scripts/core/BattleRules.gd", "_presentation_queue_written" },
+	{ "res://scripts/core/BattleRules.gd", "_board_read_scope_depth" },
+	{ "res://scripts/core/BattleRules.gd", "_board_read_scope_battle" },
+	{ "res://scripts/core/BattleRules.gd", "_validation_board_read_cache_disabled" },
+	{ "res://scripts/core/BattleRules.gd", "_board_read_cache_hits" },
+	{ "res://scripts/core/BattleRules.gd", "_board_read_scope_cache" },
+	{ "res://scripts/core/BattleRules.gd", "_hero_payload_cache" },
+	{ "res://scripts/core/BattleAiRules.gd", "_scoring_scope_depth" },
+	{ "res://scripts/core/BattleAiRules.gd", "_scoring_living" },
+	{ "res://scripts/core/BattleAiRules.gd", "_scoring_stack_terms" },
+	{ "res://scripts/core/HeroProgressionRules.gd", "_catalog_source" },
+	{ "res://scripts/core/HeroProgressionRules.gd", "_catalog_index" },
+};
+constexpr size_t kStaticCount = sizeof(kStatics) / sizeof(kStatics[0]);
+constexpr size_t kCacheHits = 4;
+constexpr size_t kScopeCache = 5;
+constexpr size_t kScoringLiving = 8;
+constexpr size_t kScoringTerms = 9;
+// g1_probe.gd's _memo_signature: hits, cache keys, term entries, complete term entries, living entries.
+constexpr size_t kSignatureSize = 5;
 
 // An object of a capture: a RandomNumberGenerator, or the session as the
 // properties the port reads.
@@ -176,6 +214,9 @@ public:
 			state_(state) {}
 
 	std::function<Value(int64_t)> resolve;
+	// A memo's marker (kArgMarker, ...) with its decoded payload: the value it
+	// stands for. Without it a marker is the Dictionary it is.
+	std::function<Value(const std::string &, const Value &)> alias;
 
 	ReplayObject *object(uint32_t ref) {
 		return ref < object_of_.size() && object_of_[ref] >= 0 ? &objects_[static_cast<size_t>(object_of_[ref])] : nullptr;
@@ -205,18 +246,11 @@ public:
 
 	// The payload of a PackedByteArray value.
 	std::string bytes_of(const Value &value) const {
-		if (value.kind != Kind::Opaque) {
+		if (value.kind != Kind::PackedByte) {
 			fail("expected a PackedByteArray");
 		}
-		const std::string &raw = opaque_[value.ref];
-		uint32_t header = 0;
-		uint32_t length = 0;
-		std::memcpy(&header, raw.data(), 4);
-		std::memcpy(&length, raw.data() + 4, 4);
-		if ((header & kTypeMask) != PACKED_BYTE_ARRAY) {
-			fail("expected a PackedByteArray");
-		}
-		return raw.substr(8, length);
+		const std::vector<uint8_t> &bytes = state_.packed(value.ref).bytes;
+		return std::string(reinterpret_cast<const char *>(bytes.data()), bytes.size());
 	}
 
 private:
@@ -328,6 +362,9 @@ private:
 						if (marker == kRngMarker || marker == kObjectMarker) {
 							return decode_object(reader, marker == kRngMarker);
 						}
+						if (alias && (marker == kArgMarker || marker == kContentMarker || marker == kCatalogIndexMarker)) {
+							return alias(marker, decode(reader));
+						}
 					}
 					reader.at = mark;
 				}
@@ -366,8 +403,11 @@ private:
 				return opaque(start, reader.at);
 			case PACKED_BYTE_ARRAY: {
 				const uint32_t length = reader.u32();
+				reader.need(length);
+				const uint32_t node = state_.new_packed(Kind::PackedByte);
+				state_.packed_node(node).bytes.assign(reader.at, reader.at + length);
 				reader.skip(length + (4 - length % 4) % 4);
-				return opaque(start, reader.at);
+				return Value::of_ref(Kind::PackedByte, node);
 			}
 			case PACKED_INT32_ARRAY:
 			case PACKED_FLOAT32_ARRAY:
@@ -526,6 +566,18 @@ private:
 				}
 				out += opaque_[value.ref];
 				return;
+			case Kind::PackedByte: {
+				const std::vector<uint8_t> &bytes = state_.packed(value.ref).bytes;
+				put_u32(out, PACKED_BYTE_ARRAY);
+				put_u32(out, static_cast<uint32_t>(bytes.size()));
+				out.append(reinterpret_cast<const char *>(bytes.data()), bytes.size());
+				out.append((4 - bytes.size() % 4) % 4, '\0');
+				return;
+			}
+			default:
+				// A kind the replay does not encode: never GDScript's bytes.
+				put_u32(out, 0xFFFFFFFFu);
+				return;
 		}
 	}
 
@@ -558,6 +610,10 @@ public:
 	Codec *codec = nullptr;
 	std::map<std::pair<int, uint32_t>, Value> rows; // (table, id atom)
 	std::map<uint32_t, Value> files; // path atom
+	// The memos' (script, name) atoms in kStatics order, and the memos of the
+	// entry being called, or none for an entry that reads only.
+	std::pair<uint32_t, uint32_t> static_atoms[kStaticCount];
+	std::vector<Value> *statics = nullptr;
 
 	void fill_array(State &, uint32_t) override { fail("the replay has no backed Arrays"); }
 	void fill_dict(State &, uint32_t) override { fail("the replay has no backed Dictionaries"); }
@@ -615,6 +671,25 @@ public:
 		}
 		return found->second;
 	}
+	Value static_get(State &state, uint32_t script, uint32_t name) override {
+		return static_slot(state, script, name);
+	}
+	void static_set(State &state, uint32_t script, uint32_t name, const Value &value) override {
+		static_slot(state, script, name) = value;
+	}
+
+private:
+	Value &static_slot(State &state, uint32_t script, uint32_t name) {
+		for (size_t index = 0; index < kStaticCount; ++index) {
+			if (static_atoms[index].first == script && static_atoms[index].second == name) {
+				if (statics == nullptr || statics->size() != kStaticCount) {
+					fail("an entry the registry marks as reading only reached " + state.text(script) + "." + state.text(name));
+				}
+				return (*statics)[index];
+			}
+		}
+		fail("the capture has no static var " + state.text(script) + "." + state.text(name));
+	}
 };
 
 std::string read_file(const char *path) {
@@ -653,6 +728,10 @@ struct Entry {
 	std::vector<int64_t> args;
 	int64_t result = 0;
 	std::vector<int64_t> after;
+	// A writing entry: the memos' blob ids before it (kStatics order) and their
+	// signature afterwards; both empty for an entry that reads only.
+	std::vector<int64_t> statics;
+	std::vector<int64_t> signature;
 };
 
 struct Capture {
@@ -705,7 +784,7 @@ Capture read_capture(const char *path) {
 	const Value rows = field(meta, root, "entries");
 	for (const Value &row : items(meta, rows)) {
 		const ValueList &parts = items(meta, row);
-		if (parts.size() != 4 || !parts[0].is_string_like()) {
+		if ((parts.size() != 4 && parts.size() != 6) || !parts[0].is_string_like()) {
 			fail("the capture is not shaped as g1_probe.gd writes it");
 		}
 		Entry entry;
@@ -728,6 +807,31 @@ Capture read_capture(const char *path) {
 		if (static_cast<int>(entry.args.size()) != entry.function->arity) {
 			fail(name + ": the capture has " + std::to_string(entry.args.size()) + " arguments");
 		}
+		// The memos' blob ids and the signature, each a blob of an Array of ints.
+		const auto ints_of = [&](const Value &id, std::vector<int64_t> &out, size_t size) {
+			const int64_t blob = integer(id);
+			if (blob < 0) {
+				return;
+			}
+			if (static_cast<size_t>(blob) >= capture.blobs.size()) {
+				fail("a blob id out of range");
+			}
+			for (const Value &value : items(meta, codec.decode(capture.blobs[static_cast<size_t>(blob)]))) {
+				out.push_back(integer(value));
+			}
+			if (out.size() != size) {
+				fail(name + ": the capture's memos are not shaped as g1_probe.gd writes them");
+			}
+		};
+		if (parts.size() == 6) {
+			ints_of(parts[4], entry.statics, kStaticCount);
+			ints_of(parts[5], entry.signature, kSignatureSize);
+			for (int64_t id : entry.statics) {
+				if (id < 0 || static_cast<size_t>(id) >= capture.blobs.size()) {
+					fail("a blob id out of range");
+				}
+			}
+		}
 		capture.entries.push_back(std::move(entry));
 	}
 	for (const Entry &entry : capture.entries) {
@@ -749,11 +853,14 @@ Capture read_capture(const char *path) {
 // one State and its memory from resolve to resolve.
 struct Loaded {
 	Loaded(const Capture &capture, State &state) :
-			capture(capture), state(state), offsets(capture.entries.size() + 1), shared(capture.blobs.size()), decoded(capture.blobs.size(), false) {
+			capture(capture), state(state), offsets(capture.entries.size() + 1), shared(capture.blobs.size()), decoded(capture.blobs.size(), false), statics(capture.entries.size()) {
 		// As StateBridge::load starts a resolve: atoms and nodes cleared, node buffers kept.
 		state.clear();
 		host.codec = &codec;
 		state.set_backing(&host);
+		for (size_t index = 0; index < kStaticCount; ++index) {
+			host.static_atoms[index] = { state.intern(kStatics[index][0]), state.intern(kStatics[index][1]) };
+		}
 		// The content, resident as the engine keeps it.
 		using aurelion::rules::state::ContentTable;
 		const Value content = codec.decode(capture.content);
@@ -829,11 +936,53 @@ struct Loaded {
 				}
 			}
 			codec.resolve = nullptr;
+			if (!entry.statics.empty()) {
+				prepare_statics(entry, slots, statics[prepared]);
+			}
 			decoded_arrays += state.array_count() - arrays;
 			decoded_dicts += state.dict_count() - dicts;
 			++prepared;
 		}
 		return args.data() + offsets[index];
+	}
+
+	// The host hands entry `index`'s memos to the call about to run.
+	void enter(size_t index) {
+		host.statics = statics[index].empty() ? nullptr : &statics[index];
+	}
+
+	// The signature of entry `index`'s memos now (g1_probe.gd's _memo_signature).
+	std::vector<int64_t> signature(size_t index) const {
+		const std::vector<Value> &memo = statics[index];
+		std::vector<int64_t> out(kSignatureSize, -1);
+		if (memo.size() != kStaticCount) {
+			return out;
+		}
+		if (memo[kCacheHits].kind == Kind::Int) {
+			out[0] = memo[kCacheHits].i;
+		}
+		if (memo[kScopeCache].kind == Kind::Dict) {
+			out[1] = static_cast<int64_t>(state.dict(memo[kScopeCache].ref).keys.size());
+		}
+		if (memo[kScoringTerms].kind == Kind::Dict) {
+			out[2] = 0;
+			out[3] = 0;
+			for (const Value &entries : state.dict(memo[kScoringTerms].ref).values) {
+				for (const Value &entry : items(state, entries)) {
+					++out[2];
+					if (items(state, entry).size() == 3) {
+						++out[3];
+					}
+				}
+			}
+		}
+		if (memo[kScoringLiving].kind == Kind::Dict) {
+			out[4] = 0;
+			for (const Value &entries : state.dict(memo[kScoringLiving].ref).values) {
+				out[4] += static_cast<int64_t>(items(state, entries).size());
+			}
+		}
+		return out;
 	}
 	// The nodes the calls made, not the decoding.
 	size_t made_arrays() const { return state.array_count() - decoded_arrays; }
@@ -847,9 +996,144 @@ struct Loaded {
 	std::vector<size_t> offsets;
 	std::vector<Value> shared;
 	std::vector<bool> decoded;
+	std::vector<std::vector<Value>> statics; // per entry, kStaticCount values each, or none
 	size_t prepared = 0;
 	size_t decoded_arrays = 0;
 	size_t decoded_dicts = 0;
+
+private:
+	// A writing entry's memos, decoded after its arguments, which their markers name.
+	void prepare_statics(const Entry &entry, const Value *slots, std::vector<Value> &memo) {
+		codec.alias = [&](const std::string &marker, const Value &payload) -> Value {
+			if (marker == kArgMarker) {
+				return argument_at(slots, entry, payload);
+			}
+			if (marker == kContentMarker) {
+				const ValueList &path = items(state, payload);
+				if (path.size() != 2 || !path[0].is_string_like() || !path[1].is_string_like()) {
+					fail("a content marker is not shaped as g1_probe.gd writes it");
+				}
+				return lookup(content_file(path[0]), path[1]);
+			}
+			return catalog_index(payload);
+		};
+		memo.resize(kStaticCount);
+		for (size_t index = 0; index < kStaticCount; ++index) {
+			memo[index] = codec.decode(capture.blobs[static_cast<size_t>(entry.statics[index])]);
+		}
+		codec.alias = nullptr;
+		memo[kScopeCache] = scope_cache(memo[kScopeCache]);
+	}
+
+	// {"__g1_arg__": [argument, step...]}: the argument, then a session's
+	// property, a Dictionary's key or an Array's index per step.
+	Value argument_at(const Value *slots, const Entry &entry, const Value &payload) {
+		const ValueList &path = items(state, payload);
+		if (path.empty() || path[0].kind != Kind::Int || path[0].i < 0 || static_cast<size_t>(path[0].i) >= entry.args.size()) {
+			fail("an argument marker is not shaped as g1_probe.gd writes it");
+		}
+		Value at = slots[path[0].i];
+		for (size_t step = 1; step < path.size(); ++step) {
+			const Value &part = path[step];
+			if (at.kind == Kind::Opaque && part.is_string_like()) {
+				const ReplayObject *object = codec.object(at.ref);
+				bool found = false;
+				for (size_t index = 0; object != nullptr && !found && index < object->atoms.size(); ++index) {
+					if (object->atoms[index] == part.ref) {
+						at = object->values[index];
+						found = true;
+					}
+				}
+				if (!found) {
+					fail("an argument marker names a property the capture does not hold");
+				}
+			} else if (at.kind == Kind::Dict && part.is_string_like()) {
+				at = lookup(at, part);
+			} else if (at.kind == Kind::Array && part.kind == Kind::Int && part.i >= 0 && static_cast<size_t>(part.i) < state.array(at.ref).items.size()) {
+				at = state.array(at.ref).items[static_cast<size_t>(part.i)];
+			} else {
+				fail("an argument marker's path does not lead into the entry's arguments");
+			}
+		}
+		return at;
+	}
+
+	Value lookup(const Value &dict, const Value &key) const {
+		Value out;
+		if (dict.kind != Kind::Dict || !state.lookup(dict.ref, Value::str(key.ref), out)) {
+			fail("a memo marker names a key the capture does not hold: " + state.text(key.ref));
+		}
+		return out;
+	}
+
+	Value content_file(const Value &path) {
+		const auto found = host.files.find(path.ref);
+		if (found == host.files.end()) {
+			fail("content file " + state.text(path.ref) + " is not in the capture");
+		}
+		return found->second;
+	}
+
+	// HeroProgressionRules._specialty_catalog's index of the resident content's
+	// "items", built once: each Dictionary row by String(row.get("id", "")).
+	Value catalog_index(const Value &path) {
+		if (catalog.kind == Kind::Nil) {
+			if (!path.is_string_like()) {
+				fail("a catalog marker is not shaped as g1_probe.gd writes it");
+			}
+			const Value rows = lookup(content_file(path), state.string("items"));
+			const uint32_t index = state.new_dict();
+			for (const Value &row : items(state, rows)) {
+				if (row.kind != Kind::Dict) {
+					continue;
+				}
+				Value id;
+				if (!state.lookup(row.ref, state.string("id"), id)) {
+					id = state.string("");
+				}
+				if (!id.is_string_like()) {
+					fail("a specialty id that is not a string is not replayed");
+				}
+				state.set(index, Value::str(id.ref), row);
+			}
+			catalog = Value::of_ref(Kind::Dict, index);
+		}
+		return catalog;
+	}
+
+	// The board-read cache: [serial, keys before, {added keys}] onto the cache
+	// kept so far (a new one when the serial moves on), copied for the entry.
+	Value scope_cache(const Value &delta) {
+		const ValueList &parts = items(state, delta);
+		if (parts.size() != 3 || parts[0].kind != Kind::Int || parts[1].kind != Kind::Int || parts[2].kind != Kind::Dict) {
+			fail("a board-read cache delta is not shaped as g1_probe.gd writes it");
+		}
+		if (cache.kind == Kind::Nil || parts[0].i != cache_serial) {
+			cache = Value::of_ref(Kind::Dict, state.new_dict());
+			cache_serial = parts[0].i;
+		}
+		auto &kept = state.dict_node(cache.ref);
+		if (static_cast<int64_t>(kept.keys.size()) != parts[1].i) {
+			fail("a board-read cache delta does not follow the one before");
+		}
+		const auto &added = state.dict(parts[2].ref);
+		for (size_t index = 0; index < added.keys.size(); ++index) {
+			kept.keys.push_back(added.keys[index]);
+			kept.values.push_back(added.values[index]);
+		}
+		const uint32_t copy = state.new_dict();
+		auto &node = state.dict_node(copy);
+		node.keys = kept.keys;
+		node.values.reserve(kept.values.size());
+		for (const Value &value : kept.values) {
+			node.values.push_back(value);
+		}
+		return Value::of_ref(Kind::Dict, copy);
+	}
+
+	Value catalog;
+	Value cache;
+	int64_t cache_serial = -1;
 };
 
 double clock_overhead_ns() {
@@ -911,6 +1195,7 @@ int run(int argc, char **argv) {
 		loaded.prepare(primer.entries.size() - 1);
 		try {
 			for (size_t index = 0; index < primer.entries.size(); ++index) {
+				loaded.enter(index);
 				primer.entries[index].function->call(loaded.state, loaded.args.data() + loaded.offsets[index]);
 			}
 		} catch (const std::exception &error) {
@@ -962,6 +1247,9 @@ int run(int argc, char **argv) {
 					problem = "argument " + std::to_string(arg) + " afterwards";
 				}
 			}
+			if (problem.empty() && !entry.signature.empty() && loaded.signature(index) != entry.signature) {
+				problem = "memos afterwards";
+			}
 			if (!problem.empty()) {
 				++mismatches;
 				if (first.size() < 10) {
@@ -996,6 +1284,7 @@ int run(int argc, char **argv) {
 		try {
 			for (; index < capture.entries.size(); ++index) {
 				const Value *args = loaded.prepare(index);
+				loaded.enter(index);
 				const Clock::time_point start = Clock::now();
 				results[index] = capture.entries[index].function->call(loaded.state, args);
 				const Clock::time_point stop = Clock::now();
@@ -1051,6 +1340,7 @@ int run(int argc, char **argv) {
 		try {
 			start = Clock::now();
 			for (; index < capture.entries.size(); ++index) {
+				loaded.enter(index);
 				results[index] = capture.entries[index].function->call(loaded.state, loaded.args.data() + loaded.offsets[index]);
 			}
 			stop = Clock::now();

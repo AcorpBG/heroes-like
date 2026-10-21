@@ -229,7 +229,11 @@ def ported_wrapper(script: str, func: Func, writes: bool, mode: str) -> list[str
             lines += [f"\tvar g1_result = {raw}", f"\tG1.add({key}, Time.get_ticks_usec() - g1_t0)", "\treturn g1_result"]
     else:
         args = f"[{', '.join(func.args)}]"
-        lines += ["\tif not G1.on or not G1.capturing:", *passthrough, f"\tvar g1_ids := G1.capture_args({args})"]
+        # The arena plays each side's BattleAiRules as its own compiled copy, with its own memos: the wrapper, inside
+        # that copy, hands them over.
+        memos = ", [_scoring_scope_depth, _scoring_living, _scoring_stack_terms]" if writes and script == "BattleAiRules" else ""
+        lines += ["\tif not G1.on or not G1.capturing:", *passthrough,
+                  f"\tvar g1_ids := G1.capture_args({args}, {'true' if writes else 'false'}{memos})"]
         after = args if writes else "[]"
         if func.void:
             lines += [f"\t{raw}", f"\tG1.capture_end({key}, g1_ids, null, {after})"]
