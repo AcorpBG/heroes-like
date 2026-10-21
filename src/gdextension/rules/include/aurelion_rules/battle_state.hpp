@@ -22,6 +22,7 @@
 
 #include <cstdint>
 #include <deque>
+#include <initializer_list>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -507,6 +508,8 @@ struct ArrayNode {
 	bool backed = false;
 	// Written since it was made or loaded: set(), erase(), append(), set_at().
 	bool dirty = false;
+	// The memo's marks (State::memo_find): kWatched, kFrozen.
+	uint8_t guard = 0;
 
 	// As new, keeping the buffer.
 	void reset() {
@@ -515,6 +518,7 @@ struct ArrayNode {
 		read_only = false;
 		backed = false;
 		dirty = false;
+		guard = 0;
 	}
 };
 
@@ -527,6 +531,7 @@ struct DictNode {
 	bool read_only = false;
 	bool backed = false;
 	bool dirty = false;
+	uint8_t guard = 0;
 
 	// As new, keeping the buffers.
 	void reset() {
@@ -537,6 +542,7 @@ struct DictNode {
 		read_only = false;
 		backed = false;
 		dirty = false;
+		guard = 0;
 	}
 };
 
@@ -551,6 +557,7 @@ struct PackedNode {
 	bool backed = false;
 	// Written since it was made or loaded.
 	bool dirty = false;
+	uint8_t guard = 0;
 
 	void reset() {
 		kind = Kind::PackedInt32;
@@ -559,6 +566,7 @@ struct PackedNode {
 		atoms.clear();
 		backed = false;
 		dirty = false;
+		guard = 0;
 	}
 	size_t size() const {
 		switch (kind) {
@@ -758,6 +766,33 @@ public:
 	// The board's cells have fixed atoms, made with the known keys, so they need
 	// no formatting or hashing; any other pair is interned.
 	uint32_t pair_atom(int64_t q, int64_t r);
+
+	// The memo: native answers kept by what they were asked (slice 04c, the
+	// board reads), the same node handed out on every hit, with no hashing of
+	// the state and no copies. An answer stays while nothing it read changes:
+	// memo_find watches the roots the answer is read from and everything they
+	// hold; a write into a watched node counts (watched_writes) and drops the
+	// whole memo, and a container stored into one is watched too. The answer is
+	// frozen when kept: a write into it is a ScriptError, since every later hit
+	// hands out the same node. An answer whose reading wrote into a watched node
+	// is not kept.
+	struct MemoKey {
+		uint64_t a = 0;
+		uint64_t b = 0;
+		uint64_t c = 0;
+		bool operator==(const MemoKey &other) const { return a == other.a && b == other.b && c == other.c; }
+	};
+	static constexpr uint8_t kWatched = 1;
+	static constexpr uint8_t kFrozen = 2;
+	// Watches the roots, then looks the key up; since goes to memo_keep.
+	bool memo_find(const MemoKey &key, std::initializer_list<Value> roots, Value &answer, uint64_t &since);
+	void memo_keep(const MemoKey &key, const Value &answer, uint64_t since);
+	// A node the host loads from its container, watched from the start, so that
+	// what the host fills into it later is watched as well.
+	void watch_loaded(const Value &value);
+	uint64_t watched_writes() const { return watched_writes_; }
+	// a.sort_custom()'s new order of an Array's own items, as a write.
+	void replace_items(uint32_t array_node, ValueList items);
 	// The cell id (q * rows + r) whose "q,r" key is this atom, or -1: the
 	// board's own keys only, so "01,2" or "3,-1" are not cells.
 	int64_t board_cell_of_atom(uint32_t atom) const {
@@ -782,6 +817,26 @@ private:
 	void checked_append(ArrayNode &node, Value value);
 	// The host, or one that only prints errors.
 	Backing &host_or_default() const;
+	// Before a write into a marked node: a frozen one stops it with a
+	// ScriptError; a watched one counts, and the containers it stores, the
+	// key and the value, are watched.
+	void guarded_write(uint8_t guard, const Value &key = Value(), const Value &value = Value());
+	void watch(const Value &value);
+	void freeze(const Value &value);
+
+	struct MemoKeyHash {
+		size_t operator()(const MemoKey &key) const {
+			uint64_t h = key.a * 0x9E3779B97F4A7C15ull;
+			h ^= key.b + 0x9E3779B97F4A7C15ull + (h << 6) + (h >> 2);
+			h ^= key.c + 0x9E3779B97F4A7C15ull + (h << 6) + (h >> 2);
+			return static_cast<size_t>(h);
+		}
+	};
+	std::unordered_map<MemoKey, Value, MemoKeyHash> memo_;
+	// watched_writes_ when memo_ was last current.
+	uint64_t memo_epoch_ = 0;
+	uint64_t watched_writes_ = 0;
+	std::vector<Value> marking_;
 
 	// A deque, so the views atom_ids_ holds stay valid.
 	std::deque<std::string> atoms_;
@@ -835,6 +890,9 @@ inline PackedNode &State::packed_write(uint32_t node) {
 	if (found.backed) {
 		fill_packed(node);
 	}
+	if (found.guard != 0) {
+		guarded_write(found.guard);
+	}
 	found.dirty = true;
 	return found;
 }
@@ -884,6 +942,9 @@ inline void State::set(uint32_t dict_node, const Value &key, const Value &value)
 	const Value value_copy = value;
 	dict(dict_node);
 	DictNode &node = dicts_[dict_node];
+	if (node.guard != 0) {
+		guarded_write(node.guard, key_copy, value_copy);
+	}
 	if (node.read_only || node.key_type != 0 || node.value_type != 0) {
 		checked_set(node, key_copy, value_copy);
 		return;
@@ -922,6 +983,9 @@ inline Value State::at(uint32_t array_node, int64_t index) const {
 inline void State::append(uint32_t array_node, const Value &value) {
 	array(array_node);
 	ArrayNode &node = arrays_[array_node];
+	if (node.guard != 0) {
+		guarded_write(node.guard, Value(), value);
+	}
 	if (node.read_only || node.element_type != 0) {
 		checked_append(node, value);
 		return;

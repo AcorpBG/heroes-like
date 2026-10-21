@@ -50,4 +50,15 @@ const Function *find_function(std::string_view name) {
 	return nullptr;
 }
 
+bool gdscript_only_static(uint32_t script, uint32_t name) {
+	for (const Table &table : all_tables()) {
+		for (size_t index = 0; index < table.gdscript_only_count; ++index) {
+			if (table.gdscript_only[index].script == script && table.gdscript_only[index].name == name) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 } // namespace aurelion::rules::port
