@@ -83,7 +83,7 @@ static func heal_round(battle: Dictionary) -> Array:
 		return heal_round__gd(battle)
 	if _battle_engine_mode == BattleEngine.NATIVE:
 		return BattleEngine.native_writing(&"TownBattleRules.heal_round", [battle])
-	var before := BattleEngine.before_writing([battle])
+	var before := BattleEngine.before_writing(&"TownBattleRules.heal_round", [battle])
 	var result = heal_round__gd(battle)
 	BattleEngine.check_writing(&"TownBattleRules.heal_round", before, [battle], result)
 	return result
@@ -112,7 +112,7 @@ static func absorb(stack: Dictionary, damage: int) -> int:
 		return absorb__gd(stack, damage)
 	if _battle_engine_mode == BattleEngine.NATIVE:
 		return BattleEngine.native_writing(&"TownBattleRules.absorb", [stack, damage])
-	var before := BattleEngine.before_writing([stack, damage])
+	var before := BattleEngine.before_writing(&"TownBattleRules.absorb", [stack, damage])
 	var result = absorb__gd(stack, damage)
 	BattleEngine.check_writing(&"TownBattleRules.absorb", before, [stack, damage], result)
 	return result

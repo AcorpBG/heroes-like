@@ -187,9 +187,10 @@ static func _stack_contact_band(stack: Dictionary, battle: Dictionary) -> int:
 	if _battle_engine_mode == BattleEngine.GDSCRIPT:
 		return _stack_contact_band__gd(stack, battle)
 	if _battle_engine_mode == BattleEngine.NATIVE:
-		return BattleEngine.native(&"BattleAiRules._stack_contact_band", [stack, battle])
+		return BattleEngine.native_writing(&"BattleAiRules._stack_contact_band", [stack, battle])
+	var before := BattleEngine.before_writing(&"BattleAiRules._stack_contact_band", [stack, battle])
 	var result = _stack_contact_band__gd(stack, battle)
-	BattleEngine.check(&"BattleAiRules._stack_contact_band", [stack, battle], result)
+	BattleEngine.check_writing(&"BattleAiRules._stack_contact_band", before, [stack, battle], result)
 	return result
 
 static func _stack_contact_band__gd(stack: Dictionary, battle: Dictionary) -> int:
@@ -204,9 +205,10 @@ static func _stack_contact_band_on(stack: Dictionary, battle: Dictionary) -> int
 	if _battle_engine_mode == BattleEngine.GDSCRIPT:
 		return _stack_contact_band_on__gd(stack, battle)
 	if _battle_engine_mode == BattleEngine.NATIVE:
-		return BattleEngine.native(&"BattleAiRules._stack_contact_band_on", [stack, battle])
+		return BattleEngine.native_writing(&"BattleAiRules._stack_contact_band_on", [stack, battle])
+	var before := BattleEngine.before_writing(&"BattleAiRules._stack_contact_band_on", [stack, battle])
 	var result = _stack_contact_band_on__gd(stack, battle)
-	BattleEngine.check(&"BattleAiRules._stack_contact_band_on", [stack, battle], result)
+	BattleEngine.check_writing(&"BattleAiRules._stack_contact_band_on", before, [stack, battle], result)
 	return result
 
 static func _stack_contact_band_on__gd(stack: Dictionary, battle: Dictionary) -> int:
@@ -1041,7 +1043,7 @@ static func _merge_commander_spellbooks_for_ai(merged: Dictionary, secondary_pay
 		return _merge_commander_spellbooks_for_ai__gd(merged, secondary_payload)
 	if _battle_engine_mode == BattleEngine.NATIVE:
 		return BattleEngine.native_writing(&"BattleAiRules._merge_commander_spellbooks_for_ai", [merged, secondary_payload])
-	var before := BattleEngine.before_writing([merged, secondary_payload])
+	var before := BattleEngine.before_writing(&"BattleAiRules._merge_commander_spellbooks_for_ai", [merged, secondary_payload])
 	var result = _merge_commander_spellbooks_for_ai__gd(merged, secondary_payload)
 	BattleEngine.check_writing(&"BattleAiRules._merge_commander_spellbooks_for_ai", before, [merged, secondary_payload], result)
 	return result
@@ -2954,9 +2956,10 @@ static func _alive_stacks_for_side(battle: Dictionary, side: String) -> Array:
 	if _battle_engine_mode == BattleEngine.GDSCRIPT:
 		return _alive_stacks_for_side__gd(battle, side)
 	if _battle_engine_mode == BattleEngine.NATIVE:
-		return BattleEngine.native(&"BattleAiRules._alive_stacks_for_side", [battle, side])
+		return BattleEngine.native_writing(&"BattleAiRules._alive_stacks_for_side", [battle, side])
+	var before := BattleEngine.before_writing(&"BattleAiRules._alive_stacks_for_side", [battle, side])
 	var result = _alive_stacks_for_side__gd(battle, side)
-	BattleEngine.check(&"BattleAiRules._alive_stacks_for_side", [battle, side], result)
+	BattleEngine.check_writing(&"BattleAiRules._alive_stacks_for_side", before, [battle, side], result)
 	return result
 
 static func _alive_stacks_for_side__gd(battle: Dictionary, side: String) -> Array:
@@ -4024,9 +4027,10 @@ static func _stack_is_engaged(stack: Dictionary, battle: Dictionary) -> bool:
 	if _battle_engine_mode == BattleEngine.GDSCRIPT:
 		return _stack_is_engaged__gd(stack, battle)
 	if _battle_engine_mode == BattleEngine.NATIVE:
-		return BattleEngine.native(&"BattleAiRules._stack_is_engaged", [stack, battle])
+		return BattleEngine.native_writing(&"BattleAiRules._stack_is_engaged", [stack, battle])
+	var before := BattleEngine.before_writing(&"BattleAiRules._stack_is_engaged", [stack, battle])
 	var result = _stack_is_engaged__gd(stack, battle)
-	BattleEngine.check(&"BattleAiRules._stack_is_engaged", [stack, battle], result)
+	BattleEngine.check_writing(&"BattleAiRules._stack_is_engaged", before, [stack, battle], result)
 	return result
 
 static func _stack_is_engaged__gd(stack: Dictionary, battle: Dictionary) -> bool:
@@ -4041,9 +4045,10 @@ static func _stack_engaged_on(stack: Dictionary, battle: Dictionary) -> bool:
 	if _battle_engine_mode == BattleEngine.GDSCRIPT:
 		return _stack_engaged_on__gd(stack, battle)
 	if _battle_engine_mode == BattleEngine.NATIVE:
-		return BattleEngine.native(&"BattleAiRules._stack_engaged_on", [stack, battle])
+		return BattleEngine.native_writing(&"BattleAiRules._stack_engaged_on", [stack, battle])
+	var before := BattleEngine.before_writing(&"BattleAiRules._stack_engaged_on", [stack, battle])
 	var result = _stack_engaged_on__gd(stack, battle)
-	BattleEngine.check(&"BattleAiRules._stack_engaged_on", [stack, battle], result)
+	BattleEngine.check_writing(&"BattleAiRules._stack_engaged_on", before, [stack, battle], result)
 	return result
 
 static func _stack_engaged_on__gd(stack: Dictionary, battle: Dictionary) -> bool:

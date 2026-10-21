@@ -321,9 +321,10 @@ static func _specialty_catalog() -> Dictionary:
 	if _battle_engine_mode == BattleEngine.GDSCRIPT:
 		return _specialty_catalog__gd()
 	if _battle_engine_mode == BattleEngine.NATIVE:
-		return BattleEngine.native(&"HeroProgressionRules._specialty_catalog", [])
+		return BattleEngine.native_writing(&"HeroProgressionRules._specialty_catalog", [])
+	var before := BattleEngine.before_writing(&"HeroProgressionRules._specialty_catalog", [])
 	var result = _specialty_catalog__gd()
-	BattleEngine.check(&"HeroProgressionRules._specialty_catalog", [], result)
+	BattleEngine.check_writing(&"HeroProgressionRules._specialty_catalog", before, [], result)
 	return result
 
 static func _specialty_catalog__gd() -> Dictionary:
@@ -405,9 +406,10 @@ static func aggregate_bonuses(hero_state: Dictionary) -> Dictionary:
 	if _battle_engine_mode == BattleEngine.GDSCRIPT:
 		return aggregate_bonuses__gd(hero_state)
 	if _battle_engine_mode == BattleEngine.NATIVE:
-		return BattleEngine.native(&"HeroProgressionRules.aggregate_bonuses", [hero_state])
+		return BattleEngine.native_writing(&"HeroProgressionRules.aggregate_bonuses", [hero_state])
+	var before := BattleEngine.before_writing(&"HeroProgressionRules.aggregate_bonuses", [hero_state])
 	var result = aggregate_bonuses__gd(hero_state)
-	BattleEngine.check(&"HeroProgressionRules.aggregate_bonuses", [hero_state], result)
+	BattleEngine.check_writing(&"HeroProgressionRules.aggregate_bonuses", before, [hero_state], result)
 	return result
 
 static func aggregate_bonuses__gd(hero_state: Dictionary) -> Dictionary:
@@ -446,7 +448,7 @@ static func _merge_bonuses(target: Dictionary, source: Dictionary, hero_state: D
 	elif _battle_engine_mode == BattleEngine.NATIVE:
 		BattleEngine.native_writing(&"HeroProgressionRules._merge_bonuses", [target, source, hero_state])
 	else:
-		var before := BattleEngine.before_writing([target, source, hero_state])
+		var before := BattleEngine.before_writing(&"HeroProgressionRules._merge_bonuses", [target, source, hero_state])
 		_merge_bonuses__gd(target, source, hero_state)
 		BattleEngine.check_writing(&"HeroProgressionRules._merge_bonuses", before, [target, source, hero_state], null)
 

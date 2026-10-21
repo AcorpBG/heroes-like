@@ -537,10 +537,17 @@ DictRef _preferred_default_target_for_active_stack(State &state, DictRef battle,
 }
 
 ArrayRef _legal_attack_target_ids_for_active_stack(State &state, DictRef battle) {
-	// The board-read memo is not ported (it is transparent); its key reads the
-	// active stack id as a String, so that conversion stays.
-	static_cast<void>(string_or_empty(state, battle, key::active_stack_id));
-	return _legal_attack_target_ids_for_active_stack_uncached(state, battle);
+	const Atom active_id = string_or_empty(state, battle, key::active_stack_id);
+	const Atom cache_key = _board_read_scope_holds(state, battle) ? _board_read_cache_key(state, battle, "attack_target_ids", state.text(active_id)) : key::empty;
+	const Value cached = _board_read_cache_get(state, cache_key);
+	if (cached.kind != state::Kind::Nil) {
+		return gd::as_array(cached);
+	}
+	const ArrayRef ids = _legal_attack_target_ids_for_active_stack_uncached(state, battle);
+	if (cache_key != key::empty) {
+		_board_read_cache_put(state, cache_key, array_value(gd::duplicate_array(state, ids)));
+	}
+	return ids;
 }
 
 ArrayRef _legal_attack_target_ids_for_active_stack_uncached(State &state, DictRef battle) {

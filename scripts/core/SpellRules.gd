@@ -1617,7 +1617,7 @@ static func normalize_stack_effects(stack: Dictionary) -> Dictionary:
 		return normalize_stack_effects__gd(stack)
 	if _battle_engine_mode == BattleEngine.NATIVE:
 		return BattleEngine.native_writing(&"SpellRules.normalize_stack_effects", [stack])
-	var before := BattleEngine.before_writing([stack])
+	var before := BattleEngine.before_writing(&"SpellRules.normalize_stack_effects", [stack])
 	var result = normalize_stack_effects__gd(stack)
 	BattleEngine.check_writing(&"SpellRules.normalize_stack_effects", before, [stack], result)
 	return result
@@ -1631,7 +1631,7 @@ static func purge_expired_stack_effects(stack: Dictionary, round_number: int) ->
 		return purge_expired_stack_effects__gd(stack, round_number)
 	if _battle_engine_mode == BattleEngine.NATIVE:
 		return BattleEngine.native_writing(&"SpellRules.purge_expired_stack_effects", [stack, round_number])
-	var before := BattleEngine.before_writing([stack, round_number])
+	var before := BattleEngine.before_writing(&"SpellRules.purge_expired_stack_effects", [stack, round_number])
 	var result = purge_expired_stack_effects__gd(stack, round_number)
 	BattleEngine.check_writing(&"SpellRules.purge_expired_stack_effects", before, [stack, round_number], result)
 	return result

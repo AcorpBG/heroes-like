@@ -6,24 +6,28 @@
 // what they read. Layers 3 and 4: movement and targeting, turn order and
 // effects.
 //
+// The memos are GDScript's static vars, read and written through the host
+// (gd::static_var) as the GDScript reads and writes them, so they keep its
+// lifetime: the board-read memo (_board_read_scope_*, _board_read_cache_hits,
+// _validation_board_read_cache_disabled), _hero_payload_cache and
+// _presentation_queue_written. A ported function that reaches one is a writing
+// function. _hex_id_by_key is the one memo left out: it maps the board's 99
+// "q,r" keys to fixed hex ids, built once, and the native code reads the same
+// ids off the State's fixed atoms.
+//
 // Not ported, with the reason:
-// - begin_board_read_scope, end_board_read_scope, _board_read_cache_get,
-//   _board_read_cache_key: the board-read memo. It is transparent, so the
-//   native reads go without it; the shadow checks prove it.
+// - begin_board_read_scope and end_board_read_scope: no ported function opens
+//   a board-read scope; GDScript's callers open it, and the native reads find
+//   it in the static vars.
 // - BattleActionPlayback.capture, the playback frames of a presented action:
 //   slice 10. It does nothing on a battle without the capture key; on one with
 //   it, the native callers (_set_stack_hex, _mark_stack_animation_event) stop
 //   with an error.
-// - _presentation_queue_written: the memo of _append_presentation_event.
-//   Normalizing a normalized queue gives the same queue, so the native call
-//   normalizes all of it.
-// - _hero_payload_cache: the payload memo of _hero_payload_for_side. It is
-//   transparent (the payload depends only on the side's payload and commander
-//   state, which it compares), so the native call computes the payload.
 
 #include "aurelion_rules/port/gd.hpp"
 
 #include <cstdint>
+#include <string>
 
 namespace aurelion::rules::port::battle_rules {
 
@@ -70,6 +74,17 @@ void _sync_distance_from_hexes(State &state, DictRef battle);
 void _sync_occupied_hexes(State &state, DictRef battle);
 DictRef _walk_steps_to_target(State &state, DictRef battle, DictRef stack, DictRef target, int64_t gap);
 void _walk_open_mask(State &state, DictRef battle, DictRef stack, uint8_t *open);
+
+// The board-read memo (begin_board_read_scope). _board_read_cache_key is ""
+// (key::empty) unless _board_read_scope_holds: inside a scope, not disabled,
+// on the scope's battle. GDScript formats the key's id before it asks, but
+// making it cannot fail, so the native callers make it only for a key.
+bool _board_read_scope_holds(State &state, DictRef battle);
+Atom _board_read_cache_key(State &state, DictRef battle, const char *kind, const std::string &id);
+// The cached value's duplicate(true), counting the hit, or Nil.
+Value _board_read_cache_get(State &state, Atom cache_key);
+// _board_read_scope_cache[cache_key] = value.
+void _board_read_cache_put(State &state, Atom cache_key, const Value &value);
 
 
 // Layer 2.

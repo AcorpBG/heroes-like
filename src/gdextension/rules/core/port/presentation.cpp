@@ -275,15 +275,28 @@ void _append_presentation_event(State &state, DictRef battle, Atom event_type, A
 	if (!state.lookup(battle, str(key::battle_presentation_events), queue)) {
 		queue = array_value(state.new_array()); // the default []
 	}
-	// The static var _presentation_queue_written is a memo (its branch keeps the
-	// already normalized entries and normalizes the last one only): the native
-	// call always normalizes the whole queue.
-	const ArrayRef events = _normalize_presentation_event_queue(state, queue);
+	// _presentation_queue_written, the queue this function wrote last: its
+	// entries are normalized already, so only the last one is again.
+	ArrayRef events;
+	if (gd::is_array(queue) && state.array_size(queue.ref) > 0
+			&& gd::is_same(state, queue, gd::static_var(state, key::battle_rules_script, key::_presentation_queue_written))) {
+		const int64_t size = state.array_size(queue.ref);
+		events = gd::slice(state, queue.ref, 0, size - 1);
+		const ArrayRef last = state.new_array();
+		state.append(last, state.at(queue.ref, size - 1));
+		const ArrayRef normalized = _normalize_presentation_event_queue(state, array_value(last));
+		for (const Value &entry : gd::items(state, array_value(normalized))) {
+			state.append(events, entry);
+		}
+	} else {
+		events = _normalize_presentation_event_queue(state, queue);
+	}
 	state.append(events, dict_value(record));
 	while (state.array_size(events) > PRESENTATION_EVENT_QUEUE_LIMIT) {
 		gd::pop_front(state, events);
 	}
 	state.set(battle, str(key::battle_presentation_events), array_value(events));
+	gd::set_static_var(state, key::battle_rules_script, key::_presentation_queue_written, array_value(events));
 }
 
 ArrayRef _normalize_presentation_event_queue(State &state, const Value &value) {

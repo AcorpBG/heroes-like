@@ -246,14 +246,30 @@ Value _hero_battle_traits(State &state, DictRef battle, Atom side) {
 }
 
 DictRef _hero_payload_for_side(State &state, DictRef battle, Atom side) {
-	// Without the payload memo (_hero_payload_cache): it is transparent, so every
-	// call computes the payload, as a cache miss does.
 	const Atom cache_side = side == key::player ? key::player : key::enemy;
 	const Value payload_value = get_or_new_dict(state, battle, cache_side == key::player ? key::player_hero : key::enemy_hero_payload);
 	const Value commander_value = get_or_new_dict(state, battle, cache_side == key::player ? key::player_commander_state : key::enemy_hero);
 	const DictRef payload_source = dict_or_new(state, payload_value);
 	const DictRef commander_source = dict_or_new(state, commander_value);
+	// The payload memo, _hero_payload_cache: the side's last payload, while its
+	// sources compare equal to the copies kept with it.
+	const DictRef cache = gd::as_dict(gd::static_var(state, key::battle_rules_script, key::_hero_payload_cache));
+	Value cached_value;
+	if (!state.lookup(cache, str(cache_side), cached_value)) {
+		cached_value = dict_value(state.new_dict());
+	}
+	const DictRef cached = gd::as_dict(cached_value);
+	if (!gd::is_empty(state, cached)
+			&& gd::equal(state, gd::index(state, cached, str(key::payload_source)), dict_value(payload_source))
+			&& gd::equal(state, gd::index(state, cached, str(key::commander_source)), dict_value(commander_source))) {
+		return gd::as_dict(gd::index(state, cached, str(key::payload)));
+	}
 	const DictRef payload = gd::deep_duplicate_dict(state, _side_payload_with_commander_fallback(state, dict_value(payload_source), dict_value(commander_source), cache_side));
+	const DictRef entry = state.new_dict();
+	state.set(entry, str(key::payload_source), dict_value(gd::deep_duplicate_dict(state, payload_source)));
+	state.set(entry, str(key::commander_source), dict_value(gd::deep_duplicate_dict(state, commander_source)));
+	state.set(entry, str(key::payload), dict_value(payload));
+	state.set(cache, str(cache_side), dict_value(entry));
 	return payload;
 }
 

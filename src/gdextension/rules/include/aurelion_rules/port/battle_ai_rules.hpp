@@ -5,10 +5,11 @@
 // reads. Where a copy's body is BattleRules' word for word, it calls the
 // BattleRules port.
 //
-// The scoring memos (_scoring_living_entry, _stack_term_memo and
-// _keep_stack_term) are not ported: they are transparent, so the native reads
-// go without them and the shadow checks prove it. _stack_contact_band and
-// _stack_is_engaged are therefore _stack_contact_band_on and _stack_engaged_on.
+// The scoring memos of one AI decision (_scoring_living_entry, _stack_term_memo
+// and _keep_stack_term) are GDScript's static vars (_scoring_scope_depth,
+// _scoring_living, _scoring_stack_terms), read and written through the host as
+// the GDScript does: _alive_stacks_for_side, _stack_contact_band and
+// _stack_is_engaged keep their entries inside a scoring scope.
 //
 // Not ported: _stack_is_isolated (calls _allied_melee_count, layer 2, and
 // reads the living memo's melee count) and _stack_is_hex_isolated (calls it).

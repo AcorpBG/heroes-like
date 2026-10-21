@@ -3,6 +3,8 @@
 #include "aurelion_rules/port/battle_footprint.hpp"
 #include "aurelion_rules/port/battle_rules.hpp"
 
+#include <string>
+
 namespace aurelion::rules::port::battle_ai_rules {
 
 using compat::engine_clamp;
@@ -30,6 +32,94 @@ Atom string_field(const State &state, DictRef dict, Atom field, Atom fallback) {
 	return gd::to_string(state.get(dict, str(field), str(fallback)));
 }
 
+// The memos of one AI decision (_open_scoring_scope), GDScript's static vars.
+bool scoring_scope_open(State &state) {
+	return gd::to_int(state, gd::static_var(state, key::battle_ai_rules_script, key::_scoring_scope_depth)) > 0;
+}
+
+// _add_scoring_memo_entry(entries_by_key, key, entry)
+void add_scoring_memo_entry(State &state, DictRef entries_by_key, Atom memo_key, ArrayRef entry) {
+	Value entries;
+	if (state.lookup(entries_by_key, str(memo_key), entries)) {
+		state.append(gd::as_array(entries), array_value(entry));
+		return;
+	}
+	const ArrayRef list = state.new_array();
+	state.append(list, array_value(entry));
+	state.set(entries_by_key, str(memo_key), array_value(list));
+}
+
+// _scoring_memo_entry(entries_by_key, key, first, second): the entry holding
+// the same two dictionaries, or a new [].
+ArrayRef scoring_memo_entry(State &state, DictRef entries_by_key, Atom memo_key, DictRef first, DictRef second) {
+	for (const Value &entry : gd::field_items(state, entries_by_key, str(memo_key))) {
+		const ArrayRef held = gd::as_array(entry);
+		if (gd::is_same(state, state.at(held, 0), dict_value(first)) && gd::is_same(state, state.at(held, 1), dict_value(second))) {
+			return held;
+		}
+	}
+	return state.new_array();
+}
+
+// _stack_term_memo(term, stack, battle): [stack, battle, value] once worked
+// out, else a new [stack, battle] that keep_stack_term completes; a new []
+// outside a scope.
+ArrayRef stack_term_memo(State &state, const char *term, DictRef stack, DictRef battle) {
+	if (!scoring_scope_open(state)) {
+		return state.new_array();
+	}
+	const Atom memo_key = state.intern(std::string(term) + "|" + state.text(string_field(state, stack, key::battle_id, key::empty)));
+	const DictRef terms = gd::as_dict(gd::static_var(state, key::battle_ai_rules_script, key::_scoring_stack_terms));
+	const ArrayRef entry = scoring_memo_entry(state, terms, memo_key, stack, battle);
+	if (state.array_size(entry) > 0) {
+		return entry;
+	}
+	const ArrayRef made = state.new_array();
+	state.append(made, dict_value(stack));
+	state.append(made, dict_value(battle));
+	add_scoring_memo_entry(state, terms, memo_key, made);
+	return made;
+}
+
+// _keep_stack_term(entry, value)
+void keep_stack_term(State &state, ArrayRef entry, const Value &value) {
+	if (state.array_size(entry) == 2) {
+		state.append(entry, value);
+	}
+}
+
+// _scoring_living_entry(battle, side): [stacks array, its living stacks of
+// side, how many of them are not ranged]; a new [] outside a scope or without
+// a stacks array.
+ArrayRef scoring_living_entry(State &state, DictRef battle, Atom side) {
+	if (!scoring_scope_open(state)) {
+		return state.new_array();
+	}
+	Value stacks;
+	if (!state.lookup(battle, str(key::stacks), stacks) || !gd::is_array(stacks)) {
+		return state.new_array();
+	}
+	const DictRef living = gd::as_dict(gd::static_var(state, key::battle_ai_rules_script, key::_scoring_living));
+	for (const Value &entry : gd::field_items(state, living, str(side))) {
+		if (gd::is_same(state, state.at(gd::as_array(entry), 0), stacks)) {
+			return gd::as_array(entry);
+		}
+	}
+	const ArrayRef alive = _living_stacks_of_side(state, stacks, side);
+	int64_t not_ranged = 0;
+	for (const Value &stack : gd::items(state, array_value(alive))) {
+		if (!gd::bool_field(state, gd::as_dict(stack), key::ranged, false)) {
+			not_ranged += 1;
+		}
+	}
+	const ArrayRef made = state.new_array();
+	state.append(made, stacks);
+	state.append(made, array_value(alive));
+	state.append(made, int_value(not_ranged));
+	add_scoring_memo_entry(state, living, side, made);
+	return made;
+}
+
 } // namespace
 
 int64_t _alive_count(const State &state, DictRef stack) {
@@ -38,7 +128,10 @@ int64_t _alive_count(const State &state, DictRef stack) {
 }
 
 ArrayRef _alive_stacks_for_side(State &state, DictRef battle, Atom side) {
-	// Without the scoring scope's living memo (_scoring_living_entry).
+	const ArrayRef entry = scoring_living_entry(state, battle, side);
+	if (state.array_size(entry) > 0) {
+		return gd::as_array(state.at(entry, 1));
+	}
 	const ArrayRef none = state.new_array();
 	return _living_stacks_of_side(state, state.get(battle, str(key::stacks), array_value(none)), side);
 }
@@ -114,8 +207,13 @@ DictRef _stack_by_battle_id(State &state, DictRef battle, Atom battle_id) {
 }
 
 int64_t _stack_contact_band(State &state, DictRef stack, DictRef battle) {
-	// Without the scoring scope's term memo (_stack_term_memo).
-	return _stack_contact_band_on(state, stack, battle);
+	const ArrayRef memo = stack_term_memo(state, "contact_band", stack, battle);
+	if (state.array_size(memo) == 3) {
+		return gd::to_int(state, state.at(memo, 2));
+	}
+	const int64_t value = _stack_contact_band_on(state, stack, battle);
+	keep_stack_term(state, memo, int_value(value));
+	return value;
 }
 
 int64_t _stack_contact_band_on(State &state, DictRef stack, DictRef battle) {
@@ -152,8 +250,13 @@ int64_t _stack_hex_distance(State &state, DictRef lhs, DictRef rhs) {
 }
 
 bool _stack_is_engaged(State &state, DictRef stack, DictRef battle) {
-	// Without the scoring scope's term memo (_stack_term_memo).
-	return _stack_engaged_on(state, stack, battle);
+	const ArrayRef memo = stack_term_memo(state, "engaged", stack, battle);
+	if (state.array_size(memo) == 3) {
+		return gd::to_bool(state.at(memo, 2));
+	}
+	const bool value = _stack_engaged_on(state, stack, battle);
+	keep_stack_term(state, memo, gd::bool_value(value));
+	return value;
 }
 
 } // namespace aurelion::rules::port::battle_ai_rules
