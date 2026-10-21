@@ -112,6 +112,7 @@ void AurelionRules::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("state_round_trip", "value", "mode"), &AurelionRules::state_round_trip);
 	ClassDB::bind_method(D_METHOD("state_overwrite", "target", "source"), &AurelionRules::state_overwrite);
 	ClassDB::bind_method(D_METHOD("state_last_stats"), &AurelionRules::state_last_stats);
+	ClassDB::bind_method(D_METHOD("state_conversion_timing", "start", "end", "made_arrays", "made_dicts", "rounds"), &AurelionRules::state_conversion_timing);
 	ClassDB::bind_method(D_METHOD("battle_port_call", "name", "args", "write_back"), &AurelionRules::battle_port_call);
 	ClassDB::bind_method(D_METHOD("battle_port_check", "name", "args", "gdscript_result"), &AurelionRules::battle_port_check);
 	ClassDB::bind_method(D_METHOD("battle_port_report", "name", "mismatch"), &AurelionRules::battle_port_report);
@@ -258,6 +259,61 @@ Variant AurelionRules::state_overwrite(const Variant &target, const Variant &sou
 
 Dictionary AurelionRules::state_last_stats() const {
 	return last_state_stats_;
+}
+
+Dictionary AurelionRules::state_conversion_timing(const Variant &start, const Variant &end, int64_t made_arrays, int64_t made_dicts, int64_t rounds) {
+	Dictionary result;
+	try {
+		using Clock = std::chrono::steady_clock;
+		std::vector<double> loads;
+		std::vector<double> stores;
+		Array load_rounds;
+		Array store_rounds;
+		for (int64_t round = 0; round < std::max<int64_t>(1, rounds); ++round) {
+			const Variant copy = start.duplicate(true);
+			aurelion::rules::state::State state;
+			aurelion::rules::bridge::StateBridge bridge;
+			const Clock::time_point load_start = Clock::now();
+			const bool loaded = bridge.load(copy, state);
+			const Clock::time_point load_stop = Clock::now();
+			if (!loaded || !bridge.overwrite(end, state)) {
+				UtilityFunctions::push_error(String("AurelionRules.state_conversion_timing: ") + String::utf8(bridge.error().c_str()));
+				return Dictionary();
+			}
+			const size_t loaded_arrays = state.array_count();
+			const size_t loaded_dicts = state.dict_count();
+			for (int64_t index = 0; index < made_arrays; ++index) {
+				state.new_array();
+			}
+			for (int64_t index = 0; index < made_dicts; ++index) {
+				state.new_dict();
+			}
+			const Clock::time_point store_start = Clock::now();
+			bridge.store_in_place(state);
+			const Clock::time_point store_stop = Clock::now();
+			loads.push_back(std::chrono::duration<double, std::micro>(load_stop - load_start).count());
+			stores.push_back(std::chrono::duration<double, std::micro>(store_stop - store_start).count());
+			load_rounds.push_back(loads.back());
+			store_rounds.push_back(stores.back());
+			result["loaded_arrays"] = static_cast<int64_t>(loaded_arrays);
+			result["loaded_dicts"] = static_cast<int64_t>(loaded_dicts);
+			result["pool_arrays"] = static_cast<int64_t>(state.array_count());
+			result["pool_dicts"] = static_cast<int64_t>(state.dict_count());
+			result["rebuilt_dicts"] = bridge.rebuilt_dicts();
+		}
+		std::sort(loads.begin(), loads.end());
+		std::sort(stores.begin(), stores.end());
+		result["load_us"] = loads[loads.size() / 2];
+		result["store_us"] = stores[stores.size() / 2];
+		result["load_rounds"] = load_rounds;
+		result["store_rounds"] = store_rounds;
+		return result;
+	} catch (const std::exception &error) {
+		report_exception("state_conversion_timing", error.what());
+	} catch (...) {
+		report_exception("state_conversion_timing", "unknown");
+	}
+	return Dictionary();
 }
 
 namespace {

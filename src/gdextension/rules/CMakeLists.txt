@@ -126,7 +126,12 @@ add_executable(rules_selftest
 )
 target_link_libraries(rules_selftest PRIVATE aurelion_rules_core)
 
-foreach(AURELION_RULES_TARGET aurelion_rules_core aurelion_rules rules_selftest)
+# The G1 replay of the battle port (tools/battle_port_g1): captured calls, native
+# only. Built on request, stays in the build tree.
+add_executable(battle_port_replay g1/battle_port_replay.cpp)
+target_link_libraries(battle_port_replay PRIVATE aurelion_rules_core)
+
+foreach(AURELION_RULES_TARGET aurelion_rules_core aurelion_rules rules_selftest battle_port_replay)
 	if(MSVC)
 		target_compile_options(${AURELION_RULES_TARGET} PRIVATE /W4)
 	else()

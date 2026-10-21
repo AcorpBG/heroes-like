@@ -77,21 +77,15 @@ const char *type_name(const Value &value) {
 	return "Variant";
 }
 
-DictRef as_dict(const Value &value) {
-	if (value.kind != Kind::Dict) {
-		fail(std::string("Invalid type: expected Dictionary, got ") + type_name(value));
-	}
-	return value.ref;
+void not_a_dict(const Value &value) {
+	fail(std::string("Invalid type: expected Dictionary, got ") + type_name(value));
 }
 
-ArrayRef as_array(const Value &value) {
-	if (value.kind != Kind::Array) {
-		fail(std::string("Invalid type: expected Array, got ") + type_name(value));
-	}
-	return value.ref;
+void not_an_array(const Value &value) {
+	fail(std::string("Invalid type: expected Array, got ") + type_name(value));
 }
 
-int64_t to_int(const State &state, const Value &value) {
+int64_t to_int_other(const State &state, const Value &value) {
 	switch (value.kind) {
 		case Kind::Int:
 			return value.i;
@@ -134,10 +128,7 @@ bool to_bool(const Value &value) {
 	}
 }
 
-Atom to_string(const Value &value) {
-	if (value.is_string_like()) {
-		return value.ref;
-	}
+void not_a_string(const Value &value) {
 	fail(std::string("Invalid argument for 'String' constructor: ") + type_name(value));
 }
 
@@ -222,18 +213,18 @@ Value ceil(const Value &value) {
 	fail(std::string("ceil() of ") + type_name(value) + " is not ported");
 }
 
-const std::vector<Value> &items(const State &state, const Value &value) {
+const state::ValueList &items(const State &state, const Value &value) {
 	if (value.kind == Kind::Array) {
 		return state.array(value.ref).items;
 	}
 	if (value.kind == Kind::Dict) {
-		return state.dict(value.ref).keys;
+		return state.dict(value.ref).keys.list();
 	}
 	fail(std::string("Iterating over ") + type_name(value) + " is not ported");
 }
 
-const std::vector<Value> &field_items(const State &state, DictRef dict, const Value &key) {
-	static const std::vector<Value> kNone;
+const state::ValueList &field_items(const State &state, DictRef dict, const Value &key) {
+	static const state::ValueList kNone;
 	Value field;
 	if (!state.lookup(dict, key, field)) {
 		return kNone;
@@ -252,8 +243,8 @@ Value index(const State &state, DictRef dict, const Value &key) {
 void merge(State &state, DictRef dict, DictRef other, bool overwrite) {
 	const state::DictNode &source = state.dict(other);
 	// Copied first: dict and other may be the same node.
-	const std::vector<Value> keys = source.keys;
-	const std::vector<Value> values = source.values;
+	const state::ValueList keys = source.keys.list();
+	const state::ValueList values = source.values;
 	for (size_t index = 0; index < keys.size(); ++index) {
 		if (overwrite || !state.has(dict, keys[index])) {
 			state.set(dict, keys[index], values[index]);

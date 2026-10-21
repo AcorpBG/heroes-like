@@ -59,7 +59,7 @@ DictRef cell_dict(State &state, int64_t q, int64_t r) {
 
 // `occupied.has(key) and (identity.is_empty() or String(occupied[key]) != identity)`
 bool taken(State &state, DictRef occupied, int64_t q, int64_t r, gd::Atom identity) {
-	const Value cell_key = state.string(gd::format_pair(q, r));
+	const Value cell_key = str(state.pair_atom(q, r));
 	Value holder;
 	if (!state.lookup(occupied, cell_key, holder)) {
 		return false;

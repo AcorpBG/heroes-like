@@ -41,36 +41,13 @@ Atom string_field(const State &state, DictRef dict, Atom field, Atom fallback) {
 
 // "%d,%d" % [q, r], interned.
 Atom pair_key(State &state, int64_t q, int64_t r) {
-	return state.intern(gd::format_pair(q, r));
+	return state.pair_atom(q, r);
 }
 
-// The "q,r" key of a hex id, the way _hex_id_by_key maps them: -1 for a key
-// that is not one of the board's 99.
+// The hex id of a "q,r" key, the way _hex_id_by_key maps them: -1 for a key
+// that is not one of the board's 99 (the State gives those fixed atoms).
 int64_t hex_id_of_key(const State &state, const Value &key) {
-	if (!key.is_string_like()) {
-		return -1;
-	}
-	const std::string &text = state.text(key.ref);
-	const size_t comma = text.find(',');
-	if (comma == std::string::npos || comma == 0 || comma + 1 >= text.size() || comma > 2 || text.size() - comma - 1 > 1) {
-		return -1;
-	}
-	int64_t q = 0;
-	for (size_t index = 0; index < comma; ++index) {
-		if (text[index] < '0' || text[index] > '9') {
-			return -1;
-		}
-		q = q * 10 + (text[index] - '0');
-	}
-	const char row = text[comma + 1];
-	if (row < '0' || row > '9') {
-		return -1;
-	}
-	const int64_t r = row - '0';
-	if (q >= BATTLE_HEX_COLUMNS || r >= BATTLE_HEX_ROWS || gd::format_pair(q, r) != text) {
-		return -1;
-	}
-	return q * BATTLE_HEX_ROWS + r;
+	return key.is_string_like() ? state.board_cell_of_atom(key.ref) : -1;
 }
 
 DictRef empty_dict(State &state) {
@@ -276,7 +253,7 @@ DictRef _obstacle_cell_map(State &state, DictRef battle) {
 			const DictRef normalized = _normalize_hex_cell(state, cell);
 			if (!gd::is_empty(state, normalized)) {
 				const Atom cell_key = _hex_key(state, normalized);
-				const Atom blocker = state.intern("obstacle:" + state.text(string_field(state, obstacle.ref, key::id, key::empty)));
+				const Atom blocker = state.joined_atom(key::obstacle_prefix, string_field(state, obstacle.ref, key::id, key::empty));
 				state.set(blocked, str(cell_key), str(blocker));
 			}
 		}

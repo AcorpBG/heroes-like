@@ -65,6 +65,13 @@ public:
 	// atoms, opaque, types, load_usec, store_usec, reused_arrays, reused_dicts,
 	// rebuilt_dicts}.
 	Dictionary state_last_stats() const;
+	// G1 (tools/battle_port_g1): one resolve's whole-battle conversion, timed.
+	// Each round loads a deep copy of start (timed), turns the state into end
+	// (untimed: StateBridge::overwrite stands in for the native loop's changes),
+	// adds the nodes the ported calls made, unreachable, and writes the state
+	// back into the copy's containers (timed). {load_us, store_us} are medians;
+	// also every round and the pool sizes.
+	Dictionary state_conversion_timing(const Variant &start, const Variant &end, int64_t made_arrays, int64_t made_dicts, int64_t rounds);
 
 	// The ported battle functions (aurelion_rules/port/registry.hpp), for the
 	// switch in BattleEngine.gd. battle_port_call runs one on args and returns

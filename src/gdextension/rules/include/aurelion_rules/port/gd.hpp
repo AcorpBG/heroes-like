@@ -40,15 +40,39 @@ inline bool is_dict(const Value &value) { return value.kind == Kind::Dict; }
 inline bool is_array(const Value &value) { return value.kind == Kind::Array; }
 inline bool is_vector2i(const Value &value) { return value.kind == Kind::Vector2i; }
 
+// The cases the inline helpers below leave to gd.cpp: the errors, and int() of
+// anything but an int.
+[[noreturn]] void not_a_dict(const Value &value);
+[[noreturn]] void not_an_array(const Value &value);
+[[noreturn]] void not_a_string(const Value &value);
+int64_t to_int_other(const State &state, const Value &value);
+
 // A value passed where GDScript's static type is Dictionary or Array.
-DictRef as_dict(const Value &value);
-ArrayRef as_array(const Value &value);
+inline DictRef as_dict(const Value &value) {
+	if (value.kind != Kind::Dict) {
+		not_a_dict(value);
+	}
+	return value.ref;
+}
+inline ArrayRef as_array(const Value &value) {
+	if (value.kind != Kind::Array) {
+		not_an_array(value);
+	}
+	return value.ref;
+}
 
 // The constructors: int(x), float(x), bool(x), String(x).
-int64_t to_int(const State &state, const Value &value);
+inline int64_t to_int(const State &state, const Value &value) {
+	return value.kind == Kind::Int ? value.i : to_int_other(state, value);
+}
 double to_float(const Value &value);
 bool to_bool(const Value &value);
-Atom to_string(const Value &value);
+inline Atom to_string(const Value &value) {
+	if (!value.is_string_like()) {
+		not_a_string(value);
+	}
+	return value.ref;
+}
 
 // x == y (Variant OP_EQUAL) and Variant::hash_compare, which containers use
 // for their values: hash_compare wants the same type, so 1 and 1.0 differ.
@@ -65,9 +89,9 @@ Value ceil(const Value &value);
 
 // What `for x in value` visits: an Array's items or a Dictionary's keys. The
 // loop body must not resize the container it walks.
-const std::vector<Value> &items(const State &state, const Value &value);
+const state::ValueList &items(const State &state, const Value &value);
 // `for x in d.get(key, [])`: the field's items, none when the key is missing.
-const std::vector<Value> &field_items(const State &state, DictRef dict, const Value &key);
+const state::ValueList &field_items(const State &state, DictRef dict, const Value &key);
 
 // d[key] for reading: a missing key is a ScriptError.
 Value index(const State &state, DictRef dict, const Value &key);

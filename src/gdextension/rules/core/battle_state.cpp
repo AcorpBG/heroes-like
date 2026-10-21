@@ -1,5 +1,7 @@
 #include "aurelion_rules/battle_state.hpp"
 
+#include "aurelion_rules/compat/godot_string.hpp"
+
 namespace aurelion::rules::state {
 
 namespace {
@@ -11,12 +13,11 @@ constexpr std::string_view kKnownKeys[] = {
 };
 
 int64_t find_index(const DictNode &node, const Value &key) {
-	for (size_t index = 0; index < node.keys.size(); ++index) {
-		if (same_key(node.keys[index], key)) {
-			return static_cast<int64_t>(index);
-		}
-	}
-	return -1;
+	return node.keys.find(key);
+}
+
+std::string pair_text(int64_t q, int64_t r) {
+	return compat::itos(q) + "," + compat::itos(r);
 }
 
 } // namespace
@@ -53,8 +54,16 @@ State::State() {
 void State::clear() {
 	atoms_.clear();
 	atom_ids_.clear();
+	joined_.clear();
 	for (std::string_view text : kKnownKeys) {
 		intern(text);
+	}
+	for (int64_t q = 0; q < battle_hex::kColumns; ++q) {
+		for (int64_t r = 0; r < battle_hex::kRows; ++r) {
+			if (intern(pair_text(q, r)) != kBoardAtoms + static_cast<uint32_t>(q * battle_hex::kRows + r)) {
+				throw std::logic_error("a known key is also a board cell key");
+			}
+		}
 	}
 	clear_nodes();
 }
@@ -85,74 +94,36 @@ bool State::find_atom(std::string_view text, uint32_t &atom) const {
 	return true;
 }
 
-uint32_t State::new_array() {
-	arrays_.emplace_back();
-	return static_cast<uint32_t>(arrays_.size() - 1);
-}
-
-uint32_t State::new_dict() {
-	dicts_.emplace_back();
-	return static_cast<uint32_t>(dicts_.size() - 1);
-}
-
-ArrayNode &State::array(uint32_t node) const {
-	if (arrays_[node].backed) {
-		backing_->fill_array(const_cast<State &>(*this), node);
-		arrays_[node].backed = false;
+uint32_t State::joined_atom(uint32_t prefix, uint32_t atom) {
+	const uint64_t pair = (static_cast<uint64_t>(prefix) << 32) | atom;
+	const auto found = joined_.find(pair);
+	if (found != joined_.end()) {
+		return found->second;
 	}
-	return arrays_[node];
+	const uint32_t joined = intern(atoms_[prefix] + atoms_[atom]);
+	joined_.emplace(pair, joined);
+	return joined;
 }
 
-DictNode &State::dict(uint32_t node) const {
-	if (dicts_[node].backed) {
-		backing_->fill_dict(const_cast<State &>(*this), node);
-		dicts_[node].backed = false;
+uint32_t State::pair_atom(int64_t q, int64_t r) {
+	if (q >= 0 && q < battle_hex::kColumns && r >= 0 && r < battle_hex::kRows) {
+		return kBoardAtoms + static_cast<uint32_t>(q * battle_hex::kRows + r);
 	}
-	return dicts_[node];
+	return intern(pair_text(q, r));
 }
 
-bool State::lookup(uint32_t dict_node, const Value &key, Value &out) const {
-	const DictNode &node = dicts_[dict_node];
-	if (node.backed) {
-		return backing_->dict_lookup(const_cast<State &>(*this), dict_node, key, out);
-	}
-	const int64_t index = find_index(node, key);
-	if (index < 0) {
-		return false;
-	}
-	out = node.values[static_cast<size_t>(index)];
-	return true;
+void State::fill_array(uint32_t node) const {
+	backing_->fill_array(const_cast<State &>(*this), node);
+	arrays_[node].backed = false;
 }
 
-bool State::has(uint32_t dict_node, const Value &key) const {
-	Value ignored;
-	return lookup(dict_node, key, ignored);
+void State::fill_dict(uint32_t node) const {
+	backing_->fill_dict(const_cast<State &>(*this), node);
+	dicts_[node].backed = false;
 }
 
-Value State::get(uint32_t dict_node, const Value &key, const Value &fallback) const {
-	Value found;
-	return lookup(dict_node, key, found) ? found : fallback;
-}
-
-int64_t State::dict_size(uint32_t dict_node) const {
-	const DictNode &node = dicts_[dict_node];
-	if (node.backed) {
-		return backing_->dict_size(dict_node);
-	}
-	return static_cast<int64_t>(node.keys.size());
-}
-
-void State::set(uint32_t dict_node, const Value &key, const Value &value) {
-	DictNode &node = dict(dict_node);
-	const int64_t index = find_index(node, key);
-	if (index >= 0) {
-		node.values[static_cast<size_t>(index)] = value;
-		node.dirty = true;
-		return;
-	}
-	node.keys.push_back(key);
-	node.values.push_back(value);
-	node.dirty = true;
+bool State::backed_lookup(uint32_t dict_node, const Value &key, Value &out) const {
+	return backing_->dict_lookup(const_cast<State &>(*this), dict_node, key, out);
 }
 
 bool State::erase(uint32_t dict_node, const Value &key) {
@@ -161,37 +132,14 @@ bool State::erase(uint32_t dict_node, const Value &key) {
 	if (index < 0) {
 		return false;
 	}
-	node.keys.erase(node.keys.begin() + static_cast<std::ptrdiff_t>(index));
-	node.values.erase(node.values.begin() + static_cast<std::ptrdiff_t>(index));
+	node.keys.erase_at(static_cast<size_t>(index));
+	node.values.erase_at(static_cast<size_t>(index));
 	node.dirty = true;
 	return true;
 }
 
-int64_t State::array_size(uint32_t array_node) const {
-	const ArrayNode &node = arrays_[array_node];
-	if (node.backed) {
-		return backing_->array_size(array_node);
-	}
-	return static_cast<int64_t>(node.items.size());
-}
-
-Value State::at(uint32_t array_node, int64_t index) const {
-	const int64_t size = array_size(array_node);
-	const int64_t position = index < 0 ? index + size : index;
-	if (position < 0 || position >= size) {
-		throw ScriptError("Out of bounds get index '" + std::to_string(index) + "' (on base: 'Array')");
-	}
-	const ArrayNode &node = arrays_[array_node];
-	if (node.backed) {
-		return backing_->array_at(const_cast<State &>(*this), array_node, position);
-	}
-	return node.items[static_cast<size_t>(position)];
-}
-
-void State::append(uint32_t array_node, const Value &value) {
-	ArrayNode &node = array(array_node);
-	node.items.push_back(value);
-	node.dirty = true;
+void State::out_of_bounds(int64_t index) {
+	throw ScriptError("Out of bounds get index '" + std::to_string(index) + "' (on base: 'Array')");
 }
 
 } // namespace aurelion::rules::state

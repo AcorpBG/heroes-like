@@ -169,7 +169,8 @@ Value PortBridge::load(const Variant &value) {
 void PortBridge::fill_array(state::State &state, uint32_t node) {
 	const Array source = *array_sources_[node];
 	const int64_t size = source.size();
-	std::vector<Value> items(static_cast<size_t>(size));
+	state::ValueList items;
+	items.resize(static_cast<size_t>(size));
 	for (int64_t index = 0; index < size; ++index) {
 		const Variant item = source[index];
 		items[static_cast<size_t>(index)] = load(item);
@@ -182,8 +183,10 @@ void PortBridge::fill_dict(state::State &state, uint32_t node) {
 	const Array keys = source.keys();
 	const Array values = source.values();
 	const int64_t size = keys.size();
-	std::vector<Value> node_keys(static_cast<size_t>(size));
-	std::vector<Value> node_values(static_cast<size_t>(size));
+	state::ValueList node_keys;
+	node_keys.resize(static_cast<size_t>(size));
+	state::ValueList node_values;
+	node_values.resize(static_cast<size_t>(size));
 	for (int64_t index = 0; index < size; ++index) {
 		const Variant key = keys[index];
 		const Variant value = values[index];

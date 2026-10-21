@@ -57,12 +57,7 @@ Probe probe_key(const Variant &key, const state::State &state, Value &out) {
 }
 
 int64_t find_key(const Value &key, const state::DictNode &node) {
-	for (size_t index = 0; index < node.keys.size(); ++index) {
-		if (state::same_key(node.keys[index], key)) {
-			return static_cast<int64_t>(index);
-		}
-	}
-	return -1;
+	return node.keys.find(key);
 }
 
 } // namespace
@@ -234,7 +229,7 @@ Value StateBridge::merge_value(const Variant &source, const Value &existing, sta
 		}
 		const state::TypeRef element_type = array.is_typed() ? register_type(array.get_typed_builtin(), array.get_typed_class_name(), array.get_typed_script()) : 0;
 		uint32_t node = 0;
-		std::vector<Value> old_items;
+		state::ValueList old_items;
 		if (existing.kind == Kind::Array && existing.ref < array_taken_.size() && !array_taken_[existing.ref] && state.array(existing.ref).element_type == element_type) {
 			node = existing.ref;
 			old_items = state.array(node).items;
@@ -248,7 +243,8 @@ Value StateBridge::merge_value(const Variant &source, const Value &existing, sta
 		array_taken_[node] = true;
 		merge_arrays_.emplace(id, node);
 		const int64_t size = array.size();
-		std::vector<Value> items(static_cast<size_t>(size));
+		state::ValueList items;
+		items.resize(static_cast<size_t>(size));
 		for (int64_t index = 0; index < size; ++index) {
 			const Value old_item = static_cast<size_t>(index) < old_items.size() ? old_items[static_cast<size_t>(index)] : Value();
 			items[static_cast<size_t>(index)] = merge_value(array[index], old_item, state);
@@ -288,8 +284,10 @@ Value StateBridge::merge_value(const Variant &source, const Value &existing, sta
 		const Array keys = dict.keys();
 		const Array values = dict.values();
 		const int64_t size = keys.size();
-		std::vector<Value> new_keys(static_cast<size_t>(size));
-		std::vector<Value> new_values(static_cast<size_t>(size));
+		state::ValueList new_keys;
+		new_keys.resize(static_cast<size_t>(size));
+		state::ValueList new_values;
+		new_values.resize(static_cast<size_t>(size));
 		for (int64_t index = 0; index < size; ++index) {
 			const Value key = merge_value(keys[index], Value(), state);
 			const int64_t old_index = find_key(key, old);
