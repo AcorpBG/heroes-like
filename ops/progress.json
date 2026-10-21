@@ -116323,15 +116323,15 @@
     {
       "id": "native-rules-phase3-ai-targets-20261021",
       "title": "Native AiHeroRules._best_candidate and _gate_candidate (Phase 3)",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Owner decision 2026-10-21: port _vetted_candidate and _gate_candidate with the shared runtime on branch native-phase3-ai-targets, games identical, Windows only, lean checks. Started 2026-10-21: profile on main 37d547fac, six seeds: _vetted_candidate 20.5% of match time, _gate_candidate 6.7%; under them battle previews 8.4% (stay GDScript), _search 0.9%, scoring 17.8%. Native entries _best_candidate and _gate_candidate; static closure 445 functions, 7,188 lines, frozen until the merge. Shared helpers go to main unswitched, one owner each (coordination notes).",
-      "updatedAt": "2026-10-21T23:00:00Z"
+      "notes": "Owner decision 2026-10-21: port _vetted_candidate and _gate_candidate with the shared runtime on branch native-phase3-ai-targets, games identical, Windows only, lean checks. Profile on main 37d547fac, six seeds: _vetted_candidate 20.5% of match time, _gate_candidate 6.7%; battle previews 8.4% stay GDScript. Completed 2026-10-21 and merged (owner decision 2026-10-21: merged although whole games got no faster): _best_candidate, _gate_candidate and their static closure (445 functions) run in the rules library; AiHeroRules keeps 64 wrappers, 67 functions deleted; 313 closure functions keep a GDScript copy. Shadow mode on the six seeds 94,431,208 checks, 0 mismatches; parity identical 6/6; core suite 17/17. Six seeds 804/868/860/844 s (main, change, change, main, shared machine): the lazy bridge re-reads the session on every call (64 s of 141 s in 240M Dictionary reads on three seeds), so the gain needs Phase 4's once-per-turn load. Linux libraries wait for the Linux pass.",
+      "updatedAt": "2026-10-21T20:20:00Z"
     }
   ],
   "project": "heroes-like",
