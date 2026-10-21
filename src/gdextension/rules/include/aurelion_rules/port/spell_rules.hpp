@@ -47,4 +47,7 @@ DictRef purge_expired_stack_effects(State &state, DictRef stack, int64_t round_n
 // A list of spell ids, the empty ones dropped (spell_rules.cpp).
 ArrayRef _normalize_spell_ids(State &state, const Value &value);
 
+// Layer 5: a battle effect built from an ability (attack_effects.cpp).
+DictRef build_battle_effect(State &state, Atom effect_id, Atom label, const Value &modifiers, int64_t duration_rounds, DictRef battle, Atom source_type, Atom source_id, const Value &status_immunity_ids);
+
 } // namespace aurelion::rules::port::spell_rules

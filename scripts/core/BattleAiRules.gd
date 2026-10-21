@@ -247,6 +247,15 @@ static func _projected_on_cell__gd(battle: Dictionary, stack: Dictionary, cell: 
 	return [projected, projected_battle]
 
 static func _field_objectives(battle: Dictionary) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _field_objectives__gd(battle)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleAiRules._field_objectives", [battle])
+	var result = _field_objectives__gd(battle)
+	BattleEngine.check(&"BattleAiRules._field_objectives", [battle], result)
+	return result
+
+static func _field_objectives__gd(battle: Dictionary) -> Array:
 	var objectives = battle.get(FIELD_OBJECTIVES_KEY, [])
 	return objectives if objectives is Array else []
 
@@ -261,6 +270,15 @@ static func _commander_spell_cast_this_round(battle: Dictionary, side: String) -
 	return int(cast_rounds.get(side, 0)) >= int(battle.get("round", 1))
 
 static func _side_controls_field_objective_type(battle: Dictionary, side: String, objective_type: String) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _side_controls_field_objective_type__gd(battle, side, objective_type)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleAiRules._side_controls_field_objective_type", [battle, side, objective_type])
+	var result = _side_controls_field_objective_type__gd(battle, side, objective_type)
+	BattleEngine.check(&"BattleAiRules._side_controls_field_objective_type", [battle, side, objective_type], result)
+	return result
+
+static func _side_controls_field_objective_type__gd(battle: Dictionary, side: String, objective_type: String) -> bool:
 	for objective in _field_objectives(battle):
 		if objective is Dictionary and String(objective.get("type", "")) == objective_type and String(objective.get("control_side", "")) == side:
 			return true
@@ -3123,6 +3141,15 @@ static func _can_make_melee_attack(stack: Dictionary, battle: Dictionary, target
 	return hex_distance == 2 and (_reach_available(stack, battle) or _hookline_available(stack, battle))
 
 static func _reach_available(stack: Dictionary, battle: Dictionary) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _reach_available__gd(stack, battle)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleAiRules._reach_available", [stack, battle])
+	var result = _reach_available__gd(stack, battle)
+	BattleEngine.check(&"BattleAiRules._reach_available", [stack, battle], result)
+	return result
+
+static func _reach_available__gd(stack: Dictionary, battle: Dictionary) -> bool:
 	var reach := _ability_by_id(stack, "reach")
 	if reach.is_empty():
 		return false
@@ -3136,6 +3163,15 @@ static func _reach_available(stack: Dictionary, battle: Dictionary) -> bool:
 	return false
 
 static func _hookline_available(stack: Dictionary, battle: Dictionary) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _hookline_available__gd(stack, battle)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleAiRules._hookline_available", [stack, battle])
+	var result = _hookline_available__gd(stack, battle)
+	BattleEngine.check(&"BattleAiRules._hookline_available", [stack, battle], result)
+	return result
+
+static func _hookline_available__gd(stack: Dictionary, battle: Dictionary) -> bool:
 	var hookline := _ability_by_id(stack, "hookline")
 	if hookline.is_empty():
 		return false
@@ -3245,7 +3281,17 @@ static func _stack_hex_distance(lhs: Dictionary, rhs: Dictionary) -> int:
 static func _stack_hex_distance__gd(lhs: Dictionary, rhs: Dictionary) -> int:
 	return Footprint.distance(lhs, rhs)
 
-static func _pressure_artillery_secondary_target(
+static func _pressure_artillery_secondary_target(battle: Dictionary, attacker: Dictionary, primary_target: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _pressure_artillery_secondary_target__gd(battle, attacker, primary_target)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules._pressure_artillery_secondary_target", [battle, attacker, primary_target])
+	var before := BattleEngine.before_writing(&"BattleAiRules._pressure_artillery_secondary_target", [battle, attacker, primary_target])
+	var result = _pressure_artillery_secondary_target__gd(battle, attacker, primary_target)
+	BattleEngine.check_writing(&"BattleAiRules._pressure_artillery_secondary_target", before, [battle, attacker, primary_target], result)
+	return result
+
+static func _pressure_artillery_secondary_target__gd(
 	battle: Dictionary,
 	attacker: Dictionary,
 	primary_target: Dictionary
@@ -3275,6 +3321,15 @@ static func _pressure_artillery_secondary_target(
 	return best
 
 static func _pressure_artillery_secondary_damage(attacker: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _pressure_artillery_secondary_damage__gd(attacker)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleAiRules._pressure_artillery_secondary_damage", [attacker])
+	var result = _pressure_artillery_secondary_damage__gd(attacker)
+	BattleEngine.check(&"BattleAiRules._pressure_artillery_secondary_damage", [attacker], result)
+	return result
+
+static func _pressure_artillery_secondary_damage__gd(attacker: Dictionary) -> int:
 	var ability := _ability_by_id(attacker, "pressure_artillery")
 	if ability.is_empty() or _alive_count(attacker) <= 0:
 		return 0
@@ -3319,6 +3374,15 @@ static func _distance_band_from_hex_distance__gd(hex_distance: int) -> int:
 	return 2
 
 static func _can_make_retaliation(stack: Dictionary, attack_distance: int, battle: Dictionary) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _can_make_retaliation__gd(stack, attack_distance, battle)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleAiRules._can_make_retaliation", [stack, attack_distance, battle])
+	var result = _can_make_retaliation__gd(stack, attack_distance, battle)
+	BattleEngine.check(&"BattleAiRules._can_make_retaliation", [stack, attack_distance, battle], result)
+	return result
+
+static func _can_make_retaliation__gd(stack: Dictionary, attack_distance: int, battle: Dictionary) -> bool:
 	if SpellRulesScript.has_effect_id(stack, battle, STATUS_STAGGERED):
 		return false
 	if attack_distance <= 0:
@@ -3670,6 +3734,15 @@ static func _commander_damage_modifier(
 	return modifier
 
 static func _ability_by_id(stack: Dictionary, ability_id: String) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _ability_by_id__gd(stack, ability_id)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleAiRules._ability_by_id", [stack, ability_id])
+	var result = _ability_by_id__gd(stack, ability_id)
+	BattleEngine.check(&"BattleAiRules._ability_by_id", [stack, ability_id], result)
+	return result
+
+static func _ability_by_id__gd(stack: Dictionary, ability_id: String) -> Dictionary:
 	if ability_id == "":
 		return {}
 	for ability in stack.get("abilities", []):
@@ -3678,11 +3751,29 @@ static func _ability_by_id(stack: Dictionary, ability_id: String) -> Dictionary:
 	return {}
 
 static func _authored_ability_by_id(stack: Dictionary, ability_id: String) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _authored_ability_by_id__gd(stack, ability_id)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleAiRules._authored_ability_by_id", [stack, ability_id])
+	var result = _authored_ability_by_id__gd(stack, ability_id)
+	BattleEngine.check(&"BattleAiRules._authored_ability_by_id", [stack, ability_id], result)
+	return result
+
+static func _authored_ability_by_id__gd(stack: Dictionary, ability_id: String) -> Dictionary:
 	var unit := ContentService.get_unit(String(stack.get("unit_id", "")))
 	var authored := _ability_by_id(unit, ability_id)
 	return authored if not authored.is_empty() else _ability_by_id(stack, ability_id)
 
 static func _has_ability(stack: Dictionary, ability_id: String) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _has_ability__gd(stack, ability_id)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleAiRules._has_ability", [stack, ability_id])
+	var result = _has_ability__gd(stack, ability_id)
+	BattleEngine.check(&"BattleAiRules._has_ability", [stack, ability_id], result)
+	return result
+
+static func _has_ability__gd(stack: Dictionary, ability_id: String) -> bool:
 	return not _ability_by_id(stack, ability_id).is_empty()
 
 static func _spell_buff_already_active(active_stack: Dictionary, battle: Dictionary, spell: Dictionary) -> bool:
@@ -3753,6 +3844,15 @@ static func _brace_has_held_objective(stack: Dictionary, battle: Dictionary, bra
 	return false
 
 static func _brace_available(stack: Dictionary, battle: Dictionary) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _brace_available__gd(stack, battle)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleAiRules._brace_available", [stack, battle])
+	var result = _brace_available__gd(stack, battle)
+	BattleEngine.check(&"BattleAiRules._brace_available", [stack, battle], result)
+	return result
+
+static func _brace_available__gd(stack: Dictionary, battle: Dictionary) -> bool:
 	var brace := _ability_by_id(stack, "brace")
 	if brace.is_empty():
 		return false
@@ -3766,9 +3866,27 @@ static func _brace_available(stack: Dictionary, battle: Dictionary) -> bool:
 	return false
 
 static func _bramble_ground_ability(stack: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _bramble_ground_ability__gd(stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleAiRules._bramble_ground_ability", [stack])
+	var result = _bramble_ground_ability__gd(stack)
+	BattleEngine.check(&"BattleAiRules._bramble_ground_ability", [stack], result)
+	return result
+
+static func _bramble_ground_ability__gd(stack: Dictionary) -> Dictionary:
 	return _authored_ability_by_id(stack, "bramble_ground")
 
 static func _bramble_ground_available(stack: Dictionary, battle: Dictionary, ability: Dictionary = {}) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _bramble_ground_available__gd(stack, battle, ability)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleAiRules._bramble_ground_available", [stack, battle, ability])
+	var result = _bramble_ground_available__gd(stack, battle, ability)
+	BattleEngine.check(&"BattleAiRules._bramble_ground_available", [stack, battle, ability], result)
+	return result
+
+static func _bramble_ground_available__gd(stack: Dictionary, battle: Dictionary, ability: Dictionary = {}) -> bool:
 	var bramble_ground := ability if not ability.is_empty() else _bramble_ground_ability(stack)
 	if stack.is_empty() or bramble_ground.is_empty():
 		return false
@@ -3782,9 +3900,27 @@ static func _bramble_ground_available(stack: Dictionary, battle: Dictionary, abi
 	return false
 
 static func _fog_screen_ability(stack: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _fog_screen_ability__gd(stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleAiRules._fog_screen_ability", [stack])
+	var result = _fog_screen_ability__gd(stack)
+	BattleEngine.check(&"BattleAiRules._fog_screen_ability", [stack], result)
+	return result
+
+static func _fog_screen_ability__gd(stack: Dictionary) -> Dictionary:
 	return _authored_ability_by_id(stack, "fog_screen")
 
 static func _fog_screen_available(stack: Dictionary, battle: Dictionary, ability: Dictionary = {}) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _fog_screen_available__gd(stack, battle, ability)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleAiRules._fog_screen_available", [stack, battle, ability])
+	var result = _fog_screen_available__gd(stack, battle, ability)
+	BattleEngine.check(&"BattleAiRules._fog_screen_available", [stack, battle, ability], result)
+	return result
+
+static func _fog_screen_available__gd(stack: Dictionary, battle: Dictionary, ability: Dictionary = {}) -> bool:
 	var fog_screen := ability if not ability.is_empty() else _fog_screen_ability(stack)
 	if stack.is_empty() or fog_screen.is_empty():
 		return false
@@ -3797,9 +3933,27 @@ static func _fog_screen_available(stack: Dictionary, battle: Dictionary, ability
 	return false
 
 static func _readiness_writ_ability(stack: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _readiness_writ_ability__gd(stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleAiRules._readiness_writ_ability", [stack])
+	var result = _readiness_writ_ability__gd(stack)
+	BattleEngine.check(&"BattleAiRules._readiness_writ_ability", [stack], result)
+	return result
+
+static func _readiness_writ_ability__gd(stack: Dictionary) -> Dictionary:
 	return _authored_ability_by_id(stack, "readiness_writ")
 
 static func _readiness_writ_effect_count(stack: Dictionary, battle: Dictionary, ability: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _readiness_writ_effect_count__gd(stack, battle, ability)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleAiRules._readiness_writ_effect_count", [stack, battle, ability])
+	var result = _readiness_writ_effect_count__gd(stack, battle, ability)
+	BattleEngine.check(&"BattleAiRules._readiness_writ_effect_count", [stack, battle, ability], result)
+	return result
+
+static func _readiness_writ_effect_count__gd(stack: Dictionary, battle: Dictionary, ability: Dictionary) -> int:
 	var count := 0
 	for status_id in ability.get("cleansed_status_ids", []):
 		if SpellRulesScript.has_effect_id(stack, battle, String(status_id)):
@@ -3869,7 +4023,17 @@ static func _side_has_ability(battle: Dictionary, side: String, ability_id: Stri
 			return true
 	return false
 
-static func _counter_ambush_flare_context(
+static func _counter_ambush_flare_context(battle: Dictionary, protected_stack: Dictionary, ambush_ability_id: String) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _counter_ambush_flare_context__gd(battle, protected_stack, ambush_ability_id)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules._counter_ambush_flare_context", [battle, protected_stack, ambush_ability_id])
+	var before := BattleEngine.before_writing(&"BattleAiRules._counter_ambush_flare_context", [battle, protected_stack, ambush_ability_id])
+	var result = _counter_ambush_flare_context__gd(battle, protected_stack, ambush_ability_id)
+	BattleEngine.check_writing(&"BattleAiRules._counter_ambush_flare_context", before, [battle, protected_stack, ambush_ability_id], result)
+	return result
+
+static func _counter_ambush_flare_context__gd(
 	battle: Dictionary,
 	protected_stack: Dictionary,
 	ambush_ability_id: String
@@ -3885,6 +4049,15 @@ static func _counter_ambush_flare_context(
 	return {}
 
 static func _battle_has_tag(battle: Dictionary, tag: String) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _battle_has_tag__gd(battle, tag)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleAiRules._battle_has_tag", [battle, tag])
+	var result = _battle_has_tag__gd(battle, tag)
+	BattleEngine.check(&"BattleAiRules._battle_has_tag", [battle, tag], result)
+	return result
+
+static func _battle_has_tag__gd(battle: Dictionary, tag: String) -> bool:
 	if tag == "":
 		return false
 	for value in battle.get("battlefield_tags", []):
@@ -4074,7 +4247,17 @@ static func _stack_is_hex_isolated(battle: Dictionary, stack: Dictionary) -> boo
 			return false
 	return true
 
-static func _harry_support_ready(
+static func _harry_support_ready(attacker: Dictionary, target: Dictionary, battle: Dictionary, ability: Dictionary) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _harry_support_ready__gd(attacker, target, battle, ability)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules._harry_support_ready", [attacker, target, battle, ability])
+	var before := BattleEngine.before_writing(&"BattleAiRules._harry_support_ready", [attacker, target, battle, ability])
+	var result = _harry_support_ready__gd(attacker, target, battle, ability)
+	BattleEngine.check_writing(&"BattleAiRules._harry_support_ready", before, [attacker, target, battle, ability], result)
+	return result
+
+static func _harry_support_ready__gd(
 	attacker: Dictionary,
 	target: Dictionary,
 	battle: Dictionary,

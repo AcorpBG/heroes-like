@@ -6860,6 +6860,15 @@ static func stack_details(battle: Dictionary, battle_id: String) -> Dictionary:
 ## The strike-backs a stack has this round: "max" a round, "left" of them
 ## still to make (none while Staggered, which "blocked" names).
 static func stack_strike_backs(battle: Dictionary, stack: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return stack_strike_backs__gd(battle, stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules.stack_strike_backs", [battle, stack])
+	var result = stack_strike_backs__gd(battle, stack)
+	BattleEngine.check(&"BattleRules.stack_strike_backs", [battle, stack], result)
+	return result
+
+static func stack_strike_backs__gd(battle: Dictionary, stack: Dictionary) -> Dictionary:
 	var staggered := SpellRulesScript.has_effect_id(stack, battle, STATUS_STAGGERED)
 	return {
 		"left": 0 if staggered else maxi(0, int(stack.get("retaliations_left", 0))),
@@ -7340,7 +7349,17 @@ static func _resolve_attack_action(
 		target_after_before_outcome
 	)
 
-static func _attach_post_attack_target_context(
+static func _attach_post_attack_target_context(result: Dictionary, session: SessionStateStoreScript.SessionData, action_id: String, target_before: Dictionary, target_after_before_outcome: Dictionary = {}) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _attach_post_attack_target_context__gd(result, session, action_id, target_before, target_after_before_outcome)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._attach_post_attack_target_context", [result, session, action_id, target_before, target_after_before_outcome])
+	var before := BattleEngine.before_writing(&"BattleRules._attach_post_attack_target_context", [result, session, action_id, target_before, target_after_before_outcome])
+	var switch_result = _attach_post_attack_target_context__gd(result, session, action_id, target_before, target_after_before_outcome)
+	BattleEngine.check_writing(&"BattleRules._attach_post_attack_target_context", before, [result, session, action_id, target_before, target_after_before_outcome], switch_result)
+	return switch_result
+
+static func _attach_post_attack_target_context__gd(
 	result: Dictionary,
 	session: SessionStateStoreScript.SessionData,
 	action_id: String,
@@ -9358,10 +9377,29 @@ static func _battle_aftermath_display_outcome(outcome: String, details: Dictiona
 			return outcome
 
 static func _append_nonempty_message(messages: Array, message: String) -> void:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		_append_nonempty_message__gd(messages, message)
+	elif _battle_engine_mode == BattleEngine.NATIVE:
+		BattleEngine.native_writing(&"BattleRules._append_nonempty_message", [messages, message])
+	else:
+		var before := BattleEngine.before_writing(&"BattleRules._append_nonempty_message", [messages, message])
+		_append_nonempty_message__gd(messages, message)
+		BattleEngine.check_writing(&"BattleRules._append_nonempty_message", before, [messages, message], null)
+
+static func _append_nonempty_message__gd(messages: Array, message: String) -> void:
 	if message != "":
 		messages.append(message)
 
 static func _join_messages(parts: Array) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _join_messages__gd(parts)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._join_messages", [parts])
+	var result = _join_messages__gd(parts)
+	BattleEngine.check(&"BattleRules._join_messages", [parts], result)
+	return result
+
+static func _join_messages__gd(parts: Array) -> String:
 	var messages = []
 	for value in parts:
 		var message = String(value)
@@ -11215,7 +11253,17 @@ static func _ranged_damage_return_ratio__gd(stack: Dictionary) -> float:
 		return 0.0
 	return clampf(float(shielding.get("ranged_damage_return_ratio", 0.0)), 0.0, 0.25)
 
-static func _apply_ranged_damage_return(
+static func _apply_ranged_damage_return(battle: Dictionary, attacker_battle_id: String, defender_before: Dictionary, is_ranged: bool, source_type: String) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_ranged_damage_return__gd(battle, attacker_battle_id, defender_before, is_ranged, source_type)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_ranged_damage_return", [battle, attacker_battle_id, defender_before, is_ranged, source_type])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_ranged_damage_return", [battle, attacker_battle_id, defender_before, is_ranged, source_type])
+	var result = _apply_ranged_damage_return__gd(battle, attacker_battle_id, defender_before, is_ranged, source_type)
+	BattleEngine.check_writing(&"BattleRules._apply_ranged_damage_return", before, [battle, attacker_battle_id, defender_before, is_ranged, source_type], result)
+	return result
+
+static func _apply_ranged_damage_return__gd(
 	battle: Dictionary,
 	attacker_battle_id: String,
 	defender_before: Dictionary,
@@ -11340,6 +11388,15 @@ static func _restore_stack_health__gd(battle: Dictionary, battle_id: String, amo
 	return restored
 
 static func _sporeglass_mend_target(battle: Dictionary, side: String) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _sporeglass_mend_target__gd(battle, side)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._sporeglass_mend_target", [battle, side])
+	var result = _sporeglass_mend_target__gd(battle, side)
+	BattleEngine.check(&"BattleRules._sporeglass_mend_target", [battle, side], result)
+	return result
+
+static func _sporeglass_mend_target__gd(battle: Dictionary, side: String) -> Dictionary:
 	var best := {}
 	var best_recoverable := 0
 	for candidate in _alive_stacks_for_side(battle, side):
@@ -11358,6 +11415,16 @@ static func _sporeglass_mend_target(battle: Dictionary, side: String) -> Diction
 	return best
 
 static func _apply_sporeglass_mending_fire(battle: Dictionary, attacker: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_sporeglass_mending_fire__gd(battle, attacker)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_sporeglass_mending_fire", [battle, attacker])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_sporeglass_mending_fire", [battle, attacker])
+	var result = _apply_sporeglass_mending_fire__gd(battle, attacker)
+	BattleEngine.check_writing(&"BattleRules._apply_sporeglass_mending_fire", before, [battle, attacker], result)
+	return result
+
+static func _apply_sporeglass_mending_fire__gd(battle: Dictionary, attacker: Dictionary) -> Dictionary:
 	var source := _get_stack_by_id(battle, String(attacker.get("battle_id", "")))
 	if source.is_empty() or _alive_count(source) <= 0:
 		return {}
@@ -11411,6 +11478,15 @@ static func _readiness_writ_ability__gd(stack: Dictionary) -> Dictionary:
 	return _authored_ability_by_id(stack, "readiness_writ")
 
 static func _readiness_writ_effect_count(stack: Dictionary, battle: Dictionary, ability: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _readiness_writ_effect_count__gd(stack, battle, ability)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._readiness_writ_effect_count", [stack, battle, ability])
+	var result = _readiness_writ_effect_count__gd(stack, battle, ability)
+	BattleEngine.check(&"BattleRules._readiness_writ_effect_count", [stack, battle, ability], result)
+	return result
+
+static func _readiness_writ_effect_count__gd(stack: Dictionary, battle: Dictionary, ability: Dictionary) -> int:
 	var count := 0
 	for status_id in ability.get("cleansed_status_ids", []):
 		if SpellRulesScript.has_effect_id(stack, battle, String(status_id)):
@@ -11418,6 +11494,16 @@ static func _readiness_writ_effect_count(stack: Dictionary, battle: Dictionary, 
 	return count
 
 static func _readiness_writ_target(battle: Dictionary, source: Dictionary, ability: Dictionary = {}) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _readiness_writ_target__gd(battle, source, ability)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._readiness_writ_target", [battle, source, ability])
+	var before := BattleEngine.before_writing(&"BattleRules._readiness_writ_target", [battle, source, ability])
+	var result = _readiness_writ_target__gd(battle, source, ability)
+	BattleEngine.check_writing(&"BattleRules._readiness_writ_target", before, [battle, source, ability], result)
+	return result
+
+static func _readiness_writ_target__gd(battle: Dictionary, source: Dictionary, ability: Dictionary = {}) -> Dictionary:
 	var readiness_writ := ability if not ability.is_empty() else _readiness_writ_ability(source)
 	if source.is_empty() or readiness_writ.is_empty():
 		return {}
@@ -11447,6 +11533,16 @@ static func _readiness_writ_target(battle: Dictionary, source: Dictionary, abili
 	return best
 
 static func _readiness_writ_preparation_target(battle: Dictionary, source: Dictionary, ability: Dictionary = {}) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _readiness_writ_preparation_target__gd(battle, source, ability)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._readiness_writ_preparation_target", [battle, source, ability])
+	var before := BattleEngine.before_writing(&"BattleRules._readiness_writ_preparation_target", [battle, source, ability])
+	var result = _readiness_writ_preparation_target__gd(battle, source, ability)
+	BattleEngine.check_writing(&"BattleRules._readiness_writ_preparation_target", before, [battle, source, ability], result)
+	return result
+
+static func _readiness_writ_preparation_target__gd(battle: Dictionary, source: Dictionary, ability: Dictionary = {}) -> Dictionary:
 	var readiness_writ := ability if not ability.is_empty() else _readiness_writ_ability(source)
 	if source.is_empty() or readiness_writ.is_empty():
 		return {}
@@ -11479,6 +11575,16 @@ static func _readiness_writ_preparation_target(battle: Dictionary, source: Dicti
 	return best
 
 static func _readiness_writ_available(source: Dictionary, battle: Dictionary, ability: Dictionary = {}) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _readiness_writ_available__gd(source, battle, ability)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._readiness_writ_available", [source, battle, ability])
+	var before := BattleEngine.before_writing(&"BattleRules._readiness_writ_available", [source, battle, ability])
+	var result = _readiness_writ_available__gd(source, battle, ability)
+	BattleEngine.check_writing(&"BattleRules._readiness_writ_available", before, [source, battle, ability], result)
+	return result
+
+static func _readiness_writ_available__gd(source: Dictionary, battle: Dictionary, ability: Dictionary = {}) -> bool:
 	var readiness_writ := ability if not ability.is_empty() else _readiness_writ_ability(source)
 	if source.is_empty() or readiness_writ.is_empty() or _alive_count(source) <= 0 or not bool(source.get("ranged", false)):
 		return false
@@ -11489,6 +11595,16 @@ static func _readiness_writ_available(source: Dictionary, battle: Dictionary, ab
 		or not _readiness_writ_preparation_target(battle, source, readiness_writ).is_empty()
 
 static func _apply_readiness_writ(battle: Dictionary, attacker: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_readiness_writ__gd(battle, attacker)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_readiness_writ", [battle, attacker])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_readiness_writ", [battle, attacker])
+	var result = _apply_readiness_writ__gd(battle, attacker)
+	BattleEngine.check_writing(&"BattleRules._apply_readiness_writ", before, [battle, attacker], result)
+	return result
+
+static func _apply_readiness_writ__gd(battle: Dictionary, attacker: Dictionary) -> Dictionary:
 	var source := _get_stack_by_id(battle, String(attacker.get("battle_id", "")))
 	var readiness_writ := _readiness_writ_ability(source)
 	if not _readiness_writ_available(source, battle, readiness_writ):
@@ -11569,6 +11685,16 @@ static func _apply_readiness_writ(battle: Dictionary, attacker: Dictionary) -> D
 	}
 
 static func _consume_retaliation(battle: Dictionary, battle_id: String) -> void:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		_consume_retaliation__gd(battle, battle_id)
+	elif _battle_engine_mode == BattleEngine.NATIVE:
+		BattleEngine.native_writing(&"BattleRules._consume_retaliation", [battle, battle_id])
+	else:
+		var before := BattleEngine.before_writing(&"BattleRules._consume_retaliation", [battle, battle_id])
+		_consume_retaliation__gd(battle, battle_id)
+		BattleEngine.check_writing(&"BattleRules._consume_retaliation", before, [battle, battle_id], null)
+
+static func _consume_retaliation__gd(battle: Dictionary, battle_id: String) -> void:
 	var stacks = battle.get("stacks", [])
 	for index in range(stacks.size()):
 		var stack = stacks[index]
@@ -11579,6 +11705,16 @@ static func _consume_retaliation(battle: Dictionary, battle_id: String) -> void:
 	battle["stacks"] = stacks
 
 static func _consume_shot(battle: Dictionary, battle_id: String) -> void:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		_consume_shot__gd(battle, battle_id)
+	elif _battle_engine_mode == BattleEngine.NATIVE:
+		BattleEngine.native_writing(&"BattleRules._consume_shot", [battle, battle_id])
+	else:
+		var before := BattleEngine.before_writing(&"BattleRules._consume_shot", [battle, battle_id])
+		_consume_shot__gd(battle, battle_id)
+		BattleEngine.check_writing(&"BattleRules._consume_shot", before, [battle, battle_id], null)
+
+static func _consume_shot__gd(battle: Dictionary, battle_id: String) -> void:
 	var stacks = battle.get("stacks", [])
 	for index in range(stacks.size()):
 		var stack = stacks[index]
@@ -12297,7 +12433,16 @@ static func _hookline_available__gd(stack: Dictionary, battle: Dictionary) -> bo
 	var ability_uses = stack.get("ability_uses", {})
 	return ability_uses is Dictionary and int(ability_uses.get("hookline", 0)) < int(hookline.get("uses_per_battle", 1))
 
-static func _pressure_artillery_secondary_target(
+static func _pressure_artillery_secondary_target(battle: Dictionary, attacker: Dictionary, primary_target: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _pressure_artillery_secondary_target__gd(battle, attacker, primary_target)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._pressure_artillery_secondary_target", [battle, attacker, primary_target])
+	var result = _pressure_artillery_secondary_target__gd(battle, attacker, primary_target)
+	BattleEngine.check(&"BattleRules._pressure_artillery_secondary_target", [battle, attacker, primary_target], result)
+	return result
+
+static func _pressure_artillery_secondary_target__gd(
 	battle: Dictionary,
 	attacker: Dictionary,
 	primary_target: Dictionary
@@ -12327,6 +12472,15 @@ static func _pressure_artillery_secondary_target(
 	return best
 
 static func _pressure_artillery_secondary_damage(attacker: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _pressure_artillery_secondary_damage__gd(attacker)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._pressure_artillery_secondary_damage", [attacker])
+	var result = _pressure_artillery_secondary_damage__gd(attacker)
+	BattleEngine.check(&"BattleRules._pressure_artillery_secondary_damage", [attacker], result)
+	return result
+
+static func _pressure_artillery_secondary_damage__gd(attacker: Dictionary) -> int:
 	var ability := _ability_by_id(attacker, "pressure_artillery")
 	if ability.is_empty() or _alive_count(attacker) <= 0:
 		return 0
@@ -12335,7 +12489,17 @@ static func _pressure_artillery_secondary_damage(attacker: Dictionary) -> int:
 		_alive_count(attacker) * maxi(1, int(ability.get("secondary_damage_per_unit", 1)))
 	)
 
-static func _apply_pressure_artillery(
+static func _apply_pressure_artillery(battle: Dictionary, attacker: Dictionary, primary_target: Dictionary) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_pressure_artillery__gd(battle, attacker, primary_target)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_pressure_artillery", [battle, attacker, primary_target])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_pressure_artillery", [battle, attacker, primary_target])
+	var result = _apply_pressure_artillery__gd(battle, attacker, primary_target)
+	BattleEngine.check_writing(&"BattleRules._apply_pressure_artillery", before, [battle, attacker, primary_target], result)
+	return result
+
+static func _apply_pressure_artillery__gd(
 	battle: Dictionary,
 	attacker: Dictionary,
 	primary_target: Dictionary
@@ -12411,13 +12575,32 @@ static func _apply_pressure_artillery(
 	return messages
 
 static func _can_make_retaliation(stack: Dictionary, attack_distance: int, battle: Dictionary) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _can_make_retaliation__gd(stack, attack_distance, battle)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._can_make_retaliation", [stack, attack_distance, battle])
+	var result = _can_make_retaliation__gd(stack, attack_distance, battle)
+	BattleEngine.check(&"BattleRules._can_make_retaliation", [stack, attack_distance, battle], result)
+	return result
+
+static func _can_make_retaliation__gd(stack: Dictionary, attack_distance: int, battle: Dictionary) -> bool:
 	if SpellRulesScript.has_effect_id(stack, battle, STATUS_STAGGERED):
 		return false
 	if attack_distance <= 0:
 		return true
 	return attack_distance == 1 and _reach_available(stack, battle)
 
-static func _apply_attack_ability_effects(
+static func _apply_attack_ability_effects(battle: Dictionary, attacker: Dictionary, defender: Dictionary, is_ranged: bool, attack_distance: int, defender_before: Dictionary = {}) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_attack_ability_effects__gd(battle, attacker, defender, is_ranged, attack_distance, defender_before)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_attack_ability_effects", [battle, attacker, defender, is_ranged, attack_distance, defender_before])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_attack_ability_effects", [battle, attacker, defender, is_ranged, attack_distance, defender_before])
+	var result = _apply_attack_ability_effects__gd(battle, attacker, defender, is_ranged, attack_distance, defender_before)
+	BattleEngine.check_writing(&"BattleRules._apply_attack_ability_effects", before, [battle, attacker, defender, is_ranged, attack_distance, defender_before], result)
+	return result
+
+static func _apply_attack_ability_effects__gd(
 	battle: Dictionary,
 	attacker: Dictionary,
 	defender: Dictionary,
@@ -12556,7 +12739,17 @@ static func _apply_attack_ability_effects(
 			])
 	return messages
 
-static func _apply_retaliation_ability_effects(
+static func _apply_retaliation_ability_effects(battle: Dictionary, retaliator: Dictionary, attacker: Dictionary) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_retaliation_ability_effects__gd(battle, retaliator, attacker)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_retaliation_ability_effects", [battle, retaliator, attacker])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_retaliation_ability_effects", [battle, retaliator, attacker])
+	var result = _apply_retaliation_ability_effects__gd(battle, retaliator, attacker)
+	BattleEngine.check_writing(&"BattleRules._apply_retaliation_ability_effects", before, [battle, retaliator, attacker], result)
+	return result
+
+static func _apply_retaliation_ability_effects__gd(
 	battle: Dictionary,
 	retaliator: Dictionary,
 	attacker: Dictionary
@@ -12586,6 +12779,15 @@ static func _apply_retaliation_ability_effects(
 	return messages
 
 static func _status_effect_from_ability(ability: Dictionary, battle: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _status_effect_from_ability__gd(ability, battle)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._status_effect_from_ability", [ability, battle])
+	var result = _status_effect_from_ability__gd(ability, battle)
+	BattleEngine.check(&"BattleRules._status_effect_from_ability", [ability, battle], result)
+	return result
+
+static func _status_effect_from_ability__gd(ability: Dictionary, battle: Dictionary) -> Dictionary:
 	return SpellRulesScript.build_battle_effect(
 		String(ability.get("status_id", "")),
 		String(ability.get("status_label", "Status")),
@@ -12597,6 +12799,16 @@ static func _status_effect_from_ability(ability: Dictionary, battle: Dictionary)
 	)
 
 static func _apply_hookline_pull(battle: Dictionary, attacker: Dictionary, defender: Dictionary) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_hookline_pull__gd(battle, attacker, defender)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_hookline_pull", [battle, attacker, defender])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_hookline_pull", [battle, attacker, defender])
+	var result = _apply_hookline_pull__gd(battle, attacker, defender)
+	BattleEngine.check_writing(&"BattleRules._apply_hookline_pull", before, [battle, attacker, defender], result)
+	return result
+
+static func _apply_hookline_pull__gd(battle: Dictionary, attacker: Dictionary, defender: Dictionary) -> bool:
 	var attacker_cell := _stack_hex(attacker)
 	var defender_cell := _stack_hex(defender)
 	if attacker_cell.is_empty() or defender_cell.is_empty() or _stack_hex_distance(attacker, defender) != 2:
@@ -13117,7 +13329,17 @@ static func _counter_ambush_flare_context__gd(
 			return {"source": source, "ability": ability}
 	return {}
 
-static func _append_counter_ambush_flare_event(
+static func _append_counter_ambush_flare_event(battle: Dictionary, flare_context: Dictionary, ambusher: Dictionary, blocked_ability_id: String, blocked_ability_name: String) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _append_counter_ambush_flare_event__gd(battle, flare_context, ambusher, blocked_ability_id, blocked_ability_name)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._append_counter_ambush_flare_event", [battle, flare_context, ambusher, blocked_ability_id, blocked_ability_name])
+	var before := BattleEngine.before_writing(&"BattleRules._append_counter_ambush_flare_event", [battle, flare_context, ambusher, blocked_ability_id, blocked_ability_name])
+	var result = _append_counter_ambush_flare_event__gd(battle, flare_context, ambusher, blocked_ability_id, blocked_ability_name)
+	BattleEngine.check_writing(&"BattleRules._append_counter_ambush_flare_event", before, [battle, flare_context, ambusher, blocked_ability_id, blocked_ability_name], result)
+	return result
+
+static func _append_counter_ambush_flare_event__gd(
 	battle: Dictionary,
 	flare_context: Dictionary,
 	ambusher: Dictionary,
@@ -14538,6 +14760,15 @@ static func _side_positive_effect_count__gd(battle: Dictionary, side: String) ->
 	return total
 
 static func _lowest_health_stack(stacks: Array) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _lowest_health_stack__gd(stacks)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._lowest_health_stack", [stacks])
+	var result = _lowest_health_stack__gd(stacks)
+	BattleEngine.check(&"BattleRules._lowest_health_stack", [stacks], result)
+	return result
+
+static func _lowest_health_stack__gd(stacks: Array) -> Dictionary:
 	var best = {}
 	for stack in stacks:
 		if not (stack is Dictionary):
@@ -15388,7 +15619,17 @@ static func _adjust_stack_momentum__gd(battle: Dictionary, battle_id: String, am
 			break
 	battle["stacks"] = stacks
 
-static func _apply_damage_pressure(
+static func _apply_damage_pressure(battle: Dictionary, attacker: Dictionary, target_before: Dictionary, target_after: Dictionary, is_ranged: bool, source_type: String) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_damage_pressure__gd(battle, attacker, target_before, target_after, is_ranged, source_type)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_damage_pressure", [battle, attacker, target_before, target_after, is_ranged, source_type])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_damage_pressure", [battle, attacker, target_before, target_after, is_ranged, source_type])
+	var result = _apply_damage_pressure__gd(battle, attacker, target_before, target_after, is_ranged, source_type)
+	BattleEngine.check_writing(&"BattleRules._apply_damage_pressure", before, [battle, attacker, target_before, target_after, is_ranged, source_type], result)
+	return result
+
+static func _apply_damage_pressure__gd(
 	battle: Dictionary,
 	attacker: Dictionary,
 	target_before: Dictionary,
@@ -15424,6 +15665,15 @@ static func _apply_damage_pressure(
 ## Cohesion lost to one hit goes by the share of the stack it took, never by
 ## the number of creatures: two of two hundred is a scratch, two of three a rout.
 static func _casualty_cohesion_shift(target_before: Dictionary, target_after: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _casualty_cohesion_shift__gd(target_before, target_after)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._casualty_cohesion_shift", [target_before, target_after])
+	var result = _casualty_cohesion_shift__gd(target_before, target_after)
+	BattleEngine.check(&"BattleRules._casualty_cohesion_shift", [target_before, target_after], result)
+	return result
+
+static func _casualty_cohesion_shift__gd(target_before: Dictionary, target_after: Dictionary) -> int:
 	var before_health = max(1, int(target_before.get("total_health", 0)))
 	var after_health = max(0, int(target_after.get("total_health", 0))) if not target_after.is_empty() else 0
 	var after_count = _alive_count(target_after) if not target_after.is_empty() else 0
@@ -15436,7 +15686,17 @@ static func _casualty_cohesion_shift(target_before: Dictionary, target_after: Di
 		return -1
 	return 0
 
-static func _attack_momentum_gain(
+static func _attack_momentum_gain(attacker: Dictionary, target_before: Dictionary, target_after: Dictionary, battle: Dictionary, is_ranged: bool, source_type: String) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _attack_momentum_gain__gd(attacker, target_before, target_after, battle, is_ranged, source_type)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._attack_momentum_gain", [attacker, target_before, target_after, battle, is_ranged, source_type])
+	var before := BattleEngine.before_writing(&"BattleRules._attack_momentum_gain", [attacker, target_before, target_after, battle, is_ranged, source_type])
+	var result = _attack_momentum_gain__gd(attacker, target_before, target_after, battle, is_ranged, source_type)
+	BattleEngine.check_writing(&"BattleRules._attack_momentum_gain", before, [attacker, target_before, target_after, battle, is_ranged, source_type], result)
+	return result
+
+static func _attack_momentum_gain__gd(
 	attacker: Dictionary,
 	target_before: Dictionary,
 	target_after: Dictionary,
@@ -15485,6 +15745,15 @@ static func _attack_momentum_gain(
 	return gain
 
 static func _supportive_cohesion_gain(attacker: Dictionary, battle: Dictionary, is_ranged: bool) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _supportive_cohesion_gain__gd(attacker, battle, is_ranged)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._supportive_cohesion_gain", [attacker, battle, is_ranged])
+	var result = _supportive_cohesion_gain__gd(attacker, battle, is_ranged)
+	BattleEngine.check(&"BattleRules._supportive_cohesion_gain", [attacker, battle, is_ranged], result)
+	return result
+
+static func _supportive_cohesion_gain__gd(attacker: Dictionary, battle: Dictionary, is_ranged: bool) -> int:
 	var gain = 0
 	var side = String(attacker.get("side", ""))
 	if String(attacker.get("faction_id", "")) == "faction_embercourt" and is_ranged and _side_defending_count(battle, side) > 0:
@@ -15501,6 +15770,16 @@ static func _supportive_cohesion_gain(attacker: Dictionary, battle: Dictionary, 
 	return gain
 
 static func _apply_destroyed_stack_shock(battle: Dictionary, destroyed_stack: Dictionary, attacking_side: String) -> void:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		_apply_destroyed_stack_shock__gd(battle, destroyed_stack, attacking_side)
+	elif _battle_engine_mode == BattleEngine.NATIVE:
+		BattleEngine.native_writing(&"BattleRules._apply_destroyed_stack_shock", [battle, destroyed_stack, attacking_side])
+	else:
+		var before := BattleEngine.before_writing(&"BattleRules._apply_destroyed_stack_shock", [battle, destroyed_stack, attacking_side])
+		_apply_destroyed_stack_shock__gd(battle, destroyed_stack, attacking_side)
+		BattleEngine.check_writing(&"BattleRules._apply_destroyed_stack_shock", before, [battle, destroyed_stack, attacking_side], null)
+
+static func _apply_destroyed_stack_shock__gd(battle: Dictionary, destroyed_stack: Dictionary, attacking_side: String) -> void:
 	var defending_side = String(destroyed_stack.get("side", ""))
 	for ally in _alive_stacks_for_side(battle, defending_side):
 		if String(ally.get("battle_id", "")) == String(destroyed_stack.get("battle_id", "")):
@@ -15612,7 +15891,16 @@ static func _stack_is_hex_isolated__gd(battle: Dictionary, stack: Dictionary) ->
 			return false
 	return true
 
-static func _harry_support_ready(
+static func _harry_support_ready(attacker: Dictionary, target: Dictionary, battle: Dictionary, ability: Dictionary) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _harry_support_ready__gd(attacker, target, battle, ability)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._harry_support_ready", [attacker, target, battle, ability])
+	var result = _harry_support_ready__gd(attacker, target, battle, ability)
+	BattleEngine.check(&"BattleRules._harry_support_ready", [attacker, target, battle, ability], result)
+	return result
+
+static func _harry_support_ready__gd(
 	attacker: Dictionary,
 	target: Dictionary,
 	battle: Dictionary,
@@ -16970,6 +17258,16 @@ static func _field_objective_cover_damage_modifier__gd(
 	return modifier
 
 static func _apply_field_objective_action_pressure(battle: Dictionary, action_context: Dictionary) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_field_objective_action_pressure__gd(battle, action_context)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_field_objective_action_pressure", [battle, action_context])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_field_objective_action_pressure", [battle, action_context])
+	var result = _apply_field_objective_action_pressure__gd(battle, action_context)
+	BattleEngine.check_writing(&"BattleRules._apply_field_objective_action_pressure", before, [battle, action_context], result)
+	return result
+
+static func _apply_field_objective_action_pressure__gd(battle: Dictionary, action_context: Dictionary) -> Array:
 	var acting_side = String(action_context.get("side", ""))
 	if acting_side not in ["player", "enemy"]:
 		return []
@@ -16991,7 +17289,16 @@ static func _apply_field_objective_action_pressure(battle: Dictionary, action_co
 	battle[FIELD_OBJECTIVES_KEY] = objectives
 	return messages
 
-static func _field_objective_action_influence(
+static func _field_objective_action_influence(objective: Dictionary, battle: Dictionary, acting_side: String, action_context: Dictionary, acting_stack: Dictionary, target_stack: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _field_objective_action_influence__gd(objective, battle, acting_side, action_context, acting_stack, target_stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._field_objective_action_influence", [objective, battle, acting_side, action_context, acting_stack, target_stack])
+	var result = _field_objective_action_influence__gd(objective, battle, acting_side, action_context, acting_stack, target_stack)
+	BattleEngine.check(&"BattleRules._field_objective_action_influence", [objective, battle, acting_side, action_context, acting_stack, target_stack], result)
+	return result
+
+static func _field_objective_action_influence__gd(
 	objective: Dictionary,
 	battle: Dictionary,
 	acting_side: String,
@@ -17089,6 +17396,16 @@ static func _field_objective_action_influence(
 	return 0
 
 static func _apply_field_objective_control_push(objective: Dictionary, battle: Dictionary, acting_side: String, amount: int) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_field_objective_control_push__gd(objective, battle, acting_side, amount)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_field_objective_control_push", [objective, battle, acting_side, amount])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_field_objective_control_push", [objective, battle, acting_side, amount])
+	var result = _apply_field_objective_control_push__gd(objective, battle, acting_side, amount)
+	BattleEngine.check_writing(&"BattleRules._apply_field_objective_control_push", before, [objective, battle, acting_side, amount], result)
+	return result
+
+static func _apply_field_objective_control_push__gd(objective: Dictionary, battle: Dictionary, acting_side: String, amount: int) -> String:
 	if amount <= 0:
 		return ""
 	var controller = String(objective.get("control_side", "neutral"))
@@ -17128,6 +17445,15 @@ static func _apply_field_objective_control_push(objective: Dictionary, battle: D
 	return ""
 
 static func _field_objective_flip_message(objective: Dictionary, previous_controller: String, new_controller: String) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _field_objective_flip_message__gd(objective, previous_controller, new_controller)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleRules._field_objective_flip_message", [objective, previous_controller, new_controller])
+	var result = _field_objective_flip_message__gd(objective, previous_controller, new_controller)
+	BattleEngine.check(&"BattleRules._field_objective_flip_message", [objective, previous_controller, new_controller], result)
+	return result
+
+static func _field_objective_flip_message__gd(objective: Dictionary, previous_controller: String, new_controller: String) -> String:
 	var label = _field_objective_label(objective)
 	if previous_controller in ["player", "enemy"]:
 		return "%s swings to %s control." % [label, _side_label(new_controller)]
@@ -17413,6 +17739,16 @@ static func _mark_side_animation_event(battle: Dictionary, side: String, event_i
 ## the playback caption's damage; the previous playback frame may already show
 ## this hit when an ability struck another stack in between.
 static func _mark_damage_target_animation(battle: Dictionary, battle_id: String, had_status_effect: bool = false, source_battle_id: String = "", extra_context: Dictionary = {}, target_before: Dictionary = {}) -> void:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		_mark_damage_target_animation__gd(battle, battle_id, had_status_effect, source_battle_id, extra_context, target_before)
+	elif _battle_engine_mode == BattleEngine.NATIVE:
+		BattleEngine.native_writing(&"BattleRules._mark_damage_target_animation", [battle, battle_id, had_status_effect, source_battle_id, extra_context, target_before])
+	else:
+		var before := BattleEngine.before_writing(&"BattleRules._mark_damage_target_animation", [battle, battle_id, had_status_effect, source_battle_id, extra_context, target_before])
+		_mark_damage_target_animation__gd(battle, battle_id, had_status_effect, source_battle_id, extra_context, target_before)
+		BattleEngine.check_writing(&"BattleRules._mark_damage_target_animation", before, [battle, battle_id, had_status_effect, source_battle_id, extra_context, target_before], null)
+
+static func _mark_damage_target_animation__gd(battle: Dictionary, battle_id: String, had_status_effect: bool = false, source_battle_id: String = "", extra_context: Dictionary = {}, target_before: Dictionary = {}) -> void:
 	if battle_id == "":
 		return
 	var target := _get_stack_by_id(battle, battle_id)
@@ -17601,7 +17937,17 @@ static func _append_presentation_event__gd(battle: Dictionary, event_type: Strin
 	battle[PRESENTATION_EVENT_QUEUE_KEY] = events
 	_presentation_queue_written = events
 
-static func _append_damage_presentation_event(
+static func _append_damage_presentation_event(battle: Dictionary, event_type: String, attacker: Dictionary, target_before: Dictionary, target_after: Dictionary, damage: int, action_id: String, extra_context: Dictionary = {}) -> void:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		_append_damage_presentation_event__gd(battle, event_type, attacker, target_before, target_after, damage, action_id, extra_context)
+	elif _battle_engine_mode == BattleEngine.NATIVE:
+		BattleEngine.native_writing(&"BattleRules._append_damage_presentation_event", [battle, event_type, attacker, target_before, target_after, damage, action_id, extra_context])
+	else:
+		var before := BattleEngine.before_writing(&"BattleRules._append_damage_presentation_event", [battle, event_type, attacker, target_before, target_after, damage, action_id, extra_context])
+		_append_damage_presentation_event__gd(battle, event_type, attacker, target_before, target_after, damage, action_id, extra_context)
+		BattleEngine.check_writing(&"BattleRules._append_damage_presentation_event", before, [battle, event_type, attacker, target_before, target_after, damage, action_id, extra_context], null)
+
+static func _append_damage_presentation_event__gd(
 	battle: Dictionary,
 	event_type: String,
 	attacker: Dictionary,
@@ -17640,7 +17986,17 @@ static func _append_damage_presentation_event(
 			context
 		)
 
-static func _append_text_presentation_event(
+static func _append_text_presentation_event(battle: Dictionary, event_type: String, texts: Array, actor: Dictionary, target: Dictionary = {}, action_id: String = "") -> void:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		_append_text_presentation_event__gd(battle, event_type, texts, actor, target, action_id)
+	elif _battle_engine_mode == BattleEngine.NATIVE:
+		BattleEngine.native_writing(&"BattleRules._append_text_presentation_event", [battle, event_type, texts, actor, target, action_id])
+	else:
+		var before := BattleEngine.before_writing(&"BattleRules._append_text_presentation_event", [battle, event_type, texts, actor, target, action_id])
+		_append_text_presentation_event__gd(battle, event_type, texts, actor, target, action_id)
+		BattleEngine.check_writing(&"BattleRules._append_text_presentation_event", before, [battle, event_type, texts, actor, target, action_id], null)
+
+static func _append_text_presentation_event__gd(
 	battle: Dictionary,
 	event_type: String,
 	texts: Array,

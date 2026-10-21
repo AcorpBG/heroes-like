@@ -17,15 +17,18 @@ namespace key = state::key;
 
 namespace {
 
-// container.has(item) on an untyped value: Array.has (StringLikeVariantComparator)
-// or Dictionary.has. Nil and the other modelled types have no has(): GDScript
-// stops there too.
+// container.has(item) on an untyped value: Array.has (StringLikeVariantComparator),
+// Dictionary.has or PackedStringArray.has. Nil and the other modelled types have
+// no has() for a String: GDScript stops there too.
 bool variant_has(const State &state, const Value &container, const Value &item) {
 	if (container.kind == Kind::Array) {
 		return gd::array_has(state, container.ref, item);
 	}
 	if (container.kind == Kind::Dict) {
 		return state.has(container.ref, item);
+	}
+	if (container.kind == Kind::PackedString) {
+		return gd::packed_find(state, container, item) >= 0;
 	}
 	if (container.kind == Kind::Opaque) {
 		throw state::ScriptError("has() on an opaque value is not ported");

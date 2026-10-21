@@ -1644,7 +1644,16 @@ static func purge_expired_stack_effects__gd(stack: Dictionary, round_number: int
 	stack["effects"] = active
 	return stack
 
-static func build_battle_effect(
+static func build_battle_effect(effect_id: String, label: String, modifiers: Variant, duration_rounds: int, battle: Dictionary, source_type: String = "status", source_id: String = "", status_immunity_ids: Variant = []) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return build_battle_effect__gd(effect_id, label, modifiers, duration_rounds, battle, source_type, source_id, status_immunity_ids)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules.build_battle_effect", [effect_id, label, modifiers, duration_rounds, battle, source_type, source_id, status_immunity_ids])
+	var result = build_battle_effect__gd(effect_id, label, modifiers, duration_rounds, battle, source_type, source_id, status_immunity_ids)
+	BattleEngine.check(&"SpellRules.build_battle_effect", [effect_id, label, modifiers, duration_rounds, battle, source_type, source_id, status_immunity_ids], result)
+	return result
+
+static func build_battle_effect__gd(
 	effect_id: String,
 	label: String,
 	modifiers: Variant,

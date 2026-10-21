@@ -4,7 +4,8 @@
 // names (docs/native-rules-engine-transition.md, Phase 1). Layer 1: hex
 // geometry and board reads. Layer 2: the damage chain, the stat totals and
 // what they read. Layers 3 and 4: movement and targeting, turn order and
-// effects.
+// effects. Layer 5: the attack and ability effects, damage pressure and the
+// attack events.
 //
 // _hero_payload_cache and _presentation_queue_written are GDScript's static
 // vars, read and written through the host (gd::static_var) as the GDScript
@@ -24,6 +25,10 @@
 //   slice 10. It does nothing on a battle without the capture key; on one with
 //   it, the native callers (_set_stack_hex, _mark_stack_animation_event) stop
 //   with an error.
+// - _resolve_attack_action and _resolve_ai_attack, the attacks themselves:
+//   slice 10. They end in _complete_action or _complete_enemy_action, which
+//   call _evaluate_outcome and the _finalize_* functions that stay GDScript in
+//   Phase 1.
 
 #include "aurelion_rules/port/gd.hpp"
 
@@ -317,5 +322,59 @@ void _append_animation_event_record(State &state, DictRef battle, DictRef record
 void _append_presentation_event(State &state, DictRef battle, Atom event_type, Atom visible_text, DictRef context);
 ArrayRef _normalize_presentation_event_queue(State &state, const Value &value);
 ArrayRef _normalize_animation_event_queue(State &state, const Value &value);
+
+// Layer 5.
+
+// Attack effects: the attack and retaliation ability effects, the hookline
+// pull, the counter-ambush flare, strike-backs and the retaliations and shots
+// an attack spends (attack_effects.cpp).
+ArrayRef _apply_attack_ability_effects(State &state, DictRef battle, DictRef attacker, DictRef defender, bool is_ranged, int64_t attack_distance, DictRef defender_before);
+ArrayRef _apply_retaliation_ability_effects(State &state, DictRef battle, DictRef retaliator, DictRef attacker);
+DictRef _status_effect_from_ability(State &state, DictRef ability, DictRef battle);
+bool _apply_hookline_pull(State &state, DictRef battle, DictRef attacker, DictRef defender);
+Atom _append_counter_ambush_flare_event(State &state, DictRef battle, DictRef flare_context, DictRef ambusher, Atom blocked_ability_id, Atom blocked_ability_name);
+DictRef stack_strike_backs(State &state, DictRef battle, DictRef stack);
+bool _can_make_retaliation(State &state, DictRef stack, int64_t attack_distance, DictRef battle);
+void _consume_retaliation(State &state, DictRef battle, Atom battle_id);
+void _consume_shot(State &state, DictRef battle, Atom battle_id);
+
+// Unit abilities: pressure artillery, the readiness writ, mending fire, the
+// harry support and the lowest-health pick (unit_abilities.cpp).
+ArrayRef _apply_pressure_artillery(State &state, DictRef battle, DictRef attacker, DictRef primary_target);
+DictRef _pressure_artillery_secondary_target(State &state, DictRef battle, DictRef attacker, DictRef primary_target);
+int64_t _pressure_artillery_secondary_damage(State &state, DictRef attacker);
+DictRef _apply_readiness_writ(State &state, DictRef battle, DictRef attacker);
+bool _readiness_writ_available(State &state, DictRef source, DictRef battle, DictRef ability);
+int64_t _readiness_writ_effect_count(State &state, DictRef stack, DictRef battle, DictRef ability);
+DictRef _readiness_writ_target(State &state, DictRef battle, DictRef source, DictRef ability);
+DictRef _readiness_writ_preparation_target(State &state, DictRef battle, DictRef source, DictRef ability);
+DictRef _apply_sporeglass_mending_fire(State &state, DictRef battle, DictRef attacker);
+DictRef _sporeglass_mend_target(State &state, DictRef battle, Atom side);
+bool _harry_support_ready(State &state, DictRef attacker, DictRef target, DictRef battle, DictRef ability);
+DictRef _lowest_health_stack(State &state, ArrayRef stacks);
+
+// Damage pressure: the cohesion and momentum shifts of a hit, the shock of a
+// destroyed stack, the field objectives' action pressure and control push and
+// the ranged damage return (damage_pressure.cpp).
+ArrayRef _apply_damage_pressure(State &state, DictRef battle, DictRef attacker, DictRef target_before, DictRef target_after, bool is_ranged, Atom source_type);
+void _apply_destroyed_stack_shock(State &state, DictRef battle, DictRef destroyed_stack, Atom attacking_side);
+int64_t _attack_momentum_gain(State &state, DictRef attacker, DictRef target_before, DictRef target_after, DictRef battle, bool is_ranged, Atom source_type);
+int64_t _casualty_cohesion_shift(State &state, DictRef target_before, DictRef target_after);
+int64_t _supportive_cohesion_gain(State &state, DictRef attacker, DictRef battle, bool is_ranged);
+int64_t _field_objective_action_influence(State &state, DictRef objective, DictRef battle, Atom acting_side, DictRef action_context, DictRef acting_stack, DictRef target_stack);
+ArrayRef _apply_field_objective_action_pressure(State &state, DictRef battle, DictRef action_context);
+Atom _apply_field_objective_control_push(State &state, DictRef objective, DictRef battle, Atom acting_side, int64_t amount);
+Atom _field_objective_flip_message(State &state, DictRef objective, Atom previous_controller, Atom new_controller);
+ArrayRef _apply_ranged_damage_return(State &state, DictRef battle, Atom attacker_battle_id, DictRef defender_before, bool is_ranged, Atom source_type);
+
+// Attack events: the post-attack target context, the damage and text
+// presentation events, the damage target animation and the message joins
+// (attack_events.cpp).
+DictRef _attach_post_attack_target_context(State &state, DictRef result, const Value &session, Atom action_id, DictRef target_before, DictRef target_after_before_outcome);
+void _append_damage_presentation_event(State &state, DictRef battle, Atom event_type, DictRef attacker, DictRef target_before, DictRef target_after, int64_t damage, Atom action_id, DictRef extra_context);
+void _append_text_presentation_event(State &state, DictRef battle, Atom event_type, ArrayRef texts, DictRef actor, DictRef target, Atom action_id);
+void _append_nonempty_message(State &state, ArrayRef messages, Atom message);
+Atom _join_messages(State &state, ArrayRef parts);
+void _mark_damage_target_animation(State &state, DictRef battle, Atom battle_id, bool had_status_effect, Atom source_battle_id, DictRef extra_context, DictRef target_before);
 
 } // namespace aurelion::rules::port::battle_rules

@@ -99,9 +99,19 @@ def param_name(param: str) -> str:
     return re.split(r"[:=]", param, maxsplit=1)[0].strip()
 
 
+def local_name(base: str, names: list[str]) -> str:
+    # A local of the switch, renamed when a parameter has its name.
+    name = base
+    while name in names:
+        name = "switch_" + name
+    return name
+
+
 def switch_lines(subsystem: Subsystem, script: str, name: str, params: str, returns: str, writes: bool) -> list[str]:
     signature = f"static func {name}({params}){' -> ' + returns if returns else ''}:"
-    args = ", ".join(param_name(p) for p in split_params(params))
+    names = [param_name(p) for p in split_params(params)]
+    args = ", ".join(names)
+    result, before, native_result = (local_name(base, names) for base in ("result", "before", "native_result"))
     call = f"{name}__gd({args})"
     key = f'&"{script}.{name}"'
     void = returns == "void"
@@ -118,15 +128,15 @@ def switch_lines(subsystem: Subsystem, script: str, name: str, params: str, retu
         ]
         if subsystem.fallback:
             lines += [
-                f"\t\tvar native_result = {engine}.native({key}, [{args}])",
-                f"\t\treturn {call} if {engine}.not_ported() else native_result",
+                f"\t\tvar {native_result} = {engine}.native({key}, [{args}])",
+                f"\t\treturn {call} if {engine}.not_ported() else {native_result}",
             ]
         else:
             lines += [f"\t\treturn {engine}.native({key}, [{args}])"]
         lines += [
-            f"\tvar result = {call}",
-            f"\t{engine}.check({key}, [{args}], result)",
-            "\treturn result",
+            f"\tvar {result} = {call}",
+            f"\t{engine}.check({key}, [{args}], {result})",
+            f"\treturn {result}",
         ]
     elif void:
         lines += [
@@ -142,9 +152,9 @@ def switch_lines(subsystem: Subsystem, script: str, name: str, params: str, retu
             ]
         lines += [
             "\telse:",
-            f"\t\tvar before := {engine}.before_writing({before_args})",
+            f"\t\tvar {before} := {engine}.before_writing({before_args})",
             f"\t\t{call}",
-            f"\t\t{engine}.check_writing({key}, before, [{args}], null)",
+            f"\t\t{engine}.check_writing({key}, {before}, [{args}], null)",
         ]
     else:
         lines += [
@@ -154,16 +164,16 @@ def switch_lines(subsystem: Subsystem, script: str, name: str, params: str, retu
         ]
         if subsystem.fallback:
             lines += [
-                f"\t\tvar native_result = {engine}.native_writing({key}, [{args}])",
-                f"\t\treturn {call} if {engine}.not_ported() else native_result",
+                f"\t\tvar {native_result} = {engine}.native_writing({key}, [{args}])",
+                f"\t\treturn {call} if {engine}.not_ported() else {native_result}",
             ]
         else:
             lines += [f"\t\treturn {engine}.native_writing({key}, [{args}])"]
         lines += [
-            f"\tvar before := {engine}.before_writing({before_args})",
-            f"\tvar result = {call}",
-            f"\t{engine}.check_writing({key}, before, [{args}], result)",
-            "\treturn result",
+            f"\tvar {before} := {engine}.before_writing({before_args})",
+            f"\tvar {result} = {call}",
+            f"\t{engine}.check_writing({key}, {before}, [{args}], {result})",
+            f"\treturn {result}",
         ]
     return lines + [""]
 

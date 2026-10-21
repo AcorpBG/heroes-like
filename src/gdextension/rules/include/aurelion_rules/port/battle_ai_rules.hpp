@@ -13,6 +13,8 @@
 //
 // Not ported: _stack_is_isolated (calls _allied_melee_count, layer 2, and
 // reads the living memo's melee count) and _stack_is_hex_isolated (calls it).
+// _readiness_writ_available: slice 08, with _readiness_writ_target and
+// _stack_cohesion_total, which it calls.
 
 #include "aurelion_rules/port/gd.hpp"
 
@@ -61,5 +63,28 @@ bool _commander_identity_tokens_match(State &state, Atom left_token, Atom right_
 // (ability_helpers.cpp).
 bool faction_brings_tag(State &state, DictRef stack, Atom tag);
 ArrayRef faction_brought_tags(State &state, DictRef stack);
+
+// Layer 5: the AI's own copies of the ability checks and the helpers they use
+// (battle_ai_abilities.cpp).
+DictRef _ability_by_id(State &state, DictRef stack, Atom ability_id);
+DictRef _authored_ability_by_id(State &state, DictRef stack, Atom ability_id);
+bool _has_ability(State &state, DictRef stack, Atom ability_id);
+bool _battle_has_tag(State &state, DictRef battle, Atom tag);
+ArrayRef _field_objectives(State &state, DictRef battle);
+bool _side_controls_field_objective_type(State &state, DictRef battle, Atom side, Atom objective_type);
+bool _brace_available(State &state, DictRef stack, DictRef battle);
+DictRef _bramble_ground_ability(State &state, DictRef stack);
+bool _bramble_ground_available(State &state, DictRef stack, DictRef battle, DictRef ability);
+DictRef _fog_screen_ability(State &state, DictRef stack);
+bool _fog_screen_available(State &state, DictRef stack, DictRef battle, DictRef ability);
+bool _hookline_available(State &state, DictRef stack, DictRef battle);
+bool _reach_available(State &state, DictRef stack, DictRef battle);
+bool _can_make_retaliation(State &state, DictRef stack, int64_t attack_distance, DictRef battle);
+DictRef _readiness_writ_ability(State &state, DictRef stack);
+int64_t _readiness_writ_effect_count(State &state, DictRef stack, DictRef battle, DictRef ability);
+DictRef _pressure_artillery_secondary_target(State &state, DictRef battle, DictRef attacker, DictRef primary_target);
+int64_t _pressure_artillery_secondary_damage(State &state, DictRef attacker);
+bool _harry_support_ready(State &state, DictRef attacker, DictRef target, DictRef battle, DictRef ability);
+DictRef _counter_ambush_flare_context(State &state, DictRef battle, DictRef protected_stack, Atom ambush_ability_id);
 
 } // namespace aurelion::rules::port::battle_ai_rules

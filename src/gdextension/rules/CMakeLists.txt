@@ -114,6 +114,9 @@ add_library(aurelion_rules_core STATIC
 	core/port/ai_port.cpp
 	core/port/ai_registry.cpp
 	core/port/artifact_rules.cpp
+	core/port/attack_effects.cpp
+	core/port/attack_events.cpp
+	core/port/battle_ai_abilities.cpp
 	core/port/battle_ai_rules.cpp
 	core/port/battle_damage_rules_ai.cpp
 	core/port/battle_footprint.cpp
@@ -125,6 +128,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/content_service_ai.cpp
 	core/port/creature_dwelling_rules_ai.cpp
 	core/port/damage_modifiers.cpp
+	core/port/damage_pressure.cpp
 	core/port/damage_stream.cpp
 	core/port/difficulty_rules.cpp
 	core/port/difficulty_rules_ai.cpp
@@ -167,6 +171,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/town_development_rules_ai.cpp
 	core/port/town_rules_ai.cpp
 	core/port/turn_order.cpp
+	core/port/unit_abilities.cpp
 	core/port/visit_building_rules_ai.cpp
 	core/port/water_travel_rules_ai.cpp
 )
