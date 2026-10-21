@@ -42,13 +42,17 @@ SIGNATURE = re.compile(r"^static func (\w+)\((.*)\)\s*(->\s*([\w\[\], ]+))?\s*:\
 
 
 class Subsystem:
-    def __init__(self, registry: str, engine: str, fallback: bool = False) -> None:
+    def __init__(self, registry: str, engine: str, fallback: bool = False, validate: bool = False) -> None:
         self.registry = PORT_DIR / registry
         self.engine = engine
         # A port that leaves paths to GDScript (state::NotPorted): in native
         # mode the switch runs the GDScript body when the engine's not_ported()
         # says the native call reached one.
         self.fallback = fallback
+        # Shadow of a writing function without a copy of its arguments: the
+        # engine's before_writing(key, args) runs the native port first
+        # (AurelionRules.port_validate_begin) and returns the check's handle.
+        self.validate = validate
         # BattleEngine -> _battle_engine_mode
         self.mode_var = "_" + re.sub(r"(?<!^)(?=[A-Z])", "_", engine).lower() + "_mode"
         self.engine_const = f'const {engine} = preload("res://scripts/core/{engine}.gd")'
@@ -102,6 +106,7 @@ def switch_lines(subsystem: Subsystem, script: str, name: str, params: str, retu
     key = f'&"{script}.{name}"'
     void = returns == "void"
     mode, engine = subsystem.mode_var, subsystem.engine
+    before_args = f"{key}, [{args}]" if subsystem.validate else f"[{args}]"
     lines = [signature]
     if not writes:
         if void:
@@ -137,7 +142,7 @@ def switch_lines(subsystem: Subsystem, script: str, name: str, params: str, retu
             ]
         lines += [
             "\telse:",
-            f"\t\tvar before := {engine}.before_writing([{args}])",
+            f"\t\tvar before := {engine}.before_writing({before_args})",
             f"\t\t{call}",
             f"\t\t{engine}.check_writing({key}, before, [{args}], null)",
         ]
@@ -155,7 +160,7 @@ def switch_lines(subsystem: Subsystem, script: str, name: str, params: str, retu
         else:
             lines += [f"\t\treturn {engine}.native_writing({key}, [{args}])"]
         lines += [
-            f"\tvar before := {engine}.before_writing([{args}])",
+            f"\tvar before := {engine}.before_writing({before_args})",
             f"\tvar result = {call}",
             f"\t{engine}.check_writing({key}, before, [{args}], result)",
             "\treturn result",

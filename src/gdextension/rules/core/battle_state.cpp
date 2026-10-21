@@ -13,6 +13,7 @@ constexpr std::string_view kKnownKeys[] = {
 #define AURELION_KEY(name, text) text,
 #include "aurelion_rules/battle_keys.inc"
 #include "aurelion_rules/day_keys.inc"
+#include "aurelion_rules/ai_keys.inc"
 #undef AURELION_KEY
 };
 
@@ -46,6 +47,14 @@ uint8_t builtin_of(const Value &value) {
 			return variant_type::ARRAY;
 		case Kind::Dict:
 			return variant_type::DICTIONARY;
+		case Kind::Vector3i:
+			return variant_type::VECTOR3I;
+		case Kind::PackedByte:
+			return variant_type::PACKED_BYTE_ARRAY;
+		case Kind::PackedInt32:
+			return variant_type::PACKED_INT32_ARRAY;
+		case Kind::PackedString:
+			return variant_type::PACKED_STRING_ARRAY;
 		case Kind::Opaque:
 			break;
 	}
@@ -68,6 +77,14 @@ const char *builtin_name(uint8_t builtin) {
 			return "StringName";
 		case variant_type::VECTOR2I:
 			return "Vector2i";
+		case variant_type::VECTOR3I:
+			return "Vector3i";
+		case variant_type::PACKED_BYTE_ARRAY:
+			return "PackedByteArray";
+		case variant_type::PACKED_INT32_ARRAY:
+			return "PackedInt32Array";
+		case variant_type::PACKED_STRING_ARRAY:
+			return "PackedStringArray";
 		case variant_type::OBJECT:
 			return "Object";
 		case variant_type::DICTIONARY:
@@ -84,6 +101,10 @@ const char *builtin_name(uint8_t builtin) {
 }
 
 } // namespace
+
+void Backing::fill_packed(State &, uint32_t) {
+	no_host("A loaded packed array");
+}
 
 Value Backing::object_get(State &, uint32_t, uint32_t) {
 	no_host("Reading an object's property");
@@ -109,6 +130,18 @@ Value Backing::content_file(State &, uint32_t) {
 	no_host("Content");
 }
 
+int64_t Backing::content_revision(State &) {
+	no_host("Content");
+}
+
+Value Backing::static_get(State &, uint32_t, uint32_t) {
+	no_host("A static var");
+}
+
+void Backing::static_set(State &, uint32_t, uint32_t, const Value &) {
+	no_host("A static var");
+}
+
 void Backing::print_error(const std::string &text) {
 	std::fprintf(stderr, "ERROR: %s\n", text.c_str());
 }
@@ -132,12 +165,15 @@ bool same_key(const Value &a, const Value &b) {
 		case Kind::Int:
 		case Kind::Vector2i:
 			return a.i == b.i;
+		case Kind::Vector3i:
+			return a.i == b.i && a.z == b.z;
 		case Kind::Float:
 			// Variant::hash_compare: == (so 0.0 and -0.0 match), with every NaN equal.
 			return a.f == b.f || (a.f != a.f && b.f != b.f);
 		default:
-			// Container and opaque keys compare by identity here; Godot compares by
-			// content. The adapter rebuilds a Dictionary that has such keys.
+			// Container, packed and opaque keys compare by identity here; Godot
+			// compares by content. The adapter rebuilds a Dictionary that has such
+			// keys.
 			return a.ref == b.ref;
 	}
 }
@@ -169,6 +205,7 @@ void State::clear() {
 void State::clear_nodes() {
 	arrays_.clear();
 	dicts_.clear();
+	packeds_.clear();
 	root = Value();
 }
 
@@ -218,6 +255,11 @@ void State::fill_array(uint32_t node) const {
 void State::fill_dict(uint32_t node) const {
 	backing_->fill_dict(const_cast<State &>(*this), node);
 	dicts_[node].backed = false;
+}
+
+void State::fill_packed(uint32_t node) const {
+	host().fill_packed(const_cast<State &>(*this), node);
+	packeds_[node].backed = false;
 }
 
 bool State::backed_lookup(uint32_t dict_node, const Value &key, Value &out) const {

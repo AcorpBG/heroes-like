@@ -9,6 +9,8 @@
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/classes/random_number_generator.hpp>
 #include <godot_cpp/classes/ref_counted.hpp>
+#include <godot_cpp/classes/resource.hpp>
+#include <godot_cpp/classes/resource_loader.hpp>
 #include <godot_cpp/classes/scene_tree.hpp>
 #include <godot_cpp/classes/window.hpp>
 #include <godot_cpp/core/object.hpp>
@@ -16,12 +18,15 @@
 #include <godot_cpp/variant/typed_array.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <godot_cpp/variant/vector2i.hpp>
+#include <godot_cpp/variant/vector3i.hpp>
 
 #include <cmath>
 #include <cstdio>
 #include <cstring>
+#include <deque>
 #include <string_view>
 #include <unordered_map>
+#include <utility>
 
 namespace aurelion::rules::bridge {
 
@@ -35,6 +40,7 @@ using godot::String;
 using godot::StringName;
 using godot::Variant;
 using godot::Vector2i;
+using godot::Vector3i;
 using state::Kind;
 using state::Value;
 
@@ -65,13 +71,111 @@ bool same_float(double a, double b) {
 	return std::memcmp(&a, &b, sizeof(double)) == 0;
 }
 
+Kind packed_kind(Variant::Type type) {
+	switch (type) {
+		case Variant::PACKED_BYTE_ARRAY:
+			return Kind::PackedByte;
+		case Variant::PACKED_STRING_ARRAY:
+			return Kind::PackedString;
+		default:
+			return Kind::PackedInt32;
+	}
+}
+
+Variant::Type packed_type(Kind kind) {
+	switch (kind) {
+		case Kind::PackedByte:
+			return Variant::PACKED_BYTE_ARRAY;
+		case Kind::PackedString:
+			return Variant::PACKED_STRING_ARRAY;
+		default:
+			return Variant::PACKED_INT32_ARRAY;
+	}
+}
+
+// The elements of a packed Variant and a node of the same kind are equal.
+bool same_elements(const state::State &state, const state::PackedNode &node, const Variant &packed) {
+	switch (node.kind) {
+		case Kind::PackedByte: {
+			const godot::PackedByteArray bytes = packed;
+			return static_cast<size_t>(bytes.size()) == node.bytes.size() && (node.bytes.empty() || std::memcmp(bytes.ptr(), node.bytes.data(), node.bytes.size()) == 0);
+		}
+		case Kind::PackedString: {
+			const godot::PackedStringArray strings = packed;
+			if (static_cast<size_t>(strings.size()) != node.atoms.size()) {
+				return false;
+			}
+			for (size_t index = 0; index < node.atoms.size(); ++index) {
+				if (utf8_of(strings[static_cast<int64_t>(index)]) != state.text(node.atoms[index])) {
+					return false;
+				}
+			}
+			return true;
+		}
+		default: {
+			const godot::PackedInt32Array ints = packed;
+			return static_cast<size_t>(ints.size()) == node.ints.size() && (node.ints.empty() || std::memcmp(ints.ptr(), node.ints.data(), node.ints.size() * sizeof(int32_t)) == 0);
+		}
+	}
+}
+
+// Two values of a container as it was loaded and as it is now: the same type
+// and value, a container or object the very same one.
+bool same_variant(const Variant &a, const Variant &b) {
+	const Variant::Type type = a.get_type();
+	if (type != b.get_type()) {
+		return false;
+	}
+	switch (type) {
+		case Variant::ARRAY:
+			return identity_of(Array(a)) == identity_of(Array(b));
+		case Variant::DICTIONARY:
+			return identity_of(Dictionary(a)) == identity_of(Dictionary(b));
+		case Variant::PACKED_BYTE_ARRAY:
+		case Variant::PACKED_INT32_ARRAY:
+		case Variant::PACKED_STRING_ARRAY:
+			return identity_of_packed(a) == identity_of_packed(b);
+		case Variant::FLOAT:
+			return same_float(static_cast<double>(a), static_cast<double>(b));
+		default:
+			return a == b;
+	}
+}
+
+// The items of an Array as it was loaded and as it is now.
+bool same_items(const Array &before, const Array &now) {
+	const int64_t size = before.size();
+	if (size != now.size()) {
+		return false;
+	}
+	for (int64_t index = 0; index < size; ++index) {
+		if (!same_variant(before[index], now[index])) {
+			return false;
+		}
+	}
+	return true;
+}
+
+// The keys, in order, and values of a Dictionary as it was loaded and as it is now.
+bool same_entries(const Dictionary &before, const Dictionary &now) {
+	if (before.size() != now.size()) {
+		return false;
+	}
+	const Array before_keys = before.keys();
+	const Array now_keys = now.keys();
+	if (!same_items(before_keys, now_keys)) {
+		return false;
+	}
+	return same_items(before.values(), now.values());
+}
+
 } // namespace
 
 PortBridge::PortBridge() {
 	state_.set_backing(this);
 }
 
-void PortBridge::begin() {
+void PortBridge::begin(bool validating) {
 	if (state_.atom_count() > kAtomLimit) {
 		state_.clear();
 		string_cache_.clear();
@@ -83,10 +187,20 @@ void PortBridge::begin() {
 	dict_sources_.clear();
 	array_nodes_.clear();
 	dict_nodes_.clear();
+	packed_sources_.clear();
+	packed_nodes_.clear();
 	opaque_.clear();
 	content_.clear();
+	content_revision_ = -1;
 	exported_arrays_.clear();
 	exported_dicts_.clear();
+	exported_packed_.clear();
+	statics_.clear();
+	static_slots_.clear();
+	validating_ = validating;
+	array_snapshots_.clear();
+	dict_snapshots_.clear();
+	packed_snapshots_.clear();
 }
 
 state::TypeRef PortBridge::register_type(int64_t builtin, const StringName &class_name, const Variant &script) {
@@ -138,6 +252,19 @@ public:
 				for (int64_t index = 0; index < size; ++index) {
 					made[keys[index]] = copy(source[keys[index]]);
 				}
+				return made;
+			}
+			case Variant::PACKED_BYTE_ARRAY:
+			case Variant::PACKED_INT32_ARRAY:
+			case Variant::PACKED_STRING_ARRAY: {
+				// One array however many Variants hold it: one copy.
+				const uint64_t id = identity_of_packed(value);
+				const auto found = packeds_.find(id);
+				if (found != packeds_.end()) {
+					return found->second;
+				}
+				const Variant made = value.duplicate();
+				packeds_.emplace(id, made);
 				return made;
 			}
 			case Variant::OBJECT:
@@ -192,6 +319,7 @@ private:
 
 	std::unordered_map<uint64_t, Variant> arrays_;
 	std::unordered_map<uint64_t, Variant> dicts_;
+	std::unordered_map<uint64_t, Variant> packeds_;
 	std::unordered_map<uint64_t, Variant> objects_;
 };
 
@@ -342,6 +470,57 @@ Value PortBridge::content_file(state::State &state, uint32_t path) {
 	return loaded;
 }
 
+Object *PortBridge::script_object(uint32_t script) {
+	const std::string &path = state_.text(script);
+	auto found = scripts_.find(path);
+	if (found == scripts_.end()) {
+		const Ref<godot::Resource> loaded = godot::ResourceLoader::get_singleton()->load(String::utf8(path.data(), static_cast<int64_t>(path.size())));
+		if (loaded.is_null()) {
+			throw state::ScriptError("cannot load " + path + " for its static vars");
+		}
+		found = scripts_.emplace(path, Variant(loaded)).first;
+	}
+	return static_cast<Object *>(found->second);
+}
+
+StringName PortBridge::static_name(uint32_t name) const {
+	const std::string &text = state_.text(name);
+	return StringName(String::utf8(text.data(), static_cast<int64_t>(text.size())));
+}
+
+Value PortBridge::static_get(state::State &, uint32_t script, uint32_t name) {
+	const uint64_t slot = static_cast<uint64_t>(script) << 32 | name;
+	const auto found = static_slots_.find(slot);
+	if (found != static_slots_.end()) {
+		return statics_[found->second].value;
+	}
+	const Variant value = script_object(script)->get(static_name(name));
+	const Value loaded = load(value);
+	statics_.push_back(StaticVar{ script, name, loaded, false });
+	static_slots_.emplace(slot, statics_.size() - 1);
+	return loaded;
+}
+
+void PortBridge::static_set(state::State &, uint32_t script, uint32_t name, const Value &value) {
+	const uint64_t slot = static_cast<uint64_t>(script) << 32 | name;
+	const auto found = static_slots_.find(slot);
+	if (found != static_slots_.end()) {
+		statics_[found->second].value = value;
+		statics_[found->second].assigned = true;
+		return;
+	}
+	script_object(script);
+	statics_.push_back(StaticVar{ script, name, value, true });
+	static_slots_.emplace(slot, statics_.size() - 1);
+}
+
+int64_t PortBridge::content_revision(state::State &) {
+	if (content_revision_ < 0) {
+		content_revision_ = static_cast<int64_t>(content_service()->call(StringName("get_content_revision")));
+	}
+	return content_revision_;
+}
+
 void PortBridge::print_error(const std::string &text) {
 	godot::UtilityFunctions::push_error(String::utf8(text.data(), static_cast<int64_t>(text.size())));
 }
@@ -381,6 +560,34 @@ Value PortBridge::load(const Variant &value) {
 			const Vector2i vector = value;
 			return Value::of_vector2i(vector.x, vector.y);
 		}
+		case Variant::VECTOR3I: {
+			const Vector3i vector = value;
+			return Value::of_vector3i(vector.x, vector.y, vector.z);
+		}
+		case Variant::PACKED_BYTE_ARRAY:
+		case Variant::PACKED_INT32_ARRAY:
+		case Variant::PACKED_STRING_ARRAY: {
+			const Kind kind = packed_kind(value.get_type());
+			const uint64_t id = identity_of_packed(value);
+			const auto found = packed_nodes_.find(id);
+			if (found != packed_nodes_.end()) {
+				return Value::of_ref(kind, found->second);
+			}
+			const uint32_t node = state_.new_packed(kind);
+			packed_nodes_.emplace(id, node);
+			if (packed_sources_.size() <= node) {
+				packed_sources_.resize(node + 1);
+			}
+			packed_sources_[node] = value;
+			state_.packed_node(node).backed = true;
+			if (validating_) {
+				if (packed_snapshots_.size() <= node) {
+					packed_snapshots_.resize(node + 1);
+				}
+				packed_snapshots_[node] = value.duplicate();
+			}
+			return Value::of_ref(kind, node);
+		}
 		case Variant::ARRAY: {
 			const Array array = value;
 			const uint64_t id = identity_of(array);
@@ -400,6 +607,12 @@ Value PortBridge::load(const Variant &value) {
 				target.element_type = register_type(array.get_typed_builtin(), array.get_typed_class_name(), array.get_typed_script());
 			}
 			target.read_only = array.is_read_only();
+			if (validating_) {
+				if (array_snapshots_.size() <= node) {
+					array_snapshots_.resize(node + 1);
+				}
+				array_snapshots_[node] = array.duplicate(false);
+			}
 			return Value::of_ref(Kind::Array, node);
 		}
 		case Variant::DICTIONARY: {
@@ -424,6 +637,12 @@ Value PortBridge::load(const Variant &value) {
 				target.value_type = register_type(dict.get_typed_value_builtin(), dict.get_typed_value_class_name(), dict.get_typed_value_script());
 			}
 			target.read_only = dict.is_read_only();
+			if (validating_) {
+				if (dict_snapshots_.size() <= node) {
+					dict_snapshots_.resize(node + 1);
+				}
+				dict_snapshots_[node] = dict.duplicate(false);
+			}
 			return Value::of_ref(Kind::Dict, node);
 		}
 		default:
@@ -476,6 +695,10 @@ Value PortBridge::array_at(state::State &, uint32_t node, int64_t index) {
 
 int64_t PortBridge::dict_size(uint32_t node) {
 	return dict_sources_[node]->size();
+}
+
+void PortBridge::fill_packed(state::State &state, uint32_t node) {
+	fill_packed_node(state, state.packed_node(node), *packed_sources_[node]);
 }
 
 bool PortBridge::dict_lookup(state::State &, uint32_t node, const Value &key, Value &out) {
@@ -538,6 +761,23 @@ Variant PortBridge::export_value(const Value &value) {
 			return string_variant(value.ref, true);
 		case Kind::Vector2i:
 			return Variant(Vector2i(value.vx(), value.vy()));
+		case Kind::Vector3i:
+			return Variant(Vector3i(value.vx(), value.vy(), value.vz()));
+		case Kind::PackedByte:
+		case Kind::PackedInt32:
+		case Kind::PackedString: {
+			const uint32_t node = value.ref;
+			if (node < packed_sources_.size() && packed_sources_[node]) {
+				return *packed_sources_[node];
+			}
+			const auto done = exported_packed_.find(node);
+			if (done != exported_packed_.end()) {
+				return done->second;
+			}
+			const Variant made = packed_variant(state_, state_.packed(node));
+			exported_packed_.emplace(node, made);
+			return made;
+		}
 		case Kind::Array: {
 			const uint32_t node = value.ref;
 			if (node < array_sources_.size() && array_sources_[node]) {
@@ -621,6 +861,21 @@ void PortBridge::write_back() {
 		}
 		fill_dict_in_place(target, source, state_, keys, values);
 	}
+	for (uint32_t node = 0; node < packed_sources_.size(); ++node) {
+		if (!packed_sources_[node] || !state_.packed_node(node).dirty) {
+			continue;
+		}
+		// Through the Variant, so the change reaches every holder of the array.
+		Variant target = *packed_sources_[node];
+		const Variant elements = packed_variant(state_, state_.packed_node(node));
+		target.call(StringName("clear"));
+		target.call(StringName("append_array"), elements);
+	}
+	for (const StaticVar &var : statics_) {
+		if (var.assigned) {
+			script_object(var.script)->set(static_name(var.name), export_value(var.value));
+		}
+	}
 }
 
 bool PortBridge::changed_a_source() const {
@@ -634,12 +889,23 @@ bool PortBridge::changed_a_source() const {
 			return true;
 		}
 	}
+	for (uint32_t node = 0; node < packed_sources_.size(); ++node) {
+		if (packed_sources_[node] && state_.packed_node(node).dirty) {
+			return true;
+		}
+	}
+	for (const StaticVar &var : statics_) {
+		if (var.assigned) {
+			return true;
+		}
+	}
 	return false;
 }
 
 std::string PortBridge::diff(const Value &native, const Variant &gdscript) {
 	matched_arrays_.clear();
 	matched_dicts_.clear();
+	matched_packed_.clear();
 	std::string path = "result";
 	std::string out;
 	diff_value(native, gdscript, path, out);
@@ -697,6 +963,57 @@ void PortBridge::diff_value(const Value &native, const Variant &gdscript, std::s
 			}
 			return;
 		}
+		case Kind::Vector3i: {
+			if (type != Variant::VECTOR3I) {
+				mismatch("Vector3i");
+				return;
+			}
+			const Vector3i vector = gdscript;
+			if (vector.x != native.vx() || vector.y != native.vy() || vector.z != native.vz()) {
+				mismatch("Vector3i (" + compat::itos(native.vx()) + ", " + compat::itos(native.vy()) + ", " + compat::itos(native.vz()) + ")");
+			}
+			return;
+		}
+		case Kind::PackedByte:
+		case Kind::PackedInt32:
+		case Kind::PackedString: {
+			const Variant::Type want = packed_type(native.kind);
+			if (type != want) {
+				mismatch(utf8_of(Variant::get_type_name(want)));
+				return;
+			}
+			const uint64_t id = identity_of_packed(gdscript);
+			const uint32_t node = native.ref;
+			if (node < packed_sources_.size() && packed_sources_[node]) {
+				if (identity_of_packed(*packed_sources_[node]) != id) {
+					mismatch("a " + utf8_of(Variant::get_type_name(want)) + " it was given");
+				}
+				return;
+			}
+			const auto seen = matched_packed_.find(node);
+			if (seen != matched_packed_.end()) {
+				if (seen->second != id) {
+					mismatch("the packed array it returned before here");
+				}
+				return;
+			}
+			for (const auto &pair : matched_packed_) {
+				if (pair.second == id) {
+					mismatch("another new packed array where GDScript repeats one");
+					return;
+				}
+			}
+			matched_packed_.emplace(node, id);
+			if (packed_nodes_.count(id) != 0) {
+				mismatch("a new packed array where GDScript returns one it was given");
+				return;
+			}
+			const state::PackedNode &elements = state_.packed(node);
+			if (!same_elements(state_, elements, gdscript)) {
+				mismatch("a " + utf8_of(Variant::get_type_name(want)) + " of " + compat::itos(static_cast<int64_t>(elements.size())) + " other elements");
+			}
+			return;
+		}
 		case Kind::Array: {
 			if (type != Variant::ARRAY) {
 				mismatch("Array");
@@ -739,17 +1056,7 @@ void PortBridge::diff_value(const Value &native, const Variant &gdscript, std::s
 				mismatch(source.read_only ? "a read-only Array" : "a writable Array");
 				return;
 			}
-			if (static_cast<int64_t>(source.items.size()) != array.size()) {
-				mismatch("an Array of " + compat::itos(static_cast<int64_t>(source.items.size())));
-				return;
-			}
-			const size_t length = path.size();
-			for (size_t index = 0; index < source.items.size() && out.empty(); ++index) {
-				path += "[" + compat::itos(static_cast<int64_t>(index)) + "]";
-				const Variant item = array[static_cast<int64_t>(index)];
-				diff_value(source.items[index], item, path, out);
-				path.resize(length);
-			}
+			diff_array_items(source, array, path, out);
 			return;
 		}
 		case Kind::Dict: {
@@ -797,26 +1104,7 @@ void PortBridge::diff_value(const Value &native, const Variant &gdscript, std::s
 				mismatch(source.read_only ? "a read-only Dictionary" : "a writable Dictionary");
 				return;
 			}
-			if (static_cast<int64_t>(source.keys.size()) != dict.size()) {
-				mismatch("a Dictionary of " + compat::itos(static_cast<int64_t>(source.keys.size())) + " keys");
-				return;
-			}
-			const Array keys = dict.keys();
-			const Array values = dict.values();
-			const size_t length = path.size();
-			for (size_t index = 0; index < source.keys.size() && out.empty(); ++index) {
-				const Variant key = keys[static_cast<int64_t>(index)];
-				path += ".keys()[" + compat::itos(static_cast<int64_t>(index)) + "]";
-				diff_value(source.keys[index], key, path, out);
-				path.resize(length);
-				if (!out.empty()) {
-					break;
-				}
-				path += source.keys[index].is_string_like() ? "." + state_.text(source.keys[index].ref) : "[" + compat::itos(static_cast<int64_t>(index)) + "]";
-				const Variant value = values[static_cast<int64_t>(index)];
-				diff_value(source.values[index], value, path, out);
-				path.resize(length);
-			}
+			diff_dict_items(source, dict, path, out);
 			return;
 		}
 		case Kind::Opaque:
@@ -825,6 +1113,291 @@ void PortBridge::diff_value(const Value &native, const Variant &gdscript, std::s
 			}
 			return;
 	}
+}
+
+
+namespace {
+
+// A timing: a Dictionary key ending in "_ms" ("surface_ms").
+bool is_timing(const state::State &state, const Value &key) {
+	if (!key.is_string_like()) {
+		return false;
+	}
+	const std::string &text = state.text(key.ref);
+	return text.size() > 3 && text.compare(text.size() - 3, 3, "_ms") == 0;
+}
+
+} // namespace
+
+void PortBridge::diff_array_items(const state::ArrayNode &node, const Array &array, std::string &path, std::string &out) {
+	if (static_cast<int64_t>(node.items.size()) != array.size()) {
+		out = path + ": native an Array of " + compat::itos(static_cast<int64_t>(node.items.size())) + ", GDScript " + describe(array);
+		return;
+	}
+	const size_t length = path.size();
+	for (size_t index = 0; index < node.items.size() && out.empty(); ++index) {
+		path += "[" + compat::itos(static_cast<int64_t>(index)) + "]";
+		const Variant item = array[static_cast<int64_t>(index)];
+		diff_value(node.items[index], item, path, out);
+		path.resize(length);
+	}
+}
+
+void PortBridge::diff_dict_items(const state::DictNode &node, const Dictionary &dict, std::string &path, std::string &out) {
+	if (static_cast<int64_t>(node.keys.size()) != dict.size()) {
+		out = path + ": native a Dictionary of " + compat::itos(static_cast<int64_t>(node.keys.size())) + " keys, GDScript " + describe(dict);
+		return;
+	}
+	const Array keys = dict.keys();
+	const Array values = dict.values();
+	const size_t length = path.size();
+	for (size_t index = 0; index < node.keys.size() && out.empty(); ++index) {
+		const Variant key = keys[static_cast<int64_t>(index)];
+		path += ".keys()[" + compat::itos(static_cast<int64_t>(index)) + "]";
+		diff_value(node.keys[index], key, path, out);
+		path.resize(length);
+		if (!out.empty()) {
+			break;
+		}
+		path += node.keys[index].is_string_like() ? "." + state_.text(node.keys[index].ref) : "[" + compat::itos(static_cast<int64_t>(index)) + "]";
+		const Variant value = values[static_cast<int64_t>(index)];
+		if (!(is_timing(state_, node.keys[index]) && node.values[index].kind == Kind::Float && value.get_type() == Variant::FLOAT)) {
+			diff_value(node.values[index], value, path, out);
+		}
+		path.resize(length);
+	}
+}
+
+namespace {
+
+constexpr const char *kViewMeta = "meta";
+
+uint64_t container_identity(const Variant &value) {
+	switch (value.get_type()) {
+		case Variant::ARRAY:
+			return identity_of(Array(value));
+		case Variant::DICTIONARY:
+			return identity_of(Dictionary(value));
+		case Variant::PACKED_BYTE_ARRAY:
+		case Variant::PACKED_INT32_ARRAY:
+		case Variant::PACKED_STRING_ARRAY:
+			return identity_of_packed(value);
+		default:
+			return 0;
+	}
+}
+
+bool is_meta_key(const Variant &key) {
+	const Variant::Type type = key.get_type();
+	return (type == Variant::STRING || type == Variant::STRING_NAME) && static_cast<String>(key) == String(kViewMeta);
+}
+
+} // namespace
+
+std::string PortBridge::verify(const Value &result, const Variant &gdscript_result, const Value *args, size_t count, const Array &after) {
+	matched_arrays_.clear();
+	matched_dicts_.clear();
+	matched_packed_.clear();
+	std::string out;
+	std::string path = "result";
+	diff_value(result, gdscript_result, path, out);
+	if (!out.empty()) {
+		return out;
+	}
+	// The arguments the engine script made again: a session's view, and in it
+	// the session's metadata.
+	std::vector<bool> views(dict_sources_.size(), false);
+	for (size_t index = 0; index < count && static_cast<int64_t>(index) < after.size(); ++index) {
+		const Value &arg = args[index];
+		const Variant now = after[static_cast<int64_t>(index)];
+		if (arg.kind != Kind::Dict || arg.ref >= dict_sources_.size() || !dict_sources_[arg.ref] || now.get_type() != Variant::DICTIONARY) {
+			continue;
+		}
+		const Dictionary now_dict = now;
+		if (identity_of(*dict_sources_[arg.ref]) == identity_of(now_dict)) {
+			continue;
+		}
+		path = "args[" + compat::itos(static_cast<int64_t>(index)) + "]";
+		verify_view(arg.ref, now_dict, path, views, 1, out);
+		if (!out.empty()) {
+			return "arguments afterwards: " + out;
+		}
+	}
+	verify_loaded(after, views, out);
+	if (!out.empty()) {
+		return "arguments afterwards: " + out;
+	}
+	for (const StaticVar &var : statics_) {
+		path = state_.text(var.script) + "." + state_.text(var.name);
+		const Variant now = script_object(var.script)->get(static_name(var.name));
+		diff_value(var.value, now, path, out);
+		if (!out.empty()) {
+			return "static vars afterwards: " + out;
+		}
+	}
+	return out;
+}
+
+void PortBridge::verify_view(uint32_t node, const Dictionary &now, std::string &path, std::vector<bool> &views, int depth, std::string &out) {
+	views[node] = true;
+	const state::DictNode &view = state_.dict_node(node);
+	const size_t length = path.size();
+	if (!view.backed) {
+		if (static_cast<int64_t>(view.keys.size()) != now.size()) {
+			out = path + ": native a Dictionary of " + compat::itos(static_cast<int64_t>(view.keys.size())) + " keys, GDScript " + describe(now);
+			return;
+		}
+		const Array keys = now.keys();
+		const Array values = now.values();
+		for (size_t index = 0; index < view.keys.size() && out.empty(); ++index) {
+			const Variant key = keys[static_cast<int64_t>(index)];
+			path += ".keys()[" + compat::itos(static_cast<int64_t>(index)) + "]";
+			diff_value(view.keys[index], key, path, out);
+			path.resize(length);
+			if (!out.empty()) {
+				return;
+			}
+			path += view.keys[index].is_string_like() ? "." + state_.text(view.keys[index].ref) : "[" + compat::itos(static_cast<int64_t>(index)) + "]";
+			const Value &value = view.values[index];
+			const Variant now_value = values[static_cast<int64_t>(index)];
+			if (depth > 0 && is_meta_key(key) && value.kind == Kind::Dict && value.ref < dict_sources_.size() && dict_sources_[value.ref] && now_value.get_type() == Variant::DICTIONARY && identity_of(*dict_sources_[value.ref]) != identity_of(Dictionary(now_value))) {
+				verify_view(value.ref, now_value, path, views, depth - 1, out);
+			} else {
+				diff_value(value, now_value, path, out);
+			}
+			path.resize(length);
+		}
+		return;
+	}
+	// Read in part: the native code changed nothing in it.
+	const Dictionary before = dict_snapshots_[node];
+	if (before.size() != now.size() || !same_items(before.keys(), now.keys())) {
+		out = path + ": native kept the keys " + describe(before.keys()) + ", GDScript " + describe(now.keys());
+		return;
+	}
+	const Array keys = before.keys();
+	for (int64_t index = 0; index < keys.size() && out.empty(); ++index) {
+		const Variant key = keys[index];
+		const Variant was = before[key];
+		const Variant is = now[key];
+		path += "." + utf8_of(key.stringify());
+		if (depth > 0 && is_meta_key(key) && was.get_type() == Variant::DICTIONARY && is.get_type() == Variant::DICTIONARY && identity_of(Dictionary(was)) != identity_of(Dictionary(is))) {
+			const auto loaded = dict_nodes_.find(identity_of(Dictionary(was)));
+			if (loaded != dict_nodes_.end()) {
+				verify_view(loaded->second, is, path, views, depth - 1, out);
+			} else if (!same_entries(was, is)) {
+				out = path + ": native kept " + describe(was) + ", GDScript " + describe(is);
+			}
+		} else if (!same_variant(was, is)) {
+			out = path + ": native kept " + describe(was) + ", GDScript " + describe(is);
+		}
+		path.resize(length);
+	}
+}
+
+void PortBridge::verify_loaded(const Array &after, const std::vector<bool> &views, std::string &out) {
+	std::string path;
+	for (uint32_t node = 0; node < array_sources_.size() && out.empty(); ++node) {
+		if (!array_sources_[node]) {
+			continue;
+		}
+		const Array now = *array_sources_[node];
+		const state::ArrayNode &array = state_.array_node(node);
+		if (array.backed) {
+			if (!same_items(array_snapshots_[node], now)) {
+				out = where(now, after) + ": GDScript changed an Array the native code only read, now " + describe(now);
+			}
+			continue;
+		}
+		path.clear();
+		diff_array_items(array, now, path, out);
+		if (!out.empty()) {
+			out = where(now, after) + out;
+		}
+	}
+	for (uint32_t node = 0; node < dict_sources_.size() && out.empty(); ++node) {
+		if (!dict_sources_[node] || (node < views.size() && views[node])) {
+			continue;
+		}
+		const Dictionary now = *dict_sources_[node];
+		const state::DictNode &dict = state_.dict_node(node);
+		if (dict.backed) {
+			if (!same_entries(dict_snapshots_[node], now)) {
+				out = where(now, after) + ": GDScript changed a Dictionary the native code only read, now " + describe(now);
+			}
+			continue;
+		}
+		path.clear();
+		diff_dict_items(dict, now, path, out);
+		if (!out.empty()) {
+			out = where(now, after) + out;
+		}
+	}
+	for (uint32_t node = 0; node < packed_sources_.size() && out.empty(); ++node) {
+		if (!packed_sources_[node]) {
+			continue;
+		}
+		const Variant now = *packed_sources_[node];
+		const state::PackedNode &packed = state_.packed_node(node);
+		const bool same = packed.backed ? packed_snapshots_[node] == now : same_elements(state_, packed, now);
+		if (!same) {
+			out = where(now, after) + ": native " + (packed.dirty ? "wrote" : "kept") + " a " + utf8_of(Variant::get_type_name(now.get_type())) + " of " + compat::itos(static_cast<int64_t>(packed.backed ? 0 : packed.size())) + " elements, GDScript " + describe(now);
+		}
+	}
+}
+
+std::string PortBridge::where(const Variant &container, const Array &after) {
+	const Variant::Type type = container.get_type();
+	const uint64_t target = container_identity(container);
+	std::deque<std::pair<Variant, std::string>> queue;
+	for (int64_t index = 0; index < after.size(); ++index) {
+		queue.emplace_back(after[index], "args[" + compat::itos(index) + "]");
+	}
+	for (const StaticVar &var : statics_) {
+		queue.emplace_back(script_object(var.script)->get(static_name(var.name)), state_.text(var.script) + "." + state_.text(var.name));
+	}
+	std::unordered_map<uint64_t, bool> seen;
+	size_t pushed = queue.size();
+	while (!queue.empty()) {
+		const Variant value = queue.front().first;
+		const std::string path = std::move(queue.front().second);
+		queue.pop_front();
+		const uint64_t id = container_identity(value);
+		if (id == 0) {
+			continue;
+		}
+		if (id == target && value.get_type() == type) {
+			return path;
+		}
+		if (!seen.emplace(id, true).second || pushed > 4000000) {
+			continue;
+		}
+		if (value.get_type() == Variant::ARRAY) {
+			const Array array = value;
+			for (int64_t index = 0; index < array.size(); ++index) {
+				const Variant item = array[index];
+				if (container_identity(item) != 0) {
+					queue.emplace_back(item, path + "[" + compat::itos(index) + "]");
+					++pushed;
+				}
+			}
+		} else if (value.get_type() == Variant::DICTIONARY) {
+			const Dictionary dict = value;
+			const Array keys = dict.keys();
+			const Array values = dict.values();
+			for (int64_t index = 0; index < keys.size(); ++index) {
+				const Variant item = values[index];
+				if (container_identity(item) == 0) {
+					continue;
+				}
+				const Variant key = keys[index];
+				const bool text = key.get_type() == Variant::STRING || key.get_type() == Variant::STRING_NAME;
+				queue.emplace_back(item, path + (text ? "." + utf8_of(key) : "[" + utf8_of(key.stringify()) + "]"));
+				++pushed;
+			}
+		}
+	}
+	return "a loaded " + utf8_of(Variant::get_type_name(type)) + " the arguments no longer reach";
 }
 
 } // namespace aurelion::rules::bridge
