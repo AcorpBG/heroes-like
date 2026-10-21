@@ -116102,15 +116102,15 @@
     {
       "id": "native-rules-phase1-06-cohesion-town-20261020",
       "title": "Native battle engine 06: cohesion, momentum, field objectives, town defences",
-      "status": "pending",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Layers 6 and 7: BattleRules 16/457, TownBattleRules 7/41. Callers: BattleRules, SpellRules, 2 tests.",
-      "updatedAt": "2026-10-20T19:35:00Z"
+      "notes": "Layers 6 and 7: BattleRules 16/457, TownBattleRules 7/41. Callers: BattleRules, SpellRules, 2 tests. Done 2026-10-22 (branch native-phase1-battle: b888d2336 port, 649d181a7 Windows binaries; merge of main 6924ce383): 5 functions / 80 lines, the rest of layers 6 and 7 came in 02-05. BattleRules 4/79 (_apply_advance_pressure, _apply_defend_pressure, _apply_melee_approach from 03, _is_town_assault_context), TownBattleRules spell_resistance 1/1. BattleAiRules' layer 6 copy _field_objective_action_influence stays for 08. Shadow on the six seeds: 0 mismatches, 0 errors, 0 not ported in 63,734,372 checks over 335 of 344 functions, 65,069 in slice 06 (all 5 reached). Native mode vs main: 415 daily digests and match records identical. Core suite 17/17 (Windows; Linux libraries not rebuilt). Review against the GDScript: no divergence.",
+      "updatedAt": "2026-10-21T22:13:00Z"
     },
     {
       "id": "native-rules-phase1-07-spells-commanders-20261020",
