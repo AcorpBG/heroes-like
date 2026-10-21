@@ -116,8 +116,33 @@ public:
 };
 
 // A typed Array's or Dictionary's element type, as the adapter registered it.
-// 0 means untyped; the State does not interpret other values.
+// 0 means untyped. The State checks writes against the type's Variant::Type,
+// which the adapter registers with set_type_builtin.
 using TypeRef = uint32_t;
+
+// Godot's Variant::Type numbers of the types the State models.
+namespace variant_type {
+enum : uint8_t {
+	NIL = 0,
+	BOOL = 1,
+	INT = 2,
+	FLOAT = 3,
+	STRING = 4,
+	VECTOR2I = 6,
+	STRING_NAME = 21,
+	OBJECT = 24,
+	DICTIONARY = 27,
+	ARRAY = 28,
+};
+} // namespace variant_type
+
+// The content tables the port reads (ContentService.get_unit and the like).
+enum class ContentTable : uint8_t {
+	Unit,
+	Hero,
+	Faction,
+	Spell,
+};
 
 bool same_key(const Value &a, const Value &b);
 
@@ -315,12 +340,14 @@ public:
 	const ValueList &list() const { return keys_; }
 
 	void push_back(const Value &key) {
-		keys_.push_back(key);
+		// key may be one of these keys: read it before the push can free them.
+		const Value copy = key;
+		keys_.push_back(copy);
 		if (indexed_) {
 			if (keys_.size() * 2 > table_.size() || keys_.size() >= kIndexBelow) {
 				drop_index();
-			} else if (key.is_string_like()) {
-				insert(key.ref, keys_.size() - 1);
+			} else if (copy.is_string_like()) {
+				insert(copy.ref, keys_.size() - 1);
 			}
 		}
 	}
@@ -426,7 +453,7 @@ struct ArrayNode {
 	TypeRef element_type = 0;
 	bool read_only = false;
 	bool backed = false;
-	// Written since it was made or loaded: set(), erase(), append().
+	// Written since it was made or loaded: set(), erase(), append(), set_at().
 	bool dirty = false;
 
 	// As new, keeping the buffer.
@@ -495,7 +522,9 @@ private:
 
 class State;
 
-// The contents of backed nodes (the Godot adapter's containers).
+// The contents of backed nodes (the Godot adapter's containers), and what else
+// the port asks of its host: objects, content and error output. A host without
+// objects or content (the defaults) makes those a ScriptError.
 class Backing {
 public:
 	virtual ~Backing() = default;
@@ -506,6 +535,23 @@ public:
 	virtual Value array_at(State &state, uint32_t node, int64_t index) = 0;
 	virtual int64_t dict_size(uint32_t node) = 0;
 	virtual bool dict_lookup(State &state, uint32_t node, const Value &key, Value &out) = 0;
+
+	// object.property of an opaque value (the session's battle, day, ...).
+	virtual Value object_get(State &state, uint32_t slot, uint32_t property);
+	// A RandomNumberGenerator: its seed and state, false for another object.
+	virtual bool rng_get(uint32_t slot, uint64_t &seed, uint64_t &state);
+	virtual void rng_set_state(uint32_t slot, uint64_t state);
+	// RandomNumberGenerator.new() with seed, then state, set: its opaque slot.
+	virtual uint32_t rng_new(uint64_t seed, uint64_t state);
+	// The content row with this id, the same node on every call (Nil when there
+	// is none), and ContentService.load_json(path).
+	virtual Value content_row(State &state, ContentTable table, uint32_t id);
+	virtual Value content_file(State &state, uint32_t path);
+	// Godot's ERR_PRINT, for the container methods that fail without stopping
+	// the script (append to a read-only Array), and a script's push_warning.
+	// The defaults write to stderr.
+	virtual void print_error(const std::string &text);
+	virtual void print_warning(const std::string &text);
 };
 
 class State {
@@ -531,14 +577,24 @@ public:
 	size_t array_count() const { return arrays_.size(); }
 	size_t dict_count() const { return dicts_.size(); }
 
-	// The whole node; a backed node is filled first.
-	ArrayNode &array(uint32_t node) const;
-	DictNode &dict(uint32_t node) const;
-	// The node as it is, backed or not (for the adapter).
+	// The whole node, to read; a backed node is filled first. Writes go through
+	// set(), erase(), append() and set_at(), which honour read-only and typed
+	// containers and mark the node dirty for the adapter's write-back.
+	const ArrayNode &array(uint32_t node) const;
+	const DictNode &dict(uint32_t node) const;
+	// The node as it is, backed or not, to build or load (for the adapter and
+	// for new nodes): writes here are not checked and do not mark it dirty.
 	ArrayNode &array_node(uint32_t node) const { return arrays_[node]; }
 	DictNode &dict_node(uint32_t node) const { return dicts_[node]; }
 
 	void set_backing(Backing *backing) { backing_ = backing; }
+	Backing *backing() const { return backing_; }
+	// The host's services (Backing): a ScriptError when there is no host.
+	Backing &host() const;
+
+	// The Variant::Type of a registered TypeRef (variant_type::NIL if unknown).
+	void set_type_builtin(TypeRef type, uint8_t builtin);
+	uint8_t type_builtin(TypeRef type) const { return type < type_builtins_.size() ? type_builtins_[type] : variant_type::NIL; }
 
 	// Dictionary semantics. A String and a StringName with the same text are one
 	// key, as in Godot's Dictionary; ints match ints and floats floats.
@@ -546,15 +602,40 @@ public:
 	bool has(uint32_t dict_node, const Value &key) const;
 	Value get(uint32_t dict_node, const Value &key, const Value &fallback) const;
 	int64_t dict_size(uint32_t dict_node) const;
-	// An existing key keeps its place; a new one goes last.
+	// d[key] = value: an existing key keeps its place, a new one goes last. A
+	// read-only Dictionary, or a key or value its types refuse, is a ScriptError
+	// (GDScript's failed keyed set); a value the type converts (1 into float) is
+	// stored converted.
 	void set(uint32_t dict_node, const Value &key, const Value &value);
+	// d.erase(key): on a read-only Dictionary, or with a key its type refuses,
+	// Godot prints an error and erases nothing.
 	bool erase(uint32_t dict_node, const Value &key);
 
 	// Array semantics. at() takes GDScript's negative indices; out of range is a
 	// ScriptError.
 	int64_t array_size(uint32_t array_node) const;
 	Value at(uint32_t array_node, int64_t index) const;
+	// a.append(value): on a read-only Array, or with a value its type refuses,
+	// Godot prints an error and appends nothing.
 	void append(uint32_t array_node, const Value &value);
+	// a[index] = value, negative indices from the end: out of range, read-only
+	// or a refused value is a ScriptError.
+	void set_at(uint32_t array_node, int64_t index, const Value &value);
+	// a.insert(position, value) (push_front is position 0), a.remove_at(position),
+	// a.pop_back() and a.pop_front() (front): negative positions from the end.
+	// Read-only, a refused value or a position out of range prints an error and
+	// leaves the Array as it was; pop of an empty Array is Nil.
+	void insert_at(uint32_t array_node, int64_t position, const Value &value);
+	void remove_at(uint32_t array_node, int64_t position);
+	Value pop_at(uint32_t array_node, bool front);
+
+	// Error and warning output through the host (stderr without one).
+	void print_error(const std::string &text) const;
+	void print_warning(const std::string &text) const;
+
+	// Godot's ContainerTypeValidate::validate against a container's element
+	// type: true, with value converted where Variant::can_convert_strict allows.
+	bool validate_type(TypeRef type, Value &value) const;
 
 	// The atom of text(prefix) + text(atom), kept per State: the same atom as
 	// interning the joined text, without building it again.
@@ -582,6 +663,11 @@ private:
 	void fill_dict(uint32_t node) const;
 	bool backed_lookup(uint32_t dict_node, const Value &key, Value &out) const;
 	[[noreturn]] static void out_of_bounds(int64_t index);
+	// The typed or read-only paths of set() and append().
+	void checked_set(DictNode &node, Value key, Value value);
+	void checked_append(ArrayNode &node, Value value);
+	// The host, or one that only prints errors.
+	Backing &host_or_default() const;
 
 	// A deque, so the views atom_ids_ holds stay valid.
 	std::deque<std::string> atoms_;
@@ -591,6 +677,7 @@ private:
 	NodePool<ArrayNode> arrays_;
 	NodePool<DictNode> dicts_;
 	Backing *backing_ = nullptr;
+	std::vector<uint8_t> type_builtins_;
 };
 
 // The operations the port runs most, inline: the backed paths are out of line.
@@ -605,16 +692,16 @@ inline uint32_t State::new_dict() {
 	return static_cast<uint32_t>(dicts_.size() - 1);
 }
 
-inline ArrayNode &State::array(uint32_t node) const {
-	ArrayNode &found = arrays_[node];
+inline const ArrayNode &State::array(uint32_t node) const {
+	const ArrayNode &found = arrays_[node];
 	if (found.backed) {
 		fill_array(node);
 	}
 	return found;
 }
 
-inline DictNode &State::dict(uint32_t node) const {
-	DictNode &found = dicts_[node];
+inline const DictNode &State::dict(uint32_t node) const {
+	const DictNode &found = dicts_[node];
 	if (found.backed) {
 		fill_dict(node);
 	}
@@ -653,13 +740,21 @@ inline int64_t State::dict_size(uint32_t dict_node) const {
 }
 
 inline void State::set(uint32_t dict_node, const Value &key, const Value &value) {
-	DictNode &node = dict(dict_node);
-	const int64_t index = node.keys.find(key);
+	// key or value may be an entry of this node: copy both before a push frees it.
+	const Value key_copy = key;
+	const Value value_copy = value;
+	dict(dict_node);
+	DictNode &node = dicts_[dict_node];
+	if (node.read_only || node.key_type != 0 || node.value_type != 0) {
+		checked_set(node, key_copy, value_copy);
+		return;
+	}
+	const int64_t index = node.keys.find(key_copy);
 	if (index >= 0) {
-		node.values[static_cast<size_t>(index)] = value;
+		node.values[static_cast<size_t>(index)] = value_copy;
 	} else {
-		node.keys.push_back(key);
-		node.values.push_back(value);
+		node.keys.push_back(key_copy);
+		node.values.push_back(value_copy);
 	}
 	node.dirty = true;
 }
@@ -686,7 +781,12 @@ inline Value State::at(uint32_t array_node, int64_t index) const {
 }
 
 inline void State::append(uint32_t array_node, const Value &value) {
-	ArrayNode &node = array(array_node);
+	array(array_node);
+	ArrayNode &node = arrays_[array_node];
+	if (node.read_only || node.element_type != 0) {
+		checked_append(node, value);
+		return;
+	}
 	node.items.push_back(value);
 	node.dirty = true;
 }

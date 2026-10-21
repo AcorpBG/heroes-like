@@ -116,6 +116,7 @@ void AurelionRules::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("port_call", "name", "args", "write_back"), &AurelionRules::port_call);
 	ClassDB::bind_method(D_METHOD("port_check", "name", "args", "gdscript_result"), &AurelionRules::port_check);
 	ClassDB::bind_method(D_METHOD("port_report", "name", "mismatch"), &AurelionRules::port_report);
+	ClassDB::bind_method(D_METHOD("port_copy", "args"), &AurelionRules::port_copy);
 	ClassDB::bind_method(D_METHOD("port_stats"), &AurelionRules::port_stats);
 }
 
@@ -136,6 +137,8 @@ AurelionRules::AurelionRules() {
 				if (std::find(port_log_paths_.begin(), port_log_paths_.end(), path) == port_log_paths_.end()) {
 					port_log_paths_.push_back(path);
 				}
+				// At once, so a folder that cannot take the file fails the run.
+				write_port_stats();
 			}
 		}
 	} catch (const std::exception &error) {
@@ -389,12 +392,17 @@ AurelionRules::PortStats &AurelionRules::stats_of(const aurelion::rules::port::F
 	return port_stats_[static_cast<size_t>(function - aurelion::rules::port::functions(count))];
 }
 
-void AurelionRules::record_mismatch(PortStats &stats, const std::string &text) {
-	++stats.mismatches;
+void AurelionRules::record_mismatch(PortStats &stats, const char *name, const std::string &text, bool error) {
+	++(error ? stats.errors : stats.mismatches);
 	if (stats.first.size() < kKeptMismatches) {
 		stats.first.push_back(text);
 	}
 	write_port_stats();
+	// Shadow is the proof of the port: a mismatch fails the run like a failed call.
+	if (reported_mismatches_ < kKeptMismatches) {
+		++reported_mismatches_;
+		report_port_failure("port shadow", std::string(error ? "native failure in " : "mismatch in ") + name + ": " + text);
+	}
 }
 
 void AurelionRules::count_port_use() {
@@ -441,6 +449,11 @@ void AurelionRules::write_port_stats() const {
 	for (const std::string &path : port_log_paths_) {
 		std::ofstream file(std::filesystem::u8path(path), std::ios::binary | std::ios::trunc);
 		file << out;
+		file.flush();
+		if (!file && !port_log_failed_) {
+			port_log_failed_ = true;
+			report_port_failure("port stats", "cannot write " + path + " (the subsystem's log variable must name an existing folder)");
+		}
 	}
 }
 
@@ -506,11 +519,13 @@ String AurelionRules::port_check(const StringName &name, const Array &args, cons
 		++stats.checks;
 		count_port_use();
 		std::string mismatch;
+		bool error = false;
 		try {
 			if (port_ == nullptr) {
 				throw std::runtime_error("the port did not start");
 			}
 			if (args.size() != function->arity || function->arity > kMaxPortArgs) {
+				error = true;
 				mismatch = std::string("takes ") + std::to_string(function->arity) + " arguments, got " + std::to_string(args.size());
 			} else {
 				port_->begin();
@@ -525,17 +540,20 @@ String AurelionRules::port_check(const StringName &name, const Array &args, cons
 					mismatch = port_->diff(result, gdscript_result);
 				}
 			}
-		} catch (const aurelion::rules::state::ScriptError &error) {
-			mismatch = std::string("native script error: ") + error.what();
-		} catch (const std::exception &error) {
-			mismatch = std::string("native exception: ") + error.what();
+		} catch (const aurelion::rules::state::ScriptError &failure) {
+			error = true;
+			mismatch = std::string("native script error: ") + failure.what();
+		} catch (const std::exception &failure) {
+			error = true;
+			mismatch = std::string("native exception: ") + failure.what();
 		} catch (...) {
+			error = true;
 			mismatch = "unknown native exception";
 		}
 		if (mismatch.empty()) {
 			return String();
 		}
-		record_mismatch(stats, mismatch);
+		record_mismatch(stats, function->name, mismatch, error);
 		return String::utf8(mismatch.c_str());
 	} catch (const std::exception &error) {
 		report_port_failure("port_check", std::string("native exception outside the port: ") + error.what());
@@ -556,13 +574,25 @@ void AurelionRules::port_report(const StringName &name, const String &mismatch) 
 		++stats.checks;
 		count_port_use();
 		if (!mismatch.is_empty()) {
-			record_mismatch(stats, utf8_text(mismatch));
+			record_mismatch(stats, function->name, utf8_text(mismatch), false);
 		}
 	} catch (const std::exception &error) {
 		report_port_failure("port_report", std::string("native exception: ") + error.what());
 	} catch (...) {
 		report_port_failure("port_report", "unknown native exception");
 	}
+}
+
+Array AurelionRules::port_copy(const Array &args) {
+	try {
+		return aurelion::rules::bridge::copy_for_shadow(args);
+	} catch (const std::exception &error) {
+		report_port_failure("port_copy", std::string("native exception: ") + error.what());
+	} catch (...) {
+		report_port_failure("port_copy", "unknown native exception");
+	}
+	// The GDScript copy, so the shadow run goes on; the failure is reported.
+	return args.duplicate(true);
 }
 
 Dictionary AurelionRules::port_stats() const {

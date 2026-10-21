@@ -12,6 +12,14 @@
 // node the native code made becomes a new container. write_back() writes the
 // loaded containers the native code changed back into themselves.
 //
+// The host services: an opaque object's properties are read with Object::get,
+// a RandomNumberGenerator's seed and state through its methods, and content
+// rows from the ContentService autoload, loaded as the containers they are.
+// A row or document is asked for once per call: within a call no GDScript
+// runs, so ContentService would return the same object again. Its empty
+// results (an unknown id, a missing file) are new objects each time, so they
+// are asked for again.
+//
 // diff() compares the native result with GDScript's: the same types (int and
 // float, String and StringName apart), the same key order, typing and
 // read-only flags, and the same container identities: a loaded container
@@ -32,6 +40,15 @@
 #include <vector>
 
 namespace aurelion::rules::bridge {
+
+// Shadow, for a function that writes into its arguments: a copy of them as the
+// GDScript call finds them, for the native run (BattleEngine.before_writing).
+// Unlike args.duplicate(true), a container reached twice is one copy, as the
+// original is one object; a RandomNumberGenerator is a new one with the same
+// seed and state; an object with a script (the session) is a new instance of
+// its script with every script variable copied the same way. A Dictionary's
+// keys and any other object are shared.
+godot::Array copy_for_shadow(const godot::Array &args);
 
 class PortBridge : public state::Backing {
 public:
@@ -56,6 +73,15 @@ public:
 	int64_t dict_size(uint32_t node) override;
 	bool dict_lookup(state::State &state, uint32_t node, const state::Value &key, state::Value &out) override;
 
+	state::Value object_get(state::State &state, uint32_t slot, uint32_t property) override;
+	bool rng_get(uint32_t slot, uint64_t &seed, uint64_t &state) override;
+	void rng_set_state(uint32_t slot, uint64_t state) override;
+	uint32_t rng_new(uint64_t seed, uint64_t state) override;
+	state::Value content_row(state::State &state, state::ContentTable table, uint32_t id) override;
+	state::Value content_file(state::State &state, uint32_t path) override;
+	void print_error(const std::string &text) override;
+	void print_warning(const std::string &text) override;
+
 private:
 	struct TypeInfo {
 		uint32_t builtin = 0;
@@ -65,6 +91,8 @@ private:
 
 	state::Value load_string(const godot::String &text, state::Kind kind);
 	state::TypeRef register_type(int64_t builtin, const godot::StringName &class_name, const godot::Variant &script);
+	godot::Object *object_at(uint32_t slot) const;
+	godot::Object *content_service();
 	const godot::Variant &string_variant(uint32_t atom, bool name);
 	godot::Variant key_variant(const state::Value &key);
 	godot::Array fresh_array(const state::ArrayNode &node) const;
@@ -79,6 +107,9 @@ private:
 	std::unordered_map<uint64_t, uint32_t> array_nodes_;
 	std::unordered_map<uint64_t, uint32_t> dict_nodes_;
 	std::vector<godot::Variant> opaque_;
+	godot::ObjectID content_service_;
+	// Per call: the content rows and documents loaded, by table and id atom.
+	std::unordered_map<uint64_t, state::Value> content_;
 	std::vector<TypeInfo> types_; // TypeRef n is types_[n - 1]; kept across calls
 	std::vector<godot::Variant> string_cache_;
 	std::vector<godot::Variant> name_cache_;

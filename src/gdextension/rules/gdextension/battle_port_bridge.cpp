@@ -4,18 +4,33 @@
 
 #include "aurelion_rules/compat/godot_string.hpp"
 
+#include <godot_cpp/classes/engine.hpp>
+#include <godot_cpp/classes/global_constants.hpp>
+#include <godot_cpp/classes/node.hpp>
+#include <godot_cpp/classes/random_number_generator.hpp>
+#include <godot_cpp/classes/ref_counted.hpp>
+#include <godot_cpp/classes/scene_tree.hpp>
+#include <godot_cpp/classes/window.hpp>
+#include <godot_cpp/core/object.hpp>
+#include <godot_cpp/variant/node_path.hpp>
+#include <godot_cpp/variant/typed_array.hpp>
+#include <godot_cpp/variant/utility_functions.hpp>
 #include <godot_cpp/variant/vector2i.hpp>
 
 #include <cmath>
 #include <cstdio>
 #include <cstring>
 #include <string_view>
+#include <unordered_map>
 
 namespace aurelion::rules::bridge {
 
 using godot::Array;
 using godot::CharString;
 using godot::Dictionary;
+using godot::Object;
+using godot::RandomNumberGenerator;
+using godot::Ref;
 using godot::String;
 using godot::StringName;
 using godot::Variant;
@@ -69,6 +84,7 @@ void PortBridge::begin() {
 	array_nodes_.clear();
 	dict_nodes_.clear();
 	opaque_.clear();
+	content_.clear();
 	exported_arrays_.clear();
 	exported_dicts_.clear();
 }
@@ -81,7 +97,220 @@ state::TypeRef PortBridge::register_type(int64_t builtin, const StringName &clas
 		}
 	}
 	types_.push_back(TypeInfo{ static_cast<uint32_t>(builtin), class_name, script });
-	return static_cast<state::TypeRef>(types_.size());
+	const state::TypeRef type = static_cast<state::TypeRef>(types_.size());
+	state_.set_type_builtin(type, static_cast<uint8_t>(builtin));
+	return type;
+}
+
+namespace {
+
+class ShadowCopier {
+public:
+	Variant copy(const Variant &value) {
+		switch (value.get_type()) {
+			case Variant::ARRAY: {
+				const Array source = value;
+				const uint64_t id = identity_of(source);
+				const auto found = arrays_.find(id);
+				if (found != arrays_.end()) {
+					return found->second;
+				}
+				// duplicate() keeps the typing; the items are copied in place.
+				Array made = source.duplicate(false);
+				arrays_.emplace(id, made);
+				const int64_t size = source.size();
+				for (int64_t index = 0; index < size; ++index) {
+					made[index] = copy(source[index]);
+				}
+				return made;
+			}
+			case Variant::DICTIONARY: {
+				const Dictionary source = value;
+				const uint64_t id = identity_of(source);
+				const auto found = dicts_.find(id);
+				if (found != dicts_.end()) {
+					return found->second;
+				}
+				Dictionary made = source.duplicate(false);
+				dicts_.emplace(id, made);
+				const Array keys = source.keys();
+				const int64_t size = keys.size();
+				for (int64_t index = 0; index < size; ++index) {
+					made[keys[index]] = copy(source[keys[index]]);
+				}
+				return made;
+			}
+			case Variant::OBJECT:
+				return copy_object(value);
+			default:
+				return value;
+		}
+	}
+
+private:
+	Variant copy_object(const Variant &value) {
+		Object *object = value;
+		if (object == nullptr) {
+			return value;
+		}
+		const uint64_t id = object->get_instance_id();
+		const auto found = objects_.find(id);
+		if (found != objects_.end()) {
+			return found->second;
+		}
+		if (RandomNumberGenerator *rng = Object::cast_to<RandomNumberGenerator>(object)) {
+			Ref<RandomNumberGenerator> made;
+			made.instantiate();
+			made->set_seed(rng->get_seed());
+			made->set_state(rng->get_state());
+			const Variant result = made;
+			objects_.emplace(id, result);
+			return result;
+		}
+		const Variant script = object->get_script();
+		Object *script_object = script;
+		if (script_object == nullptr || Object::cast_to<godot::RefCounted>(object) == nullptr) {
+			return value;
+		}
+		const Variant result = script_object->call(StringName("new"));
+		Object *made = result;
+		if (made == nullptr) {
+			throw state::ScriptError("cannot make a new instance of an argument's script for the shadow copy");
+		}
+		objects_.emplace(id, result);
+		const godot::TypedArray<Dictionary> properties = object->get_property_list();
+		for (int64_t index = 0; index < properties.size(); ++index) {
+			const Dictionary property = properties[index];
+			if ((static_cast<int64_t>(property["usage"]) & godot::PROPERTY_USAGE_SCRIPT_VARIABLE) == 0) {
+				continue;
+			}
+			const StringName name = property["name"];
+			made->set(name, copy(object->get(name)));
+		}
+		return result;
+	}
+
+	std::unordered_map<uint64_t, Variant> arrays_;
+	std::unordered_map<uint64_t, Variant> dicts_;
+	std::unordered_map<uint64_t, Variant> objects_;
+};
+
+} // namespace
+
+Array copy_for_shadow(const Array &args) {
+	ShadowCopier copier;
+	return copier.copy(args);
+}
+
+Object *PortBridge::object_at(uint32_t slot) const {
+	if (slot >= opaque_.size() || opaque_[slot].get_type() != Variant::OBJECT) {
+		return nullptr;
+	}
+	return static_cast<Object *>(opaque_[slot]);
+}
+
+Value PortBridge::object_get(state::State &state, uint32_t slot, uint32_t property) {
+	Object *object = object_at(slot);
+	if (object == nullptr) {
+		throw state::ScriptError("Invalid access to property '" + state.text(property) + "' on a value that is not an object");
+	}
+	const std::string &name = state.text(property);
+	const Variant found = object->get(StringName(String::utf8(name.data(), static_cast<int64_t>(name.size()))));
+	return load(found);
+}
+
+bool PortBridge::rng_get(uint32_t slot, uint64_t &seed, uint64_t &state) {
+	RandomNumberGenerator *rng = Object::cast_to<RandomNumberGenerator>(object_at(slot));
+	if (rng == nullptr) {
+		return false;
+	}
+	seed = rng->get_seed();
+	state = rng->get_state();
+	return true;
+}
+
+void PortBridge::rng_set_state(uint32_t slot, uint64_t state) {
+	RandomNumberGenerator *rng = Object::cast_to<RandomNumberGenerator>(object_at(slot));
+	if (rng == nullptr) {
+		throw state::ScriptError("Invalid call: set_state on a value that is not a RandomNumberGenerator");
+	}
+	rng->set_state(state);
+}
+
+uint32_t PortBridge::rng_new(uint64_t seed, uint64_t state) {
+	Ref<RandomNumberGenerator> rng;
+	rng.instantiate();
+	rng->set_seed(seed);
+	rng->set_state(state);
+	opaque_.push_back(Variant(rng));
+	return static_cast<uint32_t>(opaque_.size() - 1);
+}
+
+Object *PortBridge::content_service() {
+	Object *known = godot::ObjectDB::get_instance(content_service_);
+	if (known != nullptr) {
+		return known;
+	}
+	godot::SceneTree *tree = Object::cast_to<godot::SceneTree>(godot::Engine::get_singleton()->get_main_loop());
+	godot::Node *node = tree != nullptr && tree->get_root() != nullptr ? tree->get_root()->get_node_or_null(godot::NodePath("ContentService")) : nullptr;
+	if (node == nullptr) {
+		throw state::ScriptError("Identifier \"ContentService\" not declared: the autoload is not in the scene tree");
+	}
+	content_service_ = node->get_instance_id();
+	return node;
+}
+
+Value PortBridge::content_row(state::State &state, state::ContentTable table, uint32_t id) {
+	const char *method = "get_unit";
+	switch (table) {
+		case state::ContentTable::Unit:
+			method = "get_unit";
+			break;
+		case state::ContentTable::Hero:
+			method = "get_hero";
+			break;
+		case state::ContentTable::Faction:
+			method = "get_faction";
+			break;
+		case state::ContentTable::Spell:
+			method = "get_spell";
+			break;
+	}
+	const uint64_t memo = (static_cast<uint64_t>(table) + 1) << 32 | id;
+	const auto found = content_.find(memo);
+	if (found != content_.end()) {
+		return found->second;
+	}
+	const std::string &text = state.text(id);
+	const Variant row = content_service()->call(StringName(method), String::utf8(text.data(), static_cast<int64_t>(text.size())));
+	const Value loaded = load(row);
+	if (loaded.kind == Kind::Dict && state.dict_size(loaded.ref) != 0) {
+		content_.emplace(memo, loaded);
+	}
+	return loaded;
+}
+
+Value PortBridge::content_file(state::State &state, uint32_t path) {
+	const uint64_t memo = path;
+	const auto found = content_.find(memo);
+	if (found != content_.end()) {
+		return found->second;
+	}
+	const std::string &text = state.text(path);
+	const Variant data = content_service()->call(StringName("load_json"), String::utf8(text.data(), static_cast<int64_t>(text.size())));
+	const Value loaded = load(data);
+	if (loaded.kind == Kind::Dict && state.dict_size(loaded.ref) != 0) {
+		content_.emplace(memo, loaded);
+	}
+	return loaded;
+}
+
+void PortBridge::print_error(const std::string &text) {
+	godot::UtilityFunctions::push_error(String::utf8(text.data(), static_cast<int64_t>(text.size())));
+}
+
+void PortBridge::print_warning(const std::string &text) {
+	godot::UtilityFunctions::push_warning(String::utf8(text.data(), static_cast<int64_t>(text.size())));
 }
 
 bool PortBridge::same_type(state::TypeRef type, int64_t builtin, const StringName &class_name, const Variant &script) const {
@@ -325,7 +554,8 @@ void PortBridge::write_back() {
 		}
 		Array target = *array_sources_[node];
 		if (target.is_read_only()) {
-			continue;
+			// set() and append() refuse a read-only node, so nothing should get here.
+			throw state::ScriptError("native wrote into a read-only Array");
 		}
 		const state::ArrayNode &source = state_.array_node(node);
 		std::vector<Variant> items(source.items.size());
@@ -343,7 +573,7 @@ void PortBridge::write_back() {
 		}
 		Dictionary target = *dict_sources_[node];
 		if (target.is_read_only()) {
-			continue;
+			throw state::ScriptError("native wrote into a read-only Dictionary");
 		}
 		const state::DictNode &source = state_.dict_node(node);
 		std::vector<Variant> keys(source.keys.size());

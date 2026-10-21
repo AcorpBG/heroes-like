@@ -156,11 +156,18 @@ def add_engine_header(subsystem: Subsystem, lines: list[str], path: Path) -> boo
     return True
 
 
-def signature_of(path: Path, line: str, name: str) -> tuple[str, str]:
+def signature_of(path: Path, lines: list[str], start: int, name: str) -> tuple[str, str]:
+    # A signature over several lines (one parameter per line) is read as one.
+    line, end = lines[start], start
+    while not line.rstrip().endswith(":") and end + 1 < len(lines):
+        end += 1
+        line += " " + lines[end].strip()
     match = SIGNATURE.match(line)
     if not match:
-        raise SystemExit(f"{path.name}: {name} has no one-line signature: {line!r}")
+        raise SystemExit(f"{path.name}: {name} has no readable signature: {line!r}")
     params, returns = match.group(2), (match.group(4) or "").strip()
+    if end > start:
+        params = ", ".join(split_params(params))
     if not returns:
         raise SystemExit(f"{path.name}: {name} has no declared return type")
     return params, returns
@@ -192,7 +199,7 @@ def switch_script(subsystem: Subsystem, path: Path, functions: list[tuple[str, i
             switched.append(name)
     for name in switched:
         top, gd = switch_bounds(path, lines, name)
-        params, returns = signature_of(path, lines[gd], f"{name}__gd")
+        params, returns = signature_of(path, lines, gd, f"{name}__gd")
         if name not in registered:
             # Renamed or removed in the registry: the switch would call a missing native function.
             lines[gd] = lines[gd].replace(f"static func {name}__gd(", f"static func {name}(", 1)
@@ -214,7 +221,7 @@ def switch_script(subsystem: Subsystem, path: Path, functions: list[tuple[str, i
         starts = definitions(lines, name)
         if len(starts) != 1:
             raise SystemExit(f"{path.name}: {len(starts)} definitions of {name}")
-        params, returns = signature_of(path, lines[starts[0]], name)
+        params, returns = signature_of(path, lines, starts[0], name)
         if len(split_params(params)) != arity:
             raise SystemExit(f"{path.name}: {name} takes {len(split_params(params))} parameters, {subsystem.registry.name} says {arity}")
         lines[starts[0]] = lines[starts[0]].replace(f"static func {name}(", f"static func {name}__gd(", 1)

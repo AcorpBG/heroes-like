@@ -29,6 +29,7 @@ using Atom = uint32_t;
 inline Value dict_value(DictRef dict) { return Value::of_ref(Kind::Dict, dict); }
 inline Value array_value(ArrayRef array) { return Value::of_ref(Kind::Array, array); }
 inline Value str(Atom atom) { return Value::str(atom); }
+inline Value name_value(Atom atom) { return Value::of_ref(Kind::StringName, atom); }
 inline Value int_value(int64_t value) { return Value::of_int(value); }
 inline Value float_value(double value) { return Value::of_float(value); }
 inline Value bool_value(bool value) { return Value::of_bool(value); }
@@ -39,6 +40,29 @@ const char *type_name(const Value &value);
 inline bool is_dict(const Value &value) { return value.kind == Kind::Dict; }
 inline bool is_array(const Value &value) { return value.kind == Kind::Array; }
 inline bool is_vector2i(const Value &value) { return value.kind == Kind::Vector2i; }
+// x is String: a String only (a StringName is not one, as in GDScript).
+inline bool is_string(const Value &value) { return value.kind == Kind::String; }
+inline bool is_int(const Value &value) { return value.kind == Kind::Int; }
+inline bool is_float(const Value &value) { return value.kind == Kind::Float; }
+inline bool is_bool(const Value &value) { return value.kind == Kind::Bool; }
+
+// typeof(x): Godot's Variant::Type number (TYPE_INT is 2, TYPE_FLOAT 3, ...).
+// An opaque value's type is the adapter's; it is a ScriptError here.
+int64_t type_of(const Value &value);
+
+// int + int, - and *: GDScript's ints wrap around in two's complement.
+inline int64_t add(int64_t a, int64_t b) {
+	return static_cast<int64_t>(static_cast<uint64_t>(a) + static_cast<uint64_t>(b));
+}
+inline int64_t sub(int64_t a, int64_t b) {
+	return static_cast<int64_t>(static_cast<uint64_t>(a) - static_cast<uint64_t>(b));
+}
+inline int64_t mul(int64_t a, int64_t b) {
+	return static_cast<int64_t>(static_cast<uint64_t>(a) * static_cast<uint64_t>(b));
+}
+inline int64_t neg(int64_t a) {
+	return static_cast<int64_t>(0 - static_cast<uint64_t>(a));
+}
 
 // The cases the inline helpers below leave to gd.cpp: the errors, and int() of
 // anything but an int.
@@ -74,10 +98,52 @@ inline Atom to_string(const Value &value) {
 	return value.ref;
 }
 
-// x == y (Variant OP_EQUAL) and Variant::hash_compare, which containers use
-// for their values: hash_compare wants the same type, so 1 and 1.0 differ.
+// x == y (Variant OP_EQUAL) and Variant::hash_compare: hash_compare wants the
+// same type, so 1 and 1.0 differ, and with semantic (the default, as key
+// lookups and Array.has use it) every NaN equals every NaN. Container ==
+// compares the items without semantic, so a NaN item never matches.
 bool equal(const State &state, const Value &a, const Value &b);
-bool hash_compare(const State &state, const Value &a, const Value &b);
+bool hash_compare(const State &state, const Value &a, const Value &b, bool semantic = true);
+// StringLikeVariantComparator::compare (Array.has, Array.find, `x in array`):
+// hash_compare, and a String matches a StringName of the same text.
+bool string_like_equal(const State &state, const Value &a, const Value &b);
+
+// The untyped arithmetic of two numbers, as Variant's operators compute it:
+// int with int stays int (wrapping; / truncates, and / 0 or % 0 is a
+// ScriptError), anything with a float is a float. Not numbers: a ScriptError.
+Value op_add(const Value &a, const Value &b);
+Value op_sub(const Value &a, const Value &b);
+Value op_mul(const Value &a, const Value &b);
+Value op_div(const Value &a, const Value &b);
+// a < b and a > b of two numbers (an int meets a float as a double).
+bool op_less(const Value &a, const Value &b);
+bool op_greater(const Value &a, const Value &b);
+
+// hash(x) (Variant::hash): the murmur3 hash of 4.6.2's Variant::recursive_hash
+// over Nil, bool, int, float, String, Array and Dictionary, as GDScript's int.
+int64_t hash(const State &state, const Value &value);
+
+// if x: / not x / bool(x) of a Variant (Variant::booleanize): false for Nil,
+// false, 0, 0.0, "", an empty StringName, Vector2i(0, 0) and an empty Array or
+// Dictionary. An opaque value (an object) is true.
+bool truthy(const State &state, const Value &value);
+
+// is_equal_approx(a, b) of two floats (Math::is_equal_approx).
+bool is_equal_approx(double a, double b);
+
+// d.get(key) (Nil when missing) and d.get(key, fallback), then the
+// constructors: int(d.get(key, fallback)) and the like. The fallback goes
+// through the constructor too, as in GDScript.
+inline Value field(const State &state, DictRef dict, Atom key) {
+	return state.get(dict, Value::str(key), Value());
+}
+inline Value field_or(const State &state, DictRef dict, Atom key, const Value &fallback) {
+	return state.get(dict, Value::str(key), fallback);
+}
+int64_t int_field(const State &state, DictRef dict, Atom key, int64_t fallback);
+double float_field(const State &state, DictRef dict, Atom key, double fallback);
+bool bool_field(const State &state, DictRef dict, Atom key, bool fallback);
+Atom string_field(const State &state, DictRef dict, Atom key, Atom fallback);
 
 // An int or float value as a compat::Number, and back. Anything else is a
 // ScriptError (max(), min() and clamp() of non-numbers).
@@ -87,22 +153,102 @@ Value number_value(const compat::Number &number);
 // ceil(x) of the untyped utility: an int stays an int.
 Value ceil(const Value &value);
 
-// What `for x in value` visits: an Array's items or a Dictionary's keys. The
+// What `for x in value` visits: an Array's items, a Dictionary's keys, the
+// ints 0 to n - 1 of an int n, or each character of a String as a String. The
 // loop body must not resize the container it walks.
-const state::ValueList &items(const State &state, const Value &value);
+class Items {
+public:
+	explicit Items(const state::ValueList &list) :
+			list_(&list) {}
+	explicit Items(state::ValueList &&owned) :
+			owned_(std::move(owned)) {}
+	Items(Items &&other) noexcept :
+			owned_(std::move(other.owned_)), list_(other.list_) {}
+	Items(const Items &) = delete;
+	Items &operator=(const Items &) = delete;
+	const Value *begin() const { return list().begin(); }
+	const Value *end() const { return list().end(); }
+	size_t size() const { return list().size(); }
+	const state::ValueList &list() const { return list_ != nullptr ? *list_ : owned_; }
+
+private:
+	state::ValueList owned_;
+	const state::ValueList *list_ = nullptr;
+};
+// A String's characters are new atoms, so they need a State that can intern.
+Items items(const State &state, const Value &value);
+Items items(State &state, const Value &value);
 // `for x in d.get(key, [])`: the field's items, none when the key is missing.
-const state::ValueList &field_items(const State &state, DictRef dict, const Value &key);
+Items field_items(const State &state, DictRef dict, const Value &key);
+Items field_items(State &state, DictRef dict, const Value &key);
 
 // d[key] for reading: a missing key is a ScriptError.
 Value index(const State &state, DictRef dict, const Value &key);
+// d.keys() and d.values(): new Arrays.
+ArrayRef keys(State &state, DictRef dict);
+ArrayRef values(State &state, DictRef dict);
+// value in array (Array.has): string_like_equal against each item.
+bool array_has(const State &state, ArrayRef array, const Value &value);
+// value in x for a Dictionary (its keys) or an Array; anything else is a
+// ScriptError, as OP_IN without an evaluator.
+bool in(const State &state, const Value &value, const Value &container);
+// a.find(value): the first index, or -1.
+int64_t array_find(const State &state, ArrayRef array, const Value &value);
+// a.push_front(value), a.insert(position, value), a.remove_at(position),
+// a.pop_back(), a.pop_front(): with Godot's read-only, type and range checks,
+// which print an error and leave the Array as it was.
+void push_front(State &state, ArrayRef array, const Value &value);
+void insert(State &state, ArrayRef array, int64_t position, const Value &value);
+void remove_at(State &state, ArrayRef array, int64_t position);
+Value pop_back(State &state, ArrayRef array);
+Value pop_front(State &state, ArrayRef array);
+// a + b of two Arrays: a new untyped Array with a's items, then b's.
+ArrayRef concat(State &state, ArrayRef a, ArrayRef b);
 // d.merge(other, overwrite).
 void merge(State &state, DictRef dict, DictRef other, bool overwrite);
 // d.duplicate() / a.duplicate(): shallow, typing kept, never read-only.
 DictRef duplicate_dict(State &state, DictRef dict);
 ArrayRef duplicate_array(State &state, ArrayRef array);
+// d.duplicate(true) / a.duplicate(true): every nested Array and Dictionary is
+// copied too, once per place it is reached (Godot keeps no copy table).
+DictRef deep_duplicate_dict(State &state, DictRef dict);
+ArrayRef deep_duplicate_array(State &state, ArrayRef array);
+// x.duplicate(deep) of an untyped value: containers copied, others as they are.
+Value duplicate_value(State &state, const Value &value, bool deep);
 inline bool is_empty(const State &state, DictRef dict) { return state.dict_size(dict) == 0; }
 
 // "%d,%d" % [a, b] for ints.
 std::string format_pair(int64_t a, int64_t b);
+
+// Strings. text() is the UTF-8 of a String or StringName value.
+const std::string &text(const State &state, const Value &value);
+// s.strip_edges(): drops the characters up to code 32 at both ends.
+Atom strip_edges(State &state, Atom text);
+bool begins_with(const State &state, Atom text, Atom prefix);
+bool ends_with(const State &state, Atom text, Atom suffix);
+// str(x) and String(x) of Nil, bool, int, String and StringName (float and the
+// containers are not ported: a ScriptError).
+Atom stringify(State &state, const Value &value);
+// x.is_valid_int() and int(x) of a String.
+bool is_valid_int(const State &state, Atom text);
+
+// object.property of an object value (an opaque Variant): the host reads it.
+Value member(State &state, const Value &object, Atom property);
+
+// A RandomNumberGenerator value (an opaque Variant): rng.seed, rng.state as
+// GDScript's int, rng.randi_range(from, to), which advances the object's
+// state, and RandomNumberGenerator.new() with seed, then state, set.
+int64_t rng_seed(State &state, const Value &rng);
+int64_t rng_state(State &state, const Value &rng);
+int64_t rng_randi_range(State &state, const Value &rng, int64_t from, int64_t to);
+Value rng_new(State &state, int64_t seed, int64_t rng_state);
+
+// ContentService.get_unit(id) and the like: the row, the same Dictionary on
+// every call, or a new empty one when there is none; ContentService.load_json.
+DictRef content_row(State &state, state::ContentTable table, Atom id);
+DictRef content_file(State &state, Atom path);
+
+// push_warning(text) and push_error(text) of a script.
+void push_warning(State &state, const std::string &text);
 
 } // namespace aurelion::rules::gd

@@ -83,13 +83,17 @@ public:
 	Variant port_call(const StringName &name, const Array &args, bool write_back);
 	String port_check(const StringName &name, const Array &args, const Variant &gdscript_result);
 	void port_report(const StringName &name, const String &mismatch);
+	// Shadow: the arguments of a function that writes into them, copied for its
+	// native run before GDScript runs (bridge::copy_for_shadow).
+	Array port_copy(const Array &args);
 	// {name: {calls, checks, mismatches, errors}}, plus "unknown_calls" when a
 	// name was not in the registry. With a subsystem's log variable set to a
 	// folder (HEROES_NATIVE_BATTLE_LOG), the same goes to shadow_<pid>.json
 	// there, with the first mismatches and unknown names, every 65,536 uses, on
-	// each mismatch or failure and at exit. A native call that fails, or names
-	// no ported function, prints a SCRIPT ERROR, which fails rules_parity runs
-	// and the core suite's tests.
+	// each mismatch or failure and at exit. A native call that fails or names no
+	// ported function, a shadow mismatch (the first 20) and a stats file that
+	// cannot be written print a SCRIPT ERROR, which fails rules_parity runs and
+	// the core suite's tests.
 	Dictionary port_stats() const;
 
 private:
@@ -103,7 +107,7 @@ private:
 
 	const aurelion::rules::port::Function *port_function(const StringName &name);
 	PortStats &stats_of(const aurelion::rules::port::Function *function);
-	void record_mismatch(PortStats &stats, const std::string &text);
+	void record_mismatch(PortStats &stats, const char *name, const std::string &text, bool error);
 	void count_port_use();
 	void write_port_stats() const;
 	void record_unknown(const StringName &name, const char *method);
@@ -118,6 +122,8 @@ private:
 	int64_t port_uses_ = 0;
 	int64_t unknown_calls_ = 0;
 	std::vector<std::string> unknown_names_;
+	size_t reported_mismatches_ = 0;
+	mutable bool port_log_failed_ = false;
 };
 
 } // namespace godot
