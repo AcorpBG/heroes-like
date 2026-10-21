@@ -50,6 +50,12 @@ struct Table {
 	size_t gdscript_only_count = 0;
 	const ScriptStatic *shared_memos = nullptr;
 	size_t shared_memo_count = 0;
+	// The subsystem's switches run the GDScript body when a native call reaches
+	// a path the port leaves to GDScript (state::NotPorted): the day port.
+	// Without this fallback such a call fails, in native and in shadow mode
+	// (AurelionRules reports it as a native failure): its null result could
+	// pass for GDScript's.
+	bool fallback = false;
 };
 
 // Every subsystem's table.

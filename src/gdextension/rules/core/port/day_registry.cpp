@@ -90,9 +90,12 @@ const Function kFunctions[] = {
 
 } // namespace
 
-// The day port's table, listed in registry_tables.cpp.
+// The day port's table, listed in registry_tables.cpp. Its switches run the
+// GDScript body on a path the port leaves to GDScript.
 Table day_table() {
-	return {"HEROES_NATIVE_DAY_LOG", kFunctions, sizeof(kFunctions) / sizeof(kFunctions[0])};
+	Table table{"HEROES_NATIVE_DAY_LOG", kFunctions, sizeof(kFunctions) / sizeof(kFunctions[0])};
+	table.fallback = true;
+	return table;
 }
 
 } // namespace aurelion::rules::port

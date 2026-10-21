@@ -1219,6 +1219,14 @@ its metadata under "meta"). Shadow mode on the six seeds checked them on the bra
 - Also here, the runtime for paths a port leaves to GDScript: a native function throws `state::NotPorted` before any
   host side effect; the call writes nothing back, `port_not_ported()` is true, the stats count it as `not_ported`,
   and the switch generator writes a GDScript fallback for subsystems marked `fallback` (day only).
+  - Since 2026-10-22 the subsystem's table says so too (`Table::fallback`; the day table sets it). In a subsystem
+    without that fallback (battle, AI) a NotPorted fails the call: a native null could pass for GDScript's result
+    and hide the gap from every later check. It is a native failure:
+    - in native mode and in shadow mode;
+    - a SCRIPT ERROR, which fails the core suite, rules_parity runs and G1;
+    - counted as an error in the port stats.
+  - The AI match runner (`tests/ai_versus_ai_match_report.gd`) fails its report on any error, mismatch or unknown
+    name in the port stats, because a release export prints no SCRIPT ERROR.
 - Phase 1 takes `hero_progression_rules` and the keys `day_keys.inc` shares with its branch from main and drops its
   copies (in `commander_payload.cpp` and its `battle_keys.inc`).
 - Slice 04's shared helpers (2026-10-21; Phase 3 had claimed them and handed them over): PlayerIdentityRules 6
@@ -1227,8 +1235,8 @@ its metadata under "meta"). Shadow mode on the six seeds checked them on the bra
   copied; ScenarioSelectRules' two functions inlined), SpellRules `_normalize_spell_ids`, EnemyTurnRules
   `_owned_town_entries` and `_town_controller_faction_id`, EnemyAdventureRules `_placement_resolved`, OverworldRules
   `resolved_encounter_lookup`, AiHeroRules `is_ai_hero` (`ai_hero_rules.cpp`; Phase 3 keeps its AiHeroRules ports in
-  `ai_hero_rules_*.cpp`). `gd::stringify_or_fallback` is `String()` for a port with a GDScript fallback (day, AI): a
-  float or a container leaves the call to GDScript instead of failing it. Phase 1 drops its `difficulty_rules`
+  `ai_hero_rules_*.cpp`). `gd::stringify_or_fallback` is `String()` for a port with a GDScript fallback (day): a float
+  or a container leaves the call to GDScript instead of failing it. In battle and AI calls it fails the call. Phase 1 drops its `difficulty_rules`
   definitions from `commander_payload.cpp` and the 29 keys of `day_keys.inc`'s second "Also in battle_keys.inc" block
   from its list.
 - Slice 05's shared helpers (2026-10-21; Phase 3 handed them over): AiHeroRules `active_hero_entries` and
@@ -1324,6 +1332,31 @@ Phase 3's port (`overworld_rules_ai_recovery.cpp`, `overworld_rules_ai_sites.cpp
 `_town_building_bonus_total`, `_town_capital_project_recovery_relief`, `_town_recovery_relief_rating` and
 `_sync_unit_strength_memo`; those copies fold into Phase 5's at its merge. The paths AI matches never run stay GDScript
 and are not frozen by this slice.
+
+**Slice 02, frozen functions** (2026-10-22, until the Phase 5 merge; AGENTS.md): the day's economy steps of
+`OverworldRules.end_turn` (town occupation and recovery, town, hero and site income, site musters, reserve deliveries,
+difficulty scaling) and what they run in AI matches beyond the earlier slices' functions and Phase 3's, 24 functions.
+OverworldRules 19: `_add_recruit_growth`, `_add_resources`, `_advance_all_town_occupations`,
+`_advance_all_town_recovery`, `_advance_player_reserve_deliveries`, `_clear_resource_site_delivery`,
+`_describe_recruit_delta`, `_find_encounter_by_placement`, `_movement_max_from_hero`, `_player_hero_states`,
+`_player_heroes_daily_income`, `_refresh_all_player_heroes_for_new_day`, `_resource_node_matches_controller`,
+`_resource_site_control_income_for_day`, `_resource_site_delivery_target_label`, `_resource_site_weekly_recruits`,
+`_weighted_recruit_value`, `apply_controlled_resource_site_musters`, `controlled_resource_site_income`. DifficultyRules
+3: `_scale_amount`, `scale_income_resources`, `scale_resource_payload`. SpellRules 1: `refresh_daily_mana`.
+HeroProgressionRules 1: `daily_income_bonus`. Three of them, `_describe_recruit_delta`, `_find_encounter_by_placement`
+and `_weighted_recruit_value`, are also private helpers in Phase 3's port (`overworld_rules_ai_sites.cpp`); those copies
+fold into Phase 5's at its merge. The paths AI matches never run stay GDScript and are not frozen by this slice.
+
+**Slice 07, frozen functions** (2026-10-22, until the Phase 5 merge; AGENTS.md): `OverworldRules.end_turn` and
+`_finalize_action_result` (every caller) and what they run in AI matches beyond the earlier slices' functions and Phase
+3's, 21 functions. OverworldRules 15: `_compact_enemy_activity_events`, `_describe_resource_delta`,
+`_end_turn_muster_summary`, `_end_turn_resolution_summary`, `_end_turn_town_economy_summary`, `_enemy_activity_line`,
+`_enemy_activity_public_text`, `_evaluate_scenario_state`, `_finalize_action_result`, `_resource_keys_for_payload`,
+`_reveal_current_fog_sources`, `_short_player_text`, `describe_enemy_activity`, `end_turn`, `is_weekly_growth_day`.
+EnemyAdventureRules 6: `_ai_event_summary`, `_public_event_log_text`, `_public_reason_from_codes`,
+`ai_public_event_log`, `ai_public_event_log_entry`, `ai_public_event_log_leak_check`. The port splits `end_turn` around
+the AI turn (`_run_enemy_turn_cycle`) into two native calls; the paths AI matches never run stay GDScript and are not
+frozen by this slice.
 
 **Inventory and boundary** (2026-10-21, main 6d7471276; every function of `scripts/core` and ContentService probed on
 the six seeds; times from l1, a large four-player game to day 90, on a machine shared with Phase 1's runs):

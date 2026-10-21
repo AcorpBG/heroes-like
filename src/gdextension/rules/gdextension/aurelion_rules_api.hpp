@@ -82,7 +82,10 @@ public:
 	// engine script made itself (mismatch "" when it matched). A call that
 	// reached a path the port leaves to GDScript (state::NotPorted) changes
 	// nothing and returns null, and port_not_ported() is true until the next
-	// port_call; such a check is counted as not ported and matches.
+	// port_call. In a subsystem whose switches fall back to GDScript
+	// (port::Table::fallback, the day port) such a check is counted as not
+	// ported and matches; in any other (battle, AI) the call and the check fail
+	// as a native failure does, since the null could pass for GDScript's result.
 	Variant port_call(const StringName &name, const Array &args, bool write_back);
 	bool port_not_ported() const { return last_not_ported_; }
 	String port_check(const StringName &name, const Array &args, const Variant &gdscript_result);
@@ -108,7 +111,8 @@ public:
 	// each mismatch or failure and at exit. A native call that fails or names no
 	// ported function, a shadow mismatch (the first 20) and a stats file that
 	// cannot be written print a SCRIPT ERROR, which fails rules_parity runs and
-	// the core suite's tests.
+	// the core suite's tests. A release export prints none: the AI match runner
+	// fails its report on any error, mismatch or unknown name counted here.
 	Dictionary port_stats() const;
 
 	// AiHeroRules._search, its masks (ai_search::prepare): [blocked, stop_mask,
@@ -131,6 +135,8 @@ private:
 		int64_t errors = 0;
 		int64_t not_ported = 0;
 		std::vector<std::string> first;
+		// Its table's Table::fallback.
+		bool fallback = false;
 	};
 
 	const aurelion::rules::port::Function *port_function(const StringName &name);

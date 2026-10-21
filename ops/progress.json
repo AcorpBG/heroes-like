@@ -116219,15 +116219,15 @@
     {
       "id": "native-rules-phase5-02-economy-20261021",
       "title": "Native day processing 02: town and site economy",
-      "status": "pending",
+      "status": "in_progress",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Town occupation and recovery, town and site income, growth, musters, hero income, reserve deliveries, difficulty scaling: 60/646 (OverworldRules 30/483, TownDevelopmentRules 7/76, DifficultyRules 8/31, PlayerIdentityRules 5/23, ContentService 5/13, 5 more 5/20).",
-      "updatedAt": "2026-10-21T21:00:00Z"
+      "notes": "Town occupation and recovery, town and site income, growth, musters, hero income, reserve deliveries, difficulty scaling: 60/646 (OverworldRules 30/483, TownDevelopmentRules 7/76, DifficultyRules 8/31, PlayerIdentityRules 5/23, ContentService 5/13, 5 more 5/20). Started 2026-10-22; frozen until the merge: 24 functions (transition doc, Phase 5, \"Slice 02, frozen functions\").",
+      "updatedAt": "2026-10-22T02:00:00Z"
     },
     {
       "id": "native-rules-phase5-03-hero-commit-20261021",
@@ -116284,15 +116284,15 @@
     {
       "id": "native-rules-phase5-07-day-boundary-20261021",
       "title": "Native day processing 07: one native call each side of the AI turn",
-      "status": "pending",
+      "status": "in_progress",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "_finalize_action_result and end_turn, 19/301; end_turn as two native calls around the AI turn; session-meta caches and the OverworldShell end-turn dry run invalidate native state; timing on the six seeds.",
-      "updatedAt": "2026-10-21T21:00:00Z"
+      "notes": "_finalize_action_result and end_turn, 19/301; end_turn as two native calls around the AI turn; session-meta caches and the OverworldShell end-turn dry run invalidate native state; timing on the six seeds. Started 2026-10-22; frozen until the merge: 21 functions (transition doc, Phase 5, \"Slice 07, frozen functions\").",
+      "updatedAt": "2026-10-22T01:30:00Z"
     },
     {
       "id": "native-rules-phase5-08-exit-20261021",
