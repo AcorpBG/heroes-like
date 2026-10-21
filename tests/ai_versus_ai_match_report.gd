@@ -263,6 +263,11 @@ func _run() -> void:
 		file.store_string(JSON.stringify(record, "  "))
 		file.close()
 
+	var port_failures := _native_port_failures()
+	if port_failures != "":
+		_fail(port_failures)
+		return
+
 	var summary := {
 		"ok": true,
 		"match_seed": match_seed,
@@ -589,6 +594,22 @@ func _day_row(session, seats: Array) -> Dictionary:
 			"economy": (session.flags.get(AiHeroRulesScript.ECONOMY_LOG_KEY, {}).get(seat, {}) as Dictionary).duplicate(),
 		}
 	return row
+
+## The native port's failures in this run (AurelionRules.port_stats): failed
+## calls, shadow mismatches and names it does not have. Each printed a SCRIPT
+## ERROR, which a release export does not print, so the match fails here too.
+func _native_port_failures() -> String:
+	var stats: Dictionary = NativeRulesScript.api().port_stats()
+	var failed := PackedStringArray()
+	for name in stats:
+		var entry = stats[name]
+		if entry is Dictionary and int(entry.get("errors", 0)) + int(entry.get("mismatches", 0)) > 0:
+			failed.append("%s (%d errors, %d mismatches)" % [name, int(entry.get("errors", 0)), int(entry.get("mismatches", 0))])
+	if int(stats.get("unknown_calls", 0)) > 0:
+		failed.append("%d calls of names it does not have" % int(stats.unknown_calls))
+	if failed.is_empty():
+		return ""
+	return "The native rules port failed: %s." % ", ".join(failed)
 
 func _cleanup() -> void:
 	ContentService.clear_generated_scenario_drafts()

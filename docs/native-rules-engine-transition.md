@@ -1219,6 +1219,14 @@ its metadata under "meta"). Shadow mode on the six seeds checked them on the bra
 - Also here, the runtime for paths a port leaves to GDScript: a native function throws `state::NotPorted` before any
   host side effect; the call writes nothing back, `port_not_ported()` is true, the stats count it as `not_ported`,
   and the switch generator writes a GDScript fallback for subsystems marked `fallback` (day only).
+  - Since 2026-10-22 the subsystem's table says so too (`Table::fallback`; the day table sets it). In a subsystem
+    without that fallback (battle, AI) a NotPorted fails the call: a native null could pass for GDScript's result
+    and hide the gap from every later check. It is a native failure:
+    - in native mode and in shadow mode;
+    - a SCRIPT ERROR, which fails the core suite, rules_parity runs and G1;
+    - counted as an error in the port stats.
+  - The AI match runner (`tests/ai_versus_ai_match_report.gd`) fails its report on any error, mismatch or unknown
+    name in the port stats, because a release export prints no SCRIPT ERROR.
 - Phase 1 takes `hero_progression_rules` and the keys `day_keys.inc` shares with its branch from main and drops its
   copies (in `commander_payload.cpp` and its `battle_keys.inc`).
 - Slice 04's shared helpers (2026-10-21; Phase 3 had claimed them and handed them over): PlayerIdentityRules 6
@@ -1227,8 +1235,8 @@ its metadata under "meta"). Shadow mode on the six seeds checked them on the bra
   copied; ScenarioSelectRules' two functions inlined), SpellRules `_normalize_spell_ids`, EnemyTurnRules
   `_owned_town_entries` and `_town_controller_faction_id`, EnemyAdventureRules `_placement_resolved`, OverworldRules
   `resolved_encounter_lookup`, AiHeroRules `is_ai_hero` (`ai_hero_rules.cpp`; Phase 3 keeps its AiHeroRules ports in
-  `ai_hero_rules_*.cpp`). `gd::stringify_or_fallback` is `String()` for a port with a GDScript fallback (day, AI): a
-  float or a container leaves the call to GDScript instead of failing it. Phase 1 drops its `difficulty_rules`
+  `ai_hero_rules_*.cpp`). `gd::stringify_or_fallback` is `String()` for a port with a GDScript fallback (day): a float
+  or a container leaves the call to GDScript instead of failing it. In battle and AI calls it fails the call. Phase 1 drops its `difficulty_rules`
   definitions from `commander_payload.cpp` and the 29 keys of `day_keys.inc`'s second "Also in battle_keys.inc" block
   from its list.
 - Slice 05's shared helpers (2026-10-21; Phase 3 handed them over): AiHeroRules `active_hero_entries` and
