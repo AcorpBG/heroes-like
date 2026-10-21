@@ -831,6 +831,18 @@ the six seeds; times from l1, a large four-player game to day 90, on a machine s
   and forecast, scenario evaluation, the blocked-tile index) gain several times; Phase 5 alone gives under 1.1x on such
   games, and Phase 6, keeping the session native across days, removes the conversion.
 
+**Static reach** (2026-10-21): the static call closure of the Phase 5 entries, paths AI matches never run included (the
+human player's towns, heroes and artifacts, scenario scripts), is about 712 functions / 9,100 lines, 1.5 times the
+probed reach. Each slice ports the whole closure of its entries, so no fallback to GDScript is needed. Slices go in the
+order of their cost in AI matches: 01, 06, 05, 04, 03, 02, 07.
+
+**Slice 01, fog** (2026-10-21, branch `native-phase5-day`): `DayEngine.gd` hands sessions over as views; the day
+registry has `OverworldRules._normalize_fog_of_war` and its 54 functions (OverworldRules 17, ArtifactRules 20,
+HeroProgressionRules 8 copied from Phase 1, OverworldLevelRules 7, HeroCommandRules 2). Checks: shadow on the six seeds
+4,047 calls, 0 mismatches; core suite in shadow mode 17/17, 182 calls, 0 mismatches; native mode against main on the
+six seeds identical (every daily digest and match record); core suite 17/17. One call on a 108x108 two-level map:
+12.8 ms in GDScript, 4.1 ms native.
+
 ### Phase 6: match throughput
 
 The runner keeps a native session handle across days and writes Dictionaries back only for the digest and record (with

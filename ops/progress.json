@@ -116174,21 +116174,21 @@
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Owner decision 2026-10-21: beside Phase 1 on branch native-phase5-day, merged once, G3 skipped, Windows only, lean checks. Inventory and boundary (transition doc, Phase 5): 440 functions / 6,020 lines reached; on l1 day processing 186 ms of a 1,408 ms day (closing normalize 106, _finalize_action_result 71); whole-state conversion 545 ms a day, so view and patch through the port bridge: two native calls per day around the AI turn plus normalize_overworld_state, sessions as views written back by DayEngine.gd, content from ContentService's cached documents. Switch HEROES_NATIVE_DAY, log HEROES_NATIVE_DAY_LOG, registry core/port/day_registry.cpp. A slice's functions are frozen from its start to the merge (AGENTS.md). _finalize_* in BattleRules waits for the Phase 1 merge.",
-      "updatedAt": "2026-10-21T21:00:00Z"
+      "notes": "Owner decision 2026-10-21: beside Phase 1 on branch native-phase5-day, merged once, G3 skipped, Windows only, lean checks. Inventory and boundary (transition doc, Phase 5): 440 functions / 6,020 lines reached; on l1 day processing 186 ms of a 1,408 ms day (closing normalize 106, _finalize_action_result 71); whole-state conversion 545 ms a day, so view and patch through the port bridge: two native calls per day around the AI turn plus normalize_overworld_state, sessions as views written back by DayEngine.gd, content from ContentService's cached documents. Switch HEROES_NATIVE_DAY, log HEROES_NATIVE_DAY_LOG, registry core/port/day_registry.cpp. Static closure of the reach (paths AI matches never run included): about 712 functions / 9,100 lines; slices port the whole closure of their entries and go in the order of their cost in AI matches: 01, 06, 05, 04, 03, 02, 07. A slice's functions are frozen from its start to the merge (AGENTS.md). _finalize_* in BattleRules waits for the Phase 1 merge.",
+      "updatedAt": "2026-10-21T23:00:00Z"
     },
     {
       "id": "native-rules-phase5-01-boundary-fog-20261021",
       "title": "Native day processing 01: day engine boundary and fog",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "DayEngine.gd, the day registry, the session view and the content context; refresh_fog_of_war and its reach, 52/639 (OverworldRules 16/172, ArtifactRules 17/267, HeroProgressionRules 8/96, ContentService 4/62, OverworldLevelRules 5/23, HeroCommandRules 2/19). The bonus functions overlap Phase 1 slice 07; the branch merged second takes the other's port.",
-      "updatedAt": "2026-10-21T21:00:00Z"
+      "notes": "Completed on branch native-phase5-day: DayEngine.gd (sessions as views written back after a native call), the day registry with OverworldRules._normalize_fog_of_war, 54 functions native (OverworldRules 17, ArtifactRules 20, HeroProgressionRules 8 copied from Phase 1, OverworldLevelRules 7, HeroCommandRules 2). Checks: shadow on the six seeds 4,047 calls, 0 mismatches; core suite in shadow mode 17/17 (182 calls, 0 mismatches); native mode against main on the six seeds identical; core suite 17/17. One call on a 108x108 two-level map: 12.8 ms GDScript, 4.1 ms native. The bonus functions overlap Phase 1 slice 07; the branch merged second takes the other's port.",
+      "updatedAt": "2026-10-21T23:00:00Z"
     },
     {
       "id": "native-rules-phase5-02-economy-20261021",
