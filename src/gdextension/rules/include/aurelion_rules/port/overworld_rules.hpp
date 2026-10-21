@@ -60,6 +60,8 @@ bool _resource_site_is_repeatable(State &state, DictRef site);
 bool _resource_site_is_persistent(State &state, DictRef site);
 bool is_encounter_resolved(State &state, DictRef session, DictRef encounter);
 ArrayRef _resolved_lookup_entry(State &state, DictRef session);
+// The resolved placements as a lookup, the session's cached one.
+DictRef resolved_encounter_lookup(State &state, DictRef session);
 Atom encounter_key(State &state, DictRef encounter);
 
 // A recruit payload: unit id -> a positive count (overworld_rules.cpp).

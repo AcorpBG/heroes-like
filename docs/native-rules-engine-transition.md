@@ -931,6 +931,56 @@ its metadata under "meta"). Shadow mode on the six seeds checked them on the bra
   and the switch generator writes a GDScript fallback for subsystems marked `fallback` (day only).
 - Phase 1 takes `hero_progression_rules` and the keys `day_keys.inc` shares with its branch from main and drops its
   copies (in `commander_payload.cpp` and its `battle_keys.inc`).
+- Slice 04's shared helpers (2026-10-21; Phase 3 had claimed them and handed them over): PlayerIdentityRules 6
+  (`controller_id`, `raid_controller_id`, `town_controller_id`, `player`, `faction_id`, `identity_fields`; the day-only
+  `enemy_configs` shares the file), DifficultyRules `_default_difficulty_id` and `normalize_difficulty` (Phase 1's port,
+  copied; ScenarioSelectRules' two functions inlined), SpellRules `_normalize_spell_ids`, EnemyTurnRules
+  `_owned_town_entries` and `_town_controller_faction_id`, EnemyAdventureRules `_placement_resolved`, OverworldRules
+  `resolved_encounter_lookup`, AiHeroRules `is_ai_hero` (`ai_hero_rules.cpp`; Phase 3 keeps its AiHeroRules ports in
+  `ai_hero_rules_*.cpp`). `gd::stringify_or_fallback` is `String()` for a port with a GDScript fallback (day, AI): a
+  float or a container leaves the call to GDScript instead of failing it. Phase 1 drops its `difficulty_rules`
+  definitions from `commander_payload.cpp` and the 29 keys of `day_keys.inc`'s second "Also in battle_keys.inc" block
+  from its list.
+
+**Slice 04, frozen functions** (2026-10-21, until the Phase 5 merge; AGENTS.md): `EnemyTurnRules.normalize_enemy_states`
+(every caller: the AI turn, scenario evaluation, the threat and pressure readers, the risk forecast) and what it runs in
+AI matches, 126 functions. EnemyAdventureRules 60: `_active_commander_map`, `_apply_commander_army_metadata`,
+`_apply_commander_memory_metadata`, `_apply_commander_record_metadata`, `_apply_commander_role_metadata`,
+`_army_continuity_status`, `_army_continuity_summary`, `_army_headcount`, `_army_strength`, `_base_enemy_army`,
+`_commander_renown_from_record`, `_commander_veterancy_rank_from_record`, `_faction_commander_ids`,
+`_fallen_hero_settled`, `_hero_starting_spell_ids`, `_is_army_continuity_payload`, `_merge_unique_strings`,
+`_normalize_army_payload`, `_normalize_command_payload`, `_normalize_commander_roster_entries`,
+`_normalize_commander_roster_entry`, `_normalize_commander_status`, `_normalize_enemy_hero_sighting_records`,
+`_normalize_enemy_progression`, `_normalize_enemy_scouted_target_records`,
+`_normalize_resource_defender_commander_states`, `_normalize_string_array`, `_normalize_town_defender_commander_states`,
+`_normalized_commander_army_continuity`, `_normalized_commander_memory`, `_normalized_commander_record`,
+`_normalized_commander_role_state`, `_normalized_commander_target_kind_counts`, `_normalized_specialty_focus_ids`,
+`_normalized_specialty_ranks`, `_placement_resolved`, `_preferred_enemy_specialty_id`, `_resolved_encounter_lookup`,
+`_resource_has_ai_defender`, `_sync_specialty_pick`, `_sync_unit_strength_memo`, `_town_has_ai_defender`,
+`_unit_strength_value`, `build_raid_commander_state`, `build_roster_commander_state`, `commander_army_brief`,
+`commander_army_continuity`, `commander_army_status`, `commander_army_summary`, `commander_memory_brief`,
+`commander_memory_summary`, `commander_record_summary`, `commander_roster_for_faction`, `commander_veterancy_label`,
+`ensure_raid_army`, `normalize_all_commander_rosters`, `normalize_commander_roster`,
+`normalize_enemy_known_world_memory`, `normalize_raid_armies`, `sync_commander_army_continuity`. EnemyTurnRules 15:
+`_blank_resource_pool`, `_default_raid_encounter_ids_for_faction`, `_default_spawn_points_for_faction`,
+`_enemy_faction_config_with_runtime_defaults`, `_enemy_faction_configs_for_session`,
+`_enemy_faction_configs_with_runtime_defaults`, `_find_state`, `_normalize_enemy_states_body`, `_normalize_posture`,
+`_normalize_rebuild_pressure_request`, `_normalize_resource_pool`, `_normalize_string_array`, `_owned_town_entries`,
+`_town_controller_faction_id`, `normalize_enemy_states`. HeroProgressionRules 25: `_build_choice_group`,
+`_distinct_specialty_count`, `_enqueue_missing_choice_groups`, `_normalize_pending_choices`, `_normalize_specialties`,
+`_normalize_specialty_id_list`, `_offer_order`, `_reconcile_pending_choices`, `_specialty_is_available`,
+`_specialty_row`, `available_specialty_ids`, `choose_specialty`, `command_path`, `current_pending_choice`,
+`ensure_hero_progression`, `growth_seed`, `has_specialty`, `mana_max_bonus`, `max_rank_for_specialty`,
+`max_specialties_per_hero`, `raw_pending_choices_remaining`, `specialties`, `specialty_definition`, `specialty_rank`.
+PlayerIdentityRules 7: `controller_id`, `enemy_configs`, `faction_id`, `identity_fields`, `player`,
+`raid_controller_id`, `town_controller_id`. DifficultyRules 6: `_default_difficulty_id`, `_scenario_select_rules`,
+`normalize_difficulty`, `normalize_session`, `profile_for_difficulty`, `profile_for_session`. AiHeroRules 5:
+`_overworld_rules`, `_resolved_lookup`, `is_ai_hero`, `migrate_legacy_raids`, `normalize_ai_heroes`. SpellRules 4:
+`_normalize_spell_ids`, `ensure_hero_spellbook`, `mana_max_from_command`, `mana_max_from_hero`. OverworldRules 1:
+`resolved_encounter_lookup`. ScenarioSelectRules 2: `default_difficulty_id`, `normalize_difficulty`. OverworldLevelRules
+1: `canonical_spatial_records`. The paths AI matches never run stay GDScript and are not frozen by this slice: a roster
+memo already open, legacy raid hosts and support columns, defender commanders in towns and sites, scouted targets and
+hero sightings from old saves, hero task boards, enemy configs without player records.
 
 **Inventory and boundary** (2026-10-21, main 6d7471276; every function of `scripts/core` and ContentService probed on
 the six seeds; times from l1, a large four-player game to day 90, on a machine shared with Phase 1's runs):
