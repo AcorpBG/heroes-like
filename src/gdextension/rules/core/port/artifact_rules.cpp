@@ -508,4 +508,50 @@ ArrayRef _string_array(State &state, const Value &value) {
 	return result;
 }
 
+ArrayRef spell_affinity_records(State &state, DictRef hero_state, DictRef spell) {
+	const ArrayRef records = state.new_array();
+	Value modifiers;
+	if (!state.lookup(aggregate_bonuses(state, hero_state), str(key::spell_modifiers), modifiers) || !gd::is_array(modifiers)) {
+		return records; // the default [] is an Array with nothing in it
+	}
+	for (const Value &modifier_value : gd::items(state, modifiers)) {
+		if (!gd::is_dict(modifier_value)) {
+			continue;
+		}
+		const DictRef modifier = modifier_value.ref;
+		if (!gd::is_empty(state, spell) && !_spell_modifier_matches(state, modifier, spell)) {
+			continue;
+		}
+		state.append(records, dict_value(gd::deep_duplicate_dict(state, modifier)));
+	}
+	return records;
+}
+
+int64_t spell_mana_cost_delta(State &state, DictRef hero_state, DictRef spell) {
+	int64_t delta = 0;
+	for (const Value &modifier : gd::items(state, array_value(spell_affinity_records(state, hero_state, spell)))) {
+		delta = gd::add(delta, gd::int_field(state, modifier.ref, key::mana_cost_delta, 0));
+	}
+	return delta;
+}
+
+bool _spell_modifier_matches(State &state, DictRef modifier, DictRef spell) {
+	if (gd::is_empty(state, spell)) {
+		return true;
+	}
+	const Value effect = get_or_new_dict(state, spell, key::effect);
+	const Atom effect_type = gd::is_dict(effect) ? string_of_field(state, effect.ref, key::type, key::empty) : static_cast<Atom>(key::empty);
+	for (const Atom field : {key::school_id, key::context, key::effect_type, key::primary_role}) {
+		const Atom required = gd::strip_edges(state, string_of_field(state, modifier, field, key::empty));
+		if (required == key::empty) {
+			continue;
+		}
+		const Atom actual = field == key::effect_type ? effect_type : string_of_field(state, spell, field, key::empty);
+		if (actual != required) {
+			return false;
+		}
+	}
+	return true;
+}
+
 } // namespace aurelion::rules::port::artifact_rules
