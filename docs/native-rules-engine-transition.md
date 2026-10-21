@@ -1152,6 +1152,16 @@ OverworldLevelRules 1); the paths AI matches never run throw `state::NotPorted`,
 container (`gd::stringify_or_fallback`). Checks: shadow on the six seeds 2,511 calls, 0 mismatches; native mode against
 main on the six seeds identical; core suite 17/17.
 
+**Slice 05, scenario evaluation and elimination** (2026-10-21, branch `native-phase5-day`): the day registry adds
+`ScenarioRules.evaluate_session` and `PlayerEliminationRules.apply_daily` for every caller, with the 20 functions listed
+above (ScenarioRules 5, ScenarioScriptRules 5, PlayerEliminationRules 4, GeneratedScenarioObjectiveRules 3, AiHeroRules
+3; AiHeroRules' two shared ones on main) and slice 04's. Generated maps have no script hooks and one objective,
+defeating every rival, which counts only with a human player. Left to GDScript: script hooks and pending reinforcements,
+other objective types, a scenario's completion, a human game's rival count, the human's townless warning and defeat, a
+computer player's removal (4 calls on the six seeds), and a script state whose hook list is not yet an `Array[String]`
+(the value layer makes a typed Array only from one it holds). Checks: shadow on the six seeds `evaluate_session` 1,652
+calls, `apply_daily` 409, 0 mismatches; native mode against main on the six seeds identical; core suite 17/17.
+
 ### Phase 6: match throughput
 
 The runner keeps a native session handle across days and writes Dictionaries back only for the digest and record (with

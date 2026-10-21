@@ -116258,15 +116258,15 @@
     {
       "id": "native-rules-phase5-05-scenario-elimination-20261021",
       "title": "Native day processing 05: scenario evaluation and elimination",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "ScenarioRules.evaluate_session and PlayerEliminationRules.apply_daily, 31/552 (ScenarioScriptRules 5/171, GeneratedScenarioObjectiveRules 3/135, ScenarioRules 8/118, PlayerEliminationRules 7/67, 4 more 8/61). Started 2026-10-21; frozen until the merge: 20 functions (transition doc, Phase 5, \"Slice 05, frozen functions\").",
-      "updatedAt": "2026-10-21T23:45:00Z"
+      "notes": "Completed on branch native-phase5-day: ScenarioRules.evaluate_session and PlayerEliminationRules.apply_daily native for every caller, 20 functions beyond slice 04's; paths AI matches never run stay GDScript (script hooks, other objectives, completion, human paths, a computer player's removal). AiHeroRules active_hero_entries and _resolved_lookup on main as shared helpers. Checks: shadow on the six seeds evaluate_session 1,652 calls and apply_daily 409, 0 mismatches; native mode against main on the six seeds identical; core suite 17/17.",
+      "updatedAt": "2026-10-21T19:50:00Z"
     },
     {
       "id": "native-rules-phase5-06-normalize-20261021",
