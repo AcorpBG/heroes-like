@@ -184,20 +184,24 @@ int64_t _rank_in_array(State &state, ArrayRef specialty_ids, Atom specialty_id) 
 }
 
 DictRef _specialty_catalog(State &state) {
-	// Without the catalog memo (_catalog_source, _catalog_index): every call builds
-	// the index a content change builds, from the same shared rows.
+	// The catalog memo, GDScript's static vars: _catalog_index is built again
+	// only when the content's "items" is another Array than _catalog_source.
 	const DictRef data = gd::content_file(state, key::hero_specialties_path);
 	Value items;
-	const bool has_items = state.lookup(data, str(key::items), items) && gd::is_array(items);
-	const DictRef index = state.new_dict();
-	if (has_items) {
+	if (!state.lookup(data, str(key::items), items) || !gd::is_array(items)) {
+		items = array_value(state.new_array());
+	}
+	if (!gd::is_same(state, items, gd::static_var(state, key::hero_progression_rules_script, key::_catalog_source))) {
+		gd::set_static_var(state, key::hero_progression_rules_script, key::_catalog_source, items);
+		const DictRef index = state.new_dict();
+		gd::set_static_var(state, key::hero_progression_rules_script, key::_catalog_index, dict_value(index));
 		for (const Value &specialty : gd::items(state, items)) {
 			if (gd::is_dict(specialty)) {
 				state.set(index, str(gd::string_field(state, specialty.ref, key::id, key::empty)), specialty);
 			}
 		}
 	}
-	return index;
+	return gd::as_dict(gd::static_var(state, key::hero_progression_rules_script, key::_catalog_index));
 }
 
 Atom _resolve_bonus_key(State &state, Atom bonus_key, DictRef hero_state) {

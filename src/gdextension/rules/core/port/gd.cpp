@@ -3,6 +3,8 @@
 #include "aurelion_rules/compat/godot_pcg.hpp"
 #include "aurelion_rules/compat/godot_string.hpp"
 
+#include <algorithm>
+#include <chrono>
 #include <cmath>
 #include <cstring>
 
@@ -51,6 +53,24 @@ bool array_equal(const State &state, ArrayRef a, ArrayRef b) {
 		}
 	}
 	return true;
+}
+
+// Vector == Vector of two packed arrays, and Variant::hash_compare's packed
+// cases: the same size and elements.
+bool packed_equal(const State &state, uint32_t a, uint32_t b) {
+	if (a == b) {
+		return true;
+	}
+	const state::PackedNode &left = state.packed(a);
+	const state::PackedNode &right = state.packed(b);
+	switch (left.kind) {
+		case Kind::PackedByte:
+			return left.bytes == right.bytes;
+		case Kind::PackedString:
+			return left.atoms == right.atoms;
+		default:
+			return left.ints == right.ints;
+	}
 }
 
 // hashfuncs.h of 4.6.2.
@@ -172,6 +192,10 @@ Value deep_value(State &state, const Value &value) {
 	if (value.kind == Kind::Array) {
 		return array_value(deep_array(state, value.ref));
 	}
+	// Variant::recursive_duplicate copies a packed array.
+	if (value.is_packed()) {
+		return Value::of_ref(value.kind, packed_duplicate(state, value.ref));
+	}
 	return value;
 }
 
@@ -236,6 +260,14 @@ const char *type_name(const Value &value) {
 			return "Array";
 		case Kind::Dict:
 			return "Dictionary";
+		case Kind::Vector3i:
+			return "Vector3i";
+		case Kind::PackedByte:
+			return "PackedByteArray";
+		case Kind::PackedInt32:
+			return "PackedInt32Array";
+		case Kind::PackedString:
+			return "PackedStringArray";
 		case Kind::Opaque:
 			return "Variant";
 	}
@@ -262,6 +294,14 @@ int64_t type_of(const Value &value) {
 			return state::variant_type::ARRAY;
 		case Kind::Dict:
 			return state::variant_type::DICTIONARY;
+		case Kind::Vector3i:
+			return state::variant_type::VECTOR3I;
+		case Kind::PackedByte:
+			return state::variant_type::PACKED_BYTE_ARRAY;
+		case Kind::PackedInt32:
+			return state::variant_type::PACKED_INT32_ARRAY;
+		case Kind::PackedString:
+			return state::variant_type::PACKED_STRING_ARRAY;
 		case Kind::Opaque:
 			break;
 	}
@@ -323,6 +363,339 @@ void not_a_string(const Value &value) {
 	fail(std::string("Invalid argument for 'String' constructor: ") + type_name(value));
 }
 
+void not_packed(const Value &value, Kind kind) {
+	fail(std::string("Invalid type: expected ") + type_name(Value::of_ref(kind, 0)) + ", got " + type_name(value));
+}
+
+namespace {
+
+int64_t packed_position(int64_t index, int64_t size, const char *base, bool set) {
+	const int64_t position = index < 0 ? index + size : index;
+	if (position < 0 || position >= size) {
+		fail(std::string("Out of bounds ") + (set ? "set" : "get") + " index '" + std::to_string(index) + "' (on base: '" + base + "')");
+	}
+	return position;
+}
+
+const char *packed_base(Kind kind) {
+	switch (kind) {
+		case Kind::PackedByte:
+			return "PackedByteArray";
+		case Kind::PackedString:
+			return "PackedStringArray";
+		default:
+			return "PackedInt32Array";
+	}
+}
+
+void not_numeric(const state::PackedNode &node, const char *what) {
+	if (node.kind == Kind::PackedString) {
+		fail(std::string(what) + " of a PackedStringArray is not ported");
+	}
+}
+
+int base64_digit(unsigned char c) {
+	if (c >= 'A' && c <= 'Z') {
+		return c - 'A';
+	}
+	if (c >= 'a' && c <= 'z') {
+		return c - 'a' + 26;
+	}
+	if (c >= '0' && c <= '9') {
+		return c - '0' + 52;
+	}
+	if (c == '+') {
+		return 62;
+	}
+	if (c == '/') {
+		return 63;
+	}
+	return -1;
+}
+
+[[noreturn]] void not_encoder_base64() {
+	fail("Marshalls.base64_to_raw of text the encoder did not make is not ported");
+}
+
+} // namespace
+
+PackedRef new_bytes(State &state) {
+	return state.new_packed(Kind::PackedByte);
+}
+
+PackedRef new_ints(State &state) {
+	return state.new_packed(Kind::PackedInt32);
+}
+
+PackedRef new_strings(State &state) {
+	return state.new_packed(Kind::PackedString);
+}
+
+int64_t packed_size(const State &state, PackedRef packed) {
+	return static_cast<int64_t>(state.packed(packed).size());
+}
+
+int64_t packed_int(const State &state, PackedRef packed, int64_t index) {
+	const state::PackedNode &node = state.packed(packed);
+	not_numeric(node, "An int element");
+	const int64_t at = packed_position(index, static_cast<int64_t>(node.size()), packed_base(node.kind), false);
+	return node.kind == Kind::PackedByte ? static_cast<int64_t>(node.bytes[static_cast<size_t>(at)]) : static_cast<int64_t>(node.ints[static_cast<size_t>(at)]);
+}
+
+Atom packed_string(const State &state, PackedRef packed, int64_t index) {
+	const state::PackedNode &node = state.packed(packed);
+	if (node.kind != Kind::PackedString) {
+		fail("A String element of a numeric packed array");
+	}
+	const int64_t at = packed_position(index, static_cast<int64_t>(node.size()), packed_base(node.kind), false);
+	return node.atoms[static_cast<size_t>(at)];
+}
+
+Value packed_get(const State &state, const Value &packed, int64_t index) {
+	if (packed.kind == Kind::PackedString) {
+		return Value::str(packed_string(state, packed.ref, index));
+	}
+	if (!packed.is_packed()) {
+		fail(std::string("Indexing ") + type_name(packed) + " as a packed array");
+	}
+	return Value::of_int(packed_int(state, packed.ref, index));
+}
+
+void packed_set(State &state, PackedRef packed, int64_t index, int64_t value) {
+	state::PackedNode &node = state.packed_write(packed);
+	not_numeric(node, "Setting an int");
+	const int64_t at = packed_position(index, static_cast<int64_t>(node.size()), packed_base(node.kind), true);
+	if (node.kind == Kind::PackedByte) {
+		node.bytes[static_cast<size_t>(at)] = static_cast<uint8_t>(value);
+	} else {
+		node.ints[static_cast<size_t>(at)] = static_cast<int32_t>(value);
+	}
+}
+
+void packed_set_string(State &state, PackedRef packed, int64_t index, Atom value) {
+	state::PackedNode &node = state.packed_write(packed);
+	if (node.kind != Kind::PackedString) {
+		fail("Setting a String into a numeric packed array");
+	}
+	const int64_t at = packed_position(index, static_cast<int64_t>(node.size()), packed_base(node.kind), true);
+	node.atoms[static_cast<size_t>(at)] = value;
+}
+
+void packed_append(State &state, PackedRef packed, int64_t value) {
+	state::PackedNode &node = state.packed_write(packed);
+	not_numeric(node, "Appending an int");
+	if (node.kind == Kind::PackedByte) {
+		node.bytes.push_back(static_cast<uint8_t>(value));
+	} else {
+		node.ints.push_back(static_cast<int32_t>(value));
+	}
+}
+
+void packed_append_string(State &state, PackedRef packed, Atom value) {
+	state::PackedNode &node = state.packed_write(packed);
+	if (node.kind != Kind::PackedString) {
+		fail("Appending a String to a numeric packed array");
+	}
+	node.atoms.push_back(value);
+}
+
+void packed_append_array(State &state, PackedRef packed, PackedRef other) {
+	// Copied first: packed and other may be the same array.
+	const state::PackedNode source = state.packed(other);
+	state::PackedNode &node = state.packed_write(packed);
+	if (node.kind != source.kind) {
+		fail(std::string("append_array of a ") + packed_base(source.kind) + " to a " + packed_base(node.kind));
+	}
+	node.bytes.insert(node.bytes.end(), source.bytes.begin(), source.bytes.end());
+	node.ints.insert(node.ints.end(), source.ints.begin(), source.ints.end());
+	node.atoms.insert(node.atoms.end(), source.atoms.begin(), source.atoms.end());
+}
+
+void packed_resize(State &state, PackedRef packed, int64_t size) {
+	if (size < 0) {
+		state.print_error("Condition \"p_size < 0\" is true. Returning: ERR_INVALID_PARAMETER");
+		return;
+	}
+	const uint32_t empty = state.intern("");
+	state::PackedNode &node = state.packed_write(packed);
+	switch (node.kind) {
+		case Kind::PackedByte:
+			node.bytes.resize(static_cast<size_t>(size), 0);
+			break;
+		case Kind::PackedString:
+			node.atoms.resize(static_cast<size_t>(size), empty);
+			break;
+		default:
+			node.ints.resize(static_cast<size_t>(size), 0);
+			break;
+	}
+}
+
+void packed_fill(State &state, PackedRef packed, int64_t value) {
+	state::PackedNode &node = state.packed_write(packed);
+	not_numeric(node, "fill()");
+	if (node.kind == Kind::PackedByte) {
+		std::fill(node.bytes.begin(), node.bytes.end(), static_cast<uint8_t>(value));
+	} else {
+		std::fill(node.ints.begin(), node.ints.end(), static_cast<int32_t>(value));
+	}
+}
+
+PackedRef packed_duplicate(State &state, PackedRef packed) {
+	const Kind kind = state.packed(packed).kind;
+	const PackedRef copy = state.new_packed(kind);
+	// Both references stay valid: NodePool keeps its nodes in place.
+	const state::PackedNode &source = state.packed_node(packed);
+	state::PackedNode &target = state.packed_node(copy);
+	target.bytes = source.bytes;
+	target.ints = source.ints;
+	target.atoms = source.atoms;
+	return copy;
+}
+
+PackedRef packed_slice(State &state, PackedRef packed, int64_t begin_in, int64_t end_in) {
+	const Kind kind = state.packed(packed).kind;
+	const PackedRef result = state.new_packed(kind);
+	const state::PackedNode &source = state.packed_node(packed);
+	const int64_t s = static_cast<int64_t>(source.size());
+	int64_t begin = begin_in < -s ? -s : (begin_in > s ? s : begin_in);
+	if (begin < 0) {
+		begin += s;
+	}
+	int64_t end = end_in < -s ? -s : (end_in > s ? s : end_in);
+	if (end < 0) {
+		end += s;
+	}
+	if (begin > end) {
+		state.print_error("Condition \"begin > end\" is true. Returning: result");
+		return result;
+	}
+	state::PackedNode &target = state.packed_node(result);
+	switch (kind) {
+		case Kind::PackedByte:
+			target.bytes.assign(source.bytes.begin() + begin, source.bytes.begin() + end);
+			break;
+		case Kind::PackedString:
+			target.atoms.assign(source.atoms.begin() + begin, source.atoms.begin() + end);
+			break;
+		default:
+			target.ints.assign(source.ints.begin() + begin, source.ints.begin() + end);
+			break;
+	}
+	return result;
+}
+
+void packed_sort(State &state, PackedRef packed) {
+	state::PackedNode &node = state.packed_write(packed);
+	not_numeric(node, "sort()");
+	// Equal numbers cannot be told apart, so any correct sort is Godot's.
+	std::sort(node.bytes.begin(), node.bytes.end());
+	std::sort(node.ints.begin(), node.ints.end());
+}
+
+int64_t packed_find(const State &state, const Value &packed, const Value &value) {
+	if (!packed.is_packed()) {
+		fail(std::string("find() in ") + type_name(packed) + " as a packed array");
+	}
+	const state::PackedNode &node = state.packed(packed.ref);
+	if (node.kind == Kind::PackedString) {
+		if (!value.is_string_like()) {
+			fail(std::string("find() of ") + type_name(value) + " in a PackedStringArray is not ported");
+		}
+		for (size_t index = 0; index < node.atoms.size(); ++index) {
+			if (node.atoms[index] == value.ref) {
+				return static_cast<int64_t>(index);
+			}
+		}
+		return -1;
+	}
+	if (value.kind != Kind::Int) {
+		fail(std::string("find() of ") + type_name(value) + " in a " + packed_base(node.kind) + " is not ported");
+	}
+	for (size_t index = 0; index < node.size(); ++index) {
+		const int64_t element = node.kind == Kind::PackedByte ? static_cast<int64_t>(node.bytes[index]) : static_cast<int64_t>(node.ints[index]);
+		if (element == value.i) {
+			return static_cast<int64_t>(index);
+		}
+	}
+	return -1;
+}
+
+const uint8_t *packed_bytes(const State &state, PackedRef packed) {
+	const state::PackedNode &node = state.packed(packed);
+	if (node.kind != Kind::PackedByte) {
+		fail("packed_bytes of another packed array");
+	}
+	return node.bytes.data();
+}
+
+const int32_t *packed_ints(const State &state, PackedRef packed) {
+	const state::PackedNode &node = state.packed(packed);
+	if (node.kind != Kind::PackedInt32) {
+		fail("packed_ints of another packed array");
+	}
+	return node.ints.data();
+}
+
+PackedRef utf8_buffer(State &state, Atom text) {
+	const PackedRef bytes = state.new_packed(Kind::PackedByte);
+	const std::string &source = state.text(text);
+	state.packed_node(bytes).bytes.assign(source.begin(), source.end());
+	return bytes;
+}
+
+PackedRef base64_to_raw(State &state, Atom text) {
+	const std::string &source = state.text(text);
+	if (source.size() % 4 != 0) {
+		not_encoder_base64();
+	}
+	std::vector<uint8_t> decoded;
+	decoded.reserve(source.size() / 4 * 3);
+	for (size_t at = 0; at < source.size(); at += 4) {
+		uint32_t group = 0;
+		int padding = 0;
+		for (int index = 0; index < 4; ++index) {
+			const unsigned char c = static_cast<unsigned char>(source[at + static_cast<size_t>(index)]);
+			// The encoder pads only the last group, with one or two '='.
+			if (c == '=' && at + 4 == source.size() && index >= 2) {
+				++padding;
+				group <<= 6;
+				continue;
+			}
+			const int digit = base64_digit(c);
+			if (digit < 0 || padding > 0) {
+				not_encoder_base64();
+			}
+			group = (group << 6) | static_cast<uint32_t>(digit);
+		}
+		decoded.push_back(static_cast<uint8_t>(group >> 16));
+		if (padding < 2) {
+			decoded.push_back(static_cast<uint8_t>(group >> 8));
+		}
+		if (padding < 1) {
+			decoded.push_back(static_cast<uint8_t>(group));
+		}
+	}
+	const PackedRef bytes = state.new_packed(Kind::PackedByte);
+	state.packed_node(bytes).bytes = std::move(decoded);
+	return bytes;
+}
+
+Atom join_strings(State &state, Atom separator, PackedRef strings) {
+	const state::PackedNode &node = state.packed(strings);
+	if (node.kind != Kind::PackedString) {
+		fail("join() of a numeric packed array");
+	}
+	std::string joined;
+	for (size_t index = 0; index < node.atoms.size(); ++index) {
+		if (index != 0) {
+			joined += state.text(separator);
+		}
+		joined += state.text(node.atoms[index]);
+	}
+	return state.intern(joined);
+}
+
 bool equal(const State &state, const Value &a, const Value &b) {
 	if (is_number(a) && is_number(b)) {
 		if (a.kind == Kind::Int && b.kind == Kind::Int) {
@@ -344,13 +717,30 @@ bool equal(const State &state, const Value &a, const Value &b) {
 			return a.b == b.b;
 		case Kind::Vector2i:
 			return a.i == b.i;
+		case Kind::Vector3i:
+			return a.i == b.i && a.z == b.z;
 		case Kind::Dict:
 			return dict_equal(state, a.ref, b.ref);
 		case Kind::Array:
 			return array_equal(state, a.ref, b.ref);
+		case Kind::PackedByte:
+		case Kind::PackedInt32:
+		case Kind::PackedString:
+			return packed_equal(state, a.ref, b.ref);
 		default:
 			fail(std::string("operator '==' on ") + type_name(a) + " is not ported");
 	}
+}
+
+bool is_same(const State &state, const Value &a, const Value &b) {
+	if (a.is_container() || b.is_container() || a.is_packed() || b.is_packed()) {
+		return a.kind == b.kind && a.ref == b.ref;
+	}
+	return hash_compare(state, a, b);
+}
+
+int64_t ticks_usec() {
+	return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
 }
 
 bool hash_compare(const State &state, const Value &a, const Value &b, bool semantic) {
@@ -365,6 +755,8 @@ bool hash_compare(const State &state, const Value &a, const Value &b, bool seman
 		case Kind::Int:
 		case Kind::Vector2i:
 			return a.i == b.i;
+		case Kind::Vector3i:
+			return a.i == b.i && a.z == b.z;
 		case Kind::Float:
 			return a.f == b.f || (semantic && std::isnan(a.f) && std::isnan(b.f));
 		case Kind::String:
@@ -374,6 +766,10 @@ bool hash_compare(const State &state, const Value &a, const Value &b, bool seman
 			return dict_equal(state, a.ref, b.ref);
 		case Kind::Array:
 			return array_equal(state, a.ref, b.ref);
+		case Kind::PackedByte:
+		case Kind::PackedInt32:
+		case Kind::PackedString:
+			return packed_equal(state, a.ref, b.ref);
 		case Kind::Opaque:
 			fail("hash_compare of an opaque value is not ported");
 	}
@@ -389,6 +785,8 @@ bool truthy(const State &state, const Value &value) {
 		case Kind::Int:
 		case Kind::Vector2i:
 			return value.i != 0;
+		case Kind::Vector3i:
+			return value.i != 0 || value.z != 0;
 		case Kind::Float:
 			return value.f != 0.0;
 		case Kind::String:
@@ -398,6 +796,10 @@ bool truthy(const State &state, const Value &value) {
 			return state.array_size(value.ref) != 0;
 		case Kind::Dict:
 			return state.dict_size(value.ref) != 0;
+		case Kind::PackedByte:
+		case Kind::PackedInt32:
+		case Kind::PackedString:
+			return state.packed(value.ref).size() != 0;
 		case Kind::Opaque:
 			return true;
 	}
@@ -542,6 +944,15 @@ Items items(const State &state, const Value &value) {
 		}
 		return Items(std::move(counted));
 	}
+	if (value.is_packed()) {
+		const int64_t size = packed_size(state, value.ref);
+		state::ValueList elements;
+		elements.reserve(static_cast<size_t>(size));
+		for (int64_t index = 0; index < size; ++index) {
+			elements.push_back(packed_get(state, value, index));
+		}
+		return Items(std::move(elements));
+	}
 	fail(std::string("Iterating over ") + type_name(value) + " is not ported");
 }
 
@@ -619,6 +1030,9 @@ bool in(const State &state, const Value &value, const Value &container) {
 	}
 	if (container.kind == Kind::Array) {
 		return array_has(state, container.ref, value);
+	}
+	if (container.is_packed()) {
+		return packed_find(state, container, value) >= 0;
 	}
 	fail(std::string("Invalid operands '") + type_name(value) + "' and '" + type_name(container) + "' in operator 'in'");
 }
@@ -730,6 +1144,9 @@ Value duplicate_value(State &state, const Value &value, bool deep) {
 	}
 	if (value.kind == Kind::Array) {
 		return array_value(deep ? deep_array(state, value.ref) : duplicate_array(state, value.ref));
+	}
+	if (value.is_packed()) {
+		return Value::of_ref(value.kind, packed_duplicate(state, value.ref));
 	}
 	return value;
 }

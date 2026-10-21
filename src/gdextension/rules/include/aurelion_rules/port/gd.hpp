@@ -23,10 +23,11 @@ using state::State;
 using state::Value;
 namespace key = state::key;
 
-// A Dictionary, an Array or a String by node index or atom, where the GDScript
-// parameter or return type says which.
+// A Dictionary, an Array, a packed array or a String by node index or atom,
+// where the GDScript parameter or return type says which.
 using DictRef = uint32_t;
 using ArrayRef = uint32_t;
+using PackedRef = uint32_t;
 using Atom = uint32_t;
 
 inline Value dict_value(DictRef dict) { return Value::of_ref(Kind::Dict, dict); }
@@ -36,6 +37,10 @@ inline Value name_value(Atom atom) { return Value::of_ref(Kind::StringName, atom
 inline Value int_value(int64_t value) { return Value::of_int(value); }
 inline Value float_value(double value) { return Value::of_float(value); }
 inline Value bool_value(bool value) { return Value::of_bool(value); }
+inline Value bytes_value(PackedRef bytes) { return Value::of_ref(Kind::PackedByte, bytes); }
+inline Value ints_value(PackedRef ints) { return Value::of_ref(Kind::PackedInt32, ints); }
+inline Value strings_value(PackedRef strings) { return Value::of_ref(Kind::PackedString, strings); }
+inline Value vector3i(int32_t x, int32_t y, int32_t z) { return Value::of_vector3i(x, y, z); }
 
 // Godot's type name of a value (Variant::get_type_name).
 const char *type_name(const Value &value);
@@ -43,6 +48,8 @@ const char *type_name(const Value &value);
 inline bool is_dict(const Value &value) { return value.kind == Kind::Dict; }
 inline bool is_array(const Value &value) { return value.kind == Kind::Array; }
 inline bool is_vector2i(const Value &value) { return value.kind == Kind::Vector2i; }
+inline bool is_vector3i(const Value &value) { return value.kind == Kind::Vector3i; }
+inline bool is_packed(const Value &value) { return value.is_packed(); }
 // x is String: a String only (a StringName is not one, as in GDScript).
 inline bool is_string(const Value &value) { return value.kind == Kind::String; }
 inline bool is_int(const Value &value) { return value.kind == Kind::Int; }
@@ -72,6 +79,7 @@ inline int64_t neg(int64_t a) {
 [[noreturn]] void not_a_dict(const Value &value);
 [[noreturn]] void not_an_array(const Value &value);
 [[noreturn]] void not_a_string(const Value &value);
+[[noreturn]] void not_packed(const Value &value, Kind kind);
 int64_t to_int_other(const State &state, const Value &value);
 
 // A value passed where GDScript's static type is Dictionary or Array.
@@ -87,6 +95,16 @@ inline ArrayRef as_array(const Value &value) {
 	}
 	return value.ref;
 }
+// The same for PackedByteArray, PackedInt32Array and PackedStringArray.
+inline PackedRef as_packed(const Value &value, Kind kind) {
+	if (value.kind != kind) {
+		not_packed(value, kind);
+	}
+	return value.ref;
+}
+inline PackedRef as_bytes(const Value &value) { return as_packed(value, Kind::PackedByte); }
+inline PackedRef as_ints(const Value &value) { return as_packed(value, Kind::PackedInt32); }
+inline PackedRef as_strings(const Value &value) { return as_packed(value, Kind::PackedString); }
 
 // The constructors: int(x), float(x), bool(x), String(x).
 inline int64_t to_int(const State &state, const Value &value) {
@@ -100,6 +118,10 @@ inline Atom to_string(const Value &value) {
 	}
 	return value.ref;
 }
+
+// is_same(a, b) (Variant::identity_compare): a container or packed array is
+// the same node; anything else compares as hash_compare does, its type first.
+bool is_same(const State &state, const Value &a, const Value &b);
 
 // x == y (Variant OP_EQUAL) and Variant::hash_compare: hash_compare wants the
 // same type, so 1 and 1.0 differ, and with semantic (the default, as key
@@ -238,6 +260,61 @@ void sort_custom(State &state, ArrayRef array, Less less) {
 	node.dirty = true;
 }
 
+// Packed arrays (PackedByteArray, PackedInt32Array, PackedStringArray), as
+// Godot's Vector does it. A packed array is one object however many Variants
+// hold it, so these change it for every holder. Out of range indices are a
+// ScriptError (GDScript's "Out of bounds get index"), negative ones count
+// from the end.
+// PackedByteArray(), PackedInt32Array(), PackedStringArray().
+PackedRef new_bytes(State &state);
+PackedRef new_ints(State &state);
+PackedRef new_strings(State &state);
+int64_t packed_size(const State &state, PackedRef packed);
+inline bool packed_is_empty(const State &state, PackedRef packed) { return packed_size(state, packed) == 0; }
+// a[index] of a byte or int32 array, and of a string array.
+int64_t packed_int(const State &state, PackedRef packed, int64_t index);
+Atom packed_string(const State &state, PackedRef packed, int64_t index);
+// a[index] of any of them as a Value (an int or a String).
+Value packed_get(const State &state, const Value &packed, int64_t index);
+// a[index] = value: a byte array keeps the low 8 bits of the int, an int32 one
+// the low 32 (Variant's typed setter casts).
+void packed_set(State &state, PackedRef packed, int64_t index, int64_t value);
+void packed_set_string(State &state, PackedRef packed, int64_t index, Atom value);
+// a.append(value) (push_back).
+void packed_append(State &state, PackedRef packed, int64_t value);
+void packed_append_string(State &state, PackedRef packed, Atom value);
+// a.append_array(other) of two arrays of one kind.
+void packed_append_array(State &state, PackedRef packed, PackedRef other);
+// a.resize(size): new elements 0 or "" (Vector::resize zero-fills); a
+// negative size prints an error and leaves the array.
+void packed_resize(State &state, PackedRef packed, int64_t size);
+// a.fill(value) of a byte or int32 array.
+void packed_fill(State &state, PackedRef packed, int64_t value);
+// a.duplicate(): a new array with the same elements.
+PackedRef packed_duplicate(State &state, PackedRef packed);
+// a.slice(begin, end) (Vector::slice: clamped, negative from the end; begin
+// past end prints an error and gives an empty array).
+PackedRef packed_slice(State &state, PackedRef packed, int64_t begin, int64_t end = INT64_MAX);
+// a.sort() of a byte or int32 array: ascending.
+void packed_sort(State &state, PackedRef packed);
+// a.find(value) (-1 when missing) and a.has(value) / value in a: an int for a
+// byte or int32 array, a String or StringName for a string array.
+int64_t packed_find(const State &state, const Value &packed, const Value &value);
+// The elements in place, to read many: valid until the array changes.
+const uint8_t *packed_bytes(const State &state, PackedRef packed);
+const int32_t *packed_ints(const State &state, PackedRef packed);
+// s.to_utf8_buffer() and Marshalls.base64_to_raw(s) (strict base64: text the
+// encoder did not make is a ScriptError, not ported).
+PackedRef utf8_buffer(State &state, Atom text);
+PackedRef base64_to_raw(State &state, Atom text);
+// sep.join(strings) of a PackedStringArray.
+Atom join_strings(State &state, Atom separator, PackedRef strings);
+
+// Script.NAME of a GDScript static var (script: the script's res:// path),
+// and Script.NAME = value, which takes effect with the call's write-back.
+inline Value static_var(State &state, Atom script, Atom name) { return state.host().static_get(state, script, name); }
+inline void set_static_var(State &state, Atom script, Atom name, const Value &value) { state.host().static_set(state, script, name, value); }
+
 // "%d,%d" % [a, b] for ints.
 std::string format_pair(int64_t a, int64_t b);
 
@@ -284,6 +361,12 @@ Value rng_new(State &state, int64_t seed, int64_t rng_state);
 // every call, or a new empty one when there is none; ContentService.load_json.
 DictRef content_row(State &state, state::ContentTable table, Atom id);
 DictRef content_file(State &state, Atom path);
+// ContentService.get_content_revision().
+inline int64_t content_revision(State &state) { return state.host().content_revision(state); }
+
+// Time.get_ticks_usec(), for the timings scripts keep (a steady clock's
+// microseconds: only differences mean anything).
+int64_t ticks_usec();
 
 // push_warning(text) and push_error(text) of a script.
 void push_warning(State &state, const std::string &text);

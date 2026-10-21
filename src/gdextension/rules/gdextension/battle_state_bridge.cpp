@@ -78,6 +78,70 @@ uint64_t identity_of(const Dictionary &dict) {
 	return id;
 }
 
+// A Variant is its type, then its data aligned to 8 bytes; a packed array's
+// data is the pointer to its PackedArrayRef.
+static_assert(sizeof(Variant) >= 16, "Variant holds a type and an 8-byte aligned data block");
+
+uint64_t identity_of_packed(const Variant &packed) {
+	uint64_t id = 0;
+	std::memcpy(&id, reinterpret_cast<const uint8_t *>(packed._native_ptr()) + 8, sizeof(id));
+	return id;
+}
+
+Variant packed_variant(const state::State &state, const state::PackedNode &node) {
+	switch (node.kind) {
+		case Kind::PackedByte: {
+			godot::PackedByteArray bytes;
+			bytes.resize(static_cast<int64_t>(node.bytes.size()));
+			if (!node.bytes.empty()) {
+				std::memcpy(bytes.ptrw(), node.bytes.data(), node.bytes.size());
+			}
+			return bytes;
+		}
+		case Kind::PackedString: {
+			godot::PackedStringArray strings;
+			strings.resize(static_cast<int64_t>(node.atoms.size()));
+			for (size_t index = 0; index < node.atoms.size(); ++index) {
+				const std::string &text = state.text(node.atoms[index]);
+				strings.set(static_cast<int64_t>(index), String::utf8(text.data(), static_cast<int64_t>(text.size())));
+			}
+			return strings;
+		}
+		default: {
+			godot::PackedInt32Array ints;
+			ints.resize(static_cast<int64_t>(node.ints.size()));
+			if (!node.ints.empty()) {
+				std::memcpy(ints.ptrw(), node.ints.data(), node.ints.size() * sizeof(int32_t));
+			}
+			return ints;
+		}
+	}
+}
+
+void fill_packed_node(state::State &state, state::PackedNode &node, const Variant &packed) {
+	switch (node.kind) {
+		case Kind::PackedByte: {
+			const godot::PackedByteArray bytes = packed;
+			node.bytes.assign(bytes.ptr(), bytes.ptr() + bytes.size());
+			break;
+		}
+		case Kind::PackedString: {
+			const godot::PackedStringArray strings = packed;
+			node.atoms.resize(static_cast<size_t>(strings.size()));
+			for (int64_t index = 0; index < strings.size(); ++index) {
+				const CharString utf8 = strings[index].utf8();
+				node.atoms[static_cast<size_t>(index)] = state.intern(std::string_view(utf8.get_data(), static_cast<size_t>(utf8.length())));
+			}
+			break;
+		}
+		default: {
+			const godot::PackedInt32Array ints = packed;
+			node.ints.assign(ints.ptr(), ints.ptr() + ints.size());
+			break;
+		}
+	}
+}
+
 bool StateBridge::fail(const std::string &message) {
 	if (error_.empty()) {
 		error_ = message;
@@ -121,6 +185,10 @@ Value StateBridge::load_value(const Variant &value, state::State &state) {
 		case Variant::VECTOR2I: {
 			const godot::Vector2i vector = value;
 			return Value::of_vector2i(vector.x, vector.y);
+		}
+		case Variant::VECTOR3I: {
+			const godot::Vector3i vector = value;
+			return Value::of_vector3i(vector.x, vector.y, vector.z);
 		}
 		case Variant::ARRAY:
 			return load_array(static_cast<Array>(value), state);
@@ -357,10 +425,17 @@ Variant StateBridge::write_value(const Value &value, const state::State &state, 
 			return string_variant(value.ref, true, state);
 		case Kind::Vector2i:
 			return Variant(godot::Vector2i(value.vx(), value.vy()));
+		case Kind::Vector3i:
+			return Variant(godot::Vector3i(value.vx(), value.vy(), value.vz()));
 		case Kind::Array:
 			return write_array(value.ref, state, in_place);
 		case Kind::Dict:
 			return write_dict(value.ref, state, in_place);
+		case Kind::PackedByte:
+		case Kind::PackedInt32:
+		case Kind::PackedString:
+			// The battle state holds no packed arrays: load() keeps any as opaque.
+			return packed_variant(state, state.packed(value.ref));
 		case Kind::Opaque:
 			return opaque_[value.ref];
 	}
