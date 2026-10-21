@@ -146,6 +146,7 @@ private:
 	godot::Dictionary fresh_dict(const state::DictNode &node) const;
 	bool same_type(state::TypeRef type, int64_t builtin, const godot::StringName &class_name, const godot::Variant &script) const;
 	void diff_value(const state::Value &native, const godot::Variant &gdscript, std::string &path, std::string &out);
+	bool same_made_rng(const godot::Variant &made, const godot::Variant &gdscript) const;
 	void diff_array_items(const state::ArrayNode &node, const godot::Array &array, std::string &path, std::string &out);
 	void diff_dict_items(const state::DictNode &node, const godot::Dictionary &dict, std::string &path, std::string &out);
 	godot::Object *script_object(uint32_t script);
