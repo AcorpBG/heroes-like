@@ -185,14 +185,13 @@ void normalize_script_state(State &state, DictRef session) {
 	}
 	const DictRef script_state = script_state_value.ref;
 
-	// var fired_hook_ids: Array[String] = []: a new Array of the saved list's
-	// element type, which must be String; an untyped one (a new or loaded
-	// session's) is left to GDScript, which types it.
+	// var fired_hook_ids: Array[String] = [], filled from the saved list, typed
+	// or not (a new or loaded session's is untyped).
 	const Value saved_ids = state.get(script_state, str(key::fired_hook_ids), array_value(state.new_array()));
-	if (!gd::is_array(saved_ids) || state.type_builtin(state.array(saved_ids.ref).element_type) != state::variant_type::STRING) {
-		not_ported("a script state whose hook list is not an Array[String]");
+	if (!gd::is_array(saved_ids)) {
+		not_ported("a script state whose hook list is not an Array");
 	}
-	const ArrayRef fired_hook_ids = gd::slice(state, saved_ids.ref, 0, 0);
+	const ArrayRef fired_hook_ids = gd::new_typed_array(state, state::variant_type::STRING);
 	for (const Value &hook_id_value : gd::items(state, saved_ids)) {
 		const Atom hook_id = gd::stringify_or_fallback(state, hook_id_value);
 		if (hook_id != key::empty && !gd::array_has(state, fired_hook_ids, str(hook_id))) {
