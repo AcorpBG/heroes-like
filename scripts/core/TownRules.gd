@@ -11,8 +11,6 @@ static var HeroCommandRulesScript: Variant = load("res://scripts/core/HeroComman
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
-const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
-static var _turn_engine_mode: int = TurnEngine.mode
 static var EnemyAdventureRulesScript: Variant = load("res://scripts/core/EnemyAdventureRules.gd")
 static var ScenarioRulesScript: Variant = load("res://scripts/core/ScenarioRules.gd")
 
@@ -2123,14 +2121,6 @@ static func choose_specialty_at_active_town(session: SessionStateStoreScript.Ses
 	return OverworldRulesScript.choose_specialty(session, specialty_id)
 
 static func current_spell_tier(town: Dictionary) -> int:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return current_spell_tier__gd(town)
-	var before := TurnEngine.before_writing(&"TownRules.current_spell_tier", [town])
-	var result = current_spell_tier__gd(town)
-	TurnEngine.check_writing(&"TownRules.current_spell_tier", before, [town], result)
-	return result
-
-static func current_spell_tier__gd(town: Dictionary) -> int:
 	var highest_tier := 0
 	for building_id_value in town.get("built_buildings", []):
 		var building := ContentService.get_building(String(building_id_value))
@@ -2138,26 +2128,10 @@ static func current_spell_tier__gd(town: Dictionary) -> int:
 	return highest_tier
 
 static func accessible_spell_ids(town: Dictionary) -> Array:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return accessible_spell_ids__gd(town)
-	var before := TurnEngine.before_writing(&"TownRules.accessible_spell_ids", [town])
-	var result = accessible_spell_ids__gd(town)
-	TurnEngine.check_writing(&"TownRules.accessible_spell_ids", before, [town], result)
-	return result
-
-static func accessible_spell_ids__gd(town: Dictionary) -> Array:
 	return spell_ids_through_tier(town, current_spell_tier(town))
 
 ## Library and school spells this town teaches once its guild reaches `tier`.
 static func spell_ids_through_tier(town: Dictionary, tier: int) -> Array:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return spell_ids_through_tier__gd(town, tier)
-	var before := TurnEngine.before_writing(&"TownRules.spell_ids_through_tier", [town, tier])
-	var result = spell_ids_through_tier__gd(town, tier)
-	TurnEngine.check_writing(&"TownRules.spell_ids_through_tier", before, [town, tier], result)
-	return result
-
-static func spell_ids_through_tier__gd(town: Dictionary, tier: int) -> Array:
 	var town_template := ContentService.get_town(String(town.get("town_id", "")))
 	if tier <= 0:
 		return []
@@ -2178,14 +2152,6 @@ static func spell_ids_through_tier__gd(town: Dictionary, tier: int) -> Array:
 	return spell_ids
 
 static func _school_spell_ids_for_town(town_template: Dictionary, tier: int) -> Array:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _school_spell_ids_for_town__gd(town_template, tier)
-	var before := TurnEngine.before_writing(&"TownRules._school_spell_ids_for_town", [town_template, tier])
-	var result = _school_spell_ids_for_town__gd(town_template, tier)
-	TurnEngine.check_writing(&"TownRules._school_spell_ids_for_town", before, [town_template, tier], result)
-	return result
-
-static func _school_spell_ids_for_town__gd(town_template: Dictionary, tier: int) -> Array:
 	var allowed_schools := _town_spell_school_access(town_template)
 	if allowed_schools.is_empty():
 		return []
@@ -2206,14 +2172,6 @@ static func _school_spell_ids_for_town__gd(town_template: Dictionary, tier: int)
 	return results
 
 static func _town_spell_school_access(town_template: Dictionary) -> Array:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _town_spell_school_access__gd(town_template)
-	var before := TurnEngine.before_writing(&"TownRules._town_spell_school_access", [town_template])
-	var result = _town_spell_school_access__gd(town_template)
-	TurnEngine.check_writing(&"TownRules._town_spell_school_access", before, [town_template], result)
-	return result
-
-static func _town_spell_school_access__gd(town_template: Dictionary) -> Array:
 	var schools := []
 	var faction_id := String(town_template.get("faction_id", ""))
 	for school_id_value in FACTION_SPELL_SCHOOL_ACCESS.get(faction_id, []):

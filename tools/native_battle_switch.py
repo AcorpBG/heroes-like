@@ -31,10 +31,10 @@ calls the wrapper by name); in shadow mode it first checks the native port's
 run that stopped at this host call (AurelionRules.port_validate_point).
 
 A checked function, one a subsystem ports only inside a larger native call
-(the CHECK(Script, function, arity, writes, ...) entries: the AI turn's
-functions inside run_enemy_turn), runs its GDScript body in gdscript and native
-mode, for its callers outside that call; in shadow mode it is checked like a
-ported function, so a shadow run checks each of its calls on its own.
+(the CHECK(Script, function, arity, writes, ...) entries), runs its GDScript
+body in gdscript and native mode, for its callers outside that call; in shadow
+mode it is checked like a ported function, so a shadow run checks each of its
+calls on its own.
 
 The tool runs again after each new port: a switch that no longer matches
 its registry entry or its GDScript signature is rewritten, and one whose entry
@@ -85,7 +85,6 @@ class Subsystem:
 SUBSYSTEMS = {
     "battle": Subsystem("registry.cpp", "BattleEngine", validate=True),
     "day": Subsystem("day_registry.cpp", "DayEngine", fallback=True),
-    "turn": Subsystem("turn_registry.cpp", "TurnEngine", fallback=True, validate=True),
 }
 
 

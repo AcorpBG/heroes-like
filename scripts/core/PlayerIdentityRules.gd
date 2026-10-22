@@ -1,7 +1,5 @@
 extends RefCounted
 
-const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
-static var _turn_engine_mode: int = TurnEngine.mode
 
 # Player/controller identity is mutable world ownership. Faction identity is an
 # immutable content reference. Legacy authored scenarios keep faction-keyed
@@ -44,14 +42,6 @@ static func task_controller_id(task: Dictionary, fallback: String = "") -> Strin
 	return player_id if player_id != "" else String(task.get("owner_faction_id", fallback))
 
 static func set_resource_controller(node: Dictionary, session, controller: String) -> void:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		set_resource_controller__gd(node, session, controller)
-		return
-	var before := TurnEngine.before_writing(&"PlayerIdentityRules.set_resource_controller", [node, session, controller])
-	set_resource_controller__gd(node, session, controller)
-	TurnEngine.check_writing(&"PlayerIdentityRules.set_resource_controller", before, [node, session, controller], null)
-
-static func set_resource_controller__gd(node: Dictionary, session, controller: String) -> void:
 	node["collected_by_faction_id"] = faction_id(session, controller)
 	if player(session, controller).is_empty():
 		node.erase("collected_by_player_id")
@@ -92,14 +82,6 @@ static func has_human_seat(session) -> bool:
 	return false
 
 static func config_for_controller(session, controller: String) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return config_for_controller__gd(session, controller)
-	var before := TurnEngine.before_writing(&"PlayerIdentityRules.config_for_controller", [session, controller])
-	var result = config_for_controller__gd(session, controller)
-	TurnEngine.check_writing(&"PlayerIdentityRules.config_for_controller", before, [session, controller], result)
-	return result
-
-static func config_for_controller__gd(session, controller: String) -> Dictionary:
 	var result := identity_fields(session, controller)
 	result["label"] = String(ContentService.get_faction(String(result.faction_id)).get("name", result.faction_id))
 	return result

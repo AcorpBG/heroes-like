@@ -11,8 +11,6 @@ const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRu
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
-const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
-static var _turn_engine_mode: int = TurnEngine.mode
 
 const DIFFICULTY_OPTIONS := [
 	{
@@ -254,25 +252,9 @@ static func _campaign_rules():
 	return load("res://scripts/core/CampaignRules.gd")
 
 static func default_difficulty_id() -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return default_difficulty_id__gd()
-	var before := TurnEngine.before_writing(&"ScenarioSelectRules.default_difficulty_id", [])
-	var result = default_difficulty_id__gd()
-	TurnEngine.check_writing(&"ScenarioSelectRules.default_difficulty_id", before, [], result)
-	return result
-
-static func default_difficulty_id__gd() -> String:
 	return "normal"
 
 static func normalize_difficulty(value: Variant) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return normalize_difficulty__gd(value)
-	var before := TurnEngine.before_writing(&"ScenarioSelectRules.normalize_difficulty", [value])
-	var result = normalize_difficulty__gd(value)
-	TurnEngine.check_writing(&"ScenarioSelectRules.normalize_difficulty", before, [value], result)
-	return result
-
-static func normalize_difficulty__gd(value: Variant) -> String:
 	var difficulty_id := String(value)
 	for option in DIFFICULTY_OPTIONS:
 		if String(option.get("id", "")) == difficulty_id:

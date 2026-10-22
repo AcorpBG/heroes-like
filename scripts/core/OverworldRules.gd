@@ -34,8 +34,6 @@ const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const DayEngine = preload("res://scripts/core/DayEngine.gd")
 const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
 static var _battle_engine_mode: int = BattleEngine.mode
-const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
-static var _turn_engine_mode: int = TurnEngine.mode
 static var _day_engine_mode: int = DayEngine.mode
 const ACTIVE_TOWN_PLACEMENT_KEY := "active_town_placement_id"
 const COMMAND_BRIEFING_KEY := "command_briefing"
@@ -147,14 +145,6 @@ static func _rules_profile_timer() -> int:
 	return Time.get_ticks_usec() if _movement_rules_profile_active else 0
 
 static func _rules_profile_add_ms(bucket: String, started_usec: int) -> void:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		_rules_profile_add_ms__gd(bucket, started_usec)
-		return
-	var before := TurnEngine.before_writing(&"OverworldRules._rules_profile_add_ms", [bucket, started_usec])
-	_rules_profile_add_ms__gd(bucket, started_usec)
-	TurnEngine.check_writing(&"OverworldRules._rules_profile_add_ms", before, [bucket, started_usec], null)
-
-static func _rules_profile_add_ms__gd(bucket: String, started_usec: int) -> void:
 	if not _movement_rules_profile_active or started_usec <= 0 or bucket == "":
 		return
 	var buckets: Dictionary = _movement_rules_profile.get("sub_buckets_ms", {})
@@ -162,14 +152,6 @@ static func _rules_profile_add_ms__gd(bucket: String, started_usec: int) -> void
 	_movement_rules_profile["sub_buckets_ms"] = buckets
 
 static func _rules_profile_set(section: String, key: String, value: Variant) -> void:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		_rules_profile_set__gd(section, key, value)
-		return
-	var before := TurnEngine.before_writing(&"OverworldRules._rules_profile_set", [section, key, value])
-	_rules_profile_set__gd(section, key, value)
-	TurnEngine.check_writing(&"OverworldRules._rules_profile_set", before, [section, key, value], null)
-
-static func _rules_profile_set__gd(section: String, key: String, value: Variant) -> void:
 	if not _movement_rules_profile_active or section == "" or key == "":
 		return
 	var target: Dictionary = _movement_rules_profile.get(section, {}) if _movement_rules_profile.get(section, {}) is Dictionary else {}
@@ -212,25 +194,9 @@ static func _normalize_scenario_resources(value: Variant) -> Dictionary:
 	return _scenario_factory()._normalize_resources(value)
 
 static func _build_scenario_town_states(placements: Variant) -> Array:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _build_scenario_town_states__gd(placements)
-	var before := TurnEngine.before_writing(&"OverworldRules._build_scenario_town_states", [placements])
-	var result = _build_scenario_town_states__gd(placements)
-	TurnEngine.check_writing(&"OverworldRules._build_scenario_town_states", before, [placements], result)
-	return result
-
-static func _build_scenario_town_states__gd(placements: Variant) -> Array:
 	return _scenario_factory()._build_town_states(placements)
 
 static func _build_scenario_resource_states(placements: Variant) -> Array:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _build_scenario_resource_states__gd(placements)
-	var before := TurnEngine.before_writing(&"OverworldRules._build_scenario_resource_states", [placements])
-	var result = _build_scenario_resource_states__gd(placements)
-	TurnEngine.check_writing(&"OverworldRules._build_scenario_resource_states", before, [placements], result)
-	return result
-
-static func _build_scenario_resource_states__gd(placements: Variant) -> Array:
 	return _scenario_factory()._build_resource_states(placements)
 
 static func _seed_scenario_recruits_for_town_state(town: Dictionary) -> Dictionary:
@@ -272,14 +238,6 @@ static func _scenario_objective_labels_from_bucket(session: SessionStateStoreScr
 	return _scenario_rules()._objective_labels_from_bucket(session, bucket, limit)
 
 static func _scenario_objective_met(session: SessionStateStoreScript.SessionData, objective: Dictionary) -> bool:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _scenario_objective_met__gd(session, objective)
-	var before := TurnEngine.before_writing(&"OverworldRules._scenario_objective_met", [session, objective])
-	var result = _scenario_objective_met__gd(session, objective)
-	TurnEngine.check_writing(&"OverworldRules._scenario_objective_met", before, [session, objective], result)
-	return result
-
-static func _scenario_objective_met__gd(session: SessionStateStoreScript.SessionData, objective: Dictionary) -> bool:
 	return _scenario_rules()._objective_met(session, objective)
 
 static func _scenario_is_objective_met(session: SessionStateStoreScript.SessionData, objective_id: String, bucket: String) -> bool:
@@ -303,58 +261,18 @@ static func _describe_enemy_threats(session: SessionStateStoreScript.SessionData
 	return _enemy_turn_rules().describe_threats(session)
 
 static func _enemy_pressure(session: SessionStateStoreScript.SessionData, faction_id: String) -> int:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _enemy_pressure__gd(session, faction_id)
-	var before := TurnEngine.before_writing(&"OverworldRules._enemy_pressure", [session, faction_id])
-	var result = _enemy_pressure__gd(session, faction_id)
-	TurnEngine.check_writing(&"OverworldRules._enemy_pressure", before, [session, faction_id], result)
-	return result
-
-static func _enemy_pressure__gd(session: SessionStateStoreScript.SessionData, faction_id: String) -> int:
 	return _enemy_turn_rules().get_pressure(session, faction_id)
 
 static func _enemy_active_raids(session: SessionStateStoreScript.SessionData, faction_id: String) -> int:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _enemy_active_raids__gd(session, faction_id)
-	var before := TurnEngine.before_writing(&"OverworldRules._enemy_active_raids", [session, faction_id])
-	var result = _enemy_active_raids__gd(session, faction_id)
-	TurnEngine.check_writing(&"OverworldRules._enemy_active_raids", before, [session, faction_id], result)
-	return result
-
-static func _enemy_active_raids__gd(session: SessionStateStoreScript.SessionData, faction_id: String) -> int:
 	return _enemy_turn_rules().active_raid_count(session, faction_id)
 
 static func _enemy_raid_threshold_for_strategy(session: SessionStateStoreScript.SessionData, config: Dictionary, faction_id: String) -> int:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _enemy_raid_threshold_for_strategy__gd(session, config, faction_id)
-	var before := TurnEngine.before_writing(&"OverworldRules._enemy_raid_threshold_for_strategy", [session, config, faction_id])
-	var result = _enemy_raid_threshold_for_strategy__gd(session, config, faction_id)
-	TurnEngine.check_writing(&"OverworldRules._enemy_raid_threshold_for_strategy", before, [session, config, faction_id], result)
-	return result
-
-static func _enemy_raid_threshold_for_strategy__gd(session: SessionStateStoreScript.SessionData, config: Dictionary, faction_id: String) -> int:
 	return _enemy_turn_rules()._raid_threshold_for_strategy(session, config, faction_id)
 
 static func _enemy_max_active_raids_for_strategy(session: SessionStateStoreScript.SessionData, config: Dictionary, faction_id: String) -> int:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _enemy_max_active_raids_for_strategy__gd(session, config, faction_id)
-	var before := TurnEngine.before_writing(&"OverworldRules._enemy_max_active_raids_for_strategy", [session, config, faction_id])
-	var result = _enemy_max_active_raids_for_strategy__gd(session, config, faction_id)
-	TurnEngine.check_writing(&"OverworldRules._enemy_max_active_raids_for_strategy", before, [session, config, faction_id], result)
-	return result
-
-static func _enemy_max_active_raids_for_strategy__gd(session: SessionStateStoreScript.SessionData, config: Dictionary, faction_id: String) -> int:
 	return _enemy_turn_rules()._max_active_raids_for_strategy(session, config, faction_id)
 
 static func _raid_target_is_objective_anchor(session: SessionStateStoreScript.SessionData, target_kind: String, placement_id: String) -> bool:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _raid_target_is_objective_anchor__gd(session, target_kind, placement_id)
-	var before := TurnEngine.before_writing(&"OverworldRules._raid_target_is_objective_anchor", [session, target_kind, placement_id])
-	var result = _raid_target_is_objective_anchor__gd(session, target_kind, placement_id)
-	TurnEngine.check_writing(&"OverworldRules._raid_target_is_objective_anchor", before, [session, target_kind, placement_id], result)
-	return result
-
-static func _raid_target_is_objective_anchor__gd(session: SessionStateStoreScript.SessionData, target_kind: String, placement_id: String) -> bool:
 	return _enemy_adventure_rules().target_is_objective_anchor(session, target_kind, placement_id)
 
 static func _raid_is_public(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> bool:
@@ -729,14 +647,6 @@ static func is_tile_visible(session: SessionStateStoreScript.SessionData, x: int
 	return _grid_cell(_fog_grids(session, level)[1], x, y)
 
 static func is_tile_explored(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return is_tile_explored__gd(session, x, y, level)
-	var before := TurnEngine.before_writing(&"OverworldRules.is_tile_explored", [session, x, y, level])
-	var result = is_tile_explored__gd(session, x, y, level)
-	TurnEngine.check_writing(&"OverworldRules.is_tile_explored", before, [session, x, y, level], result)
-	return result
-
-static func is_tile_explored__gd(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
 	if session == null:
 		return false
 	return _grid_cell(_fog_grids(session, level)[0], x, y)
@@ -890,14 +800,6 @@ static func route_movement_preview(
 ## `fight_on_arrival`: a computer hero that means to fight the guard at the far
 ## end (AiHeroRules._cross_gate) may come out in its zone, as the human does.
 static func native_passage_travel_check(session: SessionStateStoreScript.SessionData, node: Dictionary, actor_position: Vector3i, actor_id: String, target_id: String = "", fight_on_arrival: bool = false) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return native_passage_travel_check__gd(session, node, actor_position, actor_id, target_id, fight_on_arrival)
-	var before := TurnEngine.before_writing(&"OverworldRules.native_passage_travel_check", [session, node, actor_position, actor_id, target_id, fight_on_arrival])
-	var result = native_passage_travel_check__gd(session, node, actor_position, actor_id, target_id, fight_on_arrival)
-	TurnEngine.check_writing(&"OverworldRules.native_passage_travel_check", before, [session, node, actor_position, actor_id, target_id, fight_on_arrival], result)
-	return result
-
-static func native_passage_travel_check__gd(session: SessionStateStoreScript.SessionData, node: Dictionary, actor_position: Vector3i, actor_id: String, target_id: String = "", fight_on_arrival: bool = false) -> Dictionary:
 	var resolved := NativeTransit.resolve(session.overworld.get("resource_nodes", []), node, target_id)
 	if not bool(resolved.get("ok", false)):
 		if bool(resolved.get("native_transit_random_exit", false)):
@@ -923,14 +825,6 @@ static func native_passage_travel_check__gd(session: SessionStateStoreScript.Ses
 ## trip count, so a reload replays it and the next trip can land elsewhere. An
 ## exit that is blocked right now is skipped for the next one in roll order.
 static func native_random_exit_check(session: SessionStateStoreScript.SessionData, node: Dictionary, actor_position: Vector3i, actor_id: String) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return native_random_exit_check__gd(session, node, actor_position, actor_id)
-	var before := TurnEngine.before_writing(&"OverworldRules.native_random_exit_check", [session, node, actor_position, actor_id])
-	var result = native_random_exit_check__gd(session, node, actor_position, actor_id)
-	TurnEngine.check_writing(&"OverworldRules.native_random_exit_check", before, [session, node, actor_position, actor_id], result)
-	return result
-
-static func native_random_exit_check__gd(session: SessionStateStoreScript.SessionData, node: Dictionary, actor_position: Vector3i, actor_id: String) -> Dictionary:
 	var first_failure := {}
 	for destination in NativeTransit.exit_order(node, native_exit_roll_key(session, node, actor_id)):
 		var check := native_passage_travel_check(session, node, actor_position, actor_id, String(destination.get("target_placement_id", "")))
@@ -941,39 +835,15 @@ static func native_random_exit_check__gd(session: SessionStateStoreScript.Sessio
 	return first_failure if not first_failure.is_empty() else {"ok": false, "error": "native_passage_has_no_exit", "message": "This portal has no exit on this map."}
 
 static func native_exit_roll_key(session: SessionStateStoreScript.SessionData, node: Dictionary, actor_id: String) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return native_exit_roll_key__gd(session, node, actor_id)
-	var before := TurnEngine.before_writing(&"OverworldRules.native_exit_roll_key", [session, node, actor_id])
-	var result = native_exit_roll_key__gd(session, node, actor_id)
-	TurnEngine.check_writing(&"OverworldRules.native_exit_roll_key", before, [session, node, actor_id], result)
-	return result
-
-static func native_exit_roll_key__gd(session: SessionStateStoreScript.SessionData, node: Dictionary, actor_id: String) -> String:
 	var trips: Dictionary = session.overworld.get(NATIVE_TRANSIT_TRIPS_KEY, {}) if session.overworld.get(NATIVE_TRANSIT_TRIPS_KEY, {}) is Dictionary else {}
 	return "%s|%d|%s|%d" % [String(node.get("placement_id", "")), int(session.day), actor_id, int(trips.get(actor_id, 0))]
 
 static func note_native_trip(session: SessionStateStoreScript.SessionData, actor_id: String) -> void:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		note_native_trip__gd(session, actor_id)
-		return
-	var before := TurnEngine.before_writing(&"OverworldRules.note_native_trip", [session, actor_id])
-	note_native_trip__gd(session, actor_id)
-	TurnEngine.check_writing(&"OverworldRules.note_native_trip", before, [session, actor_id], null)
-
-static func note_native_trip__gd(session: SessionStateStoreScript.SessionData, actor_id: String) -> void:
 	var trips: Dictionary = session.overworld.get(NATIVE_TRANSIT_TRIPS_KEY, {}) if session.overworld.get(NATIVE_TRANSIT_TRIPS_KEY, {}) is Dictionary else {}
 	trips[actor_id] = int(trips.get(actor_id, 0)) + 1
 	session.overworld[NATIVE_TRANSIT_TRIPS_KEY] = trips
 
 static func _native_passage_endpoint_safety(session: SessionStateStoreScript.SessionData, node: Dictionary, actor_id: String, actor_blocked_indexes: Variant = null, combat_arrival: bool = false) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _native_passage_endpoint_safety__gd(session, node, actor_id, actor_blocked_indexes, combat_arrival)
-	var before := TurnEngine.before_writing(&"OverworldRules._native_passage_endpoint_safety", [session, node, actor_id, actor_blocked_indexes, combat_arrival])
-	var result = _native_passage_endpoint_safety__gd(session, node, actor_id, actor_blocked_indexes, combat_arrival)
-	TurnEngine.check_writing(&"OverworldRules._native_passage_endpoint_safety", before, [session, node, actor_id, actor_blocked_indexes, combat_arrival], result)
-	return result
-
-static func _native_passage_endpoint_safety__gd(session: SessionStateStoreScript.SessionData, node: Dictionary, actor_id: String, actor_blocked_indexes: Variant = null, combat_arrival: bool = false) -> Dictionary:
 	var tile := NativeTransit.point(NativeTransit.link_of(node).get("entry"))
 	var local := Vector2i(tile.x, tile.y)
 	var id := String(node.get("placement_id", ""))
@@ -2322,15 +2192,7 @@ static func _stacks_to_recruits(stacks: Array) -> Dictionary:
 
 ## Each flagged dwelling adds +1 weekly growth for its creature in every town
 ## of the same owner that recruits it.
-static func _add_dwelling_town_growth(session: SessionStateStoreScript.SessionData, town: Dictionary, growth: Dictionary) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _add_dwelling_town_growth__gd(session, town, growth)
-	var before := TurnEngine.before_writing(&"OverworldRules._add_dwelling_town_growth", [session, town, growth])
-	var result = _add_dwelling_town_growth__gd(session, town, growth)
-	TurnEngine.check_writing(&"OverworldRules._add_dwelling_town_growth", before, [session, town, growth], result)
-	return result
-
-static func _add_dwelling_town_growth__gd(
+static func _add_dwelling_town_growth(
 	session: SessionStateStoreScript.SessionData,
 	town: Dictionary,
 	growth: Dictionary
@@ -2979,15 +2841,7 @@ static func capture_town_by_placement(session: SessionStateStoreScript.SessionDa
 		return ""
 	return _claim_town(session, town_result)
 
-static func transition_town_control(session: SessionStateStoreScript.SessionData, placement_id: String, new_owner: String, controlling_faction_id: String = "", source: String = "") -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return transition_town_control__gd(session, placement_id, new_owner, controlling_faction_id, source)
-	var before := TurnEngine.before_writing(&"OverworldRules.transition_town_control", [session, placement_id, new_owner, controlling_faction_id, source])
-	var result = transition_town_control__gd(session, placement_id, new_owner, controlling_faction_id, source)
-	TurnEngine.check_writing(&"OverworldRules.transition_town_control", before, [session, placement_id, new_owner, controlling_faction_id, source], result)
-	return result
-
-static func transition_town_control__gd(
+static func transition_town_control(
 	session: SessionStateStoreScript.SessionData,
 	placement_id: String,
 	new_owner: String,
@@ -3549,27 +3403,11 @@ static func _encounter_at_tile(session: SessionStateStoreScript.SessionData, x: 
 	return {}
 
 static func encounter_commander_name(encounter: Dictionary) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return encounter_commander_name__gd(encounter)
-	var before := TurnEngine.before_writing(&"OverworldRules.encounter_commander_name", [encounter])
-	var result = encounter_commander_name__gd(encounter)
-	TurnEngine.check_writing(&"OverworldRules.encounter_commander_name", before, [encounter], result)
-	return result
-
-static func encounter_commander_name__gd(encounter: Dictionary) -> String:
 	if encounter.is_empty() or String(encounter.get("spawned_by_faction_id", "")) == "":
 		return ""
 	return String(_enemy_adventure_rules().raid_commander_display_name(encounter))
 
 static func encounter_commander_threat_label(encounter: Dictionary) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return encounter_commander_threat_label__gd(encounter)
-	var before := TurnEngine.before_writing(&"OverworldRules.encounter_commander_threat_label", [encounter])
-	var result = encounter_commander_threat_label__gd(encounter)
-	TurnEngine.check_writing(&"OverworldRules.encounter_commander_threat_label", before, [encounter], result)
-	return result
-
-static func encounter_commander_threat_label__gd(encounter: Dictionary) -> String:
 	var commander_name := encounter_commander_name(encounter)
 	if commander_name == "":
 		return ""
@@ -3588,14 +3426,6 @@ static func encounter_commander_threat_label__gd(encounter: Dictionary) -> Strin
 	return "%s (%s)" % [commander_name, "; ".join(parts)]
 
 static func encounter_display_name(encounter: Dictionary) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return encounter_display_name__gd(encounter)
-	var before := TurnEngine.before_writing(&"OverworldRules.encounter_display_name", [encounter])
-	var result = encounter_display_name__gd(encounter)
-	TurnEngine.check_writing(&"OverworldRules.encounter_display_name", before, [encounter], result)
-	return result
-
-static func encounter_display_name__gd(encounter: Dictionary) -> String:
 	if encounter.is_empty():
 		return "Hostile contact"
 	if String(encounter.get("spawned_by_faction_id", "")) != "":
@@ -3656,14 +3486,6 @@ static func hero_level(session: SessionStateStoreScript.SessionData) -> int:
 	return OverworldLevelRulesScript.hero_level(session)
 
 static func map_for_level(session: SessionStateStoreScript.SessionData, level: int = -1) -> Array:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return map_for_level__gd(session, level)
-	var before := TurnEngine.before_writing(&"OverworldRules.map_for_level", [session, level])
-	var result = map_for_level__gd(session, level)
-	TurnEngine.check_writing(&"OverworldRules.map_for_level", before, [session, level], result)
-	return result
-
-static func map_for_level__gd(session: SessionStateStoreScript.SessionData, level: int = -1) -> Array:
 	return OverworldLevelRulesScript.terrain_rows(session, level)
 
 static func derive_map_size(session: SessionStateStoreScript.SessionData) -> Vector2i:
@@ -4171,14 +3993,6 @@ static func _profile_scenario_event_evaluation(session: SessionStateStoreScript.
 	return scenario_result
 
 static func _blocked_tile_index(session: SessionStateStoreScript.SessionData, level: int = -1) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _blocked_tile_index__gd(session, level)
-	var before := TurnEngine.before_writing(&"OverworldRules._blocked_tile_index", [session, level])
-	var result = _blocked_tile_index__gd(session, level)
-	TurnEngine.check_writing(&"OverworldRules._blocked_tile_index", before, [session, level], result)
-	return result
-
-static func _blocked_tile_index__gd(session: SessionStateStoreScript.SessionData, level: int = -1) -> Dictionary:
 	if session == null:
 		return {}
 	if not session.has_meta(BLOCKED_TILE_INDEX_META):
@@ -4200,14 +4014,6 @@ static func _spatial_lookup_index(session: SessionStateStoreScript.SessionData, 
 	return levels[resolved_level]
 
 static func invalidate_spatial_lookup(session: SessionStateStoreScript.SessionData) -> void:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		invalidate_spatial_lookup__gd(session)
-		return
-	var before := TurnEngine.before_writing(&"OverworldRules.invalidate_spatial_lookup", [session])
-	invalidate_spatial_lookup__gd(session)
-	TurnEngine.check_writing(&"OverworldRules.invalidate_spatial_lookup", before, [session], null)
-
-static func invalidate_spatial_lookup__gd(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
 		return
 	session.remove_meta(SPATIAL_LOOKUP_INDEX_META)
@@ -4229,14 +4035,6 @@ static func _spatial_lookup_signature(session: SessionStateStoreScript.SessionDa
 	]
 
 static func placement_level(session: SessionStateStoreScript.SessionData, placement_id: String, fallback: int = 0) -> int:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return placement_level__gd(session, placement_id, fallback)
-	var before := TurnEngine.before_writing(&"OverworldRules.placement_level", [session, placement_id, fallback])
-	var result = placement_level__gd(session, placement_id, fallback)
-	TurnEngine.check_writing(&"OverworldRules.placement_level", before, [session, placement_id, fallback], result)
-	return result
-
-static func placement_level__gd(session: SessionStateStoreScript.SessionData, placement_id: String, fallback: int = 0) -> int:
 	if session == null or placement_id == "":
 		return fallback
 	# Placement identity is global even though tile indexes are per level.
@@ -5230,14 +5028,6 @@ static func describe_context(session: SessionStateStoreScript.SessionData) -> St
 			return "Open Ground\nTerrain %s | No immediate site action.\nUse the movement controls to scout, consolidate towns, or intercept enemy heroes." % terrain
 
 static func _terrain_name_at(session: SessionStateStoreScript.SessionData, x: int, y: int) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _terrain_name_at__gd(session, x, y)
-	var before := TurnEngine.before_writing(&"OverworldRules._terrain_name_at", [session, x, y])
-	var result = _terrain_name_at__gd(session, x, y)
-	TurnEngine.check_writing(&"OverworldRules._terrain_name_at", before, [session, x, y], result)
-	return result
-
-static func _terrain_name_at__gd(session: SessionStateStoreScript.SessionData, x: int, y: int) -> String:
 	var terrain := _terrain_id_at(session, x, y)
 	var biome := ContentService.get_biome_for_terrain(terrain)
 	if not biome.is_empty():
@@ -5245,14 +5035,6 @@ static func _terrain_name_at__gd(session: SessionStateStoreScript.SessionData, x
 	return terrain.capitalize() if terrain != "" else "Unknown terrain"
 
 static func _terrain_id_at(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _terrain_id_at__gd(session, x, y, level)
-	var before := TurnEngine.before_writing(&"OverworldRules._terrain_id_at", [session, x, y, level])
-	var result = _terrain_id_at__gd(session, x, y, level)
-	TurnEngine.check_writing(&"OverworldRules._terrain_id_at", before, [session, x, y, level], result)
-	return result
-
-static func _terrain_id_at__gd(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> String:
 	var map_data = map_for_level(session, level)
 	if y < 0 or not (map_data is Array) or y >= map_data.size():
 		return ""
@@ -6663,14 +6445,6 @@ static func _dispatch_context_brief(session: SessionStateStoreScript.SessionData
 			return "Open ground at %d,%d on %s" % [pos.x, pos.y, terrain]
 
 static func town_weekly_growth(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return town_weekly_growth__gd(town, session)
-	var before := TurnEngine.before_writing(&"OverworldRules.town_weekly_growth", [town, session])
-	var result = town_weekly_growth__gd(town, session)
-	TurnEngine.check_writing(&"OverworldRules.town_weekly_growth", before, [town, session], result)
-	return result
-
-static func town_weekly_growth__gd(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
 	# Without a session the growth is the town's seeded growth alone.
 	var cache_key := _town_read_scope_cache_key(session, "weekly_growth", town) if session != null else _town_content_read_scope_key("seeded_weekly_growth", town)
 	if _town_read_scope_cache_has(cache_key):
@@ -6707,14 +6481,6 @@ static func town_pressure_output(town: Dictionary, session: SessionStateStoreScr
 	return result
 
 static func town_development_metrics(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return town_development_metrics__gd(town, session)
-	var before := TurnEngine.before_writing(&"OverworldRules.town_development_metrics", [town, session])
-	var result = town_development_metrics__gd(town, session)
-	TurnEngine.check_writing(&"OverworldRules.town_development_metrics", before, [town, session], result)
-	return result
-
-static func town_development_metrics__gd(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
 	var cache_key := _town_read_scope_cache_key(session, "development_metrics", town)
 	if _town_read_scope_cache_has(cache_key):
 		return _town_read_scope_cache_get(cache_key)
@@ -6754,14 +6520,6 @@ static func describe_town_identity_surface(town: Dictionary, session: SessionSta
 	return _town_identity_surface(town, session)
 
 static func town_capital_project_state(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return town_capital_project_state__gd(town, session)
-	var before := TurnEngine.before_writing(&"OverworldRules.town_capital_project_state", [town, session])
-	var result = town_capital_project_state__gd(town, session)
-	TurnEngine.check_writing(&"OverworldRules.town_capital_project_state", before, [town, session], result)
-	return result
-
-static func town_capital_project_state__gd(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
 	var cache_key := _town_read_scope_cache_key(session, "capital_project", town)
 	if _town_read_scope_cache_has(cache_key):
 		return _town_read_scope_cache_get(cache_key)
@@ -6769,34 +6527,10 @@ static func town_capital_project_state__gd(town: Dictionary, session: SessionSta
 	_town_read_scope_cache_store(cache_key, result)
 	return result
 
-static func town_logistics_support_radius(session: SessionStateStoreScript.SessionData, town: Dictionary) -> int:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return town_logistics_support_radius__gd(session, town)
-	var before := TurnEngine.before_writing(&"OverworldRules.town_logistics_support_radius", [session, town])
-	var result = town_logistics_support_radius__gd(session, town)
-	TurnEngine.check_writing(&"OverworldRules.town_logistics_support_radius", before, [session, town], result)
-	return result
-
-static func town_logistics_support_radius__gd(session: SessionStateStoreScript.SessionData, town: Dictionary) -> int:
-	# Exact projection of _town_logistics_state: scoring a nearby resource does
-	# not need to enumerate every linked site, threat, escort and delivery.
-	# Read the live plan each time; no state survives a capture or plan change.
-	if session == null or town.is_empty() or _town_controller_id(town) == "":
-		return 0
-	return int(_town_logistics_plan(town).get("support_radius", 0))
-
 static func town_logistics_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
 	return _town_logistics_state(session, town)
 
 static func town_recovery_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return town_recovery_state__gd(session, town)
-	var before := TurnEngine.before_writing(&"OverworldRules.town_recovery_state", [session, town])
-	var result = town_recovery_state__gd(session, town)
-	TurnEngine.check_writing(&"OverworldRules.town_recovery_state", before, [session, town], result)
-	return result
-
-static func town_recovery_state__gd(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
 	var cache_key := _town_read_scope_cache_key(session, "recovery", town)
 	if _town_read_scope_cache_has(cache_key):
 		return _town_read_scope_cache_get(cache_key)
@@ -7318,15 +7052,7 @@ static func describe_town_build_projection(
 		return "Projection: steadies current output."
 	return "Projection: %s." % " | ".join(parts)
 
-static func apply_town_recovery_pressure(session: SessionStateStoreScript.SessionData, town_placement_id: String, amount: int, source: String = "") -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return apply_town_recovery_pressure__gd(session, town_placement_id, amount, source)
-	var before := TurnEngine.before_writing(&"OverworldRules.apply_town_recovery_pressure", [session, town_placement_id, amount, source])
-	var result = apply_town_recovery_pressure__gd(session, town_placement_id, amount, source)
-	TurnEngine.check_writing(&"OverworldRules.apply_town_recovery_pressure", before, [session, town_placement_id, amount, source], result)
-	return result
-
-static func apply_town_recovery_pressure__gd(
+static func apply_town_recovery_pressure(
 	session: SessionStateStoreScript.SessionData,
 	town_placement_id: String,
 	amount: int,
@@ -7395,15 +7121,7 @@ static func relieve_town_recovery_pressure(
 		"" if int(recovery_state.get("days_to_clear", 0)) == 1 else "s",
 	]
 
-static func apply_resource_site_disruption(session: SessionStateStoreScript.SessionData, node: Dictionary, site: Dictionary, previous_controller: String, attacker_controller: String) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return apply_resource_site_disruption__gd(session, node, site, previous_controller, attacker_controller)
-	var before := TurnEngine.before_writing(&"OverworldRules.apply_resource_site_disruption", [session, node, site, previous_controller, attacker_controller])
-	var result = apply_resource_site_disruption__gd(session, node, site, previous_controller, attacker_controller)
-	TurnEngine.check_writing(&"OverworldRules.apply_resource_site_disruption", before, [session, node, site, previous_controller, attacker_controller], result)
-	return result
-
-static func apply_resource_site_disruption__gd(
+static func apply_resource_site_disruption(
 	session: SessionStateStoreScript.SessionData,
 	node: Dictionary,
 	site: Dictionary,
@@ -7447,14 +7165,6 @@ static func town_recruit_cost(session: SessionStateStoreScript.SessionData, town
 	return _apply_percent_discount(adjusted_cost, _recruitment_discount_percent(town, unit_id))
 
 static func _town_scaling_hero(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _town_scaling_hero__gd(session, town)
-	var before := TurnEngine.before_writing(&"OverworldRules._town_scaling_hero", [session, town])
-	var result = _town_scaling_hero__gd(session, town)
-	TurnEngine.check_writing(&"OverworldRules._town_scaling_hero", before, [session, town], result)
-	return result
-
-static func _town_scaling_hero__gd(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
 	# Recruit prices and growth follow the commander stationed in this town, not
 	# whichever hero happens to be selected. No local hero means no hero bonus.
 	if session == null or town.is_empty():
@@ -8235,14 +7945,6 @@ static func _find_resource_node_by_placement(session: SessionStateStoreScript.Se
 	return {"index": -1, "node": {}}
 
 static func _find_active_town(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _find_active_town__gd(session)
-	var before := TurnEngine.before_writing(&"OverworldRules._find_active_town", [session])
-	var result = _find_active_town__gd(session)
-	TurnEngine.check_writing(&"OverworldRules._find_active_town", before, [session], result)
-	return result
-
-static func _find_active_town__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var visit_result := _find_active_town_by_visit_context(session)
 	if int(visit_result.get("index", -1)) >= 0:
 		return visit_result
@@ -8256,14 +7958,6 @@ static func _find_active_town__gd(session: SessionStateStoreScript.SessionData) 
 	return {"index": -1, "town": {}}
 
 static func _find_active_town_by_visit_context(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _find_active_town_by_visit_context__gd(session)
-	var before := TurnEngine.before_writing(&"OverworldRules._find_active_town_by_visit_context", [session])
-	var result = _find_active_town_by_visit_context__gd(session)
-	TurnEngine.check_writing(&"OverworldRules._find_active_town_by_visit_context", before, [session], result)
-	return result
-
-static func _find_active_town_by_visit_context__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null:
 		return {"index": -1, "town": {}}
 	var placement_id := String(session.flags.get(ACTIVE_TOWN_PLACEMENT_KEY, ""))
@@ -9758,14 +9452,6 @@ static func _humanize_id(value: String) -> String:
 	return " ".join(words)
 
 static func _resource_site_response_profile(site: Dictionary) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _resource_site_response_profile__gd(site)
-	var before := TurnEngine.before_writing(&"OverworldRules._resource_site_response_profile", [site])
-	var result = _resource_site_response_profile__gd(site)
-	TurnEngine.check_writing(&"OverworldRules._resource_site_response_profile", before, [site], result)
-	return result
-
-static func _resource_site_response_profile__gd(site: Dictionary) -> Dictionary:
 	var profile := {
 		"action_label": "",
 		"summary": "",
@@ -9855,14 +9541,6 @@ static func _resource_site_response_profile__gd(site: Dictionary) -> Dictionary:
 	return profile
 
 static func _route_security_rating_for_hero(hero: Dictionary) -> int:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _route_security_rating_for_hero__gd(hero)
-	var before := TurnEngine.before_writing(&"OverworldRules._route_security_rating_for_hero", [hero])
-	var result = _route_security_rating_for_hero__gd(hero)
-	TurnEngine.check_writing(&"OverworldRules._route_security_rating_for_hero", before, [hero], result)
-	return result
-
-static func _route_security_rating_for_hero__gd(hero: Dictionary) -> int:
 	if hero.is_empty():
 		return 1
 	var command = hero.get("command", {})
@@ -10021,15 +9699,7 @@ static func _resource_site_delivery_state(
 		"manifest_value": _weighted_recruit_value(manifest),
 	}
 
-static func _delivery_encounter_matches_node(session: SessionStateStoreScript.SessionData, encounter: Dictionary, node: Dictionary, delivery_state: Dictionary) -> bool:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _delivery_encounter_matches_node__gd(session, encounter, node, delivery_state)
-	var before := TurnEngine.before_writing(&"OverworldRules._delivery_encounter_matches_node", [session, encounter, node, delivery_state])
-	var result = _delivery_encounter_matches_node__gd(session, encounter, node, delivery_state)
-	TurnEngine.check_writing(&"OverworldRules._delivery_encounter_matches_node", before, [session, encounter, node, delivery_state], result)
-	return result
-
-static func _delivery_encounter_matches_node__gd(
+static func _delivery_encounter_matches_node(
 	session: SessionStateStoreScript.SessionData,
 	encounter: Dictionary,
 	node: Dictionary,
@@ -10058,15 +9728,7 @@ static func _delivery_encounter_matches_node__gd(
 		_:
 			return false
 
-static func _resource_site_delivery_interception(session: SessionStateStoreScript.SessionData, node: Dictionary, site: Dictionary = {}) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _resource_site_delivery_interception__gd(session, node, site)
-	var before := TurnEngine.before_writing(&"OverworldRules._resource_site_delivery_interception", [session, node, site])
-	var result = _resource_site_delivery_interception__gd(session, node, site)
-	TurnEngine.check_writing(&"OverworldRules._resource_site_delivery_interception", before, [session, node, site], result)
-	return result
-
-static func _resource_site_delivery_interception__gd(
+static func _resource_site_delivery_interception(
 	session: SessionStateStoreScript.SessionData,
 	node: Dictionary,
 	site: Dictionary = {}
@@ -11545,15 +11207,7 @@ static func _growth_tick_town(session: SessionStateStoreScript.SessionData, town
 	)
 	return weekly_growth
 
-static func _effective_player_town_weekly_growth(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _effective_player_town_weekly_growth__gd(session, town)
-	var before := TurnEngine.before_writing(&"OverworldRules._effective_player_town_weekly_growth", [session, town])
-	var result = _effective_player_town_weekly_growth__gd(session, town)
-	TurnEngine.check_writing(&"OverworldRules._effective_player_town_weekly_growth", before, [session, town], result)
-	return result
-
-static func _effective_player_town_weekly_growth__gd(
+static func _effective_player_town_weekly_growth(
 	session: SessionStateStoreScript.SessionData,
 	town: Dictionary
 ) -> Dictionary:
@@ -11567,15 +11221,7 @@ static func _seed_recruits_for_town(town: Dictionary) -> Dictionary:
 	normalized_town["built_buildings"] = _normalize_built_buildings_for_town_state(normalized_town)
 	return _seed_scenario_recruits_for_town_state(normalized_town)
 
-static func _town_weekly_growth(town: Dictionary, session: SessionStateStoreScript.SessionData = null, metric_context: Dictionary = {}) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _town_weekly_growth__gd(town, session, metric_context)
-	var before := TurnEngine.before_writing(&"OverworldRules._town_weekly_growth", [town, session, metric_context])
-	var result = _town_weekly_growth__gd(town, session, metric_context)
-	TurnEngine.check_writing(&"OverworldRules._town_weekly_growth", before, [town, session, metric_context], result)
-	return result
-
-static func _town_weekly_growth__gd(
+static func _town_weekly_growth(
 	town: Dictionary,
 	session: SessionStateStoreScript.SessionData = null,
 	metric_context: Dictionary = {}
@@ -11669,15 +11315,7 @@ static func _town_battle_readiness(
 	readiness -= int(occupation.get("readiness_penalty", 0))
 	return max(0, readiness)
 
-static func _town_pressure_output(town: Dictionary, session: SessionStateStoreScript.SessionData = null, metric_context: Dictionary = {}, reinforcement_quality: int = -1) -> int:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _town_pressure_output__gd(town, session, metric_context, reinforcement_quality)
-	var before := TurnEngine.before_writing(&"OverworldRules._town_pressure_output", [town, session, metric_context, reinforcement_quality])
-	var result = _town_pressure_output__gd(town, session, metric_context, reinforcement_quality)
-	TurnEngine.check_writing(&"OverworldRules._town_pressure_output", before, [town, session, metric_context, reinforcement_quality], result)
-	return result
-
-static func _town_pressure_output__gd(
+static func _town_pressure_output(
 	town: Dictionary,
 	session: SessionStateStoreScript.SessionData = null,
 	metric_context: Dictionary = {},
@@ -12641,15 +12279,7 @@ static func _retake_front_from_legacy_state(
 	inferred["capture_count"] = max(1, int(inferred.get("capture_count", 0)))
 	return inferred
 
-static func _town_front_after_control_change(session: SessionStateStoreScript.SessionData, town: Dictionary, previous_owner: String, new_owner: String, controlling_faction_id: String, source: String) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _town_front_after_control_change__gd(session, town, previous_owner, new_owner, controlling_faction_id, source)
-	var before := TurnEngine.before_writing(&"OverworldRules._town_front_after_control_change", [session, town, previous_owner, new_owner, controlling_faction_id, source])
-	var result = _town_front_after_control_change__gd(session, town, previous_owner, new_owner, controlling_faction_id, source)
-	TurnEngine.check_writing(&"OverworldRules._town_front_after_control_change", before, [session, town, previous_owner, new_owner, controlling_faction_id, source], result)
-	return result
-
-static func _town_front_after_control_change__gd(
+static func _town_front_after_control_change(
 	session: SessionStateStoreScript.SessionData,
 	town: Dictionary,
 	previous_owner: String,
@@ -12684,15 +12314,7 @@ static func _town_front_after_control_change__gd(
 		return _town_front_stabilizing_state(session, town, faction_id, source, previous_owner)
 	return _normalize_town_front_state({})
 
-static func _town_front_stabilizing_state(session: SessionStateStoreScript.SessionData, town: Dictionary, faction_id: String, source: String, previous_owner: String = "", bonus_days: int = 0) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _town_front_stabilizing_state__gd(session, town, faction_id, source, previous_owner, bonus_days)
-	var before := TurnEngine.before_writing(&"OverworldRules._town_front_stabilizing_state", [session, town, faction_id, source, previous_owner, bonus_days])
-	var result = _town_front_stabilizing_state__gd(session, town, faction_id, source, previous_owner, bonus_days)
-	TurnEngine.check_writing(&"OverworldRules._town_front_stabilizing_state", before, [session, town, faction_id, source, previous_owner, bonus_days], result)
-	return result
-
-static func _town_front_stabilizing_state__gd(
+static func _town_front_stabilizing_state(
 	session: SessionStateStoreScript.SessionData,
 	town: Dictionary,
 	faction_id: String,
@@ -12727,14 +12349,6 @@ static func _town_front_priority_seed(role: String, objective_anchor: bool) -> i
 	return priority
 
 static func _town_front_stabilize_days(session: SessionStateStoreScript.SessionData, town: Dictionary) -> int:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _town_front_stabilize_days__gd(session, town)
-	var before := TurnEngine.before_writing(&"OverworldRules._town_front_stabilize_days", [session, town])
-	var result = _town_front_stabilize_days__gd(session, town)
-	TurnEngine.check_writing(&"OverworldRules._town_front_stabilize_days", before, [session, town], result)
-	return result
-
-static func _town_front_stabilize_days__gd(session: SessionStateStoreScript.SessionData, town: Dictionary) -> int:
 	var days := 2
 	match _town_strategic_role(town):
 		"capital":
@@ -12771,15 +12385,7 @@ static func _town_occupation_relief_per_day(
 		relief -= 1
 	return clampi(relief, 1, 4)
 
-static func _town_occupation_after_control_change(session: SessionStateStoreScript.SessionData, town: Dictionary, previous_owner: String, new_owner: String, controlling_faction_id: String, source: String) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _town_occupation_after_control_change__gd(session, town, previous_owner, new_owner, controlling_faction_id, source)
-	var before := TurnEngine.before_writing(&"OverworldRules._town_occupation_after_control_change", [session, town, previous_owner, new_owner, controlling_faction_id, source])
-	var result = _town_occupation_after_control_change__gd(session, town, previous_owner, new_owner, controlling_faction_id, source)
-	TurnEngine.check_writing(&"OverworldRules._town_occupation_after_control_change", before, [session, town, previous_owner, new_owner, controlling_faction_id, source], result)
-	return result
-
-static func _town_occupation_after_control_change__gd(
+static func _town_occupation_after_control_change(
 	session: SessionStateStoreScript.SessionData,
 	town: Dictionary,
 	previous_owner: String,
@@ -12830,14 +12436,6 @@ static func _town_occupation_seed_pressure(session: SessionStateStoreScript.Sess
 	return clampi(pressure, 4, 10)
 
 static func _lock_town_occupation_reserves(town: Dictionary, occupation: Dictionary) -> void:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		_lock_town_occupation_reserves__gd(town, occupation)
-		return
-	var before := TurnEngine.before_writing(&"OverworldRules._lock_town_occupation_reserves", [town, occupation])
-	_lock_town_occupation_reserves__gd(town, occupation)
-	TurnEngine.check_writing(&"OverworldRules._lock_town_occupation_reserves", before, [town, occupation], null)
-
-static func _lock_town_occupation_reserves__gd(town: Dictionary, occupation: Dictionary) -> void:
 	if town.is_empty():
 		return
 	var available := _normalize_recruit_payload(town.get("available_recruits", {}))
@@ -12864,14 +12462,6 @@ static func _lock_town_occupation_reserves__gd(town: Dictionary, occupation: Dic
 	occupation["locked_recruits"] = locked
 
 static func _release_town_occupation_reserves(town: Dictionary) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _release_town_occupation_reserves__gd(town)
-	var before := TurnEngine.before_writing(&"OverworldRules._release_town_occupation_reserves", [town])
-	var result = _release_town_occupation_reserves__gd(town)
-	TurnEngine.check_writing(&"OverworldRules._release_town_occupation_reserves", before, [town], result)
-	return result
-
-static func _release_town_occupation_reserves__gd(town: Dictionary) -> Dictionary:
 	var occupation := _normalize_town_occupation_state(town.get("occupation", {}))
 	var locked := _normalize_recruit_payload(occupation.get("locked_recruits", {}))
 	if locked.is_empty():
@@ -12993,14 +12583,6 @@ static func _resource_site_under_threat(session: SessionStateStoreScript.Session
 	return false
 
 static func _apply_recruit_percent(recruits: Variant, percent_modifier: int) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _apply_recruit_percent__gd(recruits, percent_modifier)
-	var before := TurnEngine.before_writing(&"OverworldRules._apply_recruit_percent", [recruits, percent_modifier])
-	var result = _apply_recruit_percent__gd(recruits, percent_modifier)
-	TurnEngine.check_writing(&"OverworldRules._apply_recruit_percent", before, [recruits, percent_modifier], result)
-	return result
-
-static func _apply_recruit_percent__gd(recruits: Variant, percent_modifier: int) -> Dictionary:
 	var adjusted := {}
 	if not (recruits is Dictionary):
 		return adjusted
@@ -13986,14 +13568,6 @@ static func _town_role_readiness_bonus(role: String) -> int:
 			return 0
 
 static func _town_role_pressure_bonus(role: String) -> int:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _town_role_pressure_bonus__gd(role)
-	var before := TurnEngine.before_writing(&"OverworldRules._town_role_pressure_bonus", [role])
-	var result = _town_role_pressure_bonus__gd(role)
-	TurnEngine.check_writing(&"OverworldRules._town_role_pressure_bonus", before, [role], result)
-	return result
-
-static func _town_role_pressure_bonus__gd(role: String) -> int:
 	match role:
 		"capital":
 			return 1
@@ -14107,14 +13681,6 @@ static func _economy_profile_income(profile: Variant, built_buildings: Array) ->
 	return income
 
 static func _pressure_bonus_from_profile(profile: Variant) -> int:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _pressure_bonus_from_profile__gd(profile)
-	var before := TurnEngine.before_writing(&"OverworldRules._pressure_bonus_from_profile", [profile])
-	var result = _pressure_bonus_from_profile__gd(profile)
-	TurnEngine.check_writing(&"OverworldRules._pressure_bonus_from_profile", before, [profile], result)
-	return result
-
-static func _pressure_bonus_from_profile__gd(profile: Variant) -> int:
 	if not (profile is Dictionary):
 		return 0
 	return max(0, int(profile.get("pressure_bonus", 0)))
@@ -14700,14 +14266,6 @@ static func _advance_town_recovery(session: SessionStateStoreScript.SessionData,
 	}
 
 static func _town_defense_summary(town: Dictionary) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _town_defense_summary__gd(town)
-	var before := TurnEngine.before_writing(&"OverworldRules._town_defense_summary", [town])
-	var result = _town_defense_summary__gd(town)
-	TurnEngine.check_writing(&"OverworldRules._town_defense_summary", before, [town], result)
-	return result
-
-static func _town_defense_summary__gd(town: Dictionary) -> String:
 	var garrison_strength := 0
 	for stack in town.get("garrison", []):
 		if not (stack is Dictionary):
@@ -16854,15 +16412,7 @@ static func _command_risk_field_item(session: SessionStateStoreScript.SessionDat
 		]
 	return item
 
-static func _command_risk_pressure_objective_item(session: SessionStateStoreScript.SessionData, scenario: Dictionary, objective: Dictionary, include_details: bool = true) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _command_risk_pressure_objective_item__gd(session, scenario, objective, include_details)
-	var before := TurnEngine.before_writing(&"OverworldRules._command_risk_pressure_objective_item", [session, scenario, objective, include_details])
-	var result = _command_risk_pressure_objective_item__gd(session, scenario, objective, include_details)
-	TurnEngine.check_writing(&"OverworldRules._command_risk_pressure_objective_item", before, [session, scenario, objective, include_details], result)
-	return result
-
-static func _command_risk_pressure_objective_item__gd(
+static func _command_risk_pressure_objective_item(
 	session: SessionStateStoreScript.SessionData,
 	scenario: Dictionary,
 	objective: Dictionary,
@@ -16900,14 +16450,6 @@ static func _command_risk_pressure_objective_item__gd(
 	return item
 
 static func _command_risk_encounter_objective_item(session: SessionStateStoreScript.SessionData, objective: Dictionary, include_details: bool = true) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _command_risk_encounter_objective_item__gd(session, objective, include_details)
-	var before := TurnEngine.before_writing(&"OverworldRules._command_risk_encounter_objective_item", [session, objective, include_details])
-	var result = _command_risk_encounter_objective_item__gd(session, objective, include_details)
-	TurnEngine.check_writing(&"OverworldRules._command_risk_encounter_objective_item", before, [session, objective, include_details], result)
-	return result
-
-static func _command_risk_encounter_objective_item__gd(session: SessionStateStoreScript.SessionData, objective: Dictionary, include_details: bool = true) -> Dictionary:
 	if _scenario_objective_met(session, objective):
 		return {}
 	var placement_id := String(objective.get("placement_id", ""))
@@ -17024,15 +16566,7 @@ static func _town_command_risk_state(
 		state["front_public_clause"] = String(front_state.get("public_clause", ""))
 	return state
 
-static func _town_command_risk_consequence(town: Dictionary, readiness: int, logistics: Dictionary, recovery: Dictionary, capital_project: Dictionary, objective_anchor: bool) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _town_command_risk_consequence__gd(town, readiness, logistics, recovery, capital_project, objective_anchor)
-	var before := TurnEngine.before_writing(&"OverworldRules._town_command_risk_consequence", [town, readiness, logistics, recovery, capital_project, objective_anchor])
-	var result = _town_command_risk_consequence__gd(town, readiness, logistics, recovery, capital_project, objective_anchor)
-	TurnEngine.check_writing(&"OverworldRules._town_command_risk_consequence", before, [town, readiness, logistics, recovery, capital_project, objective_anchor], result)
-	return result
-
-static func _town_command_risk_consequence__gd(
+static func _town_command_risk_consequence(
 	town: Dictionary,
 	readiness: int,
 	logistics: Dictionary,
@@ -17058,14 +16592,6 @@ static func _town_command_risk_consequence__gd(
 	return "Another quiet day leaves the front open to hostile pressure."
 
 static func _public_enemy_pressure_gain(session: SessionStateStoreScript.SessionData, config: Dictionary) -> int:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _public_enemy_pressure_gain__gd(session, config)
-	var before := TurnEngine.before_writing(&"OverworldRules._public_enemy_pressure_gain", [session, config])
-	var result = _public_enemy_pressure_gain__gd(session, config)
-	TurnEngine.check_writing(&"OverworldRules._public_enemy_pressure_gain", before, [session, config], result)
-	return result
-
-static func _public_enemy_pressure_gain__gd(session: SessionStateStoreScript.SessionData, config: Dictionary) -> int:
 	return max(
 		1,
 		DifficultyRulesScript.adjust_enemy_pressure_gain(
@@ -17075,14 +16601,6 @@ static func _public_enemy_pressure_gain__gd(session: SessionStateStoreScript.Ses
 	)
 
 static func _enemy_config_for_faction(scenario: Dictionary, faction_id: String) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _enemy_config_for_faction__gd(scenario, faction_id)
-	var before := TurnEngine.before_writing(&"OverworldRules._enemy_config_for_faction", [scenario, faction_id])
-	var result = _enemy_config_for_faction__gd(scenario, faction_id)
-	TurnEngine.check_writing(&"OverworldRules._enemy_config_for_faction", before, [scenario, faction_id], result)
-	return result
-
-static func _enemy_config_for_faction__gd(scenario: Dictionary, faction_id: String) -> Dictionary:
 	for config in scenario.get("enemy_factions", []):
 		if config is Dictionary and PlayerRules.controller_id(config) == faction_id:
 			return config
@@ -17104,14 +16622,6 @@ static func _scenario_town_started_enemy(session: SessionStateStoreScript.Sessio
 	return false
 
 static func _town_is_objective_anchor(session: SessionStateStoreScript.SessionData, placement_id: String) -> bool:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _town_is_objective_anchor__gd(session, placement_id)
-	var before := TurnEngine.before_writing(&"OverworldRules._town_is_objective_anchor", [session, placement_id])
-	var result = _town_is_objective_anchor__gd(session, placement_id)
-	TurnEngine.check_writing(&"OverworldRules._town_is_objective_anchor", before, [session, placement_id], result)
-	return result
-
-static func _town_is_objective_anchor__gd(session: SessionStateStoreScript.SessionData, placement_id: String) -> bool:
 	if session == null or placement_id == "":
 		return false
 	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
@@ -17140,14 +16650,6 @@ static func _command_risk_grade_label(severity: int) -> String:
 			return "Steady"
 
 static func _posture_label(posture: String) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _posture_label__gd(posture)
-	var before := TurnEngine.before_writing(&"OverworldRules._posture_label", [posture])
-	var result = _posture_label__gd(posture)
-	TurnEngine.check_writing(&"OverworldRules._posture_label", before, [posture], result)
-	return result
-
-static func _posture_label__gd(posture: String) -> String:
 	match posture:
 		"fortifying":
 			return "fortifying"

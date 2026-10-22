@@ -6,15 +6,12 @@
 // a town's capital project state, the fog grid reads it needs, and the
 // EnemyAdventureRules / ScenarioRules helpers on those paths.
 //
-// The paths whose callees no port has yet throw state::NotPorted where they
-// start (the missing_* functions below), so the GDScript body runs instead:
-// - an enemy config in the scenario's own enemy_factions (an authored
-//   scenario's) reaches the posture items' EnemyTurnRules._raid_threshold_for_strategy;
-// - a player town under threat (town_development_metrics), a raid on a player
-//   town (encounter_commander_threat_label), a town front (_town_front_state);
-// - the authored enemy_pressure_at_least and encounter_resolved defeat
-//   objectives (their objective items);
-// - a fog read scope open.
+// A player town under threat, a raid on it, a town front, the computer players'
+// raid limits and the authored enemy_pressure_at_least and encounter_resolved
+// defeat objectives call the AI turn's ports (Phase 4 slice 4.4). Those two
+// objective types belong to the archived authored scenarios alone, and
+// ScenarioRules._objective_met leaves them to GDScript. An open fog read scope
+// throws state::NotPorted, so the GDScript body runs instead.
 
 #include "aurelion_rules/port/overworld_rules.hpp"
 
@@ -26,6 +23,7 @@
 #include "aurelion_rules/port/overworld_level_rules.hpp"
 #include "aurelion_rules/port/overworld_level_rules_ai.hpp"
 #include "aurelion_rules/port/overworld_rules_ai.hpp"
+#include "aurelion_rules/port/overworld_rules_turn.hpp"
 #include "aurelion_rules/port/player_identity_rules.hpp"
 #include "aurelion_rules/port/scenario_evaluation.hpp"
 #include "aurelion_rules/port/session_view.hpp"
@@ -343,62 +341,6 @@ Atom json_stringify(State &state, const Value &value) {
 	std::vector<Value> open;
 	append_json(state, value, 0, open, json);
 	return state.intern(json);
-}
-
-// --- The functions on these paths that no port has yet. Each throws where its
-// path starts; a later port replaces the body with a call.
-
-// OverworldRules.town_development_metrics (its reinforcement quality, battle
-// readiness and pressure output).
-DictRef missing_town_development_metrics(State &, DictRef, const Value &) {
-	not_ported("OverworldRules.town_development_metrics (a player town under threat)");
-}
-
-// OverworldRules._raid_target_is_objective_anchor (EnemyAdventureRules.target_is_objective_anchor).
-bool missing_raid_target_is_objective_anchor(State &, DictRef, Atom, Atom) {
-	not_ported("OverworldRules._raid_target_is_objective_anchor (EnemyAdventureRules.target_is_objective_anchor)");
-}
-
-// OverworldRules._command_risk_pressure_objective_item (an authored
-// enemy_pressure_at_least defeat objective).
-DictRef missing_command_risk_pressure_objective_item(State &, DictRef, DictRef, DictRef, bool) {
-	not_ported("OverworldRules._command_risk_pressure_objective_item (an enemy_pressure_at_least defeat objective)");
-}
-
-// OverworldRules._command_risk_encounter_objective_item (an authored
-// encounter_resolved defeat objective).
-DictRef missing_command_risk_encounter_objective_item(State &, DictRef, DictRef, bool) {
-	not_ported("OverworldRules._command_risk_encounter_objective_item (an encounter_resolved defeat objective)");
-}
-
-// OverworldRules._enemy_raid_threshold_for_strategy
-// (EnemyTurnRules._raid_threshold_for_strategy: enemy_strategy, the faction's
-// capital state and its town fronts, _town_front_state).
-int64_t missing_enemy_raid_threshold_for_strategy(State &, DictRef, DictRef, Atom) {
-	not_ported("OverworldRules._enemy_raid_threshold_for_strategy (EnemyTurnRules._raid_threshold_for_strategy)");
-}
-
-// OverworldRules._enemy_active_raids (EnemyTurnRules.active_raid_count,
-// EnemyAdventureRules.is_active_pressure_host).
-int64_t missing_enemy_active_raids(State &, DictRef, Atom) {
-	not_ported("OverworldRules._enemy_active_raids (EnemyTurnRules.active_raid_count)");
-}
-
-// OverworldRules._enemy_max_active_raids_for_strategy
-// (EnemyTurnRules._max_active_raids_for_strategy).
-int64_t missing_enemy_max_active_raids_for_strategy(State &, DictRef, DictRef, Atom) {
-	not_ported("OverworldRules._enemy_max_active_raids_for_strategy (EnemyTurnRules._max_active_raids_for_strategy)");
-}
-
-// OverworldRules.encounter_commander_threat_label
-// (EnemyAdventureRules.raid_commander_display_name, commander_recent_outcome_brief).
-Atom missing_encounter_commander_threat_label(State &, DictRef) {
-	not_ported("OverworldRules.encounter_commander_threat_label (a raid on a player town)");
-}
-
-// OverworldRules._town_front_state.
-DictRef missing_town_front_state(State &, DictRef, DictRef) {
-	not_ported("OverworldRules._town_front_state (_town_command_risk_state with its front)");
 }
 
 // --- GDScript functions on these paths outside this group's list, small
@@ -812,13 +754,13 @@ ArrayRef _command_risk_town_items(State &state, DictRef session, ArrayRef daybre
 			continue;
 		}
 		const Projection projection = projection_at(state, session, daybreak_contexts, town_index, town);
-		const DictRef development = missing_town_development_metrics(state, projection.town, dict_value(projection.session));
+		const DictRef development = town_development_metrics(state, projection.town, dict_value(projection.session));
 		const int64_t readiness = gd::int_field(state, development, key::battle_readiness, 0);
 		const Atom defense = town_defense_summary(state, projection.town);
 		const DictRef logistics = dict_field(state, development, key::logistics);
 		const DictRef recovery = dict_field(state, development, key::recovery);
 		const DictRef capital_project = dict_field(state, development, key::capital_project);
-		const bool objective_anchor = missing_raid_target_is_objective_anchor(state, session, key::town, text(state, town, key::placement_id));
+		const bool objective_anchor = _raid_target_is_objective_anchor(state, session, key::town, text(state, town, key::placement_id));
 		int64_t severity = 2;
 		if (gd::int_field(state, threat_state, key::visible_pressuring, 0) > 0 || gd::int_field(state, threat_state, key::siege_progress, 0) > 0) {
 			severity = 5;
@@ -998,12 +940,12 @@ ArrayRef _command_risk_objective_items(State &state, DictRef session, DictRef pr
 		}
 		const Atom type = text(state, objective.ref, key::type);
 		if (type == key::enemy_pressure_at_least) {
-			const DictRef pressure_item = missing_command_risk_pressure_objective_item(state, session, scenario, objective.ref, include_details);
+			const DictRef pressure_item = _command_risk_pressure_objective_item(state, session, scenario, objective.ref, include_details);
 			if (!gd::is_empty(state, pressure_item)) {
 				state.append(items, dict_value(pressure_item));
 			}
 		} else if (type == key::encounter_resolved) {
-			const DictRef encounter_item = missing_command_risk_encounter_objective_item(state, session, objective.ref, include_details);
+			const DictRef encounter_item = _command_risk_encounter_objective_item(state, session, objective.ref, include_details);
 			if (!gd::is_empty(state, encounter_item)) {
 				state.append(items, dict_value(encounter_item));
 			}
@@ -1041,9 +983,9 @@ ArrayRef _command_risk_posture_items(State &state, DictRef session, bool include
 		const Atom faction_id = text(state, config.ref, key::faction_id);
 		const DictRef enemy_state = enemy_state_for_faction(state, session, faction_id);
 		const int64_t current_pressure = gd::int_field(state, enemy_state, key::pressure, 0);
-		const int64_t threshold = missing_enemy_raid_threshold_for_strategy(state, session, config.ref, faction_id);
-		const int64_t active_raids = missing_enemy_active_raids(state, session, faction_id);
-		const int64_t max_raids = missing_enemy_max_active_raids_for_strategy(state, session, config.ref, faction_id);
+		const int64_t threshold = _enemy_raid_threshold_for_strategy(state, session, config.ref, faction_id);
+		const int64_t active_raids = _enemy_active_raids(state, session, faction_id);
+		const int64_t max_raids = _enemy_max_active_raids_for_strategy(state, session, config.ref, faction_id);
 		const Atom posture = text(state, enemy_state, key::posture, key::probing);
 		if (active_raids >= max_raids) {
 			continue;
@@ -1175,7 +1117,7 @@ DictRef _town_command_risk_state(State &state, DictRef session, DictRef town, bo
 		const bool is_public = _raid_is_public(state, session, encounter.ref);
 		const int64_t goal_distance = gd::int_field(state, encounter.ref, key::goal_distance, 9999);
 		const bool is_pressuring = gd::bool_field(state, encounter.ref, key::arrived, false) || goal_distance <= 0;
-		const Atom commander_name = missing_encounter_commander_threat_label(state, encounter.ref);
+		const Atom commander_name = encounter_commander_threat_label(state, encounter.ref);
 		if (is_public) {
 			if (is_pressuring) {
 				state.set(risk, str(key::visible_pressuring), int_value(gd::add(gd::int_field(state, risk, key::visible_pressuring, 0), 1)));
@@ -1214,7 +1156,7 @@ DictRef _town_command_risk_state(State &state, DictRef session, DictRef town, bo
 		state.set(risk, str(key::nearest_goal_distance), int_value(0));
 	}
 	if (include_front) {
-		const DictRef front_state = missing_town_front_state(state, session, town);
+		const DictRef front_state = _town_front_state(state, session, town, state.new_dict());
 		state.set(risk, str(key::front_active), bool_value(gd::bool_field(state, front_state, key::active, false)));
 		state.set(risk, str(key::front_mode), str(text(state, front_state, key::mode)));
 		state.set(risk, str(key::front_faction_id), str(text(state, front_state, key::faction_id)));
