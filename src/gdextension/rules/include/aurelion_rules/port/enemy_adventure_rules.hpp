@@ -5,9 +5,13 @@
 
 #include "aurelion_rules/port/gd.hpp"
 
+#include <cstdint>
+
 namespace aurelion::rules::port::enemy_adventure_rules {
 
+using gd::ArrayRef;
 using gd::Atom;
+using gd::DictRef;
 using state::State;
 using state::Value;
 
@@ -32,5 +36,23 @@ gd::DictRef ai_public_event_log_leak_check(State &state, const Value &public_sur
 Atom _public_reason_from_codes(State &state, gd::ArrayRef reason_codes);
 Atom _public_event_log_text(State &state, Atom text);
 Atom _ai_event_summary(State &state, Atom event_type, Atom faction_label, Atom actor_label, Atom target_label, Atom public_reason, Atom summary_prefix = state::key::empty);
+
+// Phase 4's ports shared with Phase 5's battle ends (enemy_adventure_rules_shared.cpp).
+Atom _ai_hero_task_actor_id_from_raid(State &state, DictRef raid);
+void _ai_hero_task_finish_live_assignment(State &state, DictRef session, Atom faction_id, DictRef raid, Atom task_status, Atom validation);
+DictRef _award_enemy_commander_experience(State &state, DictRef commander_state, int64_t amount);
+Atom _commander_memory_target_kind_for_outcome(State &state, Atom outcome_id, DictRef memory);
+Atom _commander_name_from_source(State &state, const Value &source);
+DictRef _record_commander_adaptive_task_memory(State &state, DictRef commander_state, Atom outcome_id);
+DictRef _with_runtime_spellbook_state(State &state, DictRef base_state, const Value &runtime_state);
+DictRef advance_commander_record(State &state, DictRef commander_state, Atom outcome_id);
+Atom commander_display_name(State &state, const Value &source, bool include_veterancy = true);
+DictRef commander_live_role_state(State &state, const Value &source);
+DictRef commander_target_memory(State &state, const Value &source);
+void sync_commander_state_to_roster(State &state, DictRef session, Atom faction_id, const Value &commander_state, Atom status_override = state::key::empty, Atom active_placement_id = state::key::empty, int64_t recovery_day = -1, Atom last_outcome = state::key::empty);
+
+// Not ported yet: each throws state::NotPorted (phase4_shared_stubs.cpp) until Phase 5's
+// slice 09 ports it.
+ArrayRef _ai_hero_task_prune_live_tasks(State &state, ArrayRef tasks, int64_t day);
 
 } // namespace aurelion::rules::port::enemy_adventure_rules

@@ -162,6 +162,10 @@ Value Backing::call_static(State &state, uint32_t script, uint32_t function, con
 	throw ScriptError(state.text(script) + "." + state.text(function) + ": a host call, and this host runs no GDScript");
 }
 
+Value Backing::call_pure(State &state, uint32_t script, uint32_t function, const Value *args, size_t count) {
+	return call_static(state, script, function, args, count);
+}
+
 TypeRef Backing::builtin_type(uint8_t) {
 	no_host("A new typed Array");
 }
