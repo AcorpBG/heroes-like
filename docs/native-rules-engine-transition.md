@@ -1270,8 +1270,39 @@ a41e38754 Windows binaries; runtime on main 6a8c9a736, 27bee9e26 Windows binarie
   the GDScript fight loop, BattleAiRules and the battle switch's other GDScript copies are deleted, every deleted name
   grepped across `tests/` and `tools/`, with D6's test retirements. Until then a battle change goes into both copies
   (AGENTS.md).
+- **Slices** (owner decision 2026-10-22: the preview first, then the payload builder, then the battle tool; Windows
+  only, lean checks). Each merges to main on its own, from a short-lived branch, with main tagged first (D10). Proof
+  per slice: shadow on the six seeds, native mode against main on the six seeds, the core suite, and whole-game timing
+  on a quiet machine (Phases 4 and 5 paused). Review as in Phase 1.
+  - 2a, the AI's battle preview as one native call (`native-rules-phase2-a-preview-20261022`):
+    `AiHeroRules._simulate_battle` and `_battle_hero` in `core/port/ai_battle_preview.cpp`, switched in the battle
+    table. The scratch session is a native view (SessionData's fields and `meta`), with no SessionData object:
+    `gd::member`, `gd::set_member` and `gd::object_view` also take a Dictionary view (runtime, on main, on top of
+    Phase 5's object views from slice 09, 4d1c1e298 on its branch). The preview's payload
+    path, by static closure beyond the C++ on main: 61 functions, 1,889 lines (BattleRules 47: the
+    encounter payload, its stacks, obstacles, battle context, enemy commander, town captain and field objectives;
+    OverworldRules 6, the battlefront and delivery contexts; EnemyAdventureRules 4, the raid names and strength,
+    which Phase 3 has as file-local C++ copies; AiHeroRules 2; TownBattleRules 1; SessionStateStore's
+    `new_session_data`, which the view replaces). It also calls 12 of Phase 5's slice 09 functions (the town,
+    resource and context lookups), so it builds on slice 09. It reuses Phase 5's HeroProgressionRules specialty normalization
+    (`enemy_states.cpp`) and Phase 3's `_neutral_army` and `army_power`. Its battle end is Phase 5's slice 09
+    (`_finalize_*` native), so 2a merges after it. Then Phase 4's faction turn calls the port directly instead of its
+    pure host call. The read-back fields (`hero_after`, the survivors, `resources_gained`, the resolution) must be
+    shadow-identical. Frozen from 2a's start to its merge (AGENTS.md): the 61 functions it ports, below.
+  - 2b, the payload builder for every caller (`native-rules-phase2-b-payload-20261022`): the rest of
+    `create_battle_payload` (town assaults and defences, battle contexts, the human's battles), `normalize_battle_state`
+    and the end-of-battle numbers; every payload caller switches. Then the battles per second are measured for G2.
+  - 2c, the battle tool (`native-rules-phase2-c-battle-tool-20261022`), only after the owner decides D7 and G2: the
+    backend of `tune.py` and `arena.py`, the native router with each side's weights as data (option (b)), the native
+    unit and ability tables per content revision.
+  - 2d, the exit (`native-rules-phase2-d-exit-20261022`): once `tune.py` and `arena.py` run on the tool, the GDScript
+    fight loop, BattleAiRules and the battle switch's other GDScript copies are deleted with D6's test retirements,
+    every deleted name grepped across `tests/` and `tools/`.
 - **Gate G2:** a battles-per-second target the owner sets (the synthesis proposes 1M battles in 2 h on this machine).
   **Battle-level genetic algorithms (unit stats, battle-AI weights) run at full speed from here.**
+
+**Slice 2a, frozen functions** (2026-10-22, until 2a merges; AGENTS.md; corrected the same day from 32: the first
+count stopped at multi-line signatures): BattleRules 47: `_append_building_with_requirements`, `_apply_hero_battle_boosts`, `_apply_specialty_battle_starts`, `_army_affiliation`, `_army_stack_descriptors`, `_authored_field_objectives`, `_battle_context_target_hero_id`, `_battle_difficulty_value`, `_battle_enemy_army_name`, `_battle_name`, `_build_battle_stack`, `_cohesion_base_for_unit`, `_default_field_objective_pressure_tags`, `_default_field_objective_summary`, `_encounter_enemy_commander_name`, `_encounter_enemy_commander_seed`, `_enemy_army_for_battle`, `_enemy_commander_state`, `_enemy_commander_state_for_battle`, `_enemy_stack_source`, `_enemy_withdrawal_allowed`, `_find_town_at_position`, `_generate_battle_obstacles`, `_new_battle_combat_seed`, `_normalize_command`, `_normalize_enemy_hero_state`, `_normalize_field_objective`, `_normalize_field_objectives`, `_normalize_side_token`, `_normalize_string_array`, `_normalize_town_captain`, `_normalize_unit_abilities`, `_normalized_battle_context`, `_normalized_battle_context_fields`, `_normalized_battlefield_tags`, `_normalized_specialty_focus_ids`, `_normalized_specialty_ranks`, `_normalized_town_buildings`, `_obstacle_cells_clear`, `_obstacle_field_stays_open`, `_player_setup_for_battle`, `_resolved_encounter_placement`, `_titleize_token`, `_town_building_category_counts`, `_town_captain_state`, `_with_army_battlefield_tags`, `create_battle_payload`; OverworldRules 6: `_delivery_encounter_matches_node`, `_resource_site_delivery_interception`, `_town_battlefront_profile`, `delivery_interception_context_for_encounter`, `encounter_display_name`, `town_battlefront_profile`; EnemyAdventureRules 4: `raid_commander_display_name`, `raid_commander_name`, `raid_display_name`, `raid_strength`; AiHeroRules 2: `_battle_hero`, `_simulate_battle`; SessionStateStore 1: `new_session_data`; TownBattleRules 1: `prepare`. `_simulate_battle` is also frozen by Phase 4. `new_session_data` is not ported: the scratch view copies what it sets.
 
 ### Phase A: overworld AI numbers into data (GDScript only, any time after G0)
 
@@ -1872,6 +1903,47 @@ with the day native (1.08x); l1 186 to 174 s, l2 194 to 181 s.
   while games ran. Results: 690, 651, 663 and 686 s, so 688 s on main and 657 s with the day native (1.05x, 4.5% less
   time). l1 180 and 180 s to 173 and 176 s; l2 179 and 180 s to 172 and 175 s. The six games' wall time, set by the
   slowest, went from 181 s to 174 to 177 s. Slice 07's 1.08x was measured beside another session's run.
+
+**Slice 09, frozen functions** (2026-10-22, until slice 09 merges; AGENTS.md; branch `native-phase5-finalize`): the ends
+of a human battle, Phase 1's eight host targets `BattleRules._finalize_victory`, `_finalize_player_battle_loss`,
+`_finalize_stalemate`, `_finalize_enemy_withdrawal`, `_finalize_retreat`, `_finalize_surrender`,
+`_retreat_action_summary` and `_surrender_action_summary`, and what they reach beyond the functions already ported: 114
+functions (ContentService's lookups aside). BattleRules 77: `_add_enemy_treasury_resources`,
+`_apply_active_hero_aftermath_losses`, `_apply_battle_context_stalemate`, `_apply_battle_context_victory`,
+`_apply_collapse_aftermath`, `_apply_collapse_recovery_pressure`, `_apply_delivery_route_aftermath`,
+`_apply_encounter_victory_flags`, `_apply_enemy_victory_specialties`, `_apply_front_pressure_shift`,
+`_apply_player_battle_salvage_reward`, `_apply_town_assault_recovery`, `_apply_town_defense_recovery`,
+`_apply_victory_front_aftermath`, `_apply_victory_mana`, `_apply_victory_recovery`, `_apply_withdrawal_aftermath`,
+`_apply_withdrawal_recovery_pressure`, `_army_strength_from_stacks`, `_army_totals`, `_award_commander_experience`,
+`_battle_context_controller_id`, `_battle_context_resource_placement_id`, `_battle_context_town_placement_id`,
+`_battle_context_trigger_faction_id`, `_battle_enemy_faction_id`, `_battle_exit_animation_snapshot`,
+`_battle_resolution_static_encounter_snapshot`, `_battle_survivor_stacks`, `_battle_victory_rewards`,
+`_beaten_enemy_stacks`, `_build_collapse_aftermath_preview`, `_build_withdrawal_aftermath_preview`,
+`_capture_town_after_assault`, `_collapse_resource_summary`, `_current_battle_encounter_placement`,
+`_enemy_commander_exit_reaction`, `_enemy_commander_state_for_force_sync`, `_enemy_commander_state_with_payload`,
+`_enemy_state_exists`, `_finalize_enemy_withdrawal`, `_finalize_player_battle_loss`, `_finalize_primary_defeat`,
+`_finalize_retreat`, `_finalize_secondary_hero_defeat`, `_finalize_stalemate`, `_finalize_surrender`,
+`_finalize_town_defense_loss`, `_finalize_victory`, `_find_encounter_by_key`, `_find_town_by_placement`,
+`_finish_enemy_battle_task_assignment`, `_is_resource_assault_context`, `_keep_enemy_hero_after_town_capture`,
+`_mark_resolved_encounter`, `_normalize_presentation_speed`, `_normalize_stack_animation_states`,
+`_record_battle_aftermath`, `_record_enemy_commander_battle_continuity`, `_remove_hero_by_id_after_defeat`,
+`_resolve_enemy_commander_aftermath`, `_retreat_action_summary`, `_set_enemy_siege_progress`, `_set_player_hero_state`,
+`_side_faction_id`, `_stabilize_hostile_town_front`, `_station_enemy_commander_after_town_capture`,
+`_surrender_action_summary`, `_sync_enemy_force_from_battle`, `_sync_player_force_from_battle`,
+`_synthetic_battle_encounter_placement`, `_town_assault_recovery_pressure`, `_town_defense_recovery_pressure`,
+`_town_name`, `_town_name_from_placement_id`, `_withdrawal_preview_summary`, `_withdrawal_resource_summary`.
+OverworldRules 17: `_apply_artifact_claim`, `_claim_town`, `_describe_reward_delta`, `_find_resource_node_by_placement`,
+`_rules_profile_add_ms`, `_rules_profile_set`, `_rules_profile_timer`, `_spend_resources`,
+`apply_delivery_interception_outcome`, `apply_reward_bonus`, `apply_town_recovery_pressure`,
+`capture_dwelling_after_guard_victory`, `capture_resource_after_defender_victory`, `capture_town_by_placement`,
+`transition_town_control`, `update_dwelling_guard_after_battle`, `update_resource_defender_after_battle`.
+HeroProgressionRules 7: `_add_experience`, `_apply_command_gain`, `_enqueue_choice_group`, `add_experience`,
+`command_gain_stat`, `experience_with_bonus`, `pending_choice_summary`. HeroCommandRules 5: `_set_holder_stacks`,
+`active_hero_is_primary`, `hand_over_primary`, `keep_hero_troop_from_garrison`, `remove_active_hero_after_defeat`.
+ArtifactRules 2: `owned_artifact_ids`, `select_live_source_reward`. EnemyAdventureRules 2:
+`_commander_name_from_source`, `commander_display_name`. CreatureDwellingRules 1: `placement_from_guard_key`.
+DifficultyRules 1: `scale_reward_resources`. PlayerEliminationRules 1: `human_has_nothing_left`. PlayerIdentityRules 1:
+`defender_controller_id`. Phase 4's freeze covers some of them too.
 
 ### Phase 6: match throughput
 
