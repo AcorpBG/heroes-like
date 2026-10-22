@@ -9,6 +9,8 @@ extends SceneTree
 ## The variants are swapped in memory only: the cached BattleAiRules script is
 ## reloaded with the router from router.py, which forwards each AI call to the
 ## variant playing the acting stack's side. Game files are never written.
+## A plain job ("plain": true) installs no router and compiles no variant: the
+## game's own BattleAiRules plays both sides.
 ##
 ## Game scripts are loaded at runtime: a -s script compiles before autoloads exist.
 
@@ -39,7 +41,7 @@ var _hero_command: Script
 var _ai_heroes: Script
 var _town_development: Script
 var _default_variant: Script
-var _router  # the reloaded BattleAiRules script; untyped so its generated statics resolve at runtime
+var _router  # the reloaded BattleAiRules script, or null in a plain job; untyped so its generated statics resolve at runtime
 var _out: FileAccess
 
 
@@ -83,18 +85,19 @@ func _run() -> int:
 	_ai_heroes = load("res://scripts/core/AiHeroRules.gd")
 	_town_development = load("res://scripts/core/TownDevelopmentRules.gd")
 	var variants := {}
-	for label in (job.get("variants", {}) as Dictionary).keys():
-		var variant := _compile_variant(String(job.variants[label]))
-		if variant == null:
-			printerr("ARENA variant %s does not compile" % label)
+	if not bool(job.get("plain", false)):
+		for label in (job.get("variants", {}) as Dictionary).keys():
+			var variant := _compile_variant(String(job.variants[label]))
+			if variant == null:
+				printerr("ARENA variant %s does not compile" % label)
+				return 3
+			variants[String(label)] = variant
+		_default_variant = variants.get(String(job.get("default_variant", "A")))
+		if not _install_router(String(job.get("router", "")), _default_variant):
 			return 3
-		variants[String(label)] = variant
-	_default_variant = variants.get(String(job.get("default_variant", "A")))
-	if not _install_router(String(job.get("router", "")), _default_variant):
-		return 3
 	# Map and battle setup already call the AI's helpers: route them all to the
 	# default variant until a game installs its sides.
-	_router._arena_install({}, _default_variant)
+	_route({})
 	_emit({"kind": "worker_ready", "boot_ms": Time.get_ticks_msec()})
 	for group in job.get("groups", []):
 		_play_group(group, variants, job.get("orders", [["A", "B"], ["B", "A"]]))
@@ -126,10 +129,16 @@ func _install_router(router_path: String, default_variant: Script) -> bool:
 	return true
 
 
+## The variant of each side ({}: the default one everywhere). A plain job has no router.
+func _route(sides: Dictionary) -> void:
+	if _router != null:
+		_router._arena_install(sides, _default_variant)
+
+
 ## One generated map, made as the skirmish menu makes it, and its battles.
 func _play_group(group: Dictionary, variants: Dictionary, orders: Array) -> void:
 	var started := Time.get_ticks_usec()
-	_router._arena_install({}, _default_variant)
+	_route({})
 	var config = _scenario_select.build_random_map_player_config(
 		String(group.get("map_seed", "arena")), "", "", int(group.get("player_count", 2)), "land", false,
 		String(group.get("map_size", "homm3_small")), _scenario_select.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO,
@@ -227,7 +236,7 @@ func _play_game(base: Dictionary, group: Dictionary, battle: Dictionary, ground:
 	for key in ECHO_KEYS:
 		if battle.has(key):
 			row[key] = battle[key]
-	_router._arena_install({}, _default_variant)
+	_route({})
 	var session = _player_session(base, battle)
 	var kind := String(battle.get("type", ""))
 	var enemy_power := 0.0
@@ -282,7 +291,8 @@ func _play_game(base: Dictionary, group: Dictionary, battle: Dictionary, ground:
 			return
 	# Installed before the battle is built: building it already asks the AI.
 	# Calls tied to no side (shared payload plumbing) always take the default.
-	_router._arena_install({"player": variants[player_variant], "enemy": variants[enemy_variant]}, _default_variant)
+	if _router != null:
+		_route({"player": variants[player_variant], "enemy": variants[enemy_variant]})
 	var payload: Dictionary = {}
 	if kind == "siege":
 		payload = _battle_rules.create_town_assault_payload(session, String(ground.get("town", "")))
@@ -317,7 +327,7 @@ func _play_game(base: Dictionary, group: Dictionary, battle: Dictionary, ground:
 	row["outcome"] = String(report.get("outcome", "")) if report is Dictionary else ""
 	row["rounds"] = int(report.get("rounds", 0)) if report is Dictionary else 0
 	row["end_ledger"] = report.get("casualties", {}) if report is Dictionary else {}
-	row["ai_calls"] = _router._arena_calls.duplicate()
+	row["ai_calls"] = _router._arena_calls.duplicate() if _router != null else {}
 	row["ms"] = (Time.get_ticks_usec() - started) / 1000.0
 	_emit(row)
 
