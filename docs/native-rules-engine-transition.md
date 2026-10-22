@@ -1475,10 +1475,42 @@ both. Switch `HEROES_NATIVE_TURN=gdscript|native|shadow`, log `HEROES_NATIVE_TUR
   calling Phase 3's ports and Phase 5's (from its merge), with battles as host targets and the other 201 not-ported
   functions throwing `state::NotPorted`. The bound on its gain: the turn's share outside battles, about 30% of match
   time, so at most 1.4x for whole games.
-- 4.2, the paths the six seeds do not run: the 201 other functions (3,085 lines), so that no path of the day is left
-  to GDScript.
-- 4.3, battles inside the turn, after Phase 1's merge: `_simulate_battle` and the start of a battle against a human
-  call Phase 1's native payload and resolve, with no host calls.
+  Done 2026-10-22 on the branch (facf320a5 runtime, also for main; ea06c96e5 port; 6298dcb65 Windows binaries). In
+  native mode (`HEROES_NATIVE_TURN=native`; GDScript stays the default until 4.4) the computer players' whole day runs
+  native: 12,500 lines of C++ in `core/port/*_turn*.cpp` and `turn_*.cpp`. Checks, on main with Phases 5 and 1 merged
+  (ade42f86e): native mode identical to main on the six seeds, no day falling back to GDScript; shadow mode on the six
+  seeds and the two coverage seeds, 0 mismatches over 418 functions; core suite 17/17. Before Phase 1's merge, the
+  codec round trip on all 415 days, 0 differences. Whole games, the six seeds' seconds summed, interleaved on a quiet
+  machine: main 609 s (612, 606), native 418 s (420, 416), 1.46x. That is above the 1.4x bound above, because Phase 1's
+  native battles shrank the battles' share of a match.
+  - Battle previews are a pure host target (`TurnEngine.pure_host_call`, `port::Host::pure`, `Backing::call_pure`):
+    the native call writes back, GDScript runs `_simulate_battle`, and the native call reads nothing again. A probe
+    hashed every session field, the session's metadata, the three arguments and every static var of `scripts/core`
+    around each GDScript preview. On the six seeds no field, metadata or argument changed, only nine caches built
+    from content (six of the battle code's, `_damage_spell_memo`, `_unit_strength_memo`,
+    `_runtime_normalized_signatures`). The six seeds make 1,536 previews in 1,432 faction turns (409 computer days,
+    at most 14 a day). As full host calls (`HEROES_NATIVE_TURN_PREVIEW_HOST=full`) the six seeds take 464 s (467,
+    462), 46 s (11%) more. `_start_player_battle` stays a full host call.
+  - Coverage seeds (`rules_parity.py`, run only when `--seeds` names them): `isl-b` reaches `_hold_back` (an army saving
+    for a boat, 13 checks), `pt-f` the random exits of one-way portals (`native_random_exit_check`,
+    `note_native_trip`, 62 checks).
+- 4.2, the paths the six seeds do not run, so that no path of the day is left to GDScript. 4.1 leaves each to a
+  `state::NotPorted` (4.4's run on the owner's save copies checks them):
+  - the 165 functions in `turn_not_ported.cpp`: OverworldRules 45, EnemyAdventureRules 38, EnemyTurnRules 26,
+    ScenarioRules 18, AiHeroRules 5 (`_upgrade_value`, `_attack_player_hero`, `_convert_legacy_host`, ...), 13 more
+    scripts 33;
+  - four guards: `sort()` of values that are not all Strings (EnemyAdventureRules, HeroCommandRules), `to_lower()`
+    of non-ASCII text (EnemyTurnRules), a player town's weekly growth (`OverworldRules.town_weekly_growth`);
+  - Phase 5's two in `normalize_ai_heroes`: an AI hero without its movement, a legacy raid host.
+
+  A NotPorted after the day's first host call is a native failure, and a later faction's turn runs after an earlier
+  one's battles. So 4.2 ports each path, or a check before the day's first write sends the whole day to GDScript.
+  4.2 also folds the 11 functions Phase 5 left with a private copy in Phase 3's AI files
+  (`overworld_rules_ai_recovery.cpp`, `overworld_rules_ai_sites.cpp`).
+- 4.3, battles inside the turn with no host calls. Owner decision 2026-10-22: Phase 2 ports `_simulate_battle` as
+  one native call (`ai_hero_rules::_simulate_battle`, `core/port/ai_battle_preview.cpp`, the signature 4.1's host
+  target has); the turn calls it once it is on main. The start of a battle against a human calls Phase 1's native
+  payload.
 - 4.4, the exit:
   - delete the replaced GDScript; callers outside the turn (UI, day processing, battles) keep a thin wrapper or the
     GDScript copy under the two-copies rule (AGENTS.md);

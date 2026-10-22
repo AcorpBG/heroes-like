@@ -116388,15 +116388,15 @@
     {
       "id": "native-rules-phase4-01-day-call-20261022",
       "title": "Phase 4: the computer players' day in one native call",
-      "status": "pending",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "EnemyTurnRules.run_enemy_turn and AiHeroRules.run_faction_turn native with the 330 not-ported functions the six seeds run (6,066 lines); battles (AiHeroRules._simulate_battle and _start_player_battle, the callers of the frozen BattleRules.create_battle_payload) are host targets; the other 201 not-ported functions throw NotPorted. Frozen to the merge: 1,074 functions (PLAN.md).",
-      "updatedAt": "2026-10-22T05:35:00Z"
+      "notes": "Done on branch native-phase4-faction-turn: ea06c96e5 port, facf320a5 runtime (pure host calls; also for main), 6298dcb65 Windows binaries. Native mode (HEROES_NATIVE_TURN=native) runs the computer players' whole day native; battle previews are a pure host target. On main ade42f86e (Phases 5 and 1 merged): native identical to main on the six seeds, no GDScript fallback; shadow on the six seeds plus coverage seeds isl-b (_hold_back) and pt-f (random portal exits), 0 mismatches over 418 functions; core suite 17/17; codec round trip 0 differences on 415 days (before Phase 1's merge). Whole games, six seeds summed, interleaved: main 609 s, native 418 s (1.46x); previews as full host calls 464 s.",
+      "updatedAt": "2026-10-22T13:10:00Z"
     },
     {
       "id": "native-rules-phase4-02-rare-paths-20261022",
@@ -116408,8 +116408,8 @@
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "The 201 not-ported functions the six seeds do not run (3,085 lines), so no path of the day is left to GDScript.",
-      "updatedAt": "2026-10-22T05:35:00Z"
+      "notes": "The paths 4.1 leaves to state::NotPorted: 165 functions in turn_not_ported.cpp, four guards (non-String sorts, non-ASCII to_lower, a player town's weekly growth) and Phase 5's two in normalize_ai_heroes (an AI hero without movement, a legacy raid host); each ported or caught by a check before the day's first write. Also folds Phase 5's 11 private copies in Phase 3's AI files.",
+      "updatedAt": "2026-10-22T13:10:00Z"
     },
     {
       "id": "native-rules-phase4-03-battles-20261022",
@@ -116421,8 +116421,8 @@
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "After Phase 1's merge: _simulate_battle and the start of a battle against a human call Phase 1's native payload and resolve.",
-      "updatedAt": "2026-10-22T05:35:00Z"
+      "notes": "Battles in the turn with no host calls: _simulate_battle calls Phase 2's native port (ai_hero_rules::_simulate_battle, owner decision 2026-10-22) once it is on main; the start of a battle against a human calls Phase 1's native payload.",
+      "updatedAt": "2026-10-22T13:10:00Z"
     },
     {
       "id": "native-rules-phase4-04-exit-20261022",
