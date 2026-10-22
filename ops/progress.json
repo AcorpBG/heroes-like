@@ -116206,15 +116206,15 @@
     {
       "id": "native-rules-phase2-b-payload-20261022",
       "title": "Native rules Phase 2b: the payload builder for every caller",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "branch `native-phase2-payload`: the payload builder for every caller (`create_battle_payload` and the town assault, resource defence and dwelling guard payloads), `normalize_battle_state` and `battle_payload_can_resume`, switched in the battle table; the end-of-battle numbers are slice 09's C++. Then battles per second measured for G2. Frozen until it merges: BattleRules 18 (transition doc, Phase 2, \"Slice 2b, frozen functions\").",
-      "updatedAt": "2026-10-22T14:30:00Z"
+      "notes": "branch `native-phase2-payload`: the payload builder for every caller (`create_battle_payload` and the town assault, resource defence and dwelling guard payloads), `normalize_battle_state` and `battle_payload_can_resume`, switched in the battle table; the end-of-battle numbers are slice 09's C++. Then battles per second measured for G2. Frozen until it merged, two copies since: BattleRules 18 (transition doc, Phase 2, \"Slice 2b, frozen functions\"). Completed 2026-10-22: battle shadow on the six seeds 81,039,773 checks, 0 mismatches (`create_battle_payload` 1,536); a probe of the six switched functions on generated maps (27 town assaults, 1,020 resource defences, 1,020 dwelling guards, 171 resumes) 315,419 checks, 0 mismatches; turn shadow 1,766,016 checks, 0 mismatches; native against main identical on 6/6 seeds, turn native and default; core suite 17/17. G2 measured: arena `--plain` standard suite, 480 games (240 battles both ways) on 24 workers, the battle native: 54.2 s on main, 54.2 s with 2a, 53.7 s with 2b, about 8.9 games/s; per game on a worker about 900 ms, of which the session rebuild 698 ms, the payload 30, normalize 7, the fight 32 and the rest 133, so the battle itself is about 69 ms (measured before 4.2 merged). Proposed: the synthesis's 1M battles in 2 h (about 139 battles/s, about 16 times the arena now), measured end to end by `tune.py` on `battle_sim_cli`.",
+      "updatedAt": "2026-10-22T23:30:00Z"
     },
     {
       "id": "native-rules-phase2-c-battle-tool-20261022",
