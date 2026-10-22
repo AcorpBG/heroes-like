@@ -116200,8 +116200,8 @@
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Owner decision 2026-10-21: beside Phase 1 on branch native-phase5-day, merged once, G3 skipped, Windows only, lean checks. Inventory and boundary (transition doc, Phase 5): 440 functions / 6,020 lines reached; on l1 day processing 186 ms of a 1,408 ms day (closing normalize 106, _finalize_action_result 71); whole-state conversion 545 ms a day, so view and patch through the port bridge: two native calls per day around the AI turn plus normalize_overworld_state, sessions as views written back by DayEngine.gd, content from ContentService's cached documents. Switch HEROES_NATIVE_DAY, log HEROES_NATIVE_DAY_LOG, registry core/port/day_registry.cpp. Static closure of the reach (paths AI matches never run included): about 799 functions / 14,260 lines (712 / 9,100 first, corrected); slices port the paths AI matches run, and a path they never run throws state::NotPorted before any side effect so the switch runs the GDScript body. Order: 01, 06a, 04, 05, 03, 06b, 02, 07. A slice's functions are frozen from its start to the merge (AGENTS.md). _finalize_* in BattleRules waits for the Phase 1 merge.",
-      "updatedAt": "2026-10-21T23:00:00Z"
+      "notes": "Owner decision 2026-10-21: beside Phase 1 on branch native-phase5-day, merged once, G3 skipped, Windows only, lean checks. Inventory and boundary (transition doc, Phase 5): 440 functions / 6,020 lines reached; on l1 day processing 186 ms of a 1,408 ms day (closing normalize 106, _finalize_action_result 71); whole-state conversion 545 ms a day, so view and patch through the port bridge: two native calls per day around the AI turn plus normalize_overworld_state, sessions as views written back by DayEngine.gd, content from ContentService's cached documents. Switch HEROES_NATIVE_DAY, log HEROES_NATIVE_DAY_LOG, registry core/port/day_registry.cpp. Static closure of the reach (paths AI matches never run included): about 799 functions / 14,260 lines (712 / 9,100 first, corrected); slices port the paths AI matches run, and a path they never run throws state::NotPorted before any side effect so the switch runs the GDScript body. Order: 01, 06a, 04, 05, 03, 06b, 02, 07. A slice's functions are frozen from its start to the merge (AGENTS.md). _finalize_* in BattleRules waits for the Phase 1 merge. Slices 01 to 07 merged to main 2026-10-22 (slice 08), native by default; _finalize_* (slice 09) after Phase 1's merge.",
+      "updatedAt": "2026-10-22T11:30:00Z"
     },
     {
       "id": "native-rules-phase5-01-boundary-fog-20261021",
@@ -116297,6 +116297,19 @@
     {
       "id": "native-rules-phase5-08-exit-20261021",
       "title": "Native day processing 08: exit and the single merge",
+      "status": "completed",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Owner decision 2026-10-22: Phase 5 merges after its checks. Completed 2026-10-22: main tagged pre-native-phase5-day, branch native-phase5-day merged. HEROES_NATIVE_DAY stays, native by default (also for an unknown value, with an error); gdscript is the way back, shadow the check. 359 functions keep two copies (AGENTS.md; transition doc, Phase 5, Slice 08); 11 also keep a private copy in Phase 3's AI files, folded by Phase 4. Checks: a human-seat game (medium, 3 players, 12 days through OverworldShell and the end-turn confirmation) identical to main in shadow (1,139 day checks, 0 mismatches) and native mode; the dry run changed nothing in 39 confirmations; day-6 saves of main and the branch loaded by both, identical to day 12; edge cases (townless human, rivals' towns taken, non-ASCII names) identical; shadow on the six seeds after merging main's container fill 19,826 day checks, 0 mismatches; native mode identical to main on the six seeds; core suite 17/17. Whole games on the six seeds, main/change/change/main with Phases 1 and 4 paused: 690, 651, 663, 686 s (1.05x). Windows only; the Linux libraries in bin/ wait for the Linux pass.",
+      "updatedAt": "2026-10-22T11:30:00Z"
+    },
+    {
+      "id": "native-rules-phase5-09-finalize-20261022",
+      "title": "Native day processing 09: _finalize_* for human battles",
       "status": "pending",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
@@ -116304,8 +116317,8 @@
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "The single merge with the owner, main tagged first.",
-      "updatedAt": "2026-10-21T21:00:00Z"
+      "notes": "Owner decision 2026-10-21: after Phase 1's merge, on a new branch from main. _finalize_* in BattleRules for human battles, the last of Phase 5's scope.",
+      "updatedAt": "2026-10-22T11:30:00Z"
     },
     {
       "id": "native-rules-phase3-search-kernel-20261021",

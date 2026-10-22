@@ -2,11 +2,13 @@ extends RefCounted
 ## The native day engine's switch (docs/native-rules-engine-transition.md,
 ## Phase 5). HEROES_NATIVE_DAY picks who runs the day-processing functions
 ## ported so far (src/gdextension/rules/core/port/day_registry.cpp):
-## - gdscript, the default: their GDScript bodies, renamed <name>__gd.
-## - native: the native ports.
+## - native, the default (an unknown value too, with an error): the native ports.
+## - gdscript: their GDScript bodies, renamed <name>__gd; the way back if the
+##   native day goes wrong in a real game.
 ## - shadow: the GDScript bodies, with every call checked against the native
 ##   port: the result with its types, key order and container identities, and
 ##   for a function that writes into its arguments, the arguments afterwards.
+##   One six-seed shadow run checks a change to a function with two copies.
 ## A session reaches the native port as a view: a Dictionary of its fields, the
 ## very overworld, battle and flags Dictionaries among them, and its metadata
 ## under "meta". After a native call the session takes the view's fields back.
@@ -37,12 +39,13 @@ static var mode: int = _mode_from_environment()
 static func _mode_from_environment() -> int:
 	var name := OS.get_environment("HEROES_NATIVE_DAY").strip_edges().to_lower()
 	if name == "":
-		return GDSCRIPT
-	if not MODES.has(name):
-		push_error("HEROES_NATIVE_DAY=%s is none of gdscript, native, shadow; running GDScript." % name)
-		return GDSCRIPT
-	# Without the library every native call fails loudly; available() says why.
-	NativeRules.available()
+		name = "native"
+	elif not MODES.has(name):
+		push_error("HEROES_NATIVE_DAY=%s is none of gdscript, native, shadow; running native." % name)
+		name = "native"
+	if name != "gdscript":
+		# Without the library every native call fails loudly; available() says why.
+		NativeRules.available()
 	return int(MODES[name])
 
 ## The native port's result.
