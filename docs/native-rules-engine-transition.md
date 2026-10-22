@@ -1631,6 +1631,25 @@ it is a native failure, so shadow mode counts both. Switch `HEROES_NATIVE_TURN=g
   one native call (`ai_hero_rules::_simulate_battle`, `core/port/ai_battle_preview.cpp`, the signature 4.1's host
   target has); the turn calls it once it is on main. The start of a battle against a human calls Phase 1's native
   payload.
+  Done 2026-10-22 on the branch, on main 618f11309 with Phase 2a (bd1a88620 port, 0bed12196 Windows binaries).
+  - 2a's merge already made the turn call its preview directly and removed that host target.
+  - `AiHeroRules._start_player_battle`, a computer hero's attack on a human's town or hero, is ported in
+    `ai_hero_rules_turn_fights.cpp` and checked in the turn table. It calls 2a's `BattleRules.create_battle_payload`
+    port with the session's view and sets the view's `battle` and `game_state`, which the turn writes back as it does
+    every field. 2b is not needed: its payloads (a town assault, a defended site, a dwelling's guard) are the human's.
+  - The turn calls no GDScript. The turn table has no hosts, `turn_hosts.cpp` and `.hpp` are gone, and `TurnEngine.gd`
+    loses `host_point`, `host_call`, `pure_host_call` and `PURE_TARGETS`. One host call stays possible: with profiling
+    on (`HEROES_PROFILE_LOG`), the payload's `ProfileLog.emit_general`, after which a `state::NotPorted` that day is a
+    native failure, as in 2a's preview.
+  - Checks:
+    - A scratch probe (deleted): a generated small map with a human; a strong computer hero by the human's town
+      (battle on day 1) and by the human's hero in the open (day 2). gdscript, native and shadow mode gave the same
+      session, battle payload and turn result. Shadow: 3,461 checks over 197 functions, 0 mismatches, both
+      `_start_player_battle` calls and the whole days checked (before 4.3 those days' checks stopped at the host call).
+    - Turn shadow on the six seeds: 1,766,016 checks over 302 functions, 0 mismatches, 0 errors (the eight
+      not-ported calls are Phase 5's townless-player days). AI-only games never start a battle against a human.
+    - Native mode identical to main on the six seeds; core suite 17/17.
+  - Merged to main 2026-10-22, after main was tagged `pre-native-phase4-faction-turn-4.3` (D10).
 - 4.4, the exit:
   - delete the replaced GDScript; callers outside the turn (UI, day processing, battles) keep a thin wrapper or the
     GDScript copy under the two-copies rule (AGENTS.md);
@@ -2125,7 +2144,7 @@ Sizes are the proposal's unmeasured agent-day guesses, useful only to compare ph
 | D6 | **Decided 2026-10-20:** tests that call private battle functions the port deletes are retired at the Phase 1 merge by the `docs/rmg-test-retirement.md` process; the parity corpus and the core suite cover battles | Phase 1 |
 | D7 | **Decided 2026-10-22:** battle and match simulators run outside Godot, as command-line tools built from the same core: `battle_sim_cli` is Phase 2's battle tool, and Phase 8's match runner is wanted. There was never an owner rule against a simulator outside Godot; that wording in PLAN.md was an agent's, and it is removed | Phase 2 |
 | D8 | **Decided 2026-10-20:** Phase 1 lives on one port branch, `native-phase1-battle` on GitHub, rebased on main at least weekly and before each slice, and merges to main once, when every battle is native and identical; it is dropped if checkpoint G1 stays under 5x after the interface fix (AGENTS.md "Native rules port") | Phase 1 |
-| D9 | Where owner-save copies for the codec proof live (outside git); asked when a slice first needs owner saves | Phase 1 |
+| D9 | **Decided 2026-10-22:** copies of the owner's five saves on this computer (Mireclaw Zhorra Fenwake days 1 and 14; Veilmourn Ivara Blacktide days 5 and 10 and the autosave; save version 9) and the two generated maps they reference live in `D:\Games\godot\heroes-like-save-copies` (outside git, with `SHA256SUMS` and a README). The originals are never touched; runs read the copies with an isolated user profile | Phase 4 (4.4) |
 | D10 | **Decided 2026-10-20:** main is tagged before each port merge. Owner 2026-10-21: no waiting period after it (the 7 days without behaviour commits was removed) | each merge |
 
 ## 9. Risks and how the plan contains them

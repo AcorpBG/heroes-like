@@ -4442,9 +4442,12 @@ static func _attack_player_hero__gd(session: SessionStateStoreScript.SessionData
 ## Battles against the human are played by the human, exactly like any other
 ## battle against an enemy hero.
 static func _start_player_battle(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, battle_context: Dictionary, summary: String, target: Dictionary) -> Dictionary:
-	if _turn_engine_mode == TurnEngine.SHADOW:
-		TurnEngine.host_point(&"AiHeroRules._start_player_battle", [session, context, index, battle_context, summary, target])
-	return _start_player_battle__gd(session, context, index, battle_context, summary, target)
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _start_player_battle__gd(session, context, index, battle_context, summary, target)
+	var before := TurnEngine.before_writing(&"AiHeroRules._start_player_battle", [session, context, index, battle_context, summary, target])
+	var result = _start_player_battle__gd(session, context, index, battle_context, summary, target)
+	TurnEngine.check_writing(&"AiHeroRules._start_player_battle", before, [session, context, index, battle_context, summary, target], result)
+	return result
 
 static func _start_player_battle__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, battle_context: Dictionary, summary: String, target: Dictionary) -> Dictionary:
 	var entry: Dictionary = session.overworld.encounters[index]

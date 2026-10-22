@@ -116466,15 +116466,15 @@
     {
       "id": "native-rules-phase4-03-battles-20261022",
       "title": "Phase 4: battles inside the turn native",
-      "status": "pending",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Battles in the turn with no host calls: _simulate_battle calls Phase 2's native port (ai_hero_rules::_simulate_battle, owner decision 2026-10-22) once it is on main; the start of a battle against a human calls Phase 1's native payload.",
-      "updatedAt": "2026-10-22T13:10:00Z"
+      "notes": "Merged to main 2026-10-22, main tagged pre-native-phase4-faction-turn-4.3 first (bd1a88620 port, 0bed12196 Windows binaries). Phase 2a's merge made the turn call its native preview (ai_hero_rules::_simulate_battle). 4.3 ports AiHeroRules._start_player_battle (a computer hero's attack on a human's town or hero) onto 2a's create_battle_payload port and checks it in the turn table; the turn calls no GDScript: no turn hosts, turn_hosts.cpp/.hpp gone, TurnEngine.gd without host_point/host_call/pure_host_call. 2b is not needed. Only with profiling on does the payload's ProfileLog.emit_general make a host call. Checks: scratch probe on a generated small map with a human (town attack day 1, hero attack day 2), gdscript, native and shadow identical, shadow 3,461 checks over 197 functions, 0 mismatches; turn shadow on the six seeds 1,766,016 checks over 302 functions, 0 mismatches, 0 errors (the 8 not-ported calls are Phase 5's townless-player days); native identical to main on the six seeds; core suite 17/17. Linux libraries wait for the Linux pass.",
+      "updatedAt": "2026-10-22T20:00:00Z"
     },
     {
       "id": "native-rules-phase4-04-exit-20261022",

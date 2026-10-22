@@ -87,6 +87,9 @@ int64_t _max_affordable_with_market(State &state, DictRef session, DictRef town,
 DictRef _meet_hero(State &state, DictRef session, DictRef context, int64_t index, DictRef plan);
 void _record_hero_defeat(State &state, DictRef session, Atom controller, DictRef entry);
 ArrayRef _recruit_town(State &state, DictRef session, DictRef context, int64_t index, DictRef reserve);
+// Slice 4.3: an AI hero's attack on a player's hero or town, which opens the
+// battle the player fights (BattleRules.create_battle_payload, Phase 2a's port).
+DictRef _start_player_battle(State &state, DictRef session, DictRef context, int64_t index, DictRef battle_context, Atom summary, DictRef target);
 void _store_entry(State &state, DictRef session, int64_t index, DictRef entry);
 DictRef _take_artifact(State &state, DictRef session, DictRef context, int64_t index, DictRef plan);
 DictRef _take_garrison(State &state, DictRef session, DictRef entry, DictRef town, DictRef context, bool fresh_hire = false);
