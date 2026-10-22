@@ -1383,7 +1383,17 @@ Atom trim_prefix(State &state, Atom atom, Atom prefix) {
 	return state.intern(std::string_view(state.text(atom)).substr(state.text(prefix).size()));
 }
 
+// A Dictionary stands for the object it is a view of (a session the rules
+// built, such as the AI's battle preview): its fields are the members, and a
+// member it lacks is one the object lacks.
 Value member(State &state, const Value &object, Atom property) {
+	if (object.kind == Kind::Dict) {
+		Value found;
+		if (!state.lookup(object.ref, str(property), found)) {
+			fail("Invalid access to property or key '" + state.text(property) + "' on a base object of type 'Object'.");
+		}
+		return found;
+	}
 	if (object.kind != Kind::Opaque) {
 		fail("Invalid access to property or key '" + state.text(property) + "' on a base object of type '" + type_name(object) + "'.");
 	}
@@ -1391,6 +1401,13 @@ Value member(State &state, const Value &object, Atom property) {
 }
 
 void set_member(State &state, const Value &object, Atom property, const Value &value) {
+	if (object.kind == Kind::Dict) {
+		if (!state.has(object.ref, str(property))) {
+			fail("Invalid assignment of property or key '" + state.text(property) + "' on a base object of type 'Object'.");
+		}
+		state.set(object.ref, str(property), value);
+		return;
+	}
 	if (object.kind != Kind::Opaque) {
 		fail("Invalid assignment of property or key '" + state.text(property) + "' on a base object of type '" + type_name(object) + "'.");
 	}
@@ -1398,6 +1415,9 @@ void set_member(State &state, const Value &object, Atom property, const Value &v
 }
 
 DictRef object_view(State &state, const Value &object) {
+	if (object.kind == Kind::Dict) {
+		return object.ref;
+	}
 	if (object.kind != Kind::Opaque) {
 		fail(std::string("A view of a value of type '") + type_name(object) + "', which is not an object.");
 	}

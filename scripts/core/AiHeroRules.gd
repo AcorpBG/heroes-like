@@ -23,6 +23,8 @@ const AdventureRules = preload("res://scripts/core/EnemyAdventureRules.gd")
 const WaterTravel = preload("res://scripts/core/WaterTravelRules.gd")
 const NativeRules = preload("res://scripts/core/NativeRules.gd")
 const AiEngine = preload("res://scripts/core/AiEngine.gd")
+const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
+static var _battle_engine_mode: int = BattleEngine.mode
 
 const AI_HERO_KEY := "ai_hero"
 # Battle settings (terrain, length, rewards) for fights against an AI hero. The
@@ -3710,6 +3712,16 @@ static func _battle_key(entry: Dictionary, defender: Dictionary, battle_number: 
 ## Pure: the live session is not touched. stop_below_creatures > 0 ends the
 ## battle unresolved (not won) once the hero has fewer creatures standing.
 static func _simulate_battle(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, defender: Dictionary, battle_number: int, stop_below_creatures: int = 0) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _simulate_battle__gd(session, context, entry, defender, battle_number, stop_below_creatures)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"AiHeroRules._simulate_battle", [session, context, entry, defender, battle_number, stop_below_creatures])
+	var before := BattleEngine.before_writing(&"AiHeroRules._simulate_battle", [session, context, entry, defender, battle_number, stop_below_creatures])
+	var result = _simulate_battle__gd(session, context, entry, defender, battle_number, stop_below_creatures)
+	BattleEngine.check_writing(&"AiHeroRules._simulate_battle", before, [session, context, entry, defender, battle_number, stop_below_creatures], result)
+	return result
+
+static func _simulate_battle__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, defender: Dictionary, battle_number: int, stop_below_creatures: int = 0) -> Dictionary:
 	var hero := _battle_hero(entry)
 	var defender_copy := defender.duplicate(true)
 	defender_copy["x"] = 0

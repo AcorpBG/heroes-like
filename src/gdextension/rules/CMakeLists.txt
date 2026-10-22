@@ -100,6 +100,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/ability_helpers.cpp
 	core/port/action_playback.cpp
 	core/port/action_pressure.cpp
+	core/port/ai_battle_preview.cpp
 	core/port/ai_hero_rules.cpp
 	core/port/ai_hero_rules_candidates.cpp
 	core/port/ai_hero_rules_defense.cpp
@@ -130,10 +131,14 @@ add_library(aurelion_rules_core STATIC
 	core/port/battle_ai_spell_choice.cpp
 	core/port/battle_ai_spell_scores.cpp
 	core/port/battle_auto_resolve.cpp
+	core/port/battle_commanders.cpp
+	core/port/battle_context.cpp
 	core/port/battle_damage_rules_ai.cpp
 	core/port/battle_footprint.cpp
+	core/port/battle_payload.cpp
 	core/port/battle_rules.cpp
 	core/port/battle_rules_ai.cpp
+	core/port/battle_stacks.cpp
 	core/port/board_setup.cpp
 	core/port/commander_payload.cpp
 	core/port/common_mine_rules.cpp

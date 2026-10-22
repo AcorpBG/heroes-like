@@ -374,6 +374,8 @@ Atom replace(State &state, Atom text, Atom key, Atom with);
 Atom trim_prefix(State &state, Atom text, Atom prefix);
 
 // object.property of an object value (an opaque Variant): the host reads it.
+// A Dictionary there is a view the rules built (an object_view's shape): its
+// fields are the members, and set_member writes only a field it has.
 Value member(State &state, const Value &object, Atom property);
 // object.property = value: the host writes it into the object's view, and the
 // view into the object with the call's write-back.
@@ -381,6 +383,7 @@ void set_member(State &state, const Value &object, Atom property, const Value &v
 // An object value's view (Backing::object_view): a session as the day ports
 // take it (session_view.hpp), its metadata under "meta". One Dict for the
 // whole call: member() and set_member() of the object read and write it too.
+// A Dictionary is its own view.
 DictRef object_view(State &state, const Value &object);
 // The object value a view stands for: a host call (call_static) takes the
 // session object, not its view. A Dict that is no view is a ScriptError.

@@ -1,5 +1,6 @@
 #include "aurelion_rules/port/registry.hpp"
 
+#include "aurelion_rules/port/ai_battle_preview.hpp"
 #include "aurelion_rules/port/artifact_rules.hpp"
 #include "aurelion_rules/port/battle_action_playback.hpp"
 #include "aurelion_rules/port/battle_ai_rules.hpp"
@@ -29,6 +30,7 @@ using gd::str;
 using state::Kind;
 using state::State;
 using state::Value;
+namespace aih = ai_hero_rules;
 namespace art = artifact_rules;
 namespace br = battle_rules;
 namespace ai = battle_ai_rules;
@@ -85,6 +87,8 @@ Value nil() {
 	{ #script "." #fn, arity, mutates, [](State &s, const Value *a) -> Value { (void)s; (void)a; body; } }
 
 const Function kFunctions[] = {
+	// The preview reads the session's day alone: no view of the session is built.
+	PORT(AiHeroRules, _simulate_battle, 6, true, return dict_value(aih::_simulate_battle_on_day(s, gd::to_int(s, gd::member(s, a[0], state::key::day)), D(a, 2), D(a, 3), I(a, 4), I(a, 5)))),
 	PORT(ArtifactRules, _spell_modifier_matches, 2, false, return bool_value(art::_spell_modifier_matches(s, D(a, 0), D(a, 1)))),
 	PORT(ArtifactRules, spell_affinity_records, 2, true, return array_value(art::spell_affinity_records(s, D(a, 0), D(a, 1)))),
 	PORT(ArtifactRules, spell_mana_cost_delta, 2, true, return int_value(art::spell_mana_cost_delta(s, D(a, 0), D(a, 1)))),
@@ -755,6 +759,8 @@ constexpr ScriptStatic kSharedMemos[] = {
 // defend). After each one the bridge reads everything again
 // (PortBridge::call_static).
 constexpr Host kHosts[] = {
+	// create_battle_payload (battle_payload.cpp), only while profiling is on.
+	HOST(ProfileLog, emit_general, 7),
 	// _evaluate_outcome (player_orders.cpp).
 	HOST(BattleRules, _finalize_victory, 1),
 	// _evaluate_outcome (player_orders.cpp) and _run_enemy_turn (enemy_turn.cpp).
