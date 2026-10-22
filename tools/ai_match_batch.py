@@ -33,8 +33,9 @@ when the batch completes.
 
 Matches run the computer players' day native (HEROES_NATIVE_TURN=native, docs/native-rules-engine-
 transition.md, Phase 4) unless the environment names another mode; plan.json records it. A day that
-reaches a path the native port leaves to GDScript runs in GDScript and prints a NATIVE FALLBACK line:
-each match row counts them by entry and path (native_fallbacks), and summary.md totals them.
+reaches a path the native port leaves to GDScript runs in GDScript and prints a NATIVE FALLBACK line
+per native call it replaced: each match row counts them by entry and path (native_fallbacks), and
+summary.md totals them.
 
 --weights W1,W2,... gives each seat its overworld AI weight set in every match (seat order, one per
 player): "default", the name of a set in content/ai_hero_weights.json, or a .json file holding one
@@ -399,7 +400,8 @@ def finish(out: Path, run: Running, timed_out: bool, keep_maps: set[str]) -> dic
             except ValueError:
                 pass
     errors = [line.strip() for line in text.splitlines() if "SCRIPT ERROR" in line][:5]
-    # "NATIVE FALLBACK: <entry> ran in GDScript, not ported: <path>", one line a day.
+    # "NATIVE FALLBACK: <entry> ran in GDScript, not ported: <path>", one line per native call
+    # (one a day for EnemyTurnRules.run_enemy_turn).
     fallbacks: Counter = Counter()
     for line in text.splitlines():
         if line.startswith(FALLBACK_MARK):
@@ -660,10 +662,10 @@ def write_summary(out: Path, plan: dict) -> None:
         fallbacks.update(row.get("native_fallbacks", {}))
     if fallbacks:
         games = sum(1 for row in rows if row.get("native_fallbacks"))
-        lines.append(f"- Days run in GDScript (native fallback): {sum(fallbacks.values())} in {games} games: "
+        lines.append(f"- Native calls run in GDScript instead (NATIVE FALLBACK): {sum(fallbacks.values())} in {games} games: "
                      + ", ".join(f"{key} {count}" for key, count in fallbacks.most_common()))
     elif rows and plan.get("native_turn") == "native":
-        lines.append("- Days run in GDScript (native fallback): none.")
+        lines.append("- Native calls run in GDScript instead (NATIVE FALLBACK): none.")
     slow = sorted((r for r in ok if r["summary"]["slowest_ai_day_ms"] > SLOW_DAY_MS), key=lambda r: -r["summary"]["slowest_ai_day_ms"])
     if slow:
         worst = ", ".join(f"{r['run']} {r['summary']['slowest_ai_day_ms'] / 1000:.0f} s" for r in slow[:5])
