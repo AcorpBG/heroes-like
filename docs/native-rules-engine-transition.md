@@ -1366,6 +1366,71 @@ order, the tavern and spawn RNG, and the decision and battle logs. Proof adds a 
 (`to_dict(from_dict(d)) == d` with types and key order) on every day of the six seeds and on owner-approved save copies.
 AI code is frozen during the slice; the Phase A numbers stay open.
 
+Owner decision 2026-10-22: Phase 4 starts now, on its own branch `native-phase4-faction-turn`, merged once like Phases
+1 and 5; Windows only, lean checks. The goal is whole-game speed. Phase 3's C++ does in about 30 s what GDScript did in
+about 180 s, but GDScript calls it 2M times a match and each call reads the session again; Phase 4 removes those
+calls. Phase 5 merges day processing first and Phase 1 battles next; the branch takes each from main as it lands.
+Phase 5's ports of EnemyTurnRules and EnemyAdventureRules (its slice 04) are this phase's to build on. Each slice's AI
+code is frozen from its start to the merge (AGENTS.md names the functions); the Phase A numbers
+(`content/ai_hero_weights.json`) stay open.
+
+**Inventory** (2026-10-22, main 4a9f8b178). Six seeds, with a probe counting every function of `scripts/core` and
+ContentService inside the computer players' turns. The probe slows the turn, so the turn's shares read high.
+- Time: the computer players' turns (`EnemyTurnRules.run_enemy_turn`) take 55% of match time and their hero days 47%.
+  Within them, battle previews take 19% (`AiHeroRules._simulate_battle`, Phase 1's engine), real battles 4% and towns
+  2.8%. The 2.07M calls from GDScript into Phase 3's port take 22%. Most of that is the bridge reading the session
+  again for each call. The calls come from GDScript's planning and moving: `_in_hero_zone` 570k, `_site_doors` and
+  `_site_door_key` 419k each, `_site_door_value` 79k, `_explored` 68k, `_hero_guards` 56k, `_candidate` 54k.
+- Battles in the turn: `_simulate_battle` is pure. It runs a scratch session through `BattleRules.create_battle_payload`
+  and `BattleAutoResolveRules.resolve_active_battle`, and a real battle applies the preview's outcome. A battle against
+  a human starts through `create_battle_payload`. Everything of Phase 1's that a turn runs is under these two.
+- Reach of `run_enemy_turn` with the two battle entries left to GDScript: 1,074 functions, 16,800 lines (the static
+  call closure, plus 12 that the probe saw called by name). The six seeds run 768 of them, 11,416 lines:
+
+  | | Static | Run by the six seeds |
+  |---|---:|---:|
+  | On main (Phase 3's port) | 320 / 3,127 | 275 / 2,551 |
+  | On Phase 5's branch (on main at its merge) | 223 / 4,523 | 163 / 2,799 |
+  | Not ported | 531 / 9,151 | 330 / 6,066 |
+
+  Not ported and run: AiHeroRules 111 / 2,588, EnemyAdventureRules 43 / 1,182, ArtifactRules 37 / 629, OverworldRules
+  23 / 387, ContentService 22 / 178, EnemyTurnRules 18 / 219, HeroCommandRules 14 / 188, HeroProgressionRules 11 / 101,
+  WaterTravelRules 8 / 58, FactionTownServices 6 / 84, 15 more scripts 37 / 452.
+
+**Boundary.** The computer players' day is one native call: `EnemyTurnRules.run_enemy_turn` runs every faction turn,
+`AiHeroRules.run_faction_turn` included. The session is a view through the port bridge. It loads lazily, once, and is
+written back at the end. Until Phase 1's merge, the two battle entries are host targets (`gd::call_static`: write
+back, run the GDScript, reload lazily): `AiHeroRules._simulate_battle` and `AiHeroRules._start_player_battle`, the
+two callers of `BattleRules.create_battle_payload`, which is frozen battle code and takes no host wrapper. A path the port leaves out throws `state::NotPorted`, and the whole day's
+computer turns run in GDScript. That fallback is only correct before the day's first host call, so shadow mode counts
+both. Switch `HEROES_NATIVE_TURN=gdscript|native|shadow`, log `HEROES_NATIVE_TURN_LOG`, registry
+`core/port/turn_registry.cpp`, files `core/port/<script>_turn.cpp` (the claims note names each function's file).
+
+**Slices.**
+- 4.0, runtime on main first, with no behaviour change: a long call reads each value of a container from Godot once.
+  A backed Dictionary went back to Godot on every lookup. A backed Dictionary or Array that a call keeps reading is
+  filled instead, once the call has read it as often as it has entries. Done 2026-10-22 (main 13a7a0c9a source,
+  c9c25b540 Windows binaries): native mode identical to main on the six seeds, core suite 17/17. Phase 3's calls are
+  short, so whole games are not faster yet; the long calls of 4.1 need it.
+- 4.1, the computer players' day in one native call: the 330 not-ported functions the six seeds run (6,066 lines),
+  calling Phase 3's ports and Phase 5's (from its merge), with battles as host targets and the other 201 not-ported
+  functions throwing `state::NotPorted`. The bound on its gain: the turn's share outside battles, about 30% of match
+  time, so at most 1.4x for whole games.
+- 4.2, the paths the six seeds do not run: the 201 other functions (3,085 lines), so that no path of the day is left
+  to GDScript.
+- 4.3, battles inside the turn, after Phase 1's merge: `_simulate_battle` and the start of a battle against a human
+  call Phase 1's native payload and resolve, with no host calls.
+- 4.4, the exit:
+  - delete the replaced GDScript; callers outside the turn (UI, day processing, battles) keep a thin wrapper or the
+    GDScript copy under the two-copies rule (AGENTS.md);
+  - owner-approved save copies through the codec (D9);
+  - the six-seed check, the core suite and whole-game timing;
+  - main tagged (D10), then the merge.
+- Proof per slice: shadow mode on the six seeds; the codec round trip (`to_dict(from_dict(d)) == d`, types and key
+  order) on every day of the six seeds; before each push, native mode against main on the six seeds and the core
+  suite. Review: none under about 300 lines, otherwise one reviewer on the functions shadow mode did not reach.
+  Whole-game timing runs interleaved (main, change, change, main) on a quiet machine: Phases 1 and 5 pause for it.
+
 ### Phase 5: day processing
 
 `normalize_overworld_state`, `commit_active_hero`, town occupation and recovery, income, growth, reserve deliveries,
@@ -1562,6 +1627,160 @@ the six seeds; times from l1, a large four-player game to day 90, on a machine s
   value by value (the resource nodes, the fog grids) stay near their GDScript cost, the computing ones (enemy states
   and forecast, scenario evaluation, the blocked-tile index) gain several times; Phase 5 alone gives under 1.1x on such
   games, and Phase 6, keeping the session native across days, removes the conversion.
+
+**Static reach** (2026-10-21): the static call closure of the Phase 5 entries, paths AI matches never run included (the
+human player's towns, heroes and artifacts, scenario scripts), is about 712 functions / 9,100 lines, 1.5 times the
+probed reach. Each slice ports the whole closure of its entries, so no fallback to GDScript is needed. Slices go in the
+order of their cost in AI matches: 01, 06, 05, 04, 03, 02, 07.
+- Corrected after slice 01 (the first count missed functions reached through `load()` accessors): about 799 functions /
+  14,260 lines, 1.8 times the probed reach; the risk forecast's closure alone is 483 / 8,276 and `evaluate_session`'s
+  443 / 7,345. So a slice ports the paths AI matches run and leaves the others to GDScript: a native function throws
+  `state::NotPorted` where such a path starts, before any side effect, and the switch runs the GDScript body (shadow
+  mode counts the call as not ported). Slice 06 splits into 06a (the blocked-tile index and the resource nodes) and
+  06b (the rest, 164 / 2,444, almost nothing in AI matches). Order: 01, 06a, 04, 05, 03, 06b, 02, 07.
+
+**Slice 01, fog** (2026-10-21, branch `native-phase5-day`): `DayEngine.gd` hands sessions over as views; the day
+registry has `OverworldRules._normalize_fog_of_war` and its 54 functions (OverworldRules 17, ArtifactRules 20,
+HeroProgressionRules 8 copied from Phase 1, OverworldLevelRules 7, HeroCommandRules 2). Checks: shadow on the six seeds
+4,047 calls, 0 mismatches; core suite in shadow mode 17/17, 182 calls, 0 mismatches; native mode against main on the
+six seeds identical (every daily digest and match record); core suite 17/17. One call on a 108x108 two-level map:
+12.8 ms in GDScript, 4.1 ms native.
+
+**Slice 06a, blocked tiles and resource nodes** (2026-10-21, branch `native-phase5-day`): the day registry adds
+`OverworldRules._build_blocked_tile_index` (it writes the cached scenery layers and the resolved-encounter set into the
+session's metadata) and `_normalize_resource_nodes`, with 31 more functions (OverworldRules 22, CommonMineRules 5,
+MineRules 3, NativeTransitRules 1). Ports that other ports share are in one file per script; their 63 functions shared
+with Phase 3 are on main (above). Checks: shadow on the six seeds 10,243 calls, 0 mismatches; native mode against main
+on the six seeds identical; core suite 17/17.
+
+**Slice 04, enemy states** (2026-10-21, branch `native-phase5-day`): the day registry adds
+`EnemyTurnRules.normalize_enemy_states` for every caller: the computer players' states, raid hosts and commander
+rosters, with the 126 functions listed above (EnemyAdventureRules 60, HeroProgressionRules 25, EnemyTurnRules 15,
+PlayerIdentityRules 7, DifficultyRules 6, AiHeroRules 5, SpellRules 4, ScenarioSelectRules 2, OverworldRules 1,
+OverworldLevelRules 1); the paths AI matches never run throw `state::NotPorted`, and so does `String()` of a float or a
+container (`gd::stringify_or_fallback`). Checks: shadow on the six seeds 2,511 calls, 0 mismatches; native mode against
+main on the six seeds identical; core suite 17/17.
+
+**Slice 05, scenario evaluation and elimination** (2026-10-21, branch `native-phase5-day`): the day registry adds
+`ScenarioRules.evaluate_session` and `PlayerEliminationRules.apply_daily` for every caller, with the 20 functions listed
+above (ScenarioRules 5, ScenarioScriptRules 5, PlayerEliminationRules 4, GeneratedScenarioObjectiveRules 3, AiHeroRules
+3; AiHeroRules' two shared ones on main) and slice 04's. Generated maps have no script hooks and one objective,
+defeating every rival, which counts only with a human player. Left to GDScript: script hooks and pending reinforcements,
+other objective types, a scenario's completion, a human game's rival count, the human's townless warning and defeat, a
+computer player's removal (4 calls on the six seeds), and a script state whose hook list is not yet an `Array[String]`
+(the value layer makes a typed Array only from one it holds). Checks: shadow on the six seeds `evaluate_session` 1,652
+calls, `apply_daily` 409, 0 mismatches; native mode against main on the six seeds identical; core suite 17/17.
+
+**Slice 03, hero commit** (2026-10-22, branch `native-phase5-day`): the day registry adds
+`HeroCommandRules.commit_active_hero` for every caller: the active hero's overworld mirrors (position, army,
+movement) written back into the player's roster, the hero normalized as a hire is, and the mirrors rebuilt from the
+roster entry, with the 17 functions listed above and slices 01, 04 and 05's. The six it shares with Phase 3 are
+Phase 3's, from main. Checks: shadow on the six seeds 2,442 calls, 0 mismatches; core suite in shadow mode 17/17,
+92 calls, 0 mismatches; native mode against main on the six seeds identical; core suite 17/17.
+
+**Slice 06b, the rest of normalize_overworld_state** (2026-10-22, branch `native-phase5-day`): the day registry adds
+`OverworldRules.normalize_overworld_state` for every caller: the session's fields and heroes, its towns (occupation,
+recovery, fronts, capital projects, garrison heroes), resource and artifact nodes, transit networks and boats, blocked
+tiles, fog, the command briefing and risk forecast and the scenario state, with the 80 functions listed above and the
+earlier slices'; it records the runtime signature in `_runtime_normalized_signatures`. The scenario script state's hook
+list is built as `Array[String]` natively (`gd::new_typed_array`, on main f6d6d178c); before that, the untyped list of a
+new or loaded session sent 80% of the calls to GDScript. Left to GDScript: a session without towns or resource nodes, an
+artifact still to be drawn from a reward table, town fields of an odd type, a human primary hero missing from the
+roster, the garrison migration, generated rewards other than transit objects, the risk forecast's raid and objective
+items and a player town under threat, `to_lower()` of non-ASCII text, JSON edge cases and `_fog_grids` with a fog read
+scope open. Checks: shadow on the six seeds `normalize_overworld_state` 1,986 calls, 0 mismatches, none left to GDScript
+(19,826 day checks in all, 0 mismatches); core suite in shadow mode 17/17, 115 calls, 0 mismatches (3 left to GDScript:
+enemy configs without player records); native mode against main on the six seeds identical; core suite 17/17.
+
+**Slice 02, the day's economy** (2026-10-22, branch `native-phase5-day`): `OverworldRules.end_turn` is two native calls
+around the AI turn (`_run_enemy_turn_cycle`, GDScript): `_end_turn_open_day` closes the old day (the closing normalize,
+the hero commit) and opens the new one: town occupation and recovery, town, hero and site income scaled by difficulty,
+weekly growth and site musters, the heroes' daily refresh (movement, mana) and reserve deliveries, with the 24 functions
+listed above. Left to GDScript: a player town's weekly growth (`_growth_tick_town`), a player reserve delivery's arrival
+(interception), towns or nodes that are no Array, and the debug rules profile. Checks: shadow on the six seeds
+`_end_turn_open_day` 409 calls, 0 mismatches; core suite in shadow mode 17/17, 20 calls, 0 mismatches (1 left to
+GDScript: a player town's growth); native mode against main on the six seeds identical; core suite 17/17.
+
+**Slice 07, the day's close** (2026-10-22, branch `native-phase5-day`): `_end_turn_close_day` (elimination, the action
+result, the closing normalize, the day's summaries and the computer players' public event log with its leak check) and
+`_finalize_action_result` for every caller, with the 21 functions listed above. Sessions are views and no native state
+outlives a call, so `OverworldShell.gd` and the session-meta caches invalidate nothing. Left to GDScript: an action's
+scenario check narrowed to its event facts (`evaluate_session_for_event`, only the active hero's own actions), the human
+paths of slice 05 (a human game's rival count, the townless warning), JSON edge cases in the leak check and the debug
+rules profile. Checks: shadow on the six seeds `_end_turn_close_day` 405 calls and `_finalize_action_result` 409, 0
+mismatches (4 left to GDScript: a computer player's removal, slice 05); core suite in shadow mode 17/17, 9 calls, 0
+mismatches (40 human paths left to GDScript); native mode against main on the six seeds identical; core suite 17/17.
+Timing, from the native check on the six seeds (beside another session's parity run): whole games 728 s on main, 674 s
+with the day native (1.08x); l1 186 to 174 s, l2 194 to 181 s.
+
+**Slice 08, the merge** (2026-10-22; owner decision 2026-10-22: "Phase 5 merges after its checks"; main tagged
+`pre-native-phase5-day` at cf890f9c2 before the merge):
+- The switch stays (coordinator, 2026-10-22). `HEROES_NATIVE_DAY` unset runs the day native, and so does an unknown
+  value, with an error. `gdscript` is the owner's way back if the native day goes wrong in a real game. `shadow`, with
+  `HEROES_NATIVE_DAY_LOG`, is the check. Every ported function keeps its GDScript body (`<name>__gd`) for the paths
+  the port leaves to GDScript, so the switch costs almost nothing.
+- Two copies: 359 functions have a C++ port that the day calls and a GDScript body that the paths the port leaves out,
+  `gdscript` mode, the UI, human actions and battles call. A behaviour change to one goes into both copies in the same
+  commit, plus one six-seed shadow run of the day switch (AGENTS.md). 63 of them are the shared helpers that Phase 3's
+  AI port also calls, already under its rule. The 8 HeroProgressionRules functions marked "Phase 1's port, copied"
+  above are also in Phase 1's branch. The slices' frozen lists end at this merge, but Phase 4's freeze (AGENTS.md)
+  covers many of these functions until its own merge.
+  - OverworldRules (126): `_add_recruit_growth`, `_add_resources`, `_advance_all_town_occupations`, `_advance_all_town_recovery`, `_advance_player_reserve_deliveries`, `_advance_town_occupation`, `_advance_town_recovery`, `_append_generated_body_tiles_to_blocked_index`, `_apply_hero_reveal`, `_apply_site_reveal`, `_blank_project_vulnerability_penalties`, `_blank_visibility_grid`, `_blocked_scenery_layer`, `_build_blocked_scenery_layer`, `_build_blocked_tile_index`, `_build_fog_payload`, `_build_scenario_army_state`, `_clear_resource_site_delivery`, `_command_risk_field_item`, `_command_risk_forecast`, `_command_risk_forecast_from_normalized_session`, `_command_risk_grade_label`, `_command_risk_items`, `_command_risk_logistics_items`, `_command_risk_objective_items`, `_command_risk_player_town_daybreak_contexts`, `_command_risk_posture_items`, `_command_risk_town_items`, `_compact_enemy_activity_events`, `_copy_resource_runtime_metadata`, `_copy_town_runtime_metadata`, `_count_grid`, `_describe_recruit_delta`, `_describe_resource_delta`, `_duplicate_visibility_grid`, `_end_turn_close_day`, `_end_turn_muster_summary`, `_end_turn_open_day`, `_end_turn_resolution_summary`, `_end_turn_town_economy_summary`, `_enemy_activity_line`, `_enemy_activity_public_text`, `_evaluate_scenario_state`, `_finalize_action_result`, `_find_encounter_by_placement`, `_find_town_by_placement`, `_fog_grids`, `_fog_grids_uncached`, `_fog_state_ready`, `_generated_body_tiles_for_placement`, `_grid_cell`, `_map_object_blocks_body_tiles`, `_map_object_footprint_origin`, `_map_object_for_resource_node`, `_map_object_world_body_tiles`, `_mark_runtime_normalized`, `_merge_visibility_grids`, `_migrate_generated_transit_meanings`, `_nearest_town_for_controller`, `_normalize_active_town_visit_context`, `_normalize_artifact_nodes`, `_normalize_command_briefing`, `_normalize_command_risk_forecast`, `_normalize_delivery_completion_counts`, `_normalize_enemy_states`, `_normalize_fog_of_war`, `_normalize_generated_runtime_materialization`, `_normalize_live_resource_stockpile`, `_normalize_recruit_payload`, `_normalize_resource_nodes`, `_normalize_scenario_resources`, `_normalize_scenario_state_rules`, `_normalize_town_front_state`, `_normalize_town_recovery_state`, `_normalize_towns`, `_normalize_visibility_grid`, `_player_hero_states`, `_player_heroes_daily_income`, `_project_dependency_ids`, `_project_player_town_at_daybreak`, `_raid_is_public`, `_reduce_command_risk_items`, `_refresh_all_player_heroes_for_new_day`, `_refresh_blocked_tile_index`, `_resolved_lookup_entry`, `_resource_keys_for_payload`, `_resource_node_blocks_body_tiles`, `_resource_node_has_runtime_object_contract`, `_resource_node_matches_controller`, `_resource_site_control_income_for_day`, `_resource_site_delivery_target_label`, `_resource_site_is_persistent`, `_resource_site_is_repeatable`, `_resource_site_weekly_recruits`, `_reveal_all_current_fog_sources`, `_reveal_current_fog_sources`, `_runtime_normalization_signature`, `_set_grid_cell`, `_short_player_text`, `_tile_key`, `_town_building_bonus_total`, `_town_capital_project_ids`, `_town_capital_project_recovery_relief`, `_town_capital_project_state`, `_town_command_risk_state`, `_town_matches_controller`, `_town_recovery_relief_rating`, `_weighted_recruit_value`, `_world_tiles_from_payload_array`, `apply_controlled_resource_site_musters`, `controlled_resource_site_income`, `derive_map_size`, `describe_enemy_activity`, `encounter_key`, `fog_for_level`, `held_site_vision_radius`, `hero_level`, `hero_position`, `is_encounter_resolved`, `is_tile_visible`, `is_weekly_growth_day`, `normalize_overworld_state`, `refresh_fog_of_war`, `resolved_encounter_lookup`, `resource_node_is_present`, `town_strategic_role`.
+  - EnemyAdventureRules (67): `_active_commander_map`, `_ai_event_summary`, `_apply_commander_army_metadata`, `_apply_commander_memory_metadata`, `_apply_commander_record_metadata`, `_apply_commander_role_metadata`, `_army_continuity_status`, `_army_continuity_summary`, `_army_headcount`, `_army_strength`, `_base_enemy_army`, `_commander_renown_from_record`, `_commander_veterancy_rank_from_record`, `_faction_commander_ids`, `_fallen_hero_settled`, `_hero_starting_spell_ids`, `_is_army_continuity_payload`, `_merge_unique_strings`, `_normalize_army_payload`, `_normalize_command_payload`, `_normalize_commander_roster_entries`, `_normalize_commander_roster_entry`, `_normalize_commander_status`, `_normalize_enemy_hero_sighting_records`, `_normalize_enemy_progression`, `_normalize_enemy_scouted_target_records`, `_normalize_resource_defender_commander_states`, `_normalize_string_array`, `_normalize_town_defender_commander_states`, `_normalized_commander_army_continuity`, `_normalized_commander_memory`, `_normalized_commander_record`, `_normalized_commander_role_state`, `_normalized_commander_target_kind_counts`, `_normalized_specialty_focus_ids`, `_normalized_specialty_ranks`, `_placement_resolved`, `_preferred_enemy_specialty_id`, `_public_event_log_text`, `_public_reason_from_codes`, `_raid_is_public`, `_resolved_encounter_lookup`, `_resource_has_ai_defender`, `_sync_specialty_pick`, `_sync_unit_strength_memo`, `_town_has_ai_defender`, `_unit_strength_value`, `ai_public_event_log`, `ai_public_event_log_entry`, `ai_public_event_log_leak_check`, `build_raid_commander_state`, `build_roster_commander_state`, `commander_army_brief`, `commander_army_continuity`, `commander_army_status`, `commander_army_summary`, `commander_memory_brief`, `commander_memory_summary`, `commander_record_summary`, `commander_roster_for_faction`, `commander_veterancy_label`, `ensure_raid_army`, `normalize_all_commander_rosters`, `normalize_commander_roster`, `normalize_enemy_known_world_memory`, `normalize_raid_armies`, `sync_commander_army_continuity`.
+  - HeroProgressionRules (33): `_build_choice_group`, `_distinct_specialty_count`, `_enqueue_missing_choice_groups`, `_merge_bonuses`, `_normalize_pending_choices`, `_normalize_specialties`, `_normalize_specialties_in`, `_normalize_specialty_id_list`, `_offer_order`, `_rank_bonuses`, `_rank_in_array`, `_reconcile_pending_choices`, `_resolve_bonus_key`, `_specialty_catalog`, `_specialty_is_available`, `_specialty_row`, `_sum_bonus`, `aggregate_bonuses`, `available_specialty_ids`, `choose_specialty`, `command_path`, `current_pending_choice`, `daily_income_bonus`, `ensure_hero_progression`, `growth_seed`, `has_specialty`, `mana_max_bonus`, `max_rank_for_specialty`, `max_specialties_per_hero`, `raw_pending_choices_remaining`, `specialties`, `specialty_definition`, `specialty_rank`.
+  - ArtifactRules (22): `_append_inventory_artifact`, `_apply_bonus_payload`, `_artifact_exists`, `_artifact_is_owned`, `_artifact_spell_modifier_records`, `_blank_bonus_totals`, `_blank_equipped_slots`, `_compatible_equipment_slots`, `_first_empty_slot_from_candidates`, `_merge_resources`, `_merge_school_resistance`, `_register_equipped_candidate`, `_set_states_for_equipped`, `_string_array`, `aggregate_bonuses`, `artifact_set_insignia_state`, `artifact_set_record`, `artifact_slot`, `build_artifact_nodes`, `ensure_hero_artifacts`, `normalize_artifact_nodes`, `normalize_hero_artifacts`.
+  - EnemyTurnRules (15): `_blank_resource_pool`, `_default_raid_encounter_ids_for_faction`, `_default_spawn_points_for_faction`, `_enemy_faction_config_with_runtime_defaults`, `_enemy_faction_configs_for_session`, `_enemy_faction_configs_with_runtime_defaults`, `_find_state`, `_normalize_enemy_states_body`, `_normalize_posture`, `_normalize_rebuild_pressure_request`, `_normalize_resource_pool`, `_normalize_string_array`, `_owned_town_entries`, `_town_controller_faction_id`, `normalize_enemy_states`.
+  - HeroCommandRules (14): `_hero_index_by_id`, `_normalize_army`, `_normalize_authored_specialties`, `_normalize_movement`, `_normalize_player_hero`, `_normalize_town_garrison_heroes`, `_replace_hero_in_array`, `_sync_active_hero_mirror`, `active_hero`, `commit_active_hero`, `new_growth_seed`, `normalize_session`, `scout_row_half_width`, `scouting_radius_for_hero`.
+  - NativeTransitRules (10): `_network_colour_key`, `_portal_contract_error`, `assign_network_colours`, `contract_error`, `is_dead_end`, `is_native`, `network_index`, `nodes_by_id`, `normalize_legacy_session`, `validate`.
+  - PlayerIdentityRules (9): `controller_id`, `enemy_configs`, `faction_id`, `has_human_seat`, `identity_fields`, `normalize_compatibility`, `player`, `raid_controller_id`, `town_controller_id`.
+  - GeneratedRewardRules (8): `_gate_site`, `_hash32`, `_node`, `_pick`, `_roll`, `boat_tile`, `is_skipped`, `resolve`.
+  - OverworldLevelRules (8): `canonical_spatial_records`, `hero_level`, `level_count`, `level_of`, `on_level`, `position`, `query_level`, `town_entrance`.
+  - DifficultyRules (6): `_default_difficulty_id`, `_scale_amount`, `normalize_difficulty`, `normalize_session`, `scale_income_resources`, `scale_resource_payload`.
+  - ScenarioRules (6): `_objective_met`, `evaluate_session`, `normalize_scenario_state`, `objective_definitions`, `objectives_for_session`, `scenario_record_for_session`.
+  - CommonMineRules (5): `block_tiles`, `body_tiles`, `entry_tile`, `origin`, `resource`.
+  - ScenarioScriptRules (5): `_join_messages`, `_retry_pending_reinforcements`, `_sorted_hooks`, `normalize_script_state`, `process_hooks`.
+  - SpellRules (5): `_normalize_spell_ids`, `ensure_hero_spellbook`, `mana_max_from_command`, `mana_max_from_hero`, `refresh_daily_mana`.
+  - AiHeroRules (4): `active_hero_count`, `is_ai_hero`, `migrate_legacy_raids`, `normalize_ai_heroes`.
+  - PlayerEliminationRules (4): `applies`, `apply_daily`, `heroes_held`, `towns_held`.
+  - GeneratedScenarioObjectiveRules (3): `definitions`, `progress`, `uses_kind`.
+  - MineRules (3): `block_tiles`, `origin`, `resource`.
+  - ScenarioFactory (2): `_build_army_state`, `_normalize_resources`.
+  - TownDevelopmentRules (2): `convert_reserves`, `migrate_town`.
+  - SessionStateStore (1): `normalize_launch_mode`.
+  - WaterTravelRules (1): `normalize`.
+- Not folded: 11 of them also have a private copy in Phase 3's AI port (`overworld_rules_ai_recovery.cpp`,
+  `overworld_rules_ai_sites.cpp`): `_describe_recruit_delta`, `_find_encounter_by_placement`,
+  `_nearest_town_for_controller`, `_normalize_town_front_state`, `_normalize_town_recovery_state`,
+  `_sync_unit_strength_memo`, `_town_building_bonus_total`, `_town_capital_project_recovery_relief`,
+  `_town_matches_controller`, `_town_recovery_relief_rating`, `_weighted_recruit_value`. Slices 02 and 06b planned to
+  fold them here. They stay apart because the day's versions leave odd values to GDScript (`gd::stringify_or_fallback`,
+  `state::NotPorted`), and in an AI call that fails the call. Phase 4, whose one call runs both, folds them; until then
+  a change to one of them goes into all three copies.
+- Checks on the merge form:
+  - A human seat. A generated medium map with 3 players, played for 12 days through `OverworldShell`: each day the
+    human builds, recruits and walks a hero, then ends the turn through the confirmation. Run on main, and on the
+    branch in shadow and in native mode: the session was identical to main's after every action and every end of day
+    (23 digests). Shadow made 1,139 day checks with 0 mismatches. The human paths the port leaves out ran their
+    GDScript: the action result and its scenario check, 136 calls each; the day's close, 11; a player town's growth, 1.
+  - The end-turn confirmation's dry run (`OverworldShell._current_end_turn_warning`) never changed the session, in
+    any of the 39 dry runs, nor did cancelling it. Sessions are views and no native state outlives a call, so there
+    is nothing for it to invalidate.
+  - Save and load, both ways. Main and the branch each saved on day 6, and each build loaded both saves and played on
+    to day 12. All four games were identical at every step, and the two saves differ only in `saved_at_unix`.
+  - The edge cases the slices left to GDScript, on a small 2-player map, in shadow and native mode against main, all
+    identical: the human's towns given to the rival (9 days townless, with a battle), the rivals' towns given to the
+    human (the scenario completes on the first action), and non-ASCII town and hero names.
+  - After merging main's container fill (Phase 4, slice 4.0), shadow on the six seeds: 19,826 day checks, 0
+    mismatches, 0 errors; 4 computer-player removals left to GDScript (slice 05).
+  - Native mode, the default, against main cf890f9c2: identical on 6/6 seeds (415 daily digests and the match
+    records). Core suite 17/17 on Windows. The Linux libraries in `bin/` wait for the Linux pass; a Linux build needs
+    them, as it has since Phase 3 for the AI.
+- Speed. Whole games on the six seeds, against main cf890f9c2. Six at once with the editor binary, in the order main,
+  change, change, main, with Phases 1 and 4 paused. A process sampler saw no other Godot process at any sample;
+  Defender, the desktop app and Explorer briefly passed 20% of a core, and the System process took about 1.6 cores
+  while games ran. Results: 690, 651, 663 and 686 s, so 688 s on main and 657 s with the day native (1.05x, 4.5% less
+  time). l1 180 and 180 s to 173 and 176 s; l2 179 and 180 s to 172 and 175 s. The six games' wall time, set by the
+  slowest, went from 181 s to 174 to 177 s. Slice 07's 1.08x was measured beside another session's run.
 
 ### Phase 6: match throughput
 

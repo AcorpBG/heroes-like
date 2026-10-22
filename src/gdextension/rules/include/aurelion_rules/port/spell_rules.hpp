@@ -119,4 +119,7 @@ Atom _status_terms(State &state, DictRef status_effect);
 Atom _modifier_summary(State &state, DictRef modifiers);
 Atom _signed_modifier_label(State &state, int64_t amount);
 
+// A hero's mana at the start of a day (day_economy.cpp).
+gd::DictRef refresh_daily_mana(State &state, gd::DictRef hero_state);
+
 } // namespace aurelion::rules::port::spell_rules

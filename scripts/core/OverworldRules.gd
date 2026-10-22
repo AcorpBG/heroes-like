@@ -31,6 +31,8 @@ const VISIBLE_TILES_KEY := "visible_tiles"
 const EXPLORED_TILES_KEY := "explored_tiles"
 const TOWN_VISION_RADIUS := 8
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
+const DayEngine = preload("res://scripts/core/DayEngine.gd")
+static var _day_engine_mode: int = DayEngine.mode
 const ACTIVE_TOWN_PLACEMENT_KEY := "active_town_placement_id"
 const COMMAND_BRIEFING_KEY := "command_briefing"
 const COMMAND_RISK_FORECAST_KEY := "command_risk_forecast"
@@ -275,6 +277,18 @@ static func _raid_is_public(session: SessionStateStoreScript.SessionData, encoun
 	return _enemy_adventure_rules()._raid_is_public(session, encounter)
 
 static func normalize_overworld_state(session: SessionStateStoreScript.SessionData) -> void:
+	if _day_engine_mode == DayEngine.GDSCRIPT:
+		normalize_overworld_state__gd(session)
+	elif _day_engine_mode == DayEngine.NATIVE:
+		DayEngine.native_writing(&"OverworldRules.normalize_overworld_state", [session])
+		if DayEngine.not_ported():
+			normalize_overworld_state__gd(session)
+	else:
+		var before := DayEngine.before_writing([session])
+		normalize_overworld_state__gd(session)
+		DayEngine.check_writing(&"OverworldRules.normalize_overworld_state", before, [session], null)
+
+static func normalize_overworld_state__gd(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
 		return
 	if _normalized_read_scope_depth > 0 and String(session.session_id) == _normalized_read_scope_session_id:
@@ -1477,6 +1491,24 @@ static func execute_prevalidated_route(
 	return result
 
 static func end_turn(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var opened := _end_turn_open_day(session)
+	var enemy_turn_result: Dictionary = _run_enemy_turn_cycle(session)
+	return _end_turn_close_day(session, opened, enemy_turn_result)
+
+## end_turn up to the AI turn: the closing normalize, the new day's economy
+## and its messages.
+static func _end_turn_open_day(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _day_engine_mode == DayEngine.GDSCRIPT:
+		return _end_turn_open_day__gd(session)
+	if _day_engine_mode == DayEngine.NATIVE:
+		var native_result = DayEngine.native_writing(&"OverworldRules._end_turn_open_day", [session])
+		return _end_turn_open_day__gd(session) if DayEngine.not_ported() else native_result
+	var before := DayEngine.before_writing([session])
+	var result = _end_turn_open_day__gd(session)
+	DayEngine.check_writing(&"OverworldRules._end_turn_open_day", before, [session], result)
+	return result
+
+static func _end_turn_open_day__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if not (
 		bool(session.get_meta(SESSION_UNTOUCHED_BETWEEN_DAYS_META, false))
 		and int(session.get_meta(CLOSING_NORMALIZE_DAY_META, -1)) == int(session.day)
@@ -1545,7 +1577,39 @@ static func end_turn(session: SessionStateStoreScript.SessionData) -> Dictionary
 	var delivery_messages := _advance_player_reserve_deliveries(session)
 	if not delivery_messages.is_empty():
 		messages.append("Reserve deliveries %s." % "; ".join(delivery_messages))
-	var enemy_turn_result: Dictionary = _run_enemy_turn_cycle(session)
+	return {
+		"messages": messages,
+		"occupation_messages": occupation_messages,
+		"recovery_messages": recovery_messages,
+		"weekly_growth_messages": weekly_growth_messages,
+		"site_muster_messages": site_muster_messages,
+		"delivery_messages": delivery_messages,
+		"total_income": total_income,
+		"movement_after": movement_after,
+	}
+
+## end_turn after the AI turn: elimination, the action result, the closing
+## normalize and the day's summaries.
+static func _end_turn_close_day(session: SessionStateStoreScript.SessionData, opened: Dictionary, enemy_turn_result: Dictionary) -> Dictionary:
+	if _day_engine_mode == DayEngine.GDSCRIPT:
+		return _end_turn_close_day__gd(session, opened, enemy_turn_result)
+	if _day_engine_mode == DayEngine.NATIVE:
+		var native_result = DayEngine.native_writing(&"OverworldRules._end_turn_close_day", [session, opened, enemy_turn_result])
+		return _end_turn_close_day__gd(session, opened, enemy_turn_result) if DayEngine.not_ported() else native_result
+	var before := DayEngine.before_writing([session, opened, enemy_turn_result])
+	var result = _end_turn_close_day__gd(session, opened, enemy_turn_result)
+	DayEngine.check_writing(&"OverworldRules._end_turn_close_day", before, [session, opened, enemy_turn_result], result)
+	return result
+
+static func _end_turn_close_day__gd(session: SessionStateStoreScript.SessionData, opened: Dictionary, enemy_turn_result: Dictionary) -> Dictionary:
+	var messages: Array = opened["messages"]
+	var occupation_messages: Array = opened["occupation_messages"]
+	var recovery_messages: Array = opened["recovery_messages"]
+	var weekly_growth_messages: Array = opened["weekly_growth_messages"]
+	var site_muster_messages: Array = opened["site_muster_messages"]
+	var delivery_messages: Array = opened["delivery_messages"]
+	var total_income: Dictionary = opened["total_income"]
+	var movement_after = opened["movement_after"]
 	var enemy_activity_summary := describe_enemy_activity(enemy_turn_result.get("events", []), 4)
 	var enemy_message := String(enemy_turn_result.get("message", ""))
 	if enemy_message != "":
@@ -4205,6 +4269,17 @@ static func _spatial_lookup_entries(index: Dictionary, name: String, tile: Vecto
 	return table.get(_tile_key(tile), []) if table.get(_tile_key(tile), []) is Array else []
 
 static func _build_blocked_tile_index(session: SessionStateStoreScript.SessionData, level: int = -1, ignore_actor_id: String = "", combat_defenders: Dictionary = {}) -> Dictionary:
+	if _day_engine_mode == DayEngine.GDSCRIPT:
+		return _build_blocked_tile_index__gd(session, level, ignore_actor_id, combat_defenders)
+	if _day_engine_mode == DayEngine.NATIVE:
+		var native_result = DayEngine.native_writing(&"OverworldRules._build_blocked_tile_index", [session, level, ignore_actor_id, combat_defenders])
+		return _build_blocked_tile_index__gd(session, level, ignore_actor_id, combat_defenders) if DayEngine.not_ported() else native_result
+	var before := DayEngine.before_writing([session, level, ignore_actor_id, combat_defenders])
+	var result = _build_blocked_tile_index__gd(session, level, ignore_actor_id, combat_defenders)
+	DayEngine.check_writing(&"OverworldRules._build_blocked_tile_index", before, [session, level, ignore_actor_id, combat_defenders], result)
+	return result
+
+static func _build_blocked_tile_index__gd(session: SessionStateStoreScript.SessionData, level: int = -1, ignore_actor_id: String = "", combat_defenders: Dictionary = {}) -> Dictionary:
 	var index := {}
 	if session == null:
 		return index
@@ -7673,6 +7748,16 @@ static func _copy_town_runtime_metadata(target: Dictionary, source: Dictionary) 
 			target[key] = source[key].duplicate(true) if source[key] is Array or source[key] is Dictionary else source[key]
 
 static func _normalize_resource_nodes(nodes: Array) -> Array:
+	if _day_engine_mode == DayEngine.GDSCRIPT:
+		return _normalize_resource_nodes__gd(nodes)
+	if _day_engine_mode == DayEngine.NATIVE:
+		var native_result = DayEngine.native(&"OverworldRules._normalize_resource_nodes", [nodes])
+		return _normalize_resource_nodes__gd(nodes) if DayEngine.not_ported() else native_result
+	var result = _normalize_resource_nodes__gd(nodes)
+	DayEngine.check(&"OverworldRules._normalize_resource_nodes", [nodes], result)
+	return result
+
+static func _normalize_resource_nodes__gd(nodes: Array) -> Array:
 	var normalized := []
 	for node in nodes:
 		if not (node is Dictionary):
@@ -14408,6 +14493,18 @@ static func _route_tile_payloads(tiles: Array) -> Array:
 	return payloads
 
 static func _normalize_fog_of_war(session: SessionStateStoreScript.SessionData) -> void:
+	if _day_engine_mode == DayEngine.GDSCRIPT:
+		_normalize_fog_of_war__gd(session)
+	elif _day_engine_mode == DayEngine.NATIVE:
+		DayEngine.native_writing(&"OverworldRules._normalize_fog_of_war", [session])
+		if DayEngine.not_ported():
+			_normalize_fog_of_war__gd(session)
+	else:
+		var before := DayEngine.before_writing([session])
+		_normalize_fog_of_war__gd(session)
+		DayEngine.check_writing(&"OverworldRules._normalize_fog_of_war", before, [session], null)
+
+static func _normalize_fog_of_war__gd(session: SessionStateStoreScript.SessionData) -> void:
 	var map_size := derive_map_size(session)
 	if OverworldLevelRulesScript.level_count(session) > 1:
 		var levels := {}
@@ -15141,7 +15238,18 @@ static func _explored_tile_count(session: SessionStateStoreScript.SessionData) -
 	var fog = session.overworld.get(FOG_KEY, {})
 	return int(fog.get("explored_count", 0))
 
-static func _finalize_action_result(
+static func _finalize_action_result(session: SessionStateStoreScript.SessionData, ok: bool, base_message: String, refresh_fog: bool = true, incremental_fog: bool = false, scenario_event_facts: Dictionary = {}) -> Dictionary:
+	if _day_engine_mode == DayEngine.GDSCRIPT:
+		return _finalize_action_result__gd(session, ok, base_message, refresh_fog, incremental_fog, scenario_event_facts)
+	if _day_engine_mode == DayEngine.NATIVE:
+		var native_result = DayEngine.native_writing(&"OverworldRules._finalize_action_result", [session, ok, base_message, refresh_fog, incremental_fog, scenario_event_facts])
+		return _finalize_action_result__gd(session, ok, base_message, refresh_fog, incremental_fog, scenario_event_facts) if DayEngine.not_ported() else native_result
+	var before := DayEngine.before_writing([session, ok, base_message, refresh_fog, incremental_fog, scenario_event_facts])
+	var result = _finalize_action_result__gd(session, ok, base_message, refresh_fog, incremental_fog, scenario_event_facts)
+	DayEngine.check_writing(&"OverworldRules._finalize_action_result", before, [session, ok, base_message, refresh_fog, incremental_fog, scenario_event_facts], result)
+	return result
+
+static func _finalize_action_result__gd(
 	session: SessionStateStoreScript.SessionData,
 	ok: bool,
 	base_message: String,

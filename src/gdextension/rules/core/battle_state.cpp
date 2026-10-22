@@ -3,7 +3,10 @@
 #include "aurelion_rules/compat/godot_math.hpp"
 #include "aurelion_rules/compat/godot_string.hpp"
 
+#include <algorithm>
+#include <climits>
 #include <cmath>
+#include <cstdint>
 #include <cstdio>
 
 namespace aurelion::rules::state {
@@ -451,8 +454,46 @@ void State::fill_packed(uint32_t node) const {
 	packeds_[node].backed = false;
 }
 
+// A backed node reads its container in the host for every lookup. Once a call
+// has read it as often as it has entries, filling it costs no more than the
+// reads so far, and the reads after that stay native: a long call reads each
+// container about once. The host's container cannot change during the call (a
+// host call reloads every node), so a filled node reads what a lookup would.
+// The size is asked for on the second read, so a node read once costs nothing.
+namespace {
+
+uint32_t fill_count(int64_t size) {
+	return static_cast<uint32_t>(std::min<int64_t>(std::max<int64_t>(size, 2), UINT32_MAX));
+}
+
+} // namespace
+
 bool State::backed_lookup(uint32_t dict_node, const Value &key, Value &out) const {
-	return backing_->dict_lookup(const_cast<State &>(*this), dict_node, key, out);
+	DictNode &node = dicts_[dict_node];
+	++node.reads;
+	if (node.reads == 2) {
+		node.fill_at = fill_count(backing_->dict_size(dict_node));
+	}
+	if (node.reads < 2 || node.reads < node.fill_at) {
+		return backing_->dict_lookup(const_cast<State &>(*this), dict_node, key, out);
+	}
+	fill_dict(dict_node);
+	const int64_t index = node.keys.find(key);
+	if (index < 0) {
+		return false;
+	}
+	out = node.values[static_cast<size_t>(index)];
+	return true;
+}
+
+Value State::backed_at(uint32_t array_node, int64_t position, int64_t size) const {
+	ArrayNode &node = arrays_[array_node];
+	++node.reads;
+	if (node.reads < fill_count(size)) {
+		return backing_->array_at(const_cast<State &>(*this), array_node, position);
+	}
+	fill_array(array_node);
+	return node.items[static_cast<size_t>(position)];
 }
 
 Backing &State::host() const {

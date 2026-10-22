@@ -13,6 +13,8 @@ extends RefCounted
 
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
+const DayEngine = preload("res://scripts/core/DayEngine.gd")
+static var _day_engine_mode: int = DayEngine.mode
 
 const TOWNLESS_DAYS := 7
 const NATIVE_SESSION_FLAG := "native_random_map_package_session_adoption"
@@ -54,6 +56,17 @@ static func human_has_nothing_left(session: SessionStateStoreScript.SessionData)
 ## has gone without a town, removes computer players whose time is up and ends
 ## the game for the human whose time is up. Returns messages for the human.
 static func apply_daily(session: SessionStateStoreScript.SessionData) -> Array:
+	if _day_engine_mode == DayEngine.GDSCRIPT:
+		return apply_daily__gd(session)
+	if _day_engine_mode == DayEngine.NATIVE:
+		var native_result = DayEngine.native_writing(&"PlayerEliminationRules.apply_daily", [session])
+		return apply_daily__gd(session) if DayEngine.not_ported() else native_result
+	var before := DayEngine.before_writing([session])
+	var result = apply_daily__gd(session)
+	DayEngine.check_writing(&"PlayerEliminationRules.apply_daily", before, [session], result)
+	return result
+
+static func apply_daily__gd(session: SessionStateStoreScript.SessionData) -> Array:
 	var messages := []
 	if not applies(session):
 		return messages

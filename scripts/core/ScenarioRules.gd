@@ -9,6 +9,8 @@ const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const GeneratedObjectives = preload("res://scripts/core/GeneratedScenarioObjectiveRules.gd")
 const TownDevelopmentRulesScript = preload("res://scripts/core/TownDevelopmentRules.gd")
+const DayEngine = preload("res://scripts/core/DayEngine.gd")
+static var _day_engine_mode: int = DayEngine.mode
 
 static var _scenario_dependency_metadata_cache: Dictionary = {}
 
@@ -53,6 +55,17 @@ static func scenario_record_for_session(session: SessionStateStoreScript.Session
 	return ContentService.get_scenario_readonly(session.scenario_id)
 
 static func evaluate_session(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _day_engine_mode == DayEngine.GDSCRIPT:
+		return evaluate_session__gd(session)
+	if _day_engine_mode == DayEngine.NATIVE:
+		var native_result = DayEngine.native_writing(&"ScenarioRules.evaluate_session", [session])
+		return evaluate_session__gd(session) if DayEngine.not_ported() else native_result
+	var before := DayEngine.before_writing([session])
+	var result = evaluate_session__gd(session)
+	DayEngine.check_writing(&"ScenarioRules.evaluate_session", before, [session], result)
+	return result
+
+static func evaluate_session__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	normalize_scenario_state(session)
 	if session == null or session.scenario_id == "":
 		return {"status": "invalid", "message": ""}

@@ -71,6 +71,10 @@ std::string not_ported_failure(const char *what) {
 	return std::string("reached a path the port leaves to GDScript (") + what + "), and its subsystem has no GDScript fallback";
 }
 
+std::string not_ported_after_host_calls(const char *what, size_t host_calls) {
+	return std::string("reached a path the port leaves to GDScript (") + what + ") after " + std::to_string(host_calls) + " host calls, which wrote back what the call had changed, so the GDScript fallback cannot run";
+}
+
 PackedInt32Array to_pairs(const std::vector<hex::CellSteps> &cells) {
 	PackedInt32Array pairs;
 	pairs.resize(static_cast<int64_t>(cells.size()) * 2);
@@ -675,10 +679,14 @@ Variant AurelionRules::port_call(const StringName &name, const Array &args, bool
 		} catch (const aurelion::rules::state::NotPorted &reason) {
 			++stats.not_ported;
 			last_not_ported_ = true;
-			if (stats.fallback) {
+			// A host call wrote back what the call had changed so far: the
+			// GDScript fallback would start again from a changed state.
+			const size_t host_calls = bridge == nullptr ? 0 : bridge->host_calls_made().size();
+			if (stats.fallback && host_calls == 0) {
 				return Variant();
 			}
-			problem = std::string(function->name) + ": " + not_ported_failure(reason.what());
+			last_not_ported_ = false;
+			problem = std::string(function->name) + ": " + (host_calls == 0 ? not_ported_failure(reason.what()) : not_ported_after_host_calls(reason.what(), host_calls));
 		} catch (const aurelion::rules::state::Suspend &host) {
 			problem = std::string(function->name) + ": " + suspended_failure(bridge->state(), host);
 		} catch (const aurelion::rules::state::ScriptError &error) {

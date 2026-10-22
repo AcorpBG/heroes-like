@@ -29,4 +29,10 @@ DictRef identity_fields(State &state, DictRef session, Atom controller);
 // The computer players' enemy configs (player_identity_rules.cpp).
 ArrayRef enemy_configs(State &state, ArrayRef players);
 
+
+// Whether a human plays, and the identity records of older saves
+// (overworld_towns_normalize.cpp).
+bool has_human_seat(State &state, DictRef session);
+void normalize_compatibility(State &state, DictRef session);
+
 } // namespace aurelion::rules::port::player_identity_rules

@@ -23,4 +23,8 @@ int64_t query_level(State &state, DictRef session, int64_t requested);
 DictRef position(State &state, DictRef value);
 DictRef town_entrance(State &state, DictRef town);
 
+
+// (overworld_transit_normalize.cpp)
+gd::ArrayRef canonical_spatial_records(State &state, gd::ArrayRef owned_records);
+
 } // namespace aurelion::rules::port::overworld_level_rules

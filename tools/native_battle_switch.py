@@ -78,6 +78,7 @@ class Subsystem:
 # One entry per subsystem: its registry file in core/port and its engine script.
 SUBSYSTEMS = {
     "battle": Subsystem("registry.cpp", "BattleEngine", validate=True),
+    "day": Subsystem("day_registry.cpp", "DayEngine", fallback=True),
 }
 
 
