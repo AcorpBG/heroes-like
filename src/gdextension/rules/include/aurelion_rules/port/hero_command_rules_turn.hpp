@@ -39,10 +39,12 @@ DictRef tavern_offer(State &state, DictRef session, Atom hero_id, int64_t week =
 int64_t tavern_week(State &state, DictRef session);
 bool town_has_hall(State &state, DictRef town);
 
-// Not run by the six seeds: each throws state::NotPorted (turn_not_ported.cpp).
+// Ported in turn_rare_paths.cpp (slice 4.2: paths the six seeds do not run).
 ArrayRef _holder_stacks(State &state, DictRef session, DictRef town, Atom holder_id);
-void _set_holder_stacks(State &state, DictRef session, DictRef town, Atom holder_id, ArrayRef stacks);
 ArrayRef merge_stacks_into_army(State &state, ArrayRef army, ArrayRef incoming);
 DictRef set_active_hero(State &state, DictRef session, Atom hero_id);
+
+// Not run by the six seeds, and ported by Phase 5's slice 09: until it is merged each throws state::NotPorted (turn_not_ported.cpp).
+void _set_holder_stacks(State &state, DictRef session, DictRef town, Atom holder_id, ArrayRef stacks);
 
 } // namespace aurelion::rules::port::hero_command_rules

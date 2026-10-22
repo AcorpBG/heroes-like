@@ -281,6 +281,14 @@ static func ai_value(site: Dictionary) -> int:
 	return max(0, value)
 
 static func _resource_text(resources: Dictionary) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _resource_text__gd(resources)
+	var before := TurnEngine.before_writing(&"VisitBuildingRules._resource_text", [resources])
+	var result = _resource_text__gd(resources)
+	TurnEngine.check_writing(&"VisitBuildingRules._resource_text", before, [resources], result)
+	return result
+
+static func _resource_text__gd(resources: Dictionary) -> String:
 	var parts := []
 	for key in resources.keys():
 		parts.append("%s %s" % [_thousands(int(resources[key])), String(key).replace("_", " ")])

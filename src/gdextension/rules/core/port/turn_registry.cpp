@@ -4,6 +4,7 @@
 #include "aurelion_rules/port/ai_hero_rules_turn.hpp"
 #include "aurelion_rules/port/artifact_rules_turn.hpp"
 #include "aurelion_rules/port/creature_dwelling_rules_turn.hpp"
+#include "aurelion_rules/port/difficulty_rules_turn.hpp"
 #include "aurelion_rules/port/enemy_adventure_rules_turn.hpp"
 #include "aurelion_rules/port/enemy_town_services_turn.hpp"
 #include "aurelion_rules/port/enemy_turn_rules_turn.hpp"
@@ -11,10 +12,14 @@
 #include "aurelion_rules/port/hero_command_rules_turn.hpp"
 #include "aurelion_rules/port/hero_progression_rules_turn.hpp"
 #include "aurelion_rules/port/native_transit_rules_turn.hpp"
+#include "aurelion_rules/port/overworld_level_rules_turn.hpp"
 #include "aurelion_rules/port/overworld_rules_turn.hpp"
 #include "aurelion_rules/port/overworld_turn_playback_turn.hpp"
 #include "aurelion_rules/port/player_identity_rules_turn.hpp"
 #include "aurelion_rules/port/resource_node_payload_rules_turn.hpp"
+#include "aurelion_rules/port/scenario_factory_turn.hpp"
+#include "aurelion_rules/port/scenario_rules_turn.hpp"
+#include "aurelion_rules/port/scenario_script_rules_turn.hpp"
 #include "aurelion_rules/port/scenario_select_rules_turn.hpp"
 #include "aurelion_rules/port/spell_rules_turn.hpp"
 #include "aurelion_rules/port/town_development_rules_turn.hpp"
@@ -186,6 +191,11 @@ const Function kFunctions[] = {
 	CHECK(AiHeroRules, _trial_income, 1, true, return gd::dict_value(ai_hero_rules::_trial_income(s, D(a, 0)))),
 	CHECK(AiHeroRules, ai_tavern_offer_ids, 3, true, return gd::array_value(ai_hero_rules::ai_tavern_offer_ids(s, D(a, 0), D(a, 1), S(a, 2)))),
 	CHECK(AiHeroRules, build_in_town, 5, true, return gd::dict_value(ai_hero_rules::build_in_town(s, D(a, 0), D(a, 1), I(a, 2), S(a, 3), S(a, 4)))),
+	CHECK(AiHeroRules, _attack_player_hero, 4, true, return gd::dict_value(ai_hero_rules::_attack_player_hero(s, D(a, 0), D(a, 1), I(a, 2), D(a, 3)))),
+	CHECK(AiHeroRules, _convert_legacy_host, 3, true, return gd::dict_value(ai_hero_rules::_convert_legacy_host(s, D(a, 0), D(a, 1), S(a, 2)))),
+	CHECK(AiHeroRules, _nearest_hero_index, 5, true, return gd::int_value(ai_hero_rules::_nearest_hero_index(s, A(a, 0), D(a, 1), S(a, 2), D(a, 3), I(a, 4)))),
+	CHECK(AiHeroRules, _return_troops_to_nearest_town, 3, true, ai_hero_rules::_return_troops_to_nearest_town(s, D(a, 0), D(a, 1), S(a, 2)); return nil()),
+	CHECK(AiHeroRules, _upgrade_value, 2, true, return gd::float_value(ai_hero_rules::_upgrade_value(s, D(a, 0), D(a, 1)))),
 	// ArtifactRules
 	CHECK(ArtifactRules, _already_owned_message, 3, true, return gd::str(artifact_rules::_already_owned_message(s, S(a, 0), D(a, 1), S(a, 2)))),
 	CHECK(ArtifactRules, _artifact_effect_line, 1, true, return gd::str(artifact_rules::_artifact_effect_line(s, S(a, 0)))),
@@ -226,10 +236,16 @@ const Function kFunctions[] = {
 	CHECK(ArtifactRules, select_live_source_rewards, 5, true, return gd::array_value(artifact_rules::select_live_source_rewards(s, S(a, 0), D(a, 1), S(a, 2), S(a, 3), A(a, 4)))),
 	CHECK(ArtifactRules, _artifact_collection_note, 2, true, return gd::str(artifact_rules::_artifact_collection_note(s, D(a, 0), S(a, 1)))),
 	CHECK(ArtifactRules, artifact_slot_label, 1, true, return gd::str(artifact_rules::artifact_slot_label(s, S(a, 0)))),
+	CHECK(ArtifactRules, artifact_set_runtime_state, 1, true, return gd::array_value(artifact_rules::artifact_set_runtime_state(s, D(a, 0)))),
+	CHECK(ArtifactRules, has_artifact, 2, true, return gd::bool_value(artifact_rules::has_artifact(s, D(a, 0), S(a, 1)))),
+	CHECK(ArtifactRules, remove_owned_artifact, 2, true, return gd::dict_value(artifact_rules::remove_owned_artifact(s, D(a, 0), S(a, 1)))),
 	// CreatureDwellingRules
 	CHECK(CreatureDwellingRules, guard_key, 1, true, return gd::str(creature_dwelling_rules::guard_key(s, S(a, 0)))),
 	CHECK(CreatureDwellingRules, record_guard_result, 5, true, creature_dwelling_rules::record_guard_result(s, D(a, 0), S(a, 1), A(a, 2), B(a, 3), I(a, 4)); return nil()),
 	CHECK(CreatureDwellingRules, take, 5, true, creature_dwelling_rules::take(s, D(a, 0), D(a, 1), S(a, 2), I(a, 3), I(a, 4)); return nil()),
+	// DifficultyRules
+	CHECK(DifficultyRules, adjust_enemy_pressure_gain, 2, true, return gd::int_value(difficulty_rules::adjust_enemy_pressure_gain(s, D(a, 0), I(a, 1)))),
+	CHECK(DifficultyRules, adjust_raid_threshold, 2, true, return gd::int_value(difficulty_rules::adjust_raid_threshold(s, D(a, 0), I(a, 1)))),
 	// EnemyAdventureRules
 	CHECK(EnemyAdventureRules, _ai_hero_task_actor_id_from_raid, 1, true, return gd::str(enemy_adventure_rules::_ai_hero_task_actor_id_from_raid(s, D(a, 0)))),
 	CHECK(EnemyAdventureRules, _ai_hero_task_finish_live_assignment, 5, true, enemy_adventure_rules::_ai_hero_task_finish_live_assignment(s, D(a, 0), S(a, 1), D(a, 2), S(a, 3), S(a, 4)); return nil()),
@@ -274,11 +290,44 @@ const Function kFunctions[] = {
 	CHECK(EnemyAdventureRules, raid_commander_display_name, 1, true, return gd::str(enemy_adventure_rules::raid_commander_display_name(s, D(a, 0)))),
 	CHECK(EnemyAdventureRules, raid_commander_name, 1, true, return gd::str(enemy_adventure_rules::raid_commander_name(s, D(a, 0)))),
 	CHECK(EnemyAdventureRules, sync_commander_state_to_roster, 7, true, enemy_adventure_rules::sync_commander_state_to_roster(s, D(a, 0), S(a, 1), X(a, 2), S(a, 3), S(a, 4), I(a, 5), S(a, 6)); return nil()),
+	CHECK(EnemyAdventureRules, _clear_regroup_target, 1, true, return gd::dict_value(enemy_adventure_rules::_clear_regroup_target(s, D(a, 0)))),
+	CHECK(EnemyAdventureRules, _current_enemy_player_hero_sighting_records, 5, true, return gd::array_value(enemy_adventure_rules::_current_enemy_player_hero_sighting_records(s, D(a, 0), D(a, 1), S(a, 2), X(a, 3), X(a, 4)))),
+	CHECK(EnemyAdventureRules, _default_enemy_strategy, 0, true, return gd::dict_value(enemy_adventure_rules::_default_enemy_strategy(s))),
+	CHECK(EnemyAdventureRules, _default_reason_codes_for_target, 3, true, return gd::array_value(enemy_adventure_rules::_default_reason_codes_for_target(s, S(a, 0), S(a, 1), D(a, 2)))),
+	CHECK(EnemyAdventureRules, _dwelling_guard_strength, 4, true, return gd::int_value(enemy_adventure_rules::_dwelling_guard_strength(s, D(a, 0), D(a, 1), D(a, 2), S(a, 3)))),
+	CHECK(EnemyAdventureRules, _encounter_is_objective_anchor, 2, true, return gd::bool_value(enemy_adventure_rules::_encounter_is_objective_anchor(s, D(a, 0), D(a, 1)))),
+	CHECK(EnemyAdventureRules, _enemy_hero_sighting_sources, 3, true, return gd::array_value(enemy_adventure_rules::_enemy_hero_sighting_sources(s, D(a, 0), D(a, 1), S(a, 2)))),
+	CHECK(EnemyAdventureRules, _enemy_player_hero_sighting_record, 3, true, return gd::dict_value(enemy_adventure_rules::_enemy_player_hero_sighting_record(s, D(a, 0), S(a, 1), S(a, 2)))),
+	CHECK(EnemyAdventureRules, _exploration_target_level, 1, true, return gd::int_value(enemy_adventure_rules::_exploration_target_level(s, S(a, 0)))),
+	CHECK(EnemyAdventureRules, _find_encounter_by_placement, 2, true, return gd::dict_value(enemy_adventure_rules::_find_encounter_by_placement(s, D(a, 0), S(a, 1)))),
+	CHECK(EnemyAdventureRules, _find_player_hero, 2, true, return gd::dict_value(enemy_adventure_rules::_find_player_hero(s, D(a, 0), S(a, 1)))),
+	CHECK(EnemyAdventureRules, _find_town_by_placement, 2, true, return gd::dict_value(enemy_adventure_rules::_find_town_by_placement(s, D(a, 0), S(a, 1)))),
+	CHECK(EnemyAdventureRules, _known_player_hero_snapshot_for_ai, 3, true, return gd::dict_value(enemy_adventure_rules::_known_player_hero_snapshot_for_ai(s, D(a, 0), S(a, 1), D(a, 2)))),
+	CHECK(EnemyAdventureRules, _known_player_hero_strength, 1, true, return gd::int_value(enemy_adventure_rules::_known_player_hero_strength(s, D(a, 0)))),
+	CHECK(EnemyAdventureRules, _merge_strategy_dict, 2, true, return gd::dict_value(enemy_adventure_rules::_merge_strategy_dict(s, D(a, 0), D(a, 1)))),
+	CHECK(EnemyAdventureRules, _player_hero_goal_tile, 1, true, const overworld_rules::Vector2i v = enemy_adventure_rules::_player_hero_goal_tile(s, D(a, 0)); return Value::of_vector2i(v.x, v.y)),
+	CHECK(EnemyAdventureRules, _player_hero_snapshots_for_intercept, 2, true, return gd::array_value(enemy_adventure_rules::_player_hero_snapshots_for_intercept(s, D(a, 0), B(a, 1)))),
+	CHECK(EnemyAdventureRules, _preferred_commander_index_for_encounter, 1, true, return gd::int_value(enemy_adventure_rules::_preferred_commander_index_for_encounter(s, D(a, 0)))),
+	CHECK(EnemyAdventureRules, _secure_native_passage_target, 6, true, return gd::dict_value(enemy_adventure_rules::_secure_native_passage_target(s, D(a, 0), D(a, 1), D(a, 2), S(a, 3), D(a, 4), B(a, 5)))),
+	CHECK(EnemyAdventureRules, _town_controller_faction_id, 1, true, return gd::str(enemy_adventure_rules::_town_controller_faction_id(s, D(a, 0)))),
+	CHECK(EnemyAdventureRules, commander_can_deploy, 1, true, return gd::bool_value(enemy_adventure_rules::commander_can_deploy(s, X(a, 0)))),
+	CHECK(EnemyAdventureRules, commander_recent_outcome_brief, 1, true, return gd::str(enemy_adventure_rules::commander_recent_outcome_brief(s, X(a, 0)))),
+	CHECK(EnemyAdventureRules, enemy_strategy, 2, true, return gd::dict_value(enemy_adventure_rules::enemy_strategy(s, D(a, 0), S(a, 1)))),
+	CHECK(EnemyAdventureRules, occupied_raid_commander_ids, 3, true, return gd::dict_value(enemy_adventure_rules::occupied_raid_commander_ids(s, D(a, 0), S(a, 1), S(a, 2)))),
+	CHECK(EnemyAdventureRules, raid_display_name, 1, true, return gd::str(enemy_adventure_rules::raid_display_name(s, D(a, 0)))),
+	CHECK(EnemyAdventureRules, raid_strength, 1, true, return gd::int_value(enemy_adventure_rules::raid_strength(s, D(a, 0)))),
+	CHECK(EnemyAdventureRules, select_raid_commander_roster_hero_id, 5, true, return gd::str(enemy_adventure_rules::select_raid_commander_roster_hero_id(s, D(a, 0), S(a, 1), I(a, 2), D(a, 3), X(a, 4)))),
+	CHECK(EnemyAdventureRules, strategy_int, 4, true, return gd::int_value(enemy_adventure_rules::strategy_int(s, D(a, 0), S(a, 1), S(a, 2), I(a, 3)))),
+	CHECK(EnemyAdventureRules, strategy_scalar, 4, true, return gd::float_value(enemy_adventure_rules::strategy_scalar(s, D(a, 0), S(a, 1), S(a, 2), F(a, 3)))),
+	CHECK(EnemyAdventureRules, target_is_objective_anchor, 3, true, return gd::bool_value(enemy_adventure_rules::target_is_objective_anchor(s, D(a, 0), S(a, 1), S(a, 2)))),
+	CHECK(EnemyAdventureRules, _town_is_objective_anchor, 2, true, return gd::bool_value(enemy_adventure_rules::_town_is_objective_anchor(s, D(a, 0), S(a, 1)))),
 	// EnemyTownServices
 	CHECK(EnemyTownServices, apply_ai_weights, 1, true, enemy_town_services::apply_ai_weights(s, D(a, 0)); return nil()),
 	CHECK(EnemyTownServices, can_visit, 3, true, return gd::bool_value(enemy_town_services::can_visit(s, D(a, 0), D(a, 1), S(a, 2)))),
 	CHECK(EnemyTownServices, upgrade_stacks, 3, true, return gd::dict_value(enemy_town_services::upgrade_stacks(s, D(a, 0), A(a, 1), D(a, 2)))),
 	CHECK(EnemyTownServices, visit, 5, true, return gd::dict_value(enemy_town_services::visit(s, D(a, 0), D(a, 1), D(a, 2), I(a, 3), S(a, 4)))),
+	CHECK(EnemyTownServices, best_equipment, 2, true, return gd::dict_value(enemy_town_services::best_equipment(s, D(a, 0), S(a, 1)))),
+	CHECK(EnemyTownServices, loadout_value, 1, true, return gd::float_value(enemy_town_services::loadout_value(s, D(a, 0)))),
 	// EnemyTurnRules
 	CHECK(EnemyTurnRules, _append_event_records, 2, true, enemy_turn_rules::_append_event_records(s, A(a, 0), X(a, 1)); return nil()),
 	CHECK(EnemyTurnRules, _apply_discount, 2, true, return gd::dict_value(enemy_turn_rules::_apply_discount(s, X(a, 0), I(a, 1)))),
@@ -305,6 +354,32 @@ const Function kFunctions[] = {
 	CHECK(EnemyTurnRules, ai_town_build_event, 4, true, return gd::dict_value(enemy_turn_rules::ai_town_build_event(s, D(a, 0), D(a, 1), D(a, 2), D(a, 3)))),
 	CHECK(EnemyTurnRules, ai_town_recruit_event, 4, true, return gd::dict_value(enemy_turn_rules::ai_town_recruit_event(s, D(a, 0), D(a, 1), D(a, 2), D(a, 3)))),
 	PORT(EnemyTurnRules, run_enemy_turn, 2, true, return gd::dict_value(enemy_turn_rules::run_enemy_turn(s, D(a, 0), B(a, 1)))),
+	CHECK(EnemyTurnRules, _append_building_with_requirements, 3, true, enemy_turn_rules::_append_building_with_requirements(s, A(a, 0), S(a, 1), A(a, 2)); return nil()),
+	CHECK(EnemyTurnRules, _config_was_runtime_defaulted, 2, true, return gd::bool_value(enemy_turn_rules::_config_was_runtime_defaulted(s, D(a, 0), D(a, 1)))),
+	CHECK(EnemyTurnRules, _faction_capital_state, 2, true, return gd::dict_value(enemy_turn_rules::_faction_capital_state(s, D(a, 0), S(a, 1)))),
+	CHECK(EnemyTurnRules, _faction_capital_state_from_towns, 3, true, return gd::dict_value(enemy_turn_rules::_faction_capital_state_from_towns(s, D(a, 0), A(a, 1), S(a, 2)))),
+	CHECK(EnemyTurnRules, _faction_front_state, 2, true, return gd::dict_value(enemy_turn_rules::_faction_front_state(s, D(a, 0), S(a, 1)))),
+	CHECK(EnemyTurnRules, _hero_task_record_sanitized_field_count, 1, true, return gd::int_value(enemy_turn_rules::_hero_task_record_sanitized_field_count(s, D(a, 0)))),
+	CHECK(EnemyTurnRules, _hero_task_state_board_sanitized_field_count, 1, true, return gd::int_value(enemy_turn_rules::_hero_task_state_board_sanitized_field_count(s, D(a, 0)))),
+	CHECK(EnemyTurnRules, _launch_policy_capital_state, 3, true, return gd::dict_value(enemy_turn_rules::_launch_policy_capital_state(s, D(a, 0), S(a, 1), D(a, 2)))),
+	CHECK(EnemyTurnRules, _launch_policy_front_state, 3, true, return gd::dict_value(enemy_turn_rules::_launch_policy_front_state(s, D(a, 0), S(a, 1), D(a, 2)))),
+	CHECK(EnemyTurnRules, _max_active_raids_for_strategy, 4, true, return gd::int_value(enemy_turn_rules::_max_active_raids_for_strategy(s, D(a, 0), D(a, 1), S(a, 2), D(a, 3)))),
+	CHECK(EnemyTurnRules, _normalize_hero_task_actor_kind, 1, true, return gd::str(enemy_turn_rules::_normalize_hero_task_actor_kind(s, X(a, 0)))),
+	CHECK(EnemyTurnRules, _normalize_hero_task_class, 1, true, return gd::str(enemy_turn_rules::_normalize_hero_task_class(s, X(a, 0)))),
+	CHECK(EnemyTurnRules, _normalize_hero_task_continuity_policy, 1, true, return gd::str(enemy_turn_rules::_normalize_hero_task_continuity_policy(s, X(a, 0)))),
+	CHECK(EnemyTurnRules, _normalize_hero_task_origin_kind, 1, true, return gd::str(enemy_turn_rules::_normalize_hero_task_origin_kind(s, X(a, 0)))),
+	CHECK(EnemyTurnRules, _normalize_hero_task_record, 1, true, return gd::dict_value(enemy_turn_rules::_normalize_hero_task_record(s, X(a, 0)))),
+	CHECK(EnemyTurnRules, _normalize_hero_task_reservation, 1, true, return gd::dict_value(enemy_turn_rules::_normalize_hero_task_reservation(s, X(a, 0)))),
+	CHECK(EnemyTurnRules, _normalize_hero_task_route_policy, 1, true, return gd::str(enemy_turn_rules::_normalize_hero_task_route_policy(s, X(a, 0)))),
+	CHECK(EnemyTurnRules, _normalize_hero_task_source_kind, 1, true, return gd::str(enemy_turn_rules::_normalize_hero_task_source_kind(s, X(a, 0)))),
+	CHECK(EnemyTurnRules, _normalize_hero_task_status, 1, true, return gd::str(enemy_turn_rules::_normalize_hero_task_status(s, X(a, 0)))),
+	CHECK(EnemyTurnRules, _normalize_hero_task_target_kind, 1, true, return gd::str(enemy_turn_rules::_normalize_hero_task_target_kind(s, X(a, 0)))),
+	CHECK(EnemyTurnRules, _normalize_hero_task_validation_code, 1, true, return gd::str(enemy_turn_rules::_normalize_hero_task_validation_code(s, X(a, 0)))),
+	CHECK(EnemyTurnRules, _raid_threshold_for_strategy, 4, true, return gd::int_value(enemy_turn_rules::_raid_threshold_for_strategy(s, D(a, 0), D(a, 1), S(a, 2), D(a, 3)))),
+	CHECK(EnemyTurnRules, _valid_enemy_faction_configs, 1, true, return gd::array_value(enemy_turn_rules::_valid_enemy_faction_configs(s, A(a, 0)))),
+	CHECK(EnemyTurnRules, active_raid_count, 2, true, return gd::int_value(enemy_turn_rules::active_raid_count(s, D(a, 0), S(a, 1)))),
+	CHECK(EnemyTurnRules, get_pressure, 2, true, return gd::int_value(enemy_turn_rules::get_pressure(s, D(a, 0), S(a, 1)))),
+	CHECK(EnemyTurnRules, normalize_optional_hero_task_state, 1, true, return gd::dict_value(enemy_turn_rules::normalize_optional_hero_task_state(s, X(a, 0)))),
 	// FactionTownServices
 	CHECK(FactionTownServices, apply_ai_weights, 1, true, faction_town_services::apply_ai_weights(s, D(a, 0)); return nil()),
 	CHECK(FactionTownServices, perform, 5, true, return gd::dict_value(faction_town_services::perform(s, D(a, 0), D(a, 1), D(a, 2), I(a, 3), D(a, 4)))),
@@ -326,6 +401,9 @@ const Function kFunctions[] = {
 	CHECK(HeroCommandRules, tavern_offer, 3, true, return gd::dict_value(hero_command_rules::tavern_offer(s, D(a, 0), S(a, 1), I(a, 2)))),
 	CHECK(HeroCommandRules, tavern_week, 1, true, return gd::int_value(hero_command_rules::tavern_week(s, D(a, 0)))),
 	CHECK(HeroCommandRules, town_has_hall, 1, true, return gd::bool_value(hero_command_rules::town_has_hall(s, D(a, 0)))),
+	CHECK(HeroCommandRules, _holder_stacks, 3, true, return gd::array_value(hero_command_rules::_holder_stacks(s, D(a, 0), D(a, 1), S(a, 2)))),
+	CHECK(HeroCommandRules, merge_stacks_into_army, 2, true, return gd::array_value(hero_command_rules::merge_stacks_into_army(s, A(a, 0), A(a, 1)))),
+	CHECK(HeroCommandRules, set_active_hero, 2, true, return gd::dict_value(hero_command_rules::set_active_hero(s, D(a, 0), S(a, 1)))),
 	// HeroProgressionRules
 	CHECK(HeroProgressionRules, _add_experience, 2, true, return gd::dict_value(hero_progression_rules::_add_experience(s, D(a, 0), I(a, 1)))),
 	CHECK(HeroProgressionRules, _apply_command_gain, 2, true, return gd::dict_value(hero_progression_rules::_apply_command_gain(s, X(a, 0), S(a, 1)))),
@@ -338,9 +416,12 @@ const Function kFunctions[] = {
 	CHECK(HeroProgressionRules, pending_choice_summary, 1, true, return gd::str(hero_progression_rules::pending_choice_summary(s, D(a, 0)))),
 	CHECK(HeroProgressionRules, pending_choices_remaining, 1, true, return gd::int_value(hero_progression_rules::pending_choices_remaining(s, D(a, 0)))),
 	CHECK(HeroProgressionRules, rank_label, 1, true, return gd::str(hero_progression_rules::rank_label(s, I(a, 0)))),
+	CHECK(HeroProgressionRules, scale_recruit_growth, 2, true, return gd::dict_value(hero_progression_rules::scale_recruit_growth(s, D(a, 0), X(a, 1)))),
 	// NativeTransitRules
 	CHECK(NativeTransitRules, resolve, 3, true, return gd::dict_value(native_transit_rules::resolve(s, A(a, 0), D(a, 1), S(a, 2)))),
 	CHECK(NativeTransitRules, exit_order, 2, true, return gd::array_value(native_transit_rules::exit_order(s, D(a, 0), S(a, 1)))),
+	// OverworldLevelRules
+	CHECK(OverworldLevelRules, view_level, 1, true, return gd::int_value(overworld_level_rules::view_level(s, X(a, 0)))),
 	// OverworldRules
 	CHECK(OverworldRules, _add_dwelling_town_growth, 3, true, return gd::dict_value(overworld_rules::_add_dwelling_town_growth(s, D(a, 0), D(a, 1), D(a, 2)))),
 	CHECK(OverworldRules, _apply_recruit_percent, 2, true, return gd::dict_value(overworld_rules::_apply_recruit_percent(s, X(a, 0), I(a, 1)))),
@@ -372,26 +453,93 @@ const Function kFunctions[] = {
 	CHECK(OverworldRules, apply_resource_site_disruption, 5, true, return gd::str(overworld_rules::apply_resource_site_disruption(s, D(a, 0), D(a, 1), D(a, 2), S(a, 3), S(a, 4)))),
 	CHECK(OverworldRules, _lock_town_occupation_reserves, 2, true, overworld_rules::_lock_town_occupation_reserves(s, D(a, 0), D(a, 1)); return nil()),
 	CHECK(OverworldRules, _release_town_occupation_reserves, 1, true, return gd::dict_value(overworld_rules::_release_town_occupation_reserves(s, D(a, 0)))),
+	CHECK(OverworldRules, _town_scaling_hero, 2, true, return gd::dict_value(overworld_rules::_town_scaling_hero(s, D(a, 0), D(a, 1)))),
+	CHECK(OverworldRules, _effective_player_town_weekly_growth, 2, true, return gd::dict_value(overworld_rules::_effective_player_town_weekly_growth(s, D(a, 0), D(a, 1)))),
+	CHECK(OverworldRules, _build_scenario_resource_states, 1, true, return gd::array_value(overworld_rules::_build_scenario_resource_states(s, X(a, 0)))),
+	CHECK(OverworldRules, _build_scenario_town_states, 1, true, return gd::array_value(overworld_rules::_build_scenario_town_states(s, X(a, 0)))),
+	CHECK(OverworldRules, _command_risk_encounter_objective_item, 3, true, return gd::dict_value(overworld_rules::_command_risk_encounter_objective_item(s, D(a, 0), D(a, 1), B(a, 2)))),
+	CHECK(OverworldRules, _command_risk_pressure_objective_item, 4, true, return gd::dict_value(overworld_rules::_command_risk_pressure_objective_item(s, D(a, 0), D(a, 1), D(a, 2), B(a, 3)))),
+	CHECK(OverworldRules, _delivery_encounter_matches_node, 4, true, return gd::bool_value(overworld_rules::_delivery_encounter_matches_node(s, D(a, 0), D(a, 1), D(a, 2), D(a, 3)))),
+	CHECK(OverworldRules, _enemy_active_raids, 2, true, return gd::int_value(overworld_rules::_enemy_active_raids(s, D(a, 0), S(a, 1)))),
+	CHECK(OverworldRules, _enemy_config_for_faction, 2, true, return gd::dict_value(overworld_rules::_enemy_config_for_faction(s, D(a, 0), S(a, 1)))),
+	CHECK(OverworldRules, _enemy_max_active_raids_for_strategy, 3, true, return gd::int_value(overworld_rules::_enemy_max_active_raids_for_strategy(s, D(a, 0), D(a, 1), S(a, 2)))),
+	CHECK(OverworldRules, _enemy_pressure, 2, true, return gd::int_value(overworld_rules::_enemy_pressure(s, D(a, 0), S(a, 1)))),
+	CHECK(OverworldRules, _enemy_raid_threshold_for_strategy, 3, true, return gd::int_value(overworld_rules::_enemy_raid_threshold_for_strategy(s, D(a, 0), D(a, 1), S(a, 2)))),
+	CHECK(OverworldRules, _find_active_town, 1, true, return gd::dict_value(overworld_rules::_find_active_town(s, D(a, 0)))),
+	CHECK(OverworldRules, _find_active_town_by_visit_context, 1, true, return gd::dict_value(overworld_rules::_find_active_town_by_visit_context(s, D(a, 0)))),
+	CHECK(OverworldRules, _posture_label, 1, true, return gd::str(overworld_rules::_posture_label(s, S(a, 0)))),
+	CHECK(OverworldRules, _pressure_bonus_from_profile, 1, true, return gd::int_value(overworld_rules::_pressure_bonus_from_profile(s, X(a, 0)))),
+	CHECK(OverworldRules, _public_enemy_pressure_gain, 2, true, return gd::int_value(overworld_rules::_public_enemy_pressure_gain(s, D(a, 0), D(a, 1)))),
+	CHECK(OverworldRules, _raid_target_is_objective_anchor, 3, true, return gd::bool_value(overworld_rules::_raid_target_is_objective_anchor(s, D(a, 0), S(a, 1), S(a, 2)))),
+	CHECK(OverworldRules, _resource_site_delivery_interception, 3, true, return gd::dict_value(overworld_rules::_resource_site_delivery_interception(s, D(a, 0), D(a, 1), D(a, 2)))),
+	CHECK(OverworldRules, _resource_site_response_profile, 1, true, return gd::dict_value(overworld_rules::_resource_site_response_profile(s, D(a, 0)))),
+	CHECK(OverworldRules, _route_security_rating_for_hero, 1, true, return gd::int_value(overworld_rules::_route_security_rating_for_hero(s, D(a, 0)))),
+	CHECK(OverworldRules, _scenario_objective_met, 2, true, return gd::bool_value(overworld_rules::_scenario_objective_met(s, D(a, 0), D(a, 1)))),
+	CHECK(OverworldRules, _terrain_name_at, 3, true, return gd::str(overworld_rules::_terrain_name_at(s, D(a, 0), I(a, 1), I(a, 2)))),
+	CHECK(OverworldRules, _town_command_risk_consequence, 6, true, return gd::str(overworld_rules::_town_command_risk_consequence(s, D(a, 0), I(a, 1), D(a, 2), D(a, 3), D(a, 4), B(a, 5)))),
+	CHECK(OverworldRules, _town_defense_summary, 1, true, return gd::str(overworld_rules::_town_defense_summary(s, D(a, 0)))),
+	CHECK(OverworldRules, _town_pressure_output, 4, true, return gd::int_value(overworld_rules::_town_pressure_output(s, D(a, 0), X(a, 1), D(a, 2), I(a, 3)))),
+	CHECK(OverworldRules, _town_role_pressure_bonus, 1, true, return gd::int_value(overworld_rules::_town_role_pressure_bonus(s, S(a, 0)))),
+	CHECK(OverworldRules, encounter_commander_name, 1, true, return gd::str(overworld_rules::encounter_commander_name(s, D(a, 0)))),
+	CHECK(OverworldRules, encounter_commander_threat_label, 1, true, return gd::str(overworld_rules::encounter_commander_threat_label(s, D(a, 0)))),
+	CHECK(OverworldRules, encounter_display_name, 1, true, return gd::str(overworld_rules::encounter_display_name(s, D(a, 0)))),
+	CHECK(OverworldRules, town_development_metrics, 2, true, return gd::dict_value(overworld_rules::town_development_metrics(s, D(a, 0), X(a, 1)))),
 	// OverworldTurnPlayback
 	CHECK(OverworldTurnPlayback, action, 3, true, overworld_turn_playback::action(s, X(a, 0), D(a, 1), S(a, 2)); return nil()),
 	CHECK(OverworldTurnPlayback, move, 3, true, overworld_turn_playback::move(s, X(a, 0), D(a, 1), D(a, 2)); return nil()),
 	CHECK(OverworldTurnPlayback, player_turn, 2, true, overworld_turn_playback::player_turn(s, X(a, 0), D(a, 1)); return nil()),
+	CHECK(OverworldTurnPlayback, _actor_name, 1, true, return gd::str(overworld_turn_playback::_actor_name(s, D(a, 0)))),
+	CHECK(OverworldTurnPlayback, _visual_actor, 2, true, return gd::dict_value(overworld_turn_playback::_visual_actor(s, D(a, 0), D(a, 1)))),
+	CHECK(OverworldTurnPlayback, visible, 2, true, return gd::bool_value(overworld_turn_playback::visible(s, X(a, 0), D(a, 1)))),
 	// PlayerIdentityRules
 	CHECK(PlayerIdentityRules, set_resource_controller, 3, true, player_identity_rules::set_resource_controller(s, D(a, 0), X(a, 1), S(a, 2)); return nil()),
+	CHECK(PlayerIdentityRules, config_for_controller, 2, true, return gd::dict_value(player_identity_rules::config_for_controller(s, X(a, 0), S(a, 1)))),
 	// ResourceNodePayloadRules
 	CHECK(ResourceNodePayloadRules, mark_claimed, 2, true, resource_node_payload_rules::mark_claimed(s, D(a, 0), D(a, 1)); return nil()),
+	// ScenarioFactory
+	CHECK(ScenarioFactory, _build_resource_states, 1, true, return gd::array_value(scenario_factory::_build_resource_states(s, X(a, 0)))),
+	CHECK(ScenarioFactory, _build_town_states, 1, true, return gd::array_value(scenario_factory::_build_town_states(s, X(a, 0)))),
+	CHECK(ScenarioFactory, _copy_resource_runtime_metadata, 2, true, scenario_factory::_copy_resource_runtime_metadata(s, D(a, 0), D(a, 1)); return nil()),
+	CHECK(ScenarioFactory, _duplicate_dict, 1, true, return gd::dict_value(scenario_factory::_duplicate_dict(s, X(a, 0)))),
+	// ScenarioRules
+	CHECK(ScenarioRules, _army_unit_count, 2, true, return gd::int_value(scenario_rules::_army_unit_count(s, D(a, 0), S(a, 1)))),
+	CHECK(ScenarioRules, _artifact_set_equipment_progress, 2, true, return gd::dict_value(scenario_rules::_artifact_set_equipment_progress(s, D(a, 0), D(a, 1)))),
+	CHECK(ScenarioRules, _controlled_hero_army, 2, true, return gd::dict_value(scenario_rules::_controlled_hero_army(s, D(a, 0), S(a, 1)))),
+	CHECK(ScenarioRules, _controlled_hero_state, 2, true, return gd::dict_value(scenario_rules::_controlled_hero_state(s, D(a, 0), S(a, 1)))),
+	CHECK(ScenarioRules, _find_town, 2, true, return gd::dict_value(scenario_rules::_find_town(s, D(a, 0), D(a, 1)))),
+	CHECK(ScenarioRules, _hero_army_requirement_progress, 2, true, return gd::dict_value(scenario_rules::_hero_army_requirement_progress(s, D(a, 0), D(a, 1)))),
+	CHECK(ScenarioRules, _hero_progression_requirement_progress, 2, true, return gd::dict_value(scenario_rules::_hero_progression_requirement_progress(s, D(a, 0), D(a, 1)))),
+	CHECK(ScenarioRules, _hero_stationing_progress, 2, true, return gd::dict_value(scenario_rules::_hero_stationing_progress(s, D(a, 0), D(a, 1)))),
+	CHECK(ScenarioRules, _map_exploration_progress, 2, true, return gd::dict_value(scenario_rules::_map_exploration_progress(s, D(a, 0), D(a, 1)))),
+	CHECK(ScenarioRules, _player_knows_spell, 2, true, return gd::bool_value(scenario_rules::_player_knows_spell(s, D(a, 0), S(a, 1)))),
+	CHECK(ScenarioRules, _player_owns_artifact, 2, true, return gd::bool_value(scenario_rules::_player_owns_artifact(s, D(a, 0), S(a, 1)))),
+	CHECK(ScenarioRules, _reserve_delivery_progress, 2, true, return gd::dict_value(scenario_rules::_reserve_delivery_progress(s, D(a, 0), D(a, 1)))),
+	CHECK(ScenarioRules, _resource_site_control_progress, 2, true, return gd::dict_value(scenario_rules::_resource_site_control_progress(s, D(a, 0), D(a, 1)))),
+	CHECK(ScenarioRules, _resource_stockpile_progress, 2, true, return gd::dict_value(scenario_rules::_resource_stockpile_progress(s, D(a, 0), D(a, 1)))),
+	CHECK(ScenarioRules, _titleize_token, 1, true, return gd::str(scenario_rules::_titleize_token(s, S(a, 0)))),
+	CHECK(ScenarioRules, _town_garrison_requirement_progress, 2, true, return gd::dict_value(scenario_rules::_town_garrison_requirement_progress(s, D(a, 0), D(a, 1)))),
+	CHECK(ScenarioRules, _town_has_objective_building, 2, true, return gd::bool_value(scenario_rules::_town_has_objective_building(s, D(a, 0), S(a, 1)))),
+	// ScenarioScriptRules
+	CHECK(ScenarioScriptRules, _encounter_resolved, 2, true, return gd::bool_value(scenario_script_rules::_encounter_resolved(s, D(a, 0), S(a, 1)))),
+	CHECK(ScenarioScriptRules, _hook_fired, 2, true, return gd::bool_value(scenario_script_rules::_hook_fired(s, D(a, 0), S(a, 1)))),
+	CHECK(ScenarioScriptRules, build_script_state, 0, true, return gd::dict_value(scenario_script_rules::build_script_state(s))),
 	// ScenarioSelectRules
 	CHECK(ScenarioSelectRules, default_difficulty_id, 0, true, return gd::str(scenario_select_rules::default_difficulty_id(s))),
 	CHECK(ScenarioSelectRules, normalize_difficulty, 1, true, return gd::str(scenario_select_rules::normalize_difficulty(s, X(a, 0)))),
 	// SpellRules
 	CHECK(SpellRules, build_spellbook, 1, true, return gd::dict_value(spell_rules::build_spellbook(s, D(a, 0)))),
 	CHECK(SpellRules, learn_spell, 2, true, return gd::dict_value(spell_rules::learn_spell(s, D(a, 0), S(a, 1)))),
+	CHECK(SpellRules, mana_state, 1, true, return gd::dict_value(spell_rules::mana_state(s, D(a, 0)))),
 	// TownDevelopmentRules
 	CHECK(TownDevelopmentRules, can_pay, 2, true, return gd::bool_value(town_development_rules::can_pay(s, D(a, 0), D(a, 1)))),
 	CHECK(TownDevelopmentRules, construction_growth, 1, true, return gd::dict_value(town_development_rules::construction_growth(s, D(a, 0)))),
 	CHECK(TownDevelopmentRules, train_hero, 3, true, return gd::dict_value(town_development_rules::train_hero(s, D(a, 0), D(a, 1), S(a, 2)))),
 	CHECK(TownDevelopmentRules, upgrade_army, 4, true, return gd::dict_value(town_development_rules::upgrade_army(s, D(a, 0), A(a, 1), S(a, 2), D(a, 3)))),
 	CHECK(TownDevelopmentRules, upgrade_cost, 3, true, return gd::dict_value(town_development_rules::upgrade_cost(s, S(a, 0), S(a, 1), I(a, 2)))),
+	CHECK(TownDevelopmentRules, offers, 3, true, return gd::array_value(town_development_rules::offers(s, D(a, 0), I(a, 1), A(a, 2)))),
+	CHECK(TownDevelopmentRules, price, 1, true, return gd::int_value(town_development_rules::price(s, D(a, 0)))),
+	CHECK(TownDevelopmentRules, satisfies, 2, true, return gd::bool_value(town_development_rules::satisfies(s, A(a, 0), S(a, 1)))),
+	CHECK(TownDevelopmentRules, trade_artifact, 7, true, return gd::dict_value(town_development_rules::trade_artifact(s, D(a, 0), D(a, 1), I(a, 2), S(a, 3), B(a, 4), D(a, 5), A(a, 6)))),
 	// TownRules
 	CHECK(TownRules, _school_spell_ids_for_town, 2, true, return gd::array_value(town_rules::_school_spell_ids_for_town(s, D(a, 0), I(a, 1)))),
 	CHECK(TownRules, _town_spell_school_access, 1, true, return gd::array_value(town_rules::_town_spell_school_access(s, D(a, 0)))),
@@ -402,6 +550,7 @@ const Function kFunctions[] = {
 	CHECK(VisitBuildingRules, _thousands, 1, true, return gd::str(visit_building_rules::_thousands(s, I(a, 0)))),
 	CHECK(VisitBuildingRules, effect_summary, 1, true, return gd::str(visit_building_rules::effect_summary(s, D(a, 0)))),
 	CHECK(VisitBuildingRules, record_visit, 5, true, visit_building_rules::record_visit(s, D(a, 0), D(a, 1), S(a, 2), I(a, 3), S(a, 4)); return nil()),
+	CHECK(VisitBuildingRules, _resource_text, 1, true, return gd::str(visit_building_rules::_resource_text(s, D(a, 0)))),
 	// WaterTravelRules
 	CHECK(WaterTravelRules, add_boat, 4, true, return gd::dict_value(water_travel_rules::add_boat(s, X(a, 0), V(a, 1), I(a, 2), S(a, 3)))),
 	CHECK(WaterTravelRules, any_boat_at, 3, true, return gd::bool_value(water_travel_rules::any_boat_at(s, X(a, 0), V(a, 1), I(a, 2)))),

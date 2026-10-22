@@ -160,11 +160,13 @@ add_library(aurelion_rules_core STATIC
 	core/port/enemy_adventure_rules_ai.cpp
 	core/port/enemy_adventure_rules_shared.cpp
 	core/port/enemy_adventure_rules_turn.cpp
+	core/port/enemy_adventure_rules_turn_rare.cpp
 	core/port/enemy_orders.cpp
 	core/port/enemy_states.cpp
 	core/port/enemy_turn.cpp
 	core/port/enemy_turn_rules.cpp
 	core/port/enemy_turn_rules_turn.cpp
+	core/port/enemy_turn_rules_turn_rare.cpp
 	core/port/fog.cpp
 	core/port/gd.cpp
 	core/port/hero_command_rules.cpp
@@ -193,6 +195,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/overworld_rules_ai_towns.cpp
 	core/port/overworld_rules_shared.cpp
 	core/port/overworld_rules_turn.cpp
+	core/port/overworld_rules_turn_rare.cpp
 	core/port/overworld_state_normalize.cpp
 	core/port/overworld_towns_normalize.cpp
 	core/port/overworld_transit_normalize.cpp
@@ -208,6 +211,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/round_effects.cpp
 	core/port/scenario_evaluation.cpp
 	core/port/scenario_factory_ai.cpp
+	core/port/scenario_turn_rare.cpp
 	core/port/spell_battle.cpp
 	core/port/spell_effects.cpp
 	core/port/spell_events.cpp
@@ -224,6 +228,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/turn_not_ported.cpp
 	core/port/turn_order.cpp
 	core/port/turn_port.cpp
+	core/port/turn_rare_paths.cpp
 	core/port/turn_registry.cpp
 	core/port/unit_abilities.cpp
 	core/port/visit_building_rules_ai.cpp

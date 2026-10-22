@@ -50,7 +50,7 @@ DictRef ai_town_build_event(State &state, DictRef session, DictRef config, DictR
 DictRef ai_town_recruit_event(State &state, DictRef session, DictRef config, DictRef town, DictRef selected_recruitment);
 DictRef run_enemy_turn(State &state, DictRef session, bool settle_rosters = true);
 
-// Not run by the six seeds: each throws state::NotPorted (turn_not_ported.cpp).
+// Ported in enemy_turn_rules_turn_rare.cpp (slice 4.2: paths the six seeds do not run).
 void _append_building_with_requirements(State &state, ArrayRef target, Atom building_id, ArrayRef trail);
 bool _config_was_runtime_defaulted(State &state, DictRef source, DictRef normalized);
 DictRef _faction_capital_state(State &state, DictRef session, Atom faction_id);

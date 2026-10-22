@@ -749,6 +749,14 @@ static func normalize_ai_heroes(session: SessionStateStoreScript.SessionData, on
 
 ## The closest hero of this controller within `radius` tiles of a column.
 static func _nearest_hero_index(encounters: Array, resolved: Dictionary, controller: String, column: Dictionary, radius: int) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _nearest_hero_index__gd(encounters, resolved, controller, column, radius)
+	var before := TurnEngine.before_writing(&"AiHeroRules._nearest_hero_index", [encounters, resolved, controller, column, radius])
+	var result = _nearest_hero_index__gd(encounters, resolved, controller, column, radius)
+	TurnEngine.check_writing(&"AiHeroRules._nearest_hero_index", before, [encounters, resolved, controller, column, radius], result)
+	return result
+
+static func _nearest_hero_index__gd(encounters: Array, resolved: Dictionary, controller: String, column: Dictionary, radius: int) -> int:
 	var best := -1
 	var best_distance := radius + 1
 	for index in range(encounters.size()):
@@ -764,6 +772,14 @@ static func _nearest_hero_index(encounters: Array, resolved: Dictionary, control
 	return best
 
 static func _convert_legacy_host(session: SessionStateStoreScript.SessionData, entry: Dictionary, controller: String) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _convert_legacy_host__gd(session, entry, controller)
+	var before := TurnEngine.before_writing(&"AiHeroRules._convert_legacy_host", [session, entry, controller])
+	var result = _convert_legacy_host__gd(session, entry, controller)
+	TurnEngine.check_writing(&"AiHeroRules._convert_legacy_host", before, [session, entry, controller], result)
+	return result
+
+static func _convert_legacy_host__gd(session: SessionStateStoreScript.SessionData, entry: Dictionary, controller: String) -> Dictionary:
 	var converted := entry.duplicate(true)
 	converted["legacy_encounter_id"] = String(entry.get("encounter_id", ""))
 	converted["encounter_id"] = AI_HERO_ENCOUNTER_ID
@@ -791,6 +807,14 @@ static func _convert_legacy_host(session: SessionStateStoreScript.SessionData, e
 	return converted
 
 static func _return_troops_to_nearest_town(session: SessionStateStoreScript.SessionData, entry: Dictionary, controller: String) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_return_troops_to_nearest_town__gd(session, entry, controller)
+		return
+	var before := TurnEngine.before_writing(&"AiHeroRules._return_troops_to_nearest_town", [session, entry, controller])
+	_return_troops_to_nearest_town__gd(session, entry, controller)
+	TurnEngine.check_writing(&"AiHeroRules._return_troops_to_nearest_town", before, [session, entry, controller], null)
+
+static func _return_troops_to_nearest_town__gd(session: SessionStateStoreScript.SessionData, entry: Dictionary, controller: String) -> void:
 	var stacks: Array = entry.get("enemy_army", {}).get("stacks", []) if entry.get("enemy_army", {}) is Dictionary else []
 	var home := _nearest_owned_town(session, controller, Vector2i(int(entry.get("x", 0)), int(entry.get("y", 0))), LevelRules.level_of(entry))
 	if home.is_empty() or stacks.is_empty():
@@ -1418,6 +1442,14 @@ static func _recruit_set_value(recruits: Dictionary) -> float:
 	return AiEngine.native_writing(&"AiHeroRules._recruit_set_value", [recruits])
 
 static func _upgrade_value(town: Dictionary, building: Dictionary) -> float:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _upgrade_value__gd(town, building)
+	var before := TurnEngine.before_writing(&"AiHeroRules._upgrade_value", [town, building])
+	var result = _upgrade_value__gd(town, building)
+	TurnEngine.check_writing(&"AiHeroRules._upgrade_value", before, [town, building], result)
+	return result
+
+static func _upgrade_value__gd(town: Dictionary, building: Dictionary) -> float:
 	var upgraded := String(building.get("unlock_unit_id", ""))
 	var base_building := ContentService.get_building(String(building.get("upgrade_from", "")))
 	var base_unit := String(base_building.get("unlock_unit_id", ""))
@@ -4381,6 +4413,14 @@ static func _attack_town__gd(session: SessionStateStoreScript.SessionData, conte
 	return {"arrived": true, "events": events}
 
 static func _attack_player_hero(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, plan: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _attack_player_hero__gd(session, context, index, plan)
+	var before := TurnEngine.before_writing(&"AiHeroRules._attack_player_hero", [session, context, index, plan])
+	var result = _attack_player_hero__gd(session, context, index, plan)
+	TurnEngine.check_writing(&"AiHeroRules._attack_player_hero", before, [session, context, index, plan], result)
+	return result
+
+static func _attack_player_hero__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, plan: Dictionary) -> Dictionary:
 	var heroes: Array = session.overworld.get("player_heroes", [])
 	var hero_index := int(plan.get("index", -1))
 	if hero_index < 0 or hero_index >= heroes.size():

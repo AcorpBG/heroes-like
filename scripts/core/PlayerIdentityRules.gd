@@ -92,6 +92,14 @@ static func has_human_seat(session) -> bool:
 	return false
 
 static func config_for_controller(session, controller: String) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return config_for_controller__gd(session, controller)
+	var before := TurnEngine.before_writing(&"PlayerIdentityRules.config_for_controller", [session, controller])
+	var result = config_for_controller__gd(session, controller)
+	TurnEngine.check_writing(&"PlayerIdentityRules.config_for_controller", before, [session, controller], result)
+	return result
+
+static func config_for_controller__gd(session, controller: String) -> Dictionary:
 	var result := identity_fields(session, controller)
 	result["label"] = String(ContentService.get_faction(String(result.faction_id)).get("name", result.faction_id))
 	return result

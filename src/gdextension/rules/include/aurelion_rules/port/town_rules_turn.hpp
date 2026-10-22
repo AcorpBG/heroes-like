@@ -28,7 +28,7 @@ ArrayRef accessible_spell_ids(State &state, DictRef town);
 int64_t current_spell_tier(State &state, DictRef town);
 ArrayRef spell_ids_through_tier(State &state, DictRef town, int64_t tier);
 
-// Not run by the six seeds: each throws state::NotPorted (turn_not_ported.cpp).
+// Not run by the six seeds, and ported by Phase 5's slice 09: until it is merged each throws state::NotPorted (turn_not_ported.cpp).
 DictRef teach_visiting_heroes(State &state, DictRef session, DictRef town);
 
 } // namespace aurelion::rules::port::town_rules

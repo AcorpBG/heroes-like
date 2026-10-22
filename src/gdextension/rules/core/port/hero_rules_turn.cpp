@@ -36,6 +36,8 @@ namespace key = state::key;
 
 // HeroCommandRules.ARMY_SLOT_COUNT.
 constexpr int64_t kArmySlotCount = 7;
+// HeroProgressionRules.RECRUIT_GROWTH_MAX_TIER.
+constexpr int64_t kRecruitGrowthMaxTier = 6;
 
 // ceili(x).
 int64_t ceili(double x) {
@@ -481,6 +483,31 @@ DictRef advance_to_level(State &state, DictRef hero_state, int64_t target_level)
 int64_t pending_choices_remaining(State &state, DictRef hero_state) {
 	const DictRef hero = ensure_hero_progression(state, gd::deep_duplicate_dict(state, hero_state));
 	return raw_pending_choices_remaining(state, hero);
+}
+
+DictRef scale_recruit_growth(State &state, DictRef hero_state, const Value &growth_payload) {
+	const DictRef bonuses = aggregate_bonuses(state, hero_state);
+	const double multiplier = compat::engine_max<double>(0.0, 1.0 + gd::to_float(state.get(bonuses, str(key::recruit_growth_multiplier), Value::of_float(0.0))));
+	const DictRef scaled = state.new_dict();
+	if (!gd::is_dict(growth_payload)) {
+		return scaled;
+	}
+	for (const Value &unit_id : gd::items(state, array_value(gd::keys(state, growth_payload.ref)))) {
+		const Atom unit_text = gd::stringify(state, unit_id);
+		const int64_t amount = compat::engine_max<int64_t>(0, gd::to_int(state, gd::index(state, growth_payload.ref, unit_id)));
+		// Tier 7 keeps the town's own growth: one commander turning 2 a week
+		// into 3 was too much.
+		if (gd::to_int(state, state.get(gd::content_row(state, state::ContentTable::Unit, unit_text), str(key::tier), int_value(0))) > kRecruitGrowthMaxTier) {
+			state.set(scaled, str(unit_text), int_value(amount));
+			continue;
+		}
+		int64_t adjusted = compat::float_to_int(compat::godot_round(static_cast<double>(amount) * multiplier));
+		if (amount > 0 && adjusted <= 0) {
+			adjusted = 1;
+		}
+		state.set(scaled, str(unit_text), int_value(adjusted));
+	}
+	return scaled;
 }
 
 Atom rank_label(State &state, int64_t rank) {

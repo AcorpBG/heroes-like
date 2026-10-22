@@ -25,8 +25,10 @@ using state::Value;
 // Ported in enemy_turn_rules_turn.cpp.
 void set_resource_controller(State &state, DictRef node, const Value &session, Atom controller);
 
-// Not run by the six seeds: each throws state::NotPorted (turn_not_ported.cpp).
+// Ported in turn_rare_paths.cpp (slice 4.2: paths the six seeds do not run).
 DictRef config_for_controller(State &state, const Value &session, Atom controller);
+
+// Not run by the six seeds, and ported by Phase 5's slice 09: until it is merged each throws state::NotPorted (turn_not_ported.cpp).
 Atom defender_controller_id(State &state, DictRef record);
 ArrayRef from_slots(State &state, ArrayRef slots);
 

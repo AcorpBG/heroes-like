@@ -55,13 +55,8 @@ DictRef build_ai_event_record(State &state, DictRef session, DictRef config, Ato
 Atom raid_commander_display_name(State &state, DictRef encounter);
 Atom raid_commander_name(State &state, DictRef encounter);
 
-// Not run by the six seeds: each throws state::NotPorted (turn_not_ported.cpp).
-DictRef _active_resource_defender_entry(State &state, DictRef session, DictRef node, Atom faction_filter = state::key::empty);
-DictRef _active_town_defender_entry(State &state, DictRef session, DictRef town, Atom faction_filter = state::key::empty);
-int64_t _ai_hero_task_retention_priority(State &state, DictRef task);
+// Ported in enemy_adventure_rules_turn_rare.cpp (slice 4.2: paths the six seeds do not run).
 DictRef _clear_regroup_target(State &state, DictRef raid);
-void _clear_resource_defender_metadata(State &state, DictRef node);
-void _clear_town_defender_metadata(State &state, DictRef town);
 ArrayRef _current_enemy_player_hero_sighting_records(State &state, DictRef session, DictRef config, Atom faction_id, const Value &preloaded_sources = Value(), const Value &projection_profile = Value());
 DictRef _default_enemy_strategy(State &state);
 ArrayRef _default_reason_codes_for_target(State &state, Atom target_kind, Atom target_id, DictRef target);
@@ -81,10 +76,10 @@ ArrayRef _player_hero_snapshots_for_intercept(State &state, DictRef session, boo
 int64_t _preferred_commander_index_for_encounter(State &state, DictRef encounter);
 DictRef _secure_native_passage_target(State &state, DictRef session, DictRef raid, DictRef state_, Atom faction_id, DictRef node, bool preserve_target = false);
 Atom _town_controller_faction_id(State &state, DictRef town_state);
+bool _town_is_objective_anchor(State &state, DictRef session, Atom placement_id);
 bool commander_can_deploy(State &state, const Value &source);
 Atom commander_recent_outcome_brief(State &state, const Value &source);
 DictRef enemy_strategy(State &state, DictRef config, Atom faction_id);
-bool is_active_pressure_host(State &state, const Value &encounter, Atom faction_id, const Value &resolved_encounters);
 DictRef occupied_raid_commander_ids(State &state, DictRef session, Atom faction_id = state::key::empty, Atom exclude_placement_id = state::key::empty);
 Atom raid_display_name(State &state, DictRef encounter);
 int64_t raid_strength(State &state, DictRef encounter);
@@ -92,5 +87,13 @@ Atom select_raid_commander_roster_hero_id(State &state, DictRef session, Atom fa
 int64_t strategy_int(State &state, DictRef strategy, Atom section, Atom key, int64_t default_value = 0);
 double strategy_scalar(State &state, DictRef strategy, Atom section, Atom key, double default_value = 1.0);
 bool target_is_objective_anchor(State &state, DictRef session, Atom target_kind, Atom placement_id);
+
+// Not run by the six seeds, and ported by Phase 5's slice 09: until it is merged each throws state::NotPorted (turn_not_ported.cpp).
+DictRef _active_resource_defender_entry(State &state, DictRef session, DictRef node, Atom faction_filter = state::key::empty);
+DictRef _active_town_defender_entry(State &state, DictRef session, DictRef town, Atom faction_filter = state::key::empty);
+int64_t _ai_hero_task_retention_priority(State &state, DictRef task);
+void _clear_resource_defender_metadata(State &state, DictRef node);
+void _clear_town_defender_metadata(State &state, DictRef town);
+bool is_active_pressure_host(State &state, const Value &encounter, Atom faction_id, const Value &resolved_encounters);
 
 } // namespace aurelion::rules::port::enemy_adventure_rules
