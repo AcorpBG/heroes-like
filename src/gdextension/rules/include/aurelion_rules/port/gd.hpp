@@ -338,7 +338,8 @@ inline void set_static_var(State &state, Atom script, Atom name, const Value &va
 // arguments. Everything the call changed is written back first and read again
 // afterwards: an items() range or a const DictNode & held across it is no
 // longer valid. In a call where no GDScript may run (a shadow check, a call
-// that writes nothing back) the native call ends there (state::Suspend).
+// that writes nothing back) the native call ends there (state::Suspend). A
+// pure host (port::Host::pure) is written back to but not read again.
 Value call_static(State &state, Atom script, Atom function, std::initializer_list<Value> args);
 
 // "%d,%d" % [a, b] for ints.

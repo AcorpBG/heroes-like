@@ -543,6 +543,14 @@ void AurelionRules::record_mismatch(PortStats &stats, const char *name, const st
 	}
 }
 
+// A path the port leaves out, in a subsystem that falls back to GDScript: no
+// failure, but the stats name the first ones, as they do mismatches.
+void AurelionRules::keep_not_ported(PortStats &stats, const char *reason) {
+	if (stats.first.size() < kKeptMismatches) {
+		stats.first.push_back(std::string("not ported: ") + reason);
+	}
+}
+
 void AurelionRules::count_host_calls(PortStats &stats, const aurelion::rules::bridge::PortBridge &port) {
 	const auto &made = port.host_calls_made();
 	if (made.empty()) {
@@ -745,6 +753,7 @@ String AurelionRules::port_check(const StringName &name, const Array &args, cons
 			++stats.not_ported;
 			if (stats.fallback) {
 				--stats.checks;
+				keep_not_ported(stats, reason.what());
 				return String();
 			}
 			error = true;
@@ -860,6 +869,7 @@ int64_t AurelionRules::port_validate_begin(const StringName &name, const Array &
 			if (stats.fallback) {
 				--stats.checks;
 				check.not_ported = true;
+				keep_not_ported(stats, reason.what());
 			} else {
 				check.error = not_ported_failure(reason.what());
 			}

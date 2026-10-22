@@ -165,6 +165,7 @@ private:
 	const aurelion::rules::port::Function *port_function(const StringName &name);
 	PortStats &stats_of(const aurelion::rules::port::Function *function);
 	void record_mismatch(PortStats &stats, const char *name, const std::string &text, bool error);
+	void keep_not_ported(PortStats &stats, const char *reason);
 	void count_port_use();
 	void count_host_calls(PortStats &stats, const aurelion::rules::bridge::PortBridge &port);
 	void write_port_stats() const;
