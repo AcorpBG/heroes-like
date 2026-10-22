@@ -1713,6 +1713,75 @@ mismatches (40 human paths left to GDScript); native mode against main on the si
 Timing, from the native check on the six seeds (beside another session's parity run): whole games 728 s on main, 674 s
 with the day native (1.08x); l1 186 to 174 s, l2 194 to 181 s.
 
+**Slice 08, the merge** (2026-10-22; owner decision 2026-10-22: "Phase 5 merges after its checks"; main tagged
+`pre-native-phase5-day` at cf890f9c2 before the merge):
+- The switch stays (coordinator, 2026-10-22). `HEROES_NATIVE_DAY` unset runs the day native, and so does an unknown
+  value, with an error. `gdscript` is the owner's way back if the native day goes wrong in a real game. `shadow`, with
+  `HEROES_NATIVE_DAY_LOG`, is the check. Every ported function keeps its GDScript body (`<name>__gd`) for the paths
+  the port leaves to GDScript, so the switch costs almost nothing.
+- Two copies: 359 functions have a C++ port that the day calls and a GDScript body that the paths the port leaves out,
+  `gdscript` mode, the UI, human actions and battles call. A behaviour change to one goes into both copies in the same
+  commit, plus one six-seed shadow run of the day switch (AGENTS.md). 63 of them are the shared helpers that Phase 3's
+  AI port also calls, already under its rule. The 8 HeroProgressionRules functions marked "Phase 1's port, copied"
+  above are also in Phase 1's branch. The slices' frozen lists end at this merge, but Phase 4's freeze (AGENTS.md)
+  covers many of these functions until its own merge.
+  - OverworldRules (126): `_add_recruit_growth`, `_add_resources`, `_advance_all_town_occupations`, `_advance_all_town_recovery`, `_advance_player_reserve_deliveries`, `_advance_town_occupation`, `_advance_town_recovery`, `_append_generated_body_tiles_to_blocked_index`, `_apply_hero_reveal`, `_apply_site_reveal`, `_blank_project_vulnerability_penalties`, `_blank_visibility_grid`, `_blocked_scenery_layer`, `_build_blocked_scenery_layer`, `_build_blocked_tile_index`, `_build_fog_payload`, `_build_scenario_army_state`, `_clear_resource_site_delivery`, `_command_risk_field_item`, `_command_risk_forecast`, `_command_risk_forecast_from_normalized_session`, `_command_risk_grade_label`, `_command_risk_items`, `_command_risk_logistics_items`, `_command_risk_objective_items`, `_command_risk_player_town_daybreak_contexts`, `_command_risk_posture_items`, `_command_risk_town_items`, `_compact_enemy_activity_events`, `_copy_resource_runtime_metadata`, `_copy_town_runtime_metadata`, `_count_grid`, `_describe_recruit_delta`, `_describe_resource_delta`, `_duplicate_visibility_grid`, `_end_turn_close_day`, `_end_turn_muster_summary`, `_end_turn_open_day`, `_end_turn_resolution_summary`, `_end_turn_town_economy_summary`, `_enemy_activity_line`, `_enemy_activity_public_text`, `_evaluate_scenario_state`, `_finalize_action_result`, `_find_encounter_by_placement`, `_find_town_by_placement`, `_fog_grids`, `_fog_grids_uncached`, `_fog_state_ready`, `_generated_body_tiles_for_placement`, `_grid_cell`, `_map_object_blocks_body_tiles`, `_map_object_footprint_origin`, `_map_object_for_resource_node`, `_map_object_world_body_tiles`, `_mark_runtime_normalized`, `_merge_visibility_grids`, `_migrate_generated_transit_meanings`, `_nearest_town_for_controller`, `_normalize_active_town_visit_context`, `_normalize_artifact_nodes`, `_normalize_command_briefing`, `_normalize_command_risk_forecast`, `_normalize_delivery_completion_counts`, `_normalize_enemy_states`, `_normalize_fog_of_war`, `_normalize_generated_runtime_materialization`, `_normalize_live_resource_stockpile`, `_normalize_recruit_payload`, `_normalize_resource_nodes`, `_normalize_scenario_resources`, `_normalize_scenario_state_rules`, `_normalize_town_front_state`, `_normalize_town_recovery_state`, `_normalize_towns`, `_normalize_visibility_grid`, `_player_hero_states`, `_player_heroes_daily_income`, `_project_dependency_ids`, `_project_player_town_at_daybreak`, `_raid_is_public`, `_reduce_command_risk_items`, `_refresh_all_player_heroes_for_new_day`, `_refresh_blocked_tile_index`, `_resolved_lookup_entry`, `_resource_keys_for_payload`, `_resource_node_blocks_body_tiles`, `_resource_node_has_runtime_object_contract`, `_resource_node_matches_controller`, `_resource_site_control_income_for_day`, `_resource_site_delivery_target_label`, `_resource_site_is_persistent`, `_resource_site_is_repeatable`, `_resource_site_weekly_recruits`, `_reveal_all_current_fog_sources`, `_reveal_current_fog_sources`, `_runtime_normalization_signature`, `_set_grid_cell`, `_short_player_text`, `_tile_key`, `_town_building_bonus_total`, `_town_capital_project_ids`, `_town_capital_project_recovery_relief`, `_town_capital_project_state`, `_town_command_risk_state`, `_town_matches_controller`, `_town_recovery_relief_rating`, `_weighted_recruit_value`, `_world_tiles_from_payload_array`, `apply_controlled_resource_site_musters`, `controlled_resource_site_income`, `derive_map_size`, `describe_enemy_activity`, `encounter_key`, `fog_for_level`, `held_site_vision_radius`, `hero_level`, `hero_position`, `is_encounter_resolved`, `is_tile_visible`, `is_weekly_growth_day`, `normalize_overworld_state`, `refresh_fog_of_war`, `resolved_encounter_lookup`, `resource_node_is_present`, `town_strategic_role`.
+  - EnemyAdventureRules (67): `_active_commander_map`, `_ai_event_summary`, `_apply_commander_army_metadata`, `_apply_commander_memory_metadata`, `_apply_commander_record_metadata`, `_apply_commander_role_metadata`, `_army_continuity_status`, `_army_continuity_summary`, `_army_headcount`, `_army_strength`, `_base_enemy_army`, `_commander_renown_from_record`, `_commander_veterancy_rank_from_record`, `_faction_commander_ids`, `_fallen_hero_settled`, `_hero_starting_spell_ids`, `_is_army_continuity_payload`, `_merge_unique_strings`, `_normalize_army_payload`, `_normalize_command_payload`, `_normalize_commander_roster_entries`, `_normalize_commander_roster_entry`, `_normalize_commander_status`, `_normalize_enemy_hero_sighting_records`, `_normalize_enemy_progression`, `_normalize_enemy_scouted_target_records`, `_normalize_resource_defender_commander_states`, `_normalize_string_array`, `_normalize_town_defender_commander_states`, `_normalized_commander_army_continuity`, `_normalized_commander_memory`, `_normalized_commander_record`, `_normalized_commander_role_state`, `_normalized_commander_target_kind_counts`, `_normalized_specialty_focus_ids`, `_normalized_specialty_ranks`, `_placement_resolved`, `_preferred_enemy_specialty_id`, `_public_event_log_text`, `_public_reason_from_codes`, `_raid_is_public`, `_resolved_encounter_lookup`, `_resource_has_ai_defender`, `_sync_specialty_pick`, `_sync_unit_strength_memo`, `_town_has_ai_defender`, `_unit_strength_value`, `ai_public_event_log`, `ai_public_event_log_entry`, `ai_public_event_log_leak_check`, `build_raid_commander_state`, `build_roster_commander_state`, `commander_army_brief`, `commander_army_continuity`, `commander_army_status`, `commander_army_summary`, `commander_memory_brief`, `commander_memory_summary`, `commander_record_summary`, `commander_roster_for_faction`, `commander_veterancy_label`, `ensure_raid_army`, `normalize_all_commander_rosters`, `normalize_commander_roster`, `normalize_enemy_known_world_memory`, `normalize_raid_armies`, `sync_commander_army_continuity`.
+  - HeroProgressionRules (33): `_build_choice_group`, `_distinct_specialty_count`, `_enqueue_missing_choice_groups`, `_merge_bonuses`, `_normalize_pending_choices`, `_normalize_specialties`, `_normalize_specialties_in`, `_normalize_specialty_id_list`, `_offer_order`, `_rank_bonuses`, `_rank_in_array`, `_reconcile_pending_choices`, `_resolve_bonus_key`, `_specialty_catalog`, `_specialty_is_available`, `_specialty_row`, `_sum_bonus`, `aggregate_bonuses`, `available_specialty_ids`, `choose_specialty`, `command_path`, `current_pending_choice`, `daily_income_bonus`, `ensure_hero_progression`, `growth_seed`, `has_specialty`, `mana_max_bonus`, `max_rank_for_specialty`, `max_specialties_per_hero`, `raw_pending_choices_remaining`, `specialties`, `specialty_definition`, `specialty_rank`.
+  - ArtifactRules (22): `_append_inventory_artifact`, `_apply_bonus_payload`, `_artifact_exists`, `_artifact_is_owned`, `_artifact_spell_modifier_records`, `_blank_bonus_totals`, `_blank_equipped_slots`, `_compatible_equipment_slots`, `_first_empty_slot_from_candidates`, `_merge_resources`, `_merge_school_resistance`, `_register_equipped_candidate`, `_set_states_for_equipped`, `_string_array`, `aggregate_bonuses`, `artifact_set_insignia_state`, `artifact_set_record`, `artifact_slot`, `build_artifact_nodes`, `ensure_hero_artifacts`, `normalize_artifact_nodes`, `normalize_hero_artifacts`.
+  - EnemyTurnRules (15): `_blank_resource_pool`, `_default_raid_encounter_ids_for_faction`, `_default_spawn_points_for_faction`, `_enemy_faction_config_with_runtime_defaults`, `_enemy_faction_configs_for_session`, `_enemy_faction_configs_with_runtime_defaults`, `_find_state`, `_normalize_enemy_states_body`, `_normalize_posture`, `_normalize_rebuild_pressure_request`, `_normalize_resource_pool`, `_normalize_string_array`, `_owned_town_entries`, `_town_controller_faction_id`, `normalize_enemy_states`.
+  - HeroCommandRules (14): `_hero_index_by_id`, `_normalize_army`, `_normalize_authored_specialties`, `_normalize_movement`, `_normalize_player_hero`, `_normalize_town_garrison_heroes`, `_replace_hero_in_array`, `_sync_active_hero_mirror`, `active_hero`, `commit_active_hero`, `new_growth_seed`, `normalize_session`, `scout_row_half_width`, `scouting_radius_for_hero`.
+  - NativeTransitRules (10): `_network_colour_key`, `_portal_contract_error`, `assign_network_colours`, `contract_error`, `is_dead_end`, `is_native`, `network_index`, `nodes_by_id`, `normalize_legacy_session`, `validate`.
+  - PlayerIdentityRules (9): `controller_id`, `enemy_configs`, `faction_id`, `has_human_seat`, `identity_fields`, `normalize_compatibility`, `player`, `raid_controller_id`, `town_controller_id`.
+  - GeneratedRewardRules (8): `_gate_site`, `_hash32`, `_node`, `_pick`, `_roll`, `boat_tile`, `is_skipped`, `resolve`.
+  - OverworldLevelRules (8): `canonical_spatial_records`, `hero_level`, `level_count`, `level_of`, `on_level`, `position`, `query_level`, `town_entrance`.
+  - DifficultyRules (6): `_default_difficulty_id`, `_scale_amount`, `normalize_difficulty`, `normalize_session`, `scale_income_resources`, `scale_resource_payload`.
+  - ScenarioRules (6): `_objective_met`, `evaluate_session`, `normalize_scenario_state`, `objective_definitions`, `objectives_for_session`, `scenario_record_for_session`.
+  - CommonMineRules (5): `block_tiles`, `body_tiles`, `entry_tile`, `origin`, `resource`.
+  - ScenarioScriptRules (5): `_join_messages`, `_retry_pending_reinforcements`, `_sorted_hooks`, `normalize_script_state`, `process_hooks`.
+  - SpellRules (5): `_normalize_spell_ids`, `ensure_hero_spellbook`, `mana_max_from_command`, `mana_max_from_hero`, `refresh_daily_mana`.
+  - AiHeroRules (4): `active_hero_count`, `is_ai_hero`, `migrate_legacy_raids`, `normalize_ai_heroes`.
+  - PlayerEliminationRules (4): `applies`, `apply_daily`, `heroes_held`, `towns_held`.
+  - GeneratedScenarioObjectiveRules (3): `definitions`, `progress`, `uses_kind`.
+  - MineRules (3): `block_tiles`, `origin`, `resource`.
+  - ScenarioFactory (2): `_build_army_state`, `_normalize_resources`.
+  - TownDevelopmentRules (2): `convert_reserves`, `migrate_town`.
+  - SessionStateStore (1): `normalize_launch_mode`.
+  - WaterTravelRules (1): `normalize`.
+- Not folded: 11 of them also have a private copy in Phase 3's AI port (`overworld_rules_ai_recovery.cpp`,
+  `overworld_rules_ai_sites.cpp`): `_describe_recruit_delta`, `_find_encounter_by_placement`,
+  `_nearest_town_for_controller`, `_normalize_town_front_state`, `_normalize_town_recovery_state`,
+  `_sync_unit_strength_memo`, `_town_building_bonus_total`, `_town_capital_project_recovery_relief`,
+  `_town_matches_controller`, `_town_recovery_relief_rating`, `_weighted_recruit_value`. Slices 02 and 06b planned to
+  fold them here. They stay apart because the day's versions leave odd values to GDScript (`gd::stringify_or_fallback`,
+  `state::NotPorted`), and in an AI call that fails the call. Phase 4, whose one call runs both, folds them; until then
+  a change to one of them goes into all three copies.
+- Checks on the merge form:
+  - A human seat. A generated medium map with 3 players, played for 12 days through `OverworldShell`: each day the
+    human builds, recruits and walks a hero, then ends the turn through the confirmation. Run on main, and on the
+    branch in shadow and in native mode: the session was identical to main's after every action and every end of day
+    (23 digests). Shadow made 1,139 day checks with 0 mismatches. The human paths the port leaves out ran their
+    GDScript: the action result and its scenario check, 136 calls each; the day's close, 11; a player town's growth, 1.
+  - The end-turn confirmation's dry run (`OverworldShell._current_end_turn_warning`) never changed the session, in
+    any of the 39 dry runs, nor did cancelling it. Sessions are views and no native state outlives a call, so there
+    is nothing for it to invalidate.
+  - Save and load, both ways. Main and the branch each saved on day 6, and each build loaded both saves and played on
+    to day 12. All four games were identical at every step, and the two saves differ only in `saved_at_unix`.
+  - The edge cases the slices left to GDScript, on a small 2-player map, in shadow and native mode against main, all
+    identical: the human's towns given to the rival (9 days townless, with a battle), the rivals' towns given to the
+    human (the scenario completes on the first action), and non-ASCII town and hero names.
+  - After merging main's container fill (Phase 4, slice 4.0), shadow on the six seeds: 19,826 day checks, 0
+    mismatches, 0 errors; 4 computer-player removals left to GDScript (slice 05).
+  - Native mode, the default, against main cf890f9c2: identical on 6/6 seeds (415 daily digests and the match
+    records). Core suite 17/17 on Windows. The Linux libraries in `bin/` wait for the Linux pass; a Linux build needs
+    them, as it has since Phase 3 for the AI.
+- Speed. Whole games on the six seeds, against main cf890f9c2. Six at once with the editor binary, in the order main,
+  change, change, main, with Phases 1 and 4 paused. A process sampler saw no other Godot process at any sample;
+  Defender, the desktop app and Explorer briefly passed 20% of a core, and the System process took about 1.6 cores
+  while games ran. Results: 690, 651, 663 and 686 s, so 688 s on main and 657 s with the day native (1.05x, 4.5% less
+  time). l1 180 and 180 s to 173 and 176 s; l2 179 and 180 s to 172 and 175 s. The six games' wall time, set by the
+  slowest, went from 181 s to 174 to 177 s. Slice 07's 1.08x was measured beside another session's run.
+
 ### Phase 6: match throughput
 
 The runner keeps a native session handle across days and writes Dictionaries back only for the digest and record (with
