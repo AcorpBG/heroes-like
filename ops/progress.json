@@ -116206,15 +116206,15 @@
     {
       "id": "native-rules-phase2-b-payload-20261022",
       "title": "Native rules Phase 2b: the payload builder for every caller",
-      "status": "pending",
+      "status": "in_progress",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "the payload builder for every caller, `normalize_battle_state` and the end-of-battle numbers; then battles per second measured for G2.",
-      "updatedAt": "2026-10-22T09:58:17Z"
+      "notes": "branch `native-phase2-payload`: the payload builder for every caller (`create_battle_payload` and the town assault, resource defence and dwelling guard payloads), `normalize_battle_state` and `battle_payload_can_resume`, switched in the battle table; the end-of-battle numbers are slice 09's C++. Then battles per second measured for G2. Frozen until it merges: BattleRules 18 (transition doc, Phase 2, \"Slice 2b, frozen functions\").",
+      "updatedAt": "2026-10-22T14:30:00Z"
     },
     {
       "id": "native-rules-phase2-c-battle-tool-20261022",
