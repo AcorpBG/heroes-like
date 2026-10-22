@@ -10,6 +10,8 @@ const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const GeneratedObjectives = preload("res://scripts/core/GeneratedScenarioObjectiveRules.gd")
 const TownDevelopmentRulesScript = preload("res://scripts/core/TownDevelopmentRules.gd")
 const DayEngine = preload("res://scripts/core/DayEngine.gd")
+const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
+static var _turn_engine_mode: int = TurnEngine.mode
 static var _day_engine_mode: int = DayEngine.mode
 
 static var _scenario_dependency_metadata_cache: Dictionary = {}
@@ -1627,6 +1629,14 @@ static func _terrain_label(terrain_id: String) -> String:
 	return _titleize_token(terrain_id) if terrain_id != "" else "Unknown terrain"
 
 static func _titleize_token(value: String) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _titleize_token__gd(value)
+	var before := TurnEngine.before_writing(&"ScenarioRules._titleize_token", [value])
+	var result = _titleize_token__gd(value)
+	TurnEngine.check_writing(&"ScenarioRules._titleize_token", before, [value], result)
+	return result
+
+static func _titleize_token__gd(value: String) -> String:
 	if value == "":
 		return ""
 	var words := value.split("_")
@@ -1864,7 +1874,15 @@ static func _objective_label(session: SessionStateStoreScript.SessionData, objec
 			return "%s (%s)" % [base_label, String(session.flags.get(String(objective.get("flag", "")), "unset"))]
 	return base_label
 
-static func _hero_stationing_progress(
+static func _hero_stationing_progress(session: SessionStateStoreScript.SessionData, objective: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _hero_stationing_progress__gd(session, objective)
+	var before := TurnEngine.before_writing(&"ScenarioRules._hero_stationing_progress", [session, objective])
+	var result = _hero_stationing_progress__gd(session, objective)
+	TurnEngine.check_writing(&"ScenarioRules._hero_stationing_progress", before, [session, objective], result)
+	return result
+
+static func _hero_stationing_progress__gd(
 	session: SessionStateStoreScript.SessionData,
 	objective: Dictionary
 ) -> Dictionary:
@@ -1889,7 +1907,15 @@ static func _hero_stationing_progress(
 		"complete": hero_found and town_controlled and position_matches,
 	}
 
-static func _reserve_delivery_progress(
+static func _reserve_delivery_progress(session: SessionStateStoreScript.SessionData, objective: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _reserve_delivery_progress__gd(session, objective)
+	var before := TurnEngine.before_writing(&"ScenarioRules._reserve_delivery_progress", [session, objective])
+	var result = _reserve_delivery_progress__gd(session, objective)
+	TurnEngine.check_writing(&"ScenarioRules._reserve_delivery_progress", before, [session, objective], result)
+	return result
+
+static func _reserve_delivery_progress__gd(
 	session: SessionStateStoreScript.SessionData,
 	objective: Dictionary
 ) -> Dictionary:
@@ -1915,7 +1941,15 @@ static func _reserve_delivery_progress(
 		"complete": not relay.is_empty() and completed_count >= minimum_count,
 	}
 
-static func _map_exploration_progress(
+static func _map_exploration_progress(session: SessionStateStoreScript.SessionData, objective: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _map_exploration_progress__gd(session, objective)
+	var before := TurnEngine.before_writing(&"ScenarioRules._map_exploration_progress", [session, objective])
+	var result = _map_exploration_progress__gd(session, objective)
+	TurnEngine.check_writing(&"ScenarioRules._map_exploration_progress", before, [session, objective], result)
+	return result
+
+static func _map_exploration_progress__gd(
 	session: SessionStateStoreScript.SessionData,
 	objective: Dictionary
 ) -> Dictionary:
@@ -1938,7 +1972,15 @@ static func _map_exploration_progress(
 		"complete": total_tiles > 0 and explored_count >= required_count,
 	}
 
-static func _resource_stockpile_progress(
+static func _resource_stockpile_progress(session: SessionStateStoreScript.SessionData, objective: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _resource_stockpile_progress__gd(session, objective)
+	var before := TurnEngine.before_writing(&"ScenarioRules._resource_stockpile_progress", [session, objective])
+	var result = _resource_stockpile_progress__gd(session, objective)
+	TurnEngine.check_writing(&"ScenarioRules._resource_stockpile_progress", before, [session, objective], result)
+	return result
+
+static func _resource_stockpile_progress__gd(
 	session: SessionStateStoreScript.SessionData,
 	objective: Dictionary
 ) -> Dictionary:
@@ -1967,7 +2009,15 @@ static func _resource_stockpile_progress(
 		complete = complete and met
 	return {"requirements": rows, "complete": complete}
 
-static func _resource_site_control_progress(
+static func _resource_site_control_progress(session: SessionStateStoreScript.SessionData, objective: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _resource_site_control_progress__gd(session, objective)
+	var before := TurnEngine.before_writing(&"ScenarioRules._resource_site_control_progress", [session, objective])
+	var result = _resource_site_control_progress__gd(session, objective)
+	TurnEngine.check_writing(&"ScenarioRules._resource_site_control_progress", before, [session, objective], result)
+	return result
+
+static func _resource_site_control_progress__gd(
 	session: SessionStateStoreScript.SessionData,
 	objective: Dictionary
 ) -> Dictionary:
@@ -1995,7 +2045,15 @@ static func _resource_site_control_progress(
 		"complete": controlled_ids.size() >= minimum_count,
 	}
 
-static func _hero_army_requirement_progress(
+static func _hero_army_requirement_progress(session: SessionStateStoreScript.SessionData, objective: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _hero_army_requirement_progress__gd(session, objective)
+	var before := TurnEngine.before_writing(&"ScenarioRules._hero_army_requirement_progress", [session, objective])
+	var result = _hero_army_requirement_progress__gd(session, objective)
+	TurnEngine.check_writing(&"ScenarioRules._hero_army_requirement_progress", before, [session, objective], result)
+	return result
+
+static func _hero_army_requirement_progress__gd(
 	session: SessionStateStoreScript.SessionData,
 	objective: Dictionary
 ) -> Dictionary:
@@ -2031,7 +2089,15 @@ static func _hero_army_requirement_progress(
 		"complete": not rows.is_empty() and not army.is_empty() and ready_count == rows.size(),
 	}
 
-static func _town_garrison_requirement_progress(
+static func _town_garrison_requirement_progress(session: SessionStateStoreScript.SessionData, objective: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _town_garrison_requirement_progress__gd(session, objective)
+	var before := TurnEngine.before_writing(&"ScenarioRules._town_garrison_requirement_progress", [session, objective])
+	var result = _town_garrison_requirement_progress__gd(session, objective)
+	TurnEngine.check_writing(&"ScenarioRules._town_garrison_requirement_progress", before, [session, objective], result)
+	return result
+
+static func _town_garrison_requirement_progress__gd(
 	session: SessionStateStoreScript.SessionData,
 	objective: Dictionary
 ) -> Dictionary:
@@ -2071,7 +2137,15 @@ static func _town_garrison_requirement_progress(
 		"complete": not rows.is_empty() and town_controlled and ready_count == rows.size(),
 	}
 
-static func _artifact_set_equipment_progress(
+static func _artifact_set_equipment_progress(session: SessionStateStoreScript.SessionData, objective: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _artifact_set_equipment_progress__gd(session, objective)
+	var before := TurnEngine.before_writing(&"ScenarioRules._artifact_set_equipment_progress", [session, objective])
+	var result = _artifact_set_equipment_progress__gd(session, objective)
+	TurnEngine.check_writing(&"ScenarioRules._artifact_set_equipment_progress", before, [session, objective], result)
+	return result
+
+static func _artifact_set_equipment_progress__gd(
 	session: SessionStateStoreScript.SessionData,
 	objective: Dictionary
 ) -> Dictionary:
@@ -2104,7 +2178,15 @@ static func _artifact_set_equipment_progress(
 		break
 	return result
 
-static func _hero_progression_requirement_progress(
+static func _hero_progression_requirement_progress(session: SessionStateStoreScript.SessionData, objective: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _hero_progression_requirement_progress__gd(session, objective)
+	var before := TurnEngine.before_writing(&"ScenarioRules._hero_progression_requirement_progress", [session, objective])
+	var result = _hero_progression_requirement_progress__gd(session, objective)
+	TurnEngine.check_writing(&"ScenarioRules._hero_progression_requirement_progress", before, [session, objective], result)
+	return result
+
+static func _hero_progression_requirement_progress__gd(
 	session: SessionStateStoreScript.SessionData,
 	objective: Dictionary
 ) -> Dictionary:
@@ -2139,6 +2221,14 @@ static func _hero_progression_requirement_progress(
 	}
 
 static func _controlled_hero_state(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _controlled_hero_state__gd(session, hero_id)
+	var before := TurnEngine.before_writing(&"ScenarioRules._controlled_hero_state", [session, hero_id])
+	var result = _controlled_hero_state__gd(session, hero_id)
+	TurnEngine.check_writing(&"ScenarioRules._controlled_hero_state", before, [session, hero_id], result)
+	return result
+
+static func _controlled_hero_state__gd(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
 	if session == null or hero_id == "":
 		return {}
 	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
@@ -2155,6 +2245,14 @@ static func _controlled_hero_state(session: SessionStateStoreScript.SessionData,
 	return {}
 
 static func _controlled_hero_army(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _controlled_hero_army__gd(session, hero_id)
+	var before := TurnEngine.before_writing(&"ScenarioRules._controlled_hero_army", [session, hero_id])
+	var result = _controlled_hero_army__gd(session, hero_id)
+	TurnEngine.check_writing(&"ScenarioRules._controlled_hero_army", before, [session, hero_id], result)
+	return result
+
+static func _controlled_hero_army__gd(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
 	if session == null or hero_id == "":
 		return {}
 	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
@@ -2167,6 +2265,14 @@ static func _controlled_hero_army(session: SessionStateStoreScript.SessionData, 
 	return hero_army if hero_army is Dictionary else {}
 
 static func _army_unit_count(army: Dictionary, unit_id: String) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _army_unit_count__gd(army, unit_id)
+	var before := TurnEngine.before_writing(&"ScenarioRules._army_unit_count", [army, unit_id])
+	var result = _army_unit_count__gd(army, unit_id)
+	TurnEngine.check_writing(&"ScenarioRules._army_unit_count", before, [army, unit_id], result)
+	return result
+
+static func _army_unit_count__gd(army: Dictionary, unit_id: String) -> int:
 	if army.is_empty() or unit_id == "":
 		return 0
 	var total := 0
@@ -2179,6 +2285,14 @@ static func _army_unit_count(army: Dictionary, unit_id: String) -> int:
 	return total
 
 static func _player_owns_artifact(session: SessionStateStoreScript.SessionData, artifact_id: String) -> bool:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _player_owns_artifact__gd(session, artifact_id)
+	var before := TurnEngine.before_writing(&"ScenarioRules._player_owns_artifact", [session, artifact_id])
+	var result = _player_owns_artifact__gd(session, artifact_id)
+	TurnEngine.check_writing(&"ScenarioRules._player_owns_artifact", before, [session, artifact_id], result)
+	return result
+
+static func _player_owns_artifact__gd(session: SessionStateStoreScript.SessionData, artifact_id: String) -> bool:
 	if session == null or artifact_id == "":
 		return false
 	var active_hero = session.overworld.get("hero", {})
@@ -2198,6 +2312,14 @@ static func _player_owns_artifact(session: SessionStateStoreScript.SessionData, 
 	return false
 
 static func _player_knows_spell(session: SessionStateStoreScript.SessionData, spell_id: String) -> bool:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _player_knows_spell__gd(session, spell_id)
+	var before := TurnEngine.before_writing(&"ScenarioRules._player_knows_spell", [session, spell_id])
+	var result = _player_knows_spell__gd(session, spell_id)
+	TurnEngine.check_writing(&"ScenarioRules._player_knows_spell", before, [session, spell_id], result)
+	return result
+
+static func _player_knows_spell__gd(session: SessionStateStoreScript.SessionData, spell_id: String) -> bool:
 	if session == null or spell_id == "":
 		return false
 	var active_hero = session.overworld.get("hero", {})
@@ -2220,6 +2342,14 @@ static func _objective_marker(is_victory: bool, met: bool) -> String:
 	return "[!]" if met else "[ ]"
 
 static func _town_has_objective_building(town: Dictionary, building_id: String) -> bool:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _town_has_objective_building__gd(town, building_id)
+	var before := TurnEngine.before_writing(&"ScenarioRules._town_has_objective_building", [town, building_id])
+	var result = _town_has_objective_building__gd(town, building_id)
+	TurnEngine.check_writing(&"ScenarioRules._town_has_objective_building", before, [town, building_id], result)
+	return result
+
+static func _town_has_objective_building__gd(town: Dictionary, building_id: String) -> bool:
 	if building_id == "":
 		return false
 	var built = town.get("built_buildings", [])
@@ -2238,6 +2368,14 @@ static func _town_has_objective_building(town: Dictionary, building_id: String) 
 	return TownDevelopmentRulesScript.satisfies(built, required)
 
 static func _find_town(session: SessionStateStoreScript.SessionData, objective: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _find_town__gd(session, objective)
+	var before := TurnEngine.before_writing(&"ScenarioRules._find_town", [session, objective])
+	var result = _find_town__gd(session, objective)
+	TurnEngine.check_writing(&"ScenarioRules._find_town", before, [session, objective], result)
+	return result
+
+static func _find_town__gd(session: SessionStateStoreScript.SessionData, objective: Dictionary) -> Dictionary:
 	var placement_id := String(objective.get("placement_id", ""))
 	var town_id := String(objective.get("town_id", ""))
 	for town in session.overworld.get("towns", []):

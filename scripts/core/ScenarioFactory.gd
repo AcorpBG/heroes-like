@@ -25,6 +25,8 @@ const ScenarioScriptRulesScript = preload("res://scripts/core/ScenarioScriptRule
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const RandomMapGeneratorRulesScript = preload("res://scripts/core/RandomMapGeneratorRules.gd")
+const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
+static var _turn_engine_mode: int = TurnEngine.mode
 
 static func create_session(
 	scenario_id: String,
@@ -235,6 +237,14 @@ static func _build_army_state(army_template: Dictionary) -> Dictionary:
 	}
 
 static func _build_town_states(placements: Variant) -> Array:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _build_town_states__gd(placements)
+	var before := TurnEngine.before_writing(&"ScenarioFactory._build_town_states", [placements])
+	var result = _build_town_states__gd(placements)
+	TurnEngine.check_writing(&"ScenarioFactory._build_town_states", before, [placements], result)
+	return result
+
+static func _build_town_states__gd(placements: Variant) -> Array:
 	var towns := []
 	if not (placements is Array):
 		return towns
@@ -456,6 +466,14 @@ static func _add_resource_sets(left: Dictionary, right: Dictionary) -> Dictionar
 	return result
 
 static func _build_resource_states(placements: Variant) -> Array:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _build_resource_states__gd(placements)
+	var before := TurnEngine.before_writing(&"ScenarioFactory._build_resource_states", [placements])
+	var result = _build_resource_states__gd(placements)
+	TurnEngine.check_writing(&"ScenarioFactory._build_resource_states", before, [placements], result)
+	return result
+
+static func _build_resource_states__gd(placements: Variant) -> Array:
 	var nodes := []
 	if not (placements is Array):
 		return nodes
@@ -481,6 +499,14 @@ static func _build_resource_states(placements: Variant) -> Array:
 	return nodes
 
 static func _copy_resource_runtime_metadata(target: Dictionary, source: Dictionary) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_copy_resource_runtime_metadata__gd(target, source)
+		return
+	var before := TurnEngine.before_writing(&"ScenarioFactory._copy_resource_runtime_metadata", [target, source])
+	_copy_resource_runtime_metadata__gd(target, source)
+	TurnEngine.check_writing(&"ScenarioFactory._copy_resource_runtime_metadata", before, [target, source], null)
+
+static func _copy_resource_runtime_metadata__gd(target: Dictionary, source: Dictionary) -> void:
 	for key in [
 		"content_batch_id",
 		"object_id",
@@ -597,4 +623,12 @@ static func _duplicate_array(value: Variant) -> Array:
 	return value.duplicate(true) if value is Array else []
 
 static func _duplicate_dict(value: Variant) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _duplicate_dict__gd(value)
+	var before := TurnEngine.before_writing(&"ScenarioFactory._duplicate_dict", [value])
+	var result = _duplicate_dict__gd(value)
+	TurnEngine.check_writing(&"ScenarioFactory._duplicate_dict", before, [value], result)
+	return result
+
+static func _duplicate_dict__gd(value: Variant) -> Dictionary:
 	return value.duplicate(true) if value is Dictionary else {}

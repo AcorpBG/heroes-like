@@ -118,6 +118,9 @@ public:
 	// The host calls this call made that ran GDScript on the call's own state
 	// (call_static): no write-back before one can be undone.
 	size_t full_host_calls() const { return full_host_calls_; }
+	// An undoable write-back set an object's properties or metadata (its
+	// view), which undo_write_backs() does not put back.
+	bool undo_lost() const { return undo_lost_; }
 	// The GDScript fallback of a call that made no full host call: every
 	// container and static var its pure host calls wrote back takes back, in
 	// place, what it held before the call.
@@ -280,6 +283,7 @@ private:
 	bool host_calls_ = false;
 	std::vector<std::pair<uint32_t, uint32_t>> host_calls_made_;
 	size_t full_host_calls_ = 0;
+	bool undo_lost_ = false;
 	// The undoable write-backs so far: each container they wrote, with what it
 	// held before (Array and Dictionary: duplicate(false); a packed array:
 	// duplicate()), and each static var they assigned, with its value before.

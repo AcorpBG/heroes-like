@@ -22,7 +22,7 @@ using overworld_rules::Vector2i;
 using state::State;
 using state::Value;
 
-// Not run by the six seeds: each throws state::NotPorted (turn_not_ported.cpp).
+// Ported in scenario_turn_rare.cpp (slice 4.2: paths the six seeds do not run).
 ArrayRef _build_resource_states(State &state, const Value &placements);
 ArrayRef _build_town_states(State &state, const Value &placements);
 void _copy_resource_runtime_metadata(State &state, DictRef target, DictRef source);

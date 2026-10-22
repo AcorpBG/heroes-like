@@ -25,7 +25,7 @@ void action(State &state, const Value &session, DictRef actor, Atom verb);
 void move(State &state, const Value &session, DictRef actor, DictRef before);
 void player_turn(State &state, const Value &session, DictRef config);
 
-// Not run by the six seeds: each throws state::NotPorted (turn_not_ported.cpp).
+// Ported in turn_rare_paths.cpp (slice 4.2: paths the six seeds do not run).
 Atom _actor_name(State &state, DictRef actor);
 DictRef _visual_actor(State &state, DictRef actor, DictRef point);
 bool visible(State &state, const Value &session, DictRef point);

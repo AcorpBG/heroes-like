@@ -1264,7 +1264,8 @@ a41e38754 Windows binaries; runtime on main 6a8c9a736, 27bee9e26 Windows binarie
 - `AiHeroRules._simulate_battle` becomes one native call with no scratch session, if shadow mode proves the read-back
   fields identical.
 - Transcendental math first appears here (`army_power`, `HeroProgressionRules.gd:646`): decision D4.
-- `battle_sim_cli` (or an in-Godot threaded runner, decision D7) becomes a backend for `tune.py` and `arena.py`.
+- `battle_sim_cli`, a command-line tool built from the same core, becomes the backend for `tune.py` and `arena.py`
+  (D7, decided 2026-10-22).
 - From Phase 1 (owner decisions 2026-10-22): the native unit and ability tables per content revision; the arena's
   native router (each side's weights as data, option (b)); then, once `tune.py` and `arena.py` run on the battle tool,
   the GDScript fight loop, BattleAiRules and the battle switch's other GDScript copies are deleted, every deleted name
@@ -1289,11 +1290,13 @@ a41e38754 Windows binaries; runtime on main 6a8c9a736, 27bee9e26 Windows binarie
     (`_finalize_*` native), so 2a merges after it. Then Phase 4's faction turn calls the port directly instead of its
     pure host call. The read-back fields (`hero_after`, the survivors, `resources_gained`, the resolution) must be
     shadow-identical. Frozen from 2a's start to its merge (AGENTS.md): the 61 functions it ports, below.
+    Merged 2026-10-22: battle shadow on the six seeds 81,038,237 checks, 0 mismatches (`_simulate_battle` 1,536); turn shadow 1,766,016 checks, 0 mismatches; native against main identical on 6/6 seeds; core suite 17/17; whole game on the six seeds (against main c12d4f864, before 4.2) 426.5 s to 403.5 s (0.946) with the turn native, 609.0 s to 599.0 s (0.984) with the
+    default. Since the merge the 61 keep two copies (AGENTS.md).
   - 2b, the payload builder for every caller (`native-rules-phase2-b-payload-20261022`): the rest of
     `create_battle_payload` (town assaults and defences, battle contexts, the human's battles), `normalize_battle_state`
     and the end-of-battle numbers; every payload caller switches. Then the battles per second are measured for G2.
-  - 2c, the battle tool (`native-rules-phase2-c-battle-tool-20261022`), only after the owner decides D7 and G2: the
-    backend of `tune.py` and `arena.py`, the native router with each side's weights as data (option (b)), the native
+  - 2c, the battle tool (`native-rules-phase2-c-battle-tool-20261022`), the command-line `battle_sim_cli` (D7), after
+    the owner sets G2: the backend of `tune.py` and `arena.py`, the native router with each side's weights as data (option (b)), the native
     unit and ability tables per content revision.
   - 2d, the exit (`native-rules-phase2-d-exit-20261022`): once `tune.py` and `arena.py` run on the tool, the GDScript
     fight loop, BattleAiRules and the battle switch's other GDScript copies are deleted with D6's test retirements,
@@ -1301,7 +1304,7 @@ a41e38754 Windows binaries; runtime on main 6a8c9a736, 27bee9e26 Windows binarie
 - **Gate G2:** a battles-per-second target the owner sets (the synthesis proposes 1M battles in 2 h on this machine).
   **Battle-level genetic algorithms (unit stats, battle-AI weights) run at full speed from here.**
 
-**Slice 2a, frozen functions** (2026-10-22, until 2a merges; AGENTS.md; corrected the same day from 32: the first
+**Slice 2a, frozen functions** (2026-10-22, until 2a merged, two copies since; AGENTS.md; corrected the same day from 32: the first
 count stopped at multi-line signatures): BattleRules 47: `_append_building_with_requirements`, `_apply_hero_battle_boosts`, `_apply_specialty_battle_starts`, `_army_affiliation`, `_army_stack_descriptors`, `_authored_field_objectives`, `_battle_context_target_hero_id`, `_battle_difficulty_value`, `_battle_enemy_army_name`, `_battle_name`, `_build_battle_stack`, `_cohesion_base_for_unit`, `_default_field_objective_pressure_tags`, `_default_field_objective_summary`, `_encounter_enemy_commander_name`, `_encounter_enemy_commander_seed`, `_enemy_army_for_battle`, `_enemy_commander_state`, `_enemy_commander_state_for_battle`, `_enemy_stack_source`, `_enemy_withdrawal_allowed`, `_find_town_at_position`, `_generate_battle_obstacles`, `_new_battle_combat_seed`, `_normalize_command`, `_normalize_enemy_hero_state`, `_normalize_field_objective`, `_normalize_field_objectives`, `_normalize_side_token`, `_normalize_string_array`, `_normalize_town_captain`, `_normalize_unit_abilities`, `_normalized_battle_context`, `_normalized_battle_context_fields`, `_normalized_battlefield_tags`, `_normalized_specialty_focus_ids`, `_normalized_specialty_ranks`, `_normalized_town_buildings`, `_obstacle_cells_clear`, `_obstacle_field_stays_open`, `_player_setup_for_battle`, `_resolved_encounter_placement`, `_titleize_token`, `_town_building_category_counts`, `_town_captain_state`, `_with_army_battlefield_tags`, `create_battle_payload`; OverworldRules 6: `_delivery_encounter_matches_node`, `_resource_site_delivery_interception`, `_town_battlefront_profile`, `delivery_interception_context_for_encounter`, `encounter_display_name`, `town_battlefront_profile`; EnemyAdventureRules 4: `raid_commander_display_name`, `raid_commander_name`, `raid_display_name`, `raid_strength`; AiHeroRules 2: `_battle_hero`, `_simulate_battle`; SessionStateStore 1: `new_session_data`; TownBattleRules 1: `prepare`. `_simulate_battle` is also frozen by Phase 4. `new_session_data` is not ported: the scratch view copies what it sets.
 
 **Slice 2b, frozen functions** (2026-10-22, until 2b merges; AGENTS.md): BattleRules 18: `_battle_context_already_resolved`, `_battle_context_is_restorable`, `_battle_context_seed`, `_battle_has_living_opposition`, `_enemy_force_name_from_battle_army_id`, `_normalize_battle_obstacles`, `_normalize_player_commander_state`, `_normalize_stack`, `_normalize_tactical_briefing_state`, `_normalize_waited_stack_ids`, `_normalized_battle_resolved_key`, `_sync_battle_context_anchors`, `_town_assault_enemy_commander_state`, `battle_payload_can_resume`, `create_dwelling_guard_payload`, `create_resource_defense_payload`, `create_town_assault_payload`, `normalize_battle_state`. The payload itself (`create_battle_payload` and the rest of the path) is 2a's, frozen with it.
@@ -1575,6 +1578,53 @@ it is a native failure, so shadow mode counts both. Switch `HEROES_NATIVE_TURN=g
   failure. 4.2 ports each path, or a check before the day starts sends it to GDScript.
   4.2 also folds the 11 functions Phase 5 left with a private copy in Phase 3's AI files
   (`overworld_rules_ai_recovery.cpp`, `overworld_rules_ai_sites.cpp`).
+  Done 2026-10-22 on the branch, after merging Phase 5's slice 09, which ported 23 of the 165 (7863c8d91 port, 0f513137a `normalize_ai_heroes`, the bridge and the fold, 9952a0f8c Windows binaries).
+  - The other 142 functions: 139 ported and switched in the turn table, 3,650 lines in five new files
+    (`enemy_adventure_rules_turn_rare.cpp`, `enemy_turn_rules_turn_rare.cpp`, `overworld_rules_turn_rare.cpp`,
+    `scenario_turn_rare.cpp`, `turn_rare_paths.cpp`) and a few in the turn files. By script: OverworldRules 31,
+    EnemyAdventureRules 31, EnemyTurnRules 26, ScenarioRules 17, AiHeroRules 5, ScenarioFactory 4,
+    TownDevelopmentRules 4, and 11 more scripts 21. `turn_not_ported.cpp` is gone. `ScenarioRules._overworld_rules`
+    returns a script and no C++ calls it, so it keeps its GDScript body.
+  - The guards. A player town's weekly growth is ported: `_effective_player_town_weekly_growth` with
+    `HeroProgressionRules.scale_recruit_growth`. Two guards stay `state::NotPorted`, because no game reaches them:
+    - `sort()` of keys that are not all Strings. The keys are always Strings: recruit payloads convert them with
+      `String()`, and the other dictionaries come from JSON or content.
+    - `to_lower()` of non-ASCII text. Faction names and building labels in content are ASCII, and a player identity
+      has no name, so its id is used.
+  - `normalize_ai_heroes` (Phase 5's `enemy_states.cpp`, kept in two copies):
+    - an AI hero whose movement is not a Dictionary gets `{current 0, max _movement_max}`;
+    - a legacy raid host is converted;
+    - a support column joins the nearest hero within 3 tiles or disbands.
+  - The port bridge. An undoable write-back that sets an object view (a session's properties or metadata) cannot be
+    put back. The call now counts as not undoable (`PortBridge::undo_lost`), so a later `state::NotPorted` is a
+    native failure, not a fallback from a changed state. Phase 5 found the gap.
+  - The fold. 17 private copies in Phase 3's AI files now call the real functions: 11 in
+    `overworld_rules_ai_recovery.cpp` and 6 in `overworld_rules_ai_sites.cpp`. `_town_occupation_relief_per_day` no
+    longer throws when it has no front. No caller reaches that branch: the only caller passes a front proxy. Three
+    copies stay, because the real function differs on an input:
+    - `find_encounter_by_placement`: Phase 5's version drops the movement debug profile, so it would not record into
+      `_movement_rules_profile`;
+    - `delivery_interception` and its `raid_strength`: Phase 5's `_army_strength` skips the unit-strength memo
+      statics, which these copies fill as GDScript does.
+  - Not wired, for 4.4. Phase 5's nine `missing_*` stubs in `overworld_forecast.cpp` are the command-risk forecast
+    for a human's towns. They could now call 4.2's ports, but that would make those day paths native in the owner's
+    games, which run the day native by default. The eight AI seeds cannot prove them.
+  - Paths only a human player brings stay unproven until 4.4 runs the owner's save copies: a computer hero attacking
+    a human's hero (`_attack_player_hero`), sightings of a human's heroes, and a human's towns.
+  - Five of the 139 are also Phase 2a's claims: `encounter_display_name`, `_delivery_encounter_matches_node`,
+    `_resource_site_delivery_interception`, `raid_display_name` and `raid_strength`. Whichever merges second calls
+    the other's C++: 2a merged second and calls 4.2's.
+  - Checks: shadow mode of the turn and day switches together, on the six seeds and isl-b, pt-f: 2,362,704 checks over 322 functions, 0 mismatches, 0 errors (the eight not-ported calls are Phase 5's townless-player days).
+    - Native mode identical to main on the six seeds. No computer day fell back; the eight fallback lines are Phase
+      5's townless-player days.
+    - Core suite 17/17.
+    - The seeds reach one of the 139 functions. One reviewer read the other 138, `town_weekly_growth`'s player
+      branch and `normalize_ai_heroes` against their GDScript and found no divergence.
+    - Smoke batch (`ai_match_batch.py`, plan seed 16, day cap 120, the same seven games as 4.1): all seven finished,
+      five decided and two at the cap; 0 failed, 0 script errors, and no computer day fell back. The 12 fallback
+      lines in five games are Phase 5's townless-player path. The slowest computer day took 2.6 s, on XL.
+    - No new timing.
+  - Merged to main 2026-10-22, after main was tagged `pre-native-phase4-faction-turn-4.2` (D10).
 - 4.3, battles inside the turn with no host calls. Owner decision 2026-10-22: Phase 2 ports `_simulate_battle` as
   one native call (`ai_hero_rules::_simulate_battle`, `core/port/ai_battle_preview.cpp`, the signature 4.1's host
   target has); the turn calls it once it is on main. The start of a battle against a human calls Phase 1's native
@@ -2032,9 +2082,9 @@ Movement, routes, context actions, overworld spells, town actions, hero transfer
 functions the UI calls, at 1,221 call sites. Needed for the one-copy end state, not for speed, so it can interleave with
 other work. Merging the separate human and AI forms of heroes, treasury and fog is a later save-schema slice.
 
-### Phase 8 (optional): a match runner without Godot
+### Phase 8: a match runner without Godot
 
-The same core as a command-line tool. Needs the copied Variant hash and either deterministic math or accepted last-bit
+Wanted, not optional (owner decision 2026-10-22, D7). The same core as a command-line tool. Needs the copied Variant hash and either deterministic math or accepted last-bit
 differences against the game.
 
 ### Totals
@@ -2071,7 +2121,7 @@ Sizes are the proposal's unmeasured agent-day guesses, useful only to compare ph
 | D4 | Math: engine math through godot-cpp in the game, or a later deterministic-math behaviour change | Phase 2 |
 | D5 | **Phase 1 decided 2026-10-20:** battle-rule and battle-AI code take no behaviour changes from the start of Phase 1 to its merge; an urgent fix lands in GDScript on main and is ported on the branch; content JSON and `battle_ai_weights.json` stay open (AGENTS.md "Native rules port"). AI code: decided before Phase 4 | before each |
 | D6 | **Decided 2026-10-20:** tests that call private battle functions the port deletes are retired at the Phase 1 merge by the `docs/rmg-test-retirement.md` process; the parity corpus and the core suite cover battles | Phase 1 |
-| D7 | Whether a tool built from the same core counts under "no simulator outside Godot" (`PLAN.md:328`), or an in-Godot threaded runner instead | Phase 2 |
+| D7 | **Decided 2026-10-22:** battle and match simulators run outside Godot, as command-line tools built from the same core: `battle_sim_cli` is Phase 2's battle tool, and Phase 8's match runner is wanted. There was never an owner rule against a simulator outside Godot; that wording in PLAN.md was an agent's, and it is removed | Phase 2 |
 | D8 | **Decided 2026-10-20:** Phase 1 lives on one port branch, `native-phase1-battle` on GitHub, rebased on main at least weekly and before each slice, and merges to main once, when every battle is native and identical; it is dropped if checkpoint G1 stays under 5x after the interface fix (AGENTS.md "Native rules port") | Phase 1 |
 | D9 | Where owner-save copies for the codec proof live (outside git); asked when a slice first needs owner saves | Phase 1 |
 | D10 | **Decided 2026-10-20:** main is tagged before each port merge. Owner 2026-10-21: no waiting period after it (the 7 days without behaviour commits was removed) | each merge |

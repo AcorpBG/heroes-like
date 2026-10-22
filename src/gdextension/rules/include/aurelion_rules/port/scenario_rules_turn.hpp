@@ -20,7 +20,7 @@ using overworld_rules::Vector2i;
 using state::State;
 using state::Value;
 
-// Not run by the six seeds: each throws state::NotPorted (turn_not_ported.cpp).
+// Ported in scenario_turn_rare.cpp (slice 4.2: paths the six seeds do not run).
 int64_t _army_unit_count(State &state, DictRef army, Atom unit_id);
 DictRef _artifact_set_equipment_progress(State &state, DictRef session, DictRef objective);
 DictRef _controlled_hero_army(State &state, DictRef session, Atom hero_id);

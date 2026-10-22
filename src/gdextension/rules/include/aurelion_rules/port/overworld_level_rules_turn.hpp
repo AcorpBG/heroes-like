@@ -22,7 +22,7 @@ using overworld_rules::Vector2i;
 using state::State;
 using state::Value;
 
-// Not run by the six seeds: each throws state::NotPorted (turn_not_ported.cpp).
+// Ported in turn_rare_paths.cpp (slice 4.2: paths the six seeds do not run).
 int64_t view_level(State &state, const Value &session);
 
 } // namespace aurelion::rules::port::overworld_level_rules

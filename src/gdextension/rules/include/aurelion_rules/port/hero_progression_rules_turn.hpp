@@ -27,5 +27,6 @@ DictRef advance_to_level(State &state, DictRef hero_state, int64_t target_level)
 int64_t experience_for_level(State &state, int64_t level);
 int64_t pending_choices_remaining(State &state, DictRef hero_state);
 Atom rank_label(State &state, int64_t rank);
+DictRef scale_recruit_growth(State &state, DictRef hero_state, const Value &growth_payload);
 
 } // namespace aurelion::rules::port::hero_progression_rules

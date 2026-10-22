@@ -26,7 +26,7 @@ using state::Value;
 DictRef build_spellbook(State &state, DictRef hero_template);
 DictRef learn_spell(State &state, DictRef hero_state, Atom spell_id);
 
-// Not run by the six seeds: each throws state::NotPorted (turn_not_ported.cpp).
+// Ported in turn_rare_paths.cpp (slice 4.2: paths the six seeds do not run).
 DictRef mana_state(State &state, DictRef hero_state);
 
 } // namespace aurelion::rules::port::spell_rules

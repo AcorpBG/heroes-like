@@ -599,6 +599,14 @@ static func daily_income_bonus(hero_state: Dictionary) -> Dictionary:
 	return aggregate_bonuses(hero_state).get("daily_income", {}).duplicate(true)
 
 static func scale_recruit_growth(hero_state: Dictionary, growth_payload: Variant) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return scale_recruit_growth__gd(hero_state, growth_payload)
+	var before := TurnEngine.before_writing(&"HeroProgressionRules.scale_recruit_growth", [hero_state, growth_payload])
+	var result = scale_recruit_growth__gd(hero_state, growth_payload)
+	TurnEngine.check_writing(&"HeroProgressionRules.scale_recruit_growth", before, [hero_state, growth_payload], result)
+	return result
+
+static func scale_recruit_growth__gd(hero_state: Dictionary, growth_payload: Variant) -> Dictionary:
 	var bonuses := aggregate_bonuses(hero_state)
 	var multiplier := maxf(0.0, 1.0 + float(bonuses.get("recruit_growth_multiplier", 0.0)))
 	var scaled := {}

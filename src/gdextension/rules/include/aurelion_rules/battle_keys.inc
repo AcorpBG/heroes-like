@@ -1276,7 +1276,6 @@ AURELION_KEY(a_breach_point_decides_whether_the, "A breach point decides whether
 AURELION_KEY(a_hazard_zone_punishes_the_side, "A hazard zone punishes the side that fails to seize the safer lane.")
 AURELION_KEY(battlefield_pressure_still_hangs_on_this, "Battlefield pressure still hangs on this point.")
 AURELION_KEY(urgency, "urgency")
-AURELION_KEY(reinforcement, "reinforcement")
 AURELION_KEY(town_defense_effect, "town_defense_effect")
 AURELION_KEY(pressure_shield, "pressure_shield")
 AURELION_KEY(health_pct, "health_pct")

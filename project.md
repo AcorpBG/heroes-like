@@ -46,7 +46,7 @@ Documentation is not implementation unless a slice is explicitly documentation-o
 Locked stack for the current production foundation:
 
 - Engine: Godot 4 stable series.
-- Gameplay language: GDScript for in-game runtime behavior, with the rules moving to C++ subsystem by subsystem (owner decision, 2026-10-20; `docs/native-rules-engine-transition.md`). A ported subsystem's rules live in the `aurelion_rules` GDExtension; where a phase keeps a GDScript copy beside the port until a later phase deletes it (AGENTS.md: battles until Phase 2's battle tool, the functions day processing and the AI share with the UI and battles), a change goes into every copy in the same commit. UI, text and file I/O stay GDScript, and saves keep the session Dictionary format.
+- Gameplay language: GDScript for in-game runtime behavior, with the rules moving to C++ subsystem by subsystem (owner decision, 2026-10-20; `docs/native-rules-engine-transition.md`). A ported subsystem's rules live in the `aurelion_rules` GDExtension; where a phase keeps a GDScript copy beside the port until a later phase deletes it (AGENTS.md: battles until Phase 2's battle tool, the functions day processing and the AI share with the UI and battles), a change goes into every copy in the same commit. UI, text and file I/O stay GDScript, and saves keep the session Dictionary format. Battle and match simulators run outside Godot as command-line tools built from the same C++ core (owner decision, 2026-10-22: `battle_sim_cli` for battle tuning, a match runner later).
 - Tooling language: Python for tests, reports, audits, and export/validation helpers.
 - Rendering: 2D-first scenes and UI.
 - Authored content: JSON files under `content/` until a selected migration replaces specific domains.
