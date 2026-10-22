@@ -375,6 +375,16 @@ Atom trim_prefix(State &state, Atom text, Atom prefix);
 
 // object.property of an object value (an opaque Variant): the host reads it.
 Value member(State &state, const Value &object, Atom property);
+// object.property = value: the host writes it into the object's view, and the
+// view into the object with the call's write-back.
+void set_member(State &state, const Value &object, Atom property, const Value &value);
+// An object value's view (Backing::object_view): a session as the day ports
+// take it (session_view.hpp), its metadata under "meta". One Dict for the
+// whole call: member() and set_member() of the object read and write it too.
+DictRef object_view(State &state, const Value &object);
+// The object value a view stands for: a host call (call_static) takes the
+// session object, not its view. A Dict that is no view is a ScriptError.
+Value view_object(State &state, DictRef view);
 
 // A RandomNumberGenerator value (an opaque Variant): rng.seed, rng.state as
 // GDScript's int, rng.randi_range(from, to), which advances the object's
@@ -400,6 +410,13 @@ inline double engine_log(State &state, double x) { return state.host().math_log(
 // Time.get_ticks_usec(), for the timings scripts keep (a steady clock's
 // microseconds: only differences mean anything).
 int64_t ticks_usec();
+
+// JSON.stringify(value) with its defaults (no indent, keys sorted): null,
+// bools, ints, Strings, StringNames, Vector2i, Vector3i, Arrays and
+// Dictionaries whose keys are all Strings or all ints. Floats, other values,
+// other key sets, control characters json_escape does not name and circular
+// structures throw NotPorted.
+std::string json_stringify(const State &state, const Value &value);
 
 // push_warning(text) and push_error(text) of a script.
 void push_warning(State &state, const std::string &text);
