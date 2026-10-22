@@ -806,8 +806,9 @@ void PortBridge::reback() {
 }
 
 state::TypeRef PortBridge::builtin_type(uint8_t builtin) {
-	// A builtin type has no class name and no script.
-	return register_type(builtin, StringName(), Variant());
+	// A builtin type has no class name and no script: a null Object, as
+	// Array.get_typed_script() gives it (a Nil script would be another type).
+	return register_type(builtin, StringName(), Variant(static_cast<Object *>(nullptr)));
 }
 
 int64_t PortBridge::content_revision(state::State &) {
