@@ -1366,6 +1366,68 @@ order, the tavern and spawn RNG, and the decision and battle logs. Proof adds a 
 (`to_dict(from_dict(d)) == d` with types and key order) on every day of the six seeds and on owner-approved save copies.
 AI code is frozen during the slice; the Phase A numbers stay open.
 
+Owner decision 2026-10-22: Phase 4 starts now, on its own branch `native-phase4-faction-turn`, merged once like Phases
+1 and 5; Windows only, lean checks. The goal is whole-game speed. Phase 3's C++ does in about 30 s what GDScript did in
+about 180 s, but GDScript calls it 2M times a match and each call reads the session again; Phase 4 removes those
+calls. Phase 5 merges day processing first and Phase 1 battles next; the branch takes each from main as it lands.
+Phase 5's ports of EnemyTurnRules and EnemyAdventureRules (its slice 04) are this phase's to build on. Each slice's AI
+code is frozen from its start to the merge (AGENTS.md names the functions); the Phase A numbers
+(`content/ai_hero_weights.json`) stay open.
+
+**Inventory** (2026-10-22, main 4a9f8b178). Six seeds, with a probe counting every function of `scripts/core` and
+ContentService inside the computer players' turns. The probe slows the turn, so the turn's shares read high.
+- Time: the computer players' turns (`EnemyTurnRules.run_enemy_turn`) take 55% of match time and their hero days 47%.
+  Within them, battle previews take 19% (`AiHeroRules._simulate_battle`, Phase 1's engine), real battles 4% and towns
+  2.8%. The 2.07M calls from GDScript into Phase 3's port take 22%. Most of that is the bridge reading the session
+  again for each call. The calls come from GDScript's planning and moving: `_in_hero_zone` 570k, `_site_doors` and
+  `_site_door_key` 419k each, `_site_door_value` 79k, `_explored` 68k, `_hero_guards` 56k, `_candidate` 54k.
+- Battles in the turn: `_simulate_battle` is pure. It runs a scratch session through `BattleRules.create_battle_payload`
+  and `BattleAutoResolveRules.resolve_active_battle`, and a real battle applies the preview's outcome. A battle against
+  a human starts through `create_battle_payload`. Everything of Phase 1's that a turn runs is under these two.
+- Reach of `run_enemy_turn` with the two battle entries left to GDScript: 1,074 functions, 16,800 lines (the static
+  call closure, plus 12 that the probe saw called by name). The six seeds run 768 of them, 11,416 lines:
+
+  | | Static | Run by the six seeds |
+  |---|---:|---:|
+  | On main (Phase 3's port) | 320 / 3,127 | 275 / 2,551 |
+  | On Phase 5's branch (on main at its merge) | 223 / 4,523 | 163 / 2,799 |
+  | Not ported | 531 / 9,151 | 330 / 6,066 |
+
+  Not ported and run: AiHeroRules 111 / 2,588, EnemyAdventureRules 43 / 1,182, ArtifactRules 37 / 629, OverworldRules
+  23 / 387, ContentService 22 / 178, EnemyTurnRules 18 / 219, HeroCommandRules 14 / 188, HeroProgressionRules 11 / 101,
+  WaterTravelRules 8 / 58, FactionTownServices 6 / 84, 15 more scripts 37 / 452.
+
+**Boundary.** The computer players' day is one native call: `EnemyTurnRules.run_enemy_turn` runs every faction turn,
+`AiHeroRules.run_faction_turn` included. The session is a view through the port bridge. It loads lazily, once, and is
+written back at the end. Until Phase 1's merge, the two battle entries are host targets (`gd::call_static`: write
+back, run the GDScript, reload lazily). A path the port leaves out throws `state::NotPorted`, and the whole day's
+computer turns run in GDScript. That fallback is only correct before the day's first host call, so shadow mode counts
+both. Switch `HEROES_NATIVE_TURN=gdscript|native|shadow`, log `HEROES_NATIVE_TURN_LOG`, registry
+`core/port/turn_registry.cpp`, files `core/port/<script>_turn.cpp` (the claims note names each function's file).
+
+**Slices.**
+- 4.0, runtime on main first, with no behaviour change: a long call reads each value of a container from Godot once.
+  Today a backed Dictionary goes back to Godot on every lookup. A backed Dictionary or Array that a call keeps
+  reading is filled instead.
+- 4.1, the computer players' day in one native call: the 330 not-ported functions the six seeds run (6,066 lines),
+  calling Phase 3's ports and Phase 5's (from its merge), with battles as host targets and the other 201 not-ported
+  functions throwing `state::NotPorted`. The bound on its gain: the turn's share outside battles, about 30% of match
+  time, so at most 1.4x for whole games.
+- 4.2, the paths the six seeds do not run: the 201 other functions (3,085 lines), so that no path of the day is left
+  to GDScript.
+- 4.3, battles inside the turn, after Phase 1's merge: `_simulate_battle` and the start of a battle against a human
+  call Phase 1's native payload and resolve, with no host calls.
+- 4.4, the exit:
+  - delete the replaced GDScript; callers outside the turn (UI, day processing, battles) keep a thin wrapper or the
+    GDScript copy under the two-copies rule (AGENTS.md);
+  - owner-approved save copies through the codec (D9);
+  - the six-seed check, the core suite and whole-game timing;
+  - main tagged (D10), then the merge.
+- Proof per slice: shadow mode on the six seeds; the codec round trip (`to_dict(from_dict(d)) == d`, types and key
+  order) on every day of the six seeds; before each push, native mode against main on the six seeds and the core
+  suite. Review: none under about 300 lines, otherwise one reviewer on the functions shadow mode did not reach.
+  Whole-game timing runs interleaved (main, change, change, main) on a quiet machine: Phases 1 and 5 pause for it.
+
 ### Phase 5: day processing
 
 `normalize_overworld_state`, `commit_active_hero`, town occupation and recovery, income, growth, reserve deliveries,
