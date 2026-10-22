@@ -287,6 +287,8 @@ void _normalize_town_defender_commander_states(State &state, DictRef session);
 void _normalize_resource_defender_commander_states(State &state, DictRef session);
 bool _town_has_ai_defender(State &state, DictRef town);
 bool _resource_has_ai_defender(State &state, DictRef node);
+void _clear_town_defender_metadata(State &state, DictRef town);
+void _clear_resource_defender_metadata(State &state, DictRef node);
 DictRef _normalized_commander_record(State &state, const Value &entry_value, const Value &commander_state_value);
 DictRef _normalized_commander_memory(State &state, const Value &entry_value, const Value &commander_state_value);
 DictRef _normalized_commander_army_continuity(State &state, const Value &entry_value, const Value &commander_state_value, Atom encounter_id);
@@ -1675,21 +1677,65 @@ void normalize_all_commander_rosters(State &state, DictRef session) {
 
 void _normalize_town_defender_commander_states(State &state, DictRef session) {
 	const DictRef overworld = session_view::overworld(state, session);
-	for (const Value &town : gd::field_items(state, overworld, str(key::towns))) {
-		if (gd::is_dict(town) && _town_has_ai_defender(state, town.ref)) {
-			// _active_town_defender_entry and _clear_town_defender_metadata.
-			not_ported("a town's defender commander");
+	const Value towns = state.get(overworld, str(key::towns), array_value(state.new_array()));
+	if (!gd::is_array(towns)) {
+		return;
+	}
+	bool changed = false;
+	for (int64_t index = 0; index < state.array_size(towns.ref); ++index) {
+		const Value town = state.at(towns.ref, index);
+		if (!gd::is_dict(town) || !_town_has_ai_defender(state, town.ref)) {
+			continue;
 		}
+		if (gd::is_empty(state, _active_town_defender_entry(state, session, town.ref, key::empty))) {
+			const DictRef cleared = gd::deep_duplicate_dict(state, town.ref);
+			_clear_town_defender_metadata(state, cleared);
+			state.set_at(towns.ref, index, dict_value(cleared));
+			changed = true;
+		}
+	}
+	if (changed) {
+		state.set(overworld, str(key::towns), towns);
 	}
 }
 
 void _normalize_resource_defender_commander_states(State &state, DictRef session) {
 	const DictRef overworld = session_view::overworld(state, session);
-	for (const Value &node : gd::field_items(state, overworld, str(key::resource_nodes))) {
-		if (gd::is_dict(node) && _resource_has_ai_defender(state, node.ref)) {
-			// _active_resource_defender_entry and _clear_resource_defender_metadata.
-			not_ported("a site's defender commander");
+	const Value nodes = state.get(overworld, str(key::resource_nodes), array_value(state.new_array()));
+	if (!gd::is_array(nodes)) {
+		return;
+	}
+	bool changed = false;
+	for (int64_t index = 0; index < state.array_size(nodes.ref); ++index) {
+		const Value node = state.at(nodes.ref, index);
+		if (!gd::is_dict(node) || !_resource_has_ai_defender(state, node.ref)) {
+			continue;
 		}
+		if (gd::is_empty(state, _active_resource_defender_entry(state, session, node.ref, key::empty))) {
+			const DictRef cleared = gd::deep_duplicate_dict(state, node.ref);
+			_clear_resource_defender_metadata(state, cleared);
+			state.set_at(nodes.ref, index, dict_value(cleared));
+			changed = true;
+		}
+	}
+	if (changed) {
+		state.set(overworld, str(key::resource_nodes), nodes);
+	}
+}
+
+void _clear_town_defender_metadata(State &state, DictRef town) {
+	for (const Atom field : { key::ai_defender_commander_state, key::ai_defender_roster_hero_id, key::ai_defended_by_faction_id,
+				 key::ai_defended_by_player_id, key::ai_defended_day, key::ai_defense_until_day, key::ai_defense_rating,
+				 key::ai_defense_reinforced_strength }) {
+		state.erase(town, str(field));
+	}
+}
+
+void _clear_resource_defender_metadata(State &state, DictRef node) {
+	for (const Atom field : { key::ai_defender_commander_state, key::ai_defender_roster_hero_id, key::ai_defender_army,
+				 key::ai_defended_by_faction_id, key::ai_defended_by_player_id, key::ai_defended_day, key::ai_defense_until_day,
+				 key::ai_defense_rating, key::ai_defense_reinforced_strength }) {
+		state.erase(node, str(field));
 	}
 }
 
