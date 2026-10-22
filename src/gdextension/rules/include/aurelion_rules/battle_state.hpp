@@ -526,6 +526,8 @@ struct ArrayNode {
 	bool dirty = false;
 	// The memo's marks (State::memo_find): kWatched, kFrozen.
 	uint8_t guard = 0;
+	// Reads of a backed node so far (State::backed_at).
+	uint32_t reads = 0;
 
 	// As new, keeping the buffer.
 	void reset() {
@@ -535,6 +537,7 @@ struct ArrayNode {
 		backed = false;
 		dirty = false;
 		guard = 0;
+		reads = 0;
 	}
 };
 
@@ -548,6 +551,10 @@ struct DictNode {
 	bool backed = false;
 	bool dirty = false;
 	uint8_t guard = 0;
+	// Lookups of a backed node so far, and the lookup that fills it
+	// (State::backed_lookup).
+	uint32_t reads = 0;
+	uint32_t fill_at = 0;
 
 	// As new, keeping the buffers.
 	void reset() {
@@ -559,6 +566,8 @@ struct DictNode {
 		backed = false;
 		dirty = false;
 		guard = 0;
+		reads = 0;
+		fill_at = 0;
 	}
 };
 
@@ -847,6 +856,7 @@ private:
 	void fill_dict(uint32_t node) const;
 	void fill_packed(uint32_t node) const;
 	bool backed_lookup(uint32_t dict_node, const Value &key, Value &out) const;
+	Value backed_at(uint32_t array_node, int64_t position, int64_t size) const;
 	[[noreturn]] static void out_of_bounds(int64_t index);
 	// The typed or read-only paths of set() and append().
 	void checked_set(DictNode &node, Value key, Value value);
@@ -1011,7 +1021,7 @@ inline Value State::at(uint32_t array_node, int64_t index) const {
 	}
 	const ArrayNode &node = arrays_[array_node];
 	if (node.backed) {
-		return backing_->array_at(const_cast<State &>(*this), array_node, position);
+		return backed_at(array_node, position, size);
 	}
 	return node.items[static_cast<size_t>(position)];
 }

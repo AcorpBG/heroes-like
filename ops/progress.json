@@ -116332,6 +116332,84 @@
       ],
       "notes": "Owner decision 2026-10-21: port _vetted_candidate and _gate_candidate with the shared runtime on branch native-phase3-ai-targets, games identical, Windows only, lean checks. Profile on main 37d547fac, six seeds: _vetted_candidate 20.5% of match time, _gate_candidate 6.7%; battle previews 8.4% stay GDScript. Completed 2026-10-21 and merged (owner decision 2026-10-21: merged although whole games got no faster): _best_candidate, _gate_candidate and their static closure (445 functions) run in the rules library; AiHeroRules keeps 64 wrappers, 67 functions deleted; 313 closure functions keep a GDScript copy. Shadow mode on the six seeds 94,431,208 checks, 0 mismatches; parity identical 6/6; core suite 17/17. Six seeds 804/868/860/844 s (main, change, change, main, shared machine): the lazy bridge re-reads the session on every call (64 s of 141 s in 240M Dictionary reads on three seeds), so the gain needs Phase 4's once-per-turn load. Linux libraries wait for the Linux pass.",
       "updatedAt": "2026-10-21T20:20:00Z"
+    },
+    {
+      "id": "native-rules-phase4-faction-turn-20261022",
+      "title": "Native overworld AI faction turn (Phase 4)",
+      "status": "in_progress",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Owner decision 2026-10-22: Phase 4 on branch native-phase4-faction-turn, merged once, Windows only, lean checks; goal whole-game speed. Inventory on main 4a9f8b178 (six seeds, probe): the computer players' turns take 55% of match time, their hero days 47%, battle previews 19%, real battles 4%, towns 2.8%, and 2.07M calls from GDScript into Phase 3's port 22%. run_enemy_turn reaches 1,074 functions / 16,800 lines outside battles: 320 on main, 223 on Phase 5's branch, 531 not ported (330 / 6,066 run by the six seeds).",
+      "updatedAt": "2026-10-22T05:35:00Z"
+    },
+    {
+      "id": "native-rules-phase4-00-runtime-fill-20261022",
+      "title": "Phase 4 runtime: backed containers filled on repeated reads",
+      "status": "completed",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "On main (13a7a0c9a source, c9c25b540 Windows binaries), no behaviour change: a backed Dictionary or Array that a call keeps reading is filled once instead of going back to Godot for every lookup. Native mode identical to main 2ed5cfdf6 on the six seeds (415 daily digests); core suite 17/17.",
+      "updatedAt": "2026-10-22T09:00:00Z"
+    },
+    {
+      "id": "native-rules-phase4-01-day-call-20261022",
+      "title": "Phase 4: the computer players' day in one native call",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "EnemyTurnRules.run_enemy_turn and AiHeroRules.run_faction_turn native with the 330 not-ported functions the six seeds run (6,066 lines); battles (AiHeroRules._simulate_battle and _start_player_battle, the callers of the frozen BattleRules.create_battle_payload) are host targets; the other 201 not-ported functions throw NotPorted. Frozen to the merge: 1,074 functions (PLAN.md).",
+      "updatedAt": "2026-10-22T05:35:00Z"
+    },
+    {
+      "id": "native-rules-phase4-02-rare-paths-20261022",
+      "title": "Phase 4: the paths the six seeds do not run",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "The 201 not-ported functions the six seeds do not run (3,085 lines), so no path of the day is left to GDScript.",
+      "updatedAt": "2026-10-22T05:35:00Z"
+    },
+    {
+      "id": "native-rules-phase4-03-battles-20261022",
+      "title": "Phase 4: battles inside the turn native",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "After Phase 1's merge: _simulate_battle and the start of a battle against a human call Phase 1's native payload and resolve.",
+      "updatedAt": "2026-10-22T05:35:00Z"
+    },
+    {
+      "id": "native-rules-phase4-04-exit-20261022",
+      "title": "Phase 4: exit and merge",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Delete the replaced GDScript, owner-approved save copies through the codec (D9), the six-seed check, the core suite and timing, main tagged, the single merge.",
+      "updatedAt": "2026-10-22T05:35:00Z"
     }
   ],
   "project": "heroes-like",

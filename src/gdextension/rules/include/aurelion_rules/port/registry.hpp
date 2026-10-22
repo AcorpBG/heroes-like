@@ -69,7 +69,8 @@ struct Table {
 	// a path the port leaves to GDScript (state::NotPorted): the day port.
 	// Without this fallback such a call fails, in native and in shadow mode
 	// (AurelionRules reports it as a native failure): its null result could
-	// pass for GDScript's.
+	// pass for GDScript's. After a host call it fails too: the host call wrote
+	// back what the native call had changed.
 	bool fallback = false;
 };
 

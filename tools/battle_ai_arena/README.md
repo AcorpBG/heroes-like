@@ -15,6 +15,7 @@ python tools/battle_ai_arena/arena.py                       # HEAD's AI (A) vs t
 python tools/battle_ai_arena/arena.py --suite holdout       # the battles a tuning run never sees
 python tools/battle_ai_arena/arena.py --a git:main~5 --b path/to/BattleAiRules.gd --suite quick
 python tools/battle_ai_arena/arena.py --roles                # also says where B gains: as player or as enemy
+python tools/battle_ai_arena/arena.py --plain --suite standard  # the game's own AI on both sides, no router
 ```
 
 A variant is `current` (the working tree), `git:<rev>`, or a path to a copy of
@@ -164,6 +165,9 @@ Limits:
   its stack's order), and that part is shared by both sides.
 - Functions the rest of the game calls must keep their signatures; the router is built from
   the working tree's file.
+- `--plain` installs no router and no variants: the game's own `BattleAiRules` plays both
+  sides. The native battle engine's parity checks use it, since the native port reads the AI's
+  memos from the game's script, which the router replaces.
 
 ## Scoring
 
