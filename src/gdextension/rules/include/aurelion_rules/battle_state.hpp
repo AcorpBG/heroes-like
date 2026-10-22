@@ -149,6 +149,20 @@ public:
 	using std::runtime_error::runtime_error;
 };
 
+// A host call (Backing::call_static) in a call where no GDScript may run: a
+// validating call (shadow) or a call that writes nothing back. The host
+// throws it instead of running the function, and the native call ends there:
+// script and function name the host call (the atoms of the script's res://
+// path and of the static func's name), args are its arguments, in the State.
+// Not a std::exception, so no `catch (const std::exception &)` in the ported
+// code takes it for an error of its own.
+class Suspend {
+public:
+	uint32_t script = 0;
+	uint32_t function = 0;
+	std::vector<Value> args;
+};
+
 // A typed Array's or Dictionary's element type, as the adapter registered it.
 // 0 means untyped. The State checks writes against the type's Variant::Type,
 // which the adapter registers with set_type_builtin.
@@ -652,6 +666,18 @@ public:
 	// nothing back changes no static var).
 	virtual Value static_get(State &state, uint32_t script, uint32_t name);
 	virtual void static_set(State &state, uint32_t script, uint32_t name, const Value &value);
+	// A host call: the GDScript static func `function` of the script at path
+	// `script` runs on args (a phase's port::Table::hosts, Phase 1's battle
+	// ends), and its result is the answer. The host first writes back
+	// everything the call changed so far, runs the function, and then reads
+	// again whatever the native code reads next, since GDScript may have
+	// changed any container, static var or content. Values (and DictRef and
+	// ArrayRef) held across a host call stay valid and see GDScript's changes;
+	// references into a node's contents (an items() range, a `const DictNode
+	// &`, a ValueList) do not. In a call where no GDScript may run the host
+	// throws Suspend instead. The default is a ScriptError: this host runs no
+	// GDScript.
+	virtual Value call_static(State &state, uint32_t script, uint32_t function, const Value *args, size_t count);
 	// The element type of a builtin Variant type (not an Object), registered
 	// as a loaded typed Array's would be: for a new one, as GDScript's
 	// `var ids: Array[String] = []` makes it.
@@ -796,6 +822,10 @@ public:
 	// A node the host loads from its container, watched from the start, so that
 	// what the host fills into it later is watched as well.
 	void watch_loaded(const Value &value);
+	// After a host call (Backing::call_static), which may have changed whatever
+	// an answer was read from: every answer goes, and one being read now is
+	// not kept (it counts as a watched write).
+	void drop_memo();
 	uint64_t watched_writes() const { return watched_writes_; }
 	// a.sort_custom()'s new order of an Array's own items, as a write.
 	void replace_items(uint32_t array_node, ValueList items);

@@ -116115,41 +116115,41 @@
     {
       "id": "native-rules-phase1-07-spells-commanders-20261020",
       "title": "Native battle engine 07: in-battle spells and commander payloads",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Layer 8, likely two sessions: SpellRules 57/769, BattleRules 19/513, and the payload's ArtifactRules 20/328, HeroProgressionRules 10/105, DifficultyRules 7/21, ScenarioSelectRules 2/8 (or caster profiles built in GDScript, rebuilt after each enemy cast). Callers: 3 scenes, 8 scripts, 40 tests, the arena worker. Started 2026-10-22: the commander payloads came in 02. Part 07a, 52/585 (SpellRules 35/352, BattleRules 13/190, ArtifactRules 3/37, HeroProgressionRules 1/6), with 12 of them shared helpers on main, frozen until the Phase 1 merge (PLAN.md). 07a done 2026-10-22 (branch native-phase1-battle: 387543a23 port, 3e11b0aed Windows binaries; merges of main 4ea510b0b and 8d1985999; the shared helpers on main 40cf5f12e, binaries 52c89b266): shadow 0 mismatches in 66,732,872 checks over 386 of 396 functions (2,998,500 in 07a's, 51 of 52 reached, not _stable_percent); native mode identical to main on the six seeds; core suite 17/17 (Windows only, Linux libraries not rebuilt). A review of the paths shadow did not reach found no divergence. Part 07b (resolve_battle_spell, validate_battle_spell, _consume_mana, known_spells, _player_spell_resolution) waits for Phase 5's ensure_hero_spellbook, mana_max_from_hero, mana_max_from_command and HeroProgressionRules.mana_max_bonus on main. cast_player_spell and _cast_enemy_spell move to 10.",
-      "updatedAt": "2026-10-21T23:13:00Z"
+      "notes": "Layer 8, likely two sessions: SpellRules 57/769, BattleRules 19/513, and the payload's ArtifactRules 20/328, HeroProgressionRules 10/105, DifficultyRules 7/21, ScenarioSelectRules 2/8 (or caster profiles built in GDScript, rebuilt after each enemy cast). Callers: 3 scenes, 8 scripts, 40 tests, the arena worker. Started 2026-10-22: the commander payloads came in 02. Part 07a, 52/585 (SpellRules 35/352, BattleRules 13/190, ArtifactRules 3/37, HeroProgressionRules 1/6), with 12 of them shared helpers on main, frozen until the Phase 1 merge (PLAN.md). 07a done 2026-10-22 (branch native-phase1-battle: 387543a23 port, 3e11b0aed Windows binaries; merges of main 4ea510b0b and 8d1985999; the shared helpers on main 40cf5f12e, binaries 52c89b266): shadow 0 mismatches in 66,732,872 checks over 386 of 396 functions (2,998,500 in 07a's, 51 of 52 reached, not _stable_percent); native mode identical to main on the six seeds; core suite 17/17 (Windows only, Linux libraries not rebuilt). A review of the paths shadow did not reach found no divergence. Part 07b (resolve_battle_spell, validate_battle_spell, _consume_mana, known_spells, _player_spell_resolution) waits for Phase 5's ensure_hero_spellbook, mana_max_from_hero, mana_max_from_command and HeroProgressionRules.mana_max_bonus on main. cast_player_spell and _cast_enemy_spell move to 10. 07b done 2026-10-22 with 08b (branch native-phase1-battle: 099f519fd port, cf1190263 Windows binaries): resolve_battle_spell, validate_battle_spell, _consume_mana, known_spells, _player_spell_resolution (5/162) and Phase 5's 4 spellbook helpers (4/33, on main unswitched since 379665372) switched in the battle table; checks in slice 08's notes.",
+      "updatedAt": "2026-10-22T00:53:57Z"
     },
     {
       "id": "native-rules-phase1-08-ai-estimates-20261020",
       "title": "Native battle engine 08: battle AI estimates",
-      "status": "pending",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "BattleAiRules' copies of layers 1-6 (95 functions / 1,347 lines), its scoring scope and memos.",
-      "updatedAt": "2026-10-20T19:35:00Z"
+      "notes": "BattleAiRules' copies of layers 1-6 (95 functions / 1,347 lines), its scoring scope and memos. 08a done on the branch (c94611a8b, eb4f8729a): 86 of 88 functions switched; shadow 0 mismatches in 74,657,726 checks (7,924,854 in 08a's, 83 of 86 reached); native identical to main on the six seeds; core suite 17/17 (Windows). 08b: the scoring payload and the 41 functions reaching it. 08b done 2026-10-22 with 07b (099f519fd port, cf1190263 Windows binaries): 41/885. 07b and 08b: shadow 0 mismatches in 81,952,285 checks over 517 of 532 functions (7,294,559 in theirs, 48 of 50 reached, not _enemy_withdrawal_urgency_scale and _preservation_comparison_score); native mode identical to main on the six seeds; core suite 17/17 (Windows only, Linux libraries not rebuilt). A review of the withdrawal path shadow did not reach found no divergence.",
+      "updatedAt": "2026-10-22T00:53:57Z"
     },
     {
       "id": "native-rules-phase1-09-ai-decisions-20261020",
       "title": "Native battle engine 09: battle AI decisions and enemy turns",
-      "status": "pending",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Likely two sessions: the other 106 BattleAiRules functions (2,023 lines) and the BattleRules enemy turn 9/348. Callers: BattleShell.gd, BattleRules, BattleAutoResolveRules, 15 tests.",
-      "updatedAt": "2026-10-20T19:35:00Z"
+      "notes": "Done 2026-10-22 on branch native-phase1-battle (bcdbccacc port, cd3c6accc Windows binaries): BattleAiRules 27/789 (the weights, the attack, defend, advance and spell scores, the melee approach, the enemy action and tactical order, the advance plan and reachable strike; 08a and 08b took the rest of the 106) and BattleRules ai_melee_approach, ai_advance_plan and _apply_auto_advance_movement (3/27). The BattleRules enemy turn moves to 10 (it reaches the battle ends). Shadow 0 mismatches in 83,280,050 checks over 547 of 562 functions (all 30 of 09's reached); native mode identical to main on the six seeds; core suite 17/17 (Windows only, Linux libraries not rebuilt).",
+      "updatedAt": "2026-10-22T01:56:44Z"
     },
     {
       "id": "native-rules-phase1-10-autoplay-events-api-20261020",
@@ -116161,8 +116161,8 @@
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "BattleAutoResolveRules 8/316; events as structured records with a GDScript formatter (516 lines of event code today); the order-by-order API and battle UI queries, shadow mode on the human-seat corpus.",
-      "updatedAt": "2026-10-20T19:35:00Z"
+      "notes": "BattleAutoResolveRules 8/316; the BattleRules enemy turn from 09 (_run_enemy_turn, _run_enemy_stack_order, _cast_enemy_spell, the defend and wait orders, _drain_enemy_turns), and the attacks and outcome steps (_resolve_attack_action, _resolve_ai_attack, _complete_action, _complete_enemy_action, _evaluate_outcome); events as structured records with a GDScript formatter (516 lines of event code today); the order-by-order API and battle UI queries, shadow mode on the human-seat corpus.",
+      "updatedAt": "2026-10-22T01:56:44Z"
     },
     {
       "id": "native-rules-phase1-11-exit-20261020",

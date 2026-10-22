@@ -104,8 +104,26 @@ public:
 	// its own bridge, and ending one ends the checks opened inside it.
 	int64_t port_validate_begin(const StringName &name, const Array &args);
 	String port_validate_end(int64_t handle, const Variant &gdscript_result, const Array &args);
-	// {name: {calls, checks, mismatches, errors, not_ported}}, plus "unknown_calls" when a
-	// name was not in the registry. With a subsystem's log variable set to a
+	// Host calls (gd::call_static: a GDScript function the phase leaves in
+	// GDScript, port::Table::hosts). port_call with write_back runs them; in
+	// any other call, and in port_check, the native call ends at one
+	// (state::Suspend), which is a native failure. A validating check ends
+	// there too: its native run is suspended at that host call, and the engine
+	// script calls port_validate_point(name, args) just before a host
+	// function's body runs ("BattleRules._finalize_victory", from the switch
+	// tool's host wrapper). Each open check suspended at it is checked then:
+	// the same host and arguments, and the state as verify_state() finds the
+	// native run left it; port_validate_end then compares nothing more, since
+	// GDScript went on past the host call and the native run did not. An open
+	// check that is not suspended, or a suspended check that never reaches its
+	// point, is a mismatch. "" when every check matched, else the first
+	// mismatch.
+	String port_validate_point(const StringName &name, const Array &args);
+	// {name: {calls, checks, mismatches, errors, not_ported}}, with host_points
+	// (the checks closed at a host point), host_calls and max_host_calls (the
+	// host calls its native calls made, the most in one) when there are any,
+	// plus "hosts" ({host: calls}) and "unknown_calls" when a name was not in
+	// the registry. With a subsystem's log variable set to a
 	// folder (HEROES_NATIVE_BATTLE_LOG), the same goes to shadow_<pid>.json
 	// there, with the first mismatches and unknown names, every 65,536 uses, on
 	// each mismatch or failure and at exit. A native call that fails or names no
@@ -134,6 +152,11 @@ private:
 		int64_t mismatches = 0;
 		int64_t errors = 0;
 		int64_t not_ported = 0;
+		// Validating checks closed at a host point (port_validate_point).
+		int64_t host_points = 0;
+		// Host calls the native calls made (port_call), and the most in one call.
+		int64_t host_calls = 0;
+		int64_t max_host_calls = 0;
 		std::vector<std::string> first;
 		// Its table's Table::fallback.
 		bool fallback = false;
@@ -143,11 +166,17 @@ private:
 	PortStats &stats_of(const aurelion::rules::port::Function *function);
 	void record_mismatch(PortStats &stats, const char *name, const std::string &text, bool error);
 	void count_port_use();
+	void count_host_calls(PortStats &stats, const aurelion::rules::bridge::PortBridge &port);
 	void write_port_stats() const;
 	void record_unknown(const StringName &name, const char *method);
+	aurelion::rules::bridge::PortBridge &port_bridge(size_t depth);
 
 	Dictionary last_state_stats_;
-	std::unique_ptr<aurelion::rules::bridge::PortBridge> port_;
+	// port_call and port_check: one bridge per nesting depth, made on first
+	// use. A host call's GDScript runs switched functions while the call that
+	// made it still runs on its own bridge.
+	std::vector<std::unique_ptr<aurelion::rules::bridge::PortBridge>> ports_;
+	size_t port_depth_ = 0;
 	// port_validate_*: the open checks are the first open_validations_.
 	std::vector<std::unique_ptr<Validation>> validations_;
 	size_t open_validations_ = 0;
@@ -159,6 +188,8 @@ private:
 	int64_t port_uses_ = 0;
 	bool last_not_ported_ = false;
 	int64_t unknown_calls_ = 0;
+	// Each host target's calls, by its name ("BattleRules._finalize_victory").
+	std::vector<std::pair<std::string, int64_t>> host_call_counts_;
 	std::vector<std::string> unknown_names_;
 	size_t reported_mismatches_ = 0;
 	mutable bool port_log_failed_ = false;

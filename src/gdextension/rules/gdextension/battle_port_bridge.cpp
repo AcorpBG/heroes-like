@@ -177,7 +177,7 @@ PortBridge::PortBridge() {
 	state_.set_backing(this);
 }
 
-void PortBridge::begin(bool validating) {
+void PortBridge::begin(bool validating, bool host_calls) {
 	if (state_.atom_count() > kAtomLimit) {
 		state_.clear();
 		string_cache_.clear();
@@ -201,6 +201,8 @@ void PortBridge::begin(bool validating) {
 	static_slots_.clear();
 	memo_shapes_.clear();
 	validating_ = validating;
+	host_calls_ = host_calls && !validating;
+	host_calls_made_.clear();
 	array_snapshots_.clear();
 	dict_snapshots_.clear();
 	packed_snapshots_.clear();
@@ -546,6 +548,92 @@ void PortBridge::static_set(state::State &, uint32_t script, uint32_t name, cons
 	static_slots_.emplace(slot, statics_.size() - 1);
 }
 
+Value PortBridge::call_static(state::State &, uint32_t script, uint32_t function, const Value *args, size_t count) {
+	if (!host_calls_) {
+		state::Suspend suspend;
+		suspend.script = script;
+		suspend.function = function;
+		suspend.args.assign(args, args + count);
+		throw suspend;
+	}
+	// GDScript finds every container and static var as the native code left
+	// them, and the containers export made stay those nodes' objects: a second
+	// write-back writes into them, not into stale copies.
+	host_calls_made_.emplace_back(script, function);
+	write_back();
+	Array call_args;
+	for (size_t index = 0; index < count; ++index) {
+		call_args.push_back(export_value(args[index]));
+	}
+	adopt_exported();
+	for (StaticVar &var : statics_) {
+		var.assigned = false;
+	}
+	// GDScript::callp runs a static func of the script with no instance. It
+	// may call switched functions, which run on another bridge.
+	const Variant result = script_object(script)->callv(static_name(function), call_args);
+	reback();
+	return load(result);
+}
+
+void PortBridge::adopt_exported() {
+	for (const auto &made : exported_arrays_) {
+		const Array array = made.second;
+		if (array_sources_.size() <= made.first) {
+			array_sources_.resize(made.first + 1);
+		}
+		array_sources_[made.first] = array;
+		array_nodes_.emplace(identity_of(array), made.first);
+	}
+	for (const auto &made : exported_dicts_) {
+		const Dictionary dict = made.second;
+		if (dict_sources_.size() <= made.first) {
+			dict_sources_.resize(made.first + 1);
+		}
+		dict_sources_[made.first] = dict;
+		dict_nodes_.emplace(identity_of(dict), made.first);
+	}
+	for (const auto &made : exported_packed_) {
+		if (packed_sources_.size() <= made.first) {
+			packed_sources_.resize(made.first + 1);
+		}
+		packed_sources_[made.first] = made.second;
+		packed_nodes_.emplace(identity_of_packed(made.second), made.first);
+	}
+	exported_arrays_.clear();
+	exported_dicts_.clear();
+	exported_packed_.clear();
+}
+
+// GDScript may have changed any container: each loaded node reads its
+// container again, from scratch. The sources keep every container alive, so
+// no identity in the maps goes to another container meanwhile.
+void PortBridge::reback() {
+	for (uint32_t node = 0; node < array_sources_.size(); ++node) {
+		if (array_sources_[node]) {
+			state_.array_node(node).reset();
+			back_array(node, *array_sources_[node]);
+		}
+	}
+	for (uint32_t node = 0; node < dict_sources_.size(); ++node) {
+		if (dict_sources_[node]) {
+			state_.dict_node(node).reset();
+			back_dict(node, *dict_sources_[node]);
+		}
+	}
+	for (uint32_t node = 0; node < packed_sources_.size(); ++node) {
+		if (packed_sources_[node]) {
+			state_.packed_node(node).reset();
+			back_packed(node, *packed_sources_[node]);
+		}
+	}
+	state_.drop_memo();
+	statics_.clear();
+	static_slots_.clear();
+	content_.clear();
+	content_revision_ = -1;
+}
+
 state::TypeRef PortBridge::builtin_type(uint8_t builtin) {
 	// A builtin type has no class name and no script.
 	return register_type(builtin, StringName(), Variant());
@@ -591,6 +679,38 @@ Value PortBridge::load_string(const String &text, Kind kind) {
 	return Value::of_ref(kind, state_.intern(std::string_view(utf8.get_data(), static_cast<size_t>(utf8.length()))));
 }
 
+void PortBridge::back_array(uint32_t node, const Array &array) {
+	state::ArrayNode &target = state_.array_node(node);
+	target.backed = true;
+	if (array.is_typed()) {
+		target.element_type = register_type(array.get_typed_builtin(), array.get_typed_class_name(), array.get_typed_script());
+	}
+	target.read_only = array.is_read_only();
+	// What GDScript holds: the native memo's answers read from it stay only
+	// while the port writes nothing into it (State::memo_find).
+	state_.watch_loaded(Value::of_ref(Kind::Array, node));
+}
+
+void PortBridge::back_dict(uint32_t node, const Dictionary &dict) {
+	state::DictNode &target = state_.dict_node(node);
+	target.backed = true;
+	if (dict.is_typed_key()) {
+		target.key_type = register_type(dict.get_typed_key_builtin(), dict.get_typed_key_class_name(), dict.get_typed_key_script());
+	}
+	if (dict.is_typed_value()) {
+		target.value_type = register_type(dict.get_typed_value_builtin(), dict.get_typed_value_class_name(), dict.get_typed_value_script());
+	}
+	target.read_only = dict.is_read_only();
+	state_.watch_loaded(Value::of_ref(Kind::Dict, node));
+}
+
+void PortBridge::back_packed(uint32_t node, const Variant &packed) {
+	state::PackedNode &target = state_.packed_node(node);
+	target.kind = packed_kind(packed.get_type());
+	target.backed = true;
+	state_.watch_loaded(Value::of_ref(target.kind, node));
+}
+
 Value PortBridge::load(const Variant &value) {
 	switch (value.get_type()) {
 		case Variant::NIL:
@@ -628,10 +748,7 @@ Value PortBridge::load(const Variant &value) {
 				packed_sources_.resize(node + 1);
 			}
 			packed_sources_[node] = value;
-			state_.packed_node(node).backed = true;
-			// What GDScript holds: the native memo's answers read from it stay
-			// only while the port writes nothing into it (State::memo_find).
-			state_.watch_loaded(Value::of_ref(kind, node));
+			back_packed(node, value);
 			if (validating_) {
 				if (packed_snapshots_.size() <= node) {
 					packed_snapshots_.resize(node + 1);
@@ -653,13 +770,7 @@ Value PortBridge::load(const Variant &value) {
 				array_sources_.resize(node + 1);
 			}
 			array_sources_[node] = array;
-			state::ArrayNode &target = state_.array_node(node);
-			target.backed = true;
-			if (array.is_typed()) {
-				target.element_type = register_type(array.get_typed_builtin(), array.get_typed_class_name(), array.get_typed_script());
-			}
-			target.read_only = array.is_read_only();
-			state_.watch_loaded(Value::of_ref(Kind::Array, node));
+			back_array(node, array);
 			if (validating_) {
 				if (array_snapshots_.size() <= node) {
 					array_snapshots_.resize(node + 1);
@@ -681,16 +792,7 @@ Value PortBridge::load(const Variant &value) {
 				dict_sources_.resize(node + 1);
 			}
 			dict_sources_[node] = dict;
-			state::DictNode &target = state_.dict_node(node);
-			target.backed = true;
-			if (dict.is_typed_key()) {
-				target.key_type = register_type(dict.get_typed_key_builtin(), dict.get_typed_key_class_name(), dict.get_typed_key_script());
-			}
-			if (dict.is_typed_value()) {
-				target.value_type = register_type(dict.get_typed_value_builtin(), dict.get_typed_value_class_name(), dict.get_typed_value_script());
-			}
-			target.read_only = dict.is_read_only();
-			state_.watch_loaded(Value::of_ref(Kind::Dict, node));
+			back_dict(node, dict);
 			if (validating_) {
 				if (dict_snapshots_.size() <= node) {
 					dict_snapshots_.resize(node + 1);
@@ -1332,6 +1434,40 @@ std::string PortBridge::verify(const Value &result, const Variant &gdscript_resu
 	if (!out.empty()) {
 		return out;
 	}
+	return verify_after(args, count, after);
+}
+
+std::string PortBridge::verify_state(const Value *args, size_t count, const Array &after) {
+	matched_arrays_.clear();
+	matched_dicts_.clear();
+	matched_packed_.clear();
+	return verify_after(args, count, after);
+}
+
+std::string PortBridge::verify_host_call(const std::vector<Value> &host_args, const Array &gdscript_host_args, const Value *args, size_t count, const Array &after) {
+	matched_arrays_.clear();
+	matched_dicts_.clear();
+	matched_packed_.clear();
+	if (static_cast<int64_t>(host_args.size()) != gdscript_host_args.size()) {
+		return "native passes " + std::to_string(host_args.size()) + " arguments, GDScript " + std::to_string(gdscript_host_args.size());
+	}
+	std::string out;
+	std::string path;
+	for (size_t index = 0; index < host_args.size(); ++index) {
+		path = "args[" + compat::itos(static_cast<int64_t>(index)) + "]";
+		const Variant gdscript = gdscript_host_args[static_cast<int64_t>(index)];
+		diff_value(host_args[index], gdscript, path, out);
+		if (!out.empty()) {
+			return "its " + out;
+		}
+	}
+	return verify_after(args, count, after);
+}
+
+// verify's state half: the result, if any, was matched first.
+std::string PortBridge::verify_after(const Value *args, size_t count, const Array &after) {
+	std::string out;
+	std::string path;
 	// The arguments the engine script made again: a session's view, and in it
 	// the session's metadata.
 	std::vector<bool> views(dict_sources_.size(), false);
