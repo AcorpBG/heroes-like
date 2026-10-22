@@ -2,6 +2,8 @@ extends RefCounted
 
 const Progression = preload("res://scripts/core/HeroProgressionRules.gd")
 const Spells = preload("res://scripts/core/SpellRules.gd")
+const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
+static var _turn_engine_mode: int = TurnEngine.mode
 ## AI weights (content/ai_hero_weights.json) for useful_to_ai: the gold a
 ## service that costs gold leaves; mana restored at this share or below; gold
 ## before buying experience; wood and ore an exchange leaves; gold below which,
@@ -17,6 +19,14 @@ static var AI_EXCHANGE_LOW_STOCK: int
 static var _ai_weights_ready := false
 
 static func apply_ai_weights(weights: Dictionary) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		apply_ai_weights__gd(weights)
+		return
+	var before := TurnEngine.before_writing(&"FactionTownServices.apply_ai_weights", [weights])
+	apply_ai_weights__gd(weights)
+	TurnEngine.check_writing(&"FactionTownServices.apply_ai_weights", before, [weights], null)
+
+static func apply_ai_weights__gd(weights: Dictionary) -> void:
 	AI_GOLD_RESERVE = int(weights["service_gold_reserve"])
 	AI_RESTORE_MANA_SHARE = float(weights["restore_mana_share"])
 	AI_EXPERIENCE_MIN_GOLD = int(weights["experience_service_min_gold"])
@@ -26,9 +36,25 @@ static func apply_ai_weights(weights: Dictionary) -> void:
 	_ai_weights_ready = true
 
 static func week(day: int) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return week__gd(day)
+	var before := TurnEngine.before_writing(&"FactionTownServices.week", [day])
+	var result = week__gd(day)
+	TurnEngine.check_writing(&"FactionTownServices.week", before, [day], result)
+	return result
+
+static func week__gd(day: int) -> int:
 	return maxi(0, (day - 1) / 7)
 
 static func recruit_reward(town: Dictionary, service: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return recruit_reward__gd(town, service)
+	var before := TurnEngine.before_writing(&"FactionTownServices.recruit_reward", [town, service])
+	var result = recruit_reward__gd(town, service)
+	TurnEngine.check_writing(&"FactionTownServices.recruit_reward", before, [town, service], result)
+	return result
+
+static func recruit_reward__gd(town: Dictionary, service: Dictionary) -> Dictionary:
 	var reward := {}
 	for id in town.get("built_buildings", []):
 		var uid := String(ContentService.get_building(String(id)).get("unlock_unit_id", ""))
@@ -43,6 +69,14 @@ static func recruit_reward(town: Dictionary, service: Dictionary) -> Dictionary:
 	return reward
 
 static func unavailable_reason(hero: Dictionary, town: Dictionary, building: Dictionary, day: int, resources: Dictionary) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return unavailable_reason__gd(hero, town, building, day, resources)
+	var before := TurnEngine.before_writing(&"FactionTownServices.unavailable_reason", [hero, town, building, day, resources])
+	var result = unavailable_reason__gd(hero, town, building, day, resources)
+	TurnEngine.check_writing(&"FactionTownServices.unavailable_reason", before, [hero, town, building, day, resources], result)
+	return result
+
+static func unavailable_reason__gd(hero: Dictionary, town: Dictionary, building: Dictionary, day: int, resources: Dictionary) -> String:
 	var service: Dictionary = building.get("faction_service", {})
 	if service.is_empty() or String(building.get("id", "")) not in town.get("built_buildings", []): return "This faction building is not constructed."
 	var holder := hero if service.get("scope", "town") == "hero" else town
@@ -56,6 +90,14 @@ static func unavailable_reason(hero: Dictionary, town: Dictionary, building: Dic
 	return ""
 
 static func perform(hero: Dictionary, town: Dictionary, building: Dictionary, day: int, resources: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return perform__gd(hero, town, building, day, resources)
+	var before := TurnEngine.before_writing(&"FactionTownServices.perform", [hero, town, building, day, resources])
+	var result = perform__gd(hero, town, building, day, resources)
+	TurnEngine.check_writing(&"FactionTownServices.perform", before, [hero, town, building, day, resources], result)
+	return result
+
+static func perform__gd(hero: Dictionary, town: Dictionary, building: Dictionary, day: int, resources: Dictionary) -> Dictionary:
 	var reason := unavailable_reason(hero, town, building, day, resources)
 	if reason != "": return {"ok": false, "hero": hero, "message": reason}
 	var service: Dictionary = building.faction_service
@@ -82,6 +124,14 @@ static func perform(hero: Dictionary, town: Dictionary, building: Dictionary, da
 	return {"ok": true, "hero": result, "message": String(service.get("description", service.get("label", "Faction service completed.")))}
 
 static func useful_to_ai(hero: Dictionary, town: Dictionary, building: Dictionary, day: int, resources: Dictionary) -> bool:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return useful_to_ai__gd(hero, town, building, day, resources)
+	var before := TurnEngine.before_writing(&"FactionTownServices.useful_to_ai", [hero, town, building, day, resources])
+	var result = useful_to_ai__gd(hero, town, building, day, resources)
+	TurnEngine.check_writing(&"FactionTownServices.useful_to_ai", before, [hero, town, building, day, resources], result)
+	return result
+
+static func useful_to_ai__gd(hero: Dictionary, town: Dictionary, building: Dictionary, day: int, resources: Dictionary) -> bool:
 	if not _ai_weights_ready:
 		apply_ai_weights(ContentService.default_ai_hero_weights())
 	if unavailable_reason(hero, town, building, day, resources) != "": return false

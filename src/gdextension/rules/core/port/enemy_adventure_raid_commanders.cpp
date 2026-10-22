@@ -1,6 +1,6 @@
 // EnemyAdventureRules ports shared by the computer players' day (Phase 4) and the
 // payload of a battle (Phase 2a): the name of a raid's commander. Phase 4's code
-// (enemy_adventure_rules_turn.cpp), unchanged.
+// (enemy_adventure_rules_turn.cpp), moved here unchanged.
 
 #include "aurelion_rules/port/enemy_adventure_rules.hpp"
 

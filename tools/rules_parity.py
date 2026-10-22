@@ -75,6 +75,14 @@ SEEDS: dict[str, dict] = {
     "mg-a": {"seed": "mg-a", "players": 4, "size": "homm3_large", "days": 80, "water": "normal_water", "levels": 2},
     "mg-b": {"seed": "mg-b", "players": 3, "size": "homm3_medium", "days": 100, "water": "land", "levels": 2},
 }
+# Seeds a port adds for paths the committed set never runs; they run only when --seeds names them.
+# Phase 4 (2026-10-22): isl-b has an army saving for a boat (AiHeroRules._hold_back), pt-f one-way portals whose
+# random exits the computer heroes take (OverworldRules.native_random_exit_check).
+EXTRA_SEEDS: dict[str, dict] = {
+    "isl-b": {"seed": "isl-b", "players": 2, "size": "homm3_small", "days": 100, "water": "islands", "levels": 1},
+    "pt-f": {"seed": "pt-f", "players": 4, "size": "homm3_large", "days": 80, "water": "land", "levels": 2},
+}
+ALL_SEEDS = {**SEEDS, **EXTRA_SEEDS}
 # Record fields that hold wall-clock time, left out of the comparison.
 TIMING_KEYS = ("ai_turn_ms_max", "turn_ms")
 # --portable: where the map package was written (res://maps under the editor, user://maps in an
@@ -136,7 +144,7 @@ def parse_env(items: list[str] | None) -> dict[str, str]:
 
 
 def start(job: Job, profiles: Path) -> tuple[subprocess.Popen, Path, float]:
-    setup = SEEDS[job.key]
+    setup = ALL_SEEDS[job.key]
     profile = Path(tempfile.mkdtemp(prefix=f"{job.side.name}-{job.key}-", dir=profiles))
     env = {k: v for k, v in os.environ.items() if not k.startswith("HEROES_AI_MATCH_")}
     env.update(job.side.env)
@@ -216,7 +224,7 @@ def run_jobs(jobs: list[Job], parallel: int, timeout_min: float, work: Path, say
         if job.side.is_project and maps.is_dir():
             keep_maps.setdefault(str(job.side.path.resolve()), {p.name for p in maps.iterdir()})
     # Biggest maps first, so the small ones fill in at the end.
-    queue = sorted(jobs, key=lambda j: (SEEDS[j.key]["levels"], SIZES.index(SEEDS[j.key]["size"]), SEEDS[j.key]["players"]), reverse=True)
+    queue = sorted(jobs, key=lambda j: (ALL_SEEDS[j.key]["levels"], SIZES.index(ALL_SEEDS[j.key]["size"]), ALL_SEEDS[j.key]["players"]), reverse=True)
     running: list[tuple[Job, subprocess.Popen, Path, float]] = []
     results = []
     try:
@@ -396,9 +404,9 @@ def print_rows(rows: list[dict], say) -> None:
 
 def pick_seeds(text: str | None) -> list[str]:
     keys = [k.strip() for k in (text or ",".join(SEEDS)).split(",") if k.strip()]
-    unknown = [k for k in keys if k not in SEEDS]
+    unknown = [k for k in keys if k not in ALL_SEEDS]
     if unknown:
-        sys.exit(f"unknown seeds {unknown}; known: {', '.join(SEEDS)}")
+        sys.exit(f"unknown seeds {unknown}; known: {', '.join(ALL_SEEDS)}")
     return keys
 
 
@@ -563,7 +571,7 @@ def main() -> int:
     sub = parser.add_subparsers(dest="command", required=True)
 
     def common(p, with_side_env: bool) -> None:
-        p.add_argument("--seeds", help=f"comma-separated subset of {', '.join(SEEDS)} (default all)")
+        p.add_argument("--seeds", help=f"comma-separated, from {', '.join(ALL_SEEDS)} (default the committed set: {', '.join(SEEDS)})")
         p.add_argument("--jobs", type=int, default=6, help="Godot runs at once (default 6)")
         p.add_argument("--timeout-min", type=float, default=60, help="per run (default 60)")
         p.add_argument("--godot", help="editor binary for project directories (default as tools/core_suite.py)")
@@ -608,7 +616,7 @@ def main() -> int:
     p.set_defaults(func=cmd_remove)
 
     p = sub.add_parser("seeds", help="list the seed set")
-    p.set_defaults(func=lambda a: print("\n".join(f"{k:5} {json.dumps(v)}" for k, v in SEEDS.items())) or 0)
+    p.set_defaults(func=lambda a: print("\n".join(f"{k:5} {json.dumps(v)}" for k, v in ALL_SEEDS.items())) or 0)
 
     args = parser.parse_args()
     return args.func(args)

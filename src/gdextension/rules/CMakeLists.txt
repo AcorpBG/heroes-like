@@ -112,12 +112,18 @@ add_library(aurelion_rules_core STATIC
 	core/port/ai_hero_rules_search.cpp
 	core/port/ai_hero_rules_sight.cpp
 	core/port/ai_hero_rules_surface.cpp
+	core/port/ai_hero_rules_turn.cpp
+	core/port/ai_hero_rules_turn_day.cpp
+	core/port/ai_hero_rules_turn_fights.cpp
+	core/port/ai_hero_rules_turn_moves.cpp
+	core/port/ai_hero_rules_turn_towns.cpp
 	core/port/ai_hero_rules_values.cpp
 	core/port/ai_hero_rules_war.cpp
 	core/port/ai_port.cpp
 	core/port/ai_registry.cpp
 	core/port/artifact_rules.cpp
 	core/port/artifact_rules_shared.cpp
+	core/port/artifact_rules_turn.cpp
 	core/port/attack_effects.cpp
 	core/port/attack_events.cpp
 	core/port/battle_aftermath.cpp
@@ -166,10 +172,12 @@ add_library(aurelion_rules_core STATIC
 	core/port/enemy_adventure_rules.cpp
 	core/port/enemy_adventure_rules_ai.cpp
 	core/port/enemy_adventure_rules_shared.cpp
+	core/port/enemy_adventure_rules_turn.cpp
 	core/port/enemy_orders.cpp
 	core/port/enemy_states.cpp
 	core/port/enemy_turn.cpp
 	core/port/enemy_turn_rules.cpp
+	core/port/enemy_turn_rules_turn.cpp
 	core/port/fog.cpp
 	core/port/gd.cpp
 	core/port/hero_command_rules.cpp
@@ -177,6 +185,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/hero_commit.cpp
 	core/port/hero_progression_rules.cpp
 	core/port/hero_progression_rules_shared.cpp
+	core/port/hero_rules_turn.cpp
 	core/port/mine_rules.cpp
 	core/port/mine_rules_ai.cpp
 	core/port/move_orders.cpp
@@ -196,6 +205,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/overworld_rules_ai_sites.cpp
 	core/port/overworld_rules_ai_towns.cpp
 	core/port/overworld_rules_shared.cpp
+	core/port/overworld_rules_turn.cpp
 	core/port/overworld_state_normalize.cpp
 	core/port/overworld_towns_normalize.cpp
 	core/port/overworld_transit_normalize.cpp
@@ -224,7 +234,11 @@ add_library(aurelion_rules_core STATIC
 	core/port/town_rules_ai.cpp
 	core/port/town_rules_shared.cpp
 	core/port/turn_forecast.cpp
+	core/port/turn_hosts.cpp
+	core/port/turn_not_ported.cpp
 	core/port/turn_order.cpp
+	core/port/turn_port.cpp
+	core/port/turn_registry.cpp
 	core/port/unit_abilities.cpp
 	core/port/visit_building_rules_ai.cpp
 	core/port/water_travel_rules_ai.cpp

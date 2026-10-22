@@ -6,6 +6,8 @@ const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const TownBattle = preload("res://scripts/core/TownBattleRules.gd")
 const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
 static var _battle_engine_mode: int = BattleEngine.mode
+const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
+static var _turn_engine_mode: int = TurnEngine.mode
 
 const CONTEXT_OVERWORLD := "overworld"
 const CONTEXT_BATTLE := "battle"
@@ -93,6 +95,14 @@ static func spell_icon_path(spell_id: String) -> String:
 	return spell_school_icon_path(spell_id)
 
 static func build_spellbook(hero_template: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return build_spellbook__gd(hero_template)
+	var before := TurnEngine.before_writing(&"SpellRules.build_spellbook", [hero_template])
+	var result = build_spellbook__gd(hero_template)
+	TurnEngine.check_writing(&"SpellRules.build_spellbook", before, [hero_template], result)
+	return result
+
+static func build_spellbook__gd(hero_template: Dictionary) -> Dictionary:
 	var mana_max := mana_max_from_command(hero_template.get("command", {}))
 	return {
 		"known_spell_ids": _normalize_spell_ids(hero_template.get("starting_spell_ids", [])),
@@ -216,6 +226,14 @@ static func knows_spell(hero_state: Dictionary, spell_id: String) -> bool:
 	return _normalize_spell_ids(spellbook["known_spell_ids"]).has(spell_id)
 
 static func learn_spell(hero_state: Dictionary, spell_id: String) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return learn_spell__gd(hero_state, spell_id)
+	var before := TurnEngine.before_writing(&"SpellRules.learn_spell", [hero_state, spell_id])
+	var result = learn_spell__gd(hero_state, spell_id)
+	TurnEngine.check_writing(&"SpellRules.learn_spell", before, [hero_state, spell_id], result)
+	return result
+
+static func learn_spell__gd(hero_state: Dictionary, spell_id: String) -> Dictionary:
 	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
 	var spell := ContentService.get_spell(spell_id)
 	if spell.is_empty():
