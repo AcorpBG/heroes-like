@@ -7,6 +7,9 @@
 // effects. Layer 5: the attack and ability effects, damage pressure and the
 // attack events. Layers 6 and 7: the pressure of an advance and a defend, the
 // melee approach and the town assault check. Layer 8: a spell's battle events.
+// Layer 9: the AI's orders carried out. Layer 10: the fight: the player's
+// orders and moves, the enemy's turn, the attacks and casts, the end of an
+// action and the outcome.
 //
 // _hero_payload_cache and _presentation_queue_written are GDScript's static
 // vars, read and written through the host (gd::static_var) as the GDScript
@@ -22,17 +25,12 @@
 // Not ported, with the reason:
 // - begin_board_read_scope and end_board_read_scope: they open GDScript's
 //   board-read memo, which the native board reads do not use.
-// - BattleActionPlayback.capture, the playback frames of a presented action:
-//   slice 10. It does nothing on a battle without the capture key; on one with
-//   it, the native callers (_set_stack_hex, _mark_stack_animation_event) stop
-//   with an error.
-// - _resolve_attack_action and _resolve_ai_attack, the attacks themselves:
-//   slice 10. They end in _complete_action or _complete_enemy_action, which
-//   call _evaluate_outcome and the _finalize_* functions that stay GDScript in
-//   Phase 1.
-// - cast_player_spell and _cast_enemy_spell, the casts themselves: slice 10.
-//   The player's cast ends in _complete_action, the enemy's reaches
-//   BattleAiRules and _evaluate_outcome.
+// - The battle ends (_finalize_victory, _finalize_player_battle_loss,
+//   _finalize_stalemate, _finalize_enemy_withdrawal, _finalize_retreat,
+//   _finalize_surrender) and a refused withdrawal's message
+//   (_retreat_action_summary, _surrender_action_summary): they read and change
+//   the overworld and stay GDScript until Phase 5. The ports call them as host
+//   calls (gd::call_static), the HOST entries of core/port/registry.cpp.
 
 #include "aurelion_rules/port/gd.hpp"
 
@@ -414,5 +412,62 @@ Atom _spell_effect_label(State &state, const Value &effect_payload);
 DictRef ai_melee_approach(State &state, DictRef battle, DictRef stack, DictRef target);
 DictRef ai_advance_plan(State &state, DictRef battle, DictRef stack);
 bool _apply_auto_advance_movement(State &state, DictRef battle, DictRef active_stack);
+
+// Layer 10: the player's orders, the attack they resolve, the end of an
+// action and the outcome (player_orders.cpp).
+DictRef resolve_if_battle_ready(State &state, const Value &session);
+DictRef cast_player_spell(State &state, const Value &session, Atom spell_id, Atom target_id);
+DictRef perform_player_action(State &state, const Value &session, Atom action, DictRef approach);
+DictRef _resolve_attack_action(State &state, const Value &session, DictRef attacker, DictRef target, bool is_ranged);
+DictRef _complete_action(State &state, const Value &session, Atom initial_message, bool turn_spent);
+DictRef _evaluate_outcome(State &state, const Value &session);
+void _clear_stack_animation_states(State &state, DictRef battle);
+
+// Layer 10: the player's move order (move_orders.cpp).
+DictRef movement_intent_for_destination(State &state, DictRef battle, int64_t q, int64_t r, const Value &preloaded_legal_destinations);
+DictRef _legal_destination_from_preloaded(State &state, ArrayRef destinations, int64_t q, int64_t r);
+DictRef _movement_intent_skeleton(State &state, DictRef battle, DictRef active_stack, DictRef destination);
+Atom _step_count_label(State &state, int64_t steps);
+Atom _movement_destination_phrase(State &state, DictRef destination);
+DictRef _movement_target_setup_for_destination(State &state, DictRef battle, DictRef active_stack, DictRef destination, DictRef current_legality);
+Atom _movement_intent_message(State &state, DictRef battle, DictRef active_stack, DictRef destination, int64_t destination_count);
+DictRef move_active_stack_to_hex(State &state, const Value &session, int64_t q, int64_t r);
+DictRef _legal_destination_for_stack(State &state, DictRef battle, DictRef stack, DictRef destination);
+DictRef _resolve_move_action(State &state, const Value &session, DictRef active_stack, DictRef destination, Atom verb, DictRef movement_intent);
+DictRef _attach_movement_intent_to_result(State &state, DictRef result, DictRef movement_intent);
+DictRef _attach_post_move_target_context(State &state, DictRef result, DictRef battle);
+bool _apply_setup_move_target_continuity(State &state, DictRef battle, DictRef movement_intent, DictRef result);
+bool _apply_ordinary_closing_target_context(State &state, DictRef battle, DictRef movement_intent, DictRef result);
+
+// Layer 10: the enemy's turn: the drain, an enemy stack's order and its end
+// (enemy_turn.cpp).
+DictRef _run_enemy_turn(State &state, const Value &session, DictRef active_stack);
+DictRef _run_enemy_stack_order(State &state, const Value &session, DictRef active_stack, DictRef action);
+DictRef _resolve_enemy_defend(State &state, const Value &session, DictRef active_stack);
+DictRef _cast_enemy_spell(State &state, const Value &session, DictRef active_stack, DictRef action);
+DictRef _resolve_ai_attack(State &state, const Value &session, DictRef attacker, DictRef target, bool is_ranged);
+DictRef _drain_enemy_turns(State &state, const Value &session);
+DictRef _complete_enemy_action(State &state, const Value &session, Atom message);
+DictRef _resolve_enemy_wait(State &state, const Value &session, DictRef active_stack);
+void _mark_side_animation_event(State &state, DictRef battle, Atom side, Atom event_id);
+
+// Layer 10b: the battle screen's consequence previews: an attack's, an
+// advance's and a spell's, and the damage and loss ranges they print
+// (consequence_previews.cpp).
+DictRef attack_consequence_preview(State &state, DictRef battle, Atom action, Atom target_id, DictRef approach);
+Atom _no_retaliation_reason(State &state, DictRef defender, DictRef battle, bool ranged, int64_t distance, bool always_destroyed);
+ArrayRef _attack_forecast_lines(State &state, DictRef preview, DictRef target);
+Atom forecast_text(State &state, ArrayRef lines);
+Atom _range_text(State &state, int64_t low, int64_t high);
+Atom consequence_range_text(State &state, DictRef value);
+DictRef advance_consequence_preview(State &state, DictRef battle);
+DictRef spell_consequence_preview(State &state, const Value &session, Atom spell_id, Atom target_id);
+DictRef _damage_range_preview(State &state, DictRef attacker, DictRef defender, DictRef battle, bool is_ranged, bool is_retaliation, int64_t attack_distance);
+DictRef _unit_loss_range(State &state, DictRef defender, int64_t min_damage, int64_t max_damage);
+
+// Layer 10b: the turn order forecast (turn_forecast.cpp).
+ArrayRef upcoming_actor_ids(State &state, DictRef battle, int64_t limit);
+DictRef turn_order_forecast(State &state, DictRef battle);
+ArrayRef _projected_next_round_order(State &state, DictRef battle, ArrayRef still_to_act);
 
 } // namespace aurelion::rules::port::battle_rules

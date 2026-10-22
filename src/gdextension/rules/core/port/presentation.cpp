@@ -1,5 +1,6 @@
 // Layer 4: presentation: the animation states and events and the presentation event queue.
 
+#include "aurelion_rules/port/battle_action_playback.hpp"
 #include "aurelion_rules/port/battle_rules.hpp"
 
 namespace aurelion::rules::port::battle_rules {
@@ -132,15 +133,6 @@ DictRef stored_dict_or_new(State &state, DictRef dict, const Value &field) {
 	return state.new_dict();
 }
 
-// BattleActionPlayback.capture(battle, event): it returns at once without
-// CAPTURE_KEY ("_live_action_playback_capture") in the battle; the capture
-// itself goes with slice 10.
-void action_playback_capture(State &state, DictRef battle) {
-	if (state.has(battle, str(key::_live_action_playback_capture))) {
-		throw state::ScriptError("BattleActionPlayback.capture is not ported (slice 10)");
-	}
-}
-
 } // namespace
 
 void _mark_stack_animation_event(State &state, DictRef battle, Atom battle_id, Atom event_id, DictRef context) {
@@ -179,15 +171,14 @@ void _mark_stack_animation_event(State &state, DictRef battle, Atom battle_id, A
 	state.set(record, str(key::round), int_value(gd::int_field(state, battle, key::round, 1)));
 	state.set(record, str(key::turn_index), int_value(gd::int_field(state, battle, key::turn_index, 0)));
 	if (event_id != key::battle_unit_move) {
+		DictRef capture_record = record;
 		if (state.has(context, str(key::_playback_applied_damage))) {
-			// The playback-only copy (record.duplicate() with "damage" and
-			// "casualties") goes nowhere but into the capture, which is not
-			// ported: only its int() conversions, which can stop the script,
-			// are kept, in their order.
-			static_cast<void>(gd::int_field(state, context, key::_playback_applied_damage, 0));
-			static_cast<void>(gd::int_field(state, context, key::_playback_applied_casualties, 0));
+			// Playback-only: the stored animation state keeps its usual fields.
+			capture_record = gd::duplicate_dict(state, record);
+			state.set(capture_record, str(key::damage), int_value(gd::int_field(state, context, key::_playback_applied_damage, 0)));
+			state.set(capture_record, str(key::casualties), int_value(gd::int_field(state, context, key::_playback_applied_casualties, 0)));
 		}
-		action_playback_capture(state, battle);
+		battle_action_playback::capture(state, battle, capture_record);
 	}
 	if (existing_state != key::empty && existing_priority > priority) {
 		return;

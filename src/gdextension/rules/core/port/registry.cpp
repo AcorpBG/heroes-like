@@ -1,7 +1,9 @@
 #include "aurelion_rules/port/registry.hpp"
 
 #include "aurelion_rules/port/artifact_rules.hpp"
+#include "aurelion_rules/port/battle_action_playback.hpp"
 #include "aurelion_rules/port/battle_ai_rules.hpp"
+#include "aurelion_rules/port/battle_auto_resolve_rules.hpp"
 #include "aurelion_rules/port/battle_damage_rules.hpp"
 #include "aurelion_rules/port/battle_damage_rules_ai.hpp"
 #include "aurelion_rules/port/battle_footprint.hpp"
@@ -34,6 +36,8 @@ namespace dmg = battle_damage_rules;
 namespace diff = difficulty_rules;
 namespace fp = battle_footprint;
 namespace hero = hero_progression_rules;
+namespace playback = battle_action_playback;
+namespace resolve = battle_auto_resolve_rules;
 namespace spell = spell_rules;
 namespace town = town_battle_rules;
 
@@ -84,6 +88,7 @@ const Function kFunctions[] = {
 	PORT(ArtifactRules, _spell_modifier_matches, 2, false, return bool_value(art::_spell_modifier_matches(s, D(a, 0), D(a, 1)))),
 	PORT(ArtifactRules, spell_affinity_records, 2, true, return array_value(art::spell_affinity_records(s, D(a, 0), D(a, 1)))),
 	PORT(ArtifactRules, spell_mana_cost_delta, 2, true, return int_value(art::spell_mana_cost_delta(s, D(a, 0), D(a, 1)))),
+	PORT(BattleActionPlayback, capture, 2, true, playback::capture(s, D(a, 0), D(a, 1)); return nil()),
 	PORT(BattleAiRules, _ability_by_id, 2, false, return dict_value(ai::_ability_by_id(s, D(a, 0), S(a, 1)))),
 	PORT(BattleAiRules, _ability_damage_modifier, 6, true, return float_value(ai::_ability_damage_modifier(s, D(a, 0), D(a, 1), D(a, 2), B(a, 3), B(a, 4), I(a, 5)))),
 	PORT(BattleAiRules, _advance_distance_delta, 2, true, return int_value(ai::_advance_distance_delta(s, D(a, 0), D(a, 1)))),
@@ -284,6 +289,14 @@ const Function kFunctions[] = {
 	PORT(BattleAiRules, faction_brings_tag, 2, false, return bool_value(ai::faction_brings_tag(s, D(a, 0), S(a, 1)))),
 	PORT(BattleAiRules, faction_brought_tags, 1, false, return array_value(ai::faction_brought_tags(s, D(a, 0)))),
 	PORT(BattleAiRules, should_wait_for_contact, 4, true, return bool_value(ai::should_wait_for_contact(s, D(a, 0), D(a, 1), B(a, 2), I(a, 3)))),
+	PORT(BattleAutoResolveRules, _fallback_player_autoplay_decision, 4, true, return dict_value(resolve::_fallback_player_autoplay_decision(s, a[0], S(a, 1), B(a, 2), D(a, 3)))),
+	PORT(BattleAutoResolveRules, _perform_player_order, 3, true, return dict_value(resolve::_perform_player_order(s, a[0], D(a, 1), S(a, 2)))),
+	PORT(BattleAutoResolveRules, _player_creatures_standing, 1, false, return int_value(resolve::_player_creatures_standing(s, D(a, 0)))),
+	PORT(BattleAutoResolveRules, _resolve_result, 12, false, return dict_value(resolve::_resolve_result(s, a[0], B(a, 1), S(a, 2), S(a, 3), I(a, 4), I(a, 5), I(a, 6), I(a, 7), I(a, 8), D(a, 9), D(a, 10), D(a, 11)))),
+	PORT(BattleAutoResolveRules, _select_focus_enemy, 1, true, resolve::_select_focus_enemy(s, a[0]); return nil()),
+	PORT(BattleAutoResolveRules, is_terminal_state, 1, false, return bool_value(resolve::is_terminal_state(S(a, 0)))),
+	PORT(BattleAutoResolveRules, player_autoplay_decision, 3, true, return dict_value(resolve::player_autoplay_decision(s, a[0], B(a, 1), B(a, 2)))),
+	PORT(BattleAutoResolveRules, resolve_active_battle, 3, true, return dict_value(resolve::resolve_active_battle(s, a[0], I(a, 1), I(a, 2)))),
 	PORT(BattleDamageRules, attack_defense_multiplier, 2, false, return float_value(dmg::attack_defense_multiplier(s, I(a, 0), I(a, 1)))),
 	PORT(BattleDamageRules, hero_damage_multiplier, 5, false, return float_value(dmg::hero_damage_multiplier(s, D(a, 0), D(a, 1), B(a, 2), B(a, 3), B(a, 4)))),
 	PORT(BattleDamageRules, town_assault_side, 1, false, return str(dmg::town_assault_side(s, D(a, 0)))),
@@ -327,17 +340,22 @@ const Function kFunctions[] = {
 	PORT(BattleRules, _apply_foundry_aura_round_repair, 1, true, return int_value(br::_apply_foundry_aura_round_repair(s, D(a, 0)))),
 	PORT(BattleRules, _apply_hookline_pull, 3, true, return bool_value(br::_apply_hookline_pull(s, D(a, 0), D(a, 1), D(a, 2)))),
 	PORT(BattleRules, _apply_melee_approach, 3, true, br::_apply_melee_approach(s, D(a, 0), D(a, 1), D(a, 2)); return nil()),
+	PORT(BattleRules, _apply_ordinary_closing_target_context, 3, true, return bool_value(br::_apply_ordinary_closing_target_context(s, D(a, 0), D(a, 1), D(a, 2)))),
 	PORT(BattleRules, _apply_pressure_artillery, 3, true, return array_value(br::_apply_pressure_artillery(s, D(a, 0), D(a, 1), D(a, 2)))),
 	PORT(BattleRules, _apply_ranged_damage_return, 5, true, return array_value(br::_apply_ranged_damage_return(s, D(a, 0), S(a, 1), D(a, 2), B(a, 3), S(a, 4)))),
 	PORT(BattleRules, _apply_readiness_writ, 2, true, return dict_value(br::_apply_readiness_writ(s, D(a, 0), D(a, 1)))),
 	PORT(BattleRules, _apply_retaliation_ability_effects, 3, true, return array_value(br::_apply_retaliation_ability_effects(s, D(a, 0), D(a, 1), D(a, 2)))),
 	PORT(BattleRules, _apply_round_pressure_shifts, 1, true, br::_apply_round_pressure_shifts(s, D(a, 0)); return nil()),
+	PORT(BattleRules, _apply_setup_move_target_continuity, 3, true, return bool_value(br::_apply_setup_move_target_continuity(s, D(a, 0), D(a, 1), D(a, 2)))),
 	PORT(BattleRules, _apply_sporeglass_mending_fire, 2, true, return dict_value(br::_apply_sporeglass_mending_fire(s, D(a, 0), D(a, 1)))),
 	PORT(BattleRules, _apply_stack_effect, 3, true, return dict_value(br::_apply_stack_effect(s, D(a, 0), S(a, 1), a[2]))),
 	PORT(BattleRules, _apply_wait, 1, true, br::_apply_wait(s, D(a, 0)); return nil()),
 	PORT(BattleRules, _assign_default_target, 1, true, br::_assign_default_target(s, D(a, 0)); return nil()),
+	PORT(BattleRules, _attach_movement_intent_to_result, 2, true, return dict_value(br::_attach_movement_intent_to_result(s, D(a, 0), D(a, 1)))),
 	PORT(BattleRules, _attach_post_attack_target_context, 5, true, return dict_value(br::_attach_post_attack_target_context(s, D(a, 0), a[1], S(a, 2), D(a, 3), D(a, 4)))),
+	PORT(BattleRules, _attach_post_move_target_context, 2, true, return dict_value(br::_attach_post_move_target_context(s, D(a, 0), D(a, 1)))),
 	PORT(BattleRules, _attack_distance_for_action, 4, false, return int_value(br::_attack_distance_for_action(s, D(a, 0), D(a, 1), D(a, 2), B(a, 3)))),
+	PORT(BattleRules, _attack_forecast_lines, 2, false, return array_value(br::_attack_forecast_lines(s, D(a, 0), D(a, 1)))),
 	PORT(BattleRules, _attack_legality_for_target, 3, true, return dict_value(br::_attack_legality_for_target(s, D(a, 0), D(a, 1), D(a, 2)))),
 	PORT(BattleRules, _attack_momentum_gain, 6, true, return int_value(br::_attack_momentum_gain(s, D(a, 0), D(a, 1), D(a, 2), D(a, 3), B(a, 4), S(a, 5)))),
 	PORT(BattleRules, _authored_ability_by_id, 2, false, return dict_value(br::_authored_ability_by_id(s, D(a, 0), S(a, 1)))),
@@ -358,12 +376,14 @@ const Function kFunctions[] = {
 	PORT(BattleRules, _can_melee_this_action, 3, true, return bool_value(br::_can_melee_this_action(s, D(a, 0), D(a, 1), D(a, 2)))),
 	PORT(BattleRules, _capital_front_anchor_side, 1, false, return str(br::_capital_front_anchor_side(s, D(a, 0)))),
 	PORT(BattleRules, _capital_front_assault_side, 1, false, return str(br::_capital_front_assault_side(s, D(a, 0)))),
+	PORT(BattleRules, _cast_enemy_spell, 3, true, return dict_value(br::_cast_enemy_spell(s, a[0], D(a, 1), D(a, 2)))),
 	PORT(BattleRules, _casualty_cohesion_shift, 2, false, return int_value(br::_casualty_cohesion_shift(s, D(a, 0), D(a, 1)))),
 	PORT(BattleRules, _charter_retaliation_aura_context, 2, false, return dict_value(br::_charter_retaliation_aura_context(s, D(a, 0), D(a, 1)))),
 	PORT(BattleRules, _cleanse_stack_effects, 3, true, return int_value(br::_cleanse_stack_effects(s, D(a, 0), S(a, 1), a[2]))),
 	PORT(BattleRules, _clear_post_move_transition_result_fields, 1, true, br::_clear_post_move_transition_result_fields(s, D(a, 0)); return nil()),
 	PORT(BattleRules, _clear_selected_target_closing, 1, true, br::_clear_selected_target_closing(s, D(a, 0)); return nil()),
 	PORT(BattleRules, _clear_selected_target_continuity, 1, true, br::_clear_selected_target_continuity(s, D(a, 0)); return nil()),
+	PORT(BattleRules, _clear_stack_animation_states, 1, true, br::_clear_stack_animation_states(s, D(a, 0)); return nil()),
 	PORT(BattleRules, _clear_stale_selected_target_closing, 2, true, return bool_value(br::_clear_stale_selected_target_closing(s, D(a, 0), B(a, 1)))),
 	PORT(BattleRules, _cohesion_attack_bonus, 1, false, return int_value(br::_cohesion_attack_bonus(I(a, 0)))),
 	PORT(BattleRules, _cohesion_damage_modifier, 5, true, return float_value(br::_cohesion_damage_modifier(s, D(a, 0), D(a, 1), D(a, 2), B(a, 3), B(a, 4)))),
@@ -375,6 +395,8 @@ const Function kFunctions[] = {
 	PORT(BattleRules, _commit_spell_resistance_roll, 2, true, br::_commit_spell_resistance_roll(s, D(a, 0), D(a, 1)); return nil()),
 	PORT(BattleRules, _compare_stack_order_keys, 2, false, return bool_value(br::_compare_stack_order_keys(s, D(a, 0), D(a, 1)))),
 	PORT(BattleRules, _compare_waiting_order_keys, 2, false, return bool_value(br::_compare_waiting_order_keys(s, D(a, 0), D(a, 1)))),
+	PORT(BattleRules, _complete_action, 3, true, return dict_value(br::_complete_action(s, a[0], S(a, 1), B(a, 2)))),
+	PORT(BattleRules, _complete_enemy_action, 2, true, return dict_value(br::_complete_enemy_action(s, a[0], S(a, 1)))),
 	PORT(BattleRules, _consume_readiness_writ_preparation, 3, true, return dict_value(br::_consume_readiness_writ_preparation(s, D(a, 0), S(a, 1), S(a, 2)))),
 	PORT(BattleRules, _consume_retaliation, 2, true, br::_consume_retaliation(s, D(a, 0), S(a, 1)); return nil()),
 	PORT(BattleRules, _consume_shot, 2, true, br::_consume_shot(s, D(a, 0), S(a, 1)); return nil()),
@@ -386,15 +408,18 @@ const Function kFunctions[] = {
 	PORT(BattleRules, _counter_ambush_flare_context, 3, false, return dict_value(br::_counter_ambush_flare_context(s, D(a, 0), D(a, 1), S(a, 2)))),
 	PORT(BattleRules, _damage_for_roll, 7, true, return int_value(br::_damage_for_roll(s, D(a, 0), D(a, 1), D(a, 2), I(a, 3), B(a, 4), B(a, 5), I(a, 6)))),
 	PORT(BattleRules, _damage_modifier, 6, true, return float_value(br::_damage_modifier(s, D(a, 0), D(a, 1), D(a, 2), B(a, 3), B(a, 4), I(a, 5)))),
+	PORT(BattleRules, _damage_range_preview, 6, true, return dict_value(br::_damage_range_preview(s, D(a, 0), D(a, 1), D(a, 2), B(a, 3), B(a, 4), I(a, 5)))),
 	PORT(BattleRules, _damage_rng_for_battle, 1, true, return br::_damage_rng_for_battle(s, a[0])),
 	PORT(BattleRules, _damage_rng_integrity, 3, false, return str(br::_damage_rng_integrity(s, I(a, 0), S(a, 1), I(a, 2)))),
 	PORT(BattleRules, _default_stack_hex, 4, false, return dict_value(br::_default_stack_hex(s, S(a, 0), I(a, 1), I(a, 2), D(a, 3)))),
 	PORT(BattleRules, _deployment_column, 2, false, return int_value(br::_deployment_column(s, S(a, 0), D(a, 1)))),
 	PORT(BattleRules, _distance_band_from_hex_distance, 1, false, return int_value(br::_distance_band_from_hex_distance(I(a, 0)))),
+	PORT(BattleRules, _drain_enemy_turns, 1, true, return dict_value(br::_drain_enemy_turns(s, a[0]))),
 	PORT(BattleRules, _enemy_hero_payload_from_state, 3, true, return dict_value(br::_enemy_hero_payload_from_state(s, D(a, 0), a[1], a[2]))),
 	PORT(BattleRules, _enemy_wounded_count, 2, false, return int_value(br::_enemy_wounded_count(s, D(a, 0), S(a, 1)))),
 	PORT(BattleRules, _ensure_battle_hex_state, 1, true, br::_ensure_battle_hex_state(s, D(a, 0)); return nil()),
 	PORT(BattleRules, _ensure_damage_rng_state, 2, true, br::_ensure_damage_rng_state(s, a[0], D(a, 1)); return nil()),
+	PORT(BattleRules, _evaluate_outcome, 1, true, return dict_value(br::_evaluate_outcome(s, a[0]))),
 	PORT(BattleRules, _expired_stack_effect_count, 2, true, return int_value(br::_expired_stack_effect_count(s, D(a, 0), I(a, 1)))),
 	PORT(BattleRules, _faction_damage_modifier, 5, false, return float_value(br::_faction_damage_modifier(s, D(a, 0), D(a, 1), D(a, 2), B(a, 3), I(a, 4)))),
 	PORT(BattleRules, _faction_initiative_bonus, 2, false, return int_value(br::_faction_initiative_bonus(s, D(a, 0), D(a, 1)))),
@@ -440,10 +465,13 @@ const Function kFunctions[] = {
 	PORT(BattleRules, _join_messages, 1, false, return str(br::_join_messages(s, A(a, 0)))),
 	PORT(BattleRules, _legal_attack_target_ids_for_active_stack, 1, true, return array_value(br::_legal_attack_target_ids_for_active_stack(s, D(a, 0)))),
 	PORT(BattleRules, _legal_attack_target_ids_for_active_stack_uncached, 1, true, return array_value(br::_legal_attack_target_ids_for_active_stack_uncached(s, D(a, 0)))),
+	PORT(BattleRules, _legal_destination_for_stack, 3, true, return dict_value(br::_legal_destination_for_stack(s, D(a, 0), D(a, 1), D(a, 2)))),
+	PORT(BattleRules, _legal_destination_from_preloaded, 3, false, return dict_value(br::_legal_destination_from_preloaded(s, A(a, 0), I(a, 1), I(a, 2)))),
 	PORT(BattleRules, _linked_ranged_attack_screen_multiplier, 2, false, return float_value(br::_linked_ranged_attack_screen_multiplier(s, D(a, 0), D(a, 1)))),
 	PORT(BattleRules, _lowest_health_stack, 1, false, return dict_value(br::_lowest_health_stack(s, A(a, 0)))),
 	PORT(BattleRules, _mark_commander_spell_cast, 2, true, br::_mark_commander_spell_cast(s, D(a, 0), S(a, 1)); return nil()),
 	PORT(BattleRules, _mark_damage_target_animation, 6, true, br::_mark_damage_target_animation(s, D(a, 0), S(a, 1), B(a, 2), S(a, 3), D(a, 4), D(a, 5)); return nil()),
+	PORT(BattleRules, _mark_side_animation_event, 3, true, br::_mark_side_animation_event(s, D(a, 0), S(a, 1), S(a, 2)); return nil()),
 	PORT(BattleRules, _mark_spell_animation_states, 3, true, br::_mark_spell_animation_states(s, D(a, 0), D(a, 1), D(a, 2)); return nil()),
 	PORT(BattleRules, _mark_stack_animation_event, 4, true, br::_mark_stack_animation_event(s, D(a, 0), S(a, 1), S(a, 2), D(a, 3)); return nil()),
 	PORT(BattleRules, _matching_melee_approach, 4, true, return dict_value(br::_matching_melee_approach(s, D(a, 0), D(a, 1), D(a, 2), D(a, 3)))),
@@ -451,6 +479,11 @@ const Function kFunctions[] = {
 	PORT(BattleRules, _merge_spell_school_resistance, 2, false, return dict_value(br::_merge_spell_school_resistance(s, a[0], a[1]))),
 	PORT(BattleRules, _momentum_attack_bonus, 1, false, return int_value(br::_momentum_attack_bonus(I(a, 0)))),
 	PORT(BattleRules, _momentum_initiative_bonus, 1, false, return int_value(br::_momentum_initiative_bonus(I(a, 0)))),
+	PORT(BattleRules, _movement_destination_phrase, 1, false, return str(br::_movement_destination_phrase(s, D(a, 0)))),
+	PORT(BattleRules, _movement_intent_message, 4, true, return str(br::_movement_intent_message(s, D(a, 0), D(a, 1), D(a, 2), I(a, 3)))),
+	PORT(BattleRules, _movement_intent_skeleton, 3, true, return dict_value(br::_movement_intent_skeleton(s, D(a, 0), D(a, 1), D(a, 2)))),
+	PORT(BattleRules, _movement_target_setup_for_destination, 4, true, return dict_value(br::_movement_target_setup_for_destination(s, D(a, 0), D(a, 1), D(a, 2), D(a, 3)))),
+	PORT(BattleRules, _no_retaliation_reason, 5, false, return str(br::_no_retaliation_reason(s, D(a, 0), D(a, 1), B(a, 2), I(a, 3), B(a, 4)))),
 	PORT(BattleRules, _normalize_ability_modifiers, 1, false, return dict_value(br::_normalize_ability_modifiers(s, a[0]))),
 	PORT(BattleRules, _normalize_animation_event_queue, 1, false, return array_value(br::_normalize_animation_event_queue(s, a[0]))),
 	PORT(BattleRules, _normalize_commander_spell_cast_rounds, 1, false, return dict_value(br::_normalize_commander_spell_cast_rounds(s, a[0]))),
@@ -472,6 +505,8 @@ const Function kFunctions[] = {
 	PORT(BattleRules, _pressure_artillery_secondary_damage, 1, false, return int_value(br::_pressure_artillery_secondary_damage(s, D(a, 0)))),
 	PORT(BattleRules, _pressure_artillery_secondary_target, 3, false, return dict_value(br::_pressure_artillery_secondary_target(s, D(a, 0), D(a, 1), D(a, 2)))),
 	PORT(BattleRules, _projected_min_opposing_hex_distance, 3, false, return int_value(br::_projected_min_opposing_hex_distance(s, D(a, 0), D(a, 1), D(a, 2)))),
+	PORT(BattleRules, _projected_next_round_order, 2, true, return array_value(br::_projected_next_round_order(s, D(a, 0), A(a, 1)))),
+	PORT(BattleRules, _range_text, 2, false, return str(br::_range_text(s, I(a, 0), I(a, 1)))),
 	PORT(BattleRules, _ranged_damage_return_ratio, 1, false, return float_value(br::_ranged_damage_return_ratio(s, D(a, 0)))),
 	PORT(BattleRules, _reach_available, 2, false, return bool_value(br::_reach_available(s, D(a, 0), D(a, 1)))),
 	PORT(BattleRules, _reachable_empty_hexes, 3, false, return array_value(br::_reachable_empty_hexes(s, D(a, 0), D(a, 1), I(a, 2)))),
@@ -483,10 +518,17 @@ const Function kFunctions[] = {
 	PORT(BattleRules, _record_event, 2, true, br::_record_event(s, D(a, 0), S(a, 1)); return nil()),
 	PORT(BattleRules, _reserve_wave_is_active_for_side, 2, false, return bool_value(br::_reserve_wave_is_active_for_side(s, D(a, 0), S(a, 1)))),
 	PORT(BattleRules, _reserve_wave_ready_round, 2, false, return int_value(br::_reserve_wave_ready_round(s, D(a, 0), S(a, 1)))),
+	PORT(BattleRules, _resolve_ai_attack, 4, true, return dict_value(br::_resolve_ai_attack(s, a[0], D(a, 1), D(a, 2), B(a, 3)))),
+	PORT(BattleRules, _resolve_attack_action, 4, true, return dict_value(br::_resolve_attack_action(s, a[0], D(a, 1), D(a, 2), B(a, 3)))),
+	PORT(BattleRules, _resolve_enemy_defend, 2, true, return dict_value(br::_resolve_enemy_defend(s, a[0], D(a, 1)))),
+	PORT(BattleRules, _resolve_enemy_wait, 2, true, return dict_value(br::_resolve_enemy_wait(s, a[0], D(a, 1)))),
+	PORT(BattleRules, _resolve_move_action, 5, true, return dict_value(br::_resolve_move_action(s, a[0], D(a, 1), D(a, 2), S(a, 3), D(a, 4)))),
 	PORT(BattleRules, _resolve_wait, 2, true, return str(br::_resolve_wait(s, D(a, 0), D(a, 1)))),
 	PORT(BattleRules, _resolved_damage_seed, 2, false, return int_value(br::_resolved_damage_seed(s, a[0], D(a, 1)))),
 	PORT(BattleRules, _resort_remaining_turn_order, 1, true, br::_resort_remaining_turn_order(s, D(a, 0)); return nil()),
 	PORT(BattleRules, _restore_stack_health, 3, true, return int_value(br::_restore_stack_health(s, D(a, 0), S(a, 1), I(a, 2)))),
+	PORT(BattleRules, _run_enemy_stack_order, 3, true, return dict_value(br::_run_enemy_stack_order(s, a[0], D(a, 1), D(a, 2)))),
+	PORT(BattleRules, _run_enemy_turn, 2, true, return dict_value(br::_run_enemy_turn(s, a[0], D(a, 1)))),
 	PORT(BattleRules, _selected_target_can_remain_for_active_stack, 3, false, return bool_value(br::_selected_target_can_remain_for_active_stack(s, D(a, 0), D(a, 1), S(a, 2)))),
 	PORT(BattleRules, _selected_target_closing_is_stale, 2, true, return bool_value(br::_selected_target_closing_is_stale(s, D(a, 0), B(a, 1)))),
 	PORT(BattleRules, _set_selected_target, 3, true, br::_set_selected_target(s, D(a, 0), S(a, 1), B(a, 2)); return nil()),
@@ -530,22 +572,29 @@ const Function kFunctions[] = {
 	PORT(BattleRules, _stack_movement_points, 2, false, return int_value(br::_stack_movement_points(s, D(a, 0), D(a, 1)))),
 	PORT(BattleRules, _stacks_ahead_after_wait, 2, true, return int_value(br::_stacks_ahead_after_wait(s, D(a, 0), S(a, 1)))),
 	PORT(BattleRules, _status_effect_from_ability, 2, false, return dict_value(br::_status_effect_from_ability(s, D(a, 0), D(a, 1)))),
+	PORT(BattleRules, _step_count_label, 1, false, return str(br::_step_count_label(s, I(a, 0)))),
 	PORT(BattleRules, _supportive_cohesion_gain, 3, false, return int_value(br::_supportive_cohesion_gain(s, D(a, 0), D(a, 1), B(a, 2)))),
 	PORT(BattleRules, _sync_distance_from_hexes, 1, true, br::_sync_distance_from_hexes(s, D(a, 0)); return nil()),
 	PORT(BattleRules, _sync_occupied_hexes, 1, true, br::_sync_occupied_hexes(s, D(a, 0)); return nil()),
 	PORT(BattleRules, _terrain_tag_damage_modifier, 5, false, return float_value(br::_terrain_tag_damage_modifier(s, D(a, 0), D(a, 1), D(a, 2), B(a, 3), I(a, 4)))),
+	PORT(BattleRules, _unit_loss_range, 3, false, return dict_value(br::_unit_loss_range(s, D(a, 0), I(a, 1), I(a, 2)))),
 	PORT(BattleRules, _volley_has_protected_lane, 3, false, return bool_value(br::_volley_has_protected_lane(s, D(a, 0), D(a, 1), D(a, 2)))),
 	PORT(BattleRules, _walk_steps_to_target, 4, true, return dict_value(br::_walk_steps_to_target(s, D(a, 0), D(a, 1), D(a, 2), I(a, 3)))),
 	PORT(BattleRules, _weakest_stack_by_cohesion, 2, true, return dict_value(br::_weakest_stack_by_cohesion(s, D(a, 0), S(a, 1)))),
 	PORT(BattleRules, _weakest_stack_by_role, 3, true, return dict_value(br::_weakest_stack_by_role(s, D(a, 0), S(a, 1), B(a, 2)))),
 	PORT(BattleRules, action_availability, 1, true, return dict_value(br::action_availability(s, D(a, 0)))),
+	PORT(BattleRules, advance_consequence_preview, 1, true, return dict_value(br::advance_consequence_preview(s, D(a, 0)))),
 	PORT(BattleRules, advance_turn, 1, true, br::advance_turn(s, D(a, 0)); return nil()),
 	PORT(BattleRules, ai_advance_plan, 2, true, return dict_value(br::ai_advance_plan(s, D(a, 0), D(a, 1)))),
 	PORT(BattleRules, ai_melee_approach, 3, true, return dict_value(br::ai_melee_approach(s, D(a, 0), D(a, 1), D(a, 2)))),
+	PORT(BattleRules, attack_consequence_preview, 4, true, return dict_value(br::attack_consequence_preview(s, D(a, 0), S(a, 1), S(a, 2), D(a, 3)))),
 	PORT(BattleRules, board_click_attack_intent_for_target, 2, true, return dict_value(br::board_click_attack_intent_for_target(s, D(a, 0), S(a, 1)))),
 	PORT(BattleRules, can_wait, 1, false, return bool_value(br::can_wait(s, D(a, 0)))),
+	PORT(BattleRules, cast_player_spell, 3, true, return dict_value(br::cast_player_spell(s, a[0], S(a, 1), S(a, 2)))),
 	PORT(BattleRules, commander_name, 2, false, return str(br::commander_name(s, D(a, 0), S(a, 1)))),
+	PORT(BattleRules, consequence_range_text, 1, false, return str(br::consequence_range_text(s, D(a, 0)))),
 	PORT(BattleRules, extra_speed_reaches_strike, 3, true, return bool_value(br::extra_speed_reaches_strike(s, D(a, 0), D(a, 1), I(a, 2)))),
+	PORT(BattleRules, forecast_text, 1, false, return str(br::forecast_text(s, A(a, 0)))),
 	PORT(BattleRules, get_active_stack, 1, false, return dict_value(br::get_active_stack(s, D(a, 0)))),
 	PORT(BattleRules, get_selected_target, 1, false, return dict_value(br::get_selected_target(s, D(a, 0)))),
 	PORT(BattleRules, hero_actor_id, 1, false, return str(br::hero_actor_id(s, S(a, 0)))),
@@ -554,14 +603,21 @@ const Function kFunctions[] = {
 	PORT(BattleRules, legal_destinations_for_stack, 2, true, return array_value(br::legal_destinations_for_stack(s, D(a, 0), S(a, 1)))),
 	PORT(BattleRules, melee_approach_cells, 3, true, return array_value(br::melee_approach_cells(s, D(a, 0), D(a, 1), D(a, 2)))),
 	PORT(BattleRules, melee_approach_destination, 3, true, return dict_value(br::melee_approach_destination(s, D(a, 0), D(a, 1), D(a, 2)))),
+	PORT(BattleRules, move_active_stack_to_hex, 3, true, return dict_value(br::move_active_stack_to_hex(s, a[0], I(a, 1), I(a, 2)))),
+	PORT(BattleRules, movement_intent_for_destination, 4, true, return dict_value(br::movement_intent_for_destination(s, D(a, 0), I(a, 1), I(a, 2), a[3]))),
+	PORT(BattleRules, perform_player_action, 3, true, return dict_value(br::perform_player_action(s, a[0], S(a, 1), D(a, 2)))),
+	PORT(BattleRules, resolve_if_battle_ready, 1, true, return dict_value(br::resolve_if_battle_ready(s, a[0]))),
 	PORT(BattleRules, select_target, 2, true, return dict_value(br::select_target(s, a[0], S(a, 1)))),
 	PORT(BattleRules, selected_target_board_click_intent, 1, true, return dict_value(br::selected_target_board_click_intent(s, D(a, 0)))),
 	PORT(BattleRules, selected_target_closing_context, 2, true, return dict_value(br::selected_target_closing_context(s, D(a, 0), B(a, 1)))),
 	PORT(BattleRules, selected_target_continuity_context, 1, true, return dict_value(br::selected_target_continuity_context(s, D(a, 0)))),
 	PORT(BattleRules, selected_target_legality, 1, true, return dict_value(br::selected_target_legality(s, D(a, 0)))),
+	PORT(BattleRules, spell_consequence_preview, 3, true, return dict_value(br::spell_consequence_preview(s, a[0], S(a, 1), S(a, 2)))),
 	PORT(BattleRules, spend_effect_turns, 2, true, br::spend_effect_turns(s, D(a, 0), S(a, 1)); return nil()),
 	PORT(BattleRules, stack_has_waited, 2, false, return bool_value(br::stack_has_waited(s, D(a, 0), S(a, 1)))),
 	PORT(BattleRules, stack_strike_backs, 2, false, return dict_value(br::stack_strike_backs(s, D(a, 0), D(a, 1)))),
+	PORT(BattleRules, turn_order_forecast, 1, true, return dict_value(br::turn_order_forecast(s, D(a, 0)))),
+	PORT(BattleRules, upcoming_actor_ids, 2, false, return array_value(br::upcoming_actor_ids(s, D(a, 0), I(a, 1)))),
 	PORT(BattleRules, waited_stack_ids, 1, false, return array_value(br::waited_stack_ids(s, D(a, 0)))),
 	PORT(DifficultyRules, _default_difficulty_id, 0, false, return str(diff::_default_difficulty_id(s))),
 	PORT(DifficultyRules, damage_multiplier_for_side, 2, false, return float_value(diff::damage_multiplier_for_side(s, a[0], S(a, 1)))),
@@ -583,8 +639,10 @@ const Function kFunctions[] = {
 	PORT(SpellRules, _append_status_resolution_message, 4, false, return str(spell::_append_status_resolution_message(s, S(a, 0), D(a, 1), D(a, 2), D(a, 3)))),
 	PORT(SpellRules, _battle_spell_ally_target, 3, false, return dict_value(spell::_battle_spell_ally_target(s, D(a, 0), D(a, 1), S(a, 2)))),
 	PORT(SpellRules, _battle_spell_damage, 3, true, return int_value(spell::_battle_spell_damage(s, D(a, 0), D(a, 1), D(a, 2)))),
+	PORT(SpellRules, _battle_spell_effect_summary, 5, true, return str(spell::_battle_spell_effect_summary(s, D(a, 0), D(a, 1), D(a, 2), D(a, 3), D(a, 4)))),
 	PORT(SpellRules, _battle_spell_recovery_amount, 2, true, return int_value(spell::_battle_spell_recovery_amount(s, D(a, 0), D(a, 1)))),
 	PORT(SpellRules, _battle_stream_rng, 1, true, return spell::_battle_stream_rng(s, D(a, 0))),
+	PORT(SpellRules, _cleanse_labels, 1, false, return array_value(spell::_cleanse_labels(s, D(a, 0)))),
 	PORT(SpellRules, _consume_mana, 2, true, return dict_value(spell::_consume_mana(s, D(a, 0), I(a, 1)))),
 	PORT(SpellRules, _counted_in_turns, 2, true, return dict_value(spell::_counted_in_turns(s, D(a, 0), I(a, 1)))),
 	PORT(SpellRules, _effect_payload, 4, true, return dict_value(spell::_effect_payload(s, D(a, 0), D(a, 1), D(a, 2), D(a, 3)))),
@@ -592,14 +650,18 @@ const Function kFunctions[] = {
 	PORT(SpellRules, _health_ratio, 1, false, return float_value(spell::_health_ratio(s, D(a, 0)))),
 	PORT(SpellRules, _hero_payload_for_target_side, 2, false, return dict_value(spell::_hero_payload_for_target_side(s, D(a, 0), D(a, 1)))),
 	PORT(SpellRules, _knows_spell, 2, false, return bool_value(spell::_knows_spell(s, D(a, 0), S(a, 1)))),
+	PORT(SpellRules, _modifier_summary, 1, false, return str(spell::_modifier_summary(s, D(a, 0)))),
 	PORT(SpellRules, _normalize_effect_modifiers, 1, false, return dict_value(spell::_normalize_effect_modifiers(s, a[0]))),
 	PORT(SpellRules, _normalize_effects, 1, false, return array_value(spell::_normalize_effects(s, a[0]))),
 	PORT(SpellRules, _normalize_string_array, 1, false, return array_value(spell::_normalize_string_array(s, a[0]))),
 	PORT(SpellRules, _school_bonus, 3, false, return int_value(spell::_school_bonus(s, D(a, 0), S(a, 1), D(a, 2)))),
+	PORT(SpellRules, _signed_modifier_label, 1, false, return str(spell::_signed_modifier_label(s, I(a, 0)))),
 	PORT(SpellRules, _spell_effect_modifiers, 3, false, return dict_value(spell::_spell_effect_modifiers(s, D(a, 0), S(a, 1), I(a, 2)))),
 	PORT(SpellRules, _stable_percent, 1, false, return int_value(spell::_stable_percent(s, A(a, 0)))),
 	PORT(SpellRules, _status_effect_from_spell_effect, 3, true, return dict_value(spell::_status_effect_from_spell_effect(s, D(a, 0), D(a, 1), D(a, 2)))),
 	PORT(SpellRules, _status_resistance_roll, 5, true, return dict_value(spell::_status_resistance_roll(s, D(a, 0), D(a, 1), D(a, 2), D(a, 3), S(a, 4)))),
+	PORT(SpellRules, _status_terms, 1, false, return str(spell::_status_terms(s, D(a, 0)))),
+	PORT(SpellRules, _turns_label, 1, false, return str(spell::_turns_label(s, I(a, 0)))),
 	PORT(SpellRules, _wounded_bonus_applies, 2, false, return bool_value(spell::_wounded_bonus_applies(s, D(a, 0), D(a, 1)))),
 	PORT(SpellRules, active_effects_for_round, 2, false, return array_value(spell::active_effects_for_round(s, D(a, 0), I(a, 1)))),
 	PORT(SpellRules, adjusted_spell_mana_cost, 2, true, return int_value(spell::adjusted_spell_mana_cost(s, D(a, 0), a[1]))),
@@ -634,6 +696,7 @@ const Function kFunctions[] = {
 	PORT(SpellRules, spell_school_id, 1, false, return str(spell::spell_school_id(s, D(a, 0)))),
 	PORT(SpellRules, spell_tier, 1, false, return int_value(spell::spell_tier(s, D(a, 0)))),
 	PORT(SpellRules, stack_status_immunity_ids, 2, false, return array_value(spell::stack_status_immunity_ids(s, D(a, 0), D(a, 1)))),
+	PORT(SpellRules, status_rules_text, 1, false, return str(spell::status_rules_text(s, S(a, 0)))),
 	PORT(SpellRules, target_is_immune_to_status, 3, false, return bool_value(spell::target_is_immune_to_status(s, D(a, 0), D(a, 1), S(a, 2)))),
 	PORT(SpellRules, validate_battle_spell, 6, true, return dict_value(spell::validate_battle_spell(s, D(a, 0), D(a, 1), D(a, 2), D(a, 3), a[4], S(a, 5)))),
 	PORT(TownBattleRules, absorb, 2, true, return int_value(town::absorb(s, D(a, 0), I(a, 1)))),
@@ -665,6 +728,8 @@ constexpr ScriptStatic kGdscriptOnly[] = {
 constexpr ScriptStatic kSharedMemos[] = {
 	{ key::battle_rules_script, key::_presentation_queue_written },
 	{ key::battle_rules_script, key::_hero_payload_cache },
+	{ key::battle_rules_script, key::_consequence_cache_battle },
+	{ key::battle_rules_script, key::_consequence_cache },
 	{ key::battle_ai_rules_script, key::_scoring_scope_depth },
 	{ key::battle_ai_rules_script, key::_scoring_living },
 	{ key::battle_ai_rules_script, key::_scoring_stack_terms },
@@ -680,10 +745,38 @@ constexpr ScriptStatic kSharedMemos[] = {
 	{ key::hero_progression_rules_script, key::_catalog_index },
 };
 
+#define HOST(script, fn, arity) { #script "." #fn, arity }
+
+// The host targets (gd::call_static): the GDScript functions Phase 1 leaves in
+// GDScript and the fight's ports call. Each is allowed only at the call sites
+// named here, none inside the fight's step loop: a battle end runs once, when
+// the battle is over, and a refused withdrawal's message only for the human
+// side's retreat or surrender order (BattleAutoResolveRules turns those into a
+// defend). After each one the bridge reads everything again
+// (PortBridge::call_static).
+constexpr Host kHosts[] = {
+	// _evaluate_outcome (player_orders.cpp).
+	HOST(BattleRules, _finalize_victory, 1),
+	// _evaluate_outcome (player_orders.cpp) and _run_enemy_turn (enemy_turn.cpp).
+	HOST(BattleRules, _finalize_player_battle_loss, 1),
+	// _evaluate_outcome (player_orders.cpp).
+	HOST(BattleRules, _finalize_stalemate, 1),
+	// _run_enemy_stack_order (enemy_turn.cpp): the enemy's retreat and surrender.
+	HOST(BattleRules, _finalize_enemy_withdrawal, 2),
+	// perform_player_action (player_orders.cpp): the retreat order.
+	HOST(BattleRules, _finalize_retreat, 1),
+	HOST(BattleRules, _retreat_action_summary, 1),
+	// perform_player_action (player_orders.cpp): the surrender order.
+	HOST(BattleRules, _finalize_surrender, 1),
+	HOST(BattleRules, _surrender_action_summary, 1),
+};
+
+#undef HOST
+
 // The battle port's table, listed in registry_tables.cpp.
 Table battle_table() {
 	return {"HEROES_NATIVE_BATTLE_LOG", kFunctions, sizeof(kFunctions) / sizeof(kFunctions[0]), kGdscriptOnly, sizeof(kGdscriptOnly) / sizeof(kGdscriptOnly[0]), kSharedMemos,
-		sizeof(kSharedMemos) / sizeof(kSharedMemos[0])};
+		sizeof(kSharedMemos) / sizeof(kSharedMemos[0]), kHosts, sizeof(kHosts) / sizeof(kHosts[0])};
 }
 
 } // namespace aurelion::rules::port

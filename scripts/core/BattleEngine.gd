@@ -14,6 +14,11 @@ extends RefCounted
 ##   var it read or set and every RandomNumberGenerator it rolled with what the
 ##   native port would have left (AurelionRules.port_validate_begin and
 ##   port_validate_end).
+## Host calls: a native port calls a function the phase leaves in GDScript (the
+## battle ends, the HOST lines of registry.cpp) by name, and in native mode it
+## runs as GDScript with what the native call changed written back first. In
+## shadow mode the native port stops at a host call, and the host function's
+## wrapper checks it there instead (host_point).
 ## Mismatches and native failures print a SCRIPT ERROR (the first 20), which
 ## fails rules_parity runs and the core suite, and, with HEROES_NATIVE_BATTLE_LOG
 ## set to a folder, go with every function's counts into shadow_<pid>.json there.
@@ -61,3 +66,9 @@ static func before_writing(name: StringName, args: Array) -> int:
 ## would have.
 static func check_writing(_name: StringName, before: int, args: Array, result: Variant) -> void:
 	NativeRules.api().port_validate_end(before, result, args)
+
+## Shadow, in a host function's wrapper just before its body runs: every open
+## check whose native run stopped at this host call is checked here, its
+## arguments and what GDScript's call has left so far (port_validate_point).
+static func host_point(name: StringName, args: Array) -> void:
+	NativeRules.api().port_validate_point(name, args)

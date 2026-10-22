@@ -98,6 +98,7 @@ add_library(aurelion_rules_core STATIC
 	core/build_info.cpp
 	core/compat/godot_string.cpp
 	core/port/ability_helpers.cpp
+	core/port/action_playback.cpp
 	core/port/action_pressure.cpp
 	core/port/ai_hero_rules.cpp
 	core/port/ai_hero_rules_candidates.cpp
@@ -128,6 +129,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/battle_ai_rules.cpp
 	core/port/battle_ai_spell_choice.cpp
 	core/port/battle_ai_spell_scores.cpp
+	core/port/battle_auto_resolve.cpp
 	core/port/battle_damage_rules_ai.cpp
 	core/port/battle_footprint.cpp
 	core/port/battle_rules.cpp
@@ -135,6 +137,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/board_setup.cpp
 	core/port/commander_payload.cpp
 	core/port/common_mine_rules.cpp
+	core/port/consequence_previews.cpp
 	core/port/content_service_ai.cpp
 	core/port/creature_dwelling_rules_ai.cpp
 	core/port/damage_modifiers.cpp
@@ -145,6 +148,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/enemy_adventure_rules.cpp
 	core/port/enemy_adventure_rules_ai.cpp
 	core/port/enemy_orders.cpp
+	core/port/enemy_turn.cpp
 	core/port/enemy_turn_rules.cpp
 	core/port/gd.cpp
 	core/port/hero_command_rules.cpp
@@ -152,6 +156,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/hero_progression_rules.cpp
 	core/port/mine_rules.cpp
 	core/port/mine_rules_ai.cpp
+	core/port/move_orders.cpp
 	core/port/movement.cpp
 	core/port/native_transit_rules.cpp
 	core/port/native_transit_rules_ai.cpp
@@ -167,6 +172,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/overworld_rules_ai_towns.cpp
 	core/port/player_identity_rules.cpp
 	core/port/player_identity_rules_ai.cpp
+	core/port/player_orders.cpp
 	core/port/presentation.cpp
 	core/port/registry.cpp
 	core/port/registry_tables.cpp
@@ -178,11 +184,13 @@ add_library(aurelion_rules_core STATIC
 	core/port/spell_events.cpp
 	core/port/spell_rules.cpp
 	core/port/spell_rules_ai.cpp
+	core/port/spell_summaries.cpp
 	core/port/stack_effects.cpp
 	core/port/stat_totals.cpp
 	core/port/target_selection.cpp
 	core/port/town_development_rules_ai.cpp
 	core/port/town_rules_ai.cpp
+	core/port/turn_forecast.cpp
 	core/port/turn_order.cpp
 	core/port/unit_abilities.cpp
 	core/port/visit_building_rules_ai.cpp

@@ -1,6 +1,7 @@
 // Layer 3: the board setup: deployment hexes, the hex state of a battle, moving a stack and its walk path.
 
 #include "aurelion_rules/compat/godot_string.hpp"
+#include "aurelion_rules/port/battle_action_playback.hpp"
 #include "aurelion_rules/port/battle_footprint.hpp"
 #include "aurelion_rules/port/battle_rules.hpp"
 #include "aurelion_rules/port/spell_rules.hpp"
@@ -80,15 +81,6 @@ ArrayRef int_array(State &state, std::initializer_list<int64_t> items) {
 		state.append(array, int_value(item));
 	}
 	return array;
-}
-
-// BattleActionPlayback.capture(battle, event): it returns at once without
-// CAPTURE_KEY ("_live_action_playback_capture") in the battle; the capture
-// itself goes with slice 10.
-void action_playback_capture(State &state, DictRef battle) {
-	if (state.has(battle, str(key::_live_action_playback_capture))) {
-		throw state::ScriptError("BattleActionPlayback.capture is not ported (slice 10)");
-	}
 }
 
 } // namespace
@@ -232,9 +224,7 @@ void _set_stack_hex(State &state, DictRef battle, Atom battle_id, DictRef cell) 
 		return;
 	}
 	// The playback path is computed only with the capture key, for the capture.
-	if (state.has(battle, str(key::_live_action_playback_capture))) {
-		_presentation_walk_path(state, battle, from_hex, normalized);
-	}
+	const ArrayRef playback_path = state.has(battle, str(key::_live_action_playback_capture)) ? _presentation_walk_path(state, battle, from_hex, normalized) : state.new_array();
 	const Value stacks = field_or_new_array(state, battle, key::stacks);
 	const int64_t count = untyped_size(state, stacks);
 	for (int64_t index = 0; index < count; ++index) {
@@ -248,7 +238,17 @@ void _set_stack_hex(State &state, DictRef battle, Atom battle_id, DictRef cell) 
 	state.set(battle, str(key::stacks), stacks);
 	_sync_occupied_hexes(state, battle);
 	if (!gd::equal(state, dict_value(from_hex), dict_value(normalized))) {
-		action_playback_capture(state, battle);
+		// The event literal in its order.
+		const DictRef event = state.new_dict();
+		state.set(event, str(key::event_id), str(key::battle_unit_move));
+		state.set(event, str(key::state), str(key::move_path_step));
+		state.set(event, str(key::battle_id), str(battle_id));
+		state.set(event, str(key::from_q), state.get(from_hex, str(key::q), int_value(-1)));
+		state.set(event, str(key::from_r), state.get(from_hex, str(key::r), int_value(-1)));
+		state.set(event, str(key::to_q), gd::index(state, normalized, str(key::q)));
+		state.set(event, str(key::to_r), gd::index(state, normalized, str(key::r)));
+		state.set(event, str(key::walk_path), array_value(playback_path));
+		battle_action_playback::capture(state, battle, event);
 	}
 }
 

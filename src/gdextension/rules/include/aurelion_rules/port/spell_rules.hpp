@@ -109,4 +109,14 @@ DictRef ensure_hero_spellbook(State &state, DictRef hero_state, DictRef hero_tem
 int64_t mana_max_from_hero(State &state, DictRef hero_state);
 int64_t mana_max_from_command(State &state, const Value &command);
 
+// Slice 10b: the text a battle spell's effect prints on the battle screen
+// (spell_summaries.cpp).
+Atom _battle_spell_effect_summary(State &state, DictRef hero_state, DictRef spell, DictRef battle, DictRef active_stack, DictRef target_stack);
+Atom status_rules_text(State &state, Atom status_id);
+Atom _turns_label(State &state, int64_t turns);
+ArrayRef _cleanse_labels(State &state, DictRef effect);
+Atom _status_terms(State &state, DictRef status_effect);
+Atom _modifier_summary(State &state, DictRef modifiers);
+Atom _signed_modifier_label(State &state, int64_t amount);
+
 } // namespace aurelion::rules::port::spell_rules

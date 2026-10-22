@@ -934,7 +934,17 @@ static func _spell_effect_summary(spell: Dictionary, hero_state: Dictionary) -> 
 		_:
 			return "No supported effect"
 
-static func _battle_spell_effect_summary(
+static func _battle_spell_effect_summary(hero_state: Dictionary, spell: Dictionary, battle: Dictionary = {}, active_stack: Dictionary = {}, target_stack: Dictionary = {}) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _battle_spell_effect_summary__gd(hero_state, spell, battle, active_stack, target_stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"SpellRules._battle_spell_effect_summary", [hero_state, spell, battle, active_stack, target_stack])
+	var before := BattleEngine.before_writing(&"SpellRules._battle_spell_effect_summary", [hero_state, spell, battle, active_stack, target_stack])
+	var result = _battle_spell_effect_summary__gd(hero_state, spell, battle, active_stack, target_stack)
+	BattleEngine.check_writing(&"SpellRules._battle_spell_effect_summary", before, [hero_state, spell, battle, active_stack, target_stack], result)
+	return result
+
+static func _battle_spell_effect_summary__gd(
 	hero_state: Dictionary,
 	spell: Dictionary,
 	battle: Dictionary = {},
@@ -1950,9 +1960,27 @@ static func _counted_in_turns__gd(effect: Dictionary, turns: int) -> Dictionary:
 
 ## A status's rules beyond its numbers, for summaries and tooltips.
 static func status_rules_text(status_id: String) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return status_rules_text__gd(status_id)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules.status_rules_text", [status_id])
+	var result = status_rules_text__gd(status_id)
+	BattleEngine.check(&"SpellRules.status_rules_text", [status_id], result)
+	return result
+
+static func status_rules_text__gd(status_id: String) -> String:
 	return String(STATUS_RULES.get(status_id, ""))
 
 static func _turns_label(turns: int) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _turns_label__gd(turns)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules._turns_label", [turns])
+	var result = _turns_label__gd(turns)
+	BattleEngine.check(&"SpellRules._turns_label", [turns], result)
+	return result
+
+static func _turns_label__gd(turns: int) -> String:
 	return "its next turn" if turns == 1 else "its next %d turns" % turns
 
 static func battle_spell_modifiers(spell: Dictionary) -> Dictionary:
@@ -2702,6 +2730,15 @@ static func _battle_spell_recovery_amount__gd(hero_state: Dictionary, spell: Dic
 	return amount + amount * potency / 100
 
 static func _cleanse_labels(effect: Dictionary) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _cleanse_labels__gd(effect)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules._cleanse_labels", [effect])
+	var result = _cleanse_labels__gd(effect)
+	BattleEngine.check(&"SpellRules._cleanse_labels", [effect], result)
+	return result
+
+static func _cleanse_labels__gd(effect: Dictionary) -> Array:
 	var labels := []
 	for effect_id in _normalize_string_array(effect.get("cleanse_effect_ids", [])):
 		match effect_id:
@@ -2715,6 +2752,15 @@ static func _cleanse_labels(effect: Dictionary) -> Array:
 
 ## A status's numbers and rules: "-1 defense, cannot move".
 static func _status_terms(status_effect: Dictionary) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _status_terms__gd(status_effect)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules._status_terms", [status_effect])
+	var result = _status_terms__gd(status_effect)
+	BattleEngine.check(&"SpellRules._status_terms", [status_effect], result)
+	return result
+
+static func _status_terms__gd(status_effect: Dictionary) -> String:
 	var modifiers = status_effect.get("modifiers", {})
 	var parts := []
 	if modifiers is Dictionary and not modifiers.is_empty():
@@ -2725,6 +2771,15 @@ static func _status_terms(status_effect: Dictionary) -> String:
 	return ", ".join(parts)
 
 static func _modifier_summary(modifiers: Dictionary) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _modifier_summary__gd(modifiers)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules._modifier_summary", [modifiers])
+	var result = _modifier_summary__gd(modifiers)
+	BattleEngine.check(&"SpellRules._modifier_summary", [modifiers], result)
+	return result
+
+static func _modifier_summary__gd(modifiers: Dictionary) -> String:
 	if modifiers.is_empty():
 		return "no battlefield bonus"
 	var parts := []
@@ -2740,6 +2795,15 @@ static func _modifier_summary(modifiers: Dictionary) -> String:
 	return ", ".join(parts)
 
 static func _signed_modifier_label(amount: int) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _signed_modifier_label__gd(amount)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules._signed_modifier_label", [amount])
+	var result = _signed_modifier_label__gd(amount)
+	BattleEngine.check(&"SpellRules._signed_modifier_label", [amount], result)
+	return result
+
+static func _signed_modifier_label__gd(amount: int) -> String:
 	if amount > 0:
 		return "+%d" % amount
 	return "%d" % amount
