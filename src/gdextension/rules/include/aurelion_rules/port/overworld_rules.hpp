@@ -214,8 +214,7 @@ void invalidate_spatial_lookup(State &state, DictRef session);
 DictRef town_recovery_state(State &state, DictRef session, DictRef town);
 DictRef transition_town_control(State &state, DictRef session, Atom placement_id, Atom new_owner, Atom controlling_faction_id = state::key::empty, Atom source = state::key::empty);
 
-// Not ported yet: each throws state::NotPorted (phase4_shared_stubs.cpp) until Phase 5's
-// slice 09 ports it.
+// Ported in Phase 5's slice 09 (battle_end_towns.cpp).
 Atom _normalized_enemy_front_faction_id(State &state, DictRef session, DictRef front, DictRef town);
 void _teach_visiting_town_spells(State &state, DictRef session, DictRef town);
 int64_t _town_occupation_seed_pressure(State &state, DictRef session, DictRef town);

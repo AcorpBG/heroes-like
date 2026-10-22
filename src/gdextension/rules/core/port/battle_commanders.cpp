@@ -2,9 +2,9 @@
 // town's watch captain, a site's defender) and a raid's name and strength.
 
 #include "aurelion_rules/port/battle_payload.hpp"
-#include "aurelion_rules/port/phase2a_deps.hpp"
 
 #include "aurelion_rules/port/artifact_rules.hpp"
+#include "aurelion_rules/port/battle_ends.hpp"
 #include "aurelion_rules/port/battle_rules.hpp"
 #include "aurelion_rules/port/enemy_adventure_rules.hpp"
 #include "aurelion_rules/port/enemy_states.hpp"

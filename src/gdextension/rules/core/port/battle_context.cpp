@@ -2,10 +2,11 @@
 // battlefront and a delivery's interception (OverworldRules).
 
 #include "aurelion_rules/port/battle_payload.hpp"
+#include "aurelion_rules/port/battle_ends.hpp"
+#include "aurelion_rules/port/battle_rules.hpp"
 #include "aurelion_rules/port/hero_command_rules_ai.hpp"
 #include "aurelion_rules/port/overworld_level_rules.hpp"
 #include "aurelion_rules/port/overworld_rules_ai.hpp"
-#include "aurelion_rules/port/phase2a_deps.hpp"
 #include "aurelion_rules/port/player_identity_rules.hpp"
 #include "aurelion_rules/port/session_view.hpp"
 

@@ -2,8 +2,8 @@
 // the field (TownBattleRules.prepare).
 
 #include "aurelion_rules/port/battle_payload.hpp"
+#include "aurelion_rules/port/battle_ends.hpp"
 #include "aurelion_rules/port/battle_rules.hpp"
-#include "aurelion_rules/port/phase2a_deps.hpp"
 #include "aurelion_rules/port/spell_rules.hpp"
 
 #include <initializer_list>
@@ -47,6 +47,12 @@ void put(State &state, DictRef dict, Atom field, const Value &value) {
 	state.set(dict, str(field), value);
 }
 
+// String(d.get(field, fallback)): String() of a Variant converts an int, a bool
+// or null too.
+Atom text_field(State &state, DictRef dict, Atom field, Atom fallback) {
+	return gd::stringify(state, state.get(dict, str(field), str(fallback)));
+}
+
 // An Array literal of Strings: a new Array on every evaluation.
 ArrayRef string_array(State &state, std::initializer_list<Atom> texts) {
 	const ArrayRef array = state.new_array();
@@ -61,7 +67,7 @@ ArrayRef string_array(State &state, std::initializer_list<Atom> texts) {
 
 // String(entry.get(field, fallback)).
 void put_text(State &state, DictRef normalized, DictRef entry, Atom field, Atom fallback) {
-	put(state, normalized, field, str(gd::string_field(state, entry, field, fallback)));
+	put(state, normalized, field, str(text_field(state, entry, field, fallback)));
 }
 
 // bool(entry.get(field, fallback)).
@@ -125,7 +131,7 @@ DictRef _build_battle_stack(State &state, Atom unit_id, int64_t count, Atom side
 	}
 	const int64_t unit_hp = engine_max<int64_t>(1, gd::int_field(state, unit, key::hp, 1));
 	const int64_t cohesion_base = _cohesion_base_for_unit(state, unit);
-	const Atom faction_id = gd::string_field(state, unit, key::faction_id, key::empty);
+	const Atom faction_id = text_field(state, unit, key::faction_id, key::empty);
 	// load_json(...).get("units", {}).get(unit_id, {}) is only read: a missing
 	// key reads as an empty body.
 	const DictRef manifest = gd::content_file(state, key::unit_battle_size_manifest_path);
@@ -142,7 +148,7 @@ DictRef _build_battle_stack(State &state, Atom unit_id, int64_t count, Atom side
 			has_body = true;
 		}
 	}
-	Atom affiliation = gd::string_field(state, unit, key::affiliation, key::empty);
+	Atom affiliation = text_field(state, unit, key::affiliation, key::empty);
 	if (affiliation == key::empty) {
 		affiliation = faction_id != key::empty ? key::faction : key::neutral;
 	}
@@ -157,7 +163,7 @@ DictRef _build_battle_stack(State &state, Atom unit_id, int64_t count, Atom side
 	put(state, stack, key::army_slot_index, int_value(army_slot_index >= 0 && army_slot_index < 7 ? army_slot_index : index));
 	put(state, stack, key::battle_footprint, int_value(footprint == 2 ? 2 : 1));
 	put(state, stack, key::battle_visual_scale, float_value(engine_clamp<double>(visual_scale, 0.65, 1.6)));
-	put(state, stack, key::name, str(gd::string_field(state, unit, key::name, unit_id)));
+	put(state, stack, key::name, str(text_field(state, unit, key::name, unit_id)));
 	put(state, stack, key::tier, int_value(engine_clamp<int64_t>(gd::int_field(state, unit, key::tier, 1), 1, 7)));
 	put(state, stack, key::unit_hp, int_value(unit_hp));
 	put(state, stack, key::total_health, int_value(gd::mul(engine_max<int64_t>(0, count), unit_hp)));
@@ -186,10 +192,10 @@ DictRef _build_battle_stack(State &state, Atom unit_id, int64_t count, Atom side
 	put(state, stack, key::abilities, array_value(_normalize_unit_abilities(state, gd::field(state, unit, key::abilities))));
 	put(state, stack, key::ability_uses, dict_value(state.new_dict()));
 	put(state, stack, key::effects, array_value(state.new_array()));
-	put(state, stack, key::source_type, str(gd::string_field(state, source, key::source_type, key::empty)));
-	put(state, stack, key::source_hero_id, str(gd::string_field(state, source, key::hero_id, key::empty)));
-	put(state, stack, key::source_town_placement_id, str(gd::string_field(state, source, key::town_placement_id, key::empty)));
-	put(state, stack, key::source_encounter_key, str(gd::string_field(state, source, key::encounter_key, key::empty)));
+	put(state, stack, key::source_type, str(text_field(state, source, key::source_type, key::empty)));
+	put(state, stack, key::source_hero_id, str(text_field(state, source, key::hero_id, key::empty)));
+	put(state, stack, key::source_town_placement_id, str(text_field(state, source, key::town_placement_id, key::empty)));
+	put(state, stack, key::source_encounter_key, str(text_field(state, source, key::encounter_key, key::empty)));
 	return stack;
 }
 
@@ -205,7 +211,7 @@ ArrayRef _normalize_unit_abilities(State &state, const Value &value) {
 			continue;
 		}
 		const DictRef entry = entry_value.ref;
-		const Atom ability_id = gd::string_field(state, entry, key::id, key::empty);
+		const Atom ability_id = text_field(state, entry, key::id, key::empty);
 		if (ability_id == key::empty || seen.count(ability_id) != 0) {
 			continue;
 		}
@@ -442,7 +448,7 @@ int64_t _cohesion_base_for_unit(State &state, DictRef unit) {
 		if (!gd::is_dict(ability)) {
 			continue;
 		}
-		const Atom ability_id = gd::string_field(state, ability.ref, key::id, key::empty);
+		const Atom ability_id = text_field(state, ability.ref, key::id, key::empty);
 		if ((ability_id == key::brace && gd::bool_field(state, ability.ref, key::grants_base_cohesion, true)) || ability_id == key::formation_guard || (ability_id == key::shielding && gd::int_field(state, ability.ref, key::cohesion_hold_bonus, 0) > 0)) {
 			base = gd::add(base, 1);
 			break;
@@ -467,7 +473,7 @@ ArrayRef _normalize_field_objectives(State &state, const Value &existing_value, 
 	if (gd::is_array(existing_value)) {
 		for (const Value &entry : gd::items(state, existing_value)) {
 			if (gd::is_dict(entry)) {
-				const Atom existing_id = gd::string_field(state, entry.ref, key::id, key::empty);
+				const Atom existing_id = text_field(state, entry.ref, key::id, key::empty);
 				if (existing_id != key::empty) {
 					state.set(existing_by_id, str(existing_id), entry);
 				}
@@ -480,7 +486,7 @@ ArrayRef _normalize_field_objectives(State &state, const Value &existing_value, 
 		if (!gd::is_dict(entry)) {
 			continue;
 		}
-		const Atom objective_id = gd::string_field(state, entry.ref, key::id, key::empty);
+		const Atom objective_id = text_field(state, entry.ref, key::id, key::empty);
 		if (objective_id == key::empty) {
 			continue;
 		}
@@ -509,7 +515,7 @@ ArrayRef _authored_field_objectives(State &state, DictRef encounter, DictRef enc
 			if (!gd::is_dict(entry)) {
 				continue;
 			}
-			const Atom objective_id = gd::string_field(state, entry.ref, key::id, key::empty);
+			const Atom objective_id = text_field(state, entry.ref, key::id, key::empty);
 			if (objective_id == key::empty) {
 				continue;
 			}
@@ -522,7 +528,7 @@ ArrayRef _authored_field_objectives(State &state, DictRef encounter, DictRef enc
 					// entry.keys(): a copy.
 					const state::ValueList entry_keys = state.dict(entry.ref).keys.list();
 					for (const Value &entry_key : entry_keys) {
-						state.set(current.ref, str(gd::to_string(entry_key)), gd::index(state, entry.ref, entry_key));
+						state.set(current.ref, str(gd::stringify(state, entry_key)), gd::index(state, entry.ref, entry_key));
 					}
 					state.set(merged, str(objective_id), current);
 				}
@@ -542,8 +548,8 @@ ArrayRef _authored_field_objectives(State &state, DictRef encounter, DictRef enc
 
 DictRef _normalize_field_objective(State &state, DictRef entry, const Value &existing_state, const Value &context) {
 	(void)context;
-	const Atom objective_type = gd::string_field(state, entry, key::type, key::empty);
-	const Atom starting_side = _normalize_side_token(gd::string_field(state, entry, key::starting_side, key::neutral), true);
+	const Atom objective_type = text_field(state, entry, key::type, key::empty);
+	const Atom starting_side = _normalize_side_token(text_field(state, entry, key::starting_side, key::neutral), true);
 	const int64_t capture_threshold = engine_max<int64_t>(1, gd::int_field(state, entry, key::capture_threshold, 2));
 	const int64_t urgency_round = engine_max<int64_t>(1, gd::int_field(state, entry, key::urgency_round, 2));
 	// var state = existing_state if existing_state is Dictionary else {}: only read.
@@ -551,26 +557,26 @@ DictRef _normalize_field_objective(State &state, DictRef entry, const Value &exi
 	const auto saved_get = [&](Atom field, const Value &fallback) {
 		return has_saved ? state.get(existing_state.ref, str(field), fallback) : fallback;
 	};
-	Atom control_side = _normalize_side_token(gd::to_string(saved_get(key::control_side, str(starting_side))), true);
+	Atom control_side = _normalize_side_token(gd::stringify(state, saved_get(key::control_side, str(starting_side))), true);
 	if (control_side == key::empty) {
 		control_side = starting_side;
 	}
-	Atom progress_side = _normalize_side_token(gd::to_string(saved_get(key::progress_side, str(key::empty))), false);
+	Atom progress_side = _normalize_side_token(gd::stringify(state, saved_get(key::progress_side, str(key::empty))), false);
 	if (progress_side == control_side) {
 		progress_side = key::empty;
 	}
 	// clamp() of ints: an int (capture_threshold is at least 1).
 	const int64_t progress_value = engine_clamp<int64_t>(gd::to_int(state, saved_get(key::progress_value, int_value(0))), 0, capture_threshold);
 	const DictRef objective = state.new_dict();
-	put(state, objective, key::id, str(gd::string_field(state, entry, key::id, key::empty)));
+	put(state, objective, key::id, str(text_field(state, entry, key::id, key::empty)));
 	put(state, objective, key::type, str(objective_type));
 	// The label, summary and pressure tag fallbacks have no effects: they are
 	// worked out only when the entry has no value of its own.
-	const Atom label_token = gd::string_field(state, entry, key::id, objective_type);
+	const Atom label_token = text_field(state, entry, key::id, objective_type);
 	Value label;
-	put(state, objective, key::label, str(state.lookup(entry, str(key::label), label) ? gd::to_string(label) : _titleize_token(state, label_token)));
+	put(state, objective, key::label, str(state.lookup(entry, str(key::label), label) ? gd::stringify(state, label) : _titleize_token(state, label_token)));
 	Value summary;
-	put(state, objective, key::summary, str(state.lookup(entry, str(key::summary), summary) ? gd::to_string(summary) : _default_field_objective_summary(state, objective_type)));
+	put(state, objective, key::summary, str(state.lookup(entry, str(key::summary), summary) ? gd::stringify(state, summary) : _default_field_objective_summary(state, objective_type)));
 	put(state, objective, key::starting_side, str(starting_side));
 	put(state, objective, key::control_side, str(control_side));
 	put(state, objective, key::progress_side, str(progress_side));
@@ -651,7 +657,7 @@ namespace town_battle_rules {
 void prepare(State &state, DictRef battle, ArrayRef building_ids, Atom side) {
 	const DictRef defenses = state.new_dict();
 	for (const Value &id : gd::items(state, array_value(building_ids))) {
-		const DictRef building = gd::content_row(state, state::ContentTable::Building, gd::to_string(id));
+		const DictRef building = gd::content_row(state, state::ContentTable::Building, gd::stringify(state, id));
 		// .get("town_defense_effect", {}): a missing key is the empty effect, skipped.
 		Value found;
 		if (!state.lookup(building, str(key::town_defense_effect), found)) {
@@ -659,7 +665,7 @@ void prepare(State &state, DictRef battle, ArrayRef building_ids, Atom side) {
 		}
 		const DictRef effect = gd::as_dict(found);
 		if (!gd::is_empty(state, effect)) {
-			const Atom effect_id = gd::to_string(gd::index(state, effect, str(key::id)));
+			const Atom effect_id = gd::stringify(state, gd::index(state, effect, str(key::id)));
 			state.set(defenses, str(effect_id), dict_value(gd::deep_duplicate_dict(state, effect)));
 		}
 	}

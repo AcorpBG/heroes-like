@@ -10,13 +10,13 @@
 #include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/artifact_rules.hpp"
 #include "aurelion_rules/port/battle_ai_rules.hpp"
+#include "aurelion_rules/port/battle_ends.hpp"
 #include "aurelion_rules/port/battle_rules.hpp"
 #include "aurelion_rules/port/battle_rules_ai.hpp"
 #include "aurelion_rules/port/hero_command_rules_ai.hpp"
 #include "aurelion_rules/port/hero_commit.hpp"
 #include "aurelion_rules/port/overworld_level_rules.hpp"
 #include "aurelion_rules/port/overworld_rules.hpp"
-#include "aurelion_rules/port/phase2a_deps.hpp"
 #include "aurelion_rules/port/player_identity_rules.hpp"
 #include "aurelion_rules/port/town_development_rules_ai.hpp"
 
@@ -39,8 +39,6 @@ namespace {
 constexpr int64_t COHESION_MIN = 0;
 constexpr int64_t COHESION_MAX = 10;
 constexpr int64_t MOMENTUM_MAX = 4;
-constexpr int64_t BATTLE_HEX_COLUMNS = 11;
-constexpr int64_t BATTLE_HEX_ROWS = 9;
 constexpr int64_t OBSTACLE_VARIANT_COUNT = 25;
 constexpr int64_t OBSTACLE_MIN_COUNT = 2;
 constexpr int64_t OBSTACLE_MAX_COUNT = 4;
@@ -231,7 +229,7 @@ DictRef create_battle_payload(State &state, const Value &session, DictRef encoun
 			array_value(_normalize_field_objectives(state, array_value(state.new_array()), encounter, encounter_placement, scenario, dict_value(battle_context))));
 	{
 		const DictRef briefing = state.new_dict();
-		state.set(briefing, str(key::signature), str(gd::format(state, key::s_s_2, { str(encounter_id), str(overworld_rules::encounter_key(state, encounter_placement)) })));
+		state.set(briefing, str(key::signature), str(gd::format(state, key::s_bar_s, { str(encounter_id), str(overworld_rules::encounter_key(state, encounter_placement)) })));
 		state.set(briefing, str(key::shown), gd::bool_value(false));
 		state.set(briefing, str(key::shown_round), int_value(0));
 		state.set(battle, str(key::tactical_briefing), dict_value(briefing));
