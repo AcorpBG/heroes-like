@@ -2370,12 +2370,32 @@ static func _matching_melee_approach__gd(battle: Dictionary, stack: Dictionary, 
 ## AI scores best (BattleAiRules.choose_melee_approach), or {} when it cannot
 ## strike target this turn.
 static func ai_melee_approach(battle: Dictionary, stack: Dictionary, target: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return ai_melee_approach__gd(battle, stack, target)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules.ai_melee_approach", [battle, stack, target])
+	var before := BattleEngine.before_writing(&"BattleRules.ai_melee_approach", [battle, stack, target])
+	var result = ai_melee_approach__gd(battle, stack, target)
+	BattleEngine.check_writing(&"BattleRules.ai_melee_approach", before, [battle, stack, target], result)
+	return result
+
+static func ai_melee_approach__gd(battle: Dictionary, stack: Dictionary, target: Dictionary) -> Dictionary:
 	return BattleAiRulesScript.choose_melee_approach(battle, stack, target, melee_approach_cells(battle, stack, target))
 
 ## How a computer-driven stack carries out an advance order
 ## (BattleAiRules.advance_plan): a strike on the best enemy in reach, a wait,
 ## the walk, or a defend for a rooted stack.
 static func ai_advance_plan(battle: Dictionary, stack: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return ai_advance_plan__gd(battle, stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules.ai_advance_plan", [battle, stack])
+	var before := BattleEngine.before_writing(&"BattleRules.ai_advance_plan", [battle, stack])
+	var result = ai_advance_plan__gd(battle, stack)
+	BattleEngine.check_writing(&"BattleRules.ai_advance_plan", before, [battle, stack], result)
+	return result
+
+static func ai_advance_plan__gd(battle: Dictionary, stack: Dictionary) -> Dictionary:
 	return BattleAiRulesScript.advance_plan(battle, stack)
 
 ## Whether extra movement points would let the stack reach a hex next to an
@@ -10755,6 +10775,16 @@ static func _selected_target_can_remain_for_active_stack__gd(
 ## and stops where its attack works: next to the enemy for melee, two hexes off
 ## for reach, out of contact for a shooter with shots. Returns whether it moved.
 static func _apply_auto_advance_movement(battle: Dictionary, active_stack: Dictionary) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_auto_advance_movement__gd(battle, active_stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_auto_advance_movement", [battle, active_stack])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_auto_advance_movement", [battle, active_stack])
+	var result = _apply_auto_advance_movement__gd(battle, active_stack)
+	BattleEngine.check_writing(&"BattleRules._apply_auto_advance_movement", before, [battle, active_stack], result)
+	return result
+
+static func _apply_auto_advance_movement__gd(battle: Dictionary, active_stack: Dictionary) -> bool:
 	if _advance_stalled_by_obstruction(active_stack, battle):
 		return false
 	var battle_id := String(active_stack.get("battle_id", ""))

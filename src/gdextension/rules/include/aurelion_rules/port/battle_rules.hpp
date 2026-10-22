@@ -410,4 +410,9 @@ void _append_spell_status_resolution_event(State &state, DictRef battle, DictRef
 void _append_spell_effect_event(State &state, DictRef battle, Atom event_type, const Value &effect_payload, DictRef base_context, Atom target_name);
 Atom _spell_effect_label(State &state, const Value &effect_payload);
 
+// Layer 9: the AI's orders carried out (enemy_orders.cpp).
+DictRef ai_melee_approach(State &state, DictRef battle, DictRef stack, DictRef target);
+DictRef ai_advance_plan(State &state, DictRef battle, DictRef stack);
+bool _apply_auto_advance_movement(State &state, DictRef battle, DictRef active_stack);
+
 } // namespace aurelion::rules::port::battle_rules

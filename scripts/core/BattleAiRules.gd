@@ -166,6 +166,16 @@ static func _keep_stack_term(entry: Array, value: Variant) -> void:
 
 ## The weight named key in WEIGHTS_PATH, read once.
 static func _w(key: String) -> float:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _w__gd(key)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules._w", [key])
+	var before := BattleEngine.before_writing(&"BattleAiRules._w", [key])
+	var result = _w__gd(key)
+	BattleEngine.check_writing(&"BattleAiRules._w", before, [key], result)
+	return result
+
+static func _w__gd(key: String) -> float:
 	if _weights.is_empty():
 		var data: Dictionary = ContentService.load_json(WEIGHTS_PATH)
 		_weights = data.get("weights", {}) if data.get("weights", {}) is Dictionary else {}
@@ -861,12 +871,32 @@ static func _field_objective_action_influence__gd(
 ## _hero_cast_worthwhile), else the stack's own order. With allow_hero_cast
 ## false, or once the hero has cast this round, only the stack's order.
 static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, enemy_hero: Dictionary, allow_hero_cast: bool = true) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return choose_enemy_action__gd(battle, active_stack, enemy_hero, allow_hero_cast)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules.choose_enemy_action", [battle, active_stack, enemy_hero, allow_hero_cast])
+	var before := BattleEngine.before_writing(&"BattleAiRules.choose_enemy_action", [battle, active_stack, enemy_hero, allow_hero_cast])
+	var result = choose_enemy_action__gd(battle, active_stack, enemy_hero, allow_hero_cast)
+	BattleEngine.check_writing(&"BattleAiRules.choose_enemy_action", before, [battle, active_stack, enemy_hero, allow_hero_cast], result)
+	return result
+
+static func choose_enemy_action__gd(battle: Dictionary, active_stack: Dictionary, enemy_hero: Dictionary, allow_hero_cast: bool = true) -> Dictionary:
 	_open_scoring_scope()
 	var action := _enemy_action_choice(battle, active_stack, enemy_hero, allow_hero_cast)
 	_close_scoring_scope()
 	return action
 
 static func _enemy_action_choice(battle: Dictionary, active_stack: Dictionary, enemy_hero: Dictionary, allow_hero_cast: bool) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _enemy_action_choice__gd(battle, active_stack, enemy_hero, allow_hero_cast)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules._enemy_action_choice", [battle, active_stack, enemy_hero, allow_hero_cast])
+	var before := BattleEngine.before_writing(&"BattleAiRules._enemy_action_choice", [battle, active_stack, enemy_hero, allow_hero_cast])
+	var result = _enemy_action_choice__gd(battle, active_stack, enemy_hero, allow_hero_cast)
+	BattleEngine.check_writing(&"BattleAiRules._enemy_action_choice", before, [battle, active_stack, enemy_hero, allow_hero_cast], result)
+	return result
+
+static func _enemy_action_choice__gd(battle: Dictionary, active_stack: Dictionary, enemy_hero: Dictionary, allow_hero_cast: bool) -> Dictionary:
 	if active_stack.is_empty() or String(active_stack.get("side", "")) != "enemy":
 		return {}
 
@@ -924,6 +954,16 @@ static func _enemy_action_choice(battle: Dictionary, active_stack: Dictionary, e
 ## advance always means that no enemy is in reach. Returns the order with the
 ## scores weighed.
 static func _stack_order_choice(scoring_battle: Dictionary, active_stack: Dictionary, targets: Array) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _stack_order_choice__gd(scoring_battle, active_stack, targets)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules._stack_order_choice", [scoring_battle, active_stack, targets])
+	var before := BattleEngine.before_writing(&"BattleAiRules._stack_order_choice", [scoring_battle, active_stack, targets])
+	var result = _stack_order_choice__gd(scoring_battle, active_stack, targets)
+	BattleEngine.check_writing(&"BattleAiRules._stack_order_choice", before, [scoring_battle, active_stack, targets], result)
+	return result
+
+static func _stack_order_choice__gd(scoring_battle: Dictionary, active_stack: Dictionary, targets: Array) -> Dictionary:
 	# Each target's strike reads the same reachable hexes; read them once.
 	_battle_rules().begin_board_read_scope(scoring_battle)
 	var best_attack := _best_attack_action(scoring_battle, active_stack, targets)
@@ -964,12 +1004,32 @@ static func _stack_order_choice(scoring_battle: Dictionary, active_stack: Dictio
 ## walks first. {} when no enemy is in reach. advance_plan carries out an
 ## advance order with it.
 static func best_reachable_strike(battle: Dictionary, active_stack: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return best_reachable_strike__gd(battle, active_stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules.best_reachable_strike", [battle, active_stack])
+	var before := BattleEngine.before_writing(&"BattleAiRules.best_reachable_strike", [battle, active_stack])
+	var result = best_reachable_strike__gd(battle, active_stack)
+	BattleEngine.check_writing(&"BattleAiRules.best_reachable_strike", before, [battle, active_stack], result)
+	return result
+
+static func best_reachable_strike__gd(battle: Dictionary, active_stack: Dictionary) -> Dictionary:
 	_open_scoring_scope()
 	var strike := _best_reachable_strike(battle, active_stack)
 	_close_scoring_scope()
 	return strike
 
 static func _best_reachable_strike(battle: Dictionary, active_stack: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _best_reachable_strike__gd(battle, active_stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules._best_reachable_strike", [battle, active_stack])
+	var before := BattleEngine.before_writing(&"BattleAiRules._best_reachable_strike", [battle, active_stack])
+	var result = _best_reachable_strike__gd(battle, active_stack)
+	BattleEngine.check_writing(&"BattleAiRules._best_reachable_strike", before, [battle, active_stack], result)
+	return result
+
+static func _best_reachable_strike__gd(battle: Dictionary, active_stack: Dictionary) -> Dictionary:
 	if active_stack.is_empty() or _alive_count(active_stack) <= 0 or not _fights_in_melee(active_stack):
 		return {}
 	var side := String(active_stack.get("side", ""))
@@ -1016,12 +1076,32 @@ static func should_wait_for_contact__gd(battle: Dictionary, active_stack: Dictio
 ## {"action": "wait"}, {"action": "advance"} or {"action": "defend"}.
 ## BattleRules.ai_advance_plan is the game's entry point.
 static func advance_plan(battle: Dictionary, stack: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return advance_plan__gd(battle, stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules.advance_plan", [battle, stack])
+	var before := BattleEngine.before_writing(&"BattleAiRules.advance_plan", [battle, stack])
+	var result = advance_plan__gd(battle, stack)
+	BattleEngine.check_writing(&"BattleAiRules.advance_plan", before, [battle, stack], result)
+	return result
+
+static func advance_plan__gd(battle: Dictionary, stack: Dictionary) -> Dictionary:
 	_open_scoring_scope()
 	var plan := _advance_plan(battle, stack)
 	_close_scoring_scope()
 	return plan
 
 static func _advance_plan(battle: Dictionary, stack: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _advance_plan__gd(battle, stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules._advance_plan", [battle, stack])
+	var before := BattleEngine.before_writing(&"BattleAiRules._advance_plan", [battle, stack])
+	var result = _advance_plan__gd(battle, stack)
+	BattleEngine.check_writing(&"BattleAiRules._advance_plan", before, [battle, stack], result)
+	return result
+
+static func _advance_plan__gd(battle: Dictionary, stack: Dictionary) -> Dictionary:
 	var rules := _battle_rules()
 	if stack.is_empty() or _alive_count(stack) <= 0 or rules._stack_is_rooted(stack, battle):
 		return {"action": "defend"}
@@ -1041,6 +1121,16 @@ static func _advance_plan(battle: Dictionary, stack: Dictionary) -> Dictionary:
 ## the shooters, which keep firing meanwhile. It closes in once the battle
 ## clock presses (_clock_pressure), and a side that is outshot keeps closing.
 static func _should_hold_line(battle: Dictionary, stack: Dictionary) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _should_hold_line__gd(battle, stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules._should_hold_line", [battle, stack])
+	var before := BattleEngine.before_writing(&"BattleAiRules._should_hold_line", [battle, stack])
+	var result = _should_hold_line__gd(battle, stack)
+	BattleEngine.check_writing(&"BattleAiRules._should_hold_line", before, [battle, stack], result)
+	return result
+
+static func _should_hold_line__gd(battle: Dictionary, stack: Dictionary) -> bool:
 	if not _fights_in_melee(stack) or _clock_pressure(battle) > 0:
 		return false
 	var side := String(stack.get("side", ""))
@@ -1153,12 +1243,32 @@ static func best_advance_destination__gd(
 ## to (that shooter fires at x0.6). Ties keep the earlier cell, which walks no
 ## further. Returns {} when cells is empty.
 static func choose_melee_approach(battle: Dictionary, stack: Dictionary, target: Dictionary, cells: Array) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return choose_melee_approach__gd(battle, stack, target, cells)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules.choose_melee_approach", [battle, stack, target, cells])
+	var before := BattleEngine.before_writing(&"BattleAiRules.choose_melee_approach", [battle, stack, target, cells])
+	var result = choose_melee_approach__gd(battle, stack, target, cells)
+	BattleEngine.check_writing(&"BattleAiRules.choose_melee_approach", before, [battle, stack, target, cells], result)
+	return result
+
+static func choose_melee_approach__gd(battle: Dictionary, stack: Dictionary, target: Dictionary, cells: Array) -> Dictionary:
 	_open_scoring_scope()
 	var approach := _melee_approach_choice(battle, stack, target, cells)
 	_close_scoring_scope()
 	return approach
 
 static func _melee_approach_choice(battle: Dictionary, stack: Dictionary, target: Dictionary, cells: Array) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _melee_approach_choice__gd(battle, stack, target, cells)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules._melee_approach_choice", [battle, stack, target, cells])
+	var before := BattleEngine.before_writing(&"BattleAiRules._melee_approach_choice", [battle, stack, target, cells])
+	var result = _melee_approach_choice__gd(battle, stack, target, cells)
+	BattleEngine.check_writing(&"BattleAiRules._melee_approach_choice", before, [battle, stack, target, cells], result)
+	return result
+
+static func _melee_approach_choice__gd(battle: Dictionary, stack: Dictionary, target: Dictionary, cells: Array) -> Dictionary:
 	var best := {}
 	var best_score := 0.0
 	for cell in cells:
@@ -1173,6 +1283,16 @@ static func _melee_approach_choice(battle: Dictionary, stack: Dictionary, target
 	return best
 
 static func _melee_approach_score(battle: Dictionary, stack: Dictionary, target: Dictionary, cell: Dictionary) -> float:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _melee_approach_score__gd(battle, stack, target, cell)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules._melee_approach_score", [battle, stack, target, cell])
+	var before := BattleEngine.before_writing(&"BattleAiRules._melee_approach_score", [battle, stack, target, cell])
+	var result = _melee_approach_score__gd(battle, stack, target, cell)
+	BattleEngine.check_writing(&"BattleAiRules._melee_approach_score", before, [battle, stack, target, cell], result)
+	return result
+
+static func _melee_approach_score__gd(battle: Dictionary, stack: Dictionary, target: Dictionary, cell: Dictionary) -> float:
 	var projection := _projected_on_cell(battle, stack, cell)
 	var projected: Dictionary = projection[0]
 	var projected_battle: Dictionary = projection[1]
@@ -1555,12 +1675,32 @@ static func _stack_by_battle_id__gd(battle: Dictionary, battle_id: String) -> Di
 ## battles and the suggested order: the hero's free cast first when it should
 ## cast now, else the stack's own order (see choose_enemy_action).
 static func choose_stack_tactical_order(battle: Dictionary, active_stack: Dictionary, target_side: String = "", commander_payload: Dictionary = {}, allow_hero_cast: bool = true) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return choose_stack_tactical_order__gd(battle, active_stack, target_side, commander_payload, allow_hero_cast)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules.choose_stack_tactical_order", [battle, active_stack, target_side, commander_payload, allow_hero_cast])
+	var before := BattleEngine.before_writing(&"BattleAiRules.choose_stack_tactical_order", [battle, active_stack, target_side, commander_payload, allow_hero_cast])
+	var result = choose_stack_tactical_order__gd(battle, active_stack, target_side, commander_payload, allow_hero_cast)
+	BattleEngine.check_writing(&"BattleAiRules.choose_stack_tactical_order", before, [battle, active_stack, target_side, commander_payload, allow_hero_cast], result)
+	return result
+
+static func choose_stack_tactical_order__gd(battle: Dictionary, active_stack: Dictionary, target_side: String = "", commander_payload: Dictionary = {}, allow_hero_cast: bool = true) -> Dictionary:
 	_open_scoring_scope()
 	var order := _stack_tactical_order(battle, active_stack, target_side, commander_payload, allow_hero_cast)
 	_close_scoring_scope()
 	return order
 
 static func _stack_tactical_order(battle: Dictionary, active_stack: Dictionary, target_side: String, commander_payload: Dictionary, allow_hero_cast: bool) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _stack_tactical_order__gd(battle, active_stack, target_side, commander_payload, allow_hero_cast)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules._stack_tactical_order", [battle, active_stack, target_side, commander_payload, allow_hero_cast])
+	var before := BattleEngine.before_writing(&"BattleAiRules._stack_tactical_order", [battle, active_stack, target_side, commander_payload, allow_hero_cast])
+	var result = _stack_tactical_order__gd(battle, active_stack, target_side, commander_payload, allow_hero_cast)
+	BattleEngine.check_writing(&"BattleAiRules._stack_tactical_order", before, [battle, active_stack, target_side, commander_payload, allow_hero_cast], result)
+	return result
+
+static func _stack_tactical_order__gd(battle: Dictionary, active_stack: Dictionary, target_side: String, commander_payload: Dictionary, allow_hero_cast: bool) -> Dictionary:
 	if battle.is_empty() or active_stack.is_empty() or _alive_count(active_stack) <= 0:
 		return {}
 	var acting_side := String(active_stack.get("side", ""))
@@ -1615,7 +1755,17 @@ static func _stack_tactical_order(battle: Dictionary, active_stack: Dictionary, 
 ## own worth, not against that order: it goes when it destroys its target or
 ## when its score clears the mana conservation bar below. A hostile spell on
 ## the stack this stack's own attack already destroys is held back.
-static func _hero_cast_worthwhile(
+static func _hero_cast_worthwhile(best_spell: Dictionary, best_attack: Dictionary, battle: Dictionary, active_stack: Dictionary, hostile_targets: Array, commander_payload: Dictionary, lethal_spell_available: bool, lethal_attack_available: bool, support_needs_pressure: bool = true) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _hero_cast_worthwhile__gd(best_spell, best_attack, battle, active_stack, hostile_targets, commander_payload, lethal_spell_available, lethal_attack_available, support_needs_pressure)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules._hero_cast_worthwhile", [best_spell, best_attack, battle, active_stack, hostile_targets, commander_payload, lethal_spell_available, lethal_attack_available, support_needs_pressure])
+	var before := BattleEngine.before_writing(&"BattleAiRules._hero_cast_worthwhile", [best_spell, best_attack, battle, active_stack, hostile_targets, commander_payload, lethal_spell_available, lethal_attack_available, support_needs_pressure])
+	var result = _hero_cast_worthwhile__gd(best_spell, best_attack, battle, active_stack, hostile_targets, commander_payload, lethal_spell_available, lethal_attack_available, support_needs_pressure)
+	BattleEngine.check_writing(&"BattleAiRules._hero_cast_worthwhile", before, [best_spell, best_attack, battle, active_stack, hostile_targets, commander_payload, lethal_spell_available, lethal_attack_available, support_needs_pressure], result)
+	return result
+
+static func _hero_cast_worthwhile__gd(
 	best_spell: Dictionary,
 	best_attack: Dictionary,
 	battle: Dictionary,
@@ -1652,7 +1802,17 @@ static func _hero_cast_worthwhile(
 ## support_needs_pressure (the player's side under Quick Resolve and computer
 ## players' battles) a buff goes only when its stack is hurt or threatened;
 ## the battle AI's own heroes buff whenever the spell clears the bar.
-static func _shared_tactical_spell_conservation_delta(
+static func _shared_tactical_spell_conservation_delta(battle: Dictionary, active_stack: Dictionary, target_stack: Dictionary, hostile_targets: Array, commander_payload: Dictionary, behavior: Dictionary, support_needs_pressure: bool = true) -> float:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _shared_tactical_spell_conservation_delta__gd(battle, active_stack, target_stack, hostile_targets, commander_payload, behavior, support_needs_pressure)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules._shared_tactical_spell_conservation_delta", [battle, active_stack, target_stack, hostile_targets, commander_payload, behavior, support_needs_pressure])
+	var before := BattleEngine.before_writing(&"BattleAiRules._shared_tactical_spell_conservation_delta", [battle, active_stack, target_stack, hostile_targets, commander_payload, behavior, support_needs_pressure])
+	var result = _shared_tactical_spell_conservation_delta__gd(battle, active_stack, target_stack, hostile_targets, commander_payload, behavior, support_needs_pressure)
+	BattleEngine.check_writing(&"BattleAiRules._shared_tactical_spell_conservation_delta", before, [battle, active_stack, target_stack, hostile_targets, commander_payload, behavior, support_needs_pressure], result)
+	return result
+
+static func _shared_tactical_spell_conservation_delta__gd(
 	battle: Dictionary,
 	active_stack: Dictionary,
 	target_stack: Dictionary,
@@ -1854,7 +2014,17 @@ static func battle_spell_choice_report(battle: Dictionary, active_stack: Diction
 		"errors": errors,
 	}
 
-static func _best_spell_action(
+static func _best_spell_action(battle: Dictionary, active_stack: Dictionary, enemy_hero: Dictionary, targets: Array) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _best_spell_action__gd(battle, active_stack, enemy_hero, targets)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules._best_spell_action", [battle, active_stack, enemy_hero, targets])
+	var before := BattleEngine.before_writing(&"BattleAiRules._best_spell_action", [battle, active_stack, enemy_hero, targets])
+	var result = _best_spell_action__gd(battle, active_stack, enemy_hero, targets)
+	BattleEngine.check_writing(&"BattleAiRules._best_spell_action", before, [battle, active_stack, enemy_hero, targets], result)
+	return result
+
+static func _best_spell_action__gd(
 	battle: Dictionary,
 	active_stack: Dictionary,
 	enemy_hero: Dictionary,
@@ -1887,7 +2057,17 @@ static func _spell_candidate_beats(candidate: Dictionary, current_best: Dictiona
 ## Every spell the hero can cast now on every target it can take, scored.
 ## lethal_flags gets one entry per candidate: whether it is a damage spell
 ## that destroys its target (_candidate_is_lethal_damage_spell).
-static func _battle_spell_candidates(
+static func _battle_spell_candidates(battle: Dictionary, active_stack: Dictionary, enemy_hero: Dictionary, targets: Array, lethal_flags: Array) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _battle_spell_candidates__gd(battle, active_stack, enemy_hero, targets, lethal_flags)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules._battle_spell_candidates", [battle, active_stack, enemy_hero, targets, lethal_flags])
+	var before := BattleEngine.before_writing(&"BattleAiRules._battle_spell_candidates", [battle, active_stack, enemy_hero, targets, lethal_flags])
+	var result = _battle_spell_candidates__gd(battle, active_stack, enemy_hero, targets, lethal_flags)
+	BattleEngine.check_writing(&"BattleAiRules._battle_spell_candidates", before, [battle, active_stack, enemy_hero, targets, lethal_flags], result)
+	return result
+
+static func _battle_spell_candidates__gd(
 	battle: Dictionary,
 	active_stack: Dictionary,
 	enemy_hero: Dictionary,
@@ -2023,6 +2203,16 @@ static func _allied_spell_candidate_suppressed_by_active_buff__gd(
 ## stands, or for a stack that fights hand to hand a strike after walking to the
 ## hex the AI picks (see _strike_candidate).
 static func _best_attack_action(battle: Dictionary, active_stack: Dictionary, targets: Array) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _best_attack_action__gd(battle, active_stack, targets)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules._best_attack_action", [battle, active_stack, targets])
+	var before := BattleEngine.before_writing(&"BattleAiRules._best_attack_action", [battle, active_stack, targets])
+	var result = _best_attack_action__gd(battle, active_stack, targets)
+	BattleEngine.check_writing(&"BattleAiRules._best_attack_action", before, [battle, active_stack, targets], result)
+	return result
+
+static func _best_attack_action__gd(battle: Dictionary, active_stack: Dictionary, targets: Array) -> Dictionary:
 	var best := {}
 	if bool(active_stack.get("ranged", false)) and int(active_stack.get("shots_remaining", 0)) > 0:
 		for target in targets:
@@ -2052,6 +2242,16 @@ static func _best_attack_action(battle: Dictionary, active_stack: Dictionary, ta
 ## it walks to (BattleRules.ai_melee_approach), scored as given from that hex
 ## and kept as "approach". {} when target is out of reach.
 static func _strike_candidate(battle: Dictionary, active_stack: Dictionary, target: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _strike_candidate__gd(battle, active_stack, target)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules._strike_candidate", [battle, active_stack, target])
+	var before := BattleEngine.before_writing(&"BattleAiRules._strike_candidate", [battle, active_stack, target])
+	var result = _strike_candidate__gd(battle, active_stack, target)
+	BattleEngine.check_writing(&"BattleAiRules._strike_candidate", before, [battle, active_stack, target], result)
+	return result
+
+static func _strike_candidate__gd(battle: Dictionary, active_stack: Dictionary, target: Dictionary) -> Dictionary:
 	var target_id := String(target.get("battle_id", ""))
 	if _can_make_melee_attack(active_stack, battle, target):
 		return {"action": "strike", "target_battle_id": target_id, "score": _attack_score(active_stack, target, battle, false)}
@@ -2108,6 +2308,16 @@ static func _creature_average_damage__gd(stack: Dictionary) -> float:
 ## Each damage and control spell scores its target with the shot's score, so
 ## inside a scoring scope one pair's score is worked out once.
 static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dictionary, is_ranged: bool) -> float:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _attack_score__gd(attacker, target, battle, is_ranged)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules._attack_score", [attacker, target, battle, is_ranged])
+	var before := BattleEngine.before_writing(&"BattleAiRules._attack_score", [attacker, target, battle, is_ranged])
+	var result = _attack_score__gd(attacker, target, battle, is_ranged)
+	BattleEngine.check_writing(&"BattleAiRules._attack_score", before, [attacker, target, battle, is_ranged], result)
+	return result
+
+static func _attack_score__gd(attacker: Dictionary, target: Dictionary, battle: Dictionary, is_ranged: bool) -> float:
 	if _scoring_scope_depth <= 0:
 		return _attack_score_on(attacker, target, battle, is_ranged)
 	var key := String(attacker.get("battle_id", "")) + ">" + String(target.get("battle_id", ""))
@@ -2119,6 +2329,16 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 	return score
 
 static func _attack_score_on(attacker: Dictionary, target: Dictionary, battle: Dictionary, is_ranged: bool) -> float:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _attack_score_on__gd(attacker, target, battle, is_ranged)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules._attack_score_on", [attacker, target, battle, is_ranged])
+	var before := BattleEngine.before_writing(&"BattleAiRules._attack_score_on", [attacker, target, battle, is_ranged])
+	var result = _attack_score_on__gd(attacker, target, battle, is_ranged)
+	BattleEngine.check_writing(&"BattleAiRules._attack_score_on", before, [attacker, target, battle, is_ranged], result)
+	return result
+
+static func _attack_score_on__gd(attacker: Dictionary, target: Dictionary, battle: Dictionary, is_ranged: bool) -> float:
 	var attack_distance := _attack_distance_for_action(attacker, target, battle, is_ranged)
 	var damage := _estimate_damage(attacker, target, battle, is_ranged, false, attack_distance)
 	var target_health: int = max(1, int(target.get("total_health", 0)))
@@ -2286,7 +2506,17 @@ static func _attack_score_on(attacker: Dictionary, target: Dictionary, battle: D
 
 ## damage_projection is the spell's battle_spell_damage_projection on target
 ## when the caller has it already.
-static func _damage_spell_score(
+static func _damage_spell_score(enemy_hero: Dictionary, battle: Dictionary, active_stack: Dictionary, target: Dictionary, spell: Dictionary, damage_projection: Dictionary = {}) -> float:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _damage_spell_score__gd(enemy_hero, battle, active_stack, target, spell, damage_projection)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules._damage_spell_score", [enemy_hero, battle, active_stack, target, spell, damage_projection])
+	var before := BattleEngine.before_writing(&"BattleAiRules._damage_spell_score", [enemy_hero, battle, active_stack, target, spell, damage_projection])
+	var result = _damage_spell_score__gd(enemy_hero, battle, active_stack, target, spell, damage_projection)
+	BattleEngine.check_writing(&"BattleAiRules._damage_spell_score", before, [enemy_hero, battle, active_stack, target, spell, damage_projection], result)
+	return result
+
+static func _damage_spell_score__gd(
 	enemy_hero: Dictionary,
 	battle: Dictionary,
 	active_stack: Dictionary,
@@ -2343,7 +2573,17 @@ static func _damage_spell_score(
 ## not change with the target: hostiles, the acting side's opponents'
 ## living stacks, and role_modifier, the spell's
 ## _commander_spell_role_modifier; damage_projection as _damage_spell_score.
-static func _spell_candidate_score(
+static func _spell_candidate_score(enemy_hero: Dictionary, battle: Dictionary, active_stack: Dictionary, target: Dictionary, spell: Dictionary, behavior: Dictionary, hostiles: Array, role_modifier: float, damage_projection: Dictionary = {}) -> float:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _spell_candidate_score__gd(enemy_hero, battle, active_stack, target, spell, behavior, hostiles, role_modifier, damage_projection)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules._spell_candidate_score", [enemy_hero, battle, active_stack, target, spell, behavior, hostiles, role_modifier, damage_projection])
+	var before := BattleEngine.before_writing(&"BattleAiRules._spell_candidate_score", [enemy_hero, battle, active_stack, target, spell, behavior, hostiles, role_modifier, damage_projection])
+	var result = _spell_candidate_score__gd(enemy_hero, battle, active_stack, target, spell, behavior, hostiles, role_modifier, damage_projection)
+	BattleEngine.check_writing(&"BattleAiRules._spell_candidate_score", before, [enemy_hero, battle, active_stack, target, spell, behavior, hostiles, role_modifier, damage_projection], result)
+	return result
+
+static func _spell_candidate_score__gd(
 	enemy_hero: Dictionary,
 	battle: Dictionary,
 	active_stack: Dictionary,
@@ -2429,6 +2669,16 @@ static func _commander_template_for_spell_role__gd(enemy_hero: Dictionary) -> Di
 	return _commander_template_for_ai_payload(enemy_hero)
 
 static func _control_spell_score(battle: Dictionary, active_stack: Dictionary, target: Dictionary, spell: Dictionary) -> float:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _control_spell_score__gd(battle, active_stack, target, spell)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules._control_spell_score", [battle, active_stack, target, spell])
+	var before := BattleEngine.before_writing(&"BattleAiRules._control_spell_score", [battle, active_stack, target, spell])
+	var result = _control_spell_score__gd(battle, active_stack, target, spell)
+	BattleEngine.check_writing(&"BattleAiRules._control_spell_score", before, [battle, active_stack, target, spell], result)
+	return result
+
+static func _control_spell_score__gd(battle: Dictionary, active_stack: Dictionary, target: Dictionary, spell: Dictionary) -> float:
 	var status_effect := _status_effect_from_spell(spell)
 	var status_id := String(status_effect.get("effect_id", ""))
 	if status_id != "" and SpellRulesScript.target_is_immune_to_status(target, battle, status_id):
@@ -2872,6 +3122,16 @@ static func _stack_spell_target_value__gd(stack: Dictionary, battle: Dictionary)
 ## counts, not the closest pair on the field, and in the last rounds before
 ## stalemate (_clock_pressure) bracing loses its worth.
 static func _defend_score(battle: Dictionary, active_stack: Dictionary, targets: Array) -> float:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _defend_score__gd(battle, active_stack, targets)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules._defend_score", [battle, active_stack, targets])
+	var before := BattleEngine.before_writing(&"BattleAiRules._defend_score", [battle, active_stack, targets])
+	var result = _defend_score__gd(battle, active_stack, targets)
+	BattleEngine.check_writing(&"BattleAiRules._defend_score", before, [battle, active_stack, targets], result)
+	return result
+
+static func _defend_score__gd(battle: Dictionary, active_stack: Dictionary, targets: Array) -> float:
 	var score := _w("defend_base") + ((1.0 - _health_ratio(active_stack)) * _w("defend_wounded"))
 	var round_number := int(battle.get("round", 1))
 	var contact := _stack_contact_band(active_stack, battle)
@@ -2912,6 +3172,16 @@ static func _defend_score(battle: Dictionary, active_stack: Dictionary, targets:
 	return score
 
 static func _advance_score(battle: Dictionary, active_stack: Dictionary, targets: Array) -> float:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _advance_score__gd(battle, active_stack, targets)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAiRules._advance_score", [battle, active_stack, targets])
+	var before := BattleEngine.before_writing(&"BattleAiRules._advance_score", [battle, active_stack, targets])
+	var result = _advance_score__gd(battle, active_stack, targets)
+	BattleEngine.check_writing(&"BattleAiRules._advance_score", before, [battle, active_stack, targets], result)
+	return result
+
+static func _advance_score__gd(battle: Dictionary, active_stack: Dictionary, targets: Array) -> float:
 	# A rooted stack cannot move (BattleRules.action_availability), so advancing
 	# or repositioning is not an order it can be given.
 	if _stack_is_rooted(active_stack, battle):

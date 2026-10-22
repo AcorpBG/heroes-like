@@ -13,8 +13,10 @@
 // inside a scoring scope.
 //
 // Slice 08: the AI's estimates, the side's scoring payload with them (it
-// reaches SpellRules.ensure_hero_spellbook). Not ported yet: the decisions
-// that read the weights (_w), slice 09; and _battle_rules, a Script.
+// reaches SpellRules.ensure_hero_spellbook). Slice 09: the decisions, with
+// the weights (_w). Not ported: _battle_rules, a Script (the ports call the
+// BattleRules ports), and GDScript's board-read scope, which the native board
+// reads do not need.
 
 #include "aurelion_rules/port/gd.hpp"
 
@@ -235,5 +237,41 @@ double _recovery_spell_score_for_target(State &state, DictRef enemy_hero, DictRe
 double _cleanse_spell_score_for_target(State &state, DictRef battle, DictRef active_stack, DictRef target_stack, DictRef spell);
 double _spell_metadata_value_modifier(State &state, DictRef battle, DictRef active_stack, DictRef target, DictRef spell, DictRef behavior);
 double _buff_spell_score(State &state, DictRef battle, DictRef active_stack, DictRef target_stack, ArrayRef targets, DictRef spell);
+
+// Slice 09: the weights, the attack, defend and advance scores, and the melee
+// approach (battle_ai_attack_scores.cpp).
+double _w(State &state, Atom key);
+double _attack_score(State &state, DictRef attacker, DictRef target, DictRef battle, bool is_ranged);
+double _attack_score_on(State &state, DictRef attacker, DictRef target, DictRef battle, bool is_ranged);
+DictRef _strike_candidate(State &state, DictRef battle, DictRef active_stack, DictRef target);
+DictRef _best_attack_action(State &state, DictRef battle, DictRef active_stack, ArrayRef targets);
+double _defend_score(State &state, DictRef battle, DictRef active_stack, ArrayRef targets);
+double _advance_score(State &state, DictRef battle, DictRef active_stack, ArrayRef targets);
+bool _should_hold_line(State &state, DictRef battle, DictRef stack);
+double _melee_approach_score(State &state, DictRef battle, DictRef stack, DictRef target, DictRef cell);
+DictRef _melee_approach_choice(State &state, DictRef battle, DictRef stack, DictRef target, ArrayRef cells);
+DictRef choose_melee_approach(State &state, DictRef battle, DictRef stack, DictRef target, ArrayRef cells);
+
+// Slice 09: the commander's spell choice and whether a cast is worth its
+// mana (battle_ai_spell_choice.cpp).
+double _damage_spell_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef target, DictRef spell, DictRef damage_projection);
+double _spell_candidate_score(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef target, DictRef spell, DictRef behavior, ArrayRef hostiles, double role_modifier, DictRef damage_projection);
+double _control_spell_score(State &state, DictRef battle, DictRef active_stack, DictRef target, DictRef spell);
+ArrayRef _battle_spell_candidates(State &state, DictRef battle, DictRef active_stack, DictRef enemy_hero, ArrayRef targets, ArrayRef lethal_flags);
+DictRef _best_spell_action(State &state, DictRef battle, DictRef active_stack, DictRef enemy_hero, ArrayRef targets);
+bool _hero_cast_worthwhile(State &state, DictRef best_spell, DictRef best_attack, DictRef battle, DictRef active_stack, ArrayRef hostile_targets, DictRef commander_payload, bool lethal_spell_available, bool lethal_attack_available, bool support_needs_pressure);
+double _shared_tactical_spell_conservation_delta(State &state, DictRef battle, DictRef active_stack, DictRef target_stack, ArrayRef hostile_targets, DictRef commander_payload, DictRef behavior, bool support_needs_pressure);
+
+// Slice 09: the decisions, an enemy stack's action, a stack's tactical order,
+// the advance plan and the reachable strike (battle_ai_decisions.cpp).
+DictRef choose_enemy_action(State &state, DictRef battle, DictRef active_stack, DictRef enemy_hero, bool allow_hero_cast);
+DictRef _enemy_action_choice(State &state, DictRef battle, DictRef active_stack, DictRef enemy_hero, bool allow_hero_cast);
+DictRef _stack_order_choice(State &state, DictRef scoring_battle, DictRef active_stack, ArrayRef targets);
+DictRef best_reachable_strike(State &state, DictRef battle, DictRef active_stack);
+DictRef _best_reachable_strike(State &state, DictRef battle, DictRef active_stack);
+DictRef advance_plan(State &state, DictRef battle, DictRef stack);
+DictRef _advance_plan(State &state, DictRef battle, DictRef stack);
+DictRef choose_stack_tactical_order(State &state, DictRef battle, DictRef active_stack, Atom target_side, DictRef commander_payload, bool allow_hero_cast);
+DictRef _stack_tactical_order(State &state, DictRef battle, DictRef active_stack, Atom target_side, DictRef commander_payload, bool allow_hero_cast);
 
 } // namespace aurelion::rules::port::battle_ai_rules
