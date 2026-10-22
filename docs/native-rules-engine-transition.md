@@ -1270,8 +1270,35 @@ a41e38754 Windows binaries; runtime on main 6a8c9a736, 27bee9e26 Windows binarie
   the GDScript fight loop, BattleAiRules and the battle switch's other GDScript copies are deleted, every deleted name
   grepped across `tests/` and `tools/`, with D6's test retirements. Until then a battle change goes into both copies
   (AGENTS.md).
+- **Slices** (owner decision 2026-10-22: the preview first, then the payload builder, then the battle tool; Windows
+  only, lean checks). Each merges to main on its own, from a short-lived branch, with main tagged first (D10). Proof
+  per slice: shadow on the six seeds, native mode against main on the six seeds, the core suite, and whole-game timing
+  on a quiet machine (Phases 4 and 5 paused). Review as in Phase 1.
+  - 2a, the AI's battle preview as one native call (`native-rules-phase2-a-preview-20261022`):
+    `AiHeroRules._simulate_battle` and `_battle_hero` in `core/port/ai_battle_preview.cpp`, switched in the battle
+    table. The scratch session is a native view (SessionData's fields and `meta`), with no SessionData object:
+    `gd::member`, `gd::set_member` and `gd::object_view` also take a Dictionary view (runtime, on main, on top of
+    Phase 5's object views from slice 09, 4d1c1e298 on its branch). The preview's payload
+    path, by static closure beyond the C++ on main: 32 functions, 770 lines (BattleRules 25, the encounter payload,
+    its stacks, obstacles and battle context; OverworldRules 3; AiHeroRules 2; TownBattleRules 1; SessionStateStore's
+    `new_session_data`, which the view replaces). It reuses Phase 5's HeroProgressionRules specialty normalization
+    (`enemy_states.cpp`) and Phase 3's `_neutral_army` and `army_power`. Its battle end is Phase 5's slice 09
+    (`_finalize_*` native), so 2a merges after it. Then Phase 4's faction turn calls the port directly instead of its
+    pure host call. The read-back fields (`hero_after`, the survivors, `resources_gained`, the resolution) must be
+    shadow-identical. Frozen from 2a's start to its merge (AGENTS.md): the 32 functions it ports, below.
+  - 2b, the payload builder for every caller (`native-rules-phase2-b-payload-20261022`): the rest of
+    `create_battle_payload` (town assaults and defences, battle contexts, the human's battles), `normalize_battle_state`
+    and the end-of-battle numbers; every payload caller switches. Then the battles per second are measured for G2.
+  - 2c, the battle tool (`native-rules-phase2-c-battle-tool-20261022`), only after the owner decides D7 and G2: the
+    backend of `tune.py` and `arena.py`, the native router with each side's weights as data (option (b)), the native
+    unit and ability tables per content revision.
+  - 2d, the exit (`native-rules-phase2-d-exit-20261022`): once `tune.py` and `arena.py` run on the tool, the GDScript
+    fight loop, BattleAiRules and the battle switch's other GDScript copies are deleted with D6's test retirements,
+    every deleted name grepped across `tests/` and `tools/`.
 - **Gate G2:** a battles-per-second target the owner sets (the synthesis proposes 1M battles in 2 h on this machine).
   **Battle-level genetic algorithms (unit stats, battle-AI weights) run at full speed from here.**
+
+**Slice 2a, frozen functions** (2026-10-22, until 2a merges; AGENTS.md): BattleRules 25: `_apply_hero_battle_boosts`, `_apply_specialty_battle_starts`, `_army_affiliation`, `_battle_context_target_hero_id`, `_battle_difficulty_value`, `_battle_enemy_army_name`, `_battle_name`, `_build_battle_stack`, `_enemy_army_for_battle`, `_enemy_commander_state_for_battle`, `_enemy_stack_source`, `_enemy_withdrawal_allowed`, `_find_town_at_position`, `_generate_battle_obstacles`, `_new_battle_combat_seed`, `_normalize_field_objectives`, `_normalized_battle_context`, `_normalized_battle_context_fields`, `_normalized_battlefield_tags`, `_obstacle_cells_clear`, `_obstacle_field_stays_open`, `_player_setup_for_battle`, `_resolved_encounter_placement`, `_with_army_battlefield_tags`, `create_battle_payload`; OverworldRules 3: `_town_battlefront_profile`, `delivery_interception_context_for_encounter`, `town_battlefront_profile`; AiHeroRules 2: `_battle_hero`, `_simulate_battle`; SessionStateStore 1: `new_session_data`; TownBattleRules 1: `prepare`. `_simulate_battle` is also frozen by Phase 4. `new_session_data` is not ported: the scratch view copies what it sets.
 
 ### Phase A: overworld AI numbers into data (GDScript only, any time after G0)
 
