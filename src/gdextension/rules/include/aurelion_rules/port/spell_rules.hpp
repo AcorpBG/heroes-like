@@ -35,4 +35,7 @@ DictRef ensure_hero_spellbook(State &state, DictRef hero_state, DictRef hero_tem
 int64_t mana_max_from_hero(State &state, DictRef hero_state);
 int64_t mana_max_from_command(State &state, const Value &command);
 
+// A hero's mana at the start of a day (day_economy.cpp).
+gd::DictRef refresh_daily_mana(State &state, gd::DictRef hero_state);
+
 } // namespace aurelion::rules::port::spell_rules

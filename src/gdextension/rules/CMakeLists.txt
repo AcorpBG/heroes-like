@@ -118,21 +118,29 @@ add_library(aurelion_rules_core STATIC
 	core/port/common_mine_rules.cpp
 	core/port/content_service_ai.cpp
 	core/port/creature_dwelling_rules_ai.cpp
+	core/port/day_boundary.cpp
+	core/port/day_economy.cpp
+	core/port/day_registry.cpp
 	core/port/difficulty_rules.cpp
 	core/port/difficulty_rules_ai.cpp
 	core/port/enemy_adventure_rules.cpp
 	core/port/enemy_adventure_rules_ai.cpp
+	core/port/enemy_states.cpp
 	core/port/enemy_turn_rules.cpp
+	core/port/fog.cpp
 	core/port/gd.cpp
 	core/port/hero_command_rules.cpp
 	core/port/hero_command_rules_ai.cpp
+	core/port/hero_commit.cpp
 	core/port/hero_progression_rules.cpp
 	core/port/mine_rules.cpp
 	core/port/mine_rules_ai.cpp
 	core/port/native_transit_rules.cpp
 	core/port/native_transit_rules_ai.cpp
+	core/port/overworld_forecast.cpp
 	core/port/overworld_level_rules.cpp
 	core/port/overworld_level_rules_ai.cpp
+	core/port/overworld_normalize.cpp
 	core/port/overworld_rules.cpp
 	core/port/overworld_rules_ai_economy.cpp
 	core/port/overworld_rules_ai_logistics.cpp
@@ -141,10 +149,15 @@ add_library(aurelion_rules_core STATIC
 	core/port/overworld_rules_ai_recovery.cpp
 	core/port/overworld_rules_ai_sites.cpp
 	core/port/overworld_rules_ai_towns.cpp
+	core/port/overworld_state_normalize.cpp
+	core/port/overworld_towns_normalize.cpp
+	core/port/overworld_transit_normalize.cpp
+	core/port/player_elimination.cpp
 	core/port/player_identity_rules.cpp
 	core/port/player_identity_rules_ai.cpp
 	core/port/registry_tables.cpp
 	core/port/resource_node_payload_rules_ai.cpp
+	core/port/scenario_evaluation.cpp
 	core/port/scenario_factory_ai.cpp
 	core/port/spell_rules.cpp
 	core/port/spell_rules_ai.cpp

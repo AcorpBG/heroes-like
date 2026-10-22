@@ -43,4 +43,8 @@ ArrayRef spell_affinity_records(State &state, DictRef hero_state, DictRef spell)
 int64_t spell_mana_cost_delta(State &state, DictRef hero_state, DictRef spell);
 bool _spell_modifier_matches(State &state, DictRef modifier, DictRef spell);
 
+// The map's artifact nodes (overworld_state_normalize.cpp).
+ArrayRef build_artifact_nodes(State &state, const Value &placements, Atom scenario_id = state::key::empty);
+ArrayRef normalize_artifact_nodes(State &state, const Value &nodes, Atom scenario_id = state::key::empty);
+
 } // namespace aurelion::rules::port::artifact_rules

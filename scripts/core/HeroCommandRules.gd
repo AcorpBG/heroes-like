@@ -7,6 +7,8 @@ const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRu
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
+const DayEngine = preload("res://scripts/core/DayEngine.gd")
+static var _day_engine_mode: int = DayEngine.mode
 static var DifficultyRulesScript: Variant = load("res://scripts/core/DifficultyRules.gd")
 
 const HALL_BUILDING_ID := "building_wayfarers_hall"
@@ -497,6 +499,18 @@ static func spend_active_hero_movement(
 	}
 
 static func commit_active_hero(session: SessionStateStoreScript.SessionData) -> void:
+	if _day_engine_mode == DayEngine.GDSCRIPT:
+		commit_active_hero__gd(session)
+	elif _day_engine_mode == DayEngine.NATIVE:
+		DayEngine.native_writing(&"HeroCommandRules.commit_active_hero", [session])
+		if DayEngine.not_ported():
+			commit_active_hero__gd(session)
+	else:
+		var before := DayEngine.before_writing([session])
+		commit_active_hero__gd(session)
+		DayEngine.check_writing(&"HeroCommandRules.commit_active_hero", before, [session], null)
+
+static func commit_active_hero__gd(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
 		return
 	var heroes = session.overworld.get("player_heroes", [])
