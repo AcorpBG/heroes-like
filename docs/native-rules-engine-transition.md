@@ -1264,7 +1264,8 @@ a41e38754 Windows binaries; runtime on main 6a8c9a736, 27bee9e26 Windows binarie
 - `AiHeroRules._simulate_battle` becomes one native call with no scratch session, if shadow mode proves the read-back
   fields identical.
 - Transcendental math first appears here (`army_power`, `HeroProgressionRules.gd:646`): decision D4.
-- `battle_sim_cli` (or an in-Godot threaded runner, decision D7) becomes a backend for `tune.py` and `arena.py`.
+- `battle_sim_cli`, a command-line tool built from the same core, becomes the backend for `tune.py` and `arena.py`
+  (D7, decided 2026-10-22).
 - From Phase 1 (owner decisions 2026-10-22): the native unit and ability tables per content revision; the arena's
   native router (each side's weights as data, option (b)); then, once `tune.py` and `arena.py` run on the battle tool,
   the GDScript fight loop, BattleAiRules and the battle switch's other GDScript copies are deleted, every deleted name
@@ -1292,8 +1293,8 @@ a41e38754 Windows binaries; runtime on main 6a8c9a736, 27bee9e26 Windows binarie
   - 2b, the payload builder for every caller (`native-rules-phase2-b-payload-20261022`): the rest of
     `create_battle_payload` (town assaults and defences, battle contexts, the human's battles), `normalize_battle_state`
     and the end-of-battle numbers; every payload caller switches. Then the battles per second are measured for G2.
-  - 2c, the battle tool (`native-rules-phase2-c-battle-tool-20261022`), only after the owner decides D7 and G2: the
-    backend of `tune.py` and `arena.py`, the native router with each side's weights as data (option (b)), the native
+  - 2c, the battle tool (`native-rules-phase2-c-battle-tool-20261022`), the command-line `battle_sim_cli` (D7), after
+    the owner sets G2: the backend of `tune.py` and `arena.py`, the native router with each side's weights as data (option (b)), the native
     unit and ability tables per content revision.
   - 2d, the exit (`native-rules-phase2-d-exit-20261022`): once `tune.py` and `arena.py` run on the tool, the GDScript
     fight loop, BattleAiRules and the battle switch's other GDScript copies are deleted with D6's test retirements,
@@ -2079,9 +2080,9 @@ Movement, routes, context actions, overworld spells, town actions, hero transfer
 functions the UI calls, at 1,221 call sites. Needed for the one-copy end state, not for speed, so it can interleave with
 other work. Merging the separate human and AI forms of heroes, treasury and fog is a later save-schema slice.
 
-### Phase 8 (optional): a match runner without Godot
+### Phase 8: a match runner without Godot
 
-The same core as a command-line tool. Needs the copied Variant hash and either deterministic math or accepted last-bit
+Wanted, not optional (owner decision 2026-10-22, D7). The same core as a command-line tool. Needs the copied Variant hash and either deterministic math or accepted last-bit
 differences against the game.
 
 ### Totals
@@ -2118,7 +2119,7 @@ Sizes are the proposal's unmeasured agent-day guesses, useful only to compare ph
 | D4 | Math: engine math through godot-cpp in the game, or a later deterministic-math behaviour change | Phase 2 |
 | D5 | **Phase 1 decided 2026-10-20:** battle-rule and battle-AI code take no behaviour changes from the start of Phase 1 to its merge; an urgent fix lands in GDScript on main and is ported on the branch; content JSON and `battle_ai_weights.json` stay open (AGENTS.md "Native rules port"). AI code: decided before Phase 4 | before each |
 | D6 | **Decided 2026-10-20:** tests that call private battle functions the port deletes are retired at the Phase 1 merge by the `docs/rmg-test-retirement.md` process; the parity corpus and the core suite cover battles | Phase 1 |
-| D7 | Whether a tool built from the same core counts under "no simulator outside Godot" (`PLAN.md:328`), or an in-Godot threaded runner instead | Phase 2 |
+| D7 | **Decided 2026-10-22:** battle and match simulators run outside Godot, as command-line tools built from the same core: `battle_sim_cli` is Phase 2's battle tool, and Phase 8's match runner is wanted. There was never an owner rule against a simulator outside Godot; that wording in PLAN.md was an agent's, and it is removed | Phase 2 |
 | D8 | **Decided 2026-10-20:** Phase 1 lives on one port branch, `native-phase1-battle` on GitHub, rebased on main at least weekly and before each slice, and merges to main once, when every battle is native and identical; it is dropped if checkpoint G1 stays under 5x after the interface fix (AGENTS.md "Native rules port") | Phase 1 |
 | D9 | Where owner-save copies for the codec proof live (outside git); asked when a slice first needs owner saves | Phase 1 |
 | D10 | **Decided 2026-10-20:** main is tagged before each port merge. Owner 2026-10-21: no waiting period after it (the 7 days without behaviour commits was removed) | each merge |
