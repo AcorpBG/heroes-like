@@ -1,6 +1,6 @@
 // The functions of the computer players' day that the six seeds do not run
 // (docs/native-rules-engine-transition.md, Phase 4, slice 4.2 ports them): each
-// throws state::NotPorted, so the day runs in GDScript where no host call came first.
+// throws state::NotPorted, so the day runs in GDScript where no full host call came first.
 
 #include "aurelion_rules/port/ai_hero_rules_turn.hpp"
 #include "aurelion_rules/port/artifact_rules_turn.hpp"

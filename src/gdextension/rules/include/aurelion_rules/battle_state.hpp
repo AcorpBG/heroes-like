@@ -689,8 +689,9 @@ public:
 	// GDScript.
 	virtual Value call_static(State &state, uint32_t script, uint32_t function, const Value *args, size_t count);
 	// A host call to a function that changes nothing the native call holds
-	// (a pure port::Host): written back first as by call_static, but nothing
-	// is read again afterwards. The default is call_static.
+	// (a pure port::Host): written back first as by call_static, in a way the
+	// adapter can undo, and nothing is read again afterwards. The default is
+	// call_static.
 	virtual Value call_pure(State &state, uint32_t script, uint32_t function, const Value *args, size_t count);
 	// The element type of a builtin Variant type (not an Object), registered
 	// as a loaded typed Array's would be: for a new one, as GDScript's

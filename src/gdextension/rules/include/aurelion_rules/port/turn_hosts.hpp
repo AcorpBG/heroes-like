@@ -9,7 +9,8 @@
 // across one is no longer valid. A shadow check stops at the first one.
 // _simulate_battle is pure (TurnEngine.pure_host_call): it reads the session's
 // day and copies of its arguments, and returns new containers, so nothing is
-// read again after it.
+// read again after it, and it changes nothing, so a day that reaches a path
+// the port leaves to GDScript after it still falls back to GDScript.
 
 #include "aurelion_rules/port/gd.hpp"
 

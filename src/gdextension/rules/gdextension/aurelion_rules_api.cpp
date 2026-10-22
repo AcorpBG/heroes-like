@@ -72,7 +72,16 @@ std::string not_ported_failure(const char *what) {
 }
 
 std::string not_ported_after_host_calls(const char *what, size_t host_calls) {
-	return std::string("reached a path the port leaves to GDScript (") + what + ") after " + std::to_string(host_calls) + " host calls, which wrote back what the call had changed, so the GDScript fallback cannot run";
+	return std::string("reached a path the port leaves to GDScript (") + what + ") after " + std::to_string(host_calls) + " full host calls, which ran GDScript on what the call had changed, so the GDScript fallback cannot run";
+}
+
+// A call its subsystem's GDScript ran instead (port::Table::fallback): one line
+// each, which AI match batches count. Never throws.
+void report_fallback(const char *function, const char *reason) noexcept {
+	try {
+		UtilityFunctions::print(String("NATIVE FALLBACK: ") + String::utf8(function) + " ran in GDScript, not ported: " + String::utf8(reason));
+	} catch (...) {
+	}
 }
 
 PackedInt32Array to_pairs(const std::vector<hex::CellSteps> &cells) {
@@ -687,14 +696,21 @@ Variant AurelionRules::port_call(const StringName &name, const Array &args, bool
 		} catch (const aurelion::rules::state::NotPorted &reason) {
 			++stats.not_ported;
 			last_not_ported_ = true;
-			// A host call wrote back what the call had changed so far: the
-			// GDScript fallback would start again from a changed state.
-			const size_t host_calls = bridge == nullptr ? 0 : bridge->host_calls_made().size();
-			if (stats.fallback && host_calls == 0) {
+			// What pure host calls wrote back is undone, so the GDScript
+			// fallback starts from the state the call started from. A full
+			// host call ran GDScript on it: the fallback would start again
+			// from a changed state.
+			const size_t full_calls = bridge == nullptr ? 0 : bridge->full_host_calls();
+			if (stats.fallback && full_calls == 0) {
+				if (bridge != nullptr) {
+					bridge->undo_write_backs();
+				}
+				keep_not_ported(stats, reason.what());
+				report_fallback(function->name, reason.what());
 				return Variant();
 			}
 			last_not_ported_ = false;
-			problem = std::string(function->name) + ": " + (host_calls == 0 ? not_ported_failure(reason.what()) : not_ported_after_host_calls(reason.what(), host_calls));
+			problem = std::string(function->name) + ": " + (full_calls == 0 ? not_ported_failure(reason.what()) : not_ported_after_host_calls(reason.what(), full_calls));
 		} catch (const aurelion::rules::state::Suspend &host) {
 			problem = std::string(function->name) + ": " + suspended_failure(bridge->state(), host);
 		} catch (const aurelion::rules::state::ScriptError &error) {

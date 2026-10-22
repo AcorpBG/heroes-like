@@ -21,7 +21,11 @@ extends RefCounted
 ## itself. In shadow mode the native port stops there, and the target's wrapper
 ## checks it (host_point).
 ## A path the port leaves to GDScript (state::NotPorted) runs the whole day in
-## GDScript, if no host call came first; after one it is a native failure.
+## GDScript from the state the day started from, if no full host call came
+## first: the native call writes nothing until it ends, and what a pure host
+## call wrote back is undone (PortBridge::undo_write_backs). Each such day
+## prints a NATIVE FALLBACK line naming the path. After a full host call it is
+## a native failure.
 ## Mismatches and native failures print a SCRIPT ERROR (the first 20), which
 ## fails rules_parity runs and the core suite, and, with HEROES_NATIVE_TURN_LOG
 ## set to a folder, go with every function's counts into shadow_<pid>.json there.
@@ -129,21 +133,30 @@ static func host_call(name: StringName, view: Variant, args: Array) -> Variant:
 	var session: SessionStateStoreScript.SessionData = view.get(OBJECT) if view is Dictionary else null
 	if session != null:
 		_take_view(session, view)
+	var result: Variant = _call_target(name, session, view, args)
+	if session != null:
+		_refresh_view(view, session)
+	return result
+
+## host_call of a target that changes nothing (PURE_TARGETS): it reads the
+## session's day and copies of its other arguments and returns new containers,
+## so the native call reads nothing again afterwards. The session keeps its
+## own fields: if the day falls back to GDScript afterwards, the native call's
+## write-back is undone and the session is as the day found it.
+static func pure_host_call(name: StringName, view: Variant, args: Array) -> Variant:
+	var session: SessionStateStoreScript.SessionData = view.get(OBJECT) if view is Dictionary else null
+	if session != null and view.get("day") != session.day:
+		push_error("TurnEngine.pure_host_call: %s reads the session's day, which the native call changed." % name)
+	return _call_target(name, session, view, args)
+
+## The host target, with the session in its view's place.
+static func _call_target(name: StringName, session: SessionStateStoreScript.SessionData, view: Variant, args: Array) -> Variant:
 	var call_args := []
 	for value in args:
 		call_args.append(session if session != null and value is Dictionary and is_same(value, view) else value)
 	var dot := String(name).find(".")
 	var script: Script = load("res://scripts/core/%s.gd" % String(name).substr(0, dot))
-	var result: Variant = script.callv(String(name).substr(dot + 1), call_args)
-	if session != null:
-		_refresh_view(view, session)
-	return result
-
-## host_call of a target that changes nothing the native call holds: it reads
-## the session's day and copies of its arguments and returns new containers,
-## so the native call reads nothing again afterwards (PURE_TARGETS).
-static func pure_host_call(name: StringName, view: Variant, args: Array) -> Variant:
-	return host_call(name, view, args)
+	return script.callv(String(name).substr(dot + 1), call_args)
 
 ## The arguments with each session as a new view (one view per session).
 static func _views(args: Array) -> Array:

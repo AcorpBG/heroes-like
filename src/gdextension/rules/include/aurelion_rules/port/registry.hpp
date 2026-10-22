@@ -37,9 +37,9 @@ struct ScriptStatic {
 // file, which tools/native_battle_switch.py reads to give each one its shadow
 // wrapper (the BattleEngine.host_point call that AurelionRules.port_validate_point
 // checks). A pure one changes nothing the native call holds (no container,
-// static var or content it loaded): GDScript reads what the native call
-// changed, and the native call reads nothing again afterwards
-// (Backing::call_pure).
+// static var or content it loaded) or the GDScript fallback reads: GDScript
+// reads what the native call changed, the native call reads nothing again
+// afterwards (Backing::call_pure), and the adapter can undo that write-back.
 struct Host {
 	const char *name;
 	int arity;
@@ -70,11 +70,12 @@ struct Table {
 	const Host *hosts = nullptr;
 	size_t host_count = 0;
 	// The subsystem's switches run the GDScript body when a native call reaches
-	// a path the port leaves to GDScript (state::NotPorted): the day port.
-	// Without this fallback such a call fails, in native and in shadow mode
-	// (AurelionRules reports it as a native failure): its null result could
-	// pass for GDScript's. After a host call it fails too: the host call wrote
-	// back what the native call had changed.
+	// a path the port leaves to GDScript (state::NotPorted): the day and turn
+	// ports. Without this fallback such a call fails, in native and in shadow
+	// mode (AurelionRules reports it as a native failure): its null result
+	// could pass for GDScript's. The adapter first undoes what pure host calls
+	// wrote back; after a full host call it fails too, since GDScript ran on
+	// what the native call had changed.
 	bool fallback = false;
 };
 
