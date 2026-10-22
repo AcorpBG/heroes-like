@@ -116388,15 +116388,15 @@
     {
       "id": "native-rules-phase5-10-day-validate-20261022",
       "title": "Native day processing 10: the day switch's validating shadow check",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Owner decision 2026-10-22: Phase 5 moves the day switch to the cheaper validating check the turn and battle switches use, Windows only, lean checks. Branch native-phase5-day-validate: DayEngine.before_writing runs the native port first on the arguments themselves (port_validate_begin/port_validate_end, one shared view per session as in TurnEngine.gd) instead of copying them (port_copy) and comparing whole views with var_to_bytes; the day subsystem validates in tools/native_battle_switch.py. Native and gdscript mode are unchanged.",
-      "updatedAt": "2026-10-22T18:30:00Z"
+      "notes": "Owner decision 2026-10-22: Phase 5 moves the day switch to the cheaper validating check the turn and battle switches use, Windows only, lean checks. Completed 2026-10-23, on main from branch native-phase5-day-validate: the day switch's shadow check is the validating check of the battle switch (and of the turn switch until slice 4.4): the native port runs first on the arguments themselves, writing nothing back, and port_validate_end compares what it loaded or set, with one shared view per session as the turn switch had them (tools/native_battle_switch.py: the day subsystem validates). Before, DayEngine.before_writing copied every argument (port_copy, about 1.64M values on l1 by day 90) and compared the whole views with var_to_bytes. A path the port leaves to GDScript still skips the check; native and gdscript mode are unchanged. Checks: a planted difference reported (32 mismatches); the day and turn switches in shadow together on s2, 0 mismatches; day shadow on the six seeds 8,738 checks, 0 mismatches, the same checks per function as main's; on main 2a154550b day shadow on the six seeds 6,989 checks, 0 mismatches (4.4's native turn calls the day ports in C++), native mode identical to main on 6/6 seeds, core suite 17/17. Day shadow under load, new and main interleaved: 7.9x faster in total, 6.9x to 10.1x per seed (l1 474 and 381 s against 3,567 and 3,217 s). Windows only.",
+      "updatedAt": "2026-10-23T01:30:00Z"
     },
     {
       "id": "native-rules-phase3-search-kernel-20261021",

@@ -2170,6 +2170,24 @@ after merging main's slice 4.1); after that merge, shadow of the turn switch 1,7
 native mode against main 80042d9e4 identical on 6/6 seeds; core suite 17/17 (Windows; the Linux libraries in `bin/` wait for
 the Linux pass).
 
+**Slice 10, the day check** (2026-10-23, branch `native-phase5-day-validate`; owner decision 2026-10-22): the day
+switch's shadow check is the validating check of the battle switch (and of the turn switch until slice 4.4). A writing
+day function's native port runs first, on the arguments themselves and writing nothing back
+(`AurelionRules.port_validate_begin`), then its GDScript body, and `port_validate_end` compares the result and what the
+port loaded or set; every open check reads one view per session, brought up to date before each check, as the turn
+switch's did (`tools/native_battle_switch.py`: the day subsystem validates). Before, `DayEngine.before_writing` copied
+every argument for the native port (`port_copy`, the whole session view: about 1.64M values on l1 by day 90) and the
+check compared both whole views with `var_to_bytes`. A path the port leaves to GDScript still skips the check. Native
+and gdscript mode are unchanged; `port_copy` and `port_report` have no caller left. Checks: a probe that planted a
+result and an argument difference in `_end_turn_open_day`'s GDScript body, 32 mismatches reported and the run failed;
+the day and turn switches in shadow together on s2, 599 day and 66,094 turn checks, 0 mismatches; day shadow on the six
+seeds 8,738 checks, 0 mismatches, the same checks per function as main's copying check (all three on main 618f11309); on
+main 2a154550b day shadow on the six seeds 6,989 checks, 0 mismatches (4.4's native turn calls the day ports in C++),
+native mode identical to main on 6/6 seeds, core suite 17/17. Day shadow per seed on 618f11309, in seconds, run new,
+main, new, main, six seeds at once, measured under load (Phase 2's and Phase 4's checks ran beside it): s2
+34/236/25/170, mw 120/1,199/98/1,011, mg-b 215/1,896/187/1,702, mg-a 313/2,467/266/2,287, l1 474/3,567/381/3,217, l2
+597/3,933/466/3,534; main/new 6.9x to 10.1x per seed, 7.9x in total.
+
 ### Phase 6: match throughput
 
 The runner keeps a native session handle across days and writes Dictionaries back only for the digest and record (with
