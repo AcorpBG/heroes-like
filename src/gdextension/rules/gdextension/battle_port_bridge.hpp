@@ -18,12 +18,21 @@
 // a RandomNumberGenerator's seed and state through its methods, content rows
 // from the ContentService autoload, loaded as the containers they are, and a
 // script's static vars through its script object (Object::get and set, which
-// GDScript answers with its static vars). A static var is read once per call;
-// assignments wait for write_back().
+// GDScript answers with its static vars). A static var is read once per call
+// (and again after a host call); assignments wait for write_back().
 // A row or document is asked for once per call: within a call no GDScript
-// runs, so ContentService would return the same object again. Its empty
-// results (an unknown id, a missing file) and a scenario's terrain layers are
-// new objects each time, so they are asked for again.
+// runs but a host call's, so ContentService would return the same object
+// again. Its empty results (an unknown id, a missing file) and a scenario's
+// terrain layers are new objects each time, so they are asked for again.
+//
+// A host call (call_static) runs a GDScript function in the middle of a call
+// that writes back (begin(false, true)), so within such a call GDScript does
+// run; in any other call the host call throws state::Suspend instead. It
+// writes back what the call changed so far, and every node the export made
+// becomes a loaded node of the container it became. The function runs, and
+// every loaded node is backed again by its container, as load() first set it
+// up: what the native code reads next it reads as GDScript left it. Static
+// vars, content rows and the State's memo are asked for again.
 //
 // diff() compares the native result with GDScript's: the same types (int and
 // float, String and StringName apart), the same key order, typing and
@@ -80,7 +89,9 @@ public:
 
 	// Starts a call: drops the last call's nodes, sources and static vars.
 	// A validating call keeps each container as it loads it, for verify().
-	void begin(bool validating = false);
+	// host_calls: the call may run GDScript at a host call (a call that writes
+	// back, never a validating one).
+	void begin(bool validating = false, bool host_calls = false);
 	state::State &state() { return state_; }
 
 	state::Value load(const godot::Variant &value);
@@ -90,6 +101,9 @@ public:
 	void write_back();
 	// A loaded container the native code wrote into, or a static var it assigned.
 	bool changed_a_source() const;
+	// The host calls this call made, in order: (script, function) atoms.
+	const std::vector<std::pair<uint32_t, uint32_t>> &host_calls_made() const { return host_calls_made_; }
+	const state::State &state() const { return state_; }
 	// "" when the native value is GDScript's.
 	std::string diff(const state::Value &native, const godot::Variant &gdscript);
 	// After a validating call and GDScript's call of the same function: "" when
@@ -100,6 +114,14 @@ public:
 	// (a session's view, which the engine script makes again) is compared by
 	// its contents, and so is its "meta".
 	std::string verify(const state::Value &result, const godot::Variant &gdscript_result, const state::Value *args, size_t count, const godot::Array &after);
+	// verify() without a result: the loaded containers, static vars, memo
+	// shapes and RandomNumberGenerators.
+	std::string verify_state(const state::Value *args, size_t count, const godot::Array &after);
+	// A validating call that ended at a host call (state::Suspend), when
+	// GDScript's call reaches the same one: "" when GDScript calls it with the
+	// native call's host arguments, compared as diff() compares, and has left
+	// the state as verify_state() finds the native call would have by then.
+	std::string verify_host_call(const std::vector<state::Value> &host_args, const godot::Array &gdscript_host_args, const state::Value *args, size_t count, const godot::Array &after);
 	// A validating call, after the native call: the shape of each memo the
 	// native port shares with GDScript (port::Table::shared_memos) that the native call
 	// left alone, which verify then finds as GDScript's call left it.
@@ -122,6 +144,7 @@ public:
 	int64_t content_revision(state::State &state) override;
 	state::Value static_get(state::State &state, uint32_t script, uint32_t name) override;
 	void static_set(state::State &state, uint32_t script, uint32_t name, const state::Value &value) override;
+	state::Value call_static(state::State &state, uint32_t script, uint32_t function, const state::Value *args, size_t count) override;
 	state::TypeRef builtin_type(uint8_t builtin) override;
 	void print_error(const std::string &text) override;
 	void print_warning(const std::string &text) override;
@@ -151,6 +174,16 @@ private:
 	};
 
 	state::Value load_string(const godot::String &text, state::Kind kind);
+	// A node backed by its container, set up as load() sets it up when it
+	// first meets the container: typing, read-only, the memo's watch.
+	void back_array(uint32_t node, const godot::Array &array);
+	void back_dict(uint32_t node, const godot::Dictionary &dict);
+	void back_packed(uint32_t node, const godot::Variant &packed);
+	// A host call's two sides: the nodes export_value made become loaded nodes
+	// of the containers they became; every loaded node is backed again.
+	void adopt_exported();
+	void reback();
+	std::string verify_after(const state::Value *args, size_t count, const godot::Array &after);
 	state::TypeRef register_type(int64_t builtin, const godot::StringName &class_name, const godot::Variant &script);
 	godot::Object *object_at(uint32_t slot) const;
 	godot::Object *content_service();
@@ -193,6 +226,9 @@ private:
 	// A validating call: each loaded container as it was loaded, by node
 	// (Array and Dictionary: duplicate(false); a packed array: duplicate()).
 	bool validating_ = false;
+	// The call may run GDScript at a host call (begin's host_calls).
+	bool host_calls_ = false;
+	std::vector<std::pair<uint32_t, uint32_t>> host_calls_made_;
 	std::vector<godot::Variant> array_snapshots_;
 	std::vector<godot::Variant> dict_snapshots_;
 	std::vector<godot::Variant> packed_snapshots_;
@@ -209,7 +245,8 @@ private:
 	std::vector<TypeInfo> types_; // TypeRef n is types_[n - 1]; kept across calls
 	std::vector<godot::Variant> string_cache_;
 	std::vector<godot::Variant> name_cache_;
-	// Per export: the Variant each new node became, so a node is one object.
+	// Per export: the Variant each new node became, so a node is one object
+	// (until a host call, which makes them loaded nodes: adopt_exported).
 	std::unordered_map<uint32_t, godot::Variant> exported_arrays_;
 	std::unordered_map<uint32_t, godot::Variant> exported_dicts_;
 	std::unordered_map<uint32_t, godot::Variant> exported_packed_;

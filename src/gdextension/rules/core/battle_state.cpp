@@ -143,6 +143,10 @@ void Backing::static_set(State &, uint32_t, uint32_t, const Value &) {
 	no_host("A static var");
 }
 
+Value Backing::call_static(State &state, uint32_t script, uint32_t function, const Value *, size_t) {
+	throw ScriptError(state.text(script) + "." + state.text(function) + ": a host call, and this host runs no GDScript");
+}
+
 TypeRef Backing::builtin_type(uint8_t) {
 	no_host("A new typed Array");
 }
@@ -270,6 +274,12 @@ void State::watch_loaded(const Value &value) {
 		default:
 			break;
 	}
+}
+
+void State::drop_memo() {
+	++watched_writes_;
+	memo_.clear();
+	memo_epoch_ = watched_writes_;
 }
 
 void State::replace_items(uint32_t array_node, ValueList items) {

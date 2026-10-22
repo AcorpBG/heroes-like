@@ -1066,6 +1066,143 @@ port, 3e11b0aed Windows binaries; merges of main 4ea510b0b and 8d1985999):
   - Core suite: 17/17 on Windows.
   - The Linux libraries in `bin/` are not rebuilt.
 
+**The AI's estimates without the scoring payload** (slice 08a, 2026-10-22; branch commits c94611a8b port,
+eb4f8729a Windows binaries; merge of main 2c5bd236a):
+- **Ported:** 88 BattleAiRules functions, 1,120 lines; 86 of them switched.
+  - The scoring scope of one AI decision and its memos, GDScript's static vars read and written through the host as
+    the GDScript does (`battle_ai_rules.cpp`, 8).
+  - The AI's copies of the damage modifiers, the field objectives' bonuses and the side reads they use
+    (`battle_ai_modifiers.cpp`, 43).
+  - Its reads of reach and attack distance, side health, the advance target and destination, the commander's payload
+    and template, and the spell estimates (`battle_ai_reads.cpp`, 37).
+  - The copies call the AI's own memo-aware helpers, never the BattleRules port of the same name. The six memos
+    `_clear_scoring_memos` also touches join the shared memos shadow checks.
+- **Not switched:** `_add_scoring_memo_entry` and `_keep_stack_term`. GDScript passes them the static memo itself, or an
+  entry of it, and shadow cannot tie a native write to that argument back to the static var. Native callers use the C++.
+- **Waiting (08b):** the side's scoring payload and the 41 functions that reach it, through Phase 5's
+  `ensure_hero_spellbook`, on main since 379665372.
+- **Review:** one reviewer on the five functions shadow did not check (`_allied_melee_count`,
+  `_side_has_linked_unit`, `_can_make_any_ranged_attack` and the two kept out): no divergence.
+- **Checks:**
+  - Shadow on the six seeds: 0 mismatches, 0 errors and 0 paths left to GDScript in 74,657,726 checks over 469 of
+    the 482 functions. 7,924,854 of them are slice 08a's, over 83 of its 86; `_allied_melee_count`,
+    `_can_make_any_ranged_attack` and `_side_has_linked_unit` were not reached.
+  - Native mode against main: every daily digest (415) and match record of the six seeds is identical.
+  - Core suite: 17/17 on Windows.
+  - The Linux libraries in `bin/` are not rebuilt.
+
+**The casts and the AI's scoring payload** (slices 07b and 08b, 2026-10-22; branch commits 099f519fd port,
+cf1190263 Windows binaries):
+- **Ported:** 50 functions, 1,080 lines.
+  - 07b, 5/162: SpellRules `validate_battle_spell`, `resolve_battle_spell`, `_consume_mana` and `known_spells`
+    (`spell_battle.cpp`), BattleRules `_player_spell_resolution` (`spell_events.cpp`).
+  - Phase 5's spellbook helpers, 4/33: SpellRules `ensure_hero_spellbook`, `mana_max_from_hero` and
+    `mana_max_from_command`, HeroProgressionRules `mana_max_bonus`. On main unswitched since 379665372; switched here
+    in the battle table.
+  - 08b, BattleAiRules 41/885:
+    - the side's scoring payload, the commander's traits and bonuses, and the enemy's withdrawal
+      (`battle_ai_payloads.cpp`, 13);
+    - the contextual bonuses, the cohesion and momentum totals, the breach of an obstruction and the readiness writ
+      (`battle_ai_contextual.cpp`, 14);
+    - the damage estimate and its modifiers, the threat to a stack and the lethal attack
+      (`battle_ai_estimates.cpp`, 8);
+    - the field objectives' worth and the support spells' scores (`battle_ai_spell_scores.cpp`, 6).
+  - BattleAiRules' own `_hero_payload_cache` joins the shared memos.
+- **Review:** one reviewer on the two functions shadow did not reach (`_enemy_withdrawal_urgency_scale`,
+  `_preservation_comparison_score`) and the part of `_enemy_withdrawal_action` behind them: no divergence. The urgency
+  scale's lower-casing fails loudly in native mode on non-ASCII hero text, where GDScript converts it; the content has
+  none.
+- **Checks:**
+  - Shadow on the six seeds: 0 mismatches, 0 errors and 0 paths left to GDScript in 81,952,285 checks over 517 of
+    the 532 functions. 7,294,559 of them are slices 07b's and 08b's, over 48 of their 50.
+  - Native mode against main: every daily digest (415) and match record of the six seeds is identical.
+  - Core suite: 17/17 on Windows.
+  - The Linux libraries in `bin/` are not rebuilt.
+
+**The AI's decisions** (slice 09, 2026-10-22; branch commits bcdbccacc port, cd3c6accc Windows binaries):
+- **Ported:** 30 functions, 816 lines.
+  - BattleAiRules 27/789:
+    - the weights (`_w`, from `content/battle_ai_weights.json`), the attack, defend and advance scores, whether to
+      hold the line, and the melee approach (`battle_ai_attack_scores.cpp`, 11);
+    - the commander's spell candidates and choice, and whether a cast is worth its mana
+      (`battle_ai_spell_choice.cpp`, 7);
+    - an enemy stack's action, a stack's tactical order, the advance plan and the reachable strike
+      (`battle_ai_decisions.cpp`, 9).
+  - BattleRules 3/27: `ai_melee_approach`, `ai_advance_plan` and `_apply_auto_advance_movement` (`enemy_orders.cpp`).
+  - BattleAiRules' `_weights` joins the shared memos. Not ported: `_battle_rules`, a Script (the ports call the
+    BattleRules ports), and GDScript's board-read scope, which the native board reads do not need.
+- **Moved to 10:** the BattleRules enemy turn (`_run_enemy_turn`, `_run_enemy_stack_order`, `_cast_enemy_spell`, the
+  defend and wait orders, `_drain_enemy_turns`): it reaches the battle ends, which stay GDScript.
+- **Review:** none; shadow reached all 30.
+- **Checks:**
+  - Shadow on the six seeds: 0 mismatches, 0 errors and 0 paths left to GDScript in 83,280,050 checks over
+    547 of the 562 functions. 1,327,765 of them are slice 09's, over all 30.
+  - Native mode against main: every daily digest (415) and match record of the six seeds is identical.
+  - Core suite: 17/17 on Windows.
+  - The Linux libraries in `bin/` are not rebuilt.
+
+**Autoplay, the orders and the battle screen's queries** (slice 10, 2026-10-22; branch commits 26e2efdd1 port,
+a41e38754 Windows binaries; runtime on main 6a8c9a736, 27bee9e26 Windows binaries):
+- **Ported:** 59 functions, 2,050 lines. With them every step of a fight runs native: the autoplay loop, the player's
+  orders, the enemy turn, the AI and the outcome.
+  - 10a, 39/1,664:
+    - BattleAutoResolveRules 8/289: `resolve_active_battle`, the player side's decision and its fallback, the focus
+      target and the result (`battle_auto_resolve.cpp`).
+    - BattleRules 30/1,337: `perform_player_action`, `cast_player_spell`, `resolve_if_battle_ready`,
+      `_resolve_attack_action`, `_complete_action` and `_evaluate_outcome` (`player_orders.cpp`, 7);
+      `move_active_stack_to_hex`, its movement intent and the post-move target context (`move_orders.cpp`, 14); the
+      enemy turn from 09 with `_resolve_ai_attack` and `_complete_enemy_action` (`enemy_turn.cpp`, 9).
+    - BattleActionPlayback `capture`, 1/38 (`action_playback.cpp`): board setup and the presentation events now write
+      the playback record natively.
+  - 10b, 20/386, the battle screen's queries:
+    - BattleRules 13/291: the attack, advance and spell consequence previews with their damage and loss ranges
+      (`consequence_previews.cpp`, 10) and the turn order forecast (`turn_forecast.cpp`, 3);
+    - SpellRules 7/95: the text a battle spell's effect prints (`spell_summaries.cpp`).
+  - BattleRules' `_consequence_cache_battle` and `_consequence_cache` join the shared memos.
+- **Host calls** (the runtime on main): the battle ends stay GDScript in Phase 1. These are `_finalize_victory`,
+  `_finalize_player_battle_loss`, `_finalize_stalemate`, `_finalize_enemy_withdrawal`, `_finalize_retreat`,
+  `_finalize_surrender`, and the message of a refused retreat or surrender (`_retreat_action_summary`,
+  `_surrender_action_summary`, which read the overworld's withdrawal preview). The ports call them through
+  `gd::call_static`.
+  - The battle table lists these 8 targets as `HOST` entries in `core/port/registry.cpp`, each with the one call site
+    where it is allowed. None is inside the fight's step loop. `gd::call_static` fails on any other target.
+  - Native mode: the bridge writes everything back and runs the GDScript function. Then it drops everything: every
+    loaded node reads its container again lazily, and the State memo (the board reads' too), the static vars and the
+    content are read again.
+  - Shadow mode: the native run stops at the host call (`state::Suspend`). The switch's host point checks the run up to
+    there (`AurelionRules.port_validate_point`), and GDScript goes on.
+  - Counts: on the six seeds, 1,243 host calls in 1,536 resolves (1,215 `_finalize_victory`, 28
+    `_finalize_player_battle_loss`), at most one per resolve. On `standard` they are not counted, because the arena
+    fails in native mode (below).
+  - The two summaries are never reached in autoplay, because BattleAutoResolveRules turns an exit order into a defend,
+    and the AI never asks for them. They run only when a player orders a retreat or surrender that is not allowed: the
+    order is refused and the battle goes on, one host call per refused order. An allowed one calls its `_finalize_*`
+    once, and the battle ends.
+- **For the owner at the merge** (open, not settled):
+  - The rule "a ported function calls only ported functions" (slice 05) becomes "...or a registered GDScript host
+    target", as above.
+  - Events stay today's exact strings, built in C++. There are no structured records and no GDScript formatter, which
+    departs from the Phase 1 scope above.
+  - Not built:
+    - the native unit and ability tables per content revision (from 02);
+    - the human-seat corpus: 12 generated-map battle screen tests ran in shadow instead;
+    - host calls in the G1 replay harness (`tools/battle_port_g1/`), which the formal pre-merge G1 needs.
+  - The arena router: native and shadow resolves fail in the arena with an `int(Nil)` error. The router has no
+    BattleAiRules static vars, and the native scoring scope reads them. The options are in "G1 on `standard` with the
+    memos".
+  - Still GDScript: battle setup (`create_battle_payload`, `normalize_battle_state`), the battle screen's `describe_*`,
+    `intent_forecast_payload` and `get_action_surface`, and BattleActionPlayback's `begin` and `finish`.
+- **Review:** one reviewer on the five functions shadow did not reach (`_fallback_player_autoplay_decision`,
+  `_select_focus_enemy`, `consequence_range_text`, `upcoming_actor_ids`, `_cleanse_labels`): no divergence.
+- **Checks:**
+  - Shadow on the six seeds: 0 mismatches, 0 errors and 0 paths left to GDScript in 83,514,931 checks over
+    569 of the 621 functions. 234,881 of them are slice 10's, over 22 of its 59.
+  - Shadow on 12 generated-map battle screen tests: 0 mismatches in 2,339,481 checks, 18,087 of
+    them slice 10's, over 53 of its 59. The two runs together reached 54 of the 59.
+  - Native mode against main: every daily digest (415) and match record of the six seeds is identical.
+  - Core suite: 17/17 on Windows.
+  - The Linux libraries in `bin/` are not rebuilt.
+
 ### Phase 2: one payload builder, AI preview as one call, the battle tool
 
 - Battle payload creation (`BattleRules.gd:256-402`), stack and hero payloads, obstacles, and the end-of-battle numbers

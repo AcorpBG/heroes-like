@@ -177,6 +177,7 @@ void AurelionRules::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("port_copy", "args"), &AurelionRules::port_copy);
 	ClassDB::bind_method(D_METHOD("port_validate_begin", "name", "args"), &AurelionRules::port_validate_begin);
 	ClassDB::bind_method(D_METHOD("port_validate_end", "handle", "gdscript_result", "args"), &AurelionRules::port_validate_end);
+	ClassDB::bind_method(D_METHOD("port_validate_point", "name", "args"), &AurelionRules::port_validate_point);
 	ClassDB::bind_method(D_METHOD("port_stats"), &AurelionRules::port_stats);
 	ClassDB::bind_method(D_METHOD("ai_search_masks", "width", "height", "surface_blocked", "surface_stops", "water", "sea", "body_offsets", "body_tiles", "zone_offsets", "zone_tiles", "neutral_open", "unit_blocked", "unit_stops", "hero_tiles", "guard_offsets", "guard_tiles", "site_tiles", "site_open"), &AurelionRules::ai_search_masks);
 	ClassDB::bind_method(D_METHOD("ai_search_walk", "width", "height", "start", "start_phase", "radius", "native_corners", "blocked", "stop_mask", "pass_mask", "hero_zone", "portals", "seen", "water", "sea_open", "boats", "docks", "shore_cost", "dock_cost"), &AurelionRules::ai_search_walk);
@@ -192,11 +193,23 @@ struct AurelionRules::Validation {
 	// A native failure, reported when the check ends.
 	std::string error;
 	bool not_ported = false;
+	// The native run reached a host call (state::Suspend) and ended there:
+	// the host and its arguments, in the bridge's State, and the check's
+	// argument Array, which port_validate_point compares as `after`.
+	bool suspended = false;
+	uint32_t host_script = 0;
+	uint32_t host_function = 0;
+	std::vector<aurelion::rules::state::Value> host_args;
+	Array arguments;
+	// port_validate_point closed it: GDScript reached the host call (or one
+	// the native run did not make, a mismatch reported there). The end
+	// compares nothing more.
+	bool at_point = false;
 };
 
 AurelionRules::AurelionRules() {
 	try {
-		port_ = std::make_unique<aurelion::rules::bridge::PortBridge>();
+		ports_.push_back(std::make_unique<aurelion::rules::bridge::PortBridge>());
 		size_t count = 0;
 		aurelion::rules::port::functions(count);
 		port_stats_.resize(count);
@@ -453,6 +466,32 @@ std::string arity_problem(const aurelion::rules::port::Function &function, int64
 	}
 	return std::string();
 }
+
+// One level of port_call or port_check nesting, left on every exit.
+class Nesting {
+public:
+	explicit Nesting(size_t &depth) :
+			depth_(depth), level_(depth++) {}
+	~Nesting() { --depth_; }
+	Nesting(const Nesting &) = delete;
+	Nesting &operator=(const Nesting &) = delete;
+	size_t level() const { return level_; }
+
+private:
+	size_t &depth_;
+	size_t level_;
+};
+
+// "BattleRules._finalize_victory" of a host call the native run reached.
+std::string host_text(const aurelion::rules::state::State &state, uint32_t script, uint32_t function) {
+	return aurelion::rules::port::host_name(state.text(script), state.text(function));
+}
+
+// A host call (state::Suspend) in a call where no GDScript may run.
+std::string suspended_failure(const aurelion::rules::state::State &state, const aurelion::rules::state::Suspend &host) {
+	return "reached a host call to " + host_text(state, host.script, host.function) + " in a call that writes nothing back";
+}
+
 constexpr size_t kKeptMismatches = 20;
 constexpr int64_t kStatsEvery = 65536;
 
@@ -500,6 +539,24 @@ void AurelionRules::record_mismatch(PortStats &stats, const char *name, const st
 	}
 }
 
+void AurelionRules::count_host_calls(PortStats &stats, const aurelion::rules::bridge::PortBridge &port) {
+	const auto &made = port.host_calls_made();
+	if (made.empty()) {
+		return;
+	}
+	stats.host_calls += static_cast<int64_t>(made.size());
+	stats.max_host_calls = std::max(stats.max_host_calls, static_cast<int64_t>(made.size()));
+	for (const auto &call : made) {
+		const std::string name = aurelion::rules::port::host_name(port.state().text(call.first), port.state().text(call.second));
+		auto found = std::find_if(host_call_counts_.begin(), host_call_counts_.end(), [&](const auto &entry) { return entry.first == name; });
+		if (found == host_call_counts_.end()) {
+			host_call_counts_.emplace_back(name, 1);
+		} else {
+			++found->second;
+		}
+	}
+}
+
 void AurelionRules::count_port_use() {
 	if (++port_uses_ % kStatsEvery == 0) {
 		write_port_stats();
@@ -524,7 +581,14 @@ void AurelionRules::write_port_stats() const {
 		}
 		first_entry = false;
 		append_json_string(out, table[index].name);
-		out += ": {\"calls\": " + std::to_string(stats.calls) + ", \"checks\": " + std::to_string(stats.checks) + ", \"mismatches\": " + std::to_string(stats.mismatches) + ", \"errors\": " + std::to_string(stats.errors) + ", \"not_ported\": " + std::to_string(stats.not_ported) + ", \"first\": [";
+		out += ": {\"calls\": " + std::to_string(stats.calls) + ", \"checks\": " + std::to_string(stats.checks) + ", \"mismatches\": " + std::to_string(stats.mismatches) + ", \"errors\": " + std::to_string(stats.errors) + ", \"not_ported\": " + std::to_string(stats.not_ported);
+		if (stats.host_points != 0) {
+			out += ", \"host_points\": " + std::to_string(stats.host_points);
+		}
+		if (stats.host_calls != 0) {
+			out += ", \"host_calls\": " + std::to_string(stats.host_calls) + ", \"max_host_calls\": " + std::to_string(stats.max_host_calls);
+		}
+		out += ", \"first\": [";
 		for (size_t line = 0; line < stats.first.size(); ++line) {
 			if (line != 0) {
 				out += ", ";
@@ -532,6 +596,14 @@ void AurelionRules::write_port_stats() const {
 			append_json_string(out, stats.first[line]);
 		}
 		out += "]}";
+	}
+	out += "}, \"hosts\": {";
+	for (size_t index = 0; index < host_call_counts_.size(); ++index) {
+		if (index != 0) {
+			out += ", ";
+		}
+		append_json_string(out, host_call_counts_[index].first);
+		out += ": " + std::to_string(host_call_counts_[index].second);
 	}
 	out += "}, \"unknown_calls\": " + std::to_string(unknown_calls_) + ", \"unknown_names\": [";
 	for (size_t index = 0; index < unknown_names_.size(); ++index) {
@@ -552,6 +624,13 @@ void AurelionRules::write_port_stats() const {
 	}
 }
 
+aurelion::rules::bridge::PortBridge &AurelionRules::port_bridge(size_t depth) {
+	while (ports_.size() <= depth) {
+		ports_.push_back(std::make_unique<aurelion::rules::bridge::PortBridge>());
+	}
+	return *ports_[depth];
+}
+
 Variant AurelionRules::port_call(const StringName &name, const Array &args, bool write_back) {
 	std::string problem;
 	last_not_ported_ = false;
@@ -564,27 +643,33 @@ Variant AurelionRules::port_call(const StringName &name, const Array &args, bool
 		PortStats &stats = stats_of(function);
 		++stats.calls;
 		count_port_use();
+		const Nesting nesting(port_depth_);
+		aurelion::rules::bridge::PortBridge *bridge = nullptr;
 		try {
-			if (port_ == nullptr) {
-				throw std::runtime_error("the port did not start");
-			}
+			aurelion::rules::bridge::PortBridge &port = port_bridge(nesting.level());
+			bridge = &port;
 			const std::string arity = arity_problem(*function, args.size());
 			if (!arity.empty()) {
 				problem = std::string(function->name) + " " + arity;
 			} else {
-				port_->begin();
+				// A host call writes back what the call changed so far: only in
+				// a call that writes back.
+				port.begin(false, write_back);
 				aurelion::rules::state::Value values[kMaxPortArgs];
 				for (int index = 0; index < function->arity; ++index) {
-					values[index] = port_->load(args[index]);
+					values[index] = port.load(args[index]);
 				}
-				const aurelion::rules::state::Value result = function->call(port_->state(), values);
+				const aurelion::rules::state::Value result = function->call(port.state(), values);
+				// A call inside a host call may have set it.
+				last_not_ported_ = false;
+				count_host_calls(stats, port);
 				if (write_back) {
-					port_->write_back();
-				} else if (port_->changed_a_source()) {
+					port.write_back();
+				} else if (port.changed_a_source()) {
 					problem = std::string(function->name) + ": native wrote into an argument";
 				}
 				if (problem.empty()) {
-					return port_->export_value(result);
+					return port.export_value(result);
 				}
 			}
 		} catch (const aurelion::rules::state::NotPorted &reason) {
@@ -594,6 +679,8 @@ Variant AurelionRules::port_call(const StringName &name, const Array &args, bool
 				return Variant();
 			}
 			problem = std::string(function->name) + ": " + not_ported_failure(reason.what());
+		} catch (const aurelion::rules::state::Suspend &host) {
+			problem = std::string(function->name) + ": " + suspended_failure(bridge->state(), host);
 		} catch (const aurelion::rules::state::ScriptError &error) {
 			problem = std::string(function->name) + ": native script error: " + error.what();
 		} catch (const std::exception &error) {
@@ -624,25 +711,26 @@ String AurelionRules::port_check(const StringName &name, const Array &args, cons
 		count_port_use();
 		std::string mismatch;
 		bool error = false;
+		const Nesting nesting(port_depth_);
+		aurelion::rules::bridge::PortBridge *bridge = nullptr;
 		try {
-			if (port_ == nullptr) {
-				throw std::runtime_error("the port did not start");
-			}
+			aurelion::rules::bridge::PortBridge &port = port_bridge(nesting.level());
+			bridge = &port;
 			const std::string arity = arity_problem(*function, args.size());
 			if (!arity.empty()) {
 				error = true;
 				mismatch = arity;
 			} else {
-				port_->begin();
+				port.begin();
 				aurelion::rules::state::Value values[kMaxPortArgs];
 				for (int index = 0; index < function->arity; ++index) {
-					values[index] = port_->load(args[index]);
+					values[index] = port.load(args[index]);
 				}
-				const aurelion::rules::state::Value result = function->call(port_->state(), values);
-				if (port_->changed_a_source()) {
+				const aurelion::rules::state::Value result = function->call(port.state(), values);
+				if (port.changed_a_source()) {
 					mismatch = "native wrote into an argument";
 				} else {
-					mismatch = port_->diff(result, gdscript_result);
+					mismatch = port.diff(result, gdscript_result);
 				}
 			}
 		} catch (const aurelion::rules::state::NotPorted &reason) {
@@ -653,6 +741,9 @@ String AurelionRules::port_check(const StringName &name, const Array &args, cons
 			}
 			error = true;
 			mismatch = not_ported_failure(reason.what());
+		} catch (const aurelion::rules::state::Suspend &host) {
+			error = true;
+			mismatch = suspended_failure(bridge->state(), host);
 		} catch (const aurelion::rules::state::ScriptError &failure) {
 			error = true;
 			mismatch = std::string("native script error: ") + failure.what();
@@ -725,6 +816,12 @@ int64_t AurelionRules::port_validate_begin(const StringName &name, const Array &
 		check.args.clear();
 		check.error.clear();
 		check.not_ported = false;
+		check.suspended = false;
+		check.host_script = 0;
+		check.host_function = 0;
+		check.host_args.clear();
+		check.arguments = Array();
+		check.at_point = false;
 		PortStats &stats = stats_of(function);
 		++stats.checks;
 		count_port_use();
@@ -737,7 +834,17 @@ int64_t AurelionRules::port_validate_begin(const StringName &name, const Array &
 				for (int index = 0; index < function->arity; ++index) {
 					check.args.push_back(check.bridge.load(args[index]));
 				}
-				check.result = function->call(check.bridge.state(), check.args.data());
+				try {
+					check.result = function->call(check.bridge.state(), check.args.data());
+				} catch (aurelion::rules::state::Suspend &host) {
+					// Checked where GDScript's call reaches the host call
+					// (port_validate_point), on the state as it is then.
+					check.suspended = true;
+					check.host_script = host.script;
+					check.host_function = host.function;
+					check.host_args = std::move(host.args);
+					check.arguments = args;
+				}
 				check.bridge.keep_memo_shapes();
 			}
 		} catch (const aurelion::rules::state::NotPorted &reason) {
@@ -784,6 +891,11 @@ String AurelionRules::port_validate_end(int64_t handle, const Variant &gdscript_
 			if (!check.error.empty()) {
 				mismatch = check.error;
 				error = true;
+			} else if (check.at_point) {
+				// Checked at the host point: GDScript went on past the host
+				// call, the native run did not.
+			} else if (check.suspended) {
+				mismatch = "the native port calls " + host_text(check.bridge.state(), check.host_script, check.host_function) + " and GDScript returned without calling it";
 			} else {
 				try {
 					mismatch = check.bridge.verify(check.result, gdscript_result, check.args.data(), check.args.size(), args);
@@ -796,6 +908,8 @@ String AurelionRules::port_validate_end(int64_t handle, const Variant &gdscript_
 		// Lets go of the arguments.
 		check.bridge.begin();
 		check.args.clear();
+		check.host_args.clear();
+		check.arguments = Array();
 		if (mismatch.empty()) {
 			return String();
 		}
@@ -805,6 +919,61 @@ String AurelionRules::port_validate_end(int64_t handle, const Variant &gdscript_
 		report_port_failure("port_validate_end", std::string("native exception outside the port: ") + error.what());
 	} catch (...) {
 		report_port_failure("port_validate_end", "unknown native exception outside the port");
+	}
+	return String("native exception outside the port");
+}
+
+String AurelionRules::port_validate_point(const StringName &name, const Array &args) {
+	try {
+		const std::string text = utf8_text(String(name));
+		if (aurelion::rules::port::find_host(text) == nullptr) {
+			record_unknown(name, "port_validate_point");
+			return String("not a host function");
+		}
+		std::string first;
+		// Every open check's GDScript call is running, so each one calls this
+		// host function now.
+		for (size_t handle = 0; handle < open_validations_; ++handle) {
+			Validation &check = *validations_[handle];
+			// A native failure or a path left to GDScript is the end's to report.
+			if (check.at_point || check.not_ported || !check.error.empty()) {
+				continue;
+			}
+			check.at_point = true;
+			std::string mismatch;
+			bool error = false;
+			if (!check.suspended) {
+				mismatch = "GDScript calls " + text + " here and the native port does not";
+			} else {
+				++stats_of(check.function).host_points;
+				const std::string host = host_text(check.bridge.state(), check.host_script, check.host_function);
+				if (host != text) {
+					mismatch = "GDScript calls " + text + " here, the native port " + host;
+				} else {
+					try {
+						const std::string found = check.bridge.verify_host_call(check.host_args, args, check.args.data(), check.args.size(), check.arguments);
+						if (!found.empty()) {
+							mismatch = "at the host call " + text + ": " + found;
+						}
+					} catch (const std::exception &failure) {
+						mismatch = "at the host call " + text + ": native exception in the check: " + failure.what();
+						error = true;
+					}
+				}
+			}
+			if (mismatch.empty()) {
+				continue;
+			}
+			record_mismatch(stats_of(check.function), check.function->name, mismatch, error);
+			if (first.empty()) {
+				first = mismatch;
+			}
+		}
+		return String::utf8(first.c_str());
+	} catch (const std::exception &error) {
+		report_port_failure("port_validate_point", std::string("native exception outside the port: ") + error.what());
+	} catch (...) {
+		report_port_failure("port_validate_point", "unknown native exception outside the port");
 	}
 	return String("native exception outside the port");
 }
@@ -825,7 +994,21 @@ Dictionary AurelionRules::port_stats() const {
 			entry["mismatches"] = stats.mismatches;
 			entry["errors"] = stats.errors;
 			entry["not_ported"] = stats.not_ported;
+			if (stats.host_points != 0) {
+				entry["host_points"] = stats.host_points;
+			}
+			if (stats.host_calls != 0) {
+				entry["host_calls"] = stats.host_calls;
+				entry["max_host_calls"] = stats.max_host_calls;
+			}
 			result[String(table[index].name)] = entry;
+		}
+		if (!host_call_counts_.empty()) {
+			Dictionary hosts;
+			for (const auto &host : host_call_counts_) {
+				hosts[String::utf8(host.first.c_str())] = host.second;
+			}
+			result["hosts"] = hosts;
 		}
 		if (unknown_calls_ != 0) {
 			result["unknown_calls"] = unknown_calls_;

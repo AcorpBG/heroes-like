@@ -15,7 +15,22 @@ function, scripts/core/<Script>.gd gets:
         ...
 
 and every switched script gets the engine's preload and its mode in a static
-var. The tool runs again after each new port: a switch that no longer matches
+var.
+
+A host function, one the phase leaves in GDScript and its ports call (the
+HOST(Script, function, arity) entries of the registry file: the battle ends),
+gets a wrapper over its renamed body the same way:
+
+    static func _finalize_victory(session: SessionData) -> Dictionary:
+        if _battle_engine_mode == BattleEngine.SHADOW:
+            BattleEngine.host_point(&"BattleRules._finalize_victory", [session])
+        return _finalize_victory__gd(session)
+
+In gdscript and native mode it runs the body (the native port's host call
+calls the wrapper by name); in shadow mode it first checks the native port's
+run that stopped at this host call (AurelionRules.port_validate_point).
+
+The tool runs again after each new port: a switch that no longer matches
 its registry entry or its GDScript signature is rewritten, and one whose entry
 was renamed or removed is taken out again (the `__gd` body gets its name back).
 A subsystem only touches the switches that read its own mode. --check only
@@ -37,6 +52,7 @@ ROOT = Path(__file__).resolve().parent.parent
 PORT_DIR = ROOT / "src/gdextension/rules/core/port"
 SCRIPTS = ROOT / "scripts/core"
 PORT_LINE = re.compile(r"^\s*PORT\((\w+), (\w+), (\d+), (true|false),")
+HOST_LINE = re.compile(r"^\s*HOST\((\w+), (\w+), (\d+)\)")
 NEWLINE = chr(10)
 SIGNATURE = re.compile(r"^static func (\w+)\((.*)\)\s*(->\s*([\w\[\], ]+))?\s*:\s*$")
 
@@ -76,6 +92,18 @@ def ported_functions(subsystem: Subsystem) -> list[tuple[str, str, int, bool]]:
             found.append((match.group(1), match.group(2), int(match.group(3)), match.group(4) == "true"))
     if not found:
         raise SystemExit(f"no PORT entries in {subsystem.registry}")
+    return found
+
+
+def host_functions(subsystem: Subsystem) -> list[tuple[str, str, int]]:
+    found = []
+    for line in subsystem.registry.read_text(encoding="utf-8").splitlines():
+        match = HOST_LINE.match(line)
+        if match:
+            found.append((match.group(1), match.group(2), int(match.group(3))))
+    if found and not subsystem.validate:
+        # A shadow check stops at a host call only where it validates.
+        raise SystemExit(f"{subsystem.registry.name}: HOST entries need a subsystem whose shadow validates (validate=True)")
     return found
 
 
@@ -179,6 +207,25 @@ def switch_lines(subsystem: Subsystem, script: str, name: str, params: str, retu
     return lines + [""]
 
 
+def host_lines(subsystem: Subsystem, script: str, name: str, params: str, returns: str) -> list[str]:
+    signature = f"static func {name}({params}){' -> ' + returns if returns else ''}:"
+    args = ", ".join(param_name(p) for p in split_params(params))
+    call = f"{name}__gd({args})"
+    return [
+        signature,
+        f"\tif {subsystem.mode_var} == {subsystem.engine}.SHADOW:",
+        f'\t\t{subsystem.engine}.host_point(&"{script}.{name}", [{args}])',
+        f"\t{call}" if returns == "void" else f"\treturn {call}",
+        "",
+    ]
+
+
+def wrapper_lines(subsystem: Subsystem, script: str, name: str, params: str, returns: str, writes: bool, host: bool) -> list[str]:
+    if host:
+        return host_lines(subsystem, script, name, params, returns)
+    return switch_lines(subsystem, script, name, params, returns, writes)
+
+
 def add_engine_header(subsystem: Subsystem, lines: list[str], path: Path) -> bool:
     if subsystem.engine_const in lines:
         return False
@@ -228,9 +275,10 @@ def switch_bounds(path: Path, lines: list[str], name: str) -> tuple[int, int]:
     return tops[0], gd[0]
 
 
-def switch_script(subsystem: Subsystem, path: Path, functions: list[tuple[str, int, bool]], check: bool) -> list[str]:
+def switch_script(subsystem: Subsystem, path: Path, functions: list[tuple[str, int, bool, bool]], check: bool) -> list[str]:
     lines = path.read_text(encoding="utf-8").split(NEWLINE)
-    registered = {name: (arity, writes) for name, arity, writes in functions}
+    # A host function's wrapper reads the mode too: it is registered as a switch is.
+    registered = {name: (arity, writes, host) for name, arity, writes, host in functions}
     changes = []
     if functions and add_engine_header(subsystem, lines, path):
         changes.append(f"{path.name}: {subsystem.engine} preload and mode")
@@ -249,14 +297,14 @@ def switch_script(subsystem: Subsystem, path: Path, functions: list[tuple[str, i
             del lines[top:gd]
             changes.append(f"{path.name}: {name} has no registry entry, switch removed")
             continue
-        arity, writes = registered[name]
+        arity, writes, host = registered[name]
         if len(split_params(params)) != arity:
             raise SystemExit(f"{path.name}: {name} takes {len(split_params(params))} parameters, {subsystem.registry.name} says {arity}")
-        expected = switch_lines(subsystem, path.stem, name, params, returns, writes)
+        expected = wrapper_lines(subsystem, path.stem, name, params, returns, writes, host)
         if lines[top:gd] != expected:
             lines[top:gd] = expected
             changes.append(f"{path.name}: {name} switch rewritten (signature or registry entry changed)")
-    for name, (arity, writes) in registered.items():
+    for name, (arity, writes, host) in registered.items():
         if name in switched:
             continue
         if name in all_switched:
@@ -268,17 +316,25 @@ def switch_script(subsystem: Subsystem, path: Path, functions: list[tuple[str, i
         if len(split_params(params)) != arity:
             raise SystemExit(f"{path.name}: {name} takes {len(split_params(params))} parameters, {subsystem.registry.name} says {arity}")
         lines[starts[0]] = lines[starts[0]].replace(f"static func {name}(", f"static func {name}__gd(", 1)
-        lines[starts[0]:starts[0]] = switch_lines(subsystem, path.stem, name, params, returns, writes)
-        changes.append(f"{path.name}: {name}")
+        lines[starts[0]:starts[0]] = wrapper_lines(subsystem, path.stem, name, params, returns, writes, host)
+        changes.append(f"{path.name}: {name}" + (" (host wrapper)" if host else ""))
     if changes and not check:
         path.write_text(NEWLINE.join(lines), encoding="utf-8", newline=NEWLINE)
     return changes
 
 
 def switch_subsystem(name: str, subsystem: Subsystem, check: bool) -> int:
-    by_script: dict[str, list[tuple[str, int, bool]]] = {}
-    for script, function, arity, writes in ported_functions(subsystem):
-        by_script.setdefault(script, []).append((function, arity, writes))
+    by_script: dict[str, list[tuple[str, int, bool, bool]]] = {}
+    ported = ported_functions(subsystem)
+    hosts = host_functions(subsystem)
+    ported_names = {f"{script}.{function}" for script, function, _, _ in ported}
+    for script, function, _ in hosts:
+        if f"{script}.{function}" in ported_names:
+            raise SystemExit(f"{subsystem.registry.name}: {script}.{function} is both a PORT and a HOST entry")
+    for script, function, arity, writes in ported:
+        by_script.setdefault(script, []).append((function, arity, writes, False))
+    for script, function, arity in hosts:
+        by_script.setdefault(script, []).append((function, arity, True, True))
     changes = []
     for script, functions in sorted(by_script.items()):
         if not (SCRIPTS / f"{script}.gd").is_file():
@@ -291,7 +347,8 @@ def switch_subsystem(name: str, subsystem: Subsystem, check: bool) -> int:
     for change in changes:
         print(("would change: " if check else "changed: ") + f"{name}: {change}")
     if not changes:
-        print(f"{name}: every ported function is switched ({sum(len(f) for f in by_script.values())})")
+        wrapped = f", every host function wrapped ({len(hosts)})" if hosts else ""
+        print(f"{name}: every ported function is switched ({len(ported)}){wrapped}")
     return len(changes)
 
 
