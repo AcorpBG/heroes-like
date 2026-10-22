@@ -1629,6 +1629,25 @@ it is a native failure, so shadow mode counts both. Switch `HEROES_NATIVE_TURN=g
   one native call (`ai_hero_rules::_simulate_battle`, `core/port/ai_battle_preview.cpp`, the signature 4.1's host
   target has); the turn calls it once it is on main. The start of a battle against a human calls Phase 1's native
   payload.
+  Done 2026-10-22 on the branch, on main 618f11309 with Phase 2a (bd1a88620 port, 0bed12196 Windows binaries).
+  - 2a's merge already made the turn call its preview directly and removed that host target.
+  - `AiHeroRules._start_player_battle`, a computer hero's attack on a human's town or hero, is ported in
+    `ai_hero_rules_turn_fights.cpp` and checked in the turn table. It calls 2a's `BattleRules.create_battle_payload`
+    port with the session's view and sets the view's `battle` and `game_state`, which the turn writes back as it does
+    every field. 2b is not needed: its payloads (a town assault, a defended site, a dwelling's guard) are the human's.
+  - The turn calls no GDScript. The turn table has no hosts, `turn_hosts.cpp` and `.hpp` are gone, and `TurnEngine.gd`
+    loses `host_point`, `host_call`, `pure_host_call` and `PURE_TARGETS`. One host call stays possible: with profiling
+    on (`HEROES_PROFILE_LOG`), the payload's `ProfileLog.emit_general`, after which a `state::NotPorted` that day is a
+    native failure, as in 2a's preview.
+  - Checks:
+    - A scratch probe (deleted): a generated small map with a human; a strong computer hero by the human's town
+      (battle on day 1) and by the human's hero in the open (day 2). gdscript, native and shadow mode gave the same
+      session, battle payload and turn result. Shadow: 3,461 checks over 197 functions, 0 mismatches, both
+      `_start_player_battle` calls and the whole days checked (before 4.3 those days' checks stopped at the host call).
+    - Turn shadow on the six seeds: 1,766,016 checks over 302 functions, 0 mismatches, 0 errors (the eight
+      not-ported calls are Phase 5's townless-player days). AI-only games never start a battle against a human.
+    - Native mode identical to main on the six seeds; core suite 17/17.
+  - Merged to main 2026-10-22, after main was tagged `pre-native-phase4-faction-turn-4.3` (D10).
 - 4.4, the exit:
   - delete the replaced GDScript; callers outside the turn (UI, day processing, battles) keep a thin wrapper or the
     GDScript copy under the two-copies rule (AGENTS.md);
