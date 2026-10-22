@@ -95,4 +95,11 @@ int64_t _battle_spell_recovery_amount(State &state, DictRef hero_state, DictRef 
 int64_t _alive_count(State &state, DictRef stack);
 double _health_ratio(State &state, DictRef stack);
 
+// Shared with the battle port: a hero's spellbook (known spells, mana)
+// normalized in place, the template's starting spells for one that knows none,
+// returning the hero; its maximum mana (spell_rules.cpp).
+DictRef ensure_hero_spellbook(State &state, DictRef hero_state, DictRef hero_template);
+int64_t mana_max_from_hero(State &state, DictRef hero_state);
+int64_t mana_max_from_command(State &state, const Value &command);
+
 } // namespace aurelion::rules::port::spell_rules

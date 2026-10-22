@@ -1,5 +1,5 @@
 // SpellRules outside battles: a list of spell ids; shared with the battle port, a spell's school, tier and roles, its
-// mana cost for a hero, and the hero's mana and known spells.
+// mana cost for a hero, the hero's mana and known spells, and its spellbook and maximum mana.
 
 #include "aurelion_rules/port/spell_rules.hpp"
 
@@ -14,6 +14,7 @@ namespace {
 
 using gd::array_value;
 using gd::dict_value;
+using gd::int_value;
 using gd::str;
 namespace key = state::key;
 
@@ -122,6 +123,51 @@ bool _knows_spell(State &state, DictRef hero_state, Atom spell_id) {
 		}
 	}
 	return false;
+}
+
+DictRef ensure_hero_spellbook(State &state, DictRef hero_state, DictRef hero_template) {
+	const int64_t max_mana = mana_max_from_hero(state, hero_state);
+	const ArrayRef default_known_spells = !gd::is_empty(state, hero_template) ? _normalize_spell_ids(state, get_or_new_array(state, hero_template, key::starting_spell_ids)) : state.new_array();
+	// var spellbook = hero_state.get("spellbook", {}), a new one when it is not a Dictionary.
+	const Value spellbook_value = get_or_new_dict(state, hero_state, key::spellbook);
+	const DictRef spellbook = gd::is_dict(spellbook_value) ? spellbook_value.ref : state.new_dict();
+
+	// The template's list is normalized already; only a stored list needs it.
+	Value stored_spell_ids;
+	ArrayRef known_spell_ids = state.lookup(spellbook, str(key::known_spell_ids), stored_spell_ids) ? _normalize_spell_ids(state, stored_spell_ids) : default_known_spells;
+	if (state.array_size(known_spell_ids) == 0 && state.array_size(default_known_spells) > 0) {
+		known_spell_ids = default_known_spells;
+	}
+
+	// var mana: Dictionary = spellbook.get("mana", {}).
+	const DictRef mana = gd::as_dict(get_or_new_dict(state, spellbook, key::mana));
+	int64_t current_mana = max_mana;
+	if (!gd::is_empty(state, mana)) {
+		current_mana = compat::engine_clamp<int64_t>(gd::int_field(state, mana, key::current, max_mana), 0, max_mana);
+	}
+
+	const DictRef mana_state = state.new_dict();
+	state.set(mana_state, str(key::current), int_value(current_mana));
+	state.set(mana_state, str(key::max), int_value(max_mana));
+	const DictRef new_spellbook = state.new_dict();
+	state.set(new_spellbook, str(key::known_spell_ids), array_value(known_spell_ids));
+	state.set(new_spellbook, str(key::mana), dict_value(mana_state));
+	state.set(hero_state, str(key::spellbook), dict_value(new_spellbook));
+	return hero_state;
+}
+
+int64_t mana_max_from_hero(State &state, DictRef hero_state) {
+	const Value week_bonuses = get_or_new_dict(state, hero_state, key::week_bonuses);
+	const int64_t week_mana = gd::is_dict(week_bonuses) ? gd::int_field(state, week_bonuses.ref, key::mana, 0) : 0;
+	const int64_t command_mana = mana_max_from_command(state, get_or_new_dict(state, hero_state, key::command));
+	return gd::add(gd::add(command_mana, hero_progression_rules::mana_max_bonus(state, hero_state)), week_mana);
+}
+
+int64_t mana_max_from_command(State &state, const Value &command) {
+	if (!gd::is_dict(command)) {
+		return 8;
+	}
+	return compat::engine_max<int64_t>(8, gd::add(8, gd::mul(compat::engine_max<int64_t>(0, gd::int_field(state, command.ref, key::knowledge, 0)), 4)));
 }
 
 } // namespace aurelion::rules::port::spell_rules
