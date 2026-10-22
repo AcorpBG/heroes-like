@@ -1091,6 +1091,34 @@ eb4f8729a Windows binaries; merge of main 2c5bd236a):
   - Core suite: 17/17 on Windows.
   - The Linux libraries in `bin/` are not rebuilt.
 
+**The casts and the AI's scoring payload** (slices 07b and 08b, 2026-10-22; branch commits 099f519fd port,
+cf1190263 Windows binaries):
+- **Ported:** 50 functions, 1,080 lines.
+  - 07b, 5/162: SpellRules `validate_battle_spell`, `resolve_battle_spell`, `_consume_mana` and `known_spells`
+    (`spell_battle.cpp`), BattleRules `_player_spell_resolution` (`spell_events.cpp`).
+  - Phase 5's spellbook helpers, 4/33: SpellRules `ensure_hero_spellbook`, `mana_max_from_hero` and
+    `mana_max_from_command`, HeroProgressionRules `mana_max_bonus`. On main unswitched since 379665372; switched here
+    in the battle table.
+  - 08b, BattleAiRules 41/885:
+    - the side's scoring payload, the commander's traits and bonuses, and the enemy's withdrawal
+      (`battle_ai_payloads.cpp`, 13);
+    - the contextual bonuses, the cohesion and momentum totals, the breach of an obstruction and the readiness writ
+      (`battle_ai_contextual.cpp`, 14);
+    - the damage estimate and its modifiers, the threat to a stack and the lethal attack
+      (`battle_ai_estimates.cpp`, 8);
+    - the field objectives' worth and the support spells' scores (`battle_ai_spell_scores.cpp`, 6).
+  - BattleAiRules' own `_hero_payload_cache` joins the shared memos.
+- **Review:** one reviewer on the two functions shadow did not reach (`_enemy_withdrawal_urgency_scale`,
+  `_preservation_comparison_score`) and the part of `_enemy_withdrawal_action` behind them: no divergence. The urgency
+  scale's lower-casing fails loudly in native mode on non-ASCII hero text, where GDScript converts it; the content has
+  none.
+- **Checks:**
+  - Shadow on the six seeds: 0 mismatches, 0 errors and 0 paths left to GDScript in 81,952,285 checks over 517 of
+    the 532 functions. 7,294,559 of them are slices 07b's and 08b's, over 48 of their 50.
+  - Native mode against main: every daily digest (415) and match record of the six seeds is identical.
+  - Core suite: 17/17 on Windows.
+  - The Linux libraries in `bin/` are not rebuilt.
+
 ### Phase 2: one payload builder, AI preview as one call, the battle tool
 
 - Battle payload creation (`BattleRules.gd:256-402`), stack and hero payloads, obstacles, and the end-of-battle numbers
