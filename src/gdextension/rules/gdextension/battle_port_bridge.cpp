@@ -576,6 +576,41 @@ Value PortBridge::call_static(state::State &, uint32_t script, uint32_t function
 	return load(result);
 }
 
+Value PortBridge::call_pure(state::State &state, uint32_t script, uint32_t function, const Value *args, size_t count) {
+	if (!host_calls_) {
+		return call_static(state, script, function, args, count);
+	}
+	host_calls_made_.emplace_back(script, function);
+	write_back();
+	Array call_args;
+	for (size_t index = 0; index < count; ++index) {
+		call_args.push_back(export_value(args[index]));
+	}
+	adopt_exported();
+	// Godot holds what each node holds now: the next write-back writes only
+	// what changes from here on.
+	for (uint32_t node = 0; node < array_sources_.size(); ++node) {
+		if (array_sources_[node]) {
+			state_.array_node(node).dirty = false;
+		}
+	}
+	for (uint32_t node = 0; node < dict_sources_.size(); ++node) {
+		if (dict_sources_[node]) {
+			state_.dict_node(node).dirty = false;
+		}
+	}
+	for (uint32_t node = 0; node < packed_sources_.size(); ++node) {
+		if (packed_sources_[node]) {
+			state_.packed_node(node).dirty = false;
+		}
+	}
+	for (StaticVar &var : statics_) {
+		var.assigned = false;
+	}
+	const Variant result = script_object(script)->callv(static_name(function), call_args);
+	return load(result);
+}
+
 void PortBridge::adopt_exported() {
 	for (const auto &made : exported_arrays_) {
 		const Array array = made.second;
@@ -1339,7 +1374,7 @@ void PortBridge::diff_dict_items(const state::DictNode &node, const Dictionary &
 		}
 		path += node.keys[index].is_string_like() ? "." + state_.text(node.keys[index].ref) : "[" + compat::itos(static_cast<int64_t>(index)) + "]";
 		const Variant value = values[static_cast<int64_t>(index)];
-		if (!(is_timing(state_, node.keys[index]) && node.values[index].kind == Kind::Float && value.get_type() == Variant::FLOAT)) {
+		if (!(is_timing(state_, node.keys[index]) && ((node.values[index].kind == Kind::Float && value.get_type() == Variant::FLOAT) || (node.values[index].kind == Kind::Int && value.get_type() == Variant::INT)))) {
 			diff_value(node.values[index], value, path, out);
 		}
 		path.resize(length);

@@ -32,14 +32,18 @@
 // becomes a loaded node of the container it became. The function runs, and
 // every loaded node is backed again by its container, as load() first set it
 // up: what the native code reads next it reads as GDScript left it. Static
-// vars, content rows and the State's memo are asked for again.
+// vars, content rows and the State's memo are asked for again. A pure host
+// call (call_pure) changes none of that: it writes back the same way, then
+// every written node stops being dirty, since Godot holds what it holds, and
+// nothing is read again.
 //
 // diff() compares the native result with GDScript's: the same types (int and
 // float, String and StringName apart), the same key order, typing and
 // read-only flags, and the same container identities: a loaded container
 // must be GDScript's very object, a new one must not be a loaded one, and a
 // node reached twice must be one object there too. Timings are not compared:
-// a float under a Dictionary key ending in "_ms" matches any float.
+// a float or an int under a Dictionary key ending in "_ms" matches any value
+// of its type.
 //
 // verify() is the shadow check of a function that writes into its arguments
 // when copying them for the native run would cost too much (the AI targets'
@@ -145,6 +149,7 @@ public:
 	state::Value static_get(state::State &state, uint32_t script, uint32_t name) override;
 	void static_set(state::State &state, uint32_t script, uint32_t name, const state::Value &value) override;
 	state::Value call_static(state::State &state, uint32_t script, uint32_t function, const state::Value *args, size_t count) override;
+	state::Value call_pure(state::State &state, uint32_t script, uint32_t function, const state::Value *args, size_t count) override;
 	state::TypeRef builtin_type(uint8_t builtin) override;
 	void print_error(const std::string &text) override;
 	void print_warning(const std::string &text) override;

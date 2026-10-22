@@ -1454,6 +1454,9 @@ Value call_static(State &state, Atom script, Atom function, std::initializer_lis
 	if (static_cast<size_t>(host->arity) != args.size()) {
 		fail(name + ": a host call with " + std::to_string(args.size()) + " arguments, its table says " + std::to_string(host->arity));
 	}
+	if (host->pure) {
+		return state.host().call_pure(state, script, function, args.begin(), args.size());
+	}
 	return state.host().call_static(state, script, function, args.begin(), args.size());
 }
 
