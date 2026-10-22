@@ -115985,15 +115985,15 @@
     {
       "id": "native-rules-phase1-battle-engine-20261020",
       "title": "Native rules engine, Phase 1: native battle engine",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Gate G0 passed (owner, 2026-10-20). Owner decisions 2026-10-20: D8 one port branch native-phase1-battle, merged once, dropped if G1 stays under 5x after the interface fix; D5/D10 battle code frozen until 7 days after the merge, urgent fixes in GDScript on main and ported on the branch, main tagged before the merge; D6 tests on deleted private battle functions retired at the merge. Scope, order, checkpoint G1 and exit in docs/native-rules-engine-transition.md, Phase 1. The first slice measures the porting rate. Inventory (transition doc, Phase 1 results (first slice)): 565 functions / 10,278 lines run in fights, cut into child slices native-rules-phase1-01..11 in the doc's order; section 11 answered. Slice 01 completed: helpers, battle state, the HEROES_NATIVE_BATTLE switch and layer 1 at 0 shadow mismatches; next 02. Owner decision 2026-10-21: G1 projected on layer 1 first (slice 01b); the formal G1 follows layer 4. Slice 01b completed 2026-10-21: G1 projected on layer 1 after the value-layer speed-up, r 10.44-10.66 and S 9.12-9.88 when the State last held another resolve (r 5.59-5.65 and S 5.15-5.44 before); under 12.5, so the owner decides before slice 02. Slices 02, 03 and 04 completed 2026-10-21. Formal G1 after layer 4: S 3.47-4.98 on standard and the six seeds, under 5x (layers 2 and 4 at r about 4, layers 1 and 3 above 10); the owner decides the next step. Slice 04b (owner 2026-10-21) ported the GDScript memos layers 1-4 rely on: G1 on standard S 5.58-6.16, over 5x and under 10x (layers 1-4 r 6.22, 7.38, 5.18, 10.75); the owner decides. Owner decision 2026-10-21: slice 04c gives the board-read memo's native users a native cache, G1 on standard is re-measured with Phases 3 and 5 paused, then layer 5 starts whatever the number. Slice 04c completed 2026-10-21: the six board reads keep their answers in a native memo in the State; G1 on standard with no other load S 7.89-9.45, over 5x and under 10x (layers 1-4 r 13.73, 9.25, 17.69, 11.10). Slice 05 (layer 5) completed 2026-10-22: 58 functions / 1,371 lines native, shadow 0 mismatches in 63.7M checks; next 06.",
-      "updatedAt": "2026-10-21T22:00:00Z"
+      "notes": "Gate G0 passed (owner, 2026-10-20). Owner decisions 2026-10-20: D8 one port branch native-phase1-battle, merged once, dropped if G1 stays under 5x after the interface fix; D5/D10 battle code frozen until 7 days after the merge, urgent fixes in GDScript on main and ported on the branch, main tagged before the merge; D6 tests on deleted private battle functions retired at the merge. Scope, order, checkpoint G1 and exit in docs/native-rules-engine-transition.md, Phase 1. The first slice measures the porting rate. Inventory (transition doc, Phase 1 results (first slice)): 565 functions / 10,278 lines run in fights, cut into child slices native-rules-phase1-01..11 in the doc's order; section 11 answered. Slice 01 completed: helpers, battle state, the HEROES_NATIVE_BATTLE switch and layer 1 at 0 shadow mismatches; next 02. Owner decision 2026-10-21: G1 projected on layer 1 first (slice 01b); the formal G1 follows layer 4. Slice 01b completed 2026-10-21: G1 projected on layer 1 after the value-layer speed-up, r 10.44-10.66 and S 9.12-9.88 when the State last held another resolve (r 5.59-5.65 and S 5.15-5.44 before); under 12.5, so the owner decides before slice 02. Slices 02, 03 and 04 completed 2026-10-21. Formal G1 after layer 4: S 3.47-4.98 on standard and the six seeds, under 5x (layers 2 and 4 at r about 4, layers 1 and 3 above 10); the owner decides the next step. Slice 04b (owner 2026-10-21) ported the GDScript memos layers 1-4 rely on: G1 on standard S 5.58-6.16, over 5x and under 10x (layers 1-4 r 6.22, 7.38, 5.18, 10.75); the owner decides. Owner decision 2026-10-21: slice 04c gives the board-read memo's native users a native cache, G1 on standard is re-measured with Phases 3 and 5 paused, then layer 5 starts whatever the number. Slice 04c completed 2026-10-21: the six board reads keep their answers in a native memo in the State; G1 on standard with no other load S 7.89-9.45, over 5x and under 10x (layers 1-4 r 13.73, 9.25, 17.69, 11.10). Slice 05 (layer 5) completed 2026-10-22: 58 functions / 1,371 lines native, shadow 0 mismatches in 63.7M checks; next 06. Slices 06-11 completed 2026-10-22; owner decisions 2026-10-22 at the merge: host calls, exact string events, the unit and ability tables to Phase 2, the arena check with --plain; the GDScript copies and the switch stay until Phase 2's battle tool, battle changes into both copies (AGENTS.md). Main tagged pre-native-phase1-battle, the branch merged; battles run native by default.",
+      "updatedAt": "2026-10-22T08:56:20Z"
     },
     {
       "id": "native-rules-phase1-01-foundation-hex-20261020",
@@ -116154,19 +116154,32 @@
     {
       "id": "native-rules-phase1-10-autoplay-events-api-20261020",
       "title": "Native battle engine 10: autoplay, structured events, player-battle API and UI queries",
-      "status": "blocked",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Ported on branch native-phase1-battle (26e2efdd1 port, a41e38754 Windows binaries; runtime on main 6a8c9a736, 27bee9e26 binaries): BattleAutoResolveRules 8/289, BattleRules 43/1,628, BattleActionPlayback 1/38, SpellRules 7/95; every step of a fight runs native. The battle ends stay GDScript as 8 listed host calls (none in the step loop). Blocked on the owner at the merge: the rule change to ...or a registered GDScript host target; events as exact strings (no structured records or formatter); not built: the native unit and ability tables, the human-seat corpus, host calls in the G1 replay; the arena router fails in native mode. Shadow 0 mismatches in 83,514,931 checks over 569 of 621 functions; native mode identical to main on the six seeds; core suite 17/17 (Windows only, Linux libraries not rebuilt).",
-      "updatedAt": "2026-10-22T04:10:46Z"
+      "notes": "Ported on branch native-phase1-battle (26e2efdd1 port, a41e38754 Windows binaries; runtime on main 6a8c9a736, 27bee9e26 binaries): BattleAutoResolveRules 8/289, BattleRules 43/1,628, BattleActionPlayback 1/38, SpellRules 7/95; every step of a fight runs native. The battle ends stay GDScript as 8 listed host calls (none in the step loop). Owner decisions 2026-10-22 (transition doc, slice 11): the rule becomes ...or a registered GDScript host target; events stay exact strings built in C++; the native unit and ability tables go to Phase 2; the arena check runs --plain; host calls in the G1 replay are built (1142ede17). Shadow 0 mismatches in 83,514,931 checks over 569 of 621 functions; native mode identical to main on the six seeds; core suite 17/17 (Windows only, Linux libraries not rebuilt).",
+      "updatedAt": "2026-10-22T08:56:20Z"
     },
     {
       "id": "native-rules-phase1-11-exit-20261020",
       "title": "Native battle engine 11: exit and the single merge",
+      "status": "completed",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "the pre-merge suite, then the single merge (transition doc, Phase 1, \"The pre-merge suite and the merge\"). Battles run native by default; `HEROES_NATIVE_BATTLE=gdscript` and `shadow` stay, and the arena and tuner set `gdscript` for router and variant runs. Until Phase 2's battle tool is in, the 621 battle functions keep both copies and a battle change goes into both (AGENTS.md); the deletion moves to Phase 2. Checks: the arena's two suites with `--plain`, the payload corpus and mid-battle save and load both ways, identical in native mode with 0 errors; shadow 0 mismatches in 93,996,266 and 96,113,835 arena checks, 83,514,931 on the six seeds and 2,331,148 on 12 human-seat tests; an edge probe reached all 621 functions (one gap no content reaches: the runtime's `float(String)`). Formal G1 with host calls: S 11.28-13.95 on `standard`, 8.90-10.99 on the six seeds; native mode measured 10.84x on `standard` and 8.15x on the six seeds after merging main (6.85x and 4.15x before). After merging main: native mode identical to main on the six seeds; core suite 17/17; `tune.py` runs. Windows only, Linux libraries not rebuilt.",
+      "updatedAt": "2026-10-22T08:56:20Z"
+    },
+    {
+      "id": "native-rules-phase2-battle-tool-20261022",
+      "title": "Native rules engine, Phase 2: one payload builder, AI preview as one call, the battle tool",
       "status": "pending",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
@@ -116174,8 +116187,8 @@
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "The transition doc's Phase 1 exit list, then the single merge with the owner (main tagged first).",
-      "updatedAt": "2026-10-20T19:35:00Z"
+      "notes": "one payload builder, the AI's battle preview as one native call, and the battle tool as the backend of `tune.py` and `arena.py`. From Phase 1 (owner decisions 2026-10-22): the native unit and ability tables, the arena's native router (each side's weights as data), then the deletion of the GDScript fight loop, BattleAiRules and the battle switch's other GDScript copies, with D6's test retirements.",
+      "updatedAt": "2026-10-22T08:56:20Z"
     },
     {
       "id": "native-rules-shared-runtime-main-20261021",
