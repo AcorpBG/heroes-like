@@ -1841,6 +1841,47 @@ with the day native (1.08x); l1 186 to 174 s, l2 194 to 181 s.
   time). l1 180 and 180 s to 173 and 176 s; l2 179 and 180 s to 172 and 175 s. The six games' wall time, set by the
   slowest, went from 181 s to 174 to 177 s. Slice 07's 1.08x was measured beside another session's run.
 
+**Slice 09, frozen functions** (2026-10-22, until slice 09 merges; AGENTS.md; branch `native-phase5-finalize`): the ends
+of a human battle, Phase 1's eight host targets `BattleRules._finalize_victory`, `_finalize_player_battle_loss`,
+`_finalize_stalemate`, `_finalize_enemy_withdrawal`, `_finalize_retreat`, `_finalize_surrender`,
+`_retreat_action_summary` and `_surrender_action_summary`, and what they reach beyond the functions already ported: 114
+functions (ContentService's lookups aside). BattleRules 77: `_add_enemy_treasury_resources`,
+`_apply_active_hero_aftermath_losses`, `_apply_battle_context_stalemate`, `_apply_battle_context_victory`,
+`_apply_collapse_aftermath`, `_apply_collapse_recovery_pressure`, `_apply_delivery_route_aftermath`,
+`_apply_encounter_victory_flags`, `_apply_enemy_victory_specialties`, `_apply_front_pressure_shift`,
+`_apply_player_battle_salvage_reward`, `_apply_town_assault_recovery`, `_apply_town_defense_recovery`,
+`_apply_victory_front_aftermath`, `_apply_victory_mana`, `_apply_victory_recovery`, `_apply_withdrawal_aftermath`,
+`_apply_withdrawal_recovery_pressure`, `_army_strength_from_stacks`, `_army_totals`, `_award_commander_experience`,
+`_battle_context_controller_id`, `_battle_context_resource_placement_id`, `_battle_context_town_placement_id`,
+`_battle_context_trigger_faction_id`, `_battle_enemy_faction_id`, `_battle_exit_animation_snapshot`,
+`_battle_resolution_static_encounter_snapshot`, `_battle_survivor_stacks`, `_battle_victory_rewards`,
+`_beaten_enemy_stacks`, `_build_collapse_aftermath_preview`, `_build_withdrawal_aftermath_preview`,
+`_capture_town_after_assault`, `_collapse_resource_summary`, `_current_battle_encounter_placement`,
+`_enemy_commander_exit_reaction`, `_enemy_commander_state_for_force_sync`, `_enemy_commander_state_with_payload`,
+`_enemy_state_exists`, `_finalize_enemy_withdrawal`, `_finalize_player_battle_loss`, `_finalize_primary_defeat`,
+`_finalize_retreat`, `_finalize_secondary_hero_defeat`, `_finalize_stalemate`, `_finalize_surrender`,
+`_finalize_town_defense_loss`, `_finalize_victory`, `_find_encounter_by_key`, `_find_town_by_placement`,
+`_finish_enemy_battle_task_assignment`, `_is_resource_assault_context`, `_keep_enemy_hero_after_town_capture`,
+`_mark_resolved_encounter`, `_normalize_presentation_speed`, `_normalize_stack_animation_states`,
+`_record_battle_aftermath`, `_record_enemy_commander_battle_continuity`, `_remove_hero_by_id_after_defeat`,
+`_resolve_enemy_commander_aftermath`, `_retreat_action_summary`, `_set_enemy_siege_progress`, `_set_player_hero_state`,
+`_side_faction_id`, `_stabilize_hostile_town_front`, `_station_enemy_commander_after_town_capture`,
+`_surrender_action_summary`, `_sync_enemy_force_from_battle`, `_sync_player_force_from_battle`,
+`_synthetic_battle_encounter_placement`, `_town_assault_recovery_pressure`, `_town_defense_recovery_pressure`,
+`_town_name`, `_town_name_from_placement_id`, `_withdrawal_preview_summary`, `_withdrawal_resource_summary`.
+OverworldRules 17: `_apply_artifact_claim`, `_claim_town`, `_describe_reward_delta`, `_find_resource_node_by_placement`,
+`_rules_profile_add_ms`, `_rules_profile_set`, `_rules_profile_timer`, `_spend_resources`,
+`apply_delivery_interception_outcome`, `apply_reward_bonus`, `apply_town_recovery_pressure`,
+`capture_dwelling_after_guard_victory`, `capture_resource_after_defender_victory`, `capture_town_by_placement`,
+`transition_town_control`, `update_dwelling_guard_after_battle`, `update_resource_defender_after_battle`.
+HeroProgressionRules 7: `_add_experience`, `_apply_command_gain`, `_enqueue_choice_group`, `add_experience`,
+`command_gain_stat`, `experience_with_bonus`, `pending_choice_summary`. HeroCommandRules 5: `_set_holder_stacks`,
+`active_hero_is_primary`, `hand_over_primary`, `keep_hero_troop_from_garrison`, `remove_active_hero_after_defeat`.
+ArtifactRules 2: `owned_artifact_ids`, `select_live_source_reward`. EnemyAdventureRules 2:
+`_commander_name_from_source`, `commander_display_name`. CreatureDwellingRules 1: `placement_from_guard_key`.
+DifficultyRules 1: `scale_reward_resources`. PlayerEliminationRules 1: `human_has_nothing_left`. PlayerIdentityRules 1:
+`defender_controller_id`. Phase 4's freeze covers some of them too.
+
 ### Phase 6: match throughput
 
 The runner keeps a native session handle across days and writes Dictionaries back only for the digest and record (with

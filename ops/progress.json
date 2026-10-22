@@ -116323,15 +116323,15 @@
     {
       "id": "native-rules-phase5-09-finalize-20261022",
       "title": "Native day processing 09: _finalize_* for human battles",
-      "status": "pending",
+      "status": "in_progress",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Owner decision 2026-10-21: after Phase 1's merge, on a new branch from main. _finalize_* in BattleRules for human battles, the last of Phase 5's scope.",
-      "updatedAt": "2026-10-22T11:30:00Z"
+      "notes": "Owner decision 2026-10-21: after Phase 1's merge, on a new branch from main. _finalize_* in BattleRules for human battles, the last of Phase 5's scope. Started 2026-10-22 on branch native-phase5-finalize from main ade42f86e: Phase 1's eight host targets move into the battle table; 114 functions frozen until it merges (transition doc, Phase 5, Slice 09, frozen functions).",
+      "updatedAt": "2026-10-22T12:30:00Z"
     },
     {
       "id": "native-rules-phase3-search-kernel-20261021",
