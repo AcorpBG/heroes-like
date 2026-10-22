@@ -33,12 +33,88 @@ Atom string_field(const State &state, DictRef dict, Atom field, Atom fallback) {
 }
 
 // The memos of one AI decision (_open_scoring_scope), GDScript's static vars.
-bool scoring_scope_open(State &state) {
-	return gd::to_int(state, gd::static_var(state, key::battle_ai_rules_script, key::_scoring_scope_depth)) > 0;
+int64_t scoring_scope_depth(State &state) {
+	return gd::to_int(state, gd::static_var(state, key::battle_ai_rules_script, key::_scoring_scope_depth));
 }
 
-// _add_scoring_memo_entry(entries_by_key, key, entry)
-void add_scoring_memo_entry(State &state, DictRef entries_by_key, Atom memo_key, ArrayRef entry) {
+bool scoring_scope_open(State &state) {
+	return scoring_scope_depth(state) > 0;
+}
+
+void set_scoring_scope_depth(State &state, int64_t depth) {
+	gd::set_static_var(state, key::battle_ai_rules_script, key::_scoring_scope_depth, int_value(depth));
+}
+
+DictRef scoring_memo(State &state, Atom name) {
+	return gd::as_dict(gd::static_var(state, key::battle_ai_rules_script, name));
+}
+
+// d.clear(): every key erased, in order.
+void clear_dict(State &state, DictRef dict) {
+	const ArrayRef keys = gd::keys(state, dict);
+	for (const Value &held : gd::items(state, array_value(keys))) {
+		state.erase(dict, held);
+	}
+}
+
+// _stack_term_memo(term, stack, battle) with the term's text.
+ArrayRef stack_term_memo(State &state, const std::string &term, DictRef stack, DictRef battle) {
+	if (!scoring_scope_open(state)) {
+		return state.new_array();
+	}
+	const Atom memo_key = state.intern(term + "|" + state.text(string_field(state, stack, key::battle_id, key::empty)));
+	const DictRef terms = scoring_memo(state, key::_scoring_stack_terms);
+	const ArrayRef entry = _scoring_memo_entry(state, terms, memo_key, stack, battle);
+	if (state.array_size(entry) > 0) {
+		return entry;
+	}
+	const ArrayRef made = state.new_array();
+	state.append(made, dict_value(stack));
+	state.append(made, dict_value(battle));
+	_add_scoring_memo_entry(state, terms, memo_key, made);
+	return made;
+}
+
+} // namespace
+
+void _open_scoring_scope(State &state) {
+	if (scoring_scope_depth(state) <= 0) {
+		set_scoring_scope_depth(state, 0);
+		_clear_scoring_memos(state);
+	}
+	set_scoring_scope_depth(state, gd::add(scoring_scope_depth(state), 1));
+}
+
+void _close_scoring_scope(State &state) {
+	set_scoring_scope_depth(state, gd::sub(scoring_scope_depth(state), 1));
+	if (scoring_scope_depth(state) <= 0) {
+		set_scoring_scope_depth(state, 0);
+		_clear_scoring_memos(state);
+	}
+}
+
+void _clear_scoring_memos(State &state) {
+	for (const Atom name : { key::_scoring_payloads, key::_scoring_living, key::_scoring_cohesion, key::_scoring_momentum,
+			 key::_scoring_attack_scores, key::_scoring_threats, key::_scoring_damage, key::_scoring_stack_terms }) {
+		clear_dict(state, scoring_memo(state, name));
+	}
+}
+
+ArrayRef _scoring_memo_entry(State &state, DictRef entries_by_key, Atom memo_key, DictRef first, DictRef second) {
+	for (const Value &entry : gd::field_items(state, entries_by_key, str(memo_key))) {
+		const ArrayRef held = gd::as_array(entry);
+		if (gd::is_same(state, state.at(held, 0), dict_value(first)) && gd::is_same(state, state.at(held, 1), dict_value(second))) {
+			return held;
+		}
+	}
+	return state.new_array();
+}
+
+// Not in the port table, nor _keep_stack_term: GDScript passes them the static
+// memo itself, or an entry inside it, so a GDScript caller keeps their GDScript
+// body (a native write lands in the argument, which shadow cannot tie to the
+// static var it is).
+void _add_scoring_memo_entry(State &state, DictRef entries_by_key, Atom memo_key, ArrayRef entry) {
 	Value entries;
 	if (state.lookup(entries_by_key, str(memo_key), entries)) {
 		state.append(gd::as_array(entries), array_value(entry));
@@ -49,49 +125,17 @@ void add_scoring_memo_entry(State &state, DictRef entries_by_key, Atom memo_key,
 	state.set(entries_by_key, str(memo_key), array_value(list));
 }
 
-// _scoring_memo_entry(entries_by_key, key, first, second): the entry holding
-// the same two dictionaries, or a new [].
-ArrayRef scoring_memo_entry(State &state, DictRef entries_by_key, Atom memo_key, DictRef first, DictRef second) {
-	for (const Value &entry : gd::field_items(state, entries_by_key, str(memo_key))) {
-		const ArrayRef held = gd::as_array(entry);
-		if (gd::is_same(state, state.at(held, 0), dict_value(first)) && gd::is_same(state, state.at(held, 1), dict_value(second))) {
-			return held;
-		}
-	}
-	return state.new_array();
+ArrayRef _stack_term_memo(State &state, Atom term, DictRef stack, DictRef battle) {
+	return stack_term_memo(state, state.text(term), stack, battle);
 }
 
-// _stack_term_memo(term, stack, battle): [stack, battle, value] once worked
-// out, else a new [stack, battle] that keep_stack_term completes; a new []
-// outside a scope.
-ArrayRef stack_term_memo(State &state, const char *term, DictRef stack, DictRef battle) {
-	if (!scoring_scope_open(state)) {
-		return state.new_array();
-	}
-	const Atom memo_key = state.intern(std::string(term) + "|" + state.text(string_field(state, stack, key::battle_id, key::empty)));
-	const DictRef terms = gd::as_dict(gd::static_var(state, key::battle_ai_rules_script, key::_scoring_stack_terms));
-	const ArrayRef entry = scoring_memo_entry(state, terms, memo_key, stack, battle);
-	if (state.array_size(entry) > 0) {
-		return entry;
-	}
-	const ArrayRef made = state.new_array();
-	state.append(made, dict_value(stack));
-	state.append(made, dict_value(battle));
-	add_scoring_memo_entry(state, terms, memo_key, made);
-	return made;
-}
-
-// _keep_stack_term(entry, value)
-void keep_stack_term(State &state, ArrayRef entry, const Value &value) {
+void _keep_stack_term(State &state, ArrayRef entry, const Value &value) {
 	if (state.array_size(entry) == 2) {
 		state.append(entry, value);
 	}
 }
 
-// _scoring_living_entry(battle, side): [stacks array, its living stacks of
-// side, how many of them are not ranged]; a new [] outside a scope or without
-// a stacks array.
-ArrayRef scoring_living_entry(State &state, DictRef battle, Atom side) {
+ArrayRef _scoring_living_entry(State &state, DictRef battle, Atom side) {
 	if (!scoring_scope_open(state)) {
 		return state.new_array();
 	}
@@ -99,7 +143,7 @@ ArrayRef scoring_living_entry(State &state, DictRef battle, Atom side) {
 	if (!state.lookup(battle, str(key::stacks), stacks) || !gd::is_array(stacks)) {
 		return state.new_array();
 	}
-	const DictRef living = gd::as_dict(gd::static_var(state, key::battle_ai_rules_script, key::_scoring_living));
+	const DictRef living = scoring_memo(state, key::_scoring_living);
 	for (const Value &entry : gd::field_items(state, living, str(side))) {
 		if (gd::is_same(state, state.at(gd::as_array(entry), 0), stacks)) {
 			return gd::as_array(entry);
@@ -116,11 +160,9 @@ ArrayRef scoring_living_entry(State &state, DictRef battle, Atom side) {
 	state.append(made, stacks);
 	state.append(made, array_value(alive));
 	state.append(made, int_value(not_ranged));
-	add_scoring_memo_entry(state, living, side, made);
+	_add_scoring_memo_entry(state, living, side, made);
 	return made;
 }
-
-} // namespace
 
 int64_t _alive_count(const State &state, DictRef stack) {
 	const int64_t unit_hp = engine_max<int64_t>(1, int_field(state, stack, key::unit_hp, 1));
@@ -128,7 +170,7 @@ int64_t _alive_count(const State &state, DictRef stack) {
 }
 
 ArrayRef _alive_stacks_for_side(State &state, DictRef battle, Atom side) {
-	const ArrayRef entry = scoring_living_entry(state, battle, side);
+	const ArrayRef entry = _scoring_living_entry(state, battle, side);
 	if (state.array_size(entry) > 0) {
 		return gd::as_array(state.at(entry, 1));
 	}
@@ -212,7 +254,7 @@ int64_t _stack_contact_band(State &state, DictRef stack, DictRef battle) {
 		return gd::to_int(state, state.at(memo, 2));
 	}
 	const int64_t value = _stack_contact_band_on(state, stack, battle);
-	keep_stack_term(state, memo, int_value(value));
+	_keep_stack_term(state, memo, int_value(value));
 	return value;
 }
 
@@ -255,7 +297,7 @@ bool _stack_is_engaged(State &state, DictRef stack, DictRef battle) {
 		return gd::to_bool(state.at(memo, 2));
 	}
 	const bool value = _stack_engaged_on(state, stack, battle);
-	keep_stack_term(state, memo, gd::bool_value(value));
+	_keep_stack_term(state, memo, gd::bool_value(value));
 	return value;
 }
 
