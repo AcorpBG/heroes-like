@@ -116193,15 +116193,15 @@
     {
       "id": "native-rules-phase2-a-preview-20261022",
       "title": "Native rules Phase 2a: the AI's battle preview as one native call",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "`AiHeroRules._simulate_battle` as one native call (`ai_hero_rules::_simulate_battle` in `ai_battle_preview.cpp`, the entry agreed with Phase 4, whose faction turn then calls it directly), on a native scratch view with no SessionData object, with the payload path it runs: 61 functions, 1,889 lines (BattleRules 47; OverworldRules 6; EnemyAdventureRules 4; AiHeroRules 2; SessionStateStore 1; TownBattleRules 1), and 12 of slice 09's lookups. Merges after Phase 5's slice 09 (its battle end and those lookups). The read-back fields shadow-identical. Frozen until it merges: those 61 (transition doc, Phase 2, \"Slice 2a, frozen functions\").",
-      "updatedAt": "2026-10-22T09:58:17Z"
+      "notes": "`AiHeroRules._simulate_battle` as one native call (`ai_hero_rules::_simulate_battle` in `ai_battle_preview.cpp`, the entry agreed with Phase 4, whose faction turn then calls it directly), on a native scratch view with no SessionData object, with the payload path it runs: 61 functions, 1,889 lines (BattleRules 47; OverworldRules 6; EnemyAdventureRules 4; AiHeroRules 2; SessionStateStore 1; TownBattleRules 1), and 12 of slice 09's lookups. Merges after Phase 5's slice 09 (its battle end and those lookups). The read-back fields shadow-identical. Frozen until it merged, two copies since: those 61 (transition doc, Phase 2, \"Slice 2a, frozen functions\"). Completed 2026-10-22: battle shadow on the six seeds 81,038,237 checks, 0 mismatches (`_simulate_battle` 1,536); turn shadow 1,766,016 checks, 0 mismatches; native against main identical on 6/6 seeds; core suite 17/17; whole game on the six seeds (against main c12d4f864, before 4.2) 426.5 s to 403.5 s (0.946) with the turn native, 609.0 s to 599.0 s (0.984) with the default.",
+      "updatedAt": "2026-10-22T21:30:00Z"
     },
     {
       "id": "native-rules-phase2-b-payload-20261022",
