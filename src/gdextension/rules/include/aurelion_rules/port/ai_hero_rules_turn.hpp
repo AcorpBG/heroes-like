@@ -143,7 +143,7 @@ DictRef _trial_income(State &state, DictRef town);
 ArrayRef ai_tavern_offer_ids(State &state, DictRef session, DictRef state_, Atom controller);
 DictRef build_in_town(State &state, DictRef session, DictRef context, int64_t town_index, Atom building_id, Atom reason = state::key::heroes);
 
-// Not run by the six seeds: each throws state::NotPorted (turn_not_ported.cpp).
+// Ported in turn_rare_paths.cpp (slice 4.2: paths the six seeds do not run).
 DictRef _attack_player_hero(State &state, DictRef session, DictRef context, int64_t index, DictRef plan);
 DictRef _convert_legacy_host(State &state, DictRef session, DictRef entry, Atom controller);
 int64_t _nearest_hero_index(State &state, ArrayRef encounters, DictRef resolved, Atom controller, DictRef column, int64_t radius);

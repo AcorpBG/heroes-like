@@ -26,7 +26,7 @@ Atom _thousands(State &state, int64_t value);
 Atom effect_summary(State &state, DictRef effect);
 void record_visit(State &state, DictRef node, DictRef site, Atom visitor_key, int64_t day, Atom side = state::key::empty);
 
-// Not run by the six seeds: each throws state::NotPorted (turn_not_ported.cpp).
+// Ported in turn_rare_paths.cpp (slice 4.2: paths the six seeds do not run).
 Atom _resource_text(State &state, DictRef resources);
 
 } // namespace aurelion::rules::port::visit_building_rules

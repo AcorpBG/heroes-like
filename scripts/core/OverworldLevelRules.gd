@@ -1,5 +1,8 @@
 extends RefCounted
 
+const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
+static var _turn_engine_mode: int = TurnEngine.mode
+
 # A local Vector2i is meaningful only together with a level. Keep world records
 # global; callers select a level for terrain, occupancy and presentation queries.
 # Missing level fields in authored content / legacy saves mean surface (zero).
@@ -28,6 +31,14 @@ static func level_count(session) -> int:
 	return maxi(1, int(session.overworld.get("map_size", {}).get("level_count", 1)))
 
 static func view_level(session) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return view_level__gd(session)
+	var before := TurnEngine.before_writing(&"OverworldLevelRules.view_level", [session])
+	var result = view_level__gd(session)
+	TurnEngine.check_writing(&"OverworldLevelRules.view_level", before, [session], result)
+	return result
+
+static func view_level__gd(session) -> int:
 	if session == null:
 		return 0
 	return clampi(int(session.overworld.get("view_level", hero_level(session))), 0, level_count(session) - 1)

@@ -28,6 +28,4 @@ DictRef resolve(State &state, ArrayRef nodes, DictRef node, Atom target_id = sta
 // Ported in overworld_rules_turn.cpp.
 ArrayRef exit_order(State &state, DictRef node, Atom key);
 
-// Not run by the six seeds: each throws state::NotPorted (turn_not_ported.cpp).
-
 } // namespace aurelion::rules::port::native_transit_rules

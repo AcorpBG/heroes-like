@@ -92,15 +92,15 @@ namespace overworld_rules {
 DictRef town_battlefront_profile(State &state, DictRef town);
 DictRef _town_battlefront_profile(State &state, DictRef town);
 DictRef delivery_interception_context_for_encounter(State &state, DictRef session, DictRef encounter);
-// Phase 4 declares these too (overworld_rules_turn.hpp); its turn calls these ports.
+// Phase 4's ports (overworld_rules_turn_rare.cpp, declared in overworld_rules_turn.hpp too).
 bool _delivery_encounter_matches_node(State &state, DictRef session, DictRef encounter, DictRef node, DictRef delivery_state);
 DictRef _resource_site_delivery_interception(State &state, DictRef session, DictRef node, DictRef site);
 Atom encounter_display_name(State &state, DictRef encounter);
 } // namespace overworld_rules
 
 namespace enemy_adventure_rules {
-// A raid's name and strength (battle_commanders.cpp). Phase 4 declares them
-// too (enemy_adventure_rules_turn.hpp); its turn calls these ports.
+// A raid's name and strength: Phase 4's ports (enemy_adventure_rules_turn_rare.cpp,
+// declared in enemy_adventure_rules_turn.hpp too).
 Atom raid_display_name(State &state, DictRef encounter);
 int64_t raid_strength(State &state, DictRef encounter);
 } // namespace enemy_adventure_rules

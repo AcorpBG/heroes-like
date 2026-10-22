@@ -35,6 +35,14 @@ static func player_turn__gd(session, config: Dictionary) -> void:
 	session.overworld[KEY].append({"kind":"turn","player_id":controller,"faction_id":faction,"caption":caption})
 
 static func visible(session, point: Dictionary) -> bool:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return visible__gd(session, point)
+	var before := TurnEngine.before_writing(&"OverworldTurnPlayback.visible", [session, point])
+	var result = visible__gd(session, point)
+	TurnEngine.check_writing(&"OverworldTurnPlayback.visible", before, [session, point], result)
+	return result
+
+static func visible__gd(session, point: Dictionary) -> bool:
 	return Levels.level_of(point) == Levels.view_level(session) and OverworldRules.is_tile_visible(session,int(point.get("x",-1)),int(point.get("y",-1)),Levels.level_of(point))
 
 static func move(session, actor: Dictionary, before: Dictionary) -> void:
@@ -59,6 +67,14 @@ static func move__gd(session, actor: Dictionary, before: Dictionary) -> void:
 	session.overworld[KEY].append({"kind":kind,"actor":visual,"placement_id":String(actor.get("placement_id","")),"from":safe_from.duplicate(),"to":safe_to.duplicate(),"caption":name+({"move":" is moving","appear":" comes into view","disappear":" leaves explored ground"}[kind])})
 
 static func _visual_actor(actor: Dictionary, point: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _visual_actor__gd(actor, point)
+	var before := TurnEngine.before_writing(&"OverworldTurnPlayback._visual_actor", [actor, point])
+	var result = _visual_actor__gd(actor, point)
+	TurnEngine.check_writing(&"OverworldTurnPlayback._visual_actor", before, [actor, point], result)
+	return result
+
+static func _visual_actor__gd(actor: Dictionary, point: Dictionary) -> Dictionary:
 	# An allowlist prevents hidden targets, task scores or planned routes from
 	# entering the presentation record, even as AI state gains new fields.
 	var visual := {}
@@ -89,6 +105,14 @@ static func action__gd(session, actor: Dictionary, verb: String) -> void:
 	session.overworld[KEY].append({"kind":"action","actor":_visual_actor(actor,point),"placement_id":String(actor.get("placement_id","")),"from":point,"to":point.duplicate(),"caption":_actor_name(actor)+" "+verb,"vfx_cue_id":cue})
 
 static func _actor_name(actor: Dictionary) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _actor_name__gd(actor)
+	var before := TurnEngine.before_writing(&"OverworldTurnPlayback._actor_name", [actor])
+	var result = _actor_name__gd(actor)
+	TurnEngine.check_writing(&"OverworldTurnPlayback._actor_name", before, [actor], result)
+	return result
+
+static func _actor_name__gd(actor: Dictionary) -> String:
 	var commander: Dictionary = actor.get("enemy_commander_state",{})
 	var hero_id := String(commander.get("roster_hero_id",""))
 	var hero := ContentService.get_hero(hero_id)

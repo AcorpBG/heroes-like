@@ -116453,15 +116453,15 @@
     {
       "id": "native-rules-phase4-02-rare-paths-20261022",
       "title": "Phase 4: the paths the six seeds do not run",
-      "status": "pending",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "The paths 4.1 leaves to state::NotPorted: 165 functions in turn_not_ported.cpp, four guards (non-String sorts, non-ASCII to_lower, a player town's weekly growth) and Phase 5's two in normalize_ai_heroes (an AI hero without movement, a legacy raid host); since 4.1's merge each falls back to GDScript before the day's first full host call (only _start_player_battle, a human's town, is one); each ported or caught by a check before the day starts; frozen until this slice merges (AGENTS.md). Also folds Phase 5's 11 private copies in Phase 3's AI files.",
-      "updatedAt": "2026-10-22T13:10:00Z"
+      "notes": "Merged to main 2026-10-22, main tagged pre-native-phase4-faction-turn-4.2 first (7863c8d91 port, 0f513137a normalize_ai_heroes, the bridge and the fold, 9952a0f8c Windows binaries). Phase 5's slice 09 took 23 of the 165 functions in turn_not_ported.cpp; of the other 142, 139 are ported and switched in the turn table, in enemy_adventure_rules_turn_rare.cpp, enemy_turn_rules_turn_rare.cpp, overworld_rules_turn_rare.cpp, scenario_turn_rare.cpp and turn_rare_paths.cpp (3,650 lines). turn_not_ported.cpp is gone; ScenarioRules._overworld_rules keeps its GDScript body. Also ported: a player town's weekly growth and Phase 5's two normalize_ai_heroes paths. Two guards stay NotPorted, which no game reaches (non-String sort keys, non-ASCII to_lower). PortBridge::undo_lost: once an undoable write-back sets an object view, a later NotPorted is a native failure. Fold: 17 private copies in Phase 3's AI files call the real functions; 3 stay (find_encounter_by_placement, delivery_interception, raid_strength), because the real ones skip the profile and memo statics. Checks: shadow of the turn and day switches together on the six seeds and isl-b, pt-f: 2,362,704 checks over 322 functions, 0 mismatches, 0 errors (8 not-ported calls, Phase 5's townless-player days); native identical to main on the six seeds, no computer day falling back (8 lines, all Phase 5's townless-player days); core suite 17/17; the seeds reach 1 of the 139, one reviewer read the other 138 plus town_weekly_growth's player branch and normalize_ai_heroes against the GDScript: no divergence; smoke batch (plan seed 16, cap 120, 7 games small 2P to XL 5P, 4 two-level, 5 water) 7 finished, 0 failed, 0 script errors, no computer day falling back, slowest computer day 2.6 s. Left for 4.4: Phase 5's nine forecast stubs (human towns) and the paths only a human player brings. Linux libraries wait for the Linux pass.",
+      "updatedAt": "2026-10-22T16:00:00Z"
     },
     {
       "id": "native-rules-phase4-03-battles-20261022",

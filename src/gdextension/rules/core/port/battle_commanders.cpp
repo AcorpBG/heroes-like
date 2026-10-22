@@ -79,51 +79,6 @@ int64_t half_count(State &state, DictRef counts, Atom field) {
 	return gd::to_int(state, gd::op_div(state.get(counts, str(field), int_value(0)), int_value(2)));
 }
 
-// String(encounter.get("encounter_id", encounter.get("id", ""))).
-Atom encounter_template_id(State &state, DictRef encounter) {
-	const Value id_fallback = state.get(encounter, str(key::id), str(key::empty));
-	return text_or(state, encounter, key::encounter_id, id_fallback);
-}
-
-// EnemyAdventureRules._unit_strength_value, with its memo (_unit_strength_memo).
-int64_t unit_strength_value(State &state, Atom unit_id) {
-	const DictRef memo = gd::as_dict(gd::static_var(state, key::enemy_adventure_rules_script, key::_unit_strength_memo));
-	const Value strength = state.get(memo, str(unit_id), Value());
-	if (strength.kind != Kind::Nil) {
-		return gd::to_int(state, strength);
-	}
-	const DictRef unit = gd::content_row(state, ContentTable::Unit, unit_id);
-	int64_t sum = gd::int_field(state, unit, key::hp, 1);
-	sum = gd::add(sum, gd::int_field(state, unit, key::min_damage, 1));
-	sum = gd::add(sum, gd::int_field(state, unit, key::max_damage, 1));
-	sum = gd::add(sum, gd::bool_field(state, unit, key::ranged, false) ? 3 : 0);
-	const int64_t made = imax(6, sum);
-	state.set(gd::as_dict(gd::static_var(state, key::enemy_adventure_rules_script, key::_unit_strength_memo)), str(unit_id), int_value(made));
-	return made;
-}
-
-// EnemyAdventureRules._army_strength, with the unit strength memo
-// (enemy_states.cpp's copy skips the memo).
-int64_t army_strength(State &state, const Value &stacks) {
-	int64_t total = 0;
-	if (!gd::is_array(stacks)) {
-		return total;
-	}
-	enemy_adventure_rules::_sync_unit_strength_memo(state);
-	for (const Value &stack_value : gd::items(state, stacks)) {
-		if (!gd::is_dict(stack_value)) {
-			continue;
-		}
-		const Atom unit_id = text(state, stack_value.ref, key::unit_id, key::empty);
-		const int64_t count = imax(0, gd::int_field(state, stack_value.ref, key::count, 0));
-		if (unit_id == key::empty || count <= 0) {
-			continue;
-		}
-		total = gd::add(total, gd::mul(unit_strength_value(state, unit_id), count));
-	}
-	return total;
-}
-
 } // namespace
 
 // Defined in enemy_states.cpp, declared in no header.
@@ -406,39 +361,5 @@ DictRef _normalize_command(State &state, const Value &value) {
 }
 
 } // namespace battle_rules
-
-namespace enemy_adventure_rules {
-
-Atom raid_display_name(State &state, DictRef encounter) {
-	if (gd::is_empty(state, encounter)) {
-		return key::hostile_contact;
-	}
-	// An enemy hero is named like any hero; there is no "host" around it.
-	Value ai_hero;
-	if (state.lookup(encounter, str(key::ai_hero), ai_hero) && gd::is_dict(ai_hero)) {
-		const Atom hero_name = raid_commander_name(state, encounter);
-		if (hero_name != key::empty) {
-			return hero_name;
-		}
-	}
-	const DictRef encounter_template = gd::content_row(state, ContentTable::Encounter, encounter_template_id(state, encounter));
-	const Value name_fallback = state.get(encounter, str(key::placement_id), str(key::enemy_army_3));
-	const Atom encounter_name = text_or(state, encounter_template, key::name, name_fallback);
-	const Atom commander_name = raid_commander_display_name(state, encounter);
-	if (commander_name == key::empty || player_identity_rules::raid_controller_id(state, encounter) == key::empty) {
-		return encounter_name;
-	}
-	return gd::format(state, key::s_s_s, { str(commander_name), str(encounter_name) });
-}
-
-int64_t raid_strength(State &state, DictRef encounter) {
-	DictRef normalized_army = _normalize_army_payload(state, get_or_new_dict(state, encounter, key::enemy_army));
-	if (gd::is_empty(state, normalized_army)) {
-		normalized_army = _base_enemy_army(state, encounter_template_id(state, encounter));
-	}
-	return army_strength(state, get_or_new_array(state, normalized_army, key::stacks));
-}
-
-} // namespace enemy_adventure_rules
 
 } // namespace aurelion::rules::port

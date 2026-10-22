@@ -104,6 +104,14 @@ static func upgrade_stacks__gd(town: Dictionary, stacks: Array, treasury: Dictio
 	return {"stacks": result, "upgrades": upgrades}
 
 static func loadout_value(hero: Dictionary) -> float:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return loadout_value__gd(hero)
+	var before := TurnEngine.before_writing(&"EnemyTownServices.loadout_value", [hero])
+	var result = loadout_value__gd(hero)
+	TurnEngine.check_writing(&"EnemyTownServices.loadout_value", before, [hero], result)
+	return result
+
+static func loadout_value__gd(hero: Dictionary) -> float:
 	if not _ai_weights_ready:
 		apply_ai_weights(ContentService.default_ai_hero_weights())
 	# Compare actual equipped effects, including set thresholds and penalties.
@@ -118,6 +126,14 @@ static func loadout_value(hero: Dictionary) -> float:
 	return score
 
 static func best_equipment(hero: Dictionary, artifact_id: String) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return best_equipment__gd(hero, artifact_id)
+	var before := TurnEngine.before_writing(&"EnemyTownServices.best_equipment", [hero, artifact_id])
+	var result = best_equipment__gd(hero, artifact_id)
+	TurnEngine.check_writing(&"EnemyTownServices.best_equipment", before, [hero, artifact_id], result)
+	return result
+
+static func best_equipment__gd(hero: Dictionary, artifact_id: String) -> Dictionary:
 	var best := {"hero": hero, "gain": 0.0}
 	var before := loadout_value(hero)
 	var slot_type := Artifacts.artifact_slot(artifact_id)

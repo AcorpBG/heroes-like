@@ -26,7 +26,7 @@ bool can_visit(State &state, DictRef town, DictRef raid, Atom controller);
 DictRef upgrade_stacks(State &state, DictRef town, ArrayRef stacks, DictRef treasury);
 DictRef visit(State &state, DictRef town, DictRef raid, DictRef treasury, int64_t day, Atom controller);
 
-// Not run by the six seeds: each throws state::NotPorted (turn_not_ported.cpp).
+// Ported in turn_rare_paths.cpp (slice 4.2: paths the six seeds do not run).
 DictRef best_equipment(State &state, DictRef hero, Atom artifact_id);
 double loadout_value(State &state, DictRef hero);
 

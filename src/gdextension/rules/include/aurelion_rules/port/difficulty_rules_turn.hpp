@@ -22,7 +22,7 @@ using overworld_rules::Vector2i;
 using state::State;
 using state::Value;
 
-// Not run by the six seeds: each throws state::NotPorted (turn_not_ported.cpp).
+// Ported in turn_rare_paths.cpp (slice 4.2: paths the six seeds do not run).
 int64_t adjust_enemy_pressure_gain(State &state, DictRef session, int64_t base_gain);
 int64_t adjust_raid_threshold(State &state, DictRef session, int64_t base_threshold);
 

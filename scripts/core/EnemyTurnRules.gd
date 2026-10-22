@@ -177,6 +177,14 @@ static func _normalize_rebuild_pressure_request(value: Variant, current_day: int
 	}
 
 static func normalize_optional_hero_task_state(value: Variant) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return normalize_optional_hero_task_state__gd(value)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules.normalize_optional_hero_task_state", [value])
+	var result = normalize_optional_hero_task_state__gd(value)
+	TurnEngine.check_writing(&"EnemyTurnRules.normalize_optional_hero_task_state", before, [value], result)
+	return result
+
+static func normalize_optional_hero_task_state__gd(value: Variant) -> Dictionary:
 	if not (value is Dictionary):
 		return {
 			"ok": false,
@@ -400,10 +408,26 @@ static func describe_threats(session: SessionStateStoreScript.SessionData) -> St
 	return "\n".join(lines)
 
 static func get_pressure(session: SessionStateStoreScript.SessionData, faction_id: String) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return get_pressure__gd(session, faction_id)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules.get_pressure", [session, faction_id])
+	var result = get_pressure__gd(session, faction_id)
+	TurnEngine.check_writing(&"EnemyTurnRules.get_pressure", before, [session, faction_id], result)
+	return result
+
+static func get_pressure__gd(session: SessionStateStoreScript.SessionData, faction_id: String) -> int:
 	normalize_enemy_states(session)
 	return int(_find_state(session.overworld.get("enemy_states", []), faction_id).get("pressure", 0))
 
 static func active_raid_count(session: SessionStateStoreScript.SessionData, faction_id: String) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return active_raid_count__gd(session, faction_id)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules.active_raid_count", [session, faction_id])
+	var result = active_raid_count__gd(session, faction_id)
+	TurnEngine.check_writing(&"EnemyTurnRules.active_raid_count", before, [session, faction_id], result)
+	return result
+
+static func active_raid_count__gd(session: SessionStateStoreScript.SessionData, faction_id: String) -> int:
 	var count = 0
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
 	for encounter in session.overworld.get("encounters", []):
@@ -544,7 +568,15 @@ static func _visible_raids_for_faction(session: SessionStateStoreScript.SessionD
 		visible.append(encounter)
 	return visible
 
-static func _faction_front_state(
+static func _faction_front_state(session: SessionStateStoreScript.SessionData, faction_id: String) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _faction_front_state__gd(session, faction_id)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._faction_front_state", [session, faction_id])
+	var result = _faction_front_state__gd(session, faction_id)
+	TurnEngine.check_writing(&"EnemyTurnRules._faction_front_state", before, [session, faction_id], result)
+	return result
+
+static func _faction_front_state__gd(
 	session: SessionStateStoreScript.SessionData,
 	faction_id: String
 ) -> Dictionary:
@@ -814,6 +846,14 @@ static func _enemy_faction_configs_for_session(session: SessionStateStoreScript.
 	return _enemy_faction_configs_with_runtime_defaults(session, fallback_configs)
 
 static func _valid_enemy_faction_configs(configs: Array) -> Array:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _valid_enemy_faction_configs__gd(configs)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._valid_enemy_faction_configs", [configs])
+	var result = _valid_enemy_faction_configs__gd(configs)
+	TurnEngine.check_writing(&"EnemyTurnRules._valid_enemy_faction_configs", before, [configs], result)
+	return result
+
+static func _valid_enemy_faction_configs__gd(configs: Array) -> Array:
 	var result := []
 	for config_value in configs:
 		if not (config_value is Dictionary):
@@ -865,6 +905,14 @@ static func _enemy_faction_config_with_runtime_defaults(session: SessionStateSto
 	return normalized
 
 static func _config_was_runtime_defaulted(source: Dictionary, normalized: Dictionary) -> bool:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _config_was_runtime_defaulted__gd(source, normalized)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._config_was_runtime_defaulted", [source, normalized])
+	var result = _config_was_runtime_defaulted__gd(source, normalized)
+	TurnEngine.check_writing(&"EnemyTurnRules._config_was_runtime_defaulted", before, [source, normalized], result)
+	return result
+
+static func _config_was_runtime_defaulted__gd(source: Dictionary, normalized: Dictionary) -> bool:
 	for key in ["pressure_per_day", "pressure_per_enemy_town", "raid_threshold", "max_active_raids", "raid_pillage_delay", "raid_pillage", "raid_encounter_ids", "spawn_points"]:
 		if not source.has(key) and normalized.has(key):
 			return true
@@ -924,9 +972,25 @@ static func _owned_town_entries(session: SessionStateStoreScript.SessionData, fa
 	return entries
 
 static func _faction_capital_state(session: SessionStateStoreScript.SessionData, faction_id: String) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _faction_capital_state__gd(session, faction_id)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._faction_capital_state", [session, faction_id])
+	var result = _faction_capital_state__gd(session, faction_id)
+	TurnEngine.check_writing(&"EnemyTurnRules._faction_capital_state", before, [session, faction_id], result)
+	return result
+
+static func _faction_capital_state__gd(session: SessionStateStoreScript.SessionData, faction_id: String) -> Dictionary:
 	return _faction_capital_state_from_towns(session, session.overworld.get("towns", []), faction_id)
 
-static func _faction_capital_state_from_towns(
+static func _faction_capital_state_from_towns(session: SessionStateStoreScript.SessionData, towns: Array, faction_id: String) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _faction_capital_state_from_towns__gd(session, towns, faction_id)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._faction_capital_state_from_towns", [session, towns, faction_id])
+	var result = _faction_capital_state_from_towns__gd(session, towns, faction_id)
+	TurnEngine.check_writing(&"EnemyTurnRules._faction_capital_state_from_towns", before, [session, towns, faction_id], result)
+	return result
+
+static func _faction_capital_state_from_towns__gd(
 	session: SessionStateStoreScript.SessionData,
 	towns: Array,
 	faction_id: String
@@ -990,7 +1054,15 @@ static func _capital_watch_summary(capital_state: Dictionary) -> String:
 		return "Anchor watch: %s remain the backbone of the front" % ", ".join(anchor_labels)
 	return ""
 
-static func _raid_threshold_for_strategy(
+static func _raid_threshold_for_strategy(session: SessionStateStoreScript.SessionData, config: Dictionary, faction_id: String, launch_policy_context: Dictionary = {}) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _raid_threshold_for_strategy__gd(session, config, faction_id, launch_policy_context)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._raid_threshold_for_strategy", [session, config, faction_id, launch_policy_context])
+	var result = _raid_threshold_for_strategy__gd(session, config, faction_id, launch_policy_context)
+	TurnEngine.check_writing(&"EnemyTurnRules._raid_threshold_for_strategy", before, [session, config, faction_id, launch_policy_context], result)
+	return result
+
+static func _raid_threshold_for_strategy__gd(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	faction_id: String,
@@ -1011,7 +1083,15 @@ static func _raid_threshold_for_strategy(
 		threshold -= 1
 	return max(1, threshold)
 
-static func _max_active_raids_for_strategy(
+static func _max_active_raids_for_strategy(session: SessionStateStoreScript.SessionData, config: Dictionary, faction_id: String, launch_policy_context: Dictionary = {}) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _max_active_raids_for_strategy__gd(session, config, faction_id, launch_policy_context)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._max_active_raids_for_strategy", [session, config, faction_id, launch_policy_context])
+	var result = _max_active_raids_for_strategy__gd(session, config, faction_id, launch_policy_context)
+	TurnEngine.check_writing(&"EnemyTurnRules._max_active_raids_for_strategy", before, [session, config, faction_id, launch_policy_context], result)
+	return result
+
+static func _max_active_raids_for_strategy__gd(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	faction_id: String,
@@ -1026,7 +1106,15 @@ static func _max_active_raids_for_strategy(
 		+ int(capital_state.get("max_active_raids_bonus", 0))
 	)
 
-static func _launch_policy_capital_state(
+static func _launch_policy_capital_state(session: SessionStateStoreScript.SessionData, faction_id: String, launch_policy_context: Dictionary = {}) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _launch_policy_capital_state__gd(session, faction_id, launch_policy_context)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._launch_policy_capital_state", [session, faction_id, launch_policy_context])
+	var result = _launch_policy_capital_state__gd(session, faction_id, launch_policy_context)
+	TurnEngine.check_writing(&"EnemyTurnRules._launch_policy_capital_state", before, [session, faction_id, launch_policy_context], result)
+	return result
+
+static func _launch_policy_capital_state__gd(
 	session: SessionStateStoreScript.SessionData,
 	faction_id: String,
 	launch_policy_context: Dictionary = {}
@@ -1038,7 +1126,15 @@ static func _launch_policy_capital_state(
 	launch_policy_context["capital_state"] = loaded
 	return loaded
 
-static func _launch_policy_front_state(
+static func _launch_policy_front_state(session: SessionStateStoreScript.SessionData, faction_id: String, launch_policy_context: Dictionary = {}) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _launch_policy_front_state__gd(session, faction_id, launch_policy_context)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._launch_policy_front_state", [session, faction_id, launch_policy_context])
+	var result = _launch_policy_front_state__gd(session, faction_id, launch_policy_context)
+	TurnEngine.check_writing(&"EnemyTurnRules._launch_policy_front_state", before, [session, faction_id, launch_policy_context], result)
+	return result
+
+static func _launch_policy_front_state__gd(
 	session: SessionStateStoreScript.SessionData,
 	faction_id: String,
 	launch_policy_context: Dictionary = {}
@@ -1224,6 +1320,14 @@ static func _normalize_posture(value: Variant) -> String:
 	return "probing"
 
 static func _normalize_hero_task_record(value: Variant) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _normalize_hero_task_record__gd(value)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._normalize_hero_task_record", [value])
+	var result = _normalize_hero_task_record__gd(value)
+	TurnEngine.check_writing(&"EnemyTurnRules._normalize_hero_task_record", before, [value], result)
+	return result
+
+static func _normalize_hero_task_record__gd(value: Variant) -> Dictionary:
 	if not (value is Dictionary):
 		return {"ok": false, "invalid_reason": "task_not_dictionary", "sanitized_field_count": 0}
 	var task: Dictionary = value
@@ -1285,6 +1389,14 @@ static func _normalize_hero_task_record(value: Variant) -> Dictionary:
 	}
 
 static func _hero_task_state_board_sanitized_field_count(board: Dictionary) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _hero_task_state_board_sanitized_field_count__gd(board)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._hero_task_state_board_sanitized_field_count", [board])
+	var result = _hero_task_state_board_sanitized_field_count__gd(board)
+	TurnEngine.check_writing(&"EnemyTurnRules._hero_task_state_board_sanitized_field_count", before, [board], result)
+	return result
+
+static func _hero_task_state_board_sanitized_field_count__gd(board: Dictionary) -> int:
 	var allowed := {"schema_version": true, "planner_epoch": true, "tasks": true}
 	var sanitized := 0
 	for key in board.keys():
@@ -1293,6 +1405,14 @@ static func _hero_task_state_board_sanitized_field_count(board: Dictionary) -> i
 	return sanitized
 
 static func _hero_task_record_sanitized_field_count(task: Dictionary) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _hero_task_record_sanitized_field_count__gd(task)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._hero_task_record_sanitized_field_count", [task])
+	var result = _hero_task_record_sanitized_field_count__gd(task)
+	TurnEngine.check_writing(&"EnemyTurnRules._hero_task_record_sanitized_field_count", before, [task], result)
+	return result
+
+static func _hero_task_record_sanitized_field_count__gd(task: Dictionary) -> int:
 	var allowed := {
 		"task_id": true,
 		"owner_faction_id": true,
@@ -1324,18 +1444,42 @@ static func _hero_task_record_sanitized_field_count(task: Dictionary) -> int:
 	return sanitized
 
 static func _normalize_hero_task_class(value: Variant) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _normalize_hero_task_class__gd(value)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._normalize_hero_task_class", [value])
+	var result = _normalize_hero_task_class__gd(value)
+	TurnEngine.check_writing(&"EnemyTurnRules._normalize_hero_task_class", before, [value], result)
+	return result
+
+static func _normalize_hero_task_class__gd(value: Variant) -> String:
 	var task_class := String(value)
 	if task_class in ["raid_town", "retake_site", "contest_site", "stabilize_front", "defend_front", "scout_frontier", "recover_commander", "rebuild_host", "reserve"]:
 		return task_class
 	return ""
 
 static func _normalize_hero_task_status(value: Variant) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _normalize_hero_task_status__gd(value)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._normalize_hero_task_status", [value])
+	var result = _normalize_hero_task_status__gd(value)
+	TurnEngine.check_writing(&"EnemyTurnRules._normalize_hero_task_status", before, [value], result)
+	return result
+
+static func _normalize_hero_task_status__gd(value: Variant) -> String:
 	var task_status := String(value)
 	if task_status in ["candidate", "planned", "reserved", "active", "suspended", "blocked", "completed", "failed", "cancelled", "invalid"]:
 		return task_status
 	return ""
 
 static func _normalize_hero_task_target_kind(value: Variant) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _normalize_hero_task_target_kind__gd(value)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._normalize_hero_task_target_kind", [value])
+	var result = _normalize_hero_task_target_kind__gd(value)
+	TurnEngine.check_writing(&"EnemyTurnRules._normalize_hero_task_target_kind", before, [value], result)
+	return result
+
+static func _normalize_hero_task_target_kind__gd(value: Variant) -> String:
 	var target_kind := String(value)
 	if target_kind in ["resource", "town", "artifact", "encounter", "hero", "regroup", "commander", "front"]:
 		return target_kind
@@ -1344,26 +1488,74 @@ static func _normalize_hero_task_target_kind(value: Variant) -> String:
 	return ""
 
 static func _normalize_hero_task_actor_kind(value: Variant) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _normalize_hero_task_actor_kind__gd(value)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._normalize_hero_task_actor_kind", [value])
+	var result = _normalize_hero_task_actor_kind__gd(value)
+	TurnEngine.check_writing(&"EnemyTurnRules._normalize_hero_task_actor_kind", before, [value], result)
+	return result
+
+static func _normalize_hero_task_actor_kind__gd(value: Variant) -> String:
 	var actor_kind := String(value)
 	return actor_kind if actor_kind in ["commander_roster", "active_encounter", "ai_hero"] else "commander_roster"
 
 static func _normalize_hero_task_source_kind(value: Variant) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _normalize_hero_task_source_kind__gd(value)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._normalize_hero_task_source_kind", [value])
+	var result = _normalize_hero_task_source_kind__gd(value)
+	TurnEngine.check_writing(&"EnemyTurnRules._normalize_hero_task_source_kind", before, [value], result)
+	return result
+
+static func _normalize_hero_task_source_kind__gd(value: Variant) -> String:
 	var source_kind := String(value)
 	return source_kind if source_kind in ["commander_role_adapter", "saved_task_state"] else "commander_role_adapter"
 
 static func _normalize_hero_task_origin_kind(value: Variant) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _normalize_hero_task_origin_kind__gd(value)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._normalize_hero_task_origin_kind", [value])
+	var result = _normalize_hero_task_origin_kind__gd(value)
+	TurnEngine.check_writing(&"EnemyTurnRules._normalize_hero_task_origin_kind", before, [value], result)
+	return result
+
+static func _normalize_hero_task_origin_kind__gd(value: Variant) -> String:
 	var origin_kind := String(value)
 	return origin_kind if origin_kind in ["town", "front", "encounter"] else "town"
 
 static func _normalize_hero_task_continuity_policy(value: Variant) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _normalize_hero_task_continuity_policy__gd(value)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._normalize_hero_task_continuity_policy", [value])
+	var result = _normalize_hero_task_continuity_policy__gd(value)
+	TurnEngine.check_writing(&"EnemyTurnRules._normalize_hero_task_continuity_policy", before, [value], result)
+	return result
+
+static func _normalize_hero_task_continuity_policy__gd(value: Variant) -> String:
 	var policy := String(value)
 	return policy if policy in ["persist_until_invalid", "expire_on_day", "derive_each_turn"] else "persist_until_invalid"
 
 static func _normalize_hero_task_route_policy(value: Variant) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _normalize_hero_task_route_policy__gd(value)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._normalize_hero_task_route_policy", [value])
+	var result = _normalize_hero_task_route_policy__gd(value)
+	TurnEngine.check_writing(&"EnemyTurnRules._normalize_hero_task_route_policy", before, [value], result)
+	return result
+
+static func _normalize_hero_task_route_policy__gd(value: Variant) -> String:
 	var policy := String(value)
 	return policy if policy in ["derive_route_on_turn", "hold_position", "route_deferred"] else "derive_route_on_turn"
 
 static func _normalize_hero_task_validation_code(value: Variant) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _normalize_hero_task_validation_code__gd(value)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._normalize_hero_task_validation_code", [value])
+	var result = _normalize_hero_task_validation_code__gd(value)
+	TurnEngine.check_writing(&"EnemyTurnRules._normalize_hero_task_validation_code", before, [value], result)
+	return result
+
+static func _normalize_hero_task_validation_code__gd(value: Variant) -> String:
 	var code := String(value)
 	if code in [
 		"valid",
@@ -1393,6 +1585,14 @@ static func _normalize_hero_task_validation_code(value: Variant) -> String:
 	return ""
 
 static func _normalize_hero_task_reservation(value: Variant) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _normalize_hero_task_reservation__gd(value)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._normalize_hero_task_reservation", [value])
+	var result = _normalize_hero_task_reservation__gd(value)
+	TurnEngine.check_writing(&"EnemyTurnRules._normalize_hero_task_reservation", before, [value], result)
+	return result
+
+static func _normalize_hero_task_reservation__gd(value: Variant) -> Dictionary:
 	if not (value is Dictionary):
 		return {"reservation_status": "none", "reservation_scope": "none", "reservation_key": ""}
 	var reservation: Dictionary = value
@@ -1437,6 +1637,14 @@ static func _normalized_built_buildings__gd(town: Dictionary) -> Array:
 	return normalized
 
 static func _append_building_with_requirements(target: Array, building_id: String, trail: Array = []) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_append_building_with_requirements__gd(target, building_id, trail)
+		return
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._append_building_with_requirements", [target, building_id, trail])
+	_append_building_with_requirements__gd(target, building_id, trail)
+	TurnEngine.check_writing(&"EnemyTurnRules._append_building_with_requirements", before, [target, building_id, trail], null)
+
+static func _append_building_with_requirements__gd(target: Array, building_id: String, trail: Array = []) -> void:
 	if building_id == "" or building_id in target or building_id in trail:
 		return
 	var next_trail = trail.duplicate(true)
