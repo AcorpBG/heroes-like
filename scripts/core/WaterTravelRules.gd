@@ -11,8 +11,6 @@ extends RefCounted
 ## helpers.
 
 const Levels = preload("res://scripts/core/OverworldLevelRules.gd")
-const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
-static var _turn_engine_mode: int = TurnEngine.mode
 
 const BOATS_KEY := "boats"
 const HERO_BOAT_KEY := "boat_id"
@@ -28,14 +26,6 @@ static func boats(session) -> Array:
 	return value if value is Array else []
 
 static func boat_by_id(session, boat_id: String) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return boat_by_id__gd(session, boat_id)
-	var before := TurnEngine.before_writing(&"WaterTravelRules.boat_by_id", [session, boat_id])
-	var result = boat_by_id__gd(session, boat_id)
-	TurnEngine.check_writing(&"WaterTravelRules.boat_by_id", before, [session, boat_id], result)
-	return result
-
-static func boat_by_id__gd(session, boat_id: String) -> Dictionary:
 	for boat in boats(session):
 		if boat is Dictionary and String(boat.get("id", "")) == boat_id:
 			return boat
@@ -59,14 +49,6 @@ static func is_water(session, x: int, y: int, level: int = -1) -> bool:
 
 ## A boat no hero is aboard, at this water tile.
 static func free_boat_at(session, tile: Vector2i, level: int = -1) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return free_boat_at__gd(session, tile, level)
-	var before := TurnEngine.before_writing(&"WaterTravelRules.free_boat_at", [session, tile, level])
-	var result = free_boat_at__gd(session, tile, level)
-	TurnEngine.check_writing(&"WaterTravelRules.free_boat_at", before, [session, tile, level], result)
-	return result
-
-static func free_boat_at__gd(session, tile: Vector2i, level: int = -1) -> Dictionary:
 	level = Levels.query_level(session, level)
 	for boat in boats(session):
 		if boat is Dictionary and String(boat.get("hero_id", "")) == "" and int(boat.get("x", -1)) == tile.x and int(boat.get("y", -1)) == tile.y and int(boat.get("level", 0)) == level:
@@ -74,14 +56,6 @@ static func free_boat_at__gd(session, tile: Vector2i, level: int = -1) -> Dictio
 	return {}
 
 static func any_boat_at(session, tile: Vector2i, level: int) -> bool:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return any_boat_at__gd(session, tile, level)
-	var before := TurnEngine.before_writing(&"WaterTravelRules.any_boat_at", [session, tile, level])
-	var result = any_boat_at__gd(session, tile, level)
-	TurnEngine.check_writing(&"WaterTravelRules.any_boat_at", before, [session, tile, level], result)
-	return result
-
-static func any_boat_at__gd(session, tile: Vector2i, level: int) -> bool:
 	for boat in boats(session):
 		if boat is Dictionary and int(boat.get("x", -1)) == tile.x and int(boat.get("y", -1)) == tile.y and int(boat.get("level", 0)) == level:
 			return true
@@ -156,14 +130,6 @@ static func normalize(session) -> void:
 	session.overworld[BOATS_KEY] = cleaned
 
 static func add_boat(session, tile: Vector2i, level: int, id_hint: String) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return add_boat__gd(session, tile, level, id_hint)
-	var before := TurnEngine.before_writing(&"WaterTravelRules.add_boat", [session, tile, level, id_hint])
-	var result = add_boat__gd(session, tile, level, id_hint)
-	TurnEngine.check_writing(&"WaterTravelRules.add_boat", before, [session, tile, level, id_hint], result)
-	return result
-
-static func add_boat__gd(session, tile: Vector2i, level: int, id_hint: String) -> Dictionary:
 	var list := boats(session).duplicate(true)
 	var boat_id := id_hint
 	var serial := 1
@@ -174,25 +140,6 @@ static func add_boat__gd(session, tile: Vector2i, level: int, id_hint: String) -
 	list.append(boat)
 	session.overworld[BOATS_KEY] = list
 	return boat
-
-## Puts a boat at this tile with this hero aboard ("" leaves it empty there).
-static func place_boat(session, boat_id: String, hero_id: String, tile: Vector2i, level: int) -> void:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		place_boat__gd(session, boat_id, hero_id, tile, level)
-		return
-	var before := TurnEngine.before_writing(&"WaterTravelRules.place_boat", [session, boat_id, hero_id, tile, level])
-	place_boat__gd(session, boat_id, hero_id, tile, level)
-	TurnEngine.check_writing(&"WaterTravelRules.place_boat", before, [session, boat_id, hero_id, tile, level], null)
-
-static func place_boat__gd(session, boat_id: String, hero_id: String, tile: Vector2i, level: int) -> void:
-	var list := boats(session).duplicate(true)
-	for index in range(list.size()):
-		if String(list[index].get("id", "")) == boat_id:
-			list[index]["hero_id"] = hero_id
-			list[index]["x"] = tile.x
-			list[index]["y"] = tile.y
-			list[index]["level"] = level
-	session.overworld[BOATS_KEY] = list
 
 ## The active hero takes the boat at this tile.
 static func embark(session, boat: Dictionary) -> void:
@@ -248,14 +195,6 @@ static func _set_active_hero_boat(session, boat_id: String) -> void:
 	session.overworld["player_heroes"] = heroes
 
 static func hero_at(session, tile: Vector2i, level: int) -> bool:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return hero_at__gd(session, tile, level)
-	var before := TurnEngine.before_writing(&"WaterTravelRules.hero_at", [session, tile, level])
-	var result = hero_at__gd(session, tile, level)
-	TurnEngine.check_writing(&"WaterTravelRules.hero_at", before, [session, tile, level], result)
-	return result
-
-static func hero_at__gd(session, tile: Vector2i, level: int) -> bool:
 	for hero in session.overworld.get("player_heroes", []):
 		if hero is Dictionary:
 			var position: Dictionary = hero.get("position", {}) if hero.get("position", {}) is Dictionary else {}
@@ -292,14 +231,6 @@ static func dock_tile(session, node: Dictionary) -> Dictionary:
 
 ## Why the shipyard cannot launch a boat now, or "" when it can.
 static func dock_blocker(session, node: Dictionary) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return dock_blocker__gd(session, node)
-	var before := TurnEngine.before_writing(&"WaterTravelRules.dock_blocker", [session, node])
-	var result = dock_blocker__gd(session, node)
-	TurnEngine.check_writing(&"WaterTravelRules.dock_blocker", before, [session, node], result)
-	return result
-
-static func dock_blocker__gd(session, node: Dictionary) -> String:
 	var dock := dock_tile(session, node)
 	if dock.is_empty():
 		return "This shipyard has no water at its dock."
@@ -309,14 +240,6 @@ static func dock_blocker__gd(session, node: Dictionary) -> String:
 	return ""
 
 static func build_boat(session, node: Dictionary) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return build_boat__gd(session, node)
-	var before := TurnEngine.before_writing(&"WaterTravelRules.build_boat", [session, node])
-	var result = build_boat__gd(session, node)
-	TurnEngine.check_writing(&"WaterTravelRules.build_boat", before, [session, node], result)
-	return result
-
-static func build_boat__gd(session, node: Dictionary) -> String:
 	var blocker := dock_blocker(session, node)
 	if blocker != "":
 		return blocker

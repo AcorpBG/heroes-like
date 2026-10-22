@@ -1,8 +1,6 @@
 extends RefCounted
 
 const Levels = preload("res://scripts/core/OverworldLevelRules.gd")
-const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
-static var _turn_engine_mode: int = TurnEngine.mode
 const NAVIGATION_DELTAS := [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1), Vector2i(1, 1), Vector2i(1, -1), Vector2i(-1, 1), Vector2i(-1, -1)]
 
 # Package connectivity is separate from the original artwork's authored local
@@ -96,14 +94,6 @@ static func is_dead_end(object: Dictionary) -> bool:
 ## Destinations in the order a traveller tries them: a stable rotation keyed by
 ## the trip, so a reload replays the same exit and a later trip can differ.
 static func exit_order(node: Dictionary, key: String) -> Array:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return exit_order__gd(node, key)
-	var before := TurnEngine.before_writing(&"NativeTransitRules.exit_order", [node, key])
-	var result = exit_order__gd(node, key)
-	TurnEngine.check_writing(&"NativeTransitRules.exit_order", before, [node, key], result)
-	return result
-
-static func exit_order__gd(node: Dictionary, key: String) -> Array:
 	var options := destinations(node).duplicate(true)
 	if options.size() < 2:
 		return options
@@ -306,14 +296,6 @@ static func validate(nodes: Array) -> Array:
 	return errors
 
 static func resolve(nodes: Array, node: Dictionary, target_id: String = "") -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return resolve__gd(nodes, node, target_id)
-	var before := TurnEngine.before_writing(&"NativeTransitRules.resolve", [nodes, node, target_id])
-	var result = resolve__gd(nodes, node, target_id)
-	TurnEngine.check_writing(&"NativeTransitRules.resolve", before, [nodes, node, target_id], result)
-	return result
-
-static func resolve__gd(nodes: Array, node: Dictionary, target_id: String = "") -> Dictionary:
 	var indexed := nodes_by_id(nodes)
 	var error := contract_error(node, indexed)
 	if error != "":

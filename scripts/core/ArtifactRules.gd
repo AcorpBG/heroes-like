@@ -8,8 +8,6 @@ const ARTIFACT_SOURCE_REWARD_SCHEMA_ID := "artifact_source_reward_v1"
 const NodePayload = preload("res://scripts/core/ResourceNodePayloadRules.gd")
 const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
 static var _battle_engine_mode: int = BattleEngine.mode
-const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
-static var _turn_engine_mode: int = TurnEngine.mode
 const ARTIFACT_CLASSES := ["common", "crafted", "faction", "accord", "relic", "cursed", "set_piece", "old_measure", "scenario"]
 const ARTIFACT_RARITIES := ["common", "uncommon", "rare", "epic", "legendary", "scenario"]
 # The rarities each HoMM3 artifact class draws from on generated maps, in order:
@@ -144,14 +142,6 @@ static func normalize_hero_artifacts(value: Variant) -> Dictionary:
 	return {"equipped": equipped, "inventory": inventory}
 
 static func owned_artifact_ids(hero_state: Dictionary) -> Array:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return owned_artifact_ids__gd(hero_state)
-	var before := TurnEngine.before_writing(&"ArtifactRules.owned_artifact_ids", [hero_state])
-	var result = owned_artifact_ids__gd(hero_state)
-	TurnEngine.check_writing(&"ArtifactRules.owned_artifact_ids", before, [hero_state], result)
-	return result
-
-static func owned_artifact_ids__gd(hero_state: Dictionary) -> Array:
 	var artifacts = normalize_hero_artifacts(hero_state.get("artifacts", {}))
 	var artifact_ids := []
 	for slot in EQUIPMENT_SLOTS:
@@ -165,25 +155,9 @@ static func owned_artifact_ids__gd(hero_state: Dictionary) -> Array:
 	return artifact_ids
 
 static func has_artifact(hero_state: Dictionary, artifact_id: String) -> bool:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return has_artifact__gd(hero_state, artifact_id)
-	var before := TurnEngine.before_writing(&"ArtifactRules.has_artifact", [hero_state, artifact_id])
-	var result = has_artifact__gd(hero_state, artifact_id)
-	TurnEngine.check_writing(&"ArtifactRules.has_artifact", before, [hero_state, artifact_id], result)
-	return result
-
-static func has_artifact__gd(hero_state: Dictionary, artifact_id: String) -> bool:
 	return String(locate_artifact(hero_state, artifact_id).get("location", "missing")) != "missing"
 
 static func locate_artifact(hero_state: Dictionary, artifact_id: String) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return locate_artifact__gd(hero_state, artifact_id)
-	var before := TurnEngine.before_writing(&"ArtifactRules.locate_artifact", [hero_state, artifact_id])
-	var result = locate_artifact__gd(hero_state, artifact_id)
-	TurnEngine.check_writing(&"ArtifactRules.locate_artifact", before, [hero_state, artifact_id], result)
-	return result
-
-static func locate_artifact__gd(hero_state: Dictionary, artifact_id: String) -> Dictionary:
 	var artifacts = normalize_hero_artifacts(hero_state.get("artifacts", {}))
 	if artifact_id == "":
 		return {"location": "missing", "slot": ""}
@@ -228,14 +202,6 @@ static func aggregate_bonuses(hero_state: Dictionary) -> Dictionary:
 	return totals
 
 static func artifact_set_runtime_state(hero_state: Dictionary) -> Array:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return artifact_set_runtime_state__gd(hero_state)
-	var before := TurnEngine.before_writing(&"ArtifactRules.artifact_set_runtime_state", [hero_state])
-	var result = artifact_set_runtime_state__gd(hero_state)
-	TurnEngine.check_writing(&"ArtifactRules.artifact_set_runtime_state", before, [hero_state], result)
-	return result
-
-static func artifact_set_runtime_state__gd(hero_state: Dictionary) -> Array:
 	# Normalizing reads the artifacts only, so the hero needs no copy.
 	return _set_states_for_equipped(normalize_hero_artifacts(hero_state.get("artifacts", {})).get("equipped", {}))
 
@@ -386,28 +352,12 @@ static func spell_effect_amount_delta(hero_state: Dictionary, spell: Dictionary)
 	return delta
 
 static func artifact_taxonomy(artifact_id: String) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return artifact_taxonomy__gd(artifact_id)
-	var before := TurnEngine.before_writing(&"ArtifactRules.artifact_taxonomy", [artifact_id])
-	var result = artifact_taxonomy__gd(artifact_id)
-	TurnEngine.check_writing(&"ArtifactRules.artifact_taxonomy", before, [artifact_id], result)
-	return result
-
-static func artifact_taxonomy__gd(artifact_id: String) -> Dictionary:
 	var artifact := ContentService.get_artifact(artifact_id)
 	if artifact.is_empty():
 		return {}
 	return _artifact_taxonomy_payload(artifact)
 
 static func artifact_taxonomy_summary(artifact_id: String) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return artifact_taxonomy_summary__gd(artifact_id)
-	var before := TurnEngine.before_writing(&"ArtifactRules.artifact_taxonomy_summary", [artifact_id])
-	var result = artifact_taxonomy_summary__gd(artifact_id)
-	TurnEngine.check_writing(&"ArtifactRules.artifact_taxonomy_summary", before, [artifact_id], result)
-	return result
-
-static func artifact_taxonomy_summary__gd(artifact_id: String) -> String:
 	var taxonomy := artifact_taxonomy(artifact_id)
 	if taxonomy.is_empty():
 		return "Taxonomy unknown"
@@ -846,15 +796,7 @@ static func artifact_source_reward_report(
 ## per HoMM3 artifact class a generated placement holds, each skipping the
 ## artifacts already held or drawn, or the single draw of
 ## select_live_source_reward.
-static func select_live_source_rewards(source_tag: String, source_record: Dictionary, source_key: String, faction_id: String = "", excluded_artifact_ids: Array = []) -> Array:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return select_live_source_rewards__gd(source_tag, source_record, source_key, faction_id, excluded_artifact_ids)
-	var before := TurnEngine.before_writing(&"ArtifactRules.select_live_source_rewards", [source_tag, source_record, source_key, faction_id, excluded_artifact_ids])
-	var result = select_live_source_rewards__gd(source_tag, source_record, source_key, faction_id, excluded_artifact_ids)
-	TurnEngine.check_writing(&"ArtifactRules.select_live_source_rewards", before, [source_tag, source_record, source_key, faction_id, excluded_artifact_ids], result)
-	return result
-
-static func select_live_source_rewards__gd(
+static func select_live_source_rewards(
 	source_tag: String,
 	source_record: Dictionary,
 	source_key: String,
@@ -875,15 +817,7 @@ static func select_live_source_rewards__gd(
 			selections.append(selection)
 	return selections
 
-static func select_live_source_reward(source_tag: String, source_record: Dictionary, source_key: String, faction_id: String = "", excluded_artifact_ids: Array = []) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return select_live_source_reward__gd(source_tag, source_record, source_key, faction_id, excluded_artifact_ids)
-	var before := TurnEngine.before_writing(&"ArtifactRules.select_live_source_reward", [source_tag, source_record, source_key, faction_id, excluded_artifact_ids])
-	var result = select_live_source_reward__gd(source_tag, source_record, source_key, faction_id, excluded_artifact_ids)
-	TurnEngine.check_writing(&"ArtifactRules.select_live_source_reward", before, [source_tag, source_record, source_key, faction_id, excluded_artifact_ids], result)
-	return result
-
-static func select_live_source_reward__gd(
+static func select_live_source_reward(
 	source_tag: String,
 	source_record: Dictionary,
 	source_key: String,
@@ -982,15 +916,7 @@ static func _select_rarity_source_reward(
 		return {"ok": false, "reason": "placement_holds_no_artifact", "source_tag": source_tag, "source_key": source_key}
 	return _draw_from_rarities(source_tag, [[rarity]], table_id, source_key, excluded_artifact_ids)
 
-static func _select_class_source_reward(source_tag: String, artifact_class: String, source_key: String, excluded_artifact_ids: Array) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _select_class_source_reward__gd(source_tag, artifact_class, source_key, excluded_artifact_ids)
-	var before := TurnEngine.before_writing(&"ArtifactRules._select_class_source_reward", [source_tag, artifact_class, source_key, excluded_artifact_ids])
-	var result = _select_class_source_reward__gd(source_tag, artifact_class, source_key, excluded_artifact_ids)
-	TurnEngine.check_writing(&"ArtifactRules._select_class_source_reward", before, [source_tag, artifact_class, source_key, excluded_artifact_ids], result)
-	return result
-
-static func _select_class_source_reward__gd(
+static func _select_class_source_reward(
 	source_tag: String,
 	artifact_class: String,
 	source_key: String,
@@ -1006,14 +932,6 @@ static func _select_class_source_reward__gd(
 ## One artifact the hero lacks from the first group of rarities that still has
 ## one, stable for the source key.
 static func _draw_from_rarities(source_tag: String, tiers: Array, table_id: String, source_key: String, excluded_artifact_ids: Array) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _draw_from_rarities__gd(source_tag, tiers, table_id, source_key, excluded_artifact_ids)
-	var before := TurnEngine.before_writing(&"ArtifactRules._draw_from_rarities", [source_tag, tiers, table_id, source_key, excluded_artifact_ids])
-	var result = _draw_from_rarities__gd(source_tag, tiers, table_id, source_key, excluded_artifact_ids)
-	TurnEngine.check_writing(&"ArtifactRules._draw_from_rarities", before, [source_tag, tiers, table_id, source_key, excluded_artifact_ids], result)
-	return result
-
-static func _draw_from_rarities__gd(source_tag: String, tiers: Array, table_id: String, source_key: String, excluded_artifact_ids: Array) -> Dictionary:
 	var excluded := {}
 	for artifact_id_value in excluded_artifact_ids:
 		excluded[String(artifact_id_value)] = true
@@ -1040,14 +958,6 @@ static func _draw_from_rarities__gd(source_tag: String, tiers: Array, table_id: 
 	return {"ok": false, "reason": "source_table_exhausted", "exhausted": true, "table_id": table_id, "source_tag": source_tag, "source_key": source_key}
 
 static func live_source_reward_tag(source_record: Dictionary) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return live_source_reward_tag__gd(source_record)
-	var before := TurnEngine.before_writing(&"ArtifactRules.live_source_reward_tag", [source_record])
-	var result = live_source_reward_tag__gd(source_record)
-	TurnEngine.check_writing(&"ArtifactRules.live_source_reward_tag", before, [source_record], result)
-	return result
-
-static func live_source_reward_tag__gd(source_record: Dictionary) -> String:
 	var contract := _artifact_source_contract(source_record)
 	var explicit_tag := String(contract.get("source_tag", "")).strip_edges()
 	if explicit_tag != "":
@@ -1062,14 +972,6 @@ static func live_source_reward_tag__gd(source_record: Dictionary) -> String:
 	return ""
 
 static func _artifact_source_contract(source_record: Dictionary) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _artifact_source_contract__gd(source_record)
-	var before := TurnEngine.before_writing(&"ArtifactRules._artifact_source_contract", [source_record])
-	var result = _artifact_source_contract__gd(source_record)
-	TurnEngine.check_writing(&"ArtifactRules._artifact_source_contract", before, [source_record], result)
-	return result
-
-static func _artifact_source_contract__gd(source_record: Dictionary) -> Dictionary:
 	var contract = source_record.get("artifact_reward_contract", {})
 	if contract is Dictionary and not contract.is_empty():
 		return contract
@@ -1152,15 +1054,7 @@ static func artifact_equip_runtime_report(hero_state: Dictionary) -> Dictionary:
 		},
 	}
 
-static func claim_artifact(hero_state: Dictionary, artifact_id: String, source_verb: String = "Recovered", auto_equip: bool = true) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return claim_artifact__gd(hero_state, artifact_id, source_verb, auto_equip)
-	var before := TurnEngine.before_writing(&"ArtifactRules.claim_artifact", [hero_state, artifact_id, source_verb, auto_equip])
-	var result = claim_artifact__gd(hero_state, artifact_id, source_verb, auto_equip)
-	TurnEngine.check_writing(&"ArtifactRules.claim_artifact", before, [hero_state, artifact_id, source_verb, auto_equip], result)
-	return result
-
-static func claim_artifact__gd(
+static func claim_artifact(
 	hero_state: Dictionary,
 	artifact_id: String,
 	source_verb: String = "Recovered",
@@ -1226,14 +1120,6 @@ static func pickup_artifact(hero_state: Dictionary, artifact_id: String) -> Dict
 	return claim_artifact(hero_state, artifact_id, "Recovered", true)
 
 static func remove_owned_artifact(hero_state: Dictionary, artifact_id: String) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return remove_owned_artifact__gd(hero_state, artifact_id)
-	var before := TurnEngine.before_writing(&"ArtifactRules.remove_owned_artifact", [hero_state, artifact_id])
-	var result = remove_owned_artifact__gd(hero_state, artifact_id)
-	TurnEngine.check_writing(&"ArtifactRules.remove_owned_artifact", before, [hero_state, artifact_id], result)
-	return result
-
-static func remove_owned_artifact__gd(hero_state: Dictionary, artifact_id: String) -> Dictionary:
 	var hero = ensure_hero_artifacts(hero_state.duplicate(true))
 	var location := locate_artifact(hero, artifact_id)
 	var location_name := String(location.get("location", "missing"))
@@ -1289,14 +1175,6 @@ static func perform_management_action(hero_state: Dictionary, action_id: String)
 	}
 
 static func equip_artifact(hero_state: Dictionary, artifact_id: String) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return equip_artifact__gd(hero_state, artifact_id)
-	var before := TurnEngine.before_writing(&"ArtifactRules.equip_artifact", [hero_state, artifact_id])
-	var result = equip_artifact__gd(hero_state, artifact_id)
-	TurnEngine.check_writing(&"ArtifactRules.equip_artifact", before, [hero_state, artifact_id], result)
-	return result
-
-static func equip_artifact__gd(hero_state: Dictionary, artifact_id: String) -> Dictionary:
 	var hero = ensure_hero_artifacts(hero_state.duplicate(true))
 	var artifact := ContentService.get_artifact(artifact_id)
 	if artifact.is_empty():
@@ -1661,14 +1539,6 @@ static func get_management_actions(hero_state: Dictionary) -> Array:
 	return actions
 
 static func artifact_name(artifact_id: String) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return artifact_name__gd(artifact_id)
-	var before := TurnEngine.before_writing(&"ArtifactRules.artifact_name", [artifact_id])
-	var result = artifact_name__gd(artifact_id)
-	TurnEngine.check_writing(&"ArtifactRules.artifact_name", before, [artifact_id], result)
-	return result
-
-static func artifact_name__gd(artifact_id: String) -> String:
 	if artifact_id == "":
 		return "Artifact"
 	var artifact := ContentService.get_artifact(artifact_id)
@@ -1702,14 +1572,6 @@ static func artifact_slot(artifact_id: String) -> String:
 	return slot if slot in ARTIFACT_SLOTS else ""
 
 static func artifact_slot_label(artifact_id: String) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return artifact_slot_label__gd(artifact_id)
-	var before := TurnEngine.before_writing(&"ArtifactRules.artifact_slot_label", [artifact_id])
-	var result = artifact_slot_label__gd(artifact_id)
-	TurnEngine.check_writing(&"ArtifactRules.artifact_slot_label", before, [artifact_id], result)
-	return result
-
-static func artifact_slot_label__gd(artifact_id: String) -> String:
 	var slot := artifact_slot(artifact_id)
 	return slot.capitalize() if slot != "" else "Carry"
 
@@ -1736,25 +1598,9 @@ static func artifact_set_context(artifact_id: String) -> String:
 	return "Set %s" % _title_label(set_id)
 
 static func artifact_effect_summary(artifact_id: String) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return artifact_effect_summary__gd(artifact_id)
-	var before := TurnEngine.before_writing(&"ArtifactRules.artifact_effect_summary", [artifact_id])
-	var result = artifact_effect_summary__gd(artifact_id)
-	TurnEngine.check_writing(&"ArtifactRules.artifact_effect_summary", before, [artifact_id], result)
-	return result
-
-static func artifact_effect_summary__gd(artifact_id: String) -> String:
 	return _artifact_effect_summary(ContentService.get_artifact(artifact_id))
 
 static func artifact_reward_role(artifact_id: String) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return artifact_reward_role__gd(artifact_id)
-	var before := TurnEngine.before_writing(&"ArtifactRules.artifact_reward_role", [artifact_id])
-	var result = artifact_reward_role__gd(artifact_id)
-	TurnEngine.check_writing(&"ArtifactRules.artifact_reward_role", before, [artifact_id], result)
-	return result
-
-static func artifact_reward_role__gd(artifact_id: String) -> String:
 	var artifact := ContentService.get_artifact(artifact_id)
 	if artifact.is_empty():
 		return "Equipment reward"
@@ -1865,14 +1711,6 @@ static func artifact_collection_state(
 	return "Will enter pack"
 
 static func describe_artifact(artifact_id: String) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return describe_artifact__gd(artifact_id)
-	var before := TurnEngine.before_writing(&"ArtifactRules.describe_artifact", [artifact_id])
-	var result = describe_artifact__gd(artifact_id)
-	TurnEngine.check_writing(&"ArtifactRules.describe_artifact", before, [artifact_id], result)
-	return result
-
-static func describe_artifact__gd(artifact_id: String) -> String:
 	var artifact := ContentService.get_artifact(artifact_id)
 	if artifact.is_empty():
 		return "Artifact cache"
@@ -1893,36 +1731,12 @@ static func _owned_location_label(artifact_id: String, location: Dictionary) -> 
 			return "Not owned"
 
 static func _artifact_effect_line(artifact_id: String) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _artifact_effect_line__gd(artifact_id)
-	var before := TurnEngine.before_writing(&"ArtifactRules._artifact_effect_line", [artifact_id])
-	var result = _artifact_effect_line__gd(artifact_id)
-	TurnEngine.check_writing(&"ArtifactRules._artifact_effect_line", before, [artifact_id], result)
-	return result
-
-static func _artifact_effect_line__gd(artifact_id: String) -> String:
 	return "%s | %s." % [artifact_reward_role(artifact_id), artifact_effect_summary(artifact_id)]
 
 static func _artifact_equipped_note(artifact_id: String, slot: String) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _artifact_equipped_note__gd(artifact_id, slot)
-	var before := TurnEngine.before_writing(&"ArtifactRules._artifact_equipped_note", [artifact_id, slot])
-	var result = _artifact_equipped_note__gd(artifact_id, slot)
-	TurnEngine.check_writing(&"ArtifactRules._artifact_equipped_note", before, [artifact_id, slot], result)
-	return result
-
-static func _artifact_equipped_note__gd(artifact_id: String, slot: String) -> String:
 	return "Equipped in %s slot. %s" % [_equipment_slot_label(slot), _artifact_effect_line(artifact_id)]
 
 static func _artifact_collection_note(hero_state: Dictionary, artifact_id: String) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _artifact_collection_note__gd(hero_state, artifact_id)
-	var before := TurnEngine.before_writing(&"ArtifactRules._artifact_collection_note", [hero_state, artifact_id])
-	var result = _artifact_collection_note__gd(hero_state, artifact_id)
-	TurnEngine.check_writing(&"ArtifactRules._artifact_collection_note", before, [hero_state, artifact_id], result)
-	return result
-
-static func _artifact_collection_note__gd(hero_state: Dictionary, artifact_id: String) -> String:
 	return "%s | %s | %s." % [
 		artifact_slot_label(artifact_id),
 		artifact_reward_role(artifact_id),
@@ -1945,14 +1759,6 @@ static func _compatible_equipment_slots(slot_type: String) -> Array:
 			return []
 
 static func _first_empty_compatible_slot(equipped: Variant, artifact_id: String) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _first_empty_compatible_slot__gd(equipped, artifact_id)
-	var before := TurnEngine.before_writing(&"ArtifactRules._first_empty_compatible_slot", [equipped, artifact_id])
-	var result = _first_empty_compatible_slot__gd(equipped, artifact_id)
-	TurnEngine.check_writing(&"ArtifactRules._first_empty_compatible_slot", before, [equipped, artifact_id], result)
-	return result
-
-static func _first_empty_compatible_slot__gd(equipped: Variant, artifact_id: String) -> String:
 	if not (equipped is Dictionary):
 		return ""
 	return _first_empty_slot_from_candidates(equipped, _compatible_equipment_slots(artifact_slot(artifact_id)))
@@ -1965,14 +1771,6 @@ static func _first_empty_slot_from_candidates(equipped: Dictionary, candidates: 
 	return ""
 
 static func _equipment_slot_label(slot: String) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _equipment_slot_label__gd(slot)
-	var before := TurnEngine.before_writing(&"ArtifactRules._equipment_slot_label", [slot])
-	var result = _equipment_slot_label__gd(slot)
-	TurnEngine.check_writing(&"ArtifactRules._equipment_slot_label", before, [slot], result)
-	return result
-
-static func _equipment_slot_label__gd(slot: String) -> String:
 	if slot == "trinket_2":
 		return "Trinket II"
 	return slot.capitalize()
@@ -2011,14 +1809,6 @@ static func _artifact_is_owned(equipped: Dictionary, inventory: Array, artifact_
 	return false
 
 static func _remove_artifact_from_inventory(inventory: Array, artifact_id: String) -> bool:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _remove_artifact_from_inventory__gd(inventory, artifact_id)
-	var before := TurnEngine.before_writing(&"ArtifactRules._remove_artifact_from_inventory", [inventory, artifact_id])
-	var result = _remove_artifact_from_inventory__gd(inventory, artifact_id)
-	TurnEngine.check_writing(&"ArtifactRules._remove_artifact_from_inventory", before, [inventory, artifact_id], result)
-	return result
-
-static func _remove_artifact_from_inventory__gd(inventory: Array, artifact_id: String) -> bool:
 	for index in range(inventory.size()):
 		if String(inventory[index]) == artifact_id:
 			inventory.remove_at(index)
@@ -2026,14 +1816,6 @@ static func _remove_artifact_from_inventory__gd(inventory: Array, artifact_id: S
 	return false
 
 static func _already_owned_message(artifact_id: String, location: Dictionary, source_verb: String) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _already_owned_message__gd(artifact_id, location, source_verb)
-	var before := TurnEngine.before_writing(&"ArtifactRules._already_owned_message", [artifact_id, location, source_verb])
-	var result = _already_owned_message__gd(artifact_id, location, source_verb)
-	TurnEngine.check_writing(&"ArtifactRules._already_owned_message", before, [artifact_id, location, source_verb], result)
-	return result
-
-static func _already_owned_message__gd(artifact_id: String, location: Dictionary, source_verb: String) -> String:
 	var location_name := String(location.get("location", "missing"))
 	if location_name == "equipped":
 		return "%s %s, but it is already equipped in the %s slot." % [
@@ -2046,14 +1828,6 @@ static func _already_owned_message__gd(artifact_id: String, location: Dictionary
 	return "%s %s." % [source_verb, artifact_name(artifact_id)]
 
 static func _artifact_effect_summary(artifact: Dictionary) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _artifact_effect_summary__gd(artifact)
-	var before := TurnEngine.before_writing(&"ArtifactRules._artifact_effect_summary", [artifact])
-	var result = _artifact_effect_summary__gd(artifact)
-	TurnEngine.check_writing(&"ArtifactRules._artifact_effect_summary", before, [artifact], result)
-	return result
-
-static func _artifact_effect_summary__gd(artifact: Dictionary) -> String:
 	if artifact.is_empty():
 		return "No bonuses"
 	var bonuses = artifact.get("bonuses", {})
@@ -2212,14 +1986,6 @@ static func _resource_impact_parts(value: Variant) -> Array:
 	return parts
 
 static func _resource_display_name(resource_id: String) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _resource_display_name__gd(resource_id)
-	var before := TurnEngine.before_writing(&"ArtifactRules._resource_display_name", [resource_id])
-	var result = _resource_display_name__gd(resource_id)
-	TurnEngine.check_writing(&"ArtifactRules._resource_display_name", before, [resource_id], result)
-	return result
-
-static func _resource_display_name__gd(resource_id: String) -> String:
 	if resource_id in ["gold", "wood", "ore"]:
 		return resource_id
 	return resource_id.replace("_", " ").capitalize()
@@ -2248,14 +2014,6 @@ static func _rare_resource_delta(value: Variant) -> Dictionary:
 	return result
 
 static func _artifact_set_id(artifact: Dictionary) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _artifact_set_id__gd(artifact)
-	var before := TurnEngine.before_writing(&"ArtifactRules._artifact_set_id", [artifact])
-	var result = _artifact_set_id__gd(artifact)
-	TurnEngine.check_writing(&"ArtifactRules._artifact_set_id", before, [artifact], result)
-	return result
-
-static func _artifact_set_id__gd(artifact: Dictionary) -> String:
 	for key in ["set_id", "artifact_set_id", "set"]:
 		var value = artifact.get(key, "")
 		if value is Dictionary:
@@ -2355,14 +2113,6 @@ static func _spell_modifier_matches__gd(modifier: Dictionary, spell: Dictionary)
 	return true
 
 static func _artifact_spell_modifier_parts(value: Variant) -> Array:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _artifact_spell_modifier_parts__gd(value)
-	var before := TurnEngine.before_writing(&"ArtifactRules._artifact_spell_modifier_parts", [value])
-	var result = _artifact_spell_modifier_parts__gd(value)
-	TurnEngine.check_writing(&"ArtifactRules._artifact_spell_modifier_parts", before, [value], result)
-	return result
-
-static func _artifact_spell_modifier_parts__gd(value: Variant) -> Array:
 	var parts := []
 	if not (value is Array):
 		return parts
@@ -2385,14 +2135,6 @@ static func _artifact_spell_modifier_parts__gd(value: Variant) -> Array:
 	return parts
 
 static func _artifact_taxonomy_payload(artifact: Dictionary) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _artifact_taxonomy_payload__gd(artifact)
-	var before := TurnEngine.before_writing(&"ArtifactRules._artifact_taxonomy_payload", [artifact])
-	var result = _artifact_taxonomy_payload__gd(artifact)
-	TurnEngine.check_writing(&"ArtifactRules._artifact_taxonomy_payload", before, [artifact], result)
-	return result
-
-static func _artifact_taxonomy_payload__gd(artifact: Dictionary) -> Dictionary:
 	return {
 		"artifact_id": String(artifact.get("id", "")),
 		"artifact_class": String(artifact.get("artifact_class", "")),
@@ -2499,14 +2241,6 @@ static func _artifact_source_table_validation_errors(table: Dictionary, artifact
 	return issues
 
 static func _stable_source_reward_index(source_key: String, candidate_count: int) -> int:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _stable_source_reward_index__gd(source_key, candidate_count)
-	var before := TurnEngine.before_writing(&"ArtifactRules._stable_source_reward_index", [source_key, candidate_count])
-	var result = _stable_source_reward_index__gd(source_key, candidate_count)
-	TurnEngine.check_writing(&"ArtifactRules._stable_source_reward_index", before, [source_key, candidate_count], result)
-	return result
-
-static func _stable_source_reward_index__gd(source_key: String, candidate_count: int) -> int:
 	if candidate_count <= 1:
 		return 0
 	var value: int = 0
@@ -2515,14 +2249,6 @@ static func _stable_source_reward_index__gd(source_key: String, candidate_count:
 	return value % candidate_count
 
 static func _artifact_source_runtime_policy(table: Dictionary) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _artifact_source_runtime_policy__gd(table)
-	var before := TurnEngine.before_writing(&"ArtifactRules._artifact_source_runtime_policy", [table])
-	var result = _artifact_source_runtime_policy__gd(table)
-	TurnEngine.check_writing(&"ArtifactRules._artifact_source_runtime_policy", before, [table], result)
-	return result
-
-static func _artifact_source_runtime_policy__gd(table: Dictionary) -> Dictionary:
 	var policy = table.get("runtime_policy", {})
 	if not (policy is Dictionary):
 		return {
@@ -2543,14 +2269,6 @@ static func _artifact_source_runtime_policy__gd(table: Dictionary) -> Dictionary
 	}
 
 static func _matching_artifact_source_contexts(table: Dictionary, records: Array, map_object_context: bool) -> Array:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _matching_artifact_source_contexts__gd(table, records, map_object_context)
-	var before := TurnEngine.before_writing(&"ArtifactRules._matching_artifact_source_contexts", [table, records, map_object_context])
-	var result = _matching_artifact_source_contexts__gd(table, records, map_object_context)
-	TurnEngine.check_writing(&"ArtifactRules._matching_artifact_source_contexts", before, [table, records, map_object_context], result)
-	return result
-
-static func _matching_artifact_source_contexts__gd(table: Dictionary, records: Array, map_object_context: bool) -> Array:
 	var matches := []
 	var family_key := "eligible_object_families" if map_object_context else "eligible_site_families"
 	var eligible_families := _string_array(table.get(family_key, []))
@@ -2574,14 +2292,6 @@ static func _matching_artifact_source_contexts__gd(table: Dictionary, records: A
 	return matches
 
 static func _source_record_has_required_tags(record: Dictionary, required_tags: Array) -> bool:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _source_record_has_required_tags__gd(record, required_tags)
-	var before := TurnEngine.before_writing(&"ArtifactRules._source_record_has_required_tags", [record, required_tags])
-	var result = _source_record_has_required_tags__gd(record, required_tags)
-	TurnEngine.check_writing(&"ArtifactRules._source_record_has_required_tags", before, [record, required_tags], result)
-	return result
-
-static func _source_record_has_required_tags__gd(record: Dictionary, required_tags: Array) -> bool:
 	if required_tags.is_empty():
 		return true
 	var tags := []
@@ -2604,14 +2314,6 @@ static func _source_record_has_required_tags__gd(record: Dictionary, required_ta
 	return true
 
 static func _source_record_has_required_categories(record: Dictionary, required_categories: Array) -> bool:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _source_record_has_required_categories__gd(record, required_categories)
-	var before := TurnEngine.before_writing(&"ArtifactRules._source_record_has_required_categories", [record, required_categories])
-	var result = _source_record_has_required_categories__gd(record, required_categories)
-	TurnEngine.check_writing(&"ArtifactRules._source_record_has_required_categories", before, [record, required_categories], result)
-	return result
-
-static func _source_record_has_required_categories__gd(record: Dictionary, required_categories: Array) -> bool:
 	if required_categories.is_empty():
 		return true
 	var categories := _source_record_reward_categories(record)
@@ -2621,14 +2323,6 @@ static func _source_record_has_required_categories__gd(record: Dictionary, requi
 	return true
 
 static func _source_record_reward_categories(record: Dictionary) -> Array:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _source_record_reward_categories__gd(record)
-	var before := TurnEngine.before_writing(&"ArtifactRules._source_record_reward_categories", [record])
-	var result = _source_record_reward_categories__gd(record)
-	TurnEngine.check_writing(&"ArtifactRules._source_record_reward_categories", before, [record], result)
-	return result
-
-static func _source_record_reward_categories__gd(record: Dictionary) -> Array:
 	var categories := []
 	for container_key in ["artifact_reward_contract", "guarded_reward_contract", "reward_preview"]:
 		var container = record.get(container_key, {})
@@ -2646,14 +2340,6 @@ static func _source_record_reward_categories__gd(record: Dictionary) -> Array:
 	return categories
 
 static func _source_record_guard_tier(record: Dictionary) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _source_record_guard_tier__gd(record)
-	var before := TurnEngine.before_writing(&"ArtifactRules._source_record_guard_tier", [record])
-	var result = _source_record_guard_tier__gd(record)
-	TurnEngine.check_writing(&"ArtifactRules._source_record_guard_tier", before, [record], result)
-	return result
-
-static func _source_record_guard_tier__gd(record: Dictionary) -> String:
 	for container_key in ["guard_expectation", "guard_profile"]:
 		var container = record.get(container_key, {})
 		if container is Dictionary:
@@ -2791,14 +2477,6 @@ static func _ai_hints_complete(artifact: Dictionary) -> bool:
 	return true
 
 static func _artifact_ui_summary(artifact: Dictionary) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _artifact_ui_summary__gd(artifact)
-	var before := TurnEngine.before_writing(&"ArtifactRules._artifact_ui_summary", [artifact])
-	var result = _artifact_ui_summary__gd(artifact)
-	TurnEngine.check_writing(&"ArtifactRules._artifact_ui_summary", before, [artifact], result)
-	return result
-
-static func _artifact_ui_summary__gd(artifact: Dictionary) -> String:
 	var ui = artifact.get("ui", {})
 	if ui is Dictionary:
 		return String(ui.get("summary", "")).strip_edges()
@@ -2824,27 +2502,11 @@ static func _increment_count(counts: Dictionary, key_value: String) -> void:
 	counts[key] = int(counts.get(key, 0)) + 1
 
 static func _signed_amount_label(amount: int) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _signed_amount_label__gd(amount)
-	var before := TurnEngine.before_writing(&"ArtifactRules._signed_amount_label", [amount])
-	var result = _signed_amount_label__gd(amount)
-	TurnEngine.check_writing(&"ArtifactRules._signed_amount_label", before, [amount], result)
-	return result
-
-static func _signed_amount_label__gd(amount: int) -> String:
 	if amount > 0:
 		return "+%d" % amount
 	return "%d" % amount
 
 static func _title_label(value: String) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _title_label__gd(value)
-	var before := TurnEngine.before_writing(&"ArtifactRules._title_label", [value])
-	var result = _title_label__gd(value)
-	TurnEngine.check_writing(&"ArtifactRules._title_label", before, [value], result)
-	return result
-
-static func _title_label__gd(value: String) -> String:
 	var words := []
 	for part in value.replace("-", "_").split("_"):
 		var word := String(part).strip_edges()

@@ -6,8 +6,6 @@ const Heroes = preload("res://scripts/core/HeroCommandRules.gd")
 const Progression = preload("res://scripts/core/HeroProgressionRules.gd")
 const Artifacts = preload("res://scripts/core/ArtifactRules.gd")
 const FactionServices = preload("res://scripts/core/FactionTownServices.gd")
-const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
-static var _turn_engine_mode: int = TurnEngine.mode
 
 static func data() -> Dictionary:
 	return ContentService.load_json(DATA_PATH)
@@ -39,14 +37,6 @@ static func _sync_memo_sources() -> void:
 	_memo_sources = [revision, buildings, towns, development]
 
 static func satisfies(built: Array, required: String) -> bool:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return satisfies__gd(built, required)
-	var before := TurnEngine.before_writing(&"TownDevelopmentRules.satisfies", [built, required])
-	var result = satisfies__gd(built, required)
-	TurnEngine.check_writing(&"TownDevelopmentRules.satisfies", before, [built, required], result)
-	return result
-
-static func satisfies__gd(built: Array, required: String) -> bool:
 	return _satisfied_ids(built).has(required)
 
 ## Every building a built list satisfies: each built stage and the stages it
@@ -193,14 +183,6 @@ static func growth(town: Dictionary) -> Dictionary:
 	return result
 
 static func construction_growth(building: Dictionary) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return construction_growth__gd(building)
-	var before := TurnEngine.before_writing(&"TownDevelopmentRules.construction_growth", [building])
-	var result = construction_growth__gd(building)
-	TurnEngine.check_writing(&"TownDevelopmentRules.construction_growth", before, [building], result)
-	return result
-
-static func construction_growth__gd(building: Dictionary) -> Dictionary:
 	# Dwelling upgrades convert existing reserve and never grant a second week.
 	if String(building.get("upgrade_from", "")) != "": return {}
 	var uid := String(building.get("unlock_unit_id", ""))
@@ -226,14 +208,6 @@ static func visiting_active_hero(session, town: Dictionary) -> bool:
 	return false
 
 static func price(artifact: Dictionary) -> int:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return price__gd(artifact)
-	var before := TurnEngine.before_writing(&"TownDevelopmentRules.price", [artifact])
-	var result = price__gd(artifact)
-	TurnEngine.check_writing(&"TownDevelopmentRules.price", before, [artifact], result)
-	return result
-
-static func price__gd(artifact: Dictionary) -> int:
 	var tier := String(artifact.get("rarity", "common"))
 	return int({"common": 1500, "uncommon": 2500, "rare": 4000, "epic": 6500, "legendary": 10000}.get(tier, 2500))
 
@@ -243,14 +217,6 @@ static func objective_artifact_ids(session) -> Array:
 	return load("res://scripts/core/ScenarioRules.gd").objective_artifact_ids(session)
 
 static func offers(town: Dictionary, day: int, excluded_ids: Array = []) -> Array:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return offers__gd(town, day, excluded_ids)
-	var before := TurnEngine.before_writing(&"TownDevelopmentRules.offers", [town, day, excluded_ids])
-	var result = offers__gd(town, day, excluded_ids)
-	TurnEngine.check_writing(&"TownDevelopmentRules.offers", before, [town, day, excluded_ids], result)
-	return result
-
-static func offers__gd(town: Dictionary, day: int, excluded_ids: Array = []) -> Array:
 	var eligible: Array = []
 	for a in ContentService.load_json("res://content/artifacts.json").get("items", []):
 		# Authored quest/relic rewards stay outside the merchant inventory.
@@ -270,27 +236,11 @@ static func offers__gd(town: Dictionary, day: int, excluded_ids: Array = []) -> 
 	return result
 
 static func can_pay(resources: Dictionary, cost: Dictionary) -> bool:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return can_pay__gd(resources, cost)
-	var before := TurnEngine.before_writing(&"TownDevelopmentRules.can_pay", [resources, cost])
-	var result = can_pay__gd(resources, cost)
-	TurnEngine.check_writing(&"TownDevelopmentRules.can_pay", before, [resources, cost], result)
-	return result
-
-static func can_pay__gd(resources: Dictionary, cost: Dictionary) -> bool:
 	for key in cost:
 		if int(resources.get(key, 0)) < int(cost[key]): return false
 	return true
 
 static func upgrade_cost(base: String, target: String, count: int) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return upgrade_cost__gd(base, target, count)
-	var before := TurnEngine.before_writing(&"TownDevelopmentRules.upgrade_cost", [base, target, count])
-	var result = upgrade_cost__gd(base, target, count)
-	TurnEngine.check_writing(&"TownDevelopmentRules.upgrade_cost", before, [base, target, count], result)
-	return result
-
-static func upgrade_cost__gd(base: String, target: String, count: int) -> Dictionary:
 	var before: Dictionary = ContentService.get_unit(base).get("cost", {})
 	var after: Dictionary = ContentService.get_unit(target).get("cost", {})
 	var cost := {}
@@ -300,14 +250,6 @@ static func upgrade_cost__gd(base: String, target: String, count: int) -> Dictio
 	return cost
 
 static func train_hero(hero: Dictionary, town: Dictionary, building_id: String) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return train_hero__gd(hero, town, building_id)
-	var before := TurnEngine.before_writing(&"TownDevelopmentRules.train_hero", [hero, town, building_id])
-	var result = train_hero__gd(hero, town, building_id)
-	TurnEngine.check_writing(&"TownDevelopmentRules.train_hero", before, [hero, town, building_id], result)
-	return result
-
-static func train_hero__gd(hero: Dictionary, town: Dictionary, building_id: String) -> Dictionary:
 	var building := ContentService.get_building(building_id)
 	var reward: Dictionary = building.get("hero_visit_reward", {})
 	var claims: Array = hero.get("town_training_claims", []).duplicate()
@@ -325,14 +267,6 @@ static func train_hero__gd(hero: Dictionary, town: Dictionary, building_id: Stri
 	return {"ok": true, "hero": trained}
 
 static func upgrade_army(town: Dictionary, stacks: Array, base: String, resources: Dictionary) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return upgrade_army__gd(town, stacks, base, resources)
-	var before := TurnEngine.before_writing(&"TownDevelopmentRules.upgrade_army", [town, stacks, base, resources])
-	var result = upgrade_army__gd(town, stacks, base, resources)
-	TurnEngine.check_writing(&"TownDevelopmentRules.upgrade_army", before, [town, stacks, base, resources], result)
-	return result
-
-static func upgrade_army__gd(town: Dictionary, stacks: Array, base: String, resources: Dictionary) -> Dictionary:
 	var target := String(data().get("unit_upgrades", {}).get(base, ""))
 	var available := false
 	for id in active_buildings(town):
@@ -351,14 +285,6 @@ static func upgrade_army__gd(town: Dictionary, stacks: Array, base: String, reso
 	return {"ok": true, "stacks": upgraded, "count": count, "cost": cost}
 
 static func trade_artifact(hero: Dictionary, town: Dictionary, day: int, artifact_id: String, buying: bool, resources: Dictionary, excluded_ids: Array = []) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return trade_artifact__gd(hero, town, day, artifact_id, buying, resources, excluded_ids)
-	var before := TurnEngine.before_writing(&"TownDevelopmentRules.trade_artifact", [hero, town, day, artifact_id, buying, resources, excluded_ids])
-	var result = trade_artifact__gd(hero, town, day, artifact_id, buying, resources, excluded_ids)
-	TurnEngine.check_writing(&"TownDevelopmentRules.trade_artifact", before, [hero, town, day, artifact_id, buying, resources, excluded_ids], result)
-	return result
-
-static func trade_artifact__gd(hero: Dictionary, town: Dictionary, day: int, artifact_id: String, buying: bool, resources: Dictionary, excluded_ids: Array = []) -> Dictionary:
 	var exchange := false
 	for id in active_buildings(town):
 		if ContentService.get_building(String(id)).get("artifact_exchange", false): exchange = true

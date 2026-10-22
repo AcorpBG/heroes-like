@@ -7,8 +7,6 @@ const EnemyTurnRulesScript = preload("res://scripts/core/EnemyTurnRules.gd")
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const PlayerIdentityRulesScript = preload("res://scripts/core/PlayerIdentityRules.gd")
-const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
-static var _turn_engine_mode: int = TurnEngine.mode
 
 const SCRIPT_STATE_KEY := "scenario_script_state"
 const PENDING_REINFORCEMENTS_KEY := "pending_reinforcements"
@@ -23,14 +21,6 @@ static func _scenario_factory() -> Variant:
 	return load("res://scripts/core/ScenarioFactory.gd")
 
 static func build_script_state() -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return build_script_state__gd()
-	var before := TurnEngine.before_writing(&"ScenarioScriptRules.build_script_state", [])
-	var result = build_script_state__gd()
-	TurnEngine.check_writing(&"ScenarioScriptRules.build_script_state", before, [], result)
-	return result
-
-static func build_script_state__gd() -> Dictionary:
 	return {
 		"fired_hook_ids": [],
 		"event_log": [],
@@ -647,14 +637,6 @@ static func _append_event_log(session: SessionStateStoreScript.SessionData, hook
 	session.overworld[SCRIPT_STATE_KEY] = state
 
 static func _hook_fired(session: SessionStateStoreScript.SessionData, hook_id: String) -> bool:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _hook_fired__gd(session, hook_id)
-	var before := TurnEngine.before_writing(&"ScenarioScriptRules._hook_fired", [session, hook_id])
-	var result = _hook_fired__gd(session, hook_id)
-	TurnEngine.check_writing(&"ScenarioScriptRules._hook_fired", before, [session, hook_id], result)
-	return result
-
-static func _hook_fired__gd(session: SessionStateStoreScript.SessionData, hook_id: String) -> bool:
 	if session == null or hook_id == "":
 		return false
 	var state: Dictionary = session.overworld.get(SCRIPT_STATE_KEY, {})
@@ -670,14 +652,6 @@ static func _node_exists(nodes: Variant, placement_id: String) -> bool:
 	return false
 
 static func _encounter_resolved(session: SessionStateStoreScript.SessionData, placement_id: String) -> bool:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _encounter_resolved__gd(session, placement_id)
-	var before := TurnEngine.before_writing(&"ScenarioScriptRules._encounter_resolved", [session, placement_id])
-	var result = _encounter_resolved__gd(session, placement_id)
-	TurnEngine.check_writing(&"ScenarioScriptRules._encounter_resolved", before, [session, placement_id], result)
-	return result
-
-static func _encounter_resolved__gd(session: SessionStateStoreScript.SessionData, placement_id: String) -> bool:
 	if placement_id == "":
 		return false
 	var resolved = session.overworld.get("resolved_encounters", [])

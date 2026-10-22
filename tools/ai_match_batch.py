@@ -31,11 +31,10 @@ the export runs with a throwaway profile holding a copy of them. The release bui
 packages into each match's throwaway user profile, not res://maps. OUT/game (about 5 GB) is deleted
 when the batch completes.
 
-Matches run the computer players' day native (HEROES_NATIVE_TURN=native, docs/native-rules-engine-
-transition.md, Phase 4) unless the environment names another mode; plan.json records it. A day that
-reaches a path the native port leaves to GDScript runs in GDScript and prints a NATIVE FALLBACK line
-per native call it replaced: each match row counts them by entry and path (native_fallbacks), and
-summary.md totals them.
+The computer players' day runs native (docs/native-rules-engine-transition.md, Phase 4). A day
+processing path the native day port leaves to GDScript runs in GDScript and prints a NATIVE FALLBACK
+line per native call it replaced: each match row counts them by entry and path (native_fallbacks),
+and summary.md totals them.
 
 --weights W1,W2,... gives each seat its overworld AI weight set in every match (seat order, one per
 player): "default", the name of a set in content/ai_hero_weights.json, or a .json file holding one
@@ -80,8 +79,6 @@ TIMEOUT_MIN = {"homm3_small": 30, "homm3_medium": 90, "homm3_large": 180, "homm3
 GUARDS = ("weak", "normal", "strong")
 WATER = ("land", "normal_water", "islands")
 SLOW_DAY_MS = 10000
-# The native AI turn for every match, unless the environment names another mode.
-NATIVE_TURN = os.environ.get("HEROES_NATIVE_TURN", "").strip() or "native"
 FALLBACK_MARK = "NATIVE FALLBACK: "
 IS_WINDOWS = platform.system() == "Windows"
 BATCH_PRESET = "Windows AI Batch" if IS_WINDOWS else "Linux AI Batch"
@@ -235,7 +232,6 @@ def make_plan(args: argparse.Namespace, groups: list[tuple[int, str, int]]) -> d
         "plan_seed": plan_seed,
         "days": args.days,
         "build": "release" if args.release else "editor",
-        "native_turn": NATIVE_TURN,
         "lineups": "fixed" if args.lineup else args.lineups,
         "groups": [{"players": p, "size": s, "matches": n} for p, s, n in groups],
         # Map packages already there are never deleted, even if a match writes the same name.
@@ -348,7 +344,6 @@ def launch(godot: str, out: Path, m: dict, days: int, timeout_min: float, game: 
         "HEROES_AI_MATCH_LEVELS": str(m["levels"]),
         "HEROES_AI_MATCH_MAX_DAYS": str(days),
         "HEROES_AI_MATCH_OUT": (out / f"{m['run']}.json").as_posix(),
-        "HEROES_NATIVE_TURN": NATIVE_TURN,
     })
     if m.get("weights"):
         env["HEROES_AI_MATCH_WEIGHTS"] = ",".join(m["weights"])
@@ -626,8 +621,8 @@ def write_summary(out: Path, plan: dict) -> None:
         f"# AI match batch {out.name}",
         "",
         f"Commit {plan['commit'][:9]}{' (dirty tree)' if plan.get('dirty') else ''}, plan seed {plan['plan_seed']}, "
-        f"line-ups {plan['lineups']}, day cap {plan['days']}{', release build' if plan.get('build') == 'release' else ''}, "
-        f"native turn {plan.get('native_turn', 'gdscript')}: {groups}.",
+        f"line-ups {plan['lineups']}, day cap {plan['days']}{', release build' if plan.get('build') == 'release' else ''}: "
+        f"{groups}.",
         f"{len(rows)} of {len(plan['matches'])} matches played: {len(decided)} decided, {len(capped)} at the day cap, "
         f"{len(failed)} failed or timed out.",
     ]
@@ -664,7 +659,7 @@ def write_summary(out: Path, plan: dict) -> None:
         games = sum(1 for row in rows if row.get("native_fallbacks"))
         lines.append(f"- Native calls run in GDScript instead (NATIVE FALLBACK): {sum(fallbacks.values())} in {games} games: "
                      + ", ".join(f"{key} {count}" for key, count in fallbacks.most_common()))
-    elif rows and plan.get("native_turn") == "native":
+    elif rows:
         lines.append("- Native calls run in GDScript instead (NATIVE FALLBACK): none.")
     slow = sorted((r for r in ok if r["summary"]["slowest_ai_day_ms"] > SLOW_DAY_MS), key=lambda r: -r["summary"]["slowest_ai_day_ms"])
     if slow:

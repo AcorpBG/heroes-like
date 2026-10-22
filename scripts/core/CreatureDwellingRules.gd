@@ -8,8 +8,6 @@ extends RefCounted
 ## flagged dwelling adds +1 weekly growth for its creature in the owner's
 ## towns. See docs/creature-dwellings.md.
 
-const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
-static var _turn_engine_mode: int = TurnEngine.mode
 
 const FAMILY := "neutral_dwelling"
 const KIND_REFUGEE_CAMP := "refugee_camp"
@@ -80,14 +78,6 @@ static func population(node: Dictionary, site: Dictionary, day: int) -> Dictiona
 	return weekly_growth(node, site, day)
 
 static func take(node: Dictionary, site: Dictionary, unit_id: String, count: int, day: int) -> void:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		take__gd(node, site, unit_id, count, day)
-		return
-	var before := TurnEngine.before_writing(&"CreatureDwellingRules.take", [node, site, unit_id, count, day])
-	take__gd(node, site, unit_id, count, day)
-	TurnEngine.check_writing(&"CreatureDwellingRules.take", before, [node, site, unit_id, count, day], null)
-
-static func take__gd(node: Dictionary, site: Dictionary, unit_id: String, count: int, day: int) -> void:
 	var available := population(node, site, day)
 	available[unit_id] = max(0, int(available.get(unit_id, 0)) - max(0, count))
 	node[POPULATION] = available
@@ -190,14 +180,6 @@ static func guard_stacks(node: Dictionary, site: Dictionary, side: String, day: 
 	return full_guard(node, site, day)
 
 static func record_guard_result(node: Dictionary, side: String, survivor_stacks: Array, won: bool, day: int) -> void:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		record_guard_result__gd(node, side, survivor_stacks, won, day)
-		return
-	var before := TurnEngine.before_writing(&"CreatureDwellingRules.record_guard_result", [node, side, survivor_stacks, won, day])
-	record_guard_result__gd(node, side, survivor_stacks, won, day)
-	TurnEngine.check_writing(&"CreatureDwellingRules.record_guard_result", before, [node, side, survivor_stacks, won, day], null)
-
-static func record_guard_result__gd(node: Dictionary, side: String, survivor_stacks: Array, won: bool, day: int) -> void:
 	var survivors = node.get(GUARD_SURVIVORS, {})
 	if not (survivors is Dictionary):
 		survivors = {}
@@ -216,14 +198,6 @@ static func record_guard_result__gd(node: Dictionary, side: String, survivor_sta
 		node[GUARD_SURVIVORS] = survivors
 
 static func guard_key(placement_id: String) -> String:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return guard_key__gd(placement_id)
-	var before := TurnEngine.before_writing(&"CreatureDwellingRules.guard_key", [placement_id])
-	var result = guard_key__gd(placement_id)
-	TurnEngine.check_writing(&"CreatureDwellingRules.guard_key", before, [placement_id], result)
-	return result
-
-static func guard_key__gd(placement_id: String) -> String:
 	return "%s%s" % [GUARD_KEY_PREFIX, placement_id]
 
 static func placement_from_guard_key(key: String) -> String:

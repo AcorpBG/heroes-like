@@ -8,8 +8,6 @@ const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const DayEngine = preload("res://scripts/core/DayEngine.gd")
-const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
-static var _turn_engine_mode: int = TurnEngine.mode
 static var _day_engine_mode: int = DayEngine.mode
 static var DifficultyRulesScript: Variant = load("res://scripts/core/DifficultyRules.gd")
 
@@ -186,15 +184,7 @@ static func build_hero_from_template(
 ## (starting_army_for_hero, seeded by `seed_key`) when that holds no troops,
 ## and arrives at `level` through HeroProgressionRules exactly as earned levels
 ## do, with full movement and mana. tavern_offer gives a hire's level and army.
-static func build_recruited_hero(hero_template: Dictionary, position: Dictionary, movement_source: Variant, level: int = 1, army_state: Variant = {}, seed_key: String = "", growth_seed: String = "") -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return build_recruited_hero__gd(hero_template, position, movement_source, level, army_state, seed_key, growth_seed)
-	var before := TurnEngine.before_writing(&"HeroCommandRules.build_recruited_hero", [hero_template, position, movement_source, level, army_state, seed_key, growth_seed])
-	var result = build_recruited_hero__gd(hero_template, position, movement_source, level, army_state, seed_key, growth_seed)
-	TurnEngine.check_writing(&"HeroCommandRules.build_recruited_hero", before, [hero_template, position, movement_source, level, army_state, seed_key, growth_seed], result)
-	return result
-
-static func build_recruited_hero__gd(
+static func build_recruited_hero(
 	hero_template: Dictionary,
 	position: Dictionary,
 	movement_source: Variant,
@@ -237,14 +227,6 @@ static func build_recruited_hero__gd(
 ## Always at least one creature when the faction has any; the same `seed_key`
 ## always gives the same army.
 static func starting_army_for_hero(hero_template: Dictionary, seed_key: String) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return starting_army_for_hero__gd(hero_template, seed_key)
-	var before := TurnEngine.before_writing(&"HeroCommandRules.starting_army_for_hero", [hero_template, seed_key])
-	var result = starting_army_for_hero__gd(hero_template, seed_key)
-	TurnEngine.check_writing(&"HeroCommandRules.starting_army_for_hero", before, [hero_template, seed_key], result)
-	return result
-
-static func starting_army_for_hero__gd(hero_template: Dictionary, seed_key: String) -> Dictionary:
 	var hero_id := String(hero_template.get("id", ""))
 	var rng := _seeded_rng("%s|starting_army" % seed_key)
 	var stacks := []
@@ -413,20 +395,9 @@ static func scouting_radius_for_hero(hero_state: Dictionary) -> int:
 
 # Sight covers a round area: a tile is in range when its centre lies within
 # radius + 1/2 tiles of the source, which keeps the rim free of one-tile nubs.
-static func within_scout_radius(dx: int, dy: int, radius: int) -> bool:
-	return dx * dx + dy * dy <= radius * (radius + 1)
-
 # Half-width of the round sight area on the row dy tiles from its centre, or
 # -1 when the row lies outside it.
 static func scout_row_half_width(dy: int, radius: int) -> int:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return scout_row_half_width__gd(dy, radius)
-	var before := TurnEngine.before_writing(&"HeroCommandRules.scout_row_half_width", [dy, radius])
-	var result = scout_row_half_width__gd(dy, radius)
-	TurnEngine.check_writing(&"HeroCommandRules.scout_row_half_width", before, [dy, radius], result)
-	return result
-
-static func scout_row_half_width__gd(dy: int, radius: int) -> int:
 	var remaining := radius * (radius + 1) - dy * dy
 	if remaining < 0:
 		return -1
@@ -563,14 +534,6 @@ static func commit_active_hero__gd(session: SessionStateStoreScript.SessionData)
 	_sync_active_hero_mirror(session)
 
 static func set_active_hero(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return set_active_hero__gd(session, hero_id)
-	var before := TurnEngine.before_writing(&"HeroCommandRules.set_active_hero", [session, hero_id])
-	var result = set_active_hero__gd(session, hero_id)
-	TurnEngine.check_writing(&"HeroCommandRules.set_active_hero", before, [session, hero_id], result)
-	return result
-
-static func set_active_hero__gd(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
 	normalize_session(session)
 	if hero_id == "":
 		return {"ok": false, "message": "No hero was selected."}
@@ -836,14 +799,6 @@ static func set_town_garrison_hero(session: SessionStateStoreScript.SessionData,
 ## Merges `incoming` stacks into `army` (same units join, new units take free
 ## slots). Returns the slotted result, or [] when the units do not fit.
 static func merge_stacks_into_army(army: Array, incoming: Array) -> Array:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return merge_stacks_into_army__gd(army, incoming)
-	var before := TurnEngine.before_writing(&"HeroCommandRules.merge_stacks_into_army", [army, incoming])
-	var result = merge_stacks_into_army__gd(army, incoming)
-	TurnEngine.check_writing(&"HeroCommandRules.merge_stacks_into_army", before, [army, incoming], result)
-	return result
-
-static func merge_stacks_into_army__gd(army: Array, incoming: Array) -> Array:
 	var merged := _slotted_stacks(army)
 	for stack_value in incoming:
 		if not (stack_value is Dictionary):
@@ -1158,14 +1113,6 @@ static func army_addition_plan(stacks_value: Variant, additions: Dictionary) -> 
 ## types take free slots in unit-id order, and the types left without a slot
 ## come back as overflow.
 static func army_addition_split(stacks_value: Variant, additions: Dictionary) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return army_addition_split__gd(stacks_value, additions)
-	var before := TurnEngine.before_writing(&"HeroCommandRules.army_addition_split", [stacks_value, additions])
-	var result = army_addition_split__gd(stacks_value, additions)
-	TurnEngine.check_writing(&"HeroCommandRules.army_addition_split", before, [stacks_value, additions], result)
-	return result
-
-static func army_addition_split__gd(stacks_value: Variant, additions: Dictionary) -> Dictionary:
 	var stacks: Array = stacks_value.duplicate(true) if stacks_value is Array else []
 	if _valid_stack_count(stacks) <= ARMY_SLOT_COUNT:
 		stacks = _slotted_stacks(stacks)
@@ -2102,25 +2049,9 @@ static func remove_active_hero_after_defeat(session: SessionStateStoreScript.Ses
 	}
 
 static func town_has_hall(town: Dictionary) -> bool:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return town_has_hall__gd(town)
-	var before := TurnEngine.before_writing(&"HeroCommandRules.town_has_hall", [town])
-	var result = town_has_hall__gd(town)
-	TurnEngine.check_writing(&"HeroCommandRules.town_has_hall", before, [town], result)
-	return result
-
-static func town_has_hall__gd(town: Dictionary) -> bool:
 	return HALL_BUILDING_ID in town.get("built_buildings", [])
 
 static func hero_recruit_cost(hero_template: Dictionary) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return hero_recruit_cost__gd(hero_template)
-	var before := TurnEngine.before_writing(&"HeroCommandRules.hero_recruit_cost", [hero_template])
-	var result = hero_recruit_cost__gd(hero_template)
-	TurnEngine.check_writing(&"HeroCommandRules.hero_recruit_cost", before, [hero_template], result)
-	return result
-
-static func hero_recruit_cost__gd(hero_template: Dictionary) -> Dictionary:
 	var cost = hero_template.get("recruit_cost", DEFAULT_RECRUIT_COST)
 	return _normalize_resources(cost)
 
@@ -2158,14 +2089,6 @@ static func tavern_offer_ids(session: SessionStateStoreScript.SessionData) -> Ar
 	return offer
 
 static func tavern_week(session: SessionStateStoreScript.SessionData) -> int:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return tavern_week__gd(session)
-	var before := TurnEngine.before_writing(&"HeroCommandRules.tavern_week", [session])
-	var result = tavern_week__gd(session)
-	TurnEngine.check_writing(&"HeroCommandRules.tavern_week", before, [session], result)
-	return result
-
-static func tavern_week__gd(session: SessionStateStoreScript.SessionData) -> int:
 	return maxi(0, (int(session.day) - 1) / 7) if session != null else 0
 
 static func days_until_tavern_rotation(session: SessionStateStoreScript.SessionData) -> int:
@@ -2177,14 +2100,6 @@ static func days_until_tavern_rotation(session: SessionStateStoreScript.SessionD
 ## repeated reads, saves, loads and a hire in the other tavern place never
 ## reroll it. `week` defaults to the current tavern week.
 static func tavern_offer(session: SessionStateStoreScript.SessionData, hero_id: String, week: int = -1) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return tavern_offer__gd(session, hero_id, week)
-	var before := TurnEngine.before_writing(&"HeroCommandRules.tavern_offer", [session, hero_id, week])
-	var result = tavern_offer__gd(session, hero_id, week)
-	TurnEngine.check_writing(&"HeroCommandRules.tavern_offer", before, [session, hero_id, week], result)
-	return result
-
-static func tavern_offer__gd(session: SessionStateStoreScript.SessionData, hero_id: String, week: int = -1) -> Dictionary:
 	var hero_template := ContentService.get_hero(hero_id)
 	if session == null or hero_template.is_empty():
 		return {}
@@ -2488,14 +2403,6 @@ static func _stationed_holder_ids(session: SessionStateStoreScript.SessionData, 
 	return holders
 
 static func _holder_stacks(session: SessionStateStoreScript.SessionData, town: Dictionary, holder_id: String) -> Array:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _holder_stacks__gd(session, town, holder_id)
-	var before := TurnEngine.before_writing(&"HeroCommandRules._holder_stacks", [session, town, holder_id])
-	var result = _holder_stacks__gd(session, town, holder_id)
-	TurnEngine.check_writing(&"HeroCommandRules._holder_stacks", before, [session, town, holder_id], result)
-	return result
-
-static func _holder_stacks__gd(session: SessionStateStoreScript.SessionData, town: Dictionary, holder_id: String) -> Array:
 	if holder_id == HOLDER_GARRISON:
 		return town.get("garrison", []).duplicate(true) if town.get("garrison", []) is Array else []
 	var hero := hero_by_id(session, holder_id)
@@ -2744,14 +2651,6 @@ static func _first_open_army_slot(claimed: Dictionary) -> int:
 	return -1
 
 static func _stack_slot_less(left: Dictionary, right: Dictionary) -> bool:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _stack_slot_less__gd(left, right)
-	var before := TurnEngine.before_writing(&"HeroCommandRules._stack_slot_less", [left, right])
-	var result = _stack_slot_less__gd(left, right)
-	TurnEngine.check_writing(&"HeroCommandRules._stack_slot_less", before, [left, right], result)
-	return result
-
-static func _stack_slot_less__gd(left: Dictionary, right: Dictionary) -> bool:
 	return int(left.get(ARMY_SLOT_INDEX_KEY, ARMY_SLOT_COUNT)) < int(right.get(ARMY_SLOT_INDEX_KEY, ARMY_SLOT_COUNT))
 
 static func _stack_index_by_slot(stacks: Array, slot_index: int) -> int:
@@ -2797,14 +2696,6 @@ static func _holder_label(session: SessionStateStoreScript.SessionData, town: Di
 	return String(hero.get("name", holder_id))
 
 static func _seeded_rng(seed_key: String) -> RandomNumberGenerator:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _seeded_rng__gd(seed_key)
-	var before := TurnEngine.before_writing(&"HeroCommandRules._seeded_rng", [seed_key])
-	var result = _seeded_rng__gd(seed_key)
-	TurnEngine.check_writing(&"HeroCommandRules._seeded_rng", before, [seed_key], result)
-	return result
-
-static func _seeded_rng__gd(seed_key: String) -> RandomNumberGenerator:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = hash(seed_key)
 	return rng
@@ -2812,14 +2703,6 @@ static func _seeded_rng__gd(seed_key: String) -> RandomNumberGenerator:
 ## The faction's base creatures of `tier`, one per town dwelling line, from
 ## the town development roster (the faction unit ladder when it has none).
 static func _faction_creatures(faction_id: String, tier: int) -> Array:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _faction_creatures__gd(faction_id, tier)
-	var before := TurnEngine.before_writing(&"HeroCommandRules._faction_creatures", [faction_id, tier])
-	var result = _faction_creatures__gd(faction_id, tier)
-	TurnEngine.check_writing(&"HeroCommandRules._faction_creatures", before, [faction_id, tier], result)
-	return result
-
-static func _faction_creatures__gd(faction_id: String, tier: int) -> Array:
 	var creatures := []
 	var rosters = ContentService.load_json(TOWN_DEVELOPMENT_PATH).get("rosters", {})
 	var roster = rosters.get(faction_id, []) if rosters is Dictionary else []
@@ -2837,14 +2720,6 @@ static func _faction_creatures__gd(faction_id: String, tier: int) -> Array:
 	return creatures
 
 static func _starting_company_size(rng: RandomNumberGenerator, unit_id: String, growth_share: Array) -> int:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _starting_company_size__gd(rng, unit_id, growth_share)
-	var before := TurnEngine.before_writing(&"HeroCommandRules._starting_company_size", [rng, unit_id, growth_share])
-	var result = _starting_company_size__gd(rng, unit_id, growth_share)
-	TurnEngine.check_writing(&"HeroCommandRules._starting_company_size", before, [rng, unit_id, growth_share], result)
-	return result
-
-static func _starting_company_size__gd(rng: RandomNumberGenerator, unit_id: String, growth_share: Array) -> int:
 	var growth := maxi(1, int(ContentService.get_unit(unit_id).get("growth", 6)))
 	var low := maxi(1, ceili(growth * float(growth_share[0])))
 	return rng.randi_range(low, maxi(low, ceili(growth * float(growth_share[1]))))
@@ -2867,14 +2742,6 @@ static func _spend_resources(session: SessionStateStoreScript.SessionData, cost:
 	session.overworld["resources"] = resources
 
 static func _normalize_resources(value: Variant) -> Dictionary:
-	if _turn_engine_mode != TurnEngine.SHADOW:
-		return _normalize_resources__gd(value)
-	var before := TurnEngine.before_writing(&"HeroCommandRules._normalize_resources", [value])
-	var result = _normalize_resources__gd(value)
-	TurnEngine.check_writing(&"HeroCommandRules._normalize_resources", before, [value], result)
-	return result
-
-static func _normalize_resources__gd(value: Variant) -> Dictionary:
 	var resources := {}
 	if value is Dictionary:
 		for key in value.keys():
