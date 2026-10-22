@@ -80,8 +80,7 @@ DictRef locate_artifact(State &state, DictRef hero_state, Atom artifact_id);
 ArrayRef owned_artifact_ids(State &state, DictRef hero_state);
 DictRef select_live_source_reward(State &state, Atom source_tag, DictRef source_record, Atom source_key, Atom faction_id, ArrayRef excluded_artifact_ids);
 
-// Not ported yet: each throws state::NotPorted (phase4_shared_stubs.cpp) until Phase 5's
-// slice 09 ports it.
+// Ported in Phase 5's slice 09 (battle_end_heroes.cpp).
 DictRef _select_rarity_source_reward(State &state, Atom source_tag, Atom rarity, Atom source_key, ArrayRef excluded_artifact_ids);
 
 } // namespace aurelion::rules::port::artifact_rules

@@ -193,7 +193,6 @@ add_library(aurelion_rules_core STATIC
 	core/port/overworld_state_normalize.cpp
 	core/port/overworld_towns_normalize.cpp
 	core/port/overworld_transit_normalize.cpp
-	core/port/phase4_shared_stubs.cpp
 	core/port/player_elimination.cpp
 	core/port/player_identity_rules.cpp
 	core/port/player_identity_rules_ai.cpp
@@ -210,12 +209,14 @@ add_library(aurelion_rules_core STATIC
 	core/port/spell_events.cpp
 	core/port/spell_rules.cpp
 	core/port/spell_rules_ai.cpp
+	core/port/spell_rules_shared.cpp
 	core/port/spell_summaries.cpp
 	core/port/stack_effects.cpp
 	core/port/stat_totals.cpp
 	core/port/target_selection.cpp
 	core/port/town_development_rules_ai.cpp
 	core/port/town_rules_ai.cpp
+	core/port/town_rules_shared.cpp
 	core/port/turn_forecast.cpp
 	core/port/turn_order.cpp
 	core/port/unit_abilities.cpp
