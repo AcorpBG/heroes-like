@@ -144,6 +144,8 @@ add_library(aurelion_rules_core STATIC
 	core/port/battle_footprint.cpp
 	core/port/battle_forces.cpp
 	core/port/battle_payload.cpp
+	core/port/battle_payload_callers.cpp
+	core/port/battle_resume.cpp
 	core/port/battle_rules.cpp
 	core/port/battle_rules_ai.cpp
 	core/port/battle_stacks.cpp

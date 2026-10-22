@@ -75,6 +75,30 @@ DictRef _normalize_field_objective(State &state, DictRef entry, const Value &exi
 Atom _default_field_objective_summary(State &state, Atom objective_type);
 ArrayRef _default_field_objective_pressure_tags(State &state, Atom objective_type);
 
+// Slice 2b: the payloads of a town assault, a defended resource site and a
+// dwelling's guard (battle_payload_callers.cpp).
+DictRef create_town_assault_payload(State &state, const Value &session, Atom town_placement_id);
+DictRef _town_assault_enemy_commander_state(State &state, DictRef town);
+DictRef create_resource_defense_payload(State &state, const Value &session, Atom resource_placement_id);
+DictRef create_dwelling_guard_payload(State &state, const Value &session, Atom resource_placement_id);
+
+// Slice 2b: a battle picked up again, from a save or a screen refresh
+// (battle_resume.cpp).
+bool normalize_battle_state(State &state, const Value &session);
+bool battle_payload_can_resume(State &state, const Value &session);
+DictRef _battle_context_seed(State &state, const Value &session);
+bool _battle_context_is_restorable(State &state, const Value &session, DictRef context);
+bool _battle_context_already_resolved(State &state, const Value &session, DictRef context);
+bool _battle_has_living_opposition(State &state, DictRef battle);
+void _sync_battle_context_anchors(State &state, const Value &session, DictRef context);
+Atom _normalized_battle_resolved_key(State &state, const Value &session, DictRef encounter_placement, DictRef context);
+DictRef _normalize_player_commander_state(State &state, const Value &session, const Value &existing_state, const Value &source, const Value &context);
+Atom _enemy_force_name_from_battle_army_id(State &state, DictRef battle, const Value &session);
+DictRef _normalize_stack(State &state, const Value &stack);
+ArrayRef _normalize_battle_obstacles(State &state, const Value &value);
+ArrayRef _normalize_waited_stack_ids(State &state, DictRef battle);
+DictRef _normalize_tactical_briefing_state(State &state, const Value &value, const Value &session);
+
 } // namespace battle_rules
 
 namespace town_battle_rules {
