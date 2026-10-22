@@ -3,6 +3,7 @@
 #include "battle_state_bridge.hpp"
 
 #include "aurelion_rules/compat/godot_string.hpp"
+#include "aurelion_rules/port/gd.hpp"
 #include "aurelion_rules/port/registry.hpp"
 
 #include <godot_cpp/classes/engine.hpp>
@@ -621,8 +622,13 @@ Value PortBridge::content_row(state::State &state, state::ContentTable table, ui
 	const std::string &text = state.text(id);
 	const Variant row = content_service()->call(StringName(method), String::utf8(text.data(), static_cast<int64_t>(text.size())));
 	const Value loaded = load(row);
-	// Terrain layers are a new copy on every call, so they are asked for again.
-	if (loaded.kind == Kind::Dict && state.dict_size(loaded.ref) != 0 && table != state::ContentTable::TerrainLayersForScenario) {
+	// Terrain layers are a new copy on every call, so they are asked for again,
+	// and the port gets a new Dictionary of its own, as GDScript does: a
+	// shadow check then compares it by its entries.
+	if (table == state::ContentTable::TerrainLayersForScenario) {
+		return loaded.kind == Kind::Dict ? Value::of_ref(Kind::Dict, gd::deep_duplicate_dict(state, loaded.ref)) : loaded;
+	}
+	if (loaded.kind == Kind::Dict && state.dict_size(loaded.ref) != 0) {
 		content_.emplace(memo, loaded);
 	}
 	return loaded;

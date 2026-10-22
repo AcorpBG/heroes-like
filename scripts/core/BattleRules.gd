@@ -133,7 +133,17 @@ const ANIMATION_STATE_PRIORITY := {
 	"wait_hold": 54,
 }
 
-static func create_town_assault_payload(
+static func create_town_assault_payload(session: SessionStateStoreScript.SessionData, town_placement_id: String) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return create_town_assault_payload__gd(session, town_placement_id)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules.create_town_assault_payload", [session, town_placement_id])
+	var before := BattleEngine.before_writing(&"BattleRules.create_town_assault_payload", [session, town_placement_id])
+	var result = create_town_assault_payload__gd(session, town_placement_id)
+	BattleEngine.check_writing(&"BattleRules.create_town_assault_payload", before, [session, town_placement_id], result)
+	return result
+
+static func create_town_assault_payload__gd(
 	session: SessionStateStoreScript.SessionData,
 	town_placement_id: String
 ) -> Dictionary:
@@ -177,7 +187,17 @@ static func _town_assault_enemy_commander_state(town: Dictionary) -> Dictionary:
 		return commander_state.duplicate(true)
 	return {}
 
-static func create_resource_defense_payload(
+static func create_resource_defense_payload(session: SessionStateStoreScript.SessionData, resource_placement_id: String) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return create_resource_defense_payload__gd(session, resource_placement_id)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules.create_resource_defense_payload", [session, resource_placement_id])
+	var before := BattleEngine.before_writing(&"BattleRules.create_resource_defense_payload", [session, resource_placement_id])
+	var result = create_resource_defense_payload__gd(session, resource_placement_id)
+	BattleEngine.check_writing(&"BattleRules.create_resource_defense_payload", before, [session, resource_placement_id], result)
+	return result
+
+static func create_resource_defense_payload__gd(
 	session: SessionStateStoreScript.SessionData,
 	resource_placement_id: String
 ) -> Dictionary:
@@ -224,7 +244,17 @@ static func create_resource_defense_payload(
 ## plain neutral encounter keyed "dwelling_guard:<placement>", so the battle
 ## resolves through the normal encounter flow; only its outcome is written back
 ## to the dwelling (see OverworldRules.update_dwelling_guard_after_battle).
-static func create_dwelling_guard_payload(
+static func create_dwelling_guard_payload(session: SessionStateStoreScript.SessionData, resource_placement_id: String) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return create_dwelling_guard_payload__gd(session, resource_placement_id)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules.create_dwelling_guard_payload", [session, resource_placement_id])
+	var before := BattleEngine.before_writing(&"BattleRules.create_dwelling_guard_payload", [session, resource_placement_id])
+	var result = create_dwelling_guard_payload__gd(session, resource_placement_id)
+	BattleEngine.check_writing(&"BattleRules.create_dwelling_guard_payload", before, [session, resource_placement_id], result)
+	return result
+
+static func create_dwelling_guard_payload__gd(
 	session: SessionStateStoreScript.SessionData,
 	resource_placement_id: String
 ) -> Dictionary:
@@ -257,6 +287,16 @@ static func create_dwelling_guard_payload(
 	return create_battle_payload(session, placement)
 
 static func create_battle_payload(session: SessionStateStoreScript.SessionData, encounter_placement: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return create_battle_payload__gd(session, encounter_placement)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules.create_battle_payload", [session, encounter_placement])
+	var before := BattleEngine.before_writing(&"BattleRules.create_battle_payload", [session, encounter_placement])
+	var result = create_battle_payload__gd(session, encounter_placement)
+	BattleEngine.check_writing(&"BattleRules.create_battle_payload", before, [session, encounter_placement], result)
+	return result
+
+static func create_battle_payload__gd(session: SessionStateStoreScript.SessionData, encounter_placement: Dictionary) -> Dictionary:
 	var profile_started := ProfileLogScript.begin_usec()
 	var buckets := {}
 	var phase_started := ProfileLogScript.begin_usec()
@@ -522,6 +562,16 @@ static func battle_payload_can_resume_bridge(session) -> bool:
 	return battle_payload_can_resume(session)
 
 static func battle_payload_can_resume(session: SessionStateStoreScript.SessionData) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return battle_payload_can_resume__gd(session)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules.battle_payload_can_resume", [session])
+	var before := BattleEngine.before_writing(&"BattleRules.battle_payload_can_resume", [session])
+	var result = battle_payload_can_resume__gd(session)
+	BattleEngine.check_writing(&"BattleRules.battle_payload_can_resume", before, [session], result)
+	return result
+
+static func battle_payload_can_resume__gd(session: SessionStateStoreScript.SessionData) -> bool:
 	if session == null or session.scenario_id == "" or session.scenario_status != "in_progress" or session.battle.is_empty():
 		return false
 	var battle_context_seed := _battle_context_seed(session)
@@ -1539,6 +1589,16 @@ static func _town_name__gd(town: Dictionary) -> String:
 	return String(template.get("name", town.get("town_id", "Town")))
 
 static func normalize_battle_state(session: SessionStateStoreScript.SessionData) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return normalize_battle_state__gd(session)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules.normalize_battle_state", [session])
+	var before := BattleEngine.before_writing(&"BattleRules.normalize_battle_state", [session])
+	var result = normalize_battle_state__gd(session)
+	BattleEngine.check_writing(&"BattleRules.normalize_battle_state", before, [session], result)
+	return result
+
+static func normalize_battle_state__gd(session: SessionStateStoreScript.SessionData) -> bool:
 	if session == null or session.battle.is_empty():
 		return false
 	session.save_version = SessionStateStoreScript.SAVE_VERSION

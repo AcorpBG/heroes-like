@@ -8,6 +8,7 @@
 #include "aurelion_rules/port/battle_ends.hpp"
 #include "aurelion_rules/port/battle_rules.hpp"
 #include "aurelion_rules/port/creature_dwelling_rules_ai.hpp"
+#include "aurelion_rules/port/creature_dwelling_rules_turn.hpp"
 #include "aurelion_rules/port/overworld_level_rules.hpp"
 #include "aurelion_rules/port/overworld_rules.hpp"
 #include "aurelion_rules/port/player_identity_rules.hpp"
@@ -56,11 +57,6 @@ int64_t placement_combat_seed(State &state, const Value &session, Atom pattern, 
 // when not found) and node.
 DictRef find_resource_node(State &state, const Value &session, Atom placement_id) {
 	return overworld_rules::_find_resource_node_by_placement(state, gd::object_view(state, session), placement_id);
-}
-
-// CreatureDwellings.guard_key(placement_id): "%s%s" % [GUARD_KEY_PREFIX, placement_id].
-Atom dwelling_guard_key(State &state, Atom placement_id) {
-	return state.intern(state.text(key::dwelling_guard_3) + state.text(placement_id));
 }
 
 } // namespace
@@ -178,7 +174,7 @@ DictRef create_dwelling_guard_payload(State &state, const Value &session, Atom r
 		return state.new_dict();
 	}
 	const DictRef placement = state.new_dict();
-	state.set(placement, str(key::placement_id), str(dwelling_guard_key(state, resource_placement_id)));
+	state.set(placement, str(key::placement_id), str(creature_dwelling_rules::guard_key(state, resource_placement_id)));
 	state.set(placement, str(key::encounter_id), str(key::encounter_dwelling_guard));
 	state.set(placement, str(key::x), int_value(gd::int_field(state, node, key::x, 0)));
 	state.set(placement, str(key::y), int_value(gd::int_field(state, node, key::y, 0)));

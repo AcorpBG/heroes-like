@@ -8,6 +8,7 @@
 #include "aurelion_rules/port/battle_damage_rules.hpp"
 #include "aurelion_rules/port/battle_damage_rules_ai.hpp"
 #include "aurelion_rules/port/battle_footprint.hpp"
+#include "aurelion_rules/port/battle_payload.hpp"
 #include "aurelion_rules/port/battle_rules.hpp"
 #include "aurelion_rules/port/difficulty_rules.hpp"
 #include "aurelion_rules/port/difficulty_rules_ai.hpp"
@@ -689,11 +690,16 @@ const Function kFunctions[] = {
 	PORT(BattleRules, ai_advance_plan, 2, true, return dict_value(br::ai_advance_plan(s, D(a, 0), D(a, 1)))),
 	PORT(BattleRules, ai_melee_approach, 3, true, return dict_value(br::ai_melee_approach(s, D(a, 0), D(a, 1), D(a, 2)))),
 	PORT(BattleRules, attack_consequence_preview, 4, true, return dict_value(br::attack_consequence_preview(s, D(a, 0), S(a, 1), S(a, 2), D(a, 3)))),
+	PORT(BattleRules, battle_payload_can_resume, 1, true, return bool_value(br::battle_payload_can_resume(s, a[0]))),
 	PORT(BattleRules, board_click_attack_intent_for_target, 2, true, return dict_value(br::board_click_attack_intent_for_target(s, D(a, 0), S(a, 1)))),
 	PORT(BattleRules, can_wait, 1, false, return bool_value(br::can_wait(s, D(a, 0)))),
 	PORT(BattleRules, cast_player_spell, 3, true, return dict_value(br::cast_player_spell(s, a[0], S(a, 1), S(a, 2)))),
 	PORT(BattleRules, commander_name, 2, false, return str(br::commander_name(s, D(a, 0), S(a, 1)))),
 	PORT(BattleRules, consequence_range_text, 1, false, return str(br::consequence_range_text(s, D(a, 0)))),
+	PORT(BattleRules, create_battle_payload, 2, true, return dict_value(br::create_battle_payload(s, a[0], D(a, 1)))),
+	PORT(BattleRules, create_dwelling_guard_payload, 2, true, return dict_value(br::create_dwelling_guard_payload(s, a[0], S(a, 1)))),
+	PORT(BattleRules, create_resource_defense_payload, 2, true, return dict_value(br::create_resource_defense_payload(s, a[0], S(a, 1)))),
+	PORT(BattleRules, create_town_assault_payload, 2, true, return dict_value(br::create_town_assault_payload(s, a[0], S(a, 1)))),
 	PORT(BattleRules, extra_speed_reaches_strike, 3, true, return bool_value(br::extra_speed_reaches_strike(s, D(a, 0), D(a, 1), I(a, 2)))),
 	PORT(BattleRules, forecast_text, 1, false, return str(br::forecast_text(s, A(a, 0)))),
 	PORT(BattleRules, get_active_stack, 1, false, return dict_value(br::get_active_stack(s, D(a, 0)))),
@@ -706,6 +712,7 @@ const Function kFunctions[] = {
 	PORT(BattleRules, melee_approach_destination, 3, true, return dict_value(br::melee_approach_destination(s, D(a, 0), D(a, 1), D(a, 2)))),
 	PORT(BattleRules, move_active_stack_to_hex, 3, true, return dict_value(br::move_active_stack_to_hex(s, a[0], I(a, 1), I(a, 2)))),
 	PORT(BattleRules, movement_intent_for_destination, 4, true, return dict_value(br::movement_intent_for_destination(s, D(a, 0), I(a, 1), I(a, 2), a[3]))),
+	PORT(BattleRules, normalize_battle_state, 1, true, return bool_value(br::normalize_battle_state(s, a[0]))),
 	PORT(BattleRules, perform_player_action, 3, true, return dict_value(br::perform_player_action(s, a[0], S(a, 1), D(a, 2)))),
 	PORT(BattleRules, resolve_if_battle_ready, 1, true, return dict_value(br::resolve_if_battle_ready(s, a[0]))),
 	PORT(BattleRules, select_target, 2, true, return dict_value(br::select_target(s, a[0], S(a, 1)))),
