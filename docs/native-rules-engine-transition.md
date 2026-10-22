@@ -1875,7 +1875,7 @@ with the day native (1.08x); l1 186 to 174 s, l2 194 to 181 s.
 **Slice 09, frozen functions** (2026-10-22, until slice 09 merges; AGENTS.md; branch `native-phase5-finalize`): the ends
 of a human battle, Phase 1's eight host targets `BattleRules._finalize_victory`, `_finalize_player_battle_loss`,
 `_finalize_stalemate`, `_finalize_enemy_withdrawal`, `_finalize_retreat`, `_finalize_surrender`,
-`_retreat_action_summary` and `_surrender_action_summary`, and the functions slice 09 ports with them: 162 functions
+`_retreat_action_summary` and `_surrender_action_summary`, and the functions slice 09 ports with them: 166 functions
 (the Phase 4 ports they call and ContentService's lookups aside). BattleRules 97: `_add_enemy_treasury_resources`,
 `_adjust_enemy_pressure`, `_apply_active_hero_aftermath_losses`, `_apply_battle_context_stalemate`,
 `_apply_battle_context_victory`, `_apply_collapse_aftermath`, `_apply_collapse_recovery_pressure`,
@@ -1918,10 +1918,12 @@ of a human battle, Phase 1's eight host targets `BattleRules._finalize_victory`,
 `_teach_visiting_town_spells`, `_town_battle_readiness`, `_town_front_priority_seed`, `_town_front_state`,
 `town_front_state`, `_town_garrison_headcount`, `_town_garrison_strength`, `_town_occupation_seed_pressure`,
 `_town_reinforcement_quality`, `_town_role_quality_bonus`, `_town_role_readiness_bonus`, `_town_spell_tier`,
-`update_dwelling_guard_after_battle`, `update_resource_defender_after_battle`. EnemyAdventureRules 9:
+`update_dwelling_guard_after_battle`, `update_resource_defender_after_battle`. EnemyAdventureRules 13:
 `_active_resource_defender_entry`, `_active_town_defender_entry`, `_ai_hero_task_prune_live_tasks`,
-`_ai_hero_task_retention_priority`, `apply_resolved_commander_aftermath`, `commander_renown`, `is_active_pressure_host`,
-`record_rivalry`, `record_target_assignment`. HeroCommandRules 5: `active_hero_is_primary`, `hand_over_primary`,
+`_ai_hero_task_retention_priority`, `apply_resolved_commander_aftermath`, `_clear_resource_defender_metadata`,
+`_clear_town_defender_metadata`, `commander_renown`, `is_active_pressure_host`,
+`_normalize_resource_defender_commander_states`, `_normalize_town_defender_commander_states`, `record_rivalry`,
+`record_target_assignment`. HeroCommandRules 5: `active_hero_is_primary`, `hand_over_primary`,
 `keep_hero_troop_from_garrison`, `remove_active_hero_after_defeat`, `_set_holder_stacks`. ScenarioRules 3:
 `_complete_session`, `_merge_result_messages`, `_resolution_text`. PlayerIdentityRules 2: `defender_controller_id`,
 `from_slots`. ArtifactRules 1: `_select_rarity_source_reward`. CreatureDwellingRules 1: `placement_from_guard_key`.
