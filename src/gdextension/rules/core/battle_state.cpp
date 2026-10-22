@@ -18,6 +18,7 @@ constexpr std::string_view kKnownKeys[] = {
 #include "aurelion_rules/battle_keys.inc"
 #include "aurelion_rules/day_keys.inc"
 #include "aurelion_rules/ai_keys.inc"
+#include "aurelion_rules/turn_keys.inc"
 #undef AURELION_KEY
 };
 

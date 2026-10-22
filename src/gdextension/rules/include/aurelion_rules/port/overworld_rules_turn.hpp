@@ -1,0 +1,103 @@
+#pragma once
+
+// scripts/core/OverworldRules.gd: the functions the computer players' day runs
+// (docs/native-rules-engine-transition.md, Phase 4), ported function by
+// function under the GDScript names. A session is its view (session_view.hpp).
+
+#include "aurelion_rules/port/gd.hpp"
+#include "aurelion_rules/port/session_view.hpp"
+#include "aurelion_rules/port/overworld_rules.hpp"
+#include "aurelion_rules/port/overworld_rules_ai.hpp"
+
+#include <cstdint>
+
+namespace aurelion::rules::port::overworld_rules {
+
+using gd::ArrayRef;
+using gd::Atom;
+using gd::DictRef;
+using gd::PackedRef;
+using state::State;
+using state::Value;
+
+// Ported in overworld_rules_turn.cpp.
+DictRef _add_dwelling_town_growth(State &state, DictRef session, DictRef town, DictRef growth);
+DictRef _apply_recruit_percent(State &state, const Value &recruits, int64_t percent_modifier);
+DictRef _blocked_tile_index(State &state, DictRef session, int64_t level = -1);
+DictRef _native_passage_endpoint_safety(State &state, DictRef session, DictRef node, Atom actor_id, const Value &actor_blocked_indexes = Value(), bool combat_arrival = false);
+void _rules_profile_add_ms(State &state, Atom bucket, int64_t started_usec);
+void _rules_profile_set(State &state, Atom section, Atom key, const Value &value);
+int64_t _rules_profile_timer(State &state);
+Atom _terrain_id_at(State &state, DictRef session, int64_t x, int64_t y, int64_t level = -1);
+DictRef _town_front_after_control_change(State &state, DictRef session, DictRef town, Atom previous_owner, Atom new_owner, Atom controlling_faction_id, Atom source);
+int64_t _town_front_stabilize_days(State &state, DictRef session, DictRef town);
+DictRef _town_front_stabilizing_state(State &state, DictRef session, DictRef town, Atom faction_id, Atom source, Atom previous_owner = state::key::empty, int64_t bonus_days = 0);
+bool _town_is_objective_anchor(State &state, DictRef session, Atom placement_id);
+DictRef _town_occupation_after_control_change(State &state, DictRef session, DictRef town, Atom previous_owner, Atom new_owner, Atom controlling_faction_id, Atom source);
+DictRef _town_weekly_growth(State &state, DictRef town, const Value &session, DictRef metric_context);
+void invalidate_spatial_lookup(State &state, DictRef session);
+bool is_tile_explored(State &state, DictRef session, int64_t x, int64_t y, int64_t level = -1);
+ArrayRef map_for_level(State &state, DictRef session, int64_t level = -1);
+DictRef native_passage_travel_check(State &state, DictRef session, DictRef node, const Value &actor_position, Atom actor_id, Atom target_id = state::key::empty, bool fight_on_arrival = false);
+int64_t placement_level(State &state, DictRef session, Atom placement_id, int64_t fallback = 0);
+DictRef town_weekly_growth(State &state, DictRef town, const Value &session = Value());
+DictRef transition_town_control(State &state, DictRef session, Atom placement_id, Atom new_owner, Atom controlling_faction_id = state::key::empty, Atom source = state::key::empty);
+Atom native_exit_roll_key(State &state, DictRef session, DictRef node, Atom actor_id);
+DictRef native_random_exit_check(State &state, DictRef session, DictRef node, const Value &actor_position, Atom actor_id);
+void note_native_trip(State &state, DictRef session, Atom actor_id);
+DictRef town_capital_project_state(State &state, DictRef town, const Value &session = Value());
+int64_t town_logistics_support_radius(State &state, DictRef session, DictRef town);
+DictRef town_recovery_state(State &state, DictRef session, DictRef town);
+Atom apply_town_recovery_pressure(State &state, DictRef session, Atom town_placement_id, int64_t amount, Atom source = state::key::empty);
+Atom apply_resource_site_disruption(State &state, DictRef session, DictRef node, DictRef site, Atom previous_controller, Atom attacker_controller);
+void _lock_town_occupation_reserves(State &state, DictRef town, DictRef occupation);
+DictRef _release_town_occupation_reserves(State &state, DictRef town);
+
+// Not run by the six seeds: each throws state::NotPorted (turn_not_ported.cpp).
+ArrayRef _build_scenario_resource_states(State &state, const Value &placements);
+ArrayRef _build_scenario_town_states(State &state, const Value &placements);
+DictRef _command_risk_encounter_objective_item(State &state, DictRef session, DictRef objective, bool include_details = true);
+DictRef _command_risk_pressure_objective_item(State &state, DictRef session, DictRef scenario, DictRef objective, bool include_details = true);
+bool _delivery_encounter_matches_node(State &state, DictRef session, DictRef encounter, DictRef node, DictRef delivery_state);
+int64_t _enemy_active_raids(State &state, DictRef session, Atom faction_id);
+DictRef _enemy_config_for_faction(State &state, DictRef scenario, Atom faction_id);
+int64_t _enemy_max_active_raids_for_strategy(State &state, DictRef session, DictRef config, Atom faction_id);
+int64_t _enemy_pressure(State &state, DictRef session, Atom faction_id);
+int64_t _enemy_raid_threshold_for_strategy(State &state, DictRef session, DictRef config, Atom faction_id);
+DictRef _enemy_state_for_faction(State &state, DictRef session, Atom faction_id);
+DictRef _find_active_town(State &state, DictRef session);
+DictRef _find_active_town_by_visit_context(State &state, DictRef session);
+Atom _normalized_enemy_front_faction_id(State &state, DictRef session, DictRef front, DictRef town);
+Atom _posture_label(State &state, Atom posture);
+int64_t _pressure_bonus_from_profile(State &state, const Value &profile);
+int64_t _public_enemy_pressure_gain(State &state, DictRef session, DictRef config);
+bool _raid_target_is_objective_anchor(State &state, DictRef session, Atom target_kind, Atom placement_id);
+int64_t _readiness_bonus_from_profile(State &state, const Value &profile);
+DictRef _resource_site_delivery_interception(State &state, DictRef session, DictRef node, DictRef site);
+DictRef _resource_site_response_profile(State &state, DictRef site);
+DictRef _retake_front_from_legacy_state(State &state, DictRef session, DictRef town, DictRef front);
+int64_t _route_security_rating_for_hero(State &state, DictRef hero);
+bool _scenario_objective_met(State &state, DictRef session, DictRef objective);
+bool _scenario_town_started_enemy(State &state, DictRef session, Atom placement_id);
+void _teach_visiting_town_spells(State &state, DictRef session, DictRef town);
+Atom _terrain_name_at(State &state, DictRef session, int64_t x, int64_t y);
+int64_t _town_battle_readiness(State &state, DictRef town, const Value &session, DictRef metric_context, int64_t reinforcement_quality = -1);
+Atom _town_command_risk_consequence(State &state, DictRef town, int64_t readiness, DictRef logistics, DictRef recovery, DictRef capital_project, bool objective_anchor);
+Atom _town_defense_summary(State &state, DictRef town);
+int64_t _town_front_priority_seed(State &state, Atom role, bool objective_anchor);
+DictRef _town_front_state(State &state, DictRef session, DictRef town, DictRef precomputed_development_metrics);
+int64_t _town_garrison_headcount(State &state, DictRef town);
+int64_t _town_garrison_strength(State &state, DictRef town);
+int64_t _town_occupation_seed_pressure(State &state, DictRef session, DictRef town);
+int64_t _town_pressure_output(State &state, DictRef town, const Value &session, DictRef metric_context, int64_t reinforcement_quality = -1);
+int64_t _town_reinforcement_quality(State &state, DictRef town, const Value &session, DictRef metric_context);
+int64_t _town_role_pressure_bonus(State &state, Atom role);
+int64_t _town_role_quality_bonus(State &state, Atom role);
+int64_t _town_role_readiness_bonus(State &state, Atom role);
+int64_t _town_spell_tier(State &state, DictRef town);
+Atom encounter_commander_name(State &state, DictRef encounter);
+Atom encounter_commander_threat_label(State &state, DictRef encounter);
+Atom encounter_display_name(State &state, DictRef encounter);
+DictRef town_development_metrics(State &state, DictRef town, const Value &session = Value());
+
+} // namespace aurelion::rules::port::overworld_rules

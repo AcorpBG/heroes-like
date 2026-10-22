@@ -1,6 +1,9 @@
 class_name HeroProgressionRules
 extends RefCounted
 
+const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
+static var _turn_engine_mode: int = TurnEngine.mode
+
 const CHOICE_SIZE := 3
 const SPECIALTY_INSIGNIA_ATLAS_PATH := "res://art/heroes/runtime/specialties/hero_specialty_insignia_atlas.png"
 const SPECIALTY_INSIGNIA_CELL_SIZE := Vector2i(28, 28)
@@ -71,15 +74,39 @@ static func level_up_summary(hero_state: Dictionary) -> Dictionary:
 	}
 
 static func add_experience(hero_state: Dictionary, amount: int) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return add_experience__gd(hero_state, amount)
+	var before := TurnEngine.before_writing(&"HeroProgressionRules.add_experience", [hero_state, amount])
+	var result = add_experience__gd(hero_state, amount)
+	TurnEngine.check_writing(&"HeroProgressionRules.add_experience", before, [hero_state, amount], result)
+	return result
+
+static func add_experience__gd(hero_state: Dictionary, amount: int) -> Dictionary:
 	return _add_experience(hero_state, experience_with_bonus(hero_state, amount))
 
 ## `amount` of earned experience with the hero's experience bonus.
 static func experience_with_bonus(hero_state: Dictionary, amount: int) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return experience_with_bonus__gd(hero_state, amount)
+	var before := TurnEngine.before_writing(&"HeroProgressionRules.experience_with_bonus", [hero_state, amount])
+	var result = experience_with_bonus__gd(hero_state, amount)
+	TurnEngine.check_writing(&"HeroProgressionRules.experience_with_bonus", before, [hero_state, amount], result)
+	return result
+
+static func experience_with_bonus__gd(hero_state: Dictionary, amount: int) -> int:
 	if amount <= 0:
 		return amount
 	return amount + amount * int(aggregate_bonuses(hero_state).get("experience_bonus_pct", 0)) / 100
 
 static func _add_experience(hero_state: Dictionary, amount: int) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _add_experience__gd(hero_state, amount)
+	var before := TurnEngine.before_writing(&"HeroProgressionRules._add_experience", [hero_state, amount])
+	var result = _add_experience__gd(hero_state, amount)
+	TurnEngine.check_writing(&"HeroProgressionRules._add_experience", before, [hero_state, amount], result)
+	return result
+
+static func _add_experience__gd(hero_state: Dictionary, amount: int) -> Dictionary:
 	var hero := ensure_hero_progression(hero_state.duplicate(true))
 	var messages := []
 	if amount <= 0:
@@ -110,6 +137,14 @@ static func _add_experience(hero_state: Dictionary, amount: int) -> Dictionary:
 ## thresholds add_experience climbs: 250 for level 2, then 250 + 100 x level
 ## more for each further level.
 static func experience_for_level(level: int) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return experience_for_level__gd(level)
+	var before := TurnEngine.before_writing(&"HeroProgressionRules.experience_for_level", [level])
+	var result = experience_for_level__gd(level)
+	TurnEngine.check_writing(&"HeroProgressionRules.experience_for_level", before, [level], result)
+	return result
+
+static func experience_for_level__gd(level: int) -> int:
 	var threshold := 0
 	var next_threshold := 250
 	for reached in range(2, level + 1):
@@ -123,6 +158,14 @@ static func experience_for_level(level: int) -> int:
 ## taken at once, the hero's focus specialty first, and no level-up is left
 ## to present.
 static func advance_to_level(hero_state: Dictionary, target_level: int) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return advance_to_level__gd(hero_state, target_level)
+	var before := TurnEngine.before_writing(&"HeroProgressionRules.advance_to_level", [hero_state, target_level])
+	var result = advance_to_level__gd(hero_state, target_level)
+	TurnEngine.check_writing(&"HeroProgressionRules.advance_to_level", before, [hero_state, target_level], result)
+	return result
+
+static func advance_to_level__gd(hero_state: Dictionary, target_level: int) -> Dictionary:
 	var hero := ensure_hero_progression(hero_state.duplicate(true))
 	var missing := experience_for_level(target_level) - int(hero.get("experience", 0))
 	if missing > 0:
@@ -263,6 +306,14 @@ static func summarize_specialty_ids(specialty_ids: Variant, use_short_names: boo
 	return ", ".join(names)
 
 static func pending_choices_remaining(hero_state: Dictionary) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return pending_choices_remaining__gd(hero_state)
+	var before := TurnEngine.before_writing(&"HeroProgressionRules.pending_choices_remaining", [hero_state])
+	var result = pending_choices_remaining__gd(hero_state)
+	TurnEngine.check_writing(&"HeroProgressionRules.pending_choices_remaining", before, [hero_state], result)
+	return result
+
+static func pending_choices_remaining__gd(hero_state: Dictionary) -> int:
 	var hero := ensure_hero_progression(hero_state.duplicate(true))
 	return raw_pending_choices_remaining(hero)
 
@@ -274,6 +325,14 @@ static func current_pending_choice(hero_state: Dictionary) -> Dictionary:
 	return {}
 
 static func pending_choice_summary(pending_choice: Dictionary) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return pending_choice_summary__gd(pending_choice)
+	var before := TurnEngine.before_writing(&"HeroProgressionRules.pending_choice_summary", [pending_choice])
+	var result = pending_choice_summary__gd(pending_choice)
+	TurnEngine.check_writing(&"HeroProgressionRules.pending_choice_summary", before, [pending_choice], result)
+	return result
+
+static func pending_choice_summary__gd(pending_choice: Dictionary) -> String:
 	var names := []
 	for specialty_id_value in pending_choice.get("options", []):
 		var specialty := specialty_definition(String(specialty_id_value))
@@ -498,6 +557,14 @@ static func scale_raid_pillage(hero_state: Dictionary, losses: Variant) -> Dicti
 	return _scale_resource_payload(losses, multiplier)
 
 static func rank_label(rank: int) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return rank_label__gd(rank)
+	var before := TurnEngine.before_writing(&"HeroProgressionRules.rank_label", [rank])
+	var result = rank_label__gd(rank)
+	TurnEngine.check_writing(&"HeroProgressionRules.rank_label", before, [rank], result)
+	return result
+
+static func rank_label__gd(rank: int) -> String:
 	if rank <= 0:
 		return "0"
 	return RANK_LABELS[min(rank - 1, RANK_LABELS.size() - 1)]
@@ -594,6 +661,14 @@ static func _enqueue_missing_choice_groups(hero_state: Dictionary) -> Dictionary
 	return hero
 
 static func _enqueue_choice_group(hero_state: Dictionary, level_number: int) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _enqueue_choice_group__gd(hero_state, level_number)
+	var before := TurnEngine.before_writing(&"HeroProgressionRules._enqueue_choice_group", [hero_state, level_number])
+	var result = _enqueue_choice_group__gd(hero_state, level_number)
+	TurnEngine.check_writing(&"HeroProgressionRules._enqueue_choice_group", before, [hero_state, level_number], result)
+	return result
+
+static func _enqueue_choice_group__gd(hero_state: Dictionary, level_number: int) -> Dictionary:
 	var hero := hero_state
 	var choice_group := _build_choice_group(hero, level_number)
 	if choice_group.is_empty():
@@ -693,6 +768,14 @@ static func command_path(hero_state: Dictionary) -> String:
 ## The command stat `hero_state` gains on reaching `level_number`: a roll
 ## weighted by its command path, drawn from its growth seed and that level.
 static func command_gain_stat(hero_state: Dictionary, level_number: int) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return command_gain_stat__gd(hero_state, level_number)
+	var before := TurnEngine.before_writing(&"HeroProgressionRules.command_gain_stat", [hero_state, level_number])
+	var result = command_gain_stat__gd(hero_state, level_number)
+	TurnEngine.check_writing(&"HeroProgressionRules.command_gain_stat", before, [hero_state, level_number], result)
+	return result
+
+static func command_gain_stat__gd(hero_state: Dictionary, level_number: int) -> String:
 	var weights: Dictionary = COMMAND_GAIN_WEIGHTS[command_path(hero_state)]
 	var total := 0
 	for stat in COMMAND_STATS:
@@ -718,6 +801,14 @@ static func growth_seed(hero_state: Dictionary) -> String:
 	return "hero"
 
 static func _apply_command_gain(command_state: Variant, stat: String) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _apply_command_gain__gd(command_state, stat)
+	var before := TurnEngine.before_writing(&"HeroProgressionRules._apply_command_gain", [command_state, stat])
+	var result = _apply_command_gain__gd(command_state, stat)
+	TurnEngine.check_writing(&"HeroProgressionRules._apply_command_gain", before, [command_state, stat], result)
+	return result
+
+static func _apply_command_gain__gd(command_state: Variant, stat: String) -> Dictionary:
 	var command := {
 		"attack": max(0, int((command_state if command_state is Dictionary else {}).get("attack", 0))),
 		"defense": max(0, int((command_state if command_state is Dictionary else {}).get("defense", 0))),

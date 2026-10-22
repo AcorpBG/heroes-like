@@ -7,6 +7,7 @@ namespace aurelion::rules::port {
 // Each defined in its subsystem's registry file.
 Table day_table();
 Table ai_table();
+Table turn_table();
 
 namespace {
 
@@ -16,6 +17,7 @@ const std::vector<Table> &all_tables() {
 	static const std::vector<Table> tables = {
 		day_table(),
 		ai_table(),
+		turn_table(),
 	};
 	return tables;
 }
