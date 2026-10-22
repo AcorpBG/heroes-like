@@ -4,6 +4,7 @@
 #include "aurelion_rules/port/enemy_turn_rules_turn.hpp"
 
 #include "aurelion_rules/port/ai_port.hpp"
+#include "aurelion_rules/port/battle_ends.hpp"
 #include "aurelion_rules/port/difficulty_rules_turn.hpp"
 #include "aurelion_rules/port/enemy_adventure_rules_turn.hpp"
 #include "aurelion_rules/port/overworld_rules_turn.hpp"
@@ -119,12 +120,6 @@ void add_count(State &state, DictRef dict, Atom field, int64_t amount) {
 	state.set(dict, str(field), int_value(gd::add(gd::int_field(state, dict, field, 0), amount)));
 }
 
-// OverworldRules.town_front_state(session, town) is declared in no header:
-// until it is, a front state is left to GDScript.
-DictRef missing_town_front_state(State &, DictRef, DictRef) {
-	throw state::NotPorted("EnemyTurnRules._faction_front_state: OverworldRules.town_front_state is not declared");
-}
-
 } // namespace
 
 namespace enemy_turn_rules {
@@ -206,7 +201,7 @@ DictRef _faction_front_state(State &state, DictRef session, Atom faction_id) {
 			continue;
 		}
 		const DictRef town = town_value.ref;
-		const DictRef front = missing_town_front_state(state, session, town);
+		const DictRef front = overworld_rules::town_front_state(state, session, town, state.new_dict());
 		if (!gd::bool_field(state, front, key::active, false) || player_rules::controller_id(state, front, key::empty) != faction_id) {
 			continue;
 		}

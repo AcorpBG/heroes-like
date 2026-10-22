@@ -4,7 +4,10 @@
 #include "aurelion_rules/port/overworld_rules_ai.hpp"
 
 #include "aurelion_rules/port/ai_port.hpp"
+#include "aurelion_rules/port/enemy_adventure_rules.hpp"
 #include "aurelion_rules/port/hero_command_rules_ai.hpp"
+#include "aurelion_rules/port/overworld_rules.hpp"
+#include "aurelion_rules/port/overworld_rules_turn.hpp"
 #include "aurelion_rules/port/player_identity_rules_ai.hpp"
 #include "aurelion_rules/port/session_view.hpp"
 
@@ -218,104 +221,6 @@ DictRef active_hero(State &state, DictRef session) {
 	return state.new_dict();
 }
 
-// OverworldRules._resource_site_response_profile.
-DictRef response_profile(State &state, DictRef site) {
-	static constexpr Atom kBonuses[] = {
-		key::watch_days,
-		key::quality_bonus,
-		key::readiness_bonus,
-		key::pressure_bonus,
-		key::recovery_relief,
-		key::pressure_guard_bonus,
-		key::growth_bonus_percent,
-		key::break_pressure,
-	};
-	const DictRef profile = state.new_dict();
-	state.set(profile, str(key::action_label), str(key::empty));
-	state.set(profile, str(key::summary), str(key::empty));
-	state.set(profile, str(key::movement_cost), int_value(0));
-	state.set(profile, str(key::resource_cost), dict_value(blank_resource_cost(state)));
-	for (const Atom bonus : kBonuses) {
-		state.set(profile, str(bonus), int_value(0));
-	}
-	const Value authored_profile = dict_or_new(state, site, key::response_profile);
-	if (gd::is_dict(authored_profile)) {
-		const DictRef authored = authored_profile.ref;
-		state.set(profile, str(key::action_label), str(ai::string_or_empty(state, authored, key::action_label)));
-		state.set(profile, str(key::summary), str(ai::string_or_empty(state, authored, key::summary)));
-		state.set(profile, str(key::movement_cost), int_value(max0(gd::int_field(state, authored, key::movement_cost, 0))));
-		state.set(profile, str(key::resource_cost), dict_value(overworld_rules::_normalize_resource_dict(state, dict_or_new(state, authored, key::resource_cost))));
-		for (const Atom bonus : kBonuses) {
-			state.set(profile, str(bonus), int_value(max0(gd::int_field(state, authored, bonus, 0))));
-		}
-	}
-	if (ai::string_or_empty(state, profile, key::action_label) == key::empty) {
-		const Atom family = ai::string_or_empty(state, site, key::family);
-		Atom label = key::secure_route;
-		if (family == key::mine) {
-			label = key::secure_work_road;
-		} else if (family == key::neutral_dwelling) {
-			label = key::dispatch_relief;
-		} else if (family == key::faction_outpost) {
-			label = key::repair_outpost;
-		} else if (family == key::frontier_shrine) {
-			label = key::relight_shrine;
-		} else if (family == key::scouting_structure) {
-			label = key::staff_watch;
-		} else if (family == key::transit_object) {
-			label = key::repair_route;
-		}
-		state.set(profile, str(key::action_label), str(label));
-	}
-	// Per family: mine, neutral_dwelling, faction_outpost, frontier_shrine, scouting_structure, transit_object.
-	const auto family_default = [&](Atom field, int64_t mine, int64_t dwelling, int64_t outpost, int64_t shrine, int64_t scouting, int64_t transit) {
-		if (gd::int_field(state, profile, field, 0) > 0) {
-			return;
-		}
-		const Atom family = ai::string_or_empty(state, site, key::family);
-		int64_t value = 0;
-		if (family == key::mine) {
-			value = mine;
-		} else if (family == key::neutral_dwelling) {
-			value = dwelling;
-		} else if (family == key::faction_outpost) {
-			value = outpost;
-		} else if (family == key::frontier_shrine) {
-			value = shrine;
-		} else if (family == key::scouting_structure) {
-			value = scouting;
-		} else if (family == key::transit_object) {
-			value = transit;
-		} else {
-			return;
-		}
-		state.set(profile, str(field), int_value(value));
-	};
-	family_default(key::pressure_guard_bonus, 1, 1, 2, 1, 2, 1);
-	family_default(key::growth_bonus_percent, 3, 14, 4, 6, 3, 3);
-	family_default(key::break_pressure, 1, 1, 2, 1, 2, 1);
-	return profile;
-}
-
-// OverworldRules._route_security_rating_for_hero.
-int64_t route_security_rating_for_hero(State &state, DictRef hero) {
-	if (gd::is_empty(state, hero)) {
-		return 1;
-	}
-	int64_t command_total = 0;
-	Value command;
-	if (state.lookup(hero, str(key::command), command)) {
-		const int64_t attack = gd::to_int(state, ai::vget(state, command, key::attack, int_value(0)));
-		const int64_t defense = gd::to_int(state, ai::vget(state, command, key::defense, int_value(0)));
-		const int64_t power = gd::to_int(state, ai::vget(state, command, key::power, int_value(0)));
-		const int64_t knowledge = gd::to_int(state, ai::vget(state, command, key::knowledge, int_value(0)));
-		command_total = gd::add(gd::add(gd::add(attack, defense), power), knowledge);
-	}
-	const int64_t level_bonus = max0(gd::sub(gd::int_field(state, hero, key::level, 1), 1));
-	const int64_t rating = gd::add(1, compat::float_to_int(compat::godot_floor(static_cast<double>(gd::add(command_total, level_bonus)) / 4.0)));
-	return compat::engine_clamp<int64_t>(rating, 1, 5);
-}
-
 // OverworldRules._resource_site_delivery_target_label (a session is never null here).
 Atom delivery_target_label(State &state, DictRef session, Atom target_kind, Atom target_id, Atom fallback_label) {
 	if (target_kind == key::hero) {
@@ -349,89 +254,6 @@ Atom delivery_target_label(State &state, DictRef session, Atom target_kind, Atom
 		return key::enemy_army_2;
 	}
 	return key::frontline;
-}
-
-// OverworldRules._describe_recruit_delta.
-Atom describe_recruit_delta(State &state, const Value &delta) {
-	if (!gd::is_dict(delta)) {
-		return key::empty;
-	}
-	std::vector<Atom> parts;
-	const ArrayRef unit_ids = state.new_array();
-	for (const Value &unit_id_value : gd::items(state, delta)) {
-		state.append(unit_ids, str(gd::stringify(state, unit_id_value)));
-	}
-	gd::sort_custom(state, unit_ids, [&state](const Value &a, const Value &b) { return gd::text(state, a) < gd::text(state, b); });
-	for (const Value &unit_id_value : gd::items(state, array_value(unit_ids))) {
-		const Atom unit_id = unit_id_value.ref;
-		const int64_t amount = gd::to_int(state, state.get(delta.ref, unit_id_value, int_value(0)));
-		if (amount <= 0) {
-			continue;
-		}
-		const DictRef unit = gd::content_row(state, ContentTable::Unit, unit_id);
-		const Atom unit_name = gd::stringify(state, state.get(unit, str(key::name), str(unit_id)));
-		parts.push_back(gd::format(state, key::d_s_2, {int_value(amount), str(unit_name)}));
-	}
-	return join_atoms(state, key::comma_space, parts);
-}
-
-// OverworldRules._weighted_recruit_value.
-int64_t weighted_recruit_value(State &state, const Value &recruits) {
-	int64_t total = 0;
-	if (!gd::is_dict(recruits)) {
-		return total;
-	}
-	for (const Value &unit_id_value : gd::items(state, recruits)) {
-		const Atom unit_id = gd::stringify(state, unit_id_value);
-		const int64_t count = max0(gd::to_int(state, gd::index(state, recruits.ref, unit_id_value)));
-		if (unit_id == key::empty || count <= 0) {
-			continue;
-		}
-		const DictRef unit = gd::content_row(state, ContentTable::Unit, unit_id);
-		const int64_t tier = vmax(1, gd::int_field(state, unit, key::tier, 1));
-		total = gd::add(total, gd::mul(count, gd::add(4, gd::mul(tier, 3))));
-		const int64_t attack = gd::int_field(state, unit, key::attack, 0);
-		const int64_t defense = gd::int_field(state, unit, key::defense, 0);
-		total = gd::add(total, gd::mul(count, max0(gd::sub(gd::add(attack, defense), 6))));
-		if (gd::bool_field(state, unit, key::ranged, false)) {
-			total = gd::add(total, count);
-		}
-	}
-	return total;
-}
-
-// OverworldRules._delivery_encounter_matches_node (a session is never null here).
-bool delivery_encounter_matches_node(State &state, DictRef session, DictRef encounter, DictRef node, DictRef delivery_state) {
-	if (gd::is_empty(state, encounter) || gd::is_empty(state, node) || gd::is_empty(state, delivery_state)) {
-		return false;
-	}
-	const Atom explicit_node_id = ai::string_or_empty(state, encounter, key::delivery_intercept_node_placement_id);
-	if (explicit_node_id != key::empty && explicit_node_id == ai::string_or_empty(state, node, key::placement_id)) {
-		return true;
-	}
-	const Atom target_kind = ai::string_or_empty(state, encounter, key::target_kind);
-	if (target_kind == key::resource) {
-		const Atom target_placement_id = ai::string_or_empty(state, encounter, key::target_placement_id);
-		return target_placement_id == ai::string_or_empty(state, node, key::placement_id);
-	}
-	if (target_kind == key::town) {
-		if (ai::string_or_empty(state, delivery_state, key::target_kind) != key::town) {
-			return false;
-		}
-		const Atom target_placement_id = ai::string_or_empty(state, encounter, key::target_placement_id);
-		return target_placement_id == ai::string_or_empty(state, delivery_state, key::target_id);
-	}
-	if (target_kind == key::hero) {
-		if (ai::string_or_empty(state, delivery_state, key::target_kind) != key::hero) {
-			return false;
-		}
-		Atom hero_target_id = ai::string_or_empty(state, encounter, key::target_placement_id);
-		if (hero_target_id == key::empty) {
-			hero_target_id = ai::string_or_empty(state, session_view::overworld(state, session), key::active_hero_id);
-		}
-		return hero_target_id != key::empty && hero_target_id == ai::string_or_empty(state, delivery_state, key::target_id);
-	}
-	return false;
 }
 
 // EnemyAdventureRules._normalize_army_payload.
@@ -476,18 +298,6 @@ DictRef base_enemy_army(State &state, Atom encounter_id) {
 	return normalize_army_payload(state, dict_value(group));
 }
 
-// EnemyAdventureRules._sync_unit_strength_memo.
-void sync_unit_strength_memo(State &state) {
-	const ArrayRef sources = state.new_array();
-	state.append(sources, int_value(gd::content_revision(state)));
-	state.append(sources, dict_value(gd::content_file(state, key::units_path)));
-	const ArrayRef kept = ai::static_array(state, kAdventureScript, key::_unit_strength_sources);
-	if (state.array_size(kept) != state.array_size(sources) || !gd::equal(state, state.at(kept, 0), state.at(sources, 0)) || !gd::is_same(state, state.at(kept, 1), state.at(sources, 1))) {
-		gd::set_static_var(state, kAdventureScript, key::_unit_strength_memo, dict_value(state.new_dict()));
-		gd::set_static_var(state, kAdventureScript, key::_unit_strength_sources, array_value(sources));
-	}
-}
-
 // EnemyAdventureRules._unit_strength_value.
 int64_t unit_strength_value(State &state, Atom unit_id) {
 	const Value strength = state.get(ai::static_dict(state, kAdventureScript, key::_unit_strength_memo), str(unit_id), Value());
@@ -510,7 +320,7 @@ int64_t army_strength(State &state, const Value &stacks) {
 	if (!gd::is_array(stacks)) {
 		return total;
 	}
-	sync_unit_strength_memo(state);
+	enemy_adventure_rules::_sync_unit_strength_memo(state);
 	for (const Value &stack_value : gd::items(state, stacks)) {
 		if (!gd::is_dict(stack_value)) {
 			continue;
@@ -710,7 +520,7 @@ DictRef delivery_interception(State &state, DictRef session, DictRef node, DictR
 		if (gd::is_array(resolved_encounters) && gd::array_has(state, resolved_encounters.ref, str(overworld_rules::encounter_key(state, encounter.ref)))) {
 			continue;
 		}
-		if (!delivery_encounter_matches_node(state, session, encounter.ref, node, delivery_state)) {
+		if (!overworld_rules::_delivery_encounter_matches_node(state, session, encounter.ref, node, delivery_state)) {
 			continue;
 		}
 		const int64_t goal_distance = max0(gd::int_field(state, encounter.ref, key::goal_distance, 9999));
@@ -787,7 +597,7 @@ ArrayRef _map_object_world_interaction_tiles(State &state, DictRef map_object, D
 }
 
 DictRef _resource_site_response_state(State &state, DictRef session, DictRef node, DictRef site) {
-	const DictRef profile = response_profile(state, site);
+	const DictRef profile = _resource_site_response_profile(state, site);
 	bool active = false;
 	int64_t remaining_days = 0;
 	const Atom commander_id = ai::string_or_empty(state, node, key::response_commander_id);
@@ -804,7 +614,7 @@ DictRef _resource_site_response_state(State &state, DictRef session, DictRef nod
 		}
 		if (security_rating <= 0) {
 			const DictRef preview_hero = active_hero(state, session);
-			security_rating = route_security_rating_for_hero(state, preview_hero);
+			security_rating = _route_security_rating_for_hero(state, preview_hero);
 			if (commander_name == key::empty) {
 				commander_name = ai::string_or_empty(state, preview_hero, key::name);
 			}
@@ -874,8 +684,8 @@ DictRef _resource_site_delivery_state(State &state, DictRef session, DictRef nod
 			}
 		}
 	}
-	const Atom recruit_summary = describe_recruit_delta(state, dict_value(manifest));
-	const int64_t manifest_value = weighted_recruit_value(state, dict_value(manifest));
+	const Atom recruit_summary = _describe_recruit_delta(state, dict_value(manifest));
+	const int64_t manifest_value = _weighted_recruit_value(state, dict_value(manifest));
 	const DictRef result = state.new_dict();
 	state.set(result, str(key::active), bool_value(active));
 	state.set(result, str(key::controller_id), str(controller_id));

@@ -205,6 +205,7 @@ void PortBridge::begin(bool validating, bool host_calls) {
 	host_calls_ = host_calls && !validating;
 	host_calls_made_.clear();
 	full_host_calls_ = 0;
+	undo_lost_ = false;
 	undo_arrays_.clear();
 	undo_dicts_.clear();
 	undo_packed_.clear();
@@ -1250,6 +1251,7 @@ void PortBridge::write_back(bool undoable) {
 	}
 	for (const ObjectView &view : views_) {
 		if (view_changed(view)) {
+			undo_lost_ = undo_lost_ || undoable;
 			write_view(view);
 		}
 	}

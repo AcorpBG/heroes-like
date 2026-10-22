@@ -75,6 +75,10 @@ std::string not_ported_after_host_calls(const char *what, size_t host_calls) {
 	return std::string("reached a path the port leaves to GDScript (") + what + ") after " + std::to_string(host_calls) + " full host calls, which ran GDScript on what the call had changed, so the GDScript fallback cannot run";
 }
 
+std::string not_ported_after_view_write(const char *what) {
+	return std::string("reached a path the port leaves to GDScript (") + what + ") after a pure host call wrote back an object's properties, which cannot be undone, so the GDScript fallback cannot run";
+}
+
 // A call its subsystem's GDScript ran instead (port::Table::fallback): one line
 // each, which AI match batches count. Never throws.
 void report_fallback(const char *function, const char *reason) noexcept {
@@ -698,10 +702,12 @@ Variant AurelionRules::port_call(const StringName &name, const Array &args, bool
 			last_not_ported_ = true;
 			// What pure host calls wrote back is undone, so the GDScript
 			// fallback starts from the state the call started from. A full
-			// host call ran GDScript on it: the fallback would start again
-			// from a changed state.
+			// host call ran GDScript on it, and an object's view written back
+			// is not undone: the fallback would start again from a changed
+			// state.
 			const size_t full_calls = bridge == nullptr ? 0 : bridge->full_host_calls();
-			if (stats.fallback && full_calls == 0) {
+			const bool undo_lost = bridge != nullptr && bridge->undo_lost();
+			if (stats.fallback && full_calls == 0 && !undo_lost) {
 				if (bridge != nullptr) {
 					bridge->undo_write_backs();
 				}
@@ -710,7 +716,7 @@ Variant AurelionRules::port_call(const StringName &name, const Array &args, bool
 				return Variant();
 			}
 			last_not_ported_ = false;
-			problem = std::string(function->name) + ": " + (full_calls == 0 ? not_ported_failure(reason.what()) : not_ported_after_host_calls(reason.what(), full_calls));
+			problem = std::string(function->name) + ": " + (full_calls != 0 ? not_ported_after_host_calls(reason.what(), full_calls) : undo_lost ? not_ported_after_view_write(reason.what()) : not_ported_failure(reason.what()));
 		} catch (const aurelion::rules::state::Suspend &host) {
 			problem = std::string(function->name) + ": " + suspended_failure(bridge->state(), host);
 		} catch (const aurelion::rules::state::ScriptError &error) {
