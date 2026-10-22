@@ -6,34 +6,42 @@ Phase 1, "Checkpoint G1"; owner decision 2026-10-21).
     python tools/battle_port_g1/g1.py run DEST --corpus standard|holdout|seeds --out DIR [--jobs N] [--capture-every N]
     python tools/battle_port_g1/g1.py replay CAPDIR... --out FILE [--jobs N] [--repeat N] [--prime previous|none] [--fresh-writers] [--binary EXE]
     python tools/battle_port_g1/g1.py convert --replay FILE --out FILE [--jobs N] [--rounds N]
-    python tools/battle_port_g1/g1.py summarize --resolve DIR --ported DIR --replay FILE --convert FILE [--out FILE]
+    python tools/battle_port_g1/g1.py summarize --resolve DIR --ported DIR --replay FILE --convert FILE [--native DIR] [--out FILE]
     python tools/battle_port_g1/g1.py remove DEST
 
 The baseline is main at the branch point (`git merge-base HEAD origin/main`), not the branch in gdscript mode.
 `prepare` makes a copy of it with tools/rules_parity.py and wraps, in that copy only:
 
-- `BattleAutoResolveRules.resolve_active_battle`, which times each resolve (T_gd); the `_finalize_*` functions and the
-  result payload `_resolve_result` are paused out of it;
+- `BattleAutoResolveRules.resolve_active_battle`, which times each resolve (T_gd); the `_finalize_*` functions, the
+  registry's other host targets (`HOST` entries: the battle ends the native loop calls in GDScript) and the result
+  payload `_resolve_result` are paused out of it;
 - mode `resolve`: nothing else, so T_gd carries no wrapper cost;
 - mode `ported`: every function of the port registry (src/gdextension/rules/core/port/registry.cpp), which times the
-  outermost entry into the ported set (T_gd_ported) and leaves the calls it makes alone: inside a ported body, calls
-  to ported functions and to the port's native internals go straight to their raw bodies;
-- mode `capture`: the same entries, keeping their arguments and results as var_to_bytes blobs for the replay.
+  outermost entry into the ported set (T_gd_ported), less the paused calls inside it, and leaves the calls it makes
+  alone: inside a ported body, calls to ported functions and to the port's native internals go straight to their raw
+  bodies (a paused one keeps its wrapper);
+- mode `capture`: the same entries, keeping their arguments and results as var_to_bytes blobs for the replay, and
+  for each host call an entry makes its arguments before and after and its result.
 
-Runs: the arena suites (standard, holdout: through the arena's variant router) and the six parity seeds' AI battles,
-reported apart. A resolve's key is the digest of its start battle and how often that digest came before, so the three
-modes' lines match up. `replay` runs build/battle_port_replay (native only, no Godot, no bridge) over the captures:
-each resolve's entries in one State that grows, results checked byte for byte. r uses its cold time (every argument
-decoded first, all calls under one clock); r_warm and the split by layer and function use its warm pass (each entry's
-arguments decoded just before it, each call under its own clock), which finds the battle in cache as the native loop
-does. Each round clears the State as StateBridge::load does, keeping its node buffers. r_first and r_warm_first use the
-first round, which finds the State as another resolve left it (--prime previous, the default: the nearest earlier
-capture from another start battle runs untimed first, as in an engine that keeps its State between resolves) or a new
-State (--prime none); r and r_warm use the median round, whose State held the same resolve before. Every round's
-results are checked. `convert` times StateBridge::load at the start and store_in_place at the end of each captured
+Since slice 10 `resolve_active_battle` is in the registry, so each resolve is one outermost entry, as in the native
+loop. The replay gives each of its host calls the captured result and arguments afterwards, outside the native clock.
+
+Runs: the arena suites (standard, holdout: `arena.py --plain`, the game's own AI on both sides with no router) and the
+six parity seeds' AI battles, reported apart. A resolve's key is the digest of its start battle and how often that
+digest came before, so the three modes' lines match up. `replay` runs build/battle_port_replay (native only, no
+Godot, no bridge) over the captures: each resolve's entries in one State that grows, results checked byte for byte.
+r uses its cold time (every argument decoded first, all calls under one clock); r_warm and the split by layer and
+function use its warm pass (each entry's arguments decoded just before it, each call under its own clock), which
+finds the battle in cache as the native loop does. Each round clears the State as StateBridge::load does, keeping its
+node buffers. r_first and r_warm_first use the first round, which finds the State as another resolve left it (--prime
+previous, the default: the nearest earlier capture from another start battle runs untimed first, as in an engine that
+keeps its State between resolves) or a new State (--prime none); r and r_warm use the median round, whose State held
+the same resolve before. Every round's results are checked. `convert` times StateBridge::load at the start and store_in_place at the end of each captured
 resolve, at the pool size the replay reached, in the branch's library, on a new State each round. `summarize` gives
 r = T_gd_ported / T_nat_ported (per function, per layer, overall), c = T_conv / T_gd and the projection
-S = 1 / (c + 1 / r).
+S = 1 / (c + 1 / r). With --native, a `resolve` copy of the branch (`prepare resolve DEST --rev HEAD`) run with
+HEROES_NATIVE_BATTLE=native gives the measured time per resolve in native battle mode, the bridge included, and the
+measured speed-up T_gd / T_native over the resolves both runs have.
 
 Never run this while an owner AI batch runs; timing wants an idle machine. The timed parts (the resolve and ported
 runs, the replay and the conversion) run with the same number of jobs at once, so both sides of r and c see the same
@@ -64,6 +72,7 @@ LAYERS = HERE / "layers.json"
 PROBE_PATH = "res://tools/battle_port_g1/g1_probe.gd"
 PROBE_CONST = f'const G1 = preload("{PROBE_PATH}")'
 PORT_LINE = re.compile(r"^\s*PORT\((\w+), (\w+), (\d+), (true|false),")
+HOST_LINE = re.compile(r"^\s*HOST\((\w+), (\w+), (\d+)\),")
 FUNC_START = re.compile(r"^static func (\w+)\(")
 PRELOAD = re.compile(r'^const (\w+) = preload\("res://scripts/core/(\w+)\.gd"\)')
 CLASS_NAME = re.compile(r"^class_name (\w+)")
@@ -86,6 +95,16 @@ def registry() -> dict[str, dict[str, bool]]:
             found.setdefault(match.group(1), {})[match.group(2)] = match.group(4) == "true"
     if not found:
         sys.exit(f"no PORT entries in {REGISTRY}")
+    return found
+
+
+def host_targets() -> dict[str, set[str]]:
+    """Script -> the GDScript functions the port calls as host calls (gd::call_static)."""
+    found: dict[str, set[str]] = {}
+    for line in REGISTRY.read_text(encoding="utf-8").splitlines():
+        match = HOST_LINE.match(line)
+        if match:
+            found.setdefault(match.group(1), set()).add(match.group(2))
     return found
 
 
@@ -216,13 +235,14 @@ def call_line(func: Func, target: str) -> str:
     return f"{target}({', '.join(func.args)})"
 
 
-def ported_wrapper(script: str, func: Func, writes: bool, mode: str) -> list[str]:
+def ported_wrapper(script: str, func: Func, writes: bool, mode: str, name: str | None = None) -> list[str]:
+    """The entry wrapper, as `name` (default the function's own)."""
     raw = call_line(func, f"{func.name}__raw")
     key = f'&"{script}.{func.name}"'
     passthrough = [f"\t\t{raw}", "\t\treturn"] if func.void else [f"\t\treturn {raw}"]
-    lines = [func.signature(func.name), "\tif G1.depth != 0:", f"\t\tG1.reentry({key})", *passthrough]
+    lines = [func.signature(name or func.name), "\tif G1.depth != 0:", f"\t\tG1.reentry({key})", *passthrough]
     if mode == "ported":
-        lines += ["\tif not G1.on:", *passthrough, "\tG1.depth = 1", "\tvar g1_t0 := Time.get_ticks_usec()"]
+        lines += ["\tif not G1.on:", *passthrough, "\tG1.enter()", "\tvar g1_t0 := Time.get_ticks_usec()"]
         if func.void:
             lines += [f"\t{raw}", f"\tG1.add({key}, Time.get_ticks_usec() - g1_t0)"]
         else:
@@ -242,11 +262,23 @@ def ported_wrapper(script: str, func: Func, writes: bool, mode: str) -> list[str
     return lines + [""]
 
 
-def around_wrapper(func: Func, before: str, after: str) -> list[str]:
-    raw = call_line(func, f"{func.name}__raw")
+def around_wrapper(func: Func, before: str, after: str, target: str | None = None) -> list[str]:
+    raw = call_line(func, target or f"{func.name}__raw")
     if func.void:
         return [func.signature(func.name), f"\t{before}", f"\t{raw}", f"\t{after}", ""]
     return [func.signature(func.name), f"\t{before}", f"\tvar g1_result = {raw}", f"\t{after}", "\treturn g1_result", ""]
+
+
+def host_wrapper(script: str, func: Func) -> list[str]:
+    """A host target: paused, and in mode capture kept as a host call of the entry it runs in."""
+    raw = call_line(func, f"{func.name}__raw")
+    key = f'&"{script}.{func.name}"'
+    args = f"[{', '.join(func.args)}]"
+    lines = [func.signature(func.name), f"\tG1.pause({func.args[0]})", f"\tvar g1_host = G1.host_begin({args})"]
+    if func.void:
+        return lines + [f"\t{raw}", f"\tG1.host_end({key}, g1_host, null, {args})", "\tG1.resume()", ""]
+    return lines + [f"\tvar g1_result = {raw}", f"\tG1.host_end({key}, g1_host, g1_result, {args})", "\tG1.resume()",
+                    "\treturn g1_result", ""]
 
 
 def rewrite_calls(lines: list[str], own: set[str], qualified: dict[str, set[str]]) -> int:
@@ -286,6 +318,7 @@ def aliases(lines: list[str], class_names: dict[str, str]) -> dict[str, str]:
 def instrument(dest: Path, mode: str) -> list[str]:
     scripts_dir = dest / "scripts/core"
     ported = registry()
+    hosts = host_targets()
     class_names = {}
     for path in scripts_dir.glob("*.gd"):
         for line in path.read_text(encoding="utf-8").split(NEWLINE)[:5]:
@@ -293,21 +326,26 @@ def instrument(dest: Path, mode: str) -> list[str]:
             if match:
                 class_names[match.group(1)] = path.stem
     sources = {stem: (scripts_dir / f"{stem}.gd").read_text(encoding="utf-8").split(NEWLINE)
-               for stem in set(ported) | {RESOLVE[0]} | set(PAUSED)}
+               for stem in set(ported) | {RESOLVE[0]} | set(PAUSED) | set(hosts)}
     funcs = {stem: find_funcs(lines) for stem, lines in sources.items()}
+    # Out of T_gd and of the entry they run in: the battle ends, the host targets and the result payload.
+    paused = {stem: {name for name in funcs[stem] if (stem in PAUSED and PAUSED[stem].match(name)) or name in hosts.get(stem, set())}
+              for stem in sources}
     # The ported set per script: registry entries (wrapped) and native internals (a raw copy beside the original).
     internals = {stem: native_internals(stem, set(funcs[stem]), set(ported.get(stem, {}))) for stem in sources}
     raw_names = {stem: set(ported.get(stem, {})) | internals[stem] for stem in sources}
+    # The calls a ported body points at raw bodies: a paused function keeps its pause.
+    rewritten = {stem: raw_names[stem] - paused[stem] for stem in sources}
     report = []
     for stem, lines in sources.items():
-        missing = [name for name in raw_names[stem] if name not in funcs[stem]]
+        missing = [name for name in raw_names[stem] | hosts.get(stem, set()) if name not in funcs[stem]]
         if missing:
             sys.exit(f"{stem}.gd at the baseline has no {missing}")
         if any(re.search(r"\bG1\b", line) for line in lines):
             sys.exit(f"{stem}.gd already names G1")
         edits: list[tuple[int, int, list[str]]] = []  # (start, end, replacement) over the original lines
 
-        qualified = {alias: raw_names.get(target, set()) for alias, target in aliases(lines, class_names).items()}
+        qualified = {alias: rewritten.get(target, set()) for alias, target in aliases(lines, class_names).items()}
 
         def raw_copy(func: Func, in_set: bool) -> list[str]:
             """The function renamed to __raw; inside the ported set its calls into the set skip the wrappers."""
@@ -315,14 +353,23 @@ def instrument(dest: Path, mode: str) -> list[str]:
             signature = lines[func.start:func.end + 1]
             signature[0] = signature[0].replace(f"static func {func.name}(", f"static func {func.name}__raw(", 1)
             if in_set:
-                counts[0] += rewrite_calls(body, raw_names[stem], qualified)
+                counts[0] += rewrite_calls(body, rewritten[stem], qualified)
             return signature + body
 
         counts = [0]
         for name, func in funcs[stem].items():
             if stem == RESOLVE[0] and name == RESOLVE[1]:
-                wrapper, kind = around_wrapper(func, f"G1.begin_resolve({func.args[0]})", f"G1.end_resolve({func.args[0]})"), "resolve"
-            elif stem in PAUSED and PAUSED[stem].match(name):
+                begin, end = f"G1.begin_resolve({func.args[0]})", f"G1.end_resolve({func.args[0]})"
+                if mode != "resolve" and name in ported.get(stem, {}):
+                    # Ported: the resolve is the outermost entry, its clock inside the resolve's.
+                    inner = f"{name}__g1"
+                    wrapper = around_wrapper(func, begin, end, inner) + ported_wrapper(stem, func, ported[stem][name], mode, inner)
+                    kind = mode
+                else:
+                    wrapper, kind = around_wrapper(func, begin, end), "resolve"
+            elif name in hosts.get(stem, set()):
+                wrapper, kind = host_wrapper(stem, func), "host"
+            elif name in paused[stem]:
                 wrapper, kind = around_wrapper(func, f"G1.pause({func.args[0]})", "G1.resume()"), "paused"
             elif mode != "resolve" and name in ported.get(stem, {}):
                 wrapper, kind = ported_wrapper(stem, func, ported[stem][name], mode), mode
@@ -470,7 +517,7 @@ def cmd_run(args) -> int:
     if args.corpus == "seeds":
         cmd = [sys.executable, str(dest / "tools/rules_parity.py"), "run", str(dest), "--jobs", str(args.jobs), "--out", str(out / "seeds")]
     else:
-        cmd = [sys.executable, str(dest / "tools/battle_ai_arena/arena.py"), "--a", "current", "--b", "current",
+        cmd = [sys.executable, str(dest / "tools/battle_ai_arena/arena.py"), "--plain",
                "--suite", args.corpus, "--workers", str(args.jobs), "--out", str(out / "arena")]
     print(" ".join(cmd), flush=True)
     with ForeignGodot([dest]) as foreign:
@@ -709,6 +756,20 @@ def cmd_summarize(args) -> int:
     for part, meta in conditions.items():
         if meta.get("foreign_godot"):
             problems.append(f"{part}: foreign Godot processes during the run: {meta['foreign_godot']}")
+    if args.native:
+        native, _ = read_lines(Path(args.native))
+        both = sorted(set(resolve) & set(native))
+        if set(native) != set(resolve):
+            problems.append(f"resolve/native keys differ: {len(set(resolve) - set(native))} only in resolve, {len(set(native) - set(resolve))} only in native")
+        gd_both = sum(mean(resolve[k], "t_gd") for k in both)
+        nat_both = sum(mean(native[k], "t_gd") for k in both)
+        summary["native_mode"] = {"resolves": len(both), "t_gd_s": round(gd_both / 1e6, 3), "t_native_s": round(nat_both / 1e6, 3),
+                                  "speedup": round(gd_both / nat_both, 2) if nat_both else None}
+        conditions["native"] = read_meta(Path(args.native) / "run.json")
+        if conditions["native"].get("jobs") != jobs["resolve"]:
+            problems.append(f"the native run had {conditions['native'].get('jobs')} jobs, the resolve run {jobs['resolve']}")
+        if conditions["native"].get("foreign_godot"):
+            problems.append(f"native: foreign Godot processes during the run: {conditions['native']['foreign_godot']}")
     summary["conditions"] = conditions
     text = json.dumps(summary, indent=1)
     if args.out:
@@ -760,6 +821,7 @@ def main() -> int:
     p.add_argument("--ported", required=True)
     p.add_argument("--replay", required=True)
     p.add_argument("--convert", required=True)
+    p.add_argument("--native", help="a resolve run of the branch in native battle mode: the measured time per resolve")
     p.add_argument("--out")
     p.set_defaults(func=cmd_summarize)
     p = sub.add_parser("remove", help="delete a prepared copy")

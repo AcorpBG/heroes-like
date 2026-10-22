@@ -3,9 +3,16 @@ extends RefCounted
 ## Phase 1, "Checkpoint G1"). g1.py copies the game at the branch point, puts this script beside it and wraps:
 ##
 ## - BattleAutoResolveRules.resolve_active_battle: begin_resolve/end_resolve time each resolve;
-## - the _finalize_* functions and _resolve_result (the payload): pause/resume leave them out of T_gd;
-## - the ported functions, mode "ported": add() takes the outermost entry's inclusive time (T_gd_ported);
+## - the _finalize_* functions, the port's other host targets and _resolve_result (the payload): pause/resume leave
+##   them out of T_gd and out of the entry they run in;
+## - the ported functions, mode "ported": add() takes the outermost entry's inclusive time (T_gd_ported), less the
+##   paused time inside it;
 ## - the ported functions, mode "capture": capture_args/capture_end keep the outermost entry's arguments and result.
+##
+## Since slice 10 resolve_active_battle is ported, so a resolve is one outermost entry, as the native loop makes it.
+## A host target that entry reaches (a battle end the native loop calls in GDScript: gd::call_static) is a host call:
+## host_begin/host_end keep its arguments before and after and its result in the entry, and battle_port_replay
+## gives the native call that result and those arguments afterwards.
 ##
 ## HEROES_G1_MODE picks the mode ("resolve", "ported" or "capture"), HEROES_G1_OUT the folder and
 ## HEROES_G1_CAPTURE_EVERY the share of resolves captured (those whose start digest is a multiple of it). Each process
@@ -20,7 +27,8 @@ extends RefCounted
 ## GDScript's static vars (_STATICS), and a signature of them after it. A memo container that is one of the entry's
 ## arguments, their "stacks" or presentation queue or a stack in it is {"__g1_arg__": path}; one that is none of
 ## them, where the port only asks whether it is one (the scope's battle, the queue last written, a scoring memo
-## entry's stacks), is an empty placeholder; the specialty catalog built from the content is {"__g1_content__": path}
+## entry's stacks), is an empty placeholder; any other memo is its value; the specialty catalog built from the
+## content is {"__g1_content__": path}
 ## and {"__g1_catalog_index__": path}. The board-read cache only grows inside a scope, so an entry holds the keys added
 ## since the last entry: [serial of the cache object, keys before, {added keys}]. The arena plays each side's
 ## BattleAiRules as its own compiled copy behind a router at the script's path, so a BattleAiRules wrapper hands over
@@ -40,6 +48,10 @@ static var capturing := false
 ## function outside the set in between): timed with that entry, not counted as one.
 static var reentries := 0
 static var _reentered := {}
+## The paused time when the outermost entry began.
+static var _entry_paused := 0
+## Mode "capture": the host calls of the outermost entry, [name, argument ids, result id, argument ids afterwards].
+static var _cap_hosts: Array = []
 
 static var _resolve_depth := 0
 static var _nested_resolves := 0
@@ -62,16 +74,18 @@ static var _seen := {}
 static var _file: FileAccess = null
 static var _content_bytes := PackedByteArray()
 
-## The session properties the port reads (gd::member).
-const _OBJECT_PROPERTIES := ["battle", "day", "difficulty", "session_id"]
+## The session properties the port reads (gd::member), but the overworld, which only a battle without a player
+## commander state reads.
+const _OBJECT_PROPERTIES := ["battle", "day", "difficulty", "session_id", "scenario_status", "game_state"]
 ## ContentService rows the port reads (gd::content_row), by table, and the files it loads (gd::content_file).
 const _CONTENT_TABLES := {
 	"unit": ["res://content/units.json", "get_unit"],
 	"hero": ["res://content/heroes.json", "get_hero"],
 	"faction": ["res://content/factions.json", "get_faction"],
 	"spell": ["res://content/spells.json", "get_spell"],
+	"artifact": ["res://content/artifacts.json", "get_artifact"],
 }
-const _CONTENT_FILES := ["res://content/hero_specialties.json"]
+const _CONTENT_FILES := ["res://content/hero_specialties.json", "res://content/artifacts.json", "res://content/battle_ai_weights.json"]
 const _BATTLE_RULES := "res://scripts/core/BattleRules.gd"
 const _BATTLE_AI_RULES := "res://scripts/core/BattleAiRules.gd"
 const _HERO_PROGRESSION_RULES := "res://scripts/core/HeroProgressionRules.gd"
@@ -90,6 +104,16 @@ const _STATICS := [
 	[_BATTLE_AI_RULES, "_scoring_stack_terms"],
 	[_HERO_PROGRESSION_RULES, "_catalog_source"],
 	[_HERO_PROGRESSION_RULES, "_catalog_index"],
+	[_BATTLE_RULES, "_consequence_cache_battle"],
+	[_BATTLE_RULES, "_consequence_cache"],
+	[_BATTLE_AI_RULES, "_scoring_payloads"],
+	[_BATTLE_AI_RULES, "_scoring_cohesion"],
+	[_BATTLE_AI_RULES, "_scoring_momentum"],
+	[_BATTLE_AI_RULES, "_scoring_attack_scores"],
+	[_BATTLE_AI_RULES, "_scoring_threats"],
+	[_BATTLE_AI_RULES, "_scoring_damage"],
+	[_BATTLE_AI_RULES, "_hero_payload_cache"],
+	[_BATTLE_AI_RULES, "_weights"],
 ]
 static var _scripts := {}
 static var _statics_id := -1
@@ -200,9 +224,37 @@ static func resume() -> void:
 		on = true
 
 
-## Mode "ported": one outermost entry of `name` took `usec`, timer included.
+## Mode "capture": a host target starts, already paused. Inside the outermost entry and no other paused call, its
+## arguments as blob ids; else null, and host_end keeps nothing.
+static func host_begin(args: Array):
+	if not capturing or depth != 1 or _pause_depth != 1:
+		return null
+	var ids: Array = []
+	for value in args:
+		ids.append(_blob(value))
+	return ids
+
+
+## Mode "capture": the host call's result and its arguments afterwards, kept in the entry.
+static func host_end(name: StringName, ids, result, args: Array) -> void:
+	if ids == null:
+		return
+	var after_ids: Array = []
+	for value in args:
+		after_ids.append(_blob(value))
+	_cap_hosts.append([String(name), ids, _blob(result), after_ids])
+
+
+## Mode "ported": an outermost entry starts.
+static func enter() -> void:
+	depth = 1
+	_entry_paused = _paused_us
+
+
+## Mode "ported": one outermost entry of `name` took `usec`, timer included; the paused time inside it is left out.
 static func add(name: StringName, usec: int) -> void:
 	depth = 0
+	usec -= _paused_us - _entry_paused
 	_entries += 1
 	_ported_us += usec
 	var slot = _per_fn.get(name)
@@ -213,7 +265,10 @@ static func add(name: StringName, usec: int) -> void:
 		slot[1] += usec
 
 
+## A wrapper reached inside an outermost entry; one inside a paused call is not counted.
 static func reentry(name: StringName) -> void:
+	if not on:
+		return
 	reentries += 1
 	_reentered[name] = int(_reentered.get(name, 0)) + 1
 
@@ -227,6 +282,7 @@ static func capture_args(args: Array, writes := false, ai_memos = null) -> Array
 		ids.append(_blob(value))
 	_ai_memos = ai_memos
 	_statics_id = _statics_blob(args) if writes else -1
+	_cap_hosts = []
 	return ids
 
 
@@ -236,7 +292,8 @@ static func capture_end(name: StringName, ids: Array, result, after: Array) -> v
 	for value in after:
 		after_ids.append(_blob(value))
 	var signature := _blob(_memo_signature()) if _statics_id >= 0 else -1
-	_cap_entries.append([String(name), ids, _blob(result), after_ids, _statics_id, signature])
+	_cap_entries.append([String(name), ids, _blob(result), after_ids, _statics_id, signature, _cap_hosts])
+	_cap_hosts = []
 	_entries += 1
 	depth = 0
 
@@ -282,9 +339,12 @@ static func _statics_blob(args: Array) -> int:
 	return _blob(ids)
 
 
-## A scoring memo: the one the wrapper handed over, else the script's at its path, else an empty one.
+## A scoring memo: the one the wrapper handed over, else the script's at its path, else an empty one. The memos a
+## wrapper does not hand over are the script's.
 static func _ai_memo(name: String):
 	var index := ["_scoring_scope_depth", "_scoring_living", "_scoring_stack_terms"].find(name)
+	if index < 0:
+		return _static(_BATTLE_AI_RULES, name)
 	if _ai_memos is Array:
 		return _ai_memos[index]
 	var value = _static(_BATTLE_AI_RULES, name)

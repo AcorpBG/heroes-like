@@ -24,9 +24,9 @@
 // rounds find the buffers of the same resolve. t_nat_us and t_nat_warm_us are
 // the median round, and the split by function is the median warm round's.
 //
-// The host is the capture's: its content (the unit, hero, faction and spell rows
-// and the files the port reads, decoded into the State before each round, as an
-// engine keeps its content resident) and its objects. g1_probe.gd writes a
+// The host is the capture's: its content (the unit, hero, faction, spell and
+// artifact rows and the files the port reads, decoded into the State before each
+// round, as an engine keeps its content resident) and its objects. g1_probe.gd writes a
 // RandomNumberGenerator as its seed and state and the session as the blobs of
 // the properties the port reads, so a property that is also an argument is the
 // same container.
@@ -45,6 +45,15 @@
 // reading entry does, from the nodes shared by blob, so that the State's memo
 // finds them from call to call as the native loop finds its battle;
 // --fresh-writers decodes them per entry, as every other writing entry.
+//
+// Since slice 10 a resolve is one entry, resolve_active_battle, and its battle
+// end is a host call (gd::call_static: a _finalize_* function the native loop
+// leaves in GDScript). The capture holds each host call's arguments before and
+// after it and its result. The host checks that the native call passes
+// GDScript's arguments (an object's properties, any other value's bytes), then
+// gives it GDScript's arguments afterwards and its result, decoded with the
+// entry's arguments, and drops the State's memo as the bridge does. That time is
+// left out of the native time; the GDScript side pauses the host targets too.
 //
 //     battle_port_replay [--repeat N] [--prime OTHER.bin] [--fresh-writers] CAPTURE.bin
 //
@@ -190,6 +199,16 @@ constexpr const char *kStatics[][2] = {
 	{ "res://scripts/core/BattleAiRules.gd", "_scoring_stack_terms" },
 	{ "res://scripts/core/HeroProgressionRules.gd", "_catalog_source" },
 	{ "res://scripts/core/HeroProgressionRules.gd", "_catalog_index" },
+	{ "res://scripts/core/BattleRules.gd", "_consequence_cache_battle" },
+	{ "res://scripts/core/BattleRules.gd", "_consequence_cache" },
+	{ "res://scripts/core/BattleAiRules.gd", "_scoring_payloads" },
+	{ "res://scripts/core/BattleAiRules.gd", "_scoring_cohesion" },
+	{ "res://scripts/core/BattleAiRules.gd", "_scoring_momentum" },
+	{ "res://scripts/core/BattleAiRules.gd", "_scoring_attack_scores" },
+	{ "res://scripts/core/BattleAiRules.gd", "_scoring_threats" },
+	{ "res://scripts/core/BattleAiRules.gd", "_scoring_damage" },
+	{ "res://scripts/core/BattleAiRules.gd", "_hero_payload_cache" },
+	{ "res://scripts/core/BattleAiRules.gd", "_weights" },
 };
 constexpr size_t kStaticCount = sizeof(kStatics) / sizeof(kStatics[0]);
 // GDScript's own board-read memo: kStatics[1] to [5].
@@ -615,10 +634,37 @@ bool is_object_blob(const std::string &blob) {
 	return marker == kRngMarker || marker == kObjectMarker;
 }
 
+bool object_ids(const std::string &blob, std::vector<std::pair<std::string, int64_t>> &ids);
+
+// A host call an entry made (gd::call_static): GDScript's function, and its
+// arguments before it, its result and its arguments afterwards as blob ids.
+struct HostCall {
+	std::string name;
+	std::vector<int64_t> args;
+	int64_t result = 0;
+	std::vector<int64_t> after;
+};
+
+// A host call as the host gives it: its result and, per argument that is an
+// object, the object's properties afterwards (atom, value), decoded before the call.
+struct PreparedHost {
+	const HostCall *call = nullptr;
+	Value result;
+	std::vector<std::vector<std::pair<uint32_t, Value>>> after;
+};
+
 // The capture's host: its objects and its content. Containers are never backed.
 class ReplayHost : public aurelion::rules::state::Backing {
 public:
 	Codec *codec = nullptr;
+	const std::vector<std::string> *blobs = nullptr;
+	// The host calls of the entry being called, in order, the next one, the time
+	// spent giving them (left out of the native time) and where the native call
+	// differed from GDScript's.
+	std::vector<PreparedHost> *hosts = nullptr;
+	size_t next_host = 0;
+	Clock::duration host_time{};
+	std::vector<std::string> problems;
 	std::map<std::pair<int, uint32_t>, Value> rows; // (table, id atom)
 	std::map<uint32_t, Value> files; // path atom
 	// The memos' (script, name) atoms in kStatics order, and the memos of the
@@ -669,7 +715,8 @@ public:
 	}
 	Value content_row(State &state, aurelion::rules::state::ContentTable table, uint32_t id) override {
 		using aurelion::rules::state::ContentTable;
-		if (table != ContentTable::Unit && table != ContentTable::Hero && table != ContentTable::Faction && table != ContentTable::Spell) {
+		if (table != ContentTable::Unit && table != ContentTable::Hero && table != ContentTable::Faction && table != ContentTable::Spell &&
+				table != ContentTable::Artifact) {
 			fail("content table " + std::to_string(static_cast<int>(table)) + " is not in the capture (asked for " + state.text(id) + ")");
 		}
 		const auto found = rows.find({ static_cast<int>(table), id });
@@ -688,8 +735,70 @@ public:
 	void static_set(State &state, uint32_t script, uint32_t name, const Value &value) override {
 		static_slot(state, script, name) = value;
 	}
+	Value call_static(State &state, uint32_t script, uint32_t function, const Value *args, size_t count) override {
+		const Clock::time_point start = Clock::now();
+		const std::string name = aurelion::rules::port::host_name(state.text(script), state.text(function));
+		if (hosts == nullptr || next_host >= hosts->size()) {
+			fail(name + ": a host call GDScript did not make here");
+		}
+		PreparedHost &host = (*hosts)[next_host++];
+		if (host.call->name != name || host.call->args.size() != count) {
+			fail(name + ": a host call where GDScript called " + host.call->name);
+		}
+		// The arguments must be GDScript's: an object's properties, any other value's bytes.
+		for (size_t arg = 0; arg < count; ++arg) {
+			const std::string &want = (*blobs)[static_cast<size_t>(host.call->args[arg])];
+			std::vector<std::pair<std::string, int64_t>> ids;
+			bool same = true;
+			if (object_ids(want, ids)) {
+				ReplayObject *object = args[arg].kind == Kind::Opaque ? codec->object(args[arg].ref) : nullptr;
+				same = object != nullptr && !object->rng;
+				for (size_t k = 0; same && k < ids.size(); ++k) {
+					const int index = property_index(*object, ids[k].first);
+					same = index >= 0 && codec->encode(object->values[static_cast<size_t>(index)]) == (*blobs)[static_cast<size_t>(ids[k].second)];
+				}
+			} else {
+				same = codec->encode(args[arg]) == want;
+			}
+			if (!same) {
+				problems.push_back(name + ": host call argument " + std::to_string(arg) + " is not GDScript's");
+			}
+		}
+		// GDScript's arguments afterwards, which the bridge reads again after a host call.
+		for (size_t arg = 0; arg < count; ++arg) {
+			if (host.after[arg].empty()) {
+				continue;
+			}
+			ReplayObject *object = args[arg].kind == Kind::Opaque ? codec->object(args[arg].ref) : nullptr;
+			if (object == nullptr || object->rng) {
+				fail(name + ": GDScript's argument " + std::to_string(arg) + " was an object, the native one is not");
+			}
+			for (const auto &property : host.after[arg]) {
+				const int index = property_index(*object, state.text(property.first));
+				if (index >= 0) {
+					object->values[static_cast<size_t>(index)] = property.second;
+				} else {
+					object->ids.emplace_back(state.text(property.first), -1);
+					object->atoms.push_back(property.first);
+					object->values.push_back(property.second);
+				}
+			}
+		}
+		state.drop_memo();
+		host_time += Clock::now() - start;
+		return host.result;
+	}
 
 private:
+	static int property_index(const ReplayObject &object, const std::string &name) {
+		for (size_t index = 0; index < object.ids.size(); ++index) {
+			if (object.ids[index].first == name) {
+				return static_cast<int>(index);
+			}
+		}
+		return -1;
+	}
+
 	Value &static_slot(State &state, uint32_t script, uint32_t name) {
 		for (size_t index = 0; index < kStaticCount; ++index) {
 			if (static_atoms[index].first == script && static_atoms[index].second == name) {
@@ -743,6 +852,7 @@ struct Entry {
 	// signature afterwards; both empty for an entry that reads only.
 	std::vector<int64_t> statics;
 	std::vector<int64_t> signature;
+	std::vector<HostCall> hosts;
 };
 
 struct Capture {
@@ -795,7 +905,7 @@ Capture read_capture(const char *path) {
 	const Value rows = field(meta, root, "entries");
 	for (const Value &row : items(meta, rows)) {
 		const ValueList &parts = items(meta, row);
-		if ((parts.size() != 4 && parts.size() != 6) || !parts[0].is_string_like()) {
+		if ((parts.size() != 4 && parts.size() != 6 && parts.size() != 7) || !parts[0].is_string_like()) {
 			fail("the capture is not shaped as g1_probe.gd writes it");
 		}
 		Entry entry;
@@ -834,7 +944,7 @@ Capture read_capture(const char *path) {
 				fail(name + ": the capture's memos are not shaped as g1_probe.gd writes them");
 			}
 		};
-		if (parts.size() == 6) {
+		if (parts.size() >= 6) {
 			ints_of(parts[4], entry.statics, kStaticCount);
 			ints_of(parts[5], entry.signature, kSignatureSize);
 			for (int64_t id : entry.statics) {
@@ -843,12 +953,46 @@ Capture read_capture(const char *path) {
 				}
 			}
 		}
+		if (parts.size() == 7) {
+			// [name, argument ids, result id, argument ids afterwards] per host call.
+			for (const Value &call : items(meta, parts[6])) {
+				const ValueList &fields = items(meta, call);
+				if (fields.size() != 4 || !fields[0].is_string_like()) {
+					fail(name + ": a host call is not shaped as g1_probe.gd writes it");
+				}
+				HostCall host;
+				host.name = meta.text(fields[0].ref);
+				for (const Value &id : items(meta, fields[1])) {
+					host.args.push_back(integer(id));
+				}
+				host.result = integer(fields[2]);
+				for (const Value &id : items(meta, fields[3])) {
+					host.after.push_back(integer(id));
+				}
+				if (host.after.size() != host.args.size()) {
+					fail(name + ": a host call is not shaped as g1_probe.gd writes it");
+				}
+				entry.hosts.push_back(std::move(host));
+			}
+		}
 		capture.entries.push_back(std::move(entry));
 	}
+	const auto in_range = [&](int64_t id) {
+		if (id < 0 || static_cast<size_t>(id) >= capture.blobs.size()) {
+			fail("a blob id out of range");
+		}
+	};
 	for (const Entry &entry : capture.entries) {
 		for (int64_t id : entry.args) {
-			if (id < 0 || static_cast<size_t>(id) >= capture.blobs.size()) {
-				fail("a blob id out of range");
+			in_range(id);
+		}
+		for (const HostCall &host : entry.hosts) {
+			in_range(host.result);
+			for (int64_t id : host.args) {
+				in_range(id);
+			}
+			for (int64_t id : host.after) {
+				in_range(id);
 			}
 		}
 	}
@@ -865,10 +1009,11 @@ Capture read_capture(const char *path) {
 // one State and its memory from resolve to resolve.
 struct Loaded {
 	Loaded(const Capture &capture, State &state) :
-			capture(capture), state(state), offsets(capture.entries.size() + 1), shared(capture.blobs.size()), decoded(capture.blobs.size(), false), statics(capture.entries.size()) {
+			capture(capture), state(state), offsets(capture.entries.size() + 1), shared(capture.blobs.size()), decoded(capture.blobs.size(), false), statics(capture.entries.size()), hosts(capture.entries.size()) {
 		// As StateBridge::load starts a resolve: atoms and nodes cleared, node buffers kept.
 		state.clear();
 		host.codec = &codec;
+		host.blobs = &capture.blobs;
 		state.set_backing(&host);
 		for (size_t index = 0; index < kStaticCount; ++index) {
 			host.static_atoms[index] = { state.intern(kStatics[index][0]), state.intern(kStatics[index][1]) };
@@ -881,6 +1026,7 @@ struct Loaded {
 			{ "hero", ContentTable::Hero },
 			{ "faction", ContentTable::Faction },
 			{ "spell", ContentTable::Spell },
+			{ "artifact", ContentTable::Artifact },
 		};
 		for (const auto &table : tables) {
 			const auto &rows = state.dict(field(state, content, table.first).ref);
@@ -951,6 +1097,7 @@ struct Loaded {
 			if (!entry.statics.empty()) {
 				prepare_statics(entry, slots, statics[prepared]);
 			}
+			prepare_hosts(entry, hosts[prepared]);
 			decoded_arrays += state.array_count() - arrays;
 			decoded_dicts += state.dict_count() - dicts;
 			++prepared;
@@ -971,9 +1118,19 @@ struct Loaded {
 		return false;
 	}
 
-	// The host hands entry `index`'s memos to the call about to run.
+	// The host hands entry `index`'s memos and host calls to the call about to run.
 	void enter(size_t index) {
 		host.statics = statics[index].empty() ? nullptr : &statics[index];
+		host.hosts = hosts[index].empty() ? nullptr : &hosts[index];
+		host.next_host = 0;
+	}
+	// After entry `index`: every host call GDScript made, the native call made too.
+	void leave(size_t index) {
+		if (host.next_host != hosts[index].size()) {
+			host.problems.push_back(std::string(capture.entries[index].function->name) + " entry " + std::to_string(index) + ": " +
+					std::to_string(host.next_host) + " of GDScript's " + std::to_string(hosts[index].size()) + " host calls");
+		}
+		host.hosts = nullptr;
 	}
 
 	// Entry `index`'s memos now give `want`'s compared part (g1_probe.gd's _memo_signature).
@@ -1020,11 +1177,39 @@ struct Loaded {
 	std::vector<Value> shared;
 	std::vector<bool> decoded;
 	std::vector<std::vector<Value>> statics; // per entry, kStaticCount values each, or none
+	std::vector<std::vector<PreparedHost>> hosts; // per entry
 	size_t prepared = 0;
 	size_t decoded_arrays = 0;
 	size_t decoded_dicts = 0;
 
 private:
+	// An entry's host calls: each result, and each object argument's properties
+	// afterwards, decoded as the entry's own copies.
+	void prepare_hosts(const Entry &entry, std::vector<PreparedHost> &out) {
+		const auto plain = [&](int64_t id) -> Value {
+			if (capture.object_blob[static_cast<size_t>(id)]) {
+				fail("a host call's result that is an object is not replayed");
+			}
+			return codec.decode(capture.blobs[static_cast<size_t>(id)]);
+		};
+		for (const HostCall &call : entry.hosts) {
+			PreparedHost given;
+			given.call = &call;
+			given.result = plain(call.result);
+			given.after.resize(call.after.size());
+			for (size_t arg = 0; arg < call.after.size(); ++arg) {
+				std::vector<std::pair<std::string, int64_t>> ids;
+				if (!object_ids(capture.blobs[static_cast<size_t>(call.after[arg])], ids)) {
+					continue;
+				}
+				for (const auto &property : ids) {
+					given.after[arg].emplace_back(state.intern(property.first), plain(property.second));
+				}
+			}
+			out.push_back(std::move(given));
+		}
+	}
+
 	// A writing entry's memos, decoded after its arguments, which their markers name.
 	void prepare_statics(const Entry &entry, const Value *slots, std::vector<Value> &memo) {
 		codec.alias = [&](const std::string &marker, const Value &payload) -> Value {
@@ -1192,6 +1377,10 @@ int run(int argc, char **argv) {
 			for (size_t index = 0; index < primer.entries.size(); ++index) {
 				loaded.enter(index);
 				primer.entries[index].function->call(loaded.state, loaded.args.data() + loaded.offsets[index]);
+				loaded.leave(index);
+			}
+			if (!loaded.host.problems.empty()) {
+				fail("the --prime capture: " + loaded.host.problems.front());
 			}
 		} catch (const std::exception &error) {
 			fail(std::string("the --prime capture failed: ") + error.what());
@@ -1252,6 +1441,12 @@ int run(int argc, char **argv) {
 				}
 			}
 		}
+		for (const std::string &problem : loaded.host.problems) {
+			++mismatches;
+			if (first.size() < 10) {
+				first.push_back(problem);
+			}
+		}
 	};
 	auto failed = [&](size_t index, const std::exception &error) {
 		fail(std::string(capture.entries[index].function->name) + " entry " + std::to_string(index) + " failed natively where GDScript did not: " + error.what());
@@ -1270,6 +1465,7 @@ int run(int argc, char **argv) {
 	size_t made_dicts = 0;
 	size_t pool_arrays = 0;
 	size_t pool_dicts = 0;
+	double host_us = 0.0;
 	for (int round = 0; round < repeat; ++round) {
 		Loaded loaded(capture, warm_state);
 		std::vector<Value> results(capture.entries.size());
@@ -1280,10 +1476,12 @@ int run(int argc, char **argv) {
 			for (; index < capture.entries.size(); ++index) {
 				const Value *args = loaded.prepare(index);
 				loaded.enter(index);
+				const Clock::duration hosted = loaded.host.host_time;
 				const Clock::time_point start = Clock::now();
 				results[index] = capture.entries[index].function->call(loaded.state, args);
 				const Clock::time_point stop = Clock::now();
-				const double ns = std::chrono::duration<double, std::nano>(stop - start).count() - overhead_ns;
+				loaded.leave(index);
+				const double ns = std::chrono::duration<double, std::nano>(stop - start - (loaded.host.host_time - hosted)).count() - overhead_ns;
 				total_ns += ns;
 				auto &slot = by_function[capture.entries[index].function];
 				slot.first += 1;
@@ -1294,6 +1492,7 @@ int run(int argc, char **argv) {
 		}
 		warm.push_back(total_ns / 1000.0);
 		if (round == 0) {
+			host_us = std::chrono::duration<double, std::micro>(loaded.host.host_time).count();
 			made_arrays = loaded.made_arrays();
 			made_dicts = loaded.made_dicts();
 			pool_arrays = loaded.state.array_count();
@@ -1337,12 +1536,13 @@ int run(int argc, char **argv) {
 			for (; index < capture.entries.size(); ++index) {
 				loaded.enter(index);
 				results[index] = capture.entries[index].function->call(loaded.state, loaded.args.data() + loaded.offsets[index]);
+				loaded.leave(index);
 			}
 			stop = Clock::now();
 		} catch (const std::exception &error) {
 			failed(index, error);
 		}
-		totals.push_back(std::chrono::duration<double, std::micro>(stop - start).count());
+		totals.push_back(std::chrono::duration<double, std::micro>(stop - start - loaded.host.host_time).count());
 		check(loaded, results);
 	}
 
@@ -1354,6 +1554,12 @@ int run(int argc, char **argv) {
 		out += number;
 	};
 	add("entries", static_cast<double>(capture.entries.size()));
+	size_t host_calls = 0;
+	for (const Entry &entry : capture.entries) {
+		host_calls += entry.hosts.size();
+	}
+	add("host_calls", static_cast<double>(host_calls));
+	add("host_us", host_us);
 	add("blobs", static_cast<double>(capture.blobs.size()));
 	add("t_nat_us", totals[median_round(totals)]);
 	add("t_nat_min_us", *std::min_element(totals.begin(), totals.end()));
