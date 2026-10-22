@@ -1492,8 +1492,9 @@ ContentService inside the computer players' turns. The probe slows the turn, so 
 written back at the end. Until Phase 1's merge, the two battle entries are host targets (`gd::call_static`: write
 back, run the GDScript, reload lazily): `AiHeroRules._simulate_battle` and `AiHeroRules._start_player_battle`, the
 two callers of `BattleRules.create_battle_payload`, which is frozen battle code and takes no host wrapper. A path the port leaves out throws `state::NotPorted`, and the whole day's
-computer turns run in GDScript. That fallback is only correct before the day's first host call, so shadow mode counts
-both. Switch `HEROES_NATIVE_TURN=gdscript|native|shadow`, log `HEROES_NATIVE_TURN_LOG`, registry
+computer turns run in GDScript from the state the day started from. Nothing may reach Godot before that: the native call
+writes back only at its end, and what a pure host call wrote back is undone (4.1's merge below). After a full host call
+it is a native failure, so shadow mode counts both. Switch `HEROES_NATIVE_TURN=gdscript|native|shadow`, log `HEROES_NATIVE_TURN_LOG`, registry
 `core/port/turn_registry.cpp`, files `core/port/<script>_turn.cpp` (the claims note names each function's file).
 
 **Slices.**
@@ -1506,10 +1507,76 @@ both. Switch `HEROES_NATIVE_TURN=gdscript|native|shadow`, log `HEROES_NATIVE_TUR
   calling Phase 3's ports and Phase 5's (from its merge), with battles as host targets and the other 201 not-ported
   functions throwing `state::NotPorted`. The bound on its gain: the turn's share outside battles, about 30% of match
   time, so at most 1.4x for whole games.
-- 4.2, the paths the six seeds do not run: the 201 other functions (3,085 lines), so that no path of the day is left
-  to GDScript.
-- 4.3, battles inside the turn, after Phase 1's merge: `_simulate_battle` and the start of a battle against a human
-  call Phase 1's native payload and resolve, with no host calls.
+  Done 2026-10-22 on the branch (facf320a5 runtime, also for main; ea06c96e5 port; 6298dcb65 Windows binaries). In
+  native mode (`HEROES_NATIVE_TURN=native`; GDScript stays the default until 4.4) the computer players' whole day runs
+  native: 12,500 lines of C++ in `core/port/*_turn*.cpp` and `turn_*.cpp`. Checks, on main with Phases 5 and 1 merged
+  (ade42f86e): native mode identical to main on the six seeds, no day falling back to GDScript; shadow mode on the six
+  seeds and the two coverage seeds, 0 mismatches over 418 functions; core suite 17/17. Before Phase 1's merge, the
+  codec round trip on all 415 days, 0 differences. Whole games, the six seeds' seconds summed, interleaved on a quiet
+  machine: main 609 s (612, 606), native 418 s (420, 416), 1.46x. That is above the 1.4x bound above, because Phase 1's
+  native battles shrank the battles' share of a match.
+  - Battle previews are a pure host target (`TurnEngine.pure_host_call`, `port::Host::pure`, `Backing::call_pure`):
+    the native call writes back, GDScript runs `_simulate_battle`, and the native call reads nothing again. A probe
+    hashed every session field, the session's metadata, the three arguments and every static var of `scripts/core`
+    around each GDScript preview. On the six seeds no field, metadata or argument changed, only nine caches built
+    from content (six of the battle code's, `_damage_spell_memo`, `_unit_strength_memo`,
+    `_runtime_normalized_signatures`). The six seeds make 1,536 previews in 1,432 faction turns (409 computer days,
+    at most 14 a day). As full host calls (`HEROES_NATIVE_TURN_PREVIEW_HOST=full`) the six seeds take 464 s (467,
+    462), 46 s (11%) more. `_start_player_battle` stays a full host call.
+  - Coverage seeds (`rules_parity.py`, run only when `--seeds` names them): `isl-b` reaches `_hold_back` (an army saving
+    for a boat, 13 checks), `pt-f` the random exits of one-way portals (`native_random_exit_check`,
+    `note_native_trip`, 62 checks).
+  - Shared with Phase 5: the 68 functions Phase 5's slice 09 calls or reaches are on main unswitched (aa9d9f2be,
+    binaries 845b8a45e, with the runtime as 84082d9c1), moved unchanged from the turn files (672a4ee1f) to
+    `core/port/<script>_shared.cpp`, declared in the per-script headers, their keys at the end of `ai_keys.inc`. Five
+    of their callees are slice 09's and throw `state::NotPorted` from `phase4_shared_stubs.cpp` until it lands.
+  - Merged to main 2026-10-22. Owner decision that day: merge 4.1 now; `HEROES_NATIVE_TURN` stays `gdscript` by
+    default and AI batches run `native`; a day that reaches an unported path falls back to GDScript before its first
+    write; two copies until 4.4 (AGENTS.md); Windows only, lean checks. Main was tagged
+    `pre-native-phase4-faction-turn-4.1` first (D10).
+    - The switch: the owner's games run GDScript until 4.4. `tools/ai_match_batch.py` runs its games with
+      `HEROES_NATIVE_TURN=native` unless the environment names another mode, records the mode in `plan.json` and counts
+      the `NATIVE FALLBACK` lines of each game.
+    - The fallback: a `state::NotPorted` before the day's first full host call drops the native state, and the whole
+      day runs in GDScript from the same session and random state. A preview still writes back first, since GDScript
+      reads what the turn changed, but the bridge keeps what each container and static var held before the day's
+      first write into it and puts it back (`PortBridge::undo_write_backs`). `TurnEngine.pure_host_call` no longer
+      copies the view's fields into the session. The turn seeds its own random generators, so no generator state
+      reaches Godot before the end. Each such day prints `NATIVE FALLBACK: <entry> ran in GDScript, not ported:
+      <path>` and counts as not ported in the stats.
+    - Proof: a probe build threw `state::NotPorted` right after the preview on every third day. s2, mw and mg-b were
+      identical to main, with 58 days falling back. The same probe without the undo differed from main from day 6
+      on mg-b.
+    - After a full host call a `state::NotPorted` cannot fall back. The turn's one full host call is
+      `_start_player_battle`, a computer hero's attack on a human's town. AI-vs-AI games never reach it:
+      `AiSeatRules.hand_human_seat_to_ai` gives the human seat's towns to the computer and clears its heroes. The
+      `_finalize_*` host calls in the stats belong to the battle port, inside the previews' scratch sessions.
+    - Checks (e1aceebc2, binaries e5784932f): shadow mode on the six seeds and isl-b, pt-f, 2.32M checks over 418
+      functions, 0 mismatches; native mode identical to main on the six seeds, no computer day falling back (the eight
+      fallback lines are Phase 5's townless-player days); core suite 17/17; smoke batch (`ai_match_batch.py`, plan seed 16,
+      day cap 120): seven games, small 2P twice, medium 2P and 3P, large 3P and 4P, XL 5P, four of them two-level and
+      five with water (two islands). All seven finished, five decided and two at the cap; 0 failed, 0 script errors, no
+      computer day falling back. Six days in five games ran Phase 5's townless-player path in GDScript (two calls
+      each). The slowest computer day took 2.4 s, on XL. No new timing: the 1.46x above stands. It was measured
+      before the undo, which copies each container a day's previews first write back.
+- 4.2, the paths the six seeds do not run, so that no path of the day is left to GDScript. 4.1 leaves each to a
+  `state::NotPorted` (4.4's run on the owner's save copies checks them):
+  - the 165 functions in `turn_not_ported.cpp`: OverworldRules 45, EnemyAdventureRules 38, EnemyTurnRules 26,
+    ScenarioRules 18, AiHeroRules 5 (`_upgrade_value`, `_attack_player_hero`, `_convert_legacy_host`, ...), 13 more
+    scripts 33;
+  - four guards: `sort()` of values that are not all Strings (EnemyAdventureRules, HeroCommandRules), `to_lower()`
+    of non-ASCII text (EnemyTurnRules), a player town's weekly growth (`OverworldRules.town_weekly_growth`);
+  - Phase 5's two in `normalize_ai_heroes`: an AI hero without its movement, a legacy raid host.
+
+  Since 4.1's merge a `state::NotPorted` before the day's first full host call falls back, the previews' write-backs
+  undone. After `_start_player_battle`, the one full host call, which only a human's town brings, it is a native
+  failure. 4.2 ports each path, or a check before the day starts sends it to GDScript.
+  4.2 also folds the 11 functions Phase 5 left with a private copy in Phase 3's AI files
+  (`overworld_rules_ai_recovery.cpp`, `overworld_rules_ai_sites.cpp`).
+- 4.3, battles inside the turn with no host calls. Owner decision 2026-10-22: Phase 2 ports `_simulate_battle` as
+  one native call (`ai_hero_rules::_simulate_battle`, `core/port/ai_battle_preview.cpp`, the signature 4.1's host
+  target has); the turn calls it once it is on main. The start of a battle against a human calls Phase 1's native
+  payload.
 - 4.4, the exit:
   - delete the replaced GDScript; callers outside the turn (UI, day processing, battles) keep a thin wrapper or the
     GDScript copy under the two-copies rule (AGENTS.md);

@@ -23,6 +23,8 @@ const AdventureRules = preload("res://scripts/core/EnemyAdventureRules.gd")
 const WaterTravel = preload("res://scripts/core/WaterTravelRules.gd")
 const NativeRules = preload("res://scripts/core/NativeRules.gd")
 const AiEngine = preload("res://scripts/core/AiEngine.gd")
+const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
+static var _turn_engine_mode: int = TurnEngine.mode
 
 const AI_HERO_KEY := "ai_hero"
 # Battle settings (terrain, length, rewards) for fights against an AI hero. The
@@ -394,6 +396,14 @@ static var _weight_sets: Dictionary = {}
 ## turn and decision context, so no tuning number is looked up in a loop.
 ## Nothing changes when the set and the content revision are the ones in place.
 static func _use_weights(state: Dictionary) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_use_weights__gd(state)
+		return
+	var before := TurnEngine.before_writing(&"AiHeroRules._use_weights", [state])
+	_use_weights__gd(state)
+	TurnEngine.check_writing(&"AiHeroRules._use_weights", before, [state], null)
+
+static func _use_weights__gd(state: Dictionary) -> void:
 	var set_name := String(state.get(WEIGHT_SET_KEY, ""))
 	if set_name == "":
 		set_name = DEFAULT_WEIGHT_SET
@@ -411,6 +421,14 @@ static func _use_weights(state: Dictionary) -> void:
 ## The default set with a named set's values over it (resource_values merge by
 ## resource); an unknown name plays the default.
 static func _resolved_weight_set(set_name: String) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _resolved_weight_set__gd(set_name)
+	var before := TurnEngine.before_writing(&"AiHeroRules._resolved_weight_set", [set_name])
+	var result = _resolved_weight_set__gd(set_name)
+	TurnEngine.check_writing(&"AiHeroRules._resolved_weight_set", before, [set_name], result)
+	return result
+
+static func _resolved_weight_set__gd(set_name: String) -> Dictionary:
 	var sets: Dictionary = ContentService.load_json(WEIGHTS_PATH).get("sets", {})
 	var resolved: Dictionary = sets.get(DEFAULT_WEIGHT_SET, {}).duplicate(true)
 	if set_name == DEFAULT_WEIGHT_SET:
@@ -428,6 +446,14 @@ static func _resolved_weight_set(set_name: String) -> Dictionary:
 
 ## JSON numbers arrive as floats: whole-number weights go back to int here.
 static func _apply_weights(weights: Dictionary) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_apply_weights__gd(weights)
+		return
+	var before := TurnEngine.before_writing(&"AiHeroRules._apply_weights", [weights])
+	_apply_weights__gd(weights)
+	TurnEngine.check_writing(&"AiHeroRules._apply_weights", before, [weights], null)
+
+static func _apply_weights__gd(weights: Dictionary) -> void:
 	MAX_DECISIONS_PER_DAY = int(weights["max_decisions_per_day"])
 	SEARCH_DAYS = int(weights["search_days"])
 	FAR_SEARCH_DAYS = int(weights["far_search_days"])
@@ -553,6 +579,14 @@ static func is_ai_hero(entry: Variant) -> bool:
 	return entry is Dictionary and entry.get(AI_HERO_KEY, null) is Dictionary
 
 static func hero_name(entry: Dictionary) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return hero_name__gd(entry)
+	var before := TurnEngine.before_writing(&"AiHeroRules.hero_name", [entry])
+	var result = hero_name__gd(entry)
+	TurnEngine.check_writing(&"AiHeroRules.hero_name", before, [entry], result)
+	return result
+
+static func hero_name__gd(entry: Dictionary) -> String:
 	var commander: Dictionary = entry.get("enemy_commander_state", {}) if entry.get("enemy_commander_state", {}) is Dictionary else {}
 	var name := String(commander.get("name", ""))
 	if name == "":
@@ -587,15 +621,39 @@ static func _entry_index(session: SessionStateStoreScript.SessionData, placement
 	return AiEngine.native_writing(&"AiHeroRules._entry_index", [session, placement_id])
 
 static func _store_entry(session: SessionStateStoreScript.SessionData, index: int, entry: Dictionary) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_store_entry__gd(session, index, entry)
+		return
+	var before := TurnEngine.before_writing(&"AiHeroRules._store_entry", [session, index, entry])
+	_store_entry__gd(session, index, entry)
+	TurnEngine.check_writing(&"AiHeroRules._store_entry", before, [session, index, entry], null)
+
+static func _store_entry__gd(session: SessionStateStoreScript.SessionData, index: int, entry: Dictionary) -> void:
 	var encounters: Array = session.overworld.get("encounters", [])
 	if index >= 0 and index < encounters.size():
 		encounters[index] = entry
 		session.overworld["encounters"] = encounters
 
 static func _is_resolved(session: SessionStateStoreScript.SessionData, placement_id: String) -> bool:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _is_resolved__gd(session, placement_id)
+	var before := TurnEngine.before_writing(&"AiHeroRules._is_resolved", [session, placement_id])
+	var result = _is_resolved__gd(session, placement_id)
+	TurnEngine.check_writing(&"AiHeroRules._is_resolved", before, [session, placement_id], result)
+	return result
+
+static func _is_resolved__gd(session: SessionStateStoreScript.SessionData, placement_id: String) -> bool:
 	return placement_id in session.overworld.get("resolved_encounters", [])
 
 static func _mark_resolved(session: SessionStateStoreScript.SessionData, placement_id: String) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_mark_resolved__gd(session, placement_id)
+		return
+	var before := TurnEngine.before_writing(&"AiHeroRules._mark_resolved", [session, placement_id])
+	_mark_resolved__gd(session, placement_id)
+	TurnEngine.check_writing(&"AiHeroRules._mark_resolved", before, [session, placement_id], null)
+
+static func _mark_resolved__gd(session: SessionStateStoreScript.SessionData, placement_id: String) -> void:
 	var resolved: Array = session.overworld.get("resolved_encounters", []) if session.overworld.get("resolved_encounters", []) is Array else []
 	if placement_id != "" and placement_id not in resolved:
 		resolved.append(placement_id)
@@ -747,6 +805,14 @@ static func _return_troops_to_nearest_town(session: SessionStateStoreScript.Sess
 	session.overworld["towns"] = towns
 
 static func _nearest_owned_town(session: SessionStateStoreScript.SessionData, controller: String, tile: Vector2i, level: int) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _nearest_owned_town__gd(session, controller, tile, level)
+	var before := TurnEngine.before_writing(&"AiHeroRules._nearest_owned_town", [session, controller, tile, level])
+	var result = _nearest_owned_town__gd(session, controller, tile, level)
+	TurnEngine.check_writing(&"AiHeroRules._nearest_owned_town", before, [session, controller, tile, level], result)
+	return result
+
+static func _nearest_owned_town__gd(session: SessionStateStoreScript.SessionData, controller: String, tile: Vector2i, level: int) -> Dictionary:
 	var best := {}
 	var best_distance := 1 << 30
 	var towns: Array = session.overworld.get("towns", [])
@@ -763,7 +829,15 @@ static func _nearest_owned_town(session: SessionStateStoreScript.SessionData, co
 # --- Faction turn -------------------------------------------------------------
 
 ## One computer player's day: income, weekly growth, town orders, then heroes.
-static func run_faction_turn(
+static func run_faction_turn(session: SessionStateStoreScript.SessionData, config: Dictionary, state: Dictionary, should_apply_weekly_growth: bool, profile_enabled: bool = false) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return run_faction_turn__gd(session, config, state, should_apply_weekly_growth, profile_enabled)
+	var before := TurnEngine.before_writing(&"AiHeroRules.run_faction_turn", [session, config, state, should_apply_weekly_growth, profile_enabled])
+	var result = run_faction_turn__gd(session, config, state, should_apply_weekly_growth, profile_enabled)
+	TurnEngine.check_writing(&"AiHeroRules.run_faction_turn", before, [session, config, state, should_apply_weekly_growth, profile_enabled], result)
+	return result
+
+static func run_faction_turn__gd(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	state: Dictionary,
@@ -854,6 +928,14 @@ static func run_faction_turn(
 	return _turn_result(state, messages, events, profile_enabled, phases, started)
 
 static func _turn_result(state: Dictionary, messages: Array, events: Array, profile_enabled: bool, phases: Dictionary, started: int) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _turn_result__gd(state, messages, events, profile_enabled, phases, started)
+	var before := TurnEngine.before_writing(&"AiHeroRules._turn_result", [state, messages, events, profile_enabled, phases, started])
+	var result = _turn_result__gd(state, messages, events, profile_enabled, phases, started)
+	TurnEngine.check_writing(&"AiHeroRules._turn_result", before, [state, messages, events, profile_enabled, phases, started], result)
+	return result
+
+static func _turn_result__gd(state: Dictionary, messages: Array, events: Array, profile_enabled: bool, phases: Dictionary, started: int) -> Dictionary:
 	var result := {"state": state, "messages": messages, "events": events}
 	if profile_enabled:
 		phases["total_ms"] = _elapsed_ms(started)
@@ -861,6 +943,14 @@ static func _turn_result(state: Dictionary, messages: Array, events: Array, prof
 	return result
 
 static func _posture(session: SessionStateStoreScript.SessionData, controller: String) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _posture__gd(session, controller)
+	var before := TurnEngine.before_writing(&"AiHeroRules._posture", [session, controller])
+	var result = _posture__gd(session, controller)
+	TurnEngine.check_writing(&"AiHeroRules._posture", before, [session, controller], result)
+	return result
+
+static func _posture__gd(session: SessionStateStoreScript.SessionData, controller: String) -> String:
 	for entry in active_hero_entries(session, controller):
 		var goal: Dictionary = entry.get(AI_HERO_KEY, {}).get("goal", {})
 		if String(goal.get("kind", "")) in ["hero", "town_hostile"]:
@@ -870,6 +960,14 @@ static func _posture(session: SessionStateStoreScript.SessionData, controller: S
 ## The same income sources the human collects: towns, controlled sites and
 ## the daily income of every hero's artifacts and specialties.
 static func faction_daily_income(session: SessionStateStoreScript.SessionData, controller: String) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return faction_daily_income__gd(session, controller)
+	var before := TurnEngine.before_writing(&"AiHeroRules.faction_daily_income", [session, controller])
+	var result = faction_daily_income__gd(session, controller)
+	TurnEngine.check_writing(&"AiHeroRules.faction_daily_income", before, [session, controller], result)
+	return result
+
+static func faction_daily_income__gd(session: SessionStateStoreScript.SessionData, controller: String) -> Dictionary:
 	var overworld_rules = _overworld_rules()
 	var income := {}
 	for town in session.overworld.get("towns", []):
@@ -883,6 +981,14 @@ static func faction_daily_income(session: SessionStateStoreScript.SessionData, c
 	return income
 
 static func _start_heroes_day(session: SessionStateStoreScript.SessionData, controller: String) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_start_heroes_day__gd(session, controller)
+		return
+	var before := TurnEngine.before_writing(&"AiHeroRules._start_heroes_day", [session, controller])
+	_start_heroes_day__gd(session, controller)
+	TurnEngine.check_writing(&"AiHeroRules._start_heroes_day", before, [session, controller], null)
+
+static func _start_heroes_day__gd(session: SessionStateStoreScript.SessionData, controller: String) -> void:
 	var encounters: Array = session.overworld.get("encounters", [])
 	var new_week := VisitBuildings.week_index(session.day) != VisitBuildings.week_index(session.day - 1)
 	for index in range(encounters.size()):
@@ -910,6 +1016,14 @@ static func _movement_max(entry: Dictionary) -> int:
 	return AiEngine.native_writing(&"AiHeroRules._movement_max", [entry])
 
 static func _new_context(session: SessionStateStoreScript.SessionData, config: Dictionary, state: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _new_context__gd(session, config, state)
+	var before := TurnEngine.before_writing(&"AiHeroRules._new_context", [session, config, state])
+	var result = _new_context__gd(session, config, state)
+	TurnEngine.check_writing(&"AiHeroRules._new_context", before, [session, config, state], result)
+	return result
+
+static func _new_context__gd(session: SessionStateStoreScript.SessionData, config: Dictionary, state: Dictionary) -> Dictionary:
 	_use_weights(state)
 	return {
 		"config": config,
@@ -929,6 +1043,14 @@ static var _surface_cache_key := ""
 static var _surface_cache: Dictionary = {}
 
 static func _shared_level_surfaces(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _shared_level_surfaces__gd(session)
+	var before := TurnEngine.before_writing(&"AiHeroRules._shared_level_surfaces", [session])
+	var result = _shared_level_surfaces__gd(session)
+	TurnEngine.check_writing(&"AiHeroRules._shared_level_surfaces", before, [session], result)
+	return result
+
+static func _shared_level_surfaces__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var key := "%s|%s|%d|%d|%d" % [String(session.session_id), String(session.scenario_id), int(session.day), session.overworld.get("resource_nodes", []).size(), session.overworld.get("towns", []).size()]
 	if key != _surface_cache_key:
 		_surface_cache_key = key
@@ -936,6 +1058,14 @@ static func _shared_level_surfaces(session: SessionStateStoreScript.SessionData)
 	return _surface_cache
 
 static func clear_shared_surfaces() -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		clear_shared_surfaces__gd()
+		return
+	var before := TurnEngine.before_writing(&"AiHeroRules.clear_shared_surfaces", [])
+	clear_shared_surfaces__gd()
+	TurnEngine.check_writing(&"AiHeroRules.clear_shared_surfaces", before, [], null)
+
+static func clear_shared_surfaces__gd() -> void:
 	_surface_cache_key = ""
 	_surface_cache = {}
 	_guard_cache = {}
@@ -963,6 +1093,14 @@ static var _guard_index: Dictionary = {}
 ## receive it on their first day too. Authored scenarios seed AI treasuries at
 ## creation, and saves past the opening keep what they have.
 static func _ensure_opening_stockpile(session: SessionStateStoreScript.SessionData, context: Dictionary) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_ensure_opening_stockpile__gd(session, context)
+		return
+	var before := TurnEngine.before_writing(&"AiHeroRules._ensure_opening_stockpile", [session, context])
+	_ensure_opening_stockpile__gd(session, context)
+	TurnEngine.check_writing(&"AiHeroRules._ensure_opening_stockpile", before, [session, context], null)
+
+static func _ensure_opening_stockpile__gd(session: SessionStateStoreScript.SessionData, context: Dictionary) -> void:
 	var state: Dictionary = context.state
 	if bool(state.get("ai_opening_granted", false)):
 		return
@@ -973,6 +1111,14 @@ static func _ensure_opening_stockpile(session: SessionStateStoreScript.SessionDa
 	_add_pool(state.treasury, opening)
 
 static func _ensure_starting_hero(session: SessionStateStoreScript.SessionData, context: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _ensure_starting_hero__gd(session, context)
+	var before := TurnEngine.before_writing(&"AiHeroRules._ensure_starting_hero", [session, context])
+	var result = _ensure_starting_hero__gd(session, context)
+	TurnEngine.check_writing(&"AiHeroRules._ensure_starting_hero", before, [session, context], result)
+	return result
+
+static func _ensure_starting_hero__gd(session: SessionStateStoreScript.SessionData, context: Dictionary) -> Dictionary:
 	var state: Dictionary = context.state
 	var controller := String(context.controller)
 	if bool(state.get("ai_start_hero_granted", false)):
@@ -1006,6 +1152,14 @@ static func _ensure_starting_hero(session: SessionStateStoreScript.SessionData, 
 ## actually holds. Order mirrors a sensible human: a tavern while the faction
 ## lacks heroes, one hire, one build per town, then troops with what is left.
 static func _govern_towns(session: SessionStateStoreScript.SessionData, context: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _govern_towns__gd(session, context)
+	var before := TurnEngine.before_writing(&"AiHeroRules._govern_towns", [session, context])
+	var result = _govern_towns__gd(session, context)
+	TurnEngine.check_writing(&"AiHeroRules._govern_towns", before, [session, context], result)
+	return result
+
+static func _govern_towns__gd(session: SessionStateStoreScript.SessionData, context: Dictionary) -> Dictionary:
 	var turn_rules = _turn_rules()
 	var controller := String(context.controller)
 	var messages := []
@@ -1046,6 +1200,14 @@ static func _govern_towns(session: SessionStateStoreScript.SessionData, context:
 
 ## Takes up to `amounts` out of the treasury and returns what it took.
 static func _hold_back(treasury: Dictionary, amounts: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _hold_back__gd(treasury, amounts)
+	var before := TurnEngine.before_writing(&"AiHeroRules._hold_back", [treasury, amounts])
+	var result = _hold_back__gd(treasury, amounts)
+	TurnEngine.check_writing(&"AiHeroRules._hold_back", before, [treasury, amounts], result)
+	return result
+
+static func _hold_back__gd(treasury: Dictionary, amounts: Dictionary) -> Dictionary:
 	var held := {}
 	for key in amounts.keys():
 		var take := mini(int(treasury.get(key, 0)), int(amounts[key]))
@@ -1061,17 +1223,41 @@ static func desired_hero_count(session: SessionStateStoreScript.SessionData, con
 	return _desired_hero_count(session, controller)
 
 static func _desired_hero_count(session: SessionStateStoreScript.SessionData, controller: String) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _desired_hero_count__gd(session, controller)
+	var before := TurnEngine.before_writing(&"AiHeroRules._desired_hero_count", [session, controller])
+	var result = _desired_hero_count__gd(session, controller)
+	TurnEngine.check_writing(&"AiHeroRules._desired_hero_count", before, [session, controller], result)
+	return result
+
+static func _desired_hero_count__gd(session: SessionStateStoreScript.SessionData, controller: String) -> int:
 	var towns: int = _turn_rules()._owned_town_count(session, controller)
 	var wanted := 1 + mini(towns, HERO_COUNT_TOWN_MAX) + (1 if int(session.day) >= EXTRA_HERO_DAY else 0)
 	return clampi(wanted, 1, HeroCommandRulesScript.HERO_LIMIT)
 
 static func _faction_has_tavern(town_entries: Array) -> bool:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _faction_has_tavern__gd(town_entries)
+	var before := TurnEngine.before_writing(&"AiHeroRules._faction_has_tavern", [town_entries])
+	var result = _faction_has_tavern__gd(town_entries)
+	TurnEngine.check_writing(&"AiHeroRules._faction_has_tavern", before, [town_entries], result)
+	return result
+
+static func _faction_has_tavern__gd(town_entries: Array) -> bool:
 	for entry in town_entries:
 		if HeroCommandRulesScript.town_has_hall(entry.get("town", {})):
 			return true
 	return false
 
 static func _build_tavern(session: SessionStateStoreScript.SessionData, context: Dictionary, town_entries: Array) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _build_tavern__gd(session, context, town_entries)
+	var before := TurnEngine.before_writing(&"AiHeroRules._build_tavern", [session, context, town_entries])
+	var result = _build_tavern__gd(session, context, town_entries)
+	TurnEngine.check_writing(&"AiHeroRules._build_tavern", before, [session, context, town_entries], result)
+	return result
+
+static func _build_tavern__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, town_entries: Array) -> Dictionary:
 	var overworld_rules = _overworld_rules()
 	var treasury: Dictionary = context.state.treasury
 	var towns: Array = session.overworld.get("towns", [])
@@ -1101,6 +1287,14 @@ static func _build_tavern(session: SessionStateStoreScript.SessionData, context:
 ## adds, better troops from an upgrade, two weeks of extra income, spells for
 ## visiting heroes, a market's trades, and the buildings it opens up.
 static func _build_in_towns(session: SessionStateStoreScript.SessionData, context: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _build_in_towns__gd(session, context)
+	var before := TurnEngine.before_writing(&"AiHeroRules._build_in_towns", [session, context])
+	var result = _build_in_towns__gd(session, context)
+	TurnEngine.check_writing(&"AiHeroRules._build_in_towns", before, [session, context], result)
+	return result
+
+static func _build_in_towns__gd(session: SessionStateStoreScript.SessionData, context: Dictionary) -> Dictionary:
 	var messages := []
 	var events := []
 	var treasury: Dictionary = context.state.treasury
@@ -1124,6 +1318,14 @@ static func _build_in_towns(session: SessionStateStoreScript.SessionData, contex
 ## The building this town builds today: what it adds over BUILD_HORIZON_WEEKS
 ## per its price. `values`, when given, gets each option's value by id.
 static func _build_choice(session: SessionStateStoreScript.SessionData, town: Dictionary, treasury: Dictionary, values: Dictionary = {}) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _build_choice__gd(session, town, treasury, values)
+	var before := TurnEngine.before_writing(&"AiHeroRules._build_choice", [session, town, treasury, values])
+	var result = _build_choice__gd(session, town, treasury, values)
+	TurnEngine.check_writing(&"AiHeroRules._build_choice", before, [session, town, treasury, values], result)
+	return result
+
+static func _build_choice__gd(session: SessionStateStoreScript.SessionData, town: Dictionary, treasury: Dictionary, values: Dictionary = {}) -> Dictionary:
 	var overworld_rules = _overworld_rules()
 	var income_before := _trial_income(town)
 	var growth_before := _trial_growth(town)
@@ -1199,6 +1401,14 @@ static func _trial_growth(town: Dictionary) -> Dictionary:
 	return AiEngine.native_writing(&"AiHeroRules._trial_growth", [town])
 
 static func _trial_income(town: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _trial_income__gd(town)
+	var before := TurnEngine.before_writing(&"AiHeroRules._trial_income", [town])
+	var result = _trial_income__gd(town)
+	TurnEngine.check_writing(&"AiHeroRules._trial_income", before, [town], result)
+	return result
+
+static func _trial_income__gd(town: Dictionary) -> Dictionary:
 	var development = _turn_rules().TownDevelopment
 	if development.is_current(town):
 		return development.income(town)
@@ -1221,6 +1431,14 @@ static func _upgrade_value(town: Dictionary, building: Dictionary) -> float:
 ## every other requirement once it stands. None of them can be built before it,
 ## so they are looked up in the whole tree, not in today's build options.
 static func _opens_count(town: Dictionary, building_id: String, trial_built: Array) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _opens_count__gd(town, building_id, trial_built)
+	var before := TurnEngine.before_writing(&"AiHeroRules._opens_count", [town, building_id, trial_built])
+	var result = _opens_count__gd(town, building_id, trial_built)
+	TurnEngine.check_writing(&"AiHeroRules._opens_count", before, [town, building_id, trial_built], result)
+	return result
+
+static func _opens_count__gd(town: Dictionary, building_id: String, trial_built: Array) -> int:
 	var count := 0
 	var trial := town.duplicate()
 	trial["built_buildings"] = trial_built
@@ -1239,6 +1457,14 @@ static func _opens_count(town: Dictionary, building_id: String, trial_built: Arr
 ## each market stage like a Storehouse: two weeks of the Storehouse's wood and
 ## ore, and more while a missing resource holds up the town's build list.
 static func _market_value(building: Dictionary, short: Dictionary) -> float:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _market_value__gd(building, short)
+	var before := TurnEngine.before_writing(&"AiHeroRules._market_value", [building, short])
+	var result = _market_value__gd(building, short)
+	TurnEngine.check_writing(&"AiHeroRules._market_value", before, [building, short], result)
+	return result
+
+static func _market_value__gd(building: Dictionary, short: Dictionary) -> float:
 	if not (building.get("market_profile", {}) is Dictionary) or (building.get("market_profile", {}) as Dictionary).is_empty():
 		return 0.0
 	var storehouse: Dictionary = ContentService.get_building(MARKET_PEER_BUILDING_ID).get("income", {})
@@ -1256,6 +1482,14 @@ static func _build_value(payload: Dictionary) -> float:
 	return AiEngine.native_writing(&"AiHeroRules._build_value", [payload])
 
 static func _pool_delta(after: Dictionary, before: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _pool_delta__gd(after, before)
+	var switch_before := TurnEngine.before_writing(&"AiHeroRules._pool_delta", [after, before])
+	var result = _pool_delta__gd(after, before)
+	TurnEngine.check_writing(&"AiHeroRules._pool_delta", switch_before, [after, before], result)
+	return result
+
+static func _pool_delta__gd(after: Dictionary, before: Dictionary) -> Dictionary:
 	var delta := {}
 	for key in after.keys():
 		var amount := int(after[key]) - int(before.get(key, 0))
@@ -1280,6 +1514,14 @@ static func _market_cover(session: SessionStateStoreScript.SessionData, town: Di
 ## The most of a creature the faction can pay for, trading at the town's
 ## market if it has one.
 static func _max_affordable_with_market(session: SessionStateStoreScript.SessionData, town: Dictionary, pool: Dictionary, unit_cost: Dictionary, available: int) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _max_affordable_with_market__gd(session, town, pool, unit_cost, available)
+	var before := TurnEngine.before_writing(&"AiHeroRules._max_affordable_with_market", [session, town, pool, unit_cost, available])
+	var result = _max_affordable_with_market__gd(session, town, pool, unit_cost, available)
+	TurnEngine.check_writing(&"AiHeroRules._max_affordable_with_market", before, [session, town, pool, unit_cost, available], result)
+	return result
+
+static func _max_affordable_with_market__gd(session: SessionStateStoreScript.SessionData, town: Dictionary, pool: Dictionary, unit_cost: Dictionary, available: int) -> int:
 	var low := 0
 	var high := maxi(0, available)
 	var market_memo := {}
@@ -1292,6 +1534,14 @@ static func _max_affordable_with_market(session: SessionStateStoreScript.Session
 	return low
 
 static func build_in_town(session: SessionStateStoreScript.SessionData, context: Dictionary, town_index: int, building_id: String, reason: String = "heroes") -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return build_in_town__gd(session, context, town_index, building_id, reason)
+	var before := TurnEngine.before_writing(&"AiHeroRules.build_in_town", [session, context, town_index, building_id, reason])
+	var result = build_in_town__gd(session, context, town_index, building_id, reason)
+	TurnEngine.check_writing(&"AiHeroRules.build_in_town", before, [session, context, town_index, building_id, reason], result)
+	return result
+
+static func build_in_town__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, town_index: int, building_id: String, reason: String = "heroes") -> Dictionary:
 	var overworld_rules = _overworld_rules()
 	var turn_rules = _turn_rules()
 	var treasury: Dictionary = context.state.treasury
@@ -1330,6 +1580,14 @@ static func build_in_town(session: SessionStateStoreScript.SessionData, context:
 ## Two faction heroes per week, drawn like the human's tavern. Heroes already
 ## on the map, in the human's command or recovering from defeat are skipped.
 static func ai_tavern_offer_ids(session: SessionStateStoreScript.SessionData, state: Dictionary, controller: String) -> Array:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return ai_tavern_offer_ids__gd(session, state, controller)
+	var before := TurnEngine.before_writing(&"AiHeroRules.ai_tavern_offer_ids", [session, state, controller])
+	var result = ai_tavern_offer_ids__gd(session, state, controller)
+	TurnEngine.check_writing(&"AiHeroRules.ai_tavern_offer_ids", before, [session, state, controller], result)
+	return result
+
+static func ai_tavern_offer_ids__gd(session: SessionStateStoreScript.SessionData, state: Dictionary, controller: String) -> Array:
 	var week := HeroCommandRulesScript.tavern_week(session)
 	var pool := _tavern_pool(session, state, controller)
 	var stored = state.get("ai_tavern", {})
@@ -1352,6 +1610,14 @@ static func ai_tavern_offer_ids(session: SessionStateStoreScript.SessionData, st
 	return offer
 
 static func _tavern_pool(session: SessionStateStoreScript.SessionData, state: Dictionary, controller: String) -> Array:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _tavern_pool__gd(session, state, controller)
+	var before := TurnEngine.before_writing(&"AiHeroRules._tavern_pool", [session, state, controller])
+	var result = _tavern_pool__gd(session, state, controller)
+	TurnEngine.check_writing(&"AiHeroRules._tavern_pool", before, [session, state, controller], result)
+	return result
+
+static func _tavern_pool__gd(session: SessionStateStoreScript.SessionData, state: Dictionary, controller: String) -> Array:
 	var taken := {}
 	for hero in session.overworld.get("player_heroes", []):
 		if hero is Dictionary:
@@ -1382,6 +1648,14 @@ static func _cheapest_offer_cost(session: SessionStateStoreScript.SessionData, s
 	return best
 
 static func _hire_hero(session: SessionStateStoreScript.SessionData, context: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _hire_hero__gd(session, context)
+	var before := TurnEngine.before_writing(&"AiHeroRules._hire_hero", [session, context])
+	var result = _hire_hero__gd(session, context)
+	TurnEngine.check_writing(&"AiHeroRules._hire_hero", before, [session, context], result)
+	return result
+
+static func _hire_hero__gd(session: SessionStateStoreScript.SessionData, context: Dictionary) -> Dictionary:
 	var state: Dictionary = context.state
 	var controller := String(context.controller)
 	var treasury: Dictionary = state.treasury
@@ -1434,6 +1708,14 @@ static func _hire_hero(session: SessionStateStoreScript.SessionData, context: Di
 ## entrance. A start hero leads the faction's start army; a tavern hire comes
 ## with this week's offered level and army, exactly as the human's would.
 static func _create_hero(session: SessionStateStoreScript.SessionData, context: Dictionary, town: Dictionary, hero_id: String, start_stacks: Array = []) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _create_hero__gd(session, context, town, hero_id, start_stacks)
+	var before := TurnEngine.before_writing(&"AiHeroRules._create_hero", [session, context, town, hero_id, start_stacks])
+	var result = _create_hero__gd(session, context, town, hero_id, start_stacks)
+	TurnEngine.check_writing(&"AiHeroRules._create_hero", before, [session, context, town, hero_id, start_stacks], result)
+	return result
+
+static func _create_hero__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, town: Dictionary, hero_id: String, start_stacks: Array = []) -> Dictionary:
 	var controller := String(context.controller)
 	var state: Dictionary = context.state
 	var template := ContentService.get_hero(hero_id)
@@ -1507,6 +1789,14 @@ static func _create_hero(session: SessionStateStoreScript.SessionData, context: 
 	return {"entry": entry, "event": event}
 
 static func _roster_progression_seed(state: Dictionary, hero_id: String) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _roster_progression_seed__gd(state, hero_id)
+	var before := TurnEngine.before_writing(&"AiHeroRules._roster_progression_seed", [state, hero_id])
+	var result = _roster_progression_seed__gd(state, hero_id)
+	TurnEngine.check_writing(&"AiHeroRules._roster_progression_seed", before, [state, hero_id], result)
+	return result
+
+static func _roster_progression_seed__gd(state: Dictionary, hero_id: String) -> Dictionary:
 	for entry in state.get("commander_roster", []):
 		if entry is Dictionary and String(entry.get("roster_hero_id", "")) == hero_id:
 			var commander = entry.get("commander_state", {})
@@ -1527,6 +1817,14 @@ static func _town_entrance_free(session: SessionStateStoreScript.SessionData, to
 ## Buys what each town offers, strongest tier first, with real costs and
 ## availability, into the garrison. Gold reserved for a planned hire is kept.
 static func _recruit_in_towns(session: SessionStateStoreScript.SessionData, context: Dictionary, reserve: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _recruit_in_towns__gd(session, context, reserve)
+	var before := TurnEngine.before_writing(&"AiHeroRules._recruit_in_towns", [session, context, reserve])
+	var result = _recruit_in_towns__gd(session, context, reserve)
+	TurnEngine.check_writing(&"AiHeroRules._recruit_in_towns", before, [session, context, reserve], result)
+	return result
+
+static func _recruit_in_towns__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, reserve: Dictionary) -> Dictionary:
 	var events := []
 	for entry in _turn_rules()._owned_town_entries(session, String(context.controller)):
 		events.append_array(_recruit_town(session, context, int(entry.get("index", -1)), reserve))
@@ -1535,6 +1833,14 @@ static func _recruit_in_towns(session: SessionStateStoreScript.SessionData, cont
 ## Buys what one owned town offers into its garrison, strongest tier first,
 ## with the treasury the faction holds and the market's help.
 static func _recruit_town(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, reserve: Dictionary) -> Array:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _recruit_town__gd(session, context, index, reserve)
+	var before := TurnEngine.before_writing(&"AiHeroRules._recruit_town", [session, context, index, reserve])
+	var result = _recruit_town__gd(session, context, index, reserve)
+	TurnEngine.check_writing(&"AiHeroRules._recruit_town", before, [session, context, index, reserve], result)
+	return result
+
+static func _recruit_town__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, reserve: Dictionary) -> Array:
 	var turn_rules = _turn_rules()
 	var treasury: Dictionary = context.state.treasury
 	var events := []
@@ -1590,6 +1896,14 @@ static func _recruit_town(session: SessionStateStoreScript.SessionData, context:
 ## four-player match a captured town kept the same seven stacks for four weeks
 ## while its growth piled up unbought and the treasury reached 900,000 gold.
 static func _make_room(garrison: Array, unit_id: String, count: int) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _make_room__gd(garrison, unit_id, count)
+	var before := TurnEngine.before_writing(&"AiHeroRules._make_room", [garrison, unit_id, count])
+	var result = _make_room__gd(garrison, unit_id, count)
+	TurnEngine.check_writing(&"AiHeroRules._make_room", before, [garrison, unit_id, count], result)
+	return result
+
+static func _make_room__gd(garrison: Array, unit_id: String, count: int) -> Dictionary:
 	var stacks := garrison.duplicate(true)
 	var weakest := -1
 	var weakest_power := INF
@@ -1611,6 +1925,14 @@ static func _make_room(garrison: Array, unit_id: String, count: int) -> Dictiona
 ## a fresh hire without troops takes the garrison's weakest stack. Every hero in
 ## town learns the spells the town teaches.
 static func _take_garrison(session: SessionStateStoreScript.SessionData, entry: Dictionary, town: Dictionary, context: Dictionary, fresh_hire: bool = false) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _take_garrison__gd(session, entry, town, context, fresh_hire)
+	var before := TurnEngine.before_writing(&"AiHeroRules._take_garrison", [session, entry, town, context, fresh_hire])
+	var result = _take_garrison__gd(session, entry, town, context, fresh_hire)
+	TurnEngine.check_writing(&"AiHeroRules._take_garrison", before, [session, entry, town, context, fresh_hire], result)
+	return result
+
+static func _take_garrison__gd(session: SessionStateStoreScript.SessionData, entry: Dictionary, town: Dictionary, context: Dictionary, fresh_hire: bool = false) -> Dictionary:
 	var town_result := _find_town(session, String(town.get("placement_id", "")))
 	var index := int(town_result.get("index", -1))
 	if index < 0:
@@ -1714,6 +2036,14 @@ static func _strongest_threat(session: SessionStateStoreScript.SessionData, cont
 ## enough troops to beat that raider, or stays when that would cost more than a
 ## quarter of its strength.
 static func _holds_gate(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, town: Dictionary, is_main: bool) -> bool:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _holds_gate__gd(session, context, entry, town, is_main)
+	var before := TurnEngine.before_writing(&"AiHeroRules._holds_gate", [session, context, entry, town, is_main])
+	var result = _holds_gate__gd(session, context, entry, town, is_main)
+	TurnEngine.check_writing(&"AiHeroRules._holds_gate", before, [session, context, entry, town, is_main], result)
+	return result
+
+static func _holds_gate__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, town: Dictionary, is_main: bool) -> bool:
 	var threat := _strongest_threat(session, context, town)
 	if threat.is_empty():
 		return false
@@ -1732,6 +2062,14 @@ static func _holds_gate(session: SessionStateStoreScript.SessionData, context: D
 ## hero into the town's garrison. False when that would cost the hero more
 ## than GUARD_SHARE_MAX of its strength or leave it without troops.
 static func _leave_guard(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, town: Dictionary, needed: float) -> bool:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _leave_guard__gd(session, context, entry, town, needed)
+	var before := TurnEngine.before_writing(&"AiHeroRules._leave_guard", [session, context, entry, town, needed])
+	var result = _leave_guard__gd(session, context, entry, town, needed)
+	TurnEngine.check_writing(&"AiHeroRules._leave_guard", before, [session, context, entry, town, needed], result)
+	return result
+
+static func _leave_guard__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, town: Dictionary, needed: float) -> bool:
 	var needed_left := needed - army_power(town.get("garrison", []))
 	if needed_left <= 0.0:
 		return true
@@ -1793,6 +2131,14 @@ static func _decision_main_id(session: SessionStateStoreScript.SessionData, cont
 # --- Hero turn ----------------------------------------------------------------
 
 static func _run_hero_day(session: SessionStateStoreScript.SessionData, context: Dictionary, placement_id: String) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _run_hero_day__gd(session, context, placement_id)
+	var before := TurnEngine.before_writing(&"AiHeroRules._run_hero_day", [session, context, placement_id])
+	var result = _run_hero_day__gd(session, context, placement_id)
+	TurnEngine.check_writing(&"AiHeroRules._run_hero_day", before, [session, context, placement_id], result)
+	return result
+
+static func _run_hero_day__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, placement_id: String) -> Dictionary:
 	var messages := []
 	var events := []
 	for _decision in range(MAX_DECISIONS_PER_DAY):
@@ -1850,6 +2196,14 @@ static func _run_hero_day(session: SessionStateStoreScript.SessionData, context:
 	return {"messages": messages, "events": events}
 
 static func _avoid_target(session: SessionStateStoreScript.SessionData, placement_id: String, target_id: String, until_day: int) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_avoid_target__gd(session, placement_id, target_id, until_day)
+		return
+	var before := TurnEngine.before_writing(&"AiHeroRules._avoid_target", [session, placement_id, target_id, until_day])
+	_avoid_target__gd(session, placement_id, target_id, until_day)
+	TurnEngine.check_writing(&"AiHeroRules._avoid_target", before, [session, placement_id, target_id, until_day], null)
+
+static func _avoid_target__gd(session: SessionStateStoreScript.SessionData, placement_id: String, target_id: String, until_day: int) -> void:
 	var index := _entry_index(session, placement_id)
 	if index < 0 or target_id == "":
 		return
@@ -1866,6 +2220,14 @@ static func _avoid_target(session: SessionStateStoreScript.SessionData, placemen
 	_store_entry(session, index, entry)
 
 static func _visit_own_town_if_inside(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _visit_own_town_if_inside__gd(session, context, index)
+	var before := TurnEngine.before_writing(&"AiHeroRules._visit_own_town_if_inside", [session, context, index])
+	var result = _visit_own_town_if_inside__gd(session, context, index)
+	TurnEngine.check_writing(&"AiHeroRules._visit_own_town_if_inside", before, [session, context, index], result)
+	return result
+
+static func _visit_own_town_if_inside__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int) -> Dictionary:
 	var entry: Dictionary = session.overworld.encounters[index]
 	var block: Dictionary = entry.get(AI_HERO_KEY, {})
 	if int(block.get("visited_town_day", -1)) == int(session.day):
@@ -1897,6 +2259,14 @@ static func _visit_own_town_if_inside(session: SessionStateStoreScript.SessionDa
 	return {"events": [event]}
 
 static func _creature_total(stacks: Variant) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _creature_total__gd(stacks)
+	var before := TurnEngine.before_writing(&"AiHeroRules._creature_total", [stacks])
+	var result = _creature_total__gd(stacks)
+	TurnEngine.check_writing(&"AiHeroRules._creature_total", before, [stacks], result)
+	return result
+
+static func _creature_total__gd(stacks: Variant) -> int:
 	var total := 0
 	if stacks is Array:
 		for stack in stacks:
@@ -1905,6 +2275,14 @@ static func _creature_total(stacks: Variant) -> int:
 	return total
 
 static func _own_town_at(session: SessionStateStoreScript.SessionData, controller: String, entry: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _own_town_at__gd(session, controller, entry)
+	var before := TurnEngine.before_writing(&"AiHeroRules._own_town_at", [session, controller, entry])
+	var result = _own_town_at__gd(session, controller, entry)
+	TurnEngine.check_writing(&"AiHeroRules._own_town_at", before, [session, controller, entry], result)
+	return result
+
+static func _own_town_at__gd(session: SessionStateStoreScript.SessionData, controller: String, entry: Dictionary) -> Dictionary:
 	for town in session.overworld.get("towns", []):
 		if not (town is Dictionary) or String(town.get("owner", "")) != "enemy" or PlayerRules.town_controller_id(town) != controller:
 			continue
@@ -1922,20 +2300,52 @@ static func _own_town_at(session: SessionStateStoreScript.SessionData, controlle
 ## sight questions each own hero's scouting radius (SCOUT_RADII_KEY); both are
 ## dropped before any hero moves and when the decision ends.
 static func _choose_plan(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _choose_plan__gd(session, context, entry)
+	var before := TurnEngine.before_writing(&"AiHeroRules._choose_plan", [session, context, entry])
+	var result = _choose_plan__gd(session, context, entry)
+	TurnEngine.check_writing(&"AiHeroRules._choose_plan", before, [session, context, entry], result)
+	return result
+
+static func _choose_plan__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary) -> Dictionary:
 	_open_decision_memos(context)
 	var plan := _decide_plan(session, context, entry)
 	_close_decision_memos(context)
 	return plan
 
 static func _open_decision_memos(context: Dictionary) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_open_decision_memos__gd(context)
+		return
+	var before := TurnEngine.before_writing(&"AiHeroRules._open_decision_memos", [context])
+	_open_decision_memos__gd(context)
+	TurnEngine.check_writing(&"AiHeroRules._open_decision_memos", before, [context], null)
+
+static func _open_decision_memos__gd(context: Dictionary) -> void:
 	context[SITE_PASS_DECISION_KEY] = {}
 	context[SCOUT_RADII_KEY] = {}
 
 static func _close_decision_memos(context: Dictionary) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_close_decision_memos__gd(context)
+		return
+	var before := TurnEngine.before_writing(&"AiHeroRules._close_decision_memos", [context])
+	_close_decision_memos__gd(context)
+	TurnEngine.check_writing(&"AiHeroRules._close_decision_memos", before, [context], null)
+
+static func _close_decision_memos__gd(context: Dictionary) -> void:
 	context.erase(SITE_PASS_DECISION_KEY)
 	context.erase(SCOUT_RADII_KEY)
 
 static func _decide_plan(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _decide_plan__gd(session, context, entry)
+	var before := TurnEngine.before_writing(&"AiHeroRules._decide_plan", [session, context, entry])
+	var result = _decide_plan__gd(session, context, entry)
+	TurnEngine.check_writing(&"AiHeroRules._decide_plan", before, [session, context, entry], result)
+	return result
+
+static func _decide_plan__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary) -> Dictionary:
 	var movement: Dictionary = entry.get(AI_HERO_KEY, {}).get("movement", {})
 	var movement_max := maxi(1, int(movement.get("max", 1)))
 	var radius := maxi(MIN_SEARCH_RADIUS, movement_max * SEARCH_DAYS)
@@ -2023,6 +2433,14 @@ static func _decide_plan(session: SessionStateStoreScript.SessionData, context: 
 ## that follows reuses it. A guard that would cost a creature is not previewed
 ## again this turn while the army stays the same.
 static func _free_fight(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _free_fight__gd(session, context, entry, search)
+	var before := TurnEngine.before_writing(&"AiHeroRules._free_fight", [session, context, entry, search])
+	var result = _free_fight__gd(session, context, entry, search)
+	TurnEngine.check_writing(&"AiHeroRules._free_fight", before, [session, context, entry, search], result)
+	return result
+
+static func _free_fight__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary) -> Dictionary:
 	var block: Dictionary = entry.get(AI_HERO_KEY, {})
 	var reach := int(block.get("movement", {}).get("current", 0))
 	var power := hero_power(entry)
@@ -2104,6 +2522,14 @@ static func _plans_far(session: SessionStateStoreScript.SessionData, context: Di
 ## then ran errands for 200 days, the last rival's towns unseen behind three
 ## weak guards more than three days' walk away.
 static func _strategic_candidate(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, movement_max: int, local_radius: int, wide: Dictionary = {}) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _strategic_candidate__gd(session, context, entry, movement_max, local_radius, wide)
+	var before := TurnEngine.before_writing(&"AiHeroRules._strategic_candidate", [session, context, entry, movement_max, local_radius, wide])
+	var result = _strategic_candidate__gd(session, context, entry, movement_max, local_radius, wide)
+	TurnEngine.check_writing(&"AiHeroRules._strategic_candidate", before, [session, context, entry, movement_max, local_radius, wide], result)
+	return result
+
+static func _strategic_candidate__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, movement_max: int, local_radius: int, wide: Dictionary = {}) -> Dictionary:
 	var search := wide if not wide.is_empty() else _search(session, context, entry, movement_max * STRATEGIC_DAYS)
 	var known := _explored(session, context, LevelRules.level_of(entry))
 	var power := hero_power(entry)
@@ -2240,6 +2666,14 @@ static func _route_loss_limit(value: float) -> float:
 
 ## Notes the stretch a main or field army stands on today (ROUTE_REVISIT_DAYS).
 static func _note_route_visit(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_note_route_visit__gd(session, context, entry)
+		return
+	var before := TurnEngine.before_writing(&"AiHeroRules._note_route_visit", [session, context, entry])
+	_note_route_visit__gd(session, context, entry)
+	TurnEngine.check_writing(&"AiHeroRules._note_route_visit", before, [session, context, entry], null)
+
+static func _note_route_visit__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary) -> void:
 	var tile := _tile_index_of(entry, context.map_size)
 	if LevelRules.level_count(session) < 2 or tile < 0:
 		return
@@ -2266,6 +2700,14 @@ static func _stretch_key(session: SessionStateStoreScript.SessionData, context: 
 ## them. Without it such a hero waited on its own level at the town's
 ## coordinates, out of the way of every recruit.
 static func _gate_home(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary, town: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _gate_home__gd(session, context, entry, search, town)
+	var before := TurnEngine.before_writing(&"AiHeroRules._gate_home", [session, context, entry, search, town])
+	var result = _gate_home__gd(session, context, entry, search, town)
+	TurnEngine.check_writing(&"AiHeroRules._gate_home", before, [session, context, entry, search, town], result)
+	return result
+
+static func _gate_home__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary, town: Dictionary) -> Dictionary:
 	var level := LevelRules.level_of(entry)
 	var gates: Dictionary = _level_surface(session, context, level).get("gates", {})
 	if gates.is_empty() or not search.has("dist"):
@@ -2329,6 +2771,14 @@ static func _gate_home(session: SessionStateStoreScript.SessionData, context: Di
 ## or the one at its far end, looks good in a preview (`_fight_looks_good`). A
 ## bad one is left alone for a few days.
 static func _gate_fight_looks_good(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, plan: Dictionary) -> bool:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _gate_fight_looks_good__gd(session, context, entry, plan)
+	var before := TurnEngine.before_writing(&"AiHeroRules._gate_fight_looks_good", [session, context, entry, plan])
+	var result = _gate_fight_looks_good__gd(session, context, entry, plan)
+	TurnEngine.check_writing(&"AiHeroRules._gate_fight_looks_good", before, [session, context, entry, plan], result)
+	return result
+
+static func _gate_fight_looks_good__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, plan: Dictionary) -> bool:
 	var fight := plan
 	if String(plan.kind) == "gate":
 		if not plan.has("far_guard"):
@@ -2345,6 +2795,14 @@ static func _gate_fight_looks_good(session: SessionStateStoreScript.SessionData,
 ## site, took it, and the kept errand drew it back through the gate twice more
 ## that day for the site it already held.
 static func _forget_beyond(context: Dictionary, target_id: String) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_forget_beyond__gd(context, target_id)
+		return
+	var before := TurnEngine.before_writing(&"AiHeroRules._forget_beyond", [context, target_id])
+	_forget_beyond__gd(context, target_id)
+	TurnEngine.check_writing(&"AiHeroRules._forget_beyond", before, [context, target_id], null)
+
+static func _forget_beyond__gd(context: Dictionary, target_id: String) -> void:
 	var cache: Dictionary = context.get("gate_beyond", {})
 	if target_id == "" or cache.is_empty():
 		return
@@ -2353,6 +2811,14 @@ static func _forget_beyond(context: Dictionary, target_id: String) -> void:
 			cache.erase(key)
 
 static func placement_is_main(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary) -> bool:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return placement_is_main__gd(session, context, entry)
+	var before := TurnEngine.before_writing(&"AiHeroRules.placement_is_main", [session, context, entry])
+	var result = placement_is_main__gd(session, context, entry)
+	TurnEngine.check_writing(&"AiHeroRules.placement_is_main", before, [session, context, entry], result)
+	return result
+
+static func placement_is_main__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary) -> bool:
 	return String(entry.get("placement_id", "")) == _decision_main_id(session, context)
 
 ## Visible hostile heroes strong enough to beat this one (DANGER_RATIO), with
@@ -2368,6 +2834,14 @@ static func _in_danger(dangers: Array, x: int, y: int, level: int) -> bool:
 ## do, walks to the tile it can reach today that lies farthest from it, so it
 ## lives to fight on better terms. A human pulls back the same way.
 static func _evade(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _evade__gd(session, context, entry, search)
+	var before := TurnEngine.before_writing(&"AiHeroRules._evade", [session, context, entry, search])
+	var result = _evade__gd(session, context, entry, search)
+	TurnEngine.check_writing(&"AiHeroRules._evade", before, [session, context, entry, search], result)
+	return result
+
+static func _evade__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary) -> Dictionary:
 	var dangers := _dangers(session, context, entry)
 	var level := LevelRules.level_of(entry)
 	if dangers.is_empty() or not _in_danger(dangers, int(entry.get("x", 0)), int(entry.get("y", 0)), level):
@@ -2393,6 +2867,14 @@ static func _evade(session: SessionStateStoreScript.SessionData, context: Dictio
 ## How far a tile lies outside the reach of the nearest of `dangers` (negative
 ## inside it).
 static func _danger_gap(dangers: Array, x: int, y: int, level: int) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _danger_gap__gd(dangers, x, y, level)
+	var before := TurnEngine.before_writing(&"AiHeroRules._danger_gap", [dangers, x, y, level])
+	var result = _danger_gap__gd(dangers, x, y, level)
+	TurnEngine.check_writing(&"AiHeroRules._danger_gap", before, [dangers, x, y, level], result)
+	return result
+
+static func _danger_gap__gd(dangers: Array, x: int, y: int, level: int) -> int:
 	var gap := 1 << 20
 	for threat in dangers:
 		if int(threat.get("level", 0)) != level:
@@ -2405,6 +2887,14 @@ static func _danger_gap(dangers: Array, x: int, y: int, level: int) -> int:
 ## aside: at once if it can still move today, otherwise first thing tomorrow
 ## (lesser heroes act before the main hero, so the way is clear when it acts).
 static func _clear_way(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, radius: int, movement_max: int) -> bool:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _clear_way__gd(session, context, entry, radius, movement_max)
+	var before := TurnEngine.before_writing(&"AiHeroRules._clear_way", [session, context, entry, radius, movement_max])
+	var result = _clear_way__gd(session, context, entry, radius, movement_max)
+	TurnEngine.check_writing(&"AiHeroRules._clear_way", before, [session, context, entry, radius, movement_max], result)
+	return result
+
+static func _clear_way__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, radius: int, movement_max: int) -> bool:
 	var controller := String(context.controller)
 	var past := _search(session, context, entry, radius, true)
 	var best := _vetted_candidate(session, context, entry, past, movement_max)
@@ -2434,6 +2924,14 @@ static func _clear_way(session: SessionStateStoreScript.SessionData, context: Di
 ## they are asked to step aside (`_make_way`); while one cannot move today the
 ## hero walks up to it and goes on once it has.
 static func _gate_walk(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, plan: Dictionary, search: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _gate_walk__gd(session, context, entry, plan, search)
+	var before := TurnEngine.before_writing(&"AiHeroRules._gate_walk", [session, context, entry, plan, search])
+	var result = _gate_walk__gd(session, context, entry, plan, search)
+	TurnEngine.check_writing(&"AiHeroRules._gate_walk", before, [session, context, entry, plan, search], result)
+	return result
+
+static func _gate_walk__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, plan: Dictionary, search: Dictionary) -> Dictionary:
 	if not plan.has("past_path"):
 		plan["path"] = _path_to(search, int(plan.tile_index))
 		return plan
@@ -2468,6 +2966,14 @@ static func _gate_walk(session: SessionStateStoreScript.SessionData, context: Di
 ## Moves a hero off the tiles another hero needs, into its town when there is
 ## room, or books the move for its next turn when it cannot move today.
 static func _make_way(session: SessionStateStoreScript.SessionData, context: Dictionary, placement_id: String, keep_clear: Dictionary) -> bool:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _make_way__gd(session, context, placement_id, keep_clear)
+	var before := TurnEngine.before_writing(&"AiHeroRules._make_way", [session, context, placement_id, keep_clear])
+	var result = _make_way__gd(session, context, placement_id, keep_clear)
+	TurnEngine.check_writing(&"AiHeroRules._make_way", before, [session, context, placement_id, keep_clear], result)
+	return result
+
+static func _make_way__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, placement_id: String, keep_clear: Dictionary) -> bool:
 	var index := _entry_index(session, placement_id)
 	if index < 0:
 		return false
@@ -2492,6 +2998,14 @@ static func _make_way(session: SessionStateStoreScript.SessionData, context: Dic
 
 ## A step out of the way that another of the player's heroes asked for.
 static func _pending_make_way(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _pending_make_way__gd(session, context, entry, search)
+	var before := TurnEngine.before_writing(&"AiHeroRules._pending_make_way", [session, context, entry, search])
+	var result = _pending_make_way__gd(session, context, entry, search)
+	TurnEngine.check_writing(&"AiHeroRules._pending_make_way", before, [session, context, entry, search], result)
+	return result
+
+static func _pending_make_way__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary) -> Dictionary:
 	var block: Dictionary = entry.get(AI_HERO_KEY, {})
 	if not (block.get("make_way", {}) is Dictionary) or (block.get("make_way", {}) as Dictionary).is_empty():
 		return {}
@@ -2512,6 +3026,14 @@ static func _pending_make_way(session: SessionStateStoreScript.SessionData, cont
 ## The best candidate whose fight, if any, the hero expects to win well. A
 ## fight that looks bad is left alone for a few days and the next best taken.
 static func _vetted_candidate(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary, movement_max: int) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _vetted_candidate__gd(session, context, entry, search, movement_max)
+	var before := TurnEngine.before_writing(&"AiHeroRules._vetted_candidate", [session, context, entry, search, movement_max])
+	var result = _vetted_candidate__gd(session, context, entry, search, movement_max)
+	TurnEngine.check_writing(&"AiHeroRules._vetted_candidate", before, [session, context, entry, search, movement_max], result)
+	return result
+
+static func _vetted_candidate__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary, movement_max: int) -> Dictionary:
 	var best := _best_candidate(session, context, entry, search, movement_max)
 	for _veto in range(MAX_FIGHT_VETOES):
 		if best.is_empty() or _fight_looks_good(session, context, entry, best):
@@ -2525,6 +3047,14 @@ static func _vetted_candidate(session: SessionStateStoreScript.SessionData, cont
 ## waiting forever: when it cannot move at all, or when its search reached every
 ## tile it can walk to and its home town is not among them.
 static func _cornered_fight(session: SessionStateStoreScript.SessionData, entry: Dictionary, search: Dictionary, context: Dictionary = {}) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _cornered_fight__gd(session, entry, search, context)
+	var before := TurnEngine.before_writing(&"AiHeroRules._cornered_fight", [session, entry, search, context])
+	var result = _cornered_fight__gd(session, entry, search, context)
+	TurnEngine.check_writing(&"AiHeroRules._cornered_fight", before, [session, entry, search, context], result)
+	return result
+
+static func _cornered_fight__gd(session: SessionStateStoreScript.SessionData, entry: Dictionary, search: Dictionary, context: Dictionary = {}) -> Dictionary:
 	if int(search.get("order_count", 0)) > 1 and (bool(search.get("capped", true)) or _home_reachable(session, context, entry, search)):
 		return {}
 	var power := hero_power(entry)
@@ -2547,6 +3077,14 @@ static func _cornered_fight(session: SessionStateStoreScript.SessionData, entry:
 ## Whether the hero can walk to its home town (or, without one, to any town of
 ## its player) on this search.
 static func _home_reachable(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary) -> bool:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _home_reachable__gd(session, context, entry, search)
+	var before := TurnEngine.before_writing(&"AiHeroRules._home_reachable", [session, context, entry, search])
+	var result = _home_reachable__gd(session, context, entry, search)
+	TurnEngine.check_writing(&"AiHeroRules._home_reachable", before, [session, context, entry, search], result)
+	return result
+
+static func _home_reachable__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary) -> bool:
 	var controller := String(context.get("controller", PlayerRules.raid_controller_id(entry)))
 	var size: Vector2i = context.map_size if context.has("map_size") else _overworld_rules().derive_map_size(session)
 	var doors := _own_town_doors(session, controller, LevelRules.level_of(entry), size)
@@ -2563,6 +3101,14 @@ static func _home_reachable(session: SessionStateStoreScript.SessionData, contex
 ## really costs, and one that pays after all, or that it wins cleanly, is
 ## fought rather than the hero standing idle.
 static func _idle_fight(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _idle_fight__gd(session, context, entry, search)
+	var before := TurnEngine.before_writing(&"AiHeroRules._idle_fight", [session, context, entry, search])
+	var result = _idle_fight__gd(session, context, entry, search)
+	TurnEngine.check_writing(&"AiHeroRules._idle_fight", before, [session, context, entry, search], result)
+	return result
+
+static func _idle_fight__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary) -> Dictionary:
 	var avoid: Dictionary = entry.get(AI_HERO_KEY, {}).get("avoid", {}) if entry.get(AI_HERO_KEY, {}).get("avoid", {}) is Dictionary else {}
 	var power := hero_power(entry)
 	var needs := _resource_needs(session, context)
@@ -2601,6 +3147,14 @@ static func _idle_fight(session: SessionStateStoreScript.SessionData, context: D
 ## corridor), where they would hold the main army in. `keep_clear` holds tiles
 ## another hero needs to pass: a hero on one of them moves off it.
 static func _wait_by_home(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary, keep_clear: Dictionary = {}) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _wait_by_home__gd(session, context, entry, search, keep_clear)
+	var before := TurnEngine.before_writing(&"AiHeroRules._wait_by_home", [session, context, entry, search, keep_clear])
+	var result = _wait_by_home__gd(session, context, entry, search, keep_clear)
+	TurnEngine.check_writing(&"AiHeroRules._wait_by_home", before, [session, context, entry, search, keep_clear], result)
+	return result
+
+static func _wait_by_home__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary, keep_clear: Dictionary = {}) -> Dictionary:
 	var level := LevelRules.level_of(entry)
 	var controller := String(context.controller)
 	var size: Vector2i = context.map_size
@@ -2669,6 +3223,14 @@ static func _own_town_doors(session: SessionStateStoreScript.SessionData, contro
 
 ## The player's hero parked in this town, if one is.
 static func _parked_hero_id(session: SessionStateStoreScript.SessionData, controller: String, town_id: String) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _parked_hero_id__gd(session, controller, town_id)
+	var before := TurnEngine.before_writing(&"AiHeroRules._parked_hero_id", [session, controller, town_id])
+	var result = _parked_hero_id__gd(session, controller, town_id)
+	TurnEngine.check_writing(&"AiHeroRules._parked_hero_id", before, [session, controller, town_id], result)
+	return result
+
+static func _parked_hero_id__gd(session: SessionStateStoreScript.SessionData, controller: String, town_id: String) -> String:
 	if town_id == "":
 		return ""
 	var town: Dictionary = _find_town(session, town_id).town
@@ -2682,6 +3244,14 @@ static func _parked_hero_id(session: SessionStateStoreScript.SessionData, contro
 	return ""
 
 static func _park(session: SessionStateStoreScript.SessionData, placement_id: String, town_id: String) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_park__gd(session, placement_id, town_id)
+		return
+	var before := TurnEngine.before_writing(&"AiHeroRules._park", [session, placement_id, town_id])
+	_park__gd(session, placement_id, town_id)
+	TurnEngine.check_writing(&"AiHeroRules._park", before, [session, placement_id, town_id], null)
+
+static func _park__gd(session: SessionStateStoreScript.SessionData, placement_id: String, town_id: String) -> void:
 	var index := _entry_index(session, placement_id)
 	if index < 0:
 		return
@@ -2696,6 +3266,14 @@ static func _park(session: SessionStateStoreScript.SessionData, placement_id: St
 ## tile, the open ground around it falls apart into more than one piece. Town
 ## doorways, guard zones and other route ends are not ways through.
 static func _cuts_a_way(search: Dictionary, tile_index: int, size: Vector2i) -> bool:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _cuts_a_way__gd(search, tile_index, size)
+	var before := TurnEngine.before_writing(&"AiHeroRules._cuts_a_way", [search, tile_index, size])
+	var result = _cuts_a_way__gd(search, tile_index, size)
+	TurnEngine.check_writing(&"AiHeroRules._cuts_a_way", before, [search, tile_index, size], result)
+	return result
+
+static func _cuts_a_way__gd(search: Dictionary, tile_index: int, size: Vector2i) -> bool:
 	var blocked: PackedByteArray = search.get("blocked", PackedByteArray())
 	var stop_mask: PackedByteArray = search.get("stop_mask", PackedByteArray())
 	var pass_mask: PackedByteArray = search.get("pass_mask", PackedByteArray())
@@ -2745,6 +3323,14 @@ static func _cuts_a_way(search: Dictionary, tile_index: int, size: Vector2i) -> 
 	return groups > 1
 
 static func _next_to_any(tile: Vector2i, others: Array) -> bool:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _next_to_any__gd(tile, others)
+	var before := TurnEngine.before_writing(&"AiHeroRules._next_to_any", [tile, others])
+	var result = _next_to_any__gd(tile, others)
+	TurnEngine.check_writing(&"AiHeroRules._next_to_any", before, [tile, others], result)
+	return result
+
+static func _next_to_any__gd(tile: Vector2i, others: Array) -> bool:
 	for other in others:
 		if maxi(absi(other.x - tile.x), absi(other.y - tile.y)) <= 1:
 			return true
@@ -2856,6 +3442,14 @@ static func _hostile_heroes(session: SessionStateStoreScript.SessionData, contro
 ## Remembers the hostile heroes in sight now (SIGHTINGS_KEY) and forgets those
 ## not seen for SIGHTING_MEMORY_DAYS.
 static func _note_sightings(session: SessionStateStoreScript.SessionData, context: Dictionary) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_note_sightings__gd(session, context)
+		return
+	var before := TurnEngine.before_writing(&"AiHeroRules._note_sightings", [session, context])
+	_note_sightings__gd(session, context)
+	TurnEngine.check_writing(&"AiHeroRules._note_sightings", before, [session, context], null)
+
+static func _note_sightings__gd(session: SessionStateStoreScript.SessionData, context: Dictionary) -> void:
 	var day := int(session.day)
 	var known = context.state.get(SIGHTINGS_KEY, {})
 	var kept := {}
@@ -2871,6 +3465,14 @@ static func _note_sightings(session: SessionStateStoreScript.SessionData, contex
 
 ## A hero this player has beaten is no longer out there.
 static func _forget_sighting(context: Dictionary, id: String) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_forget_sighting__gd(context, id)
+		return
+	var before := TurnEngine.before_writing(&"AiHeroRules._forget_sighting", [context, id])
+	_forget_sighting__gd(context, id)
+	TurnEngine.check_writing(&"AiHeroRules._forget_sighting", before, [context, id], null)
+
+static func _forget_sighting__gd(context: Dictionary, id: String) -> void:
 	var known = context.state.get(SIGHTINGS_KEY, {})
 	if known is Dictionary and known.has(id):
 		known.erase(id)
@@ -2894,6 +3496,14 @@ static func _town_seen(known: PackedByteArray, town: Dictionary, size: Vector2i)
 	return AiEngine.native_writing(&"AiHeroRules._town_seen", [known, town, size])
 
 static func _store_explored(context: Dictionary) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_store_explored__gd(context)
+		return
+	var before := TurnEngine.before_writing(&"AiHeroRules._store_explored", [context])
+	_store_explored__gd(context)
+	TurnEngine.check_writing(&"AiHeroRules._store_explored", before, [context], null)
+
+static func _store_explored__gd(context: Dictionary) -> void:
 	var maps: Dictionary = context.get("explored", {})
 	if maps.is_empty():
 		return
@@ -2909,6 +3519,14 @@ static func _store_explored(context: Dictionary) -> void:
 	context.state[EXPLORED_KEY] = stored
 
 static func _reveal(session: SessionStateStoreScript.SessionData, context: Dictionary, point: Dictionary, radius: int) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_reveal__gd(session, context, point, radius)
+		return
+	var before := TurnEngine.before_writing(&"AiHeroRules._reveal", [session, context, point, radius])
+	_reveal__gd(session, context, point, radius)
+	TurnEngine.check_writing(&"AiHeroRules._reveal", before, [session, context, point, radius], null)
+
+static func _reveal__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, point: Dictionary, radius: int) -> void:
 	var level := LevelRules.level_of(point)
 	var tiles := _explored(session, context, level)
 	var size: Vector2i = context.map_size
@@ -2926,6 +3544,14 @@ static func _reveal(session: SessionStateStoreScript.SessionData, context: Dicti
 	context.explored[level] = tiles
 
 static func _reveal_from_holdings(session: SessionStateStoreScript.SessionData, context: Dictionary) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_reveal_from_holdings__gd(session, context)
+		return
+	var before := TurnEngine.before_writing(&"AiHeroRules._reveal_from_holdings", [session, context])
+	_reveal_from_holdings__gd(session, context)
+	TurnEngine.check_writing(&"AiHeroRules._reveal_from_holdings", before, [session, context], null)
+
+static func _reveal_from_holdings__gd(session: SessionStateStoreScript.SessionData, context: Dictionary) -> void:
 	var controller := String(context.controller)
 	for town in session.overworld.get("towns", []):
 		if town is Dictionary and String(town.get("owner", "")) == "enemy" and PlayerRules.town_controller_id(town) == controller:
@@ -2934,11 +3560,27 @@ static func _reveal_from_holdings(session: SessionStateStoreScript.SessionData, 
 		_reveal(session, context, LevelRules.position(entry), _sight_radius(entry))
 
 static func _sight_radius(entry: Dictionary) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _sight_radius__gd(entry)
+	var before := TurnEngine.before_writing(&"AiHeroRules._sight_radius", [entry])
+	var result = _sight_radius__gd(entry)
+	TurnEngine.check_writing(&"AiHeroRules._sight_radius", before, [entry], result)
+	return result
+
+static func _sight_radius__gd(entry: Dictionary) -> int:
 	return HeroCommandRulesScript.scouting_radius_for_hero(entry.get("enemy_commander_state", {}))
 
 # --- Movement -----------------------------------------------------------------
 
 static func _follow_plan(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, plan: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _follow_plan__gd(session, context, index, plan)
+	var before := TurnEngine.before_writing(&"AiHeroRules._follow_plan", [session, context, index, plan])
+	var result = _follow_plan__gd(session, context, index, plan)
+	TurnEngine.check_writing(&"AiHeroRules._follow_plan", before, [session, context, index, plan], result)
+	return result
+
+static func _follow_plan__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, plan: Dictionary) -> Dictionary:
 	var entry: Dictionary = session.overworld.encounters[index]
 	var block: Dictionary = entry.get(AI_HERO_KEY, {})
 	var movement: Dictionary = block.get("movement", {})
@@ -3031,6 +3673,14 @@ static func _follow_plan(session: SessionStateStoreScript.SessionData, context: 
 ## stands at builds for it) or, aboard, steps ashore and leaves the boat moored
 ## where the hero was. False when there is no boat to take.
 static func _cross_shore(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, tile: Vector2i, level: int) -> bool:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _cross_shore__gd(session, context, entry, tile, level)
+	var before := TurnEngine.before_writing(&"AiHeroRules._cross_shore", [session, context, entry, tile, level])
+	var result = _cross_shore__gd(session, context, entry, tile, level)
+	TurnEngine.check_writing(&"AiHeroRules._cross_shore", before, [session, context, entry, tile, level], result)
+	return result
+
+static func _cross_shore__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, tile: Vector2i, level: int) -> bool:
 	var boat_id := WaterTravel.hero_boat_id(entry)
 	if boat_id != "":
 		WaterTravel.place_boat(session, boat_id, "", Vector2i(int(entry.get("x", 0)), int(entry.get("y", 0))), level)
@@ -3049,6 +3699,14 @@ static func _cross_shore(session: SessionStateStoreScript.SessionData, context: 
 ## the human's price, paid from the player's treasury after any trades at one
 ## of its towns' markets (`_boat_market`).
 static func _launch_boat(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, tile: Vector2i, level: int) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _launch_boat__gd(session, context, entry, tile, level)
+	var before := TurnEngine.before_writing(&"AiHeroRules._launch_boat", [session, context, entry, tile, level])
+	var result = _launch_boat__gd(session, context, entry, tile, level)
+	TurnEngine.check_writing(&"AiHeroRules._launch_boat", before, [session, context, entry, tile, level], result)
+	return result
+
+static func _launch_boat__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, tile: Vector2i, level: int) -> Dictionary:
 	var size: Vector2i = context.map_size
 	var surface := _level_surface(session, context, level)
 	var yard: Dictionary = surface.get("shipyards", {}).get(_tile_index_of(entry, size), {})
@@ -3087,6 +3745,14 @@ static func _boat_market(session: SessionStateStoreScript.SessionData, context: 
 ## a shipyard is in reach and the player cannot pay for a boat marks the day:
 ## the towns then save the boat's price (`_govern_towns`).
 static func _note_boat_need(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_note_boat_need__gd(session, context, entry)
+		return
+	var before := TurnEngine.before_writing(&"AiHeroRules._note_boat_need", [session, context, entry])
+	_note_boat_need__gd(session, context, entry)
+	TurnEngine.check_writing(&"AiHeroRules._note_boat_need", before, [session, context, entry], null)
+
+static func _note_boat_need__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary) -> void:
 	if int(context.state.get(BOAT_WANTED_KEY, -1000)) == int(session.day) or WaterTravel.hero_boat_id(entry) != "":
 		return
 	if not _plans_far(session, context, entry):
@@ -3107,6 +3773,14 @@ static func _note_boat_need(session: SessionStateStoreScript.SessionData, contex
 ## trip); returns the tile the hero comes out on as "exit" when that differs
 ## from the planned one.
 static func _portal_step(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, tile: Vector2i, level: int) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _portal_step__gd(session, context, entry, tile, level)
+	var before := TurnEngine.before_writing(&"AiHeroRules._portal_step", [session, context, entry, tile, level])
+	var result = _portal_step__gd(session, context, entry, tile, level)
+	TurnEngine.check_writing(&"AiHeroRules._portal_step", before, [session, context, entry, tile, level], result)
+	return result
+
+static func _portal_step__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, tile: Vector2i, level: int) -> Dictionary:
 	var here := Vector2i(int(entry.get("x", 0)), int(entry.get("y", 0)))
 	if maxi(absi(tile.x - here.x), absi(tile.y - here.y)) <= 1:
 		return {}
@@ -3137,6 +3811,14 @@ static func _portal_step(session: SessionStateStoreScript.SessionData, context: 
 ## is part of the object's body; only another army or hero keeps it out. The
 ## player's own heroes in one of its towns leave room for more.
 static func _tile_blocked_for_standing(session: SessionStateStoreScript.SessionData, context: Dictionary, tile: Vector2i, level: int, actor_id: String) -> bool:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _tile_blocked_for_standing__gd(session, context, tile, level, actor_id)
+	var before := TurnEngine.before_writing(&"AiHeroRules._tile_blocked_for_standing", [session, context, tile, level, actor_id])
+	var result = _tile_blocked_for_standing__gd(session, context, tile, level, actor_id)
+	TurnEngine.check_writing(&"AiHeroRules._tile_blocked_for_standing", before, [session, context, tile, level, actor_id], result)
+	return result
+
+static func _tile_blocked_for_standing__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, tile: Vector2i, level: int, actor_id: String) -> bool:
 	var controller := String(context.get("controller", ""))
 	var size: Vector2i = context.map_size if context.has("map_size") else _overworld_rules().derive_map_size(session)
 	var own_door := controller != "" and _own_town_doors(session, controller, level, size).has(tile.y * size.x + tile.x)
@@ -3165,6 +3847,14 @@ static func _hero_zone_tiles(session: SessionStateStoreScript.SessionData, conte
 ## The hostile hero whose zone this tile lies in, as a plan to fight it: a hero
 ## that steps next to one fights it there, as the human does.
 static func _hostile_hero_beside(session: SessionStateStoreScript.SessionData, context: Dictionary, tile: Vector2i, level: int) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _hostile_hero_beside__gd(session, context, tile, level)
+	var before := TurnEngine.before_writing(&"AiHeroRules._hostile_hero_beside", [session, context, tile, level])
+	var result = _hostile_hero_beside__gd(session, context, tile, level)
+	TurnEngine.check_writing(&"AiHeroRules._hostile_hero_beside", before, [session, context, tile, level], result)
+	return result
+
+static func _hostile_hero_beside__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, tile: Vector2i, level: int) -> Dictionary:
 	for guard in _hero_guards(session, context, level):
 		if not bool(guard.hostile) or maxi(absi(guard.tile.x - tile.x), absi(guard.tile.y - tile.y)) != 1:
 			continue
@@ -3220,6 +3910,14 @@ static func _path_to(search: Dictionary, tile_index: int) -> Array:
 # --- Interactions -------------------------------------------------------------
 
 static func _interact(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, plan: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _interact__gd(session, context, index, plan)
+	var before := TurnEngine.before_writing(&"AiHeroRules._interact", [session, context, index, plan])
+	var result = _interact__gd(session, context, index, plan)
+	TurnEngine.check_writing(&"AiHeroRules._interact", before, [session, context, index, plan], result)
+	return result
+
+static func _interact__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, plan: Dictionary) -> Dictionary:
 	match String(plan.get("kind", "")):
 		"resource":
 			return _claim_resource(session, context, index, plan)
@@ -3264,6 +3962,14 @@ static func _interact(session: SessionStateStoreScript.SessionData, context: Dic
 ## its goal. A guard whose zone covers the far doorway is fought there on
 ## arrival, as the human fights it; the hero plans again on the other level.
 static func _cross_gate(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, plan: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _cross_gate__gd(session, context, index, plan)
+	var before := TurnEngine.before_writing(&"AiHeroRules._cross_gate", [session, context, index, plan])
+	var result = _cross_gate__gd(session, context, index, plan)
+	TurnEngine.check_writing(&"AiHeroRules._cross_gate", before, [session, context, index, plan], result)
+	return result
+
+static func _cross_gate__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, plan: Dictionary) -> Dictionary:
 	var entry: Dictionary = session.overworld.encounters[index]
 	var nodes: Array = session.overworld.get("resource_nodes", [])
 	var node_index := int(plan.get("index", -1))
@@ -3298,6 +4004,14 @@ static func _cross_gate(session: SessionStateStoreScript.SessionData, context: D
 	return {"arrived": false, "rerouted": true}
 
 static func _claim_resource(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, plan: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _claim_resource__gd(session, context, index, plan)
+	var before := TurnEngine.before_writing(&"AiHeroRules._claim_resource", [session, context, index, plan])
+	var result = _claim_resource__gd(session, context, index, plan)
+	TurnEngine.check_writing(&"AiHeroRules._claim_resource", before, [session, context, index, plan], result)
+	return result
+
+static func _claim_resource__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, plan: Dictionary) -> Dictionary:
 	var controller := String(context.controller)
 	var entry: Dictionary = session.overworld.encounters[index]
 	var nodes: Array = session.overworld.get("resource_nodes", [])
@@ -3353,6 +4067,14 @@ static func _claim_resource(session: SessionStateStoreScript.SessionData, contex
 	return {"arrived": true, "events": events, "acted": acted}
 
 static func _clear_static_body(session: SessionStateStoreScript.SessionData, context: Dictionary, node: Dictionary) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_clear_static_body__gd(session, context, node)
+		return
+	var before := TurnEngine.before_writing(&"AiHeroRules._clear_static_body", [session, context, node])
+	_clear_static_body__gd(session, context, node)
+	TurnEngine.check_writing(&"AiHeroRules._clear_static_body", before, [session, context, node], null)
+
+static func _clear_static_body__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, node: Dictionary) -> void:
 	context["topology_changed"] = true
 	var level := LevelRules.level_of(node)
 	if not context.levels.has(level):
@@ -3375,6 +4097,14 @@ static func _clear_static_body(session: SessionStateStoreScript.SessionData, con
 	surface.erase("open_zones")
 
 static func _take_artifact(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, plan: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _take_artifact__gd(session, context, index, plan)
+	var before := TurnEngine.before_writing(&"AiHeroRules._take_artifact", [session, context, index, plan])
+	var result = _take_artifact__gd(session, context, index, plan)
+	TurnEngine.check_writing(&"AiHeroRules._take_artifact", before, [session, context, index, plan], result)
+	return result
+
+static func _take_artifact__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, plan: Dictionary) -> Dictionary:
 	var controller := String(context.controller)
 	var entry: Dictionary = session.overworld.encounters[index]
 	var nodes: Array = session.overworld.get("artifact_nodes", [])
@@ -3406,6 +4136,14 @@ static func _take_artifact(session: SessionStateStoreScript.SessionData, context
 	return {"arrived": true, "events": [event]}
 
 static func _fight_neutral(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, plan: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _fight_neutral__gd(session, context, index, plan)
+	var before := TurnEngine.before_writing(&"AiHeroRules._fight_neutral", [session, context, index, plan])
+	var result = _fight_neutral__gd(session, context, index, plan)
+	TurnEngine.check_writing(&"AiHeroRules._fight_neutral", before, [session, context, index, plan], result)
+	return result
+
+static func _fight_neutral__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, plan: Dictionary) -> Dictionary:
 	var encounters: Array = session.overworld.get("encounters", [])
 	var guard_index := int(plan.get("index", -1))
 	if guard_index < 0 or guard_index >= encounters.size():
@@ -3435,6 +4173,14 @@ static func _fight_neutral(session: SessionStateStoreScript.SessionData, context
 ## After a fight that left the guard standing, the hero falls back to the tile
 ## it attacked from instead of staying inside the guard's zone.
 static func _step_back_from_guard(session: SessionStateStoreScript.SessionData, index: int, plan: Dictionary) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_step_back_from_guard__gd(session, index, plan)
+		return
+	var before := TurnEngine.before_writing(&"AiHeroRules._step_back_from_guard", [session, index, plan])
+	_step_back_from_guard__gd(session, index, plan)
+	TurnEngine.check_writing(&"AiHeroRules._step_back_from_guard", before, [session, index, plan], null)
+
+static func _step_back_from_guard__gd(session: SessionStateStoreScript.SessionData, index: int, plan: Dictionary) -> void:
 	if not (plan.get("retreat_tile", null) is Vector2i):
 		return
 	var tile: Vector2i = plan.retreat_tile
@@ -3451,6 +4197,14 @@ static func _step_back_from_guard(session: SessionStateStoreScript.SessionData, 
 	_overworld_rules().invalidate_spatial_lookup(session)
 
 static func _fight_ai_hero(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, plan: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _fight_ai_hero__gd(session, context, index, plan)
+	var before := TurnEngine.before_writing(&"AiHeroRules._fight_ai_hero", [session, context, index, plan])
+	var result = _fight_ai_hero__gd(session, context, index, plan)
+	TurnEngine.check_writing(&"AiHeroRules._fight_ai_hero", before, [session, context, index, plan], result)
+	return result
+
+static func _fight_ai_hero__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, plan: Dictionary) -> Dictionary:
 	var encounters: Array = session.overworld.get("encounters", [])
 	var other_index := int(plan.get("index", -1))
 	if other_index < 0 or other_index >= encounters.size():
@@ -3474,6 +4228,14 @@ static func _fight_ai_hero(session: SessionStateStoreScript.SessionData, context
 
 ## Hand troops to the main hero standing next to this one.
 static func _meet_hero(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, plan: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _meet_hero__gd(session, context, index, plan)
+	var before := TurnEngine.before_writing(&"AiHeroRules._meet_hero", [session, context, index, plan])
+	var result = _meet_hero__gd(session, context, index, plan)
+	TurnEngine.check_writing(&"AiHeroRules._meet_hero", before, [session, context, index, plan], result)
+	return result
+
+static func _meet_hero__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, plan: Dictionary) -> Dictionary:
 	var other_index := _entry_index(session, String(plan.get("id", "")))
 	if other_index < 0 or _is_resolved(session, String(plan.get("id", ""))):
 		return {"arrived": true}
@@ -3530,6 +4292,14 @@ static func _meet_hero(session: SessionStateStoreScript.SessionData, context: Di
 	return {"arrived": true, "acted": true, "events": [event]}
 
 static func _attack_town(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, plan: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _attack_town__gd(session, context, index, plan)
+	var before := TurnEngine.before_writing(&"AiHeroRules._attack_town", [session, context, index, plan])
+	var result = _attack_town__gd(session, context, index, plan)
+	TurnEngine.check_writing(&"AiHeroRules._attack_town", before, [session, context, index, plan], result)
+	return result
+
+static func _attack_town__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, plan: Dictionary) -> Dictionary:
 	var controller := String(context.controller)
 	var towns: Array = session.overworld.get("towns", [])
 	var town_index := int(plan.get("index", -1))
@@ -3630,6 +4400,11 @@ static func _attack_player_hero(session: SessionStateStoreScript.SessionData, co
 ## Battles against the human are played by the human, exactly like any other
 ## battle against an enemy hero.
 static func _start_player_battle(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, battle_context: Dictionary, summary: String, target: Dictionary) -> Dictionary:
+	if _turn_engine_mode == TurnEngine.SHADOW:
+		TurnEngine.host_point(&"AiHeroRules._start_player_battle", [session, context, index, battle_context, summary, target])
+	return _start_player_battle__gd(session, context, index, battle_context, summary, target)
+
+static func _start_player_battle__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, battle_context: Dictionary, summary: String, target: Dictionary) -> Dictionary:
 	var entry: Dictionary = session.overworld.encounters[index]
 	entry["battle_context"] = battle_context
 	_store_entry(session, index, entry)
@@ -3652,6 +4427,14 @@ static func _start_player_battle(session: SessionStateStoreScript.SessionData, c
 	return {"arrived": true, "battle_started": true, "messages": [summary], "events": [event]}
 
 static func _record_hero_defeat(session: SessionStateStoreScript.SessionData, controller: String, entry: Dictionary) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_record_hero_defeat__gd(session, controller, entry)
+		return
+	var before := TurnEngine.before_writing(&"AiHeroRules._record_hero_defeat", [session, controller, entry])
+	_record_hero_defeat__gd(session, controller, entry)
+	TurnEngine.check_writing(&"AiHeroRules._record_hero_defeat", before, [session, controller, entry], null)
+
+static func _record_hero_defeat__gd(session: SessionStateStoreScript.SessionData, controller: String, entry: Dictionary) -> void:
 	var commander: Dictionary = entry.get("enemy_commander_state", {})
 	if commander.is_empty() or controller == "":
 		return
@@ -3666,6 +4449,14 @@ static func _record_hero_defeat(session: SessionStateStoreScript.SessionData, co
 ## the fight will use, as a human weighs a battle before committing: it goes
 ## only when it wins and keeps at least half of its strength.
 static func _fight_looks_good(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, plan: Dictionary, idle: bool = false) -> bool:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _fight_looks_good__gd(session, context, entry, plan, idle)
+	var before := TurnEngine.before_writing(&"AiHeroRules._fight_looks_good", [session, context, entry, plan, idle])
+	var result = _fight_looks_good__gd(session, context, entry, plan, idle)
+	TurnEngine.check_writing(&"AiHeroRules._fight_looks_good", before, [session, context, entry, plan, idle], result)
+	return result
+
+static func _fight_looks_good__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, plan: Dictionary, idle: bool = false) -> bool:
 	if String(plan.get("kind", "")) not in ["encounter", "ai_hero"]:
 		return true
 	var encounters: Array = session.overworld.get("encounters", [])
@@ -3704,12 +4495,25 @@ static func _fight_looks_good(session: SessionStateStoreScript.SessionData, cont
 	return true
 
 static func _battle_key(entry: Dictionary, defender: Dictionary, battle_number: int) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _battle_key__gd(entry, defender, battle_number)
+	var before := TurnEngine.before_writing(&"AiHeroRules._battle_key", [entry, defender, battle_number])
+	var result = _battle_key__gd(entry, defender, battle_number)
+	TurnEngine.check_writing(&"AiHeroRules._battle_key", before, [entry, defender, battle_number], result)
+	return result
+
+static func _battle_key__gd(entry: Dictionary, defender: Dictionary, battle_number: int) -> String:
 	return "%s|%s|%d|%d|%d" % [String(entry.get("placement_id", "")), String(defender.get("placement_id", "")), battle_number, hash(entry.get("enemy_army", {}).get("stacks", [])), hash(_neutral_army(defender).get("stacks", []) if PlayerRules.raid_controller_id(defender) == "" else defender.get("enemy_army", {}).get("stacks", []))]
 
 ## One auto-resolved battle on a scratch session: the hero attacks `defender`.
 ## Pure: the live session is not touched. stop_below_creatures > 0 ends the
 ## battle unresolved (not won) once the hero has fewer creatures standing.
 static func _simulate_battle(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, defender: Dictionary, battle_number: int, stop_below_creatures: int = 0) -> Dictionary:
+	if _turn_engine_mode == TurnEngine.SHADOW:
+		TurnEngine.host_point(&"AiHeroRules._simulate_battle", [session, context, entry, defender, battle_number, stop_below_creatures])
+	return _simulate_battle__gd(session, context, entry, defender, battle_number, stop_below_creatures)
+
+static func _simulate_battle__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, defender: Dictionary, battle_number: int, stop_below_creatures: int = 0) -> Dictionary:
 	var hero := _battle_hero(entry)
 	var defender_copy := defender.duplicate(true)
 	defender_copy["x"] = 0
@@ -3797,6 +4601,14 @@ static func _simulate_battle(session: SessionStateStoreScript.SessionData, conte
 	}
 
 static func _auto_resolve(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, defender: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _auto_resolve__gd(session, context, index, defender)
+	var before := TurnEngine.before_writing(&"AiHeroRules._auto_resolve", [session, context, index, defender])
+	var result = _auto_resolve__gd(session, context, index, defender)
+	TurnEngine.check_writing(&"AiHeroRules._auto_resolve", before, [session, context, index, defender], result)
+	return result
+
+static func _auto_resolve__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, defender: Dictionary) -> Dictionary:
 	context["auto_battle_count"] = int(context.get("auto_battle_count", 0)) + 1
 	var entry: Dictionary = session.overworld.encounters[index]
 	var preview: Dictionary = context.get("fight_preview", {})
@@ -3852,6 +4664,14 @@ static func _auto_resolve(session: SessionStateStoreScript.SessionData, context:
 ## One auto-resolved fight, kept in `session.flags` when a match asks for a
 ## battle log (an AI-against-AI evaluation). Normal games keep none.
 static func _log_battle(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, defender: Dictionary, outcome: Dictionary, previewed: bool) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_log_battle__gd(session, context, entry, defender, outcome, previewed)
+		return
+	var before := TurnEngine.before_writing(&"AiHeroRules._log_battle", [session, context, entry, defender, outcome, previewed])
+	_log_battle__gd(session, context, entry, defender, outcome, previewed)
+	TurnEngine.check_writing(&"AiHeroRules._log_battle", before, [session, context, entry, defender, outcome, previewed], null)
+
+static func _log_battle__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, defender: Dictionary, outcome: Dictionary, previewed: bool) -> void:
 	var defender_stacks: Array = []
 	if defender.get("enemy_army", {}) is Dictionary and defender.get("enemy_army", {}).has("stacks"):
 		defender_stacks = defender.get("enemy_army", {}).get("stacks", [])
@@ -3901,6 +4721,14 @@ static func _note_alternative(context: Dictionary, candidate: Dictionary, score:
 	AiEngine.native_writing(&"AiHeroRules._note_alternative", [context, candidate, score, distance])
 
 static func _log_decision(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, plan: Dictionary) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_log_decision__gd(session, context, entry, plan)
+		return
+	var before := TurnEngine.before_writing(&"AiHeroRules._log_decision", [session, context, entry, plan])
+	_log_decision__gd(session, context, entry, plan)
+	TurnEngine.check_writing(&"AiHeroRules._log_decision", before, [session, context, entry, plan], null)
+
+static func _log_decision__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, plan: Dictionary) -> void:
 	var log: Array = session.flags.get(DECISION_LOG_KEY, [])
 	var chosen := String(plan.get("id", "")).get_slice("_object_", 1)
 	var alternatives := []
@@ -3922,6 +4750,14 @@ static func _log_decision(session: SessionStateStoreScript.SessionData, context:
 	session.flags[DECISION_LOG_KEY] = log
 
 static func _economy_add(session: SessionStateStoreScript.SessionData, controller: String, key: String, amount: float) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_economy_add__gd(session, controller, key, amount)
+		return
+	var before := TurnEngine.before_writing(&"AiHeroRules._economy_add", [session, controller, key, amount])
+	_economy_add__gd(session, controller, key, amount)
+	TurnEngine.check_writing(&"AiHeroRules._economy_add", before, [session, controller, key, amount], null)
+
+static func _economy_add__gd(session: SessionStateStoreScript.SessionData, controller: String, key: String, amount: float) -> void:
 	if amount == 0.0 or not bool(session.flags.get(BATTLE_LOG_FLAG, false)):
 		return
 	var log: Dictionary = session.flags.get(ECONOMY_LOG_KEY, {})
@@ -3932,6 +4768,14 @@ static func _economy_add(session: SessionStateStoreScript.SessionData, controlle
 
 ## What a hero brings to a battle besides its troops, for the battle log.
 static func _commander_brief(commander: Variant) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _commander_brief__gd(commander)
+	var before := TurnEngine.before_writing(&"AiHeroRules._commander_brief", [commander])
+	var result = _commander_brief__gd(commander)
+	TurnEngine.check_writing(&"AiHeroRules._commander_brief", before, [commander], result)
+	return result
+
+static func _commander_brief__gd(commander: Variant) -> Dictionary:
 	if not (commander is Dictionary) or commander.is_empty():
 		return {}
 	var command: Dictionary = commander.get("command", {}) if commander.get("command", {}) is Dictionary else {}
@@ -3949,6 +4793,14 @@ static func _commander_brief(commander: Variant) -> Dictionary:
 	}
 
 static func _defender_label(defender: Dictionary) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _defender_label__gd(defender)
+	var before := TurnEngine.before_writing(&"AiHeroRules._defender_label", [defender])
+	var result = _defender_label__gd(defender)
+	TurnEngine.check_writing(&"AiHeroRules._defender_label", before, [defender], result)
+	return result
+
+static func _defender_label__gd(defender: Dictionary) -> String:
 	if is_ai_hero(defender):
 		return hero_name(defender)
 	var army: Dictionary = defender.get("enemy_army", {}) if defender.get("enemy_army", {}) is Dictionary else {}
@@ -3957,6 +4809,14 @@ static func _defender_label(defender: Dictionary) -> String:
 	return String(_overworld_rules().encounter_display_name(defender))
 
 static func _defender_target(defender: Dictionary, label: String) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _defender_target__gd(defender, label)
+	var before := TurnEngine.before_writing(&"AiHeroRules._defender_target", [defender, label])
+	var result = _defender_target__gd(defender, label)
+	TurnEngine.check_writing(&"AiHeroRules._defender_target", before, [defender, label], result)
+	return result
+
+static func _defender_target__gd(defender: Dictionary, label: String) -> Dictionary:
 	return {
 		"target_kind": "encounter",
 		"target_placement_id": String(defender.get("placement_id", "")),
@@ -4018,6 +4878,14 @@ static func _merge_stacks_into(destination: Variant, additions: Variant) -> Dict
 	return AiEngine.native_writing(&"AiHeroRules._merge_stacks_into", [destination, additions])
 
 static func _find_town(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _find_town__gd(session, placement_id)
+	var before := TurnEngine.before_writing(&"AiHeroRules._find_town", [session, placement_id])
+	var result = _find_town__gd(session, placement_id)
+	TurnEngine.check_writing(&"AiHeroRules._find_town", before, [session, placement_id], result)
+	return result
+
+static func _find_town__gd(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
 	var towns: Array = session.overworld.get("towns", [])
 	for index in range(towns.size()):
 		if towns[index] is Dictionary and String(towns[index].get("placement_id", "")) == placement_id:
@@ -4028,6 +4896,14 @@ static func _can_afford(pool: Dictionary, cost: Dictionary) -> bool:
 	return AiEngine.native_writing(&"AiHeroRules._can_afford", [pool, cost])
 
 static func _add_pool(pool: Dictionary, delta: Variant) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_add_pool__gd(pool, delta)
+		return
+	var before := TurnEngine.before_writing(&"AiHeroRules._add_pool", [pool, delta])
+	_add_pool__gd(pool, delta)
+	TurnEngine.check_writing(&"AiHeroRules._add_pool", before, [pool, delta], null)
+
+static func _add_pool__gd(pool: Dictionary, delta: Variant) -> void:
 	if not (delta is Dictionary):
 		return
 	for key in delta.keys():
@@ -4035,6 +4911,14 @@ static func _add_pool(pool: Dictionary, delta: Variant) -> void:
 			pool[key] = int(pool.get(key, 0)) + int(delta[key])
 
 static func _append_all(target: Array, values: Variant) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_append_all__gd(target, values)
+		return
+	var before := TurnEngine.before_writing(&"AiHeroRules._append_all", [target, values])
+	_append_all__gd(target, values)
+	TurnEngine.check_writing(&"AiHeroRules._append_all", before, [target, values], null)
+
+static func _append_all__gd(target: Array, values: Variant) -> void:
 	if values is Array:
 		for value in values:
 			if value is Dictionary and value.is_empty():
@@ -4047,6 +4931,14 @@ static func _elapsed_ms(started: int) -> int:
 	return int(round(float(Time.get_ticks_usec() - started) / 1000.0))
 
 static func _event(session: SessionStateStoreScript.SessionData, context: Dictionary, event_type: String, actor: Dictionary, target: Dictionary, summary: String, reason_codes: Array) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _event__gd(session, context, event_type, actor, target, summary, reason_codes)
+	var before := TurnEngine.before_writing(&"AiHeroRules._event", [session, context, event_type, actor, target, summary, reason_codes])
+	var result = _event__gd(session, context, event_type, actor, target, summary, reason_codes)
+	TurnEngine.check_writing(&"AiHeroRules._event", before, [session, context, event_type, actor, target, summary, reason_codes], result)
+	return result
+
+static func _event__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, event_type: String, actor: Dictionary, target: Dictionary, summary: String, reason_codes: Array) -> Dictionary:
 	var target_with_reasons := target.duplicate(true)
 	target_with_reasons["target_reason_codes"] = reason_codes
 	return AdventureRules.build_ai_event_record(session, context.config, event_type, actor, target_with_reasons, {

@@ -32,7 +32,7 @@
 // holds another value for, and the metadata the view's "meta" adds, changes
 // or drops. A host call reads the view again from the object afterwards.
 //
-// A host call (call_static) runs a GDScript function in the middle of a call
+// A full host call (call_static) runs a GDScript function in the middle of a call
 // that writes back (begin(false, true)), so within such a call GDScript does
 // run; in any other call the host call throws state::Suspend instead. It
 // writes back what the call changed so far, and every node the export made
@@ -42,7 +42,10 @@
 // vars, content rows and the State's memo are asked for again. A pure host
 // call (call_pure) changes none of that: it writes back the same way, then
 // every written node stops being dirty, since Godot holds what it holds, and
-// nothing is read again.
+// nothing is read again. Until the call's first full host call, its pure
+// ones first keep what each container and static var they write held, and
+// undo_write_backs() puts it back: the day port's GDScript fallback
+// (port::Table::fallback) then starts from the state the call started from.
 //
 // diff() compares the native result with GDScript's: the same types (int and
 // float, String and StringName apart), the same key order, typing and
@@ -108,8 +111,17 @@ public:
 	state::Value load(const godot::Variant &value);
 	godot::Variant export_value(const state::Value &value);
 	// The loaded containers the native code changed, into themselves, and the
-	// static vars it assigned, into their scripts.
-	void write_back();
+	// static vars it assigned, into their scripts. undoable: each one keeps
+	// what it held before the call's first write-back into it, for
+	// undo_write_backs().
+	void write_back(bool undoable = false);
+	// The host calls this call made that ran GDScript on the call's own state
+	// (call_static): no write-back before one can be undone.
+	size_t full_host_calls() const { return full_host_calls_; }
+	// The GDScript fallback of a call that made no full host call: every
+	// container and static var its pure host calls wrote back takes back, in
+	// place, what it held before the call.
+	void undo_write_backs();
 	// A loaded container the native code wrote into, or a static var it assigned.
 	bool changed_a_source() const;
 	// The host calls this call made, in order: (script, function) atoms.
@@ -181,6 +193,13 @@ private:
 		uint32_t name = 0;
 		state::Value value;
 		bool assigned = false;
+		// Its value before the call is in undo_statics_.
+		bool undo_kept = false;
+	};
+	struct UndoStatic {
+		uint32_t script = 0;
+		uint32_t name = 0;
+		godot::Variant value;
 	};
 	// An object's view: its Dict node, the node its "meta" started as, and
 	// the script variables' names (atoms), in order.
@@ -260,6 +279,18 @@ private:
 	// The call may run GDScript at a host call (begin's host_calls).
 	bool host_calls_ = false;
 	std::vector<std::pair<uint32_t, uint32_t>> host_calls_made_;
+	size_t full_host_calls_ = 0;
+	// The undoable write-backs so far: each container they wrote, with what it
+	// held before (Array and Dictionary: duplicate(false); a packed array:
+	// duplicate()), and each static var they assigned, with its value before.
+	// A node's flag says it is kept.
+	std::vector<std::pair<godot::Array, godot::Array>> undo_arrays_;
+	std::vector<std::pair<godot::Dictionary, godot::Dictionary>> undo_dicts_;
+	std::vector<std::pair<godot::Variant, godot::Variant>> undo_packed_;
+	std::vector<UndoStatic> undo_statics_;
+	std::vector<uint8_t> undo_array_kept_;
+	std::vector<uint8_t> undo_dict_kept_;
+	std::vector<uint8_t> undo_packed_kept_;
 	std::vector<godot::Variant> array_snapshots_;
 	std::vector<godot::Variant> dict_snapshots_;
 	std::vector<godot::Variant> packed_snapshots_;

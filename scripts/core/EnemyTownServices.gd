@@ -4,6 +4,8 @@ const Development = preload("res://scripts/core/TownDevelopmentRules.gd")
 const Artifacts = preload("res://scripts/core/ArtifactRules.gd")
 const Levels = preload("res://scripts/core/OverworldLevelRules.gd")
 const Players = preload("res://scripts/core/PlayerIdentityRules.gd")
+const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
+static var _turn_engine_mode: int = TurnEngine.mode
 ## AI weights (content/ai_hero_weights.json): a hero in its own town spends at
 ## most TOWN_SPEND_SHARE of the gold above GOLD_RESERVE on upgrades and on an
 ## artifact, buys one only for a loadout gain of MIN_PURCHASE_GAIN or more, and
@@ -22,6 +24,14 @@ static var LOADOUT_MANA_COST_VALUE: float
 static var _ai_weights_ready := false
 
 static func apply_ai_weights(weights: Dictionary) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		apply_ai_weights__gd(weights)
+		return
+	var before := TurnEngine.before_writing(&"EnemyTownServices.apply_ai_weights", [weights])
+	apply_ai_weights__gd(weights)
+	TurnEngine.check_writing(&"EnemyTownServices.apply_ai_weights", before, [weights], null)
+
+static func apply_ai_weights__gd(weights: Dictionary) -> void:
 	GOLD_RESERVE = int(weights["gold_reserve"])
 	TOWN_SPEND_SHARE = float(weights["town_spend_share"])
 	MIN_PURCHASE_GAIN = float(weights["min_purchase_gain"])
@@ -39,6 +49,14 @@ static func apply_ai_weights(weights: Dictionary) -> void:
 	_ai_weights_ready = true
 
 static func can_visit(town: Dictionary, raid: Dictionary, controller: String) -> bool:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return can_visit__gd(town, raid, controller)
+	var before := TurnEngine.before_writing(&"EnemyTownServices.can_visit", [town, raid, controller])
+	var result = can_visit__gd(town, raid, controller)
+	TurnEngine.check_writing(&"EnemyTownServices.can_visit", before, [town, raid, controller], result)
+	return result
+
+static func can_visit__gd(town: Dictionary, raid: Dictionary, controller: String) -> bool:
 	if town.get("owner", "neutral") != "enemy" or Players.town_controller_id(town) != controller:
 		return false
 	if Players.raid_controller_id(raid) != controller or bool(raid.get("raid_retired_to_rebuild", false)):
@@ -48,6 +66,14 @@ static func can_visit(town: Dictionary, raid: Dictionary, controller: String) ->
 	return Levels.same_level(entrance, raid) and absi(int(entrance.x) - int(raid.get("x", -999))) + absi(int(entrance.y) - int(raid.get("y", -999))) <= 1
 
 static func upgrade_stacks(town: Dictionary, stacks: Array, treasury: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return upgrade_stacks__gd(town, stacks, treasury)
+	var before := TurnEngine.before_writing(&"EnemyTownServices.upgrade_stacks", [town, stacks, treasury])
+	var result = upgrade_stacks__gd(town, stacks, treasury)
+	TurnEngine.check_writing(&"EnemyTownServices.upgrade_stacks", before, [town, stacks, treasury], result)
+	return result
+
+static func upgrade_stacks__gd(town: Dictionary, stacks: Array, treasury: Dictionary) -> Dictionary:
 	if not _ai_weights_ready:
 		apply_ai_weights(ContentService.default_ai_hero_weights())
 	var result := stacks.duplicate(true)
@@ -110,6 +136,14 @@ static func best_equipment(hero: Dictionary, artifact_id: String) -> Dictionary:
 	return best
 
 static func visit(town: Dictionary, raid: Dictionary, treasury: Dictionary, day: int, controller: String) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return visit__gd(town, raid, treasury, day, controller)
+	var before := TurnEngine.before_writing(&"EnemyTownServices.visit", [town, raid, treasury, day, controller])
+	var result = visit__gd(town, raid, treasury, day, controller)
+	TurnEngine.check_writing(&"EnemyTownServices.visit", before, [town, raid, treasury, day, controller], result)
+	return result
+
+static func visit__gd(town: Dictionary, raid: Dictionary, treasury: Dictionary, day: int, controller: String) -> Dictionary:
 	if not _ai_weights_ready:
 		apply_ai_weights(ContentService.default_ai_hero_weights())
 	var changes: Array = []

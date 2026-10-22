@@ -3,6 +3,8 @@ extends RefCounted
 const KEY := "_live_turn_playback"
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const Levels = preload("res://scripts/core/OverworldLevelRules.gd")
+const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
+static var _turn_engine_mode: int = TurnEngine.mode
 
 static func begin(session) -> void:
 	session.overworld[KEY] = []
@@ -13,6 +15,14 @@ static func finish(session) -> Array:
 	return records
 
 static func player_turn(session, config: Dictionary) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		player_turn__gd(session, config)
+		return
+	var before := TurnEngine.before_writing(&"OverworldTurnPlayback.player_turn", [session, config])
+	player_turn__gd(session, config)
+	TurnEngine.check_writing(&"OverworldTurnPlayback.player_turn", before, [session, config], null)
+
+static func player_turn__gd(session, config: Dictionary) -> void:
 	if not session.overworld.has(KEY): return
 	var controller := PlayerRules.controller_id(config)
 	var identity := PlayerRules.player(session, controller)
@@ -28,6 +38,14 @@ static func visible(session, point: Dictionary) -> bool:
 	return Levels.level_of(point) == Levels.view_level(session) and OverworldRules.is_tile_visible(session,int(point.get("x",-1)),int(point.get("y",-1)),Levels.level_of(point))
 
 static func move(session, actor: Dictionary, before: Dictionary) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		move__gd(session, actor, before)
+		return
+	var switch_before := TurnEngine.before_writing(&"OverworldTurnPlayback.move", [session, actor, before])
+	move__gd(session, actor, before)
+	TurnEngine.check_writing(&"OverworldTurnPlayback.move", switch_before, [session, actor, before], null)
+
+static func move__gd(session, actor: Dictionary, before: Dictionary) -> void:
 	if not session.overworld.has(KEY): return
 	var after := Levels.position(actor)
 	var from_visible := visible(session,before)
@@ -54,6 +72,14 @@ static func _visual_actor(actor: Dictionary, point: Dictionary) -> Dictionary:
 	return visual
 
 static func action(session, actor: Dictionary, verb: String) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		action__gd(session, actor, verb)
+		return
+	var before := TurnEngine.before_writing(&"OverworldTurnPlayback.action", [session, actor, verb])
+	action__gd(session, actor, verb)
+	TurnEngine.check_writing(&"OverworldTurnPlayback.action", before, [session, actor, verb], null)
+
+static func action__gd(session, actor: Dictionary, verb: String) -> void:
 	if not session.overworld.has(KEY) or not visible(session,Levels.position(actor)): return
 	var point := Levels.position(actor)
 	var cue := ""

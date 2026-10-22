@@ -204,6 +204,14 @@ void PortBridge::begin(bool validating, bool host_calls) {
 	validating_ = validating;
 	host_calls_ = host_calls && !validating;
 	host_calls_made_.clear();
+	full_host_calls_ = 0;
+	undo_arrays_.clear();
+	undo_dicts_.clear();
+	undo_packed_.clear();
+	undo_statics_.clear();
+	undo_array_kept_.clear();
+	undo_dict_kept_.clear();
+	undo_packed_kept_.clear();
 	array_snapshots_.clear();
 	dict_snapshots_.clear();
 	packed_snapshots_.clear();
@@ -689,8 +697,14 @@ Value PortBridge::call_static(state::State &, uint32_t script, uint32_t function
 	}
 	// GDScript finds every container and static var as the native code left
 	// them, and the containers export made stay those nodes' objects: a second
-	// write-back writes into them, not into stale copies.
+	// write-back writes into them, not into stale copies. GDScript may change
+	// them in place, so nothing written back before can be undone.
 	host_calls_made_.emplace_back(script, function);
+	++full_host_calls_;
+	undo_arrays_.clear();
+	undo_dicts_.clear();
+	undo_packed_.clear();
+	undo_statics_.clear();
 	write_back();
 	Array call_args;
 	for (size_t index = 0; index < count; ++index) {
@@ -712,7 +726,7 @@ Value PortBridge::call_pure(state::State &state, uint32_t script, uint32_t funct
 		return call_static(state, script, function, args, count);
 	}
 	host_calls_made_.emplace_back(script, function);
-	write_back();
+	write_back(full_host_calls_ == 0);
 	Array call_args;
 	for (size_t index = 0; index < count; ++index) {
 		call_args.push_back(export_value(args[index]));
@@ -1152,7 +1166,23 @@ Variant PortBridge::export_value(const Value &value) {
 	return Variant();
 }
 
-void PortBridge::write_back() {
+namespace {
+
+// Whether an undoable write-back meets this node first: its flag, set now.
+bool first_undo(std::vector<uint8_t> &kept, uint32_t node) {
+	if (kept.size() <= node) {
+		kept.resize(node + 1, 0);
+	}
+	if (kept[node] != 0) {
+		return false;
+	}
+	kept[node] = 1;
+	return true;
+}
+
+} // namespace
+
+void PortBridge::write_back(bool undoable) {
 	for (uint32_t node = 0; node < array_sources_.size(); ++node) {
 		if (!array_sources_[node] || !state_.array_node(node).dirty) {
 			continue;
@@ -1161,6 +1191,9 @@ void PortBridge::write_back() {
 		if (target.is_read_only()) {
 			// set() and append() refuse a read-only node, so nothing should get here.
 			throw state::ScriptError("native wrote into a read-only Array");
+		}
+		if (undoable && first_undo(undo_array_kept_, node)) {
+			undo_arrays_.emplace_back(target, target.duplicate(false));
 		}
 		const state::ArrayNode &source = state_.array_node(node);
 		std::vector<Variant> items(source.items.size());
@@ -1180,6 +1213,9 @@ void PortBridge::write_back() {
 		if (target.is_read_only()) {
 			throw state::ScriptError("native wrote into a read-only Dictionary");
 		}
+		if (undoable && first_undo(undo_dict_kept_, node)) {
+			undo_dicts_.emplace_back(target, target.duplicate(false));
+		}
 		const state::DictNode &source = state_.dict_node(node);
 		std::vector<Variant> keys(source.keys.size());
 		std::vector<Variant> values(source.keys.size());
@@ -1195,13 +1231,21 @@ void PortBridge::write_back() {
 		}
 		// Through the Variant, so the change reaches every holder of the array.
 		Variant target = *packed_sources_[node];
+		if (undoable && first_undo(undo_packed_kept_, node)) {
+			undo_packed_.emplace_back(target, target.duplicate());
+		}
 		const Variant elements = packed_variant(state_, state_.packed_node(node));
 		target.call(StringName("clear"));
 		target.call(StringName("append_array"), elements);
 	}
-	for (const StaticVar &var : statics_) {
+	for (StaticVar &var : statics_) {
 		if (var.assigned) {
-			script_object(var.script)->set(static_name(var.name), export_value(var.value));
+			Object *holder = script_object(var.script);
+			if (undoable && !var.undo_kept) {
+				var.undo_kept = true;
+				undo_statics_.push_back(UndoStatic{ var.script, var.name, holder->get(static_name(var.name)) });
+			}
+			holder->set(static_name(var.name), export_value(var.value));
 		}
 	}
 	for (const ObjectView &view : views_) {
@@ -1209,6 +1253,38 @@ void PortBridge::write_back() {
 			write_view(view);
 		}
 	}
+}
+
+void PortBridge::undo_write_backs() {
+	for (const auto &undo : undo_arrays_) {
+		Array target = undo.first;
+		const Array &before = undo.second;
+		target.resize(before.size());
+		for (int64_t index = 0; index < before.size(); ++index) {
+			target.set(index, before[index]);
+		}
+	}
+	for (const auto &undo : undo_dicts_) {
+		Dictionary target = undo.first;
+		const Array keys = undo.second.keys();
+		const Array values = undo.second.values();
+		target.clear();
+		for (int64_t index = 0; index < keys.size(); ++index) {
+			target[keys[index]] = values[index];
+		}
+	}
+	for (const auto &undo : undo_packed_) {
+		Variant target = undo.first;
+		target.call(StringName("clear"));
+		target.call(StringName("append_array"), undo.second);
+	}
+	for (const UndoStatic &undo : undo_statics_) {
+		script_object(undo.script)->set(static_name(undo.name), undo.value);
+	}
+	undo_arrays_.clear();
+	undo_dicts_.clear();
+	undo_packed_.clear();
+	undo_statics_.clear();
 }
 
 bool PortBridge::changed_a_source() const {
