@@ -5,6 +5,9 @@ extends RefCounted
 ## hero can use a building once, once a day or once a week, and a side can chart
 ## or survey once. See docs/visit-buildings.md.
 
+const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
+static var _turn_engine_mode: int = TurnEngine.mode
+
 const FAMILY := "visit_building"
 const HERO_VISITS := "hero_visits"
 const SIDE_VISITS := "side_visits"
@@ -114,6 +117,14 @@ static func readiness(node: Dictionary, site: Dictionary, visitor_key: String, d
 	return {"ok": true, "message": ""}
 
 static func record_visit(node: Dictionary, site: Dictionary, visitor_key: String, day: int, side: String = "") -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		record_visit__gd(node, site, visitor_key, day, side)
+		return
+	var before := TurnEngine.before_writing(&"VisitBuildingRules.record_visit", [node, site, visitor_key, day, side])
+	record_visit__gd(node, site, visitor_key, day, side)
+	TurnEngine.check_writing(&"VisitBuildingRules.record_visit", before, [node, site, visitor_key, day, side], null)
+
+static func record_visit__gd(node: Dictionary, site: Dictionary, visitor_key: String, day: int, side: String = "") -> void:
 	var visits = node.get(HERO_VISITS, {})
 	if not (visits is Dictionary):
 		visits = {}
@@ -144,6 +155,14 @@ static func cadence_label(site: Dictionary) -> String:
 			return "once per hero"
 
 static func effect_summary(effect: Dictionary) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return effect_summary__gd(effect)
+	var before := TurnEngine.before_writing(&"VisitBuildingRules.effect_summary", [effect])
+	var result = effect_summary__gd(effect)
+	TurnEngine.check_writing(&"VisitBuildingRules.effect_summary", before, [effect], result)
+	return result
+
+static func effect_summary__gd(effect: Dictionary) -> String:
 	var parts := []
 	var gains = effect.get("resources", {})
 	if gains is Dictionary and not gains.is_empty():
@@ -268,6 +287,14 @@ static func _resource_text(resources: Dictionary) -> String:
 	return ", ".join(parts)
 
 static func _thousands(value: int) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _thousands__gd(value)
+	var before := TurnEngine.before_writing(&"VisitBuildingRules._thousands", [value])
+	var result = _thousands__gd(value)
+	TurnEngine.check_writing(&"VisitBuildingRules._thousands", before, [value], result)
+	return result
+
+static func _thousands__gd(value: int) -> String:
 	var digits := str(value)
 	var grouped := ""
 	while digits.length() > 3:

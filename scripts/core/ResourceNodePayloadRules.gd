@@ -6,6 +6,9 @@ extends RefCounted
 ## claim payload once per placement: recapturing it grants ownership only,
 ## never the payload again.
 
+const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
+static var _turn_engine_mode: int = TurnEngine.mode
+
 const PAYLOAD_REWARDS := "payload_rewards"
 const PAYLOAD_REWARD_CHOICES := "payload_reward_choices"
 const PAYLOAD_SPELL_IDS := "payload_spell_ids"
@@ -88,6 +91,14 @@ static func claim_payload_spent(node: Dictionary, site: Dictionary) -> bool:
 	return bool(site.get("persistent_control", false)) and bool(node.get(CLAIM_PAYLOAD_SPENT, false))
 
 static func mark_claimed(node: Dictionary, site: Dictionary) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		mark_claimed__gd(node, site)
+		return
+	var before := TurnEngine.before_writing(&"ResourceNodePayloadRules.mark_claimed", [node, site])
+	mark_claimed__gd(node, site)
+	TurnEngine.check_writing(&"ResourceNodePayloadRules.mark_claimed", before, [node, site], null)
+
+static func mark_claimed__gd(node: Dictionary, site: Dictionary) -> void:
 	if bool(site.get("persistent_control", false)):
 		node[CLAIM_PAYLOAD_SPENT] = true
 
