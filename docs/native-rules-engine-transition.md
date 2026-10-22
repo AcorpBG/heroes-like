@@ -2000,6 +2000,22 @@ are beaten, stays GDScript until site visits are ported: the battle table's one 
 An AI battle preview never reaches it (its scratch session has no resource nodes). Phase 4's freeze covers some of them
 too.
 
+**Slice 09, the battle ends** (2026-10-22, branch `native-phase5-finalize`; runtime on main as its own commits
+f3747fa49, an object's view, and d634dbf40, a natively made typed Array's script): the eight host targets leave the
+battle table's host list and join its ports, 718 with one host target, `OverworldRules._collect_resource_node_result`.
+The battle ends take the session as its view and call the other 69 functions natively, unswitched. Phase 4's TownRules
+spell lists and `SpellRules.learn_spell` are shared in `town_rules_shared.cpp` and `spell_rules_shared.cpp`, and the turn
+calls 23 of the 69 that were stubs in `turn_not_ported.cpp`. The frozen list ends at the merge: the 97 BattleRules functions
+keep two copies with the rest of the battle table, and the other 69 keep their GDScript bodies for their GDScript callers
+(AGENTS.md). Checks: the twelve ends of a human battle on a small map (victory, loss, retreat, surrender, stalemate, enemy
+withdrawal, town assault, dwelling guard, resource defense, a town assault retreated from and stalemated, a resource
+defense lost) in shadow 27,928 checks, 0 mismatches, native results identical; shadow of the battle switch on the six
+seeds 77,335,601 checks, 0 mismatches (`_finalize_victory` 1,077 calls, `_finalize_player_battle_loss` and
+`_finalize_primary_defeat` 16); shadow of the day switch on the six seeds 14,882 checks, 0 mismatches (l1 and l2
+after merging main's slice 4.1); after that merge, shadow of the turn switch 1,769,088 checks, 0 mismatches, and
+native mode against main 80042d9e4 identical on 6/6 seeds; core suite 17/17 (Windows; the Linux libraries in `bin/` wait for
+the Linux pass).
+
 ### Phase 6: match throughput
 
 The runner keeps a native session handle across days and writes Dictionaries back only for the digest and record (with
