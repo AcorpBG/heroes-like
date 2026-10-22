@@ -165,9 +165,15 @@ Limits:
   its stack's order), and that part is shared by both sides.
 - Functions the rest of the game calls must keep their signatures; the router is built from
   the working tree's file.
+- Battles run native by default (`HEROES_NATIVE_BATTLE`, `scripts/core/BattleEngine.gd`), and
+  the native engine does not call the router. So runs with variants, and with them `tune.py`
+  and `power_fit.py`, set the switch to `gdscript` for their workers: the GDScript copy of the
+  battle rules plays, which the native engine matches. Tuned weights carry over, since both
+  read `content/battle_ai_weights.json`. This lasts until the Phase 2 battle tool
+  (docs/native-rules-engine-transition.md).
 - `--plain` installs no router and no variants: the game's own `BattleAiRules` plays both
-  sides. The native battle engine's parity checks use it, since the native port reads the AI's
-  memos from the game's script, which the router replaces.
+  sides, with the caller's battle switch (native by default). The native battle engine's
+  parity checks use it.
 
 ## Scoring
 

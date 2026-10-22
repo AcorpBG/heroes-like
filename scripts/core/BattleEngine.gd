@@ -1,9 +1,12 @@
 extends RefCounted
 ## The native battle engine's switch (docs/native-rules-engine-transition.md,
-## Phase 1). HEROES_NATIVE_BATTLE picks who runs the battle functions ported
-## so far (src/gdextension/rules/core/port/registry.cpp):
-## - gdscript, the default: their GDScript bodies, renamed <name>__gd.
-## - native: the native ports.
+## Phase 1). HEROES_NATIVE_BATTLE picks who runs the battle functions
+## (src/gdextension/rules/core/port/registry.cpp):
+## - native, the default: the native ports.
+## - gdscript: their GDScript bodies, renamed <name>__gd. Until the Phase 2
+##   battle tool, the battle AI arena and its tuner run them (their router
+##   swaps the GDScript BattleAiRules), and a battle change goes into both
+##   copies (AGENTS.md).
 ## - shadow: the GDScript bodies, with every call checked against the native
 ##   port: the result with its types, key order and container identities, and
 ##   for a function that writes into its arguments or a memo, what it leaves.
@@ -36,9 +39,11 @@ static var mode: int = _mode_from_environment()
 static func _mode_from_environment() -> int:
 	var name := OS.get_environment("HEROES_NATIVE_BATTLE").strip_edges().to_lower()
 	if name == "":
-		return GDSCRIPT
+		name = "native"
 	if not MODES.has(name):
-		push_error("HEROES_NATIVE_BATTLE=%s is none of gdscript, native, shadow; running GDScript." % name)
+		push_error("HEROES_NATIVE_BATTLE=%s is none of gdscript, native, shadow; running native." % name)
+		name = "native"
+	if int(MODES[name]) == GDSCRIPT:
 		return GDSCRIPT
 	# Without the library every native call fails loudly; available() says why.
 	NativeRules.available()
