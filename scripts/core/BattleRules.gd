@@ -267,10 +267,11 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 	var encounter_id = String(encounter_placement.get("encounter_id", encounter_placement.get("id", "")))
 	var encounter = ContentService.get_encounter(encounter_id)
 	if encounter.is_empty():
-		ProfileLogScript.emit_general("battle", "payload", "create_battle_payload_failed", ProfileLogScript.elapsed_ms(profile_started), buckets, {
-			"encounter_id": encounter_id,
-			"reason": "missing_encounter_content",
-		}, session)
+		if ProfileLogScript.general_enabled():
+			ProfileLogScript.emit_general("battle", "payload", "create_battle_payload_failed", ProfileLogScript.elapsed_ms(profile_started), buckets, {
+				"encounter_id": encounter_id,
+				"reason": "missing_encounter_content",
+			}, session)
 		return {}
 	buckets["resolve_encounter"] = ProfileLogScript.elapsed_ms(phase_started)
 
@@ -395,13 +396,14 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 	_initialize_damage_rng_state(session, battle)
 	_prepare_round(battle, 1)
 	buckets["stacks_and_round"] = ProfileLogScript.elapsed_ms(phase_started)
-	ProfileLogScript.emit_general("battle", "payload", "create_battle_payload", ProfileLogScript.elapsed_ms(profile_started), buckets, {
-		"encounter_id": encounter_id,
-		"placement_id": String(encounter_placement.get("placement_id", "")),
-		"battle_context_type": String(battle_context.get("type", "")) if battle_context is Dictionary else "",
-		"scenario_found": not scenario.is_empty(),
-		"stack_count": stacks.size(),
-	}, session)
+	if ProfileLogScript.general_enabled():
+		ProfileLogScript.emit_general("battle", "payload", "create_battle_payload", ProfileLogScript.elapsed_ms(profile_started), buckets, {
+			"encounter_id": encounter_id,
+			"placement_id": String(encounter_placement.get("placement_id", "")),
+			"battle_context_type": String(battle_context.get("type", "")) if battle_context is Dictionary else "",
+			"scenario_found": not scenario.is_empty(),
+			"stack_count": stacks.size(),
+		}, session)
 	return battle
 
 # Visit buildings (Wayside Chapel, Muster Banner, Fortune Ring...) leave
