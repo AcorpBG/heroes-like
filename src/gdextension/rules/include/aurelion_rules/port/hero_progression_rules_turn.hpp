@@ -23,15 +23,8 @@ using state::State;
 using state::Value;
 
 // Ported in hero_rules_turn.cpp.
-DictRef _add_experience(State &state, DictRef hero_state, int64_t amount);
-DictRef _apply_command_gain(State &state, const Value &command_state, Atom stat);
-DictRef _enqueue_choice_group(State &state, DictRef hero_state, int64_t level_number);
-DictRef add_experience(State &state, DictRef hero_state, int64_t amount);
 DictRef advance_to_level(State &state, DictRef hero_state, int64_t target_level);
-Atom command_gain_stat(State &state, DictRef hero_state, int64_t level_number);
 int64_t experience_for_level(State &state, int64_t level);
-int64_t experience_with_bonus(State &state, DictRef hero_state, int64_t amount);
-Atom pending_choice_summary(State &state, DictRef pending_choice);
 int64_t pending_choices_remaining(State &state, DictRef hero_state);
 Atom rank_label(State &state, int64_t rank);
 

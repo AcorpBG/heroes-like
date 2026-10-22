@@ -6,6 +6,7 @@
 
 #include "aurelion_rules/port/gd.hpp"
 #include "aurelion_rules/port/session_view.hpp"
+#include "aurelion_rules/port/creature_dwelling_rules.hpp"
 #include "aurelion_rules/port/creature_dwelling_rules_ai.hpp"
 #include "aurelion_rules/port/overworld_rules.hpp"
 
@@ -23,7 +24,6 @@ using state::Value;
 
 // Ported in enemy_turn_rules_turn.cpp.
 Atom guard_key(State &state, Atom placement_id);
-void record_guard_result(State &state, DictRef node, Atom side, ArrayRef survivor_stacks, bool won, int64_t day);
 void take(State &state, DictRef node, DictRef site, Atom unit_id, int64_t count, int64_t day);
 
 } // namespace aurelion::rules::port::creature_dwelling_rules

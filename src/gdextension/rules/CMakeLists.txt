@@ -121,6 +121,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/ai_port.cpp
 	core/port/ai_registry.cpp
 	core/port/artifact_rules.cpp
+	core/port/artifact_rules_shared.cpp
 	core/port/artifact_rules_turn.cpp
 	core/port/attack_effects.cpp
 	core/port/attack_events.cpp
@@ -146,6 +147,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/consequence_previews.cpp
 	core/port/content_service_ai.cpp
 	core/port/creature_dwelling_rules_ai.cpp
+	core/port/creature_dwelling_rules_shared.cpp
 	core/port/damage_modifiers.cpp
 	core/port/damage_pressure.cpp
 	core/port/damage_stream.cpp
@@ -156,6 +158,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/difficulty_rules_ai.cpp
 	core/port/enemy_adventure_rules.cpp
 	core/port/enemy_adventure_rules_ai.cpp
+	core/port/enemy_adventure_rules_shared.cpp
 	core/port/enemy_adventure_rules_turn.cpp
 	core/port/enemy_orders.cpp
 	core/port/enemy_states.cpp
@@ -168,6 +171,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/hero_command_rules_ai.cpp
 	core/port/hero_commit.cpp
 	core/port/hero_progression_rules.cpp
+	core/port/hero_progression_rules_shared.cpp
 	core/port/hero_rules_turn.cpp
 	core/port/mine_rules.cpp
 	core/port/mine_rules_ai.cpp
@@ -187,10 +191,12 @@ add_library(aurelion_rules_core STATIC
 	core/port/overworld_rules_ai_recovery.cpp
 	core/port/overworld_rules_ai_sites.cpp
 	core/port/overworld_rules_ai_towns.cpp
+	core/port/overworld_rules_shared.cpp
 	core/port/overworld_rules_turn.cpp
 	core/port/overworld_state_normalize.cpp
 	core/port/overworld_towns_normalize.cpp
 	core/port/overworld_transit_normalize.cpp
+	core/port/phase4_shared_stubs.cpp
 	core/port/player_elimination.cpp
 	core/port/player_identity_rules.cpp
 	core/port/player_identity_rules_ai.cpp

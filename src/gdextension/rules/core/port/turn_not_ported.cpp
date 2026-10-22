@@ -55,11 +55,6 @@ double _upgrade_value(State &state, DictRef town, DictRef building) {
 
 namespace artifact_rules {
 
-DictRef _select_rarity_source_reward(State &state, Atom source_tag, Atom rarity, Atom source_key, ArrayRef excluded_artifact_ids) {
-	(void)source_tag; (void)rarity; (void)source_key; (void)excluded_artifact_ids; (void)state;
-	throw state::NotPorted("ArtifactRules._select_rarity_source_reward");
-}
-
 ArrayRef artifact_set_runtime_state(State &state, DictRef hero_state) {
 	(void)hero_state; (void)state;
 	throw state::NotPorted("ArtifactRules.artifact_set_runtime_state");
@@ -101,11 +96,6 @@ DictRef _active_resource_defender_entry(State &state, DictRef session, DictRef n
 DictRef _active_town_defender_entry(State &state, DictRef session, DictRef town, Atom faction_filter) {
 	(void)session; (void)town; (void)faction_filter; (void)state;
 	throw state::NotPorted("EnemyAdventureRules._active_town_defender_entry");
-}
-
-ArrayRef _ai_hero_task_prune_live_tasks(State &state, ArrayRef tasks, int64_t day) {
-	(void)tasks; (void)day; (void)state;
-	throw state::NotPorted("EnemyAdventureRules._ai_hero_task_prune_live_tasks");
 }
 
 int64_t _ai_hero_task_retention_priority(State &state, DictRef task) {
@@ -537,11 +527,6 @@ DictRef _find_active_town_by_visit_context(State &state, DictRef session) {
 	throw state::NotPorted("OverworldRules._find_active_town_by_visit_context");
 }
 
-Atom _normalized_enemy_front_faction_id(State &state, DictRef session, DictRef front, DictRef town) {
-	(void)session; (void)front; (void)town; (void)state;
-	throw state::NotPorted("OverworldRules._normalized_enemy_front_faction_id");
-}
-
 Atom _posture_label(State &state, Atom posture) {
 	(void)posture; (void)state;
 	throw state::NotPorted("OverworldRules._posture_label");
@@ -597,11 +582,6 @@ bool _scenario_town_started_enemy(State &state, DictRef session, Atom placement_
 	throw state::NotPorted("OverworldRules._scenario_town_started_enemy");
 }
 
-void _teach_visiting_town_spells(State &state, DictRef session, DictRef town) {
-	(void)session; (void)town; (void)state;
-	throw state::NotPorted("OverworldRules._teach_visiting_town_spells");
-}
-
 Atom _terrain_name_at(State &state, DictRef session, int64_t x, int64_t y) {
 	(void)session; (void)x; (void)y; (void)state;
 	throw state::NotPorted("OverworldRules._terrain_name_at");
@@ -640,11 +620,6 @@ int64_t _town_garrison_headcount(State &state, DictRef town) {
 int64_t _town_garrison_strength(State &state, DictRef town) {
 	(void)town; (void)state;
 	throw state::NotPorted("OverworldRules._town_garrison_strength");
-}
-
-int64_t _town_occupation_seed_pressure(State &state, DictRef session, DictRef town) {
-	(void)session; (void)town; (void)state;
-	throw state::NotPorted("OverworldRules._town_occupation_seed_pressure");
 }
 
 int64_t _town_pressure_output(State &state, DictRef town, const Value &session, DictRef metric_context, int64_t reinforcement_quality) {

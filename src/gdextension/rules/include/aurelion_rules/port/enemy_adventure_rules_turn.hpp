@@ -23,16 +23,11 @@ using state::State;
 using state::Value;
 
 // Ported in enemy_adventure_rules_turn.cpp.
-Atom _ai_hero_task_actor_id_from_raid(State &state, DictRef raid);
-void _ai_hero_task_finish_live_assignment(State &state, DictRef session, Atom faction_id, DictRef raid, Atom task_status, Atom validation);
 DictRef _apply_resource_site_artifact_reward_to_raid(State &state, DictRef session, Atom faction_id, DictRef raid, DictRef node, DictRef site);
 DictRef _apply_resource_site_claim_recruits_to_raid(State &state, DictRef session, Atom faction_id, DictRef raid, DictRef site);
 DictRef _apply_resource_site_spell_reward_to_commander(State &state, DictRef session, Atom faction_id, DictRef raid, DictRef site);
-DictRef _award_enemy_commander_experience(State &state, DictRef commander_state, int64_t amount);
 bool _break_dwelling_guard_by_raid(State &state, DictRef session, DictRef raid, Atom faction_id, int64_t index, DictRef site);
 int64_t _commander_map_level(State &state, const Value &source);
-Atom _commander_memory_target_kind_for_outcome(State &state, Atom outcome_id, DictRef memory);
-Atom _commander_name_from_source(State &state, const Value &source);
 Atom _default_public_importance(State &state, Atom target_kind, ArrayRef reason_codes);
 Atom _describe_recruit_set(State &state, const Value &recruits);
 Atom _describe_resource_set(State &state, DictRef resources);
@@ -46,7 +41,6 @@ Atom _raid_name(State &state, DictRef raid);
 DictRef _raid_reinforcement_army(State &state, DictRef raid);
 DictRef _raid_site_recruit_admission(State &state, DictRef raid, DictRef site);
 DictRef _record_adventure_objective_success(State &state, DictRef session, Atom faction_id, DictRef raid, Atom outcome_id, Atom active_placement_id = state::key::empty);
-DictRef _record_commander_adaptive_task_memory(State &state, DictRef commander_state, Atom outcome_id);
 int64_t _recruit_payload_value(State &state, const Value &recruits);
 int64_t _resource_route_pressure_value(State &state, DictRef site);
 DictRef _resource_site_claim_recruits(State &state, DictRef site);
@@ -57,20 +51,13 @@ DictRef _secure_resource_target(State &state, DictRef session, DictRef raid, Dic
 int64_t _target_level(State &state, DictRef session, Atom kind, Atom target_id, Atom faction_id = state::key::empty, int64_t fallback = 0);
 int64_t _target_resource_value(State &state, const Value &rewards);
 DictRef _visit_building_by_raid(State &state, DictRef session, DictRef raid, DictRef state_, Atom faction_id, DictRef node_result, DictRef site, DictRef _config);
-DictRef _with_runtime_spellbook_state(State &state, DictRef base_state, const Value &runtime_state);
-DictRef advance_commander_record(State &state, DictRef commander_state, Atom outcome_id);
 DictRef build_ai_event_record(State &state, DictRef session, DictRef config, Atom event_type, DictRef actor, DictRef target, DictRef options);
-Atom commander_display_name(State &state, const Value &source, bool include_veterancy = true);
-DictRef commander_live_role_state(State &state, const Value &source);
-DictRef commander_target_memory(State &state, const Value &source);
 Atom raid_commander_display_name(State &state, DictRef encounter);
 Atom raid_commander_name(State &state, DictRef encounter);
-void sync_commander_state_to_roster(State &state, DictRef session, Atom faction_id, const Value &commander_state, Atom status_override = state::key::empty, Atom active_placement_id = state::key::empty, int64_t recovery_day = -1, Atom last_outcome = state::key::empty);
 
 // Not run by the six seeds: each throws state::NotPorted (turn_not_ported.cpp).
 DictRef _active_resource_defender_entry(State &state, DictRef session, DictRef node, Atom faction_filter = state::key::empty);
 DictRef _active_town_defender_entry(State &state, DictRef session, DictRef town, Atom faction_filter = state::key::empty);
-ArrayRef _ai_hero_task_prune_live_tasks(State &state, ArrayRef tasks, int64_t day);
 int64_t _ai_hero_task_retention_priority(State &state, DictRef task);
 DictRef _clear_regroup_target(State &state, DictRef raid);
 void _clear_resource_defender_metadata(State &state, DictRef node);
@@ -94,7 +81,6 @@ ArrayRef _player_hero_snapshots_for_intercept(State &state, DictRef session, boo
 int64_t _preferred_commander_index_for_encounter(State &state, DictRef encounter);
 DictRef _secure_native_passage_target(State &state, DictRef session, DictRef raid, DictRef state_, Atom faction_id, DictRef node, bool preserve_target = false);
 Atom _town_controller_faction_id(State &state, DictRef town_state);
-bool _town_is_objective_anchor(State &state, DictRef session, Atom placement_id);
 bool commander_can_deploy(State &state, const Value &source);
 Atom commander_recent_outcome_brief(State &state, const Value &source);
 DictRef enemy_strategy(State &state, DictRef config, Atom faction_id);

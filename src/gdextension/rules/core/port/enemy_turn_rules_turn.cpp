@@ -221,26 +221,6 @@ void take(State &state, DictRef node, DictRef site, Atom unit_id, int64_t count,
 	state.set(node, str(key::dwelling_week), int_value(week_index(state, day)));
 }
 
-void record_guard_result(State &state, DictRef node, Atom side, ArrayRef survivor_stacks, bool won, int64_t day) {
-	const DictRef survivors = dict_field_or_new(state, node, key::dwelling_guard_survivors);
-	if (won) {
-		const DictRef beaten = dict_field_or_new(state, node, key::dwelling_guard_beaten);
-		state.set(beaten, str(side), int_value(day));
-		state.set(node, str(key::dwelling_guard_beaten), dict_value(beaten));
-		state.erase(survivors, str(side));
-	} else {
-		const DictRef record = state.new_dict();
-		state.set(record, str(key::week), int_value(week_index(state, day)));
-		state.set(record, str(key::stacks), array_value(gd::deep_duplicate_array(state, survivor_stacks)));
-		state.set(survivors, str(side), dict_value(record));
-	}
-	if (gd::is_empty(state, survivors)) {
-		state.erase(node, str(key::dwelling_guard_survivors));
-	} else {
-		state.set(node, str(key::dwelling_guard_survivors), dict_value(survivors));
-	}
-}
-
 Atom guard_key(State &state, Atom placement_id) {
 	return gd::format(state, key::s_s_5, { str(key::dwelling_guard_3), str(placement_id) });
 }
