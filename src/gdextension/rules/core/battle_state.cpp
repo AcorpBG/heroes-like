@@ -114,6 +114,18 @@ Value Backing::object_get(State &, uint32_t, uint32_t) {
 	no_host("Reading an object's property");
 }
 
+Value Backing::object_view(State &, uint32_t) {
+	no_host("An object's view");
+}
+
+Value Backing::view_object(State &, uint32_t) {
+	return Value();
+}
+
+void Backing::object_set(State &, uint32_t, uint32_t, const Value &) {
+	no_host("Setting an object's property");
+}
+
 bool Backing::rng_get(uint32_t, uint64_t &, uint64_t &) {
 	no_host("A RandomNumberGenerator");
 }
