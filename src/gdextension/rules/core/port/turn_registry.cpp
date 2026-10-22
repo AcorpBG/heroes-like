@@ -140,6 +140,7 @@ const Function kFunctions[] = {
 	CHECK(AiHeroRules, _meet_hero, 4, true, return gd::dict_value(ai_hero_rules::_meet_hero(s, D(a, 0), D(a, 1), I(a, 2), D(a, 3)))),
 	CHECK(AiHeroRules, _record_hero_defeat, 3, true, ai_hero_rules::_record_hero_defeat(s, D(a, 0), S(a, 1), D(a, 2)); return nil()),
 	CHECK(AiHeroRules, _recruit_town, 4, true, return gd::array_value(ai_hero_rules::_recruit_town(s, D(a, 0), D(a, 1), I(a, 2), D(a, 3)))),
+	CHECK(AiHeroRules, _start_player_battle, 6, true, return gd::dict_value(ai_hero_rules::_start_player_battle(s, D(a, 0), D(a, 1), I(a, 2), D(a, 3), S(a, 4), D(a, 5)))),
 	CHECK(AiHeroRules, _store_entry, 3, true, ai_hero_rules::_store_entry(s, D(a, 0), I(a, 1), D(a, 2)); return nil()),
 	CHECK(AiHeroRules, _take_artifact, 4, true, return gd::dict_value(ai_hero_rules::_take_artifact(s, D(a, 0), D(a, 1), I(a, 2), D(a, 3)))),
 	CHECK(AiHeroRules, _take_garrison, 5, true, return gd::dict_value(ai_hero_rules::_take_garrison(s, D(a, 0), D(a, 1), D(a, 2), D(a, 3), B(a, 4)))),
@@ -566,26 +567,13 @@ const Function kFunctions[] = {
 #undef CHECK
 #undef PORT
 
-// The start of a battle against a human stays GDScript. The ports call it
-// through TurnEngine.host_call (turn_hosts.cpp), which a shadow check meets at
-// the target's wrapper (TurnEngine.host_point). The battle preview is native
-// (ai_battle_preview.cpp, Phase 2a).
-#define HOST(script, fn, arity) { #script "." #fn, arity }
-const Host kHosts[] = {
-	{"TurnEngine.host_call", 3},
-	{"TurnEngine.pure_host_call", 3, true},
-	HOST(AiHeroRules, _start_player_battle, 6),
-};
-#undef HOST
-
 } // namespace
 
 // The AI turn port's table, listed in registry_tables.cpp. Its switches run
-// the GDScript body on a path the port leaves to GDScript.
+// the GDScript body on a path the port leaves to GDScript. The turn calls no
+// GDScript (slice 4.3): its battles are Phase 2a's preview and payload ports.
 Table turn_table() {
 	Table table{"HEROES_NATIVE_TURN_LOG", kFunctions, sizeof(kFunctions) / sizeof(kFunctions[0])};
-	table.hosts = kHosts;
-	table.host_count = sizeof(kHosts) / sizeof(kHosts[0]);
 	table.fallback = true;
 	return table;
 }

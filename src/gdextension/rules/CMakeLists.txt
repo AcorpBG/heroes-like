@@ -238,7 +238,6 @@ add_library(aurelion_rules_core STATIC
 	core/port/town_rules_ai.cpp
 	core/port/town_rules_shared.cpp
 	core/port/turn_forecast.cpp
-	core/port/turn_hosts.cpp
 	core/port/turn_order.cpp
 	core/port/turn_port.cpp
 	core/port/turn_rare_paths.cpp

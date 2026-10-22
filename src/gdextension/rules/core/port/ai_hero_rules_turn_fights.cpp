@@ -1,10 +1,13 @@
 // AiHeroRules: where a computer player's heroes fight and take things: guards,
 // heroes, towns, sites and artifacts, the auto-resolved battles (the battle
-// itself is a host call, turn_hosts.hpp) and their logs and events.
+// itself is Phase 2a's preview, ai_battle_preview.hpp), the battles a human
+// fights, and their logs and events.
 
+#include "aurelion_rules/port/ai_battle_preview.hpp"
 #include "aurelion_rules/port/ai_hero_rules_turn.hpp"
 #include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/artifact_rules_turn.hpp"
+#include "aurelion_rules/port/battle_payload.hpp"
 #include "aurelion_rules/port/creature_dwelling_rules_ai.hpp"
 #include "aurelion_rules/port/creature_dwelling_rules_turn.hpp"
 #include "aurelion_rules/port/enemy_adventure_rules_turn.hpp"
@@ -21,7 +24,6 @@
 #include "aurelion_rules/port/resource_node_payload_rules_ai.hpp"
 #include "aurelion_rules/port/session_view.hpp"
 #include "aurelion_rules/port/spell_rules_turn.hpp"
-#include "aurelion_rules/port/turn_hosts.hpp"
 
 #include <cmath>
 #include <cstdint>
@@ -1238,6 +1240,40 @@ DictRef _attack_town(State &state, DictRef session, DictRef context, int64_t ind
 	const ArrayRef reasons = string_list(state, {key::town_captured, previous_owner == key::player ? key::player_town : key::neutral_town});
 	state.append(events, dict_value(_event(state, session, context, key::ai_town_captured, entry, target, summary, reasons)));
 	return arrived_events(state, array_value(events));
+}
+
+// Battles against the human are played by the human, exactly like any other
+// battle against an enemy hero. The payload is Phase 2a's port; the session
+// takes the battle in its view's fields.
+DictRef _start_player_battle(State &state, DictRef session, DictRef context, int64_t index, DictRef battle_context, Atom summary, DictRef target) {
+	const DictRef entry = encounter_at(state, session, index);
+	state.set(entry, str(key::battle_context), dict_value(battle_context));
+	_store_entry(state, session, index, entry);
+	const DictRef payload = battle_rules::create_battle_payload(state, dict_value(session), entry);
+	if (gd::is_empty(state, payload)) {
+		state.erase(entry, str(key::battle_context));
+		_store_entry(state, session, index, entry);
+		return arrived_result(state);
+	}
+	state.set(session, str(key::battle), dict_value(payload));
+	state.set(session, str(key::game_state), str(key::battle));
+	overworld_turn_playback::action(state, dict_value(session), entry, key::engages_a_defending_army);
+	const bool town_defense = gd::stringify(state, state.get(battle_context, str(key::type), str(key::empty))) == key::town_defense;
+	const Atom placement_id = gd::stringify(state, state.get(target, str(key::placement_id), state.get(target, str(key::id), str(key::empty))));
+	const Atom label = town_defense ? enemy_turn_rules::_town_name(state, target) : gd::stringify(state, state.get(target, str(key::name), str(key::empty)));
+	const DictRef event_fields = event_target(state, town_defense ? key::town : key::hero, placement_id, label, gd::int_field(state, entry, key::x, 0), gd::int_field(state, entry, key::y, 0));
+	state.set(event_fields, str(key::target_public_importance), str(key::critical));
+	const Atom event_type = town_defense ? key::ai_town_defense_battle_queued : key::ai_hero_intercept_battle_queued;
+	const DictRef event = _event(state, session, context, event_type, entry, event_fields, summary, string_list(state, {key::battle_handoff}));
+	const DictRef result = arrived_result(state);
+	state.set(result, str(key::battle_started), bool_value(true));
+	const ArrayRef messages = state.new_array();
+	state.append(messages, str(summary));
+	state.set(result, str(key::messages), array_value(messages));
+	const ArrayRef events = state.new_array();
+	state.append(events, dict_value(event));
+	state.set(result, str(key::events), array_value(events));
+	return result;
 }
 
 void _record_hero_defeat(State &state, DictRef session, Atom controller, DictRef entry) {
