@@ -405,6 +405,9 @@ Release packaging still stops on the 4.7 GB export pack, which predates the rule
     Phases 3 and 5 paused, then layer 5 starts whatever the number.
   - With the native board-read memo (2026-10-21, "G1 on `standard` after the native memo", no other load): S is
     7.89 to 9.45 on `standard`, over 5x and under 10x (r 10.79 needed). Layer 5 starts.
+  - Formal pre-merge G1, 2026-10-22 (slice 11, "The pre-merge suite and the merge"), with host calls: S 11.28 to
+    13.95 on `standard` and 8.90 to 10.99 on the six seeds. Native mode measured on whole resolves: 10.84x on
+    `standard` and 8.15x on the six seeds after merging main (6.85x and 4.15x before). The branch merges (D8).
 - **Identity:** per-action stream (order taken, RNG state and roll count, simulation-key digest) on the tuner suites,
   every AI battle in the six seeds, and JSON round-tripped payloads; shadow mode on every resolve; daily digests; the
   payload corpus across compilers; mid-battle save/load both ways between the native build and the tagged pre-merge
@@ -412,6 +415,9 @@ Release packaging still stops on the 4.7 GB export pack, which predates the rule
 - **Exit:** all battles native, the GDScript fight loop and BattleAiRules deleted, every deleted name grepped across
   `tests/` and `tools/` (`core_script_compile_check` covers only `scripts/` and `scenes/`), the runner and tuner run,
   core suite on Windows (Linux in the owner's Linux pass), project.md ownership updated.
+  - Owner decision 2026-10-22: the GDScript copies and the switch stay at the merge until Phase 2's battle tool is in,
+    so the tuner keeps working. The deletion, the grep of deleted names and D6's test retirements move to Phase 2
+    (slice 11).
 - **Gain:** large for battle-only work (the tuner); modest for whole games, bounded by the battle share from Phase 0.
 
 ### Phase 1 results (first slice: inventory, section 11, engine-exact helpers, 2026-10-20)
@@ -1178,18 +1184,8 @@ a41e38754 Windows binaries; runtime on main 6a8c9a736, 27bee9e26 Windows binarie
     and the AI never asks for them. They run only when a player orders a retreat or surrender that is not allowed: the
     order is refused and the battle goes on, one host call per refused order. An allowed one calls its `_finalize_*`
     once, and the battle ends.
-- **For the owner at the merge** (open, not settled):
-  - The rule "a ported function calls only ported functions" (slice 05) becomes "...or a registered GDScript host
-    target", as above.
-  - Events stay today's exact strings, built in C++. There are no structured records and no GDScript formatter, which
-    departs from the Phase 1 scope above.
-  - Not built:
-    - the native unit and ability tables per content revision (from 02);
-    - the human-seat corpus: 12 generated-map battle screen tests ran in shadow instead;
-    - host calls in the G1 replay harness (`tools/battle_port_g1/`), which the formal pre-merge G1 needs.
-  - The arena router: native and shadow resolves fail in the arena with an `int(Nil)` error. The router has no
-    BattleAiRules static vars, and the native scoring scope reads them. The options are in "G1 on `standard` with the
-    memos".
+- **At the merge:** the owner's decisions of 2026-10-22 on the host-call rule, the events, the tables, the human seat
+  and the arena are in slice 11 ("The pre-merge suite and the merge").
   - Still GDScript: battle setup (`create_battle_payload`, `normalize_battle_state`), the battle screen's `describe_*`,
     `intent_forecast_payload` and `get_action_surface`, and BattleActionPlayback's `begin` and `finish`.
 - **Review:** one reviewer on the five functions shadow did not reach (`_fallback_player_autoplay_decision`,
@@ -1203,6 +1199,64 @@ a41e38754 Windows binaries; runtime on main 6a8c9a736, 27bee9e26 Windows binarie
   - Core suite: 17/17 on Windows.
   - The Linux libraries in `bin/` are not rebuilt.
 
+**The pre-merge suite and the merge** (slice 11, 2026-10-22; branch commits 1142ede17 the G1 harness's host calls,
+0c25910a0 native by default, f8fac574f merge of main with Phase 5, e2611ac81 Windows binaries; main tagged
+`pre-native-phase1-battle` before the merge):
+- **Owner decisions at the merge** (2026-10-22):
+  - The rule "a ported function calls only ported functions" becomes "...or a registered GDScript host target" (the 8
+    in slice 10).
+  - Events stay today's exact strings, built in C++, with no structured records and no GDScript formatter. This
+    replaces the Phase 1 scope above.
+  - The native unit and ability tables per content revision go to Phase 2.
+  - The arena check runs `--plain`: the game's own BattleAiRules on both sides, no router (option (c) in "G1 on
+    `standard` with the memos"). Option (b), each side's weights as data, comes with Phase 2's battle tool.
+  - Human seat: the 12 generated-map battle screen tests in shadow stand in for the corpus. The owner plays a battle
+    or two after the merge.
+  - The GDScript copies and the switch stay until Phase 2's battle tool is in, so the tuner keeps working:
+    - `HEROES_NATIVE_BATTLE` is native by default (`BattleEngine.gd`); `gdscript` and `shadow` stay.
+    - `arena.py` sets `gdscript` for its workers when a router plays (code or weight variants, so `tune.py` and
+      `power_fit.py` too); `--plain` keeps the caller's switch. `git:<rev>` variants work as before.
+    - A battle change goes into the C++ and the GDScript in the same commit, checked with one six-seed shadow run
+      of the battle switch (AGENTS.md).
+    - The exit's deletion of the GDScript fight loop and BattleAiRules, the grep of every deleted name and D6's test
+      retirements move to Phase 2. Nothing is deleted at this merge.
+- **Merge of main:** `battle_keys.inc` drops the 13 keys main's `day_keys.inc` now holds with the same text.
+- **G1 harness:** the replay harness (`tools/battle_port_g1/`) captures the resolve as one entry and replays its host
+  calls from the recorded results, with the newer memos.
+- **Checks** (Windows):
+  - Arena `--plain`, 480 games per suite: native identical to GDScript with 0 errors on `standard` (29,473,853 native
+    calls) and `holdout` (27,546,302). Shadow 0 mismatches in 93,996,266 checks (`standard`, 576 functions) and
+    96,113,835 (`holdout`, 577).
+  - Payload corpus, the battle JSON round-tripped at its start: native identical to GDScript 480/480; shadow 0
+    mismatches in 94,284,055 (`standard`) and 96,403,222 (`holdout`) checks.
+  - Mid-battle save and load both ways: 12 steps in one mode, the battle through JSON and `normalize_battle_state`,
+    the rest in the other mode. GDScript to native (260 battles still running at the save) and native to GDScript are
+    identical to GDScript on both sides, 480/480, 0 errors.
+  - Shadow on the six seeds: 0 mismatches in 83,514,931 checks over 569 functions.
+  - Shadow on the 12 human-seat tests: 0 mismatches in 2,331,148 checks over 581 functions. 11 pass;
+    `battle_event_animation_state_report` fails the same way in GDScript mode.
+  - Reach: the runs together reach 615 of the 621 functions. An edge probe (the quick suite's battles with mutated
+    inputs) reached all 621, 0 mismatches in 43,776,346 checks on the calls GDScript runs without error, except 10
+    calls of `HeroProgressionRules._sum_bonus` with a String operand: the runtime's `float(String)` is not ported
+    (fails loudly; no content reaches it).
+  - Correctness replay: 239 resolves, 0 mismatches.
+  - Formal G1 (6 jobs, no other load):
+
+    | | `standard` | six seeds |
+    |---|---|---|
+    | c | 0.0103 | 0.0239 |
+    | r: same resolve / previous resolve / new State | 16.29 / 14.39 / 12.76 | 14.91 / 12.43 / 11.31 |
+    | S | 13.95 / 12.53 / 11.28 | 10.99 / 9.58 / 8.90 |
+    | native mode before merging main, whole resolves | 6.85x (74.26 s to 10.85 s) | 4.15x (88.85 s to 21.41 s) |
+    | native mode after merging main | 10.84x (70.30 s to 6.49 s) | 8.15x (88.88 s to 10.90 s) |
+
+    Before the merge of main, native mode paid about 4 ms per resolve beyond the replay (fit: 4.18 ms + T_gd/8.4 on
+    `standard`, 3.81 ms + T_gd/5.7 on the six seeds). Main's container fill (13a7a0c9a) brought it to about 2 ms
+    (1.97 ms + T_gd/12.7 and 2.08 ms + T_gd/11.5). The shipped figure is native mode's.
+  - After the merge of main: native mode against main identical on the six seeds (415 daily digests and the match
+    records); core suite 17/17; a two-generation `tune.py` run plays (its router in GDScript mode).
+  - The Linux libraries in `bin/` are not rebuilt.
+
 ### Phase 2: one payload builder, AI preview as one call, the battle tool
 
 - Battle payload creation (`BattleRules.gd:256-402`), stack and hero payloads, obstacles, and the end-of-battle numbers
@@ -1211,6 +1265,11 @@ a41e38754 Windows binaries; runtime on main 6a8c9a736, 27bee9e26 Windows binarie
   fields identical.
 - Transcendental math first appears here (`army_power`, `HeroProgressionRules.gd:646`): decision D4.
 - `battle_sim_cli` (or an in-Godot threaded runner, decision D7) becomes a backend for `tune.py` and `arena.py`.
+- From Phase 1 (owner decisions 2026-10-22): the native unit and ability tables per content revision; the arena's
+  native router (each side's weights as data, option (b)); then, once `tune.py` and `arena.py` run on the battle tool,
+  the GDScript fight loop, BattleAiRules and the battle switch's other GDScript copies are deleted, every deleted name
+  grepped across `tests/` and `tools/`, with D6's test retirements. Until then a battle change goes into both copies
+  (AGENTS.md).
 - **Gate G2:** a battles-per-second target the owner sets (the synthesis proposes 1M battles in 2 h on this machine).
   **Battle-level genetic algorithms (unit stats, battle-AI weights) run at full speed from here.**
 

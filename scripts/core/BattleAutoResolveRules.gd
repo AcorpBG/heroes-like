@@ -5,6 +5,8 @@ const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd
 const BattleRulesScript = preload("res://scripts/core/BattleRules.gd")
 const BattleAiRulesScript = preload("res://scripts/core/BattleAiRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
+const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
+static var _battle_engine_mode: int = BattleEngine.mode
 
 ## A loop guard: the battle clock ends every battle first. Each of up to seven
 ## stacks a side may wait and then act in each of twelve rounds, and the hero
@@ -27,7 +29,17 @@ const TERMINAL_STATES := [
 ## the stack's order only. An advance is carried out as the enemy's is
 ## (BattleRules.ai_advance_plan): a strike on the best enemy in reach, a wait
 ## while enemies still close in, else the walk.
-static func player_autoplay_decision(
+static func player_autoplay_decision(session: SessionStateStoreScript.SessionData, apply_selection: bool = false, allow_hero_cast: bool = true) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return player_autoplay_decision__gd(session, apply_selection, allow_hero_cast)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAutoResolveRules.player_autoplay_decision", [session, apply_selection, allow_hero_cast])
+	var before := BattleEngine.before_writing(&"BattleAutoResolveRules.player_autoplay_decision", [session, apply_selection, allow_hero_cast])
+	var result = player_autoplay_decision__gd(session, apply_selection, allow_hero_cast)
+	BattleEngine.check_writing(&"BattleAutoResolveRules.player_autoplay_decision", before, [session, apply_selection, allow_hero_cast], result)
+	return result
+
+static func player_autoplay_decision__gd(
 	session: SessionStateStoreScript.SessionData,
 	apply_selection: bool = false,
 	allow_hero_cast: bool = true
@@ -144,7 +156,17 @@ static func player_autoplay_decision(
 ## asks whether the player wins without a loss. Nothing brings a fallen
 ## creature back before the battle ends except the victory recovery of the
 ## player's hero, so with that the battle always runs to its end.
-static func resolve_active_battle(
+static func resolve_active_battle(session: SessionStateStoreScript.SessionData, step_limit: int = DEFAULT_STEP_LIMIT, stop_below_player_creatures: int = 0) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return resolve_active_battle__gd(session, step_limit, stop_below_player_creatures)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAutoResolveRules.resolve_active_battle", [session, step_limit, stop_below_player_creatures])
+	var before := BattleEngine.before_writing(&"BattleAutoResolveRules.resolve_active_battle", [session, step_limit, stop_below_player_creatures])
+	var result = resolve_active_battle__gd(session, step_limit, stop_below_player_creatures)
+	BattleEngine.check_writing(&"BattleAutoResolveRules.resolve_active_battle", before, [session, step_limit, stop_below_player_creatures], result)
+	return result
+
+static func resolve_active_battle__gd(
 	session: SessionStateStoreScript.SessionData,
 	step_limit: int = DEFAULT_STEP_LIMIT,
 	stop_below_player_creatures: int = 0
@@ -249,10 +271,28 @@ static func resolve_active_battle(
 
 
 static func is_terminal_state(state: String) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return is_terminal_state__gd(state)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleAutoResolveRules.is_terminal_state", [state])
+	var result = is_terminal_state__gd(state)
+	BattleEngine.check(&"BattleAutoResolveRules.is_terminal_state", [state], result)
+	return result
+
+static func is_terminal_state__gd(state: String) -> bool:
 	return state in TERMINAL_STATES
 
 
 static func _player_creatures_standing(battle: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _player_creatures_standing__gd(battle)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleAutoResolveRules._player_creatures_standing", [battle])
+	var result = _player_creatures_standing__gd(battle)
+	BattleEngine.check(&"BattleAutoResolveRules._player_creatures_standing", [battle], result)
+	return result
+
+static func _player_creatures_standing__gd(battle: Dictionary) -> int:
 	var total := 0
 	for stack in battle.get("stacks", []):
 		if stack is Dictionary and String(stack.get("side", "")) == "player":
@@ -260,7 +300,17 @@ static func _player_creatures_standing(battle: Dictionary) -> int:
 	return total
 
 
-static func _perform_player_order(
+static func _perform_player_order(session: SessionStateStoreScript.SessionData, decision: Dictionary, action: String) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _perform_player_order__gd(session, decision, action)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAutoResolveRules._perform_player_order", [session, decision, action])
+	var before := BattleEngine.before_writing(&"BattleAutoResolveRules._perform_player_order", [session, decision, action])
+	var result = _perform_player_order__gd(session, decision, action)
+	BattleEngine.check_writing(&"BattleAutoResolveRules._perform_player_order", before, [session, decision, action], result)
+	return result
+
+static func _perform_player_order__gd(
 	session: SessionStateStoreScript.SessionData,
 	decision: Dictionary,
 	action: String
@@ -284,7 +334,17 @@ static func _perform_player_order(
 	return BattleRulesScript.perform_player_action(session, action)
 
 
-static func _fallback_player_autoplay_decision(
+static func _fallback_player_autoplay_decision(session: SessionStateStoreScript.SessionData, reason: String, apply_selection: bool, scored_decision: Dictionary = {}) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _fallback_player_autoplay_decision__gd(session, reason, apply_selection, scored_decision)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleAutoResolveRules._fallback_player_autoplay_decision", [session, reason, apply_selection, scored_decision])
+	var before := BattleEngine.before_writing(&"BattleAutoResolveRules._fallback_player_autoplay_decision", [session, reason, apply_selection, scored_decision])
+	var result = _fallback_player_autoplay_decision__gd(session, reason, apply_selection, scored_decision)
+	BattleEngine.check_writing(&"BattleAutoResolveRules._fallback_player_autoplay_decision", before, [session, reason, apply_selection, scored_decision], result)
+	return result
+
+static func _fallback_player_autoplay_decision__gd(
 	session: SessionStateStoreScript.SessionData,
 	reason: String,
 	apply_selection: bool,
@@ -313,6 +373,16 @@ static func _fallback_player_autoplay_decision(
 ## The weakest living enemy stack: least total health, then fewest creatures
 ## left (battle stacks have no "count"; see BattleRules._alive_count).
 static func _select_focus_enemy(session: SessionStateStoreScript.SessionData) -> void:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		_select_focus_enemy__gd(session)
+	elif _battle_engine_mode == BattleEngine.NATIVE:
+		BattleEngine.native_writing(&"BattleAutoResolveRules._select_focus_enemy", [session])
+	else:
+		var before := BattleEngine.before_writing(&"BattleAutoResolveRules._select_focus_enemy", [session])
+		_select_focus_enemy__gd(session)
+		BattleEngine.check_writing(&"BattleAutoResolveRules._select_focus_enemy", before, [session], null)
+
+static func _select_focus_enemy__gd(session: SessionStateStoreScript.SessionData) -> void:
 	var best_id := ""
 	var best_health := 0
 	var best_alive := 0
@@ -333,7 +403,16 @@ static func _select_focus_enemy(session: SessionStateStoreScript.SessionData) ->
 		BattleRulesScript.select_target(session, best_id)
 
 
-static func _resolve_result(
+static func _resolve_result(session: SessionStateStoreScript.SessionData, completed: bool, stop_reason: String, state: String, steps: int, player_orders: int, enemy_ready_ticks: int, invalid_orders: int, forbidden_exit_orders: int, action_counts: Dictionary, terminal_result: Dictionary, last_result: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _resolve_result__gd(session, completed, stop_reason, state, steps, player_orders, enemy_ready_ticks, invalid_orders, forbidden_exit_orders, action_counts, terminal_result, last_result)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleAutoResolveRules._resolve_result", [session, completed, stop_reason, state, steps, player_orders, enemy_ready_ticks, invalid_orders, forbidden_exit_orders, action_counts, terminal_result, last_result])
+	var result = _resolve_result__gd(session, completed, stop_reason, state, steps, player_orders, enemy_ready_ticks, invalid_orders, forbidden_exit_orders, action_counts, terminal_result, last_result)
+	BattleEngine.check(&"BattleAutoResolveRules._resolve_result", [session, completed, stop_reason, state, steps, player_orders, enemy_ready_ticks, invalid_orders, forbidden_exit_orders, action_counts, terminal_result, last_result], result)
+	return result
+
+static func _resolve_result__gd(
 	session: SessionStateStoreScript.SessionData,
 	completed: bool,
 	stop_reason: String,

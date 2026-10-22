@@ -6,6 +6,8 @@ const EQUIPMENT_SLOTS := ["boots", "banner", "armor", "trinket", "trinket_2"]
 const ARTIFACT_SCHEMA_ID := "artifact_taxonomy_v1"
 const ARTIFACT_SOURCE_REWARD_SCHEMA_ID := "artifact_source_reward_v1"
 const NodePayload = preload("res://scripts/core/ResourceNodePayloadRules.gd")
+const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
+static var _battle_engine_mode: int = BattleEngine.mode
 const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
 static var _turn_engine_mode: int = TurnEngine.mode
 const ARTIFACT_CLASSES := ["common", "crafted", "faction", "accord", "relic", "cursed", "set_piece", "old_measure", "scenario"]
@@ -322,6 +324,16 @@ static func artifact_set_insignia_state(set_id: String) -> Dictionary:
 	}
 
 static func spell_affinity_records(hero_state: Dictionary, spell: Dictionary = {}) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return spell_affinity_records__gd(hero_state, spell)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"ArtifactRules.spell_affinity_records", [hero_state, spell])
+	var before := BattleEngine.before_writing(&"ArtifactRules.spell_affinity_records", [hero_state, spell])
+	var result = spell_affinity_records__gd(hero_state, spell)
+	BattleEngine.check_writing(&"ArtifactRules.spell_affinity_records", before, [hero_state, spell], result)
+	return result
+
+static func spell_affinity_records__gd(hero_state: Dictionary, spell: Dictionary = {}) -> Array:
 	var records := []
 	var modifiers = aggregate_bonuses(hero_state).get("spell_modifiers", [])
 	if not (modifiers is Array):
@@ -336,6 +348,16 @@ static func spell_affinity_records(hero_state: Dictionary, spell: Dictionary = {
 	return records
 
 static func spell_mana_cost_delta(hero_state: Dictionary, spell: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return spell_mana_cost_delta__gd(hero_state, spell)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"ArtifactRules.spell_mana_cost_delta", [hero_state, spell])
+	var before := BattleEngine.before_writing(&"ArtifactRules.spell_mana_cost_delta", [hero_state, spell])
+	var result = spell_mana_cost_delta__gd(hero_state, spell)
+	BattleEngine.check_writing(&"ArtifactRules.spell_mana_cost_delta", before, [hero_state, spell], result)
+	return result
+
+static func spell_mana_cost_delta__gd(hero_state: Dictionary, spell: Dictionary) -> int:
 	var delta := 0
 	for modifier in spell_affinity_records(hero_state, spell):
 		delta += int(modifier.get("mana_cost_delta", 0))
@@ -2277,6 +2299,15 @@ static func _artifact_spell_modifier_records(artifact: Dictionary, artifact_id: 
 	return records
 
 static func _spell_modifier_matches(modifier: Dictionary, spell: Dictionary) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _spell_modifier_matches__gd(modifier, spell)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"ArtifactRules._spell_modifier_matches", [modifier, spell])
+	var result = _spell_modifier_matches__gd(modifier, spell)
+	BattleEngine.check(&"ArtifactRules._spell_modifier_matches", [modifier, spell], result)
+	return result
+
+static func _spell_modifier_matches__gd(modifier: Dictionary, spell: Dictionary) -> bool:
 	if spell.is_empty():
 		return true
 	var effect = spell.get("effect", {})
