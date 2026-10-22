@@ -18,7 +18,6 @@
 #include "aurelion_rules/port/content_service_ai.hpp"
 #include "aurelion_rules/port/overworld_rules.hpp"
 #include "aurelion_rules/port/session_view.hpp"
-#include "aurelion_rules/port/turn_hosts.hpp"
 
 #include "aurelion_rules/compat/godot_math.hpp"
 #include "aurelion_rules/compat/godot_string.hpp"
@@ -257,7 +256,6 @@ DictRef _attack_player_hero(State &state, DictRef session, DictRef context, int6
 	const Atom attacker = hero_name(state, encounter_at(state, session, index));
 	const Atom defender = gd::stringify(state, state.get(hero, str(key::name), str(key::the_hero)));
 	const Atom summary = gd::format(state, key::s_attacks_s, { str(attacker), str(defender) });
-	// A host call: nothing is read after it.
 	return _start_player_battle(state, session, context, index, battle_context, summary, hero);
 }
 

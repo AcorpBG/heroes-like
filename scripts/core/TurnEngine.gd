@@ -15,17 +15,14 @@ extends RefCounted
 ## very overworld, battle and flags Dictionaries among them, its metadata under
 ## "meta" and the session itself under "object". After a native call the
 ## session takes the view's fields back. In shadow mode every open check reads
-## one view per session, brought up to date before each check and host point.
-## Host calls: the turn's battles stay GDScript until Phase 1's merge. The
-## native port calls them through host_call, which hands the target the session
-## itself. In shadow mode the native port stops there, and the target's wrapper
-## checks it (host_point).
+## one view per session, brought up to date before each check.
+## The turn calls no GDScript (slice 4.3): its battles are Phase 2a's native
+## preview and payload.
 ## A path the port leaves to GDScript (state::NotPorted) runs the whole day in
-## GDScript from the state the day started from, if no full host call came
-## first: the native call writes nothing until it ends, and what a pure host
-## call wrote back is undone (PortBridge::undo_write_backs). Each such day
-## prints a NATIVE FALLBACK line naming the path. After a full host call it is
-## a native failure.
+## GDScript from the state the day started from: the native call writes
+## nothing until it ends. Each such day prints a NATIVE FALLBACK line naming the
+## path. After a host call (the battle payload's profile record, only while
+## profiling is on) it is a native failure.
 ## Mismatches and native failures print a SCRIPT ERROR (the first 20), which
 ## fails rules_parity runs and the core suite, and, with HEROES_NATIVE_TURN_LOG
 ## set to a folder, go with every function's counts into shadow_<pid>.json there.
@@ -45,12 +42,6 @@ const SESSION_FIELDS := [
 ]
 const META := "meta"
 const OBJECT := "object"
-## The host functions the native ports call; their first argument names the
-## target (turn_registry.cpp lists the targets).
-const HOST_CALL := &"TurnEngine.host_call"
-const PURE_HOST_CALL := &"TurnEngine.pure_host_call"
-## The host targets that change nothing the native call holds (pure_host_call).
-const PURE_TARGETS := [&"AiHeroRules._simulate_battle"]
 
 static var mode: int = _mode_from_environment()
 ## Shadow: the view of each session the open checks read, by the session's
@@ -109,54 +100,6 @@ static func check_writing(_name: StringName, before: int, args: Array, result: V
 		_open_checks.resize(before)
 	if _open_checks.is_empty():
 		_shared_views.clear()
-
-## Shadow, in a host target's wrapper just before its body runs: every open
-## check whose native run stopped at this host call is checked here
-## (port_validate_point), as the native port calls it: host_call with the
-## target's name, the session's view and the arguments.
-static func host_point(name: StringName, args: Array) -> void:
-	for open in _open_checks:
-		if open is Array:
-			_shared(open)
-	var views := _shared(args)
-	var session_view: Variant = null
-	for index in range(args.size()):
-		if args[index] is SessionStateStoreScript.SessionData:
-			session_view = views[index]
-			break
-	NativeRules.api().port_validate_point(PURE_HOST_CALL if PURE_TARGETS.has(name) else HOST_CALL, [name, session_view, views])
-
-## A host call of a native port: the session takes its view's fields, the
-## target runs with the session in its view's place, and the view takes the
-## session's fields back.
-static func host_call(name: StringName, view: Variant, args: Array) -> Variant:
-	var session: SessionStateStoreScript.SessionData = view.get(OBJECT) if view is Dictionary else null
-	if session != null:
-		_take_view(session, view)
-	var result: Variant = _call_target(name, session, view, args)
-	if session != null:
-		_refresh_view(view, session)
-	return result
-
-## host_call of a target that changes nothing (PURE_TARGETS): it reads the
-## session's day and copies of its other arguments and returns new containers,
-## so the native call reads nothing again afterwards. The session keeps its
-## own fields: if the day falls back to GDScript afterwards, the native call's
-## write-back is undone and the session is as the day found it.
-static func pure_host_call(name: StringName, view: Variant, args: Array) -> Variant:
-	var session: SessionStateStoreScript.SessionData = view.get(OBJECT) if view is Dictionary else null
-	if session != null and view.get("day") != session.day:
-		push_error("TurnEngine.pure_host_call: %s reads the session's day, which the native call changed." % name)
-	return _call_target(name, session, view, args)
-
-## The host target, with the session in its view's place.
-static func _call_target(name: StringName, session: SessionStateStoreScript.SessionData, view: Variant, args: Array) -> Variant:
-	var call_args := []
-	for value in args:
-		call_args.append(session if session != null and value is Dictionary and is_same(value, view) else value)
-	var dot := String(name).find(".")
-	var script: Script = load("res://scripts/core/%s.gd" % String(name).substr(0, dot))
-	return script.callv(String(name).substr(dot + 1), call_args)
 
 ## The arguments with each session as a new view (one view per session).
 static func _views(args: Array) -> Array:
