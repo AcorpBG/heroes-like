@@ -4,6 +4,7 @@
     python tools/battle_ai_arena/arena.py                      # HEAD's AI (A) vs the working tree's (B)
     python tools/battle_ai_arena/arena.py --b path/to/BattleAiRules.gd --suite holdout
     python tools/battle_ai_arena/arena.py --a git:main~3 --b current --suite quick --workers 8
+    python tools/battle_ai_arena/arena.py --plain --suite standard   # the game's own AI on both sides, no router
 
 Evaluation tooling only, run on demand. It is not part of tools/core_suite.py, the game or
 the export; see README.md here for the design, the scoring and its limits.
@@ -13,6 +14,10 @@ sides, so the armies and the battlefield cancel out and only the AI differs. Eac
 stacks and hero are commanded by its own variant, swapped in memory inside the Godot worker
 (router.py); the repo's files are never written. Results go to
 .artifacts/battle_ai_arena/<time>-<suite>/.
+
+--plain plays the game's own BattleAiRules on both sides, with no router and no variants, for
+the native battle engine's parity checks: the native port reads the AI's memos from the game's
+script, which the router replaces (docs/native-rules-engine-transition.md, Phase 1).
 """
 from __future__ import annotations
 
@@ -177,12 +182,13 @@ def run_workers(
     groups: list[dict],
     workers: int,
     variant_paths: dict,
-    router_path: Path,
+    router_path: Path | None,
     timeout: int,
     orders: list[list[str]] | None = None,
     default_variant: str = "A",
 ) -> tuple[list[dict], list[str]]:
-    """Plays every battle of groups once per order ([player variant, enemy variant])."""
+    """Plays every battle of groups once per order ([player variant, enemy variant]). Without a router the game's
+    own AI plays both sides (--plain)."""
     chunks = [groups[i::workers] for i in range(workers)]
     procs = []
     profiles = []
@@ -193,7 +199,8 @@ def run_workers(
         job.write_text(json.dumps({
             "variants": {label: str(path) for label, path in variant_paths.items()},
             "default_variant": default_variant,
-            "router": str(router_path),
+            "router": str(router_path) if router_path else "",
+            "plain": router_path is None,
             "orders": orders or [["A", "B"], ["B", "A"]],
             "groups": chunk,
         }), encoding="utf-8")
@@ -259,7 +266,7 @@ def battle_tags(game: dict) -> dict[str, str]:
     return tags
 
 
-def summarize(rows: list[dict], values: dict[str, float]) -> tuple[dict, list[str]]:
+def summarize(rows: list[dict], values: dict[str, float], plain: bool = False) -> tuple[dict, list[str]]:
     games = [row for row in rows if row.get("kind") == "game"]
     problems = [f"{row.get('battle_id', row.get('group_id'))}: {row.get('error')}" for row in rows if row.get("error")]
     by_battle: dict[str, dict] = {}
@@ -271,7 +278,7 @@ def summarize(rows: list[dict], values: dict[str, float]) -> tuple[dict, list[st
             problems.append(f"{game['battle_id']} ({game['player_variant']} as player): unscored outcome {game.get('outcome')!r} state {game.get('state')!r}")
             continue
         calls = game.get("ai_calls", {})
-        if (not calls.get("player") or not calls.get("enemy")) and game.get("rounds", 0) > 1:
+        if not plain and (not calls.get("player") or not calls.get("enemy")) and game.get("rounds", 0) > 1:
             problems.append(f"{game['battle_id']}: an AI side made no calls {calls}")
         entry = by_battle.setdefault(game["battle_id"], {"tags": battle_tags(game), "games": [], "reference": None})
         if game["player_variant"] == game["enemy_variant"]:
@@ -342,8 +349,8 @@ def summarize(rows: list[dict], values: dict[str, float]) -> tuple[dict, list[st
 
 
 def print_report(summary: dict, problems: list[str], args, wall: float, run_dir: Path) -> None:
-    a_label = args.a + (f" with {args.a_weights}" if args.a_weights else "")
-    b_label = args.b + (f" with {args.b_weights}" if args.b_weights else "")
+    a_label = "the game's AI, no router" if args.plain else args.a + (f" with {args.a_weights}" if args.a_weights else "")
+    b_label = "the game's AI, no router" if args.plain else args.b + (f" with {args.b_weights}" if args.b_weights else "")
     odds = f" odds {args.odds} ({summary.get('skipped', 0)} battles outside)" if args.odds else ""
     print(f"\nBattle AI arena | suite {args.suite}{odds} | A = {a_label} | B = {b_label}")
     print(f"{summary['battles']} battles, {summary['games']} games in {wall:.0f}s ({summary['games'] / wall:.1f} games/s), "
@@ -386,19 +393,25 @@ def main() -> int:
     parser.add_argument("--odds", help="contested battles only: LOW,HIGH band of the player's strength over the enemy's, e.g. 0.6,1.7")
     parser.add_argument("--roles", action="store_true", help="also play A against A, to split B's gain into its play as player and as enemy")
     parser.add_argument("--keep-logs", action="store_true", help="keep worker jobs, logs and raw results")
+    parser.add_argument("--plain", action="store_true", help="the game's own BattleAiRules on both sides, no router or variants (--a and --b unused)")
     args = parser.parse_args()
+    if args.plain and (args.a_weights or args.b_weights):
+        parser.error("--plain plays the game's own weights")
 
     godot = find_godot(args.godot)
     run_dir = Path(args.out) if args.out else ROOT / ".artifacts" / "battle_ai_arena" / f"{datetime.now():%Y%m%d-%H%M%S}-{args.suite}"
     run_dir.mkdir(parents=True, exist_ok=True)
-    variants_dir = run_dir / "variants"
-    variants_dir.mkdir(exist_ok=True)
-    variant_paths = {"A": variants_dir / "A.gd", "B": variants_dir / "B.gd"}
-    resolve_variant(args.a, variant_paths["A"], load_weights(args.a_weights) if args.a_weights else None)
-    resolve_variant(args.b, variant_paths["B"], load_weights(args.b_weights) if args.b_weights else None)
-    # The router keeps the signatures the game was compiled against: the working tree's.
-    router_path = run_dir / "router.gd"
-    router_path.write_text(router.build_router(AI_SOURCE.read_text(encoding="utf-8")), encoding="utf-8")
+    variant_paths: dict = {}
+    router_path = None
+    if not args.plain:
+        variants_dir = run_dir / "variants"
+        variants_dir.mkdir(exist_ok=True)
+        variant_paths = {"A": variants_dir / "A.gd", "B": variants_dir / "B.gd"}
+        resolve_variant(args.a, variant_paths["A"], load_weights(args.a_weights) if args.a_weights else None)
+        resolve_variant(args.b, variant_paths["B"], load_weights(args.b_weights) if args.b_weights else None)
+        # The router keeps the signatures the game was compiled against: the working tree's.
+        router_path = run_dir / "router.gd"
+        router_path.write_text(router.build_router(AI_SOURCE.read_text(encoding="utf-8")), encoding="utf-8")
 
     groups = build_suite(args.suite, parse_odds(args.odds))
     orders = [["A", "B"], ["B", "A"]] + ([["A", "A"]] if args.roles else [])
@@ -408,12 +421,12 @@ def main() -> int:
     started = time.monotonic()
     rows, problems = run_workers(godot, run_dir, groups, workers, variant_paths, router_path, args.timeout, orders)
     wall = time.monotonic() - started
-    summary, game_problems = summarize(rows, unit_values())
+    summary, game_problems = summarize(rows, unit_values(), args.plain)
     problems = problems + game_problems
     leftovers = sorted(p.name for p in (set(MAPS_DIR.iterdir()) if MAPS_DIR.exists() else set()) - maps_before)
     if leftovers:
         problems.append(f"maps/ gained {len(leftovers)} files during the run (workers remove their own): {leftovers[:6]}")
-    summary.update({"suite": args.suite, "odds": args.odds, "skipped": sum(1 for row in rows if row.get("kind") == "skipped") // max(1, len(orders)), "a": args.a, "b": args.b, "workers": workers, "wall_seconds": round(wall, 1), "problems": problems})
+    summary.update({"suite": args.suite, "odds": args.odds, "skipped": sum(1 for row in rows if row.get("kind") == "skipped") // max(1, len(orders)), "a": args.a, "b": args.b, "plain": args.plain, "workers": workers, "wall_seconds": round(wall, 1), "problems": problems})
     (run_dir / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
     values = unit_values()
     with (run_dir / "games.jsonl").open("w", encoding="utf-8", newline="\n") as handle:
