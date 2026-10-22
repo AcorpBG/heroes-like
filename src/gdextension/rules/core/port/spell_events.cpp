@@ -1,9 +1,11 @@
 // Layer 8: the battle side of a spell. The commander's cast of the round, the casting hero, the commit of a
-// resistance roll, and the cast's animation states and presentation events.
+// resistance roll, and the cast's animation states and presentation events; the player's cast resolved against its
+// target.
 
 #include "aurelion_rules/port/battle_rules.hpp"
 
 #include "aurelion_rules/compat/godot_string.hpp"
+#include "aurelion_rules/port/spell_rules.hpp"
 
 #include <algorithm>
 #include <string>
@@ -33,6 +35,14 @@ Value get_or_new_dict(State &state, DictRef dict, Atom field) {
 // String(d.get(field, "")).
 Atom string_or_empty(const State &state, DictRef dict, Atom field) {
 	return gd::string_field(state, dict, field, key::empty);
+}
+
+// {"ok": false, "message": message}.
+DictRef refusal(State &state, Atom message) {
+	const DictRef result = state.new_dict();
+	state.set(result, str(key::ok), bool_value(false));
+	state.set(result, str(key::message), str(message));
+	return result;
 }
 
 // session.battle and session.overworld: SessionData types both Dictionary.
@@ -376,6 +386,21 @@ Atom _spell_effect_label(State &state, const Value &effect_payload) {
 	const Value kind_fallback = state.get(payload, str(key::kind), str(key::the_effect_text));
 	const Value id_fallback = state.get(payload, str(key::effect_id), kind_fallback);
 	return to_lower(state, gd::to_string(state.get(payload, str(key::label), id_fallback)));
+}
+
+DictRef _player_spell_resolution(State &state, const Value &session, Atom spell_id, Atom target_id) {
+	const DictRef battle = session_battle(state, session);
+	const DictRef active = get_active_stack(state, battle);
+	const DictRef target = target_id == key::empty ? get_selected_target(state, battle) : _get_stack_by_id(state, battle, target_id);
+	if (target_id != key::empty && (gd::is_empty(state, target) || _alive_count(state, target) <= 0)) {
+		return refusal(state, key::spell_target_not_alive_text);
+	}
+	const DictRef resolution = spell_rules::resolve_battle_spell(state, _player_commander_state(state, session), battle, active, target, spell_id, key::player);
+	// Explicit orders must never inherit the legacy support-spell fallback to the active stack.
+	if (target_id != key::empty && gd::bool_field(state, resolution, key::ok, false) && string_or_empty(state, resolution, key::target_battle_id) != target_id) {
+		return refusal(state, key::stack_not_valid_spell_target_text);
+	}
+	return resolution;
 }
 
 } // namespace aurelion::rules::port::battle_rules

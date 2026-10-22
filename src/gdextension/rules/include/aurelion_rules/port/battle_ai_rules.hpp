@@ -12,12 +12,9 @@
 // _can_make_melee_attack and _allied_status_synergy_score keep their entries
 // inside a scoring scope.
 //
-// Slice 08: the AI's estimates. Not ported yet: the side's scoring payload
-// (_hero_payload_for_side and everything reaching it: the traits, the
-// contextual bonuses, cohesion and momentum totals, _estimate_damage, the
-// threat and withdrawal reads, the readiness writ), which reaches
-// SpellRules.ensure_hero_spellbook (Phase 5's, slice 07b); the decisions that
-// read the weights (_w), slice 09; and _battle_rules, a Script.
+// Slice 08: the AI's estimates, the side's scoring payload with them (it
+// reaches SpellRules.ensure_hero_spellbook). Not ported yet: the decisions
+// that read the weights (_w), slice 09; and _battle_rules, a Script.
 
 #include "aurelion_rules/port/gd.hpp"
 
@@ -185,5 +182,58 @@ double _buff_spell_offense_payoff(State &state, DictRef stack);
 double _stack_spell_target_value(State &state, DictRef stack, DictRef battle);
 double _allied_status_synergy_score(State &state, DictRef battle, Atom side, Atom status_id);
 double _allied_status_synergy_on(State &state, DictRef battle, Atom side, Atom status_id);
+
+// Slice 08b: the side's scoring payload, the commander's traits and bonuses,
+// and the enemy's withdrawal (battle_ai_payloads.cpp).
+DictRef _battle_with_enemy_hero_payload(State &state, DictRef battle, DictRef enemy_hero);
+DictRef _battle_with_side_hero_payload(State &state, DictRef battle, Atom side, DictRef commander_payload);
+DictRef _commander_payload_for_tactical_scoring(State &state, DictRef commander_payload);
+DictRef _enemy_withdrawal_action(State &state, DictRef battle, DictRef active_stack, ArrayRef targets, DictRef current_best);
+double _preservation_comparison_score(State &state, DictRef battle, DictRef active_stack, DictRef current_best, double best_score);
+double _enemy_withdrawal_urgency_scale(State &state, DictRef battle);
+int64_t _hero_bonus_for_side(State &state, DictRef battle, Atom side, Atom kind);
+double _damage_multiplier_for_side(State &state, DictRef battle, Atom side);
+DictRef _hero_payload_for_side(State &state, DictRef battle, Atom side);
+ArrayRef _scoring_payload_entry(State &state, DictRef battle, Atom side);
+DictRef _side_hero_payload(State &state, DictRef battle, Atom side);
+DictRef _side_payload_with_commander_fallback(State &state, const Value &existing_payload_value, const Value &commander_state_value);
+bool _hero_has_trait(State &state, DictRef battle, Atom side, Atom trait_id);
+
+// Slice 08b: the contextual bonuses, the cohesion and momentum totals, the
+// breach of an obstruction and the readiness writ (battle_ai_contextual.cpp).
+bool _stack_can_breach_obstruction(State &state, DictRef stack, DictRef battle);
+int64_t _advance_distance_delta(State &state, DictRef stack, DictRef battle);
+int64_t _contextual_attack_bonus(State &state, DictRef stack, DictRef battle);
+int64_t _contextual_attack_bonus_on(State &state, DictRef stack, DictRef battle);
+int64_t _contextual_defense_bonus(State &state, DictRef stack, DictRef battle);
+int64_t _contextual_defense_bonus_on(State &state, DictRef stack, DictRef battle);
+int64_t _stack_cohesion_total(State &state, DictRef stack, DictRef battle);
+int64_t _stack_momentum_total(State &state, DictRef stack, DictRef battle);
+int64_t _stack_cohesion_sum(State &state, DictRef stack, DictRef battle);
+int64_t _stack_momentum_sum(State &state, DictRef stack, DictRef battle);
+int64_t _contextual_cohesion_bonus(State &state, DictRef stack, DictRef battle);
+int64_t _contextual_momentum_bonus(State &state, DictRef stack, DictRef battle);
+DictRef _readiness_writ_target(State &state, DictRef battle, DictRef source, DictRef ability);
+bool _readiness_writ_available(State &state, DictRef source, DictRef battle, DictRef ability);
+
+// Slice 08b: the damage estimate and its modifiers, the threat to a stack and
+// the lethal attack (battle_ai_estimates.cpp).
+int64_t _estimate_damage(State &state, DictRef attacker, DictRef defender, DictRef battle, bool is_ranged, bool is_retaliation, int64_t attack_distance);
+int64_t _estimate_damage_on(State &state, DictRef attacker, DictRef defender, DictRef battle, bool is_ranged, bool is_retaliation, int64_t attack_distance);
+double _cohesion_damage_modifier(State &state, DictRef attacker, DictRef defender, DictRef battle, bool is_ranged, bool is_retaliation);
+double _commander_damage_modifier(State &state, DictRef attacker, DictRef defender, DictRef battle, bool is_ranged, int64_t attack_distance);
+double _target_threat_on(State &state, DictRef defended_stack, DictRef target, DictRef battle);
+double _target_immediate_threat_score(State &state, DictRef defended_stack, DictRef target, DictRef battle);
+bool _candidate_is_lethal_attack(State &state, DictRef candidate, DictRef battle, DictRef active_stack);
+bool _support_spell_has_active_pressure(State &state, DictRef battle, DictRef active_stack, DictRef target_stack, ArrayRef hostile_targets);
+
+// Slice 08b: the field objectives' worth and the support spells' scores
+// (battle_ai_spell_scores.cpp).
+double _objective_action_score(State &state, DictRef battle, Atom acting_side, Atom action, DictRef acting_stack, DictRef target_stack);
+double _field_objective_value(State &state, DictRef objective, DictRef battle, Atom acting_side, Atom action, DictRef acting_stack, DictRef target_stack);
+double _recovery_spell_score_for_target(State &state, DictRef enemy_hero, DictRef battle, DictRef active_stack, DictRef target_stack, DictRef spell);
+double _cleanse_spell_score_for_target(State &state, DictRef battle, DictRef active_stack, DictRef target_stack, DictRef spell);
+double _spell_metadata_value_modifier(State &state, DictRef battle, DictRef active_stack, DictRef target, DictRef spell, DictRef behavior);
+double _buff_spell_score(State &state, DictRef battle, DictRef active_stack, DictRef target_stack, ArrayRef targets, DictRef spell);
 
 } // namespace aurelion::rules::port::battle_ai_rules

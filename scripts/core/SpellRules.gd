@@ -103,6 +103,16 @@ static func build_spellbook(hero_template: Dictionary) -> Dictionary:
 	}
 
 static func ensure_hero_spellbook(hero_state: Dictionary, hero_template: Dictionary = {}) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return ensure_hero_spellbook__gd(hero_state, hero_template)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"SpellRules.ensure_hero_spellbook", [hero_state, hero_template])
+	var before := BattleEngine.before_writing(&"SpellRules.ensure_hero_spellbook", [hero_state, hero_template])
+	var result = ensure_hero_spellbook__gd(hero_state, hero_template)
+	BattleEngine.check_writing(&"SpellRules.ensure_hero_spellbook", before, [hero_state, hero_template], result)
+	return result
+
+static func ensure_hero_spellbook__gd(hero_state: Dictionary, hero_template: Dictionary = {}) -> Dictionary:
 	var max_mana := mana_max_from_hero(hero_state)
 	var default_known_spells := _normalize_spell_ids(hero_template.get("starting_spell_ids", [])) if not hero_template.is_empty() else []
 	var spellbook = hero_state.get("spellbook", {})
@@ -129,11 +139,30 @@ static func ensure_hero_spellbook(hero_state: Dictionary, hero_template: Diction
 	return hero_state
 
 static func mana_max_from_hero(hero_state: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return mana_max_from_hero__gd(hero_state)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"SpellRules.mana_max_from_hero", [hero_state])
+	var before := BattleEngine.before_writing(&"SpellRules.mana_max_from_hero", [hero_state])
+	var result = mana_max_from_hero__gd(hero_state)
+	BattleEngine.check_writing(&"SpellRules.mana_max_from_hero", before, [hero_state], result)
+	return result
+
+static func mana_max_from_hero__gd(hero_state: Dictionary) -> int:
 	var week_bonuses = hero_state.get("week_bonuses", {})
 	var week_mana := int(week_bonuses.get("mana", 0)) if week_bonuses is Dictionary else 0
 	return mana_max_from_command(hero_state.get("command", {})) + HeroProgressionRulesScript.mana_max_bonus(hero_state) + week_mana
 
 static func mana_max_from_command(command: Variant) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return mana_max_from_command__gd(command)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"SpellRules.mana_max_from_command", [command])
+	var result = mana_max_from_command__gd(command)
+	BattleEngine.check(&"SpellRules.mana_max_from_command", [command], result)
+	return result
+
+static func mana_max_from_command__gd(command: Variant) -> int:
 	if not (command is Dictionary):
 		return 8
 	return max(8, 8 + (max(0, int(command.get("knowledge", 0))) * 4))
@@ -208,6 +237,16 @@ static func learn_spell(hero_state: Dictionary, spell_id: String) -> Dictionary:
 	}
 
 static func known_spells(hero_state: Dictionary, context_filter: String = "") -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return known_spells__gd(hero_state, context_filter)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"SpellRules.known_spells", [hero_state, context_filter])
+	var before := BattleEngine.before_writing(&"SpellRules.known_spells", [hero_state, context_filter])
+	var result = known_spells__gd(hero_state, context_filter)
+	BattleEngine.check_writing(&"SpellRules.known_spells", before, [hero_state, context_filter], result)
+	return result
+
+static func known_spells__gd(hero_state: Dictionary, context_filter: String = "") -> Array:
 	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
 	var results := []
 	for spell_id_value in hero.get("spellbook", {}).get("known_spell_ids", []):
@@ -1159,7 +1198,17 @@ static func get_battle_actions(hero_state: Dictionary, battle: Dictionary, activ
 		)
 	return actions
 
-static func resolve_battle_spell(
+static func resolve_battle_spell(hero_state: Dictionary, battle: Dictionary, active_stack: Dictionary, target_stack: Dictionary, spell_id: String, acting_side: String = "player") -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return resolve_battle_spell__gd(hero_state, battle, active_stack, target_stack, spell_id, acting_side)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"SpellRules.resolve_battle_spell", [hero_state, battle, active_stack, target_stack, spell_id, acting_side])
+	var before := BattleEngine.before_writing(&"SpellRules.resolve_battle_spell", [hero_state, battle, active_stack, target_stack, spell_id, acting_side])
+	var result = resolve_battle_spell__gd(hero_state, battle, active_stack, target_stack, spell_id, acting_side)
+	BattleEngine.check_writing(&"SpellRules.resolve_battle_spell", before, [hero_state, battle, active_stack, target_stack, spell_id, acting_side], result)
+	return result
+
+static func resolve_battle_spell__gd(
 	hero_state: Dictionary,
 	battle: Dictionary,
 	active_stack: Dictionary,
@@ -1335,7 +1384,17 @@ static func validate_overworld_spell(hero_state: Dictionary, movement_state: Dic
 		_:
 			return {"ok": false, "message": "That overworld spell effect is unsupported."}
 
-static func validate_battle_spell(
+static func validate_battle_spell(hero_state: Dictionary, battle: Dictionary, active_stack: Dictionary, target_stack: Dictionary, spell: Variant, acting_side: String = "player") -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return validate_battle_spell__gd(hero_state, battle, active_stack, target_stack, spell, acting_side)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"SpellRules.validate_battle_spell", [hero_state, battle, active_stack, target_stack, spell, acting_side])
+	var before := BattleEngine.before_writing(&"SpellRules.validate_battle_spell", [hero_state, battle, active_stack, target_stack, spell, acting_side])
+	var result = validate_battle_spell__gd(hero_state, battle, active_stack, target_stack, spell, acting_side)
+	BattleEngine.check_writing(&"SpellRules.validate_battle_spell", before, [hero_state, battle, active_stack, target_stack, spell, acting_side], result)
+	return result
+
+static func validate_battle_spell__gd(
 	hero_state: Dictionary,
 	battle: Dictionary,
 	active_stack: Dictionary,
@@ -2698,6 +2757,16 @@ static func _has_mana__gd(hero_state: Dictionary, cost: int) -> bool:
 	return int(hero_state.get("spellbook", {}).get("mana", {}).get("current", 0)) >= max(0, cost)
 
 static func _consume_mana(hero_state: Dictionary, cost: int) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _consume_mana__gd(hero_state, cost)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"SpellRules._consume_mana", [hero_state, cost])
+	var before := BattleEngine.before_writing(&"SpellRules._consume_mana", [hero_state, cost])
+	var result = _consume_mana__gd(hero_state, cost)
+	BattleEngine.check_writing(&"SpellRules._consume_mana", before, [hero_state, cost], result)
+	return result
+
+static func _consume_mana__gd(hero_state: Dictionary, cost: int) -> Dictionary:
 	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
 	var spellbook = hero.get("spellbook", {})
 	var mana = spellbook.get("mana", {})

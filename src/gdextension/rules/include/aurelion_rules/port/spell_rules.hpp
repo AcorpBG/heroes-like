@@ -95,6 +95,13 @@ int64_t _battle_spell_recovery_amount(State &state, DictRef hero_state, DictRef 
 int64_t _alive_count(State &state, DictRef stack);
 double _health_ratio(State &state, DictRef stack);
 
+// Layer 8, 07b: the cast checked, resolved and paid for, and the hero's
+// known spells (spell_battle.cpp).
+ArrayRef known_spells(State &state, DictRef hero_state, Atom context_filter);
+DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, DictRef active_stack, DictRef target_stack, Atom spell_id, Atom acting_side);
+DictRef validate_battle_spell(State &state, DictRef hero_state, DictRef battle, DictRef active_stack, DictRef target_stack, const Value &spell, Atom acting_side);
+DictRef _consume_mana(State &state, DictRef hero_state, int64_t cost);
+
 // Shared with the battle port: a hero's spellbook (known spells, mana)
 // normalized in place, the template's starting spells for one that knows none,
 // returning the hero; its maximum mana (spell_rules.cpp).

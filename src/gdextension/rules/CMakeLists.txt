@@ -118,9 +118,13 @@ add_library(aurelion_rules_core STATIC
 	core/port/attack_effects.cpp
 	core/port/attack_events.cpp
 	core/port/battle_ai_abilities.cpp
+	core/port/battle_ai_contextual.cpp
+	core/port/battle_ai_estimates.cpp
 	core/port/battle_ai_modifiers.cpp
+	core/port/battle_ai_payloads.cpp
 	core/port/battle_ai_reads.cpp
 	core/port/battle_ai_rules.cpp
+	core/port/battle_ai_spell_scores.cpp
 	core/port/battle_damage_rules_ai.cpp
 	core/port/battle_footprint.cpp
 	core/port/battle_rules.cpp

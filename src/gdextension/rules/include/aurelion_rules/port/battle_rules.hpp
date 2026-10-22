@@ -396,6 +396,7 @@ void _apply_melee_approach(State &state, DictRef battle, DictRef stack, DictRef 
 // commit of a resistance roll, and the cast's animation states and
 // presentation events (spell_events.cpp).
 DictRef _player_commander_state(State &state, const Value &session);
+DictRef _player_spell_resolution(State &state, const Value &session, Atom spell_id, Atom target_id);
 DictRef _normalize_commander_spell_cast_rounds(State &state, const Value &value);
 bool _commander_spell_cast_this_round(State &state, DictRef battle, Atom side);
 void _mark_commander_spell_cast(State &state, DictRef battle, Atom side);

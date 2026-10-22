@@ -3088,6 +3088,16 @@ static func advance_consequence_preview(battle: Dictionary) -> Dictionary:
 		"message": "Advance → %s\nMovement only — no attack. Enemy choices are not predicted." % _hex_label(destination)}
 
 static func _player_spell_resolution(session: SessionStateStoreScript.SessionData, spell_id: String, target_id: String = "") -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _player_spell_resolution__gd(session, spell_id, target_id)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._player_spell_resolution", [session, spell_id, target_id])
+	var before := BattleEngine.before_writing(&"BattleRules._player_spell_resolution", [session, spell_id, target_id])
+	var result = _player_spell_resolution__gd(session, spell_id, target_id)
+	BattleEngine.check_writing(&"BattleRules._player_spell_resolution", before, [session, spell_id, target_id], result)
+	return result
+
+static func _player_spell_resolution__gd(session: SessionStateStoreScript.SessionData, spell_id: String, target_id: String = "") -> Dictionary:
 	var battle := session.battle
 	var active := get_active_stack(battle)
 	var target := get_selected_target(battle) if target_id == "" else _get_stack_by_id(battle, target_id)

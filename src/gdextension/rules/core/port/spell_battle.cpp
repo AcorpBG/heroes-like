@@ -1,5 +1,6 @@
 // Layer 8: the battle spells. A spell's battle behavior, the cast and target checks, spell and control resistance,
-// the damage, recovery and duration of a cast, the effect payloads and the status resistance roll.
+// the damage, recovery and duration of a cast, the effect payloads and the status resistance roll; a hero's known
+// spells, the validation and resolution of a cast and the mana it spends.
 
 #include "aurelion_rules/port/spell_rules.hpp"
 
@@ -76,6 +77,30 @@ DictRef accepted(State &state) {
 	const DictRef result = state.new_dict();
 	state.set(result, str(key::ok), bool_value(true));
 	return result;
+}
+
+// {"ok": false, "hero": hero, "message": message}.
+DictRef hero_refusal(State &state, DictRef hero, Atom message) {
+	const DictRef result = state.new_dict();
+	state.set(result, str(key::ok), bool_value(false));
+	state.set(result, str(key::hero), dict_value(hero));
+	state.set(result, str(key::message), str(message));
+	return result;
+}
+
+// The head of every resolved cast: {"ok": true, "hero": hero, "resolution_type": ..., "target_battle_id": ...}.
+DictRef cast_result(State &state, DictRef hero, Atom resolution_type, Atom target_battle_id) {
+	const DictRef result = state.new_dict();
+	state.set(result, str(key::ok), bool_value(true));
+	state.set(result, str(key::hero), dict_value(hero));
+	state.set(result, str(key::resolution_type), str(resolution_type));
+	state.set(result, str(key::target_battle_id), str(target_battle_id));
+	return result;
+}
+
+// "%s casts %s on %s." of a cast on an ally.
+Atom ally_cast_message(State &state, Atom caster_name, DictRef spell, Atom spell_id, DictRef ally_target) {
+	return gd::format(state, key::casts_on_format, { str(caster_name), str(gd::string_field(state, spell, key::name, spell_id)), str(gd::string_field(state, ally_target, key::name, key::the_line_text)) });
 }
 
 // The literal battle_spell_status_resolution returns, in its order.
@@ -541,6 +566,158 @@ double _health_ratio(State &state, DictRef stack) {
 	const int64_t max_health = engine_max<int64_t>(1, gd::mul(gd::int_field(state, stack, key::unit_hp, 1), count));
 	const double health = static_cast<double>(gd::int_field(state, stack, key::total_health, 0));
 	return engine_clamp(health / static_cast<double>(max_health), 0.0, 1.0);
+}
+
+ArrayRef known_spells(State &state, DictRef hero_state, Atom context_filter) {
+	const DictRef hero = ensure_hero_spellbook(state, gd::deep_duplicate_dict(state, hero_state), state.new_dict());
+	const ArrayRef results = state.new_array();
+	// for spell_id_value in hero.get("spellbook", {}).get("known_spell_ids", [])
+	const DictRef spellbook = two_argument_get_target(get_or_new_dict(state, hero, key::spellbook));
+	for (const Value &spell_id_value : gd::field_items(state, spellbook, str(key::known_spell_ids))) {
+		const Atom spell_id = gd::stringify_or_fallback(state, spell_id_value);
+		if (spell_id == key::empty) {
+			continue;
+		}
+		const DictRef spell = gd::content_row(state, state::ContentTable::Spell, spell_id);
+		if (gd::is_empty(state, spell)) {
+			continue;
+		}
+		if (context_filter != key::empty && gd::string_field(state, spell, key::context, key::empty) != context_filter) {
+			continue;
+		}
+		state.append(results, dict_value(spell));
+	}
+	return results;
+}
+
+DictRef resolve_battle_spell(State &state, DictRef hero_state, DictRef battle, DictRef active_stack, DictRef target_stack, Atom spell_id, Atom acting_side) {
+	DictRef hero = ensure_hero_spellbook(state, gd::deep_duplicate_dict(state, hero_state), state.new_dict());
+	if (!_knows_spell(state, hero, spell_id)) {
+		return hero_refusal(state, hero, key::spell_not_in_spellbook_text);
+	}
+	const DictRef spell = gd::content_row(state, state::ContentTable::Spell, spell_id);
+	if (gd::is_empty(state, spell)) {
+		return hero_refusal(state, hero, key::spell_not_known_text);
+	}
+	const int64_t mana_cost = adjusted_spell_mana_cost(state, hero, dict_value(spell));
+
+	const DictRef validation = validate_battle_spell(state, hero, battle, active_stack, target_stack, dict_value(spell), acting_side);
+	if (!gd::bool_field(state, validation, key::ok, false)) {
+		return hero_refusal(state, hero, gd::string_field(state, validation, key::message, key::spell_cannot_be_cast_now_text));
+	}
+
+	const DictRef effect = two_argument_get_target(get_or_new_dict(state, spell, key::effect));
+	const Atom effect_type = gd::to_string(state.get(effect, str(key::type), str(key::empty)));
+	hero = _consume_mana(state, hero, mana_cost);
+	const Atom caster_name = gd::string_field(state, hero, key::name, key::the_hero_text);
+	const DictRef ally_target = _battle_spell_ally_target(state, active_stack, target_stack, acting_side);
+	if (effect_type == key::damage_enemy) {
+		const DictRef damage_projection = battle_spell_damage_projection(state, hero, battle, target_stack, spell);
+		const DictRef post_damage_effect = _status_effect_from_spell_effect(state, spell, battle, hero);
+		const DictRef status_resolution = battle_spell_status_resolution(state, battle, active_stack, target_stack, spell, post_damage_effect);
+		DictRef resolved_post_damage_effect = post_damage_effect;
+		if (gd::bool_field(state, status_resolution, key::blocked, false)) {
+			resolved_post_damage_effect = state.new_dict();
+		}
+		Atom message = gd::format(state, key::casts_on_for_damage_format, {
+			str(caster_name),
+			str(gd::string_field(state, spell, key::name, spell_id)),
+			str(gd::string_field(state, target_stack, key::name, key::the_enemy_text)),
+			int_value(gd::int_field(state, damage_projection, key::final_damage, 0)),
+		});
+		if (gd::int_field(state, damage_projection, key::prevented_damage, 0) > 0) {
+			const Atom resists = gd::format(state, key::resists_damage_suffix_format, {
+				str(gd::string_field(state, target_stack, key::name, key::the_target_capital_text)),
+				int_value(gd::int_field(state, damage_projection, key::prevented_damage, 0)),
+			});
+			message = state.intern(state.text(message) + state.text(resists));
+		}
+		message = _append_status_resolution_message(state, message, target_stack, post_damage_effect, status_resolution);
+		const DictRef result = cast_result(state, hero, key::damage, gd::string_field(state, target_stack, key::battle_id, key::empty));
+		state.set(result, str(key::damage), int_value(gd::int_field(state, damage_projection, key::final_damage, 0)));
+		state.set(result, str(key::raw_damage), int_value(gd::int_field(state, damage_projection, key::raw_damage, 0)));
+		state.set(result, str(key::final_damage), int_value(gd::int_field(state, damage_projection, key::final_damage, 0)));
+		state.set(result, str(key::resistance_pct), int_value(gd::int_field(state, damage_projection, key::resistance_pct, 0)));
+		state.set(result, str(key::prevented_damage), int_value(gd::int_field(state, damage_projection, key::prevented_damage, 0)));
+		state.set(result, str(key::post_damage_effect), dict_value(resolved_post_damage_effect));
+		state.set(result, str(key::post_damage_resisted), bool_value(gd::bool_field(state, status_resolution, key::resisted, false)));
+		state.set(result, str(key::post_damage_immune), bool_value(gd::bool_field(state, status_resolution, key::immune, false)));
+		state.set(result, str(key::blocked_status_id), str(gd::string_field(state, status_resolution, key::blocked_status_id, key::empty)));
+		state.set(result, str(key::control_resistance_pct), int_value(gd::int_field(state, status_resolution, key::control_resistance_pct, 0)));
+		state.set(result, str(key::resistance_roll), int_value(gd::int_field(state, status_resolution, key::resistance_roll, -1)));
+		state.set(result, str(key::resistance_rng_state), str(gd::string_field(state, status_resolution, key::resistance_rng_state, key::empty)));
+		state.set(result, str(key::message), str(message));
+		return result;
+	}
+	if (effect_type == key::control_enemy) {
+		const DictRef control_effect = _status_effect_from_spell_effect(state, spell, battle, hero);
+		const DictRef control_resolution = battle_spell_status_resolution(state, battle, active_stack, target_stack, spell, control_effect);
+		DictRef resolved_control_effect = control_effect;
+		if (gd::bool_field(state, control_resolution, key::blocked, false)) {
+			resolved_control_effect = state.new_dict();
+		}
+		Atom control_message = gd::format(state, key::casts_on_format, {
+			str(caster_name),
+			str(gd::string_field(state, spell, key::name, spell_id)),
+			str(gd::string_field(state, target_stack, key::name, key::the_enemy_text)),
+		});
+		control_message = _append_status_resolution_message(state, control_message, target_stack, control_effect, control_resolution);
+		const DictRef result = cast_result(state, hero, key::effect, gd::string_field(state, target_stack, key::battle_id, key::empty));
+		state.set(result, str(key::effect), dict_value(resolved_control_effect));
+		state.set(result, str(key::resisted), bool_value(gd::bool_field(state, control_resolution, key::resisted, false)));
+		state.set(result, str(key::immune), bool_value(gd::bool_field(state, control_resolution, key::immune, false)));
+		state.set(result, str(key::blocked_status_id), str(gd::string_field(state, control_resolution, key::blocked_status_id, key::empty)));
+		state.set(result, str(key::control_resistance_pct), int_value(gd::int_field(state, control_resolution, key::control_resistance_pct, 0)));
+		state.set(result, str(key::resistance_roll), int_value(gd::int_field(state, control_resolution, key::resistance_roll, -1)));
+		state.set(result, str(key::resistance_rng_state), str(gd::string_field(state, control_resolution, key::resistance_rng_state, key::empty)));
+		state.set(result, str(key::message), str(control_message));
+		return result;
+	}
+	if (effect_type == key::recover_ally) {
+		const DictRef result = cast_result(state, hero, key::recover_effect, gd::string_field(state, ally_target, key::battle_id, key::empty));
+		state.set(result, str(key::recovery_amount), int_value(_battle_spell_recovery_amount(state, hero, spell)));
+		const DictRef recover_payload = !gd::is_empty(state, battle_spell_modifiers(state, spell)) ? _effect_payload(state, spell, effect, battle, hero) : state.new_dict();
+		state.set(result, str(key::effect), dict_value(recover_payload));
+		state.set(result, str(key::message), str(ally_cast_message(state, caster_name, spell, spell_id, ally_target)));
+		return result;
+	}
+	if (effect_type == key::cleanse_ally) {
+		const DictRef result = cast_result(state, hero, key::cleanse_effect, gd::string_field(state, ally_target, key::battle_id, key::empty));
+		state.set(result, str(key::cleanse_effect_ids), array_value(_normalize_string_array(state, get_or_new_array(state, effect, key::cleanse_effect_ids))));
+		const bool with_payload = !gd::is_empty(state, battle_spell_modifiers(state, spell)) || state.array_size(normalize_status_immunity_ids(state, get_or_new_array(state, effect, key::status_immunity_ids))) > 0;
+		const DictRef cleanse_payload = with_payload ? _effect_payload(state, spell, effect, battle, hero) : state.new_dict();
+		state.set(result, str(key::effect), dict_value(cleanse_payload));
+		state.set(result, str(key::message), str(ally_cast_message(state, caster_name, spell, spell_id, ally_target)));
+		return result;
+	}
+	if (effect_type == key::defense_buff || effect_type == key::initiative_buff || effect_type == key::attack_buff) {
+		const DictRef result = cast_result(state, hero, key::effect, gd::string_field(state, ally_target, key::battle_id, key::empty));
+		state.set(result, str(key::effect), dict_value(_effect_payload(state, spell, effect, battle, hero)));
+		state.set(result, str(key::message), str(ally_cast_message(state, caster_name, spell, spell_id, ally_target)));
+		return result;
+	}
+	return hero_refusal(state, hero, key::battle_spell_no_supported_effect_text);
+}
+
+DictRef validate_battle_spell(State &state, DictRef hero_state, DictRef battle, DictRef active_stack, DictRef target_stack, const Value &spell, Atom acting_side) {
+	const DictRef hero = ensure_hero_spellbook(state, gd::deep_duplicate_dict(state, hero_state), state.new_dict());
+	const DictRef spell_dict = gd::is_dict(spell) ? spell.ref : gd::content_row(state, state::ContentTable::Spell, gd::stringify_or_fallback(state, spell));
+	const DictRef cast_check = battle_spell_cast_check(state, hero, spell_dict, active_stack, acting_side);
+	if (!gd::bool_field(state, cast_check, key::ok, false)) {
+		return cast_check;
+	}
+	return battle_spell_target_check(state, battle, active_stack, target_stack, spell_dict, acting_side);
+}
+
+DictRef _consume_mana(State &state, DictRef hero_state, int64_t cost) {
+	const DictRef hero = ensure_hero_spellbook(state, gd::deep_duplicate_dict(state, hero_state), state.new_dict());
+	const Value spellbook = get_or_new_dict(state, hero, key::spellbook);
+	const Value mana = get_or_new_dict(state, two_argument_get_target(spellbook), key::mana);
+	const int64_t current = engine_max<int64_t>(0, gd::sub(gd::int_field(state, two_argument_get_target(mana), key::current, 0), engine_max<int64_t>(0, cost)));
+	state.set(mana.ref, str(key::current), int_value(current));
+	state.set(spellbook.ref, str(key::mana), mana);
+	state.set(hero, str(key::spellbook), spellbook);
+	return hero;
 }
 
 } // namespace aurelion::rules::port::spell_rules

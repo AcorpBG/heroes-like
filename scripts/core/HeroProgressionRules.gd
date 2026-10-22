@@ -507,6 +507,16 @@ static func _resolve_bonus_key__gd(key: String, hero_state: Dictionary) -> Strin
 	return String(resources.get("main" if key == "faction_rare_main" else "secondary", ""))
 
 static func mana_max_bonus(hero_state: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return mana_max_bonus__gd(hero_state)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"HeroProgressionRules.mana_max_bonus", [hero_state])
+	var before := BattleEngine.before_writing(&"HeroProgressionRules.mana_max_bonus", [hero_state])
+	var result = mana_max_bonus__gd(hero_state)
+	BattleEngine.check_writing(&"HeroProgressionRules.mana_max_bonus", before, [hero_state], result)
+	return result
+
+static func mana_max_bonus__gd(hero_state: Dictionary) -> int:
 	return int(aggregate_bonuses(hero_state).get("max_mana", 0))
 
 static func adjusted_mana_cost(hero_state: Dictionary, base_cost: int, school_id: String = "") -> int:
