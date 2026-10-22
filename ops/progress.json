@@ -116414,7 +116414,7 @@
     {
       "id": "native-rules-phase4-faction-turn-20261022",
       "title": "Native overworld AI faction turn (Phase 4)",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
@@ -116422,7 +116422,7 @@
         "docs/native-rules-engine-transition.md"
       ],
       "notes": "Owner decision 2026-10-22: Phase 4 on branch native-phase4-faction-turn, merged once, Windows only, lean checks; goal whole-game speed. Inventory on main 4a9f8b178 (six seeds, probe): the computer players' turns take 55% of match time, their hero days 47%, battle previews 19%, real battles 4%, towns 2.8%, and 2.07M calls from GDScript into Phase 3's port 22%. run_enemy_turn reaches 1,074 functions / 16,800 lines outside battles: 320 on main, 223 on Phase 5's branch, 531 not ported (330 / 6,066 run by the six seeds).",
-      "updatedAt": "2026-10-22T05:35:00Z"
+      "updatedAt": "2026-10-23T01:05:00Z"
     },
     {
       "id": "native-rules-phase4-00-runtime-fill-20261022",
@@ -116479,15 +116479,15 @@
     {
       "id": "native-rules-phase4-04-exit-20261022",
       "title": "Phase 4: exit and merge",
-      "status": "pending",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Delete the replaced GDScript, owner-approved save copies through the codec (D9), the six-seed check, the core suite and timing, main tagged, the single merge.",
-      "updatedAt": "2026-10-22T05:35:00Z"
+      "notes": "Merged to main 2026-10-23, main tagged pre-native-phase4-faction-turn-4.4 first (157138710 source, effbae9ba Windows binaries). The turn runs native in every game: HEROES_NATIVE_TURN and its gdscript and shadow modes are gone, the turn table no longer falls back (a path the port leaves out is a SCRIPT ERROR). scripts/core -9,758 / +130 lines: 233 functions' GDScript deleted (183 of the turn, 42 of Phase 3's AiHeroRules wrappers, ai_registry.cpp 64 to 22 entries, four Phase 3 two-copy functions, 309 stay, four helpers); 69 thin wrappers (turn table 456 to 70 entries); 203 functions of other scripts keep a GDScript copy (two copies; transition doc, Phase 4, 4.4, names them). Phase 5's nine forecast stubs call 4.2's ports; the two authored defeat objectives still leave the day to GDScript (ScenarioRules._objective_met). Checks: owner save copies (D9) 5 saves x 10 days, all GDScript and all native identical, turn+day shadow 69,837 checks / 0 mismatches, codec round trip 0 differences, the same 50 days native after the deletions; a threat built on each save copy identical in native, GDScript, day shadow (10 checks / 0 mismatches, no fallback) and main; native identical to main on the six seeds; core suite 17/17; whole games main/change/change/main 587, 391, 390, 586 s (1.50x). Windows only; the Linux libraries wait for the Linux pass.",
+      "updatedAt": "2026-10-23T01:05:00Z"
     }
   ],
   "project": "heroes-like",

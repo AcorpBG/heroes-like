@@ -1422,7 +1422,10 @@ merged although whole games got no faster):
     VisitBuildingRules 11, PlayerIdentityRules 8, 9 more 29; AiHeroRules `is_ai_hero` among them), 63 are Phase 5's
     shared helpers, 26 ContentService reads, and 10 more: BattleRules 2, SpellRules 2 and BattleDamageRules 1 (frozen
     until Phase 1's merge), AiHeroRules' 3 script loaders and ScenarioSelectRules 2. A behaviour change to one of them
-    changes both copies (AGENTS.md), until its script's port deletes the GDScript.
+    changes both copies (AGENTS.md), until its script's port deletes the GDScript. Phase 4's exit (4.4) deleted the
+    GDScript of four whose last GDScript caller went with the turn: `AiHeroRules._overworld_rules`,
+    `EnemyAdventureRules._find_resource_by_placement` and `_resource_site_claim_rewards`, and
+    `HeroCommandRules.within_scout_radius`. 309 keep two copies.
   - The ported functions keep their static vars (the weights, memos and caches) in their scripts, where the port reads
     and writes them, so those declarations stay.
   - Runtime on main first (cba124b9c): the engine's pow, exp and log for ported code, calls of up to 16 arguments.
@@ -1656,6 +1659,84 @@ it is a native failure, so shadow mode counts both. Switch `HEROES_NATIVE_TURN=g
   - owner-approved save copies through the codec (D9);
   - the six-seed check, the core suite and whole-game timing;
   - main tagged (D10), then the merge.
+
+  Done 2026-10-23 on the branch, on main bf208b7b0 with Phase 2b (157138710 source, effbae9ba Windows binaries).
+  - The turn runs native in every game. `HEROES_NATIVE_TURN` and its gdscript and shadow modes are gone, as
+    `HEROES_NATIVE_AI` went with Phase 3. `EnemyTurnRules.run_enemy_turn` is a wrapper over its port, and `TurnEngine.gd`
+    keeps only `native_writing`. `tools/ai_match_batch.py` and `tools/native_battle_switch.py` no longer know the switch.
+    The turn table no longer falls back. A path the port leaves out (4.2's two guards, which no content reaches) prints
+    a SCRIPT ERROR, and the computer players' day leaves the session as it was.
+  - The replaced GDScript is deleted: `scripts/core` loses 9,758 lines and gains 130.
+    - 183 functions of the turn that nothing outside it calls: AiHeroRules 89, EnemyAdventureRules 46, EnemyTurnRules
+      37, EnemyTownServices 5, and 5 more scripts 6.
+    - 50 more functions whose last caller was that GDScript:
+      - 42 of Phase 3's AiHeroRules wrappers (`_best_candidate`, `_in_hero_zone`, `_site_doors`, ...). Their entries
+        leave `ai_registry.cpp`, and 22 stay.
+      - four of Phase 3's two-copy functions (Phase 3, "AI targets").
+      - four helpers.
+    - 69 functions of the AI turn's scripts that GDScript outside the turn still calls are thin wrappers over their
+      port: AiHeroRules 27, EnemyAdventureRules 28, EnemyTurnRules 13 and EnemyTownServices 1. Their callers are the
+      UI, the GDScript copies of the day and battle code, and the test harness. With `run_enemy_turn` (listed under
+      EnemyTurnRules) they are the turn table's 70 entries (456 before).
+      - EnemyAdventureRules (28): `_ai_hero_task_finish_live_assignment`, `_apply_resource_site_artifact_reward_to_raid`, `_apply_resource_site_claim_recruits_to_raid`, `_apply_resource_site_spell_reward_to_commander`, `_break_dwelling_guard_by_raid`, `_enemy_hero_sighting_sources`, `_find_encounter_by_placement`, `_find_player_hero`, `_find_town_by_placement`, `_hire_dwelling_creatures_into_raid`, `_player_hero_snapshots_for_intercept`, `_preferred_commander_index_for_encounter`, `_secure_resource_target`, `_target_level`, `_town_controller_faction_id`, `_town_is_objective_anchor`, `advance_commander_record`, `commander_can_deploy`, `commander_display_name`, `commander_live_role_state`, `commander_recent_outcome_brief`, `commander_target_memory`, `raid_commander_display_name`, `raid_display_name`, `raid_strength`, `select_raid_commander_roster_hero_id`, `sync_commander_state_to_roster`, `target_is_objective_anchor`.
+      - AiHeroRules (27): `_choose_plan`, `_convert_legacy_host`, `_cuts_a_way`, `_desired_hero_count`, `_ensure_starting_hero`, `_find_town`, `_follow_plan`, `_gate_fight_looks_good`, `_govern_towns`, `_hostile_hero_beside`, `_mark_resolved`, `_nearest_hero_index`, `_new_context`, `_record_hero_defeat`, `_return_troops_to_nearest_town`, `_reveal`, `_roster_progression_seed`, `_start_heroes_day`, `_take_artifact`, `_tavern_pool`, `_use_weights`, `_wait_by_home`, `ai_tavern_offer_ids`, `clear_shared_surfaces`, `faction_daily_income`, `hero_name`, `run_faction_turn`.
+      - EnemyTurnRules (14): `_config_was_runtime_defaulted`, `_enemy_recruit_cost`, `_faction_capital_state`, `_faction_front_state`, `_latest_enemy_state`, `_max_active_raids_for_strategy`, `_owned_town_count`, `_raid_threshold_for_strategy`, `_town_name`, `_valid_enemy_faction_configs`, `active_raid_count`, `get_pressure`, `normalize_optional_hero_task_state`, `run_enemy_turn`.
+      - EnemyTownServices (1): `visit`.
+    - 203 functions of other scripts keep a GDScript copy for their callers outside the turn: OverworldRules 60,
+      ArtifactRules 42, ScenarioRules 17, HeroCommandRules 16, HeroProgressionRules 12, and 16 more scripts 56. A
+      behaviour change to one of them goes into both copies in the same commit (AGENTS.md). Their switches are gone.
+      - OverworldRules (60): `_add_dwelling_town_growth`, `_apply_recruit_percent`, `_blocked_tile_index`, `_build_scenario_resource_states`, `_build_scenario_town_states`, `_command_risk_encounter_objective_item`, `_command_risk_pressure_objective_item`, `_delivery_encounter_matches_node`, `_effective_player_town_weekly_growth`, `_enemy_active_raids`, `_enemy_config_for_faction`, `_enemy_max_active_raids_for_strategy`, `_enemy_pressure`, `_enemy_raid_threshold_for_strategy`, `_find_active_town`, `_find_active_town_by_visit_context`, `_lock_town_occupation_reserves`, `_native_passage_endpoint_safety`, `_posture_label`, `_pressure_bonus_from_profile`, `_public_enemy_pressure_gain`, `_raid_target_is_objective_anchor`, `_release_town_occupation_reserves`, `_resource_site_delivery_interception`, `_resource_site_response_profile`, `_route_security_rating_for_hero`, `_rules_profile_add_ms`, `_rules_profile_set`, `_scenario_objective_met`, `_terrain_id_at`, `_terrain_name_at`, `_town_command_risk_consequence`, `_town_defense_summary`, `_town_front_after_control_change`, `_town_front_stabilize_days`, `_town_front_stabilizing_state`, `_town_is_objective_anchor`, `_town_occupation_after_control_change`, `_town_pressure_output`, `_town_role_pressure_bonus`, `_town_scaling_hero`, `_town_weekly_growth`, `apply_resource_site_disruption`, `apply_town_recovery_pressure`, `encounter_commander_name`, `encounter_commander_threat_label`, `encounter_display_name`, `invalidate_spatial_lookup`, `is_tile_explored`, `map_for_level`, `native_exit_roll_key`, `native_passage_travel_check`, `native_random_exit_check`, `note_native_trip`, `placement_level`, `town_capital_project_state`, `town_development_metrics`, `town_recovery_state`, `town_weekly_growth`, `transition_town_control`.
+      - ArtifactRules (42): `_already_owned_message`, `_artifact_collection_note`, `_artifact_effect_line`, `_artifact_effect_summary`, `_artifact_equipped_note`, `_artifact_set_id`, `_artifact_source_contract`, `_artifact_source_runtime_policy`, `_artifact_spell_modifier_parts`, `_artifact_taxonomy_payload`, `_artifact_ui_summary`, `_draw_from_rarities`, `_equipment_slot_label`, `_first_empty_compatible_slot`, `_matching_artifact_source_contexts`, `_remove_artifact_from_inventory`, `_resource_display_name`, `_select_class_source_reward`, `_signed_amount_label`, `_source_record_guard_tier`, `_source_record_has_required_categories`, `_source_record_has_required_tags`, `_source_record_reward_categories`, `_stable_source_reward_index`, `_title_label`, `artifact_effect_summary`, `artifact_name`, `artifact_reward_role`, `artifact_set_runtime_state`, `artifact_slot_label`, `artifact_taxonomy`, `artifact_taxonomy_summary`, `claim_artifact`, `describe_artifact`, `equip_artifact`, `has_artifact`, `live_source_reward_tag`, `locate_artifact`, `owned_artifact_ids`, `remove_owned_artifact`, `select_live_source_reward`, `select_live_source_rewards`.
+      - ScenarioRules (17): `_army_unit_count`, `_artifact_set_equipment_progress`, `_controlled_hero_army`, `_controlled_hero_state`, `_find_town`, `_hero_army_requirement_progress`, `_hero_progression_requirement_progress`, `_hero_stationing_progress`, `_map_exploration_progress`, `_player_knows_spell`, `_player_owns_artifact`, `_reserve_delivery_progress`, `_resource_site_control_progress`, `_resource_stockpile_progress`, `_titleize_token`, `_town_garrison_requirement_progress`, `_town_has_objective_building`.
+      - HeroCommandRules (16): `_faction_creatures`, `_holder_stacks`, `_normalize_resources`, `_seeded_rng`, `_stack_slot_less`, `_starting_company_size`, `army_addition_split`, `build_recruited_hero`, `hero_recruit_cost`, `merge_stacks_into_army`, `scout_row_half_width`, `set_active_hero`, `starting_army_for_hero`, `tavern_offer`, `tavern_week`, `town_has_hall`.
+      - HeroProgressionRules (12): `_add_experience`, `_apply_command_gain`, `_enqueue_choice_group`, `add_experience`, `advance_to_level`, `command_gain_stat`, `experience_for_level`, `experience_with_bonus`, `pending_choice_summary`, `pending_choices_remaining`, `rank_label`, `scale_recruit_growth`.
+      - TownDevelopmentRules (9): `can_pay`, `construction_growth`, `offers`, `price`, `satisfies`, `trade_artifact`, `train_hero`, `upgrade_army`, `upgrade_cost`.
+      - WaterTravelRules (7): `add_boat`, `any_boat_at`, `boat_by_id`, `build_boat`, `dock_blocker`, `free_boat_at`, `hero_at`.
+      - OverworldTurnPlayback (5): `_actor_name`, `_visual_actor`, `action`, `move`, `visible`.
+      - TownRules (5): `_school_spell_ids_for_town`, `_town_spell_school_access`, `accessible_spell_ids`, `current_spell_tier`, `spell_ids_through_tier`.
+      - FactionTownServices (4): `perform`, `recruit_reward`, `unavailable_reason`, `week`.
+      - ScenarioFactory (4): `_build_resource_states`, `_build_town_states`, `_copy_resource_runtime_metadata`, `_duplicate_dict`.
+      - VisitBuildingRules (4): `_resource_text`, `_thousands`, `effect_summary`, `record_visit`.
+      - CreatureDwellingRules (3): `guard_key`, `record_guard_result`, `take`.
+      - ScenarioScriptRules (3): `_encounter_resolved`, `_hook_fired`, `build_script_state`.
+      - SpellRules (3): `build_spellbook`, `learn_spell`, `mana_state`.
+      - NativeTransitRules (2): `exit_order`, `resolve`.
+      - PlayerIdentityRules (2): `config_for_controller`, `set_resource_controller`.
+      - ScenarioSelectRules (2): `default_difficulty_id`, `normalize_difficulty`.
+      - DifficultyRules (1): `adjust_enemy_pressure_gain`.
+      - OverworldLevelRules (1): `view_level`.
+      - ResourceNodePayloadRules (1): `mark_claimed`.
+  - Phase 5's nine forecast stubs (`missing_*` in `overworld_forecast.cpp`) now call 4.2's ports. They cover a human's
+    town under threat (its development, objective anchor and the raid commanders' labels), the computer players' raid
+    threshold and limits, the town front, and the two authored defeat objectives.
+    - The two objectives still leave the day to GDScript: `ScenarioRules._objective_met` leaves the archived authored
+      scenarios' objective types to it.
+    - The town front is reached only with `include_front`, which the forecast does not pass.
+  - The owner's save copies (D9): five saves, 10 days each from where they were saved, with the human doing nothing
+    and a battle against the human auto-resolved. In the autosave, a computer hero intercepts the human's hero on
+    day 16.
+    - Before the deletions, all GDScript (turn and day) and all native gave the same session and forecast every day.
+    - Shadow of the turn and day switches: 69,837 checks over 338 functions, 0 mismatches.
+    - The codec round trip of each stored payload and of the session each day: 0 differences.
+    - Reached only there: `_attack_player_hero`, `_start_player_battle`, `_attack_town` (3 checks), `_note_sightings`
+      (100), the snapshots of a human's heroes for sightings and intercepts, `_effective_player_town_weekly_growth`
+      (8) and `_linked_player_town_bonus` (82).
+    - After the deletions, the native turn gave the same 50 days again.
+  - The saves do not reach the forecast stubs: no computer hero marches on a town the way legacy raids did. A scratch
+    probe (deleted) built a threat on each save copy in memory: raids on a human town in sight, at its gates and in the
+    fog, a siege, and a computer player's raid config.
+    - The day's native normalize, its GDScript copy, day shadow and main's all-GDScript turn gave the same session,
+      forecast and town front on all five saves.
+    - Day shadow: 10 checks, 0 mismatches, none falling back to GDScript.
+    - With the two authored objectives added, the native day falls back to GDScript on `_objective_met`, as on main.
+  - Day processing's human-only fallbacks are unchanged. A player town's weekly growth
+    (`OverworldRules._growth_tick_town`) and a townless human's warning run in GDScript and print a `NATIVE FALLBACK`
+    line.
+  - Checks: native identical to main on the six seeds; core suite 17/17.
+  - Timing: Whole games, the six seeds' seconds summed, interleaved on a quiet machine (Phases 2 and 5 paused): main
+    587 s and 586 s, the branch 391 s and 390 s, 1.50x. Main runs the GDScript turn by default; 4.1's 1.46x was native
+    mode against it.
+  - The Linux libraries in `bin/` wait for the Linux pass.
 - Proof per slice: shadow mode on the six seeds; the codec round trip (`to_dict(from_dict(d)) == d`, types and key
   order) on every day of the six seeds; before each push, native mode against main on the six seeds and the core
   suite. Review: none under about 300 lines, otherwise one reviewer on the functions shadow mode did not reach.
