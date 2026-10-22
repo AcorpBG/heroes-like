@@ -82,10 +82,12 @@ public:
 	// engine script made itself (mismatch "" when it matched). A call that
 	// reached a path the port leaves to GDScript (state::NotPorted) changes
 	// nothing and returns null, and port_not_ported() is true until the next
-	// port_call. In a subsystem whose switches fall back to GDScript
-	// (port::Table::fallback, the day port) such a check is counted as not
-	// ported and matches; in any other (battle, AI) the call and the check fail
-	// as a native failure does, since the null could pass for GDScript's result.
+	// port_call: what its pure host calls wrote back is undone, and a
+	// NATIVE FALLBACK line names the path. In a subsystem whose switches fall
+	// back to GDScript (port::Table::fallback, the day and turn ports) such a
+	// check is counted as not ported and matches; in any other (battle, AI),
+	// or after a full host call, the call and the check fail as a native
+	// failure does, since the null could pass for GDScript's result.
 	Variant port_call(const StringName &name, const Array &args, bool write_back);
 	bool port_not_ported() const { return last_not_ported_; }
 	String port_check(const StringName &name, const Array &args, const Variant &gdscript_result);

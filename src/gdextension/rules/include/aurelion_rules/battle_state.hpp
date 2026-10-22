@@ -9,7 +9,7 @@
 // Containers live in the State's pools and Values refer to them by index, so a
 // container reached from two places is one node, as it is one object in Godot.
 // Strings are interned: equal texts have one atom, and the texts the port
-// names in code (battle_keys.inc, day_keys.inc, ai_keys.inc) have fixed atoms. Pool references stay valid
+// names in code (battle_keys.inc, day_keys.inc, ai_keys.inc, turn_keys.inc) have fixed atoms. Pool references stay valid
 // while nodes are added (NodePool).
 //
 // A node can be backed: its contents still live in the adapter's container and
@@ -125,6 +125,7 @@ enum : uint32_t {
 #include "aurelion_rules/battle_keys.inc"
 #include "aurelion_rules/day_keys.inc"
 #include "aurelion_rules/ai_keys.inc"
+#include "aurelion_rules/turn_keys.inc"
 #undef AURELION_KEY
 	known_count,
 };
@@ -688,8 +689,9 @@ public:
 	// GDScript.
 	virtual Value call_static(State &state, uint32_t script, uint32_t function, const Value *args, size_t count);
 	// A host call to a function that changes nothing the native call holds
-	// (a pure port::Host): written back first as by call_static, but nothing
-	// is read again afterwards. The default is call_static.
+	// (a pure port::Host): written back first as by call_static, in a way the
+	// adapter can undo, and nothing is read again afterwards. The default is
+	// call_static.
 	virtual Value call_pure(State &state, uint32_t script, uint32_t function, const Value *args, size_t count);
 	// The element type of a builtin Variant type (not an Object), registered
 	// as a loaded typed Array's would be: for a new one, as GDScript's

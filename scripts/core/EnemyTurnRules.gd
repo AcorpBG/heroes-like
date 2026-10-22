@@ -11,6 +11,8 @@ const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
 const EnemyAdventureRulesScript = preload("res://scripts/core/EnemyAdventureRules.gd")
 const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
 const DayEngine = preload("res://scripts/core/DayEngine.gd")
+const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
+static var _turn_engine_mode: int = TurnEngine.mode
 static var _day_engine_mode: int = DayEngine.mode
 # Computer-player state AiHeroRules keeps between days.
 const AI_PLAYER_STATE_KEYS := ["ai_start_hero_granted", "ai_opening_granted", "ai_tavern", "ai_hero_counter", "ai_explored", "ai_boat_wanted_day", "ai_sightings", "ai_weight_set"]
@@ -226,6 +228,17 @@ static func normalize_optional_hero_task_state(value: Variant) -> Dictionary:
 
 ## settle_rosters false: the caller normalizes the enemy states right after.
 static func run_enemy_turn(session: SessionStateStoreScript.SessionData, settle_rosters: bool = true) -> Dictionary:
+	if _turn_engine_mode == TurnEngine.GDSCRIPT:
+		return run_enemy_turn__gd(session, settle_rosters)
+	if _turn_engine_mode == TurnEngine.NATIVE:
+		var native_result = TurnEngine.native_writing(&"EnemyTurnRules.run_enemy_turn", [session, settle_rosters])
+		return run_enemy_turn__gd(session, settle_rosters) if TurnEngine.not_ported() else native_result
+	var before := TurnEngine.before_writing(&"EnemyTurnRules.run_enemy_turn", [session, settle_rosters])
+	var result = run_enemy_turn__gd(session, settle_rosters)
+	TurnEngine.check_writing(&"EnemyTurnRules.run_enemy_turn", before, [session, settle_rosters], result)
+	return result
+
+static func run_enemy_turn__gd(session: SessionStateStoreScript.SessionData, settle_rosters: bool = true) -> Dictionary:
 	var profile_enabled := _enemy_turn_profile_enabled()
 	var profile := {
 		"schema_id": "strategic_ai_enemy_turn_profile_v1",
@@ -288,12 +301,28 @@ static func run_enemy_turn(session: SessionStateStoreScript.SessionData, settle_
 	return _enemy_turn_result(true, " ".join(messages), events, profile_enabled, profile)
 
 static func _enemy_turn_profile_enabled() -> bool:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _enemy_turn_profile_enabled__gd()
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._enemy_turn_profile_enabled", [])
+	var result = _enemy_turn_profile_enabled__gd()
+	TurnEngine.check_writing(&"EnemyTurnRules._enemy_turn_profile_enabled", before, [], result)
+	return result
+
+static func _enemy_turn_profile_enabled__gd() -> bool:
 	return OS.get_environment("HEROES_STRATEGIC_AI_PROFILE").strip_edges().to_lower() in ["1", "true", "yes", "on"]
 
 static func _profile_timer(enabled: bool) -> int:
 	return Time.get_ticks_usec() if enabled else 0
 
 static func _profile_add_ms(profile: Dictionary, key: String, started_usec: int) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_profile_add_ms__gd(profile, key, started_usec)
+		return
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._profile_add_ms", [profile, key, started_usec])
+	_profile_add_ms__gd(profile, key, started_usec)
+	TurnEngine.check_writing(&"EnemyTurnRules._profile_add_ms", before, [profile, key, started_usec], null)
+
+static func _profile_add_ms__gd(profile: Dictionary, key: String, started_usec: int) -> void:
 	if profile.is_empty() or key == "" or started_usec <= 0:
 		return
 	var phases: Dictionary = profile.get("phases_ms", {}) if profile.get("phases_ms", {}) is Dictionary else {}
@@ -302,12 +331,28 @@ static func _profile_add_ms(profile: Dictionary, key: String, started_usec: int)
 	profile["phases_ms"] = phases
 
 static func _enemy_turn_result(ok: bool, message: String, events: Array, profile_enabled: bool, profile: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _enemy_turn_result__gd(ok, message, events, profile_enabled, profile)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._enemy_turn_result", [ok, message, events, profile_enabled, profile])
+	var result = _enemy_turn_result__gd(ok, message, events, profile_enabled, profile)
+	TurnEngine.check_writing(&"EnemyTurnRules._enemy_turn_result", before, [ok, message, events, profile_enabled, profile], result)
+	return result
+
+static func _enemy_turn_result__gd(ok: bool, message: String, events: Array, profile_enabled: bool, profile: Dictionary) -> Dictionary:
 	var result := {"ok": ok, "message": message, "events": events}
 	if profile_enabled:
 		result["profile"] = profile
 	return result
 
 static func _append_event_records(output: Array, events_value: Variant) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_append_event_records__gd(output, events_value)
+		return
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._append_event_records", [output, events_value])
+	_append_event_records__gd(output, events_value)
+	TurnEngine.check_writing(&"EnemyTurnRules._append_event_records", before, [output, events_value], null)
+
+static func _append_event_records__gd(output: Array, events_value: Variant) -> void:
 	if not (events_value is Array):
 		return
 	for event_value in events_value:
@@ -367,7 +412,15 @@ static func active_raid_count(session: SessionStateStoreScript.SessionData, fact
 		count += 1
 	return count
 
-static func ai_town_build_event(
+static func ai_town_build_event(session: SessionStateStoreScript.SessionData, config: Dictionary, town: Dictionary, selected_build: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return ai_town_build_event__gd(session, config, town, selected_build)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules.ai_town_build_event", [session, config, town, selected_build])
+	var result = ai_town_build_event__gd(session, config, town, selected_build)
+	TurnEngine.check_writing(&"EnemyTurnRules.ai_town_build_event", before, [session, config, town, selected_build], result)
+	return result
+
+static func ai_town_build_event__gd(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	town: Dictionary,
@@ -405,7 +458,15 @@ static func ai_town_build_event(
 		}
 	)
 
-static func ai_town_recruit_event(
+static func ai_town_recruit_event(session: SessionStateStoreScript.SessionData, config: Dictionary, town: Dictionary, selected_recruitment: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return ai_town_recruit_event__gd(session, config, town, selected_recruitment)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules.ai_town_recruit_event", [session, config, town, selected_recruitment])
+	var result = ai_town_recruit_event__gd(session, config, town, selected_recruitment)
+	TurnEngine.check_writing(&"EnemyTurnRules.ai_town_recruit_event", before, [session, config, town, selected_recruitment], result)
+	return result
+
+static func ai_town_recruit_event__gd(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	town: Dictionary,
@@ -452,6 +513,14 @@ static func ai_town_recruit_event(
 	)
 
 static func _town_actor(town: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _town_actor__gd(town)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._town_actor", [town])
+	var result = _town_actor__gd(town)
+	TurnEngine.check_writing(&"EnemyTurnRules._town_actor", before, [town], result)
+	return result
+
+static func _town_actor__gd(town: Dictionary) -> Dictionary:
 	return {
 		"placement_id": String(town.get("placement_id", "")),
 		"name": _town_name(town),
@@ -530,7 +599,15 @@ static func _faction_front_state(
 		"summary": " | ".join(parts),
 	}
 
-static func _latest_enemy_state(
+static func _latest_enemy_state(session: SessionStateStoreScript.SessionData, faction_id: String, fallback: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _latest_enemy_state__gd(session, faction_id, fallback)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._latest_enemy_state", [session, faction_id, fallback])
+	var result = _latest_enemy_state__gd(session, faction_id, fallback)
+	TurnEngine.check_writing(&"EnemyTurnRules._latest_enemy_state", before, [session, faction_id, fallback], result)
+	return result
+
+static func _latest_enemy_state__gd(
 	session: SessionStateStoreScript.SessionData,
 	faction_id: String,
 	fallback: Dictionary
@@ -550,7 +627,15 @@ static func _latest_enemy_state(
 			merged.erase(runtime_key)
 	return merged
 
-static func _apply_weekly_musters(
+static func _apply_weekly_musters(session: SessionStateStoreScript.SessionData, town_entries: Array, towns: Array, faction_id: String, config: Dictionary) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _apply_weekly_musters__gd(session, town_entries, towns, faction_id, config)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._apply_weekly_musters", [session, town_entries, towns, faction_id, config])
+	var result = _apply_weekly_musters__gd(session, town_entries, towns, faction_id, config)
+	TurnEngine.check_writing(&"EnemyTurnRules._apply_weekly_musters", before, [session, town_entries, towns, faction_id, config], result)
+	return result
+
+static func _apply_weekly_musters__gd(
 	session: SessionStateStoreScript.SessionData,
 	town_entries: Array,
 	towns: Array,
@@ -575,6 +660,14 @@ static func _apply_weekly_musters(
 	]
 
 static func _enemy_town_accessible_spell_ids(town: Dictionary) -> Array:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _enemy_town_accessible_spell_ids__gd(town)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._enemy_town_accessible_spell_ids", [town])
+	var result = _enemy_town_accessible_spell_ids__gd(town)
+	TurnEngine.check_writing(&"EnemyTurnRules._enemy_town_accessible_spell_ids", before, [town], result)
+	return result
+
+static func _enemy_town_accessible_spell_ids__gd(town: Dictionary) -> Array:
 	if TownRulesScript == null:
 		return []
 	return TownRulesScript.accessible_spell_ids(town)
@@ -806,6 +899,14 @@ static func _default_spawn_points_for_faction(session: SessionStateStoreScript.S
 	return points
 
 static func _owned_town_count(session: SessionStateStoreScript.SessionData, faction_id: String) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _owned_town_count__gd(session, faction_id)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._owned_town_count", [session, faction_id])
+	var result = _owned_town_count__gd(session, faction_id)
+	TurnEngine.check_writing(&"EnemyTurnRules._owned_town_count", before, [session, faction_id], result)
+	return result
+
+static func _owned_town_count__gd(session: SessionStateStoreScript.SessionData, faction_id: String) -> int:
 	return _owned_town_entries(session, faction_id).size()
 
 static func _owned_town_entries(session: SessionStateStoreScript.SessionData, faction_id: String) -> Array:
@@ -950,10 +1051,26 @@ static func _launch_policy_front_state(
 	return loaded
 
 static func _enemy_recruit_cost(town: Dictionary, unit_id: String) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _enemy_recruit_cost__gd(town, unit_id)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._enemy_recruit_cost", [town, unit_id])
+	var result = _enemy_recruit_cost__gd(town, unit_id)
+	TurnEngine.check_writing(&"EnemyTurnRules._enemy_recruit_cost", before, [town, unit_id], result)
+	return result
+
+static func _enemy_recruit_cost__gd(town: Dictionary, unit_id: String) -> Dictionary:
 	var unit = ContentService.get_unit(unit_id)
 	return _apply_discount(unit.get("cost", {}), _recruitment_discount_percent(town, unit_id))
 
 static func _recruitment_discount_percent(town: Dictionary, unit_id: String) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _recruitment_discount_percent__gd(town, unit_id)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._recruitment_discount_percent", [town, unit_id])
+	var result = _recruitment_discount_percent__gd(town, unit_id)
+	TurnEngine.check_writing(&"EnemyTurnRules._recruitment_discount_percent", before, [town, unit_id], result)
+	return result
+
+static func _recruitment_discount_percent__gd(town: Dictionary, unit_id: String) -> int:
 	var town_template = ContentService.get_town(String(town.get("town_id", "")))
 	var total_discount = _discount_from_profile(town_template.get("recruitment", {}), unit_id)
 	total_discount += _discount_from_profile(
@@ -967,6 +1084,14 @@ static func _recruitment_discount_percent(town: Dictionary, unit_id: String) -> 
 	return clamp(total_discount, 0, 75)
 
 static func _discount_from_profile(profile: Variant, unit_id: String) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _discount_from_profile__gd(profile, unit_id)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._discount_from_profile", [profile, unit_id])
+	var result = _discount_from_profile__gd(profile, unit_id)
+	TurnEngine.check_writing(&"EnemyTurnRules._discount_from_profile", before, [profile, unit_id], result)
+	return result
+
+static func _discount_from_profile__gd(profile: Variant, unit_id: String) -> int:
 	if not (profile is Dictionary):
 		return 0
 	var discounts = profile.get("cost_discount_percent", {})
@@ -975,6 +1100,14 @@ static func _discount_from_profile(profile: Variant, unit_id: String) -> int:
 	return max(0, int(discounts.get(unit_id, 0)))
 
 static func _building_growth_payload(building_id: String) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _building_growth_payload__gd(building_id)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._building_growth_payload", [building_id])
+	var result = _building_growth_payload__gd(building_id)
+	TurnEngine.check_writing(&"EnemyTurnRules._building_growth_payload", before, [building_id], result)
+	return result
+
+static func _building_growth_payload__gd(building_id: String) -> Dictionary:
 	var payload = {}
 	var building = ContentService.get_building(building_id)
 	if int(building.get("development_version", 0)) == 1:
@@ -989,6 +1122,14 @@ static func _building_growth_payload(building_id: String) -> Dictionary:
 	return payload
 
 static func _merge_recruits(base: Variant, delta: Variant) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _merge_recruits__gd(base, delta)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._merge_recruits", [base, delta])
+	var result = _merge_recruits__gd(base, delta)
+	TurnEngine.check_writing(&"EnemyTurnRules._merge_recruits", before, [base, delta], result)
+	return result
+
+static func _merge_recruits__gd(base: Variant, delta: Variant) -> Dictionary:
 	var merged = {}
 	if base is Dictionary:
 		for unit_id in base.keys():
@@ -999,6 +1140,14 @@ static func _merge_recruits(base: Variant, delta: Variant) -> Dictionary:
 	return merged
 
 static func _consume_recruits(base: Variant, unit_id: String, amount: int) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _consume_recruits__gd(base, unit_id, amount)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._consume_recruits", [base, unit_id, amount])
+	var result = _consume_recruits__gd(base, unit_id, amount)
+	TurnEngine.check_writing(&"EnemyTurnRules._consume_recruits", before, [base, unit_id, amount], result)
+	return result
+
+static func _consume_recruits__gd(base: Variant, unit_id: String, amount: int) -> Dictionary:
 	var remaining = {}
 	if base is Dictionary:
 		for existing_unit_id in base.keys():
@@ -1007,6 +1156,14 @@ static func _consume_recruits(base: Variant, unit_id: String, amount: int) -> Di
 	return remaining
 
 static func _spend_from_pool(pool: Dictionary, cost: Variant) -> void:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		_spend_from_pool__gd(pool, cost)
+		return
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._spend_from_pool", [pool, cost])
+	_spend_from_pool__gd(pool, cost)
+	TurnEngine.check_writing(&"EnemyTurnRules._spend_from_pool", before, [pool, cost], null)
+
+static func _spend_from_pool__gd(pool: Dictionary, cost: Variant) -> void:
 	if not (cost is Dictionary):
 		return
 	for key in cost.keys():
@@ -1014,6 +1171,14 @@ static func _spend_from_pool(pool: Dictionary, cost: Variant) -> void:
 		pool[resource_key] = max(0, int(pool.get(resource_key, 0)) - max(0, int(cost[key])))
 
 static func _scale_resource_pool(cost: Variant, multiplier: int) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _scale_resource_pool__gd(cost, multiplier)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._scale_resource_pool", [cost, multiplier])
+	var result = _scale_resource_pool__gd(cost, multiplier)
+	TurnEngine.check_writing(&"EnemyTurnRules._scale_resource_pool", before, [cost, multiplier], result)
+	return result
+
+static func _scale_resource_pool__gd(cost: Variant, multiplier: int) -> Dictionary:
 	var scaled = {}
 	if not (cost is Dictionary):
 		return scaled
@@ -1035,6 +1200,14 @@ static func _blank_resource_pool() -> Dictionary:
 	return resources
 
 static func _apply_discount(cost: Variant, discount_percent: int) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _apply_discount__gd(cost, discount_percent)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._apply_discount", [cost, discount_percent])
+	var result = _apply_discount__gd(cost, discount_percent)
+	TurnEngine.check_writing(&"EnemyTurnRules._apply_discount", before, [cost, discount_percent], result)
+	return result
+
+static func _apply_discount__gd(cost: Variant, discount_percent: int) -> Dictionary:
 	var discounted = {}
 	var clamped_discount = clamp(discount_percent, 0, 75)
 	if cost is Dictionary:
@@ -1246,6 +1419,14 @@ static func _normalize_string_array(value: Variant) -> Array:
 	return normalized
 
 static func _normalized_built_buildings(town: Dictionary) -> Array:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _normalized_built_buildings__gd(town)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._normalized_built_buildings", [town])
+	var result = _normalized_built_buildings__gd(town)
+	TurnEngine.check_writing(&"EnemyTurnRules._normalized_built_buildings", before, [town], result)
+	return result
+
+static func _normalized_built_buildings__gd(town: Dictionary) -> Array:
 	if TownDevelopment.is_current(town): return TownDevelopment.active_buildings(town)
 	var normalized = []
 	var town_template = ContentService.get_town(String(town.get("town_id", "")))
@@ -1269,6 +1450,14 @@ static func _append_building_with_requirements(target: Array, building_id: Strin
 	target.append(building_id)
 
 static func _describe_recruit_delta(delta: Variant) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _describe_recruit_delta__gd(delta)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._describe_recruit_delta", [delta])
+	var result = _describe_recruit_delta__gd(delta)
+	TurnEngine.check_writing(&"EnemyTurnRules._describe_recruit_delta", before, [delta], result)
+	return result
+
+static func _describe_recruit_delta__gd(delta: Variant) -> String:
 	if not (delta is Dictionary) or delta.is_empty():
 		return ""
 	var parts = []
@@ -1292,6 +1481,14 @@ static func _find_state(states: Variant, faction_id: String) -> Dictionary:
 	return {}
 
 static func _find_state_index(states: Variant, faction_id: String) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _find_state_index__gd(states, faction_id)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._find_state_index", [states, faction_id])
+	var result = _find_state_index__gd(states, faction_id)
+	TurnEngine.check_writing(&"EnemyTurnRules._find_state_index", before, [states, faction_id], result)
+	return result
+
+static func _find_state_index__gd(states: Variant, faction_id: String) -> int:
 	if states is Array:
 		for index in range(states.size()):
 			var state = states[index]
@@ -1300,6 +1497,14 @@ static func _find_state_index(states: Variant, faction_id: String) -> int:
 	return -1
 
 static func _town_name(town_state: Dictionary) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _town_name__gd(town_state)
+	var before := TurnEngine.before_writing(&"EnemyTurnRules._town_name", [town_state])
+	var result = _town_name__gd(town_state)
+	TurnEngine.check_writing(&"EnemyTurnRules._town_name", before, [town_state], result)
+	return result
+
+static func _town_name__gd(town_state: Dictionary) -> String:
 	var town = ContentService.get_town(String(town_state.get("town_id", "")))
 	return String(town.get("name", town_state.get("town_id", "Town")))
 
