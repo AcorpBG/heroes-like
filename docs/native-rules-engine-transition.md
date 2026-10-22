@@ -1066,6 +1066,31 @@ port, 3e11b0aed Windows binaries; merges of main 4ea510b0b and 8d1985999):
   - Core suite: 17/17 on Windows.
   - The Linux libraries in `bin/` are not rebuilt.
 
+**The AI's estimates without the scoring payload** (slice 08a, 2026-10-22; branch commits c94611a8b port,
+eb4f8729a Windows binaries; merge of main 2c5bd236a):
+- **Ported:** 88 BattleAiRules functions, 1,120 lines; 86 of them switched.
+  - The scoring scope of one AI decision and its memos, GDScript's static vars read and written through the host as
+    the GDScript does (`battle_ai_rules.cpp`, 8).
+  - The AI's copies of the damage modifiers, the field objectives' bonuses and the side reads they use
+    (`battle_ai_modifiers.cpp`, 43).
+  - Its reads of reach and attack distance, side health, the advance target and destination, the commander's payload
+    and template, and the spell estimates (`battle_ai_reads.cpp`, 37).
+  - The copies call the AI's own memo-aware helpers, never the BattleRules port of the same name. The six memos
+    `_clear_scoring_memos` also touches join the shared memos shadow checks.
+- **Not switched:** `_add_scoring_memo_entry` and `_keep_stack_term`. GDScript passes them the static memo itself, or an
+  entry of it, and shadow cannot tie a native write to that argument back to the static var. Native callers use the C++.
+- **Waiting (08b):** the side's scoring payload and the 41 functions that reach it, through Phase 5's
+  `ensure_hero_spellbook`, on main since 379665372.
+- **Review:** one reviewer on the five functions shadow did not check (`_allied_melee_count`,
+  `_side_has_linked_unit`, `_can_make_any_ranged_attack` and the two kept out): no divergence.
+- **Checks:**
+  - Shadow on the six seeds: 0 mismatches, 0 errors and 0 paths left to GDScript in 74,657,726 checks over 469 of
+    the 482 functions. 7,924,854 of them are slice 08a's, over 83 of its 86; `_allied_melee_count`,
+    `_can_make_any_ranged_attack` and `_side_has_linked_unit` were not reached.
+  - Native mode against main: every daily digest (415) and match record of the six seeds is identical.
+  - Core suite: 17/17 on Windows.
+  - The Linux libraries in `bin/` are not rebuilt.
+
 ### Phase 2: one payload builder, AI preview as one call, the battle tool
 
 - Battle payload creation (`BattleRules.gd:256-402`), stack and hero payloads, obstacles, and the end-of-battle numbers

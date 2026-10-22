@@ -116128,15 +116128,15 @@
     {
       "id": "native-rules-phase1-08-ai-estimates-20261020",
       "title": "Native battle engine 08: battle AI estimates",
-      "status": "pending",
+      "status": "in_progress",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "BattleAiRules' copies of layers 1-6 (95 functions / 1,347 lines), its scoring scope and memos.",
-      "updatedAt": "2026-10-20T19:35:00Z"
+      "notes": "BattleAiRules' copies of layers 1-6 (95 functions / 1,347 lines), its scoring scope and memos. 08a done on the branch (c94611a8b, eb4f8729a): 86 of 88 functions switched; shadow 0 mismatches in 74,657,726 checks (7,924,854 in 08a's, 83 of 86 reached); native identical to main on the six seeds; core suite 17/17 (Windows). 08b: the scoring payload and the 41 functions reaching it.",
+      "updatedAt": "2026-10-22T00:18:24Z"
     },
     {
       "id": "native-rules-phase1-09-ai-decisions-20261020",
