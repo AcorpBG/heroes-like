@@ -10,6 +10,8 @@ const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd
 const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
 const EnemyAdventureRulesScript = preload("res://scripts/core/EnemyAdventureRules.gd")
 const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
+const DayEngine = preload("res://scripts/core/DayEngine.gd")
+static var _day_engine_mode: int = DayEngine.mode
 # Computer-player state AiHeroRules keeps between days.
 const AI_PLAYER_STATE_KEYS := ["ai_start_hero_granted", "ai_opening_granted", "ai_tavern", "ai_hero_counter", "ai_explored", "ai_boat_wanted_day", "ai_sightings", "ai_weight_set"]
 static var TownRulesScript: Variant = load("res://scripts/core/TownRules.gd")
@@ -60,6 +62,18 @@ static func build_enemy_states(configs: Variant) -> Array:
 	return states
 
 static func normalize_enemy_states(session: SessionStateStoreScript.SessionData) -> void:
+	if _day_engine_mode == DayEngine.GDSCRIPT:
+		normalize_enemy_states__gd(session)
+	elif _day_engine_mode == DayEngine.NATIVE:
+		DayEngine.native_writing(&"EnemyTurnRules.normalize_enemy_states", [session])
+		if DayEngine.not_ported():
+			normalize_enemy_states__gd(session)
+	else:
+		var before := DayEngine.before_writing([session])
+		normalize_enemy_states__gd(session)
+		DayEngine.check_writing(&"EnemyTurnRules.normalize_enemy_states", before, [session], null)
+
+static func normalize_enemy_states__gd(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null or session.scenario_id == "":
 		return
 	# Roster entries built during this normalization are reused within it (see

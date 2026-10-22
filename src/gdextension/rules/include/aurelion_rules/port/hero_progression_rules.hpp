@@ -40,4 +40,7 @@ int64_t adjusted_mana_cost(State &state, DictRef hero_state, int64_t base_cost, 
 // port (hero_progression_rules.cpp).
 int64_t mana_max_bonus(State &state, DictRef hero_state);
 
+// A hero's daily income from artifacts and specialties (day_economy.cpp).
+DictRef daily_income_bonus(State &state, DictRef hero_state);
+
 } // namespace aurelion::rules::port::hero_progression_rules
