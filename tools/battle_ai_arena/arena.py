@@ -210,6 +210,10 @@ def run_workers(
         env["APPDATA"] = profile  # Windows user data
         env["XDG_DATA_HOME"] = profile  # Linux user data
         env["XDG_CONFIG_HOME"] = profile
+        if router_path is not None:
+            # The router and the variants replace the GDScript BattleAiRules, which only the battle switch's GDScript
+            # copy runs (scripts/core/BattleEngine.gd). A plain run keeps the caller's switch, native by default.
+            env["HEROES_NATIVE_BATTLE"] = "gdscript"
         out = run_dir / f"results_{index}.jsonl"
         log = (run_dir / f"worker_{index}.log").open("w", encoding="utf-8")
         cmd = [godot, "--headless", "--path", str(ROOT), "--audio-driver", "Dummy", "-s", str(HERE / "worker.gd"), "--", str(job), str(out)]

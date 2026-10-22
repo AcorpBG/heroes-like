@@ -5,6 +5,9 @@ extends RefCounted
 ## down to -70%. The caps sit past any stat gap the content reaches, so every
 ## point of hero or creature attack and defense counts.
 
+const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
+static var _battle_engine_mode: int = BattleEngine.mode
+
 const ATTACK_BONUS_PER_POINT := 0.05
 const ATTACK_BONUS_MAX := 3.0
 const DEFENSE_REDUCTION_PER_POINT := 0.025
@@ -29,6 +32,15 @@ const HERO_SPECIALTY_BATTLE_KEYS := [
 
 ## The side assaulting a town in this battle, "" when it is no town fight.
 static func town_assault_side(battle: Dictionary) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return town_assault_side__gd(battle)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleDamageRules.town_assault_side", [battle])
+	var result = town_assault_side__gd(battle)
+	BattleEngine.check(&"BattleDamageRules.town_assault_side", [battle], result)
+	return result
+
+static func town_assault_side__gd(battle: Dictionary) -> String:
 	var context = battle.get("context", {})
 	var context_type := String(context.get("type", "")) if context is Dictionary else ""
 	if context_type == "town_assault":
@@ -41,6 +53,15 @@ static func town_assault_side(battle: Dictionary) -> String:
 ## bonus, plus retaliation and siege bonuses when they apply, against the
 ## defender's damage reduction.
 static func hero_damage_multiplier(attacker_hero: Dictionary, defender_hero: Dictionary, is_ranged: bool, is_retaliation: bool, is_town_assault: bool) -> float:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return hero_damage_multiplier__gd(attacker_hero, defender_hero, is_ranged, is_retaliation, is_town_assault)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleDamageRules.hero_damage_multiplier", [attacker_hero, defender_hero, is_ranged, is_retaliation, is_town_assault])
+	var result = hero_damage_multiplier__gd(attacker_hero, defender_hero, is_ranged, is_retaliation, is_town_assault)
+	BattleEngine.check(&"BattleDamageRules.hero_damage_multiplier", [attacker_hero, defender_hero, is_ranged, is_retaliation, is_town_assault], result)
+	return result
+
+static func hero_damage_multiplier__gd(attacker_hero: Dictionary, defender_hero: Dictionary, is_ranged: bool, is_retaliation: bool, is_town_assault: bool) -> float:
 	var pct := int(attacker_hero.get("ranged_damage_pct" if is_ranged else "melee_damage_pct", 0))
 	if is_retaliation:
 		pct += int(attacker_hero.get("retaliation_damage_pct", 0))
@@ -50,6 +71,15 @@ static func hero_damage_multiplier(attacker_hero: Dictionary, defender_hero: Dic
 	return (1.0 + float(pct) / 100.0) * taken
 
 static func attack_defense_multiplier(attack_stat: int, defense_stat: int) -> float:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return attack_defense_multiplier__gd(attack_stat, defense_stat)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleDamageRules.attack_defense_multiplier", [attack_stat, defense_stat])
+	var result = attack_defense_multiplier__gd(attack_stat, defense_stat)
+	BattleEngine.check(&"BattleDamageRules.attack_defense_multiplier", [attack_stat, defense_stat], result)
+	return result
+
+static func attack_defense_multiplier__gd(attack_stat: int, defense_stat: int) -> float:
 	var difference := attack_stat - defense_stat
 	if difference >= 0:
 		return 1.0 + minf(float(difference) * ATTACK_BONUS_PER_POINT, ATTACK_BONUS_MAX)

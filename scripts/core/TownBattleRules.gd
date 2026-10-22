@@ -1,5 +1,8 @@
 extends RefCounted
 
+const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
+static var _battle_engine_mode: int = BattleEngine.mode
+
 # A battle snapshots the defending town once. Loading or changing ownership
 # later must not refill shields or replay healing already resolved this round.
 static func prepare(battle: Dictionary, building_ids: Array, side: String) -> void:
@@ -16,14 +19,41 @@ static func prepare(battle: Dictionary, building_ids: Array, side: String) -> vo
 				stack["town_shield_hp"] = maxi(0, int(ceil(float(stack.get("total_health", 0)) * float(shield.get("health_pct", 15)) / 100.0)))
 
 static func effect(battle: Dictionary, id: String) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return effect__gd(battle, id)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"TownBattleRules.effect", [battle, id])
+	var result = effect__gd(battle, id)
+	BattleEngine.check(&"TownBattleRules.effect", [battle, id], result)
+	return result
+
+static func effect__gd(battle: Dictionary, id: String) -> Dictionary:
 	var value: Dictionary = battle.get("town_defenses", {}).get("effects", {}).get(id, {})
 	if value.is_empty() or int(battle.get("round", 1)) > int(value.get("rounds", 999)): return {}
 	return value
 
 static func defends(battle: Dictionary, stack: Dictionary) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return defends__gd(battle, stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"TownBattleRules.defends", [battle, stack])
+	var result = defends__gd(battle, stack)
+	BattleEngine.check(&"TownBattleRules.defends", [battle, stack], result)
+	return result
+
+static func defends__gd(battle: Dictionary, stack: Dictionary) -> bool:
 	return not battle.get("town_defenses", {}).is_empty() and stack.get("side", "") == battle.town_defenses.get("side", "")
 
 static func damage_multiplier(battle: Dictionary, attacker: Dictionary, defender: Dictionary, ranged: bool) -> float:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return damage_multiplier__gd(battle, attacker, defender, ranged)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"TownBattleRules.damage_multiplier", [battle, attacker, defender, ranged])
+	var result = damage_multiplier__gd(battle, attacker, defender, ranged)
+	BattleEngine.check(&"TownBattleRules.damage_multiplier", [battle, attacker, defender, ranged], result)
+	return result
+
+static func damage_multiplier__gd(battle: Dictionary, attacker: Dictionary, defender: Dictionary, ranged: bool) -> float:
 	if not ranged: return 1.0
 	var multiplier := 1.0
 	if defends(battle, attacker):
@@ -33,13 +63,41 @@ static func damage_multiplier(battle: Dictionary, attacker: Dictionary, defender
 	return multiplier
 
 static func movement_penalty(battle: Dictionary, stack: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return movement_penalty__gd(battle, stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"TownBattleRules.movement_penalty", [battle, stack])
+	var result = movement_penalty__gd(battle, stack)
+	BattleEngine.check(&"TownBattleRules.movement_penalty", [battle, stack], result)
+	return result
+
+static func movement_penalty__gd(battle: Dictionary, stack: Dictionary) -> int:
 	if defends(battle, stack): return 0
 	return int(effect(battle, "chainboom").get("movement_penalty", 0))
 
 static func spell_resistance(battle: Dictionary, stack: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return spell_resistance__gd(battle, stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"TownBattleRules.spell_resistance", [battle, stack])
+	var result = spell_resistance__gd(battle, stack)
+	BattleEngine.check(&"TownBattleRules.spell_resistance", [battle, stack], result)
+	return result
+
+static func spell_resistance__gd(battle: Dictionary, stack: Dictionary) -> int:
 	return int(effect(battle, "prism_ward").get("resistance_pct", 0)) if defends(battle, stack) else 0
 
 static func heal_round(battle: Dictionary) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return heal_round__gd(battle)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"TownBattleRules.heal_round", [battle])
+	var before := BattleEngine.before_writing(&"TownBattleRules.heal_round", [battle])
+	var result = heal_round__gd(battle)
+	BattleEngine.check_writing(&"TownBattleRules.heal_round", before, [battle], result)
+	return result
+
+static func heal_round__gd(battle: Dictionary) -> Array:
 	var restored: Array = []
 	var ward := effect(battle, "root_ward")
 	var round_number := int(battle.get("round", 1))
@@ -59,6 +117,16 @@ static func heal_round(battle: Dictionary) -> Array:
 	return restored
 
 static func absorb(stack: Dictionary, damage: int) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return absorb__gd(stack, damage)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"TownBattleRules.absorb", [stack, damage])
+	var before := BattleEngine.before_writing(&"TownBattleRules.absorb", [stack, damage])
+	var result = absorb__gd(stack, damage)
+	BattleEngine.check_writing(&"TownBattleRules.absorb", before, [stack, damage], result)
+	return result
+
+static func absorb__gd(stack: Dictionary, damage: int) -> int:
 	var absorbed := mini(maxi(0, int(stack.get("town_shield_hp", 0))), maxi(0, damage))
 	if absorbed > 0: stack["town_shield_hp"] = int(stack.town_shield_hp) - absorbed
 	return absorbed

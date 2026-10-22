@@ -2,10 +2,31 @@ extends RefCounted
 ## Shared odd-row hex body geometry. No content lookup, RNG or state mutation.
 ## Saved stacks without footprint metadata retain their original one-cell body.
 
+const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
+static var _battle_engine_mode: int = BattleEngine.mode
+
 static func width(stack: Dictionary) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return width__gd(stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleFootprint.width", [stack])
+	var result = width__gd(stack)
+	BattleEngine.check(&"BattleFootprint.width", [stack], result)
+	return result
+
+static func width__gd(stack: Dictionary) -> int:
 	return 2 if int(stack.get("battle_footprint", 1)) == 2 else 1
 
 static func cells(stack: Dictionary, anchor: Dictionary = {}) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return cells__gd(stack, anchor)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleFootprint.cells", [stack, anchor])
+	var result = cells__gd(stack, anchor)
+	BattleEngine.check(&"BattleFootprint.cells", [stack, anchor], result)
+	return result
+
+static func cells__gd(stack: Dictionary, anchor: Dictionary = {}) -> Array:
 	var origin: Variant = stack.get("hex", {}) if anchor.is_empty() else anchor
 	# Match the legacy rule boundary's accepted Vector2i and x/y forms.
 	if origin is Vector2i: origin = {"q":origin.x,"r":origin.y}
@@ -21,6 +42,15 @@ static func cells(stack: Dictionary, anchor: Dictionary = {}) -> Array:
 ## The same body as cells() (width() inlined), read without building it: fits
 ## and distance run for every hex of every walk and strike the battle weighs.
 static func fits(stack: Dictionary, anchor: Dictionary, occupied: Dictionary, columns: int, rows: int) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return fits__gd(stack, anchor, occupied, columns, rows)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleFootprint.fits", [stack, anchor, occupied, columns, rows])
+	var result = fits__gd(stack, anchor, occupied, columns, rows)
+	BattleEngine.check(&"BattleFootprint.fits", [stack, anchor, occupied, columns, rows], result)
+	return result
+
+static func fits__gd(stack: Dictionary, anchor: Dictionary, occupied: Dictionary, columns: int, rows: int) -> bool:
 	var origin: Variant = stack.get("hex", {}) if anchor.is_empty() else anchor
 	var q := -1
 	var r := -1
@@ -47,6 +77,15 @@ static func fits(stack: Dictionary, anchor: Dictionary, occupied: Dictionary, co
 ## searches: [anchor q, r, tail q]. q or r is below 0 when it has no hex; the
 ## tail q equals q for a one-hex body.
 static func placed_columns(stack: Dictionary) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return placed_columns__gd(stack)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleFootprint.placed_columns", [stack])
+	var result = placed_columns__gd(stack)
+	BattleEngine.check(&"BattleFootprint.placed_columns", [stack], result)
+	return result
+
+static func placed_columns__gd(stack: Dictionary) -> Array:
 	var origin: Variant = stack.get("hex", {})
 	var q := -1
 	var r := -1
@@ -62,6 +101,15 @@ static func placed_columns(stack: Dictionary) -> Array:
 	return [q, r, tail]
 
 static func distance(lhs: Dictionary, rhs: Dictionary, lhs_anchor: Dictionary = {}) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return distance__gd(lhs, rhs, lhs_anchor)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native(&"BattleFootprint.distance", [lhs, rhs, lhs_anchor])
+	var result = distance__gd(lhs, rhs, lhs_anchor)
+	BattleEngine.check(&"BattleFootprint.distance", [lhs, rhs, lhs_anchor], result)
+	return result
+
+static func distance__gd(lhs: Dictionary, rhs: Dictionary, lhs_anchor: Dictionary = {}) -> int:
 	var origin: Variant = lhs.get("hex", {}) if lhs_anchor.is_empty() else lhs_anchor
 	var a_q := -1
 	var a_r := -1

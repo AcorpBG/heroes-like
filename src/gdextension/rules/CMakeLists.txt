@@ -97,6 +97,9 @@ add_library(aurelion_rules_core STATIC
 	core/battle_state.cpp
 	core/build_info.cpp
 	core/compat/godot_string.cpp
+	core/port/ability_helpers.cpp
+	core/port/action_playback.cpp
+	core/port/action_pressure.cpp
 	core/port/ai_hero_rules.cpp
 	core/port/ai_hero_rules_candidates.cpp
 	core/port/ai_hero_rules_defense.cpp
@@ -113,11 +116,33 @@ add_library(aurelion_rules_core STATIC
 	core/port/ai_port.cpp
 	core/port/ai_registry.cpp
 	core/port/artifact_rules.cpp
+	core/port/attack_effects.cpp
+	core/port/attack_events.cpp
+	core/port/battle_ai_abilities.cpp
+	core/port/battle_ai_attack_scores.cpp
+	core/port/battle_ai_contextual.cpp
+	core/port/battle_ai_decisions.cpp
+	core/port/battle_ai_estimates.cpp
+	core/port/battle_ai_modifiers.cpp
+	core/port/battle_ai_payloads.cpp
+	core/port/battle_ai_reads.cpp
+	core/port/battle_ai_rules.cpp
+	core/port/battle_ai_spell_choice.cpp
+	core/port/battle_ai_spell_scores.cpp
+	core/port/battle_auto_resolve.cpp
 	core/port/battle_damage_rules_ai.cpp
+	core/port/battle_footprint.cpp
+	core/port/battle_rules.cpp
 	core/port/battle_rules_ai.cpp
+	core/port/board_setup.cpp
+	core/port/commander_payload.cpp
 	core/port/common_mine_rules.cpp
+	core/port/consequence_previews.cpp
 	core/port/content_service_ai.cpp
 	core/port/creature_dwelling_rules_ai.cpp
+	core/port/damage_modifiers.cpp
+	core/port/damage_pressure.cpp
+	core/port/damage_stream.cpp
 	core/port/day_boundary.cpp
 	core/port/day_economy.cpp
 	core/port/day_registry.cpp
@@ -125,7 +150,9 @@ add_library(aurelion_rules_core STATIC
 	core/port/difficulty_rules_ai.cpp
 	core/port/enemy_adventure_rules.cpp
 	core/port/enemy_adventure_rules_ai.cpp
+	core/port/enemy_orders.cpp
 	core/port/enemy_states.cpp
+	core/port/enemy_turn.cpp
 	core/port/enemy_turn_rules.cpp
 	core/port/fog.cpp
 	core/port/gd.cpp
@@ -135,6 +162,8 @@ add_library(aurelion_rules_core STATIC
 	core/port/hero_progression_rules.cpp
 	core/port/mine_rules.cpp
 	core/port/mine_rules_ai.cpp
+	core/port/move_orders.cpp
+	core/port/movement.cpp
 	core/port/native_transit_rules.cpp
 	core/port/native_transit_rules_ai.cpp
 	core/port/overworld_forecast.cpp
@@ -155,14 +184,28 @@ add_library(aurelion_rules_core STATIC
 	core/port/player_elimination.cpp
 	core/port/player_identity_rules.cpp
 	core/port/player_identity_rules_ai.cpp
+	core/port/player_orders.cpp
+	core/port/presentation.cpp
+	core/port/registry.cpp
 	core/port/registry_tables.cpp
 	core/port/resource_node_payload_rules_ai.cpp
+	core/port/round_effects.cpp
 	core/port/scenario_evaluation.cpp
 	core/port/scenario_factory_ai.cpp
+	core/port/spell_battle.cpp
+	core/port/spell_effects.cpp
+	core/port/spell_events.cpp
 	core/port/spell_rules.cpp
 	core/port/spell_rules_ai.cpp
+	core/port/spell_summaries.cpp
+	core/port/stack_effects.cpp
+	core/port/stat_totals.cpp
+	core/port/target_selection.cpp
 	core/port/town_development_rules_ai.cpp
 	core/port/town_rules_ai.cpp
+	core/port/turn_forecast.cpp
+	core/port/turn_order.cpp
+	core/port/unit_abilities.cpp
 	core/port/visit_building_rules_ai.cpp
 	core/port/water_travel_rules_ai.cpp
 )
@@ -191,7 +234,12 @@ add_executable(rules_selftest
 )
 target_link_libraries(rules_selftest PRIVATE aurelion_rules_core)
 
-foreach(AURELION_RULES_TARGET aurelion_rules_core aurelion_rules rules_selftest)
+# The G1 replay of the battle port (tools/battle_port_g1): captured calls, native
+# only. Built on request, stays in the build tree.
+add_executable(battle_port_replay g1/battle_port_replay.cpp)
+target_link_libraries(battle_port_replay PRIVATE aurelion_rules_core)
+
+foreach(AURELION_RULES_TARGET aurelion_rules_core aurelion_rules rules_selftest battle_port_replay)
 	if(MSVC)
 		target_compile_options(${AURELION_RULES_TARGET} PRIVATE /W4)
 	else()

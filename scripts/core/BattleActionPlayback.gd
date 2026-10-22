@@ -1,5 +1,8 @@
 extends RefCounted
 
+const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
+static var _battle_engine_mode: int = BattleEngine.mode
+
 # Transient, opt-in render snapshots. Removed synchronously before an action
 # returns; never a save field or an input to simulation/RNG.
 const CAPTURE_KEY := "_live_action_playback_capture"
@@ -15,6 +18,16 @@ static func finish(battle: Dictionary, result: Dictionary) -> Dictionary:
 	return result
 
 static func capture(battle: Dictionary, event: Dictionary) -> void:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		capture__gd(battle, event)
+	elif _battle_engine_mode == BattleEngine.NATIVE:
+		BattleEngine.native_writing(&"BattleActionPlayback.capture", [battle, event])
+	else:
+		var before := BattleEngine.before_writing(&"BattleActionPlayback.capture", [battle, event])
+		capture__gd(battle, event)
+		BattleEngine.check_writing(&"BattleActionPlayback.capture", before, [battle, event], null)
+
+static func capture__gd(battle: Dictionary, event: Dictionary) -> void:
 	if not battle.has(CAPTURE_KEY): return
 	var frames: Array = battle[CAPTURE_KEY]
 	# Frames are read-only once captured, so a value that has not changed since
