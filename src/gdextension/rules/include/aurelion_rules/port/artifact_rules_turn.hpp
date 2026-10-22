@@ -31,7 +31,7 @@ Atom describe_artifact(State &state, Atom artifact_id);
 Atom live_source_reward_tag(State &state, DictRef source_record);
 ArrayRef select_live_source_rewards(State &state, Atom source_tag, DictRef source_record, Atom source_key, Atom faction_id, ArrayRef excluded_artifact_ids);
 
-// Not run by the six seeds: each throws state::NotPorted (turn_not_ported.cpp).
+// Ported in turn_rare_paths.cpp (slice 4.2: paths the six seeds do not run).
 ArrayRef artifact_set_runtime_state(State &state, DictRef hero_state);
 bool has_artifact(State &state, DictRef hero_state, Atom artifact_id);
 DictRef remove_owned_artifact(State &state, DictRef hero_state, Atom artifact_id);

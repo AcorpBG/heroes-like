@@ -39,6 +39,14 @@ static func _sync_memo_sources() -> void:
 	_memo_sources = [revision, buildings, towns, development]
 
 static func satisfies(built: Array, required: String) -> bool:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return satisfies__gd(built, required)
+	var before := TurnEngine.before_writing(&"TownDevelopmentRules.satisfies", [built, required])
+	var result = satisfies__gd(built, required)
+	TurnEngine.check_writing(&"TownDevelopmentRules.satisfies", before, [built, required], result)
+	return result
+
+static func satisfies__gd(built: Array, required: String) -> bool:
 	return _satisfied_ids(built).has(required)
 
 ## Every building a built list satisfies: each built stage and the stages it
@@ -218,6 +226,14 @@ static func visiting_active_hero(session, town: Dictionary) -> bool:
 	return false
 
 static func price(artifact: Dictionary) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return price__gd(artifact)
+	var before := TurnEngine.before_writing(&"TownDevelopmentRules.price", [artifact])
+	var result = price__gd(artifact)
+	TurnEngine.check_writing(&"TownDevelopmentRules.price", before, [artifact], result)
+	return result
+
+static func price__gd(artifact: Dictionary) -> int:
 	var tier := String(artifact.get("rarity", "common"))
 	return int({"common": 1500, "uncommon": 2500, "rare": 4000, "epic": 6500, "legendary": 10000}.get(tier, 2500))
 
@@ -227,6 +243,14 @@ static func objective_artifact_ids(session) -> Array:
 	return load("res://scripts/core/ScenarioRules.gd").objective_artifact_ids(session)
 
 static func offers(town: Dictionary, day: int, excluded_ids: Array = []) -> Array:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return offers__gd(town, day, excluded_ids)
+	var before := TurnEngine.before_writing(&"TownDevelopmentRules.offers", [town, day, excluded_ids])
+	var result = offers__gd(town, day, excluded_ids)
+	TurnEngine.check_writing(&"TownDevelopmentRules.offers", before, [town, day, excluded_ids], result)
+	return result
+
+static func offers__gd(town: Dictionary, day: int, excluded_ids: Array = []) -> Array:
 	var eligible: Array = []
 	for a in ContentService.load_json("res://content/artifacts.json").get("items", []):
 		# Authored quest/relic rewards stay outside the merchant inventory.
@@ -327,6 +351,14 @@ static func upgrade_army__gd(town: Dictionary, stacks: Array, base: String, reso
 	return {"ok": true, "stacks": upgraded, "count": count, "cost": cost}
 
 static func trade_artifact(hero: Dictionary, town: Dictionary, day: int, artifact_id: String, buying: bool, resources: Dictionary, excluded_ids: Array = []) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return trade_artifact__gd(hero, town, day, artifact_id, buying, resources, excluded_ids)
+	var before := TurnEngine.before_writing(&"TownDevelopmentRules.trade_artifact", [hero, town, day, artifact_id, buying, resources, excluded_ids])
+	var result = trade_artifact__gd(hero, town, day, artifact_id, buying, resources, excluded_ids)
+	TurnEngine.check_writing(&"TownDevelopmentRules.trade_artifact", before, [hero, town, day, artifact_id, buying, resources, excluded_ids], result)
+	return result
+
+static func trade_artifact__gd(hero: Dictionary, town: Dictionary, day: int, artifact_id: String, buying: bool, resources: Dictionary, excluded_ids: Array = []) -> Dictionary:
 	var exchange := false
 	for id in active_buildings(town):
 		if ContentService.get_building(String(id)).get("artifact_exchange", false): exchange = true

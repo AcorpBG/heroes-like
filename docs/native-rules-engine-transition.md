@@ -1575,6 +1575,53 @@ it is a native failure, so shadow mode counts both. Switch `HEROES_NATIVE_TURN=g
   failure. 4.2 ports each path, or a check before the day starts sends it to GDScript.
   4.2 also folds the 11 functions Phase 5 left with a private copy in Phase 3's AI files
   (`overworld_rules_ai_recovery.cpp`, `overworld_rules_ai_sites.cpp`).
+  Done 2026-10-22 on the branch, after merging Phase 5's slice 09, which ported 23 of the 165 (7863c8d91 port, 0f513137a `normalize_ai_heroes`, the bridge and the fold, 9952a0f8c Windows binaries).
+  - The other 142 functions: 139 ported and switched in the turn table, 3,650 lines in five new files
+    (`enemy_adventure_rules_turn_rare.cpp`, `enemy_turn_rules_turn_rare.cpp`, `overworld_rules_turn_rare.cpp`,
+    `scenario_turn_rare.cpp`, `turn_rare_paths.cpp`) and a few in the turn files. By script: OverworldRules 31,
+    EnemyAdventureRules 31, EnemyTurnRules 26, ScenarioRules 17, AiHeroRules 5, ScenarioFactory 4,
+    TownDevelopmentRules 4, and 11 more scripts 21. `turn_not_ported.cpp` is gone. `ScenarioRules._overworld_rules`
+    returns a script and no C++ calls it, so it keeps its GDScript body.
+  - The guards. A player town's weekly growth is ported: `_effective_player_town_weekly_growth` with
+    `HeroProgressionRules.scale_recruit_growth`. Two guards stay `state::NotPorted`, because no game reaches them:
+    - `sort()` of keys that are not all Strings. The keys are always Strings: recruit payloads convert them with
+      `String()`, and the other dictionaries come from JSON or content.
+    - `to_lower()` of non-ASCII text. Faction names and building labels in content are ASCII, and a player identity
+      has no name, so its id is used.
+  - `normalize_ai_heroes` (Phase 5's `enemy_states.cpp`, kept in two copies):
+    - an AI hero whose movement is not a Dictionary gets `{current 0, max _movement_max}`;
+    - a legacy raid host is converted;
+    - a support column joins the nearest hero within 3 tiles or disbands.
+  - The port bridge. An undoable write-back that sets an object view (a session's properties or metadata) cannot be
+    put back. The call now counts as not undoable (`PortBridge::undo_lost`), so a later `state::NotPorted` is a
+    native failure, not a fallback from a changed state. Phase 5 found the gap.
+  - The fold. 17 private copies in Phase 3's AI files now call the real functions: 11 in
+    `overworld_rules_ai_recovery.cpp` and 6 in `overworld_rules_ai_sites.cpp`. `_town_occupation_relief_per_day` no
+    longer throws when it has no front. No caller reaches that branch: the only caller passes a front proxy. Three
+    copies stay, because the real function differs on an input:
+    - `find_encounter_by_placement`: Phase 5's version drops the movement debug profile, so it would not record into
+      `_movement_rules_profile`;
+    - `delivery_interception` and its `raid_strength`: Phase 5's `_army_strength` skips the unit-strength memo
+      statics, which these copies fill as GDScript does.
+  - Not wired, for 4.4. Phase 5's nine `missing_*` stubs in `overworld_forecast.cpp` are the command-risk forecast
+    for a human's towns. They could now call 4.2's ports, but that would make those day paths native in the owner's
+    games, which run the day native by default. The eight AI seeds cannot prove them.
+  - Paths only a human player brings stay unproven until 4.4 runs the owner's save copies: a computer hero attacking
+    a human's hero (`_attack_player_hero`), sightings of a human's heroes, and a human's towns.
+  - Five of the 139 are also Phase 2a's claims: `encounter_display_name`, `_delivery_encounter_matches_node`,
+    `_resource_site_delivery_interception`, `raid_display_name` and `raid_strength`. Whichever merges second calls
+    the other's C++.
+  - Checks: shadow mode of the turn and day switches together, on the six seeds and isl-b, pt-f: 2,362,704 checks over 322 functions, 0 mismatches, 0 errors (the eight not-ported calls are Phase 5's townless-player days).
+    - Native mode identical to main on the six seeds. No computer day fell back; the eight fallback lines are Phase
+      5's townless-player days.
+    - Core suite 17/17.
+    - The seeds reach one of the 139 functions. One reviewer read the other 138, `town_weekly_growth`'s player
+      branch and `normalize_ai_heroes` against their GDScript and found no divergence.
+    - Smoke batch (`ai_match_batch.py`, plan seed 16, day cap 120, the same seven games as 4.1): all seven finished,
+      five decided and two at the cap; 0 failed, 0 script errors, and no computer day fell back. The 12 fallback
+      lines in five games are Phase 5's townless-player path. The slowest computer day took 2.6 s, on XL.
+    - No new timing.
+  - Merged to main 2026-10-22, after main was tagged `pre-native-phase4-faction-turn-4.2` (D10).
 - 4.3, battles inside the turn with no host calls. Owner decision 2026-10-22: Phase 2 ports `_simulate_battle` as
   one native call (`ai_hero_rules::_simulate_battle`, `core/port/ai_battle_preview.cpp`, the signature 4.1's host
   target has); the turn calls it once it is on main. The start of a battle against a human calls Phase 1's native

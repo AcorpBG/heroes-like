@@ -29,7 +29,7 @@ DictRef train_hero(State &state, DictRef hero, DictRef town, Atom building_id);
 DictRef upgrade_army(State &state, DictRef town, ArrayRef stacks, Atom base, DictRef resources);
 DictRef upgrade_cost(State &state, Atom base, Atom target, int64_t count);
 
-// Not run by the six seeds: each throws state::NotPorted (turn_not_ported.cpp).
+// Ported in turn_rare_paths.cpp (slice 4.2: paths the six seeds do not run).
 ArrayRef offers(State &state, DictRef town, int64_t day, ArrayRef excluded_ids);
 int64_t price(State &state, DictRef artifact);
 bool satisfies(State &state, ArrayRef built, Atom required);

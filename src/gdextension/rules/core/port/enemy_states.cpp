@@ -6,6 +6,9 @@
 // saves' memories and hero task boards, configs without player records.
 
 #include "aurelion_rules/port/ai_hero_rules.hpp"
+#include "aurelion_rules/port/ai_hero_rules_ai.hpp"
+#include "aurelion_rules/port/ai_hero_rules_turn.hpp"
+#include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/artifact_rules.hpp"
 #include "aurelion_rules/port/battle_ends.hpp"
 #include "aurelion_rules/port/difficulty_rules.hpp"
@@ -210,6 +213,8 @@ constexpr Atom kCommanderMemoryKeys[] = {
 
 // AiHeroRules.MIGRATION_VERSION.
 constexpr int64_t kAiHeroesMigrationVersion = 1;
+// AiHeroRules.COLUMN_JOIN_RADIUS.
+constexpr int64_t kColumnJoinRadius = 3;
 
 // HeroProgressionRules.CHOICE_SIZE and the OFFER_*_WEIGHT draw weights.
 constexpr int64_t kChoiceSize = 3;
@@ -655,6 +660,8 @@ DictRef normalize_ai_heroes(State &state, DictRef session, Atom only_controller)
 	// _resolved_lookup(session).duplicate(): AiHeroRules._resolved_lookup and
 	// _overworld_rules are inlined (Phase 3's AI targets port them).
 	const DictRef resolved = gd::duplicate_dict(state, overworld_rules::resolved_encounter_lookup(state, session));
+	bool changed = false;
+	std::vector<int64_t> columns;
 	for (int64_t index = 0; index < state.array_size(encounters); ++index) {
 		const Value entry = state.at(encounters, index);
 		if (!gd::is_dict(entry)) {
@@ -671,14 +678,66 @@ DictRef normalize_ai_heroes(State &state, DictRef session, Atom only_controller)
 		if (is_ai_hero(state, entry)) {
 			const DictRef block = gd::as_dict(get_or_new_dict(state, entry.ref, key::ai_hero));
 			if (!gd::is_dict(get_or_new_dict(state, block, key::movement))) {
-				// _movement_max: Phase 3's AI targets port it.
-				not_ported("an AI hero without its movement");
+				const DictRef movement = state.new_dict();
+				state.set(movement, str(key::current), int_value(0));
+				state.set(movement, str(key::max), int_value(_movement_max(state, entry.ref)));
+				state.set(block, str(key::movement), dict_value(movement));
+				state.set(entry.ref, str(key::ai_hero), dict_value(block));
+				state.set_at(encounters, index, entry);
+				changed = true;
 			}
 			continue;
 		}
-		// A raid host (_convert_legacy_host) or a support column (joined to the
-		// nearest hero or disbanded): older saves only.
-		not_ported("a legacy raid host");
+		// A raid host or a support column: older saves only.
+		const DictRef commander = dict_field_or_new(state, entry.ref, key::enemy_commander_state);
+		const Atom hero_id = text(state, commander, key::roster_hero_id, key::empty);
+		if (hero_id == key::empty || gd::bool_field(state, entry.ref, key::commanderless_support_column, false)) {
+			columns.push_back(index);
+			continue;
+		}
+		state.set_at(encounters, index, dict_value(_convert_legacy_host(state, session, entry.ref, controller)));
+		state.set(report, str(key::converted), int_value(gd::add(gd::int_field(state, report, key::converted, 0), 1)));
+		changed = true;
+	}
+	for (const int64_t index : columns) {
+		const DictRef entry = gd::as_dict(state.at(encounters, index));
+		const Atom controller = player_rules::raid_controller_id(state, entry);
+		const Atom placement_id = text(state, entry, key::placement_id, key::empty);
+		const Value army_value = get_or_new_dict(state, entry, key::enemy_army);
+		ArrayRef stacks = gd::is_dict(army_value) ? ai::typed_array(get_or_new_array(state, army_value.ref, key::stacks), "AiHeroRules.normalize_ai_heroes: stacks") : state.new_array();
+		const int64_t hero_index = _nearest_hero_index(state, encounters, resolved, controller, entry, kColumnJoinRadius);
+		if (hero_index >= 0) {
+			const DictRef hero = gd::as_dict(state.at(encounters, hero_index));
+			const DictRef army = dict_field_or_new(state, hero, key::enemy_army);
+			const DictRef merged = _merge_stacks_into(state, get_or_new_array(state, army, key::stacks), array_value(stacks));
+			if (!gd::equal(state, gd::index(state, merged, str(key::stacks)), get_or_new_array(state, army, key::stacks))) {
+				state.set(army, str(key::stacks), gd::index(state, merged, str(key::stacks)));
+				state.set(hero, str(key::enemy_army), dict_value(army));
+				const DictRef hero_commander = dict_field_or_new(state, hero, key::enemy_commander_state);
+				if (!gd::is_empty(state, hero_commander)) {
+					state.set(hero, str(key::enemy_commander_state), dict_value(enemy_adventure_rules::sync_commander_army_continuity(state, hero_commander, dict_value(army), key::encounter_mire_raid)));
+				}
+				state.set(hero, str(key::joined_column_placement_id), str(placement_id));
+				state.set_at(encounters, hero_index, dict_value(hero));
+				state.set(entry, str(key::ai_joined_hero_placement_id), str(text(state, hero, key::placement_id, key::empty)));
+				state.set(report, str(key::joined_hero), int_value(gd::add(gd::int_field(state, report, key::joined_hero, 0), 1)));
+			}
+			stacks = ai::typed_array(gd::index(state, merged, str(key::left)), "AiHeroRules.normalize_ai_heroes: merged.left");
+		}
+		const DictRef leftover = gd::deep_duplicate_dict(state, entry);
+		const DictRef leftover_army = state.new_dict();
+		state.set(leftover_army, str(key::stacks), array_value(stacks));
+		state.set(leftover, str(key::enemy_army), dict_value(leftover_army));
+		_return_troops_to_nearest_town(state, session, leftover, controller);
+		_mark_resolved(state, session, placement_id);
+		state.set(resolved, str(placement_id), bool_value(true));
+		state.set(entry, str(key::ai_disbanded_day), int_value(gd::int_field(state, session, key::day, 0)));
+		state.set_at(encounters, index, dict_value(entry));
+		state.set(report, str(key::disbanded), int_value(gd::add(gd::int_field(state, report, key::disbanded, 0), 1)));
+		changed = true;
+	}
+	if (changed) {
+		state.set(overworld, str(key::encounters), array_value(encounters));
 	}
 	return report;
 }

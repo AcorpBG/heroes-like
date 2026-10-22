@@ -7,6 +7,8 @@
 
 #include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/creature_dwelling_rules_ai.hpp"
+#include "aurelion_rules/port/hero_command_rules_ai.hpp"
+#include "aurelion_rules/port/hero_progression_rules_turn.hpp"
 #include "aurelion_rules/port/native_transit_rules_turn.hpp"
 #include "aurelion_rules/port/overworld_level_rules.hpp"
 #include "aurelion_rules/port/overworld_level_rules_ai.hpp"
@@ -305,10 +307,7 @@ DictRef town_weekly_growth(State &state, DictRef town, const Value &session) {
 	if (_town_read_scope_cache_has(state, cache_key)) {
 		return gd::as_dict(_town_read_scope_cache_get(state, cache_key));
 	}
-	if (has_session && gd::stringify(state, state.get(town, str(key::owner), str(key::neutral))) == key::player) {
-		throw state::NotPorted("OverworldRules.town_weekly_growth: _effective_player_town_weekly_growth (a player town) is not ported");
-	}
-	const DictRef result = _town_weekly_growth(state, town, session, state.new_dict());
+	const DictRef result = has_session && gd::stringify(state, state.get(town, str(key::owner), str(key::neutral))) == key::player ? _effective_player_town_weekly_growth(state, gd::as_dict(session), town) : _town_weekly_growth(state, town, session, state.new_dict());
 	_town_read_scope_cache_store(state, cache_key, dict_value(result));
 	return result;
 }
@@ -360,6 +359,33 @@ Atom apply_resource_site_disruption(State &state, DictRef session, DictRef node,
 		return key::empty;
 	}
 	return apply_town_recovery_pressure(state, session, gd::stringify(state, state.get(town, str(key::placement_id), str(key::empty))), disruption_pressure, disruption_source);
+}
+
+DictRef _town_scaling_hero(State &state, DictRef session, DictRef town) {
+	// Recruit prices and growth follow the commander stationed in this town, not
+	// whichever hero happens to be selected. No local hero means no hero bonus.
+	// session == null cannot happen: a session is its view.
+	if (gd::is_empty(state, town)) {
+		return state.new_dict();
+	}
+	const DictRef hero = hero_command_rules::town_defending_hero(state, session, town);
+	const Atom hero_id = gd::stringify(state, state.get(hero, str(key::id), str(key::empty)));
+	if (hero_id == key::empty) {
+		return state.new_dict();
+	}
+	// The active mirror can be ahead of its roster entry until commit_active_hero.
+	const DictRef overworld = session_view::overworld(state, session);
+	const Value active = state.get(overworld, str(key::hero), dict_value(state.new_dict()));
+	if (gd::is_dict(active) && hero_id == gd::stringify(state, state.get(overworld, str(key::active_hero_id), str(key::empty))) && gd::stringify(state, state.get(active.ref, str(key::id), str(key::empty))) == hero_id) {
+		return active.ref;
+	}
+	return hero;
+}
+
+DictRef _effective_player_town_weekly_growth(State &state, DictRef session, DictRef town) {
+	const DictRef hero = _town_scaling_hero(state, session, town);
+	const DictRef growth = _town_weekly_growth(state, town, dict_value(session), state.new_dict());
+	return hero_progression_rules::scale_recruit_growth(state, hero, dict_value(growth));
 }
 
 } // namespace overworld_rules

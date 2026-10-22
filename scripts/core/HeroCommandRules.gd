@@ -563,6 +563,14 @@ static func commit_active_hero__gd(session: SessionStateStoreScript.SessionData)
 	_sync_active_hero_mirror(session)
 
 static func set_active_hero(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return set_active_hero__gd(session, hero_id)
+	var before := TurnEngine.before_writing(&"HeroCommandRules.set_active_hero", [session, hero_id])
+	var result = set_active_hero__gd(session, hero_id)
+	TurnEngine.check_writing(&"HeroCommandRules.set_active_hero", before, [session, hero_id], result)
+	return result
+
+static func set_active_hero__gd(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
 	normalize_session(session)
 	if hero_id == "":
 		return {"ok": false, "message": "No hero was selected."}
@@ -828,6 +836,14 @@ static func set_town_garrison_hero(session: SessionStateStoreScript.SessionData,
 ## Merges `incoming` stacks into `army` (same units join, new units take free
 ## slots). Returns the slotted result, or [] when the units do not fit.
 static func merge_stacks_into_army(army: Array, incoming: Array) -> Array:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return merge_stacks_into_army__gd(army, incoming)
+	var before := TurnEngine.before_writing(&"HeroCommandRules.merge_stacks_into_army", [army, incoming])
+	var result = merge_stacks_into_army__gd(army, incoming)
+	TurnEngine.check_writing(&"HeroCommandRules.merge_stacks_into_army", before, [army, incoming], result)
+	return result
+
+static func merge_stacks_into_army__gd(army: Array, incoming: Array) -> Array:
 	var merged := _slotted_stacks(army)
 	for stack_value in incoming:
 		if not (stack_value is Dictionary):
@@ -2472,6 +2488,14 @@ static func _stationed_holder_ids(session: SessionStateStoreScript.SessionData, 
 	return holders
 
 static func _holder_stacks(session: SessionStateStoreScript.SessionData, town: Dictionary, holder_id: String) -> Array:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _holder_stacks__gd(session, town, holder_id)
+	var before := TurnEngine.before_writing(&"HeroCommandRules._holder_stacks", [session, town, holder_id])
+	var result = _holder_stacks__gd(session, town, holder_id)
+	TurnEngine.check_writing(&"HeroCommandRules._holder_stacks", before, [session, town, holder_id], result)
+	return result
+
+static func _holder_stacks__gd(session: SessionStateStoreScript.SessionData, town: Dictionary, holder_id: String) -> Array:
 	if holder_id == HOLDER_GARRISON:
 		return town.get("garrison", []).duplicate(true) if town.get("garrison", []) is Array else []
 	var hero := hero_by_id(session, holder_id)

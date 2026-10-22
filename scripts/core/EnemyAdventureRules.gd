@@ -321,7 +321,15 @@ static func _normalize_enemy_hero_sighting_records(value: Variant, current_day: 
 		normalized.pop_back()
 	return LevelRules.canonical_spatial_records(normalized)
 
-static func _current_enemy_player_hero_sighting_records(
+static func _current_enemy_player_hero_sighting_records(session: SessionStateStoreScript.SessionData, config: Dictionary, faction_id: String, preloaded_sources: Variant = null, projection_profile: Variant = null) -> Array:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _current_enemy_player_hero_sighting_records__gd(session, config, faction_id, preloaded_sources, projection_profile)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules._current_enemy_player_hero_sighting_records", [session, config, faction_id, preloaded_sources, projection_profile])
+	var result = _current_enemy_player_hero_sighting_records__gd(session, config, faction_id, preloaded_sources, projection_profile)
+	TurnEngine.check_writing(&"EnemyAdventureRules._current_enemy_player_hero_sighting_records", before, [session, config, faction_id, preloaded_sources, projection_profile], result)
+	return result
+
+static func _current_enemy_player_hero_sighting_records__gd(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	faction_id: String,
@@ -376,7 +384,15 @@ static func _current_enemy_player_hero_sighting_records(
 		)
 	return LevelRules.canonical_spatial_records(records)
 
-static func _enemy_hero_sighting_sources(
+static func _enemy_hero_sighting_sources(session: SessionStateStoreScript.SessionData, config: Dictionary, faction_id: String) -> Array:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _enemy_hero_sighting_sources__gd(session, config, faction_id)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules._enemy_hero_sighting_sources", [session, config, faction_id])
+	var result = _enemy_hero_sighting_sources__gd(session, config, faction_id)
+	TurnEngine.check_writing(&"EnemyAdventureRules._enemy_hero_sighting_sources", before, [session, config, faction_id], result)
+	return result
+
+static func _enemy_hero_sighting_sources__gd(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	faction_id: String
@@ -435,7 +451,15 @@ static func _enemy_hero_sighting_sources(
 		})
 	return LevelRules.canonical_spatial_records(sources)
 
-static func _known_player_hero_snapshot_for_ai(
+static func _known_player_hero_snapshot_for_ai(session: SessionStateStoreScript.SessionData, faction_id: String, hero: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _known_player_hero_snapshot_for_ai__gd(session, faction_id, hero)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules._known_player_hero_snapshot_for_ai", [session, faction_id, hero])
+	var result = _known_player_hero_snapshot_for_ai__gd(session, faction_id, hero)
+	TurnEngine.check_writing(&"EnemyAdventureRules._known_player_hero_snapshot_for_ai", before, [session, faction_id, hero], result)
+	return result
+
+static func _known_player_hero_snapshot_for_ai__gd(
 	session: SessionStateStoreScript.SessionData,
 	faction_id: String,
 	hero: Dictionary
@@ -465,7 +489,15 @@ static func _known_player_hero_snapshot_for_ai(
 	recent["ai_sighting_seen_day"] = int(remembered.get("seen_day", 0))
 	return recent
 
-static func _enemy_player_hero_sighting_record(
+static func _enemy_player_hero_sighting_record(session: SessionStateStoreScript.SessionData, faction_id: String, hero_id: String) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _enemy_player_hero_sighting_record__gd(session, faction_id, hero_id)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules._enemy_player_hero_sighting_record", [session, faction_id, hero_id])
+	var result = _enemy_player_hero_sighting_record__gd(session, faction_id, hero_id)
+	TurnEngine.check_writing(&"EnemyAdventureRules._enemy_player_hero_sighting_record", before, [session, faction_id, hero_id], result)
+	return result
+
+static func _enemy_player_hero_sighting_record__gd(
 	session: SessionStateStoreScript.SessionData,
 	faction_id: String,
 	hero_id: String
@@ -482,6 +514,14 @@ static func _enemy_player_hero_sighting_record(
 	return {}
 
 static func _known_player_hero_strength(hero: Dictionary) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _known_player_hero_strength__gd(hero)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules._known_player_hero_strength", [hero])
+	var result = _known_player_hero_strength__gd(hero)
+	TurnEngine.check_writing(&"EnemyAdventureRules._known_player_hero_strength", before, [hero], result)
+	return result
+
+static func _known_player_hero_strength__gd(hero: Dictionary) -> int:
 	if hero.has("known_army_strength"):
 		return max(0, int(hero.get("known_army_strength", 0)))
 	return _army_strength(hero.get("army", {}).get("stacks", []))
@@ -522,6 +562,14 @@ static func _raid_site_recruit_admission__gd(raid: Dictionary, site: Dictionary)
 	return HeroCommandRulesScript.army_addition_split(_raid_reinforcement_army(raid).get("stacks", []), _resource_site_claim_recruits(site))
 
 static func _player_hero_snapshots_for_intercept(session: SessionStateStoreScript.SessionData, read_only: bool = false) -> Array:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _player_hero_snapshots_for_intercept__gd(session, read_only)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules._player_hero_snapshots_for_intercept", [session, read_only])
+	var result = _player_hero_snapshots_for_intercept__gd(session, read_only)
+	TurnEngine.check_writing(&"EnemyAdventureRules._player_hero_snapshots_for_intercept", before, [session, read_only], result)
+	return result
+
+static func _player_hero_snapshots_for_intercept__gd(session: SessionStateStoreScript.SessionData, read_only: bool = false) -> Array:
 	# read_only callers only inspect the records (path fingerprints, blocked
 	# tiles), so they get the live hero dictionaries instead of deep copies.
 	var heroes := []
@@ -892,6 +940,14 @@ static func commander_army_brief(source: Variant) -> String:
 	return ""
 
 static func commander_recent_outcome_brief(source: Variant) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return commander_recent_outcome_brief__gd(source)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules.commander_recent_outcome_brief", [source])
+	var result = commander_recent_outcome_brief__gd(source)
+	TurnEngine.check_writing(&"EnemyAdventureRules.commander_recent_outcome_brief", before, [source], result)
+	return result
+
+static func commander_recent_outcome_brief__gd(source: Variant) -> String:
 	match String(_normalized_commander_record(source).get("last_outcome", "")):
 		COMMANDER_OUTCOME_ROUT_VICTORY:
 			return "fresh from a rout"
@@ -906,6 +962,14 @@ static func commander_army_summary(source: Variant) -> String:
 	return String(_normalized_commander_army_continuity(source).get("summary", ""))
 
 static func commander_can_deploy(source: Variant) -> bool:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return commander_can_deploy__gd(source)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules.commander_can_deploy", [source])
+	var result = commander_can_deploy__gd(source)
+	TurnEngine.check_writing(&"EnemyAdventureRules.commander_can_deploy", before, [source], result)
+	return result
+
+static func commander_can_deploy__gd(source: Variant) -> bool:
 	var continuity := _normalized_commander_army_continuity(source)
 	if continuity.is_empty() or int(continuity.get("base_strength", 0)) <= 0:
 		return true
@@ -1465,7 +1529,15 @@ static func ensure_raid_army(
 		)
 	return encounter
 
-static func occupied_raid_commander_ids(
+static func occupied_raid_commander_ids(session: SessionStateStoreScript.SessionData, faction_id: String = "", exclude_placement_id: String = "") -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return occupied_raid_commander_ids__gd(session, faction_id, exclude_placement_id)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules.occupied_raid_commander_ids", [session, faction_id, exclude_placement_id])
+	var result = occupied_raid_commander_ids__gd(session, faction_id, exclude_placement_id)
+	TurnEngine.check_writing(&"EnemyAdventureRules.occupied_raid_commander_ids", before, [session, faction_id, exclude_placement_id], result)
+	return result
+
+static func occupied_raid_commander_ids__gd(
 	session: SessionStateStoreScript.SessionData,
 	faction_id: String = "",
 	exclude_placement_id: String = ""
@@ -1488,7 +1560,15 @@ static func occupied_raid_commander_ids(
 			occupied[roster_hero_id] = true
 	return occupied
 
-static func select_raid_commander_roster_hero_id(
+static func select_raid_commander_roster_hero_id(session: SessionStateStoreScript.SessionData, faction_id: String, preferred_index: int = 0, occupied_commander_ids: Dictionary = {}, commander_roster: Variant = []) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return select_raid_commander_roster_hero_id__gd(session, faction_id, preferred_index, occupied_commander_ids, commander_roster)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules.select_raid_commander_roster_hero_id", [session, faction_id, preferred_index, occupied_commander_ids, commander_roster])
+	var result = select_raid_commander_roster_hero_id__gd(session, faction_id, preferred_index, occupied_commander_ids, commander_roster)
+	TurnEngine.check_writing(&"EnemyAdventureRules.select_raid_commander_roster_hero_id", before, [session, faction_id, preferred_index, occupied_commander_ids, commander_roster], result)
+	return result
+
+static func select_raid_commander_roster_hero_id__gd(
 	session: SessionStateStoreScript.SessionData,
 	faction_id: String,
 	preferred_index: int = 0,
@@ -1708,6 +1788,14 @@ static func raid_commander_display_name__gd(encounter: Dictionary) -> String:
 	return raid_commander_name(encounter)
 
 static func raid_display_name(encounter: Dictionary) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return raid_display_name__gd(encounter)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules.raid_display_name", [encounter])
+	var result = raid_display_name__gd(encounter)
+	TurnEngine.check_writing(&"EnemyAdventureRules.raid_display_name", before, [encounter], result)
+	return result
+
+static func raid_display_name__gd(encounter: Dictionary) -> String:
 	if encounter.is_empty():
 		return "Hostile contact"
 	# An enemy hero is named like any hero; there is no "host" around it.
@@ -2627,6 +2715,14 @@ static func _merge_unique_strings(primary: Variant, secondary: Variant) -> Array
 	return merged
 
 static func _preferred_commander_index_for_encounter(encounter: Dictionary) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _preferred_commander_index_for_encounter__gd(encounter)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules._preferred_commander_index_for_encounter", [encounter])
+	var result = _preferred_commander_index_for_encounter__gd(encounter)
+	TurnEngine.check_writing(&"EnemyAdventureRules._preferred_commander_index_for_encounter", before, [encounter], result)
+	return result
+
+static func _preferred_commander_index_for_encounter__gd(encounter: Dictionary) -> int:
 	var placement_id := String(encounter.get("placement_id", encounter.get("encounter_id", "")))
 	if placement_id == "":
 		return 0
@@ -2646,6 +2742,14 @@ static func _commander_map_level__gd(source: Variant) -> int:
 	return 0
 
 static func enemy_strategy(config: Dictionary, faction_id: String) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return enemy_strategy__gd(config, faction_id)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules.enemy_strategy", [config, faction_id])
+	var result = enemy_strategy__gd(config, faction_id)
+	TurnEngine.check_writing(&"EnemyAdventureRules.enemy_strategy", before, [config, faction_id], result)
+	return result
+
+static func enemy_strategy__gd(config: Dictionary, faction_id: String) -> Dictionary:
 	var strategy = _default_enemy_strategy()
 	var faction = ContentService.get_faction(String(config.get("faction_id", faction_id)))
 	if faction.get("enemy_strategy", {}) is Dictionary:
@@ -2655,12 +2759,28 @@ static func enemy_strategy(config: Dictionary, faction_id: String) -> Dictionary
 	return strategy
 
 static func strategy_scalar(strategy: Dictionary, section: String, key: String, default_value: float = 1.0) -> float:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return strategy_scalar__gd(strategy, section, key, default_value)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules.strategy_scalar", [strategy, section, key, default_value])
+	var result = strategy_scalar__gd(strategy, section, key, default_value)
+	TurnEngine.check_writing(&"EnemyAdventureRules.strategy_scalar", before, [strategy, section, key, default_value], result)
+	return result
+
+static func strategy_scalar__gd(strategy: Dictionary, section: String, key: String, default_value: float = 1.0) -> float:
 	var bucket = strategy.get(section, {})
 	if not (bucket is Dictionary):
 		return default_value
 	return float(bucket.get(key, default_value))
 
 static func strategy_int(strategy: Dictionary, section: String, key: String, default_value: int = 0) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return strategy_int__gd(strategy, section, key, default_value)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules.strategy_int", [strategy, section, key, default_value])
+	var result = strategy_int__gd(strategy, section, key, default_value)
+	TurnEngine.check_writing(&"EnemyAdventureRules.strategy_int", before, [strategy, section, key, default_value], result)
+	return result
+
+static func strategy_int__gd(strategy: Dictionary, section: String, key: String, default_value: int = 0) -> int:
 	var bucket = strategy.get(section, {})
 	if not (bucket is Dictionary):
 		return default_value
@@ -2686,6 +2806,14 @@ static func public_strategy_summary(config: Dictionary, faction_id: String) -> S
 			return "Priorities: pressure objectives while contesting frontier assets"
 
 static func target_is_objective_anchor(session: SessionStateStoreScript.SessionData, target_kind: String, placement_id: String) -> bool:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return target_is_objective_anchor__gd(session, target_kind, placement_id)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules.target_is_objective_anchor", [session, target_kind, placement_id])
+	var result = target_is_objective_anchor__gd(session, target_kind, placement_id)
+	TurnEngine.check_writing(&"EnemyAdventureRules.target_is_objective_anchor", before, [session, target_kind, placement_id], result)
+	return result
+
+static func target_is_objective_anchor__gd(session: SessionStateStoreScript.SessionData, target_kind: String, placement_id: String) -> bool:
 	match target_kind:
 		"town":
 			return _town_is_objective_anchor(session, placement_id)
@@ -2696,12 +2824,28 @@ static func target_is_objective_anchor(session: SessionStateStoreScript.SessionD
 			return false
 
 static func raid_strength(encounter: Dictionary) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return raid_strength__gd(encounter)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules.raid_strength", [encounter])
+	var result = raid_strength__gd(encounter)
+	TurnEngine.check_writing(&"EnemyAdventureRules.raid_strength", before, [encounter], result)
+	return result
+
+static func raid_strength__gd(encounter: Dictionary) -> int:
 	var normalized_army = _normalize_army_payload(encounter.get("enemy_army", {}))
 	if normalized_army.is_empty():
 		normalized_army = _base_enemy_army(String(encounter.get("encounter_id", encounter.get("id", ""))))
 	return _army_strength(normalized_army.get("stacks", []))
 
 static func _find_player_hero(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _find_player_hero__gd(session, hero_id)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules._find_player_hero", [session, hero_id])
+	var result = _find_player_hero__gd(session, hero_id)
+	TurnEngine.check_writing(&"EnemyAdventureRules._find_player_hero", before, [session, hero_id], result)
+	return result
+
+static func _find_player_hero__gd(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
 	if session == null or hero_id == "":
 		return {}
 	for hero in session.overworld.get("player_heroes", []):
@@ -2710,6 +2854,14 @@ static func _find_player_hero(session: SessionStateStoreScript.SessionData, hero
 	return {}
 
 static func _player_hero_goal_tile(hero: Dictionary) -> Vector2i:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _player_hero_goal_tile__gd(hero)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules._player_hero_goal_tile", [hero])
+	var result = _player_hero_goal_tile__gd(hero)
+	TurnEngine.check_writing(&"EnemyAdventureRules._player_hero_goal_tile", before, [hero], result)
+	return result
+
+static func _player_hero_goal_tile__gd(hero: Dictionary) -> Vector2i:
 	var hero_position: Dictionary = hero.get("position", {})
 	return Vector2i(int(hero_position.get("x", 0)), int(hero_position.get("y", 0)))
 
@@ -3028,6 +3180,14 @@ static func _public_event_log_text(text: String) -> String:
 	return output
 
 static func _exploration_target_level(target_id: String) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _exploration_target_level__gd(target_id)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules._exploration_target_level", [target_id])
+	var result = _exploration_target_level__gd(target_id)
+	TurnEngine.check_writing(&"EnemyAdventureRules._exploration_target_level", before, [target_id], result)
+	return result
+
+static func _exploration_target_level__gd(target_id: String) -> int:
 	var parts := target_id.split(":")
 	return int(parts[3]) if parts.size() == 4 else 0
 
@@ -3146,6 +3306,14 @@ static func _ai_hero_task_retention_priority(task: Dictionary) -> int:
 	return 0
 
 static func _default_reason_codes_for_target(target_kind: String, target_id: String, target: Dictionary = {}) -> Array:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _default_reason_codes_for_target__gd(target_kind, target_id, target)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules._default_reason_codes_for_target", [target_kind, target_id, target])
+	var result = _default_reason_codes_for_target__gd(target_kind, target_id, target)
+	TurnEngine.check_writing(&"EnemyAdventureRules._default_reason_codes_for_target", before, [target_kind, target_id, target], result)
+	return result
+
+static func _default_reason_codes_for_target__gd(target_kind: String, target_id: String, target: Dictionary = {}) -> Array:
 	match target_kind:
 		"town":
 			var codes := ["town_siege"]
@@ -3291,6 +3459,14 @@ static func _target_resource_value__gd(rewards: Variant) -> int:
 	return total
 
 static func _town_is_objective_anchor(session: SessionStateStoreScript.SessionData, placement_id: String) -> bool:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _town_is_objective_anchor__gd(session, placement_id)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules._town_is_objective_anchor", [session, placement_id])
+	var result = _town_is_objective_anchor__gd(session, placement_id)
+	TurnEngine.check_writing(&"EnemyAdventureRules._town_is_objective_anchor", before, [session, placement_id], result)
+	return result
+
+static func _town_is_objective_anchor__gd(session: SessionStateStoreScript.SessionData, placement_id: String) -> bool:
 	var scenario = ContentService.get_scenario_readonly(session.scenario_id)
 	var objectives = scenario.get("objectives", {})
 	if not (objectives is Dictionary):
@@ -3302,6 +3478,14 @@ static func _town_is_objective_anchor(session: SessionStateStoreScript.SessionDa
 	return false
 
 static func _encounter_is_objective_anchor(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> bool:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _encounter_is_objective_anchor__gd(session, encounter)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules._encounter_is_objective_anchor", [session, encounter])
+	var result = _encounter_is_objective_anchor__gd(session, encounter)
+	TurnEngine.check_writing(&"EnemyAdventureRules._encounter_is_objective_anchor", before, [session, encounter], result)
+	return result
+
+static func _encounter_is_objective_anchor__gd(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> bool:
 	var encounter_template = ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 	var victory_flags: Array = encounter_template.get("victory_flags", [])
 	if not (victory_flags is Array) or victory_flags.is_empty():
@@ -3321,6 +3505,14 @@ static func _encounter_is_objective_anchor(session: SessionStateStoreScript.Sess
 	return false
 
 static func _secure_native_passage_target(session: SessionStateStoreScript.SessionData, raid: Dictionary, state: Dictionary, faction_id: String, node: Dictionary, preserve_target: bool = false) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _secure_native_passage_target__gd(session, raid, state, faction_id, node, preserve_target)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules._secure_native_passage_target", [session, raid, state, faction_id, node, preserve_target])
+	var result = _secure_native_passage_target__gd(session, raid, state, faction_id, node, preserve_target)
+	TurnEngine.check_writing(&"EnemyAdventureRules._secure_native_passage_target", before, [session, raid, state, faction_id, node, preserve_target], result)
+	return result
+
+static func _secure_native_passage_target__gd(session: SessionStateStoreScript.SessionData, raid: Dictionary, state: Dictionary, faction_id: String, node: Dictionary, preserve_target: bool = false) -> Dictionary:
 	var actor_id := String(raid.get("placement_id", ""))
 	var check: Dictionary = OverworldRulesScript.native_passage_travel_check(session, node, NativeTransit.point(raid), actor_id)
 	if bool(check.get("native_transit_random_exit", false)):
@@ -3681,7 +3873,15 @@ static func _visit_building_by_raid__gd(
 			)
 	return {"encounter": updated_raid, "state": state, "event_message": message, "ai_events": []}
 
-static func _dwelling_guard_strength(
+static func _dwelling_guard_strength(session: SessionStateStoreScript.SessionData, node: Dictionary, site: Dictionary, faction_id: String) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _dwelling_guard_strength__gd(session, node, site, faction_id)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules._dwelling_guard_strength", [session, node, site, faction_id])
+	var result = _dwelling_guard_strength__gd(session, node, site, faction_id)
+	TurnEngine.check_writing(&"EnemyAdventureRules._dwelling_guard_strength", before, [session, node, site, faction_id], result)
+	return result
+
+static func _dwelling_guard_strength__gd(
 	session: SessionStateStoreScript.SessionData,
 	node: Dictionary,
 	site: Dictionary,
@@ -4027,6 +4227,14 @@ static func _apply_resource_site_spell_reward_to_commander__gd(
 	}
 
 static func _clear_regroup_target(raid: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _clear_regroup_target__gd(raid)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules._clear_regroup_target", [raid])
+	var result = _clear_regroup_target__gd(raid)
+	TurnEngine.check_writing(&"EnemyAdventureRules._clear_regroup_target", before, [raid], result)
+	return result
+
+static func _clear_regroup_target__gd(raid: Dictionary) -> Dictionary:
 	raid["target_kind"] = ""
 	raid["target_placement_id"] = ""
 	raid["target_label"] = ""
@@ -4162,6 +4370,14 @@ static func _placement_resolved(placement_id: String, resolved_encounters: Varia
 	return resolved_encounters is Array and placement_id in resolved_encounters
 
 static func _find_town_by_placement(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _find_town_by_placement__gd(session, placement_id)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules._find_town_by_placement", [session, placement_id])
+	var result = _find_town_by_placement__gd(session, placement_id)
+	TurnEngine.check_writing(&"EnemyAdventureRules._find_town_by_placement", before, [session, placement_id], result)
+	return result
+
+static func _find_town_by_placement__gd(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
 	for index in range(session.overworld.get("towns", []).size()):
 		var town = session.overworld.get("towns", [])[index]
 		if town is Dictionary and String(town.get("placement_id", "")) == placement_id:
@@ -4333,6 +4549,14 @@ static func _normalize_recruit_payload__gd(recruits: Variant) -> Dictionary:
 	return normalized
 
 static func _default_enemy_strategy() -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _default_enemy_strategy__gd()
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules._default_enemy_strategy", [])
+	var result = _default_enemy_strategy__gd()
+	TurnEngine.check_writing(&"EnemyAdventureRules._default_enemy_strategy", before, [], result)
+	return result
+
+static func _default_enemy_strategy__gd() -> Dictionary:
 	return {
 		"build_category_weights": {
 			"civic": 1.0,
@@ -4392,6 +4616,14 @@ static func _default_enemy_strategy() -> Dictionary:
 	}
 
 static func _merge_strategy_dict(base: Dictionary, override: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _merge_strategy_dict__gd(base, override)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules._merge_strategy_dict", [base, override])
+	var result = _merge_strategy_dict__gd(base, override)
+	TurnEngine.check_writing(&"EnemyAdventureRules._merge_strategy_dict", before, [base, override], result)
+	return result
+
+static func _merge_strategy_dict__gd(base: Dictionary, override: Dictionary) -> Dictionary:
 	var merged = base.duplicate(true)
 	for key in override.keys():
 		var value = override[key]
@@ -4402,6 +4634,14 @@ static func _merge_strategy_dict(base: Dictionary, override: Dictionary) -> Dict
 	return merged
 
 static func _find_encounter_by_placement(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _find_encounter_by_placement__gd(session, placement_id)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules._find_encounter_by_placement", [session, placement_id])
+	var result = _find_encounter_by_placement__gd(session, placement_id)
+	TurnEngine.check_writing(&"EnemyAdventureRules._find_encounter_by_placement", before, [session, placement_id], result)
+	return result
+
+static func _find_encounter_by_placement__gd(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
 	for index in range(session.overworld.get("encounters", []).size()):
 		var encounter = session.overworld.get("encounters", [])[index]
 		if encounter is Dictionary and String(encounter.get("placement_id", "")) == placement_id:
@@ -4411,6 +4651,14 @@ static func _find_encounter_by_placement(session: SessionStateStoreScript.Sessio
 # Controlling player (or legacy faction key) of the town, matching
 # EnemyTurnRules._town_controller_faction_id. Not the town's content faction.
 static func _town_controller_faction_id(town_state: Dictionary) -> String:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return _town_controller_faction_id__gd(town_state)
+	var before := TurnEngine.before_writing(&"EnemyAdventureRules._town_controller_faction_id", [town_state])
+	var result = _town_controller_faction_id__gd(town_state)
+	TurnEngine.check_writing(&"EnemyAdventureRules._town_controller_faction_id", before, [town_state], result)
+	return result
+
+static func _town_controller_faction_id__gd(town_state: Dictionary) -> String:
 	return PlayerRules.town_controller_id(town_state)
 
 static func _merge_resources(base: Variant, delta: Variant) -> Dictionary:

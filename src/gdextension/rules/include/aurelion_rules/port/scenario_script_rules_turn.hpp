@@ -20,7 +20,7 @@ using overworld_rules::Vector2i;
 using state::State;
 using state::Value;
 
-// Not run by the six seeds: each throws state::NotPorted (turn_not_ported.cpp).
+// Ported in scenario_turn_rare.cpp (slice 4.2: paths the six seeds do not run).
 bool _encounter_resolved(State &state, DictRef session, Atom placement_id);
 bool _hook_fired(State &state, DictRef session, Atom hook_id);
 DictRef build_script_state(State &state);

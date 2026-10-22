@@ -165,6 +165,14 @@ static func owned_artifact_ids__gd(hero_state: Dictionary) -> Array:
 	return artifact_ids
 
 static func has_artifact(hero_state: Dictionary, artifact_id: String) -> bool:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return has_artifact__gd(hero_state, artifact_id)
+	var before := TurnEngine.before_writing(&"ArtifactRules.has_artifact", [hero_state, artifact_id])
+	var result = has_artifact__gd(hero_state, artifact_id)
+	TurnEngine.check_writing(&"ArtifactRules.has_artifact", before, [hero_state, artifact_id], result)
+	return result
+
+static func has_artifact__gd(hero_state: Dictionary, artifact_id: String) -> bool:
 	return String(locate_artifact(hero_state, artifact_id).get("location", "missing")) != "missing"
 
 static func locate_artifact(hero_state: Dictionary, artifact_id: String) -> Dictionary:
@@ -220,6 +228,14 @@ static func aggregate_bonuses(hero_state: Dictionary) -> Dictionary:
 	return totals
 
 static func artifact_set_runtime_state(hero_state: Dictionary) -> Array:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return artifact_set_runtime_state__gd(hero_state)
+	var before := TurnEngine.before_writing(&"ArtifactRules.artifact_set_runtime_state", [hero_state])
+	var result = artifact_set_runtime_state__gd(hero_state)
+	TurnEngine.check_writing(&"ArtifactRules.artifact_set_runtime_state", before, [hero_state], result)
+	return result
+
+static func artifact_set_runtime_state__gd(hero_state: Dictionary) -> Array:
 	# Normalizing reads the artifacts only, so the hero needs no copy.
 	return _set_states_for_equipped(normalize_hero_artifacts(hero_state.get("artifacts", {})).get("equipped", {}))
 
@@ -1210,6 +1226,14 @@ static func pickup_artifact(hero_state: Dictionary, artifact_id: String) -> Dict
 	return claim_artifact(hero_state, artifact_id, "Recovered", true)
 
 static func remove_owned_artifact(hero_state: Dictionary, artifact_id: String) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return remove_owned_artifact__gd(hero_state, artifact_id)
+	var before := TurnEngine.before_writing(&"ArtifactRules.remove_owned_artifact", [hero_state, artifact_id])
+	var result = remove_owned_artifact__gd(hero_state, artifact_id)
+	TurnEngine.check_writing(&"ArtifactRules.remove_owned_artifact", before, [hero_state, artifact_id], result)
+	return result
+
+static func remove_owned_artifact__gd(hero_state: Dictionary, artifact_id: String) -> Dictionary:
 	var hero = ensure_hero_artifacts(hero_state.duplicate(true))
 	var location := locate_artifact(hero, artifact_id)
 	var location_name := String(location.get("location", "missing"))

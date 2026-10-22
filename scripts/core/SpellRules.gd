@@ -191,6 +191,14 @@ static func refresh_daily_mana(hero_state: Dictionary) -> Dictionary:
 	return hero
 
 static func mana_state(hero_state: Dictionary) -> Dictionary:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return mana_state__gd(hero_state)
+	var before := TurnEngine.before_writing(&"SpellRules.mana_state", [hero_state])
+	var result = mana_state__gd(hero_state)
+	TurnEngine.check_writing(&"SpellRules.mana_state", before, [hero_state], result)
+	return result
+
+static func mana_state__gd(hero_state: Dictionary) -> Dictionary:
 	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
 	return hero.get("spellbook", {}).get("mana", {})
 

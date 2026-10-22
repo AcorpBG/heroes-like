@@ -3,6 +3,8 @@ extends RefCounted
 
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
+const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
+static var _turn_engine_mode: int = TurnEngine.mode
 static var _battle_engine_mode: int = BattleEngine.mode
 
 const DIFFICULTY_PROFILES := {
@@ -114,10 +116,26 @@ static func scale_reward_resources(session: SessionStateStoreScript.SessionData,
 	return scale_resource_payload(payload, float(profile_for_session(session).get("reward_multiplier", 1.0)))
 
 static func adjust_enemy_pressure_gain(session: SessionStateStoreScript.SessionData, base_gain: int) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return adjust_enemy_pressure_gain__gd(session, base_gain)
+	var before := TurnEngine.before_writing(&"DifficultyRules.adjust_enemy_pressure_gain", [session, base_gain])
+	var result = adjust_enemy_pressure_gain__gd(session, base_gain)
+	TurnEngine.check_writing(&"DifficultyRules.adjust_enemy_pressure_gain", before, [session, base_gain], result)
+	return result
+
+static func adjust_enemy_pressure_gain__gd(session: SessionStateStoreScript.SessionData, base_gain: int) -> int:
 	var profile := profile_for_session(session)
 	return max(0, base_gain + int(profile.get("enemy_pressure_bonus", 0)))
 
 static func adjust_raid_threshold(session: SessionStateStoreScript.SessionData, base_threshold: int) -> int:
+	if _turn_engine_mode != TurnEngine.SHADOW:
+		return adjust_raid_threshold__gd(session, base_threshold)
+	var before := TurnEngine.before_writing(&"DifficultyRules.adjust_raid_threshold", [session, base_threshold])
+	var result = adjust_raid_threshold__gd(session, base_threshold)
+	TurnEngine.check_writing(&"DifficultyRules.adjust_raid_threshold", before, [session, base_threshold], result)
+	return result
+
+static func adjust_raid_threshold__gd(session: SessionStateStoreScript.SessionData, base_threshold: int) -> int:
 	var profile := profile_for_session(session)
 	return max(1, base_threshold + int(profile.get("raid_threshold_offset", 0)))
 
