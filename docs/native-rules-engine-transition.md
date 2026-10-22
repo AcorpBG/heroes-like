@@ -1400,15 +1400,18 @@ ContentService inside the computer players' turns. The probe slows the turn, so 
 **Boundary.** The computer players' day is one native call: `EnemyTurnRules.run_enemy_turn` runs every faction turn,
 `AiHeroRules.run_faction_turn` included. The session is a view through the port bridge. It loads lazily, once, and is
 written back at the end. Until Phase 1's merge, the two battle entries are host targets (`gd::call_static`: write
-back, run the GDScript, reload lazily). A path the port leaves out throws `state::NotPorted`, and the whole day's
+back, run the GDScript, reload lazily): `AiHeroRules._simulate_battle` and `AiHeroRules._start_player_battle`, the
+two callers of `BattleRules.create_battle_payload`, which is frozen battle code and takes no host wrapper. A path the port leaves out throws `state::NotPorted`, and the whole day's
 computer turns run in GDScript. That fallback is only correct before the day's first host call, so shadow mode counts
 both. Switch `HEROES_NATIVE_TURN=gdscript|native|shadow`, log `HEROES_NATIVE_TURN_LOG`, registry
 `core/port/turn_registry.cpp`, files `core/port/<script>_turn.cpp` (the claims note names each function's file).
 
 **Slices.**
 - 4.0, runtime on main first, with no behaviour change: a long call reads each value of a container from Godot once.
-  Today a backed Dictionary goes back to Godot on every lookup. A backed Dictionary or Array that a call keeps
-  reading is filled instead.
+  A backed Dictionary went back to Godot on every lookup. A backed Dictionary or Array that a call keeps reading is
+  filled instead, once the call has read it as often as it has entries. Done 2026-10-22 (main 13a7a0c9a source,
+  c9c25b540 Windows binaries): native mode identical to main on the six seeds, core suite 17/17. Phase 3's calls are
+  short, so whole games are not faster yet; the long calls of 4.1 need it.
 - 4.1, the computer players' day in one native call: the 330 not-ported functions the six seeds run (6,066 lines),
   calling Phase 3's ports and Phase 5's (from its merge), with battles as host targets and the other 201 not-ported
   functions throwing `state::NotPorted`. The bound on its gain: the turn's share outside battles, about 30% of match
