@@ -331,6 +331,16 @@ inline void set_static_var(State &state, Atom script, Atom name, const Value &va
 	state.host().static_set(state, script, name, value);
 }
 
+// Script.function(args) of a GDScript static func the phase leaves in
+// GDScript, a host call (Backing::call_static; script: the script's res://
+// path): gd::call_static(state, key::battle_rules_script, key::_finalize_victory,
+// {session}). Its table must list it (port::Table::hosts) with as many
+// arguments. Everything the call changed is written back first and read again
+// afterwards: an items() range or a const DictNode & held across it is no
+// longer valid. In a call where no GDScript may run (a shadow check, a call
+// that writes nothing back) the native call ends there (state::Suspend).
+Value call_static(State &state, Atom script, Atom function, std::initializer_list<Value> args);
+
 // "%d,%d" % [a, b] for ints.
 std::string format_pair(int64_t a, int64_t b);
 

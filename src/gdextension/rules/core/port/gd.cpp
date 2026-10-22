@@ -1445,4 +1445,16 @@ void refuse_gdscript_only_static(const State &state, Atom script, Atom name) {
 	fail(state.text(script) + "." + state.text(name) + " is GDScript's own memo: a native port neither reads nor fills it (its table's gdscript_only)");
 }
 
+Value call_static(State &state, Atom script, Atom function, std::initializer_list<Value> args) {
+	const std::string name = port::host_name(state.text(script), state.text(function));
+	const port::Host *host = port::find_host(name);
+	if (host == nullptr) {
+		fail(name + ": a host call to a function no table lists as a host (port::Table::hosts)");
+	}
+	if (static_cast<size_t>(host->arity) != args.size()) {
+		fail(name + ": a host call with " + std::to_string(args.size()) + " arguments, its table says " + std::to_string(host->arity));
+	}
+	return state.host().call_static(state, script, function, args.begin(), args.size());
+}
+
 } // namespace aurelion::rules::gd
