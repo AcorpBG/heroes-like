@@ -658,6 +658,19 @@ public:
 
 	// object.property of an opaque value (the session's battle, day, ...).
 	virtual Value object_get(State &state, uint32_t slot, uint32_t property);
+	// An opaque value's view, as DayEngine.gd makes a session's: a Dict of its
+	// script variables, in its property list's order, with its metadata under
+	// "meta" (a Dict keyed by StringName), the same node for the rest of the
+	// call. Once the view is made, object_get and object_set of that object
+	// read and write it, and the host writes it back into the object with the
+	// call's write-back (Object::set, set_meta, remove_meta). object_set of a
+	// property that is not a script variable is a ScriptError.
+	virtual Value object_view(State &state, uint32_t slot);
+	virtual void object_set(State &state, uint32_t slot, uint32_t property, const Value &value);
+	// The object a view of this call stands for (object_view): its opaque
+	// value, for a host call, which takes the object. Nil for a Dict that is
+	// no view.
+	virtual Value view_object(State &state, uint32_t node);
 	// A RandomNumberGenerator: its seed and state, false for another object.
 	virtual bool rng_get(uint32_t slot, uint64_t &seed, uint64_t &state);
 	virtual void rng_set_state(uint32_t slot, uint64_t state);

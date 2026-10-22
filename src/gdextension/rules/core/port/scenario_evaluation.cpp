@@ -1,14 +1,20 @@
 // ScenarioRules.evaluate_session: the scenario state normalized (its script
 // state, the computer players' states), its script hooks run and its
 // objectives checked. Generated maps have no script hooks and one objective,
-// defeating every rival, which counts only for a human player. The paths AI
-// matches never run are left to GDScript (state::NotPorted): script hooks and
-// pending reinforcements (authored scenarios), any other objective type, a
-// finished scenario, the rival count of a human game, a script state whose
-// hook list is not yet a typed Array[String] (built anew once a session).
+// defeating every rival, which counts only for a human player. The battle ends
+// run it too (Phase 5 slice 09), so a human game's rival count and a won or
+// lost scenario are ported. Left to GDScript (state::NotPorted): script hooks
+// and pending reinforcements (authored scenarios), any other objective type, a
+// campaign chapter's completion, a script state whose hook list is not yet a
+// typed Array[String] (built anew once a session).
 
+#include "aurelion_rules/port/battle_ends.hpp"
+#include "aurelion_rules/port/enemy_adventure_rules_ai.hpp"
 #include "aurelion_rules/port/enemy_states.hpp"
+#include "aurelion_rules/port/player_identity_rules.hpp"
+#include "aurelion_rules/port/player_identity_rules_ai.hpp"
 #include "aurelion_rules/port/scenario_evaluation.hpp"
+#include "aurelion_rules/port/session_state_store.hpp"
 #include "aurelion_rules/port/session_view.hpp"
 
 #include <string>
@@ -78,6 +84,9 @@ void normalize_scenario_state(State &state, DictRef session, bool normalize_enem
 DictRef scenario_record_for_session(State &state, DictRef session);
 Value objective_definitions(State &state, DictRef scenario);
 bool _objective_met(State &state, DictRef session, DictRef objective);
+DictRef _complete_session(State &state, DictRef session, Atom status, Atom summary);
+DictRef _merge_result_messages(State &state, DictRef result, Atom prefix_message);
+Atom _resolution_text(State &state, DictRef scenario, Atom status);
 } // namespace scenario_rules
 
 // ScenarioRules.
@@ -117,8 +126,7 @@ DictRef evaluate_session(State &state, DictRef session) {
 	if (gd::is_array(defeat_objectives)) {
 		for (const Value &objective : gd::items(state, defeat_objectives)) {
 			if (gd::is_dict(objective) && _objective_met(state, session, objective.ref)) {
-				// _complete_session, _resolution_text, _merge_result_messages.
-				not_ported("a scenario defeat");
+				return _merge_result_messages(state, _complete_session(state, session, key::defeat, _resolution_text(state, scenario, key::defeat)), script_message);
 			}
 		}
 	}
@@ -133,8 +141,7 @@ DictRef evaluate_session(State &state, DictRef session) {
 			}
 		}
 		if (all_met) {
-			// _complete_session, _resolution_text, _merge_result_messages.
-			not_ported("a scenario victory");
+			return _merge_result_messages(state, _complete_session(state, session, key::victory, _resolution_text(state, scenario, key::victory)), script_message);
 		}
 	}
 
@@ -168,6 +175,47 @@ bool _objective_met(State &state, DictRef session, DictRef objective) {
 	}
 	// The authored scenarios' objective types and unknown ones.
 	not_ported("an objective other than defeating the generated rivals");
+}
+
+DictRef _complete_session(State &state, DictRef session, Atom status, Atom summary) {
+	// session.to_dict(), the snapshot a campaign's failed completion restores,
+	// changes nothing.
+	state.set(session, str(key::scenario_status), str(status));
+	state.set(session, str(key::scenario_summary), str(summary));
+	state.set(gd::as_dict(gd::field(state, session, key::flags)), str(key::scenario_result), str(status));
+	if (session_state_store::normalize_launch_mode(state, gd::field(state, session, key::launch_mode)) == key::campaign) {
+		// CampaignProgression.record_session_completion (campaigns are archived).
+		not_ported("a campaign chapter's completion");
+	}
+	return status_result(state, status, summary);
+}
+
+DictRef _merge_result_messages(State &state, DictRef result, Atom prefix_message) {
+	const DictRef merged = gd::deep_duplicate_dict(state, result);
+	std::string joined;
+	if (prefix_message != key::empty) {
+		joined = state.text(prefix_message);
+	}
+	const Atom result_message = text(state, result, key::message, key::empty);
+	if (result_message != key::empty) {
+		if (prefix_message != key::empty) {
+			joined += " ";
+		}
+		joined += state.text(result_message);
+	}
+	state.set(merged, str(key::message), str(state.intern(joined)));
+	return merged;
+}
+
+Atom _resolution_text(State &state, DictRef scenario, Atom status) {
+	const Value objectives = objective_definitions(state, scenario);
+	if (gd::is_dict(objectives)) {
+		const Atom explicit_text = text(state, objectives.ref, state.intern(state.text(status) + "_text"), key::empty);
+		if (explicit_text != key::empty) {
+			return explicit_text;
+		}
+	}
+	return gd::format(state, key::scenario_s, { str(status) });
 }
 
 } // namespace scenario_rules
@@ -354,7 +402,7 @@ DictRef progress(State &state, DictRef session) {
 		return result;
 	}
 	const DictRef catalog = state.new_dict();
-	const Atom active = text(state, overworld, key::active_player_id, key::empty);
+	const Atom active_id = text(state, overworld, key::active_player_id, key::empty);
 	const DictRef flags = gd::as_dict(gd::field(state, session, key::flags));
 	Value source = state.get(flags, str(key::native_random_map_runtime_scenario_record), dict_value(state.new_dict()));
 	if (!gd::is_dict(source) || text(state, source.ref, key::id, key::empty) != text(state, session, key::scenario_id, key::empty)) {
@@ -363,33 +411,295 @@ DictRef progress(State &state, DictRef session) {
 	if (!gd::is_dict(source)) {
 		return result;
 	}
-	if (state.array_size(players.ref) == 0) {
+	const bool no_players = state.array_size(players.ref) == 0;
+	Atom active = active_id;
+	if (!no_players) {
+		for (const Value &player : gd::items(state, players)) {
+			if (!gd::is_dict(player)) {
+				return result;
+			}
+			const Atom id = text(state, player.ref, key::player_id, key::empty);
+			if (id == key::empty || state.has(catalog, str(id)) || text(state, player.ref, key::faction_id, key::empty) == key::empty ||
+					text(state, player.ref, key::team_id, key::empty) == key::empty) {
+				return result;
+			}
+			state.set(catalog, str(id), player);
+		}
+		Value active_player;
+		if (!state.lookup(catalog, str(active), active_player) || !gd::bool_field(state, active_player.ref, key::human, false)) {
+			return result;
+		}
+		// Native package slots are immutable identity, unlike Town ownership.
+		// A dropped rival row or altered team must not manufacture a victory.
+		if (state.has(source.ref, str(key::player_slots))) {
+			const Value slots = state.get(source.ref, str(key::player_slots), Value());
+			if (!gd::is_array(slots) || state.array_size(slots.ref) != state.array_size(players.ref)) {
+				return result;
+			}
+			const DictRef seen = state.new_dict();
+			for (const Value &original : gd::items(state, array_value(player_identity_rules::from_slots(state, slots.ref)))) {
+				const Atom id = text(state, original.ref, key::player_id, key::empty);
+				Value listed;
+				if (state.has(seen, str(id)) || !state.lookup(catalog, str(id), listed)) {
+					return result;
+				}
+				state.set(seen, str(id), gd::bool_value(true));
+				for (const Atom field : { key::faction_id, key::team_id, key::human }) {
+					if (!gd::equal(state, state.get(original.ref, str(field), Value()), state.get(listed.ref, str(field), Value()))) {
+						return result;
+					}
+				}
+			}
+			if (state.dict_size(seen) != state.array_size(players.ref)) {
+				return result;
+			}
+		}
+	} else {
+		// Pre-controller saves cannot recover same-faction ownership that was
+		// already pooled. Accept only their explicit, distinct legacy controllers.
 		if (text(state, overworld, key::player_identity_mode, key::empty) != key::legacy_generated_faction_v0) {
 			return result;
 		}
-		// Pre-controller saves' legacy rivals.
-		not_ported("the rivals of a pre-controller save");
-	}
-	for (const Value &player : gd::items(state, players)) {
-		if (!gd::is_dict(player)) {
+		const Value enemies = state.get(source.ref, str(key::enemy_factions), array_value(state.new_array()));
+		if (!gd::is_array(enemies) || state.array_size(enemies.ref) == 0) {
 			return result;
 		}
-		const Atom id = text(state, player.ref, key::player_id, key::empty);
-		if (id == key::empty || state.has(catalog, str(id)) || text(state, player.ref, key::faction_id, key::empty) == key::empty ||
-				text(state, player.ref, key::team_id, key::empty) == key::empty) {
+		active = key::player;
+		state.set(catalog, str(active), dict_value(state.new_dict()));
+		const DictRef hero = gd::as_dict(state.get(overworld, str(key::hero), dict_value(state.new_dict())));
+		for (const Value &enemy : gd::items(state, enemies)) {
+			const Atom id = gd::is_dict(enemy) ? player_identity_rules::controller_id(state, enemy.ref, key::empty) : gd::stringify(state, enemy);
+			if (id == key::empty || state.has(catalog, str(id)) || id == text(state, hero, key::faction_id, key::empty)) {
+				return result;
+			}
+			state.set(catalog, str(id), dict_value(state.new_dict()));
+		}
+	}
+
+	const DictRef rivals = state.new_dict();
+	for (const Value &id_value : gd::items(state, array_value(gd::keys(state, catalog)))) {
+		const Atom id = gd::stringify(state, id_value);
+		if (id != active && !player_identity_rules::allied(state, dict_value(session), active, id)) {
+			const DictRef presence = state.new_dict();
+			state.set(presence, str(key::towns), int_value(0));
+			state.set(presence, str(key::field_hosts), int_value(0));
+			state.set(presence, str(key::defenders), int_value(0));
+			state.set(rivals, str(id), dict_value(presence));
+		}
+	}
+	// rivals[controller].<field> += 1.
+	const auto count = [&](Atom controller, Atom field) {
+		Value presence;
+		if (state.lookup(rivals, str(controller), presence)) {
+			state.set(presence.ref, str(field), gd::op_add(state.get(presence.ref, str(field), Value()), int_value(1)));
+		}
+	};
+
+	for (const Value &town : gd::items(state, state.get(overworld, str(key::towns), array_value(state.new_array())))) {
+		if (!gd::is_dict(town)) {
 			return result;
 		}
-		state.set(catalog, str(id), player);
+		const Atom owner = text(state, town.ref, key::owner, key::neutral);
+		if (owner == key::neutral) {
+			continue;
+		}
+		Atom controller = player_identity_rules::town_controller_id(state, town.ref);
+		if (owner == key::player && no_players) {
+			controller = active;
+		}
+		if ((owner != key::player && owner != key::enemy) || !state.has(catalog, str(controller))) {
+			return result;
+		}
+		if (owner == key::player && controller != active) {
+			return result;
+		}
+		if (owner == key::enemy && controller == active) {
+			return result;
+		}
+		count(controller, key::towns);
 	}
-	Value active_player;
-	if (!state.lookup(catalog, str(active), active_player) || !gd::bool_field(state, active_player.ref, key::human, false)) {
+	const Value resolved = state.get(overworld, str(key::resolved_encounters), array_value(state.new_array()));
+	if (!gd::is_array(resolved)) {
 		return result;
 	}
-	// The package's player slots, then the rivals' towns, field hosts and
-	// defenders (a human game).
-	not_ported("the rival count of a human game");
+	for (const Value &encounter : gd::items(state, state.get(overworld, str(key::encounters), array_value(state.new_array())))) {
+		if (!gd::is_dict(encounter)) {
+			return result;
+		}
+		if (!gd::array_has(state, resolved.ref, str(text(state, encounter.ref, key::placement_id, key::empty))) &&
+				!gd::bool_field(state, encounter.ref, key::raid_retired_to_rebuild, false)) {
+			const Value commander = state.get(encounter.ref, str(key::enemy_commander_state), dict_value(state.new_dict()));
+			if (gd::is_dict(commander) && text(state, commander.ref, key::player_id, key::empty) != key::empty &&
+					player_identity_rules::raid_controller_id(state, encounter.ref) == key::empty) {
+				return result;
+			}
+		}
+		if (!enemy_adventure_rules::is_active_pressure_host(state, encounter, key::empty, resolved)) {
+			continue;
+		}
+		const Atom controller = player_identity_rules::raid_controller_id(state, encounter.ref);
+		if (!state.has(catalog, str(controller))) {
+			return result;
+		}
+		count(controller, key::field_hosts);
+	}
+	for (const Value &node : gd::items(state, state.get(overworld, str(key::resource_nodes), array_value(state.new_array())))) {
+		if (!gd::is_dict(node)) {
+			return result;
+		}
+		if (!state.has(node.ref, str(key::ai_defender_commander_state))) {
+			continue;
+		}
+		if (gd::is_empty(state, enemy_adventure_rules::_active_resource_defender_entry(state, session, node.ref, key::empty))) {
+			continue;
+		}
+		const Atom controller = player_identity_rules::defender_controller_id(state, node.ref);
+		if (!state.has(catalog, str(controller))) {
+			return result;
+		}
+		count(controller, key::defenders);
+	}
+
+	state.set(result, str(key::known), gd::bool_value(true));
+	state.set(result, str(key::reason), str(key::empty));
+	state.set(result, str(key::total), int_value(state.dict_size(rivals)));
+	const ArrayRef remaining = gd::as_array(state.get(result, str(key::remaining), Value()));
+	for (const Value &id_value : gd::items(state, array_value(gd::keys(state, rivals)))) {
+		const DictRef presence = gd::as_dict(state.get(rivals, id_value, Value()));
+		const int64_t present = gd::add(gd::add(gd::int_field(state, presence, key::towns, 0), gd::int_field(state, presence, key::field_hosts, 0)),
+				gd::int_field(state, presence, key::defenders, 0));
+		if (present > 0) {
+			const DictRef entry = state.new_dict();
+			state.set(entry, str(key::player_id), id_value);
+			state.set(entry, str(key::presence), dict_value(presence));
+			state.append(remaining, dict_value(entry));
+		} else {
+			state.set(result, str(key::defeated), gd::op_add(state.get(result, str(key::defeated), Value()), int_value(1)));
+		}
+	}
+	state.set(result, str(key::complete), gd::bool_value(state.array_size(remaining) == 0));
+	return result;
 }
 
 } // namespace generated_scenario_objective_rules
+
+// PlayerIdentityRules and EnemyAdventureRules: what a human game's rival count
+// reads that no port had (Phase 4 declares them, battle_ends.hpp).
+
+namespace player_identity_rules {
+
+Atom defender_controller_id(State &state, DictRef record) {
+	Atom player_id = text(state, record, key::ai_defended_by_player_id, key::empty);
+	const Value commander_value = state.get(record, str(key::ai_defender_commander_state), dict_value(state.new_dict()));
+	const DictRef commander = gd::is_dict(commander_value) ? commander_value.ref : state.new_dict();
+	if (player_id == key::empty) {
+		player_id = text(state, commander, key::player_id, key::empty);
+	}
+	if (player_id != key::empty) {
+		return player_id;
+	}
+	const Atom faction = text(state, record, key::ai_defended_by_faction_id, key::empty);
+	return faction != key::empty ? faction : text(state, commander, key::faction_id, key::empty);
+}
+
+ArrayRef from_slots(State &state, ArrayRef slots) {
+	const ArrayRef result = state.new_array();
+	for (const Value &value : gd::items(state, array_value(slots))) {
+		if (!gd::is_dict(value)) {
+			continue;
+		}
+		const int64_t slot = gd::int_field(state, value.ref, key::slot, 0);
+		if (slot <= 0) {
+			continue;
+		}
+		const DictRef record = gd::deep_duplicate_dict(state, value.ref);
+		Atom id = text(state, record, key::player_id, key::empty);
+		if (id == key::empty) {
+			id = gd::format(state, key::player_d, { int_value(slot) });
+		}
+		state.set(record, str(key::player_id), str(id));
+		if (text(state, record, key::team_id, key::empty) == key::empty) {
+			// Older packages did not carry teams. Do not invent alliances from
+			// faction equality or the requested (not source-assigned) team count.
+			state.set(record, str(key::team_id), str(id));
+		}
+		state.append(result, dict_value(record));
+	}
+	return result;
+}
+
+} // namespace player_identity_rules
+
+namespace enemy_adventure_rules {
+
+bool is_active_pressure_host(State &state, const Value &encounter, Atom faction_id, const Value &resolved_encounters) {
+	if (!_is_active_raid(state, encounter, faction_id, resolved_encounters)) {
+		return false;
+	}
+	const DictRef raid = gd::as_dict(encounter);
+	if (text(state, raid, key::difficulty, key::empty) == key::pressure) {
+		return true;
+	}
+	if (state.has(raid, str(key::days_active))) {
+		return true;
+	}
+	if (text(state, raid, key::target_kind, key::empty) != key::empty && text(state, raid, key::target_placement_id, key::empty) != key::empty) {
+		return true;
+	}
+	if (gd::bool_field(state, raid, key::commanderless_support_column, false)) {
+		return true;
+	}
+	const Value commander_state = state.get(raid, str(key::enemy_commander_state), dict_value(state.new_dict()));
+	if (gd::is_dict(commander_state) && !gd::is_empty(state, commander_state.ref)) {
+		return true;
+	}
+	return text(state, raid, key::delivery_intercept_node_placement_id, key::empty) != key::empty;
+}
+
+DictRef _active_resource_defender_entry(State &state, DictRef session, DictRef node, Atom faction_filter) {
+	// session == null: a view is never null.
+	if (gd::is_empty(state, node)) {
+		return state.new_dict();
+	}
+	const Value commander_state = state.get(node, str(key::ai_defender_commander_state), dict_value(state.new_dict()));
+	if (!gd::is_dict(commander_state) || gd::is_empty(state, commander_state.ref)) {
+		return state.new_dict();
+	}
+	const Atom roster_hero_id = gd::stringify_or_fallback(state,
+			state.get(commander_state.ref, str(key::roster_hero_id), state.get(node, str(key::ai_defender_roster_hero_id), str(key::empty))));
+	if (roster_hero_id == key::empty) {
+		return state.new_dict();
+	}
+	const Atom faction_id = player_identity_rules::defender_controller_id(state, node);
+	if (faction_filter != key::empty && faction_id != faction_filter) {
+		return state.new_dict();
+	}
+	const DictRef site = gd::content_row(state, state::ContentTable::ResourceSite, text(state, node, key::site_id, key::empty));
+	if (!_resource_site_is_persistent(state, site)) {
+		return state.new_dict();
+	}
+	if (faction_id == key::empty || player_identity_rules::resource_controller_id(state, node) != faction_id) {
+		return state.new_dict();
+	}
+	const Value front_value = state.get(node, str(key::front), dict_value(state.new_dict()));
+	const DictRef front = gd::is_dict(front_value) ? front_value.ref : state.new_dict();
+	const Atom raw_front_state = text(state, front, key::state, key::empty);
+	const int64_t defense_until = compat::engine_max<int64_t>(gd::int_field(state, node, key::ai_defense_until_day, 0), gd::int_field(state, front, key::defense_until_day, 0));
+	if (defense_until < gd::to_int(state, gd::field(state, session, key::day))) {
+		return state.new_dict();
+	}
+	if (raw_front_state != key::empty && raw_front_state != key::defend && raw_front_state != key::stabilizing) {
+		return state.new_dict();
+	}
+	const DictRef entry_state = gd::deep_duplicate_dict(state, commander_state.ref);
+	state.set(entry_state, str(key::roster_hero_id), str(roster_hero_id));
+	gd::merge(state, entry_state, player_identity_rules::identity_fields(state, session, faction_id), true);
+	const DictRef entry = state.new_dict();
+	state.set(entry, str(key::placement_id), str(gd::format(state, key::resource_defense_s, { str(text(state, node, key::placement_id, key::empty)) })));
+	state.set(entry, str(key::commander_state), dict_value(entry_state));
+	return entry;
+}
+
+} // namespace enemy_adventure_rules
 
 } // namespace aurelion::rules::port

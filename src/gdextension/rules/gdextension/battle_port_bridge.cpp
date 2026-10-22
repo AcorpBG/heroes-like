@@ -192,6 +192,7 @@ void PortBridge::begin(bool validating, bool host_calls) {
 	packed_sources_.clear();
 	packed_nodes_.clear();
 	opaque_.clear();
+	views_.clear();
 	content_.clear();
 	content_revision_ = -1;
 	exported_arrays_.clear();
@@ -353,6 +354,12 @@ Object *PortBridge::object_at(uint32_t slot) const {
 }
 
 Value PortBridge::object_get(state::State &state, uint32_t slot, uint32_t property) {
+	if (const ObjectView *view = view_of(slot)) {
+		Value found;
+		if (std::find(view->fields.begin(), view->fields.end(), property) != view->fields.end() && state.lookup(view->node, Value::str(property), found)) {
+			return found;
+		}
+	}
 	Object *object = object_at(slot);
 	if (object == nullptr) {
 		throw state::ScriptError("Invalid access to property '" + state.text(property) + "' on a value that is not an object");
@@ -360,6 +367,130 @@ Value PortBridge::object_get(state::State &state, uint32_t slot, uint32_t proper
 	const std::string &name = state.text(property);
 	const Variant found = object->get(StringName(String::utf8(name.data(), static_cast<int64_t>(name.size()))));
 	return load(found);
+}
+
+const PortBridge::ObjectView *PortBridge::view_of(uint32_t slot) const {
+	for (const ObjectView &view : views_) {
+		if (view.slot == slot) {
+			return &view;
+		}
+	}
+	return nullptr;
+}
+
+Value PortBridge::object_view(state::State &state, uint32_t slot) {
+	if (const ObjectView *known = view_of(slot)) {
+		return Value::of_ref(Kind::Dict, known->node);
+	}
+	Object *object = object_at(slot);
+	if (object == nullptr) {
+		throw state::ScriptError("A view of a value that is not an object");
+	}
+	ObjectView view;
+	view.slot = slot;
+	view.node = state.new_dict();
+	view.meta = state.new_dict();
+	const godot::TypedArray<Dictionary> properties = object->get_property_list();
+	for (int64_t index = 0; index < properties.size(); ++index) {
+		const Dictionary property = properties[index];
+		if ((static_cast<int64_t>(property["usage"]) & godot::PROPERTY_USAGE_SCRIPT_VARIABLE) != 0) {
+			view.fields.push_back(state.intern(utf8_of(String(property["name"]))));
+		}
+	}
+	views_.push_back(std::move(view));
+	fill_view(views_.back());
+	return Value::of_ref(Kind::Dict, views_.back().node);
+}
+
+void PortBridge::object_set(state::State &state, uint32_t slot, uint32_t property, const Value &value) {
+	const Value view = object_view(state, slot);
+	const std::vector<uint32_t> &fields = view_of(slot)->fields;
+	if (std::find(fields.begin(), fields.end(), property) == fields.end()) {
+		throw state::ScriptError("Invalid assignment of property '" + state.text(property) + "': not a script variable of the object");
+	}
+	state.set(view.ref, Value::str(property), value);
+}
+
+Value PortBridge::view_object(state::State &, uint32_t node) {
+	for (const ObjectView &view : views_) {
+		if (view.node == node) {
+			return Value::of_ref(Kind::Opaque, view.slot);
+		}
+	}
+	return Value();
+}
+
+// The nodes are built in place, so they start clean: write_back() writes a
+// view that set() has changed since.
+void PortBridge::fill_view(const ObjectView &view) {
+	Object *object = object_at(view.slot);
+	state::ValueList keys;
+	state::ValueList values;
+	for (const uint32_t field : view.fields) {
+		keys.push_back(Value::str(field));
+		values.push_back(load(object->get(static_name(field))));
+	}
+	state::ValueList meta_keys;
+	state::ValueList meta_values;
+	const godot::TypedArray<StringName> names = object->get_meta_list();
+	for (int64_t index = 0; index < names.size(); ++index) {
+		const StringName name = names[index];
+		meta_keys.push_back(load(Variant(name)));
+		meta_values.push_back(load(object->get_meta(name)));
+	}
+	keys.push_back(state_.string("meta"));
+	values.push_back(Value::of_ref(Kind::Dict, view.meta));
+	state::DictNode &meta = state_.dict_node(view.meta);
+	meta.reset();
+	meta.keys = std::move(meta_keys);
+	meta.values = std::move(meta_values);
+	state::DictNode &node = state_.dict_node(view.node);
+	node.reset();
+	node.keys = std::move(keys);
+	node.values = std::move(values);
+}
+
+bool PortBridge::view_changed(const ObjectView &view) const {
+	return state_.dict_node(view.node).dirty || state_.dict_node(view.meta).dirty;
+}
+
+// As DayEngine._take_views: each property the view holds another value for,
+// then the metadata the view's "meta" drops, adds or changes.
+void PortBridge::write_view(const ObjectView &view) {
+	Object *object = object_at(view.slot);
+	for (const uint32_t field : view.fields) {
+		Value value;
+		if (!state_.lookup(view.node, Value::str(field), value)) {
+			continue;
+		}
+		const StringName name = static_name(field);
+		const Variant exported = export_value(value);
+		if (!same_variant(object->get(name), exported)) {
+			object->set(name, exported);
+		}
+	}
+	Value meta;
+	if (!state_.lookup(view.node, state_.string("meta"), meta) || meta.kind != Kind::Dict) {
+		throw state::ScriptError("an object's view lost its \"meta\" Dictionary");
+	}
+	// Copies: exporting may fill a backed node, which may move the node lists.
+	const state::DictNode &entries = state_.dict(meta.ref);
+	const state::ValueList keys = entries.keys.list();
+	const state::ValueList values = entries.values;
+	const godot::TypedArray<StringName> names = object->get_meta_list();
+	for (int64_t index = 0; index < names.size(); ++index) {
+		const StringName name = names[index];
+		if (!state_.has(meta.ref, load(Variant(name)))) {
+			object->remove_meta(name);
+		}
+	}
+	for (size_t index = 0; index < keys.size(); ++index) {
+		const StringName name = export_value(keys[index]);
+		const Variant exported = export_value(values[index]);
+		if (!object->has_meta(name) || !same_variant(object->get_meta(name), exported)) {
+			object->set_meta(name, exported);
+		}
+	}
 }
 
 bool PortBridge::rng_get(uint32_t slot, uint64_t &seed, uint64_t &state) {
@@ -681,11 +812,17 @@ void PortBridge::reback() {
 	static_slots_.clear();
 	content_.clear();
 	content_revision_ = -1;
+	// The views' nodes stay the same nodes, so the DictRefs held across the
+	// call see GDScript's changes.
+	for (const ObjectView &view : views_) {
+		fill_view(view);
+	}
 }
 
 state::TypeRef PortBridge::builtin_type(uint8_t builtin) {
-	// A builtin type has no class name and no script.
-	return register_type(builtin, StringName(), Variant());
+	// A builtin type has no class name and no script: a null Object, as
+	// Array.get_typed_script() gives it (a Nil script would be another type).
+	return register_type(builtin, StringName(), Variant(static_cast<Object *>(nullptr)));
 }
 
 int64_t PortBridge::content_revision(state::State &) {
@@ -1111,6 +1248,11 @@ void PortBridge::write_back(bool undoable) {
 			holder->set(static_name(var.name), export_value(var.value));
 		}
 	}
+	for (const ObjectView &view : views_) {
+		if (view_changed(view)) {
+			write_view(view);
+		}
+	}
 }
 
 void PortBridge::undo_write_backs() {
@@ -1163,6 +1305,11 @@ bool PortBridge::changed_a_source() const {
 	}
 	for (const StaticVar &var : statics_) {
 		if (var.assigned) {
+			return true;
+		}
+	}
+	for (const ObjectView &view : views_) {
+		if (view_changed(view)) {
 			return true;
 		}
 	}
@@ -1602,6 +1749,12 @@ std::string PortBridge::verify_after(const Value *args, size_t count, const Arra
 	if (!out.empty()) {
 		return "arguments afterwards: " + out;
 	}
+	for (const ObjectView &view : views_) {
+		verify_object_view(view, out);
+		if (!out.empty()) {
+			return "an object afterwards: " + out;
+		}
+	}
 	// The static vars the native call read or set. It cannot reach GDScript's
 	// own memos (port::Table::gdscript_only), which GDScript fills for its
 	// GDScript callers: they are never compared.
@@ -1685,6 +1838,38 @@ void PortBridge::verify_view(uint32_t node, const Dictionary &now, std::string &
 		}
 		path.resize(length);
 	}
+}
+
+// A validating call writes no view back: each property as GDScript's call left
+// it, and the metadata as a Dictionary in get_meta_list()'s order.
+void PortBridge::verify_object_view(const ObjectView &view, std::string &out) {
+	Object *object = object_at(view.slot);
+	std::string path;
+	for (const uint32_t field : view.fields) {
+		Value value;
+		path = "." + state_.text(field);
+		if (!state_.lookup(view.node, Value::str(field), value)) {
+			out = path + ": the native view dropped it";
+			return;
+		}
+		diff_value(value, object->get(static_name(field)), path, out);
+		if (!out.empty()) {
+			return;
+		}
+	}
+	Value meta;
+	if (!state_.lookup(view.node, state_.string("meta"), meta)) {
+		out = ".meta: the native view dropped it";
+		return;
+	}
+	Dictionary now;
+	const godot::TypedArray<StringName> names = object->get_meta_list();
+	for (int64_t index = 0; index < names.size(); ++index) {
+		const StringName name = names[index];
+		now[name] = object->get_meta(name);
+	}
+	path = ".meta";
+	diff_value(meta, now, path, out);
 }
 
 void PortBridge::verify_loaded(const Array &after, const std::vector<bool> &views, std::string &out) {

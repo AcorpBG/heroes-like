@@ -51,8 +51,7 @@ DictRef commander_live_role_state(State &state, const Value &source);
 DictRef commander_target_memory(State &state, const Value &source);
 void sync_commander_state_to_roster(State &state, DictRef session, Atom faction_id, const Value &commander_state, Atom status_override = state::key::empty, Atom active_placement_id = state::key::empty, int64_t recovery_day = -1, Atom last_outcome = state::key::empty);
 
-// Not ported yet: each throws state::NotPorted (phase4_shared_stubs.cpp) until Phase 5's
-// slice 09 ports it.
+// Ported in Phase 5's slice 09 (battle_end_heroes.cpp).
 ArrayRef _ai_hero_task_prune_live_tasks(State &state, ArrayRef tasks, int64_t day);
 
 } // namespace aurelion::rules::port::enemy_adventure_rules

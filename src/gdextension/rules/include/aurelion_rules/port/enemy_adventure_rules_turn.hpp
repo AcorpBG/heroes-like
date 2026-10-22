@@ -6,6 +6,7 @@
 
 #include "aurelion_rules/port/gd.hpp"
 #include "aurelion_rules/port/session_view.hpp"
+#include "aurelion_rules/port/battle_ends.hpp"
 #include "aurelion_rules/port/enemy_adventure_rules.hpp"
 #include "aurelion_rules/port/enemy_adventure_rules_ai.hpp"
 #include "aurelion_rules/port/overworld_rules.hpp"
@@ -88,12 +89,8 @@ int64_t strategy_int(State &state, DictRef strategy, Atom section, Atom key, int
 double strategy_scalar(State &state, DictRef strategy, Atom section, Atom key, double default_value = 1.0);
 bool target_is_objective_anchor(State &state, DictRef session, Atom target_kind, Atom placement_id);
 
-// Not run by the six seeds, and ported by Phase 5's slice 09: until it is merged each throws state::NotPorted (turn_not_ported.cpp).
-DictRef _active_resource_defender_entry(State &state, DictRef session, DictRef node, Atom faction_filter = state::key::empty);
-DictRef _active_town_defender_entry(State &state, DictRef session, DictRef town, Atom faction_filter = state::key::empty);
-int64_t _ai_hero_task_retention_priority(State &state, DictRef task);
+// Not run by the six seeds: Phase 5's slice 09 ported them (enemy_states.cpp), and no other header declares them.
 void _clear_resource_defender_metadata(State &state, DictRef node);
 void _clear_town_defender_metadata(State &state, DictRef town);
-bool is_active_pressure_host(State &state, const Value &encounter, Atom faction_id, const Value &resolved_encounters);
 
 } // namespace aurelion::rules::port::enemy_adventure_rules

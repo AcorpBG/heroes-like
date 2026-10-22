@@ -6,6 +6,7 @@
 
 #include "aurelion_rules/port/gd.hpp"
 #include "aurelion_rules/port/session_view.hpp"
+#include "aurelion_rules/port/battle_ends.hpp"
 #include "aurelion_rules/port/hero_command_rules.hpp"
 #include "aurelion_rules/port/hero_command_rules_ai.hpp"
 #include "aurelion_rules/port/hero_commit.hpp"
@@ -43,8 +44,5 @@ bool town_has_hall(State &state, DictRef town);
 ArrayRef _holder_stacks(State &state, DictRef session, DictRef town, Atom holder_id);
 ArrayRef merge_stacks_into_army(State &state, ArrayRef army, ArrayRef incoming);
 DictRef set_active_hero(State &state, DictRef session, Atom hero_id);
-
-// Not run by the six seeds, and ported by Phase 5's slice 09: until it is merged each throws state::NotPorted (turn_not_ported.cpp).
-void _set_holder_stacks(State &state, DictRef session, DictRef town, Atom holder_id, ArrayRef stacks);
 
 } // namespace aurelion::rules::port::hero_command_rules

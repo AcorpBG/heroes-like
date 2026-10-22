@@ -9,7 +9,7 @@
 // melee approach and the town assault check. Layer 8: a spell's battle events.
 // Layer 9: the AI's orders carried out. Layer 10: the fight: the player's
 // orders and moves, the enemy's turn, the attacks and casts, the end of an
-// action and the outcome.
+// action and the outcome. Layer 11 (Phase 5): the battle ends.
 //
 // _hero_payload_cache and _presentation_queue_written are GDScript's static
 // vars, read and written through the host (gd::static_var) as the GDScript
@@ -25,12 +25,6 @@
 // Not ported, with the reason:
 // - begin_board_read_scope and end_board_read_scope: they open GDScript's
 //   board-read memo, which the native board reads do not use.
-// - The battle ends (_finalize_victory, _finalize_player_battle_loss,
-//   _finalize_stalemate, _finalize_enemy_withdrawal, _finalize_retreat,
-//   _finalize_surrender) and a refused withdrawal's message
-//   (_retreat_action_summary, _surrender_action_summary): they read and change
-//   the overworld and stay GDScript until Phase 5. The ports call them as host
-//   calls (gd::call_static), the HOST entries of core/port/registry.cpp.
 
 #include "aurelion_rules/port/gd.hpp"
 
@@ -469,5 +463,120 @@ DictRef _unit_loss_range(State &state, DictRef defender, int64_t min_damage, int
 ArrayRef upcoming_actor_ids(State &state, DictRef battle, int64_t limit);
 DictRef turn_order_forecast(State &state, DictRef battle);
 ArrayRef _projected_next_round_order(State &state, DictRef battle, ArrayRef still_to_act);
+
+// Layer 11 (Phase 5 slice 09): the battle ends. They take the session as the
+// battle does and hand the overworld rules its view (gd::object_view), so both
+// read and write the same fields. Arguments GDScript defaults are passed.
+
+// The ends: victory, defeat, retreat, surrender, an enemy's withdrawal and a
+// stalemate, and the encounter they resolve (battle_finalize.cpp).
+DictRef _finalize_victory(State &state, const Value &session);
+DictRef _finalize_player_battle_loss(State &state, const Value &session);
+DictRef _finalize_primary_defeat(State &state, const Value &session, Atom base_summary, Atom outcome_id);
+DictRef _finalize_secondary_hero_defeat(State &state, const Value &session);
+DictRef _finalize_town_defense_loss(State &state, const Value &session);
+DictRef _finalize_retreat(State &state, const Value &session);
+DictRef _finalize_surrender(State &state, const Value &session);
+DictRef _finalize_enemy_withdrawal(State &state, const Value &session, Atom outcome_id);
+DictRef _finalize_stalemate(State &state, const Value &session);
+Atom _retreat_action_summary(State &state, const Value &session);
+Atom _surrender_action_summary(State &state, const Value &session);
+DictRef _battle_victory_rewards(State &state, const Value &session, DictRef encounter);
+ArrayRef _beaten_enemy_stacks(State &state, DictRef battle);
+DictRef _battle_resolution_static_encounter_snapshot(State &state, const Value &session);
+void _apply_encounter_victory_flags(State &state, const Value &session, DictRef encounter);
+void _mark_resolved_encounter(State &state, const Value &session, Atom resolved_key);
+DictRef _find_encounter_by_key(State &state, const Value &session, Atom encounter_key);
+DictRef _current_battle_encounter_placement(State &state, const Value &session);
+DictRef _synthetic_battle_encounter_placement(State &state, const Value &session, const Value &context);
+DictRef _battle_exit_animation_snapshot(State &state, DictRef battle, Atom outcome);
+DictRef _normalize_stack_animation_states(State &state, const Value &value);
+Atom _normalize_presentation_speed(State &state, Atom speed);
+
+// The aftermath report, the casualties, and the withdrawal and collapse
+// previews (battle_aftermath.cpp).
+void _record_battle_aftermath(State &state, const Value &session, Atom outcome, Atom summary, DictRef details);
+Atom _battle_aftermath_display_outcome(State &state, Atom outcome, DictRef details);
+Atom _battle_aftermath_result_summary(State &state, Atom summary);
+Atom _battle_aftermath_reward_summary(State &state, DictRef details);
+Atom _battle_aftermath_artifact_summary(State &state, DictRef details);
+Atom _battle_aftermath_force_summary(State &state, const Value &session);
+Atom _battle_aftermath_side_force_clause(State &state, DictRef battle, Atom side, Atom label);
+Atom _battle_aftermath_world_summary(State &state, const Value &session, Atom outcome, DictRef details);
+Atom _battle_aftermath_return_summary(State &state, DictRef report);
+DictRef _battle_report_casualty_ledger(State &state, DictRef battle);
+DictRef _battle_report_side_casualties(State &state, DictRef battle, Atom side);
+Atom _titleize_token(State &state, Atom value);
+DictRef _army_totals(State &state, DictRef battle, Atom side);
+DictRef _build_withdrawal_aftermath_preview(State &state, const Value &session, Atom outcome);
+DictRef _build_collapse_aftermath_preview(State &state, const Value &session, Atom outcome);
+Atom _withdrawal_preview_summary(State &state, DictRef preview, Atom outcome);
+Atom _withdrawal_resource_summary(State &state, Atom outcome, DictRef resource_loss, Atom enemy_label);
+Atom _collapse_resource_summary(State &state, Atom outcome, DictRef resource_loss, Atom enemy_label);
+DictRef _clamped_resource_loss(State &state, const Value &session, DictRef desired_loss);
+int64_t _casualty_units_from_ratio(int64_t total_units, double ratio);
+int64_t _remove_units_from_stacks(State &state, ArrayRef stacks, int64_t unit_losses);
+int64_t _stack_count_total(State &state, const Value &stacks);
+int64_t _army_strength_from_stacks(State &state, const Value &stacks);
+
+// The forces and commanders after a battle: survivors, recovery, mana,
+// salvage, experience, losses and the enemy commander's record
+// (battle_forces.cpp).
+void _sync_player_force_from_battle(State &state, const Value &session);
+void _sync_enemy_force_from_battle(State &state, const Value &session, bool encounter_resolved);
+ArrayRef _battle_survivor_stacks(State &state, const Value &session, Atom side, DictRef filters);
+int64_t _apply_victory_recovery(State &state, DictRef battle, Atom side);
+int64_t _apply_victory_mana(State &state, DictRef commander_state, DictRef battle, Atom side);
+DictRef _apply_player_battle_salvage_reward(State &state, const Value &session);
+ArrayRef _award_commander_experience(State &state, const Value &session, int64_t amount);
+Atom _apply_active_hero_aftermath_losses(State &state, const Value &session, int64_t unit_losses, Atom outcome);
+void _set_player_hero_state(State &state, const Value &session, DictRef hero_state, Atom hero_id);
+DictRef _remove_hero_by_id_after_defeat(State &state, const Value &session, Atom hero_id);
+DictRef _enemy_commander_state_for_force_sync(State &state, const Value &session);
+DictRef _enemy_commander_state_with_payload(State &state, const Value &session, DictRef commander_state);
+DictRef _apply_enemy_commander_battle_memory(State &state, const Value &session, DictRef commander_state);
+Atom _resolve_enemy_commander_aftermath(State &state, const Value &session, Atom outcome_id);
+void _record_enemy_commander_battle_continuity(State &state, const Value &session, Atom outcome_id);
+DictRef _enemy_commander_rivalry_context(State &state, const Value &session, DictRef encounter);
+Atom _enemy_commander_exit_reaction(State &state, const Value &session, Atom outcome_id);
+void _finish_enemy_battle_task_assignment(State &state, const Value &session, Atom task_status, Atom validation);
+
+// The battle's context afterwards: the town, site or route it was fought for,
+// the fronts and the enemy's pressure, treasury and siege
+// (battle_context_aftermath.cpp).
+Atom _apply_battle_context_victory(State &state, const Value &session);
+Atom _apply_battle_context_stalemate(State &state, const Value &session);
+Atom _battle_context_controller_id(State &state, const Value &session, DictRef context, const Value &raw_context);
+Atom _battle_context_resource_placement_id(State &state, DictRef context, const Value &raw_context);
+Atom _battle_context_town_placement_id(State &state, const Value &session, DictRef context, const Value &raw_context);
+Atom _battle_context_trigger_faction_id(State &state, const Value &session, DictRef context, const Value &raw_context, DictRef town);
+bool _is_resource_assault_context(State &state, const Value &context);
+Atom _battle_enemy_faction_id(State &state, const Value &session);
+Atom _battle_enemy_label(State &state, const Value &session, Atom faction_id);
+Atom _side_faction_id(State &state, DictRef battle, Atom side);
+bool _enemy_state_exists(State &state, const Value &session, Atom faction_id);
+int64_t _adjust_enemy_pressure(State &state, const Value &session, Atom faction_id, int64_t delta);
+void _add_enemy_treasury_resources(State &state, const Value &session, Atom faction_id, DictRef delta);
+void _set_enemy_siege_progress(State &state, const Value &session, Atom faction_id, int64_t progress);
+Atom _apply_front_pressure_shift(State &state, const Value &session, Atom faction_id, int64_t delta, Atom outcome);
+DictRef _apply_victory_front_aftermath(State &state, const Value &session);
+DictRef _apply_collapse_aftermath(State &state, const Value &session, Atom outcome);
+DictRef _apply_withdrawal_aftermath(State &state, const Value &session, Atom outcome);
+Atom _apply_collapse_recovery_pressure(State &state, const Value &session, Atom town_placement_id, int64_t pressure, Atom outcome);
+Atom _apply_withdrawal_recovery_pressure(State &state, const Value &session, Atom town_placement_id, int64_t pressure, Atom outcome);
+Atom _apply_town_assault_recovery(State &state, const Value &session, Atom outcome);
+Atom _apply_town_defense_recovery(State &state, const Value &session, Atom outcome);
+int64_t _town_assault_recovery_pressure(State &state, const Value &session, Atom outcome);
+int64_t _town_defense_recovery_pressure(State &state, const Value &session, Atom outcome);
+Atom _apply_delivery_route_aftermath(State &state, const Value &session, Atom outcome);
+void _apply_enemy_victory_specialties(State &state, const Value &session);
+void _capture_town_after_assault(State &state, const Value &session, Atom town_placement_id, ArrayRef enemy_survivors);
+Atom _keep_enemy_hero_after_town_capture(State &state, const Value &session, Atom town_placement_id, ArrayRef enemy_survivors);
+Atom _station_enemy_commander_after_town_capture(State &state, const Value &session, Atom town_placement_id, ArrayRef enemy_survivors);
+Atom _stabilize_hostile_town_front(State &state, const Value &session, Atom source, int64_t bonus_days);
+DictRef _find_town_by_placement(State &state, const Value &session, Atom placement_id);
+DictRef _find_town_at_position(State &state, const Value &session, int64_t x, int64_t y, int64_t level);
+Atom _town_name(State &state, DictRef town);
+Atom _town_name_from_placement_id(State &state, const Value &session, Atom placement_id);
 
 } // namespace aurelion::rules::port::battle_rules

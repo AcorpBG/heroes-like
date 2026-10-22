@@ -119,6 +119,10 @@ Atom _status_terms(State &state, DictRef status_effect);
 Atom _modifier_summary(State &state, DictRef modifiers);
 Atom _signed_modifier_label(State &state, int64_t amount);
 
+// Phase 4's port shared with Phase 5's battle ends (spell_rules_shared.cpp): a
+// hero learning a spell.
+DictRef learn_spell(State &state, DictRef hero_state, Atom spell_id);
+
 // A hero's mana at the start of a day (day_economy.cpp).
 gd::DictRef refresh_daily_mana(State &state, gd::DictRef hero_state);
 

@@ -460,6 +460,16 @@ static func _apply_specialty_battle_starts(battle: Dictionary) -> void:
 ## Field Surgeon: part of the winning side's fallen creatures stand up again
 ## before its survivors go back to the map.
 static func _apply_victory_recovery(battle: Dictionary, side: String) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_victory_recovery__gd(battle, side)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_victory_recovery", [battle, side])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_victory_recovery", [battle, side])
+	var result = _apply_victory_recovery__gd(battle, side)
+	BattleEngine.check_writing(&"BattleRules._apply_victory_recovery", before, [battle, side], result)
+	return result
+
+static func _apply_victory_recovery__gd(battle: Dictionary, side: String) -> int:
 	var pct := int(_hero_payload_for_side(battle, side).get("victory_recovery_pct", 0))
 	if pct <= 0:
 		return 0
@@ -482,6 +492,16 @@ static func _apply_victory_recovery(battle: Dictionary, side: String) -> int:
 
 ## Ley Channeler: a winning commander regains mana.
 static func _apply_victory_mana(commander_state: Dictionary, battle: Dictionary, side: String) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_victory_mana__gd(commander_state, battle, side)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_victory_mana", [commander_state, battle, side])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_victory_mana", [commander_state, battle, side])
+	var result = _apply_victory_mana__gd(commander_state, battle, side)
+	BattleEngine.check_writing(&"BattleRules._apply_victory_mana", before, [commander_state, battle, side], result)
+	return result
+
+static func _apply_victory_mana__gd(commander_state: Dictionary, battle: Dictionary, side: String) -> int:
 	var amount := int(_hero_payload_for_side(battle, side).get("mana_after_victory", 0))
 	var spellbook = commander_state.get("spellbook", {})
 	if amount <= 0 or not (spellbook is Dictionary):
@@ -540,7 +560,17 @@ static func _battle_context_seed(session: SessionStateStoreScript.SessionData) -
 		seed["y"] = int(position.get("y", 0))
 	return seed
 
-static func _synthetic_battle_encounter_placement(
+static func _synthetic_battle_encounter_placement(session: SessionStateStoreScript.SessionData, context: Variant = {}) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _synthetic_battle_encounter_placement__gd(session, context)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._synthetic_battle_encounter_placement", [session, context])
+	var before := BattleEngine.before_writing(&"BattleRules._synthetic_battle_encounter_placement", [session, context])
+	var result = _synthetic_battle_encounter_placement__gd(session, context)
+	BattleEngine.check_writing(&"BattleRules._synthetic_battle_encounter_placement", before, [session, context], result)
+	return result
+
+static func _synthetic_battle_encounter_placement__gd(
 	session: SessionStateStoreScript.SessionData,
 	context: Variant = {}
 ) -> Dictionary:
@@ -573,7 +603,17 @@ static func _synthetic_battle_encounter_placement(
 		synthetic["spawned_by_faction_id"] = String(synthetic_context.get("trigger_faction_id", ""))
 	return synthetic
 
-static func _battle_context_town_placement_id(
+static func _battle_context_town_placement_id(session: SessionStateStoreScript.SessionData, context: Dictionary, raw_context: Variant) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _battle_context_town_placement_id__gd(session, context, raw_context)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._battle_context_town_placement_id", [session, context, raw_context])
+	var before := BattleEngine.before_writing(&"BattleRules._battle_context_town_placement_id", [session, context, raw_context])
+	var result = _battle_context_town_placement_id__gd(session, context, raw_context)
+	BattleEngine.check_writing(&"BattleRules._battle_context_town_placement_id", before, [session, context, raw_context], result)
+	return result
+
+static func _battle_context_town_placement_id__gd(
 	session: SessionStateStoreScript.SessionData,
 	context: Dictionary,
 	raw_context: Variant
@@ -602,6 +642,16 @@ static func _battle_context_town_placement_id(
 	return String(_find_town_at_position(session, x, y, LevelRules.level_of(source)).get("town", {}).get("placement_id", ""))
 
 static func _battle_context_resource_placement_id(context: Dictionary, raw_context: Variant) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _battle_context_resource_placement_id__gd(context, raw_context)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._battle_context_resource_placement_id", [context, raw_context])
+	var before := BattleEngine.before_writing(&"BattleRules._battle_context_resource_placement_id", [context, raw_context])
+	var result = _battle_context_resource_placement_id__gd(context, raw_context)
+	BattleEngine.check_writing(&"BattleRules._battle_context_resource_placement_id", before, [context, raw_context], result)
+	return result
+
+static func _battle_context_resource_placement_id__gd(context: Dictionary, raw_context: Variant) -> String:
 	var placement_id := String(context.get("resource_placement_id", ""))
 	if placement_id != "":
 		return placement_id
@@ -618,7 +668,17 @@ static func _battle_context_resource_placement_id(context: Dictionary, raw_conte
 		return resolved_key.trim_prefix("resource_defense:")
 	return ""
 
-static func _battle_context_trigger_faction_id(
+static func _battle_context_trigger_faction_id(session: SessionStateStoreScript.SessionData, context: Dictionary, raw_context: Variant, town: Dictionary = {}) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _battle_context_trigger_faction_id__gd(session, context, raw_context, town)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._battle_context_trigger_faction_id", [session, context, raw_context, town])
+	var before := BattleEngine.before_writing(&"BattleRules._battle_context_trigger_faction_id", [session, context, raw_context, town])
+	var result = _battle_context_trigger_faction_id__gd(session, context, raw_context, town)
+	BattleEngine.check_writing(&"BattleRules._battle_context_trigger_faction_id", before, [session, context, raw_context, town], result)
+	return result
+
+static func _battle_context_trigger_faction_id__gd(
 	session: SessionStateStoreScript.SessionData,
 	context: Dictionary,
 	raw_context: Variant,
@@ -662,7 +722,17 @@ static func _battle_context_target_hero_id(
 		return ""
 	return target_hero_id
 
-static func _find_town_at_position(
+static func _find_town_at_position(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = 0) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _find_town_at_position__gd(session, x, y, level)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._find_town_at_position", [session, x, y, level])
+	var before := BattleEngine.before_writing(&"BattleRules._find_town_at_position", [session, x, y, level])
+	var result = _find_town_at_position__gd(session, x, y, level)
+	BattleEngine.check_writing(&"BattleRules._find_town_at_position", before, [session, x, y, level], result)
+	return result
+
+static func _find_town_at_position__gd(
 	session: SessionStateStoreScript.SessionData,
 	x: int,
 	y: int,
@@ -681,6 +751,16 @@ static func _find_town_at_position(
 	return {"index": -1, "town": {}}
 
 static func _battle_context_controller_id(session: SessionStateStoreScript.SessionData, context: Dictionary, raw_context: Variant = {}) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _battle_context_controller_id__gd(session, context, raw_context)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._battle_context_controller_id", [session, context, raw_context])
+	var before := BattleEngine.before_writing(&"BattleRules._battle_context_controller_id", [session, context, raw_context])
+	var result = _battle_context_controller_id__gd(session, context, raw_context)
+	BattleEngine.check_writing(&"BattleRules._battle_context_controller_id", before, [session, context, raw_context], result)
+	return result
+
+static func _battle_context_controller_id__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, raw_context: Variant = {}) -> String:
 	var source: Dictionary = raw_context if raw_context is Dictionary else {}
 	var player_id := String(context.get("trigger_player_id", ""))
 	if player_id == "":
@@ -1030,6 +1110,16 @@ static func _is_town_assault_context__gd(context: Variant) -> bool:
 	return context is Dictionary and String(context.get("type", "")) == "town_assault"
 
 static func _is_resource_assault_context(context: Variant) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _is_resource_assault_context__gd(context)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._is_resource_assault_context", [context])
+	var before := BattleEngine.before_writing(&"BattleRules._is_resource_assault_context", [context])
+	var result = _is_resource_assault_context__gd(context)
+	BattleEngine.check_writing(&"BattleRules._is_resource_assault_context", before, [context], result)
+	return result
+
+static func _is_resource_assault_context__gd(context: Variant) -> bool:
 	return context is Dictionary and String(context.get("type", "")) == "resource_assault"
 
 static func _battle_retreat_allowed(battle: Dictionary) -> bool:
@@ -1377,6 +1467,16 @@ static func _append_building_with_requirements(target: Array, building_id: Strin
 	target.append(building_id)
 
 static func _find_town_by_placement(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _find_town_by_placement__gd(session, placement_id)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._find_town_by_placement", [session, placement_id])
+	var before := BattleEngine.before_writing(&"BattleRules._find_town_by_placement", [session, placement_id])
+	var result = _find_town_by_placement__gd(session, placement_id)
+	BattleEngine.check_writing(&"BattleRules._find_town_by_placement", before, [session, placement_id], result)
+	return result
+
+static func _find_town_by_placement__gd(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
 	if session == null or placement_id == "":
 		return {"index": -1, "town": {}}
 	var towns = session.overworld.get("towns", [])
@@ -1387,6 +1487,16 @@ static func _find_town_by_placement(session: SessionStateStoreScript.SessionData
 	return {"index": -1, "town": {}}
 
 static func _find_encounter_by_key(session: SessionStateStoreScript.SessionData, encounter_key: String) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _find_encounter_by_key__gd(session, encounter_key)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._find_encounter_by_key", [session, encounter_key])
+	var before := BattleEngine.before_writing(&"BattleRules._find_encounter_by_key", [session, encounter_key])
+	var result = _find_encounter_by_key__gd(session, encounter_key)
+	BattleEngine.check_writing(&"BattleRules._find_encounter_by_key", before, [session, encounter_key], result)
+	return result
+
+static func _find_encounter_by_key__gd(session: SessionStateStoreScript.SessionData, encounter_key: String) -> Dictionary:
 	if session == null or encounter_key == "":
 		return {"index": -1, "encounter": {}}
 	var encounters = session.overworld.get("encounters", [])
@@ -1397,10 +1507,30 @@ static func _find_encounter_by_key(session: SessionStateStoreScript.SessionData,
 	return {"index": -1, "encounter": {}}
 
 static func _town_name_from_placement_id(session: SessionStateStoreScript.SessionData, placement_id: String) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _town_name_from_placement_id__gd(session, placement_id)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._town_name_from_placement_id", [session, placement_id])
+	var before := BattleEngine.before_writing(&"BattleRules._town_name_from_placement_id", [session, placement_id])
+	var result = _town_name_from_placement_id__gd(session, placement_id)
+	BattleEngine.check_writing(&"BattleRules._town_name_from_placement_id", before, [session, placement_id], result)
+	return result
+
+static func _town_name_from_placement_id__gd(session: SessionStateStoreScript.SessionData, placement_id: String) -> String:
 	var town = _find_town_by_placement(session, placement_id).get("town", {})
 	return _town_name(town)
 
 static func _town_name(town: Dictionary) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _town_name__gd(town)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._town_name", [town])
+	var before := BattleEngine.before_writing(&"BattleRules._town_name", [town])
+	var result = _town_name__gd(town)
+	BattleEngine.check_writing(&"BattleRules._town_name", before, [town], result)
+	return result
+
+static func _town_name__gd(town: Dictionary) -> String:
 	if town.is_empty():
 		return ""
 	var template = ContentService.get_town(String(town.get("town_id", "")))
@@ -4875,9 +5005,14 @@ static func _defend_action_summary(battle: Dictionary, stack: Dictionary) -> Str
 	return "%s." % " | ".join(clauses)
 
 static func _retreat_action_summary(session: SessionStateStoreScript.SessionData) -> String:
-	if _battle_engine_mode == BattleEngine.SHADOW:
-		BattleEngine.host_point(&"BattleRules._retreat_action_summary", [session])
-	return _retreat_action_summary__gd(session)
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _retreat_action_summary__gd(session)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._retreat_action_summary", [session])
+	var before := BattleEngine.before_writing(&"BattleRules._retreat_action_summary", [session])
+	var result = _retreat_action_summary__gd(session)
+	BattleEngine.check_writing(&"BattleRules._retreat_action_summary", before, [session], result)
+	return result
 
 static func _retreat_action_summary__gd(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
@@ -4901,9 +5036,14 @@ static func _retreat_action_summary__gd(session: SessionStateStoreScript.Session
 	return "%s." % " | ".join(clauses)
 
 static func _surrender_action_summary(session: SessionStateStoreScript.SessionData) -> String:
-	if _battle_engine_mode == BattleEngine.SHADOW:
-		BattleEngine.host_point(&"BattleRules._surrender_action_summary", [session])
-	return _surrender_action_summary__gd(session)
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _surrender_action_summary__gd(session)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._surrender_action_summary", [session])
+	var before := BattleEngine.before_writing(&"BattleRules._surrender_action_summary", [session])
+	var result = _surrender_action_summary__gd(session)
+	BattleEngine.check_writing(&"BattleRules._surrender_action_summary", before, [session], result)
+	return result
 
 static func _surrender_action_summary__gd(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
@@ -4925,7 +5065,17 @@ static func _surrender_action_summary__gd(session: SessionStateStoreScript.Sessi
 		clauses.append(aftermath_summary)
 	return "%s." % " | ".join(clauses)
 
-static func _build_withdrawal_aftermath_preview(
+static func _build_withdrawal_aftermath_preview(session: SessionStateStoreScript.SessionData, outcome: String) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _build_withdrawal_aftermath_preview__gd(session, outcome)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._build_withdrawal_aftermath_preview", [session, outcome])
+	var before := BattleEngine.before_writing(&"BattleRules._build_withdrawal_aftermath_preview", [session, outcome])
+	var result = _build_withdrawal_aftermath_preview__gd(session, outcome)
+	BattleEngine.check_writing(&"BattleRules._build_withdrawal_aftermath_preview", before, [session, outcome], result)
+	return result
+
+static func _build_withdrawal_aftermath_preview__gd(
 	session: SessionStateStoreScript.SessionData,
 	outcome: String
 ) -> Dictionary:
@@ -5007,6 +5157,16 @@ static func _build_withdrawal_aftermath_preview(
 	return preview
 
 static func _withdrawal_preview_summary(preview: Dictionary, outcome: String) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _withdrawal_preview_summary__gd(preview, outcome)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._withdrawal_preview_summary", [preview, outcome])
+	var before := BattleEngine.before_writing(&"BattleRules._withdrawal_preview_summary", [preview, outcome])
+	var result = _withdrawal_preview_summary__gd(preview, outcome)
+	BattleEngine.check_writing(&"BattleRules._withdrawal_preview_summary", before, [preview, outcome], result)
+	return result
+
+static func _withdrawal_preview_summary__gd(preview: Dictionary, outcome: String) -> String:
 	var clauses := []
 	var casualty_units = int(preview.get("casualty_units", 0))
 	if casualty_units > 0:
@@ -5036,6 +5196,16 @@ static func _withdrawal_preview_summary(preview: Dictionary, outcome: String) ->
 	return " | ".join(clauses)
 
 static func _casualty_units_from_ratio(total_units: int, ratio: float) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _casualty_units_from_ratio__gd(total_units, ratio)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._casualty_units_from_ratio", [total_units, ratio])
+	var before := BattleEngine.before_writing(&"BattleRules._casualty_units_from_ratio", [total_units, ratio])
+	var result = _casualty_units_from_ratio__gd(total_units, ratio)
+	BattleEngine.check_writing(&"BattleRules._casualty_units_from_ratio", before, [total_units, ratio], result)
+	return result
+
+static func _casualty_units_from_ratio__gd(total_units: int, ratio: float) -> int:
 	if total_units <= 1:
 		return 0
 	var casualties = int(round(float(total_units) * clampf(ratio, 0.0, 0.9)))
@@ -5044,6 +5214,16 @@ static func _casualty_units_from_ratio(total_units: int, ratio: float) -> int:
 	return clamp(casualties, 0, total_units - 1)
 
 static func _clamped_resource_loss(session: SessionStateStoreScript.SessionData, desired_loss: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _clamped_resource_loss__gd(session, desired_loss)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._clamped_resource_loss", [session, desired_loss])
+	var before := BattleEngine.before_writing(&"BattleRules._clamped_resource_loss", [session, desired_loss])
+	var result = _clamped_resource_loss__gd(session, desired_loss)
+	BattleEngine.check_writing(&"BattleRules._clamped_resource_loss", before, [session, desired_loss], result)
+	return result
+
+static func _clamped_resource_loss__gd(session: SessionStateStoreScript.SessionData, desired_loss: Dictionary) -> Dictionary:
 	var available = session.overworld.get("resources", {})
 	var loss := {}
 	for resource_key_value in desired_loss.keys():
@@ -5054,6 +5234,16 @@ static func _clamped_resource_loss(session: SessionStateStoreScript.SessionData,
 	return loss
 
 static func _battle_enemy_faction_id(session: SessionStateStoreScript.SessionData) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _battle_enemy_faction_id__gd(session)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._battle_enemy_faction_id", [session])
+	var before := BattleEngine.before_writing(&"BattleRules._battle_enemy_faction_id", [session])
+	var result = _battle_enemy_faction_id__gd(session)
+	BattleEngine.check_writing(&"BattleRules._battle_enemy_faction_id", before, [session], result)
+	return result
+
+static func _battle_enemy_faction_id__gd(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return ""
 	var context = session.battle.get("context", {})
@@ -5070,6 +5260,16 @@ static func _battle_enemy_faction_id(session: SessionStateStoreScript.SessionDat
 	return faction_id if _enemy_state_exists(session, faction_id) else ""
 
 static func _enemy_state_exists(session: SessionStateStoreScript.SessionData, faction_id: String) -> bool:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _enemy_state_exists__gd(session, faction_id)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._enemy_state_exists", [session, faction_id])
+	var before := BattleEngine.before_writing(&"BattleRules._enemy_state_exists", [session, faction_id])
+	var result = _enemy_state_exists__gd(session, faction_id)
+	BattleEngine.check_writing(&"BattleRules._enemy_state_exists", before, [session, faction_id], result)
+	return result
+
+static func _enemy_state_exists__gd(session: SessionStateStoreScript.SessionData, faction_id: String) -> bool:
 	if session == null or faction_id == "":
 		return false
 	for state in session.overworld.get("enemy_states", []):
@@ -5078,6 +5278,16 @@ static func _enemy_state_exists(session: SessionStateStoreScript.SessionData, fa
 	return false
 
 static func _battle_enemy_label(session: SessionStateStoreScript.SessionData, faction_id: String) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _battle_enemy_label__gd(session, faction_id)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._battle_enemy_label", [session, faction_id])
+	var before := BattleEngine.before_writing(&"BattleRules._battle_enemy_label", [session, faction_id])
+	var result = _battle_enemy_label__gd(session, faction_id)
+	BattleEngine.check_writing(&"BattleRules._battle_enemy_label", before, [session, faction_id], result)
+	return result
+
+static func _battle_enemy_label__gd(session: SessionStateStoreScript.SessionData, faction_id: String) -> String:
 	if faction_id != "":
 		return String(ContentService.get_faction(PlayerRules.faction_id(session, faction_id)).get("name", faction_id))
 	if session == null or session.battle.is_empty():
@@ -5085,6 +5295,16 @@ static func _battle_enemy_label(session: SessionStateStoreScript.SessionData, fa
 	return String(session.battle.get("encounter_name", session.battle.get("encounter_id", "The opposing host")))
 
 static func _stack_count_total(stacks: Variant) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _stack_count_total__gd(stacks)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._stack_count_total", [stacks])
+	var before := BattleEngine.before_writing(&"BattleRules._stack_count_total", [stacks])
+	var result = _stack_count_total__gd(stacks)
+	BattleEngine.check_writing(&"BattleRules._stack_count_total", before, [stacks], result)
+	return result
+
+static func _stack_count_total__gd(stacks: Variant) -> int:
 	var total := 0
 	if not (stacks is Array):
 		return total
@@ -6150,6 +6370,16 @@ static func _encounter_objective_for_battle(session: SessionStateStoreScript.Ses
 	return {}
 
 static func _current_battle_encounter_placement(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _current_battle_encounter_placement__gd(session)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._current_battle_encounter_placement", [session])
+	var before := BattleEngine.before_writing(&"BattleRules._current_battle_encounter_placement", [session])
+	var result = _current_battle_encounter_placement__gd(session)
+	BattleEngine.check_writing(&"BattleRules._current_battle_encounter_placement", before, [session], result)
+	return result
+
+static func _current_battle_encounter_placement__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {}
 	var encounter: Dictionary = _find_encounter_by_key(session, String(session.battle.get("resolved_key", ""))).get("encounter", {})
@@ -8442,6 +8672,16 @@ static func battle_rewards_for_strength(encounter: Dictionary, beaten_stacks: Va
 ## The enemy creatures that fell or broke in this battle, by their starting
 ## counts less those still standing.
 static func _beaten_enemy_stacks(battle: Dictionary) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _beaten_enemy_stacks__gd(battle)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._beaten_enemy_stacks", [battle])
+	var before := BattleEngine.before_writing(&"BattleRules._beaten_enemy_stacks", [battle])
+	var result = _beaten_enemy_stacks__gd(battle)
+	BattleEngine.check_writing(&"BattleRules._beaten_enemy_stacks", before, [battle], result)
+	return result
+
+static func _beaten_enemy_stacks__gd(battle: Dictionary) -> Array:
 	var beaten := []
 	for stack_value in battle.get("stacks", []):
 		if not (stack_value is Dictionary) or String(stack_value.get("side", "")) != "enemy":
@@ -8460,13 +8700,28 @@ static func _starting_enemy_stacks(battle: Dictionary) -> Array:
 	return stacks
 
 static func _battle_victory_rewards(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _battle_victory_rewards__gd(session, encounter)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._battle_victory_rewards", [session, encounter])
+	var before := BattleEngine.before_writing(&"BattleRules._battle_victory_rewards", [session, encounter])
+	var result = _battle_victory_rewards__gd(session, encounter)
+	BattleEngine.check_writing(&"BattleRules._battle_victory_rewards", before, [session, encounter], result)
+	return result
+
+static func _battle_victory_rewards__gd(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> Dictionary:
 	var battle: Dictionary = session.battle
 	return DifficultyRulesScript.scale_reward_resources(session, battle_rewards_for_strength(encounter, _beaten_enemy_stacks(battle), battle.get("enemy_hero", {})))
 
 static func _finalize_victory(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	if _battle_engine_mode == BattleEngine.SHADOW:
-		BattleEngine.host_point(&"BattleRules._finalize_victory", [session])
-	return _finalize_victory__gd(session)
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _finalize_victory__gd(session)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._finalize_victory", [session])
+	var before := BattleEngine.before_writing(&"BattleRules._finalize_victory", [session])
+	var result = _finalize_victory__gd(session)
+	BattleEngine.check_writing(&"BattleRules._finalize_victory", before, [session], result)
+	return result
 
 static func _finalize_victory__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var resolution_context_snapshot := {
@@ -8549,6 +8804,16 @@ static func _finalize_victory__gd(session: SessionStateStoreScript.SessionData) 
 	}
 
 static func _battle_resolution_static_encounter_snapshot(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _battle_resolution_static_encounter_snapshot__gd(session)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._battle_resolution_static_encounter_snapshot", [session])
+	var before := BattleEngine.before_writing(&"BattleRules._battle_resolution_static_encounter_snapshot", [session])
+	var result = _battle_resolution_static_encounter_snapshot__gd(session)
+	BattleEngine.check_writing(&"BattleRules._battle_resolution_static_encounter_snapshot", before, [session], result)
+	return result
+
+static func _battle_resolution_static_encounter_snapshot__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {}
 	var context: Dictionary = session.battle.get("context", {}) if session.battle.get("context", {}) is Dictionary else {}
@@ -8568,6 +8833,16 @@ static func _battle_resolution_static_encounter_snapshot(session: SessionStateSt
 	}
 
 static func _apply_player_battle_salvage_reward(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_player_battle_salvage_reward__gd(session)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_player_battle_salvage_reward", [session])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_player_battle_salvage_reward", [session])
+	var result = _apply_player_battle_salvage_reward__gd(session)
+	BattleEngine.check_writing(&"BattleRules._apply_player_battle_salvage_reward", before, [session], result)
+	return result
+
+static func _apply_player_battle_salvage_reward__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {"ok": false, "reason": "no_active_battle"}
 	var commander_source = session.battle.get("player_commander_source", {})
@@ -8630,9 +8905,14 @@ static func _apply_player_battle_salvage_reward(session: SessionStateStoreScript
 	return selection
 
 static func _finalize_player_battle_loss(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	if _battle_engine_mode == BattleEngine.SHADOW:
-		BattleEngine.host_point(&"BattleRules._finalize_player_battle_loss", [session])
-	return _finalize_player_battle_loss__gd(session)
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _finalize_player_battle_loss__gd(session)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._finalize_player_battle_loss", [session])
+	var before := BattleEngine.before_writing(&"BattleRules._finalize_player_battle_loss", [session])
+	var result = _finalize_player_battle_loss__gd(session)
+	BattleEngine.check_writing(&"BattleRules._finalize_player_battle_loss", before, [session], result)
+	return result
 
 static func _finalize_player_battle_loss__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if _is_town_defense_context(session.battle.get("context", {})):
@@ -8647,7 +8927,17 @@ static func _finalize_player_battle_loss__gd(session: SessionStateStoreScript.Se
 		HeroCommandRulesScript.hand_over_primary(session, String(session.overworld.get("active_hero_id", "")))
 	return _finalize_secondary_hero_defeat(session)
 
-static func _finalize_primary_defeat(
+static func _finalize_primary_defeat(session: SessionStateStoreScript.SessionData, base_summary: String = "The field army collapses and the primary commander is defeated.", outcome_id: String = "defeat") -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _finalize_primary_defeat__gd(session, base_summary, outcome_id)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._finalize_primary_defeat", [session, base_summary, outcome_id])
+	var before := BattleEngine.before_writing(&"BattleRules._finalize_primary_defeat", [session, base_summary, outcome_id])
+	var result = _finalize_primary_defeat__gd(session, base_summary, outcome_id)
+	BattleEngine.check_writing(&"BattleRules._finalize_primary_defeat", before, [session, base_summary, outcome_id], result)
+	return result
+
+static func _finalize_primary_defeat__gd(
 	session: SessionStateStoreScript.SessionData,
 	base_summary: String = "The field army collapses and the primary commander is defeated.",
 	outcome_id: String = "defeat"
@@ -8699,6 +8989,16 @@ static func _finalize_primary_defeat(
 	return {"state": "defeat", "message": final_message}
 
 static func _finalize_secondary_hero_defeat(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _finalize_secondary_hero_defeat__gd(session)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._finalize_secondary_hero_defeat", [session])
+	var before := BattleEngine.before_writing(&"BattleRules._finalize_secondary_hero_defeat", [session])
+	var result = _finalize_secondary_hero_defeat__gd(session)
+	BattleEngine.check_writing(&"BattleRules._finalize_secondary_hero_defeat", before, [session], result)
+	return result
+
+static func _finalize_secondary_hero_defeat__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	_record_enemy_commander_battle_continuity(session, EnemyAdventureRulesScript.COMMANDER_OUTCOME_ROUT_VICTORY)
 	_finish_enemy_battle_task_assignment(session, "completed", "valid")
 	var commander_summary := _enemy_commander_exit_reaction(session, EnemyAdventureRulesScript.COMMANDER_OUTCOME_ROUT_VICTORY)
@@ -8748,9 +9048,14 @@ static func _finalize_secondary_hero_defeat(session: SessionStateStoreScript.Ses
 	return {"state": "defeat" if session.scenario_status == "defeat" else "hero_defeat", "message": final_message}
 
 static func _finalize_retreat(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	if _battle_engine_mode == BattleEngine.SHADOW:
-		BattleEngine.host_point(&"BattleRules._finalize_retreat", [session])
-	return _finalize_retreat__gd(session)
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _finalize_retreat__gd(session)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._finalize_retreat", [session])
+	var before := BattleEngine.before_writing(&"BattleRules._finalize_retreat", [session])
+	var result = _finalize_retreat__gd(session)
+	BattleEngine.check_writing(&"BattleRules._finalize_retreat", before, [session], result)
+	return result
 
 static func _finalize_retreat__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if _is_town_defense_context(session.battle.get("context", {})):
@@ -8793,9 +9098,14 @@ static func _finalize_retreat__gd(session: SessionStateStoreScript.SessionData) 
 	return {"ok": true, "message": final_message, "state": "retreat", "battle_exit_animation_snapshot": exit_animation_snapshot}
 
 static func _finalize_surrender(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	if _battle_engine_mode == BattleEngine.SHADOW:
-		BattleEngine.host_point(&"BattleRules._finalize_surrender", [session])
-	return _finalize_surrender__gd(session)
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _finalize_surrender__gd(session)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._finalize_surrender", [session])
+	var before := BattleEngine.before_writing(&"BattleRules._finalize_surrender", [session])
+	var result = _finalize_surrender__gd(session)
+	BattleEngine.check_writing(&"BattleRules._finalize_surrender", before, [session], result)
+	return result
 
 static func _finalize_surrender__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if _is_town_defense_context(session.battle.get("context", {})):
@@ -8837,9 +9147,14 @@ static func _finalize_surrender__gd(session: SessionStateStoreScript.SessionData
 	return {"ok": true, "message": final_message, "state": "surrender", "battle_exit_animation_snapshot": exit_animation_snapshot}
 
 static func _finalize_enemy_withdrawal(session: SessionStateStoreScript.SessionData, outcome_id: String) -> Dictionary:
-	if _battle_engine_mode == BattleEngine.SHADOW:
-		BattleEngine.host_point(&"BattleRules._finalize_enemy_withdrawal", [session, outcome_id])
-	return _finalize_enemy_withdrawal__gd(session, outcome_id)
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _finalize_enemy_withdrawal__gd(session, outcome_id)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._finalize_enemy_withdrawal", [session, outcome_id])
+	var before := BattleEngine.before_writing(&"BattleRules._finalize_enemy_withdrawal", [session, outcome_id])
+	var result = _finalize_enemy_withdrawal__gd(session, outcome_id)
+	BattleEngine.check_writing(&"BattleRules._finalize_enemy_withdrawal", before, [session, outcome_id], result)
+	return result
 
 static func _finalize_enemy_withdrawal__gd(session: SessionStateStoreScript.SessionData, outcome_id: String) -> Dictionary:
 	if session == null or session.battle.is_empty():
@@ -8916,7 +9231,17 @@ static func _finalize_enemy_withdrawal__gd(session: SessionStateStoreScript.Sess
 		"battle_exit_animation_snapshot": exit_animation_snapshot,
 	}
 
-static func _apply_encounter_victory_flags(
+static func _apply_encounter_victory_flags(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> void:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		_apply_encounter_victory_flags__gd(session, encounter)
+	elif _battle_engine_mode == BattleEngine.NATIVE:
+		BattleEngine.native_writing(&"BattleRules._apply_encounter_victory_flags", [session, encounter])
+	else:
+		var before := BattleEngine.before_writing(&"BattleRules._apply_encounter_victory_flags", [session, encounter])
+		_apply_encounter_victory_flags__gd(session, encounter)
+		BattleEngine.check_writing(&"BattleRules._apply_encounter_victory_flags", before, [session, encounter], null)
+
+static func _apply_encounter_victory_flags__gd(
 	session: SessionStateStoreScript.SessionData,
 	encounter: Dictionary
 ) -> void:
@@ -8929,9 +9254,14 @@ static func _apply_encounter_victory_flags(
 		session.flags[String(flag_value)] = true
 
 static func _finalize_stalemate(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	if _battle_engine_mode == BattleEngine.SHADOW:
-		BattleEngine.host_point(&"BattleRules._finalize_stalemate", [session])
-	return _finalize_stalemate__gd(session)
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _finalize_stalemate__gd(session)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._finalize_stalemate", [session])
+	var before := BattleEngine.before_writing(&"BattleRules._finalize_stalemate", [session])
+	var result = _finalize_stalemate__gd(session)
+	BattleEngine.check_writing(&"BattleRules._finalize_stalemate", before, [session], result)
+	return result
 
 static func _finalize_stalemate__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var messages = []
@@ -8958,6 +9288,16 @@ static func _finalize_stalemate__gd(session: SessionStateStoreScript.SessionData
 	return {"state": "stalemate", "message": final_message}
 
 static func _apply_victory_front_aftermath(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_victory_front_aftermath__gd(session)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_victory_front_aftermath", [session])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_victory_front_aftermath", [session])
+	var result = _apply_victory_front_aftermath__gd(session)
+	BattleEngine.check_writing(&"BattleRules._apply_victory_front_aftermath", before, [session], result)
+	return result
+
+static func _apply_victory_front_aftermath__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {"summary": ""}
 	var faction_id := _battle_enemy_faction_id(session)
@@ -8974,7 +9314,17 @@ static func _apply_victory_front_aftermath(session: SessionStateStoreScript.Sess
 	var pressure_summary := _apply_front_pressure_shift(session, faction_id, pressure_delta, "victory")
 	return {"summary": pressure_summary}
 
-static func _resolve_enemy_commander_aftermath(
+static func _resolve_enemy_commander_aftermath(session: SessionStateStoreScript.SessionData, outcome_id: String) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _resolve_enemy_commander_aftermath__gd(session, outcome_id)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._resolve_enemy_commander_aftermath", [session, outcome_id])
+	var before := BattleEngine.before_writing(&"BattleRules._resolve_enemy_commander_aftermath", [session, outcome_id])
+	var result = _resolve_enemy_commander_aftermath__gd(session, outcome_id)
+	BattleEngine.check_writing(&"BattleRules._resolve_enemy_commander_aftermath", before, [session, outcome_id], result)
+	return result
+
+static func _resolve_enemy_commander_aftermath__gd(
 	session: SessionStateStoreScript.SessionData,
 	outcome_id: String
 ) -> String:
@@ -8998,7 +9348,17 @@ static func _resolve_enemy_commander_aftermath(
 		outcome_id
 	)
 
-static func _finish_enemy_battle_task_assignment(
+static func _finish_enemy_battle_task_assignment(session: SessionStateStoreScript.SessionData, task_status: String, validation: String) -> void:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		_finish_enemy_battle_task_assignment__gd(session, task_status, validation)
+	elif _battle_engine_mode == BattleEngine.NATIVE:
+		BattleEngine.native_writing(&"BattleRules._finish_enemy_battle_task_assignment", [session, task_status, validation])
+	else:
+		var before := BattleEngine.before_writing(&"BattleRules._finish_enemy_battle_task_assignment", [session, task_status, validation])
+		_finish_enemy_battle_task_assignment__gd(session, task_status, validation)
+		BattleEngine.check_writing(&"BattleRules._finish_enemy_battle_task_assignment", before, [session, task_status, validation], null)
+
+static func _finish_enemy_battle_task_assignment__gd(
 	session: SessionStateStoreScript.SessionData,
 	task_status: String,
 	validation: String
@@ -9036,7 +9396,17 @@ static func _finish_enemy_battle_task_assignment(
 		validation
 	)
 
-static func _record_enemy_commander_battle_continuity(
+static func _record_enemy_commander_battle_continuity(session: SessionStateStoreScript.SessionData, outcome_id: String) -> void:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		_record_enemy_commander_battle_continuity__gd(session, outcome_id)
+	elif _battle_engine_mode == BattleEngine.NATIVE:
+		BattleEngine.native_writing(&"BattleRules._record_enemy_commander_battle_continuity", [session, outcome_id])
+	else:
+		var before := BattleEngine.before_writing(&"BattleRules._record_enemy_commander_battle_continuity", [session, outcome_id])
+		_record_enemy_commander_battle_continuity__gd(session, outcome_id)
+		BattleEngine.check_writing(&"BattleRules._record_enemy_commander_battle_continuity", before, [session, outcome_id], null)
+
+static func _record_enemy_commander_battle_continuity__gd(
 	session: SessionStateStoreScript.SessionData,
 	outcome_id: String
 ) -> void:
@@ -9069,7 +9439,17 @@ static func _record_enemy_commander_battle_continuity(
 		outcome_id
 	)
 
-static func _enemy_commander_state_with_payload(
+static func _enemy_commander_state_with_payload(session: SessionStateStoreScript.SessionData, commander_state: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _enemy_commander_state_with_payload__gd(session, commander_state)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._enemy_commander_state_with_payload", [session, commander_state])
+	var before := BattleEngine.before_writing(&"BattleRules._enemy_commander_state_with_payload", [session, commander_state])
+	var result = _enemy_commander_state_with_payload__gd(session, commander_state)
+	BattleEngine.check_writing(&"BattleRules._enemy_commander_state_with_payload", before, [session, commander_state], result)
+	return result
+
+static func _enemy_commander_state_with_payload__gd(
 	session: SessionStateStoreScript.SessionData,
 	commander_state: Dictionary
 ) -> Dictionary:
@@ -9080,7 +9460,17 @@ static func _enemy_commander_state_with_payload(
 		return commander_state
 	return BattleAiRulesScript._merged_commander_ai_payload(commander_state, payload)
 
-static func _apply_enemy_commander_battle_memory(
+static func _apply_enemy_commander_battle_memory(session: SessionStateStoreScript.SessionData, commander_state: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_enemy_commander_battle_memory__gd(session, commander_state)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_enemy_commander_battle_memory", [session, commander_state])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_enemy_commander_battle_memory", [session, commander_state])
+	var result = _apply_enemy_commander_battle_memory__gd(session, commander_state)
+	BattleEngine.check_writing(&"BattleRules._apply_enemy_commander_battle_memory", before, [session, commander_state], result)
+	return result
+
+static func _apply_enemy_commander_battle_memory__gd(
 	session: SessionStateStoreScript.SessionData,
 	commander_state: Dictionary
 ) -> Dictionary:
@@ -9132,7 +9522,17 @@ static func _apply_enemy_commander_battle_memory(
 	)
 	return updated
 
-static func _enemy_commander_rivalry_context(
+static func _enemy_commander_rivalry_context(session: SessionStateStoreScript.SessionData, encounter: Dictionary = {}) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _enemy_commander_rivalry_context__gd(session, encounter)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._enemy_commander_rivalry_context", [session, encounter])
+	var before := BattleEngine.before_writing(&"BattleRules._enemy_commander_rivalry_context", [session, encounter])
+	var result = _enemy_commander_rivalry_context__gd(session, encounter)
+	BattleEngine.check_writing(&"BattleRules._enemy_commander_rivalry_context", before, [session, encounter], result)
+	return result
+
+static func _enemy_commander_rivalry_context__gd(
 	session: SessionStateStoreScript.SessionData,
 	encounter: Dictionary = {}
 ) -> Dictionary:
@@ -9169,6 +9569,16 @@ static func _enemy_commander_rivalry_context(
 	return {}
 
 static func _apply_withdrawal_aftermath(session: SessionStateStoreScript.SessionData, outcome: String) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_withdrawal_aftermath__gd(session, outcome)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_withdrawal_aftermath", [session, outcome])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_withdrawal_aftermath", [session, outcome])
+	var result = _apply_withdrawal_aftermath__gd(session, outcome)
+	BattleEngine.check_writing(&"BattleRules._apply_withdrawal_aftermath", before, [session, outcome], result)
+	return result
+
+static func _apply_withdrawal_aftermath__gd(session: SessionStateStoreScript.SessionData, outcome: String) -> Dictionary:
 	var preview := _build_withdrawal_aftermath_preview(session, outcome)
 	var resource_summary := ""
 	var army_summary := ""
@@ -9207,7 +9617,17 @@ static func _apply_withdrawal_aftermath(session: SessionStateStoreScript.Session
 		"recovery_summary": recovery_summary,
 	}
 
-static func _build_collapse_aftermath_preview(
+static func _build_collapse_aftermath_preview(session: SessionStateStoreScript.SessionData, outcome: String) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _build_collapse_aftermath_preview__gd(session, outcome)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._build_collapse_aftermath_preview", [session, outcome])
+	var before := BattleEngine.before_writing(&"BattleRules._build_collapse_aftermath_preview", [session, outcome])
+	var result = _build_collapse_aftermath_preview__gd(session, outcome)
+	BattleEngine.check_writing(&"BattleRules._build_collapse_aftermath_preview", before, [session, outcome], result)
+	return result
+
+static func _build_collapse_aftermath_preview__gd(
 	session: SessionStateStoreScript.SessionData,
 	outcome: String
 ) -> Dictionary:
@@ -9270,6 +9690,16 @@ static func _build_collapse_aftermath_preview(
 	return preview
 
 static func _apply_collapse_aftermath(session: SessionStateStoreScript.SessionData, outcome: String) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_collapse_aftermath__gd(session, outcome)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_collapse_aftermath", [session, outcome])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_collapse_aftermath", [session, outcome])
+	var result = _apply_collapse_aftermath__gd(session, outcome)
+	BattleEngine.check_writing(&"BattleRules._apply_collapse_aftermath", before, [session, outcome], result)
+	return result
+
+static func _apply_collapse_aftermath__gd(session: SessionStateStoreScript.SessionData, outcome: String) -> Dictionary:
 	var preview := _build_collapse_aftermath_preview(session, outcome)
 	var resource_summary := ""
 	var pressure_summary := ""
@@ -9306,6 +9736,16 @@ static func _apply_collapse_aftermath(session: SessionStateStoreScript.SessionDa
 	}
 
 static func _withdrawal_resource_summary(outcome: String, resource_loss: Dictionary, enemy_label: String) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _withdrawal_resource_summary__gd(outcome, resource_loss, enemy_label)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._withdrawal_resource_summary", [outcome, resource_loss, enemy_label])
+	var before := BattleEngine.before_writing(&"BattleRules._withdrawal_resource_summary", [outcome, resource_loss, enemy_label])
+	var result = _withdrawal_resource_summary__gd(outcome, resource_loss, enemy_label)
+	BattleEngine.check_writing(&"BattleRules._withdrawal_resource_summary", before, [outcome, resource_loss, enemy_label], result)
+	return result
+
+static func _withdrawal_resource_summary__gd(outcome: String, resource_loss: Dictionary, enemy_label: String) -> String:
 	var resource_summary = OverworldRulesScript._describe_resource_delta(resource_loss)
 	if resource_summary == "":
 		return ""
@@ -9316,6 +9756,16 @@ static func _withdrawal_resource_summary(outcome: String, resource_loss: Diction
 	return "The withdrawal abandons %s on the road." % resource_summary
 
 static func _collapse_resource_summary(outcome: String, resource_loss: Dictionary, enemy_label: String) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _collapse_resource_summary__gd(outcome, resource_loss, enemy_label)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._collapse_resource_summary", [outcome, resource_loss, enemy_label])
+	var before := BattleEngine.before_writing(&"BattleRules._collapse_resource_summary", [outcome, resource_loss, enemy_label])
+	var result = _collapse_resource_summary__gd(outcome, resource_loss, enemy_label)
+	BattleEngine.check_writing(&"BattleRules._collapse_resource_summary", before, [outcome, resource_loss, enemy_label], result)
+	return result
+
+static func _collapse_resource_summary__gd(outcome: String, resource_loss: Dictionary, enemy_label: String) -> String:
 	var resource_summary = OverworldRulesScript._describe_resource_delta(resource_loss)
 	if resource_summary == "":
 		return ""
@@ -9323,7 +9773,17 @@ static func _collapse_resource_summary(outcome: String, resource_loss: Dictionar
 		return "%s strips %s from the broken defense." % [enemy_label, resource_summary]
 	return "%s strips %s from the routed baggage." % [enemy_label, resource_summary]
 
-static func _apply_active_hero_aftermath_losses(
+static func _apply_active_hero_aftermath_losses(session: SessionStateStoreScript.SessionData, unit_losses: int, outcome: String) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_active_hero_aftermath_losses__gd(session, unit_losses, outcome)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_active_hero_aftermath_losses", [session, unit_losses, outcome])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_active_hero_aftermath_losses", [session, unit_losses, outcome])
+	var result = _apply_active_hero_aftermath_losses__gd(session, unit_losses, outcome)
+	BattleEngine.check_writing(&"BattleRules._apply_active_hero_aftermath_losses", before, [session, unit_losses, outcome], result)
+	return result
+
+static func _apply_active_hero_aftermath_losses__gd(
 	session: SessionStateStoreScript.SessionData,
 	unit_losses: int,
 	outcome: String
@@ -9373,6 +9833,16 @@ static func _apply_active_hero_aftermath_losses(
 	]
 
 static func _remove_units_from_stacks(stacks: Array, unit_losses: int) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _remove_units_from_stacks__gd(stacks, unit_losses)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._remove_units_from_stacks", [stacks, unit_losses])
+	var before := BattleEngine.before_writing(&"BattleRules._remove_units_from_stacks", [stacks, unit_losses])
+	var result = _remove_units_from_stacks__gd(stacks, unit_losses)
+	BattleEngine.check_writing(&"BattleRules._remove_units_from_stacks", before, [stacks, unit_losses], result)
+	return result
+
+static func _remove_units_from_stacks__gd(stacks: Array, unit_losses: int) -> int:
 	var total_units: int = _stack_count_total(stacks)
 	var remaining_losses: int = clampi(unit_losses, 0, maxi(0, total_units - 1))
 	var applied: int = 0
@@ -9399,7 +9869,17 @@ static func _remove_units_from_stacks(stacks: Array, unit_losses: int) -> int:
 		applied += 1
 	return applied
 
-static func _apply_front_pressure_shift(
+static func _apply_front_pressure_shift(session: SessionStateStoreScript.SessionData, faction_id: String, delta: int, outcome: String) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_front_pressure_shift__gd(session, faction_id, delta, outcome)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_front_pressure_shift", [session, faction_id, delta, outcome])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_front_pressure_shift", [session, faction_id, delta, outcome])
+	var result = _apply_front_pressure_shift__gd(session, faction_id, delta, outcome)
+	BattleEngine.check_writing(&"BattleRules._apply_front_pressure_shift", before, [session, faction_id, delta, outcome], result)
+	return result
+
+static func _apply_front_pressure_shift__gd(
 	session: SessionStateStoreScript.SessionData,
 	faction_id: String,
 	delta: int,
@@ -9422,6 +9902,16 @@ static func _apply_front_pressure_shift(
 	return "%s front pressure drops by %d after the field is secured." % [faction_name, abs(applied)]
 
 static func _adjust_enemy_pressure(session: SessionStateStoreScript.SessionData, faction_id: String, delta: int) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _adjust_enemy_pressure__gd(session, faction_id, delta)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._adjust_enemy_pressure", [session, faction_id, delta])
+	var before := BattleEngine.before_writing(&"BattleRules._adjust_enemy_pressure", [session, faction_id, delta])
+	var result = _adjust_enemy_pressure__gd(session, faction_id, delta)
+	BattleEngine.check_writing(&"BattleRules._adjust_enemy_pressure", before, [session, faction_id, delta], result)
+	return result
+
+static func _adjust_enemy_pressure__gd(session: SessionStateStoreScript.SessionData, faction_id: String, delta: int) -> int:
 	if session == null or faction_id == "" or delta == 0:
 		return 0
 	var states = session.overworld.get("enemy_states", [])
@@ -9439,7 +9929,17 @@ static func _adjust_enemy_pressure(session: SessionStateStoreScript.SessionData,
 		return updated - current
 	return 0
 
-static func _add_enemy_treasury_resources(
+static func _add_enemy_treasury_resources(session: SessionStateStoreScript.SessionData, faction_id: String, delta: Dictionary) -> void:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		_add_enemy_treasury_resources__gd(session, faction_id, delta)
+	elif _battle_engine_mode == BattleEngine.NATIVE:
+		BattleEngine.native_writing(&"BattleRules._add_enemy_treasury_resources", [session, faction_id, delta])
+	else:
+		var before := BattleEngine.before_writing(&"BattleRules._add_enemy_treasury_resources", [session, faction_id, delta])
+		_add_enemy_treasury_resources__gd(session, faction_id, delta)
+		BattleEngine.check_writing(&"BattleRules._add_enemy_treasury_resources", before, [session, faction_id, delta], null)
+
+static func _add_enemy_treasury_resources__gd(
 	session: SessionStateStoreScript.SessionData,
 	faction_id: String,
 	delta: Dictionary
@@ -9462,7 +9962,17 @@ static func _add_enemy_treasury_resources(
 		session.overworld["enemy_states"] = states
 		return
 
-static func _apply_withdrawal_recovery_pressure(
+static func _apply_withdrawal_recovery_pressure(session: SessionStateStoreScript.SessionData, town_placement_id: String, pressure: int, outcome: String) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_withdrawal_recovery_pressure__gd(session, town_placement_id, pressure, outcome)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_withdrawal_recovery_pressure", [session, town_placement_id, pressure, outcome])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_withdrawal_recovery_pressure", [session, town_placement_id, pressure, outcome])
+	var result = _apply_withdrawal_recovery_pressure__gd(session, town_placement_id, pressure, outcome)
+	BattleEngine.check_writing(&"BattleRules._apply_withdrawal_recovery_pressure", before, [session, town_placement_id, pressure, outcome], result)
+	return result
+
+static func _apply_withdrawal_recovery_pressure__gd(
 	session: SessionStateStoreScript.SessionData,
 	town_placement_id: String,
 	pressure: int,
@@ -9473,7 +9983,17 @@ static func _apply_withdrawal_recovery_pressure(
 	var source := "surrender column" if outcome == "surrender" else "scattered survivors"
 	return OverworldRulesScript.apply_town_recovery_pressure(session, town_placement_id, pressure, source)
 
-static func _apply_collapse_recovery_pressure(
+static func _apply_collapse_recovery_pressure(session: SessionStateStoreScript.SessionData, town_placement_id: String, pressure: int, outcome: String) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_collapse_recovery_pressure__gd(session, town_placement_id, pressure, outcome)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_collapse_recovery_pressure", [session, town_placement_id, pressure, outcome])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_collapse_recovery_pressure", [session, town_placement_id, pressure, outcome])
+	var result = _apply_collapse_recovery_pressure__gd(session, town_placement_id, pressure, outcome)
+	BattleEngine.check_writing(&"BattleRules._apply_collapse_recovery_pressure", before, [session, town_placement_id, pressure, outcome], result)
+	return result
+
+static func _apply_collapse_recovery_pressure__gd(
 	session: SessionStateStoreScript.SessionData,
 	town_placement_id: String,
 	pressure: int,
@@ -9486,7 +10006,17 @@ static func _apply_collapse_recovery_pressure(
 		source = "breached walls"
 	return OverworldRulesScript.apply_town_recovery_pressure(session, town_placement_id, pressure, source)
 
-static func _record_battle_aftermath(
+static func _record_battle_aftermath(session: SessionStateStoreScript.SessionData, outcome: String, summary: String, details: Dictionary = {}) -> void:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		_record_battle_aftermath__gd(session, outcome, summary, details)
+	elif _battle_engine_mode == BattleEngine.NATIVE:
+		BattleEngine.native_writing(&"BattleRules._record_battle_aftermath", [session, outcome, summary, details])
+	else:
+		var before := BattleEngine.before_writing(&"BattleRules._record_battle_aftermath", [session, outcome, summary, details])
+		_record_battle_aftermath__gd(session, outcome, summary, details)
+		BattleEngine.check_writing(&"BattleRules._record_battle_aftermath", before, [session, outcome, summary, details], null)
+
+static func _record_battle_aftermath__gd(
 	session: SessionStateStoreScript.SessionData,
 	outcome: String,
 	summary: String,
@@ -9573,6 +10103,16 @@ static func acknowledge_pending_battle_report(session: SessionStateStoreScript.S
 	}
 
 static func _battle_report_casualty_ledger(battle: Dictionary) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _battle_report_casualty_ledger__gd(battle)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._battle_report_casualty_ledger", [battle])
+	var before := BattleEngine.before_writing(&"BattleRules._battle_report_casualty_ledger", [battle])
+	var result = _battle_report_casualty_ledger__gd(battle)
+	BattleEngine.check_writing(&"BattleRules._battle_report_casualty_ledger", before, [battle], result)
+	return result
+
+static func _battle_report_casualty_ledger__gd(battle: Dictionary) -> Dictionary:
 	return {
 		"player": _battle_report_side_casualties(battle, "player"),
 		"enemy": _battle_report_side_casualties(battle, "enemy"),
@@ -9582,6 +10122,16 @@ static func battle_report_casualty_ledger_bridge(battle: Dictionary) -> Dictiona
 	return _battle_report_casualty_ledger(battle).duplicate(true)
 
 static func _battle_report_side_casualties(battle: Dictionary, side: String) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _battle_report_side_casualties__gd(battle, side)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._battle_report_side_casualties", [battle, side])
+	var before := BattleEngine.before_writing(&"BattleRules._battle_report_side_casualties", [battle, side])
+	var result = _battle_report_side_casualties__gd(battle, side)
+	BattleEngine.check_writing(&"BattleRules._battle_report_side_casualties", before, [battle, side], result)
+	return result
+
+static func _battle_report_side_casualties__gd(battle: Dictionary, side: String) -> Dictionary:
 	var rows: Array = []
 	var deployed := 0
 	var surviving := 0
@@ -9636,12 +10186,32 @@ static func _battle_report_side_casualties(battle: Dictionary, side: String) -> 
 	}
 
 static func _battle_aftermath_result_summary(summary: String) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _battle_aftermath_result_summary__gd(summary)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._battle_aftermath_result_summary", [summary])
+	var before := BattleEngine.before_writing(&"BattleRules._battle_aftermath_result_summary", [summary])
+	var result = _battle_aftermath_result_summary__gd(summary)
+	BattleEngine.check_writing(&"BattleRules._battle_aftermath_result_summary", before, [summary], result)
+	return result
+
+static func _battle_aftermath_result_summary__gd(summary: String) -> String:
 	var clean_summary := summary.strip_edges()
 	if clean_summary == "":
 		return ""
 	return "Result: %s" % clean_summary
 
 static func _battle_aftermath_reward_summary(details: Dictionary) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _battle_aftermath_reward_summary__gd(details)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._battle_aftermath_reward_summary", [details])
+	var before := BattleEngine.before_writing(&"BattleRules._battle_aftermath_reward_summary", [details])
+	var result = _battle_aftermath_reward_summary__gd(details)
+	BattleEngine.check_writing(&"BattleRules._battle_aftermath_reward_summary", before, [details], result)
+	return result
+
+static func _battle_aftermath_reward_summary__gd(details: Dictionary) -> String:
 	var explicit := String(details.get("reward_summary", "")).strip_edges()
 	if explicit != "":
 		return explicit
@@ -9655,12 +10225,32 @@ static func _battle_aftermath_reward_summary(details: Dictionary) -> String:
 	return resource_summary
 
 static func _battle_aftermath_artifact_summary(details: Dictionary) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _battle_aftermath_artifact_summary__gd(details)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._battle_aftermath_artifact_summary", [details])
+	var before := BattleEngine.before_writing(&"BattleRules._battle_aftermath_artifact_summary", [details])
+	var result = _battle_aftermath_artifact_summary__gd(details)
+	BattleEngine.check_writing(&"BattleRules._battle_aftermath_artifact_summary", before, [details], result)
+	return result
+
+static func _battle_aftermath_artifact_summary__gd(details: Dictionary) -> String:
 	var artifact_summary := String(details.get("artifact_summary", "")).strip_edges()
 	if artifact_summary == "":
 		return ""
 	return artifact_summary if artifact_summary.begins_with("Artifact") else "Artifact: %s" % artifact_summary
 
 static func _battle_aftermath_force_summary(session: SessionStateStoreScript.SessionData) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _battle_aftermath_force_summary__gd(session)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._battle_aftermath_force_summary", [session])
+	var before := BattleEngine.before_writing(&"BattleRules._battle_aftermath_force_summary", [session])
+	var result = _battle_aftermath_force_summary__gd(session)
+	BattleEngine.check_writing(&"BattleRules._battle_aftermath_force_summary", before, [session], result)
+	return result
+
+static func _battle_aftermath_force_summary__gd(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return ""
 	var player_clause := _battle_aftermath_side_force_clause(session.battle, "player", "Your forces")
@@ -9675,6 +10265,16 @@ static func _battle_aftermath_force_summary(session: SessionStateStoreScript.Ses
 	return "Forces: %s." % "; ".join(clauses)
 
 static func _battle_aftermath_side_force_clause(battle: Dictionary, side: String, label: String) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _battle_aftermath_side_force_clause__gd(battle, side, label)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._battle_aftermath_side_force_clause", [battle, side, label])
+	var before := BattleEngine.before_writing(&"BattleRules._battle_aftermath_side_force_clause", [battle, side, label])
+	var result = _battle_aftermath_side_force_clause__gd(battle, side, label)
+	BattleEngine.check_writing(&"BattleRules._battle_aftermath_side_force_clause", before, [battle, side, label], result)
+	return result
+
+static func _battle_aftermath_side_force_clause__gd(battle: Dictionary, side: String, label: String) -> String:
 	var starting_troops := 0
 	var surviving_troops := 0
 	var surviving_companies := 0
@@ -9719,7 +10319,17 @@ static func _battle_aftermath_side_force_clause(battle: Dictionary, side: String
 		]
 	return clause
 
-static func _battle_aftermath_world_summary(
+static func _battle_aftermath_world_summary(session: SessionStateStoreScript.SessionData, outcome: String, details: Dictionary) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _battle_aftermath_world_summary__gd(session, outcome, details)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._battle_aftermath_world_summary", [session, outcome, details])
+	var before := BattleEngine.before_writing(&"BattleRules._battle_aftermath_world_summary", [session, outcome, details])
+	var result = _battle_aftermath_world_summary__gd(session, outcome, details)
+	BattleEngine.check_writing(&"BattleRules._battle_aftermath_world_summary", before, [session, outcome, details], result)
+	return result
+
+static func _battle_aftermath_world_summary__gd(
 	session: SessionStateStoreScript.SessionData,
 	outcome: String,
 	details: Dictionary
@@ -9744,6 +10354,16 @@ static func _battle_aftermath_world_summary(
 	return "Overworld: %s" % " ".join(parts)
 
 static func _battle_aftermath_return_summary(report: Dictionary) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _battle_aftermath_return_summary__gd(report)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._battle_aftermath_return_summary", [report])
+	var before := BattleEngine.before_writing(&"BattleRules._battle_aftermath_return_summary", [report])
+	var result = _battle_aftermath_return_summary__gd(report)
+	BattleEngine.check_writing(&"BattleRules._battle_aftermath_return_summary", before, [report], result)
+	return result
+
+static func _battle_aftermath_return_summary__gd(report: Dictionary) -> String:
 	var parts := []
 	for key in ["result_summary", "reward_summary", "artifact_summary", "force_summary", "world_summary"]:
 		var text := String(report.get(key, "")).strip_edges()
@@ -9752,6 +10372,16 @@ static func _battle_aftermath_return_summary(report: Dictionary) -> String:
 	return " ".join(parts)
 
 static func _battle_aftermath_display_outcome(outcome: String, details: Dictionary) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _battle_aftermath_display_outcome__gd(outcome, details)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._battle_aftermath_display_outcome", [outcome, details])
+	var before := BattleEngine.before_writing(&"BattleRules._battle_aftermath_display_outcome", [outcome, details])
+	var result = _battle_aftermath_display_outcome__gd(outcome, details)
+	BattleEngine.check_writing(&"BattleRules._battle_aftermath_display_outcome", before, [outcome, details], result)
+	return result
+
+static func _battle_aftermath_display_outcome__gd(outcome: String, details: Dictionary) -> String:
 	var explicit_label := String(details.get("display_outcome", ""))
 	if explicit_label != "":
 		return explicit_label
@@ -14563,6 +15193,16 @@ static func _stack_ability_summary(stack: Dictionary) -> String:
 	return ", ".join(names)
 
 static func _sync_player_force_from_battle(session: SessionStateStoreScript.SessionData) -> void:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		_sync_player_force_from_battle__gd(session)
+	elif _battle_engine_mode == BattleEngine.NATIVE:
+		BattleEngine.native_writing(&"BattleRules._sync_player_force_from_battle", [session])
+	else:
+		var before := BattleEngine.before_writing(&"BattleRules._sync_player_force_from_battle", [session])
+		_sync_player_force_from_battle__gd(session)
+		BattleEngine.check_writing(&"BattleRules._sync_player_force_from_battle", before, [session], null)
+
+static func _sync_player_force_from_battle__gd(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null or session.battle.is_empty():
 		return
 	var context = session.battle.get("context", {})
@@ -14615,6 +15255,16 @@ static func _sync_player_force_from_battle(session: SessionStateStoreScript.Sess
 	session.overworld["army"] = army
 
 static func _sync_enemy_force_from_battle(session: SessionStateStoreScript.SessionData, encounter_resolved: bool) -> void:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		_sync_enemy_force_from_battle__gd(session, encounter_resolved)
+	elif _battle_engine_mode == BattleEngine.NATIVE:
+		BattleEngine.native_writing(&"BattleRules._sync_enemy_force_from_battle", [session, encounter_resolved])
+	else:
+		var before := BattleEngine.before_writing(&"BattleRules._sync_enemy_force_from_battle", [session, encounter_resolved])
+		_sync_enemy_force_from_battle__gd(session, encounter_resolved)
+		BattleEngine.check_writing(&"BattleRules._sync_enemy_force_from_battle", before, [session, encounter_resolved], null)
+
+static func _sync_enemy_force_from_battle__gd(session: SessionStateStoreScript.SessionData, encounter_resolved: bool) -> void:
 	if session == null or session.battle.is_empty():
 		return
 	var context = session.battle.get("context", {})
@@ -14705,6 +15355,16 @@ static func _sync_enemy_force_from_battle(session: SessionStateStoreScript.Sessi
 		_mark_resolved_encounter(session, String(session.battle.get("resolved_key", "")))
 
 static func _apply_enemy_victory_specialties(session: SessionStateStoreScript.SessionData) -> void:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		_apply_enemy_victory_specialties__gd(session)
+	elif _battle_engine_mode == BattleEngine.NATIVE:
+		BattleEngine.native_writing(&"BattleRules._apply_enemy_victory_specialties", [session])
+	else:
+		var before := BattleEngine.before_writing(&"BattleRules._apply_enemy_victory_specialties", [session])
+		_apply_enemy_victory_specialties__gd(session)
+		BattleEngine.check_writing(&"BattleRules._apply_enemy_victory_specialties", before, [session], null)
+
+static func _apply_enemy_victory_specialties__gd(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null or session.battle.is_empty():
 		return
 	_apply_victory_recovery(session.battle, "enemy")
@@ -14715,6 +15375,16 @@ static func _apply_enemy_victory_specialties(session: SessionStateStoreScript.Se
 			session.battle["enemy_hero"] = updated
 
 static func _enemy_commander_state_for_force_sync(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _enemy_commander_state_for_force_sync__gd(session)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._enemy_commander_state_for_force_sync", [session])
+	var before := BattleEngine.before_writing(&"BattleRules._enemy_commander_state_for_force_sync", [session])
+	var result = _enemy_commander_state_for_force_sync__gd(session)
+	BattleEngine.check_writing(&"BattleRules._enemy_commander_state_for_force_sync", before, [session], result)
+	return result
+
+static func _enemy_commander_state_for_force_sync__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {}
 	var commander_state = session.battle.get("enemy_hero", {})
@@ -14730,6 +15400,16 @@ static func _enemy_commander_state_for_force_sync(session: SessionStateStoreScri
 	return commander_state
 
 static func _battle_survivor_stacks(session: SessionStateStoreScript.SessionData, side: String, filters: Dictionary = {}) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _battle_survivor_stacks__gd(session, side, filters)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._battle_survivor_stacks", [session, side, filters])
+	var before := BattleEngine.before_writing(&"BattleRules._battle_survivor_stacks", [session, side, filters])
+	var result = _battle_survivor_stacks__gd(session, side, filters)
+	BattleEngine.check_writing(&"BattleRules._battle_survivor_stacks", before, [session, side, filters], result)
+	return result
+
+static func _battle_survivor_stacks__gd(session: SessionStateStoreScript.SessionData, side: String, filters: Dictionary = {}) -> Array:
 	var survivors = []
 	for stack in session.battle.get("stacks", []):
 		if not (stack is Dictionary):
@@ -14755,6 +15435,16 @@ static func _battle_survivor_stacks(session: SessionStateStoreScript.SessionData
 	return survivors
 
 static func _award_commander_experience(session: SessionStateStoreScript.SessionData, amount: int) -> Array:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _award_commander_experience__gd(session, amount)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._award_commander_experience", [session, amount])
+	var before := BattleEngine.before_writing(&"BattleRules._award_commander_experience", [session, amount])
+	var result = _award_commander_experience__gd(session, amount)
+	BattleEngine.check_writing(&"BattleRules._award_commander_experience", before, [session, amount], result)
+	return result
+
+static func _award_commander_experience__gd(session: SessionStateStoreScript.SessionData, amount: int) -> Array:
 	if amount <= 0 or session == null or session.battle.is_empty():
 		return []
 	var commander_source = session.battle.get("player_commander_source", {})
@@ -14771,6 +15461,16 @@ static func _award_commander_experience(session: SessionStateStoreScript.Session
 	return result.get("messages", [])
 
 static func _apply_battle_context_victory(session: SessionStateStoreScript.SessionData) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_battle_context_victory__gd(session)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_battle_context_victory", [session])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_battle_context_victory", [session])
+	var result = _apply_battle_context_victory__gd(session)
+	BattleEngine.check_writing(&"BattleRules._apply_battle_context_victory", before, [session], result)
+	return result
+
+static func _apply_battle_context_victory__gd(session: SessionStateStoreScript.SessionData) -> String:
 	var dwelling_placement := CreatureDwellings.placement_from_guard_key(String(session.battle.get("resolved_key", "")))
 	if dwelling_placement != "":
 		return OverworldRulesScript.capture_dwelling_after_guard_victory(session, dwelling_placement)
@@ -14801,6 +15501,16 @@ static func _apply_battle_context_victory(session: SessionStateStoreScript.Sessi
 	return message
 
 static func _apply_battle_context_stalemate(session: SessionStateStoreScript.SessionData) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_battle_context_stalemate__gd(session)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_battle_context_stalemate", [session])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_battle_context_stalemate", [session])
+	var result = _apply_battle_context_stalemate__gd(session)
+	BattleEngine.check_writing(&"BattleRules._apply_battle_context_stalemate", before, [session], result)
+	return result
+
+static func _apply_battle_context_stalemate__gd(session: SessionStateStoreScript.SessionData) -> String:
 	var context = session.battle.get("context", {})
 	if _is_town_assault_context(context):
 		var town_name = _town_name_from_placement_id(session, String(context.get("town_placement_id", "")))
@@ -14826,6 +15536,16 @@ static func _apply_battle_context_stalemate(session: SessionStateStoreScript.Ses
 	return message
 
 static func _apply_delivery_route_aftermath(session: SessionStateStoreScript.SessionData, outcome: String) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_delivery_route_aftermath__gd(session, outcome)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_delivery_route_aftermath", [session, outcome])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_delivery_route_aftermath", [session, outcome])
+	var result = _apply_delivery_route_aftermath__gd(session, outcome)
+	BattleEngine.check_writing(&"BattleRules._apply_delivery_route_aftermath", before, [session, outcome], result)
+	return result
+
+static func _apply_delivery_route_aftermath__gd(session: SessionStateStoreScript.SessionData, outcome: String) -> String:
 	if session == null or session.battle.is_empty():
 		return ""
 	if bool(session.battle.get("delivery_outcome_applied", false)):
@@ -14838,6 +15558,16 @@ static func _apply_delivery_route_aftermath(session: SessionStateStoreScript.Ses
 	return String(OverworldRulesScript.apply_delivery_interception_outcome(session, node_placement_id, outcome).get("summary", ""))
 
 static func _finalize_town_defense_loss(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _finalize_town_defense_loss__gd(session)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._finalize_town_defense_loss", [session])
+	var before := BattleEngine.before_writing(&"BattleRules._finalize_town_defense_loss", [session])
+	var result = _finalize_town_defense_loss__gd(session)
+	BattleEngine.check_writing(&"BattleRules._finalize_town_defense_loss", before, [session], result)
+	return result
+
+static func _finalize_town_defense_loss__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var context = session.battle.get("context", {})
 	var messages = []
 	var defender_owner := String((context if context is Dictionary else {}).get("defender_owner", "player"))
@@ -14935,6 +15665,16 @@ static func _finalize_town_defense_loss(session: SessionStateStoreScript.Session
 	}
 
 static func _apply_town_defense_recovery(session: SessionStateStoreScript.SessionData, outcome: String) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_town_defense_recovery__gd(session, outcome)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_town_defense_recovery", [session, outcome])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_town_defense_recovery", [session, outcome])
+	var result = _apply_town_defense_recovery__gd(session, outcome)
+	BattleEngine.check_writing(&"BattleRules._apply_town_defense_recovery", before, [session, outcome], result)
+	return result
+
+static func _apply_town_defense_recovery__gd(session: SessionStateStoreScript.SessionData, outcome: String) -> String:
 	var context = session.battle.get("context", {})
 	if not _is_town_defense_context(context):
 		return ""
@@ -14957,6 +15697,16 @@ static func _apply_town_defense_recovery(session: SessionStateStoreScript.Sessio
 	)
 
 static func _town_defense_recovery_pressure(session: SessionStateStoreScript.SessionData, outcome: String) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _town_defense_recovery_pressure__gd(session, outcome)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._town_defense_recovery_pressure", [session, outcome])
+	var before := BattleEngine.before_writing(&"BattleRules._town_defense_recovery_pressure", [session, outcome])
+	var result = _town_defense_recovery_pressure__gd(session, outcome)
+	BattleEngine.check_writing(&"BattleRules._town_defense_recovery_pressure", before, [session, outcome], result)
+	return result
+
+static func _town_defense_recovery_pressure__gd(session: SessionStateStoreScript.SessionData, outcome: String) -> int:
 	if session == null or session.battle.is_empty():
 		return 0
 	var context = session.battle.get("context", {})
@@ -14977,6 +15727,16 @@ static func _town_defense_recovery_pressure(session: SessionStateStoreScript.Ses
 	return clamp(pressure, 1, 6)
 
 static func _apply_town_assault_recovery(session: SessionStateStoreScript.SessionData, outcome: String) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _apply_town_assault_recovery__gd(session, outcome)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._apply_town_assault_recovery", [session, outcome])
+	var before := BattleEngine.before_writing(&"BattleRules._apply_town_assault_recovery", [session, outcome])
+	var result = _apply_town_assault_recovery__gd(session, outcome)
+	BattleEngine.check_writing(&"BattleRules._apply_town_assault_recovery", before, [session, outcome], result)
+	return result
+
+static func _apply_town_assault_recovery__gd(session: SessionStateStoreScript.SessionData, outcome: String) -> String:
 	var context = session.battle.get("context", {})
 	if not _is_town_assault_context(context):
 		return ""
@@ -14992,6 +15752,16 @@ static func _apply_town_assault_recovery(session: SessionStateStoreScript.Sessio
 	)
 
 static func _town_assault_recovery_pressure(session: SessionStateStoreScript.SessionData, outcome: String) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _town_assault_recovery_pressure__gd(session, outcome)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._town_assault_recovery_pressure", [session, outcome])
+	var before := BattleEngine.before_writing(&"BattleRules._town_assault_recovery_pressure", [session, outcome])
+	var result = _town_assault_recovery_pressure__gd(session, outcome)
+	BattleEngine.check_writing(&"BattleRules._town_assault_recovery_pressure", before, [session, outcome], result)
+	return result
+
+static func _town_assault_recovery_pressure__gd(session: SessionStateStoreScript.SessionData, outcome: String) -> int:
 	if session == null or session.battle.is_empty():
 		return 0
 	var context = session.battle.get("context", {})
@@ -15006,7 +15776,17 @@ static func _town_assault_recovery_pressure(session: SessionStateStoreScript.Ses
 			pressure += 1
 	return clamp(pressure, 1, 5)
 
-static func _stabilize_hostile_town_front(
+static func _stabilize_hostile_town_front(session: SessionStateStoreScript.SessionData, source: String, bonus_days: int = 0) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _stabilize_hostile_town_front__gd(session, source, bonus_days)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._stabilize_hostile_town_front", [session, source, bonus_days])
+	var before := BattleEngine.before_writing(&"BattleRules._stabilize_hostile_town_front", [session, source, bonus_days])
+	var result = _stabilize_hostile_town_front__gd(session, source, bonus_days)
+	BattleEngine.check_writing(&"BattleRules._stabilize_hostile_town_front", before, [session, source, bonus_days], result)
+	return result
+
+static func _stabilize_hostile_town_front__gd(
 	session: SessionStateStoreScript.SessionData,
 	source: String,
 	bonus_days: int = 0
@@ -15039,6 +15819,16 @@ static func _stabilize_hostile_town_front(
 	return "%s stays on stabilization orders." % (town_name if town_name != "" else "The town")
 
 static func _enemy_commander_exit_reaction(session: SessionStateStoreScript.SessionData, outcome_id: String) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _enemy_commander_exit_reaction__gd(session, outcome_id)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._enemy_commander_exit_reaction", [session, outcome_id])
+	var before := BattleEngine.before_writing(&"BattleRules._enemy_commander_exit_reaction", [session, outcome_id])
+	var result = _enemy_commander_exit_reaction__gd(session, outcome_id)
+	BattleEngine.check_writing(&"BattleRules._enemy_commander_exit_reaction", before, [session, outcome_id], result)
+	return result
+
+static func _enemy_commander_exit_reaction__gd(session: SessionStateStoreScript.SessionData, outcome_id: String) -> String:
 	if session == null or session.battle.is_empty():
 		return ""
 	var commander_state = session.battle.get("enemy_hero", {})
@@ -15058,6 +15848,16 @@ static func _enemy_commander_exit_reaction(session: SessionStateStoreScript.Sess
 			return ""
 
 static func _capture_town_after_assault(session: SessionStateStoreScript.SessionData, town_placement_id: String, enemy_survivors: Array) -> void:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		_capture_town_after_assault__gd(session, town_placement_id, enemy_survivors)
+	elif _battle_engine_mode == BattleEngine.NATIVE:
+		BattleEngine.native_writing(&"BattleRules._capture_town_after_assault", [session, town_placement_id, enemy_survivors])
+	else:
+		var before := BattleEngine.before_writing(&"BattleRules._capture_town_after_assault", [session, town_placement_id, enemy_survivors])
+		_capture_town_after_assault__gd(session, town_placement_id, enemy_survivors)
+		BattleEngine.check_writing(&"BattleRules._capture_town_after_assault", before, [session, town_placement_id, enemy_survivors], null)
+
+static func _capture_town_after_assault__gd(session: SessionStateStoreScript.SessionData, town_placement_id: String, enemy_survivors: Array) -> void:
 	var town_result = _find_town_by_placement(session, town_placement_id)
 	if int(town_result.get("index", -1)) < 0:
 		return
@@ -15075,7 +15875,17 @@ static func _capture_town_after_assault(session: SessionStateStoreScript.Session
 	towns[int(town_result.get("index", -1))] = town
 	session.overworld["towns"] = towns
 
-static func _keep_enemy_hero_after_town_capture(
+static func _keep_enemy_hero_after_town_capture(session: SessionStateStoreScript.SessionData, town_placement_id: String, enemy_survivors: Array) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _keep_enemy_hero_after_town_capture__gd(session, town_placement_id, enemy_survivors)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._keep_enemy_hero_after_town_capture", [session, town_placement_id, enemy_survivors])
+	var before := BattleEngine.before_writing(&"BattleRules._keep_enemy_hero_after_town_capture", [session, town_placement_id, enemy_survivors])
+	var result = _keep_enemy_hero_after_town_capture__gd(session, town_placement_id, enemy_survivors)
+	BattleEngine.check_writing(&"BattleRules._keep_enemy_hero_after_town_capture", before, [session, town_placement_id, enemy_survivors], result)
+	return result
+
+static func _keep_enemy_hero_after_town_capture__gd(
 	session: SessionStateStoreScript.SessionData,
 	town_placement_id: String,
 	enemy_survivors: Array
@@ -15107,7 +15917,17 @@ static func _keep_enemy_hero_after_town_capture(
 	OverworldRulesScript.invalidate_spatial_lookup(session)
 	return "%s holds %s." % [EnemyAdventureRulesScript.commander_display_name(encounter.get("enemy_commander_state", {}), false), _town_name(town)]
 
-static func _station_enemy_commander_after_town_capture(
+static func _station_enemy_commander_after_town_capture(session: SessionStateStoreScript.SessionData, town_placement_id: String, enemy_survivors: Array) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _station_enemy_commander_after_town_capture__gd(session, town_placement_id, enemy_survivors)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._station_enemy_commander_after_town_capture", [session, town_placement_id, enemy_survivors])
+	var before := BattleEngine.before_writing(&"BattleRules._station_enemy_commander_after_town_capture", [session, town_placement_id, enemy_survivors])
+	var result = _station_enemy_commander_after_town_capture__gd(session, town_placement_id, enemy_survivors)
+	BattleEngine.check_writing(&"BattleRules._station_enemy_commander_after_town_capture", before, [session, town_placement_id, enemy_survivors], result)
+	return result
+
+static func _station_enemy_commander_after_town_capture__gd(
 	session: SessionStateStoreScript.SessionData,
 	town_placement_id: String,
 	enemy_survivors: Array
@@ -15172,6 +15992,16 @@ static func _station_enemy_commander_after_town_capture(
 	]
 
 static func _set_player_hero_state(session: SessionStateStoreScript.SessionData, hero_state: Dictionary, hero_id: String) -> void:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		_set_player_hero_state__gd(session, hero_state, hero_id)
+	elif _battle_engine_mode == BattleEngine.NATIVE:
+		BattleEngine.native_writing(&"BattleRules._set_player_hero_state", [session, hero_state, hero_id])
+	else:
+		var before := BattleEngine.before_writing(&"BattleRules._set_player_hero_state", [session, hero_state, hero_id])
+		_set_player_hero_state__gd(session, hero_state, hero_id)
+		BattleEngine.check_writing(&"BattleRules._set_player_hero_state", before, [session, hero_state, hero_id], null)
+
+static func _set_player_hero_state__gd(session: SessionStateStoreScript.SessionData, hero_state: Dictionary, hero_id: String) -> void:
 	if session == null or hero_id == "":
 		return
 	var heroes = session.overworld.get("player_heroes", [])
@@ -15190,6 +16020,16 @@ static func _set_player_hero_state(session: SessionStateStoreScript.SessionData,
 		session.overworld["movement"] = hero_state.get("movement", {}).duplicate(true) if hero_state.get("movement", {}) is Dictionary else session.overworld.get("movement", {})
 
 static func _remove_hero_by_id_after_defeat(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _remove_hero_by_id_after_defeat__gd(session, hero_id)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._remove_hero_by_id_after_defeat", [session, hero_id])
+	var before := BattleEngine.before_writing(&"BattleRules._remove_hero_by_id_after_defeat", [session, hero_id])
+	var result = _remove_hero_by_id_after_defeat__gd(session, hero_id)
+	BattleEngine.check_writing(&"BattleRules._remove_hero_by_id_after_defeat", before, [session, hero_id], result)
+	return result
+
+static func _remove_hero_by_id_after_defeat__gd(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
 	HeroCommandRulesScript.normalize_session(session)
 	HeroCommandRulesScript.commit_active_hero(session)
 	var removed_hero = HeroCommandRulesScript.hero_by_id(session, hero_id)
@@ -15217,6 +16057,16 @@ static func _remove_hero_by_id_after_defeat(session: SessionStateStoreScript.Ses
 	}
 
 static func _mark_resolved_encounter(session: SessionStateStoreScript.SessionData, resolved_key: String) -> void:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		_mark_resolved_encounter__gd(session, resolved_key)
+	elif _battle_engine_mode == BattleEngine.NATIVE:
+		BattleEngine.native_writing(&"BattleRules._mark_resolved_encounter", [session, resolved_key])
+	else:
+		var before := BattleEngine.before_writing(&"BattleRules._mark_resolved_encounter", [session, resolved_key])
+		_mark_resolved_encounter__gd(session, resolved_key)
+		BattleEngine.check_writing(&"BattleRules._mark_resolved_encounter", before, [session, resolved_key], null)
+
+static func _mark_resolved_encounter__gd(session: SessionStateStoreScript.SessionData, resolved_key: String) -> void:
 	if session == null or resolved_key == "" or resolved_key.begins_with(CreatureDwellings.GUARD_KEY_PREFIX):
 		return
 	var resolved = session.overworld.get("resolved_encounters", [])
@@ -15227,6 +16077,16 @@ static func _mark_resolved_encounter(session: SessionStateStoreScript.SessionDat
 	session.overworld["resolved_encounters"] = resolved
 
 static func _set_enemy_siege_progress(session: SessionStateStoreScript.SessionData, faction_id: String, progress: int) -> void:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		_set_enemy_siege_progress__gd(session, faction_id, progress)
+	elif _battle_engine_mode == BattleEngine.NATIVE:
+		BattleEngine.native_writing(&"BattleRules._set_enemy_siege_progress", [session, faction_id, progress])
+	else:
+		var before := BattleEngine.before_writing(&"BattleRules._set_enemy_siege_progress", [session, faction_id, progress])
+		_set_enemy_siege_progress__gd(session, faction_id, progress)
+		BattleEngine.check_writing(&"BattleRules._set_enemy_siege_progress", before, [session, faction_id, progress], null)
+
+static func _set_enemy_siege_progress__gd(session: SessionStateStoreScript.SessionData, faction_id: String, progress: int) -> void:
 	if session == null or faction_id == "":
 		return
 	var states = session.overworld.get("enemy_states", [])
@@ -15244,6 +16104,16 @@ static func _set_enemy_siege_progress(session: SessionStateStoreScript.SessionDa
 	session.overworld["enemy_states"] = states
 
 static func _army_strength_from_stacks(stacks: Variant) -> int:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _army_strength_from_stacks__gd(stacks)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._army_strength_from_stacks", [stacks])
+	var before := BattleEngine.before_writing(&"BattleRules._army_strength_from_stacks", [stacks])
+	var result = _army_strength_from_stacks__gd(stacks)
+	BattleEngine.check_writing(&"BattleRules._army_strength_from_stacks", before, [stacks], result)
+	return result
+
+static func _army_strength_from_stacks__gd(stacks: Variant) -> int:
 	var total = 0
 	if not (stacks is Array):
 		return total
@@ -15361,6 +16231,16 @@ static func _lowest_health_stack__gd(stacks: Array) -> Dictionary:
 	return best
 
 static func _army_totals(battle: Dictionary, side: String) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _army_totals__gd(battle, side)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._army_totals", [battle, side])
+	var before := BattleEngine.before_writing(&"BattleRules._army_totals", [battle, side])
+	var result = _army_totals__gd(battle, side)
+	BattleEngine.check_writing(&"BattleRules._army_totals", before, [battle, side], result)
+	return result
+
+static func _army_totals__gd(battle: Dictionary, side: String) -> Dictionary:
 	var totals = {
 		"stacks": 0,
 		"units": 0,
@@ -16800,6 +17680,16 @@ static func _side_doctrine_summary(battle: Dictionary, side: String) -> String:
 			return "No doctrine is asserting itself"
 
 static func _side_faction_id(battle: Dictionary, side: String) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _side_faction_id__gd(battle, side)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._side_faction_id", [battle, side])
+	var before := BattleEngine.before_writing(&"BattleRules._side_faction_id", [battle, side])
+	var result = _side_faction_id__gd(battle, side)
+	BattleEngine.check_writing(&"BattleRules._side_faction_id", before, [battle, side], result)
+	return result
+
+static func _side_faction_id__gd(battle: Dictionary, side: String) -> String:
 	var counts = {}
 	for stack in _alive_stacks_for_side(battle, side):
 		var faction_id = String(stack.get("faction_id", ""))
@@ -18302,6 +19192,16 @@ static func _damage_rng_integrity__gd(seed: int, state_text: String, roll_count:
 	return ("damage_rng_v%d|%d|%s|%d" % [DAMAGE_RNG_VERSION, seed, state_text, roll_count]).sha256_text()
 
 static func _battle_exit_animation_snapshot(battle: Dictionary, outcome: String) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _battle_exit_animation_snapshot__gd(battle, outcome)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._battle_exit_animation_snapshot", [battle, outcome])
+	var before := BattleEngine.before_writing(&"BattleRules._battle_exit_animation_snapshot", [battle, outcome])
+	var result = _battle_exit_animation_snapshot__gd(battle, outcome)
+	BattleEngine.check_writing(&"BattleRules._battle_exit_animation_snapshot", before, [battle, outcome], result)
+	return result
+
+static func _battle_exit_animation_snapshot__gd(battle: Dictionary, outcome: String) -> Dictionary:
 	if battle.is_empty():
 		return {}
 	var snapshot := battle.duplicate(true)
@@ -18826,6 +19726,16 @@ static func _spell_effect_label__gd(effect_payload: Variant) -> String:
 	return String(effect_payload.get("label", effect_payload.get("effect_id", effect_payload.get("kind", "the effect")))).to_lower()
 
 static func _normalize_presentation_speed(speed: String) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _normalize_presentation_speed__gd(speed)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._normalize_presentation_speed", [speed])
+	var before := BattleEngine.before_writing(&"BattleRules._normalize_presentation_speed", [speed])
+	var result = _normalize_presentation_speed__gd(speed)
+	BattleEngine.check_writing(&"BattleRules._normalize_presentation_speed", before, [speed], result)
+	return result
+
+static func _normalize_presentation_speed__gd(speed: String) -> String:
 	var normalized := speed.strip_edges().to_lower()
 	if normalized in PRESENTATION_SPEEDS:
 		return normalized
@@ -18882,6 +19792,16 @@ static func _normalize_presentation_event_queue__gd(value: Variant) -> Array:
 	return normalized
 
 static func _normalize_stack_animation_states(value: Variant) -> Dictionary:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _normalize_stack_animation_states__gd(value)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._normalize_stack_animation_states", [value])
+	var before := BattleEngine.before_writing(&"BattleRules._normalize_stack_animation_states", [value])
+	var result = _normalize_stack_animation_states__gd(value)
+	BattleEngine.check_writing(&"BattleRules._normalize_stack_animation_states", before, [value], result)
+	return result
+
+static func _normalize_stack_animation_states__gd(value: Variant) -> Dictionary:
 	var normalized := {}
 	if not (value is Dictionary):
 		return normalized
@@ -19061,6 +19981,16 @@ static func _normalize_tactical_briefing_state(value: Variant, session: SessionS
 	return briefing
 
 static func _titleize_token(value: String) -> String:
+	if _battle_engine_mode == BattleEngine.GDSCRIPT:
+		return _titleize_token__gd(value)
+	if _battle_engine_mode == BattleEngine.NATIVE:
+		return BattleEngine.native_writing(&"BattleRules._titleize_token", [value])
+	var before := BattleEngine.before_writing(&"BattleRules._titleize_token", [value])
+	var result = _titleize_token__gd(value)
+	BattleEngine.check_writing(&"BattleRules._titleize_token", before, [value], result)
+	return result
+
+static func _titleize_token__gd(value: String) -> String:
 	if value == "":
 		return ""
 	var words = value.split("_")

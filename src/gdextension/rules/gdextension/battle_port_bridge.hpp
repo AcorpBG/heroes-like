@@ -25,6 +25,13 @@
 // again. Its empty results (an unknown id, a missing file) and a scenario's
 // terrain layers are new objects each time, so they are asked for again.
 //
+// An object's view (object_view): the session as a Dictionary of its script
+// variables and its metadata, made from the object when the native code first
+// asks for it, as DayEngine.gd makes it. From then on the object's properties
+// are read and set in the view, and write_back() sets each property the view
+// holds another value for, and the metadata the view's "meta" adds, changes
+// or drops. A host call reads the view again from the object afterwards.
+//
 // A full host call (call_static) runs a GDScript function in the middle of a call
 // that writes back (begin(false, true)), so within such a call GDScript does
 // run; in any other call the host call throws state::Suspend instead. It
@@ -152,6 +159,9 @@ public:
 	void fill_packed(state::State &state, uint32_t node) override;
 
 	state::Value object_get(state::State &state, uint32_t slot, uint32_t property) override;
+	state::Value object_view(state::State &state, uint32_t slot) override;
+	void object_set(state::State &state, uint32_t slot, uint32_t property, const state::Value &value) override;
+	state::Value view_object(state::State &state, uint32_t node) override;
 	bool rng_get(uint32_t slot, uint64_t &seed, uint64_t &state) override;
 	void rng_set_state(uint32_t slot, uint64_t state) override;
 	uint32_t rng_new(uint64_t seed, uint64_t state) override;
@@ -191,6 +201,14 @@ private:
 		uint32_t name = 0;
 		godot::Variant value;
 	};
+	// An object's view: its Dict node, the node its "meta" started as, and
+	// the script variables' names (atoms), in order.
+	struct ObjectView {
+		uint32_t slot = 0;
+		uint32_t node = 0;
+		uint32_t meta = 0;
+		std::vector<uint32_t> fields;
+	};
 	struct MemoShape {
 		uint32_t script = 0;
 		uint32_t name = 0;
@@ -208,6 +226,12 @@ private:
 	void adopt_exported();
 	void reback();
 	std::string verify_after(const state::Value *args, size_t count, const godot::Array &after);
+	const ObjectView *view_of(uint32_t slot) const;
+	// The view's fields and metadata, read from the object again.
+	void fill_view(const ObjectView &view);
+	void write_view(const ObjectView &view);
+	bool view_changed(const ObjectView &view) const;
+	void verify_object_view(const ObjectView &view, std::string &out);
 	state::TypeRef register_type(int64_t builtin, const godot::StringName &class_name, const godot::Variant &script);
 	godot::Object *object_at(uint32_t slot) const;
 	godot::Object *content_service();
@@ -239,6 +263,8 @@ private:
 	std::vector<std::optional<godot::Variant>> packed_sources_;
 	std::unordered_map<uint64_t, uint32_t> packed_nodes_;
 	std::vector<godot::Variant> opaque_;
+	// Per call: the views made (object_view), in the order made.
+	std::vector<ObjectView> views_;
 	// The scripts whose static vars the port reads, by path; kept across calls.
 	std::unordered_map<std::string, godot::Variant> scripts_;
 	// Per call: the static vars read or assigned, in first-use order, by

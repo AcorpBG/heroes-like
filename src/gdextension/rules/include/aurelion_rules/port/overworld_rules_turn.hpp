@@ -6,6 +6,7 @@
 
 #include "aurelion_rules/port/gd.hpp"
 #include "aurelion_rules/port/session_view.hpp"
+#include "aurelion_rules/port/battle_ends.hpp"
 #include "aurelion_rules/port/overworld_rules.hpp"
 #include "aurelion_rules/port/overworld_rules_ai.hpp"
 
@@ -68,20 +69,5 @@ Atom encounter_commander_name(State &state, DictRef encounter);
 Atom encounter_commander_threat_label(State &state, DictRef encounter);
 Atom encounter_display_name(State &state, DictRef encounter);
 DictRef town_development_metrics(State &state, DictRef town, const Value &session = Value());
-
-// Not run by the six seeds, and ported by Phase 5's slice 09: until it is merged each throws state::NotPorted (turn_not_ported.cpp).
-DictRef _enemy_state_for_faction(State &state, DictRef session, Atom faction_id);
-int64_t _readiness_bonus_from_profile(State &state, const Value &profile);
-DictRef _retake_front_from_legacy_state(State &state, DictRef session, DictRef town, DictRef front);
-bool _scenario_town_started_enemy(State &state, DictRef session, Atom placement_id);
-int64_t _town_battle_readiness(State &state, DictRef town, const Value &session, DictRef metric_context, int64_t reinforcement_quality = -1);
-int64_t _town_front_priority_seed(State &state, Atom role, bool objective_anchor);
-DictRef _town_front_state(State &state, DictRef session, DictRef town, DictRef precomputed_development_metrics);
-int64_t _town_garrison_headcount(State &state, DictRef town);
-int64_t _town_garrison_strength(State &state, DictRef town);
-int64_t _town_reinforcement_quality(State &state, DictRef town, const Value &session, DictRef metric_context);
-int64_t _town_role_quality_bonus(State &state, Atom role);
-int64_t _town_role_readiness_bonus(State &state, Atom role);
-int64_t _town_spell_tier(State &state, DictRef town);
 
 } // namespace aurelion::rules::port::overworld_rules

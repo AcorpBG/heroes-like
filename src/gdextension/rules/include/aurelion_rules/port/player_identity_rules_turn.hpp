@@ -6,6 +6,7 @@
 
 #include "aurelion_rules/port/gd.hpp"
 #include "aurelion_rules/port/session_view.hpp"
+#include "aurelion_rules/port/battle_ends.hpp"
 #include "aurelion_rules/port/player_identity_rules.hpp"
 #include "aurelion_rules/port/player_identity_rules_ai.hpp"
 #include "aurelion_rules/port/overworld_rules.hpp"
@@ -27,9 +28,5 @@ void set_resource_controller(State &state, DictRef node, const Value &session, A
 
 // Ported in turn_rare_paths.cpp (slice 4.2: paths the six seeds do not run).
 DictRef config_for_controller(State &state, const Value &session, Atom controller);
-
-// Not run by the six seeds, and ported by Phase 5's slice 09: until it is merged each throws state::NotPorted (turn_not_ported.cpp).
-Atom defender_controller_id(State &state, DictRef record);
-ArrayRef from_slots(State &state, ArrayRef slots);
 
 } // namespace aurelion::rules::port::player_identity_rules
