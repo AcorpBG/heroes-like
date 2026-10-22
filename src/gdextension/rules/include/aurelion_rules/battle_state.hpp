@@ -700,6 +700,10 @@ public:
 	// throws Suspend instead. The default is a ScriptError: this host runs no
 	// GDScript.
 	virtual Value call_static(State &state, uint32_t script, uint32_t function, const Value *args, size_t count);
+	// A host call to a function that changes nothing the native call holds
+	// (a pure port::Host): written back first as by call_static, but nothing
+	// is read again afterwards. The default is call_static.
+	virtual Value call_pure(State &state, uint32_t script, uint32_t function, const Value *args, size_t count);
 	// The element type of a builtin Variant type (not an Object), registered
 	// as a loaded typed Array's would be: for a new one, as GDScript's
 	// `var ids: Array[String] = []` makes it.

@@ -116180,6 +116180,32 @@
     {
       "id": "native-rules-phase2-battle-tool-20261022",
       "title": "Native rules engine, Phase 2: one payload builder, AI preview as one call, the battle tool",
+      "status": "in_progress",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "one payload builder, the AI's battle preview as one native call, and the battle tool as the backend of `tune.py` and `arena.py`. From Phase 1 (owner decisions 2026-10-22): the native unit and ability tables, the arena's native router (each side's weights as data), then the deletion of the GDScript fight loop, BattleAiRules and the battle switch's other GDScript copies, with D6's test retirements. Owner decision 2026-10-22: the preview first, then the payload builder, then the battle tool; each part merges to main on its own from a short-lived branch, main tagged first; Windows only, lean checks; D7 and G2 decided by the owner before 2c.",
+      "updatedAt": "2026-10-22T09:58:17Z"
+    },
+    {
+      "id": "native-rules-phase2-a-preview-20261022",
+      "title": "Native rules Phase 2a: the AI's battle preview as one native call",
+      "status": "in_progress",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "`AiHeroRules._simulate_battle` as one native call (`ai_hero_rules::_simulate_battle` in `ai_battle_preview.cpp`, the entry agreed with Phase 4, whose faction turn then calls it directly), on a native scratch view with no SessionData object, with the payload path it runs: 61 functions, 1,889 lines (BattleRules 47; OverworldRules 6; EnemyAdventureRules 4; AiHeroRules 2; SessionStateStore 1; TownBattleRules 1), and 12 of slice 09's lookups. Merges after Phase 5's slice 09 (its battle end and those lookups). The read-back fields shadow-identical. Frozen until it merges: those 61 (transition doc, Phase 2, \"Slice 2a, frozen functions\").",
+      "updatedAt": "2026-10-22T09:58:17Z"
+    },
+    {
+      "id": "native-rules-phase2-b-payload-20261022",
+      "title": "Native rules Phase 2b: the payload builder for every caller",
       "status": "pending",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
@@ -116187,8 +116213,34 @@
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "one payload builder, the AI's battle preview as one native call, and the battle tool as the backend of `tune.py` and `arena.py`. From Phase 1 (owner decisions 2026-10-22): the native unit and ability tables, the arena's native router (each side's weights as data), then the deletion of the GDScript fight loop, BattleAiRules and the battle switch's other GDScript copies, with D6's test retirements.",
-      "updatedAt": "2026-10-22T08:56:20Z"
+      "notes": "the payload builder for every caller, `normalize_battle_state` and the end-of-battle numbers; then battles per second measured for G2.",
+      "updatedAt": "2026-10-22T09:58:17Z"
+    },
+    {
+      "id": "native-rules-phase2-c-battle-tool-20261022",
+      "title": "Native rules Phase 2c: the battle tool for the tuner",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "the backend of `tune.py` and `arena.py`, the native router with each side's weights as data, the native unit and ability tables.",
+      "updatedAt": "2026-10-22T09:58:17Z"
+    },
+    {
+      "id": "native-rules-phase2-d-exit-20261022",
+      "title": "Native rules Phase 2d: the GDScript battle copies deleted",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "the GDScript battle copies deleted with D6's test retirements once `tune.py` and `arena.py` run on the tool.",
+      "updatedAt": "2026-10-22T09:58:17Z"
     },
     {
       "id": "native-rules-shared-runtime-main-20261021",

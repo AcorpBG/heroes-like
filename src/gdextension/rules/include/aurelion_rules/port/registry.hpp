@@ -36,10 +36,14 @@ struct ScriptStatic {
 // A subsystem lists them as HOST(Script, function, arity) lines in its registry
 // file, which tools/native_battle_switch.py reads to give each one its shadow
 // wrapper (the BattleEngine.host_point call that AurelionRules.port_validate_point
-// checks).
+// checks). A pure one changes nothing the native call holds (no container,
+// static var or content it loaded): GDScript reads what the native call
+// changed, and the native call reads nothing again afterwards
+// (Backing::call_pure).
 struct Host {
 	const char *name;
 	int arity;
+	bool pure = false;
 };
 
 // One subsystem's functions.
