@@ -1141,6 +1141,68 @@ cf1190263 Windows binaries):
   - Core suite: 17/17 on Windows.
   - The Linux libraries in `bin/` are not rebuilt.
 
+**Autoplay, the orders and the battle screen's queries** (slice 10, 2026-10-22; branch commits 26e2efdd1 port,
+a41e38754 Windows binaries; runtime on main 6a8c9a736, 27bee9e26 Windows binaries):
+- **Ported:** 59 functions, 2,050 lines. With them every step of a fight runs native: the autoplay loop, the player's
+  orders, the enemy turn, the AI and the outcome.
+  - 10a, 39/1,664:
+    - BattleAutoResolveRules 8/289: `resolve_active_battle`, the player side's decision and its fallback, the focus
+      target and the result (`battle_auto_resolve.cpp`).
+    - BattleRules 30/1,337: `perform_player_action`, `cast_player_spell`, `resolve_if_battle_ready`,
+      `_resolve_attack_action`, `_complete_action` and `_evaluate_outcome` (`player_orders.cpp`, 7);
+      `move_active_stack_to_hex`, its movement intent and the post-move target context (`move_orders.cpp`, 14); the
+      enemy turn from 09 with `_resolve_ai_attack` and `_complete_enemy_action` (`enemy_turn.cpp`, 9).
+    - BattleActionPlayback `capture`, 1/38 (`action_playback.cpp`): board setup and the presentation events now write
+      the playback record natively.
+  - 10b, 20/386, the battle screen's queries:
+    - BattleRules 13/291: the attack, advance and spell consequence previews with their damage and loss ranges
+      (`consequence_previews.cpp`, 10) and the turn order forecast (`turn_forecast.cpp`, 3);
+    - SpellRules 7/95: the text a battle spell's effect prints (`spell_summaries.cpp`).
+  - BattleRules' `_consequence_cache_battle` and `_consequence_cache` join the shared memos.
+- **Host calls** (the runtime on main): the battle ends stay GDScript in Phase 1. These are `_finalize_victory`,
+  `_finalize_player_battle_loss`, `_finalize_stalemate`, `_finalize_enemy_withdrawal`, `_finalize_retreat`,
+  `_finalize_surrender`, and the message of a refused retreat or surrender (`_retreat_action_summary`,
+  `_surrender_action_summary`, which read the overworld's withdrawal preview). The ports call them through
+  `gd::call_static`.
+  - The battle table lists these 8 targets as `HOST` entries in `core/port/registry.cpp`, each with the one call site
+    where it is allowed. None is inside the fight's step loop. `gd::call_static` fails on any other target.
+  - Native mode: the bridge writes everything back and runs the GDScript function. Then it drops everything: every
+    loaded node reads its container again lazily, and the State memo (the board reads' too), the static vars and the
+    content are read again.
+  - Shadow mode: the native run stops at the host call (`state::Suspend`). The switch's host point checks the run up to
+    there (`AurelionRules.port_validate_point`), and GDScript goes on.
+  - Counts: on the six seeds, 1,243 host calls in 1,536 resolves (1,215 `_finalize_victory`, 28
+    `_finalize_player_battle_loss`), at most one per resolve. On `standard` they are not counted, because the arena
+    fails in native mode (below).
+  - The two summaries are never reached in autoplay, because BattleAutoResolveRules turns an exit order into a defend,
+    and the AI never asks for them. They run only when a player orders a retreat or surrender that is not allowed: the
+    order is refused and the battle goes on, one host call per refused order. An allowed one calls its `_finalize_*`
+    once, and the battle ends.
+- **For the owner at the merge** (open, not settled):
+  - The rule "a ported function calls only ported functions" (slice 05) becomes "...or a registered GDScript host
+    target", as above.
+  - Events stay today's exact strings, built in C++. There are no structured records and no GDScript formatter, which
+    departs from the Phase 1 scope above.
+  - Not built:
+    - the native unit and ability tables per content revision (from 02);
+    - the human-seat corpus: 12 generated-map battle screen tests ran in shadow instead;
+    - host calls in the G1 replay harness (`tools/battle_port_g1/`), which the formal pre-merge G1 needs.
+  - The arena router: native and shadow resolves fail in the arena with an `int(Nil)` error. The router has no
+    BattleAiRules static vars, and the native scoring scope reads them. The options are in "G1 on `standard` with the
+    memos".
+  - Still GDScript: battle setup (`create_battle_payload`, `normalize_battle_state`), the battle screen's `describe_*`,
+    `intent_forecast_payload` and `get_action_surface`, and BattleActionPlayback's `begin` and `finish`.
+- **Review:** one reviewer on the five functions shadow did not reach (`_fallback_player_autoplay_decision`,
+  `_select_focus_enemy`, `consequence_range_text`, `upcoming_actor_ids`, `_cleanse_labels`): no divergence.
+- **Checks:**
+  - Shadow on the six seeds: 0 mismatches, 0 errors and 0 paths left to GDScript in 83,514,931 checks over
+    569 of the 621 functions. 234,881 of them are slice 10's, over 22 of its 59.
+  - Shadow on 12 generated-map battle screen tests: 0 mismatches in 2,339,481 checks, 18,087 of
+    them slice 10's, over 53 of its 59. The two runs together reached 54 of the 59.
+  - Native mode against main: every daily digest (415) and match record of the six seeds is identical.
+  - Core suite: 17/17 on Windows.
+  - The Linux libraries in `bin/` are not rebuilt.
+
 ### Phase 2: one payload builder, AI preview as one call, the battle tool
 
 - Battle payload creation (`BattleRules.gd:256-402`), stack and hero payloads, obstacles, and the end-of-battle numbers
