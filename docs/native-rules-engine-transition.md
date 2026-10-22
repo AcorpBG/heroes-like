@@ -1525,6 +1525,10 @@ both. Switch `HEROES_NATIVE_TURN=gdscript|native|shadow`, log `HEROES_NATIVE_TUR
   - Coverage seeds (`rules_parity.py`, run only when `--seeds` names them): `isl-b` reaches `_hold_back` (an army saving
     for a boat, 13 checks), `pt-f` the random exits of one-way portals (`native_random_exit_check`,
     `note_native_trip`, 62 checks).
+  - Shared with Phase 5: the 68 functions Phase 5's slice 09 calls or reaches are on main unswitched (aa9d9f2be,
+    binaries 845b8a45e, with the runtime as 84082d9c1), moved unchanged from the turn files (672a4ee1f) to
+    `core/port/<script>_shared.cpp`, declared in the per-script headers, their keys at the end of `ai_keys.inc`. Five
+    of their callees are slice 09's and throw `state::NotPorted` from `phase4_shared_stubs.cpp` until it lands.
 - 4.2, the paths the six seeds do not run, so that no path of the day is left to GDScript. 4.1 leaves each to a
   `state::NotPorted` (4.4's run on the owner's save copies checks them):
   - the 165 functions in `turn_not_ported.cpp`: OverworldRules 45, EnemyAdventureRules 38, EnemyTurnRules 26,
