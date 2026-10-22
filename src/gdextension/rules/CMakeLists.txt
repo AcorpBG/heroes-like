@@ -119,6 +119,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/artifact_rules.cpp
 	core/port/attack_effects.cpp
 	core/port/attack_events.cpp
+	core/port/battle_aftermath.cpp
 	core/port/battle_ai_abilities.cpp
 	core/port/battle_ai_attack_scores.cpp
 	core/port/battle_ai_contextual.cpp
@@ -133,8 +134,14 @@ add_library(aurelion_rules_core STATIC
 	core/port/battle_auto_resolve.cpp
 	core/port/battle_commanders.cpp
 	core/port/battle_context.cpp
+	core/port/battle_context_aftermath.cpp
 	core/port/battle_damage_rules_ai.cpp
+	core/port/battle_end_heroes.cpp
+	core/port/battle_end_sites.cpp
+	core/port/battle_end_towns.cpp
+	core/port/battle_finalize.cpp
 	core/port/battle_footprint.cpp
+	core/port/battle_forces.cpp
 	core/port/battle_payload.cpp
 	core/port/battle_rules.cpp
 	core/port/battle_rules_ai.cpp

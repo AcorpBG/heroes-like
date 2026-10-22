@@ -1875,43 +1875,61 @@ with the day native (1.08x); l1 186 to 174 s, l2 194 to 181 s.
 **Slice 09, frozen functions** (2026-10-22, until slice 09 merges; AGENTS.md; branch `native-phase5-finalize`): the ends
 of a human battle, Phase 1's eight host targets `BattleRules._finalize_victory`, `_finalize_player_battle_loss`,
 `_finalize_stalemate`, `_finalize_enemy_withdrawal`, `_finalize_retreat`, `_finalize_surrender`,
-`_retreat_action_summary` and `_surrender_action_summary`, and what they reach beyond the functions already ported: 114
-functions (ContentService's lookups aside). BattleRules 77: `_add_enemy_treasury_resources`,
-`_apply_active_hero_aftermath_losses`, `_apply_battle_context_stalemate`, `_apply_battle_context_victory`,
-`_apply_collapse_aftermath`, `_apply_collapse_recovery_pressure`, `_apply_delivery_route_aftermath`,
-`_apply_encounter_victory_flags`, `_apply_enemy_victory_specialties`, `_apply_front_pressure_shift`,
-`_apply_player_battle_salvage_reward`, `_apply_town_assault_recovery`, `_apply_town_defense_recovery`,
-`_apply_victory_front_aftermath`, `_apply_victory_mana`, `_apply_victory_recovery`, `_apply_withdrawal_aftermath`,
-`_apply_withdrawal_recovery_pressure`, `_army_strength_from_stacks`, `_army_totals`, `_award_commander_experience`,
-`_battle_context_controller_id`, `_battle_context_resource_placement_id`, `_battle_context_town_placement_id`,
-`_battle_context_trigger_faction_id`, `_battle_enemy_faction_id`, `_battle_exit_animation_snapshot`,
-`_battle_resolution_static_encounter_snapshot`, `_battle_survivor_stacks`, `_battle_victory_rewards`,
-`_beaten_enemy_stacks`, `_build_collapse_aftermath_preview`, `_build_withdrawal_aftermath_preview`,
-`_capture_town_after_assault`, `_collapse_resource_summary`, `_current_battle_encounter_placement`,
-`_enemy_commander_exit_reaction`, `_enemy_commander_state_for_force_sync`, `_enemy_commander_state_with_payload`,
-`_enemy_state_exists`, `_finalize_enemy_withdrawal`, `_finalize_player_battle_loss`, `_finalize_primary_defeat`,
-`_finalize_retreat`, `_finalize_secondary_hero_defeat`, `_finalize_stalemate`, `_finalize_surrender`,
-`_finalize_town_defense_loss`, `_finalize_victory`, `_find_encounter_by_key`, `_find_town_by_placement`,
-`_finish_enemy_battle_task_assignment`, `_is_resource_assault_context`, `_keep_enemy_hero_after_town_capture`,
-`_mark_resolved_encounter`, `_normalize_presentation_speed`, `_normalize_stack_animation_states`,
-`_record_battle_aftermath`, `_record_enemy_commander_battle_continuity`, `_remove_hero_by_id_after_defeat`,
+`_retreat_action_summary` and `_surrender_action_summary`, and the functions slice 09 ports with them: 162 functions
+(the Phase 4 ports they call and ContentService's lookups aside). BattleRules 97: `_add_enemy_treasury_resources`,
+`_adjust_enemy_pressure`, `_apply_active_hero_aftermath_losses`, `_apply_battle_context_stalemate`,
+`_apply_battle_context_victory`, `_apply_collapse_aftermath`, `_apply_collapse_recovery_pressure`,
+`_apply_delivery_route_aftermath`, `_apply_encounter_victory_flags`, `_apply_enemy_commander_battle_memory`,
+`_apply_enemy_victory_specialties`, `_apply_front_pressure_shift`, `_apply_player_battle_salvage_reward`,
+`_apply_town_assault_recovery`, `_apply_town_defense_recovery`, `_apply_victory_front_aftermath`, `_apply_victory_mana`,
+`_apply_victory_recovery`, `_apply_withdrawal_aftermath`, `_apply_withdrawal_recovery_pressure`,
+`_army_strength_from_stacks`, `_army_totals`, `_award_commander_experience`, `_battle_aftermath_artifact_summary`,
+`_battle_aftermath_display_outcome`, `_battle_aftermath_force_summary`, `_battle_aftermath_result_summary`,
+`_battle_aftermath_return_summary`, `_battle_aftermath_reward_summary`, `_battle_aftermath_side_force_clause`,
+`_battle_aftermath_world_summary`, `_battle_context_controller_id`, `_battle_context_resource_placement_id`,
+`_battle_context_town_placement_id`, `_battle_context_trigger_faction_id`, `_battle_enemy_faction_id`,
+`_battle_enemy_label`, `_battle_exit_animation_snapshot`, `_battle_report_casualty_ledger`,
+`_battle_report_side_casualties`, `_battle_resolution_static_encounter_snapshot`, `_battle_survivor_stacks`,
+`_battle_victory_rewards`, `_beaten_enemy_stacks`, `_build_collapse_aftermath_preview`,
+`_build_withdrawal_aftermath_preview`, `_capture_town_after_assault`, `_casualty_units_from_ratio`,
+`_clamped_resource_loss`, `_collapse_resource_summary`, `_current_battle_encounter_placement`,
+`_enemy_commander_exit_reaction`, `_enemy_commander_rivalry_context`, `_enemy_commander_state_for_force_sync`,
+`_enemy_commander_state_with_payload`, `_enemy_state_exists`, `_finalize_enemy_withdrawal`,
+`_finalize_player_battle_loss`, `_finalize_primary_defeat`, `_finalize_retreat`, `_finalize_secondary_hero_defeat`,
+`_finalize_stalemate`, `_finalize_surrender`, `_finalize_town_defense_loss`, `_finalize_victory`,
+`_find_encounter_by_key`, `_find_town_at_position`, `_find_town_by_placement`, `_finish_enemy_battle_task_assignment`,
+`_is_resource_assault_context`, `_keep_enemy_hero_after_town_capture`, `_mark_resolved_encounter`,
+`_normalize_presentation_speed`, `_normalize_stack_animation_states`, `_record_battle_aftermath`,
+`_record_enemy_commander_battle_continuity`, `_remove_hero_by_id_after_defeat`, `_remove_units_from_stacks`,
 `_resolve_enemy_commander_aftermath`, `_retreat_action_summary`, `_set_enemy_siege_progress`, `_set_player_hero_state`,
-`_side_faction_id`, `_stabilize_hostile_town_front`, `_station_enemy_commander_after_town_capture`,
-`_surrender_action_summary`, `_sync_enemy_force_from_battle`, `_sync_player_force_from_battle`,
-`_synthetic_battle_encounter_placement`, `_town_assault_recovery_pressure`, `_town_defense_recovery_pressure`,
-`_town_name`, `_town_name_from_placement_id`, `_withdrawal_preview_summary`, `_withdrawal_resource_summary`.
-OverworldRules 17: `_apply_artifact_claim`, `_claim_town`, `_describe_reward_delta`, `_find_resource_node_by_placement`,
-`_rules_profile_add_ms`, `_rules_profile_set`, `_rules_profile_timer`, `_spend_resources`,
-`apply_delivery_interception_outcome`, `apply_reward_bonus`, `apply_town_recovery_pressure`,
+`_side_faction_id`, `_stabilize_hostile_town_front`, `_stack_count_total`,
+`_station_enemy_commander_after_town_capture`, `_surrender_action_summary`, `_sync_enemy_force_from_battle`,
+`_sync_player_force_from_battle`, `_synthetic_battle_encounter_placement`, `_titleize_token`,
+`_town_assault_recovery_pressure`, `_town_defense_recovery_pressure`, `_town_name`, `_town_name_from_placement_id`,
+`_withdrawal_preview_summary`, `_withdrawal_resource_summary`. OverworldRules 41: `_apply_artifact_claim`,
+`apply_delivery_interception_outcome`, `apply_reward_bonus`, `_army_strength_value`,
 `capture_dwelling_after_guard_victory`, `capture_resource_after_defender_victory`, `capture_town_by_placement`,
-`transition_town_control`, `update_dwelling_guard_after_battle`, `update_resource_defender_after_battle`.
-HeroProgressionRules 7: `_add_experience`, `_apply_command_gain`, `_enqueue_choice_group`, `add_experience`,
-`command_gain_stat`, `experience_with_bonus`, `pending_choice_summary`. HeroCommandRules 5: `_set_holder_stacks`,
-`active_hero_is_primary`, `hand_over_primary`, `keep_hero_troop_from_garrison`, `remove_active_hero_after_defeat`.
-ArtifactRules 2: `owned_artifact_ids`, `select_live_source_reward`. EnemyAdventureRules 2:
-`_commander_name_from_source`, `commander_display_name`. CreatureDwellingRules 1: `placement_from_guard_key`.
-DifficultyRules 1: `scale_reward_resources`. PlayerEliminationRules 1: `human_has_nothing_left`. PlayerIdentityRules 1:
-`defender_controller_id`. Phase 4's freeze covers some of them too.
+`_claim_town`, `_clear_resource_ai_defender_metadata`, `_deliver_reinforcements_to_hero`,
+`_deliver_reinforcements_to_town`, `_describe_reward_delta`, `_enemy_state_for_faction`,
+`_find_resource_node_by_placement`, `_movement_max_from_hero`, `_normalized_enemy_front_faction_id`,
+`_readiness_bonus_from_profile`, `_record_successful_reserve_delivery`, `_resolve_player_reserve_delivery`,
+`_retake_front_from_legacy_state`, `_return_reinforcements_to_source`, `_scenario_town_started_enemy`,
+`_spend_resources`, `_split_recruit_payload`, `stabilize_town_front`, `_stacks_to_recruits`, `_sync_movement_to_hero`,
+`_teach_visiting_town_spells`, `_town_battle_readiness`, `_town_front_priority_seed`, `_town_front_state`,
+`town_front_state`, `_town_garrison_headcount`, `_town_garrison_strength`, `_town_occupation_seed_pressure`,
+`_town_reinforcement_quality`, `_town_role_quality_bonus`, `_town_role_readiness_bonus`, `_town_spell_tier`,
+`update_dwelling_guard_after_battle`, `update_resource_defender_after_battle`. EnemyAdventureRules 9:
+`_active_resource_defender_entry`, `_active_town_defender_entry`, `_ai_hero_task_prune_live_tasks`,
+`_ai_hero_task_retention_priority`, `apply_resolved_commander_aftermath`, `commander_renown`, `is_active_pressure_host`,
+`record_rivalry`, `record_target_assignment`. HeroCommandRules 5: `active_hero_is_primary`, `hand_over_primary`,
+`keep_hero_troop_from_garrison`, `remove_active_hero_after_defeat`, `_set_holder_stacks`. ScenarioRules 3:
+`_complete_session`, `_merge_result_messages`, `_resolution_text`. PlayerIdentityRules 2: `defender_controller_id`,
+`from_slots`. ArtifactRules 1: `_select_rarity_source_reward`. CreatureDwellingRules 1: `placement_from_guard_key`.
+DifficultyRules 1: `scale_reward_resources`. PlayerEliminationRules 1: `human_has_nothing_left`. TownRules 1:
+`teach_visiting_heroes`. `OverworldRules._collect_resource_node_result`, a site's visit after its guards or defenders
+are beaten, stays GDScript until site visits are ported: the battle table's one host target (coordinator, 2026-10-22).
+An AI battle preview never reaches it (its scratch session has no resource nodes). Phase 4's freeze covers some of them
+too.
 
 ### Phase 6: match throughput
 
