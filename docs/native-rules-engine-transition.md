@@ -1119,6 +1119,28 @@ cf1190263 Windows binaries):
   - Core suite: 17/17 on Windows.
   - The Linux libraries in `bin/` are not rebuilt.
 
+**The AI's decisions** (slice 09, 2026-10-22; branch commits bcdbccacc port, cd3c6accc Windows binaries):
+- **Ported:** 30 functions, 816 lines.
+  - BattleAiRules 27/789:
+    - the weights (`_w`, from `content/battle_ai_weights.json`), the attack, defend and advance scores, whether to
+      hold the line, and the melee approach (`battle_ai_attack_scores.cpp`, 11);
+    - the commander's spell candidates and choice, and whether a cast is worth its mana
+      (`battle_ai_spell_choice.cpp`, 7);
+    - an enemy stack's action, a stack's tactical order, the advance plan and the reachable strike
+      (`battle_ai_decisions.cpp`, 9).
+  - BattleRules 3/27: `ai_melee_approach`, `ai_advance_plan` and `_apply_auto_advance_movement` (`enemy_orders.cpp`).
+  - BattleAiRules' `_weights` joins the shared memos. Not ported: `_battle_rules`, a Script (the ports call the
+    BattleRules ports), and GDScript's board-read scope, which the native board reads do not need.
+- **Moved to 10:** the BattleRules enemy turn (`_run_enemy_turn`, `_run_enemy_stack_order`, `_cast_enemy_spell`, the
+  defend and wait orders, `_drain_enemy_turns`): it reaches the battle ends, which stay GDScript.
+- **Review:** none; shadow reached all 30.
+- **Checks:**
+  - Shadow on the six seeds: 0 mismatches, 0 errors and 0 paths left to GDScript in 83,280,050 checks over
+    547 of the 562 functions. 1,327,765 of them are slice 09's, over all 30.
+  - Native mode against main: every daily digest (415) and match record of the six seeds is identical.
+  - Core suite: 17/17 on Windows.
+  - The Linux libraries in `bin/` are not rebuilt.
+
 ### Phase 2: one payload builder, AI preview as one call, the battle tool
 
 - Battle payload creation (`BattleRules.gd:256-402`), stack and hero payloads, obstacles, and the end-of-battle numbers

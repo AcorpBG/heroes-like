@@ -116141,15 +116141,15 @@
     {
       "id": "native-rules-phase1-09-ai-decisions-20261020",
       "title": "Native battle engine 09: battle AI decisions and enemy turns",
-      "status": "pending",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Likely two sessions: the other 106 BattleAiRules functions (2,023 lines) and the BattleRules enemy turn 9/348. Callers: BattleShell.gd, BattleRules, BattleAutoResolveRules, 15 tests.",
-      "updatedAt": "2026-10-20T19:35:00Z"
+      "notes": "Done 2026-10-22 on branch native-phase1-battle (bcdbccacc port, cd3c6accc Windows binaries): BattleAiRules 27/789 (the weights, the attack, defend, advance and spell scores, the melee approach, the enemy action and tactical order, the advance plan and reachable strike; 08a and 08b took the rest of the 106) and BattleRules ai_melee_approach, ai_advance_plan and _apply_auto_advance_movement (3/27). The BattleRules enemy turn moves to 10 (it reaches the battle ends). Shadow 0 mismatches in 83,280,050 checks over 547 of 562 functions (all 30 of 09's reached); native mode identical to main on the six seeds; core suite 17/17 (Windows only, Linux libraries not rebuilt).",
+      "updatedAt": "2026-10-22T01:56:44Z"
     },
     {
       "id": "native-rules-phase1-10-autoplay-events-api-20261020",
@@ -116161,8 +116161,8 @@
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "BattleAutoResolveRules 8/316; events as structured records with a GDScript formatter (516 lines of event code today); the order-by-order API and battle UI queries, shadow mode on the human-seat corpus.",
-      "updatedAt": "2026-10-20T19:35:00Z"
+      "notes": "BattleAutoResolveRules 8/316; the BattleRules enemy turn from 09 (_run_enemy_turn, _run_enemy_stack_order, _cast_enemy_spell, the defend and wait orders, _drain_enemy_turns), and the attacks and outcome steps (_resolve_attack_action, _resolve_ai_attack, _complete_action, _complete_enemy_action, _evaluate_outcome); events as structured records with a GDScript formatter (516 lines of event code today); the order-by-order API and battle UI queries, shadow mode on the human-seat corpus.",
+      "updatedAt": "2026-10-22T01:56:44Z"
     },
     {
       "id": "native-rules-phase1-11-exit-20261020",
