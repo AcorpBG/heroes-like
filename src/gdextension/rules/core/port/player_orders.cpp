@@ -26,7 +26,7 @@ Atom string_or_empty(const State &state, DictRef dict, Atom field) {
 }
 
 // session.battle: SessionData.battle is a typed Dictionary, read again at every
-// use as GDScript reads it (a host call ends the battle with a new one).
+// use as GDScript reads it (a battle end leaves a new one).
 DictRef session_battle(State &state, const Value &session) {
 	return gd::as_dict(gd::member(state, session, key::battle));
 }
@@ -154,16 +154,6 @@ Atom to_lower(State &state, Atom text, const char *where) {
 		}
 	}
 	return state.intern(lowered);
-}
-
-// BattleRules.<function>(session) of the functions that stay GDScript in
-// Phase 1 (they change the overworld): a host call.
-DictRef host_dict(State &state, Atom function, const Value &session) {
-	return gd::as_dict(gd::call_static(state, key::battle_rules_script, function, { session }));
-}
-
-Atom host_string(State &state, Atom function, const Value &session) {
-	return gd::to_string(gd::call_static(state, key::battle_rules_script, function, { session }));
 }
 
 } // namespace
@@ -419,26 +409,26 @@ DictRef perform_player_action(State &state, const Value &session, Atom action, D
 			return refusal(state, key::town_defenders_cannot_retreat_text);
 		}
 		if (!_battle_retreat_allowed(state, session_battle(state, session))) {
-			return refusal(state, host_string(state, key::_retreat_action_summary, session));
+			return refusal(state, _retreat_action_summary(state, session));
 		}
 		_clear_stack_animation_states(state, session_battle(state, session));
 		_mark_side_animation_event(state, session_battle(state, session), key::player, key::battle_unit_retreat);
 		_clear_selected_target_continuity(state, session_battle(state, session));
 		_clear_selected_target_closing(state, session_battle(state, session));
-		return host_dict(state, key::_finalize_retreat, session);
+		return _finalize_retreat(state, session);
 	}
 	if (action == key::surrender) {
 		if (_is_town_defense_context(state, get_or_new_dict(state, session_battle(state, session), key::context))) {
 			return refusal(state, key::town_defenders_cannot_surrender_text);
 		}
 		if (!_battle_surrender_allowed(state, session_battle(state, session))) {
-			return refusal(state, host_string(state, key::_surrender_action_summary, session));
+			return refusal(state, _surrender_action_summary(state, session));
 		}
 		_clear_stack_animation_states(state, session_battle(state, session));
 		_mark_side_animation_event(state, session_battle(state, session), key::player, key::battle_unit_surrender);
 		_clear_selected_target_continuity(state, session_battle(state, session));
 		_clear_selected_target_closing(state, session_battle(state, session));
-		return host_dict(state, key::_finalize_surrender, session);
+		return _finalize_surrender(state, session);
 	}
 	return refusal(state, key::unknown_action_text);
 }
@@ -604,13 +594,13 @@ DictRef _evaluate_outcome(State &state, const Value &session) {
 	const bool player_alive = state.array_size(_alive_stacks_for_side(state, session_battle(state, session), key::player)) != 0;
 	const bool enemy_alive = state.array_size(_alive_stacks_for_side(state, session_battle(state, session), key::enemy)) != 0;
 	if (!enemy_alive && player_alive) {
-		return host_dict(state, key::_finalize_victory, session);
+		return _finalize_victory(state, session);
 	}
 	if (!player_alive) {
-		return host_dict(state, key::_finalize_player_battle_loss, session);
+		return _finalize_player_battle_loss(state, session);
 	}
 	if (gd::int_field(state, session_battle(state, session), key::round, 1) > gd::int_field(state, session_battle(state, session), key::max_rounds, 12)) {
-		return host_dict(state, key::_finalize_stalemate, session);
+		return _finalize_stalemate(state, session);
 	}
 	return state_and_message(state, key::empty, key::empty);
 }
