@@ -6,12 +6,17 @@ extends RefCounted
 ## - gdscript: their GDScript bodies, renamed <name>__gd; the way back if the
 ##   native day goes wrong in a real game.
 ## - shadow: the GDScript bodies, with every call checked against the native
-##   port: the result with its types, key order and container identities, and
-##   for a function that writes into its arguments, the arguments afterwards.
+##   port: the result with its types, key order and container identities. A
+##   function that writes into its arguments has its native port run first, on
+##   the arguments themselves and writing nothing back, then the GDScript body,
+##   and the check compares the result and everything the native port loaded or
+##   set (AurelionRules.port_validate_begin and port_validate_end).
 ##   One six-seed shadow run checks a change to a function with two copies.
 ## A session reaches the native port as a view: a Dictionary of its fields, the
 ## very overworld, battle and flags Dictionaries among them, and its metadata
 ## under "meta". After a native call the session takes the view's fields back.
+## In shadow mode every open check reads one view per session, brought up to
+## date before each check.
 ## Mismatches and native failures print a SCRIPT ERROR (the first 20), which
 ## fails rules_parity runs and the core suite, and, with HEROES_NATIVE_DAY_LOG
 ## set to a folder, go with every function's counts into shadow_<pid>.json there.
@@ -35,6 +40,11 @@ const SESSION_FIELDS := [
 const META := "meta"
 
 static var mode: int = _mode_from_environment()
+## Shadow: the view of each session the checks read, by the session's instance
+## id, kept while a check is open: the open checks' handles are below
+## _open_handles (the other subsystems' checks share the numbering).
+static var _shared_views := {}
+static var _open_handles := 0
 
 static func _mode_from_environment() -> int:
 	var name := OS.get_environment("HEROES_NATIVE_DAY").strip_edges().to_lower()
@@ -66,30 +76,25 @@ static func not_ported() -> bool:
 
 ## Shadow: checks GDScript's result against the native port's.
 static func check(name: StringName, args: Array, result: Variant) -> void:
-	NativeRules.api().port_check(name, _views(args), result)
+	NativeRules.api().port_check(name, _shared(args), result)
 
-## Shadow, for a function that writes into its arguments: a copy of them as the
-## GDScript call finds them, sessions as views. A container reached twice is
-## one copy, so the native run changes nothing GDScript holds.
-static func before_writing(args: Array) -> Array:
-	return NativeRules.api().port_copy(_views(args))
+## Shadow: runs the native port first, on the arguments themselves, writing
+## nothing back. The handle goes to check_writing.
+static func before_writing(name: StringName, args: Array) -> int:
+	var handle: int = NativeRules.api().port_validate_begin(name, _shared(args))
+	_open_handles = maxi(_open_handles, handle + 1)
+	return handle
 
-## Shadow: runs the native port on before and checks that it returns GDScript's
-## result and leaves before as the GDScript call left args.
-static func check_writing(name: StringName, before: Array, args: Array, result: Variant) -> void:
-	var native_result: Variant = NativeRules.api().port_call(name, before, true)
-	if not_ported():
-		return
-	var mismatch := _first_difference(native_result, result, "result")
-	if mismatch != "":
-		mismatch = "result: " + mismatch
-	else:
-		mismatch = _first_difference(before, _views(args), "args")
-		if mismatch != "":
-			mismatch = "arguments afterwards: " + mismatch
-	NativeRules.api().port_report(name, mismatch)
+## Shadow: checks that GDScript returned the native port's result and left the
+## arguments and static vars as the native port would have.
+static func check_writing(_name: StringName, before: int, args: Array, result: Variant) -> void:
+	NativeRules.api().port_validate_end(before, result, _shared(args))
+	if before >= 0:
+		_open_handles = before
+	if _open_handles == 0:
+		_shared_views.clear()
 
-## The arguments with each session as its view (one view per session).
+## The arguments with each session as a new view (one view per session).
 static func _views(args: Array) -> Array:
 	var out := []
 	var made := {}
@@ -103,6 +108,22 @@ static func _views(args: Array) -> Array:
 			out.append(value)
 	return out
 
+## Shadow: the arguments with each session as its shared view, brought up to
+## date with the session.
+static func _shared(args: Array) -> Array:
+	var out := []
+	for value in args:
+		if value is SessionStateStoreScript.SessionData:
+			var id: int = value.get_instance_id()
+			if _shared_views.has(id):
+				_refresh_view(_shared_views[id], value)
+			else:
+				_shared_views[id] = _view(value)
+			out.append(_shared_views[id])
+		else:
+			out.append(value)
+	return out
+
 static func _view(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var view := {}
 	for field in SESSION_FIELDS:
@@ -112,6 +133,27 @@ static func _view(session: SessionStateStoreScript.SessionData) -> Dictionary:
 		meta[key] = session.get_meta(key)
 	view[META] = meta
 	return view
+
+## The view takes the session's fields and metadata, in place.
+static func _refresh_view(view: Dictionary, session: SessionStateStoreScript.SessionData) -> void:
+	for field in SESSION_FIELDS:
+		var value: Variant = session.get(field)
+		if not is_same(view[field], value):
+			view[field] = value
+	var meta: Dictionary = view[META]
+	var keys := session.get_meta_list()
+	var same := meta.size() == keys.size()
+	if same:
+		var index := 0
+		for key in meta:
+			if StringName(key) != keys[index] or not is_same(meta[key], session.get_meta(keys[index])):
+				same = false
+				break
+			index += 1
+	if not same:
+		meta.clear()
+		for key in keys:
+			meta[key] = session.get_meta(key)
 
 ## Each session takes its view's fields and metadata back.
 static func _take_views(args: Array, views: Array) -> void:
@@ -130,28 +172,3 @@ static func _take_views(args: Array, views: Array) -> void:
 		for key in meta:
 			if not session.has_meta(key) or not is_same(session.get_meta(key), meta[key]):
 				session.set_meta(key, meta[key])
-
-static func _first_difference(native_value: Variant, gdscript_value: Variant, path: String) -> String:
-	if var_to_bytes(native_value) == var_to_bytes(gdscript_value):
-		return ""
-	if typeof(native_value) != typeof(gdscript_value):
-		return "%s: native %s %s, GDScript %s %s" % [path, type_string(typeof(native_value)), str(native_value), type_string(typeof(gdscript_value)), str(gdscript_value)]
-	if native_value is Array:
-		if native_value.size() != gdscript_value.size():
-			return "%s: native %d items, GDScript %d" % [path, native_value.size(), gdscript_value.size()]
-		for index in range(native_value.size()):
-			var found := _first_difference(native_value[index], gdscript_value[index], "%s[%d]" % [path, index])
-			if found != "":
-				return found
-		return ""
-	if native_value is Dictionary:
-		var native_keys: Array = native_value.keys()
-		var gdscript_keys: Array = gdscript_value.keys()
-		if var_to_bytes(native_keys) != var_to_bytes(gdscript_keys):
-			return "%s: native keys %s, GDScript %s" % [path, str(native_keys), str(gdscript_keys)]
-		for key in native_keys:
-			var found := _first_difference(native_value[key], gdscript_value[key], "%s.%s" % [path, str(key)])
-			if found != "":
-				return found
-		return ""
-	return "%s: native %s, GDScript %s" % [path, str(native_value), str(gdscript_value)]

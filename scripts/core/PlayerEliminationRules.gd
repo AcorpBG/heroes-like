@@ -61,7 +61,7 @@ static func apply_daily(session: SessionStateStoreScript.SessionData) -> Array:
 	if _day_engine_mode == DayEngine.NATIVE:
 		var native_result = DayEngine.native_writing(&"PlayerEliminationRules.apply_daily", [session])
 		return apply_daily__gd(session) if DayEngine.not_ported() else native_result
-	var before := DayEngine.before_writing([session])
+	var before := DayEngine.before_writing(&"PlayerEliminationRules.apply_daily", [session])
 	var result = apply_daily__gd(session)
 	DayEngine.check_writing(&"PlayerEliminationRules.apply_daily", before, [session], result)
 	return result

@@ -67,7 +67,7 @@ static func normalize_enemy_states(session: SessionStateStoreScript.SessionData)
 		if DayEngine.not_ported():
 			normalize_enemy_states__gd(session)
 	else:
-		var before := DayEngine.before_writing([session])
+		var before := DayEngine.before_writing(&"EnemyTurnRules.normalize_enemy_states", [session])
 		normalize_enemy_states__gd(session)
 		DayEngine.check_writing(&"EnemyTurnRules.normalize_enemy_states", before, [session], null)
 

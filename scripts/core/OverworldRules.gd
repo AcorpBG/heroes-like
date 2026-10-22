@@ -286,7 +286,7 @@ static func normalize_overworld_state(session: SessionStateStoreScript.SessionDa
 		if DayEngine.not_ported():
 			normalize_overworld_state__gd(session)
 	else:
-		var before := DayEngine.before_writing([session])
+		var before := DayEngine.before_writing(&"OverworldRules.normalize_overworld_state", [session])
 		normalize_overworld_state__gd(session)
 		DayEngine.check_writing(&"OverworldRules.normalize_overworld_state", before, [session], null)
 
@@ -1505,7 +1505,7 @@ static func _end_turn_open_day(session: SessionStateStoreScript.SessionData) -> 
 	if _day_engine_mode == DayEngine.NATIVE:
 		var native_result = DayEngine.native_writing(&"OverworldRules._end_turn_open_day", [session])
 		return _end_turn_open_day__gd(session) if DayEngine.not_ported() else native_result
-	var before := DayEngine.before_writing([session])
+	var before := DayEngine.before_writing(&"OverworldRules._end_turn_open_day", [session])
 	var result = _end_turn_open_day__gd(session)
 	DayEngine.check_writing(&"OverworldRules._end_turn_open_day", before, [session], result)
 	return result
@@ -1598,7 +1598,7 @@ static func _end_turn_close_day(session: SessionStateStoreScript.SessionData, op
 	if _day_engine_mode == DayEngine.NATIVE:
 		var native_result = DayEngine.native_writing(&"OverworldRules._end_turn_close_day", [session, opened, enemy_turn_result])
 		return _end_turn_close_day__gd(session, opened, enemy_turn_result) if DayEngine.not_ported() else native_result
-	var before := DayEngine.before_writing([session, opened, enemy_turn_result])
+	var before := DayEngine.before_writing(&"OverworldRules._end_turn_close_day", [session, opened, enemy_turn_result])
 	var result = _end_turn_close_day__gd(session, opened, enemy_turn_result)
 	DayEngine.check_writing(&"OverworldRules._end_turn_close_day", before, [session, opened, enemy_turn_result], result)
 	return result
@@ -4281,7 +4281,7 @@ static func _build_blocked_tile_index(session: SessionStateStoreScript.SessionDa
 	if _day_engine_mode == DayEngine.NATIVE:
 		var native_result = DayEngine.native_writing(&"OverworldRules._build_blocked_tile_index", [session, level, ignore_actor_id, combat_defenders])
 		return _build_blocked_tile_index__gd(session, level, ignore_actor_id, combat_defenders) if DayEngine.not_ported() else native_result
-	var before := DayEngine.before_writing([session, level, ignore_actor_id, combat_defenders])
+	var before := DayEngine.before_writing(&"OverworldRules._build_blocked_tile_index", [session, level, ignore_actor_id, combat_defenders])
 	var result = _build_blocked_tile_index__gd(session, level, ignore_actor_id, combat_defenders)
 	DayEngine.check_writing(&"OverworldRules._build_blocked_tile_index", before, [session, level, ignore_actor_id, combat_defenders], result)
 	return result
@@ -14499,7 +14499,7 @@ static func _normalize_fog_of_war(session: SessionStateStoreScript.SessionData) 
 		if DayEngine.not_ported():
 			_normalize_fog_of_war__gd(session)
 	else:
-		var before := DayEngine.before_writing([session])
+		var before := DayEngine.before_writing(&"OverworldRules._normalize_fog_of_war", [session])
 		_normalize_fog_of_war__gd(session)
 		DayEngine.check_writing(&"OverworldRules._normalize_fog_of_war", before, [session], null)
 
@@ -15243,7 +15243,7 @@ static func _finalize_action_result(session: SessionStateStoreScript.SessionData
 	if _day_engine_mode == DayEngine.NATIVE:
 		var native_result = DayEngine.native_writing(&"OverworldRules._finalize_action_result", [session, ok, base_message, refresh_fog, incremental_fog, scenario_event_facts])
 		return _finalize_action_result__gd(session, ok, base_message, refresh_fog, incremental_fog, scenario_event_facts) if DayEngine.not_ported() else native_result
-	var before := DayEngine.before_writing([session, ok, base_message, refresh_fog, incremental_fog, scenario_event_facts])
+	var before := DayEngine.before_writing(&"OverworldRules._finalize_action_result", [session, ok, base_message, refresh_fog, incremental_fog, scenario_event_facts])
 	var result = _finalize_action_result__gd(session, ok, base_message, refresh_fog, incremental_fog, scenario_event_facts)
 	DayEngine.check_writing(&"OverworldRules._finalize_action_result", before, [session, ok, base_message, refresh_fog, incremental_fog, scenario_event_facts], result)
 	return result

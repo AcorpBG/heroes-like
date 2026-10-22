@@ -503,7 +503,7 @@ static func commit_active_hero(session: SessionStateStoreScript.SessionData) -> 
 		if DayEngine.not_ported():
 			commit_active_hero__gd(session)
 	else:
-		var before := DayEngine.before_writing([session])
+		var before := DayEngine.before_writing(&"HeroCommandRules.commit_active_hero", [session])
 		commit_active_hero__gd(session)
 		DayEngine.check_writing(&"HeroCommandRules.commit_active_hero", before, [session], null)
 

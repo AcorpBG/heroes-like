@@ -60,7 +60,7 @@ static func evaluate_session(session: SessionStateStoreScript.SessionData) -> Di
 	if _day_engine_mode == DayEngine.NATIVE:
 		var native_result = DayEngine.native_writing(&"ScenarioRules.evaluate_session", [session])
 		return evaluate_session__gd(session) if DayEngine.not_ported() else native_result
-	var before := DayEngine.before_writing([session])
+	var before := DayEngine.before_writing(&"ScenarioRules.evaluate_session", [session])
 	var result = evaluate_session__gd(session)
 	DayEngine.check_writing(&"ScenarioRules.evaluate_session", before, [session], result)
 	return result
