@@ -27,8 +27,8 @@ Atom string_or_empty(const State &state, DictRef dict, Atom field) {
 	return gd::string_field(state, dict, field, key::empty);
 }
 
-// session.battle (SessionData types it Dictionary), read where the GDScript reads it: a host call that ends the
-// battle leaves a new empty Dictionary there.
+// session.battle (SessionData types it Dictionary), read where the GDScript reads it: a battle end leaves a new
+// empty Dictionary there.
 DictRef session_battle(State &state, const Value &session) {
 	return gd::as_dict(gd::member(state, session, key::battle));
 }
@@ -186,12 +186,6 @@ Atom to_lower(State &state, Atom text, const char *where) {
 	return state.intern(lowered);
 }
 
-// A BattleRules function that stays GDScript in Phase 1 (it ends the battle on the overworld), run by the host.
-// Its Dictionary, read with .get.
-DictRef host_dict(State &state, Atom function, std::initializer_list<Value> args) {
-	return gd::as_dict(gd::call_static(state, key::battle_rules_script, function, args));
-}
-
 // An enemy stack's advance: the "advance" order's own and the fallback's, word for word the same in the GDScript.
 DictRef enemy_advance(State &state, const Value &session, DictRef active_stack) {
 	const bool stalled = _advance_stalled_by_obstruction(state, active_stack, session_battle(state, session));
@@ -226,7 +220,7 @@ DictRef _run_enemy_turn(State &state, const Value &session, DictRef active_stack
 
 	const ArrayRef targets = _alive_stacks_for_side(state, session_battle(state, session), key::player);
 	if (state.array_size(targets) == 0) {
-		const DictRef defeat_result = host_dict(state, key::_finalize_player_battle_loss, { session });
+		const DictRef defeat_result = _finalize_player_battle_loss(state, session);
 		const Atom message = join_two(state, key::army_is_broken_text, string_or_empty(state, defeat_result, key::message));
 		return action_result(state, true, message, gd::string_field(state, defeat_result, key::state, key::defeat));
 	}
@@ -261,14 +255,14 @@ DictRef _run_enemy_stack_order(State &state, const Value &session, DictRef activ
 			return action_result(state, false, key::enemy_retreat_locked_text, key::invalid);
 		}
 		_mark_side_animation_event(state, session_battle(state, session), key::enemy, key::battle_unit_retreat);
-		return host_dict(state, key::_finalize_enemy_withdrawal, { session, str(key::enemy_retreat) });
+		return _finalize_enemy_withdrawal(state, session, key::enemy_retreat);
 	}
 	if (order == key::surrender) {
 		if (!_battle_surrender_allowed(state, session_battle(state, session)) || !gd::bool_field(state, session_battle(state, session), key::enemy_withdrawal_allowed, false)) {
 			return action_result(state, false, key::enemy_surrender_locked_text, key::invalid);
 		}
 		_mark_side_animation_event(state, session_battle(state, session), key::enemy, key::battle_unit_surrender);
-		return host_dict(state, key::_finalize_enemy_withdrawal, { session, str(key::enemy_surrender) });
+		return _finalize_enemy_withdrawal(state, session, key::enemy_surrender);
 	}
 	if (order == key::shoot) {
 		const DictRef target = _get_stack_by_id(state, session_battle(state, session), string_or_empty(state, action, key::target_battle_id));

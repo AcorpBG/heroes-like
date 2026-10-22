@@ -7,6 +7,7 @@
 
 #include "aurelion_rules/port/ai_hero_rules.hpp"
 #include "aurelion_rules/port/artifact_rules.hpp"
+#include "aurelion_rules/port/battle_ends.hpp"
 #include "aurelion_rules/port/difficulty_rules.hpp"
 #include "aurelion_rules/port/enemy_adventure_rules.hpp"
 #include "aurelion_rules/port/enemy_states.hpp"
@@ -286,6 +287,8 @@ void _normalize_town_defender_commander_states(State &state, DictRef session);
 void _normalize_resource_defender_commander_states(State &state, DictRef session);
 bool _town_has_ai_defender(State &state, DictRef town);
 bool _resource_has_ai_defender(State &state, DictRef node);
+void _clear_town_defender_metadata(State &state, DictRef town);
+void _clear_resource_defender_metadata(State &state, DictRef node);
 DictRef _normalized_commander_record(State &state, const Value &entry_value, const Value &commander_state_value);
 DictRef _normalized_commander_memory(State &state, const Value &entry_value, const Value &commander_state_value);
 DictRef _normalized_commander_army_continuity(State &state, const Value &entry_value, const Value &commander_state_value, Atom encounter_id);
@@ -1538,20 +1541,83 @@ DictRef _active_commander_map(State &state, DictRef session, Atom faction_id, co
 		state.set(active_entry, str(key::commander_state), dict_value(gd::deep_duplicate_dict(state, commander_state.ref)));
 		state.set(active, str(roster_hero_id), dict_value(active_entry));
 	}
-	// Only a site or town holding a defender's state can add one.
+	// Only a site or town holding a defender's state can add one (see the
+	// defender entries), so the rest are skipped before the full check.
+	const auto add_defender = [&](DictRef defender_entry) {
+		if (gd::is_empty(state, defender_entry)) {
+			return;
+		}
+		// var defender_state: Dictionary = defender_entry.get("commander_state", {})
+		const DictRef defender_state = gd::as_dict(get_or_new_dict(state, defender_entry, key::commander_state));
+		const Atom defender_roster_hero_id = text(state, defender_state, key::roster_hero_id, key::empty);
+		if (defender_roster_hero_id == key::empty || (limited && !gd::array_has(state, hero_ids.ref, str(defender_roster_hero_id)))) {
+			return;
+		}
+		state.set(active, str(defender_roster_hero_id), dict_value(defender_entry));
+	};
 	for (const Value &town : gd::field_items(state, overworld, str(key::towns))) {
 		if (gd::is_dict(town) && state.has(town.ref, str(key::ai_defender_commander_state))) {
-			// _active_town_defender_entry.
-			not_ported("a town's defender commander");
+			add_defender(_active_town_defender_entry(state, session, town.ref, faction_id));
 		}
 	}
 	for (const Value &node : gd::field_items(state, overworld, str(key::resource_nodes))) {
 		if (gd::is_dict(node) && state.has(node.ref, str(key::ai_defender_commander_state))) {
-			// _active_resource_defender_entry.
-			not_ported("a site's defender commander");
+			add_defender(_active_resource_defender_entry(state, session, node.ref, faction_id));
 		}
 	}
 	return active;
+}
+
+DictRef _active_town_defender_entry(State &state, DictRef session, DictRef town, Atom faction_filter) {
+	// session == null cannot happen: a session is its view.
+	if (gd::is_empty(state, town)) {
+		return state.new_dict();
+	}
+	const Value commander_state = state.get(town, str(key::ai_defender_commander_state), dict_value(state.new_dict()));
+	if (!gd::is_dict(commander_state) || gd::is_empty(state, commander_state.ref)) {
+		return state.new_dict();
+	}
+	const Atom roster_hero_id = gd::stringify_or_fallback(state,
+			state.get(commander_state.ref, str(key::roster_hero_id), state.get(town, str(key::ai_defender_roster_hero_id), str(key::empty))));
+	if (roster_hero_id == key::empty) {
+		return state.new_dict();
+	}
+	Atom faction_id = player_identity_rules::defender_controller_id(state, town);
+	if (faction_id == key::empty) {
+		faction_id = player_identity_rules::town_controller_id(state, town);
+	}
+	if (faction_filter != key::empty && faction_id != faction_filter) {
+		return state.new_dict();
+	}
+	if (gd::stringify_or_fallback(state, state.get(town, str(key::owner), str(key::neutral))) != key::enemy
+			|| player_identity_rules::town_controller_id(state, town) != faction_id) {
+		return state.new_dict();
+	}
+	const Value front_value = state.get(town, str(key::front), dict_value(state.new_dict()));
+	const DictRef front = gd::is_dict(front_value) ? front_value.ref : state.new_dict();
+	const DictRef front_state = overworld_rules::town_front_state(state, session, town, state.new_dict());
+	const Atom raw_front_state = text(state, front, key::state, key::empty);
+	if (raw_front_state != key::defend && raw_front_state != key::stabilizing) {
+		return state.new_dict();
+	}
+	if (!gd::bool_field(state, front_state, key::active, false) || text(state, front_state, key::mode, key::empty) != key::stabilizing) {
+		return state.new_dict();
+	}
+	const Atom front_controller = player_identity_rules::controller_id(state, front_state, key::empty);
+	if (front_controller != key::empty && front_controller != faction_id) {
+		return state.new_dict();
+	}
+	const int64_t defense_until = compat::engine_max<int64_t>(gd::int_field(state, town, key::ai_defense_until_day, 0), gd::int_field(state, front, key::defense_until_day, 0));
+	if (defense_until < gd::to_int(state, gd::field(state, session, key::day))) {
+		return state.new_dict();
+	}
+	const DictRef entry_state = gd::deep_duplicate_dict(state, commander_state.ref);
+	state.set(entry_state, str(key::roster_hero_id), str(roster_hero_id));
+	gd::merge(state, entry_state, player_identity_rules::identity_fields(state, session, faction_id), true);
+	const DictRef entry = state.new_dict();
+	state.set(entry, str(key::placement_id), str(gd::format(state, key::town_defense_s, { str(text(state, town, key::placement_id, key::empty)) })));
+	state.set(entry, str(key::commander_state), dict_value(entry_state));
+	return entry;
 }
 
 DictRef _resolved_encounter_lookup(State &state, const Value &resolved_encounters) {
@@ -1611,21 +1677,65 @@ void normalize_all_commander_rosters(State &state, DictRef session) {
 
 void _normalize_town_defender_commander_states(State &state, DictRef session) {
 	const DictRef overworld = session_view::overworld(state, session);
-	for (const Value &town : gd::field_items(state, overworld, str(key::towns))) {
-		if (gd::is_dict(town) && _town_has_ai_defender(state, town.ref)) {
-			// _active_town_defender_entry and _clear_town_defender_metadata.
-			not_ported("a town's defender commander");
+	const Value towns = state.get(overworld, str(key::towns), array_value(state.new_array()));
+	if (!gd::is_array(towns)) {
+		return;
+	}
+	bool changed = false;
+	for (int64_t index = 0; index < state.array_size(towns.ref); ++index) {
+		const Value town = state.at(towns.ref, index);
+		if (!gd::is_dict(town) || !_town_has_ai_defender(state, town.ref)) {
+			continue;
 		}
+		if (gd::is_empty(state, _active_town_defender_entry(state, session, town.ref, key::empty))) {
+			const DictRef cleared = gd::deep_duplicate_dict(state, town.ref);
+			_clear_town_defender_metadata(state, cleared);
+			state.set_at(towns.ref, index, dict_value(cleared));
+			changed = true;
+		}
+	}
+	if (changed) {
+		state.set(overworld, str(key::towns), towns);
 	}
 }
 
 void _normalize_resource_defender_commander_states(State &state, DictRef session) {
 	const DictRef overworld = session_view::overworld(state, session);
-	for (const Value &node : gd::field_items(state, overworld, str(key::resource_nodes))) {
-		if (gd::is_dict(node) && _resource_has_ai_defender(state, node.ref)) {
-			// _active_resource_defender_entry and _clear_resource_defender_metadata.
-			not_ported("a site's defender commander");
+	const Value nodes = state.get(overworld, str(key::resource_nodes), array_value(state.new_array()));
+	if (!gd::is_array(nodes)) {
+		return;
+	}
+	bool changed = false;
+	for (int64_t index = 0; index < state.array_size(nodes.ref); ++index) {
+		const Value node = state.at(nodes.ref, index);
+		if (!gd::is_dict(node) || !_resource_has_ai_defender(state, node.ref)) {
+			continue;
 		}
+		if (gd::is_empty(state, _active_resource_defender_entry(state, session, node.ref, key::empty))) {
+			const DictRef cleared = gd::deep_duplicate_dict(state, node.ref);
+			_clear_resource_defender_metadata(state, cleared);
+			state.set_at(nodes.ref, index, dict_value(cleared));
+			changed = true;
+		}
+	}
+	if (changed) {
+		state.set(overworld, str(key::resource_nodes), nodes);
+	}
+}
+
+void _clear_town_defender_metadata(State &state, DictRef town) {
+	for (const Atom field : { key::ai_defender_commander_state, key::ai_defender_roster_hero_id, key::ai_defended_by_faction_id,
+				 key::ai_defended_by_player_id, key::ai_defended_day, key::ai_defense_until_day, key::ai_defense_rating,
+				 key::ai_defense_reinforced_strength }) {
+		state.erase(town, str(field));
+	}
+}
+
+void _clear_resource_defender_metadata(State &state, DictRef node) {
+	for (const Atom field : { key::ai_defender_commander_state, key::ai_defender_roster_hero_id, key::ai_defender_army,
+				 key::ai_defended_by_faction_id, key::ai_defended_by_player_id, key::ai_defended_day, key::ai_defense_until_day,
+				 key::ai_defense_rating, key::ai_defense_reinforced_strength }) {
+		state.erase(node, str(field));
 	}
 }
 

@@ -88,34 +88,9 @@ int64_t adjust_raid_threshold(State &state, DictRef session, int64_t base_thresh
 
 namespace enemy_adventure_rules {
 
-DictRef _active_resource_defender_entry(State &state, DictRef session, DictRef node, Atom faction_filter) {
-	(void)session; (void)node; (void)faction_filter; (void)state;
-	throw state::NotPorted("EnemyAdventureRules._active_resource_defender_entry");
-}
-
-DictRef _active_town_defender_entry(State &state, DictRef session, DictRef town, Atom faction_filter) {
-	(void)session; (void)town; (void)faction_filter; (void)state;
-	throw state::NotPorted("EnemyAdventureRules._active_town_defender_entry");
-}
-
-int64_t _ai_hero_task_retention_priority(State &state, DictRef task) {
-	(void)task; (void)state;
-	throw state::NotPorted("EnemyAdventureRules._ai_hero_task_retention_priority");
-}
-
 DictRef _clear_regroup_target(State &state, DictRef raid) {
 	(void)raid; (void)state;
 	throw state::NotPorted("EnemyAdventureRules._clear_regroup_target");
-}
-
-void _clear_resource_defender_metadata(State &state, DictRef node) {
-	(void)node; (void)state;
-	throw state::NotPorted("EnemyAdventureRules._clear_resource_defender_metadata");
-}
-
-void _clear_town_defender_metadata(State &state, DictRef town) {
-	(void)town; (void)state;
-	throw state::NotPorted("EnemyAdventureRules._clear_town_defender_metadata");
 }
 
 ArrayRef _current_enemy_player_hero_sighting_records(State &state, DictRef session, DictRef config, Atom faction_id, const Value &preloaded_sources, const Value &projection_profile) {
@@ -231,11 +206,6 @@ Atom commander_recent_outcome_brief(State &state, const Value &source) {
 DictRef enemy_strategy(State &state, DictRef config, Atom faction_id) {
 	(void)config; (void)faction_id; (void)state;
 	throw state::NotPorted("EnemyAdventureRules.enemy_strategy");
-}
-
-bool is_active_pressure_host(State &state, const Value &encounter, Atom faction_id, const Value &resolved_encounters) {
-	(void)encounter; (void)faction_id; (void)resolved_encounters; (void)state;
-	throw state::NotPorted("EnemyAdventureRules.is_active_pressure_host");
 }
 
 DictRef occupied_raid_commander_ids(State &state, DictRef session, Atom faction_id, Atom exclude_placement_id) {
@@ -430,11 +400,6 @@ ArrayRef _holder_stacks(State &state, DictRef session, DictRef town, Atom holder
 	throw state::NotPorted("HeroCommandRules._holder_stacks");
 }
 
-void _set_holder_stacks(State &state, DictRef session, DictRef town, Atom holder_id, ArrayRef stacks) {
-	(void)session; (void)town; (void)holder_id; (void)stacks; (void)state;
-	throw state::NotPorted("HeroCommandRules._set_holder_stacks");
-}
-
 ArrayRef merge_stacks_into_army(State &state, ArrayRef army, ArrayRef incoming) {
 	(void)army; (void)incoming; (void)state;
 	throw state::NotPorted("HeroCommandRules.merge_stacks_into_army");
@@ -512,11 +477,6 @@ int64_t _enemy_raid_threshold_for_strategy(State &state, DictRef session, DictRe
 	throw state::NotPorted("OverworldRules._enemy_raid_threshold_for_strategy");
 }
 
-DictRef _enemy_state_for_faction(State &state, DictRef session, Atom faction_id) {
-	(void)session; (void)faction_id; (void)state;
-	throw state::NotPorted("OverworldRules._enemy_state_for_faction");
-}
-
 DictRef _find_active_town(State &state, DictRef session) {
 	(void)session; (void)state;
 	throw state::NotPorted("OverworldRules._find_active_town");
@@ -547,11 +507,6 @@ bool _raid_target_is_objective_anchor(State &state, DictRef session, Atom target
 	throw state::NotPorted("OverworldRules._raid_target_is_objective_anchor");
 }
 
-int64_t _readiness_bonus_from_profile(State &state, const Value &profile) {
-	(void)profile; (void)state;
-	throw state::NotPorted("OverworldRules._readiness_bonus_from_profile");
-}
-
 DictRef _resource_site_delivery_interception(State &state, DictRef session, DictRef node, DictRef site) {
 	(void)session; (void)node; (void)site; (void)state;
 	throw state::NotPorted("OverworldRules._resource_site_delivery_interception");
@@ -560,11 +515,6 @@ DictRef _resource_site_delivery_interception(State &state, DictRef session, Dict
 DictRef _resource_site_response_profile(State &state, DictRef site) {
 	(void)site; (void)state;
 	throw state::NotPorted("OverworldRules._resource_site_response_profile");
-}
-
-DictRef _retake_front_from_legacy_state(State &state, DictRef session, DictRef town, DictRef front) {
-	(void)session; (void)town; (void)front; (void)state;
-	throw state::NotPorted("OverworldRules._retake_front_from_legacy_state");
 }
 
 int64_t _route_security_rating_for_hero(State &state, DictRef hero) {
@@ -577,19 +527,9 @@ bool _scenario_objective_met(State &state, DictRef session, DictRef objective) {
 	throw state::NotPorted("OverworldRules._scenario_objective_met");
 }
 
-bool _scenario_town_started_enemy(State &state, DictRef session, Atom placement_id) {
-	(void)session; (void)placement_id; (void)state;
-	throw state::NotPorted("OverworldRules._scenario_town_started_enemy");
-}
-
 Atom _terrain_name_at(State &state, DictRef session, int64_t x, int64_t y) {
 	(void)session; (void)x; (void)y; (void)state;
 	throw state::NotPorted("OverworldRules._terrain_name_at");
-}
-
-int64_t _town_battle_readiness(State &state, DictRef town, const Value &session, DictRef metric_context, int64_t reinforcement_quality) {
-	(void)town; (void)session; (void)metric_context; (void)reinforcement_quality; (void)state;
-	throw state::NotPorted("OverworldRules._town_battle_readiness");
 }
 
 Atom _town_command_risk_consequence(State &state, DictRef town, int64_t readiness, DictRef logistics, DictRef recovery, DictRef capital_project, bool objective_anchor) {
@@ -602,54 +542,14 @@ Atom _town_defense_summary(State &state, DictRef town) {
 	throw state::NotPorted("OverworldRules._town_defense_summary");
 }
 
-int64_t _town_front_priority_seed(State &state, Atom role, bool objective_anchor) {
-	(void)role; (void)objective_anchor; (void)state;
-	throw state::NotPorted("OverworldRules._town_front_priority_seed");
-}
-
-DictRef _town_front_state(State &state, DictRef session, DictRef town, DictRef precomputed_development_metrics) {
-	(void)session; (void)town; (void)precomputed_development_metrics; (void)state;
-	throw state::NotPorted("OverworldRules._town_front_state");
-}
-
-int64_t _town_garrison_headcount(State &state, DictRef town) {
-	(void)town; (void)state;
-	throw state::NotPorted("OverworldRules._town_garrison_headcount");
-}
-
-int64_t _town_garrison_strength(State &state, DictRef town) {
-	(void)town; (void)state;
-	throw state::NotPorted("OverworldRules._town_garrison_strength");
-}
-
 int64_t _town_pressure_output(State &state, DictRef town, const Value &session, DictRef metric_context, int64_t reinforcement_quality) {
 	(void)town; (void)session; (void)metric_context; (void)reinforcement_quality; (void)state;
 	throw state::NotPorted("OverworldRules._town_pressure_output");
 }
 
-int64_t _town_reinforcement_quality(State &state, DictRef town, const Value &session, DictRef metric_context) {
-	(void)town; (void)session; (void)metric_context; (void)state;
-	throw state::NotPorted("OverworldRules._town_reinforcement_quality");
-}
-
 int64_t _town_role_pressure_bonus(State &state, Atom role) {
 	(void)role; (void)state;
 	throw state::NotPorted("OverworldRules._town_role_pressure_bonus");
-}
-
-int64_t _town_role_quality_bonus(State &state, Atom role) {
-	(void)role; (void)state;
-	throw state::NotPorted("OverworldRules._town_role_quality_bonus");
-}
-
-int64_t _town_role_readiness_bonus(State &state, Atom role) {
-	(void)role; (void)state;
-	throw state::NotPorted("OverworldRules._town_role_readiness_bonus");
-}
-
-int64_t _town_spell_tier(State &state, DictRef town) {
-	(void)town; (void)state;
-	throw state::NotPorted("OverworldRules._town_spell_tier");
 }
 
 Atom encounter_commander_name(State &state, DictRef encounter) {
@@ -698,16 +598,6 @@ namespace player_identity_rules {
 DictRef config_for_controller(State &state, const Value &session, Atom controller) {
 	(void)session; (void)controller; (void)state;
 	throw state::NotPorted("PlayerIdentityRules.config_for_controller");
-}
-
-Atom defender_controller_id(State &state, DictRef record) {
-	(void)record; (void)state;
-	throw state::NotPorted("PlayerIdentityRules.defender_controller_id");
-}
-
-ArrayRef from_slots(State &state, ArrayRef slots) {
-	(void)slots; (void)state;
-	throw state::NotPorted("PlayerIdentityRules.from_slots");
 }
 
 } // namespace player_identity_rules
@@ -881,15 +771,6 @@ DictRef trade_artifact(State &state, DictRef hero, DictRef town, int64_t day, At
 }
 
 } // namespace town_development_rules
-
-namespace town_rules {
-
-DictRef teach_visiting_heroes(State &state, DictRef session, DictRef town) {
-	(void)session; (void)town; (void)state;
-	throw state::NotPorted("TownRules.teach_visiting_heroes");
-}
-
-} // namespace town_rules
 
 namespace visit_building_rules {
 

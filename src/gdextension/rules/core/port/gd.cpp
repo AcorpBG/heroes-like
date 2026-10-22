@@ -1390,6 +1390,28 @@ Value member(State &state, const Value &object, Atom property) {
 	return state.host().object_get(state, object.ref, property);
 }
 
+void set_member(State &state, const Value &object, Atom property, const Value &value) {
+	if (object.kind != Kind::Opaque) {
+		fail("Invalid assignment of property or key '" + state.text(property) + "' on a base object of type '" + type_name(object) + "'.");
+	}
+	state.host().object_set(state, object.ref, property, value);
+}
+
+DictRef object_view(State &state, const Value &object) {
+	if (object.kind != Kind::Opaque) {
+		fail(std::string("A view of a value of type '") + type_name(object) + "', which is not an object.");
+	}
+	return as_dict(state.host().object_view(state, object.ref));
+}
+
+Value view_object(State &state, DictRef view) {
+	const Value object = state.host().view_object(state, view);
+	if (object.kind != Kind::Opaque) {
+		fail("A Dictionary that is no object's view stands for no object.");
+	}
+	return object;
+}
+
 namespace {
 
 compat::GodotPcg rng_of(State &state, const Value &rng, uint64_t &seed) {
@@ -1435,6 +1457,153 @@ DictRef content_row(State &state, state::ContentTable table, Atom id) {
 DictRef content_file(State &state, Atom path) {
 	const Value data = state.host().content_file(state, path);
 	return data.kind == Kind::Dict ? data.ref : state.new_dict();
+}
+
+namespace {
+
+[[noreturn]] void json_not_ported(const std::string &what) {
+	throw state::NotPorted("left to GDScript: JSON.stringify of " + what);
+}
+
+// "\"" + text.json_escape() + "\"": the backslash, \b \f \n \r \t \v and the
+// quote.
+void append_json_string(const std::string &source, std::string &out) {
+	out += '"';
+	for (const char c : source) {
+		switch (c) {
+			case '\\':
+				out += "\\\\";
+				break;
+			case '\b':
+				out += "\\b";
+				break;
+			case '\f':
+				out += "\\f";
+				break;
+			case '\n':
+				out += "\\n";
+				break;
+			case '\r':
+				out += "\\r";
+				break;
+			case '\t':
+				out += "\\t";
+				break;
+			case '\v':
+				out += "\\v";
+				break;
+			case '"':
+				out += "\\\"";
+				break;
+			default:
+				if (static_cast<unsigned char>(c) < 0x20) {
+					json_not_ported("a control character");
+				}
+				out += c;
+				break;
+		}
+	}
+	out += '"';
+}
+
+void append_json(const State &state, const Value &value, int depth, std::vector<Value> &open, std::string &out) {
+	if (depth > 1024) {
+		json_not_ported("a structure nested too deep");
+	}
+	switch (value.kind) {
+		case Kind::Nil:
+			out += "null";
+			return;
+		case Kind::Bool:
+			out += value.b ? "true" : "false";
+			return;
+		case Kind::Int:
+			out += compat::itos(value.i);
+			return;
+		case Kind::String:
+		case Kind::StringName:
+			append_json_string(state.text(value.ref), out);
+			return;
+		case Kind::Vector2i:
+			append_json_string("(" + compat::itos(value.vx()) + ", " + compat::itos(value.vy()) + ")", out);
+			return;
+		case Kind::Vector3i:
+			append_json_string("(" + compat::itos(value.vx()) + ", " + compat::itos(value.vy()) + ", " + compat::itos(value.vz()) + ")", out);
+			return;
+		case Kind::Array: {
+			for (const Value &container : open) {
+				if (container.kind == value.kind && container.ref == value.ref) {
+					json_not_ported("a circular Array");
+				}
+			}
+			open.push_back(value);
+			out += '[';
+			const int64_t size = state.array_size(value.ref);
+			for (int64_t index = 0; index < size; ++index) {
+				if (index > 0) {
+					out += ',';
+				}
+				append_json(state, state.at(value.ref, index), depth + 1, open, out);
+			}
+			out += ']';
+			open.pop_back();
+			return;
+		}
+		case Kind::Dict: {
+			for (const Value &container : open) {
+				if (container.kind == value.kind && container.ref == value.ref) {
+					json_not_ported("a circular Dictionary");
+				}
+			}
+			const state::DictNode &node = state.dict(value.ref);
+			const state::ValueList keys = node.keys.list();
+			const state::ValueList values = node.values;
+			bool string_keys = true;
+			bool int_keys = true;
+			for (const Value &entry_key : keys) {
+				string_keys = string_keys && entry_key.kind == Kind::String;
+				int_keys = int_keys && entry_key.kind == Kind::Int;
+			}
+			if (!string_keys && !int_keys) {
+				json_not_ported("a Dictionary with keys other than all Strings or all ints");
+			}
+			// Keys are distinct, so any sort gives Godot's order.
+			std::vector<size_t> order(keys.size());
+			for (size_t index = 0; index < order.size(); ++index) {
+				order[index] = index;
+			}
+			if (string_keys) {
+				std::sort(order.begin(), order.end(), [&](size_t a, size_t b) { return state.text(keys.begin()[a].ref) < state.text(keys.begin()[b].ref); });
+			} else {
+				std::sort(order.begin(), order.end(), [&](size_t a, size_t b) { return keys.begin()[a].i < keys.begin()[b].i; });
+			}
+			open.push_back(value);
+			out += '{';
+			for (size_t position = 0; position < order.size(); ++position) {
+				if (position > 0) {
+					out += ',';
+				}
+				const Value &entry_key = keys.begin()[order[position]];
+				append_json_string(string_keys ? state.text(entry_key.ref) : compat::itos(entry_key.i), out);
+				out += ':';
+				append_json(state, values.begin()[order[position]], depth + 1, open, out);
+			}
+			out += '}';
+			open.pop_back();
+			return;
+		}
+		default:
+			json_not_ported(type_name(value));
+	}
+}
+
+} // namespace
+
+std::string json_stringify(const State &state, const Value &value) {
+	std::string json;
+	std::vector<Value> open;
+	append_json(state, value, 0, open, json);
+	return json;
 }
 
 void push_warning(State &state, const std::string &text) {

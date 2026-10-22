@@ -125,6 +125,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/artifact_rules_turn.cpp
 	core/port/attack_effects.cpp
 	core/port/attack_events.cpp
+	core/port/battle_aftermath.cpp
 	core/port/battle_ai_abilities.cpp
 	core/port/battle_ai_attack_scores.cpp
 	core/port/battle_ai_contextual.cpp
@@ -137,8 +138,14 @@ add_library(aurelion_rules_core STATIC
 	core/port/battle_ai_spell_choice.cpp
 	core/port/battle_ai_spell_scores.cpp
 	core/port/battle_auto_resolve.cpp
+	core/port/battle_context_aftermath.cpp
 	core/port/battle_damage_rules_ai.cpp
+	core/port/battle_end_heroes.cpp
+	core/port/battle_end_sites.cpp
+	core/port/battle_end_towns.cpp
+	core/port/battle_finalize.cpp
 	core/port/battle_footprint.cpp
+	core/port/battle_forces.cpp
 	core/port/battle_rules.cpp
 	core/port/battle_rules_ai.cpp
 	core/port/board_setup.cpp
@@ -196,7 +203,6 @@ add_library(aurelion_rules_core STATIC
 	core/port/overworld_state_normalize.cpp
 	core/port/overworld_towns_normalize.cpp
 	core/port/overworld_transit_normalize.cpp
-	core/port/phase4_shared_stubs.cpp
 	core/port/player_elimination.cpp
 	core/port/player_identity_rules.cpp
 	core/port/player_identity_rules_ai.cpp
@@ -213,12 +219,14 @@ add_library(aurelion_rules_core STATIC
 	core/port/spell_events.cpp
 	core/port/spell_rules.cpp
 	core/port/spell_rules_ai.cpp
+	core/port/spell_rules_shared.cpp
 	core/port/spell_summaries.cpp
 	core/port/stack_effects.cpp
 	core/port/stat_totals.cpp
 	core/port/target_selection.cpp
 	core/port/town_development_rules_ai.cpp
 	core/port/town_rules_ai.cpp
+	core/port/town_rules_shared.cpp
 	core/port/turn_forecast.cpp
 	core/port/turn_hosts.cpp
 	core/port/turn_not_ported.cpp

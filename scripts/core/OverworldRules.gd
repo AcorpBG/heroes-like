@@ -32,6 +32,8 @@ const EXPLORED_TILES_KEY := "explored_tiles"
 const TOWN_VISION_RADIUS := 8
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const DayEngine = preload("res://scripts/core/DayEngine.gd")
+const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
+static var _battle_engine_mode: int = BattleEngine.mode
 const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
 static var _turn_engine_mode: int = TurnEngine.mode
 static var _day_engine_mode: int = DayEngine.mode
@@ -1786,7 +1788,12 @@ static func _resource_site_reward_summary(site: Dictionary) -> String:
 		labels.append(_describe_reward_delta(choice.get("rewards", {})))
 	return "choose " + " or ".join(labels)
 
-static func _collect_resource_node_result(
+static func _collect_resource_node_result(session: SessionStateStoreScript.SessionData, node_result: Dictionary, refresh_fog_after_action: bool = true, native_transit_cost: int = 1, reward_choice_id: String = "") -> Dictionary:
+	if _battle_engine_mode == BattleEngine.SHADOW:
+		BattleEngine.host_point(&"OverworldRules._collect_resource_node_result", [session, node_result, refresh_fog_after_action, native_transit_cost, reward_choice_id])
+	return _collect_resource_node_result__gd(session, node_result, refresh_fog_after_action, native_transit_cost, reward_choice_id)
+
+static func _collect_resource_node_result__gd(
 	session: SessionStateStoreScript.SessionData,
 	node_result: Dictionary,
 	refresh_fog_after_action: bool = true,
