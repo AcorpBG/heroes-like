@@ -195,4 +195,29 @@ Atom _end_turn_muster_summary(State &state, ArrayRef weekly_growth_messages, Arr
 Atom _end_turn_town_economy_summary(State &state, ArrayRef occupation_messages, ArrayRef recovery_messages, ArrayRef delivery_messages);
 Atom _end_turn_resolution_summary(State &state, DictRef session, DictRef result);
 
+// Phase 4's ports shared with Phase 5's battle ends (overworld_rules_shared.cpp).
+DictRef _add_dwelling_town_growth(State &state, DictRef session, DictRef town, DictRef growth);
+DictRef _apply_recruit_percent(State &state, const Value &recruits, int64_t percent_modifier);
+void _lock_town_occupation_reserves(State &state, DictRef town, DictRef occupation);
+DictRef _release_town_occupation_reserves(State &state, DictRef town);
+void _rules_profile_add_ms(State &state, Atom bucket, int64_t started_usec);
+void _rules_profile_set(State &state, Atom section, Atom key, const Value &value);
+int64_t _rules_profile_timer(State &state);
+DictRef _town_front_after_control_change(State &state, DictRef session, DictRef town, Atom previous_owner, Atom new_owner, Atom controlling_faction_id, Atom source);
+int64_t _town_front_stabilize_days(State &state, DictRef session, DictRef town);
+DictRef _town_front_stabilizing_state(State &state, DictRef session, DictRef town, Atom faction_id, Atom source, Atom previous_owner = state::key::empty, int64_t bonus_days = 0);
+bool _town_is_objective_anchor(State &state, DictRef session, Atom placement_id);
+DictRef _town_occupation_after_control_change(State &state, DictRef session, DictRef town, Atom previous_owner, Atom new_owner, Atom controlling_faction_id, Atom source);
+DictRef _town_weekly_growth(State &state, DictRef town, const Value &session, DictRef metric_context);
+Atom apply_town_recovery_pressure(State &state, DictRef session, Atom town_placement_id, int64_t amount, Atom source = state::key::empty);
+void invalidate_spatial_lookup(State &state, DictRef session);
+DictRef town_recovery_state(State &state, DictRef session, DictRef town);
+DictRef transition_town_control(State &state, DictRef session, Atom placement_id, Atom new_owner, Atom controlling_faction_id = state::key::empty, Atom source = state::key::empty);
+
+// Not ported yet: each throws state::NotPorted (phase4_shared_stubs.cpp) until Phase 5's
+// slice 09 ports it.
+Atom _normalized_enemy_front_faction_id(State &state, DictRef session, DictRef front, DictRef town);
+void _teach_visiting_town_spells(State &state, DictRef session, DictRef town);
+int64_t _town_occupation_seed_pressure(State &state, DictRef session, DictRef town);
+
 } // namespace aurelion::rules::port::overworld_rules

@@ -43,4 +43,13 @@ int64_t mana_max_bonus(State &state, DictRef hero_state);
 // A hero's daily income from artifacts and specialties (day_economy.cpp).
 DictRef daily_income_bonus(State &state, DictRef hero_state);
 
+// Phase 4's ports shared with Phase 5's battle ends (hero_progression_rules_shared.cpp).
+DictRef _add_experience(State &state, DictRef hero_state, int64_t amount);
+DictRef _apply_command_gain(State &state, const Value &command_state, Atom stat);
+DictRef _enqueue_choice_group(State &state, DictRef hero_state, int64_t level_number);
+DictRef add_experience(State &state, DictRef hero_state, int64_t amount);
+Atom command_gain_stat(State &state, DictRef hero_state, int64_t level_number);
+int64_t experience_with_bonus(State &state, DictRef hero_state, int64_t amount);
+Atom pending_choice_summary(State &state, DictRef pending_choice);
+
 } // namespace aurelion::rules::port::hero_progression_rules
