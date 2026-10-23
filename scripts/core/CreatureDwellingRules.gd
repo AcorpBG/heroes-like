@@ -15,8 +15,6 @@ const POPULATION := "dwelling_population"
 const POPULATION_WEEK := "dwelling_week"
 const GUARD_BEATEN := "dwelling_guard_beaten"
 const GUARD_SURVIVORS := "dwelling_guard_survivors"
-const GUARD_KEY_PREFIX := "dwelling_guard:"
-const GUARD_ENCOUNTER_ID := "encounter_dwelling_guard"
 const WEEK_LENGTH := 7
 const GUARD_MIN_TIER := 5
 const GUARD_WEEKS := 3
@@ -196,12 +194,6 @@ static func record_guard_result(node: Dictionary, side: String, survivor_stacks:
 		node.erase(GUARD_SURVIVORS)
 	else:
 		node[GUARD_SURVIVORS] = survivors
-
-static func guard_key(placement_id: String) -> String:
-	return "%s%s" % [GUARD_KEY_PREFIX, placement_id]
-
-static func placement_from_guard_key(key: String) -> String:
-	return key.substr(GUARD_KEY_PREFIX.length()) if key.begins_with(GUARD_KEY_PREFIX) else ""
 
 static func describe_creatures(node: Dictionary, site: Dictionary, day: int) -> String:
 	var parts := []

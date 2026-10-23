@@ -24,22 +24,13 @@ static var _enemy_turn_path_caches_active := false
 const COMMANDER_STATUS_AVAILABLE := "available"
 const COMMANDER_STATUS_ACTIVE := "active"
 const COMMANDER_STATUS_RECOVERING := "recovering"
-const COMMANDER_OUTCOME_DEFEATED := "defeated"
-const COMMANDER_OUTCOME_ASSAULT_VICTORY := "assault_victory"
 const COMMANDER_OUTCOME_DEPLOYED := "deployed"
 const COMMANDER_OUTCOME_FIELD_VICTORY := "field_victory"
-const COMMANDER_OUTCOME_PURSUIT_VICTORY := "pursuit_victory"
-const COMMANDER_OUTCOME_CAPITULATION := "capitulation"
-const COMMANDER_OUTCOME_ROUT_VICTORY := "rout_victory"
-const COMMANDER_OUTCOME_STALEMATE := "stalemate"
 const COMMANDER_OUTCOME_RESOURCE_SECURED := "resource_secured"
 const COMMANDER_OUTCOME_ARTIFACT_SECURED := "artifact_secured"
 const COMMANDER_OUTCOME_OBJECTIVE_SECURED := "objective_secured"
-const COMMANDER_OUTCOME_TOWN_CAPTURED := "town_captured"
 const COMMANDER_OUTCOME_SITE_DEFENDED := "site_defended"
 const COMMANDER_OUTCOME_TOWN_DEFENDED := "town_defended"
-const COMMANDER_RECOVERY_DAYS_DEFEATED := 3
-const COMMANDER_RECOVERY_DAYS_ASSAULT_VICTORY := 1
 const COMMANDER_EXPERIENCE_DEPLOYED := 90
 const COMMANDER_EXPERIENCE_FIELD_VICTORY := 180
 const COMMANDER_EXPERIENCE_PURSUIT_VICTORY := 205
@@ -555,9 +546,6 @@ static func commander_roster_for_faction(
 		return roster if roster is Array else []
 	return []
 
-static func commander_renown(source: Variant) -> int:
-	return max(0, int(_normalized_commander_record(source).get("renown", 0)))
-
 static func commander_veterancy_label(source: Variant) -> String:
 	return String(
 		COMMANDER_VETERANCY_LABELS[
@@ -769,80 +757,6 @@ static func public_commander_rebuild_summary(
 	if total_rebuilding > rebuilding.size():
 		summary += " (+%d more)" % (total_rebuilding - rebuilding.size())
 	return summary
-
-static func apply_resolved_commander_aftermath(
-	session: SessionStateStoreScript.SessionData,
-	faction_id: String,
-	commander_state: Variant,
-	outcome_id: String
-) -> String:
-	if session == null or faction_id == "" or not (commander_state is Dictionary):
-		return ""
-	var roster_hero_id := String(commander_state.get("roster_hero_id", ""))
-	if roster_hero_id == "":
-		return ""
-	var states = session.overworld.get("enemy_states", [])
-	if not (states is Array):
-		return ""
-	for index in range(states.size()):
-		var state = states[index]
-		if not (state is Dictionary) or PlayerRules.controller_id(state) != faction_id:
-			continue
-		var roster = normalize_commander_roster(session, faction_id, state.get("commander_roster", []))
-		for roster_index in range(roster.size()):
-			var entry = roster[roster_index]
-			if not (entry is Dictionary) or String(entry.get("roster_hero_id", "")) != roster_hero_id:
-				continue
-			var updated_state := advance_commander_record(commander_state, outcome_id)
-			if outcome_id == COMMANDER_OUTCOME_DEFEATED:
-				var continuity := commander_army_continuity(updated_state)
-				var defeated_encounter_id := String(continuity.get("encounter_id", ""))
-				if defeated_encounter_id == "":
-					defeated_encounter_id = String(commander_army_continuity(commander_state).get("encounter_id", ""))
-				updated_state = sync_commander_army_continuity(updated_state, {"stacks": []}, defeated_encounter_id)
-			entry["status"] = COMMANDER_STATUS_RECOVERING
-			entry["active_placement_id"] = ""
-			entry["last_outcome"] = outcome_id
-			entry["deployments"] = max(0, int(updated_state.get("deployments", entry.get("deployments", 0))))
-			entry["battle_wins"] = max(0, int(updated_state.get("battle_wins", entry.get("battle_wins", 0))))
-			entry["times_defeated"] = max(0, int(updated_state.get("times_defeated", entry.get("times_defeated", 0))))
-			entry["strategic_successes"] = max(0, int(updated_state.get("strategic_successes", entry.get("strategic_successes", 0))))
-			entry["renown"] = commander_renown(updated_state)
-			entry["commander_state"] = build_roster_commander_state(
-				roster_hero_id,
-				faction_id,
-				updated_state,
-				entry
-			)
-			entry["target_memory"] = commander_target_memory(entry.get("commander_state", {}))
-			entry["commander_role_state"] = commander_live_role_state(entry.get("commander_state", {}))
-			entry["army_continuity"] = commander_army_continuity(entry.get("commander_state", {}))
-			var recovery_days := 0
-			var summary := ""
-			match outcome_id:
-				COMMANDER_OUTCOME_DEFEATED:
-					recovery_days = COMMANDER_RECOVERY_DAYS_DEFEATED
-					summary = "%s is routed and will not return for %d day%s." % [
-						commander_display_name(entry),
-						recovery_days,
-						"" if recovery_days == 1 else "s",
-					]
-				COMMANDER_OUTCOME_ASSAULT_VICTORY:
-					recovery_days = COMMANDER_RECOVERY_DAYS_ASSAULT_VICTORY
-					summary = "%s is consolidating the breach and will not return for %d day%s." % [
-						commander_display_name(entry),
-						recovery_days,
-						"" if recovery_days == 1 else "s",
-					]
-				_:
-					entry["status"] = COMMANDER_STATUS_AVAILABLE
-			entry["recovery_day"] = int(session.day) + recovery_days if recovery_days > 0 else 0
-			roster[roster_index] = entry
-			state["commander_roster"] = roster
-			states[index] = state
-			session.overworld["enemy_states"] = states
-			return summary
-	return ""
 
 static func build_roster_commander_state(
 	roster_hero_id: String,
@@ -1374,64 +1288,6 @@ static func _normalize_commander_status(value: Variant) -> String:
 	if status in [COMMANDER_STATUS_AVAILABLE, COMMANDER_STATUS_ACTIVE, COMMANDER_STATUS_RECOVERING]:
 		return status
 	return COMMANDER_STATUS_AVAILABLE
-
-static func record_target_assignment(
-	commander_state: Dictionary,
-	target_kind: String,
-	target_id: String,
-	target_label: String,
-	target_x: int = 0,
-	target_y: int = 0
-) -> Dictionary:
-	if commander_state.is_empty() or target_kind == "" or target_id == "":
-		return _apply_commander_memory_metadata(commander_state, commander_state)
-	var updated := commander_state.duplicate(true)
-	var memory := _normalized_commander_memory(updated)
-	var is_focus_match := (
-		target_kind == String(memory.get("focus_target_kind", ""))
-		and target_id == String(memory.get("focus_target_id", ""))
-	)
-	var is_last_match := (
-		target_kind == String(memory.get("last_target_kind", ""))
-		and target_id == String(memory.get("last_target_id", ""))
-	)
-	var next_focus_count := 1
-	if is_focus_match:
-		next_focus_count = max(1, int(memory.get("focus_pressure_count", 0))) + 1
-	elif is_last_match:
-		next_focus_count = max(2, int(memory.get("focus_pressure_count", 0)))
-	memory["focus_target_kind"] = target_kind
-	memory["focus_target_id"] = target_id
-	memory["focus_target_label"] = target_label
-	memory["focus_pressure_count"] = next_focus_count
-	memory["last_target_kind"] = target_kind
-	memory["last_target_id"] = target_id
-	memory["last_target_label"] = target_label
-	memory["front_label"] = target_label
-	memory["front_x"] = target_x
-	memory["front_y"] = target_y
-	updated["target_memory"] = memory
-	return _apply_commander_memory_metadata(updated, memory)
-
-static func record_rivalry(
-	commander_state: Dictionary,
-	rival_kind: String,
-	rival_id: String,
-	rival_label: String
-) -> Dictionary:
-	if commander_state.is_empty() or rival_kind == "" or rival_id == "":
-		return _apply_commander_memory_metadata(commander_state, commander_state)
-	var updated := commander_state.duplicate(true)
-	var memory := _normalized_commander_memory(updated)
-	var rivalry_count := 1
-	if rival_kind == String(memory.get("rival_kind", "")) and rival_id == String(memory.get("rival_id", "")):
-		rivalry_count = max(1, int(memory.get("rivalry_count", 0))) + 1
-	memory["rival_kind"] = rival_kind
-	memory["rival_id"] = rival_id
-	memory["rival_label"] = rival_label
-	memory["rivalry_count"] = rivalry_count
-	updated["target_memory"] = memory
-	return _apply_commander_memory_metadata(updated, memory)
 
 static func _normalized_commander_record(entry_value: Variant, commander_state_value: Variant = {}) -> Dictionary:
 	var entry: Dictionary = entry_value if entry_value is Dictionary else {}

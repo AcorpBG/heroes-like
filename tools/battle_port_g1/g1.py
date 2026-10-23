@@ -10,6 +10,8 @@ Phase 1, "Checkpoint G1"; owner decision 2026-10-21).
     python tools/battle_port_g1/g1.py remove DEST
 
 The baseline is main at the branch point (`git merge-base HEAD origin/main`), not the branch in gdscript mode.
+Since Phase 2d deleted the battle port's GDScript bodies, a baseline needs an earlier revision
+(`--rev pre-native-phase2-exit`).
 `prepare` makes a copy of it with tools/rules_parity.py and wraps, in that copy only:
 
 - `BattleAutoResolveRules.resolve_active_battle`, which times each resolve (T_gd); the `_finalize_*` functions, the
@@ -40,7 +42,7 @@ the same resolve before. Every round's results are checked. `convert` times Stat
 resolve, at the pool size the replay reached, in the branch's library, on a new State each round. `summarize` gives
 r = T_gd_ported / T_nat_ported (per function, per layer, overall), c = T_conv / T_gd and the projection
 S = 1 / (c + 1 / r). With --native, a `resolve` copy of the branch (`prepare resolve DEST --rev HEAD`) run with
-HEROES_NATIVE_BATTLE=native gives the measured time per resolve in native battle mode, the bridge included, and the
+battles native (before Phase 2d, HEROES_NATIVE_BATTLE=native) gives the measured time per resolve in native battle mode, the bridge included, and the
 measured speed-up T_gd / T_native over the resolves both runs have.
 
 Never run this while an owner AI batch runs; timing wants an idle machine. The timed parts (the resolve and ported

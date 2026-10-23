@@ -417,7 +417,7 @@ Release packaging still stops on the 4.7 GB export pack, which predates the rule
   core suite on Windows (Linux in the owner's Linux pass), project.md ownership updated.
   - Owner decision 2026-10-22: the GDScript copies and the switch stay at the merge until Phase 2's battle tool is in,
     so the tuner keeps working. The deletion, the grep of deleted names and D6's test retirements move to Phase 2
-    (slice 11).
+    (slice 11). Done in Phase 2d (2026-10-23).
 - **Gain:** large for battle-only work (the tuner); modest for whole games, bounded by the battle share from Phase 0.
 
 ### Phase 1 results (first slice: inventory, section 11, engine-exact helpers, 2026-10-20)
@@ -1219,7 +1219,7 @@ a41e38754 Windows binaries; runtime on main 6a8c9a736, 27bee9e26 Windows binarie
     - A battle change goes into the C++ and the GDScript in the same commit, checked with one six-seed shadow run
       of the battle switch (AGENTS.md).
     - The exit's deletion of the GDScript fight loop and BattleAiRules, the grep of every deleted name and D6's test
-      retirements move to Phase 2. Nothing is deleted at this merge.
+      retirements move to Phase 2. Nothing is deleted at this merge. Done in Phase 2d (2026-10-23).
 - **Merge of main:** `battle_keys.inc` drops the 13 keys main's `day_keys.inc` now holds with the same text.
 - **G1 harness:** the replay harness (`tools/battle_port_g1/`) captures the resolve as one entry and replays its host
   calls from the recorded results, with the newer memos.
@@ -1269,8 +1269,7 @@ a41e38754 Windows binaries; runtime on main 6a8c9a736, 27bee9e26 Windows binarie
 - From Phase 1 (owner decisions 2026-10-22): the native unit and ability tables per content revision; the arena's
   native router (each side's weights as data, option (b)); then, once `tune.py` and `arena.py` run on the battle tool,
   the GDScript fight loop, BattleAiRules and the battle switch's other GDScript copies are deleted, every deleted name
-  grepped across `tests/` and `tools/`, with D6's test retirements. Until then a battle change goes into both copies
-  (AGENTS.md).
+  grepped across `tests/` and `tools/`, with D6's test retirements. Done in 2d (2026-10-23).
 - **Slices** (owner decision 2026-10-22: the preview first, then the payload builder, then the battle tool; Windows
   only, lean checks). Each merges to main on its own, from a short-lived branch, with main tagged first (D10). Proof
   per slice: shadow on the six seeds, native mode against main on the six seeds, the core suite, and whole-game timing
@@ -1339,9 +1338,38 @@ a41e38754 Windows binaries; runtime on main 6a8c9a736, 27bee9e26 Windows binarie
       - `HeroProgressionRules._offer_order`, via `_award_commander_experience` and `add_experience` at a level-up.
       None feeds the record; a byte-identical post-battle state needs D4.
     - The Variant hash is native (`gd::hash`), so it is no blocker.
-  - 2d, the exit (`native-rules-phase2-d-exit-20261022`): once `tune.py` and `arena.py` run on the tool, the GDScript
-    fight loop, BattleAiRules and the battle switch's other GDScript copies are deleted with D6's test retirements,
-    every deleted name grepped across `tests/` and `tools/`.
+  - 2d, the exit (`native-rules-phase2-d-exit-20261022`, 2026-10-23; main tagged `pre-native-phase2-exit` first):
+    battles run native only, with no switch and no GDScript battle. No C++ change.
+    - The 725 functions of the battle table lose their GDScript bodies and the `HEROES_NATIVE_BATTLE` switch. The 232
+      that the game, the tools and the tests still call are thin wrappers over `BattleEngine.native` and
+      `native_writing`. The other 493 are gone, with 198 GDScript functions, constants and statics only they called,
+      all of `BattleDamageRules.gd` among them. 41 of the 198 are in other scripts: 20 functions ported with slice 09
+      and 2a, whose C++ ports stay, and constants, preloads and helpers only they used. The two host functions (`ProfileLog.emit_general`,
+      `OverworldRules._collect_resource_node_result`) get their names back. The static vars the port reads stay.
+      `scripts/` loses 23,874 lines and gains 332 (20 files); the retired tests take 28,007 lines.
+    - Two copies stay where the battle screen's text, the overworld or towns call a function the port also has in C++
+      (AGENTS.md):
+      - BattleRules `_enemy_force_name_from_battle_army_id`, `battle_rewards_for_strength`, `_allied_ranged_count`;
+      - OverworldRules `_delivery_encounter_matches_node`, `_resource_site_delivery_interception`,
+        `_town_battlefront_profile`, `delivery_interception_context_for_encounter`, `encounter_display_name`,
+        `town_battlefront_profile`;
+      - EnemyAdventureRules `raid_commander_display_name`, `raid_display_name`, `raid_strength`;
+      - SpellRules `build_spellbook`, `refresh_daily_mana`, `mana_state`, `knows_spell`, `learn_spell`,
+        `effect_summary`, `_normalize_spell_ids`, `_ability_by_id`, `_has_ability`, `_alive_stacks_for_side`.
+    - GDScript only for the core battle tests and an RMG tool, which the game never runs: BattleRules
+      `_build_battle_stack`, `_normalize_unit_abilities`, `_cohesion_base_for_unit`, `_normalize_string_array` and
+      `_enemy_withdrawal_allowed`, and `_normalized_battle_context_fields` with `_battle_context_target_hero_id`
+      (`tools/rmg_native_transit_validation.py`).
+    - D6: 46 tests retired (`docs/battle-test-retirement.md`). `battle_readability_regression`, the runner of about 30
+      tests, measures its distances with `BattleFootprint.distance` instead. Every deleted name was grepped across
+      `tests/` and `tools/`: the hits left name live functions of the scripts they name.
+    - The arena's variants are weight sets only. `router.py` is gone, `worker.gd` plays the game's own battle AI,
+      `--backend godot` needs `--plain`, and `tune.py` and `power_fit.py` run on `battle_sim_cli` only. Two versions
+      of the battle AI's code no longer play each other in one run. `native_battle_switch.py` keeps the day switch.
+    - Checks (Windows): native against main 6e490c9e2 identical on 6/6 seeds (415 daily digests and the match records); core
+      suite 17/17; arena `quick` on `battle_sim_cli` and on `--backend godot --plain`, 72 games each, records identical
+      apart from `ai_calls` and timing; `tune.py` two generations of 4 on 12 maps, 430 games. The Linux libraries in
+      `bin/` are unchanged (no C++ change).
 - **Gate G2:** 100 battles per second (owner decision 2026-10-23; 1M battles in about 2.8 h on this machine),
   measured end to end by `tune.py` on `battle_sim_cli`. Met by 2c: 164.9 battles/s end to end (Slice 2c above). Measured after 2b: about 8.9 games/s in the arena, about 69 ms of each game's 900 ms the battle. Proposed was the synthesis's 1M battles in 2 h (about 139 battles/s); the owner set 100 battles/s, about 11 times the arena now.
   **Battle-level genetic algorithms (unit stats, battle-AI weights) run at full speed from here.**
@@ -2384,7 +2412,7 @@ Sizes are the proposal's unmeasured agent-day guesses, useful only to compare ph
 | D3 | **Decided 2026-10-20:** native binaries stay committed; the Linux debug library is stripped (50.8 MB today) and its debug info kept outside git | Phase 0 |
 | D4 | Math: engine math through godot-cpp in the game, or a later deterministic-math behaviour change | Phase 2 |
 | D5 | **Phase 1 decided 2026-10-20:** battle-rule and battle-AI code take no behaviour changes from the start of Phase 1 to its merge; an urgent fix lands in GDScript on main and is ported on the branch; content JSON and `battle_ai_weights.json` stay open (AGENTS.md "Native rules port"). AI code: decided before Phase 4 | before each |
-| D6 | **Decided 2026-10-20:** tests that call private battle functions the port deletes are retired at the Phase 1 merge by the `docs/rmg-test-retirement.md` process; the parity corpus and the core suite cover battles | Phase 1 |
+| D6 | **Decided 2026-10-20:** tests that call private battle functions the port deletes are retired at the Phase 1 merge by the `docs/rmg-test-retirement.md` process; the parity corpus and the core suite cover battles. Done with Phase 2d, 2026-10-23: 46 tests (`docs/battle-test-retirement.md`) | Phase 1 |
 | D7 | **Decided 2026-10-22:** battle and match simulators run outside Godot, as command-line tools built from the same core: `battle_sim_cli` is Phase 2's battle tool, and Phase 8's match runner is wanted. There was never an owner rule against a simulator outside Godot; that wording in PLAN.md was an agent's, and it is removed | Phase 2 |
 | D8 | **Decided 2026-10-20:** Phase 1 lives on one port branch, `native-phase1-battle` on GitHub, rebased on main at least weekly and before each slice, and merges to main once, when every battle is native and identical; it is dropped if checkpoint G1 stays under 5x after the interface fix (AGENTS.md "Native rules port") | Phase 1 |
 | D9 | **Decided 2026-10-22:** copies of the owner's five saves on this computer (Mireclaw Zhorra Fenwake days 1 and 14; Veilmourn Ivara Blacktide days 5 and 10 and the autosave; save version 9) and the two generated maps they reference live in `D:\Games\godot\heroes-like-save-copies` (outside git, with `SHA256SUMS` and a README). The originals are never touched; runs read the copies with an isolated user profile | Phase 4 (4.4) |

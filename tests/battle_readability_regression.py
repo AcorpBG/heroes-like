@@ -12,6 +12,7 @@ OUTPUT = ROOT / '.artifacts/battle_readability_20260910'
 SCRIPT = r'''extends Node
 const Store = preload("res://scripts/core/SessionStateStore.gd")
 const Playback = preload("res://scripts/core/BattleActionPlayback.gd")
+const Footprint = preload("res://scripts/core/BattleFootprint.gd")
 var failures := []
 var checks := 0
 var out := ""
@@ -20,6 +21,13 @@ var captured_resolution := Vector2i.ZERO
 func check(ok: bool, message: String) -> void:
 	checks += 1
 	if not ok: failures.append(message)
+func hex_step(lhs: Dictionary, rhs: Dictionary) -> int:
+	# Odd-row offset hexes to cube coordinates.
+	var lx: int=int(lhs.q)-int((int(lhs.r)-int(lhs.r)%2)/2)
+	var rx: int=int(rhs.q)-int((int(rhs.r)-int(rhs.r)%2)/2)
+	var lz: int=int(lhs.r)
+	var rz: int=int(rhs.r)
+	return int((abs(lx-rx)+abs(lz-rz)+abs((-lx-lz)-(-rx-rz)))/2)
 func fixture():
 	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
 	session.battle = BattleRules.create_battle_payload(session, session.overworld.encounters[0])
@@ -58,7 +66,7 @@ func run() -> void:
 	var approach:=BattleRules.melee_approach_destination(session.battle,active,target)
 	check(not approach.is_empty(),"reachable enemy has no melee approach")
 	check(session.to_dict()==before,"approach query mutated state")
-	check(not BattleRules._can_make_melee_attack(active,session.battle,target),"fixture already adjacent")
+	check(Footprint.distance(active,target)>1,"fixture already adjacent")
 	var intent:=BattleRules.board_click_attack_intent_for_target(session.battle,target.battle_id)
 	check(intent.action=="strike" and intent.label=="Move & strike","board intent missing combined action")
 	check(BattleRules.action_availability(session.battle).strike,"strike button disabled for approach")
@@ -84,10 +92,10 @@ func run() -> void:
 	var path: Array=frames[0].playback_event.get("walk_path",[])
 	check(path.size()>=2 and path.size()-1<=int(active.speed),"movement playback lacks a legal length path")
 	for index in range(1,path.size()):
-		check(BattleRules._hex_distance(path[index-1],path[index])==1,"movement animation skips hexes")
+		check(hex_step(path[index-1],path[index])==1,"movement animation skips hexes")
 	check(enemy_frames>0,"enemy actions absent from playback")
 	var moved:=BattleRules._get_stack_by_id(frames[0],String(active.battle_id))
-	check(BattleRules._hex_distance(BattleRules._stack_hex(moved),BattleRules._stack_hex(target))==1,"strike approach did not land adjacent")
+	check(Footprint.distance(moved,target)==1,"strike approach did not land adjacent")
 	var unreachable=fixture()
 	unreachable.battle.stacks[0].speed=1
 	var rejected_before: Dictionary=unreachable.to_dict().duplicate(true)

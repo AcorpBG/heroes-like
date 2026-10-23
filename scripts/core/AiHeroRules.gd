@@ -11,9 +11,7 @@ const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const LevelRules = preload("res://scripts/core/OverworldLevelRules.gd")
 const TurnPlayback = preload("res://scripts/core/OverworldTurnPlayback.gd")
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
-const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
-const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const CreatureDwellings = preload("res://scripts/core/CreatureDwellingRules.gd")
 const NodePayload = preload("res://scripts/core/ResourceNodePayloadRules.gd")
 const NativeTransit = preload("res://scripts/core/NativeTransitRules.gd")
@@ -21,10 +19,7 @@ const VisitBuildings = preload("res://scripts/core/VisitBuildingRules.gd")
 const TownServices = preload("res://scripts/core/EnemyTownServices.gd")
 const AdventureRules = preload("res://scripts/core/EnemyAdventureRules.gd")
 const WaterTravel = preload("res://scripts/core/WaterTravelRules.gd")
-const NativeRules = preload("res://scripts/core/NativeRules.gd")
 const AiEngine = preload("res://scripts/core/AiEngine.gd")
-const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
-static var _battle_engine_mode: int = BattleEngine.mode
 const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
 
 const AI_HERO_KEY := "ai_hero"
@@ -47,7 +42,6 @@ const DECISION_LOG_ALTERNATIVES := 3
 const BATTLE_LOG_KEY := "ai_battle_log"
 const BATTLE_LOG_OWNER_KEY := "battle_log_owner"
 const CAPTURE_LOG_KEY := "ai_capture_log"
-const AI_DIFFICULTY := "normal"
 ## The typed static vars below are tuning numbers from
 ## content/ai_hero_weights.json ("Weights" below).
 static var MAX_DECISIONS_PER_DAY: int
@@ -297,18 +291,6 @@ const STOP_AI_HERO := 6
 static var SCROLL_SPELL_BASE_VALUE: float
 static var SCROLL_SPELL_TIER_VALUE: float
 static var RESOURCE_VALUES: Dictionary = {}
-const LIVE_RESOURCE_KEYS := [
-	"gold",
-	"wood",
-	"ore",
-	"aetherglass",
-	"embergrain",
-	"peatwax",
-	"verdant_grafts",
-	"brass_scrip",
-	"memory_salt",
-]
-
 # --- Weights ------------------------------------------------------------------
 
 ## The tuning numbers (the static vars above and below) live in WEIGHTS_PATH:
@@ -398,12 +380,6 @@ static var _weight_sets: Dictionary = {}
 ## Nothing changes when the set and the content revision are the ones in place.
 static func _use_weights(state: Dictionary) -> void:
 	TurnEngine.native_writing(&"AiHeroRules._use_weights", [state])
-
-static func _battle_rules() -> Variant:
-	return load("res://scripts/core/BattleRules.gd")
-
-static func _auto_resolve_rules() -> Variant:
-	return load("res://scripts/core/BattleAutoResolveRules.gd")
 
 static func _turn_rules() -> Variant:
 	return load("res://scripts/core/EnemyTurnRules.gd")
@@ -791,121 +767,6 @@ static func _record_hero_defeat(session: SessionStateStoreScript.SessionData, co
 	TurnEngine.native_writing(&"AiHeroRules._record_hero_defeat", [session, controller, entry])
 
 # --- Auto-resolved battles ----------------------------------------------------
-
-## One auto-resolved battle on a scratch session: the hero attacks `defender`.
-## Pure: the live session is not touched. stop_below_creatures > 0 ends the
-## battle unresolved (not won) once the hero has fewer creatures standing.
-static func _simulate_battle(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, defender: Dictionary, battle_number: int, stop_below_creatures: int = 0) -> Dictionary:
-	if _battle_engine_mode == BattleEngine.GDSCRIPT:
-		return _simulate_battle__gd(session, context, entry, defender, battle_number, stop_below_creatures)
-	if _battle_engine_mode == BattleEngine.NATIVE:
-		return BattleEngine.native_writing(&"AiHeroRules._simulate_battle", [session, context, entry, defender, battle_number, stop_below_creatures])
-	var before := BattleEngine.before_writing(&"AiHeroRules._simulate_battle", [session, context, entry, defender, battle_number, stop_below_creatures])
-	var result = _simulate_battle__gd(session, context, entry, defender, battle_number, stop_below_creatures)
-	BattleEngine.check_writing(&"AiHeroRules._simulate_battle", before, [session, context, entry, defender, battle_number, stop_below_creatures], result)
-	return result
-
-static func _simulate_battle__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, defender: Dictionary, battle_number: int, stop_below_creatures: int = 0) -> Dictionary:
-	var hero := _battle_hero(entry)
-	var defender_copy := defender.duplicate(true)
-	defender_copy["x"] = 0
-	defender_copy["y"] = 0
-	defender_copy["level"] = 0
-	defender_copy.erase("battle_context")
-	if defender_copy.has("enemy_army") and defender_copy.get("enemy_army", {}) is Dictionary:
-		var stacks: Array = defender_copy.enemy_army.get("stacks", [])
-		if stacks.is_empty():
-			defender_copy.erase("enemy_army")
-	elif PlayerRules.raid_controller_id(defender) == "":
-		defender_copy["enemy_army"] = _neutral_army(defender)
-	var scratch := SessionStateStoreScript.new_session_data(
-		"ai_battle_%s_%d" % [String(entry.get("placement_id", "")), battle_number],
-		"",
-		String(hero.get("id", "")),
-		int(session.day),
-		{
-			"map": [["grass"]],
-			"map_size": {"x": 1, "y": 1},
-			"player_heroes": [hero],
-			"active_hero_id": String(hero.get("id", "")),
-			"hero": hero,
-			"army": hero.get("army", {}),
-			"hero_position": {"x": 0, "y": 0},
-			"movement": hero.get("movement", {}),
-			"encounters": [defender_copy],
-			"resolved_encounters": [],
-			"towns": [],
-			"resource_nodes": [],
-			"artifact_nodes": [],
-			"resources": {},
-			"enemy_states": [],
-		},
-		AI_DIFFICULTY,
-		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
-	)
-	var payload: Dictionary = _battle_rules().create_battle_payload(scratch, defender_copy)
-	if payload.is_empty():
-		return {"ok": false, "won": false}
-	scratch.battle = payload
-	scratch.game_state = "battle"
-	var resolution: Dictionary = _auto_resolve_rules().resolve_active_battle(scratch, _auto_resolve_rules().DEFAULT_STEP_LIMIT, stop_below_creatures)
-	var final_state := String(resolution.get("state", ""))
-	var won := final_state == "victory"
-	var hero_after := {}
-	for value in scratch.overworld.get("player_heroes", []):
-		if value is Dictionary and String(value.get("id", "")) == String(hero.get("id", "")):
-			hero_after = value
-	var hero_survivors: Array = hero_after.get("army", {}).get("stacks", []) if not hero_after.is_empty() else []
-	if not won and not scratch.battle.is_empty():
-		# The fight ran out of orders without an outcome: both sides keep what
-		# is still standing, as after a drawn battle.
-		hero_survivors = _battle_rules()._battle_survivor_stacks(scratch, "player")
-	var enemy_survivors: Array = []
-	var scratch_defender: Dictionary = scratch.overworld.get("encounters", [defender_copy])[0] if not scratch.overworld.get("encounters", []).is_empty() else defender_copy
-	if not won:
-		if not scratch.battle.is_empty():
-			enemy_survivors = _battle_rules()._battle_survivor_stacks(scratch, "enemy")
-		else:
-			enemy_survivors = scratch_defender.get("enemy_army", {}).get("stacks", defender_copy.get("enemy_army", {}).get("stacks", []))
-	var gained := {}
-	for key in LIVE_RESOURCE_KEYS:
-		var amount := int(scratch.overworld.get("resources", {}).get(key, 0))
-		if amount > 0:
-			gained[key] = amount
-	return {
-		"ok": true,
-		"won": won,
-		"state": final_state,
-		"hero_after": hero_after,
-		"hero_survivors": hero_survivors,
-		"lost": hero_after.is_empty() or army_power(hero_survivors) <= 0.0,
-		"enemy_survivors": enemy_survivors,
-		"resources_gained": gained,
-		"resolution": {
-			"state": final_state,
-			"stop_reason": String(resolution.get("stop_reason", "")),
-			"steps": int(resolution.get("steps", 0)),
-			"player_orders": int(resolution.get("player_orders", 0)),
-			"enemy_turns": int(resolution.get("enemy_ready_ticks", 0)),
-			"action_counts": resolution.get("action_counts", {}),
-			"message": String(resolution.get("terminal_result", {}).get("message", "")),
-		},
-	}
-
-## The hero as the human's battle code expects one: a hero record with army,
-## movement and position.
-static func _battle_hero(entry: Dictionary) -> Dictionary:
-	var commander: Dictionary = entry.get("enemy_commander_state", {}).duplicate(true)
-	var hero_id := String(commander.get("roster_hero_id", commander.get("id", "ai_hero")))
-	var hero := commander
-	hero["id"] = hero_id
-	hero["army"] = {"id": "%s_army" % hero_id, "name": "Field Army", "stacks": entry.get("enemy_army", {}).get("stacks", []).duplicate(true)}
-	hero["position"] = {"x": 0, "y": 0}
-	hero["movement"] = entry.get(AI_HERO_KEY, {}).get("movement", {"current": 0, "max": 0}).duplicate(true)
-	hero["is_primary"] = true
-	if not hero.has("base_movement"):
-		hero["base_movement"] = int(ContentService.get_hero(hero_id).get("base_movement", 10))
-	return HeroProgressionRulesScript.ensure_hero_progression(SpellRulesScript.ensure_hero_spellbook(hero))
 
 static func _neutral_army(encounter: Dictionary) -> Dictionary:
 	return AiEngine.native_writing(&"AiHeroRules._neutral_army", [encounter])

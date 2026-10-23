@@ -116232,15 +116232,15 @@
     {
       "id": "native-rules-phase2-d-exit-20261022",
       "title": "Native rules Phase 2d: the GDScript battle copies deleted",
-      "status": "pending",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "the GDScript battle copies deleted with D6's test retirements once `tune.py` and `arena.py` run on the tool.",
-      "updatedAt": "2026-10-22T09:58:17Z"
+      "notes": "Battles run native only: the battle table's 725 functions lose their GDScript bodies and the HEROES_NATIVE_BATTLE switch; 232 are thin wrappers over BattleEngine.native, 493 are gone with 198 GDScript units only they called (BattleDamageRules.gd among them); no C++ change. D6: 46 tests retired (docs/battle-test-retirement.md). Arena variants are weight sets only (router.py gone). Native against main identical on 6/6 seeds; core suite 17/17; arena quick on both backends identical; tune.py runs. Windows only.",
+      "updatedAt": "2026-10-23T12:00:00Z"
     },
     {
       "id": "native-rules-shared-runtime-main-20261021",

@@ -31,7 +31,6 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parent))
 import arena  # noqa: E402
-import router  # noqa: E402
 import scenarios  # noqa: E402
 
 TYPES = ["guard", "hero", "siege"]
@@ -45,19 +44,16 @@ TERMS = {"health": ARMY_POWER["power_health"], "damage": ARMY_POWER["power_damag
 
 
 def play(out: Path, first: int, seeds: int, dice: list[int], workers: int) -> Path:
-    """Plays the battles of seeds first.. once each (and once per dice value), current AI on both sides."""
+    """Plays the battles of seeds first.. once each (and once per dice value), the game's own AI on both sides,
+    in battle_sim_cli."""
     out.mkdir(parents=True, exist_ok=True)
-    variant = out / "A.gd"
-    arena.resolve_variant("current", variant)
-    router_path = out / "router.gd"
-    router_path.write_text(router.build_router(arena.AI_SOURCE.read_text(encoding="utf-8")), encoding="utf-8")
     godot = arena.find_godot(None)
     games = out / "games.jsonl"
     for seed in range(first, first + seeds):
         groups = [dict(group, dice=d) for d in dice for group in scenarios.build_suite("power", f"power-{seed}", 48, 5, None)]
         run = out / f"seed_{seed}"
         run.mkdir(exist_ok=True)
-        rows, problems = arena.run_workers(godot, run, groups, workers, {"A": variant}, router_path, 7200, [["A", "A"]], "A")
+        rows, problems, _stats = arena.run_cli(godot, run, groups, workers, None, 7200, [["A", "A"]], "A")
         with games.open("a", encoding="utf-8") as f:
             for row in rows:
                 if row.get("kind") == "game":

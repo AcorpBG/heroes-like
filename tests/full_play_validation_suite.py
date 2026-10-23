@@ -19,7 +19,6 @@ SCENES = [
     "overworld_end_turn_confirmation_runtime_report",
     "battle_quick_resolve_runtime_report",
     "battle_withdrawal_confirmation_runtime_report",
-    "post_battle_report_runtime_report",
     "battle_deterministic_rng_state_report",
     "battle_controller_board_navigation_smoke",
     "overworld_gameplay_movement_input_ownership_regression",
@@ -57,7 +56,6 @@ SCENES = [
     "town_route_response_dispatch_feedback_report",
     "town_capital_project_identity_runtime_report",
     "town_development_runtime_balance_report",
-    "four_elder_wild_recruitment_sanctuaries_smoke",
 ]
 RENDERED_SCENES = ["active_play_keyboard_focus_smoke", "custom_mouse_cursor_runtime_report"]
 # These reports observe an actual drawn frame, not a headless timing surrogate.
@@ -70,7 +68,6 @@ RMG_SCENES = [
     "overworld_map_object_sprite_asset_report",
     "overworld_decorative_sprite_asset_report",
     "battle_quick_resolve_runtime_report",
-    "post_battle_report_runtime_report",
     "battle_deterministic_rng_state_report",
     "overworld_gameplay_movement_input_ownership_regression",
     "overworld_full_route_movement_regression",

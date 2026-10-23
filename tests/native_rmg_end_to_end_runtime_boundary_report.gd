@@ -1348,7 +1348,7 @@ func _validate_creature_generator_interaction(adoption: Dictionary, expected_sub
 		var current_node: Dictionary = current_nodes[node_index] if node_index >= 0 and node_index < current_nodes.size() and current_nodes[node_index] is Dictionary else {}
 		var dwelling_site := ContentService.get_resource_site(String(current_node.get("site_id", "")))
 		if CreatureDwellings.is_guarded(current_node, dwelling_site, session.day):
-			# Guard battles are covered by creature_dwellings_report.
+			# The guard battle itself is not this test's subject.
 			CreatureDwellings.record_guard_result(current_node, "player", [], true, session.day)
 		# Each dwelling is an isolated reward fixture. Do not accumulate twenty
 		# different unit types into one seven-slot army across unrelated visits.

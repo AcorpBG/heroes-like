@@ -32,8 +32,6 @@ const EXPLORED_TILES_KEY := "explored_tiles"
 const TOWN_VISION_RADIUS := 8
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const DayEngine = preload("res://scripts/core/DayEngine.gd")
-const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
-static var _battle_engine_mode: int = BattleEngine.mode
 static var _day_engine_mode: int = DayEngine.mode
 const ACTIVE_TOWN_PLACEMENT_KEY := "active_town_placement_id"
 const COMMAND_BRIEFING_KEY := "command_briefing"
@@ -1733,12 +1731,7 @@ static func _resource_site_reward_summary(site: Dictionary) -> String:
 		labels.append(_describe_reward_delta(choice.get("rewards", {})))
 	return "choose " + " or ".join(labels)
 
-static func _collect_resource_node_result(session: SessionStateStoreScript.SessionData, node_result: Dictionary, refresh_fog_after_action: bool = true, native_transit_cost: int = 1, reward_choice_id: String = "") -> Dictionary:
-	if _battle_engine_mode == BattleEngine.SHADOW:
-		BattleEngine.host_point(&"OverworldRules._collect_resource_node_result", [session, node_result, refresh_fog_after_action, native_transit_cost, reward_choice_id])
-	return _collect_resource_node_result__gd(session, node_result, refresh_fog_after_action, native_transit_cost, reward_choice_id)
-
-static func _collect_resource_node_result__gd(
+static func _collect_resource_node_result(
 	session: SessionStateStoreScript.SessionData,
 	node_result: Dictionary,
 	refresh_fog_after_action: bool = true,
@@ -2148,50 +2141,6 @@ static func hire_from_dwelling(
 	var message := "%s hires %s at %s" % [String(hero.get("name", "The hero")), _describe_recruit_delta(chosen), String(site.get("name", "the dwelling"))]
 	message += " for %s." % _describe_resource_delta(price) if not price.is_empty() else " for free."
 	return _finalize_action_result(session, true, message, false, false, {"recruits": chosen.duplicate(true)})
-
-## Battle outcome against a dwelling guard. A win marks the guard beaten for
-## the player for good and flags the dwelling; otherwise the survivors hold
-## the dwelling against the player until the guard returns next week.
-static func update_dwelling_guard_after_battle(
-	session: SessionStateStoreScript.SessionData,
-	placement_id: String,
-	survivor_stacks: Array,
-	won: bool
-) -> String:
-	var node_result := _find_resource_node_by_placement(session, placement_id)
-	var index := int(node_result.get("index", -1))
-	if index < 0:
-		return ""
-	var node: Dictionary = node_result.get("node", {})
-	var site := NodePayload.site_for_node(node)
-	CreatureDwellings.record_guard_result(node, "player", survivor_stacks, won or survivor_stacks.is_empty(), session.day)
-	var nodes: Array = session.overworld.get("resource_nodes", [])
-	nodes[index] = node
-	session.overworld["resource_nodes"] = nodes
-	if won or survivor_stacks.is_empty():
-		return ""
-	return "%s guards still hold %s." % [_describe_recruit_delta(_stacks_to_recruits(survivor_stacks)), String(site.get("name", "the dwelling"))]
-
-static func capture_dwelling_after_guard_victory(
-	session: SessionStateStoreScript.SessionData,
-	placement_id: String
-) -> String:
-	var node_result := _find_resource_node_by_placement(session, placement_id)
-	if int(node_result.get("index", -1)) < 0:
-		return ""
-	var node: Dictionary = node_result.get("node", {})
-	var site := NodePayload.site_for_node(node)
-	CreatureDwellings.record_guard_result(node, "player", [], true, session.day)
-	var nodes: Array = session.overworld.get("resource_nodes", [])
-	nodes[int(node_result.get("index", -1))] = node
-	session.overworld["resource_nodes"] = nodes
-	var site_name := String(site.get("name", "the dwelling"))
-	if PlayerRules.resource_controller_id(node) == "player":
-		return "The guards of %s are beaten." % site_name
-	var claimed := _collect_resource_node_result(session, _find_resource_node_by_placement(session, placement_id), false)
-	if bool(claimed.get("ok", false)) and PlayerRules.resource_controller_id(_find_resource_node_by_placement(session, placement_id).get("node", {})) == "player":
-		return "The guards of %s are beaten and it flies your flag. Visit it to hire." % site_name
-	return "The guards of %s are beaten." % site_name
 
 static func _stacks_to_recruits(stacks: Array) -> Dictionary:
 	var recruits := {}
@@ -2918,29 +2867,6 @@ static func transition_town_control(
 		"changed": previous_owner != new_owner or previous_controller != PlayerRules.town_controller_id(town),
 		"previous_owner": previous_owner,
 		"town": town,
-	}
-
-static func stabilize_town_front(
-	session: SessionStateStoreScript.SessionData,
-	placement_id: String,
-	faction_id: String,
-	source: String = "",
-	bonus_days: int = 0
-) -> Dictionary:
-	if session == null or placement_id == "" or faction_id == "":
-		return {"ok": false, "town": {}, "front": {}}
-	var town_result := _find_town_by_placement(session, placement_id)
-	if int(town_result.get("index", -1)) < 0:
-		return {"ok": false, "town": {}, "front": {}}
-	var town = town_result.get("town", {})
-	var towns = session.overworld.get("towns", [])
-	town["front"] = _town_front_stabilizing_state(session, town, faction_id, source, "", bonus_days)
-	towns[int(town_result.get("index", -1))] = town
-	session.overworld["towns"] = towns
-	return {
-		"ok": true,
-		"town": town,
-		"front": _town_front_state(session, town),
 	}
 
 static func describe_encounter_pressure(
@@ -8159,50 +8085,6 @@ static func capture_resource_after_defender_victory(
 	var refreshed := _find_resource_node_by_placement(session, placement_id)
 	return _collect_resource_node_result(session, refreshed)
 
-static func update_resource_defender_after_battle(
-	session: SessionStateStoreScript.SessionData,
-	placement_id: String,
-	faction_id: String,
-	commander_state: Dictionary,
-	survivor_stacks: Array,
-	resolved: bool
-) -> String:
-	if session == null or placement_id == "":
-		return ""
-	var node_result := _find_resource_node_by_placement(session, placement_id)
-	if int(node_result.get("index", -1)) < 0:
-		return ""
-	var nodes = session.overworld.get("resource_nodes", [])
-	var node: Dictionary = node_result.get("node", {})
-	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
-	if resolved or String(node.get("collected_by_faction_id", "")) == "player" or survivor_stacks.is_empty():
-		node = _clear_resource_ai_defender_metadata(node)
-		nodes[int(node_result.get("index", -1))] = node
-		session.overworld["resource_nodes"] = nodes
-		return ""
-	var defender_army := {
-		"id": String(node.get("ai_defender_army", {}).get("id", "resource_defense_host")) if node.get("ai_defender_army", {}) is Dictionary else "resource_defense_host",
-		"name": String(node.get("ai_defender_army", {}).get("name", "Resource Defense Host")) if node.get("ai_defender_army", {}) is Dictionary else "Resource Defense Host",
-		"stacks": survivor_stacks.duplicate(true),
-	}
-	var defender_strength := _army_strength_value(survivor_stacks)
-	node["ai_defender_army"] = defender_army
-	node["ai_defense_rating"] = defender_strength
-	node["ai_defense_reinforced_strength"] = max(int(node.get("ai_defense_reinforced_strength", 0)), defender_strength)
-	if not commander_state.is_empty():
-		node["ai_defender_commander_state"] = commander_state.duplicate(true)
-		node["ai_defender_roster_hero_id"] = String(commander_state.get("roster_hero_id", ""))
-	if String(node.get("ai_defended_by_faction_id", "")) == "" and faction_id != "":
-		node["ai_defended_by_faction_id"] = PlayerRules.faction_id(session, faction_id)
-		if not PlayerRules.player(session, faction_id).is_empty():
-			node["ai_defended_by_player_id"] = faction_id
-	nodes[int(node_result.get("index", -1))] = node
-	session.overworld["resource_nodes"] = nodes
-	return "%s remains defended by %s." % [
-		String(site.get("name", "The field site")),
-		String(ContentService.get_faction(faction_id).get("name", faction_id)) if faction_id != "" else "the stationed force",
-	]
-
 static func _clear_resource_ai_defender_metadata(node: Dictionary) -> Dictionary:
 	var cleared := node.duplicate(true)
 	cleared.erase("ai_defender_commander_state")
@@ -10873,120 +10755,6 @@ static func _record_successful_reserve_delivery(node: Dictionary, delivery_state
 	node["last_delivery_day"] = max(0, delivery_day)
 	node["last_delivery_manifest"] = _normalize_recruit_payload(delivery_state.get("manifest", {}))
 
-static func apply_delivery_interception_outcome(
-	session: SessionStateStoreScript.SessionData,
-	node_placement_id: String,
-	outcome: String
-) -> Dictionary:
-	var result := {"summary": ""}
-	if session == null or node_placement_id == "":
-		return result
-	var node_result := _find_resource_node_by_placement(session, node_placement_id)
-	if int(node_result.get("index", -1)) < 0:
-		return result
-	var node: Dictionary = node_result.get("node", {})
-	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
-	var delivery_state: Dictionary = _resource_site_delivery_state(session, node, site)
-	if not bool(delivery_state.get("active", false)) or String(delivery_state.get("controller_id", "")) != "player":
-		return result
-	var nodes = session.overworld.get("resource_nodes", [])
-	match outcome:
-		"victory":
-			if session.day < int(delivery_state.get("arrival_day", 0)):
-				result["summary"] = "%s route holds. %s keeps marching toward %s." % [
-					String(site.get("name", "The route")),
-					String(delivery_state.get("recruit_summary", "The convoy")),
-					String(delivery_state.get("target_label", "the front")),
-				]
-				return result
-			var delivery_message := _resolve_player_reserve_delivery(session, site, delivery_state, node)
-			node = _clear_resource_site_delivery(node)
-			nodes[int(node_result.get("index", -1))] = node
-			session.overworld["resource_nodes"] = nodes
-			result["summary"] = delivery_message
-			return result
-		"stalemate":
-			node = _clear_resource_site_delivery(node)
-			nodes[int(node_result.get("index", -1))] = node
-			session.overworld["resource_nodes"] = nodes
-			var returned_to := _return_reinforcements_to_source(
-				session,
-				String(delivery_state.get("origin_town_id", "")),
-				_normalize_recruit_payload(delivery_state.get("manifest", {}))
-			)
-			if returned_to != "":
-				result["summary"] = "%s convoy turns back to %s after the lane stalls (%s)." % [
-					String(site.get("name", "The route")),
-					returned_to,
-					String(delivery_state.get("recruit_summary", "")),
-				]
-			else:
-				result["summary"] = "%s convoy breaks off from %s after the line stalls (%s)." % [
-					String(site.get("name", "The route")),
-					String(delivery_state.get("target_label", "the front")),
-					String(delivery_state.get("recruit_summary", "")),
-				]
-			return result
-		"retreat":
-			node = _clear_resource_site_delivery(node)
-			nodes[int(node_result.get("index", -1))] = node
-			session.overworld["resource_nodes"] = nodes
-			var partition := _split_recruit_payload(
-				_normalize_recruit_payload(delivery_state.get("manifest", {})),
-				0.45
-			)
-			var returned_manifest: Dictionary = partition.get("returned", {})
-			var lost_manifest: Dictionary = partition.get("lost", {})
-			var returned_to := _return_reinforcements_to_source(
-				session,
-				String(delivery_state.get("origin_town_id", "")),
-				returned_manifest
-			)
-			var returned_summary := _describe_recruit_delta(returned_manifest)
-			var lost_summary := _describe_recruit_delta(lost_manifest)
-			if returned_to != "" and returned_summary != "" and lost_summary != "":
-				result["summary"] = "%s convoy scatters under pursuit. %s regathers %s, but %s is lost before it reaches %s." % [
-					String(site.get("name", "The route")),
-					returned_to,
-					returned_summary,
-					lost_summary,
-					String(delivery_state.get("target_label", "the front")),
-				]
-			elif returned_to != "" and returned_summary != "":
-				result["summary"] = "%s convoy breaks contact and turns %s back to %s." % [
-					String(site.get("name", "The route")),
-					returned_summary,
-					returned_to,
-				]
-			else:
-				result["summary"] = "%s convoy is cut apart during the withdrawal (%s)." % [
-					String(site.get("name", "The route")),
-					String(delivery_state.get("recruit_summary", "")),
-				]
-			return result
-		"surrender":
-			node = _clear_resource_site_delivery(node)
-			nodes[int(node_result.get("index", -1))] = node
-			session.overworld["resource_nodes"] = nodes
-			result["summary"] = "%s convoy for %s is handed over intact with the surrender terms (%s)." % [
-				String(site.get("name", "The route")),
-				String(delivery_state.get("target_label", "the front")),
-				String(delivery_state.get("recruit_summary", "")),
-			]
-			return result
-		_:
-			node = _clear_resource_site_delivery(node)
-			nodes[int(node_result.get("index", -1))] = node
-			session.overworld["resource_nodes"] = nodes
-			var collapse_label := "is overrun in the rout" if outcome in ["hero_defeat", "defeat", "town_lost"] else "is intercepted"
-			result["summary"] = "%s convoy for %s %s (%s)." % [
-				String(site.get("name", "The route")),
-				String(delivery_state.get("target_label", "the front")),
-				collapse_label,
-				String(delivery_state.get("recruit_summary", "")),
-			]
-			return result
-
 static func _delivery_army_admission(session: SessionStateStoreScript.SessionData, delivery_state: Dictionary) -> Dictionary:
 	var target_id := String(delivery_state.get("target_id", ""))
 	var stacks := []
@@ -11068,37 +10836,6 @@ static func _return_reinforcements_to_source(
 	towns[int(town_result.get("index", -1))] = town
 	session.overworld["towns"] = towns
 	return _town_name(town)
-
-static func _split_recruit_payload(manifest: Dictionary, return_ratio: float) -> Dictionary:
-	var normalized := _normalize_recruit_payload(manifest)
-	var result := {"returned": {}, "lost": {}}
-	if normalized.is_empty():
-		return result
-	var total_units := 0
-	for unit_id_value in normalized.keys():
-		total_units += max(0, int(normalized.get(unit_id_value, 0)))
-	var target_returned := int(floor(float(total_units) * clampf(return_ratio, 0.0, 1.0)))
-	if target_returned <= 0 and total_units >= 4 and return_ratio > 0.0:
-		target_returned = 1
-	target_returned = clampi(target_returned, 0, maxi(0, total_units - 1))
-	var returned := {}
-	var lost := {}
-	var remaining_to_return := target_returned
-	var unit_ids := normalized.keys()
-	unit_ids.sort()
-	for unit_id_value in unit_ids:
-		var unit_id := String(unit_id_value)
-		var available: int = max(0, int(normalized.get(unit_id_value, 0)))
-		var returned_count: int = min(available, remaining_to_return)
-		if returned_count > 0:
-			returned[unit_id] = returned_count
-		var lost_count: int = max(0, available - returned_count)
-		if lost_count > 0:
-			lost[unit_id] = lost_count
-		remaining_to_return = max(0, remaining_to_return - returned_count)
-	result["returned"] = returned
-	result["lost"] = lost
-	return result
 
 static func _army_strength_value(stacks: Variant) -> int:
 	var total_strength := 0

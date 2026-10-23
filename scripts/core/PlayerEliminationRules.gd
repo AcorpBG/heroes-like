@@ -4,7 +4,7 @@ extends RefCounted
 ## a player is out when it holds no town and no hero, or when it has held no
 ## town for TOWNLESS_DAYS days in a row, as in the classic games. Losing the
 ## starting hero does not end the game; another hero leads
-## (`HeroCommandRules.hand_over_primary`). Authored scenarios keep their own
+## (`hand_over_primary` in core/port/battle_end_heroes.cpp). Authored scenarios keep their own
 ## defeat rules.
 ##
 ## Without the townless rule a beaten player kept a single hero of about 200
@@ -44,13 +44,6 @@ static func heroes_held(session: SessionStateStoreScript.SessionData, player: Di
 	if bool(player.get("human", false)):
 		return (session.overworld.get("player_heroes", []) as Array).size()
 	return _ai_heroes().active_hero_count(session, String(player.get("player_id", "")))
-
-## Whether the human has neither a town nor a hero left.
-static func human_has_nothing_left(session: SessionStateStoreScript.SessionData) -> bool:
-	for player in session.overworld.get("players", []):
-		if player is Dictionary and bool(player.get("human", false)):
-			return towns_held(session, player) == 0 and heroes_held(session, player) == 0
-	return false
 
 ## Runs once a day, after every player has moved. Counts the days each player
 ## has gone without a town, removes computer players whose time is up and ends

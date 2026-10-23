@@ -3,28 +3,28 @@
 
 Each subsystem of the native rules port (docs/native-rules-engine-transition.md)
 lists its ported functions as the PORT(...) entries of its registry file and has
-an engine script that holds its mode (SUBSYSTEMS below; the battle port:
-src/gdextension/rules/core/port/registry.cpp and BattleEngine.gd). For each
+an engine script that holds its mode (SUBSYSTEMS below; the day port:
+src/gdextension/rules/core/port/day_registry.cpp and DayEngine.gd). For each
 function, scripts/core/<Script>.gd gets:
 
-    static func _hex_cell(q: int, r: int) -> Dictionary:      # the switch
-        if _battle_engine_mode == BattleEngine.GDSCRIPT:
-            return _hex_cell__gd(q, r)
+    static func normalize_overworld_state(session: SessionData) -> void:      # the switch
+        if _day_engine_mode == DayEngine.GDSCRIPT:
+            normalize_overworld_state__gd(session)
         ...
-    static func _hex_cell__gd(q: int, r: int) -> Dictionary:  # the GDScript body
+    static func normalize_overworld_state__gd(session: SessionData) -> void:  # the GDScript body
         ...
 
 and every switched script gets the engine's preload and its mode in a static
 var.
 
 A host function, one the phase leaves in GDScript and its ports call (the
-HOST(Script, function, arity) entries of the registry file: the battle ends),
-gets a wrapper over its renamed body the same way:
+HOST(Script, function, arity) entries of the registry file), gets a wrapper
+over its renamed body the same way:
 
-    static func _finalize_victory(session: SessionData) -> Dictionary:
-        if _battle_engine_mode == BattleEngine.SHADOW:
-            BattleEngine.host_point(&"BattleRules._finalize_victory", [session])
-        return _finalize_victory__gd(session)
+    static func _host_function(session: SessionData) -> Dictionary:
+        if _day_engine_mode == DayEngine.SHADOW:
+            DayEngine.host_point(&"Script._host_function", [session])
+        return _host_function__gd(session)
 
 In gdscript and native mode it runs the body (the native port's host call
 calls the wrapper by name); in shadow mode it first checks the native port's
@@ -42,8 +42,12 @@ was renamed or removed is taken out again (the `__gd` body gets its name back).
 A subsystem only touches the switches that read its own mode. --check only
 reports what it would change and exits 1 if anything.
 
+The battle port's switch went with its GDScript copies in Phase 2d: battles run
+native only, and its functions that GDScript still calls are thin wrappers over
+BattleEngine.native and native_writing.
+
     python tools/native_battle_switch.py                      # every subsystem
-    python tools/native_battle_switch.py --subsystem battle
+    python tools/native_battle_switch.py --subsystem day
     python tools/native_battle_switch.py --check
 """
 
@@ -75,7 +79,7 @@ class Subsystem:
         # engine's before_writing(key, args) runs the native port first
         # (AurelionRules.port_validate_begin) and returns the check's handle.
         self.validate = validate
-        # BattleEngine -> _battle_engine_mode
+        # DayEngine -> _day_engine_mode
         self.mode_var = "_" + re.sub(r"(?<!^)(?=[A-Z])", "_", engine).lower() + "_mode"
         self.engine_const = f'const {engine} = preload("res://scripts/core/{engine}.gd")'
         self.mode_line = f"static var {self.mode_var}: int = {engine}.mode"
@@ -83,7 +87,6 @@ class Subsystem:
 
 # One entry per subsystem: its registry file in core/port and its engine script.
 SUBSYSTEMS = {
-    "battle": Subsystem("registry.cpp", "BattleEngine", validate=True),
     "day": Subsystem("day_registry.cpp", "DayEngine", fallback=True, validate=True),
 }
 
