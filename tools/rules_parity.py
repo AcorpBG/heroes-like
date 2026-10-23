@@ -8,6 +8,7 @@
     python tools/rules_parity.py prepare REV DEST          # a copy of another revision, outside the repo
     python tools/rules_parity.py remove DEST               # delete a prepared copy (junctions first)
     python tools/rules_parity.py seeds
+    python tools/rules_parity.py check A B --human         # a human player on seat 1, through the screens
 
 A side is a project directory (run with the editor binary, --godot / --godot-a / --godot-b) or an
 exported game binary of an AI batch preset (export_presets.cfg; it starts the match runner and
@@ -37,6 +38,16 @@ on either side as FAILED, never identical; `compare` reads each folder's runs.js
 again. Only debug builds print SCRIPT ERROR lines: on an editor side a script error fails the run,
 on a release export (template_release) it goes unseen and only the runner's own failures count.
 Exit codes: 0 identical, 1 different, 2 a run failed.
+
+--human (Phase 7, owner decision D-a) plays HUMAN_SEEDS instead: tests/human_seat_report.tscn plays seat 1 by
+fixed rules through the real main menu, overworld, town and battle screens, on generated maps or on the D9 copies
+of the owner's saves (HEROES_SAVE_COPIES, default D:\\Games\\godot\\heroes-like-save-copies). It writes a digest
+row per action, "day<TAB>step<TAB>action<TAB>session<TAB>panels", the last hash being that of the texts the
+screen shows; `check` reports the first differing step and replays both sides to it with a dump of the state and
+the panel texts. Both sides play this checkout's runner: it is copied into a side made by `prepare`, and any
+other project side must already have the same one. A save run gets the save in its profile's user://saves and
+the maps the save names in <side>/maps, copied with their times kept and removed after the runs unless they were
+there. `check` also prints each action kind's time on both sides, the screens' speed.
 """
 from __future__ import annotations
 
@@ -62,6 +73,10 @@ from core_suite import find_godot  # noqa: E402
 
 SCENE = "res://tests/ai_versus_ai_match_report.tscn"
 REPORT_ID = "AI_VERSUS_AI_MATCH_REPORT"
+HUMAN_SCENE = "res://tests/human_seat_report.tscn"
+HUMAN_REPORT_ID = "HUMAN_SEAT_REPORT"
+HUMAN_RUNNER = ("tests/human_seat_report.gd", "tests/human_seat_report.tscn")
+SAVE_COPIES = Path(os.environ.get("HEROES_SAVE_COPIES", r"D:\Games\godot\heroes-like-save-copies"))
 IS_WINDOWS = platform.system() == "Windows"
 COPY_MARKER = ".rules_parity_copy"
 GODOT_SMALL_FILES = (".gdignore", "global_script_class_cache.cfg", "uid_cache.bin",
@@ -83,9 +98,26 @@ EXTRA_SEEDS: dict[str, dict] = {
     "isl-b": {"seed": "isl-b", "players": 2, "size": "homm3_small", "days": 100, "water": "islands", "levels": 1},
     "pt-f": {"seed": "pt-f", "players": 4, "size": "homm3_large", "days": 80, "water": "land", "levels": 2},
 }
-ALL_SEEDS = {**SEEDS, **EXTRA_SEEDS}
+# --human (Phase 7, 2026-10-23): generated maps at fixed seeds, and the D9 save copies played on from where they
+# were saved. The size, players and levels of a save only order the runs.
+HUMAN_SEEDS: dict[str, dict] = {
+    "h-s2": {"kind": "human", "seed": "human-s2", "players": 2, "size": "homm3_small", "days": 28, "water": "land", "levels": 1},
+    "h-m3": {"kind": "human", "seed": "human-m3", "players": 3, "size": "homm3_medium", "days": 21, "water": "normal_water", "levels": 1},
+    "h-l4": {"kind": "human", "seed": "human-l4", "players": 4, "size": "homm3_large", "days": 14, "water": "normal_water", "levels": 2},
+    "sv-m1": {"kind": "human", "save": "Mireclaw Zhorra Fenwake \u2014 Day 1.save.json", "maps": ["medium-dusk-lantern-deep-64efd5b1"],
+              "players": 2, "size": "homm3_medium", "days": 10, "levels": 1},
+    "sv-m14": {"kind": "human", "save": "Mireclaw Zhorra Fenwake \u2014 Day 14.save.json", "maps": ["medium-dusk-lantern-deep-64efd5b1"],
+               "players": 2, "size": "homm3_medium", "days": 10, "levels": 1},
+    "sv-v5": {"kind": "human", "save": "Veilmourn Ivara Blacktide \u2014 Day 5.save.json", "maps": ["medium-fallow-field-spring-a9c4612b"],
+              "players": 2, "size": "homm3_medium", "days": 10, "levels": 2},
+    "sv-v10": {"kind": "human", "save": "Veilmourn Ivara Blacktide \u2014 Day 10.save.json", "maps": ["medium-fallow-field-spring-a9c4612b"],
+               "players": 2, "size": "homm3_medium", "days": 10, "levels": 2},
+    "sv-auto": {"kind": "human", "save": "autosave.json", "maps": ["medium-fallow-field-spring-a9c4612b"],
+                "players": 2, "size": "homm3_medium", "days": 10, "levels": 2},
+}
+ALL_SEEDS = {**SEEDS, **EXTRA_SEEDS, **HUMAN_SEEDS}
 # Record fields that hold wall-clock time, left out of the comparison.
-TIMING_KEYS = ("ai_turn_ms_max", "turn_ms")
+TIMING_KEYS = ("ai_turn_ms_max", "turn_ms", "timing")
 # --portable: where the map package was written (res://maps under the editor, user://maps in an
 # exported build) shows up in these session keys, as the paths and the package signatures that include
 # them. The runner sets those fields to "" in the digest (HEROES_AI_MATCH_DIGEST_BLANK, nested
@@ -112,9 +144,9 @@ class Side:
     def is_project(self) -> bool:
         return self.path.is_dir()
 
-    def command(self) -> list[str]:
+    def command(self, scene: str = SCENE) -> list[str]:
         if self.is_project:
-            return [self.godot, "--headless", "--path", str(self.path), "--audio-driver", "Dummy", SCENE]
+            return [self.godot, "--headless", "--path", str(self.path), "--audio-driver", "Dummy", scene]
         # Release templates take no scene argument; the AI batch presets start the match runner.
         return [str(self.path), "--headless", "--audio-driver", "Dummy"]
 
@@ -130,8 +162,74 @@ class Job:
     def stem(self) -> str:
         return self.key if self.dump_day is None else f"{self.key}.dump{self.dump_day}"
 
+    @property
+    def human(self) -> bool:
+        return is_human(self.key)
+
     def lock(self) -> tuple[str, str]:
         return (str(self.side.path.resolve()), self.key)
+
+
+def is_human(key: str) -> bool:
+    return ALL_SEEDS[key].get("kind") == "human"
+
+
+def user_dir(profile: Path) -> Path:
+    """user:// of a run whose APPDATA (Windows) or XDG_DATA_HOME (Linux) is profile."""
+    return profile / ("Godot" if IS_WINDOWS else "godot") / "app_userdata" / "heroes-like"
+
+
+def human_env(job: Job, profile: Path) -> dict[str, str]:
+    """The human seat runner's setup; a save goes into the profile's user://saves."""
+    setup = ALL_SEEDS[job.key]
+    env = {"HEROES_HUMAN_DAYS": str(setup["days"]),
+           "HEROES_HUMAN_OUT": (job.out / f"{job.stem}.json").as_posix(),
+           "HEROES_HUMAN_DIGEST": (job.out / f"{job.stem}.digest").as_posix()}
+    if "save" in setup:
+        saves = user_dir(profile) / "saves"
+        saves.mkdir(parents=True)
+        shutil.copy2(SAVE_COPIES / "saves" / setup["save"], saves / setup["save"])
+        env["HEROES_HUMAN_SAVE"] = "1"
+    else:
+        env.update({"HEROES_HUMAN_SEED": setup["seed"], "HEROES_HUMAN_PLAYERS": str(setup["players"]),
+                    "HEROES_HUMAN_SIZE": setup["size"], "HEROES_HUMAN_WATER": setup["water"],
+                    "HEROES_HUMAN_LEVELS": str(setup["levels"])})
+    if job.dump_day is not None:
+        env["HEROES_HUMAN_DUMP"] = (job.out / f"{job.stem}.state.json").as_posix()
+        env["HEROES_HUMAN_DUMP_STEP"] = str(job.dump_day)
+    return env
+
+
+def place_save_maps(jobs: list[Job]) -> list[Path]:
+    """The map packages the save runs name, copied into each side's maps folder with their times kept (so the
+    match-map cleanup leaves them); returns the files placed, never one that was there."""
+    placed: list[Path] = []
+    for job in jobs:
+        for stem in ALL_SEEDS[job.key].get("maps", []):
+            for suffix in (".amap", ".ascenario"):
+                source = SAVE_COPIES / "maps" / f"{stem}{suffix}"
+                target = job.side.path / "maps" / source.name
+                if not source.exists():
+                    sys.exit(f"{job.key}: {source} is missing (HEROES_SAVE_COPIES)")
+                if not target.exists():
+                    target.parent.mkdir(exist_ok=True)
+                    shutil.copy2(source, target)
+                    placed.append(target)
+    return placed
+
+
+def install_human_runner(side: Side) -> None:
+    """Both sides play this checkout's runner: copied into a `prepare` copy, required as is anywhere else."""
+    if not side.is_project:
+        sys.exit(f"{side.name}: --human needs a project directory, not {side.path}")
+    if side.path.resolve() == ROOT.resolve():
+        return
+    for name in HUMAN_RUNNER:
+        mine, theirs = ROOT / name, side.path / name
+        if (side.path / COPY_MARKER).exists():
+            shutil.copy2(mine, theirs)
+        elif not theirs.exists() or theirs.read_bytes() != mine.read_bytes():
+            sys.exit(f"{side.name}: {theirs} is not this checkout's {name}; use a `prepare` copy")
 
 
 def parse_env(items: list[str] | None) -> dict[str, str]:
@@ -147,10 +245,26 @@ def parse_env(items: list[str] | None) -> dict[str, str]:
 def start(job: Job, profiles: Path) -> tuple[subprocess.Popen, Path, float]:
     setup = ALL_SEEDS[job.key]
     profile = Path(tempfile.mkdtemp(prefix=f"{job.side.name}-{job.key}-", dir=profiles))
-    env = {k: v for k, v in os.environ.items() if not k.startswith("HEROES_AI_MATCH_")}
+    env = {k: v for k, v in os.environ.items() if not k.startswith(("HEROES_AI_MATCH_", "HEROES_HUMAN_"))}
     env.update(job.side.env)
-    env.update({
-        "APPDATA": str(profile), "XDG_DATA_HOME": str(profile), "XDG_CONFIG_HOME": str(profile), "XDG_CACHE_HOME": str(profile),
+    env.update({"APPDATA": str(profile), "XDG_DATA_HOME": str(profile), "XDG_CONFIG_HOME": str(profile), "XDG_CACHE_HOME": str(profile)})
+    for suffix in (".json", ".digest", ".state.json"):
+        (job.out / f"{job.stem}{suffix}").unlink(missing_ok=True)
+    scene = SCENE
+    if job.human:
+        env.update(human_env(job, profile))
+        scene = HUMAN_SCENE
+    else:
+        env.update(ai_match_env(job, setup))
+    log = open(job.out / f"{job.stem}.log", "w", encoding="utf-8", errors="replace")
+    extra = {} if IS_WINDOWS else {"start_new_session": True}
+    proc = subprocess.Popen(job.side.command(scene), env=env, stdout=log, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL, **extra)
+    log.close()
+    return proc, profile, time.time()
+
+
+def ai_match_env(job: Job, setup: dict) -> dict[str, str]:
+    env = {
         "HEROES_AI_MATCH_SEED": setup["seed"],
         "HEROES_AI_MATCH_PLAYERS": str(setup["players"]),
         "HEROES_AI_MATCH_SIZE": setup["size"],
@@ -160,26 +274,21 @@ def start(job: Job, profiles: Path) -> tuple[subprocess.Popen, Path, float]:
         "HEROES_AI_MATCH_MAX_DAYS": str(setup["days"]),
         "HEROES_AI_MATCH_OUT": (job.out / f"{job.stem}.json").as_posix(),
         "HEROES_AI_MATCH_DIGEST": (job.out / f"{job.stem}.digest").as_posix(),
-    })
+    }
     if job.dump_day is not None:
         env["HEROES_AI_MATCH_DUMP"] = (job.out / f"{job.stem}.state.json").as_posix()
         env["HEROES_AI_MATCH_DUMP_DAY"] = str(job.dump_day)
-    for suffix in (".json", ".digest", ".state.json"):
-        (job.out / f"{job.stem}{suffix}").unlink(missing_ok=True)
-    log = open(job.out / f"{job.stem}.log", "w", encoding="utf-8", errors="replace")
-    extra = {} if IS_WINDOWS else {"start_new_session": True}
-    proc = subprocess.Popen(job.side.command(), env=env, stdout=log, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL, **extra)
-    log.close()
-    return proc, profile, time.time()
+    return env
 
 
-def log_verdict(text: str, returncode: int | None = None, timed_out: bool = False) -> tuple[str, list[str], dict]:
+def log_verdict(text: str, returncode: int | None = None, timed_out: bool = False,
+                report_id: str = REPORT_ID) -> tuple[str, list[str], dict]:
     """A run's problem ("" when it is clean), its SCRIPT ERROR lines and its report, from its log."""
     report = {}
     for line in text.splitlines():
-        if line.startswith(REPORT_ID + " "):
+        if line.startswith(report_id + " "):
             try:
-                report = json.loads(line[len(REPORT_ID) + 1:])
+                report = json.loads(line[len(report_id) + 1:])
             except ValueError:
                 pass
     # A script error means the game ran a different path than intended (a missing class, a failed call),
@@ -199,7 +308,7 @@ def log_verdict(text: str, returncode: int | None = None, timed_out: bool = Fals
 def finish(job: Job, proc: subprocess.Popen, profile: Path, started: float, timed_out: bool, keep_maps: dict[str, set[str]]) -> dict:
     shutil.rmtree(profile, ignore_errors=True)
     text = (job.out / f"{job.stem}.log").read_text(encoding="utf-8", errors="replace")
-    problem, script_errors, report = log_verdict(text, proc.returncode, timed_out)
+    problem, script_errors, report = log_verdict(text, proc.returncode, timed_out, HUMAN_REPORT_ID if job.human else REPORT_ID)
     record_path = job.out / f"{job.stem}.json"
     removed: list[str] = []
     if job.side.is_project and record_path.exists():
@@ -219,6 +328,7 @@ def finish(job: Job, proc: subprocess.Popen, profile: Path, started: float, time
 def run_jobs(jobs: list[Job], parallel: int, timeout_min: float, work: Path, say) -> list[dict]:
     profiles = work / "profiles"
     profiles.mkdir(parents=True, exist_ok=True)
+    placed = place_save_maps([j for j in jobs if j.human])
     keep_maps: dict[str, set[str]] = {}
     for job in jobs:
         maps = job.side.path / "maps"
@@ -256,6 +366,9 @@ def run_jobs(jobs: list[Job], parallel: int, timeout_min: float, work: Path, say
             kill(proc)
             shutil.rmtree(profile, ignore_errors=True)
         raise
+    finally:
+        for path in placed:
+            path.unlink(missing_ok=True)
     shutil.rmtree(profiles, ignore_errors=True)
     return results
 
@@ -263,31 +376,40 @@ def run_jobs(jobs: list[Job], parallel: int, timeout_min: float, work: Path, say
 # ---------------------------------------------------------------- comparison
 
 def read_digest(path: Path) -> list[tuple]:
-    """(day, digest) per line; a runner from before 2026-10-23 wrote (day, sha256 of the JSON, its length)."""
+    """(day, digest) per line; a runner from before 2026-10-23 wrote (day, sha256 of the JSON, its length); the
+    human seat runner writes (day, step, action, session digest, panel digest)."""
     if not path.exists():
         return []
     rows = []
     for line in path.read_text(encoding="utf-8").splitlines():
         day, *rest = line.split("\t")
-        rows.append((int(day), *rest))
+        if len(rest) == 4:
+            rows.append((int(day), int(rest[0]), *rest[1:]))
+        else:
+            rows.append((int(day), *rest))
     return rows
 
 
 def digest_format(rows: list[tuple]) -> str:
     if not rows:
         return ""
-    return "sha256 of the JSON" if len(rows[0]) == 3 else "Variant hash"
+    return {3: "sha256 of the JSON", 5: "human seat actions"}.get(len(rows[0]), "Variant hash")
 
 
-def first_differing_day(a: list, b: list) -> int | None:
+def first_differing_row(a: list, b: list) -> tuple | None:
     for x, y in zip(a, b):
         if x != y:
-            return x[0]
+            return x
     if len(a) != len(b):
         shorter = a if len(a) < len(b) else b
         longer = b if shorter is a else a
-        return longer[len(shorter)][0]
+        return longer[len(shorter)]
     return None
+
+
+def first_differing_day(a: list, b: list) -> int | None:
+    row = first_differing_row(a, b)
+    return None if row is None else row[0]
 
 
 def strip_timing(value):
@@ -334,8 +456,12 @@ def differences(a, b, path: str = "", out: list | None = None, limit: int = 12) 
 def compare_seed(key: str, dir_a: Path, dir_b: Path, failed: list[str]) -> dict:
     """failed: why a run of this seed on either side failed; such a seed is never identical."""
     da, db = read_digest(dir_a / f"{key}.digest"), read_digest(dir_b / f"{key}.digest")
-    row = {"seed": key, "days_a": len(da), "days_b": len(db), "first_day": first_differing_day(da, db), "record": [],
+    first = first_differing_row(da, db)
+    row = {"seed": key, "days_a": len(da), "days_b": len(db), "first_day": None if first is None else first[0], "record": [],
            "failed": failed, "formats": ""}
+    if first is not None and is_human(key):
+        row["first_step"] = first[1]
+        row["first_action"] = first[2]
     if da and db and digest_format(da) != digest_format(db):
         row["formats"] = f"digest formats differ (A {digest_format(da)}, B {digest_format(db)}), records compared only"
         row["first_day"] = None
@@ -357,7 +483,8 @@ def run_failures(folder: Path, key: str) -> list[str]:
     problems = [str(entry.get("problem") or "failed")] if entry and not entry.get("ok") else []
     log = folder / f"{key}.log"
     if log.exists():
-        problem = log_verdict(log.read_text(encoding="utf-8", errors="replace"))[0]
+        problem = log_verdict(log.read_text(encoding="utf-8", errors="replace"),
+                              report_id=HUMAN_REPORT_ID if is_human(key) else REPORT_ID)[0]
         if problem and problem not in problems:
             problems.append(problem)
     elif entry is None:
@@ -365,15 +492,24 @@ def run_failures(folder: Path, key: str) -> list[str]:
     return problems
 
 
+def dump_point(row: dict) -> int:
+    """Where a differing seed is replayed to: its first differing day, or step for the human seat."""
+    return row["first_step"] if is_human(row["seed"]) else row["first_day"]
+
+
 def explain_dump(key: str, day: int, dir_a: Path, dir_b: Path, first_a: list, first_b: list) -> dict:
-    """The first differing paths of the day's full state, after checking each side replayed itself."""
+    """The first differing paths of the day's full state (the human seat's: of its step's state and panel texts),
+    after checking each side replayed itself."""
     stem = f"{key}.dump{day}"
-    info: dict = {"day": day, "paths": []}
+    human = is_human(key)
+    info: dict = {"day": day, "label": f"step {day}" if human else f"day {day}", "paths": []}
     for name, folder, first in (("A", dir_a, first_a), ("B", dir_b, first_b)):
         again = read_digest(folder / f"{stem}.digest")
-        expected = [r for r in first if r[0] <= day]
+        expected = [r for r in first if (r[1] if human else r[0]) <= day]
         if again != expected:
-            info.setdefault("not_reproducible", []).append(f"{name} replayed differently from day {first_differing_day(expected, again)}")
+            where = first_differing_row(expected, again)
+            info.setdefault("not_reproducible", []).append(
+                f"{name} replayed differently from {'step %s' % where[1] if human else 'day %s' % where[0]}")
     sa, sb = dir_a / f"{stem}.state.json", dir_b / f"{stem}.state.json"
     if not (sa.exists() and sb.exists()):
         info["paths"] = [f"state dump missing: A {sa.exists()}, B {sb.exists()}"]
@@ -393,9 +529,12 @@ def explain_dump(key: str, day: int, dir_a: Path, dir_b: Path, first_a: list, fi
 def print_rows(rows: list[dict], say) -> None:
     for row in rows:
         if row["identical"]:
-            say(f"{row['seed']:5} identical: {row['days_a']} daily digests and the match record")
+            what = "action digests and the record" if is_human(row["seed"]) else "daily digests and the match record"
+            say(f"{row['seed']:5} identical: {row['days_a']} {what}")
             continue
-        where = (row["formats"] if row["formats"] else f"first differing day {row['first_day']}" if row["first_day"] is not None
+        where = (row["formats"] if row["formats"]
+                 else f"first differing step {row['first_step']} ({row['first_action']}, day {row['first_day']})" if "first_step" in row
+                 else f"first differing day {row['first_day']}" if row["first_day"] is not None
                  else "daily digests identical")
         if row["failed"]:
             say(f"{row['seed']:5} FAILED: {'; '.join(row['failed'])[:220]}")
@@ -411,13 +550,13 @@ def print_rows(rows: list[dict], say) -> None:
             for note in dump.get("not_reproducible", []):
                 say(f"        WARNING {note}")
             for text in dump["paths"]:
-                say(f"        day {dump['day']} {text}")
+                say(f"        {dump.get('label', 'day %s' % dump['day'])} {text}")
 
 
 # ---------------------------------------------------------------- commands
 
-def pick_seeds(text: str | None) -> list[str]:
-    keys = [k.strip() for k in (text or ",".join(SEEDS)).split(",") if k.strip()]
+def pick_seeds(text: str | None, human: bool = False) -> list[str]:
+    keys = [k.strip() for k in (text or ",".join(HUMAN_SEEDS if human else SEEDS)).split(",") if k.strip()]
     unknown = [k for k in keys if k not in ALL_SEEDS]
     if unknown:
         sys.exit(f"unknown seeds {unknown}; known: {', '.join(ALL_SEEDS)}")
@@ -443,6 +582,30 @@ def make_work(text: str | None) -> Path:
     return work
 
 
+def print_screen_times(keys: list[str], dirs: dict[str, Path], say) -> None:
+    """The human seat's time per action kind on both sides, summed over its seeds: the screens' speed."""
+    totals: dict[str, dict[str, list[float]]] = {}
+    for key in keys:
+        for side, folder in dirs.items():
+            path = folder / f"{key}.json"
+            if not path.exists():
+                continue
+            for kind, entry in json.loads(path.read_text(encoding="utf-8")).get("timing", {}).items():
+                total = totals.setdefault(kind, {}).setdefault(side, [0, 0.0, 0.0])
+                total[0] += int(entry["n"])
+                total[1] += float(entry["ms"])
+                total[2] = max(total[2], float(entry["max_ms"]))
+    if not totals:
+        return
+    say("SCREEN TIME per action kind, ms per action (max), A | B:")
+    for kind in sorted(totals, key=lambda k: -sum(t[1] for t in totals[k].values())):
+        cells = []
+        for side in dirs:
+            n, ms, top = totals[kind].get(side, [0, 0.0, 0.0])
+            cells.append(f"{ms / n:8.1f} ({top:7.1f}) x{n}" if n else f"{'-':>8}")
+        say(f"  {kind:16} " + " | ".join(cells))
+
+
 class Say:
     def __init__(self, path: Path):
         self.file = open(path, "a", encoding="utf-8")
@@ -458,7 +621,10 @@ def cmd_check(args) -> int:
     say = Say(work / "parity.log")
     a = make_side("A", args.a, args.godot_a or args.godot, portable(args, parse_env(args.env_a)))
     b = make_side("B", args.b, args.godot_b or args.godot, portable(args, parse_env(args.env_b)))
-    keys = pick_seeds(args.seeds)
+    keys = pick_seeds(args.seeds, args.human)
+    if any(is_human(k) for k in keys):
+        install_human_runner(a)
+        install_human_runner(b)
     dirs = {"A": work / "A", "B": work / "B"}
     for d in dirs.values():
         d.mkdir(exist_ok=True)
@@ -472,16 +638,17 @@ def cmd_check(args) -> int:
     differing = [r for r in rows if r["first_day"] is not None and r["days_a"] and r["days_b"]]
     if differing and not args.no_dump:
         say(f"REPLAY to the first differing day with a full state dump: {', '.join(r['seed'] for r in differing)}")
-        dump_jobs = [Job(side, r["seed"], dirs[side.name], r["first_day"]) for r in differing for side in (a, b)]
+        dump_jobs = [Job(side, r["seed"], dirs[side.name], dump_point(r)) for r in differing for side in (a, b)]
         results += run_jobs(dump_jobs, args.jobs, args.timeout_min, work, say)
         for r in differing:
-            r["dump"] = explain_dump(r["seed"], r["first_day"], dirs["A"], dirs["B"],
+            r["dump"] = explain_dump(r["seed"], dump_point(r), dirs["A"], dirs["B"],
                                      read_digest(dirs["A"] / f"{r['seed']}.digest"), read_digest(dirs["B"] / f"{r['seed']}.digest"))
             for side in ("A", "B"):
                 if not args.keep:
-                    (dirs[side] / f"{r['seed']}.dump{r['first_day']}.state.json").unlink(missing_ok=True)
+                    (dirs[side] / f"{r['seed']}.dump{dump_point(r)}.state.json").unlink(missing_ok=True)
     say(f"RESULT after {(time.time() - started) / 60:.1f} min:")
     print_rows(rows, say)
+    print_screen_times([k for k in keys if is_human(k)], dirs, say)
     errors = sorted({e for r in results for e in r["script_errors"]})
     if errors:
         say(f"{len(errors)} distinct SCRIPT ERROR lines (both sides; see the logs in {work}):")
@@ -501,7 +668,9 @@ def cmd_run(args) -> int:
     out = make_work(args.out)
     say = Say(out / "parity.log")
     side = make_side("A", args.side, args.godot, portable(args, parse_env(args.env)))
-    keys = pick_seeds(args.seeds)
+    keys = pick_seeds(args.seeds, args.human)
+    if any(is_human(k) for k in keys):
+        install_human_runner(side)
     say(f"RUN {', '.join(keys)} on {side.path}; output {out}")
     results = run_jobs([Job(side, k, out, args.dump_day) for k in keys], args.jobs, args.timeout_min, out, say)
     (out / "runs.json").write_text(json.dumps(results, indent=1), encoding="utf-8")
@@ -510,13 +679,14 @@ def cmd_run(args) -> int:
 
 def cmd_compare(args) -> int:
     da, db = Path(args.a).resolve(), Path(args.b).resolve()
-    keys = [k for k in pick_seeds(args.seeds) if (da / f"{k}.digest").exists() or (db / f"{k}.digest").exists()]
+    keys = [k for k in pick_seeds(args.seeds, args.human) if (da / f"{k}.digest").exists() or (db / f"{k}.digest").exists()]
     rows = [compare_seed(k, da, db, [f"{name} {problem}" for name, folder in (("A", da), ("B", db)) for problem in run_failures(folder, k)])
             for k in keys]
     for r in rows:
-        if r["first_day"] is not None and (da / f"{r['seed']}.dump{r['first_day']}.state.json").exists():
-            r["dump"] = explain_dump(r["seed"], r["first_day"], da, db, read_digest(da / f"{r['seed']}.digest"), read_digest(db / f"{r['seed']}.digest"))
+        if r["first_day"] is not None and (da / f"{r['seed']}.dump{dump_point(r)}.state.json").exists():
+            r["dump"] = explain_dump(r["seed"], dump_point(r), da, db, read_digest(da / f"{r['seed']}.digest"), read_digest(db / f"{r['seed']}.digest"))
     print_rows(rows, print)
+    print_screen_times([k for k in keys if is_human(k)], {"A": da, "B": db}, print)
     failed = [r["seed"] for r in rows if r["failed"]]
     if failed:
         print(f"{len(failed)} seeds FAILED: {', '.join(failed)}")
@@ -591,6 +761,7 @@ def main() -> int:
         p.add_argument("--godot", help="editor binary for project directories (default as tools/core_suite.py)")
         p.add_argument("--portable", action="store_true",
                        help="blank the map package's location in the digest (editor against an exported build)")
+        p.add_argument("--human", action="store_true", help=f"default to the human seat's set: {', '.join(HUMAN_SEEDS)}")
         if with_side_env:
             p.add_argument("--env", action="append", metavar="NAME=VALUE", help="extra environment for the runs")
 
@@ -611,13 +782,14 @@ def main() -> int:
     p.add_argument("side")
     common(p, True)
     p.add_argument("--out", help="output folder (default a new temp folder)")
-    p.add_argument("--dump-day", type=int, help="stop on this day with a full state dump")
+    p.add_argument("--dump-day", type=int, help="stop on this day (the human seat: step) with a full state dump")
     p.set_defaults(func=cmd_run)
 
     p = sub.add_parser("compare", help="compare two `run` folders")
     p.add_argument("a")
     p.add_argument("b")
     p.add_argument("--seeds")
+    p.add_argument("--human", action="store_true")
     p.set_defaults(func=cmd_compare)
 
     p = sub.add_parser("prepare", help="copy a revision outside the repo")
