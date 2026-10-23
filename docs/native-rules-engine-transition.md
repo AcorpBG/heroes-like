@@ -2753,8 +2753,64 @@ Checks:
 
 ### Phase 8: a match runner without Godot
 
-Wanted, not optional (owner decision 2026-10-22, D7). The same core as a command-line tool. Needs the copied Variant hash and either deterministic math or accepted last-bit
-differences against the game.
+Wanted, not optional (owner decision 2026-10-22, D7). The same core as a command-line tool, `match_sim_cli` beside
+`battle_sim_cli`. It runs alongside Phase 7 and touches none of the setup and save code Phase 7 has frozen.
+
+**Owner decisions** (2026-10-23, on the inventory and plan; D4 and D12 in section 8):
+- **D4, option B.** One portable `pow`/`exp`/`log` in the core, used by the game's host and by the runner, accepted
+  as one named behaviour change (P8-2). Every rules copy uses it: the GDScript offer draw (`HeroProgressionRules.gd`,
+  human level-ups) calls the native function.
+- **The elimination day.** Phase 8 ports the computer-player branch of `PlayerEliminationRules.apply_daily` (P8-1);
+  Phase 7's 7.7 keeps the human branches.
+- **Statics.** Native state in the runner first; the game keeps reading GDScript until Phase 7 deletes the last
+  GDScript readers.
+- **Generation in the runner last** (P8-8), after Phase 7's merge 1b frees `MapPackageService`.
+- **Order and merges.** P8-1, P8-2, then P8-3 to P8-6 as one milestone, P8-7 after merge 1b, P8-8. Main is tagged
+  before each merge (D10).
+
+**Inventory** (main 2abd6e086):
+- `aurelion_rules_core` has no godot-cpp; the Godot-facing code is `rules/gdextension/`. The core has the engine
+  copies a runner needs (Variant hash, JSON, float text, PCG32, rounding, the content tables of 7.10) and reaches the
+  outside through `state::Backing`. `battle_sim_cli` is already such a host, playing Godot-written snapshots
+  (`ARSNAP01`) on threads.
+- An AI-only day is one native call (`end_turn` on the kept session). The runner's digest, standings, notes and
+  record are GDScript around it. Setup (generation, the package save and load, adoption, the seat handover) is
+  GDScript and the map GDExtension, which is Godot-typed throughout; packages are JSON text. The H3MapEd generator
+  core is Godot-free.
+- The one rules path an AI-only match still ran in GDScript: a computer player whose townless days are up
+  (`player_elimination.cpp`), 4 days on the six seeds, each rerunning the day's close in GDScript and dropping the
+  kept session.
+- The port reads GDScript statics through the bridge: 16.2 million reads in four games of the Phase 6 profile.
+- `pow`, `exp` and `log` (7 call sites: `army_power`, `hero_power`, the route loss limit, the specialty offer draw) go
+  to the engine in the game and to the UCRT in the tools. The engine's are MinGW-w64's, linked into the Godot binary
+  (it imports only `_vsnprintf` and `log10` from msvcrt). On 65,536 inputs per function in the game's ranges they
+  differ by 1 ulp in 0.18% (army-power pow), 0.20% (offer-draw pow), 0.49% (exp) and 0.04% (log) of calls; neither
+  side is correctly rounded every time (engine 9 to 40 misses per 65,536, UCRT 16 to 333).
+
+**Slices:**
+
+| Slice | What | After |
+|---|---|---|
+| P8-1 Elimination day | the computer branch of `apply_daily` in C++ (done) | |
+| P8-2 D4 | one `pow`/`exp`/`log` in the core for the game and the runner; the named behaviour change | P8-1 |
+| P8-3 Statics | a native statics store in the runner's host, initial values checked against Godot's | |
+| P8-4 The runner | `match_sim_cli` playing sessions Godot prepared (snapshots), the runner's glue in C++, the same outputs | P8-2, P8-3 |
+| P8-5 The proof | a runner side in `rules_parity.py`: the six seeds' digests and records identical to game mode | P8-4 |
+| P8-6 Batches | `ai_match_batch.py --runner`: Godot prepares, the runner plays on threads; timing | P8-5 |
+| P8-7 Packages and setup | packages read in the core; sessions created natively from a package and a seed (7.11) | merge 1b |
+| P8-8 Generation | the map library's projection Godot-free; the runner generates its maps | P8-7 |
+
+**P8-1, the AI-match elimination day** (`native-rules-phase8-01-elimination-20261023`, branch
+`native-phase8-elimination`):
+- **What changed.** `player_elimination_rules::apply_daily` runs a computer player's removal when its townless days
+  are up: the rosters normalized once (`normalize_all_commander_rosters`), the player's heroes marked resolved and
+  their defeats recorded (`_remove_computer_player`), and the message with the faction's name. All the helpers had
+  C++ ports already. The human branches (the defeat with no town and no hero, the townless warning, the townless
+  defeat) stay `NotPorted` for 7.7, and `apply_daily__gd` stays for them. No AI-only day falls back now.
+- **Checks.** Day shadow on the six seeds: 7,841 checks, 0 mismatches, 0 errors, 0 left to GDScript;
+  `apply_daily` checked 437 times, the 4 elimination days (l1 2, mw 2) among them. Native against main 2abd6e086:
+  all 443 daily digests and the records identical; NATIVE FALLBACK lines 12 on main, 0 on the branch. Core suite
+  17/17.
 
 ### Totals
 
@@ -2787,7 +2843,7 @@ Sizes are the proposal's unmeasured agent-day guesses, useful only to compare ph
 | D1 | **Decided 2026-10-20:** `project.md:49` records the move to C++ subsystem by subsystem; the ownership list changes as each phase lands | before Phase 0 code |
 | D2 | **Decided 2026-10-20:** parity runs are allowed on port slices, never while an owner batch is running (AGENTS.md "Validation budget") | Phase 0 |
 | D3 | **Decided 2026-10-20:** native binaries stay committed; the Linux debug library is stripped (50.8 MB today) and its debug info kept outside git | Phase 0 |
-| D4 | Math: engine math through godot-cpp in the game, or a later deterministic-math behaviour change | Phase 2 |
+| D4 | **Decided 2026-10-23, option B:** one portable `pow`/`exp`/`log` in the core for the game and the runner, accepted as one named behaviour change (Phase 8, P8-2); every rules copy uses it. Options A (copy the engine's MinGW-w64 math) and C (accept last-bit differences) were declined | Phase 8 |
 | D5 | **Phase 1 decided 2026-10-20:** battle-rule and battle-AI code take no behaviour changes from the start of Phase 1 to its merge; an urgent fix lands in GDScript on main and is ported on the branch; content JSON and `battle_ai_weights.json` stay open (AGENTS.md "Native rules port"). AI code: decided before Phase 4 | before each |
 | D6 | **Decided 2026-10-20:** tests that call private battle functions the port deletes are retired at the Phase 1 merge by the `docs/rmg-test-retirement.md` process; the parity corpus and the core suite cover battles. Done with Phase 2d, 2026-10-23: 46 tests (`docs/battle-test-retirement.md`) | Phase 1 |
 | D7 | **Decided 2026-10-22:** battle and match simulators run outside Godot, as command-line tools built from the same core: `battle_sim_cli` is Phase 2's battle tool, and Phase 8's match runner is wanted. There was never an owner rule against a simulator outside Godot; that wording in PLAN.md was an agent's, and it is removed | Phase 2 |
@@ -2795,6 +2851,7 @@ Sizes are the proposal's unmeasured agent-day guesses, useful only to compare ph
 | D9 | **Decided 2026-10-22:** copies of the owner's five saves on this computer (Mireclaw Zhorra Fenwake days 1 and 14; Veilmourn Ivara Blacktide days 5 and 10 and the autosave; save version 9) and the two generated maps they reference live in `D:\Games\godot\heroes-like-save-copies` (outside git, with `SHA256SUMS` and a README). The originals are never touched; runs read the copies with an isolated user profile | Phase 4 (4.4) |
 | D10 | **Decided 2026-10-20:** main is tagged before each port merge. Owner 2026-10-21: no waiting period after it (the 7 days without behaviour commits was removed) | each merge |
 | D11 | **Decided 2026-10-23:** Phase 7's scope and checks (Phase 7, "Owner decisions", D-a to D-e): a permanent human seat in `tools/rules_parity.py`; every rule native, only the screens in GDScript; one map snapshot per redraw; no GDScript way back; retired tests by D6. Plan revision 2 (D-f to D-h): the campaign runtime moves with the campaign rework, `RandomMapGeneratorRules.generate` and the editor's authored-scenario export are deleted; order 7.1, 7.10 to 7.12, 7.2 to 7.9, 7.13, 7.15; four merges. Later (D-i): the archived content's start-up checks are deleted and the live files' checks ported; the first merge is split into 1a (7.1, 7.10) and 1b (7.11, 7.12) | Phase 7 |
+| D12 | **Decided 2026-10-23:** Phase 8's plan (Phase 8, "Owner decisions"): D4 option B; Phase 8 ports the computer branch of the elimination day and Phase 7's 7.7 keeps the human branches; statics native in the runner first; generation in the runner last; P8-1, P8-2, P8-3 to P8-6 as one milestone, P8-7 after Phase 7's merge 1b, P8-8 | Phase 8 |
 
 ## 9. Risks and how the plan contains them
 
