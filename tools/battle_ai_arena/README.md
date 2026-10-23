@@ -1,8 +1,8 @@
 # Battle AI arena
 
-Plays two versions of the battle AI (`scripts/core/BattleAiRules.gd`) against each other and
-says which one is better. Use it to judge a strategy change before it lands, and later as the
-evaluator for weight tuning.
+Plays two weight sets of the battle AI (`content/battle_ai_weights.json`) against each other
+and says which one is better. It is the evaluator for weight tuning, and plays the game's own
+battle AI on both sides for parity and timing runs.
 
 It is evaluation tooling, run on demand. It is not part of `tools/core_suite.py`, the game or
 the export. The `.gdignore` here keeps Godot's import and the script compile check out of the
@@ -11,29 +11,28 @@ folder. It never writes the repo's files.
 ## Running it
 
 ```
-python tools/battle_ai_arena/arena.py                       # HEAD's AI (A) vs the working tree's (B)
+python tools/battle_ai_arena/arena.py                       # HEAD's weights (A) vs the working tree's (B)
 python tools/battle_ai_arena/arena.py --suite holdout       # the battles a tuning run never sees
-python tools/battle_ai_arena/arena.py --a git:main~5 --b path/to/BattleAiRules.gd --suite quick
+python tools/battle_ai_arena/arena.py --a git:main~5 --b-weights tuned.json --suite quick
 python tools/battle_ai_arena/arena.py --roles                # also says where B gains: as player or as enemy
-python tools/battle_ai_arena/arena.py --plain --suite standard  # the game's own AI on both sides, no router
+python tools/battle_ai_arena/arena.py --plain --suite standard  # the game's own weights on both sides
 ```
 
-A variant is `current` (the working tree), `git:<rev>`, or a path to a copy of
-`BattleAiRules.gd`. A `git:<rev>` variant plays with that revision's weights file; `current`
-and a file read the working tree's `content/battle_ai_weights.json` unless given a weights
-file. Godot comes from `--godot`, `$GODOT_BIN`, `godot4`/`godot` on PATH, or
-the owner's Windows install, as for the core suite. Every worker gets a throwaway user
-profile. Results go to `.artifacts/battle_ai_arena/<time>-<suite>/` (`summary.json`,
-`games.jsonl`). Worker logs are kept only when something went wrong, or with `--keep-logs`.
-The battles are played by `battle_sim_cli` outside Godot (`--backend cli`, the default; see
-"Battles outside Godot"); `--backend godot` plays every game in Godot workers.
+A variant is a weight set: `current` (the working tree's `content/battle_ai_weights.json`),
+`git:<rev>` (that revision's file) or a weights file, and `--a-weights` and `--b-weights`
+replace them. Weights a file leaves out keep the working tree's values. Both sides run the
+working tree's battle AI, the native port: Phase 2d deleted the GDScript `BattleAiRules`
+(docs/native-rules-engine-transition.md), so two versions of the battle AI's code cannot play
+each other. Score a code change against the code before it from two runs of the same suite
+instead, or by building a second `battle_sim_cli`.
 
-The usual loop for a strategy change: edit `BattleAiRules.gd`, run the `standard` suite
-against HEAD, then confirm on `holdout` before committing.
-
-A variant can also take a weights file (`--a-weights`, `--b-weights`): the battle AI's tunable
-numbers live in `content/battle_ai_weights.json` (`BattleAiRules._w`), and the variant is
-the same script with those weights built in.
+Godot comes from `--godot`, `$GODOT_BIN`, `godot4`/`godot` on PATH, or the owner's Windows
+install, as for the core suite. Every worker gets a throwaway user profile. Results go to
+`.artifacts/battle_ai_arena/<time>-<suite>/` (`summary.json`, `games.jsonl`). Worker logs are
+kept only when something went wrong, or with `--keep-logs`. The battles are played by
+`battle_sim_cli` outside Godot (`--backend cli`, the default; see "Battles outside Godot");
+`--backend godot --plain` plays every game in Godot workers, the game's own weights on both
+sides.
 
 ## Tuning the weights
 
@@ -146,35 +145,23 @@ The 2026-10-16 fit, tested on 2,400 battles the fit never saw:
   itself in Quick Resolve (`AiHeroRules._fight_looks_good`). The estimate only shortlists
   what they consider.
 
-## How the variants are swapped
+## How the variants play
 
-The game calls the AI through `BattleAiRules`' static functions. Inside the worker, and only
-in its memory, that script is reloaded with a generated router (`router.py`). The router
-has one stub per static function, with the same signature, forwarding to the variant that
-plays the acting stack's side. Each variant is a full copy of the file, so its internal calls
-stay inside it. A call is routed by:
+Each side's stacks play with their variant's weights. In `battle_sim_cli` the native router
+enters the battle AI's calls with the weights of the side that acts (`port/ai_route.hpp`):
 
 1. a parameter naming the acting stack (`active_stack`, `stack`, ...);
 2. otherwise a side parameter;
-3. otherwise to the enemy's variant for functions named after the enemy;
-4. otherwise to A.
+3. otherwise the enemy's weights for functions named after the enemy;
+4. otherwise A's.
 
-Limits:
+Each variant's `BattleAiRules` static vars are its own. The battle AI's choices live in the
+battle AI's port, the advance plan and the advance walk included (`advance_plan`,
+`best_advance_destination`). The battle rules only carry out the orders (the enemy turn flow,
+a hero's cast before its stack's order), and that part is shared by both sides.
 
-- Only `BattleAiRules.gd` changes per side. The battle AI's choices live there, the
-  advance plan and the advance walk included (`advance_plan`, `best_advance_destination`).
-  `BattleRules.gd` only carries out the orders (the enemy turn flow, a hero's cast before
-  its stack's order), and that part is shared by both sides.
-- Functions the rest of the game calls must keep their signatures; the router is built from
-  the working tree's file.
-- Battles run native by default (`HEROES_NATIVE_BATTLE`, `scripts/core/BattleEngine.gd`), and
-  the native engine in Godot does not call the GDScript router. So Godot workers that play
-  variants (`--backend godot`, and `power_fit.py`) set the switch to `gdscript`: the GDScript
-  copy of the battle rules plays, which the native engine matches. `battle_sim_cli` routes
-  natively instead (below).
-- `--plain` installs no router and no variants: the game's own `BattleAiRules` plays both
-  sides, with the caller's battle switch (native by default). The native battle engine's
-  parity checks use it.
+`--plain` plays no variants: the game's own weights on both sides. The native battle
+engine's parity and timing checks use it, and it is the only mode of `--backend godot`.
 
 ## Battles outside Godot
 
@@ -189,13 +176,8 @@ holds its battles (each one's session as the native rules see it, its site and i
 far) and the generated scenario. `battle_sim_cli` then plays every order of every battle from
 there, a game per thread, as `worker.gd` goes on from the payload, and writes the same record.
 
-- Each side's stacks play with their variant's weights: the battle code enters each call the
-  GDScript router stubs with the side the router picks (`port/ai_route.hpp`), and each
-  variant's `BattleAiRules` static vars are its own, as each variant script's are.
-- A variant is the working tree's `BattleAiRules.gd` with weights of its own: `battle_sim_cli`
-  runs the native port of the working tree's code. A variant with other code (an older
-  revision's, a file) needs `--backend godot`. Rebuild `battle_sim_cli` after a battle rules
-  change, as the library.
+- `battle_sim_cli` runs the native port of the working tree's code. Rebuild it after a battle
+  rules change, as the library.
 - At a battle end over a site's guards, the site's visit (`OverworldRules._collect_resource_node_result`)
   answers nothing: the record reads nothing it changes. `pow`, `exp` and `log` are the tool's
   C runtime's, not the engine's (decision D4). `summary.json` counts both
@@ -203,10 +185,8 @@ there, a game per thread, as `worker.gd` goes on from the payload, and writes th
 - `tune.py`'s setup workers boot once for the run and build each generation's battles one
   generation ahead of the one being played. Each generation's line and `history.jsonl` record
   give the seconds spent waiting for them (`setup_wait`) and `battle_sim_cli`'s own.
-- The records are the Godot backend's, checked game for game (transition doc, Phase 2c). Only
-  `ai_calls` can differ: a Godot worker keeps `BattleAiRules._hero_payload_cache` from one game
-  to the next, so a battle played again skips one routed call, while `battle_sim_cli` starts
-  every game from the snapshot's static vars.
+- The records are the Godot backend's, checked game for game (transition doc, Phase 2c).
+  Godot workers no longer count `ai_calls`.
 
 ## Scoring
 

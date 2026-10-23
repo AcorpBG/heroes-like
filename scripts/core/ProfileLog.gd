@@ -1,8 +1,6 @@
 class_name ProfileLog
 extends RefCounted
 
-const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
-static var _battle_engine_mode: int = BattleEngine.mode
 
 const GENERAL_PROFILE_LOG_PATH := "user://debug/heroes_profile.jsonl"
 const OVERWORLD_PROFILE_ENV := "HEROES_OVERWORLD_PROFILE_LOG"
@@ -21,12 +19,7 @@ static func env_enabled(name: String) -> bool:
 static func general_enabled() -> bool:
 	return env_enabled(GENERAL_PROFILE_ENV) or env_enabled(OVERWORLD_PROFILE_ENV)
 
-static func emit_general(surface: String, phase: String, event: String, total_ms: float, buckets_ms: Dictionary = {}, metadata: Dictionary = {}, session: Variant = null) -> void:
-	if _battle_engine_mode == BattleEngine.SHADOW:
-		BattleEngine.host_point(&"ProfileLog.emit_general", [surface, phase, event, total_ms, buckets_ms, metadata, session])
-	emit_general__gd(surface, phase, event, total_ms, buckets_ms, metadata, session)
-
-static func emit_general__gd(
+static func emit_general(
 	surface: String,
 	phase: String,
 	event: String,

@@ -2,8 +2,6 @@ class_name HeroProgressionRules
 extends RefCounted
 
 const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
-static var _battle_engine_mode: int = BattleEngine.mode
-
 const CHOICE_SIZE := 3
 const SPECIALTY_INSIGNIA_ATLAS_PATH := "res://art/heroes/runtime/specialties/hero_specialty_insignia_atlas.png"
 const SPECIALTY_INSIGNIA_CELL_SIZE := Vector2i(28, 28)
@@ -318,47 +316,10 @@ static func _specialty_row(specialty_id: String) -> Dictionary:
 
 ## The catalog rows by id, shared and read-only; rebuilt when the content changes.
 static func _specialty_catalog() -> Dictionary:
-	if _battle_engine_mode == BattleEngine.GDSCRIPT:
-		return _specialty_catalog__gd()
-	if _battle_engine_mode == BattleEngine.NATIVE:
-		return BattleEngine.native_writing(&"HeroProgressionRules._specialty_catalog", [])
-	var before := BattleEngine.before_writing(&"HeroProgressionRules._specialty_catalog", [])
-	var result = _specialty_catalog__gd()
-	BattleEngine.check_writing(&"HeroProgressionRules._specialty_catalog", before, [], result)
-	return result
-
-static func _specialty_catalog__gd() -> Dictionary:
-	# specialties(), read here directly: bonus checks ask for the catalog often.
-	var items = ContentService.load_json(SPECIALTIES_PATH).get("items", [])
-	if not (items is Array):
-		items = []
-	if not is_same(items, _catalog_source):
-		_catalog_source = items
-		_catalog_index = {}
-		for specialty in items:
-			if specialty is Dictionary:
-				_catalog_index[String(specialty.get("id", ""))] = specialty
-	return _catalog_index
+	return BattleEngine.native_writing(&"HeroProgressionRules._specialty_catalog", [])
 
 static func has_specialty(specialty_id: String) -> bool:
 	return not _specialty_row(specialty_id).is_empty()
-
-## The bonuses of a specialty's catalog row at `rank`.
-static func _rank_bonuses(row: Dictionary, rank: int) -> Dictionary:
-	if _battle_engine_mode == BattleEngine.GDSCRIPT:
-		return _rank_bonuses__gd(row, rank)
-	if _battle_engine_mode == BattleEngine.NATIVE:
-		return BattleEngine.native(&"HeroProgressionRules._rank_bonuses", [row, rank])
-	var result = _rank_bonuses__gd(row, rank)
-	BattleEngine.check(&"HeroProgressionRules._rank_bonuses", [row, rank], result)
-	return result
-
-static func _rank_bonuses__gd(row: Dictionary, rank: int) -> Dictionary:
-	var ranks: Array = row.get("ranks", [])
-	if rank < 1 or ranks.is_empty():
-		return {}
-	var bonuses = ranks[mini(rank, ranks.size()) - 1].get("bonuses", {})
-	return bonuses if bonuses is Dictionary else {}
 
 static func specialty_id_for_action(action_id: String) -> String:
 	const PREFIX := "choose_specialty:"
@@ -403,139 +364,10 @@ static func max_rank_for_specialty(specialty_id: String) -> int:
 	return max(1, int(_specialty_row(specialty_id).get("max_rank", 1)))
 
 static func aggregate_bonuses(hero_state: Dictionary) -> Dictionary:
-	if _battle_engine_mode == BattleEngine.GDSCRIPT:
-		return aggregate_bonuses__gd(hero_state)
-	if _battle_engine_mode == BattleEngine.NATIVE:
-		return BattleEngine.native_writing(&"HeroProgressionRules.aggregate_bonuses", [hero_state])
-	var before := BattleEngine.before_writing(&"HeroProgressionRules.aggregate_bonuses", [hero_state])
-	var result = aggregate_bonuses__gd(hero_state)
-	BattleEngine.check_writing(&"HeroProgressionRules.aggregate_bonuses", before, [hero_state], result)
-	return result
-
-static func aggregate_bonuses__gd(hero_state: Dictionary) -> Dictionary:
-	# Reads the hero only. Of what ensure_hero_progression settles, the bonuses
-	# depend on the normalized specialties alone.
-	var bonuses := {
-		"overworld_movement": 0,
-		"scouting_radius": 0,
-		"daily_income": {"gold": 0, "wood": 0, "ore": 0},
-		"max_mana": 0,
-		"mana_cost_discount": 0,
-		"battle_attack": 0,
-		"battle_defense": 0,
-		"battle_initiative": 0,
-		"recruit_growth_multiplier": 0.0,
-		"recruit_cost_delta": 0.0,
-		"raid_pillage_resistance": 0.0,
-	}
-	var raw_specialty_ids: Variant = hero_state.get("specialties", [])
-	if not (raw_specialty_ids is Array) or raw_specialty_ids.is_empty():
-		return bonuses
-	var catalog := _specialty_catalog()
-	var specialty_ids := _normalize_specialties_in(catalog, raw_specialty_ids)
-	var counted := {}
-	for specialty_id_value in specialty_ids:
-		var specialty_id := String(specialty_id_value)
-		if counted.has(specialty_id):
-			continue
-		counted[specialty_id] = true
-		_merge_bonuses(bonuses, _rank_bonuses(catalog.get(specialty_id, {}), _rank_in_array(specialty_ids, specialty_id)), hero_state)
-	return bonuses
-
-static func _merge_bonuses(target: Dictionary, source: Dictionary, hero_state: Dictionary) -> void:
-	if _battle_engine_mode == BattleEngine.GDSCRIPT:
-		_merge_bonuses__gd(target, source, hero_state)
-	elif _battle_engine_mode == BattleEngine.NATIVE:
-		BattleEngine.native_writing(&"HeroProgressionRules._merge_bonuses", [target, source, hero_state])
-	else:
-		var before := BattleEngine.before_writing(&"HeroProgressionRules._merge_bonuses", [target, source, hero_state])
-		_merge_bonuses__gd(target, source, hero_state)
-		BattleEngine.check_writing(&"HeroProgressionRules._merge_bonuses", before, [target, source, hero_state], null)
-
-static func _merge_bonuses__gd(target: Dictionary, source: Dictionary, hero_state: Dictionary) -> void:
-	for key in source.keys():
-		var bonus_key := String(key)
-		var value = source[key]
-		if value is Dictionary:
-			var nested: Dictionary = target.get(bonus_key, {}) if target.get(bonus_key, {}) is Dictionary else {}
-			for nested_key in value.keys():
-				var resolved := _resolve_bonus_key(String(nested_key), hero_state)
-				if resolved == "":
-					continue
-				nested[resolved] = _sum_bonus(nested.get(resolved, 0), value[nested_key])
-			target[bonus_key] = nested
-		else:
-			target[bonus_key] = _sum_bonus(target.get(bonus_key, 0), value)
-
-static func _sum_bonus(current: Variant, added: Variant) -> Variant:
-	if _battle_engine_mode == BattleEngine.GDSCRIPT:
-		return _sum_bonus__gd(current, added)
-	if _battle_engine_mode == BattleEngine.NATIVE:
-		return BattleEngine.native(&"HeroProgressionRules._sum_bonus", [current, added])
-	var result = _sum_bonus__gd(current, added)
-	BattleEngine.check(&"HeroProgressionRules._sum_bonus", [current, added], result)
-	return result
-
-static func _sum_bonus__gd(current: Variant, added: Variant) -> Variant:
-	if typeof(current) == TYPE_FLOAT or typeof(added) == TYPE_FLOAT:
-		return float(current) + float(added)
-	return int(current) + int(added)
-
-## faction_rare_main and faction_rare_secondary name the hero's faction's
-## town resources (factions.json town_resources).
-static func _resolve_bonus_key(key: String, hero_state: Dictionary) -> String:
-	if _battle_engine_mode == BattleEngine.GDSCRIPT:
-		return _resolve_bonus_key__gd(key, hero_state)
-	if _battle_engine_mode == BattleEngine.NATIVE:
-		return BattleEngine.native(&"HeroProgressionRules._resolve_bonus_key", [key, hero_state])
-	var result = _resolve_bonus_key__gd(key, hero_state)
-	BattleEngine.check(&"HeroProgressionRules._resolve_bonus_key", [key, hero_state], result)
-	return result
-
-static func _resolve_bonus_key__gd(key: String, hero_state: Dictionary) -> String:
-	if key != "faction_rare_main" and key != "faction_rare_secondary":
-		return key
-	var faction_id := String(hero_state.get("faction_id", ""))
-	if faction_id == "":
-		for id_key in ["id", "roster_hero_id", "hero_id"]:
-			faction_id = String(ContentService.get_hero(String(hero_state.get(id_key, ""))).get("faction_id", ""))
-			if faction_id != "":
-				break
-	var resources = ContentService.get_faction(faction_id).get("town_resources", {})
-	if not (resources is Dictionary):
-		return ""
-	return String(resources.get("main" if key == "faction_rare_main" else "secondary", ""))
-
-static func mana_max_bonus(hero_state: Dictionary) -> int:
-	if _battle_engine_mode == BattleEngine.GDSCRIPT:
-		return mana_max_bonus__gd(hero_state)
-	if _battle_engine_mode == BattleEngine.NATIVE:
-		return BattleEngine.native_writing(&"HeroProgressionRules.mana_max_bonus", [hero_state])
-	var before := BattleEngine.before_writing(&"HeroProgressionRules.mana_max_bonus", [hero_state])
-	var result = mana_max_bonus__gd(hero_state)
-	BattleEngine.check_writing(&"HeroProgressionRules.mana_max_bonus", before, [hero_state], result)
-	return result
-
-static func mana_max_bonus__gd(hero_state: Dictionary) -> int:
-	return int(aggregate_bonuses(hero_state).get("max_mana", 0))
+	return BattleEngine.native_writing(&"HeroProgressionRules.aggregate_bonuses", [hero_state])
 
 static func adjusted_mana_cost(hero_state: Dictionary, base_cost: int, school_id: String = "") -> int:
-	if _battle_engine_mode == BattleEngine.GDSCRIPT:
-		return adjusted_mana_cost__gd(hero_state, base_cost, school_id)
-	if _battle_engine_mode == BattleEngine.NATIVE:
-		return BattleEngine.native_writing(&"HeroProgressionRules.adjusted_mana_cost", [hero_state, base_cost, school_id])
-	var before := BattleEngine.before_writing(&"HeroProgressionRules.adjusted_mana_cost", [hero_state, base_cost, school_id])
-	var result = adjusted_mana_cost__gd(hero_state, base_cost, school_id)
-	BattleEngine.check_writing(&"HeroProgressionRules.adjusted_mana_cost", before, [hero_state, base_cost, school_id], result)
-	return result
-
-static func adjusted_mana_cost__gd(hero_state: Dictionary, base_cost: int, school_id: String = "") -> int:
-	var bonuses := aggregate_bonuses(hero_state)
-	var discount := int(bonuses.get("mana_cost_discount", 0))
-	var school_discounts = bonuses.get("school_mana_discount", {})
-	if school_id != "" and school_discounts is Dictionary:
-		discount += int(school_discounts.get(school_id, 0))
-	return max(0, base_cost - max(0, discount))
+	return BattleEngine.native_writing(&"HeroProgressionRules.adjusted_mana_cost", [hero_state, base_cost, school_id])
 
 static func daily_income_bonus(hero_state: Dictionary) -> Dictionary:
 	return aggregate_bonuses(hero_state).get("daily_income", {}).duplicate(true)
@@ -586,26 +418,7 @@ static func _normalize_specialties(value: Variant) -> Array:
 	return _normalize_specialties_in(_specialty_catalog() if value is Array else {}, value)
 
 static func _normalize_specialties_in(catalog: Dictionary, value: Variant) -> Array:
-	if _battle_engine_mode == BattleEngine.GDSCRIPT:
-		return _normalize_specialties_in__gd(catalog, value)
-	if _battle_engine_mode == BattleEngine.NATIVE:
-		return BattleEngine.native(&"HeroProgressionRules._normalize_specialties_in", [catalog, value])
-	var result = _normalize_specialties_in__gd(catalog, value)
-	BattleEngine.check(&"HeroProgressionRules._normalize_specialties_in", [catalog, value], result)
-	return result
-
-static func _normalize_specialties_in__gd(catalog: Dictionary, value: Variant) -> Array:
-	var normalized := []
-	if value is Array:
-		for specialty_id_value in value:
-			var specialty_id := String(specialty_id_value)
-			var row: Dictionary = catalog.get(specialty_id, {})
-			if row.is_empty():
-				continue
-			if _rank_in_array(normalized, specialty_id) >= maxi(1, int(row.get("max_rank", 1))):
-				continue
-			normalized.append(specialty_id)
-	return normalized
+	return BattleEngine.native(&"HeroProgressionRules._normalize_specialties_in", [catalog, value])
 
 static func _normalize_specialty_id_list(value: Variant) -> Array:
 	var normalized := []
@@ -815,22 +628,6 @@ static func _apply_command_gain(command_state: Variant, stat: String) -> Diction
 	}
 	command[stat] = int(command.get(stat, 0)) + 1
 	return command
-
-static func _rank_in_array(specialty_ids: Array, specialty_id: String) -> int:
-	if _battle_engine_mode == BattleEngine.GDSCRIPT:
-		return _rank_in_array__gd(specialty_ids, specialty_id)
-	if _battle_engine_mode == BattleEngine.NATIVE:
-		return BattleEngine.native(&"HeroProgressionRules._rank_in_array", [specialty_ids, specialty_id])
-	var result = _rank_in_array__gd(specialty_ids, specialty_id)
-	BattleEngine.check(&"HeroProgressionRules._rank_in_array", [specialty_ids, specialty_id], result)
-	return result
-
-static func _rank_in_array__gd(specialty_ids: Array, specialty_id: String) -> int:
-	var count := 0
-	for specialty_id_value in specialty_ids:
-		if String(specialty_id_value) == specialty_id:
-			count += 1
-	return count
 
 ## The queued choices of a hero already passed through ensure_hero_progression.
 static func raw_pending_choices_remaining(hero_state: Dictionary) -> int:

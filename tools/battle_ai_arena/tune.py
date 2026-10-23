@@ -22,10 +22,9 @@ Results go to .artifacts/battle_ai_arena/tune-<time>/: state.json (resumable), h
 (one line per generation) and weights.json (the current mean, the run's recommendation).
 Check it with `arena.py --b-weights <dir>/weights.json` on `standard` and `holdout`.
 
-With --backend cli (the default) battle_sim_cli plays the games (arena.py's README): Godot
-setup workers, booted once for the whole run, build each generation's battles up to their
-payloads, one generation ahead of the one being played, since the battles do not depend on
-the weights; --backend godot plays every game in Godot workers, a generation at a time.
+battle_sim_cli plays the games (arena.py's README): Godot setup workers, booted once for the
+whole run, build each generation's battles up to their payloads, one generation ahead of the
+one being played, since the battles do not depend on the weights.
 """
 from __future__ import annotations
 
@@ -46,7 +45,6 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
 import arena  # noqa: E402
-import router  # noqa: E402
 import scenarios  # noqa: E402
 
 SEARCH_LIMIT = 3.0  # a weight stays within 1/8 and 8 times its current value
@@ -156,7 +154,7 @@ class SetupAhead:
                 # The first worker writes the content snapshot as it boots.
                 "setup": {"content": str(self.content) if index == 0 else ""},
             }), encoding="utf-8")
-            self.procs.append(arena.start_worker(godot, self.dir, index, job, False, self.profiles))
+            self.procs.append(arena.start_worker(godot, self.dir, index, job, self.profiles))
             self.read[index] = (0, [])  # bytes read, rows of the map in progress
 
     def release(self, gen: int) -> None:
@@ -270,7 +268,6 @@ def main() -> int:
     parser.add_argument("--seed", type=int, default=1)
     parser.add_argument("--timeout", type=int, default=3600, help="seconds before a generation's workers are stopped")
     parser.add_argument("--keep-logs", action="store_true", help="keep each generation's jobs, logs and raw results")
-    parser.add_argument("--backend", choices=("cli", "godot"), default="cli", help="cli: battle_sim_cli plays the games (default); godot: Godot workers play every game")
     parser.add_argument("--threads", type=int, default=0, help="battle_sim_cli's threads (default: one per core)")
     args = parser.parse_args()
 
@@ -293,27 +290,21 @@ def main() -> int:
     names = [f"c{i}" for i in range(settings["population"])] + ["mean"]
     orders = [order for name in names for order in ([name, "base"], ["base", name])]
     odds = arena.parse_odds(settings.get("odds", ""))
-    router_path = run_dir / "router.gd"
-    ahead = None
-    if args.backend == "cli":
-        schedule = [(gen, training_groups(settings["seed"], gen, settings["maps"], settings["battles"], odds)) for gen in range(cma.gen, args.generations)]
-        ahead = SetupAhead(godot, run_dir, schedule, max(1, min(args.workers, settings["maps"])), orders)
-        ahead.release(cma.gen)
-    else:
-        router_path.write_text(router.build_router(arena.AI_SOURCE.read_text(encoding="utf-8")), encoding="utf-8")
-    print(f"Tuning {len(keys)} weights, population {settings['population']}, {settings['battles'] * settings['maps']} battles generated a generation (odds {settings.get('odds') or 'any'}), backend {args.backend} -> {run_dir}")
+    schedule = [(gen, training_groups(settings["seed"], gen, settings["maps"], settings["battles"], odds)) for gen in range(cma.gen, args.generations)]
+    ahead = SetupAhead(godot, run_dir, schedule, max(1, min(args.workers, settings["maps"])), orders)
+    ahead.release(cma.gen)
+    print(f"Tuning {len(keys)} weights, population {settings['population']}, {settings['battles'] * settings['maps']} battles generated a generation (odds {settings.get('odds') or 'any'}) -> {run_dir}")
     code = 1
     try:
-        code = tune(args, run_dir, cma, rng, keys, base, settings, values, names, orders, odds, godot, router_path, ahead)
+        code = tune(args, run_dir, cma, rng, keys, base, settings, values, names, orders, ahead)
         return code
     finally:
-        if ahead is not None:
-            # A failed run keeps the setup workers' logs.
-            ahead.close(args.keep_logs or code != 0)
+        # A failed run keeps the setup workers' logs.
+        ahead.close(args.keep_logs or code != 0)
 
 
 def tune(args, run_dir: Path, cma: SepCMA, rng, keys: list[str], base: dict[str, float], settings: dict, values: dict[str, float],
-         names: list[str], orders: list[list[str]], odds, godot: str, router_path: Path, ahead: SetupAhead | None) -> int:
+         names: list[str], orders: list[list[str]], ahead: SetupAhead) -> int:
     run_started = time.monotonic()
     run_games = 0
     while cma.gen < args.generations:
@@ -323,30 +314,17 @@ def tune(args, run_dir: Path, cma: SepCMA, rng, keys: list[str], base: dict[str,
         xs = cma.ask(rng)
         points = list(xs) + [cma.mean]
         weights = {"base": base, **{name: to_weights(x, keys, base) for name, x in zip(names, points)}}
-        split = {}
-        if ahead is not None:
-            # The next generation's maps build while this one plays.
-            ahead.release(gen + 1)
-            waited = time.monotonic()
-            rows, problems = ahead.wait(gen, args.timeout)
-            split["setup_wait"] = round(time.monotonic() - waited, 1)
-            games, cli_problems, stats = arena.play_cli(gen_dir, ahead.content, gen_dir / "corpus", {name: arena.full_weights(w) for name, w in weights.items()},
-                                                        orders, "base", args.timeout, args.threads)
-            split["battle_sim_cli"] = round(float(stats.get("seconds", 0.0)), 1)
-            split["battle_sim_cli_wall"] = stats.get("wall_seconds", 0.0)
-            shutil.rmtree(gen_dir / "corpus", ignore_errors=True)
-            rows, problems = rows + games, problems + cli_problems
-        else:
-            if gen_dir.exists():
-                shutil.rmtree(gen_dir)
-            variants_dir = gen_dir / "variants"
-            variants_dir.mkdir(parents=True)
-            paths = {}
-            for name, variant_weights in weights.items():
-                paths[name] = variants_dir / f"{name}.gd"
-                arena.resolve_variant("current", paths[name], variant_weights)
-            groups = training_groups(settings["seed"], gen, settings["maps"], settings["battles"], odds)
-            rows, problems = arena.run_workers(godot, gen_dir, groups, min(args.workers, len(groups)), paths, router_path, args.timeout, orders, "base")
+        # The next generation's maps build while this one plays.
+        ahead.release(gen + 1)
+        waited = time.monotonic()
+        rows, problems = ahead.wait(gen, args.timeout)
+        split = {"setup_wait": round(time.monotonic() - waited, 1)}
+        games, cli_problems, stats = arena.play_cli(gen_dir, ahead.content, gen_dir / "corpus", {name: arena.full_weights(w) for name, w in weights.items()},
+                                                    orders, "base", args.timeout, args.threads)
+        split["battle_sim_cli"] = round(float(stats.get("seconds", 0.0)), 1)
+        split["battle_sim_cli_wall"] = stats.get("wall_seconds", 0.0)
+        shutil.rmtree(gen_dir / "corpus", ignore_errors=True)
+        rows, problems = rows + games, problems + cli_problems
         games_played = sum(1 for row in rows if row.get("kind") == "game")
         run_games += games_played
         scores = candidate_scores(rows, names, values)
@@ -371,7 +349,7 @@ def tune(args, run_dir: Path, cma: SepCMA, rng, keys: list[str], base: dict[str,
             "sigma": round(cma.sigma, 4),
             "battles": len(scores["mean"]),
             "games": games_played,
-            # cli backend: the seconds spent waiting for the Godot setup workers, and battle_sim_cli's own.
+            # The seconds spent waiting for the Godot setup workers, and battle_sim_cli's own.
             **split,
             "multipliers": {key: round(2.0 ** float(np.clip(v, -SEARCH_LIMIT, SEARCH_LIMIT)), 3) for key, v in zip(keys, cma.mean)},
         }
@@ -384,7 +362,7 @@ def tune(args, run_dir: Path, cma: SepCMA, rng, keys: list[str], base: dict[str,
         moved = sorted(record["multipliers"].items(), key=lambda kv: -abs(math.log2(kv[1])))[:4]
         print(
             f"gen {gen:3d}  {record['seconds']:6.0f}s  {games_played} games  "
-            + (f"(setup wait {split['setup_wait']:.0f}s, battle_sim_cli {split['battle_sim_cli']:.0f}s)  " if split else "")
+            + f"(setup wait {split['setup_wait']:.0f}s, battle_sim_cli {split['battle_sim_cli']:.0f}s)  "
             + f"mean {record['mean_score']:.4f}  best {record['best_score']:.4f}  "
             f"population {record['population_score']:.4f}  sigma {record['sigma']:.3f}  "
             + "  ".join(f"{k} x{v}" for k, v in moved),
