@@ -5,6 +5,7 @@
 #include "aurelion_rules/port/hero_progression_rules.hpp"
 #include "aurelion_rules/port/native_random_map_package_session_bridge.hpp"
 #include "aurelion_rules/port/overworld_rules_human.hpp"
+#include "aurelion_rules/port/overworld_rules_move.hpp"
 #include "aurelion_rules/port/random_map_generator_rules.hpp"
 #include "aurelion_rules/port/save_service.hpp"
 #include "aurelion_rules/port/scenario_select_rules_setup.hpp"
@@ -25,6 +26,10 @@ namespace hero_command = hero_command_rules;
 namespace hero_progression = hero_progression_rules;
 namespace rmg = random_map_generator_rules;
 namespace save = save_service;
+namespace native_transit = native_transit_rules;
+namespace dwellings = creature_dwelling_rules;
+namespace visit_buildings = visit_building_rules;
+namespace scenario = scenario_rules;
 using overworld::Vector2i;
 
 // The parameters as GDScript's types left them. A session is its view, a
@@ -54,6 +59,13 @@ bool nil(const Value *args, int index) {
 // GDScript stops with a runtime error on a null session here; no screen passes one.
 void no_null_session(const Value *args) {
 	if (nil(args, 0)) {
+		throw state::NotPorted("a null session");
+	}
+}
+
+// The same for a session that is not the first parameter.
+void no_null(const Value *args, int index) {
+	if (nil(args, index)) {
 		throw state::NotPorted("a null session");
 	}
 }
@@ -378,6 +390,184 @@ const Function kFunctions[] = {
 	// 7.12, the save payload normalized (SessionState.normalize_payload, the tests).
 	NATIVE(SessionStateStore, normalize_payload, 1, true,
 			return gd::dict_value(session_state_store::normalize_payload(s, a[0]))),
+	// 7.2, the move and its arrival: what the overworld screen and the
+	// GDScript outside this slice call (the panels, the context actions, the
+	// battle end's site visit).
+	PORT(CreatureDwellingRules, summary, 3, false,
+			return gd::str(dwellings::summary(s, D(a, 0), D(a, 1), I(a, 2)))),
+	PORT(HeroCommandRules, field_rendezvous_heroes, 1, true,
+			if (nil(a, 0)) return gd::array_value(s.new_array());
+			return gd::array_value(hero_command::field_rendezvous_heroes(s, D(a, 0)))),
+	PORT(OverworldRules, normalize_overworld_state_for_runtime, 1, true,
+			if (nil(a, 0)) return Value();
+			overworld::normalize_overworld_state_for_runtime(s, D(a, 0)); return Value()),
+	PORT(OverworldRules, _store_level_fog, 3, true,
+			no_null(a, 0);
+			overworld::_store_level_fog(s, D(a, 0), D(a, 1), I(a, 2)); return Value()),
+	PORT(OverworldRules, try_move, 3, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld::try_move(s, D(a, 0), I(a, 1), I(a, 2)))),
+	PORT(OverworldRules, native_portal_display_name, 1, false,
+			return gd::str(overworld::native_portal_display_name(s, D(a, 0)))),
+	PORT(OverworldRules, try_move_along_route, 4, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld::try_move_along_route(s, D(a, 0), a[1], I(a, 2), B(a, 3)))),
+	PORT(OverworldRules, execute_prevalidated_route, 5, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld::execute_prevalidated_route(s, D(a, 0), a[1], D(a, 2), I(a, 3), D(a, 4)))),
+	PORT(OverworldRules, collect_active_resource, 1, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld::collect_active_resource(s, D(a, 0)))),
+	PORT(OverworldRules, _resource_reward_choice_context, 2, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld::_resource_reward_choice_context(s, D(a, 0), D(a, 1)))),
+	PORT(OverworldRules, _resource_site_artifact_summary, 1, false,
+			return gd::str(overworld::_resource_site_artifact_summary(s, D(a, 0)))),
+	PORT(OverworldRules, _spell_list_text, 1, false,
+			return gd::str(overworld::_spell_list_text(s, A(a, 0)))),
+	PORT(OverworldRules, _resource_site_reward_summary, 1, false,
+			return gd::str(overworld::_resource_site_reward_summary(s, D(a, 0)))),
+	PORT(OverworldRules, _collect_resource_node_result, 5, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld::_collect_resource_node_result(s, D(a, 0), D(a, 1), B(a, 2), I(a, 3), S(a, 4)))),
+	PORT(OverworldRules, collect_active_artifact, 1, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld::collect_active_artifact(s, D(a, 0)))),
+	PORT(OverworldRules, clear_active_town_visit, 1, true,
+			if (nil(a, 0)) return Value();
+			overworld::clear_active_town_visit(s, D(a, 0)); return Value()),
+	PORT(OverworldRules, capture_active_town, 1, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld::capture_active_town(s, D(a, 0)))),
+	PORT(OverworldRules, describe_encounter_compact_readability, 2, true,
+			no_null(a, 0);
+			return gd::str(overworld::describe_encounter_compact_readability(s, D(a, 0), D(a, 1)))),
+	PORT(OverworldRules, describe_encounter_battle_cue, 2, true,
+			no_null(a, 0);
+			return gd::str(overworld::describe_encounter_battle_cue(s, D(a, 0), D(a, 1)))),
+	PORT(OverworldRules, describe_encounter_consequence_surface, 3, true,
+			no_null(a, 0);
+			return gd::str(overworld::describe_encounter_consequence_surface(s, D(a, 0), D(a, 1), B(a, 2)))),
+	PORT(OverworldRules, _field_rendezvous_hero_at_tile, 2, true,
+			if (nil(a, 0)) return gd::dict_value(s.new_dict());
+			return gd::dict_value(overworld::_field_rendezvous_hero_at_tile(s, D(a, 0), V(a, 1)))),
+	PORT(OverworldRules, get_active_encounter, 1, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld::get_active_encounter(s, D(a, 0)))),
+	PORT(OverworldRules, _scenario_objective_player_label, 2, true,
+			no_null(a, 0);
+			return gd::str(overworld::_scenario_objective_player_label(s, D(a, 0), D(a, 1)))),
+	PORT(OverworldRules, _resource_site_income_cadence_label, 1, false,
+			return gd::str(overworld::_resource_site_income_cadence_label(s, D(a, 0)))),
+	PORT(OverworldRules, relieve_town_recovery_pressure, 4, true,
+			if (nil(a, 0)) return gd::str(state::key::empty);
+			return gd::str(overworld::relieve_town_recovery_pressure(s, D(a, 0), S(a, 1), I(a, 2), S(a, 3)))),
+	PORT(OverworldRules, _find_resource_node_at, 1, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld::_find_resource_node_at(s, D(a, 0)))),
+	PORT(OverworldRules, _find_context_resource_node, 1, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld::_find_context_resource_node(s, D(a, 0)))),
+	PORT(OverworldRules, _find_active_artifact_node, 1, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld::_find_active_artifact_node(s, D(a, 0)))),
+	PORT(OverworldRules, _resource_site_visit_cost, 1, false,
+			return gd::dict_value(overworld::_resource_site_visit_cost(s, D(a, 0)))),
+	PORT(OverworldRules, _resource_site_repeat_ready, 3, true,
+			if (nil(a, 0)) return gd::bool_value(false);
+			return gd::bool_value(overworld::_resource_site_repeat_ready(s, D(a, 0), D(a, 1), D(a, 2)))),
+	PORT(OverworldRules, _resource_site_next_visit_day, 2, false,
+			return gd::int_value(overworld::_resource_site_next_visit_day(s, D(a, 0), D(a, 1)))),
+	PORT(OverworldRules, _resource_node_claimable_by_player, 3, true,
+			return gd::bool_value(overworld::_resource_node_claimable_by_player(s, D(a, 0), D(a, 1), a[2]))),
+	PORT(OverworldRules, _resource_node_has_live_ai_defender, 3, true,
+			if (nil(a, 0)) return gd::bool_value(false);
+			return gd::bool_value(overworld::_resource_node_has_live_ai_defender(s, D(a, 0), D(a, 1), D(a, 2)))),
+	PORT(OverworldRules, _resource_site_claim_rewards, 1, false,
+			return gd::dict_value(overworld::_resource_site_claim_rewards(s, D(a, 0)))),
+	PORT(OverworldRules, _resource_site_claim_recruits, 1, false,
+			return gd::dict_value(overworld::_resource_site_claim_recruits(s, D(a, 0)))),
+	PORT(OverworldRules, resource_site_is_recruit_source, 1, false,
+			return gd::bool_value(overworld::resource_site_is_recruit_source(s, D(a, 0)))),
+	PORT(OverworldRules, _resource_site_yield_line, 3, true,
+			no_null(a, 0);
+			return gd::str(overworld::_resource_site_yield_line(s, D(a, 0), D(a, 1), D(a, 2)))),
+	PORT(OverworldRules, _resource_site_guard_encounter, 4, true,
+			if (nil(a, 0)) return gd::dict_value(s.new_dict());
+			return gd::dict_value(overworld::_resource_site_guard_encounter(s, D(a, 0), D(a, 1), D(a, 2), a[3]))),
+	PORT(OverworldRules, _resource_site_guard_blocks_node, 2, false,
+			return gd::bool_value(overworld::_resource_site_guard_blocks_node(s, D(a, 0), D(a, 1)))),
+	PORT(OverworldRules, _encounter_guard_link, 1, false,
+			return gd::dict_value(overworld::_encounter_guard_link(s, D(a, 0)))),
+	PORT(OverworldRules, _encounter_guard_summary, 2, true,
+			return gd::str(overworld::_encounter_guard_summary(s, D(a, 0), a[1]))),
+	PORT(OverworldRules, _encounter_readiness_surface, 3, true,
+			if (nil(a, 0)) return gd::str(state::key::empty);
+			return gd::str(overworld::_encounter_readiness_surface(s, D(a, 0), D(a, 1), B(a, 2)))),
+	PORT(OverworldRules, _encounter_risk_label, 1, false,
+			return gd::str(overworld::_encounter_risk_label(s, D(a, 0)))),
+	PORT(OverworldRules, _encounter_difficulty_label, 1, false,
+			return gd::str(overworld::_encounter_difficulty_label(s, D(a, 0)))),
+	PORT(OverworldRules, _encounter_army_surface, 2, false,
+			return gd::str(overworld::_encounter_army_surface(s, D(a, 0), B(a, 1)))),
+	PORT(OverworldRules, _encounter_army_payload, 1, false,
+			return gd::dict_value(overworld::_encounter_army_payload(s, D(a, 0)))),
+	PORT(OverworldRules, _encounter_reward_surface, 1, false,
+			return gd::str(overworld::_encounter_reward_surface(s, D(a, 0)))),
+	PORT(OverworldRules, _encounter_guard_target_label, 2, true,
+			return gd::str(overworld::_encounter_guard_target_label(s, a[0], D(a, 1)))),
+	PORT(OverworldRules, _non_empty_strings, 1, false,
+			return gd::array_value(overworld::_non_empty_strings(s, A(a, 0)))),
+	PORT(OverworldRules, _humanize_id, 1, false,
+			return gd::str(overworld::_humanize_id(s, S(a, 0)))),
+	PORT(OverworldRules, _describe_recruit_count, 1, false,
+			return gd::str(overworld::_describe_recruit_count(s, D(a, 0)))),
+	PORT(OverworldRules, _resource_site_spell_names, 1, false,
+			return gd::array_value(overworld::_resource_site_spell_names(s, D(a, 0)))),
+	PORT(OverworldRules, _can_afford, 2, true,
+			no_null(a, 0);
+			return gd::bool_value(overworld::_can_afford(s, D(a, 0), a[1]))),
+	PORT(OverworldRules, _sync_spellbook_to_hero, 2, true,
+			no_null(a, 0);
+			overworld::_sync_spellbook_to_hero(s, D(a, 0), I(a, 1)); return Value()),
+	PORT(OverworldRules, _town_requires_assault, 1, false,
+			return gd::bool_value(overworld::_town_requires_assault(s, D(a, 0)))),
+	PORT(OverworldRules, _attach_post_action_recap, 4, true,
+			no_null(a, 1);
+			return gd::dict_value(overworld::_attach_post_action_recap(s, D(a, 0), D(a, 1), S(a, 2), D(a, 3)))),
+	PORT(OverworldRules, _normalize_post_action_recap, 1, false,
+			return gd::dict_value(overworld::_normalize_post_action_recap(s, a[0]))),
+	PORT(OverworldRules, _army_totals, 1, false,
+			return gd::dict_value(overworld::_army_totals(s, D(a, 0)))),
+	PORT(VisitBuildingRules, cadence_label, 1, false,
+			return gd::str(visit_buildings::cadence_label(s, D(a, 0)))),
+	PORT(VisitBuildingRules, summary, 1, false,
+			return gd::str(visit_buildings::summary(s, D(a, 0)))),
+	PORT(ScenarioRules, _objective_label, 2, true,
+			no_null(a, 0);
+			return gd::str(scenario::_objective_label(s, D(a, 0), D(a, 1)))),
+	// 7.2's functions that tests call to set up or check a move.
+	PORT(OverworldRules, travel_native_passage, 3, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld::travel_native_passage(s, D(a, 0), D(a, 1), I(a, 2)))),
+	PORT(OverworldRules, _set_active_hero_position, 3, true,
+			no_null(a, 0);
+			overworld::_set_active_hero_position(s, D(a, 0), V(a, 1), I(a, 2)); return Value()),
+	PORT(OverworldRules, _resolve_post_move_interaction, 1, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld::_resolve_post_move_interaction(s, D(a, 0)))),
+	PORT(OverworldRules, _refresh_blocked_tile_index_for_interaction, 2, true,
+			if (nil(a, 0)) return Value();
+			overworld::_refresh_blocked_tile_index_for_interaction(s, D(a, 0), D(a, 1)); return Value()),
+	PORT(OverworldRules, _route_lock_prompt, 3, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld::_route_lock_prompt(s, D(a, 0), D(a, 1), D(a, 2)))),
+	PORT(OverworldRules, _collect_artifact_node_result, 3, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld::_collect_artifact_node_result(s, D(a, 0), D(a, 1), B(a, 2)))),
+	PORT(ScenarioRules, evaluate_session_for_event, 2, true,
+			no_null(a, 0);
+			return gd::dict_value(scenario::evaluate_session_for_event(s, D(a, 0), D(a, 1)))),
 };
 
 // The host calls of a merged slice's functions (gd::call_static), as HOST

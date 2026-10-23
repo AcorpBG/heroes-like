@@ -9,6 +9,7 @@ const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const DayEngine = preload("res://scripts/core/DayEngine.gd")
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 static var _day_engine_mode: int = DayEngine.mode
 static var DifficultyRulesScript: Variant = load("res://scripts/core/DifficultyRules.gd")
 
@@ -1243,6 +1244,16 @@ static func manage_army_slots(
 	}
 
 static func field_rendezvous_heroes(session: SessionStateStoreScript.SessionData) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return field_rendezvous_heroes__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"HeroCommandRules.field_rendezvous_heroes", [session])
+	var before := HumanEngine.before_writing(&"HeroCommandRules.field_rendezvous_heroes", [session])
+	var result = field_rendezvous_heroes__gd(session)
+	HumanEngine.check_writing(&"HeroCommandRules.field_rendezvous_heroes", before, [session], result)
+	return result
+
+static func field_rendezvous_heroes__gd(session: SessionStateStoreScript.SessionData) -> Array:
 	normalize_session(session)
 	var rendezvous := []
 	if session == null:

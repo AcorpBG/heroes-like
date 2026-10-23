@@ -162,7 +162,8 @@ Atom _encounter_army_surface(State &state, DictRef encounter, bool include_units
 DictRef _encounter_army_payload(State &state, DictRef encounter);
 Atom _encounter_army_unit_summary(State &state, DictRef army);
 Atom _encounter_reward_surface(State &state, DictRef encounter);
-Atom _encounter_guard_target_label(State &state, DictRef session, DictRef guard);
+// session: a view, or Nil.
+Atom _encounter_guard_target_label(State &state, const Value &session, DictRef guard);
 ArrayRef _non_empty_strings(State &state, ArrayRef value);
 Atom _humanize_id(State &state, Atom value);
 

@@ -186,8 +186,10 @@ ArrayRef _duplicate_visibility_grid(State &state, ArrayRef grid) {
 }
 
 DictRef _build_fog_payload(State &state, ArrayRef visible_tiles, ArrayRef explored_tiles, Vector2i map_size) {
+	const int64_t count_started_usec = _rules_profile_timer(state);
 	const int64_t explored_count = _count_grid(state, array_value(explored_tiles));
 	const int64_t visible_count = visible_tiles == explored_tiles ? explored_count : _count_grid(state, array_value(visible_tiles));
+	_rules_profile_add_ms(state, key::fog_count_grid_ms, count_started_usec);
 	const DictRef payload = state.new_dict();
 	state.set(payload, str(key::visible_tiles), array_value(visible_tiles));
 	state.set(payload, str(key::explored_tiles), array_value(explored_tiles));
@@ -217,11 +219,13 @@ int64_t _count_grid(State &state, const Value &grid) {
 
 void _reveal_all_current_fog_sources(State &state, DictRef session, ArrayRef explored_tiles, Vector2i map_size, int64_t level) {
 	level = level_rules::query_level(state, session, level);
+	int64_t source_count = 0;
 	const DictRef overworld = session_view::overworld(state, session);
 	const Value heroes = gd::field(state, overworld, key::player_heroes);
 	if (gd::is_array(heroes)) {
 		for (const Value &hero : gd::items(state, heroes)) {
 			if (gd::is_dict(hero) && level_rules::on_level(state, hero, level)) {
+				source_count = gd::add(source_count, 1);
 				_apply_hero_reveal(state, explored_tiles, hero.ref, map_size);
 			}
 		}
@@ -236,6 +240,7 @@ void _reveal_all_current_fog_sources(State &state, DictRef session, ArrayRef exp
 			if (gd::stringify(state, state.get(town, str(key::owner), str(key::neutral))) != key::player || !level_rules::on_level(state, town_value, level)) {
 				continue;
 			}
+			source_count = gd::add(source_count, 1);
 			_apply_site_reveal(state, explored_tiles, level_rules::town_entrance(state, town), kTownVisionRadius, map_size);
 		}
 	}
@@ -254,9 +259,11 @@ void _reveal_all_current_fog_sources(State &state, DictRef session, ArrayRef exp
 			if (!_resource_site_is_persistent(state, site)) {
 				continue;
 			}
+			source_count = gd::add(source_count, 1);
 			_apply_site_reveal(state, explored_tiles, node.ref, held_site_vision_radius(state, site), map_size);
 		}
 	}
+	_rules_profile_set(state, key::fog, key::source_count, int_value(source_count));
 }
 
 void _apply_hero_reveal(State &state, ArrayRef explored_tiles, DictRef hero, Vector2i map_size) {

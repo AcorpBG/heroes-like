@@ -5,6 +5,9 @@ extends RefCounted
 ## hero can use a building once, once a day or once a week, and a side can chart
 ## or survey once. See docs/visit-buildings.md.
 
+const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
+
 
 const FAMILY := "visit_building"
 const HERO_VISITS := "hero_visits"
@@ -130,6 +133,15 @@ static func record_visit(node: Dictionary, site: Dictionary, visitor_key: String
 		node[SITE_LAST_VISIT_DAY] = day
 
 static func cadence_label(site: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return cadence_label__gd(site)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"VisitBuildingRules.cadence_label", [site])
+	var result = cadence_label__gd(site)
+	HumanEngine.check(&"VisitBuildingRules.cadence_label", [site], result)
+	return result
+
+static func cadence_label__gd(site: Dictionary) -> String:
 	match cadence(site):
 		CADENCE_ONCE_PER_SIDE:
 			return "once per player"
@@ -189,6 +201,15 @@ static func effect_summary(effect: Dictionary) -> String:
 
 ## One line for tooltips and inspection: effect, price and cadence.
 static func summary(site: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return summary__gd(site)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"VisitBuildingRules.summary", [site])
+	var result = summary__gd(site)
+	HumanEngine.check(&"VisitBuildingRules.summary", [site], result)
+	return result
+
+static func summary__gd(site: Dictionary) -> String:
 	var text := ""
 	var options := choices(site)
 	if not options.is_empty():

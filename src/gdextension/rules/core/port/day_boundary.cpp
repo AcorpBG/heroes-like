@@ -7,17 +7,17 @@
 // summary texts.
 //
 // The paths AI matches never run are left to GDScript (state::NotPorted): the
-// rules profile while it records (a debug capture), an action whose scenario
-// check is narrowed to its event facts (ScenarioRules.evaluate_session_for_event,
-// the human player's site, dwelling, building, artifact and town actions), and
-// a public event JSON.stringify would write with a float, a control character
-// or a key that is not a String.
+// end of turn while the rules profile records (a debug capture), and a public
+// event JSON.stringify would write with a float, a control character or a key
+// that is not a String. An action's scenario check narrowed to its event facts
+// (ScenarioRules.evaluate_session_for_event) is ported (Phase 7, slice 7.2).
 
 #include "aurelion_rules/port/enemy_adventure_rules.hpp"
 #include "aurelion_rules/port/enemy_turn_rules_turn.hpp"
 #include "aurelion_rules/port/hero_commit.hpp"
 #include "aurelion_rules/port/overworld_level_rules.hpp"
 #include "aurelion_rules/port/overworld_rules.hpp"
+#include "aurelion_rules/port/overworld_rules_move.hpp"
 #include "aurelion_rules/port/scenario_evaluation.hpp"
 #include "aurelion_rules/port/session_view.hpp"
 
@@ -411,20 +411,25 @@ DictRef leak_result(State &state, const std::string &error) {
 	return result;
 }
 
-// _finalize_action_result once its NotPorted cases and the rules profile are
-// checked: scenario_event_facts is empty and incremental fog has its port.
-DictRef finalize_action_result_body(State &state, DictRef session, bool ok, Atom base_message, bool refresh_fog, bool incremental_fog) {
+// OverworldRules._finalize_action_result__gd. The end of turn calls it too,
+// with no event facts, once it has refused a recording profile.
+DictRef finalize_action_result_body(State &state, DictRef session, bool ok, Atom base_message, bool refresh_fog, bool incremental_fog, DictRef scenario_event_facts) {
+	const int64_t finalize_started_usec = overworld_rules::_rules_profile_timer(state);
+	const int64_t commit_before_started_usec = overworld_rules::_rules_profile_timer(state);
 	hero_command_rules::commit_active_hero(state, session);
+	overworld_rules::_rules_profile_add_ms(state, key::finalize_commit_before_ms, commit_before_started_usec);
+	const int64_t fog_before_started_usec = overworld_rules::_rules_profile_timer(state);
 	if (refresh_fog) {
 		overworld_rules::refresh_fog_of_war(state, session);
 	} else if (incremental_fog) {
 		overworld_rules::_reveal_current_fog_sources(state, session);
 	}
+	overworld_rules::_rules_profile_add_ms(state, key::finalize_fog_before_ms, fog_before_started_usec);
 
-	// The objective and hook counts feed only the rules profile; read as GDScript reads them.
 	int64_t objective_count = 0;
 	int64_t hook_count = 0;
-	{
+	const bool without_event_facts = gd::is_empty(state, scenario_event_facts);
+	if (without_event_facts) {
 		// ContentService.get_scenario_readonly(session.scenario_id).
 		const DictRef scenario = gd::content_row(state, ContentTable::Scenario, text(state, session, key::scenario_id, key::empty));
 		const Value objectives = scenario_rules::objectives_for_session(state, session);
@@ -436,20 +441,47 @@ DictRef finalize_action_result_body(State &state, DictRef session, bool ok, Atom
 		}
 		const Value hooks = field_or_new_array(state, scenario, key::script_hooks);
 		hook_count = gd::is_array(hooks) ? state.array_size(hooks.ref) : 0;
+		overworld_rules::_rules_profile_set(state, key::scenario_eval, key::objective_count, int_value(objective_count));
+		overworld_rules::_rules_profile_set(state, key::scenario_eval, key::hook_count, int_value(hook_count));
 	}
-	(void)objective_count;
-	(void)hook_count;
-
-	const DictRef scenario_result = overworld_rules::_evaluate_scenario_state(state, session);
-	// The scenario profile goes only to the rules profile.
+	const int64_t scenario_started_usec = overworld_rules::_rules_profile_timer(state);
+	const DictRef scenario_result = without_event_facts
+			? overworld_rules::_evaluate_scenario_state(state, session)
+			: overworld_rules::_evaluate_scenario_state_for_event(state, session, scenario_event_facts);
+	overworld_rules::_rules_profile_add_ms(state, key::finalize_scenario_eval_ms, scenario_started_usec);
+	// var scenario_profile: Dictionary = scenario_result.get("profile", {}) if ... is Dictionary else {}
+	Value profile_value;
+	DictRef scenario_profile = state.lookup(scenario_result, str(key::profile), profile_value) && gd::is_dict(profile_value) ? profile_value.ref : state.new_dict();
+	if (gd::is_empty(state, scenario_profile)) {
+		scenario_profile = state.new_dict();
+		state.set(scenario_profile, str(key::dependency_mode), str(key::full));
+		state.set(scenario_profile, str(key::fallback_reason), str(key::empty));
+		state.set(scenario_profile, str(key::objective_count), int_value(objective_count));
+		state.set(scenario_profile, str(key::hook_count), int_value(hook_count));
+		state.set(scenario_profile, str(key::objectives_checked), int_value(objective_count));
+		state.set(scenario_profile, str(key::objectives_skipped), int_value(0));
+		state.set(scenario_profile, str(key::hooks_checked), int_value(hook_count));
+		state.set(scenario_profile, str(key::hooks_skipped), int_value(0));
+	}
+	{
+		const ArrayRef profile_keys = gd::keys(state, scenario_profile);
+		for (const Value &profile_key : gd::items(state, array_value(profile_keys))) {
+			overworld_rules::_rules_profile_set(state, key::scenario_eval, gd::stringify_or_fallback(state, profile_key), state.get(scenario_profile, profile_key, Value()));
+		}
+	}
 	const Atom scenario_message = text(state, scenario_result, key::message, key::empty);
+	const int64_t commit_after_started_usec = overworld_rules::_rules_profile_timer(state);
 	hero_command_rules::commit_active_hero(state, session);
+	overworld_rules::_rules_profile_add_ms(state, key::finalize_commit_after_ms, commit_after_started_usec);
+	const int64_t fog_after_started_usec = overworld_rules::_rules_profile_timer(state);
 	if (refresh_fog) {
 		overworld_rules::refresh_fog_of_war(state, session);
 	} else if (incremental_fog) {
 		overworld_rules::_reveal_current_fog_sources(state, session);
 	}
+	overworld_rules::_rules_profile_add_ms(state, key::finalize_fog_after_ms, fog_after_started_usec);
 	overworld_rules::_mark_runtime_normalized(state, session);
+	overworld_rules::_rules_profile_add_ms(state, key::finalize_action_total_ms, finalize_started_usec);
 
 	// " ".join(messages): base_message, then scenario_message, each when not "".
 	std::vector<std::string> messages;
@@ -639,12 +671,7 @@ void _reveal_current_fog_sources(State &state, DictRef session) {
 }
 
 DictRef _finalize_action_result(State &state, DictRef session, bool ok, Atom base_message, bool refresh_fog, bool incremental_fog, DictRef scenario_event_facts) {
-	refuse_recording_profile(state);
-	if (!gd::is_empty(state, scenario_event_facts)) {
-		// _evaluate_scenario_state_for_event(session, scenario_event_facts).
-		not_ported("ScenarioRules.evaluate_session_for_event (an action's scenario check narrowed to its event facts)");
-	}
-	return finalize_action_result_body(state, session, ok, base_message, refresh_fog, incremental_fog);
+	return finalize_action_result_body(state, session, ok, base_message, refresh_fog, incremental_fog, scenario_event_facts);
 }
 
 DictRef _end_turn_close_day(State &state, DictRef session, DictRef opened, DictRef enemy_turn_result) {
@@ -673,7 +700,9 @@ DictRef _end_turn_close_day(State &state, DictRef session, DictRef opened, DictR
 			state.append(messages, item);
 		}
 	}
-	const DictRef result = finalize_action_result_body(state, session, true, join_array(state, " ", messages), true, false);
+	// _finalize_action_result(session, true, " ".join(messages)): no event facts.
+	const Atom closing_message = join_array(state, " ", messages);
+	const DictRef result = finalize_action_result_body(state, session, true, closing_message, true, false, state.new_dict());
 	normalize_overworld_state(state, session);
 	// session.set_meta(CLOSING_NORMALIZE_DAY_META, int(session.day))
 	state.set(session_view::meta(state, session), gd::name_value(key::_overworld_end_turn_closing_normalize_day), int_value(gd::to_int(state, gd::field(state, session, key::day))));

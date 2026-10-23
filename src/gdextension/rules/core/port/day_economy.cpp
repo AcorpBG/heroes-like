@@ -743,7 +743,9 @@ DictRef _find_encounter_by_placement(State &state, DictRef session, Atom placeme
 	if (placement_id == key::empty) {
 		return encounter_result(state, -1, dict_value(state.new_dict()));
 	}
+	const int64_t lookup_started_usec = _rules_profile_timer(state);
 	const Value encounters = field_or_new_array(state, session_view::overworld(state, session), key::encounters);
+	_rules_profile_set(state, key::descriptor, key::lookup_collection_size, int_value(gd::is_array(encounters) ? state.array_size(encounters.ref) : 0));
 	const DictRef lookup_index = _spatial_lookup_index(state, session, -1);
 	// var by_placement: Dictionary = lookup_index.get("encounter_by_placement", {}), {} unless a Dictionary.
 	Value by_placement;
@@ -755,19 +757,24 @@ DictRef _find_encounter_by_placement(State &state, DictRef session, Atom placeme
 			if (gd::is_dict(indexed_encounter)) {
 				const Value id_fallback = state.get(indexed_encounter.ref, str(key::id), str(key::empty));
 				if (gd::stringify_or_fallback(state, state.get(indexed_encounter.ref, str(key::placement_id), id_fallback)) == placement_id) {
+					_rules_profile_set(state, key::descriptor, key::lookup_mode, str(key::placement_index));
+					_rules_profile_add_ms(state, key::descriptor_lookup_ms, lookup_started_usec);
 					return encounter_result(state, indexed, indexed_encounter);
 				}
 			}
 		}
 	}
+	_rules_profile_set(state, key::descriptor, key::lookup_mode, str(key::full_scan_fallback));
 	// for index in range(encounters.size()): encounters[index]
 	const int64_t count = ai::vsize(state, encounters);
 	for (int64_t index = 0; index < count; ++index) {
 		const Value encounter = ai::vindex(state, encounters, int_value(index));
 		if (gd::is_dict(encounter) && text(state, encounter.ref, key::placement_id, key::empty) == placement_id) {
+			_rules_profile_add_ms(state, key::descriptor_lookup_ms, lookup_started_usec);
 			return encounter_result(state, index, encounter);
 		}
 	}
+	_rules_profile_add_ms(state, key::descriptor_lookup_ms, lookup_started_usec);
 	return encounter_result(state, -1, dict_value(state.new_dict()));
 }
 

@@ -10,6 +10,8 @@ const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const GeneratedObjectives = preload("res://scripts/core/GeneratedScenarioObjectiveRules.gd")
 const TownDevelopmentRulesScript = preload("res://scripts/core/TownDevelopmentRules.gd")
 const DayEngine = preload("res://scripts/core/DayEngine.gd")
+const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 static var _day_engine_mode: int = DayEngine.mode
 
 static var _scenario_dependency_metadata_cache: Dictionary = {}
@@ -129,6 +131,16 @@ static func objective_artifact_ids(session: SessionStateStoreScript.SessionData)
 	return ids
 
 static func evaluate_session_for_event(session: SessionStateStoreScript.SessionData, event_facts: Dictionary = {}) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return evaluate_session_for_event__gd(session, event_facts)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ScenarioRules.evaluate_session_for_event", [session, event_facts])
+	var before := HumanEngine.before_writing(&"ScenarioRules.evaluate_session_for_event", [session, event_facts])
+	var result = evaluate_session_for_event__gd(session, event_facts)
+	HumanEngine.check_writing(&"ScenarioRules.evaluate_session_for_event", before, [session, event_facts], result)
+	return result
+
+static func evaluate_session_for_event__gd(session: SessionStateStoreScript.SessionData, event_facts: Dictionary = {}) -> Dictionary:
 	normalize_scenario_state(session)
 	var profile := _scenario_event_dependency_profile(session, event_facts)
 	if session == null or session.scenario_id == "":
@@ -1689,6 +1701,16 @@ static func _objective_met(session: SessionStateStoreScript.SessionData, objecti
 			return false
 
 static func _objective_label(session: SessionStateStoreScript.SessionData, objective: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _objective_label__gd(session, objective)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ScenarioRules._objective_label", [session, objective])
+	var before := HumanEngine.before_writing(&"ScenarioRules._objective_label", [session, objective])
+	var result = _objective_label__gd(session, objective)
+	HumanEngine.check_writing(&"ScenarioRules._objective_label", before, [session, objective], result)
+	return result
+
+static func _objective_label__gd(session: SessionStateStoreScript.SessionData, objective: Dictionary) -> String:
 	var base_label := String(objective.get("label", objective.get("id", "Objective")))
 	match String(objective.get("type", "")):
 		GeneratedObjectives.KIND:

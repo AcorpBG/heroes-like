@@ -2,7 +2,8 @@
 
 // scripts/core/OverworldRules.gd, ported function by function under the GDScript
 // names (docs/native-rules-engine-transition.md, Phase 5). A session is its view
-// (session_view.hpp). The debug rules profile (_rules_profile_*) is not recorded.
+// (session_view.hpp). The debug rules profile (_rules_profile_*) is recorded as
+// GDScript records it, except at the end of the turn (refuse_recording_profile).
 
 #include "aurelion_rules/port/gd.hpp"
 

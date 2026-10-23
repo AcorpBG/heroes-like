@@ -327,6 +327,7 @@ void _refresh_blocked_tile_index(State &state, DictRef session) {
 	const DictRef profile = gd::as_dict(gd::static_var(state, key::overworld_rules_script, key::_pathing_debug_profile));
 	const bool capture_enabled = gd::bool_field(state, profile, key::capture_enabled, false);
 	const int64_t started_usec = capture_enabled ? gd::ticks_usec() : 0;
+	const Value resource_nodes = field_or_new_array(state, session_view::overworld(state, session), key::resource_nodes);
 	const DictRef level_indexes = state.new_dict();
 	const int64_t level_count = overworld_level_rules::level_count(state, session);
 	for (int64_t level = 0; level < level_count; ++level) {
@@ -335,13 +336,15 @@ void _refresh_blocked_tile_index(State &state, DictRef session) {
 	}
 	// session.set_meta(BLOCKED_TILE_INDEX_META, level_indexes).
 	state.set(session_view::meta(state, session), gd::name_value(key::_overworld_blocked_tile_indexes), dict_value(level_indexes));
-	// The rules profile's blocked_index section (_rules_profile_set) is not recorded.
-	if (!capture_enabled) {
-		return;
-	}
 	// var index: Dictionary = level_indexes.get(hero_level(session), {})
 	const Value index_value = state.get(level_indexes, int_value(hero_level(state, session)), Value());
 	const int64_t tile_count = gd::is_dict(index_value) ? state.dict_size(index_value.ref) : 0;
+	_rules_profile_set(state, key::blocked_index, key::rebuilt, bool_value(true));
+	_rules_profile_set(state, key::blocked_index, key::node_count, int_value(gd::is_array(resource_nodes) ? state.array_size(resource_nodes.ref) : 0));
+	_rules_profile_set(state, key::blocked_index, key::tile_count, int_value(tile_count));
+	if (!capture_enabled) {
+		return;
+	}
 	const int64_t elapsed_usec = compat::engine_max<int64_t>(0, gd::sub(gd::ticks_usec(), started_usec));
 	state.set(profile, str(key::blocked_index_rebuild_count), int_value(gd::add(gd::int_field(state, profile, key::blocked_index_rebuild_count, 0), 1)));
 	state.set(profile, str(key::last_blocked_index_rebuild_usec), int_value(elapsed_usec));
