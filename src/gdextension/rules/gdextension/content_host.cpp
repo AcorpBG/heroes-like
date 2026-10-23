@@ -269,7 +269,8 @@ PackedStringArray AurelionContent::content_ids(const String &path, const String 
 }
 
 String AurelionContent::canonical_town_id(const String &id) {
-	return query<String>("canonical_town_id", id, [&](std::vector<content::Message> &messages) {
+	// A typed GDScript function that stops on an error returns its type's default.
+	return query<String>("canonical_town_id", String(), [&](std::vector<content::Message> &messages) {
 		return from_utf8(store_->canonical_town_id(utf8(id), messages));
 	});
 }

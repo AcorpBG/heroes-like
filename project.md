@@ -64,7 +64,7 @@ Native extensions, external asset pipelines, or new storage layers may be added 
 - Scene controllers render state and send intents; core rule scripts own gameplay decisions.
 - Authored content is immutable at runtime and referenced by stable ids.
 - Each faction has one gameplay town template and one construction tree. Retired town IDs are compatibility aliases, not alternate town definitions; existing placement IDs, source-map records and scenario targets retain their identity. Shared building lines use one active stage, with ancestry satisfying prerequisites without stacking obsolete effects. Tiers 1–5 choose one of two dwelling branches; all seven tiers have Veteran upgrades. Per-faction main/secondary resources, hero training claims, artifact shop stock and legacy town migration remain data-driven and save-persistent.
-- `ContentService` owns derived id/art lookup indexes over borrowed immutable rows. Reloading content clears those indexes with the content cache; changing catalog membership or ids in place is not a runtime editing API. Editors and tests replacing content must use the cache/reset boundary, not mutate borrowed catalog structure.
+- The native content tables (`content::Store`, Phase 7.10) own the parsed content documents and their id/art lookup indexes; `ContentService` hands out their rows, read-only and shared by every caller. Reloading content (`clear_cache`) rebuilds them; changing catalog membership or ids in place is not a runtime editing API. Editors and tests replacing content use `set_content_override` and `clear_content_overrides`, not mutation of the borrowed rows.
 - Save data stores mutable state plus content references, not copied authored definitions.
 - Map/scenario persistence must separate authored/generated map assets from mutable session deltas; full map payload rewrites are not an acceptable long-term save model.
 - Save/load must remain explicit, versioned, and backward-aware.
@@ -89,7 +89,7 @@ Native extensions, external asset pipelines, or new storage layers may be added 
 Expected ownership boundaries:
 
 - Scenario bootstrap and setup: `ScenarioFactory.gd`, scenario content JSON, and future scenario/map document adapters.
-- Map/scenario persistence: current JSON content/save plumbing in `ContentService.gd`, `SaveService.gd`, and `SessionStateStore.gd`; future C++ GDExtension map package ownership once selected by a tactical slice.
+- Map/scenario persistence: content loading in the native content tables (`src/gdextension/rules/core/content_store.cpp`, reached through `ContentService.gd`); save plumbing in `SaveService.gd` and `SessionStateStore.gd`; future C++ GDExtension map package ownership once selected by a tactical slice.
 - Overworld state, movement, sites, economy ticks, fog, towns, and strategic summaries: `OverworldRules.gd`.
 - Overworld ground presentation: `OverworldGroundSurface.gd` blends manifest-backed original raster materials in world space. Its cached terrain/exploration lookup is derived presentation data, never terrain, collision or save authority; unknown neighboring ground must not leak through biome blending.
 - Overworld scenery may compose compatible neighboring blocked bodies into shared visual patches, independent of source-record boundaries. Patch bases must use existing blocked cells; overlapping art stays in the presentation/fog layer and must not modify native placements, paths, collision, simulation RNG or saves.

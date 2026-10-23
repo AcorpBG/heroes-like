@@ -88,11 +88,13 @@ need the same hit/miss behaviour.
 exception caught at the adapter. Floats become text only through `compat::num` and `compat::json_float` (the engine's
 `String::num` and `JSON.stringify`) or in the Godot adapter.
 
-**Content.** A native content table is built once per content revision from the Dictionaries ContentService has already
-parsed (no second JSON parser), keeping first-id-wins, file order and per-field presence (defaults differ per call
-site). Genetic-algorithm overrides go through one in-memory override layer *in ContentService* that bumps the content
-revision, so GDScript and native code never see two different contents in one match. Overrides are validated (no zero
-hit points, reversed damage ranges and similar) at that boundary.
+**Content.** The native content tables (Phase 7, slice 7.10) read the content files themselves: `compat::json_parse`
+is the engine's `JSON.parse`, and `content::Store` keeps every document read-only with ContentService's lookups
+(first id wins, file order, towns by their canonical id). GDScript gets one read-only Dictionary per document and
+row, the same object for every caller, and the port bridge reads the store directly. Overrides (the genetic
+algorithms', the tests') go through the store's one override layer, which bumps the content revision, so GDScript
+and native code never see two different contents in one match; an AI weights override is checked against the
+shipped document at that boundary.
 
 **State.** The session Dictionaries stay the save and UI format throughout. Native calls convert in, compute on a copy,
 and write back only on success: known keys in place, new keys appended in GDScript's order, int/float types kept, array
@@ -2601,6 +2603,11 @@ treasury and fog is a later save-schema slice. Branch `native-phase7-human`.
   merges; while working, the shadow check on the `--human` run. If the first merge looks too big to debug, a split is
   proposed first.
 
+**Later owner decisions** (2026-10-23; D11 in section 8):
+- **D-i, the archived content's start-up checks.** Option (b): they are deleted in 7.10, and the live files' checks
+  are ported. ContentService still loads the archived content by id.
+- **The first merge is split.** Merge 1a is 7.1 with 7.10, merge 1b is 7.11 with 7.12, each with the full checks once.
+
 **Inventory** (2026-10-23, main 7bd62e817; a static call graph of main from a scratch analyzer: calls through
 `class_name`, preload consts, lazy-script getters and autoload names; calls by string, signals and engine callbacks
 not followed):
@@ -2692,6 +2699,47 @@ their seven helpers. The shell's validation hooks (`_build_validation_path`) sti
 - Day shadow on the six seeds, after the main merge: 7,829 checks, 0 mismatches, 0 errors.
 - The `--human` check against main runs at the first merge.
 
+**Slice 7.10, content loading** (2026-10-23, branch `native-phase7-human`): ContentService's files are parsed,
+indexed, looked up and checked in C++.
+- `compat::json_parse` (`compat/godot_json.cpp`) is the engine's `JSON.parse`, with its own digest in the selftest's
+  compat vectors.
+- `content::Store` (`core/content_store.cpp`) loads each document once, read-only (an Array root as `{"items": ...}`,
+  the archive's missing files as `{}`), and answers `get_content_by_id`, `get_content_ids`, `get_encounter` (with the
+  generated companies), `canonical_town_id`, `normalize_terrain_id`, `get_biome_for_terrain`,
+  `get_map_object_for_resource_site`, the overrides (`ai_hero_weights_errors` against the shipped file), `clear_cache`
+  and the content revision. A lookup takes ids as `String()` does: a non-text id stops it.
+- `AurelionContent` (`gdextension/content_host.cpp`) hands GDScript one read-only Dictionary or Array per node, kept
+  until the tables reload. The port bridge's content rows and files read the store; scenarios and terrain layers still
+  come from ContentService (its generated drafts).
+- `core/content_validate.cpp` is the start-up checks of the live files (36 functions, the art indexes included), with
+  GDScript's runtime-error rule: an error ends the function it happens in, and its caller goes on.
+- The archived content's start-up checks are deleted (D-i): `_validate_content`, `_index_items`,
+  `_validate_terrain_layer`, `_terrain_ids_supporting_roads`, `_terrain_overlay_ids`, `_terrain_id_from_map`,
+  `_validate_scenario`, `_validate_objective`, `_validate_script_hook`, `_validate_script_condition`,
+  `_validate_script_effect`, `_validate_script_placement`, `_append_hook_spawn_placements`, `_append_unique_string`,
+  `_validate_campaign`, `_validate_campaign_chapter_seal`, `_validate_campaign_requirements`,
+  `_validate_campaign_carryover`, `_campaign_id_for_scenario` and `_validate_enemy_faction` (970 lines). No core test,
+  `tests/validate_repo.py` or other code called them, so no test retires under D-e.
+- `ContentService.gd` keeps thin wrappers, a memo per document and found row, and the generated drafts: 2,362 lines
+  before, 340 after.
+- Fixed on the way: `State::clear` emptied its atoms before the map whose keys view them (MSVC's `clear()` can hash its
+  keys); the fix went to main on its own (4eb648cfe).
+- `canonical_town_id` answers `""` when an error stops it, as GDScript's typed function does.
+Checks:
+- Tables, main against the branch: every content file's document, ids and rows by id (each `is_same` as its list's row),
+  the art, animation and hero art rows, the encounters with the generated companies, the towns and aliases, terrain ids
+  and biomes, the site objects, the failures, overrides and the revision: 8,178 lines identical, with the same errors
+  at the same places (in the native messages' words) and the same warnings. 0 start-up warnings on both.
+- Start-up checks of the live files, main against the branch (both still running the archived checks then): the shipped
+  files and 1,929 broken copies of the 24 live files (a key removed, emptied, a bad reference, a wrong type, nested
+  fields; at most 100 a file, spread over its rows). In 1,919 cases the same warnings and the same number of runtime
+  errors. In 10 cases with an int id the branch printed one runtime error more, from the archived checks' GDScript index
+  beside the native one; rerun after their deletion, heroes.json's 86 cases have main's counts. With `legacy_aliases` a
+  list, `canonical_town_id` answered the id instead of `""` after its error, so the archived checks printed 120 warnings
+  fewer; fixed, and 28 lookups on broken alias copies now give main's answers.
+- Measured in the probes: loading every content file 266 ms on main, 94 to 97 ms on the branch; the start-up checks
+  595 ms on main, 331 ms on the branch with the archived checks still in GDScript.
+
 ### Phase 8: a match runner without Godot
 
 Wanted, not optional (owner decision 2026-10-22, D7). The same core as a command-line tool. Needs the copied Variant hash and either deterministic math or accepted last-bit
@@ -2735,7 +2783,7 @@ Sizes are the proposal's unmeasured agent-day guesses, useful only to compare ph
 | D8 | **Decided 2026-10-20:** Phase 1 lives on one port branch, `native-phase1-battle` on GitHub, rebased on main at least weekly and before each slice, and merges to main once, when every battle is native and identical; it is dropped if checkpoint G1 stays under 5x after the interface fix (AGENTS.md "Native rules port") | Phase 1 |
 | D9 | **Decided 2026-10-22:** copies of the owner's five saves on this computer (Mireclaw Zhorra Fenwake days 1 and 14; Veilmourn Ivara Blacktide days 5 and 10 and the autosave; save version 9) and the two generated maps they reference live in `D:\Games\godot\heroes-like-save-copies` (outside git, with `SHA256SUMS` and a README). The originals are never touched; runs read the copies with an isolated user profile | Phase 4 (4.4) |
 | D10 | **Decided 2026-10-20:** main is tagged before each port merge. Owner 2026-10-21: no waiting period after it (the 7 days without behaviour commits was removed) | each merge |
-| D11 | **Decided 2026-10-23:** Phase 7's scope and checks (Phase 7, "Owner decisions", D-a to D-e): a permanent human seat in `tools/rules_parity.py`; every rule native, only the screens in GDScript; one map snapshot per redraw; no GDScript way back; retired tests by D6. Plan revision 2 (D-f to D-h): the campaign runtime moves with the campaign rework, `RandomMapGeneratorRules.generate` and the editor's authored-scenario export are deleted; order 7.1, 7.10 to 7.12, 7.2 to 7.9, 7.13, 7.15; four merges | Phase 7 |
+| D11 | **Decided 2026-10-23:** Phase 7's scope and checks (Phase 7, "Owner decisions", D-a to D-e): a permanent human seat in `tools/rules_parity.py`; every rule native, only the screens in GDScript; one map snapshot per redraw; no GDScript way back; retired tests by D6. Plan revision 2 (D-f to D-h): the campaign runtime moves with the campaign rework, `RandomMapGeneratorRules.generate` and the editor's authored-scenario export are deleted; order 7.1, 7.10 to 7.12, 7.2 to 7.9, 7.13, 7.15; four merges. Later (D-i): the archived content's start-up checks are deleted and the live files' checks ported; the first merge is split into 1a (7.1, 7.10) and 1b (7.11, 7.12) | Phase 7 |
 
 ## 9. Risks and how the plan contains them
 

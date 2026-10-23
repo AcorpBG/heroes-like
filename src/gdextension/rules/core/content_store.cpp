@@ -278,7 +278,8 @@ std::string Store::canonical_town_id(const std::string &id, std::vector<Message>
 		return id;
 	}
 	if (aliases.kind != Kind::Dict) {
-		throw state::NotPorted("left to GDScript: towns.json's legacy_aliases is no Dictionary");
+		throw state::ScriptError(std::string("Trying to assign value of type '") + gd::type_name(aliases) +
+				"' to a variable of type 'Dictionary'.");
 	}
 	Value alias;
 	if (!data_.lookup(aliases.ref, data_.string(id), alias)) {
