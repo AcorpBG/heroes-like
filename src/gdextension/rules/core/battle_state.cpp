@@ -232,9 +232,12 @@ State::State() {
 }
 
 void State::clear() {
-	atoms_.clear();
+	// atom_ids_'s keys view the strings of atoms_, and clearing a map may hash
+	// its keys (MSVC's does when it has more buckets than keys): the map goes
+	// first.
 	atom_ids_.clear();
 	joined_.clear();
+	atoms_.clear();
 	for (std::string_view text : kKnownKeys) {
 		const size_t next = atoms_.size();
 		if (intern(text) != next) {
