@@ -116531,15 +116531,15 @@
     {
       "id": "native-rules-phase6-p3-day-call-20261023",
       "title": "Phase 6 P6-3: end_turn as one native call",
-      "status": "pending",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "The day open, the computer players' turn and the day close in one port call; PortBridge::begin clears only what the last call used. Measured share about 14% of a batch match, bound about 1.16x.",
-      "updatedAt": "2026-10-23T08:30:00Z"
+      "notes": "OverworldRules.end_turn is one native call (day open, the computer players' turn, day close; day_registry.cpp, day_boundary.cpp) with the standard day switch; a path left to GDScript undoes the call and the three parts run (four elimination days in the six seeds). State's memo hash is noexcept. PortBridge::begin unchanged: small calls measured 28 us, not the profile's 330 us. Checks: day shadow on the six seeds (end_turn 405 checks, 0 mismatches, 0 errors), six seeds native against main 61e73a38c identical in all 415 digests and the records, core suite 17/17. Timing without the digest, three interleaved rounds, six at once: summed runs 176.6-180.6 s on main (baseline for P6-3 and P6-4), 160.5-162.5 s with P6-3, 1.11x; wall 46.2 s against 41.2-42.2 s.",
+      "updatedAt": "2026-10-23T09:45:00Z"
     },
     {
       "id": "native-rules-phase6-p4-session-handle-20261023",

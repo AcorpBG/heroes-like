@@ -907,8 +907,11 @@ private:
 	void watch(const Value &value);
 	void freeze(const Value &value);
 
+	// noexcept: MSVC's clear() then costs the memo's size, not its bucket
+	// count, which stays as large as the biggest call made it. Every port call
+	// clears the memo when it starts (PortBridge::begin).
 	struct MemoKeyHash {
-		size_t operator()(const MemoKey &key) const {
+		size_t operator()(const MemoKey &key) const noexcept {
 			uint64_t h = key.a * 0x9E3779B97F4A7C15ull;
 			h ^= key.b + 0x9E3779B97F4A7C15ull + (h << 6) + (h >> 2);
 			h ^= key.c + 0x9E3779B97F4A7C15ull + (h << 6) + (h >> 2);

@@ -2272,7 +2272,7 @@ Godot dependency, since these slices lead to Phase 8. The bound is 1/(1 - share)
 | Slice | Change | Share | Bound |
 |---|---|---|---|
 | P6-5 | The runner's per-day digest becomes the Variant hash of the session instead of sha256 of its JSON: Godot's `hash()` in the game, `gd::hash` (the C++ copy) in runner mode and Phase 8. The JSON stays for the dump day. | 56% of checks | 2.3x on checks |
-| P6-3 | `end_turn` as one native call; `PortBridge::begin` clears only what the last call used | about 14% | about 1.16x |
+| P6-3 | `end_turn` as one native call (done: 1.11x measured; `begin` needed no change) | about 14% | about 1.16x |
 | P6-4 | The native session kept across days; runner mode and game mode give the same digests | 31-34% | 1.45-1.52x |
 | P6-1 | Several matches per Godot process | 19.9% (s2 50%) | 1.25x (s2 2.0x) |
 | P6-2 | A map corpus, with the adopted session kept per process | 8.3-14.4% | 1.09-1.17x |
@@ -2304,6 +2304,41 @@ Godot dependency, since these slices lead to Phase 8. The bound is 1/(1 - share)
   - Core suite 17/17.
 - **Timing:** the six seeds took 204 s in one run on a quiet machine. 4.4's last measurement with the JSON digest,
   on an older main, was 391 s; the two runs were not interleaved.
+
+**P6-3, one native call per day** (`native-rules-phase6-p3-day-call-20261023`, branch `native-phase6-day-call`):
+- **What changed.**
+  - `OverworldRules.end_turn` is a day port entry (`day_registry.cpp`, the composite in `day_boundary.cpp`):
+    `_end_turn_open_day`, `EnemyTurnRules.run_enemy_turn(session, false)` and `_end_turn_close_day` in one native
+    call, with the standard day switch (`tools/native_battle_switch.py`). The session loads once a day, and the
+    open day's result and the turn's result stay native.
+  - The turn makes no host call, so a path the day port leaves to GDScript, anywhere in the day, undoes the whole
+    call. The switch then runs the three parts, as before. Human games reach such paths mostly in the day open
+    (a player town's weekly growth, a convoy's arrival), before the turn runs.
+  - `State`'s memo hash is `noexcept`: MSVC's `clear()` of the memo then costs its size, not its bucket count, which
+    stays as large as the biggest call made it. The memo is cleared at every call's start and after a watched write
+    inside a call.
+  - `PortBridge::begin` stays as it was. The profile's 330 µs per small call came from its timer build. A scratch
+    probe on l1 (days 16 to 25, 2,780 `AiHeroRules.hero_power` calls after the day calls) measured 28 µs a call, and
+    65 µs for the first call after a day, with main's library and with this one.
+- **Checks:**
+  - Day shadow on the six seeds: `end_turn` 405 checks, 0 mismatches, 0 errors; no function with a mismatch or error.
+    Four days are not ported: a player's elimination ("a player whose townless days are up", already left to
+    GDScript on main). On those days the call is undone and the three parts run, so the turn runs twice.
+  - Six seeds native against main 61e73a38c: all 415 daily digests and the match records identical, the four
+    fallback days among them.
+  - Core suite 17/17.
+  - After merging main b49d1bcc9 (Phase 2c) and rebuilding: six seeds against it identical again, core suite 17/17.
+- **Timing** (the six seeds as `tools/ai_match_batch.py` plays them, no per-day digest, six at once, three rounds
+  alternating main 61e73a38c and P6-3 on a quiet machine):
+
+  | | Wall | Sum of the six runs |
+  |---|---|---|
+  | main (the baseline for P6-3 and P6-4) | 46.2 s, 46.2 s, 46.2 s | 180.6 s, 179.5 s, 176.6 s |
+  | P6-3 | 42.2 s, 42.2 s, 41.2 s | 162.5 s, 161.4 s, 160.5 s |
+
+  1.11x on the summed runs (9.7% less), against the 1.16x bound. Every seed was faster in every round (l1 43 s to
+  38–39 s, s2 10 s to 9 s).
+
 
 ### Phase 7: human-side actions and the last GDScript rules
 
