@@ -2196,6 +2196,75 @@ reused and a fresh process); a pre-generated map corpus for genetic-algorithm wo
 and move forward if G0 finds a high fixed cost. **Whole-game genetic algorithms become practical here, if the measured
 gain is there.**
 
+**Profile** (2026-10-23, main bb79014da, seeds s2, mw, mg-b and l1, four at once on a quiet machine, scratch timers in
+the runner and a scratch timer build of the bridge, which adds 4%, so its splits are ranges):
+- The same four games take 205.4 s in `rules_parity.py` and 89.5 s as `tools/ai_match_batch.py` plays them (no
+  per-day digest). The digest, `JSON.stringify` of the whole session plus sha256, is 56% of every parity and timing
+  run. The session's JSON is 2 to 20 MB a day; about 75% of it is map package data, and the 5.0 MB runtime scenario
+  record is held twice, in `overworld` and in `flags`.
+- An owner-batch match, 89.5 s:
+
+  | Part | Seconds | Share |
+  |---|---|---|
+  | The computer players' turn | 38.89 | 43.4% |
+  | The day close | 15.35 | 17.1% |
+  | Start-up per Godot process | 17.80 | 19.9% |
+  | Map generation and package | 9.96 | 11.1% |
+  | Session adoption | 2.89 | 3.2% |
+  | Other setup | 1.45 | 1.6% |
+  | Runner bookkeeping per day | 2.29 | 2.6% |
+  | The day open | 0.72 | 0.8% |
+  | The record | 0.16 | 0.2% |
+
+- Start-up per Godot process is about 4.4 s: Godot itself 0.1 s, GDExtensions and autoload scripts 0.9 s, compiling
+  the runner's script closure 2.1 s, content validation 0.5 s, and process start and exit. That is 50% of an s2 match
+  and 12% of l1.
+- Native rules against the bridge (loads, lazy fills, exports, write-backs, statics, content lookups, `begin`):
+  - The turn: native 52-57%, bridge 43-48%.
+  - The day close: bridge 68-73%.
+  - No host calls into GDScript during the day.
+  - Over a match: bridge 31-34%, native rules work 27-30%.
+
+**Slices** (owner decision 2026-10-23: P6-5 first, then P6-3 and P6-4; P6-1 and P6-2 later; Windows only, lean checks).
+Each slice merges to main on its own, the C++ ones with main tagged first (D10). The code stays portable and adds no
+Godot dependency, since these slices lead to Phase 8. The bound is 1/(1 - share).
+
+| Slice | Change | Share | Bound |
+|---|---|---|---|
+| P6-5 | The runner's per-day digest becomes the Variant hash of the session instead of sha256 of its JSON: Godot's `hash()` in the game, `gd::hash` (the C++ copy) in runner mode and Phase 8. The JSON stays for the dump day. | 56% of checks | 2.3x on checks |
+| P6-3 | `end_turn` as one native call; `PortBridge::begin` clears only what the last call used | about 14% | about 1.16x |
+| P6-4 | The native session kept across days; runner mode and game mode give the same digests | 31-34% | 1.45-1.52x |
+| P6-1 | Several matches per Godot process | 19.9% (s2 50%) | 1.25x (s2 2.0x) |
+| P6-2 | A map corpus, with the adopted session kept per process | 8.3-14.4% | 1.09-1.17x |
+
+- Checks per C++ slice: shadow on the six seeds while working; before pushing, native against main on the six seeds and
+  the core suite, plus P6-4's runner-mode against game-mode digests; timing on a quiet machine with Phases 2 and 5
+  paused.
+- A runner without Godot (Phase 8) still needs native content tables, the copied Variant hash, package-to-session
+  adoption, D4 math, GDScript statics as native state and the runner's setup.
+
+**P6-5, the digest as the Variant hash** (`native-rules-phase6-p5-variant-digest-20261023`, branch
+`native-phase6-digest`):
+- **What changed.** The match runner writes `day<TAB>digest` each day: the Variant hash (`hash()`) of the header
+  fields, overworld, battle and flags, 8 hex digits each. The dump day still writes the full JSON.
+  `tools/rules_parity.py` reads both formats; two sides with different formats compare their records only and never
+  count as identical.
+- **No native change.** The game hashes with Godot's `hash()`, and the rules library's `gd::hash` already copies it for
+  runner mode and Phase 8.
+- **Checks:**
+  - Scratch probe, on a small 2P map (5 days) and a large 4P two-level map (3 days), 68 checks, 0 failures:
+    - `gd::hash` gives `hash()`'s value on every part every day. The sessions hold only Dictionaries, Arrays, Strings,
+      ints, floats and bools.
+    - One planted value at a time changes only its part's digest, and restoring it gives the old digest back: a town's
+      `x`, a flag, a computer hero's army count, its commander's experience, an int turned float, and the last bit of
+      a float.
+  - Six seeds against main 2dfcc8d15: identical match records and final days. The 415 daily digests were not
+    compared, since their formats differ.
+  - A second run of the six seeds: all 415 daily digests and the records identical to the first.
+  - Core suite 17/17.
+- **Timing:** the six seeds took 204 s in one run on a quiet machine. 4.4's last measurement with the JSON digest,
+  on an older main, was 391 s; the two runs were not interleaved.
+
 ### Phase 7: human-side actions and the last GDScript rules
 
 Movement, routes, context actions, overworld spells, town actions, hero transfers and artifact equipping: about 378

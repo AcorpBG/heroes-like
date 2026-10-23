@@ -13,11 +13,12 @@ A side is a project directory (run with the editor binary, --godot / --godot-a /
 exported game binary of an AI batch preset (export_presets.cfg; it starts the match runner and
 loads the .pck beside it). An exported build writes its map package to user://maps, the editor to
 res://maps: compare the two with --portable, which blanks the fields that hold that location. Every match writes a
-digest line per day (HEROES_AI_MATCH_DIGEST in tests/ai_versus_ai_match_report.gd: sha256 of the
-whole session state as JSON with insertion order, int and float apart and full precision) and its
-match record. `check` compares the digests and the records (timing fields left out); for a seed
-that differs it plays both sides again to the first differing day with a full state dump and
-reports the first differing JSON paths.
+digest line per day (HEROES_AI_MATCH_DIGEST in tests/ai_versus_ai_match_report.gd: the Variant hash
+of the whole session state, insertion order, int and float apart; a runner from before 2026-10-23
+writes sha256 of its JSON instead) and its match record. `check` compares the digests and the
+records (timing fields left out); for a seed that differs it plays both sides again to the first
+differing day with a full state dump and reports the first differing JSON paths. Two sides whose
+digests have different formats compare their records only and never count as identical.
 
 Each Godot run gets its own throwaway user profile (APPDATA, XDG_DATA_HOME/CONFIG/CACHE) and its
 package under <project>/maps is deleted after it (matched by scenario id and time, never a file
@@ -261,14 +262,21 @@ def run_jobs(jobs: list[Job], parallel: int, timeout_min: float, work: Path, say
 
 # ---------------------------------------------------------------- comparison
 
-def read_digest(path: Path) -> list[tuple[int, str, int]]:
+def read_digest(path: Path) -> list[tuple]:
+    """(day, digest) per line; a runner from before 2026-10-23 wrote (day, sha256 of the JSON, its length)."""
     if not path.exists():
         return []
     rows = []
     for line in path.read_text(encoding="utf-8").splitlines():
-        day, sha, length = line.split("\t")
-        rows.append((int(day), sha, int(length)))
+        day, *rest = line.split("\t")
+        rows.append((int(day), *rest))
     return rows
+
+
+def digest_format(rows: list[tuple]) -> str:
+    if not rows:
+        return ""
+    return "sha256 of the JSON" if len(rows[0]) == 3 else "Variant hash"
 
 
 def first_differing_day(a: list, b: list) -> int | None:
@@ -327,14 +335,17 @@ def compare_seed(key: str, dir_a: Path, dir_b: Path, failed: list[str]) -> dict:
     """failed: why a run of this seed on either side failed; such a seed is never identical."""
     da, db = read_digest(dir_a / f"{key}.digest"), read_digest(dir_b / f"{key}.digest")
     row = {"seed": key, "days_a": len(da), "days_b": len(db), "first_day": first_differing_day(da, db), "record": [],
-           "failed": failed}
+           "failed": failed, "formats": ""}
+    if da and db and digest_format(da) != digest_format(db):
+        row["formats"] = f"digest formats differ (A {digest_format(da)}, B {digest_format(db)}), records compared only"
+        row["first_day"] = None
     ra, rb = dir_a / f"{key}.json", dir_b / f"{key}.json"
     if ra.exists() and rb.exists():
         row["record"] = differences(strip_timing(json.loads(ra.read_text(encoding="utf-8"))),
                                     strip_timing(json.loads(rb.read_text(encoding="utf-8"))), limit=6)
     else:
         row["record"] = [f"record missing: A {ra.exists()}, B {rb.exists()}"]
-    row["identical"] = bool(da) and row["first_day"] is None and not row["record"] and not failed
+    row["identical"] = bool(da) and row["first_day"] is None and not row["record"] and not failed and not row["formats"]
     return row
 
 
@@ -384,7 +395,8 @@ def print_rows(rows: list[dict], say) -> None:
         if row["identical"]:
             say(f"{row['seed']:5} identical: {row['days_a']} daily digests and the match record")
             continue
-        where = f"first differing day {row['first_day']}" if row["first_day"] is not None else "daily digests identical"
+        where = (row["formats"] if row["formats"] else f"first differing day {row['first_day']}" if row["first_day"] is not None
+                 else "daily digests identical")
         if row["failed"]:
             say(f"{row['seed']:5} FAILED: {'; '.join(row['failed'])[:220]}")
             say(f"        {where} (A {row['days_a']} days, B {row['days_b']} days)")
@@ -392,6 +404,8 @@ def print_rows(rows: list[dict], say) -> None:
             say(f"{row['seed']:5} DIFFERENT: {where} (A {row['days_a']} days, B {row['days_b']} days)")
         for text in row["record"][:3]:
             say(f"        record {text}")
+        if row["formats"] and not row["record"]:
+            say("        record identical")
         dump = row.get("dump")
         if dump:
             for note in dump.get("not_reproducible", []):

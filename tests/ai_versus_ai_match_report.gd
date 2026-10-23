@@ -27,14 +27,17 @@ extends Node
 # HEROES_AI_MATCH_WATER    land (default), normal_water or islands.
 # HEROES_AI_MATCH_LEVELS   1 (default) or 2 (with an underground level).
 # HEROES_AI_MATCH_DIGEST   file that gets one line per day, at the start and
-#                          after every end_turn: "day<TAB>sha256<TAB>length"
-#                          of the whole session state as JSON (insertion
-#                          order, int and float apart, full precision; length
-#                          in characters). For tools/rules_parity.py; off by
-#                          default, and the game is the same either way.
+#                          after every end_turn: "day<TAB>digest", the Variant
+#                          hash of the whole session state (hash(); the rules
+#                          library's gd::hash copies it), 8 hex digits for
+#                          each of its header fields, overworld, battle and
+#                          flags (insertion order, int and float apart). For
+#                          tools/rules_parity.py; off by default, and the game
+#                          is the same either way.
 # HEROES_AI_MATCH_DUMP     with HEROES_AI_MATCH_DUMP_DAY: that day's session
-#                          JSON, exactly as digested, goes into this file and
-#                          the match stops there.
+#                          state as JSON (the digested parts in one object,
+#                          full precision) goes into this file and the match
+#                          stops there.
 # HEROES_AI_MATCH_DIGEST_BLANK comma-separated; "overworld.<key>" and
 #                          "flags.<key>" entries name where to look, the other
 #                          entries are field names whose values become "" in
@@ -292,6 +295,23 @@ func _run() -> void:
 func _digest_day(session) -> void:
 	if _digest_file == null and _dump_day != int(session.day):
 		return
+	var parts := _state_parts(session)
+	if _digest_file != null:
+		_digest_file.store_line(_digest_line(int(session.day), parts))
+		_digest_file.flush()
+	if _dump_day == int(session.day):
+		var state: Dictionary = parts[0].duplicate()
+		state["overworld"] = parts[1]
+		state["battle"] = parts[2]
+		state["flags"] = parts[3]
+		var dump := FileAccess.open(_dump_path, FileAccess.WRITE)
+		if dump != null:
+			dump.store_string(JSON.stringify(state, "", false, true))
+			dump.close()
+
+## The session state as the digest takes it, blanked as asked: the header
+## fields, overworld, battle and flags.
+func _state_parts(session) -> Array:
 	var overworld: Dictionary = session.overworld
 	var flags: Dictionary = session.flags
 	if not _blank_scopes.is_empty():
@@ -302,25 +322,23 @@ func _digest_day(session) -> void:
 			var key := scope.get_slice(".", 1)
 			if part.get(key) is Dictionary:
 				part[key] = _blanked(part[key])
-	var text := JSON.stringify({
+	var header := {
 		"day": session.day,
 		"session_id": session.session_id,
 		"scenario_id": session.scenario_id,
 		"game_state": session.game_state,
 		"scenario_status": session.scenario_status,
 		"scenario_summary": session.scenario_summary,
-		"overworld": overworld,
-		"battle": session.battle,
-		"flags": flags,
-	}, "", false, true)
-	if _digest_file != null:
-		_digest_file.store_line("%d\t%s\t%d" % [int(session.day), text.sha256_text(), text.length()])
-		_digest_file.flush()
-	if _dump_day == int(session.day):
-		var dump := FileAccess.open(_dump_path, FileAccess.WRITE)
-		if dump != null:
-			dump.store_string(text)
-			dump.close()
+	}
+	return [header, overworld, session.battle, flags]
+
+## "day<TAB>digest": each part's Variant hash (hash(), which the rules
+## library's gd::hash copies) as 8 hex digits.
+static func _digest_line(day: int, parts: Array) -> String:
+	var line := "%d\t" % day
+	for part in parts:
+		line += "%08x" % hash(part)
+	return line
 
 ## A copy of value with every _blank_fields entry set to "", in nested
 ## dictionaries only; insertion order kept.
