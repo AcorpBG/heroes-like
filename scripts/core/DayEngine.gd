@@ -13,8 +13,9 @@ extends RefCounted
 ##   set (AurelionRules.port_validate_begin and port_validate_end).
 ##   One six-seed shadow run checks a change to a function with two copies.
 ## A session reaches the native port as a view: a Dictionary of its fields, the
-## very overworld, battle and flags Dictionaries among them, and its metadata
-## under "meta". After a native call the session takes the view's fields back.
+## very overworld, battle and flags Dictionaries among them, its metadata
+## under "meta" and its instance id under "instance_id". After a native call
+## the session takes the view's fields back.
 ## In shadow mode every open check reads one view per session, brought up to
 ## date before each check.
 ## Mismatches and native failures print a SCRIPT ERROR (the first 20), which
@@ -38,6 +39,8 @@ const SESSION_FIELDS := [
 	"game_state", "scenario_status", "scenario_summary", "overworld", "battle", "flags",
 ]
 const META := "meta"
+## session.get_instance_id(), which the read scopes key their caches by.
+const INSTANCE_ID := "instance_id"
 
 static var mode: int = _mode_from_environment()
 ## Shadow: the view of each session the checks read, by the session's instance
@@ -143,6 +146,7 @@ static func _view(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	for key in session.get_meta_list():
 		meta[key] = session.get_meta(key)
 	view[META] = meta
+	view[INSTANCE_ID] = session.get_instance_id()
 	return view
 
 ## The view takes the session's fields and metadata, in place.

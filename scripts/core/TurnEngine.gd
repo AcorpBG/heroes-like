@@ -9,8 +9,8 @@ extends RefCounted
 ## callers outside the turn (slice 4.4).
 ## A session reaches the native port as a view: a Dictionary of its fields, the
 ## very overworld, battle and flags Dictionaries among them, its metadata under
-## "meta" and the session itself under "object". After a native call the
-## session takes the view's fields back.
+## "meta", the session itself under "object" and its instance id under
+## "instance_id". After a native call the session takes the view's fields back.
 ## A path the port does not cover (none the game reaches) is a native failure:
 ## it prints a SCRIPT ERROR, and the session keeps the state the call started
 ## from. HEROES_NATIVE_TURN_LOG, set to a folder, collects the port's call
@@ -26,6 +26,8 @@ const SESSION_FIELDS := [
 ]
 const META := "meta"
 const OBJECT := "object"
+## session.get_instance_id(), which the read scopes key their caches by.
+const INSTANCE_ID := "instance_id"
 
 ## The native port of a function that may write into its arguments, writing
 ## into them; a session takes its view's fields back.
@@ -58,6 +60,7 @@ static func _view(session: SessionStateStoreScript.SessionData) -> Dictionary:
 		meta[key] = session.get_meta(key)
 	view[META] = meta
 	view[OBJECT] = session
+	view[INSTANCE_ID] = session.get_instance_id()
 	return view
 
 ## Each session takes its view's fields and metadata back.

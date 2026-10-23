@@ -20,7 +20,7 @@ const COUNT := 1 << 20
 const INT64_MAX := 9223372036854775807
 const INT64_MIN := -9223372036854775807 - 1
 const CANONICAL_NAN_BITS := 0x7FF8000000000000
-const HELPERS := ["pcg", "int_text", "string", "posmod", "int_div", "float_round", "snapped", "variant_minmax", "typed_minmax", "sort"]
+const HELPERS := ["pcg", "int_text", "string", "posmod", "int_div", "float_round", "snapped", "variant_minmax", "typed_minmax", "sort", "json_float"]
 const CODE_POINTS := [0x2D, 0x2B, 0x2E, 0x20, 0x61, 0x5A, 0x5F, 0x09, 0xE9, 0x3A9, 0x4E2D, 0x1F600, 0x30, 0x2D]
 
 var _state := 1
@@ -337,4 +337,21 @@ func _fuzz_sort(count: int) -> void:
 		_emit_int(size)
 		for index in order:
 			_emit_int(index)
+		_flush()
+
+# JSON.stringify of a float: random floats, dyadic fractions (exact ties at
+# every place) and the floats next to powers of ten and their reciprocals.
+func _fuzz_json_float(count: int) -> void:
+	for i in count:
+		_emit_text(JSON.stringify(_rand_float()))
+		var numerator := float(_below(2000001) - 1000000)
+		_emit_text(JSON.stringify(numerator / float(1 << _below(60))))
+		var power := 1
+		for k in _below(19):
+			power *= 10
+		_bytes.encode_double(0, float(power))
+		var near := _bits_to_float(_bytes.decode_s64(0) + _below(5) - 2)
+		if _below(2) == 1:
+			near = 1.0 / near
+		_emit_text(JSON.stringify(near))
 		_flush()

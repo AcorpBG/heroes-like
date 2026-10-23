@@ -84,7 +84,8 @@ need the same hit/miss behaviour.
 (`std::to_string(double)`, `printf("%f")`, `strtod`, `tolower`), ASCII-only lowering; no `unordered_*` iteration or
 `std::hash` reaching any output; no behaviour depending on `DEBUG_ENABLED` (godot-cpp makes it public in
 `template_debug`); `/fp:precise`, `-ffp-contract=off`, no fast-math, no `-march=native`; checked division; every
-exception caught at the adapter. Numbers become text only in the Godot adapter, through godot-cpp `String::num`/`JSON`.
+exception caught at the adapter. Floats become text only through `compat::num` and `compat::json_float` (the engine's
+`String::num` and `JSON.stringify`) or in the Godot adapter.
 
 **Content.** A native content table is built once per content revision from the Dictionaries ContentService has already
 parsed (no second JSON parser), keeping first-id-wins, file order and per-field presence (defaults differ per call
@@ -495,7 +496,11 @@ every function run inside `resolve_active_battle`, with `_finalize_*` left out. 
   - `maxf`/`minf`/`clampf`/`maxi`/... are the engine's MAX/MIN/CLAMP templates: the second argument wins ties.
     With `lo > hi`, `clampf` returns `lo` when `x < lo` and `hi` otherwise, where `clamp` always returns `hi`.
   - `str(int)` and `"%d" % x` are the same digits (a float is truncated first).
-  - Floats become text only through `String::num` in the adapter.
+  - Floats become text only through `compat::num`/`compat::json_float` or in the adapter. On Windows they call
+    `msvcrt.dll`'s `_vsnprintf` and `log10`, the functions the official build imports: this library's UCRT prints
+    exact digits, where msvcrt keeps 17 and rounds them in its own 80-bit arithmetic (rounding exact digits as msvcrt
+    does still missed 1 of 786,432 fuzz values). On Linux both use glibc. The `json_float` digest checks them; the
+    Linux digest waits for the Linux pass.
 - **C runtime.** The official Windows binary is MinGW-w64 GCC (GNU ld 2.45) on `msvcrt.dll`, which supplies `acos`,
   `asin`, `atan`, `ceil`, `cosh`, `log10`, `sinh`, `tan`, `tanh`, `_hypot` and `_nextafter`. The battle code calls no
   transcendental function. Inside the engine, float-to-text (`log10` plus `snprintf`) is the only path that depends on

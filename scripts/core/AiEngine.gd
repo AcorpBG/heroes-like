@@ -5,8 +5,9 @@ extends RefCounted
 ## AiHeroRules functions GDScript still calls are wrappers that call their
 ## native port here (ai_registry.cpp lists them).
 ## A session reaches the native port as a view: a Dictionary of its fields, the
-## very overworld, battle and flags Dictionaries among them, and its metadata
-## under "meta". After a native call the session takes the view's fields back.
+## very overworld, battle and flags Dictionaries among them, its metadata under
+## "meta" and its instance id under "instance_id". After a native call the
+## session takes the view's fields back.
 ## The ported functions keep their static vars (weights, memos, caches) in
 ## their scripts, where the port reads and writes them.
 
@@ -19,6 +20,8 @@ const SESSION_FIELDS := [
 	"game_state", "scenario_status", "scenario_summary", "overworld", "battle", "flags",
 ]
 const META := "meta"
+## session.get_instance_id(), which the read scopes key their caches by.
+const INSTANCE_ID := "instance_id"
 
 ## The native port of a function that may write into its arguments, writing
 ## into them; a session takes its view's fields back. A path the port does not
@@ -54,6 +57,7 @@ static func _view(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	for key in session.get_meta_list():
 		meta[key] = session.get_meta(key)
 	view[META] = meta
+	view[INSTANCE_ID] = session.get_instance_id()
 	return view
 
 ## Each session takes its view's fields and metadata back.

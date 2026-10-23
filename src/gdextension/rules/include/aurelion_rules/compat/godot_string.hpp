@@ -1,10 +1,10 @@
 #pragma once
 
-// Godot 4.6.2's integer text and string hash, bit for bit (core/string/ustring.cpp
-// of the 4.6.2-stable tag, MIT). Strings are UTF-8 std::string here; Godot's are
-// UTF-32, so the hash decodes UTF-8 first. Locale-free; no float text: numbers
-// with a fraction become text only in the Godot adapter (section 4 of
-// docs/native-rules-engine-transition.md).
+// Godot 4.6.2's integer and float text and string hash, bit for bit
+// (core/string/ustring.cpp and core/io/json.cpp of the 4.6.2-stable tag, MIT).
+// Strings are UTF-8 std::string here; Godot's are UTF-32, so the hash decodes
+// UTF-8 first. Float text comes from the C runtime the engine build prints
+// through (num below).
 
 #include <cstdint>
 #include <string>
@@ -13,6 +13,22 @@ namespace aurelion::rules::compat {
 
 // str(int) / itos / String::num_int64(p, 10).
 std::string itos(int64_t value);
+
+// String::num(value, decimals): the C runtime's "%.<decimals>lf" (decimals
+// below 0: 14 less the integer digits past the first, "%lf" when that is
+// negative; at most 32), then trailing zeros dropped down to one after the
+// period; "nan", "inf", "-inf". The digits are each platform's engine build's:
+// the official Windows build prints through msvcrt.dll's _vsnprintf and log10
+// (at most 17 significant digits, then zeros), which are called here too; the
+// Linux build and this library print through glibc (the exact value, rounded
+// half to even).
+std::string num(double value, int decimals = -1);
+
+// JSON.stringify(value) of a float (JSON::_stringify, not full precision):
+// "0.0" for either zero, 1e99999 and -1e99999 for the infinities, null for NaN
+// (the engine also warns once; this does not), else
+// num(value, max(1, 14 - floor(log10(|value|)))).
+std::string json_float(double value);
 
 // String::to_int(), which int(String) calls: the digits before the first '.'
 // count, every other character is skipped, and each '-' met before the first
