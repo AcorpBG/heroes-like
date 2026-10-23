@@ -2,15 +2,10 @@ extends SceneTree
 ## Battle AI arena worker (tools/battle_ai_arena). Started by arena.py with
 ##   godot --headless --path <repo> -s <this file> -- <job.json> <results.jsonl>
 ## It plays the job's battles (scenarios.py: guards, heroes and sieges on
-## generated maps) with Quick Resolve (BattleAutoResolveRules), each side's
-## stacks commanded by its own BattleAiRules variant, and writes one JSON line
-## per game. Nothing here is loaded by the game or the test suites.
-##
-## The variants are swapped in memory only: the cached BattleAiRules script is
-## reloaded with the router from router.py, which forwards each AI call to the
-## variant playing the acting stack's side. Game files are never written.
-## A plain job ("plain": true) installs no router and compiles no variant: the
-## game's own BattleAiRules plays both sides.
+## generated maps) with Quick Resolve (BattleAutoResolveRules), the game's own
+## battle AI and weights on both sides, and writes one JSON line per game
+## (arena.py --backend godot --plain). Nothing here is loaded by the game or the
+## test suites. Games with each side's own weights play in battle_sim_cli.
 ##
 ## A setup job ("setup": {"corpus_dir", "content"}) plays nothing: it builds each
 ## battle's session as a game does up to the battle payload, which every order
@@ -21,7 +16,6 @@ extends SceneTree
 ##
 ## Game scripts are loaded at runtime: a -s script compiles before autoloads exist.
 
-const AI_PATH := "res://scripts/core/BattleAiRules.gd"
 const FORT_BUILDINGS := ["building_dev_fort_1", "building_dev_fort_2", "building_dev_fort_3"]
 # Each faction's town defence building (town_defense_effect) and what it needs.
 const FACTION_DEFENSE := {
@@ -67,8 +61,6 @@ var _spells: Script
 var _hero_command: Script
 var _ai_heroes: Script
 var _town_development: Script
-var _default_variant: Script
-var _router  # the reloaded BattleAiRules script, or null in a plain job; untyped so its generated statics resolve at runtime
 var _out: FileAccess
 
 
@@ -112,17 +104,6 @@ func _run() -> int:
 	_ai_heroes = load("res://scripts/core/AiHeroRules.gd")
 	_town_development = load("res://scripts/core/TownDevelopmentRules.gd")
 	var setup: Dictionary = job.get("setup", {}) if job.get("setup", {}) is Dictionary else {}
-	var variants := {}
-	if setup.is_empty() and not bool(job.get("plain", false)):
-		for label in (job.get("variants", {}) as Dictionary).keys():
-			var variant := _compile_variant(String(job.variants[label]))
-			if variant == null:
-				printerr("ARENA variant %s does not compile" % label)
-				return 3
-			variants[String(label)] = variant
-		_default_variant = variants.get(String(job.get("default_variant", "A")))
-		if not _install_router(String(job.get("router", "")), _default_variant):
-			return 3
 	# Before any map: the static vars as a game starts. army_power applies its
 	# terms from the content at its first call, which every game's setup has
 	# made before its record reads them (_commander_features).
@@ -131,57 +112,22 @@ func _run() -> int:
 	if String(setup.get("content", "")) != "" and not _write_snapshot(String(setup.content), _content_snapshot()):
 		printerr("ARENA cannot write the content snapshot %s" % setup.content)
 		return 2
-	# Map and battle setup already call the AI's helpers: route them all to the
-	# default variant until a game installs its sides.
-	_route({})
 	_emit({"kind": "worker_ready", "boot_ms": Time.get_ticks_msec()})
 	for group in job.get("groups", []):
 		# A setup job may run ahead of its caller (tune.py): a group waits for its go.
 		var wait_for := String(group.get("wait_for", ""))
 		while wait_for != "" and not FileAccess.file_exists(wait_for):
 			OS.delay_msec(100)
-		_play_group(group, variants, job.get("orders", [["A", "B"], ["B", "A"]]), String(group.get("corpus_dir", setup.get("corpus_dir", ""))))
+		_play_group(group, job.get("orders", [["A", "B"], ["B", "A"]]), String(group.get("corpus_dir", setup.get("corpus_dir", ""))))
 		if not setup.is_empty():
 			_emit({"kind": "group_done", "group_id": group.get("group_id", ""), "tag": group.get("tag", "")})
 	return 0
 
 
-func _compile_variant(path: String) -> Script:
-	var source := FileAccess.get_file_as_string(path)
-	if source == "":
-		return null
-	var script := GDScript.new()
-	script.source_code = source
-	return script if script.reload() == OK else null
-
-
-## Reloads the cached BattleAiRules script in place with the router, so every
-## script that preloaded it (BattleRules, BattleAutoResolveRules) now calls the
-## router.
-func _install_router(router_path: String, default_variant: Script) -> bool:
-	var source := FileAccess.get_file_as_string(router_path)
-	_router = load(AI_PATH)
-	if source == "" or _router == null or default_variant == null:
-		printerr("ARENA router missing")
-		return false
-	_router.source_code = source
-	if _router.reload() != OK:
-		printerr("ARENA router does not compile")
-		return false
-	return true
-
-
-## The variant of each side ({}: the default one everywhere). A plain job has no router.
-func _route(sides: Dictionary) -> void:
-	if _router != null:
-		_router._arena_install(sides, _default_variant)
-
-
 ## One generated map, made as the skirmish menu makes it, and its battles: played,
 ## or, in a setup job (corpus_dir), written for battle_sim_cli.
-func _play_group(group: Dictionary, variants: Dictionary, orders: Array, corpus_dir: String) -> void:
+func _play_group(group: Dictionary, orders: Array, corpus_dir: String) -> void:
 	var started := Time.get_ticks_usec()
-	_route({})
 	var config = _scenario_select.build_random_map_player_config(
 		String(group.get("map_seed", "arena")), "", "", int(group.get("player_count", 2)), "land", false,
 		String(group.get("map_size", "homm3_small")), _scenario_select.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO,
@@ -235,7 +181,7 @@ func _play_group(group: Dictionary, variants: Dictionary, orders: Array, corpus_
 				corpus.append(entry)
 			continue
 		for order in orders:
-			_play_game(base, group, battle, ground, String(order[0]), String(order[1]), variants, ai_controller)
+			_play_game(base, group, battle, ground, String(order[0]), String(order[1]), ai_controller)
 	if corpus_dir != "":
 		_write_corpus(corpus_dir, group, String(session.scenario_id), corpus)
 
@@ -272,7 +218,7 @@ func _player_session(base: Dictionary, battle: Dictionary):
 	return session
 
 
-func _play_game(base: Dictionary, group: Dictionary, battle: Dictionary, ground: Dictionary, player_variant: String, enemy_variant: String, variants: Dictionary, ai_controller: String) -> void:
+func _play_game(base: Dictionary, group: Dictionary, battle: Dictionary, ground: Dictionary, player_variant: String, enemy_variant: String, ai_controller: String) -> void:
 	var started := Time.get_ticks_usec()
 	var game := _prepare_game(base, group, battle, ground, ai_controller)
 	var row: Dictionary = game.row
@@ -284,10 +230,6 @@ func _play_game(base: Dictionary, group: Dictionary, battle: Dictionary, ground:
 	var session = game.session
 	var site: Dictionary = game.site
 	var kind := String(battle.get("type", ""))
-	# Installed before the battle is built: building it already asks the AI.
-	# Calls tied to no side (shared payload plumbing) always take the default.
-	if _router != null:
-		_route({"player": variants[player_variant], "enemy": variants[enemy_variant]})
 	var payload: Dictionary = {}
 	if kind == "siege":
 		payload = _battle_rules.create_town_assault_payload(session, String(ground.get("town", "")))
@@ -322,7 +264,7 @@ func _play_game(base: Dictionary, group: Dictionary, battle: Dictionary, ground:
 	row["outcome"] = String(report.get("outcome", "")) if report is Dictionary else ""
 	row["rounds"] = int(report.get("rounds", 0)) if report is Dictionary else 0
 	row["end_ledger"] = report.get("casualties", {}) if report is Dictionary else {}
-	row["ai_calls"] = _router._arena_calls.duplicate() if _router != null else {}
+	row["ai_calls"] = {}
 	row["ms"] = (Time.get_ticks_usec() - started) / 1000.0
 	_emit(row)
 
@@ -343,7 +285,6 @@ func _prepare_game(base: Dictionary, group: Dictionary, battle: Dictionary, grou
 	for key in ECHO_KEYS:
 		if battle.has(key):
 			row[key] = battle[key]
-	_route({})
 	var session = probe if probe != null else _player_session(base, battle)
 	var kind := String(battle.get("type", ""))
 	var enemy_power := 0.0

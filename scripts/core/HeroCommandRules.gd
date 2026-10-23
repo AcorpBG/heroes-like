@@ -311,29 +311,6 @@ static func restore_empty_hero_armies(session: SessionStateStoreScript.SessionDa
 			session.overworld["encounters"] = encounters
 	return restored + raids_restored
 
-## A commander never leaves a battle leading no troops. When a town defense is
-## won by the garrison after the visiting hero's own companies fell, one
-## creature from the garrison's largest surviving company joins the hero.
-static func keep_hero_troop_from_garrison(session: SessionStateStoreScript.SessionData, town: Dictionary, hero_id: String) -> bool:
-	var hero := hero_by_id(session, hero_id)
-	if hero.is_empty() or town.is_empty() or _valid_stack_count(hero.get("army", {}).get("stacks", [])) > 0:
-		return false
-	var garrison: Array = town.get("garrison", []).duplicate(true) if town.get("garrison", []) is Array else []
-	var largest := -1
-	for index in range(garrison.size()):
-		if garrison[index] is Dictionary and String(garrison[index].get("unit_id", "")) != "" and int(garrison[index].get("count", 0)) > 0:
-			if largest < 0 or int(garrison[index].get("count", 0)) > int(garrison[largest].get("count", 0)):
-				largest = index
-	if largest < 0:
-		return false
-	var unit_id := String(garrison[largest].get("unit_id", ""))
-	garrison[largest]["count"] = int(garrison[largest].get("count", 0)) - 1
-	if int(garrison[largest].get("count", 0)) <= 0:
-		garrison.remove_at(largest)
-	_set_holder_stacks(session, town, HOLDER_GARRISON, garrison)
-	_set_holder_stacks(session, town, hero_id, [{"unit_id": unit_id, "count": 1, ARMY_SLOT_INDEX_KEY: 0}])
-	return true
-
 ## A new hero's growth seed (HeroProgressionRules.command_gain_stat): from the
 ## session and hero when a session is known, so the tavern's preview and the
 ## hire it shows roll alike, else drawn at random.
@@ -447,10 +424,6 @@ static func hero_inspection_snapshot(session: SessionStateStoreScript.SessionDat
 
 static func player_hero_count(session: SessionStateStoreScript.SessionData) -> int:
 	return hero_count_from_overworld(session.overworld if session != null else {})
-
-static func active_hero_is_primary(session: SessionStateStoreScript.SessionData) -> bool:
-	var hero := active_hero(session)
-	return not hero.is_empty() and bool(hero.get("is_primary", false))
 
 static func spend_active_hero_movement(
 	session: SessionStateStoreScript.SessionData,
@@ -1996,57 +1969,6 @@ static func transfer_town_stack(
 ## is brought back from the scenario or made leader again, and the next hero
 ## hired leads when no other is left.
 const PRIMARY_FALLEN_FLAG := "primary_hero_fallen"
-
-## The leading (primary) hero falls on a generated map and the game goes on
-## (owner decision 2026-10-09): the most experienced of the other heroes leads,
-## or, with none left, the next one hired. Call before removing the fallen hero.
-static func hand_over_primary(session: SessionStateStoreScript.SessionData, fallen_id: String) -> void:
-	var heroes: Array = session.overworld.get("player_heroes", [])
-	var next_id := ""
-	var best_experience := -1
-	for hero in heroes:
-		if hero is Dictionary and String(hero.get("id", "")) != fallen_id and int(hero.get("experience", 0)) > best_experience:
-			best_experience = int(hero.get("experience", 0))
-			next_id = String(hero.get("id", ""))
-	for index in range(heroes.size()):
-		if heroes[index] is Dictionary:
-			heroes[index]["is_primary"] = String(heroes[index].get("id", "")) == next_id
-	session.overworld["player_heroes"] = heroes
-	session.hero_id = next_id
-	var fallen: Array = session.flags.get(PRIMARY_FALLEN_FLAG, []) if session.flags.get(PRIMARY_FALLEN_FLAG, []) is Array else []
-	if fallen_id != "" and fallen_id not in fallen:
-		fallen.append(fallen_id)
-	session.flags[PRIMARY_FALLEN_FLAG] = fallen
-	_sync_active_hero_mirror(session)
-
-static func remove_active_hero_after_defeat(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	normalize_session(session)
-	commit_active_hero(session)
-	if session == null:
-		return {"ok": false, "message": "No active hero is available."}
-	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
-	var removed_hero := hero_by_id(session, active_hero_id)
-	if removed_hero.is_empty():
-		return {"ok": false, "message": "No active hero is available."}
-	if bool(removed_hero.get("is_primary", false)):
-		return {"ok": false, "message": "The primary hero cannot be removed by this path."}
-
-	var remaining := []
-	for hero in session.overworld.get("player_heroes", []):
-		if hero is Dictionary and String(hero.get("id", "")) != active_hero_id:
-			remaining.append(hero)
-	session.overworld["player_heroes"] = remaining
-	var next_active_id := String(session.hero_id)
-	if _hero_index_by_id(remaining, next_active_id) < 0 and not remaining.is_empty():
-		next_active_id = String(remaining[0].get("id", ""))
-	session.overworld["active_hero_id"] = next_active_id
-	_sync_active_hero_mirror(session)
-	return {
-		"ok": true,
-		"message": "%s falls in battle." % String(removed_hero.get("name", "The hero")),
-		"removed_hero_name": String(removed_hero.get("name", "The hero")),
-		"next_active_name": String(active_hero(session).get("name", "")),
-	}
 
 static func town_has_hall(town: Dictionary) -> bool:
 	return HALL_BUILDING_ID in town.get("built_buildings", [])
