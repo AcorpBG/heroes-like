@@ -59,6 +59,9 @@ namespace {
 // Strings a long run interns past this are dropped with the atoms at the next
 // call's start.
 constexpr size_t kAtomLimit = size_t(1) << 20;
+// And past this many bytes of text: a save's JSON text is one atom of
+// megabytes, which no later save interns again.
+constexpr size_t kAtomBytesLimit = size_t(64) << 20;
 
 std::string utf8_of(const String &text) {
 	const CharString utf8 = text.utf8();
@@ -186,7 +189,7 @@ PortBridge::PortBridge() {
 }
 
 void PortBridge::begin(bool validating, bool host_calls) {
-	if (state_.atom_count() > kAtomLimit) {
+	if (state_.atom_count() > kAtomLimit || state_.atom_bytes() > kAtomBytesLimit) {
 		state_.clear();
 		string_cache_.clear();
 		name_cache_.clear();
@@ -229,7 +232,8 @@ void PortBridge::begin(bool validating, bool host_calls) {
 }
 
 void PortBridge::begin_kept() {
-	const bool keeps = kept_ && state_.atom_count() <= kAtomLimit && content_host()->revision() == kept_revision_;
+	const bool keeps = kept_ && state_.atom_count() <= kAtomLimit && state_.atom_bytes() <= kAtomBytesLimit
+			&& content_host()->revision() == kept_revision_;
 	// Until this call ends in keep().
 	kept_ = false;
 	if (!keeps) {
@@ -571,7 +575,41 @@ Value PortBridge::view_object(state::State &, uint32_t node) {
 			return Value::of_ref(Kind::Opaque, view.slot);
 		}
 	}
-	return Value();
+	return adopt_view(node);
+}
+
+Value PortBridge::adopt_view(uint32_t node) {
+	if (!host_calls_ || node >= dict_sources_.size() || !dict_sources_[node]) {
+		return Value();
+	}
+	Value id;
+	Value meta;
+	if (!state_.lookup(node, state_.string("instance_id"), id) || id.kind != Kind::Int
+			|| !state_.lookup(node, state_.string("meta"), meta) || meta.kind != Kind::Dict) {
+		return Value();
+	}
+	Object *object = godot::ObjectDB::get_instance(static_cast<uint64_t>(id.i));
+	if (object == nullptr) {
+		return Value();
+	}
+	opaque_.push_back(Variant(object));
+	ObjectView view;
+	view.slot = static_cast<uint32_t>(opaque_.size() - 1);
+	view.node = node;
+	view.meta = meta.ref;
+	view.adopted = true;
+	const godot::TypedArray<Dictionary> properties = object->get_property_list();
+	for (int64_t index = 0; index < properties.size(); ++index) {
+		const Dictionary property = properties[index];
+		if ((static_cast<int64_t>(property["usage"]) & godot::PROPERTY_USAGE_SCRIPT_VARIABLE) != 0) {
+			view.fields.push_back(state_.intern(utf8_of(String(property["name"]))));
+		}
+	}
+	views_.push_back(std::move(view));
+	// The object takes what the native call changed in the view so far; each
+	// write-back from here on writes the view's changes into it.
+	write_view(views_.back());
+	return Value::of_ref(Kind::Opaque, views_.back().slot);
 }
 
 // The nodes are built in place, so they start clean: write_back() writes a
@@ -605,6 +643,13 @@ void PortBridge::fill_view(const ObjectView &view) {
 	node.reset();
 	node.keys = std::move(keys);
 	node.values = std::move(values);
+	if (view.adopted) {
+		// The DayEngine view in GDScript still holds what it held before the
+		// host call: the next write-back gives it the object's values, which
+		// DayEngine._take_views then finds unchanged.
+		node.dirty = true;
+		meta.dirty = true;
+	}
 }
 
 bool PortBridge::view_changed(const ObjectView &view) const {
@@ -1051,16 +1096,45 @@ String PortBridge::path_text(uint32_t path) const {
 }
 
 Value PortBridge::object_call(state::State &state, uint32_t slot, uint32_t method, const Value *args, size_t count) {
-	Object *object = object_at(slot);
-	if (object == nullptr) {
+	return load(call_opaque(state, slot, method, args, count));
+}
+
+Value PortBridge::object_call_engine(state::State &state, uint32_t slot, uint32_t method, const Value *args, size_t count) {
+	return keep_opaque(call_opaque(state, slot, method, args, count));
+}
+
+Variant PortBridge::call_opaque(state::State &state, uint32_t slot, uint32_t method, const Value *args, size_t count) {
+	if (slot >= opaque_.size() || opaque_[slot].get_type() == Variant::NIL) {
 		throw state::ScriptError("Cannot call method '" + state.text(method) + "' on a value that is not an object.");
 	}
 	if (!host_calls_) {
 		throw state::ScriptError("Calling the method " + state.text(method) + " of an object runs the engine, which this call may not do (a shadow check or a call that writes nothing back)");
 	}
 	const Array call_args = begin_pure_call(args, count);
-	const Variant result = object->callv(static_name(method), call_args);
-	return load(result);
+	if (Object *object = object_at(slot)) {
+		return object->callv(static_name(method), call_args);
+	}
+	// A kept engine value (a String): its builtin method, on a copy.
+	Variant receiver = opaque_[slot];
+	std::vector<const Variant *> pointers;
+	for (int64_t index = 0; index < call_args.size(); ++index) {
+		pointers.push_back(&call_args[index]);
+	}
+	Variant result;
+	GDExtensionCallError error;
+	receiver.callp(static_name(method), pointers.data(), static_cast<int>(pointers.size()), result, error);
+	if (error.error != GDEXTENSION_CALL_OK) {
+		throw state::ScriptError("Invalid call. Nonexistent function '" + state.text(method) + "' in base '" + utf8_of(Variant::get_type_name(receiver.get_type())) + "'.");
+	}
+	return result;
+}
+
+Value PortBridge::keep_opaque(const Variant &value) {
+	if (value.get_type() == Variant::NIL) {
+		return Value();
+	}
+	opaque_.push_back(value);
+	return Value::of_ref(Kind::Opaque, static_cast<uint32_t>(opaque_.size() - 1));
 }
 
 bool PortBridge::object_has_method(state::State &, uint32_t slot, uint32_t method) {
@@ -1139,6 +1213,124 @@ int64_t PortBridge::ticks_usec() {
 
 double PortBridge::unix_time() {
 	return godot::Time::get_singleton()->get_unix_time_from_system();
+}
+
+Array PortBridge::engine_args(const Value *args, size_t count, const char *what) {
+	for (size_t index = 0; index < count; ++index) {
+		const Kind kind = args[index].kind;
+		if (kind == Kind::Array || kind == Kind::Dict || kind == Kind::Opaque || args[index].is_packed()) {
+			if (!host_calls_) {
+				throw state::ScriptError(std::string(what) + " runs the engine, which this call may not do (a shadow check or a call that writes nothing back)");
+			}
+			return begin_pure_call(args, count);
+		}
+	}
+	Array exported;
+	for (size_t index = 0; index < count; ++index) {
+		exported.push_back(export_value(args[index]));
+	}
+	return exported;
+}
+
+Value PortBridge::class_call_static(state::State &state, uint32_t class_name, uint32_t method, const Value *args, size_t count) {
+	if (!host_calls_) {
+		throw state::ScriptError("ClassDB.class_call_static(" + state.text(class_name) + ", " + state.text(method) + ") runs the engine, which this call may not do (a shadow check or a call that writes nothing back)");
+	}
+	Array call_args;
+	call_args.push_back(static_name(class_name));
+	call_args.push_back(static_name(method));
+	call_args.append_array(engine_args(args, count, "ClassDB.class_call_static"));
+	return load(godot::ClassDBSingleton::get_singleton()->callv(StringName("class_call_static"), call_args));
+}
+
+Value PortBridge::class_call_static_engine(state::State &state, uint32_t class_name, uint32_t method, const Value *args, size_t count) {
+	if (!host_calls_) {
+		throw state::ScriptError("ClassDB.class_call_static(" + state.text(class_name) + ", " + state.text(method) + ") runs the engine, which this call may not do (a shadow check or a call that writes nothing back)");
+	}
+	Array call_args;
+	call_args.push_back(static_name(class_name));
+	call_args.push_back(static_name(method));
+	call_args.append_array(engine_args(args, count, "ClassDB.class_call_static"));
+	return keep_opaque(godot::ClassDBSingleton::get_singleton()->callv(StringName("class_call_static"), call_args));
+}
+
+bool PortBridge::engine_equal(state::State &, const Value &a, const Value &b) {
+	const Value pair[] = { a, b };
+	const Array exported = engine_args(pair, 2, "==");
+	return exported[0] == exported[1];
+}
+
+Value PortBridge::engine_singleton(state::State &, uint32_t name) {
+	godot::Engine *engine = godot::Engine::get_singleton();
+	const StringName singleton = static_name(name);
+	if (!engine->has_singleton(singleton)) {
+		return Value();
+	}
+	return load(Variant(engine->get_singleton(singleton)));
+}
+
+uint32_t PortBridge::engine_format(state::State &state, uint32_t pattern, const Value *args, size_t count, bool &ok) {
+	const Array values = engine_args(args, count, "String formatting");
+	Variant result;
+	bool valid = false;
+	Variant::evaluate(Variant::OP_MODULE, Variant(path_text(pattern)), Variant(values), result, valid);
+	ok = valid;
+	return state.intern(utf8_of(String(result)));
+}
+
+uint32_t PortBridge::engine_str(state::State &state, const Value &value) {
+	const Array exported = engine_args(&value, 1, "str()");
+	return state.intern(utf8_of(exported[0].stringify()));
+}
+
+bool PortBridge::holds_loaded(const Value &root) const {
+	std::vector<Value> pending{ root };
+	std::vector<bool> seen_arrays(state_.array_count());
+	std::vector<bool> seen_dicts(state_.dict_count());
+	while (!pending.empty()) {
+		const Value value = pending.back();
+		pending.pop_back();
+		if (value.kind == Kind::Array) {
+			if (value.ref < array_sources_.size() && array_sources_[value.ref]) {
+				return true;
+			}
+			if (seen_arrays[value.ref]) {
+				continue;
+			}
+			seen_arrays[value.ref] = true;
+			const state::ArrayNode &node = state_.array_node(value.ref);
+			pending.insert(pending.end(), node.items.begin(), node.items.end());
+		} else if (value.kind == Kind::Dict) {
+			if (value.ref < dict_sources_.size() && dict_sources_[value.ref]) {
+				return true;
+			}
+			if (seen_dicts[value.ref]) {
+				continue;
+			}
+			seen_dicts[value.ref] = true;
+			const state::DictNode &node = state_.dict_node(value.ref);
+			pending.insert(pending.end(), node.values.begin(), node.values.end());
+		}
+	}
+	return false;
+}
+
+Value PortBridge::engine_duplicate(state::State &, const Value &value, bool deep) {
+	// A container loaded from GDScript, or a native-built one holding one: the
+	// copy is then GDScript's too, so no later host call exports it, and a
+	// loaded part is not filled to be copied. A wholly native-built one copies
+	// as fast natively, without being exported first.
+	if (!host_calls_ || (value.kind != Kind::Array && value.kind != Kind::Dict)
+			|| !(deep ? holds_loaded(value)
+						: value.kind == Kind::Array ? value.ref < array_sources_.size() && array_sources_[value.ref]
+													: value.ref < dict_sources_.size() && dict_sources_[value.ref])) {
+		return Value();
+	}
+	const Array exported = begin_pure_call(&value, 1);
+	if (value.kind == Kind::Array) {
+		return load(Array(exported[0]).duplicate(deep));
+	}
+	return load(Dictionary(exported[0]).duplicate(deep));
 }
 
 uint32_t PortBridge::json_stringify(state::State &state, const Value &value) {

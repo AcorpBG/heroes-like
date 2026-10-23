@@ -261,6 +261,38 @@ uint32_t Backing::json_stringify(State &, const Value &) {
 	no_host("JSON.stringify");
 }
 
+Value Backing::class_call_static(State &, uint32_t, uint32_t, const Value *, size_t) {
+	no_host("ClassDB.class_call_static");
+}
+
+Value Backing::engine_singleton(State &, uint32_t) {
+	no_host("An engine singleton");
+}
+
+uint32_t Backing::engine_format(State &, uint32_t, const Value *, size_t, bool &) {
+	no_host("The engine's String formatting");
+}
+
+uint32_t Backing::engine_str(State &, const Value &) {
+	no_host("The engine's str()");
+}
+
+Value Backing::engine_duplicate(State &, const Value &, bool) {
+	return Value();
+}
+
+Value Backing::class_call_static_engine(State &, uint32_t, uint32_t, const Value *, size_t) {
+	no_host("ClassDB.class_call_static");
+}
+
+Value Backing::object_call_engine(State &state, uint32_t, uint32_t method, const Value *, size_t) {
+	throw ScriptError("Calling the method " + state.text(method) + " of an object needs the Godot host, which this State does not have");
+}
+
+bool Backing::engine_equal(State &, const Value &, const Value &) {
+	no_host("The engine's ==");
+}
+
 bool same_key(const Value &a, const Value &b) {
 	if (a.is_string_like() && b.is_string_like()) {
 		return a.ref == b.ref;
@@ -300,6 +332,7 @@ void State::clear() {
 	atom_ids_.clear();
 	joined_.clear();
 	atoms_.clear();
+	atom_bytes_ = 0;
 	for (std::string_view text : kKnownKeys) {
 		const size_t next = atoms_.size();
 		if (intern(text) != next) {
@@ -625,6 +658,7 @@ uint32_t State::intern(std::string_view text) {
 	}
 	const uint32_t atom = static_cast<uint32_t>(atoms_.size());
 	atoms_.emplace_back(text);
+	atom_bytes_ += text.size();
 	atom_ids_.emplace(std::string_view(atoms_.back()), atom);
 	return atom;
 }

@@ -2778,6 +2778,60 @@ Checks:
   normal-water two-level setup (seed 72136) crashes main's native generator as well as the branch's.
 - Core tests covering setup: 5 of 5.
 
+**Slice 7.12, saves** (2026-10-23, branch `native-phase7-human`): saves are written, read, summarized and restored in
+C++.
+- Ported to the human registry (files `save_service_*.cpp` and `save_session_payload.cpp`, 215 functions, 6,548 lines):
+  every `SaveService` function (the save format, the slot summaries and their cache, the transactional write with its
+  backup, previous generation and recovery, the restore, the campaign progression file, the save screens' texts),
+  `SessionStateStore.normalize_payload` with its helpers, and `HeroCommandRules.restore_empty_hero_armies`. The 64
+  `SaveService` functions that the game, the tools and the tests call, and `normalize_payload`, are thin wrappers over
+  `HumanEngine.native_writing`; the other bodies are deleted (`SaveService.gd` 4,335 lines before, 247 after).
+  `SessionData.payload_for_storage` and `share_runtime_scenario_record` keep a GDScript copy for `SessionData`.
+- 21 entries call GDScript as host calls: `ProfileLog` (5), `CampaignRules.get_campaign_id_for_scenario`, and the
+  `OverworldRules`, `TownRules`, `BattleRules` and `ScenarioRules` read scopes and texts a summary quotes (15).
+- Deleted because nothing reaches them (no wrapper, no other port code): `_runtime_session_resume_brief`,
+  `_session_changed_recap_line`, `_session_save_resume_recap`, `describe_session_play_check`,
+  `describe_session_return_handoff`, `describe_session_save_check`, `describe_session_save_handoff`,
+  `describe_session_save_handoff_brief`, `describe_session_save_recap`, `has_any_loadable_session`, `has_slot`,
+  `list_loadable_session_summaries` and `save_runtime_selected_manual_session`.
+- The port bridge: a DayEngine view handed back is mapped to its object (`adopt_view`). New engine services: a static
+  call or method whose answer stays the engine's, the engine's `==`, and builtin methods of a kept value. A save's JSON
+  text stays an engine String, written, measured and compared in the engine. Before that change, each autosave grew
+  memory by about 48 MB. `engine_duplicate` now copies in the engine a native container that holds one loaded from
+  GDScript: copied natively, an autosave's summary built 77,000 native dictionaries and took 180 ms longer. The atom
+  table is also cleared past 64 MiB of text.
+- Tests: 3 retired (`docs/save-test-retirement.md`). `tools/native_battle_switch.py` reads signatures over several lines.
+Checks, main 2abd6e086 against the branch, with a scratch probe and isolated profiles:
+- Phase a, the five D9 copies: the file list and slot summaries, the screens' 13 texts for each summary, the loads,
+  the in-session surfaces, and a file, manual and autosave write of each loaded session. 54 labels, 0 differ: the
+  written files are identical apart from `saved_at_unix`.
+- Phase b, each side loading the files the other wrote: 10 labels, 0 differ, and 10 of 10 give the same session as
+  the copy.
+- Phase c, the rest:
+  - payload saves and loads, the slot actions, a rename and a delete;
+  - recovery from the backup and from the previous generation, and both failure phases;
+  - the progression file empty, current, newer, older, wrongly typed and broken;
+  - the generated opening's fast and full autosaves, and the validation hooks;
+  - six changed copies: a town visit, a lost town, a missing and a broken battle, a won scenario holding a battle,
+    and save version 8.
+  49 labels, 0 differ. `load_session` of an empty slot stops with the same script error on both sides (main's
+  `_loaded_session_payload`).
+- Coverage of main's 229 GDScript functions: 207 reached. The 16 not reached are deleted: the 13 above and the 3
+  legacy functions a retired test called. Named unproven:
+  - `_battle_aftermath_summary`, which needs a battle save without a recap;
+  - `_describe_session_play_check_from_summary`, `_fallback_resume_decision` and `_summary_objective_line`, which
+    need summaries without their recap context;
+  - `_migrate_progression_payload` and its step, which nothing reaches while the profile version is 1, its minimum;
+  - migration from save versions before 9: no real save is older, and the version 8 copy only shows one normalized
+    as legacy alike.
+- Speed, main | branch, in ms:
+  - listing the save files 3,491 | 1,025;
+  - the slot summaries 422 | 585: the branch frees the previous call's parsed saves at the next call's start;
+  - the five loads 564 | 552, 546 | 462, 360 | 325, 339 | 275 and 530 | 478;
+  - the 15 saves from 157 ms faster to 124 ms slower (one save slower).
+  - 15 autosaves of the Veilmourn Day 10 copy: main 1,125 to 1,146 ms with 530 to 570 MB private memory, the branch
+    1,123 to 1,161 ms with 465 to 585 MB.
+
 ### Phase 8: a match runner without Godot
 
 Wanted, not optional (owner decision 2026-10-22, D7). The same core as a command-line tool. Needs the copied Variant hash and either deterministic math or accepted last-bit

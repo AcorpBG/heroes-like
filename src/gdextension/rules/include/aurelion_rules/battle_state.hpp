@@ -751,9 +751,10 @@ public:
 	// the clocks, which read the C++ ones.
 	//
 	// object.method(args) of an opaque value: the method of an engine or
-	// extension object (the map package service and its documents), or a
+	// extension object (the map package service and its documents), a
 	// GDScript method of an autoload that changes nothing the native call
-	// holds. Written back first, with nothing read again after, as a pure
+	// holds, or a builtin method of an engine value kept opaque (a String's
+	// to_utf8_buffer()). Written back first, with nothing read again after, as a pure
 	// host call is (call_pure); in a call where no GDScript may run, a
 	// ScriptError.
 	virtual Value object_call(State &state, uint32_t slot, uint32_t method, const Value *args, size_t count);
@@ -784,6 +785,34 @@ public:
 	virtual double unix_time();
 	// JSON.stringify(value) with its default arguments.
 	virtual uint32_t json_stringify(State &state, const Value &value);
+
+	// The engine's services that saves call (Phase 7, slice 7.12). Each writes
+	// back first what it hands the engine and reads nothing again after, as
+	// object_call does; in a call where no GDScript may run, a ScriptError.
+	//
+	// ClassDB.class_call_static(class, method, args...): a static method of an
+	// engine class (FileAccess.get_sha256, DirAccess.open, JSON.stringify).
+	virtual Value class_call_static(State &state, uint32_t class_name, uint32_t method, const Value *args, size_t count);
+	// Engine.get_singleton(name) (Time, ProjectSettings), or Nil when the
+	// engine has none of that name.
+	virtual Value engine_singleton(State &state, uint32_t name);
+	// pattern % values, the engine's String::sprintf. ok is false on a format
+	// error, and the answer is then the engine's message.
+	virtual uint32_t engine_format(State &state, uint32_t pattern, const Value *args, size_t count, bool &ok);
+	// str(value), the engine's Variant::stringify.
+	virtual uint32_t engine_str(State &state, const Value &value);
+	// value.duplicate(deep) of an Array or Dictionary loaded from GDScript,
+	// copied by the engine: a new container, loaded like any other. Nil for
+	// another value, or when this host cannot (the caller copies natively).
+	virtual Value engine_duplicate(State &state, const Value &value, bool deep);
+	// class_call_static and object_call whose answer stays the engine's value,
+	// an opaque value (Nil for null): a text of megabytes that native code only
+	// hands back to the engine, as a save's JSON text.
+	virtual Value class_call_static_engine(State &state, uint32_t class_name, uint32_t method, const Value *args, size_t count);
+	virtual Value object_call_engine(State &state, uint32_t slot, uint32_t method, const Value *args, size_t count);
+	// a == b, the engine's: for opaque values, which native code cannot
+	// compare.
+	virtual bool engine_equal(State &state, const Value &a, const Value &b);
 };
 
 class State {
@@ -817,6 +846,8 @@ public:
 	bool find_atom(std::string_view text, uint32_t &atom) const;
 	const std::string &text(uint32_t atom) const { return atoms_[atom]; }
 	size_t atom_count() const { return atoms_.size(); }
+	// The atoms' texts, in bytes.
+	size_t atom_bytes() const { return atom_bytes_; }
 	Value string(std::string_view text) { return Value::str(intern(text)); }
 
 	uint32_t new_array();
@@ -985,6 +1016,7 @@ private:
 
 	// A deque, so the views atom_ids_ holds stay valid.
 	std::deque<std::string> atoms_;
+	size_t atom_bytes_ = 0;
 	std::unordered_map<std::string_view, uint32_t> atom_ids_;
 	// joined_atom's atoms: (prefix << 32 | atom) -> atom of the joined text.
 	std::unordered_map<uint64_t, uint32_t> joined_;

@@ -1,6 +1,8 @@
 class_name SessionStateStore
 extends RefCounted
 
+const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+
 const SAVE_VERSION := 9
 const SUPPORTED_GAME_STATES := ["overworld", "town", "battle", "outcome"]
 const SUPPORTED_SCENARIO_STATUSES := ["in_progress", "victory", "defeat"]
@@ -157,39 +159,11 @@ class SessionData:
 		return value.duplicate(true) if value is Dictionary else {}
 
 static func normalize_payload(value: Variant) -> Dictionary:
-	var payload: Dictionary = value if value is Dictionary else {}
-	var normalized := {
-		"save_version": max(0, int(payload.get("save_version", SAVE_VERSION))),
-		"session_id": String(payload.get("session_id", str(Time.get_ticks_msec()))),
-		"scenario_id": String(payload.get("scenario_id", "")),
-		"hero_id": String(payload.get("hero_id", "")),
-		"day": max(1, int(payload.get("day", 1))),
-		"difficulty": String(payload.get("difficulty", "normal")),
-		"launch_mode": normalize_launch_mode(payload.get("launch_mode", LAUNCH_MODE_CAMPAIGN)),
-		"game_state": _normalize_game_state(payload.get("game_state", "overworld")),
-		"scenario_status": _normalize_scenario_status(payload.get("scenario_status", "in_progress")),
-		"scenario_summary": String(payload.get("scenario_summary", "")),
-		"overworld": _dict_or_empty_value(payload.get("overworld", {})),
-		"battle": _dict_or_empty_value(payload.get("battle", {})),
-		"flags": _dict_or_empty_value(payload.get("flags", {})),
-	}
-	SessionData.share_runtime_scenario_record(normalized["overworld"], normalized["flags"])
-	return normalized
-
-static func _normalize_game_state(value: Variant) -> String:
-	var game_state := String(value)
-	return game_state if game_state in SUPPORTED_GAME_STATES else "overworld"
-
-static func _normalize_scenario_status(value: Variant) -> String:
-	var scenario_status := String(value)
-	return scenario_status if scenario_status in SUPPORTED_SCENARIO_STATUSES else "in_progress"
+	return HumanEngine.native_writing(&"SessionStateStore.normalize_payload", [value])
 
 static func normalize_launch_mode(value: Variant) -> String:
 	var launch_mode := String(value)
 	return launch_mode if launch_mode in SUPPORTED_LAUNCH_MODES else LAUNCH_MODE_CAMPAIGN
-
-static func _dict_or_empty_value(value: Variant) -> Dictionary:
-	return value.duplicate(true) if value is Dictionary else {}
 
 static func new_session_data(
 	session_id: String = "",

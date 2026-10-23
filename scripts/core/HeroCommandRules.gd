@@ -259,59 +259,6 @@ static func starting_army_for_hero(hero_template: Dictionary, seed_key: String) 
 static func army_has_troops(army: Variant) -> bool:
 	return HumanEngine.native_writing(&"HeroCommandRules.army_has_troops", [army])
 
-## Save migration: older saves hired heroes with no troops. On restore, every
-## player hero still in play that leads no troops gets its starting army, and
-## so does an AI raid commander left without a host. Returns how many armies
-## were restored. Mid-battle and finished sessions are left as they are.
-static func restore_empty_hero_armies(session: SessionStateStoreScript.SessionData) -> int:
-	if session == null or not session.battle.is_empty() or String(session.scenario_status) not in ["", "in_progress"]:
-		return 0
-	var restored := 0
-	var heroes = session.overworld.get("player_heroes", [])
-	if heroes is Array:
-		for index in range(heroes.size()):
-			var hero = heroes[index]
-			if not (hero is Dictionary) or _valid_stack_count(hero.get("army", {}).get("stacks", []) if hero.get("army", {}) is Dictionary else []) > 0:
-				continue
-			var hero_id := String(hero.get("id", ""))
-			var army := starting_army_for_hero(ContentService.get_hero(hero_id), "%s|%s|restored_army|%s" % [String(session.session_id), String(session.scenario_id), hero_id])
-			if army.get("stacks", []).is_empty():
-				continue
-			var previous: Dictionary = hero.get("army", {}) if hero.get("army", {}) is Dictionary else {}
-			army["id"] = String(previous.get("id", army.get("id", "")))
-			army["name"] = String(previous.get("name", army.get("name", "Field Army")))
-			hero["army"] = army
-			heroes[index] = hero
-			restored += 1
-		if restored > 0:
-			session.overworld["player_heroes"] = heroes
-			_sync_active_hero_mirror(session)
-	var encounters = session.overworld.get("encounters", [])
-	var raids_restored := 0
-	if encounters is Array:
-		for index in range(encounters.size()):
-			var encounter = encounters[index]
-			if not (encounter is Dictionary) or bool(encounter.get("commanderless_support_column", false)):
-				continue
-			if String(encounter.get("spawned_by_player_id", "")) == "" and String(encounter.get("spawned_by_faction_id", "")) == "":
-				continue
-			var commander = encounter.get("enemy_commander_state", {})
-			var roster_hero_id := String(commander.get("roster_hero_id", "")) if commander is Dictionary else ""
-			var host = encounter.get("enemy_army", {})
-			if roster_hero_id == "" or _valid_stack_count(host.get("stacks", []) if host is Dictionary else []) > 0:
-				continue
-			var army := starting_army_for_hero(ContentService.get_hero(roster_hero_id), "%s|%s|restored_army|%s" % [String(session.session_id), String(session.scenario_id), String(encounter.get("placement_id", roster_hero_id))])
-			if army.get("stacks", []).is_empty():
-				continue
-			army["id"] = String((host if host is Dictionary else {}).get("id", encounter.get("encounter_id", "")))
-			army["name"] = String((host if host is Dictionary else {}).get("name", "Raid Host"))
-			encounter["enemy_army"] = army
-			encounters[index] = encounter
-			raids_restored += 1
-		if raids_restored > 0:
-			session.overworld["encounters"] = encounters
-	return restored + raids_restored
-
 ## A new hero's growth seed (HeroProgressionRules.command_gain_stat): from the
 ## session and hero when a session is known, so the tavern's preview and the
 ## hire it shows roll alike, else drawn at random.

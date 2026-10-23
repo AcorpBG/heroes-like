@@ -186,6 +186,11 @@ public:
 	state::Value object_view(state::State &state, uint32_t slot) override;
 	void object_set(state::State &state, uint32_t slot, uint32_t property, const state::Value &value) override;
 	state::Value view_object(state::State &state, uint32_t node) override;
+	// A DayEngine view (DayEngine._view: an object's script vars, its metadata
+	// under "meta" and its instance id under "instance_id") that a host call
+	// takes as its object: it becomes that object's view, as object_view()
+	// makes one. Nil when the node is no such view, or no GDScript may run.
+	state::Value adopt_view(uint32_t node);
 	bool rng_get(uint32_t slot, uint64_t &seed, uint64_t &state) override;
 	void rng_set_state(uint32_t slot, uint64_t state) override;
 	uint32_t rng_new(uint64_t seed, uint64_t state) override;
@@ -219,8 +224,24 @@ public:
 	int64_t ticks_usec() override;
 	double unix_time() override;
 	uint32_t json_stringify(state::State &state, const state::Value &value) override;
+	// The engine's services that saves call (Backing::class_call_static and on).
+	state::Value class_call_static(state::State &state, uint32_t class_name, uint32_t method, const state::Value *args, size_t count) override;
+	state::Value engine_singleton(state::State &state, uint32_t name) override;
+	uint32_t engine_format(state::State &state, uint32_t pattern, const state::Value *args, size_t count, bool &ok) override;
+	uint32_t engine_str(state::State &state, const state::Value &value) override;
+	state::Value engine_duplicate(state::State &state, const state::Value &value, bool deep) override;
+	state::Value class_call_static_engine(state::State &state, uint32_t class_name, uint32_t method, const state::Value *args, size_t count) override;
+	state::Value object_call_engine(state::State &state, uint32_t slot, uint32_t method, const state::Value *args, size_t count) override;
+	bool engine_equal(state::State &state, const state::Value &a, const state::Value &b) override;
 
 private:
+	// object.method(args) for object_call and object_call_engine.
+	godot::Variant call_opaque(state::State &state, uint32_t slot, uint32_t method, const state::Value *args, size_t count);
+	// An engine value as an opaque value, Nil for null.
+	state::Value keep_opaque(const godot::Variant &value);
+	// A container loaded from GDScript, or a native-built one that holds one at
+	// any depth (engine_duplicate copies both by the engine).
+	bool holds_loaded(const state::Value &value) const;
 	struct TypeInfo {
 		uint32_t builtin = 0;
 		godot::StringName class_name;
@@ -248,6 +269,10 @@ private:
 		uint32_t node = 0;
 		uint32_t meta = 0;
 		std::vector<uint32_t> fields;
+		// A DayEngine view loaded from GDScript (adopt_view): its node is also
+		// a loaded container, which takes the object's values after each host
+		// call.
+		bool adopted = false;
 	};
 	struct MemoShape {
 		uint32_t script = 0;
@@ -292,6 +317,9 @@ private:
 	// undoably while no full host call has run, and each loaded node marked as
 	// what Godot holds now; then the arguments exported.
 	godot::Array begin_pure_call(const state::Value *args, size_t count);
+	// The arguments of an engine service: scalars as they are, and a call with
+	// a container among them written back first (begin_pure_call).
+	godot::Array engine_args(const state::Value *args, size_t count, const char *what);
 	// A validating call's record of a loaded generator's state, made on first use;
 	// null outside a validating call and for a generator the call made.
 	uint64_t *validating_state(godot::RandomNumberGenerator *rng);

@@ -116765,15 +116765,15 @@
     {
       "id": "native-rules-phase7-12-saves-20261023",
       "title": "Phase 7.12: saves",
-      "status": "pending",
+      "status": "in_progress",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Transition doc, Phase 7, Slices.",
-      "updatedAt": "2026-10-23T14:30:00Z"
+      "notes": "Transition doc, Phase 7, Slices. In progress 2026-10-23 on branch native-phase7-human, for merge 1b with 7.11: SaveService, SessionStateStore.normalize_payload and its helpers, SessionData.payload_for_storage and share_runtime_scenario_record and HeroCommandRules.restore_empty_hero_armies in C++; ProfileLog and the summaries' screen texts stay GDScript as host calls. Implemented 2026-10-23: the D9 copies against main 2abd6e086, phase a 54 labels, phase b 10, phase c 49, 0 differ; 10 of 10 cross-loads the same session; 207 of main's 229 functions reached, 16 deleted, 6 named unproven (transition doc, Slice 7.12). Completes at merge 1b's checks.",
+      "updatedAt": "2026-10-24T00:00:00Z"
     },
     {
       "id": "native-rules-phase7-13-map-editor-20261023",

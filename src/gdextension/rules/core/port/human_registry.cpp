@@ -6,7 +6,9 @@
 #include "aurelion_rules/port/native_random_map_package_session_bridge.hpp"
 #include "aurelion_rules/port/overworld_rules_human.hpp"
 #include "aurelion_rules/port/random_map_generator_rules.hpp"
+#include "aurelion_rules/port/save_service.hpp"
 #include "aurelion_rules/port/scenario_select_rules_setup.hpp"
+#include "aurelion_rules/port/session_state_store.hpp"
 
 namespace aurelion::rules::port {
 
@@ -22,6 +24,7 @@ namespace rewards = generated_reward_rules;
 namespace hero_command = hero_command_rules;
 namespace hero_progression = hero_progression_rules;
 namespace rmg = random_map_generator_rules;
+namespace save = save_service;
 using overworld::Vector2i;
 
 // The parameters as GDScript's types left them. A session is its view, a
@@ -243,6 +246,138 @@ const Function kFunctions[] = {
 	// 7.11, the config normalized.
 	NATIVE(RandomMapGeneratorRules, normalize_config, 1, true,
 			return gd::dict_value(rmg::normalize_config(s, D(a, 0)))),
+	// 7.12, saves: the SaveService methods the game, the tools and the tests call.
+	NATIVE(SaveService, save_file_identity, 1, true,
+			return gd::dict_value(save::save_file_identity(s, S(a, 0)))),
+	NATIVE(SaveService, inspect_save_file, 1, true,
+			return gd::dict_value(save::inspect_save_file(s, S(a, 0)))),
+	NATIVE(SaveService, list_save_files, 0, true,
+			return gd::array_value(save::list_save_files(s))),
+	NATIVE(SaveService, build_file_save_action, 1, true,
+			return gd::dict_value(save::build_file_save_action(s, S(a, 0)))),
+	NATIVE(SaveService, save_runtime_file_session, 4, true,
+			return gd::dict_value(save::save_runtime_file_session(s, a[0], S(a, 1), B(a, 2), S(a, 3)))),
+	NATIVE(SaveService, validation_begin_summary_inspection_trace, 0, true,
+			save::validation_begin_summary_inspection_trace(s); return Value()),
+	NATIVE(SaveService, validation_summary_inspection_trace_snapshot, 0, true,
+			return gd::dict_value(save::validation_summary_inspection_trace_snapshot(s))),
+	NATIVE(SaveService, validation_end_summary_inspection_trace, 0, true,
+			return gd::dict_value(save::validation_end_summary_inspection_trace(s))),
+	NATIVE(SaveService, validation_last_runtime_save_profile, 0, true,
+			return gd::dict_value(save::validation_last_runtime_save_profile(s))),
+	NATIVE(SaveService, validation_summary_cache_snapshot, 0, true,
+			return gd::dict_value(save::validation_summary_cache_snapshot(s))),
+	NATIVE(SaveService, validation_clear_summary_cache, 0, true,
+			save::validation_clear_summary_cache(s); return Value()),
+	NATIVE(SaveService, validation_transaction_artifact_paths, 1, true,
+			return gd::dict_value(save::validation_transaction_artifact_paths(s, S(a, 0)))),
+	NATIVE(SaveService, validation_clear_general_profile_log, 0, true,
+			return gd::dict_value(save::validation_clear_general_profile_log(s))),
+	NATIVE(SaveService, validation_general_profile_log_snapshot, 0, true,
+			return gd::dict_value(save::validation_general_profile_log_snapshot(s))),
+	NATIVE(SaveService, validation_general_profile_log_last_records, 1, true,
+			return gd::array_value(save::validation_general_profile_log_last_records(s, I(a, 0)))),
+	NATIVE(SaveService, save_session, 2, true,
+			return gd::str(save::save_session(s, D(a, 0), I(a, 1)))),
+	NATIVE(SaveService, save_runtime_manual_session, 2, true,
+			return gd::dict_value(save::save_runtime_manual_session(s, a[0], I(a, 1)))),
+	NATIVE(SaveService, save_runtime_autosave_session, 3, true,
+			return gd::dict_value(save::save_runtime_autosave_session(s, a[0], B(a, 1), B(a, 2)))),
+	NATIVE(SaveService, save_manual_session, 2, true,
+			return gd::str(save::save_manual_session(s, D(a, 0), I(a, 1)))),
+	NATIVE(SaveService, save_autosave_session, 1, true,
+			return gd::str(save::save_autosave_session(s, D(a, 0)))),
+	NATIVE(SaveService, load_session, 1, true,
+			return gd::dict_value(save::load_session(s, I(a, 0)))),
+	NATIVE(SaveService, load_autosave, 0, true,
+			return gd::dict_value(save::load_autosave(s))),
+	NATIVE(SaveService, restore_manual_session, 1, true,
+			return save::restore_manual_session(s, I(a, 0))),
+	NATIVE(SaveService, restore_autosave_session, 0, true,
+			return save::restore_autosave_session(s)),
+	NATIVE(SaveService, restore_session_from_summary, 1, true,
+			return save::restore_session_from_summary(s, D(a, 0))),
+	NATIVE(SaveService, refresh_summary, 1, true,
+			return gd::dict_value(save::refresh_summary(s, D(a, 0)))),
+	NATIVE(SaveService, build_delete_action, 1, true,
+			return gd::dict_value(save::build_delete_action(s, D(a, 0)))),
+	NATIVE(SaveService, build_manual_slot_name_action, 1, true,
+			return gd::dict_value(save::build_manual_slot_name_action(s, D(a, 0)))),
+	NATIVE(SaveService, set_manual_slot_name_from_summary, 2, true,
+			return gd::dict_value(save::set_manual_slot_name_from_summary(s, D(a, 0), S(a, 1)))),
+	NATIVE(SaveService, build_manual_save_action, 2, true,
+			return gd::dict_value(save::build_manual_save_action(s, a[0], I(a, 1)))),
+	NATIVE(SaveService, delete_session_from_summary, 1, true,
+			return gd::dict_value(save::delete_session_from_summary(s, D(a, 0)))),
+	NATIVE(SaveService, save_progression, 1, true,
+			return gd::str(save::save_progression(s, D(a, 0)))),
+	NATIVE(SaveService, load_progression, 0, true,
+			return gd::dict_value(save::load_progression(s))),
+	NATIVE(SaveService, has_progression, 0, true,
+			return gd::bool_value(save::has_progression(s))),
+	NATIVE(SaveService, inspect_progression_storage, 0, true,
+			return gd::dict_value(save::inspect_progression_storage(s))),
+	NATIVE(SaveService, get_manual_slot_ids, 0, true,
+			return gd::array_value(save::get_manual_slot_ids(s))),
+	NATIVE(SaveService, get_selected_manual_slot, 0, true,
+			return gd::int_value(save::get_selected_manual_slot(s))),
+	NATIVE(SaveService, set_selected_manual_slot, 1, true,
+			save::set_selected_manual_slot(s, I(a, 0)); return Value()),
+	NATIVE(SaveService, inspect_manual_slot, 1, true,
+			return gd::dict_value(save::inspect_manual_slot(s, I(a, 0)))),
+	NATIVE(SaveService, inspect_autosave, 0, true,
+			return gd::dict_value(save::inspect_autosave(s))),
+	NATIVE(SaveService, list_session_summaries, 0, true,
+			return gd::array_value(save::list_session_summaries(s))),
+	NATIVE(SaveService, latest_loadable_summary, 0, true,
+			return gd::dict_value(save::latest_loadable_summary(s))),
+	NATIVE(SaveService, summary_recency_timestamp, 1, true,
+			return gd::float_value(save::summary_recency_timestamp(s, D(a, 0)))),
+	NATIVE(SaveService, in_session_save_bar_status, 2, true,
+			return gd::dict_value(save::in_session_save_bar_status(s, a[0], I(a, 1)))),
+	NATIVE(SaveService, build_current_session_save_context, 1, true,
+			return gd::dict_value(save::build_current_session_save_context(s, a[0]))),
+	NATIVE(SaveService, build_in_session_save_surface, 5, true,
+			return gd::dict_value(save::build_in_session_save_surface(s, a[0], I(a, 1), D(a, 2), B(a, 3), B(a, 4)))),
+	NATIVE(SaveService, resume_target_for_session, 1, true,
+			return gd::str(save::resume_target_for_session(s, a[0]))),
+	NATIVE(SaveService, can_load_summary, 1, true,
+			return gd::bool_value(save::can_load_summary(s, D(a, 0)))),
+	NATIVE(SaveService, load_action_label, 1, true,
+			return gd::str(save::load_action_label(s, D(a, 0)))),
+	NATIVE(SaveService, continue_action_label, 1, true,
+			return gd::str(save::continue_action_label(s, D(a, 0)))),
+	NATIVE(SaveService, load_action_tooltip, 1, true,
+			return gd::str(save::load_action_tooltip(s, D(a, 0)))),
+	NATIVE(SaveService, describe_summary_resume_recap, 1, true,
+			return gd::str(save::describe_summary_resume_recap(s, D(a, 0)))),
+	NATIVE(SaveService, describe_summary_play_check, 1, true,
+			return gd::str(save::describe_summary_play_check(s, D(a, 0)))),
+	NATIVE(SaveService, describe_summary_resume_handoff, 1, true,
+			return gd::str(save::describe_summary_resume_handoff(s, D(a, 0)))),
+	NATIVE(SaveService, describe_resume_brief, 1, true,
+			return gd::str(save::describe_resume_brief(s, D(a, 0)))),
+	NATIVE(SaveService, describe_slot_browser_row, 1, true,
+			return gd::str(save::describe_slot_browser_row(s, D(a, 0)))),
+	NATIVE(SaveService, describe_load_preview, 1, true,
+			return gd::str(save::describe_load_preview(s, D(a, 0)))),
+	NATIVE(SaveService, describe_slot_continuity_cue, 1, true,
+			return gd::str(save::describe_slot_continuity_cue(s, D(a, 0)))),
+	NATIVE(SaveService, describe_slot_details, 1, true,
+			return gd::str(save::describe_slot_details(s, D(a, 0)))),
+	NATIVE(SaveService, format_modified_timestamp, 1, true,
+			return gd::str(save::format_modified_timestamp(s, I(a, 0)))),
+	NATIVE(SaveService, _autosave_path, 0, true,
+			return gd::str(save::_autosave_path(s))),
+	NATIVE(SaveService, _inspect_slot, 3, true,
+			return gd::dict_value(save::_inspect_slot(s, S(a, 0), S(a, 1), S(a, 2)))),
+	NATIVE(SaveService, _normalize_restore_result, 2, true,
+			return gd::dict_value(save::_normalize_restore_result(s, D(a, 0), S(a, 1)))),
+	NATIVE(SaveService, _ensure_generated_random_map_scenario_registered, 1, true,
+			return gd::dict_value(save::_ensure_generated_random_map_scenario_registered(s, D(a, 0)))),
+	// 7.12, the save payload normalized (SessionState.normalize_payload, the tests).
+	NATIVE(SessionStateStore, normalize_payload, 1, true,
+			return gd::dict_value(session_state_store::normalize_payload(s, a[0]))),
 };
 
 // The host calls of a merged slice's functions (gd::call_static), as HOST
@@ -250,12 +385,41 @@ const Function kFunctions[] = {
 // no shadow wrapper. A pure one (Host::pure) is written back to, undoably,
 // and read nothing again after.
 #define NATIVE_HOST(script, fn, arity) { #script "." #fn, arity, true }
+// One that may change what the native call holds (a session's containers, a
+// static var the ports read): written back first and read again after.
+#define NATIVE_HOST_WRITING(script, fn, arity) { #script "." #fn, arity, false }
 
 constexpr Host kHosts[] = {
 	// 7.11: a new game's SessionData (session_state_store::new_session_data).
 	NATIVE_HOST(SessionStateStore, new_session_data, 7),
+	// 7.12, saves. The profile log stays GDScript (diagnostics the screens and
+	// the router write too), and so does the campaign runtime (D-f).
+	NATIVE_HOST(ProfileLog, session_metadata, 1),
+	NATIVE_HOST(ProfileLog, emit_general, 7),
+	NATIVE_HOST(ProfileLog, clear_general_log, 0),
+	NATIVE_HOST(ProfileLog, general_log_snapshot, 0),
+	NATIVE_HOST(ProfileLog, last_general_records, 1),
+	NATIVE_HOST(CampaignRules, get_campaign_id_for_scenario, 1),
+	// The screens' texts a summary quotes and the read scopes they run in,
+	// GDScript until their slices port them. They normalize the session.
+	NATIVE_HOST_WRITING(OverworldRules, begin_normalized_read_scope, 1),
+	NATIVE_HOST_WRITING(OverworldRules, end_normalized_read_scope, 1),
+	NATIVE_HOST_WRITING(OverworldRules, is_runtime_session_normalized, 1),
+	NATIVE_HOST_WRITING(OverworldRules, describe_command_risk, 1),
+	NATIVE_HOST_WRITING(OverworldRules, describe_command_risk_summary_from_normalized_session, 1),
+	NATIVE_HOST_WRITING(OverworldRules, describe_frontier_threats, 1),
+	NATIVE_HOST_WRITING(OverworldRules, describe_management_watch, 1),
+	NATIVE_HOST_WRITING(TownRules, begin_read_scope, 1),
+	NATIVE_HOST_WRITING(TownRules, end_read_scope, 1),
+	NATIVE_HOST_WRITING(TownRules, can_visit_active_town, 1),
+	NATIVE_HOST_WRITING(TownRules, describe_defense, 1),
+	NATIVE_HOST_WRITING(TownRules, describe_defense_headline, 1),
+	NATIVE_HOST_WRITING(BattleRules, describe_risk_readiness_board, 1),
+	NATIVE_HOST_WRITING(ScenarioRules, describe_session_progress_recap, 2),
+	NATIVE_HOST_WRITING(ScenarioRules, describe_session_progress_recap_from_normalized_session, 3),
 };
 
+#undef NATIVE_HOST_WRITING
 #undef NATIVE_HOST
 
 #undef NATIVE

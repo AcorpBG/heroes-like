@@ -1709,6 +1709,51 @@ Atom engine_json_stringify(State &state, const Value &value) {
 	return state.host().json_stringify(state, value);
 }
 
+Value class_call_static(State &state, Atom class_name, Atom method, std::initializer_list<Value> args) {
+	return state.host().class_call_static(state, class_name, method, args.begin(), args.size());
+}
+
+Value engine_singleton(State &state, Atom name) {
+	return state.host().engine_singleton(state, name);
+}
+
+Atom engine_format(State &state, Atom pattern, std::initializer_list<Value> values) {
+	bool ok = false;
+	const Atom formatted = state.host().engine_format(state, pattern, values.begin(), values.size(), ok);
+	if (!ok) {
+		state.print_error("String formatting error: " + state.text(formatted) + ".");
+		return pattern;
+	}
+	return formatted;
+}
+
+Atom engine_str(State &state, const Value &value) {
+	return state.host().engine_str(state, value);
+}
+
+Value class_call_static_engine(State &state, Atom class_name, Atom method, std::initializer_list<Value> args) {
+	return state.host().class_call_static_engine(state, class_name, method, args.begin(), args.size());
+}
+
+Value call_method_engine(State &state, const Value &object, Atom method, std::initializer_list<Value> args) {
+	const uint32_t slot = object_slot(state, object, method);
+	return state.host().object_call_engine(state, slot, method, args.begin(), args.size());
+}
+
+bool engine_equal(State &state, const Value &a, const Value &b) {
+	return state.host().engine_equal(state, a, b);
+}
+
+Value engine_duplicate(State &state, const Value &value, bool deep) {
+	if (deep && (value.kind == Kind::Dict || value.kind == Kind::Array)) {
+		const Value copied = state.host().engine_duplicate(state, value, true);
+		if (copied.kind != Kind::Nil) {
+			return copied;
+		}
+	}
+	return duplicate_value(state, value, deep);
+}
+
 void refuse_gdscript_only_static(const State &state, Atom script, Atom name) {
 	fail(state.text(script) + "." + state.text(name) + " is GDScript's own memo: a native port neither reads nor fills it (its table's gdscript_only)");
 }

@@ -27,4 +27,8 @@ void _replace_hero_in_array(State &state, gd::ArrayRef player_heroes, DictRef re
 bool army_has_troops(State &state, const state::Value &army);
 void seed_start_heroes_from_session(State &state, const state::Value &session);
 
+// A restored save's commanders without troops (Phase 7, 7.12;
+// save_session_payload.cpp).
+int64_t restore_empty_hero_armies(State &state, const state::Value &session);
+
 } // namespace aurelion::rules::port::hero_command_rules

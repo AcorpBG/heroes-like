@@ -28,4 +28,20 @@ inline Value new_session_data(State &state, Atom session_id, Atom scenario_id, A
 					gd::str(difficulty), gd::str(launch_mode)});
 }
 
+// SessionStateStore.SAVE_VERSION. SUPPORTED_GAME_STATES are "overworld",
+// "town", "battle" and "outcome"; SUPPORTED_SCENARIO_STATUSES "in_progress",
+// "victory" and "defeat".
+constexpr int64_t kSaveVersion = 9;
+
+// The save format's payload (Phase 7, 7.12; save_session_payload.cpp):
+// SessionStateStore.normalize_payload and its helpers, and SessionData's
+// payload_for_storage and share_runtime_scenario_record, whose GDScript copies
+// SessionData.from_dict and to_dict keep (two copies).
+DictRef normalize_payload(State &state, const Value &value);
+Atom _normalize_game_state(State &state, const Value &value);
+Atom _normalize_scenario_status(State &state, const Value &value);
+DictRef _dict_or_empty_value(State &state, const Value &value);
+DictRef payload_for_storage(State &state, DictRef payload);
+void share_runtime_scenario_record(State &state, DictRef overworld_state, DictRef session_flags);
+
 } // namespace aurelion::rules::port::session_state_store

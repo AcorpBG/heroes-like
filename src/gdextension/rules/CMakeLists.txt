@@ -235,6 +235,15 @@ add_library(aurelion_rules_core STATIC
 	core/port/registry_tables.cpp
 	core/port/resource_node_payload_rules_ai.cpp
 	core/port/round_effects.cpp
+	core/port/save_service_describe.cpp
+	core/port/save_service_entry.cpp
+	core/port/save_service_labels.cpp
+	core/port/save_service_restore.cpp
+	core/port/save_service_runtime.cpp
+	core/port/save_service_summary.cpp
+	core/port/save_service_surface.cpp
+	core/port/save_service_transaction.cpp
+	core/port/save_session_payload.cpp
 	core/port/scenario_evaluation.cpp
 	core/port/scenario_factory_ai.cpp
 	core/port/scenario_select_catalog.cpp
