@@ -848,7 +848,13 @@ Value PortBridge::content_row(state::State &state, state::ContentTable table, ui
 				break;
 		}
 		godot::AurelionContent::report(messages);
-		row = native.kind == Kind::Nil ? Variant(Dictionary()) : host->content_variant(native);
+		if (native.kind == Kind::Nil) {
+			// No such row: gd::content_row answers a new empty Dictionary of the
+			// port's own, as ContentService answers a new {}; a shadow check then
+			// compares it by its entries, not as one it was given.
+			return Value();
+		}
+		row = host->content_variant(native);
 	}
 	const Value loaded = load(row);
 	// Terrain layers are a new copy on every call, so they are asked for again,

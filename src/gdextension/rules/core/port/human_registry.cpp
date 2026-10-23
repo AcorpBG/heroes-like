@@ -568,6 +568,10 @@ const Function kFunctions[] = {
 	PORT(ScenarioRules, evaluate_session_for_event, 2, true,
 			no_null(a, 0);
 			return gd::dict_value(scenario::evaluate_session_for_event(s, D(a, 0), D(a, 1)))),
+	// ScenarioScriptRules' award_experience effect.
+	PORT(OverworldRules, _award_experience, 2, true,
+			no_null(a, 0);
+			return gd::array_value(overworld::_award_experience(s, D(a, 0), I(a, 1)))),
 };
 
 // The host calls of a merged slice's functions (gd::call_static), as HOST

@@ -125,6 +125,16 @@ void index_objectives(State &state, const Value &objectives, DictRef objective_i
 	}
 }
 
+// JSON.stringify(value): natively where json_stringify covers the value (a
+// shadow check may not run the engine), else the engine's.
+Atom json_text(State &state, const Value &value) {
+	try {
+		return state.intern(gd::json_stringify(state, value));
+	} catch (const state::NotPorted &) {
+		return gd::engine_json_stringify(state, value);
+	}
+}
+
 } // namespace
 
 namespace generated_scenario_objective_rules {
@@ -275,7 +285,7 @@ DictRef _scenario_dependency_metadata_for_session(State &state, DictRef session)
 		put(state, dependency_record, key::objectives, state.get(source, str(key::objectives), dict_value(state.new_dict())));
 		put(state, dependency_record, key::script_hooks, state.get(source, str(key::script_hooks), array_value(state.new_array())));
 		// JSON.stringify(dependency_record).sha256_text()
-		const Atom json = gd::engine_json_stringify(state, dict_value(dependency_record));
+		const Atom json = json_text(state, dict_value(dependency_record));
 		put(state, dependency_record, key::dependency_signature, str(state.intern(compat::sha256_text(state.text(json)))));
 	} else {
 		dependency_record = gd::as_dict(gd::call_method(state, gd::autoload(state, key::ContentService), key::get_scenario_dependency_record, { str(scenario_id) }));

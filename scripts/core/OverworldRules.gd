@@ -13486,6 +13486,16 @@ static func _weighted_recruit_value(recruits: Variant) -> int:
 	return total
 
 static func _award_experience(session: SessionStateStoreScript.SessionData, amount: int) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _award_experience__gd(session, amount)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules._award_experience", [session, amount])
+	var before := HumanEngine.before_writing(&"OverworldRules._award_experience", [session, amount])
+	var result = _award_experience__gd(session, amount)
+	HumanEngine.check_writing(&"OverworldRules._award_experience", before, [session, amount], result)
+	return result
+
+static func _award_experience__gd(session: SessionStateStoreScript.SessionData, amount: int) -> Array:
 	if amount <= 0:
 		return []
 
