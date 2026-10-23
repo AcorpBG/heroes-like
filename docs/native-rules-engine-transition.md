@@ -2302,7 +2302,7 @@ Godot dependency, since these slices lead to Phase 8. The bound is 1/(1 - share)
 | P6-5 | The runner's per-day digest becomes the Variant hash of the session instead of sha256 of its JSON: Godot's `hash()` in the game, `gd::hash` (the C++ copy) in runner mode and Phase 8. The JSON stays for the dump day. | 56% of checks | 2.3x on checks |
 | P6-3 | `end_turn` as one native call (done: 1.11x measured; `begin` needed no change) | about 14% | about 1.16x |
 | P6-4 | The native session kept across days; runner mode and game mode give the same digests (done: 1.19x measured; write-backs, content lookups and the compaction stay) | 31-34% | 1.45-1.52x |
-| P6-1 | Several matches per Godot process | 19.9% (s2 50%) | 1.25x (s2 2.0x) |
+| P6-1 | Several matches per Godot process (done: 1.26x on the six seeds one after another, 1.49x on a small-map batch) | 19.9% (s2 50%) | 1.25x (s2 2.0x) |
 | P6-2 | A map corpus, with the adopted session kept per process | 8.3-14.4% | 1.09-1.17x |
 
 - Checks per C++ slice: shadow on the six seeds while working; before pushing, native against main on the six seeds and
@@ -2408,6 +2408,48 @@ Godot dependency, since these slices lead to Phase 8. The bound is 1/(1 - share)
 
   1.19x on the summed runs (15.8% less), against the 1.45-1.52x bound. Every seed was faster in every round
   (s2 10 s to 9 s, mw 16-17 s to 14 s, l1 39-40 s to 33-34 s, l2 43 s to 36-37 s).
+
+**P6-1, several matches per Godot process** (`native-rules-phase6-p1-matches-per-process-20261023`, branch
+`native-phase6-matches-per-process`):
+- **What changed.**
+  - The match runner plays a list of matches in one process (`HEROES_AI_MATCH_LIST`: a JSON array whose entries hold
+    one match's `HEROES_AI_MATCH_*` settings in place of the environment's). Each match prints a BEGIN line and its
+    report line, which now carries the match's own seconds; a failed match no longer quits the process, and the next
+    one plays. Between matches the runner closes the digest file, takes `OverworldRules.end_turn` out of
+    `DayEngine.session_calls`, closes the native session on every exit path, and clears the generated drafts and
+    content overrides; the native port's failures count from the match's start (`port_stats` is per process).
+  - `tools/ai_match_batch.py` plays up to `--per-process` matches per Godot process (default 4), fewer when the queue
+    is short enough that more would leave slots idle at the end. The process log is split per match at the BEGIN
+    lines; a match the process never began, after an earlier one crashed or timed out, goes back into the queue.
+  - `tools/rules_parity.py`: `run --one-process` and `check --one-process-a/-b` play a side's seeds in one process.
+  - No native change and no game change.
+- **What a second match could inherit** (an audit of the 247 static vars, the autoloads, the statics the native port
+  reads and writes, and random number use):
+  - Content memos are keyed by the content revision or by their sources, and the revision goes up at every match's
+    start. Per-day AI caches are cleared at both ends of every computer turn.
+  - The AI weight statics hold the last seat's set until a faction turn applies its seat's set again, before any
+    read, exactly as one seat's set replaces another's within a match; a batch gives every match the same weights.
+  - The other per-session statics (normalize signatures, town visit indexes, terrain rows, scoped reads) are keyed by
+    session, opened only on human or save paths, or capped; the global random number generator is not used, and
+    every random source the match uses is seeded from the session.
+  - What the runner itself must reset is listed above: `port_stats` and the kept session.
+- **Checks:**
+  - Six seeds, each in a process of its own against all six in one process, in the order l1, l2, mw, s2, mg-a, mg-b
+    and again from mg-b to l1: all 415 daily digests and the match records identical both times.
+  - Six seeds against main 7bd62e817 (a process per seed): all 415 digests and the records identical.
+  - A batch of four small matches in one process: four rows, records and map packages removed.
+  - Core suite 17/17.
+- **Timing** (a quiet machine, Phases 5 and 7 paused, no per-day digest, two rounds alternating the two ways; the
+  wall clock is read every 1-2 s):
+
+  | | A process per match | One process for several | Gain |
+  |---|---|---|---|
+  | The six seeds one after another | 122.2 s, 122.2 s | 97.3 s, 97.3 s (all six) | 1.26x |
+  | 24 small 2P matches (`ai_match_batch.py`, 6 slots) | 34.9 s, 32.9 s | 22.8 s, 22.8 s (`--per-process 4`) | 1.49x |
+
+  The bound was 1.25x, 2.0x on small maps. Every batch match ended on the same day both ways. In one process the
+  matches after the first take what they took in a process of their own less the start-up (l1 24.4-24.7 s against
+  29-30 s, s2 2.1 s against 7 s).
 
 
 ### Phase 7: human-side actions and the last GDScript rules

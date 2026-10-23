@@ -116557,15 +116557,15 @@
     {
       "id": "native-rules-phase6-p1-matches-per-process-20261023",
       "title": "Phase 6 P6-1: several matches per Godot process",
-      "status": "pending",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Later (owner decision 2026-10-23). Measured share 19.9% on four seeds, 50% on s2; bound 1.25x, 2.0x on small maps.",
-      "updatedAt": "2026-10-23T08:30:00Z"
+      "notes": "Branch native-phase6-matches-per-process (owner decision 2026-10-23: P6-1 next, then P6-2). The match runner plays a list of matches in one process (HEROES_AI_MATCH_LIST), resetting the digest file, DayEngine.session_calls, the native session, drafts and content overrides between matches and counting native port failures per match; tools/ai_match_batch.py --per-process N (default 4) and tools/rules_parity.py --one-process(-a/-b). No native or game change; the static/autoload/RNG audit found nothing else a second match inherits. Checks: six seeds per-process against one process (both orders) and against main 7bd62e817, all 415 digests and records identical; core suite 17/17. Timing, two interleaved rounds on a quiet machine: six seeds one after another 122.2 s vs 97.3 s (1.26x, bound 1.25x); 24 small 2P batch matches at 6 slots 32.9-34.9 s vs 22.8 s (1.49x, bound 2.0x).",
+      "updatedAt": "2026-10-23T14:30:00Z"
     },
     {
       "id": "native-rules-phase6-p2-map-corpus-20261023",
