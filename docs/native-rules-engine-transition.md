@@ -18,9 +18,10 @@ start only through their gates. Line references are as of commit 50929125a; each
   every rule; the game, the match runner, the battle tuner and any command-line tool run the same native code.
 - **End state.**
   - **Native** (`aurelion::rules`, a pure C++ core in a new `aurelion_rules` GDExtension for Windows and Linux): battles,
-    battle AI, battle payloads, the overworld AI faction turn, day processing, and the human-side rule actions.
-  - **GDScript keeps:** UI and scenes, `describe_*` text built on native queries, SaveService file I/O, ContentService
-    parsing (feeding the native content tables), the map editor.
+    battle AI, battle payloads, the overworld AI faction turn, day processing, the human-side rule actions, and (owner
+    decision 2026-10-23, Phase 7) every other rule: panel text, content loading, game setup, the save format, the
+    map editor's rules and the campaign runtime.
+  - **GDScript keeps:** the screens only: scenes, layout, input, animation, drawing and audio, reading native results.
   - **Unchanged contracts:** save version 9 (`SessionStateStore.gd:4`), the session Dictionary shape, the battle RNG
     stream format.
   - **AI tuning numbers** live in content JSON, per controller, so tuning them never needs a C++ build.
@@ -87,11 +88,13 @@ need the same hit/miss behaviour.
 exception caught at the adapter. Floats become text only through `compat::num` and `compat::json_float` (the engine's
 `String::num` and `JSON.stringify`) or in the Godot adapter.
 
-**Content.** A native content table is built once per content revision from the Dictionaries ContentService has already
-parsed (no second JSON parser), keeping first-id-wins, file order and per-field presence (defaults differ per call
-site). Genetic-algorithm overrides go through one in-memory override layer *in ContentService* that bumps the content
-revision, so GDScript and native code never see two different contents in one match. Overrides are validated (no zero
-hit points, reversed damage ranges and similar) at that boundary.
+**Content.** The native content tables (Phase 7, slice 7.10) read the content files themselves: `compat::json_parse`
+is the engine's `JSON.parse`, and `content::Store` keeps every document read-only with ContentService's lookups
+(first id wins, file order, towns by their canonical id). GDScript gets one read-only Dictionary per document and
+row, the same object for every caller, and the port bridge reads the store directly. Overrides (the genetic
+algorithms', the tests') go through the store's one override layer, which bumps the content revision, so GDScript
+and native code never see two different contents in one match; an AI weights override is checked against the
+shipped document at that boundary.
 
 **State.** The session Dictionaries stay the save and UI format throughout. Native calls convert in, compute on a copy,
 and write back only on success: known keys in place, new keys appended in GDScript's order, int/float types kept, array
@@ -2570,11 +2573,183 @@ drawn at random from the map seed by default, and the human keeps their pick or 
   ac046cf67: all 443 daily digests and the records identical. Core suite 17/17.
 
 
-### Phase 7: human-side actions and the last GDScript rules
+### Phase 7: every rule native, one copy
 
-Movement, routes, context actions, overworld spells, town actions, hero transfers and artifact equipping: about 378
-functions the UI calls, at 1,221 call sites. Needed for the one-copy end state, not for speed, so it can interleave with
-other work. Merging the separate human and AI forms of heroes, treasury and fog is a later save-schema slice.
+The human-side actions and every other GDScript rule move to C++, and the two-copy functions lose their GDScript
+bodies. This is needed for the one-copy end state, not for speed. Merging the separate human and AI forms of heroes,
+treasury and fog is a later save-schema slice. Branch `native-phase7-human`.
+
+**Owner decisions** (2026-10-23, on the plan below; D11 in section 8):
+- **D-a, the check.** A permanent human seat: the `--human` mode of `tools/rules_parity.py`.
+- **D-b, the scope.** Every rule moves to C++: panel text, content loading, game setup, the save format, the map
+  editor's rules and the campaign runtime. Only the screens stay GDScript: scenes, layout, input, animation, drawing
+  and audio, reading native results.
+- **D-c, the map views.** One native snapshot per redraw, not one native read per tile.
+- **D-d, no way back in GDScript.** `HEROES_NATIVE_HUMAN` exists only on a slice's branch, as the shadow check. The
+  day switch's `gdscript` mode and its `__gd` bodies are deleted. The tags before each merge are the way back.
+- **D-e, tests.** Tests that call GDScript bodies the phase deletes are retired by the D6 process.
+
+**Plan revision 2** (owner decisions, 2026-10-23; D11 in section 8):
+- **D-f, the campaign runtime.** It is ported with the campaign rework, not in Phase 7: 7.14 leaves the phase.
+- **D-g, the GDScript generator.** `RandomMapGeneratorRules.generate` and the legacy rebuild path are deleted. Its setup
+  part (`normalize_config` and the materialization identity) moves with 7.11. Of the 17 test files that call
+  `generate`, the three core tests (`random_map_seeded_generator_core_report`,
+  `random_map_final_writeout_export_save_schema_report` and `generated_start_hero_growth_seed_report`) move to the
+  native generator in the same slice; the others are retired under D-e.
+- **D-h, the map editor.** The editor's export of the archived authored-scenario format is deleted. Only map-package
+  editing and saving is ported.
+- **Order.** 7.1, then 7.10 to 7.12, then 7.2 to 7.9, 7.13 and 7.15.
+- **Merges.** Four: after 7.1 with 7.10 to 7.12, after 7.2, after 7.7, and at the end. The full checks run only at these
+  merges; while working, the shadow check on the `--human` run. If the first merge looks too big to debug, a split is
+  proposed first.
+
+**Later owner decisions** (2026-10-23; D11 in section 8):
+- **D-i, the archived content's start-up checks.** Option (b): they are deleted in 7.10, and the live files' checks
+  are ported. ContentService still loads the archived content by id.
+- **The first merge is split.** Merge 1a is 7.1 with 7.10, merge 1b is 7.11 with 7.12, each with the full checks once.
+
+**Inventory** (2026-10-23, main 7bd62e817; a static call graph of main from a scratch analyzer: calls through
+`class_name`, preload consts, lazy-script getters and autoload names; calls by string, signals and engine callbacks
+not followed):
+- **What the UI calls.** 500 rules functions at 1,632 call sites. Without the battle screen and setup, 355 functions
+  at 1,276 sites.
+- **Two copies.** 798 GDScript functions, 13,343 lines, have a C++ port beside them: Phase 3's 309, 4.4's 203, Phase
+  5's 359 and 2d's lists, minus overlaps. The UI calls them at 466 sites, and 183 test files at 1,317.
+- **The native day** leaves nine human-only paths to GDScript:
+  - a player town's weekly growth, and a player convoy's arrival;
+  - a human action's scenario check, and a townless human;
+  - a human primary hero rebuilt from its template, and the garrison migration;
+  - an artifact placement still to be drawn, and sessions without towns or resource nodes;
+  - the archived authored objective types.
+- **The human route search is UI code.** `OverworldShell._build_path` and `_route_path_lengths` are breadth-first
+  searches that call four rules functions per neighbour tile, so the search moves native as one call. The map views
+  read fog, positions and levels per tile, for example `is_tile_explored` at 31 sites and `hero_position` at 80.
+- **The GDScript map generator.** `RandomMapGeneratorRules.generate` (450 functions, 10,687 lines) only rebuilds a
+  save whose map is not a native disk package. All five D9 save copies are native packages. Setup calls
+  `normalize_config` (29 functions, 665 lines) and the materialization identity (3 functions, 21 lines).
+- **Saves are JSON**, written with `JSON.stringify` and read with `JSON.parse_string`.
+
+**Slices.** "Port" counts GDScript functions without a C++ port, each in the first slice that reaches it. Two-copy
+functions lose their GDScript in the slice that removes their last GDScript caller.
+
+| Slice | What moves | Port |
+|---|---|---|
+| 7.1 Routes | the route search out of `OverworldShell`, `hero_route_*`, `tile_*`, linked transit edges, `route_movement_preview`, guard approach | 22 functions, 516 lines, plus the search |
+| 7.2 The move and its arrival | `try_move*`, `execute_prevalidated_route`, the action frame (`_finalize_action_result` and its scenario check), pickups, rewards, sites, dwellings, visit buildings, boats, transit, starting a guard battle, entering a town | 195, 3,655 lines |
+| 7.3 Context and site actions | context actions, reward choice, site recruits, dwelling hire, level-up, specialties | 112, 2,543 lines |
+| 7.4 Overworld spells | `cast_overworld_spell`, `get_spell_actions` | 23, 517 lines |
+| 7.5 Heroes | rendezvous, army slots, field exchange, town transfers, garrison, tavern, artifacts | 84, 1,749 lines |
+| 7.6 Town actions | build, recruit, market, responses, spell learning, the two town boards, the action lists | 128, 2,611 lines |
+| 7.7 The day's human paths, the outcome screen | the fallbacks above, `build_outcome_model`, `perform_outcome_action` | 38, 796 lines |
+| 7.8 Overworld, town and hero panels | `describe_*`, labels, action lists, forecasts, the map views' snapshot (D-c) | 341, 6,326 lines |
+| 7.9 Battle screen | battle text, the action surface, forecasts, presentation events, board reads for drawing | 172, 3,677 lines |
+| 7.10 Content loading | ContentService parsing and queries; the native content tables built from the JSON files | 112, 2,322 lines |
+| 7.11 Game setup | ScenarioSelectRules, ScenarioFactory, package adoption, setup's neutral encounters and rewards, AI seats, MapPackageService's GDScript, the generator's setup part (`generate` deleted, D-g) | 256, 4,763 lines |
+| 7.12 Saves | the save format, normalization, validation, migration, summaries, the transactional write | 222, 4,026 lines |
+| 7.13 Map editor | TerrainPlacementRules, NativeScenery*, MapDocument, ScenarioDocument, the edit operations inside `MapEditorShell`; the authored-scenario export deleted (D-h) | 84, 1,204 lines, plus about 150 to 195 functions from the screen |
+| 7.14 Campaign runtime | out of Phase 7 (D-f): CampaignRules, CampaignProgression, ported with the campaign rework | 146, 2,147 lines |
+| 7.15 One copy | the last two-copy bodies, the C++ functions defined twice, AGENTS.md's two-copy rules | deletions |
+
+The slices port 1,935 functions, 36,852 GDScript lines, plus the editor's operations; without 7.14, 1,789 functions and
+34,705 lines. Without porting, the phase
+deletes 169 functions only tests reach, and about 190 with no caller found.
+
+7.10 to 7.12 depend on none of the human slices. They give Phase 8 content tables, setup from a map package and
+saves without Godot.
+
+**Checks.**
+- **The `--human` run.** A scripted player drives seat 1 through the real `OverworldShell`, `TownShell` and
+  `BattleShell`, headless, with an isolated profile.
+  - It routes and moves, answers prompts, uses context actions, spells, level-ups, transfers and artifacts, and runs
+    town actions.
+  - It plays some battles through `BattleShell` with the battle AI's suggested order, and the rest with Quick
+    Resolve. It ends each day through the confirmation.
+  - After every action it records the session digest (P6-5) and a digest of the panel texts.
+  - It runs on small, medium and large generated maps, at fixed seeds, with water and underground, and on the five
+    D9 save copies, copied into a scratch profile.
+- **While working.** `HEROES_NATIVE_HUMAN=shadow` on the `--human` run, plus day shadow on the six seeds.
+- **Before a merge.** `rules_parity.py check <main copy> . --human`, with every per-action digest identical. Then the
+  six seeds against main and the core suite.
+- **Coverage.** Functions the runs never reach are listed in the slice entry. Each gets a scratch probe, or is named
+  as unproven.
+- **UI speed.** Refresh times are compared with main. A panel that got slower moves its loop native.
+- **7.10.** The native content tables are identical to ContentService's for every content file.
+- **7.11.** New games from fixed seeds give the same session as main's.
+- **7.12.** The D9 copies load to the same session as main's; written saves are identical apart from
+  `saved_at_unix`, and load on main and on the branch.
+- **7.13.** Scripted editor operations on generated packages leave the same document as main's.
+
+**Slice 7.1, routes** (2026-10-23, branch `native-phase7-human`): the human route search is one native call.
+`OverworldShell._build_path` and `_route_path_lengths` and the map view's searches call `OverworldRules.hero_route_path`
+and `hero_route_path_lengths`. The human registry (`human_registry.cpp`, `HEROES_NATIVE_HUMAN`, no GDScript fallback)
+ports them with 15 route queries: `tile_is_blocked`, `tile_step_cuts_blocked_corner`, `tile_has_route_interaction`,
+`tile_is_actionable_route_destination`, `hero_route_tile_blocked`, `hero_route_destination`,
+`active_linked_transit_edges`, `active_linked_transit_signature`, `linked_transit_neighbors_from_edges`,
+`route_movement_preview`, `guard_engagement_approach_route`, `guard_engagement_encounter_at_tile`,
+`resource_node_interaction_at_tile`, `blocking_object_feedback_surface_at_tile` and `WaterTravelRules.is_sailing`, and
+their seven helpers. The shell's validation hooks (`_build_validation_path`) still call the queries per tile. Checks:
+- Human shadow on the eight `--human` seeds (seven before the main merge, h-s2 after it, which the read-scope fix of
+  main ac046cf67 lets finish), 0 mismatches and 0 errors: `tile_is_blocked` 1,537,029 checks,
+  `tile_step_cuts_blocked_corner` 1,443,258, `tile_has_route_interaction` 643,287, `is_sailing` 630,231,
+  `hero_route_tile_blocked` 553,299, `linked_transit_neighbors_from_edges` 435,273, `hero_route_destination` 76,654,
+  `tile_is_actionable_route_destination` 76,654, `guard_engagement_encounter_at_tile` 6,637,
+  `active_linked_transit_signature` 4,836, `active_linked_transit_edges` 3,800, `resource_node_interaction_at_tile`
+  2,089, `route_movement_preview` 1,140, `guard_engagement_approach_route` 802, `hero_route_path` 388,
+  `hero_route_path_lengths` 301, `blocking_object_feedback_surface_at_tile` 8.
+- Day shadow on the six seeds, after the main merge: 7,829 checks, 0 mismatches, 0 errors.
+- The `--human` check against main runs at the first merge.
+
+**Slice 7.10, content loading** (2026-10-23, branch `native-phase7-human`): ContentService's files are parsed,
+indexed, looked up and checked in C++.
+- `compat::json_parse` (`compat/godot_json.cpp`) is the engine's `JSON.parse`, with its own digest in the selftest's
+  compat vectors.
+- `content::Store` (`core/content_store.cpp`) loads each document once, read-only (an Array root as `{"items": ...}`,
+  the archive's missing files as `{}`), and answers `get_content_by_id`, `get_content_ids`, `get_encounter` (with the
+  generated companies), `canonical_town_id`, `normalize_terrain_id`, `get_biome_for_terrain`,
+  `get_map_object_for_resource_site`, the overrides (`ai_hero_weights_errors` against the shipped file), `clear_cache`
+  and the content revision. A lookup takes ids as `String()` does: a non-text id stops it.
+- `AurelionContent` (`gdextension/content_host.cpp`) hands GDScript one read-only Dictionary or Array per node, kept
+  until the tables reload. The port bridge's content rows and files read the store; scenarios and terrain layers still
+  come from ContentService (its generated drafts).
+- `core/content_validate.cpp` is the start-up checks of the live files (36 functions, the art indexes included), with
+  GDScript's runtime-error rule: an error ends the function it happens in, and its caller goes on.
+- The archived content's start-up checks are deleted (D-i): `_validate_content`, `_index_items`,
+  `_validate_terrain_layer`, `_terrain_ids_supporting_roads`, `_terrain_overlay_ids`, `_terrain_id_from_map`,
+  `_validate_scenario`, `_validate_objective`, `_validate_script_hook`, `_validate_script_condition`,
+  `_validate_script_effect`, `_validate_script_placement`, `_append_hook_spawn_placements`, `_append_unique_string`,
+  `_validate_campaign`, `_validate_campaign_chapter_seal`, `_validate_campaign_requirements`,
+  `_validate_campaign_carryover`, `_campaign_id_for_scenario` and `_validate_enemy_faction` (970 lines). No core test,
+  `tests/validate_repo.py` or other code called them, so no test retires under D-e.
+- `ContentService.gd` keeps thin wrappers, a memo per document and found row, and the generated drafts: 2,362 lines
+  before, 340 after.
+- Fixed on the way: `State::clear` emptied its atoms before the map whose keys view them (MSVC's `clear()` can hash its
+  keys); the fix went to main on its own (4eb648cfe).
+- `canonical_town_id` answers `""` when an error stops it, as GDScript's typed function does.
+Checks:
+- Tables, main against the branch: every content file's document, ids and rows by id (each `is_same` as its list's row),
+  the art, animation and hero art rows, the encounters with the generated companies, the towns and aliases, terrain ids
+  and biomes, the site objects, the failures, overrides and the revision: 8,178 lines identical, with the same errors
+  at the same places (in the native messages' words) and the same warnings. 0 start-up warnings on both.
+- Start-up checks of the live files, main against the branch (both still running the archived checks then): the shipped
+  files and 1,929 broken copies of the 24 live files (a key removed, emptied, a bad reference, a wrong type, nested
+  fields; at most 100 a file, spread over its rows). In 1,919 cases the same warnings and the same number of runtime
+  errors. In 10 cases with an int id the branch printed one runtime error more, from the archived checks' GDScript index
+  beside the native one; rerun after their deletion, heroes.json's 86 cases have main's counts. With `legacy_aliases` a
+  list, `canonical_town_id` answered the id instead of `""` after its error, so the archived checks printed 120 warnings
+  fewer; fixed, and 28 lookups on broken alias copies now give main's answers.
+- Measured in the probes: loading every content file 266 ms on main, 94 to 97 ms on the branch; the start-up checks
+  595 ms on main, 331 ms on the branch with the archived checks still in GDScript.
+
+**Merge 1a** (7.1 and 7.10, 2026-10-23): merged to main after main was tagged `pre-native-phase7-merge-1a` (D10).
+- 7.1's 17 functions are NATIVE entries of the human registry: `tools/native_battle_switch.py` writes them as thin
+  wrappers over `HumanEngine.native` and `native_writing`, and deletes their switches and GDScript bodies (716 lines,
+  D-d). No function on main reads `HEROES_NATIVE_HUMAN`; a later slice's switches exist on its branch.
+- While working, on 7.10 (3991505dd): human shadow on the eight `--human` seeds, 5,328,486 checks of the 17
+  functions, 0 mismatches and 0 errors; day shadow on the six seeds, 7,829 checks, 0 mismatches and 0 errors.
+- The merged code (21d6e16b6) against main 4eb648cfe: the `--human` check identical on the eight seeds, 1,896 action
+  digests and the records; the six seeds identical, 443 daily digests and the match records; core suite 17/17.
+- UI speed, screen time per action in ms, main | branch, with other runs on the machine: town actions 1,371 | 1,134, end of turn 1,416 | 1,406, battle 646 | 643, move 216 | 214; every other kind within 6 ms either way (opening a town 92 | 94). No kind got slower beyond that noise.
+- Coverage: the human shadow reached all 17 functions; the two probes above cover 7.10's lookups and checks.
 
 ### Phase 8: a match runner without Godot
 
@@ -2619,6 +2794,7 @@ Sizes are the proposal's unmeasured agent-day guesses, useful only to compare ph
 | D8 | **Decided 2026-10-20:** Phase 1 lives on one port branch, `native-phase1-battle` on GitHub, rebased on main at least weekly and before each slice, and merges to main once, when every battle is native and identical; it is dropped if checkpoint G1 stays under 5x after the interface fix (AGENTS.md "Native rules port") | Phase 1 |
 | D9 | **Decided 2026-10-22:** copies of the owner's five saves on this computer (Mireclaw Zhorra Fenwake days 1 and 14; Veilmourn Ivara Blacktide days 5 and 10 and the autosave; save version 9) and the two generated maps they reference live in `D:\Games\godot\heroes-like-save-copies` (outside git, with `SHA256SUMS` and a README). The originals are never touched; runs read the copies with an isolated user profile | Phase 4 (4.4) |
 | D10 | **Decided 2026-10-20:** main is tagged before each port merge. Owner 2026-10-21: no waiting period after it (the 7 days without behaviour commits was removed) | each merge |
+| D11 | **Decided 2026-10-23:** Phase 7's scope and checks (Phase 7, "Owner decisions", D-a to D-e): a permanent human seat in `tools/rules_parity.py`; every rule native, only the screens in GDScript; one map snapshot per redraw; no GDScript way back; retired tests by D6. Plan revision 2 (D-f to D-h): the campaign runtime moves with the campaign rework, `RandomMapGeneratorRules.generate` and the editor's authored-scenario export are deleted; order 7.1, 7.10 to 7.12, 7.2 to 7.9, 7.13, 7.15; four merges. Later (D-i): the archived content's start-up checks are deleted and the live files' checks ported; the first merge is split into 1a (7.1, 7.10) and 1b (7.11, 7.12) | Phase 7 |
 
 ## 9. Risks and how the plan contains them
 

@@ -96,7 +96,7 @@ func run():
 	for change in patch.units:
 		for i in range(manifest.items.size()):
 			if manifest.items[i].unit_id==change.unit_id:manifest.items[i]=change.animation
-	ContentService.clear_cache();ContentService._cache[ContentService.UNIT_ANIMATION_PATH]=manifest
+	ContentService.set_content_override(ContentService.UNIT_ANIMATION_PATH,manifest)
 	if DisplayServer.get_name()!="headless":
 		SettingsService.set_presentation_mode("windowed")
 		DisplayServer.window_set_position(Vector2i(-16000,-16000));DisplayServer.window_set_size(Vector2i(1280,400))

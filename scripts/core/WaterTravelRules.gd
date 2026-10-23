@@ -11,6 +11,7 @@ extends RefCounted
 ## helpers.
 
 const Levels = preload("res://scripts/core/OverworldLevelRules.gd")
+const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
 
 const BOATS_KEY := "boats"
 const HERO_BOAT_KEY := "boat_id"
@@ -36,7 +37,7 @@ static func hero_boat_id(hero: Variant) -> String:
 
 ## True when the active hero is aboard a boat.
 static func is_sailing(session) -> bool:
-	return session != null and hero_boat_id(session.overworld.get("hero", {})) != ""
+	return HumanEngine.native(&"WaterTravelRules.is_sailing", [session])
 
 static func is_water(session, x: int, y: int, level: int = -1) -> bool:
 	var rows: Array = Levels.terrain_rows(session, level)

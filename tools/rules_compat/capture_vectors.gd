@@ -20,7 +20,14 @@ const COUNT := 1 << 20
 const INT64_MAX := 9223372036854775807
 const INT64_MIN := -9223372036854775807 - 1
 const CANONICAL_NAN_BITS := 0x7FF8000000000000
-const HELPERS := ["pcg", "int_text", "string", "posmod", "int_div", "float_round", "snapped", "variant_minmax", "typed_minmax", "sort", "json_float"]
+const HELPERS := ["pcg", "int_text", "string", "posmod", "int_div", "float_round", "snapped", "variant_minmax", "typed_minmax", "sort", "json_float", "json_parse"]
+const STRING_CHARS := [0x61, 0x5A, 0x20, 0x0A, 0xE9, 0x3A9, 0x4E2D, 0x1F600]
+const SOUP := ["{", "}", "[", "]", ":", ",", "\"k\"", "\"a\"", "1", "-", "2.5e3", "true", "false", "null", "nul", "True", " ", "\n", "\t", "\r", "x", ".5", "1e", "\""]
+const WORDS := ["true", "false", "null", "nul", "True"]
+const KEYS := ["a", "b", "id", "a", "items"]
+const SEPARATORS := [",", ", ", ",\n", " , "]
+const ESCAPES := ["\\b", "\\t", "\\n", "\\f", "\\r", "\\\"", "\\\\", "\\/"]
+const BAD_ESCAPES := ["\\x", "\\u12G4", "\\"]
 const CODE_POINTS := [0x2D, 0x2B, 0x2E, 0x20, 0x61, 0x5A, 0x5F, 0x09, 0xE9, 0x3A9, 0x4E2D, 0x1F600, 0x30, 0x2D]
 
 var _state := 1
@@ -354,4 +361,137 @@ func _fuzz_json_float(count: int) -> void:
 		if _below(2) == 1:
 			near = 1.0 / near
 		_emit_text(JSON.stringify(near))
+		_flush()
+
+# --- JSON.parse: texts built from the draws (compat_fuzz.cpp: rand_json_text) ---
+
+func _hex4(value: int) -> String:
+	return ("%04x" if _below(2) == 0 else "%04X") % value
+
+func _digits(count: int) -> String:
+	var text := ""
+	for d in count:
+		text += String.chr(0x30 + _below(10))
+	return text
+
+func _rand_number_text() -> String:
+	var text := ""
+	if _below(4) == 0:
+		text += "-"
+	text += _digits(_below(25) if _below(4) == 0 else 1 + _below(6))
+	if _below(2) == 0:
+		text += "."
+		text += _digits(_below(25) if _below(4) == 0 else _below(8))
+	if _below(3) == 0:
+		text += "e" if _below(2) == 0 else "E"
+		var sign := _below(3)
+		text += "" if sign == 0 else ("+" if sign == 1 else "-")
+		text += _digits(0 if _below(4) == 0 else (3 if _below(16) == 0 else 1 + _below(2)))
+	return text
+
+func _rand_json_string() -> String:
+	var text := "\""
+	var pieces := _below(12)
+	for i in pieces:
+		var pick := _below(20)
+		if pick < 8:
+			text += String.chr(STRING_CHARS[pick])
+		elif pick < 16:
+			text += ESCAPES[pick - 8]
+		elif pick == 16:
+			text += "\\u" + _hex4(_below(65536))
+		elif pick == 17:
+			text += "\\u" + _hex4(0xD800 + _below(0x400))
+			text += "\\u" + _hex4(0xDC00 + _below(0x400))
+		elif pick == 18:
+			text += "\\u0000"
+		else:
+			text += BAD_ESCAPES[_below(3)]
+	if _below(16) != 0:
+		text += "\""
+	return text
+
+func _rand_json_value(depth: int) -> String:
+	var mode := _below(4 if depth >= 3 else 7)
+	if mode == 0 or mode == 3:
+		return _rand_number_text()
+	if mode == 1:
+		return _rand_json_string()
+	if mode == 2:
+		return WORDS[_below(5)]
+	var text := "{" if mode == 6 else "["
+	var count := _below(5)
+	for i in count:
+		if i > 0:
+			text += SEPARATORS[_below(4)]
+		if mode == 6:
+			text += "\"" + KEYS[_below(5)] + "\"" + (":" if _below(2) == 0 else ": ")
+		text += _rand_json_value(depth + 1)
+	if count > 0 and _below(8) == 0:
+		text += ","
+	text += "}" if mode == 6 else "]"
+	return text
+
+func _rand_json_text() -> String:
+	var mode := _below(10)
+	if mode <= 1:
+		return _rand_number_text()
+	if mode == 2:
+		return "[" + _rand_number_text() + "]"
+	if mode == 3:
+		return _rand_json_string()
+	if mode <= 7:
+		return _rand_json_value(0)
+	if mode == 8:
+		var soup := ""
+		var pieces := _below(12)
+		while pieces > 0:
+			soup += SOUP[_below(24)]
+			pieces -= 1
+		return soup
+	if _below(128) == 0:
+		var depth := 1020 + _below(10)
+		var closes := depth if _below(2) == 0 else depth - 1
+		return "[".repeat(depth) + "]".repeat(closes)
+	var text := " \n" + _rand_json_value(0) + "\n\t "
+	if _below(4) == 0:
+		text += "x"
+	return text
+
+func _emit_json_value(value: Variant) -> void:
+	match typeof(value):
+		TYPE_NIL:
+			_buffer.put_u8(0)
+		TYPE_BOOL:
+			_buffer.put_u8(1)
+			_emit_bool(value)
+		TYPE_FLOAT:
+			_buffer.put_u8(2)
+			_emit_float(value)
+		TYPE_STRING:
+			_buffer.put_u8(3)
+			_emit_text(value)
+		TYPE_ARRAY:
+			_buffer.put_u8(4)
+			_emit_int(value.size())
+			for item in value:
+				_emit_json_value(item)
+		TYPE_DICTIONARY:
+			_buffer.put_u8(5)
+			_emit_int(value.size())
+			for key in value:
+				_emit_text(key)
+				_emit_json_value(value[key])
+		_:
+			_buffer.put_u8(9)
+
+# JSON.new().parse(text): the error, its line and message, and the data.
+func _fuzz_json_parse(count: int) -> void:
+	for i in count:
+		var json := JSON.new()
+		var error := json.parse(_rand_json_text())
+		_emit_int(error)
+		_emit_int(json.get_error_line())
+		_emit_text(json.get_error_message())
+		_emit_json_value(json.data)
 		_flush()

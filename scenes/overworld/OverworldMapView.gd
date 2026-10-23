@@ -13720,64 +13720,12 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 	var detail_profile_enabled := _path_detail_profile_enabled
 	if not detail_profile_enabled:
 		_validation_profile.erase("last_path_recompute")
-	if _session == null or goal.x < 0 or goal.y < 0:
+	if _session == null:
 		_profile_path_recompute_details(detail_profile_enabled, start, goal, "missing_session_or_goal", 0, 0, 0, 0)
 		return []
-	if start == goal:
-		_profile_path_recompute_details(detail_profile_enabled, start, goal, "same_tile", 1, 1, 0, 0)
-		return [start]
-	if goal.x >= _map_size.x or goal.y >= _map_size.y:
-		_profile_path_recompute_details(detail_profile_enabled, start, goal, "goal_out_of_bounds", 0, 0, 0, 0)
-		return []
-	if OverworldRulesScript.hero_route_tile_blocked(_session, goal.x, goal.y, _level):
-		_profile_path_recompute_details(detail_profile_enabled, start, goal, "goal_blocked", 0, 0, 1 if detail_profile_enabled else 0, 0)
-		return []
-	var queue: Array = [start]
-	var queue_index := 0
-	var visited = {_tile_key(start): true}
-	var came_from = {_tile_key(start): start}
-	var found = false
-	var blocked_tile_lookup_count := 1 if detail_profile_enabled else 0
-	var enqueued_count := 1 if detail_profile_enabled else 0
-
-	while queue_index < queue.size():
-		var current: Vector2i = queue[queue_index]
-		queue_index += 1
-		if current == goal:
-			found = true
-			break
-		for direction in DIRECTIONS:
-			var next: Vector2i = current + direction
-			if next.x < 0 or next.y < 0 or next.x >= _map_size.x or next.y >= _map_size.y:
-				continue
-			# Skip already-reached tiles before the costly blocking checks.
-			var key = _tile_key(next)
-			if visited.has(key):
-				continue
-			if detail_profile_enabled:
-				blocked_tile_lookup_count += 1
-			if OverworldRulesScript.tile_step_cuts_blocked_corner(_session, current, next, _level):
-				continue
-			if OverworldRulesScript.hero_route_tile_blocked(_session, next.x, next.y, _level):
-				continue
-			if next != goal and OverworldRulesScript.tile_has_route_interaction(_session, next.x, next.y, _level):
-				continue
-			visited[key] = true
-			came_from[key] = current
-			queue.append(next)
-			if detail_profile_enabled:
-				enqueued_count += 1
-
-	if not found:
-		_profile_path_recompute_details(detail_profile_enabled, start, goal, "not_found", 0, visited.size() if detail_profile_enabled else 0, blocked_tile_lookup_count, enqueued_count)
-		return []
-
-	var path: Array = [goal]
-	var walker: Vector2i = goal
-	while walker != start:
-		walker = came_from.get(_tile_key(walker), start)
-		path.push_front(walker)
-	_profile_path_recompute_details(detail_profile_enabled, start, goal, "found", path.size(), visited.size() if detail_profile_enabled else 0, blocked_tile_lookup_count, enqueued_count)
+	# The map view's own search (a screen without the overworld's route).
+	var path := OverworldRulesScript.hero_route_path(_session, start, goal, _level, true)
+	_profile_path_recompute_details(detail_profile_enabled, start, goal, "found" if not path.is_empty() else "not_found", path.size(), 0, 0, 0)
 	return path
 
 func _profile_path_recompute_details(

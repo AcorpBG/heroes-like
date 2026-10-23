@@ -116605,6 +116605,214 @@
       ],
       "notes": "Branch native-phase6-random-opponents (owner decision 2026-10-23: in skirmish games the computer opponents' factions are drawn at random from the map seed by default; the human keeps their pick or Random). MainMenu._generated_random_map_config passes seat_faction_ids: seat 1 the player's pick or random, every other seat random, each drawn from the seed on its own (repeats possible, the player's faction included). No ScenarioSelectRules, native or runner change. Checks: a medium 4P skirmish through the menu with a screenshot; the draw repeats for a seed in a process and across processes; over 200 4P seeds an opponent shares the player's faction in 86, some faction twice in 145; six seeds against main ac046cf67 identical (443 digests and records); core suite 17/17.",
       "updatedAt": "2026-10-23T18:00:00Z"
+    },
+    {
+      "id": "native-rules-phase7-one-copy-20261023",
+      "title": "Native rules Phase 7: every rule native, one copy",
+      "status": "in_progress",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Owner decisions 2026-10-23 (D11, D-a to D-e): every rule moves to C++, only the screens stay GDScript; check is a permanent human seat (tools/rules_parity.py --human); one map snapshot per redraw; no GDScript way back; retired tests by D6. Inventory of main 7bd62e817: 1,935 GDScript functions to port (36,852 lines; 1,789 and 34,705 without 7.14) plus the map editor's operations; 798 two-copy bodies to delete. Branch native-phase7-human. Plan revision 2 (owner decisions D-f to D-h, 2026-10-23): the campaign runtime is ported with the campaign rework (7.14 leaves Phase 7); RandomMapGeneratorRules.generate and the legacy rebuild path are deleted, its setup part moves with 7.11; the editor's authored-scenario export is deleted. Order: 7.1, 7.10-7.12, 7.2-7.9, 7.13, 7.15. Four merges with the full checks: after 7.1 with 7.10-7.12, after 7.2, after 7.7, at the end.",
+      "updatedAt": "2026-10-23T13:47:00Z"
+    },
+    {
+      "id": "native-rules-phase7-01-routes-20261023",
+      "title": "Phase 7.1: the human route search native",
+      "status": "completed",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "The route search out of OverworldShell (_build_path, _route_path_lengths) as one native call, with the route queries it calls (22 GDScript functions, 516 lines); the --human mode of tools/rules_parity.py; HEROES_NATIVE_HUMAN on the branch. Frozen functions named in PLAN.md. Implemented (transition doc, Phase 7, Slice 7.1): human shadow on the eight --human seeds 0 mismatches, day shadow on the six seeds 7,829 checks 0 mismatches. Merges with 7.10 (merge 1a), after the --human check against main. Merged to main 2026-10-23 (merge 1a, main tagged pre-native-phase7-merge-1a): its 17 functions thin wrappers over their port, the GDScript bodies deleted (D-d); --human check against main identical on the eight seeds (1,896 action digests), six seeds identical (443 digests), core suite 17/17.",
+      "updatedAt": "2026-10-23T21:30:00Z"
+    },
+    {
+      "id": "native-rules-phase7-02-move-20261023",
+      "title": "Phase 7.2: the move and its arrival",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Transition doc, Phase 7, Slices.",
+      "updatedAt": "2026-10-23T14:30:00Z"
+    },
+    {
+      "id": "native-rules-phase7-03-context-actions-20261023",
+      "title": "Phase 7.3: context and site actions",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Transition doc, Phase 7, Slices.",
+      "updatedAt": "2026-10-23T14:30:00Z"
+    },
+    {
+      "id": "native-rules-phase7-04-overworld-spells-20261023",
+      "title": "Phase 7.4: overworld spells",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Transition doc, Phase 7, Slices.",
+      "updatedAt": "2026-10-23T14:30:00Z"
+    },
+    {
+      "id": "native-rules-phase7-05-heroes-20261023",
+      "title": "Phase 7.5: hero transfers, rendezvous, garrison, tavern, artifacts",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Transition doc, Phase 7, Slices.",
+      "updatedAt": "2026-10-23T14:30:00Z"
+    },
+    {
+      "id": "native-rules-phase7-06-town-actions-20261023",
+      "title": "Phase 7.6: town actions",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Transition doc, Phase 7, Slices.",
+      "updatedAt": "2026-10-23T14:30:00Z"
+    },
+    {
+      "id": "native-rules-phase7-07-day-human-outcome-20261023",
+      "title": "Phase 7.7: the day's human paths and the outcome screen",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Transition doc, Phase 7, Slices.",
+      "updatedAt": "2026-10-23T14:30:00Z"
+    },
+    {
+      "id": "native-rules-phase7-08-panels-20261023",
+      "title": "Phase 7.8: overworld, town and hero panels",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Transition doc, Phase 7, Slices.",
+      "updatedAt": "2026-10-23T14:30:00Z"
+    },
+    {
+      "id": "native-rules-phase7-09-battle-screen-20261023",
+      "title": "Phase 7.9: the battle screen",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Transition doc, Phase 7, Slices.",
+      "updatedAt": "2026-10-23T14:30:00Z"
+    },
+    {
+      "id": "native-rules-phase7-10-content-20261023",
+      "title": "Phase 7.10: content loading",
+      "status": "completed",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Implemented (transition doc, Phase 7, Slice 7.10): the content files parsed in C++ by a port of the engine's JSON.parse, ContentService's lookups, overrides and revision in content::Store, the live files' start-up checks in core/content_validate.cpp; the archived content's start-up checks deleted (owner decision 2026-10-23, D-i). Tables main vs branch: 8,178 lines identical; start-up checks on the shipped files and 1,929 broken copies: the same warnings and runtime-error counts in 1,919 of 1,930 cases; the rest explained in the slice entry (canonical_town_id fixed). Merges with 7.1 (merge 1a). Merged to main 2026-10-23 (merge 1a): --human check against main identical on the eight seeds, six seeds identical, core suite 17/17.",
+      "updatedAt": "2026-10-23T21:30:00Z"
+    },
+    {
+      "id": "native-rules-phase7-11-setup-20261023",
+      "title": "Phase 7.11: game setup",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Transition doc, Phase 7, Slices. With the generator's setup part (normalize_config, the materialization identity; D-g): RandomMapGeneratorRules.generate and the legacy rebuild path are deleted, its three core tests (random_map_seeded_generator_core_report, random_map_final_writeout_export_save_schema_report, generated_start_hero_growth_seed_report) move to the native generator and the other tests calling it are retired (D-e).",
+      "updatedAt": "2026-10-23T13:47:00Z"
+    },
+    {
+      "id": "native-rules-phase7-12-saves-20261023",
+      "title": "Phase 7.12: saves",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Transition doc, Phase 7, Slices.",
+      "updatedAt": "2026-10-23T14:30:00Z"
+    },
+    {
+      "id": "native-rules-phase7-13-map-editor-20261023",
+      "title": "Phase 7.13: the map editor's rules",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Transition doc, Phase 7, Slices. Map-package editing and saving only; the authored-scenario export is deleted (D-h).",
+      "updatedAt": "2026-10-23T13:47:00Z"
+    },
+    {
+      "id": "native-rules-phase7-14-campaign-20261023",
+      "title": "Phase 7.14: the campaign runtime",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Out of Phase 7 (owner decision D-f, 2026-10-23): the campaign runtime is ported with the campaign rework.",
+      "updatedAt": "2026-10-23T13:47:00Z"
+    },
+    {
+      "id": "native-rules-phase7-15-one-copy-20261023",
+      "title": "Phase 7.15: one copy",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Transition doc, Phase 7, Slices.",
+      "updatedAt": "2026-10-23T14:30:00Z"
     }
   ],
   "project": "heroes-like",

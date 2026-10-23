@@ -1,6 +1,7 @@
 #include "battle_port_bridge.hpp"
 
 #include "battle_state_bridge.hpp"
+#include "content_host.hpp"
 
 #include "aurelion_rules/compat/godot_string.hpp"
 #include "aurelion_rules/port/gd.hpp"
@@ -222,7 +223,7 @@ void PortBridge::begin(bool validating, bool host_calls) {
 }
 
 void PortBridge::begin_kept() {
-	const bool keeps = kept_ && state_.atom_count() <= kAtomLimit && static_cast<int64_t>(content_service()->call(StringName("get_content_revision"))) == kept_revision_;
+	const bool keeps = kept_ && state_.atom_count() <= kAtomLimit && content_host()->revision() == kept_revision_;
 	// Until this call ends in keep().
 	kept_ = false;
 	if (!keeps) {
@@ -323,7 +324,7 @@ Variant PortBridge::keep(const Value &result, const Value *args, size_t count) {
 	for (auto &row : content_) {
 		row.second.ref = maps.dicts[row.second.ref];
 	}
-	kept_revision_ = static_cast<int64_t>(content_service()->call(StringName("get_content_revision")));
+	kept_revision_ = content_host()->revision();
 	kept_ = true;
 	return exported;
 }
@@ -708,65 +709,89 @@ Object *PortBridge::content_service() {
 	return node;
 }
 
-Value PortBridge::content_row(state::State &state, state::ContentTable table, uint32_t id) {
-	const char *method = "get_unit";
-	switch (table) {
-		case state::ContentTable::Unit:
-			method = "get_unit";
-			break;
-		case state::ContentTable::Hero:
-			method = "get_hero";
-			break;
-		case state::ContentTable::Faction:
-			method = "get_faction";
-			break;
-		case state::ContentTable::Spell:
-			method = "get_spell";
-			break;
-		case state::ContentTable::Artifact:
-			method = "get_artifact";
-			break;
-		case state::ContentTable::ResourceSite:
-			method = "get_resource_site";
-			break;
-		case state::ContentTable::Building:
-			method = "get_building";
-			break;
-		case state::ContentTable::Town:
-			method = "get_town";
-			break;
-		case state::ContentTable::MapObject:
-			method = "get_map_object";
-			break;
-		case state::ContentTable::Encounter:
-			method = "get_encounter";
-			break;
-		case state::ContentTable::ArmyGroup:
-			method = "get_army_group";
-			break;
-		case state::ContentTable::Scenario:
-			method = "get_scenario_readonly";
-			break;
-		case state::ContentTable::Resource:
-			method = "get_resource";
-			break;
-		case state::ContentTable::MapObjectForResourceSite:
-			method = "get_map_object_for_resource_site";
-			break;
-		case state::ContentTable::BiomeForTerrain:
-			method = "get_biome_for_terrain";
-			break;
-		case state::ContentTable::TerrainLayersForScenario:
-			method = "get_terrain_layers_for_scenario";
-			break;
+godot::AurelionContent *PortBridge::content_host() {
+	Object *known = godot::ObjectDB::get_instance(content_host_);
+	if (known != nullptr) {
+		return static_cast<godot::AurelionContent *>(known);
 	}
+	godot::AurelionContent *host = Object::cast_to<godot::AurelionContent>(static_cast<Object *>(content_service()->get(StringName("_native"))));
+	if (host == nullptr) {
+		throw state::ScriptError("ContentService holds no native content tables (its _native is no AurelionContent)");
+	}
+	content_host_ = host->get_instance_id();
+	return host;
+}
+
+Value PortBridge::content_row(state::State &state, state::ContentTable table, uint32_t id) {
+	namespace content = aurelion::rules::content;
 	const uint64_t memo = (static_cast<uint64_t>(table) + 1) << 32 | id;
 	const auto found = content_.find(memo);
 	if (found != content_.end()) {
 		return found->second;
 	}
 	const std::string &text = state.text(id);
-	const Variant row = content_service()->call(StringName(method), String::utf8(text.data(), static_cast<int64_t>(text.size())));
+	Variant row;
+	if (table == state::ContentTable::Scenario || table == state::ContentTable::TerrainLayersForScenario) {
+		const char *method = table == state::ContentTable::Scenario ? "get_scenario_readonly" : "get_terrain_layers_for_scenario";
+		row = content_service()->call(StringName(method), String::utf8(text.data(), static_cast<int64_t>(text.size())));
+	} else {
+		godot::AurelionContent *host = content_host();
+		content::Store &store = host->store();
+		std::vector<content::Message> messages;
+		Value native;
+		const auto by_id = [&](const char *path) {
+			return store.content_by_id(path, text, "items", messages);
+		};
+		switch (table) {
+			case state::ContentTable::Unit:
+				native = by_id(content::kUnitsPath);
+				break;
+			case state::ContentTable::Hero:
+				native = by_id(content::kHeroesPath);
+				break;
+			case state::ContentTable::Faction:
+				native = by_id(content::kFactionsPath);
+				break;
+			case state::ContentTable::Spell:
+				native = by_id(content::kSpellsPath);
+				break;
+			case state::ContentTable::Artifact:
+				native = by_id(content::kArtifactsPath);
+				break;
+			case state::ContentTable::ResourceSite:
+				native = by_id(content::kResourceSitesPath);
+				break;
+			case state::ContentTable::Building:
+				native = by_id(content::kBuildingsPath);
+				break;
+			case state::ContentTable::Town:
+				native = by_id(content::kTownsPath);
+				break;
+			case state::ContentTable::MapObject:
+				native = by_id(content::kMapObjectsPath);
+				break;
+			case state::ContentTable::Encounter:
+				native = store.encounter(text, messages);
+				break;
+			case state::ContentTable::ArmyGroup:
+				native = by_id(content::kArmyGroupsPath);
+				break;
+			case state::ContentTable::Resource:
+				native = by_id(content::kResourcesPath);
+				break;
+			case state::ContentTable::MapObjectForResourceSite:
+				native = store.map_object_for_resource_site(text, messages);
+				break;
+			case state::ContentTable::BiomeForTerrain:
+				native = store.biome_for_terrain(text, messages);
+				break;
+			case state::ContentTable::Scenario:
+			case state::ContentTable::TerrainLayersForScenario:
+				break;
+		}
+		godot::AurelionContent::report(messages);
+		row = native.kind == Kind::Nil ? Variant(Dictionary()) : host->content_variant(native);
+	}
 	const Value loaded = load(row);
 	// Terrain layers are a new copy on every call, so they are asked for again,
 	// and the port gets a new Dictionary of its own, as GDScript does: a
@@ -786,9 +811,11 @@ Value PortBridge::content_file(state::State &state, uint32_t path) {
 	if (found != content_.end()) {
 		return found->second;
 	}
-	const std::string &text = state.text(path);
-	const Variant data = content_service()->call(StringName("load_json"), String::utf8(text.data(), static_cast<int64_t>(text.size())));
-	const Value loaded = load(data);
+	godot::AurelionContent *host = content_host();
+	std::vector<aurelion::rules::content::Message> messages;
+	const Value native = host->store().load_json(state.text(path), messages);
+	godot::AurelionContent::report(messages);
+	const Value loaded = load(native.kind == Kind::Nil ? Variant(Dictionary()) : host->content_variant(native));
 	if (loaded.kind == Kind::Dict && state.dict_size(loaded.ref) != 0) {
 		content_.emplace(memo, loaded);
 	}
@@ -979,7 +1006,7 @@ state::TypeRef PortBridge::builtin_type(uint8_t builtin) {
 
 int64_t PortBridge::content_revision(state::State &) {
 	if (content_revision_ < 0) {
-		content_revision_ = static_cast<int64_t>(content_service()->call(StringName("get_content_revision")));
+		content_revision_ = content_host()->revision();
 	}
 	return content_revision_;
 }

@@ -12,6 +12,9 @@
 // the Linux build through glibc (godot_string.hpp, num). json_float has the
 // Windows digest (captured 2026-10-23, Windows 10); the Linux one is captured
 // in the Linux pass, and until then the Linux self-test reports it missing.
+//
+// json_parse (captured 2026-10-23, Windows 10) is plain double arithmetic in
+// the engine's own strtod, so both platforms share its digest.
 
 struct CompatExpected {
 	const char *helper;
@@ -38,4 +41,5 @@ constexpr CompatExpected kCompatExpected[] = {
 #ifdef _WIN32
 	{ "json_float", "4666bda411d8a7292df57b30b27644aad906b6b11d4677180d43063e4f6df669" },
 #endif
+	{ "json_parse", "ba995e47e94d2eef67b588ffd573047bd81d6f48771d9312e52e62a409a6d218" },
 };

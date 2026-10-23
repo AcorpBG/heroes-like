@@ -9,6 +9,7 @@ Table day_table();
 Table ai_table();
 Table battle_table();
 Table turn_table();
+Table human_table();
 
 namespace {
 
@@ -20,6 +21,7 @@ const std::vector<Table> &all_tables() {
 		ai_table(),
 		battle_table(),
 		turn_table(),
+		human_table(),
 	};
 	return tables;
 }

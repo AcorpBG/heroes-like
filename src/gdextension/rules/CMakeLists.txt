@@ -97,7 +97,10 @@ add_library(aurelion_rules_core STATIC
 	core/battle_hex.cpp
 	core/battle_state.cpp
 	core/build_info.cpp
+	core/compat/godot_json.cpp
 	core/compat/godot_string.cpp
+	core/content_store.cpp
+	core/content_validate.cpp
 	core/port/ability_helpers.cpp
 	core/port/action_playback.cpp
 	core/port/action_pressure.cpp
@@ -191,6 +194,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/hero_progression_rules.cpp
 	core/port/hero_progression_rules_shared.cpp
 	core/port/hero_rules_turn.cpp
+	core/port/human_registry.cpp
 	core/port/mine_rules.cpp
 	core/port/mine_rules_ai.cpp
 	core/port/move_orders.cpp
@@ -209,6 +213,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/overworld_rules_ai_recovery.cpp
 	core/port/overworld_rules_ai_sites.cpp
 	core/port/overworld_rules_ai_towns.cpp
+	core/port/overworld_rules_routes.cpp
 	core/port/overworld_rules_shared.cpp
 	core/port/overworld_rules_turn.cpp
 	core/port/overworld_rules_turn_rare.cpp
@@ -260,6 +265,7 @@ add_library(aurelion_rules SHARED
 	gdextension/aurelion_rules_api.cpp
 	gdextension/battle_port_bridge.cpp
 	gdextension/battle_state_bridge.cpp
+	gdextension/content_host.cpp
 	gdextension/snapshot_encoder.cpp
 )
 target_link_libraries(aurelion_rules PRIVATE aurelion_rules_core godot::cpp)
