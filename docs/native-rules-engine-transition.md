@@ -2397,6 +2397,7 @@ Godot dependency, since these slices lead to Phase 8. The bound is 1/(1 - share)
   - Day shadow on the six seeds: `end_turn` 405 checks; all functions 7,394 checks, 0 mismatches, 0 errors, 12 not
     ported (the elimination days, as on main).
   - Core suite 17/17.
+  - After merging main eda1a4de9 (Phase 2d): six seeds against it identical, core suite 17/17.
 - **Timing** (as for P6-3: the six seeds as `tools/ai_match_batch.py` plays them, six at once, three rounds alternating
   main 6e490c9e2 and P6-4 on a quiet machine):
 
