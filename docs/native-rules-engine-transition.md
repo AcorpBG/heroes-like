@@ -18,9 +18,10 @@ start only through their gates. Line references are as of commit 50929125a; each
   every rule; the game, the match runner, the battle tuner and any command-line tool run the same native code.
 - **End state.**
   - **Native** (`aurelion::rules`, a pure C++ core in a new `aurelion_rules` GDExtension for Windows and Linux): battles,
-    battle AI, battle payloads, the overworld AI faction turn, day processing, and the human-side rule actions.
-  - **GDScript keeps:** UI and scenes, `describe_*` text built on native queries, SaveService file I/O, ContentService
-    parsing (feeding the native content tables), the map editor.
+    battle AI, battle payloads, the overworld AI faction turn, day processing, the human-side rule actions, and (owner
+    decision 2026-10-23, Phase 7) every other rule: panel text, content loading, game setup, the save format, the
+    map editor's rules and the campaign runtime.
+  - **GDScript keeps:** the screens only: scenes, layout, input, animation, drawing and audio, reading native results.
   - **Unchanged contracts:** save version 9 (`SessionStateStore.gd:4`), the session Dictionary shape, the battle RNG
     stream format.
   - **AI tuning numbers** live in content JSON, per controller, so tuning them never needs a C++ build.
@@ -2410,11 +2411,99 @@ Godot dependency, since these slices lead to Phase 8. The bound is 1/(1 - share)
   (s2 10 s to 9 s, mw 16-17 s to 14 s, l1 39-40 s to 33-34 s, l2 43 s to 36-37 s).
 
 
-### Phase 7: human-side actions and the last GDScript rules
+### Phase 7: every rule native, one copy
 
-Movement, routes, context actions, overworld spells, town actions, hero transfers and artifact equipping: about 378
-functions the UI calls, at 1,221 call sites. Needed for the one-copy end state, not for speed, so it can interleave with
-other work. Merging the separate human and AI forms of heroes, treasury and fog is a later save-schema slice.
+The human-side actions and every other GDScript rule move to C++, and the two-copy functions lose their GDScript
+bodies. This is needed for the one-copy end state, not for speed. Merging the separate human and AI forms of heroes,
+treasury and fog is a later save-schema slice. Branch `native-phase7-human`.
+
+**Owner decisions** (2026-10-23, on the plan below; D11 in section 8):
+- **D-a, the check.** A permanent human seat: the `--human` mode of `tools/rules_parity.py`.
+- **D-b, the scope.** Every rule moves to C++: panel text, content loading, game setup, the save format, the map
+  editor's rules and the campaign runtime. Only the screens stay GDScript: scenes, layout, input, animation, drawing
+  and audio, reading native results.
+- **D-c, the map views.** One native snapshot per redraw, not one native read per tile.
+- **D-d, no way back in GDScript.** `HEROES_NATIVE_HUMAN` exists only on a slice's branch, as the shadow check. The
+  day switch's `gdscript` mode and its `__gd` bodies are deleted. The tags before each merge are the way back.
+- **D-e, tests.** Tests that call GDScript bodies the phase deletes are retired by the D6 process.
+
+The merge cadence is open. Proposed: four milestones, after 7.2, 7.7, 7.12 and 7.15, against one merge at the end.
+
+**Inventory** (2026-10-23, main 7bd62e817; a static call graph of main from a scratch analyzer: calls through
+`class_name`, preload consts, lazy-script getters and autoload names; calls by string, signals and engine callbacks
+not followed):
+- **What the UI calls.** 500 rules functions at 1,632 call sites. Without the battle screen and setup, 355 functions
+  at 1,276 sites.
+- **Two copies.** 798 GDScript functions, 13,343 lines, have a C++ port beside them: Phase 3's 309, 4.4's 203, Phase
+  5's 359 and 2d's lists, minus overlaps. The UI calls them at 466 sites, and 183 test files at 1,317.
+- **The native day** leaves nine human-only paths to GDScript:
+  - a player town's weekly growth, and a player convoy's arrival;
+  - a human action's scenario check, and a townless human;
+  - a human primary hero rebuilt from its template, and the garrison migration;
+  - an artifact placement still to be drawn, and sessions without towns or resource nodes;
+  - the archived authored objective types.
+- **The human route search is UI code.** `OverworldShell._build_path` and `_route_path_lengths` are breadth-first
+  searches that call four rules functions per neighbour tile, so the search moves native as one call. The map views
+  read fog, positions and levels per tile, for example `is_tile_explored` at 31 sites and `hero_position` at 80.
+- **The GDScript map generator.** `RandomMapGeneratorRules.generate` (450 functions, 10,687 lines) only rebuilds a
+  save whose map is not a native disk package. All five D9 save copies are native packages. Setup calls
+  `normalize_config` (29 functions, 665 lines) and the materialization identity (3 functions, 21 lines).
+- **Saves are JSON**, written with `JSON.stringify` and read with `JSON.parse_string`.
+
+**Slices.** "Port" counts GDScript functions without a C++ port, each in the first slice that reaches it. Two-copy
+functions lose their GDScript in the slice that removes their last GDScript caller.
+
+| Slice | What moves | Port |
+|---|---|---|
+| 7.1 Routes | the route search out of `OverworldShell`, `hero_route_*`, `tile_*`, linked transit edges, `route_movement_preview`, guard approach | 22 functions, 516 lines, plus the search |
+| 7.2 The move and its arrival | `try_move*`, `execute_prevalidated_route`, the action frame (`_finalize_action_result` and its scenario check), pickups, rewards, sites, dwellings, visit buildings, boats, transit, starting a guard battle, entering a town | 195, 3,655 lines |
+| 7.3 Context and site actions | context actions, reward choice, site recruits, dwelling hire, level-up, specialties | 112, 2,543 lines |
+| 7.4 Overworld spells | `cast_overworld_spell`, `get_spell_actions` | 23, 517 lines |
+| 7.5 Heroes | rendezvous, army slots, field exchange, town transfers, garrison, tavern, artifacts | 84, 1,749 lines |
+| 7.6 Town actions | build, recruit, market, responses, spell learning, the two town boards, the action lists | 128, 2,611 lines |
+| 7.7 The day's human paths, the outcome screen | the fallbacks above, `build_outcome_model`, `perform_outcome_action` | 38, 796 lines |
+| 7.8 Overworld, town and hero panels | `describe_*`, labels, action lists, forecasts, the map views' snapshot (D-c) | 341, 6,326 lines |
+| 7.9 Battle screen | battle text, the action surface, forecasts, presentation events, board reads for drawing | 172, 3,677 lines |
+| 7.10 Content loading | ContentService parsing and queries; the native content tables built from the JSON files | 112, 2,322 lines |
+| 7.11 Game setup | ScenarioSelectRules, ScenarioFactory, package adoption, setup's neutral encounters and rewards, AI seats, MapPackageService's GDScript, the generator's setup part | 256, 4,763 lines |
+| 7.12 Saves | the save format, normalization, validation, migration, summaries, the transactional write | 222, 4,026 lines |
+| 7.13 Map editor | TerrainPlacementRules, NativeScenery*, MapDocument, ScenarioDocument, the edit operations inside `MapEditorShell` | 84, 1,204 lines, plus about 150 to 195 functions from the screen |
+| 7.14 Campaign runtime | CampaignRules, CampaignProgression | 146, 2,147 lines |
+| 7.15 One copy | the last two-copy bodies, the C++ functions defined twice, AGENTS.md's two-copy rules | deletions |
+
+The slices port 1,935 functions, 36,852 GDScript lines, plus the editor's operations. Without porting, the phase
+deletes 169 functions only tests reach, and about 190 with no caller found.
+
+7.10 to 7.12 depend on none of the human slices. They give Phase 8 content tables, setup from a map package and
+saves without Godot.
+
+**Checks.**
+- **The `--human` run.** A scripted player drives seat 1 through the real `OverworldShell`, `TownShell` and
+  `BattleShell`, headless, with an isolated profile.
+  - It routes and moves, answers prompts, uses context actions, spells, level-ups, transfers and artifacts, and runs
+    town actions.
+  - It plays some battles through `BattleShell` with the battle AI's suggested order, and the rest with Quick
+    Resolve. It ends each day through the confirmation.
+  - After every action it records the session digest (P6-5) and a digest of the panel texts.
+  - It runs on small, medium and large generated maps, at fixed seeds, with water and underground, and on the five
+    D9 save copies, copied into a scratch profile.
+- **While working.** `HEROES_NATIVE_HUMAN=shadow` on the `--human` run, plus day shadow on the six seeds.
+- **Before a merge.** `rules_parity.py check <main copy> . --human`, with every per-action digest identical. Then the
+  six seeds against main and the core suite.
+- **Coverage.** Functions the runs never reach are listed in the slice entry. Each gets a scratch probe, or is named
+  as unproven.
+- **UI speed.** Refresh times are compared with main. A panel that got slower moves its loop native.
+- **7.10.** The native content tables are identical to ContentService's for every content file.
+- **7.11.** New games from fixed seeds give the same session as main's.
+- **7.12.** The D9 copies load to the same session as main's; written saves are identical apart from
+  `saved_at_unix`, and load on main and on the branch.
+- **7.13.** Scripted editor operations on generated packages leave the same document as main's.
+
+**Open.**
+- **The campaign runtime.** No check reaches it: the campaigns are archived and their tests are quarantined.
+- **The GDScript generator's `generate`.** Delete it, or port it under `docs/lessons-learned.md`.
+- **The editor's export** of the archived authored-scenario format.
+- **The order of 7.10 to 7.12**, and the merge cadence.
 
 ### Phase 8: a match runner without Godot
 
@@ -2459,6 +2548,7 @@ Sizes are the proposal's unmeasured agent-day guesses, useful only to compare ph
 | D8 | **Decided 2026-10-20:** Phase 1 lives on one port branch, `native-phase1-battle` on GitHub, rebased on main at least weekly and before each slice, and merges to main once, when every battle is native and identical; it is dropped if checkpoint G1 stays under 5x after the interface fix (AGENTS.md "Native rules port") | Phase 1 |
 | D9 | **Decided 2026-10-22:** copies of the owner's five saves on this computer (Mireclaw Zhorra Fenwake days 1 and 14; Veilmourn Ivara Blacktide days 5 and 10 and the autosave; save version 9) and the two generated maps they reference live in `D:\Games\godot\heroes-like-save-copies` (outside git, with `SHA256SUMS` and a README). The originals are never touched; runs read the copies with an isolated user profile | Phase 4 (4.4) |
 | D10 | **Decided 2026-10-20:** main is tagged before each port merge. Owner 2026-10-21: no waiting period after it (the 7 days without behaviour commits was removed) | each merge |
+| D11 | **Decided 2026-10-23:** Phase 7's scope and checks (Phase 7, "Owner decisions", D-a to D-e): a permanent human seat in `tools/rules_parity.py`; every rule native, only the screens in GDScript; one map snapshot per redraw; no GDScript way back; retired tests by D6. Merge cadence open | Phase 7 |
 
 ## 9. Risks and how the plan contains them
 
