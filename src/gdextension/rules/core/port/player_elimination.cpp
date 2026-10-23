@@ -1,10 +1,10 @@
 // PlayerEliminationRules.apply_daily: the days each player has gone without a
-// town, counted once a day after every player has moved. The paths AI matches
-// never run are left to GDScript (state::NotPorted): the human player's
-// townless warnings and defeat, and a computer player's removal when its time
-// is up (a few times a game).
+// town, counted once a day after every player has moved, and a computer player
+// removed when its time is up. The human player's townless warnings and defeat
+// are left to GDScript (state::NotPorted).
 
 #include "aurelion_rules/port/ai_hero_rules.hpp"
+#include "aurelion_rules/port/ai_hero_rules_turn.hpp"
 #include "aurelion_rules/port/player_identity_rules.hpp"
 #include "aurelion_rules/port/scenario_evaluation.hpp"
 #include "aurelion_rules/port/session_view.hpp"
@@ -12,6 +12,11 @@
 #include <string>
 
 namespace aurelion::rules::port {
+
+// Defined in enemy_states.cpp (Phase 5) and declared only where it is called.
+namespace enemy_adventure_rules {
+void normalize_all_commander_rosters(state::State &state, gd::DictRef session);
+} // namespace enemy_adventure_rules
 
 namespace {
 
@@ -22,6 +27,7 @@ using gd::dict_value;
 using gd::DictRef;
 using gd::int_value;
 using gd::str;
+using state::ContentTable;
 using state::State;
 using state::Value;
 namespace key = state::key;
@@ -37,6 +43,16 @@ Atom text(State &state, DictRef dict, Atom field, Atom fallback) {
 
 // PlayerEliminationRules.TOWNLESS_DAYS.
 constexpr int64_t kTownlessDays = 7;
+
+// A computer player's heroes leave the map; its record stays, out of the game.
+void _remove_computer_player(State &state, DictRef session, Atom player_id) {
+	const ArrayRef entries = ai_hero_rules::active_hero_entries(state, session, player_id);
+	for (int64_t index = 0; index < state.array_size(entries); ++index) {
+		const DictRef entry = gd::as_dict(state.at(entries, index));
+		ai_hero_rules::_mark_resolved(state, session, text(state, entry, key::placement_id, key::empty));
+		ai_hero_rules::_record_hero_defeat(state, session, player_id, entry);
+	}
+}
 
 } // namespace
 
@@ -86,6 +102,7 @@ ArrayRef apply_daily(State &state, DictRef session) {
 	Value since_value;
 	const DictRef since = state.lookup(overworld, str(key::townless_since), since_value) && gd::is_dict(since_value) ? since_value.ref : state.new_dict();
 	const int64_t day = gd::int_field(state, session, key::day, 0);
+	bool rosters_settled = false;
 	for (const Value &player : gd::field_items(state, overworld, str(key::players))) {
 		if (!gd::is_dict(player)) {
 			continue;
@@ -115,9 +132,19 @@ ArrayRef apply_daily(State &state, DictRef session) {
 			}
 			continue;
 		}
-		// The human's defeat, or a computer player's removal:
-		// normalize_all_commander_rosters, _remove_computer_player and its message.
-		not_ported("a player whose townless days are up");
+		state.erase(since, str(player_id));
+		if (human) {
+			// _defeat_human.
+			not_ported("a human whose townless days are up");
+		}
+		if (!rosters_settled) {
+			// The enemy turn leaves its rosters to the scenario check after this.
+			enemy_adventure_rules::normalize_all_commander_rosters(state, session);
+			rosters_settled = true;
+		}
+		_remove_computer_player(state, session, player_id);
+		const Value name = state.get(gd::content_row(state, ContentTable::Faction, text(state, player.ref, key::faction_id, key::empty)), str(key::name), str(player_id));
+		state.append(messages, str(gd::format(state, key::s_has_held_no_town_for_d_days_and_leaves_the_war, { name, int_value(kTownlessDays) })));
 	}
 	state.set(overworld, str(key::townless_since), dict_value(since));
 	return messages;

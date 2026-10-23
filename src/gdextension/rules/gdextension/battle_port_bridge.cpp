@@ -1078,18 +1078,6 @@ void PortBridge::print_warning(const std::string &text) {
 	godot::UtilityFunctions::push_warning(String::utf8(text.data(), static_cast<int64_t>(text.size())));
 }
 
-double PortBridge::math_pow(double base, double exponent) {
-	return godot::UtilityFunctions::pow(base, exponent);
-}
-
-double PortBridge::math_exp(double x) {
-	return godot::UtilityFunctions::exp(x);
-}
-
-double PortBridge::math_log(double x) {
-	return godot::UtilityFunctions::log(x);
-}
-
 String PortBridge::path_text(uint32_t path) const {
 	const std::string &text = state_.text(path);
 	return String::utf8(text.data(), static_cast<int64_t>(text.size()));

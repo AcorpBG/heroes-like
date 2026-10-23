@@ -7,6 +7,7 @@
 #include "aurelion_rules/ai_search.hpp"
 #include "aurelion_rules/battle_hex.hpp"
 #include "aurelion_rules/build_info.hpp"
+#include "aurelion_rules/compat/portable_math.hpp"
 #include "aurelion_rules/port/registry.hpp"
 
 #include <godot_cpp/classes/os.hpp>
@@ -203,6 +204,7 @@ void AurelionRules::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("ai_search_masks", "width", "height", "surface_blocked", "surface_stops", "water", "sea", "body_offsets", "body_tiles", "zone_offsets", "zone_tiles", "neutral_open", "unit_blocked", "unit_stops", "hero_tiles", "guard_offsets", "guard_tiles", "site_tiles", "site_open"), &AurelionRules::ai_search_masks);
 	ClassDB::bind_method(D_METHOD("ai_search_walk", "width", "height", "start", "start_phase", "radius", "native_corners", "blocked", "stop_mask", "pass_mask", "hero_zone", "portals", "seen", "water", "sea_open", "boats", "docks", "shore_cost", "dock_cost"), &AurelionRules::ai_search_walk);
 	ClassDB::bind_method(D_METHOD("snapshot_encode", "value"), &AurelionRules::snapshot_encode);
+	ClassDB::bind_method(D_METHOD("math_pow", "base", "exponent"), &AurelionRules::math_pow);
 }
 
 // One open port_validate check: the native run's result and arguments, kept in
@@ -1054,6 +1056,10 @@ String AurelionRules::port_validate_point(const StringName &name, const Array &a
 		report_port_failure("port_validate_point", "unknown native exception outside the port");
 	}
 	return String("native exception outside the port");
+}
+
+double AurelionRules::math_pow(double base, double exponent) const {
+	return aurelion::rules::compat::portable_pow(base, exponent);
 }
 
 PackedByteArray AurelionRules::snapshot_encode(const Variant &value) const {

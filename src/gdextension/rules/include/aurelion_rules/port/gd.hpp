@@ -405,11 +405,12 @@ DictRef content_file(State &state, Atom path);
 // ContentService.get_content_revision().
 inline int64_t content_revision(State &state) { return state.host().content_revision(state); }
 
-// GDScript's pow(base, exponent), exp(x) and log(x): the engine's, so the last
-// bit matches whatever C runtime the game's build uses (Backing::math_pow).
-inline double engine_pow(State &state, double base, double exponent) { return state.host().math_pow(base, exponent); }
-inline double engine_exp(State &state, double x) { return state.host().math_exp(x); }
-inline double engine_log(State &state, double x) { return state.host().math_log(x); }
+// The rules' pow(base, exponent), exp(x) and log(x): the core's portable ones
+// (compat/portable_math.hpp, decision D4 option B), through the host, which
+// may count the calls (Backing::math_pow).
+inline double math_pow(State &state, double base, double exponent) { return state.host().math_pow(base, exponent); }
+inline double math_exp(State &state, double x) { return state.host().math_exp(x); }
+inline double math_log(State &state, double x) { return state.host().math_log(x); }
 
 // Time.get_ticks_usec(), for the timings scripts keep (a steady clock's
 // microseconds: only differences mean anything).

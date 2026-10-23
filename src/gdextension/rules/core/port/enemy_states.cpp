@@ -1021,7 +1021,7 @@ ArrayRef _offer_order(State &state, DictRef hero_state, int64_t level_number) {
 		// ("%s|offer|%d|%s" % [seed_text, level_number, specialty_id]).sha256_text()
 		const std::string digest = compat::sha256_text(seed_text + "|offer|" + compat::itos(level_number) + "|" + state.text(specialty_id));
 		const double draw = (static_cast<double>(hex_digits_to_int(digest.substr(0, 8))) + 1.0) / 4294967297.0;
-		keyed.push_back(Keyed{ specialty_id, gd::engine_pow(state, draw, 1.0 / weight) });
+		keyed.push_back(Keyed{ specialty_id, gd::math_pow(state, draw, 1.0 / weight) });
 	}
 	compat::sort_custom(keyed.data(), static_cast<int64_t>(keyed.size()), [](const Keyed &a, const Keyed &b) { return a.key > b.key; });
 	const ArrayRef result = state.new_array();

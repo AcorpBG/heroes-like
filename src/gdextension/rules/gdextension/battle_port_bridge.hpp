@@ -204,10 +204,6 @@ public:
 	state::TypeRef builtin_type(uint8_t builtin) override;
 	void print_error(const std::string &text) override;
 	void print_warning(const std::string &text) override;
-	// The engine's pow, exp and log (UtilityFunctions), as GDScript calls them.
-	double math_pow(double base, double exponent) override;
-	double math_exp(double x) override;
-	double math_log(double x) override;
 	// The engine's services that game setup calls (Backing::object_call and on).
 	state::Value object_call(state::State &state, uint32_t slot, uint32_t method, const state::Value *args, size_t count) override;
 	bool object_has_method(state::State &state, uint32_t slot, uint32_t method) override;

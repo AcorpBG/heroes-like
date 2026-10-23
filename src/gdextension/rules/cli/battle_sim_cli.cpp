@@ -703,15 +703,15 @@ public:
 
 	double math_pow(double base, double exponent) override {
 		++counts.pow_calls;
-		return std::pow(base, exponent);
+		return Backing::math_pow(base, exponent);
 	}
 	double math_exp(double x) override {
 		++counts.exp_calls;
-		return std::exp(x);
+		return Backing::math_exp(x);
 	}
 	double math_log(double x) override {
 		++counts.log_calls;
-		return std::log(x);
+		return Backing::math_log(x);
 	}
 
 	bool routes_ai() const override {

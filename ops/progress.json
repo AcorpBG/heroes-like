@@ -116813,6 +116813,123 @@
       ],
       "notes": "Transition doc, Phase 7, Slices.",
       "updatedAt": "2026-10-23T14:30:00Z"
+    },
+    {
+      "id": "native-rules-phase8-runner-20261023",
+      "title": "Native rules Phase 8: a match runner without Godot",
+      "status": "in_progress",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Owner decisions 2026-10-23 (D4, D12): D4 option B (one portable pow/exp/log in the core for the game and the runner, one named behaviour change); Phase 8 ports the computer branch of the elimination day, Phase 7's 7.7 keeps the human branches; statics native in the runner first; generation in the runner last. Order P8-1, P8-2, P8-3 to P8-6 as one milestone, P8-7 after Phase 7's merge 1b, P8-8. Transition doc, Phase 8.",
+      "updatedAt": "2026-10-23T19:00:00Z"
+    },
+    {
+      "id": "native-rules-phase8-01-elimination-20261023",
+      "title": "Phase 8.1: the AI-match elimination day native",
+      "status": "completed",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Branch native-phase8-elimination (owner decision 2026-10-23: Phase 8 ports the computer branch, Phase 7's 7.7 keeps the human branches). player_elimination.cpp runs a computer player's removal when its townless days are up: rosters normalized once, its heroes resolved and their defeats recorded, the message with the faction name; the human branches stay NotPorted and apply_daily__gd stays for them. No AI-only day falls back. Checks: day shadow on the six seeds 7,841 checks, 0 mismatches, 0 errors, apply_daily checked 437 times with the 4 elimination days (l1 2, mw 2); native against main 2abd6e086 identical (443 digests and the records), NATIVE FALLBACK lines 12 on main, 0 on the branch; core suite 17/17.",
+      "updatedAt": "2026-10-23T19:00:00Z"
+    },
+    {
+      "id": "native-rules-phase8-02-math-20261023",
+      "title": "Phase 8.2: D4 option B, one pow/exp/log",
+      "status": "completed",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Branch native-phase8-math, merged as its own named behaviour change (main tagged pre-native-phase8-math first). The rules' pow, exp and log are Arm optimized-routines v26.07 (src/gdextension/rules/third_party/arm_optimized_routines, MIT; README with source, version and the three local changes), built as aurelion_rules_math without FMA or rounding instructions; Backing::math_* answer with them, the GDExtension host no longer overrides them with the engine's, battle_sim_cli only counts calls, and the GDScript offer draw calls AurelionRules.math_pow. rules_selftest pins a portable_math digest. Behaviour change: the new pow differs from the engine's by 1 ulp in 710 of 1,000,000 offer draws and 1,276 of 1,000,000 army-power calls. Checks: native against main f5d2ddfb8 identical on the six seeds (443 digests and the records); --human identical (1,896 action digests, 8 seeds); core suite 17/17. Windows only; Linux libraries not rebuilt.",
+      "updatedAt": "2026-10-23T22:30:00Z"
+    },
+    {
+      "id": "native-rules-phase8-03-statics-20261023",
+      "title": "Phase 8.3: statics as native state in the runner",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Transition doc, Phase 8, Slices.",
+      "updatedAt": "2026-10-23T19:00:00Z"
+    },
+    {
+      "id": "native-rules-phase8-04-runner-20261023",
+      "title": "Phase 8.4: match_sim_cli from Godot-prepared sessions",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Transition doc, Phase 8, Slices.",
+      "updatedAt": "2026-10-23T19:00:00Z"
+    },
+    {
+      "id": "native-rules-phase8-05-proof-20261023",
+      "title": "Phase 8.5: the runner's proof on the six seeds",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Transition doc, Phase 8, Slices.",
+      "updatedAt": "2026-10-23T19:00:00Z"
+    },
+    {
+      "id": "native-rules-phase8-06-batch-20261023",
+      "title": "Phase 8.6: ai_match_batch.py on the runner",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Transition doc, Phase 8, Slices.",
+      "updatedAt": "2026-10-23T19:00:00Z"
+    },
+    {
+      "id": "native-rules-phase8-07-packages-setup-20261023",
+      "title": "Phase 8.7: packages and setup without Godot",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "After Phase 7's merge 1b. Transition doc, Phase 8, Slices.",
+      "updatedAt": "2026-10-23T19:00:00Z"
+    },
+    {
+      "id": "native-rules-phase8-08-generation-20261023",
+      "title": "Phase 8.8: generation in the runner",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Transition doc, Phase 8, Slices.",
+      "updatedAt": "2026-10-23T19:00:00Z"
     }
   ],
   "project": "heroes-like",

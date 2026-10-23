@@ -165,6 +165,10 @@ public:
 	// data nested too deep.
 	PackedByteArray snapshot_encode(const Variant &value) const;
 
+	// The rules' pow() (compat/portable_math.hpp), for the GDScript copies of
+	// the rules that still compute one (HeroProgressionRules._offer_order).
+	double math_pow(double base, double exponent) const;
+
 private:
 	struct Validation;
 	struct PortStats {

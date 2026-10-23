@@ -2,6 +2,7 @@
 
 #include "aurelion_rules/compat/godot_math.hpp"
 #include "aurelion_rules/compat/godot_string.hpp"
+#include "aurelion_rules/compat/portable_math.hpp"
 
 #include <algorithm>
 #include <chrono>
@@ -182,15 +183,15 @@ void Backing::print_warning(const std::string &text) {
 }
 
 double Backing::math_pow(double base, double exponent) {
-	return std::pow(base, exponent);
+	return compat::portable_pow(base, exponent);
 }
 
 double Backing::math_exp(double x) {
-	return std::exp(x);
+	return compat::portable_exp(x);
 }
 
 double Backing::math_log(double x) {
-	return std::log(x);
+	return compat::portable_log(x);
 }
 
 bool Backing::routes_ai() const {
