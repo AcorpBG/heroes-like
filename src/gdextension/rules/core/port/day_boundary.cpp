@@ -14,6 +14,7 @@
 // or a key that is not a String.
 
 #include "aurelion_rules/port/enemy_adventure_rules.hpp"
+#include "aurelion_rules/port/enemy_turn_rules_turn.hpp"
 #include "aurelion_rules/port/hero_commit.hpp"
 #include "aurelion_rules/port/overworld_level_rules.hpp"
 #include "aurelion_rules/port/overworld_rules.hpp"
@@ -698,6 +699,14 @@ DictRef _end_turn_close_day(State &state, DictRef session, DictRef opened, DictR
 	state.set(result, str(key::town_economy_summary), str(_end_turn_town_economy_summary(state, occupation_messages, recovery_messages, delivery_messages)));
 	state.set(result, str(key::turn_resolution_summary), str(_end_turn_resolution_summary(state, session, result)));
 	return result;
+}
+
+DictRef end_turn(State &state, DictRef session) {
+	const DictRef opened = _end_turn_open_day(state, session);
+	// _run_enemy_turn_cycle: the rosters are not settled, since the close
+	// evaluates the scenario, which normalizes them again.
+	const DictRef enemy_turn_result = enemy_turn_rules::run_enemy_turn(state, session, false);
+	return _end_turn_close_day(state, session, opened, enemy_turn_result);
 }
 
 } // namespace overworld_rules

@@ -79,6 +79,14 @@ const Function kFunctions[] = {
 	PORT(OverworldRules, _end_turn_close_day, 3, true,
 			if (a[0].kind == state::Kind::Nil) throw state::NotPorted("left to GDScript: a null session");
 			return gd::dict_value(overworld::_end_turn_close_day(s, D(a, 0), D(a, 1), D(a, 2)))),
+	// The whole day in one call (Phase 6 P6-3): _end_turn_open_day, the
+	// computer players' turn and _end_turn_close_day, so the session loads
+	// once a day. The turn makes no host call, so a path left to GDScript
+	// anywhere in it undoes the whole call, and the switch runs the three
+	// parts.
+	PORT(OverworldRules, end_turn, 1, true,
+			if (a[0].kind == state::Kind::Nil) throw state::NotPorted("left to GDScript: a null session");
+			return gd::dict_value(overworld::end_turn(s, D(a, 0)))),
 	// An action's close: the hero committed, the fog refreshed, the scenario
 	// evaluated, the runtime signature recorded.
 	PORT(OverworldRules, _finalize_action_result, 6, true,

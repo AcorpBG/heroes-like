@@ -183,6 +183,9 @@ DictRef _find_encounter_by_placement(State &state, DictRef session, Atom placeme
 // The day's close: end_turn's second half, an action's result and the turn's
 // summaries (day_boundary.cpp).
 DictRef _end_turn_close_day(State &state, DictRef session, DictRef opened, DictRef enemy_turn_result);
+// The whole day in one call: _end_turn_open_day, the computer players' turn and
+// _end_turn_close_day.
+DictRef end_turn(State &state, DictRef session);
 DictRef _finalize_action_result(State &state, DictRef session, bool ok, Atom base_message, bool refresh_fog, bool incremental_fog, DictRef scenario_event_facts);
 DictRef _evaluate_scenario_state(State &state, DictRef session);
 void _reveal_current_fog_sources(State &state, DictRef session);

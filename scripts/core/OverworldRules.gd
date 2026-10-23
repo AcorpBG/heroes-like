@@ -1493,6 +1493,17 @@ static func execute_prevalidated_route(
 	return result
 
 static func end_turn(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _day_engine_mode == DayEngine.GDSCRIPT:
+		return end_turn__gd(session)
+	if _day_engine_mode == DayEngine.NATIVE:
+		var native_result = DayEngine.native_writing(&"OverworldRules.end_turn", [session])
+		return end_turn__gd(session) if DayEngine.not_ported() else native_result
+	var before := DayEngine.before_writing(&"OverworldRules.end_turn", [session])
+	var result = end_turn__gd(session)
+	DayEngine.check_writing(&"OverworldRules.end_turn", before, [session], result)
+	return result
+
+static func end_turn__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var opened := _end_turn_open_day(session)
 	var enemy_turn_result: Dictionary = _run_enemy_turn_cycle(session)
 	return _end_turn_close_day(session, opened, enemy_turn_result)
