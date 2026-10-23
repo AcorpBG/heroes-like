@@ -1299,11 +1299,51 @@ a41e38754 Windows binaries; runtime on main 6a8c9a736, 27bee9e26 Windows binarie
   - 2c, the battle tool (`native-rules-phase2-c-battle-tool-20261022`), the command-line `battle_sim_cli` (D7), to
     G2's 100 battles/s: the backend of `tune.py` and `arena.py`, the native router with each side's weights as data (option (b)), the native
     unit and ability tables per content revision.
+    What changed:
+    - `battle_sim_cli` (`src/gdextension/rules/cli/`, built into `bin/` with the rules library). Godot setup workers
+      (`worker.gd`, a setup job) build each battle's session up to the payload once. They write it as snapshots: a new
+      binary format, `aurelion_rules/snapshot.hpp`, with the library's `snapshot_encode` and the core's decoder.
+      - `content.snap` holds the content files, the ContentService tables by id and the rules scripts' static vars:
+        the native unit and ability tables, one set per run.
+      - A group snapshot per map holds its battles, the generated scenario and the content revision.
+      - The tool plays every order of every battle, a game per thread, and writes `worker.gd`'s record.
+    - The native router: 13 call sites in the battle code enter the side the GDScript router picks
+      (`port/ai_route.hpp`, `Backing::routes_ai`, false in the game).
+      - Each variant's BattleAiRules static vars are its own.
+      - Its `_weights` literal is data, the variants file `arena.py` writes.
+    - `arena.py` and `tune.py` take `--backend cli` (the default) or `--backend godot` (as before). `tune.py`'s setup
+      workers boot once for the run and build each generation one generation ahead.
+    Checks: in-Godot battles against `battle_sim_cli`, records compared without `ms`.
+    - Arena `--plain`, Godot's native battles: standard 480/480 identical, holdout 480/480 identical.
+    - Arena routed, GDScript router and battles against the native router:
+      - standard and holdout, 960 games, identical apart from the `ai_calls` count in 7;
+      - the cause: `BattleAiRules._hero_payload_cache` lives across a Godot worker's games, so a repeated battle skips
+        one routed `_merged_commander_ai_payload` call; the tool starts every game from the snapshot's statics;
+      - scoring reads only whether each side made calls.
+    - One `tune.py` generation (17 weight sets, 3,298 games): history, weights and CMA state identical; records
+      identical apart from `ai_calls` in 40.
+    - Native against main identical on 6/6 seeds; core suite 17/17.
+    Speed and the remaining points:
+    - G2 met. `tune.py --generations 10` with its defaults (48 maps, 3 battles a map and 17 weight sets a generation;
+      24 setup workers, 32 tool threads), quiet machine: 30,974 battles in 188 s end to end, 164.9 battles/s;
+      generations 1 to 9 at 188.3/s (16.3 s each).
+      - Of the 188 s, waiting for the Godot setup workers took 82.8 s (30.2 s of it the first generation, boot
+        included) and `battle_sim_cli` 102.2 s, while the setup workers build the next generation.
+      - Before the tool skipped freeing its workers' states at exit (13 to 18 s a generation), the same run took
+        299 s (103.7/s).
+      - One Godot run of another session overlapped the last 10 s.
+    - D4, not needed for identical records: `pow`, `exp` and `log` are the tool's C runtime's, not the engine's
+      (counted in the tool's stats). They are reached by:
+      - `AiHeroRules.army_power` and `_unit_power_figures`, via `BattleRules.battle_rewards_for_strength` at a
+        victory;
+      - `HeroProgressionRules._offer_order`, via `_award_commander_experience` and `add_experience` at a level-up.
+      None feeds the record; a byte-identical post-battle state needs D4.
+    - The Variant hash is native (`gd::hash`), so it is no blocker.
   - 2d, the exit (`native-rules-phase2-d-exit-20261022`): once `tune.py` and `arena.py` run on the tool, the GDScript
     fight loop, BattleAiRules and the battle switch's other GDScript copies are deleted with D6's test retirements,
     every deleted name grepped across `tests/` and `tools/`.
 - **Gate G2:** 100 battles per second (owner decision 2026-10-23; 1M battles in about 2.8 h on this machine),
-  measured end to end by `tune.py` on `battle_sim_cli`. Measured after 2b: about 8.9 games/s in the arena, about 69 ms of each game's 900 ms the battle. Proposed was the synthesis's 1M battles in 2 h (about 139 battles/s); the owner set 100 battles/s, about 11 times the arena now.
+  measured end to end by `tune.py` on `battle_sim_cli`. Met by 2c: 164.9 battles/s end to end (Slice 2c above). Measured after 2b: about 8.9 games/s in the arena, about 69 ms of each game's 900 ms the battle. Proposed was the synthesis's 1M battles in 2 h (about 139 battles/s); the owner set 100 battles/s, about 11 times the arena now.
   **Battle-level genetic algorithms (unit stats, battle-AI weights) run at full speed from here.**
 
 **Slice 2a, frozen functions** (2026-10-22, until 2a merged, two copies since; AGENTS.md; corrected the same day from 32: the first
@@ -2287,6 +2327,7 @@ Godot dependency, since these slices lead to Phase 8. The bound is 1/(1 - share)
   - Six seeds native against main 61e73a38c: all 415 daily digests and the match records identical, the four
     fallback days among them.
   - Core suite 17/17.
+  - After merging main b49d1bcc9 (Phase 2c) and rebuilding: six seeds against it identical again, core suite 17/17.
 - **Timing** (the six seeds as `tools/ai_match_batch.py` plays them, no per-day digest, six at once, three rounds
   alternating main 61e73a38c and P6-3 on a quiet machine):
 

@@ -8,6 +8,7 @@ project(aurelion_rules LANGUAGES CXX)
 #   aurelion_rules_core  pure std:: core, compiled once per tree
 #   aurelion_rules       the GDExtension (src/gdextension/rules.gdextension)
 #   rules_selftest       golden vectors without Godot
+#   battle_sim_cli       the battle AI arena's battles without Godot
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -247,6 +248,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/unit_abilities.cpp
 	core/port/visit_building_rules_ai.cpp
 	core/port/water_travel_rules_ai.cpp
+	core/snapshot.cpp
 )
 add_dependencies(aurelion_rules_core aurelion_rules_source_tree)
 target_include_directories(aurelion_rules_core PUBLIC include PRIVATE "${AURELION_RULES_GENERATED_DIR}")
@@ -258,6 +260,7 @@ add_library(aurelion_rules SHARED
 	gdextension/aurelion_rules_api.cpp
 	gdextension/battle_port_bridge.cpp
 	gdextension/battle_state_bridge.cpp
+	gdextension/snapshot_encoder.cpp
 )
 target_link_libraries(aurelion_rules PRIVATE aurelion_rules_core godot::cpp)
 target_compile_definitions(aurelion_rules PRIVATE "AURELION_RULES_FLAVOUR=\"${AURELION_GODOTCPP_TARGET}\"")
@@ -278,7 +281,14 @@ target_link_libraries(rules_selftest PRIVATE aurelion_rules_core)
 add_executable(battle_port_replay g1/battle_port_replay.cpp)
 target_link_libraries(battle_port_replay PRIVATE aurelion_rules_core)
 
-foreach(AURELION_RULES_TARGET aurelion_rules_core aurelion_rules rules_selftest battle_port_replay)
+# The battle tool (Phase 2c, decision D7): the battle AI arena's battles outside
+# Godot, for tools/battle_ai_arena (arena.py and tune.py, --backend cli).
+add_executable(battle_sim_cli cli/battle_sim_cli.cpp)
+target_link_libraries(battle_sim_cli PRIVATE aurelion_rules_core)
+find_package(Threads REQUIRED)
+target_link_libraries(battle_sim_cli PRIVATE Threads::Threads)
+
+foreach(AURELION_RULES_TARGET aurelion_rules_core aurelion_rules rules_selftest battle_port_replay battle_sim_cli)
 	if(MSVC)
 		target_compile_options(${AURELION_RULES_TARGET} PRIVATE /W4)
 	else()
@@ -288,6 +298,7 @@ endforeach()
 
 if(WIN32 AND NOT MSVC)
 	target_link_options(rules_selftest PRIVATE -static -static-libgcc -static-libstdc++)
+	target_link_options(battle_sim_cli PRIVATE -static -static-libgcc -static-libstdc++)
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
@@ -305,7 +316,7 @@ set_target_properties(aurelion_rules PROPERTIES
 	PREFIX "${AURELION_OUTPUT_PREFIX}"
 	OUTPUT_NAME "aurelion_rules.${AURELION_GODOT_PLATFORM}.${AURELION_GODOTCPP_TARGET}.x86_64"
 )
-foreach(AURELION_RULES_OUTPUT aurelion_rules rules_selftest)
+foreach(AURELION_RULES_OUTPUT aurelion_rules rules_selftest battle_sim_cli)
 	set_target_properties(${AURELION_RULES_OUTPUT} PROPERTIES
 		LIBRARY_OUTPUT_DIRECTORY "${AURELION_BIN_OUTPUT_DIR}"
 		RUNTIME_OUTPUT_DIRECTORY "${AURELION_BIN_OUTPUT_DIR}"

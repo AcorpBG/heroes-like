@@ -25,6 +25,8 @@ file. Godot comes from `--godot`, `$GODOT_BIN`, `godot4`/`godot` on PATH, or
 the owner's Windows install, as for the core suite. Every worker gets a throwaway user
 profile. Results go to `.artifacts/battle_ai_arena/<time>-<suite>/` (`summary.json`,
 `games.jsonl`). Worker logs are kept only when something went wrong, or with `--keep-logs`.
+The battles are played by `battle_sim_cli` outside Godot (`--backend cli`, the default; see
+"Battles outside Godot"); `--backend godot` plays every game in Godot workers.
 
 The usual loop for a strategy change: edit `BattleAiRules.gd`, run the `standard` suite
 against HEAD, then confirm on `holdout` before committing.
@@ -166,14 +168,45 @@ Limits:
 - Functions the rest of the game calls must keep their signatures; the router is built from
   the working tree's file.
 - Battles run native by default (`HEROES_NATIVE_BATTLE`, `scripts/core/BattleEngine.gd`), and
-  the native engine does not call the router. So runs with variants, and with them `tune.py`
-  and `power_fit.py`, set the switch to `gdscript` for their workers: the GDScript copy of the
-  battle rules plays, which the native engine matches. Tuned weights carry over, since both
-  read `content/battle_ai_weights.json`. This lasts until the Phase 2 battle tool
-  (docs/native-rules-engine-transition.md).
+  the native engine in Godot does not call the GDScript router. So Godot workers that play
+  variants (`--backend godot`, and `power_fit.py`) set the switch to `gdscript`: the GDScript
+  copy of the battle rules plays, which the native engine matches. `battle_sim_cli` routes
+  natively instead (below).
 - `--plain` installs no router and no variants: the game's own `BattleAiRules` plays both
   sides, with the caller's battle switch (native by default). The native battle engine's
   parity checks use it.
+
+## Battles outside Godot
+
+`battle_sim_cli` (`src/gdextension/rules/cli`, built into `bin/` with the rules library by
+`python tools/build_native.py windows`) plays the battles with the native rules core, outside
+Godot (docs/native-rules-engine-transition.md, Phase 2c). A battle's setup, the map and the
+session up to the battle payload, is the same in every order and does not depend on the
+weights, so Godot workers build it once (`worker.gd`, a setup job) and write it as snapshots
+(`aurelion_rules/snapshot.hpp`): `content.snap` holds the content files, the content tables
+by id and the rules scripts' static vars as a game starts, and one `group_<n>.snap` per map
+holds its battles (each one's session as the native rules see it, its site and its record so
+far) and the generated scenario. `battle_sim_cli` then plays every order of every battle from
+there, a game per thread, as `worker.gd` goes on from the payload, and writes the same record.
+
+- Each side's stacks play with their variant's weights: the battle code enters each call the
+  GDScript router stubs with the side the router picks (`port/ai_route.hpp`), and each
+  variant's `BattleAiRules` static vars are its own, as each variant script's are.
+- A variant is the working tree's `BattleAiRules.gd` with weights of its own: `battle_sim_cli`
+  runs the native port of the working tree's code. A variant with other code (an older
+  revision's, a file) needs `--backend godot`. Rebuild `battle_sim_cli` after a battle rules
+  change, as the library.
+- At a battle end over a site's guards, the site's visit (`OverworldRules._collect_resource_node_result`)
+  answers nothing: the record reads nothing it changes. `pow`, `exp` and `log` are the tool's
+  C runtime's, not the engine's (decision D4). `summary.json` counts both
+  (`battle_sim_cli.host_calls`, `math_calls`).
+- `tune.py`'s setup workers boot once for the run and build each generation's battles one
+  generation ahead of the one being played. Each generation's line and `history.jsonl` record
+  give the seconds spent waiting for them (`setup_wait`) and `battle_sim_cli`'s own.
+- The records are the Godot backend's, checked game for game (transition doc, Phase 2c). Only
+  `ai_calls` can differ: a Godot worker keeps `BattleAiRules._hero_payload_cache` from one game
+  to the next, so a battle played again skips one routed call, while `battle_sim_cli` starts
+  every game from the snapshot's static vars.
 
 ## Scoring
 

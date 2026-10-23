@@ -1,5 +1,6 @@
 // Layer 2: the damage multiplier chain.
 
+#include "aurelion_rules/port/ai_route.hpp"
 #include "aurelion_rules/port/battle_ai_rules.hpp"
 #include "aurelion_rules/port/battle_damage_rules.hpp"
 #include "aurelion_rules/port/battle_damage_rules_ai.hpp"
@@ -469,7 +470,7 @@ double _terrain_tag_damage_modifier(State &state, DictRef attacker, DictRef defe
 	if (_battle_has_tag(state, battle, key::bog_channels) && (_has_ability(state, attacker, key::harry) || _has_ability(state, attacker, key::backstab) || _has_ability(state, attacker, key::bloodrush) || spell_rules::has_effect_id(state, defender, battle, key::status_harried))) {
 		modifier *= 1.08;
 	}
-	if (_battle_has_tag(state, battle, key::fog_bank) && is_ranged && attack_distance > 0 && !battle_ai_rules::faction_brings_tag(state, attacker, key::fog_bank)) {
+	if (_battle_has_tag(state, battle, key::fog_bank) && is_ranged && attack_distance > 0 && !ai_route::by_stack(state, gd::dict_value(attacker), [&] { return battle_ai_rules::faction_brings_tag(state, attacker, key::fog_bank); })) {
 		modifier *= 0.88;
 	}
 	return modifier;
