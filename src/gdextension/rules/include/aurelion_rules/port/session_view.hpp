@@ -18,8 +18,9 @@ inline gd::DictRef meta(const state::State &state, gd::DictRef session) {
 	return gd::as_dict(gd::field(state, session, state::key::meta));
 }
 
-// session.get_instance_id(): the view's "instance_id", which DayEngine.gd's
-// views carry (the read scopes key their caches by it).
+// session.get_instance_id(): the view's "instance_id", which the views of
+// DayEngine.gd, TurnEngine.gd and AiEngine.gd carry (the read scopes key
+// their caches by it).
 inline int64_t instance_id(const state::State &state, gd::DictRef session) {
 	state::Value id;
 	if (!state.lookup(session, gd::str(state::key::instance_id), id) || id.kind != state::Kind::Int) {

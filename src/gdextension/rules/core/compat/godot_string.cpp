@@ -1,6 +1,21 @@
 #include "aurelion_rules/compat/godot_string.hpp"
 
+#include <algorithm>
+#include <cmath>
+#include <cstdarg>
+#include <cstdio>
 #include <cstring>
+#include <stdexcept>
+
+#ifdef _WIN32
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <windows.h>
+#endif
 
 namespace aurelion::rules::compat {
 namespace {
@@ -52,6 +67,57 @@ uint32_t rotr(uint32_t x, uint32_t n) {
 	return (x >> n) | (x << (32 - n));
 }
 
+// String::num's C runtime calls, as the engine build makes them. The official
+// Windows build is MinGW on msvcrt.dll: its snprintf is msvcrt's _vsnprintf,
+// which keeps at most 17 significant digits, rounded in its own 80-bit
+// arithmetic, then pads with zeros, and its log10 is msvcrt's. This library
+// links the UCRT, which prints exact digits, so msvcrt's functions themselves
+// are called. On Linux the engine and this library both use glibc.
+#ifdef _WIN32
+struct Msvcrt {
+	using Vsnprintf = int(__cdecl *)(char *, size_t, const char *, va_list);
+	using Log10 = double(__cdecl *)(double);
+	Vsnprintf vsnprintf = nullptr;
+	Log10 log10 = nullptr;
+};
+
+const Msvcrt &msvcrt() {
+	static const Msvcrt functions = [] {
+		Msvcrt out;
+		const HMODULE dll = LoadLibraryW(L"msvcrt.dll");
+		if (dll != nullptr) {
+			out.vsnprintf = reinterpret_cast<Msvcrt::Vsnprintf>(reinterpret_cast<void *>(GetProcAddress(dll, "_vsnprintf")));
+			out.log10 = reinterpret_cast<Msvcrt::Log10>(reinterpret_cast<void *>(GetProcAddress(dll, "log10")));
+		}
+		if (out.vsnprintf == nullptr || out.log10 == nullptr) {
+			throw std::runtime_error("compat::num: msvcrt.dll has no _vsnprintf or log10");
+		}
+		return out;
+	}();
+	return functions;
+}
+#endif
+
+int engine_snprintf(char *buffer, size_t size, const char *format, ...) {
+	va_list args;
+	va_start(args, format);
+#ifdef _WIN32
+	const int written = msvcrt().vsnprintf(buffer, size, format, args);
+#else
+	const int written = std::vsnprintf(buffer, size, format, args);
+#endif
+	va_end(args);
+	return written;
+}
+
+double engine_log10(double value) {
+#ifdef _WIN32
+	return msvcrt().log10(value);
+#else
+	return std::log10(value);
+#endif
+}
+
 } // namespace
 
 std::string itos(int64_t value) {
@@ -68,6 +134,61 @@ std::string itos(int64_t value) {
 		buffer[--pos] = '-';
 	}
 	return std::string(buffer + pos);
+}
+
+std::string num(double value, int decimals) {
+	if (std::isnan(value)) {
+		return "nan";
+	}
+	if (std::isinf(value)) {
+		return std::signbit(value) ? "-inf" : "inf";
+	}
+	if (decimals < 0) {
+		decimals = 14;
+		const double magnitude = std::fabs(value);
+		if (magnitude > 10) {
+			decimals -= static_cast<int>(std::floor(engine_log10(magnitude)));
+		}
+	}
+	decimals = std::min(decimals, 32);
+	// "%lf" for a negative count: six decimals.
+	char format[8];
+	if (decimals < 0) {
+		std::snprintf(format, sizeof(format), "%%lf");
+	} else {
+		std::snprintf(format, sizeof(format), "%%.%dlf", decimals);
+	}
+	// The engine's buffer: longer text is cut at 324 characters.
+	char buffer[325];
+	engine_snprintf(buffer, sizeof(buffer), format, value);
+	buffer[324] = 0;
+	std::string text(buffer);
+	// Trailing zeros go, but one after the period.
+	if (text.find('.') != std::string::npos) {
+		size_t end = text.size();
+		while (text[end - 1] == '0') {
+			end -= 1;
+		}
+		if (text[end - 1] == '.') {
+			end += 1;
+		}
+		text.resize(end);
+	}
+	return text;
+}
+
+std::string json_float(double value) {
+	if (!std::isfinite(value)) {
+		if (std::isnan(value)) {
+			return "null";
+		}
+		return value > 0 ? "1e99999" : "-1e99999";
+	}
+	if (value == 0.0) {
+		return "0.0";
+	}
+	const double magnitude = engine_log10(std::fabs(value));
+	return num(value, std::max(1, 14 - static_cast<int>(std::floor(magnitude))));
 }
 
 int64_t to_int(const std::string &text) {

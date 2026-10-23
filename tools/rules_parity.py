@@ -4,6 +4,7 @@
     python tools/rules_parity.py check A B                 # play both, compare, explain the first difference
     python tools/rules_parity.py check A B --seeds l1,s2 --env-b HEROES_NATIVE_DAY=shadow
     python tools/rules_parity.py run A --out DIR           # play one side only (for example on Linux)
+    python tools/rules_parity.py check A A --one-process-b # every seed fresh against all in one process
     python tools/rules_parity.py compare DIR_A DIR_B       # compare two `run` outputs
     python tools/rules_parity.py prepare REV DEST          # a copy of another revision, outside the repo
     python tools/rules_parity.py remove DEST               # delete a prepared copy (junctions first)
@@ -20,6 +21,12 @@ writes sha256 of its JSON instead) and its match record. `check` compares the di
 records (timing fields left out); for a seed that differs it plays both sides again to the first
 differing day with a full state dump and reports the first differing JSON paths. Two sides whose
 digests have different formats compare their records only and never count as identical.
+
+--one-process (run) and --one-process-a/-b (check) play that side's seeds one after another in one
+Godot process, in the order --seeds gives (HEROES_AI_MATCH_LIST), as tools/ai_match_batch.py plays
+several matches per process; each seed still gets its own digest, record and log (the process's log
+split at each match). A match must play the same there as in a process of its own. The replays with
+a full state dump always run in a process of their own.
 
 Each Godot run gets its own throwaway user profile (APPDATA, XDG_DATA_HOME/CONFIG/CACHE) and its
 package under <project>/maps is deleted after it (matched by scenario id and time, never a file
@@ -47,7 +54,8 @@ screen shows; `check` reports the first differing step and replays both sides to
 the panel texts. Both sides play this checkout's runner: it is copied into a side made by `prepare`, and any
 other project side must already have the same one. A save run gets the save in its profile's user://saves and
 the maps the save names in <side>/maps, copied with their times kept and removed after the runs unless they were
-there. `check` also prints each action kind's time on both sides, the screens' speed.
+there. Each human seed runs in a process of its own (--one-process plays AI seeds only). `check` also prints each
+action kind's time on both sides, the screens' speed.
 """
 from __future__ import annotations
 
@@ -68,7 +76,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
-from ai_match_batch import SIZES, kill, remove_match_maps  # noqa: E402
+from ai_match_batch import SIZES, kill, remove_match_maps, split_match_log  # noqa: E402
 from core_suite import find_godot  # noqa: E402
 
 SCENE = "res://tests/ai_versus_ai_match_report.tscn"
@@ -157,21 +165,30 @@ class Job:
     key: str
     out: Path
     dump_day: int | None = None
+    # --one-process: the seeds the same Godot process plays after key, in order.
+    more: tuple[str, ...] = ()
 
     @property
-    def stem(self) -> str:
-        return self.key if self.dump_day is None else f"{self.key}.dump{self.dump_day}"
+    def keys(self) -> tuple[str, ...]:
+        return (self.key, *self.more)
+
+    def stem(self, key: str) -> str:
+        return key if self.dump_day is None else f"{key}.dump{self.dump_day}"
+
+    def locks(self) -> set[tuple[str, str]]:
+        return {(str(self.side.path.resolve()), key) for key in self.keys}
 
     @property
     def human(self) -> bool:
         return is_human(self.key)
 
-    def lock(self) -> tuple[str, str]:
-        return (str(self.side.path.resolve()), self.key)
-
 
 def is_human(key: str) -> bool:
     return ALL_SEEDS[key].get("kind") == "human"
+
+
+def report_id(key: str) -> str:
+    return HUMAN_REPORT_ID if is_human(key) else REPORT_ID
 
 
 def user_dir(profile: Path) -> Path:
@@ -179,25 +196,28 @@ def user_dir(profile: Path) -> Path:
     return profile / ("Godot" if IS_WINDOWS else "godot") / "app_userdata" / "heroes-like"
 
 
-def human_env(job: Job, profile: Path) -> dict[str, str]:
+def human_settings(job: Job, profile: Path) -> dict[str, str]:
     """The human seat runner's setup; a save goes into the profile's user://saves."""
     setup = ALL_SEEDS[job.key]
-    env = {"HEROES_HUMAN_DAYS": str(setup["days"]),
-           "HEROES_HUMAN_OUT": (job.out / f"{job.stem}.json").as_posix(),
-           "HEROES_HUMAN_DIGEST": (job.out / f"{job.stem}.digest").as_posix()}
+    stem = job.stem(job.key)
+    settings = {"HEROES_HUMAN_DAYS": str(setup["days"]),
+                "HEROES_HUMAN_OUT": (job.out / f"{stem}.json").as_posix(),
+                "HEROES_HUMAN_DIGEST": (job.out / f"{stem}.digest").as_posix()}
     if "save" in setup:
         saves = user_dir(profile) / "saves"
         saves.mkdir(parents=True)
         shutil.copy2(SAVE_COPIES / "saves" / setup["save"], saves / setup["save"])
-        env["HEROES_HUMAN_SAVE"] = "1"
+        settings["HEROES_HUMAN_SAVE"] = "1"
     else:
-        env.update({"HEROES_HUMAN_SEED": setup["seed"], "HEROES_HUMAN_PLAYERS": str(setup["players"]),
-                    "HEROES_HUMAN_SIZE": setup["size"], "HEROES_HUMAN_WATER": setup["water"],
-                    "HEROES_HUMAN_LEVELS": str(setup["levels"])})
+        settings.update({"HEROES_HUMAN_SEED": setup["seed"], "HEROES_HUMAN_PLAYERS": str(setup["players"]),
+                         "HEROES_HUMAN_SIZE": setup["size"], "HEROES_HUMAN_WATER": setup["water"],
+                         "HEROES_HUMAN_LEVELS": str(setup["levels"])})
     if job.dump_day is not None:
-        env["HEROES_HUMAN_DUMP"] = (job.out / f"{job.stem}.state.json").as_posix()
-        env["HEROES_HUMAN_DUMP_STEP"] = str(job.dump_day)
-    return env
+        settings["HEROES_HUMAN_DUMP"] = (job.out / f"{stem}.state.json").as_posix()
+        settings["HEROES_HUMAN_DUMP_STEP"] = str(job.dump_day)
+    for suffix in (".json", ".digest", ".state.json"):
+        (job.out / f"{stem}{suffix}").unlink(missing_ok=True)
+    return settings
 
 
 def place_save_maps(jobs: list[Job]) -> list[Path]:
@@ -242,29 +262,10 @@ def parse_env(items: list[str] | None) -> dict[str, str]:
     return env
 
 
-def start(job: Job, profiles: Path) -> tuple[subprocess.Popen, Path, float]:
-    setup = ALL_SEEDS[job.key]
-    profile = Path(tempfile.mkdtemp(prefix=f"{job.side.name}-{job.key}-", dir=profiles))
-    env = {k: v for k, v in os.environ.items() if not k.startswith(("HEROES_AI_MATCH_", "HEROES_HUMAN_"))}
-    env.update(job.side.env)
-    env.update({"APPDATA": str(profile), "XDG_DATA_HOME": str(profile), "XDG_CONFIG_HOME": str(profile), "XDG_CACHE_HOME": str(profile)})
-    for suffix in (".json", ".digest", ".state.json"):
-        (job.out / f"{job.stem}{suffix}").unlink(missing_ok=True)
-    scene = SCENE
-    if job.human:
-        env.update(human_env(job, profile))
-        scene = HUMAN_SCENE
-    else:
-        env.update(ai_match_env(job, setup))
-    log = open(job.out / f"{job.stem}.log", "w", encoding="utf-8", errors="replace")
-    extra = {} if IS_WINDOWS else {"start_new_session": True}
-    proc = subprocess.Popen(job.side.command(scene), env=env, stdout=log, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL, **extra)
-    log.close()
-    return proc, profile, time.time()
-
-
-def ai_match_env(job: Job, setup: dict) -> dict[str, str]:
-    env = {
+def match_settings(job: Job, key: str) -> dict[str, str]:
+    setup = ALL_SEEDS[key]
+    stem = job.stem(key)
+    settings = {
         "HEROES_AI_MATCH_SEED": setup["seed"],
         "HEROES_AI_MATCH_PLAYERS": str(setup["players"]),
         "HEROES_AI_MATCH_SIZE": setup["size"],
@@ -272,13 +273,40 @@ def ai_match_env(job: Job, setup: dict) -> dict[str, str]:
         "HEROES_AI_MATCH_WATER": setup["water"],
         "HEROES_AI_MATCH_LEVELS": str(setup["levels"]),
         "HEROES_AI_MATCH_MAX_DAYS": str(setup["days"]),
-        "HEROES_AI_MATCH_OUT": (job.out / f"{job.stem}.json").as_posix(),
-        "HEROES_AI_MATCH_DIGEST": (job.out / f"{job.stem}.digest").as_posix(),
+        "HEROES_AI_MATCH_OUT": (job.out / f"{stem}.json").as_posix(),
+        "HEROES_AI_MATCH_DIGEST": (job.out / f"{stem}.digest").as_posix(),
     }
     if job.dump_day is not None:
-        env["HEROES_AI_MATCH_DUMP"] = (job.out / f"{job.stem}.state.json").as_posix()
-        env["HEROES_AI_MATCH_DUMP_DAY"] = str(job.dump_day)
-    return env
+        settings["HEROES_AI_MATCH_DUMP"] = (job.out / f"{stem}.state.json").as_posix()
+        settings["HEROES_AI_MATCH_DUMP_DAY"] = str(job.dump_day)
+    for suffix in (".json", ".digest", ".state.json"):
+        (job.out / f"{stem}{suffix}").unlink(missing_ok=True)
+    return settings
+
+
+def start(job: Job, profiles: Path) -> tuple[subprocess.Popen, Path, float]:
+    profile = Path(tempfile.mkdtemp(prefix=f"{job.side.name}-{job.key}-", dir=profiles))
+    env = {k: v for k, v in os.environ.items() if not k.startswith(("HEROES_AI_MATCH_", "HEROES_HUMAN_"))}
+    env.update(job.side.env)
+    env.update({"APPDATA": str(profile), "XDG_DATA_HOME": str(profile), "XDG_CONFIG_HOME": str(profile), "XDG_CACHE_HOME": str(profile)})
+    scene = SCENE
+    if job.human:
+        env.update(human_settings(job, profile))
+        scene = HUMAN_SCENE
+        log_path = job.out / f"{job.stem(job.key)}.log"
+    elif job.more:
+        list_path = job.out / f"{job.key}.list.json"
+        list_path.write_text(json.dumps([match_settings(job, key) for key in job.keys], indent=1), encoding="utf-8")
+        env["HEROES_AI_MATCH_LIST"] = str(list_path)
+        log_path = job.out / f"{job.key}.process.log"
+    else:
+        env.update(match_settings(job, job.key))
+        log_path = job.out / f"{job.stem(job.key)}.log"
+    log = open(log_path, "w", encoding="utf-8", errors="replace")
+    extra = {} if IS_WINDOWS else {"start_new_session": True}
+    proc = subprocess.Popen(job.side.command(scene), env=env, stdout=log, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL, **extra)
+    log.close()
+    return proc, profile, time.time()
 
 
 def log_verdict(text: str, returncode: int | None = None, timed_out: bool = False,
@@ -305,24 +333,38 @@ def log_verdict(text: str, returncode: int | None = None, timed_out: bool = Fals
     return problem, script_errors, report
 
 
-def finish(job: Job, proc: subprocess.Popen, profile: Path, started: float, timed_out: bool, keep_maps: dict[str, set[str]]) -> dict:
+def finish(job: Job, proc: subprocess.Popen, profile: Path, started: float, timed_out: bool, keep_maps: dict[str, set[str]]) -> list[dict]:
     shutil.rmtree(profile, ignore_errors=True)
-    text = (job.out / f"{job.stem}.log").read_text(encoding="utf-8", errors="replace")
-    problem, script_errors, report = log_verdict(text, proc.returncode, timed_out, HUMAN_REPORT_ID if job.human else REPORT_ID)
-    record_path = job.out / f"{job.stem}.json"
-    removed: list[str] = []
-    if job.side.is_project and record_path.exists():
-        try:
-            scenario_id = str(json.loads(record_path.read_text(encoding="utf-8"))["setup"].get("scenario_id", ""))
-            removed = remove_match_maps(scenario_id, started, keep_maps.get(str(job.side.path.resolve()), set()), job.side.path / "maps")
-        except (ValueError, KeyError):
-            pass
-    return {
-        "side": job.side.name, "seed": job.key, "dump_day": job.dump_day, "ok": not problem, "problem": problem,
-        "seconds": round(time.time() - started, 1), "final_day": report.get("final_day"),
-        "script_errors": script_errors,
-        "maps_removed": removed,
-    }
+    if job.more:
+        # Each seed's log: the lines before the first match and its own.
+        process_log = job.out / f"{job.key}.process.log"
+        preamble, sections = split_match_log(process_log.read_text(encoding="utf-8", errors="replace"))
+        for index, key in enumerate(job.keys):
+            lines = sections[index][1] if index < len(sections) else ["(the process ended before this match began)"]
+            (job.out / f"{key}.log").write_text("\n".join(preamble + lines) + "\n", encoding="utf-8")
+        process_log.unlink(missing_ok=True)
+        (job.out / f"{job.key}.list.json").unlink(missing_ok=True)
+    rows = []
+    for key in job.keys:
+        stem = job.stem(key)
+        text = (job.out / f"{stem}.log").read_text(encoding="utf-8", errors="replace")
+        reported = any(line.startswith(report_id(key) + " ") for line in text.splitlines())
+        problem, script_errors, report = log_verdict(text, proc.returncode, timed_out and not reported, report_id(key))
+        record_path = job.out / f"{stem}.json"
+        removed: list[str] = []
+        if job.side.is_project and record_path.exists():
+            try:
+                scenario_id = str(json.loads(record_path.read_text(encoding="utf-8"))["setup"].get("scenario_id", ""))
+                removed = remove_match_maps(scenario_id, started, keep_maps.get(str(job.side.path.resolve()), set()), job.side.path / "maps")
+            except (ValueError, KeyError):
+                pass
+        rows.append({
+            "side": job.side.name, "seed": key, "dump_day": job.dump_day, "ok": not problem, "problem": problem,
+            "seconds": report.get("seconds") if job.more else round(time.time() - started, 1), "final_day": report.get("final_day"),
+            "script_errors": script_errors,
+            "maps_removed": removed,
+        })
+    return rows
 
 
 def run_jobs(jobs: list[Job], parallel: int, timeout_min: float, work: Path, say) -> list[dict]:
@@ -340,27 +382,28 @@ def run_jobs(jobs: list[Job], parallel: int, timeout_min: float, work: Path, say
     results = []
     try:
         while queue or running:
-            locks = {j.lock() for j, *_ in running}
+            locks = set().union(*(j.locks() for j, *_ in running))
             while len(running) < parallel:
-                job = next((j for j in queue if j.lock() not in locks), None)
+                job = next((j for j in queue if not j.locks() & locks), None)
                 if job is None:
                     break
                 queue.remove(job)
-                locks.add(job.lock())
+                locks |= job.locks()
                 running.append((job, *start(job, profiles)))
             time.sleep(1)
             for item in list(running):
                 job, proc, profile, started = item
-                timed_out = proc.poll() is None and time.time() - started > timeout_min * 60
+                timed_out = proc.poll() is None and time.time() - started > timeout_min * 60 * len(job.keys)
                 if timed_out:
                     kill(proc)
                 if proc.poll() is None:
                     continue
                 running.remove(item)
-                row = finish(job, proc, profile, started, timed_out, keep_maps)
-                results.append(row)
-                say(f"  {job.side.name} {job.stem}: {'ok' if row['ok'] else 'FAILED ' + row['problem'][:160]}, day {row['final_day']}, "
-                    f"{row['seconds']:.0f} s{', %d script errors' % len(row['script_errors']) if row['script_errors'] else ''}")
+                for row in finish(job, proc, profile, started, timed_out, keep_maps):
+                    results.append(row)
+                    say(f"  {job.side.name} {job.stem(row['seed'])}: {'ok' if row['ok'] else 'FAILED ' + row['problem'][:160]}, "
+                        f"day {row['final_day']}, {row['seconds'] or 0:.0f} s"
+                        f"{', %d script errors' % len(row['script_errors']) if row['script_errors'] else ''}")
     except KeyboardInterrupt:
         for job, proc, profile, _ in running:
             kill(proc)
@@ -483,8 +526,7 @@ def run_failures(folder: Path, key: str) -> list[str]:
     problems = [str(entry.get("problem") or "failed")] if entry and not entry.get("ok") else []
     log = folder / f"{key}.log"
     if log.exists():
-        problem = log_verdict(log.read_text(encoding="utf-8", errors="replace"),
-                              report_id=HUMAN_REPORT_ID if is_human(key) else REPORT_ID)[0]
+        problem = log_verdict(log.read_text(encoding="utf-8", errors="replace"), report_id=report_id(key))[0]
         if problem and problem not in problems:
             problems.append(problem)
     elif entry is None:
@@ -606,6 +648,16 @@ def print_screen_times(keys: list[str], dirs: dict[str, Path], say) -> None:
         say(f"  {kind:16} " + " | ".join(cells))
 
 
+def human_keys_ready(keys: list[str], sides: list[Side], one_process: bool) -> None:
+    """Installs the human seat runner on each side when keys has a human seed."""
+    if not any(is_human(k) for k in keys):
+        return
+    if one_process:
+        sys.exit("--one-process plays AI seeds only; the human seat runs one seed per process")
+    for side in sides:
+        install_human_runner(side)
+
+
 class Say:
     def __init__(self, path: Path):
         self.file = open(path, "a", encoding="utf-8")
@@ -622,16 +674,16 @@ def cmd_check(args) -> int:
     a = make_side("A", args.a, args.godot_a or args.godot, portable(args, parse_env(args.env_a)))
     b = make_side("B", args.b, args.godot_b or args.godot, portable(args, parse_env(args.env_b)))
     keys = pick_seeds(args.seeds, args.human)
-    if any(is_human(k) for k in keys):
-        install_human_runner(a)
-        install_human_runner(b)
+    human_keys_ready(keys, [a, b], args.one_process_a or args.one_process_b)
     dirs = {"A": work / "A", "B": work / "B"}
     for d in dirs.values():
         d.mkdir(exist_ok=True)
     say(f"PARITY {', '.join(keys)}: A {a.path}{' ' + str(a.env) if a.env else ''} | B {b.path}{' ' + str(b.env) if b.env else ''}; "
         f"{args.jobs} at once; output {work}")
     started = time.time()
-    jobs = [Job(side, k, dirs[side.name]) for k in keys for side in (a, b)]
+    jobs = []
+    for side, one_process in ((a, args.one_process_a), (b, args.one_process_b)):
+        jobs += [Job(side, keys[0], dirs[side.name], more=tuple(keys[1:]))] if one_process else [Job(side, k, dirs[side.name]) for k in keys]
     results = run_jobs(jobs, args.jobs, args.timeout_min, work, say)
     rows = [compare_seed(k, dirs["A"], dirs["B"], [f"{r['side']} {r['problem']}" for r in results if r["seed"] == k and not r["ok"]])
             for k in keys]
@@ -669,10 +721,10 @@ def cmd_run(args) -> int:
     say = Say(out / "parity.log")
     side = make_side("A", args.side, args.godot, portable(args, parse_env(args.env)))
     keys = pick_seeds(args.seeds, args.human)
-    if any(is_human(k) for k in keys):
-        install_human_runner(side)
-    say(f"RUN {', '.join(keys)} on {side.path}; output {out}")
-    results = run_jobs([Job(side, k, out, args.dump_day) for k in keys], args.jobs, args.timeout_min, out, say)
+    human_keys_ready(keys, [side], args.one_process)
+    say(f"RUN {', '.join(keys)} on {side.path}{' in one process' if args.one_process else ''}; output {out}")
+    jobs = [Job(side, keys[0], out, args.dump_day, tuple(keys[1:]))] if args.one_process else [Job(side, k, out, args.dump_day) for k in keys]
+    results = run_jobs(jobs, args.jobs, args.timeout_min, out, say)
     (out / "runs.json").write_text(json.dumps(results, indent=1), encoding="utf-8")
     return 0 if all(r["ok"] for r in results) else 2
 
@@ -757,7 +809,7 @@ def main() -> int:
     def common(p, with_side_env: bool) -> None:
         p.add_argument("--seeds", help=f"comma-separated, from {', '.join(ALL_SEEDS)} (default the committed set: {', '.join(SEEDS)})")
         p.add_argument("--jobs", type=int, default=6, help="Godot runs at once (default 6)")
-        p.add_argument("--timeout-min", type=float, default=60, help="per run (default 60)")
+        p.add_argument("--timeout-min", type=float, default=60, help="per match (default 60)")
         p.add_argument("--godot", help="editor binary for project directories (default as tools/core_suite.py)")
         p.add_argument("--portable", action="store_true",
                        help="blank the map package's location in the digest (editor against an exported build)")
@@ -773,6 +825,8 @@ def main() -> int:
     p.add_argument("--godot-b")
     p.add_argument("--env-a", action="append", metavar="NAME=VALUE")
     p.add_argument("--env-b", action="append", metavar="NAME=VALUE")
+    p.add_argument("--one-process-a", action="store_true", help="play side A's seeds in one Godot process, in --seeds order")
+    p.add_argument("--one-process-b", action="store_true", help="play side B's seeds in one Godot process, in --seeds order")
     p.add_argument("--work", help="output folder (default a new temp folder)")
     p.add_argument("--no-dump", action="store_true", help="skip the replay with a full state dump")
     p.add_argument("--keep", action="store_true", help="keep the state dumps")
@@ -783,6 +837,7 @@ def main() -> int:
     common(p, True)
     p.add_argument("--out", help="output folder (default a new temp folder)")
     p.add_argument("--dump-day", type=int, help="stop on this day (the human seat: step) with a full state dump")
+    p.add_argument("--one-process", action="store_true", help="play the seeds in one Godot process, in --seeds order")
     p.set_defaults(func=cmd_run)
 
     p = sub.add_parser("compare", help="compare two `run` folders")

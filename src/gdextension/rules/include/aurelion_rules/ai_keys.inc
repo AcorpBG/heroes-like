@@ -1006,3 +1006,6 @@ AURELION_KEY(Carry, "Carry")
 AURELION_KEY(s_s_s_5, "%s | %s | %s.")
 AURELION_KEY(s_recovery_d_s_d_day, "%s recovery +%d%s | %d day%s to stabilize.")
 AURELION_KEY(from_s, " from %s")
+// The session view's instance id and the read scope's town keys (OverworldRules._town_read_scope_cache_key).
+AURELION_KEY(instance_id, "instance_id")
+AURELION_KEY(d_s_s_s, "%d|%s|%s|%s")

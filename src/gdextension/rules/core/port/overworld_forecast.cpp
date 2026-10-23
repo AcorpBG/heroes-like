@@ -188,8 +188,8 @@ DictRef session_town(State &state, DictRef session, DictRef town) {
 
 // --- JSON.stringify(value): JSON._stringify with no indent and sorted keys,
 // as overworld_rules_ai_economy.cpp (Phase 3) ports it: null, bools, ints,
-// Strings, StringNames, Vector2i, Vector3i, Arrays and Dictionaries whose keys
-// are all Strings or all ints. Floats, packed arrays, other key sets, control
+// floats, Strings, StringNames, Vector2i, Vector3i, Arrays and Dictionaries whose
+// keys are all Strings or all ints. Packed arrays, other key sets, control
 // characters and circular structures are left to GDScript.
 
 [[noreturn]] void json_not_ported(const std::string &what) {
@@ -262,6 +262,9 @@ void append_json(const State &state, const Value &value, int depth, std::vector<
 			return;
 		case Kind::Int:
 			out += compat::itos(value.i);
+			return;
+		case Kind::Float:
+			out += compat::json_float(value.f);
 			return;
 		case Kind::String:
 		case Kind::StringName:

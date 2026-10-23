@@ -116557,28 +116557,41 @@
     {
       "id": "native-rules-phase6-p1-matches-per-process-20261023",
       "title": "Phase 6 P6-1: several matches per Godot process",
-      "status": "pending",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Later (owner decision 2026-10-23). Measured share 19.9% on four seeds, 50% on s2; bound 1.25x, 2.0x on small maps.",
-      "updatedAt": "2026-10-23T08:30:00Z"
+      "notes": "Branch native-phase6-matches-per-process (owner decision 2026-10-23: P6-1 next, then P6-2). The match runner plays a list of matches in one process (HEROES_AI_MATCH_LIST), resetting the digest file, DayEngine.session_calls, the native session, drafts and content overrides between matches and counting native port failures per match; tools/ai_match_batch.py --per-process N (default 4) and tools/rules_parity.py --one-process(-a/-b). No native or game change; the static/autoload/RNG audit found nothing else a second match inherits. Checks: six seeds per-process against one process (both orders) and against main 7bd62e817, all 415 digests and records identical; core suite 17/17. Timing, two interleaved rounds on a quiet machine: six seeds one after another 122.2 s vs 97.3 s (1.26x, bound 1.25x); 24 small 2P batch matches at 6 slots 32.9-34.9 s vs 22.8 s (1.49x, bound 2.0x).",
+      "updatedAt": "2026-10-23T14:30:00Z"
     },
     {
       "id": "native-rules-phase6-p2-map-corpus-20261023",
       "title": "Phase 6 P6-2: a map corpus",
-      "status": "pending",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Later (owner decision 2026-10-23). For batches that replay fixed maps; measured share 8.3-14.4%, bound 1.09-1.17x.",
-      "updatedAt": "2026-10-23T08:30:00Z"
+      "notes": "Branch native-phase6-map-corpus (owner decision 2026-10-23: after P6-1). HEROES_AI_MATCH_MAP_CORPUS keeps generated maps (package pair and setup, keyed by everything the map depends on) and a match whose map is there starts from it; in a match list a match on the previous match's map starts from a copy of the adopted session; tools/ai_match_batch.py --map-corpus DIR (one commit per folder). No native, game or rules_parity.py change. Checks: six seeds with no corpus, filling an empty corpus, from the corpus, and each seed twice in one process (corpus then kept): all digests and records identical; against main 2dfeaddb7 identical; core suite 17/17. Timing, two rounds: six seeds in one process 97.5/102.8 s generated, 81.5/87.0 s from the corpus (1.20x), 70.9/70.7 s from the kept session (1.38x); 24 small 2P batch matches at 6 slots 22.8 s vs 20.8-20.9 s with --map-corpus (1.09x; bound 1.09-1.17x).",
+      "updatedAt": "2026-10-23T14:45:00Z"
+    },
+    {
+      "id": "native-rules-phase6-faction-setup-20261023",
+      "title": "Phase 6: the generator's faction setup and rotated maps",
+      "status": "completed",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Branch native-phase6-faction-setup (owner decision 2026-10-23: one map with the factions rotated, and the generator provisions a random faction). ScenarioSelectRules.build_random_map_player_config takes seat_faction_ids (a faction id, \"random\" drawn from the normalized seed, or \"\" per seat); the skirmish faction picker has a Random item. Native map_package_service: the normalize keeps the seat list (mirrors allowed), each seat's faction goes to its town and the neutral towns and dwellings of its town type, the ids hash the seat list, a setup with a seat list takes faction-free placement ids so all line-ups of a seed share one map, and the core result is kept for the next call with the same generator inputs (generator_core_reused). Setups without a seat list generate as before. The match runner hands its line-up to the generator (_refound_seat gone); tools/ai_match_batch.py --rotate. The corpus and kept session stay keyed by the line-up. Checks: setups without a seat list identical to main's packages apart from generator_core_reused; a map's rotations share terrain, placement ids and every object, only factions differ; random seats reproducible; native RMG selftest and reports as on main (the end-to-end boundary report fails as on main); six seeds against main ad2c5f24a differ from day 1, each difference named in the transition doc; core suite 17/17. Timing (quiet machine, three rounds): a rotation's generation reuses the core, 49 ms vs 215-298 ms small 2P, 89-98 vs 741-786 ms medium, 158-179 vs 1527-1770 ms large, 248-288 vs 3479-7606 ms extra large.",
+      "updatedAt": "2026-10-23T17:00:00Z"
     },
     {
       "id": "native-rules-phase7-one-copy-20261023",
@@ -116590,8 +116603,8 @@
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Owner decisions 2026-10-23 (D11, D-a to D-e): every rule moves to C++, only the screens stay GDScript; check is a permanent human seat (tools/rules_parity.py --human); one map snapshot per redraw; no GDScript way back; retired tests by D6. Inventory of main 7bd62e817: 1,935 GDScript functions to port (36,852 lines) plus the map editor's operations; 798 two-copy bodies to delete. Branch native-phase7-human. Merge cadence open.",
-      "updatedAt": "2026-10-23T14:30:00Z"
+      "notes": "Owner decisions 2026-10-23 (D11, D-a to D-e): every rule moves to C++, only the screens stay GDScript; check is a permanent human seat (tools/rules_parity.py --human); one map snapshot per redraw; no GDScript way back; retired tests by D6. Inventory of main 7bd62e817: 1,935 GDScript functions to port (36,852 lines; 1,789 and 34,705 without 7.14) plus the map editor's operations; 798 two-copy bodies to delete. Branch native-phase7-human. Plan revision 2 (owner decisions D-f to D-h, 2026-10-23): the campaign runtime is ported with the campaign rework (7.14 leaves Phase 7); RandomMapGeneratorRules.generate and the legacy rebuild path are deleted, its setup part moves with 7.11; the editor's authored-scenario export is deleted. Order: 7.1, 7.10-7.12, 7.2-7.9, 7.13, 7.15. Four merges with the full checks: after 7.1 with 7.10-7.12, after 7.2, after 7.7, at the end.",
+      "updatedAt": "2026-10-23T13:47:00Z"
     },
     {
       "id": "native-rules-phase7-01-routes-20261023",
@@ -116733,8 +116746,8 @@
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Transition doc, Phase 7, Slices.",
-      "updatedAt": "2026-10-23T14:30:00Z"
+      "notes": "Transition doc, Phase 7, Slices. With the generator's setup part (normalize_config, the materialization identity; D-g): RandomMapGeneratorRules.generate and the legacy rebuild path are deleted, its three core tests (random_map_seeded_generator_core_report, random_map_final_writeout_export_save_schema_report, generated_start_hero_growth_seed_report) move to the native generator and the other tests calling it are retired (D-e).",
+      "updatedAt": "2026-10-23T13:47:00Z"
     },
     {
       "id": "native-rules-phase7-12-saves-20261023",
@@ -116759,8 +116772,8 @@
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Transition doc, Phase 7, Slices.",
-      "updatedAt": "2026-10-23T14:30:00Z"
+      "notes": "Transition doc, Phase 7, Slices. Map-package editing and saving only; the authored-scenario export is deleted (D-h).",
+      "updatedAt": "2026-10-23T13:47:00Z"
     },
     {
       "id": "native-rules-phase7-14-campaign-20261023",
@@ -116772,8 +116785,8 @@
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Transition doc, Phase 7, Slices. Open: no check reaches it while campaigns are archived.",
-      "updatedAt": "2026-10-23T14:30:00Z"
+      "notes": "Out of Phase 7 (owner decision D-f, 2026-10-23): the campaign runtime is ported with the campaign rework.",
+      "updatedAt": "2026-10-23T13:47:00Z"
     },
     {
       "id": "native-rules-phase7-15-one-copy-20261023",

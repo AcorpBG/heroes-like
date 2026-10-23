@@ -418,6 +418,29 @@ void fuzz_sort(Fuzz &f, int64_t count) {
 	}
 }
 
+// JSON.stringify of a float: random floats, dyadic fractions (exact ties at
+// every place) and the floats next to powers of ten and their reciprocals.
+void fuzz_json_float(Fuzz &f, int64_t count) {
+	for (int64_t i = 0; i < count; ++i) {
+		f.emit_text(compat::json_float(f.rand_float()));
+		const double numerator = static_cast<double>(f.below(2000001) - 1000000);
+		f.emit_text(compat::json_float(numerator / static_cast<double>(int64_t(1) << f.below(60))));
+		int64_t power = 1;
+		for (int64_t k = f.below(19); k > 0; --k) {
+			power *= 10;
+		}
+		const double whole = static_cast<double>(power);
+		int64_t bits;
+		std::memcpy(&bits, &whole, sizeof(bits));
+		double near = Fuzz::bits_to_float(bits + f.below(5) - 2);
+		if (f.below(2) == 1) {
+			near = 1.0 / near;
+		}
+		f.emit_text(compat::json_float(near));
+		f.flush();
+	}
+}
+
 } // namespace
 
 std::vector<CompatDigest> compat_digests(int64_t count) {
@@ -437,6 +460,7 @@ std::vector<CompatDigest> compat_digests(int64_t count) {
 		{ "variant_minmax", fuzz_variant_minmax },
 		{ "typed_minmax", fuzz_typed_minmax },
 		{ "sort", fuzz_sort },
+		{ "json_float", fuzz_json_float },
 	};
 	std::vector<CompatDigest> digests;
 	int64_t helper_index = 0;

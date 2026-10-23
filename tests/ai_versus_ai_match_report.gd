@@ -19,7 +19,10 @@ extends Node
 # HEROES_AI_MATCH_PLAYERS  computer players on the map (default 2); a match
 #                          of more ends when one player is left standing.
 # HEROES_AI_MATCH_FACTIONS comma-separated faction ids, one per seat, in
-#                          place of the seed's random draw.
+#                          place of the seed's random draw. The map comes from
+#                          the seed alone: the generator gives each seat its
+#                          faction (ScenarioSelectRules seat factions), so the
+#                          same seed with another line-up plays the same map.
 # HEROES_AI_MATCH_GUARDS   guard strength: weak, normal (default, as a new
 #                          game from the main menu) or strong.
 # HEROES_AI_MATCH_SIZE     map size class (default homm3_small; homm3_medium,
@@ -59,6 +62,28 @@ extends Node
 #                          native call keeps the session from one day to the
 #                          next (DayEngine.session_calls); the game is the
 #                          same either way.
+# HEROES_AI_MATCH_LIST     a JSON file holding an array of matches that this
+#                          process plays one after another, each an object of
+#                          HEROES_AI_MATCH_* settings in place of the
+#                          environment's (values as strings; a setting it
+#                          leaves out comes from the environment). Each match
+#                          prints an AI_VERSUS_AI_MATCH_BEGIN line, then its
+#                          report line, and plays as it would in a process of
+#                          its own; a failed match does not stop the next. The
+#                          process exits 1 when any match failed. A match on
+#                          the map and line-up the match before it played (the
+#                          same map seed, setup and seat factions) starts from
+#                          a copy of the session that match adopted, before its
+#                          handover, instead of loading the map again; one on
+#                          the same map with another line-up has the generator
+#                          reuse the map it made for the match before.
+# HEROES_AI_MATCH_MAP_CORPUS a folder of generated map packages: a match whose
+#                          map and line-up are there starts from the saved
+#                          package and setup instead of generating it, and one
+#                          not there yet is generated and saved there. The game
+#                          is the same either way. The packages belong to the
+#                          game revision that generated them
+#                          (tools/ai_match_batch.py --map-corpus checks it).
 #
 # The match fails at once when the native rules library is not registered:
 # without it every battle hex search errors and battles play out wrong.
@@ -69,16 +94,30 @@ const AiSeatRulesScript = preload("res://scripts/core/AiSeatRules.gd")
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const NativeRulesScript = preload("res://scripts/core/NativeRules.gd")
 const DayEngineScript = preload("res://scripts/core/DayEngine.gd")
+const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const REPORT_ID := "AI_VERSUS_AI_MATCH_REPORT"
+const BEGIN_ID := "AI_VERSUS_AI_MATCH_BEGIN"
 const DEFAULT_MAX_DAYS := 320
 const DEFAULT_OUT := "user://ai_versus_ai_match.json"
 
+# Per match; _begin_match sets them up again.
+var _settings := {}
+var _out_path := DEFAULT_OUT
+var _started_msec := 0
+var _stats_before := {}
 var _failed := false
 var _digest_file: FileAccess = null
 var _dump_path := ""
 var _dump_day := -1
 var _blank_scopes := PackedStringArray()
 var _blank_fields := {}
+# Where the match's map came from: generated, reused (the generator's map from
+# the match before, with this match's factions), corpus or kept.
+var _map_source := ""
+# In a match list, the last map adopted and a copy of its session as adopted.
+var _list_mode := false
+var _kept_map_key := ""
+var _kept_map_session = null
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -86,53 +125,100 @@ func _ready() -> void:
 func _run() -> void:
 	if not NativeRulesScript.available():
 		_fail("The native rules library is not loaded: %s." % NativeRulesScript.REGISTER_HINT)
+		get_tree().quit(1)
 		return
+	var matches := [{}]
+	var list_path := OS.get_environment("HEROES_AI_MATCH_LIST").strip_edges()
+	if list_path != "":
+		var parsed = JSON.parse_string(FileAccess.get_file_as_string(list_path)) if FileAccess.file_exists(list_path) else null
+		if not (parsed is Array) or (parsed as Array).any(func(entry): return not (entry is Dictionary)):
+			_fail("HEROES_AI_MATCH_LIST %s holds no JSON array of objects." % list_path)
+			get_tree().quit(1)
+			return
+		matches = parsed
+		_list_mode = true
+	var all_ok := true
+	for entry in matches:
+		_begin_match(entry)
+		if list_path != "":
+			print("%s %s" % [BEGIN_ID, JSON.stringify({"out": ProjectSettings.globalize_path(_out_path)})])
+		_play()
+		_end_match()
+		all_ok = all_ok and not _failed
+	get_tree().quit(0 if all_ok else 1)
+
+## A match setting: the match list's entry, else the environment.
+func _env(name: String) -> String:
+	return String(_settings[name]) if _settings.has(name) else OS.get_environment(name)
+
+func _begin_match(settings: Dictionary) -> void:
+	_settings = settings
+	_out_path = _env("HEROES_AI_MATCH_OUT").strip_edges()
+	if _out_path == "":
+		_out_path = DEFAULT_OUT
+	_started_msec = Time.get_ticks_msec()
+	_stats_before = NativeRulesScript.api().port_stats()
+	_failed = false
+	_digest_file = null
+	_dump_path = ""
+	_dump_day = -1
+	_blank_scopes = PackedStringArray()
+	_blank_fields = {}
+	_map_source = ""
+
+## What one match leaves behind is gone before the next one starts.
+func _end_match() -> void:
+	if _digest_file != null:
+		_digest_file.close()
+		_digest_file = null
+	DayEngineScript.session_calls.erase(&"OverworldRules.end_turn")
+	NativeRulesScript.api().port_session_close()
+	_cleanup()
+
+func _play() -> void:
 	ContentService.clear_generated_scenario_drafts()
-	var match_seed := OS.get_environment("HEROES_AI_MATCH_SEED").strip_edges()
+	var match_seed := _env("HEROES_AI_MATCH_SEED").strip_edges()
 	if match_seed in ["", "random"]:
 		var draw := RandomNumberGenerator.new()
 		draw.randomize()
 		match_seed = "ai-match-%d" % draw.randi()
-	var max_days := int(OS.get_environment("HEROES_AI_MATCH_MAX_DAYS")) if OS.get_environment("HEROES_AI_MATCH_MAX_DAYS") != "" else DEFAULT_MAX_DAYS
-	var swapped := OS.get_environment("HEROES_AI_MATCH_SWAP").strip_edges() not in ["", "0"]
-	var player_count := clampi(int(OS.get_environment("HEROES_AI_MATCH_PLAYERS")), 2, 8) if OS.get_environment("HEROES_AI_MATCH_PLAYERS") != "" else 2
-	var guards := OS.get_environment("HEROES_AI_MATCH_GUARDS").strip_edges().to_lower()
+	var max_days := int(_env("HEROES_AI_MATCH_MAX_DAYS")) if _env("HEROES_AI_MATCH_MAX_DAYS") != "" else DEFAULT_MAX_DAYS
+	var swapped := _env("HEROES_AI_MATCH_SWAP").strip_edges() not in ["", "0"]
+	var player_count := clampi(int(_env("HEROES_AI_MATCH_PLAYERS")), 2, 8) if _env("HEROES_AI_MATCH_PLAYERS") != "" else 2
+	var guards := _env("HEROES_AI_MATCH_GUARDS").strip_edges().to_lower()
 	if guards == "":
 		guards = "normal"
 	if guards not in ["weak", "normal", "strong"]:
 		_fail("HEROES_AI_MATCH_GUARDS must be weak, normal or strong, got %s." % guards)
 		return
-	var size_class := OS.get_environment("HEROES_AI_MATCH_SIZE").strip_edges()
+	var size_class := _env("HEROES_AI_MATCH_SIZE").strip_edges()
 	if size_class == "":
 		size_class = "homm3_small"
-	var water := OS.get_environment("HEROES_AI_MATCH_WATER").strip_edges().to_lower()
+	var water := _env("HEROES_AI_MATCH_WATER").strip_edges().to_lower()
 	if water == "":
 		water = "land"
 	if water not in ["land", "normal_water", "islands"]:
 		_fail("HEROES_AI_MATCH_WATER must be land, normal_water or islands, got %s." % water)
 		return
-	var levels := int(OS.get_environment("HEROES_AI_MATCH_LEVELS")) if OS.get_environment("HEROES_AI_MATCH_LEVELS") != "" else 1
+	var levels := int(_env("HEROES_AI_MATCH_LEVELS")) if _env("HEROES_AI_MATCH_LEVELS") != "" else 1
 	if levels not in [1, 2]:
 		_fail("HEROES_AI_MATCH_LEVELS must be 1 or 2, got %d." % levels)
 		return
 	# Turn time by phase is always recorded; the ledger keeps it per player.
 	OS.set_environment("HEROES_STRATEGIC_AI_PROFILE", "1")
-	var trace := OS.get_environment("HEROES_AI_MATCH_TRACE").strip_edges() not in ["", "0"]
-	var keep_session := OS.get_environment("HEROES_AI_MATCH_KEEP_SESSION").strip_edges() != "0"
-	var out_path := OS.get_environment("HEROES_AI_MATCH_OUT").strip_edges()
-	if out_path == "":
-		out_path = DEFAULT_OUT
-	var digest_path := OS.get_environment("HEROES_AI_MATCH_DIGEST").strip_edges()
+	var trace := _env("HEROES_AI_MATCH_TRACE").strip_edges() not in ["", "0"]
+	var keep_session := _env("HEROES_AI_MATCH_KEEP_SESSION").strip_edges() != "0"
+	var digest_path := _env("HEROES_AI_MATCH_DIGEST").strip_edges()
 	if digest_path != "":
 		_digest_file = FileAccess.open(digest_path, FileAccess.WRITE)
 		if _digest_file == null:
 			_fail("HEROES_AI_MATCH_DIGEST %s cannot be written." % digest_path)
 			return
-	_dump_path = OS.get_environment("HEROES_AI_MATCH_DUMP").strip_edges()
-	if _dump_path != "" and OS.get_environment("HEROES_AI_MATCH_DUMP_DAY").strip_edges() != "":
-		_dump_day = int(OS.get_environment("HEROES_AI_MATCH_DUMP_DAY"))
+	_dump_path = _env("HEROES_AI_MATCH_DUMP").strip_edges()
+	if _dump_path != "" and _env("HEROES_AI_MATCH_DUMP_DAY").strip_edges() != "":
+		_dump_day = int(_env("HEROES_AI_MATCH_DUMP_DAY"))
 		max_days = mini(max_days, _dump_day)
-	for item in OS.get_environment("HEROES_AI_MATCH_DIGEST_BLANK").split(",", false):
+	for item in _env("HEROES_AI_MATCH_DIGEST_BLANK").split(",", false):
 		item = item.strip_edges()
 		if item.begins_with("overworld.") or item.begins_with("flags."):
 			_blank_scopes.append(item)
@@ -148,13 +234,13 @@ func _run() -> void:
 	var drawn := []
 	for _seat in range(player_count):
 		drawn.append(String(faction_ids[rng.randi_range(0, faction_ids.size() - 1)]))
-	var chosen := OS.get_environment("HEROES_AI_MATCH_FACTIONS").strip_edges()
+	var chosen := _env("HEROES_AI_MATCH_FACTIONS").strip_edges()
 	if chosen != "":
 		drawn = Array(chosen.split(",", false)).map(func(id): return String(id).strip_edges())
 		if drawn.size() != player_count or drawn.any(func(id): return not faction_ids.has(id)):
 			_fail("HEROES_AI_MATCH_FACTIONS needs %d of %s, got %s." % [player_count, JSON.stringify(faction_ids), chosen])
 			return
-	var seat_weights := _seat_weights(OS.get_environment("HEROES_AI_MATCH_WEIGHTS"), player_count)
+	var seat_weights := _seat_weights(_env("HEROES_AI_MATCH_WEIGHTS"), player_count)
 	if _failed:
 		return
 	var map_seed := str(rng.randi())
@@ -162,7 +248,11 @@ func _run() -> void:
 	if player_count != 2:
 		map_seed = "%s-p%d" % [map_seed, player_count]
 
-	var session = _start_session(map_seed, drawn[0], player_count, size_class, guards, water, levels)
+	# Swapping keeps the map and trades the two factions' starting places.
+	var seat_factions := drawn.duplicate()
+	if swapped:
+		seat_factions.reverse()
+	var session = _start_session(map_seed, seat_factions, player_count, size_class, guards, water, levels)
 	if session == null:
 		return
 	var seats := []
@@ -175,13 +265,6 @@ func _run() -> void:
 	if AiSeatRulesScript.hand_human_seat_to_ai(session) != seats[0]:
 		_fail("The human seat could not be handed to the computer.")
 		return
-	# Swapping keeps the map and trades the two factions' starting places.
-	var seat_factions := drawn.duplicate()
-	if swapped:
-		seat_factions.reverse()
-	for index in range(seats.size()):
-		if PlayerRules.faction_id(session, seats[index]) != String(seat_factions[index]):
-			_refound_seat(session, seats[index], String(seat_factions[index]))
 	session.flags[AiHeroRulesScript.BATTLE_LOG_FLAG] = true
 	for index in range(seat_weights.size()):
 		var weight_set := String(seat_weights[index].set)
@@ -275,7 +358,7 @@ func _run() -> void:
 		"ledger": ledger,
 		"town_weeks": town_weeks,
 	}
-	var file := FileAccess.open(out_path, FileAccess.WRITE)
+	var file := FileAccess.open(_out_path, FileAccess.WRITE)
 	if file != null:
 		file.store_string(JSON.stringify(record, "  "))
 		file.close()
@@ -298,11 +381,11 @@ func _run() -> void:
 		"timeline_events": timeline.size(),
 		"ai_turn_ms_max": ai_ms_max,
 		"final": ledger[ledger.size() - 1],
-		"out": ProjectSettings.globalize_path(out_path),
+		"out": ProjectSettings.globalize_path(_out_path),
+		"seconds": snappedf((Time.get_ticks_msec() - _started_msec) / 1000.0, 0.1),
+		"map": _map_source,
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(summary)])
-	_cleanup()
-	get_tree().quit(0)
 
 ## The whole session state of the day, before the runner empties the decision
 ## log; timings are kept outside the session, in the turn result.
@@ -368,62 +451,102 @@ func _blanked(value: Dictionary) -> Dictionary:
 			out[key] = child
 	return out
 
-func _start_session(map_seed: String, faction_id: String, player_count: int = 2, size_class: String = "homm3_small", guards: String = "normal", water: String = "land", levels: int = 1):
-	var config := ScenarioSelectRulesScript.build_random_map_player_config(
-		map_seed, "", "", player_count, water, levels == 2, size_class,
-		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT,
-		faction_id, "", guards
-	)
-	var setup := ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(config, "normal", ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY)
-	if not bool(setup.get("ok", false)):
-		_fail("Generated %s setup failed: %s" % [size_class, JSON.stringify(setup).left(600)])
-		return null
+## The adopted session of the match's map and line-up: a copy of the one the
+## match before adopted for both, else adopted from the map corpus's package and
+## setup, else from a newly generated map (saved to the corpus). The generator
+## stamps each seat's faction on the map, which does not depend on them: after
+## a match on the same map with another line-up it reuses that map.
+func _start_session(map_seed: String, seat_factions: Array, player_count: int = 2, size_class: String = "homm3_small", guards: String = "normal", water: String = "land", levels: int = 1):
+	# Everything the generated package depends on, and where it goes.
+	var key := "%s|%s|%d|%s|%s|%s|%d|%s" % [map_seed, ",".join(seat_factions), player_count, size_class, guards, water, levels, ScenarioSelectRulesScript._generated_map_package_dir()]
+	if key == _kept_map_key and _kept_map_session != null:
+		_map_source = "kept"
+		var copy = _copy_session(_kept_map_session)
+		SessionState.active_session = copy
+		return copy
+	var entry := _corpus_entry(key)
+	var setup := _corpus_setup(entry, key)
+	_map_source = "corpus" if not setup.is_empty() else "generated"
+	if setup.is_empty():
+		var config := ScenarioSelectRulesScript.build_random_map_player_config(
+			map_seed, "", "", player_count, water, levels == 2, size_class,
+			ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT,
+			String(seat_factions[0]), "", guards, seat_factions
+		)
+		setup = ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(config, "normal", ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY)
+		if not bool(setup.get("ok", false)):
+			_fail("Generated %s setup failed: %s" % [size_class, JSON.stringify(setup).left(600)])
+			return null
+		if bool(setup.get("native_generation", {}).get("generator_core_reused", false)):
+			_map_source = "reused"
+		_corpus_store(entry, key, setup)
 	var session = ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(setup)
 	if session == null or session.scenario_id == "":
 		_fail("The generated session could not start.")
 		return null
 	OverworldRules.normalize_overworld_state(session)
+	_kept_map_key = ""
+	_kept_map_session = null
+	if _list_mode:
+		_kept_map_key = key
+		_kept_map_session = _copy_session(session)
 	return session
 
-## The generator never gives two players one faction, and a swapped match keeps
-## the map. A seat whose drawn faction differs from the generator's has its
-## capital set up as that faction's starting capital instead.
-func _refound_seat(session, seat: String, faction_id: String) -> void:
-	var town_id := String(RandomMapGeneratorRules.DEFAULT_TOWN_BY_FACTION.get(faction_id, ""))
-	var template := ContentService.get_town(town_id)
-	var towns: Array = session.overworld.get("towns", [])
-	for index in range(towns.size()):
-		var town: Dictionary = towns[index]
-		if String(town.get("owner", "")) != "enemy" or PlayerRules.town_controller_id(town) != seat:
-			continue
-		town["town_id"] = town_id
-		town["faction_id"] = faction_id
-		town["controlling_faction_id"] = faction_id
-		town["built_buildings"] = template.get("starting_building_ids", []).duplicate(true)
-		town["garrison"] = template.get("garrison", []).duplicate(true)
-		town["available_recruits"] = {}
-		towns[index] = town
-	session.overworld["towns"] = towns
-	var players: Array = session.overworld.get("players", [])
-	for index in range(players.size()):
-		if String(players[index].get("player_id", "")) == seat:
-			players[index]["faction_id"] = faction_id
-	session.overworld["players"] = players
-	var states: Array = session.overworld.get("enemy_states", [])
-	for index in range(states.size()):
-		var state: Dictionary = states[index]
-		if PlayerRules.controller_id(state) == seat:
-			state["faction_id"] = faction_id
-			for key in ["commander_roster", "ai_tavern"]:
-				state.erase(key)
-			states[index] = state
-	session.overworld["enemy_states"] = states
-	OverworldRules.normalize_overworld_state(session)
-	for index in range(towns.size()):
-		var town: Dictionary = session.overworld.towns[index]
-		if PlayerRules.town_controller_id(town) == seat and (town.get("available_recruits", {}) as Dictionary).is_empty():
-			town["available_recruits"] = OverworldRules._seed_recruits_for_town(town)
-			session.overworld.towns[index] = town
+## Every field of the session, its containers copied; what one match changes
+## never reaches the copy. A container that two places shared is two after the
+## copy, as after saving and loading.
+func _copy_session(source):
+	var copy = SessionStateStoreScript.SessionData.new()
+	for property in source.get_property_list():
+		if property.usage & PROPERTY_USAGE_SCRIPT_VARIABLE:
+			var value = source.get(property.name)
+			copy.set(property.name, value.duplicate(true) if value is Dictionary or value is Array else value)
+	for name in source.get_meta_list():
+		var value = source.get_meta(name)
+		copy.set_meta(name, value.duplicate(true) if value is Dictionary or value is Array else value)
+	return copy
+
+## The corpus file stem of the map named by key, "" without a corpus.
+func _corpus_entry(key: String) -> String:
+	var corpus := _env("HEROES_AI_MATCH_MAP_CORPUS").strip_edges()
+	return corpus.path_join(key.sha256_text().left(24)) if corpus != "" else ""
+
+## The setup saved with the map, {} when the corpus has none; its package
+## pair is copied to where the generator writes it, so the session is the one
+## a newly generated map gives.
+func _corpus_setup(entry: String, key: String) -> Dictionary:
+	if entry == "" or not FileAccess.file_exists(entry + ".setup"):
+		return {}
+	var file := FileAccess.open(entry + ".setup", FileAccess.READ)
+	var saved = file.get_var() if file != null else null
+	if not (saved is Dictionary) or String(saved.get("key", "")) != key or not (saved.get("setup") is Dictionary):
+		return {}
+	var setup: Dictionary = saved.setup
+	var startup: Dictionary = setup.get("package_startup", {})
+	for pair in [[".amap", "map_path"], [".ascenario", "scenario_path"]]:
+		var target := ProjectSettings.globalize_path(String(startup.get(pair[1], "")))
+		DirAccess.make_dir_recursive_absolute(target.get_base_dir())
+		if DirAccess.copy_absolute(entry + pair[0], target) != OK:
+			return {}
+	return setup
+
+## Saves a generated map's package pair and setup; the setup goes last, so a
+## map counts only when it is whole.
+func _corpus_store(entry: String, key: String, setup: Dictionary) -> void:
+	if entry == "" or FileAccess.file_exists(entry + ".setup"):
+		return
+	DirAccess.make_dir_recursive_absolute(entry.get_base_dir())
+	var startup: Dictionary = setup.get("package_startup", {})
+	for pair in [[".amap", "map_path"], [".ascenario", "scenario_path"]]:
+		if DirAccess.copy_absolute(ProjectSettings.globalize_path(String(startup.get(pair[1], ""))), entry + pair[0]) != OK:
+			push_warning("The map corpus could not take %s." % String(startup.get(pair[1], "")))
+			return
+	var file := FileAccess.open(entry + ".setup.part", FileAccess.WRITE)
+	if file == null:
+		return
+	file.store_var({"key": key, "setup": setup})
+	file.close()
+	DirAccess.rename_absolute(entry + ".setup.part", entry + ".setup")
 
 func _check_handover(session, seats: Array, drawn: Array, start_treasury: Dictionary) -> Dictionary:
 	if PlayerRules.has_human_seat(session):
@@ -627,18 +750,25 @@ func _day_row(session, seats: Array) -> Dictionary:
 		}
 	return row
 
-## The native port's failures in this run (AurelionRules.port_stats): failed
-## calls, shadow mismatches and names it does not have. Each printed a SCRIPT
-## ERROR, which a release export does not print, so the match fails here too.
+## The native port's failures in this match (AurelionRules.port_stats, which
+## counts from the process start): failed calls, shadow mismatches and names it
+## does not have. Each printed a SCRIPT ERROR, which a release export does not
+## print, so the match fails here too.
 func _native_port_failures() -> String:
 	var stats: Dictionary = NativeRulesScript.api().port_stats()
 	var failed := PackedStringArray()
 	for name in stats:
 		var entry = stats[name]
-		if entry is Dictionary and int(entry.get("errors", 0)) + int(entry.get("mismatches", 0)) > 0:
-			failed.append("%s (%d errors, %d mismatches)" % [name, int(entry.get("errors", 0)), int(entry.get("mismatches", 0))])
-	if int(stats.get("unknown_calls", 0)) > 0:
-		failed.append("%d calls of names it does not have" % int(stats.unknown_calls))
+		var before = _stats_before.get(name, {})
+		if not (entry is Dictionary) or not (before is Dictionary):
+			continue
+		var errors := int(entry.get("errors", 0)) - int(before.get("errors", 0))
+		var mismatches := int(entry.get("mismatches", 0)) - int(before.get("mismatches", 0))
+		if errors + mismatches > 0:
+			failed.append("%s (%d errors, %d mismatches)" % [name, errors, mismatches])
+	var unknown := int(stats.get("unknown_calls", 0)) - int(_stats_before.get("unknown_calls", 0))
+	if unknown > 0:
+		failed.append("%d calls of names it does not have" % unknown)
 	if failed.is_empty():
 		return ""
 	return "The native rules port failed: %s." % ", ".join(failed)
@@ -652,6 +782,5 @@ func _fail(message: String) -> void:
 		return
 	_failed = true
 	push_error(message)
-	print("%s %s" % [REPORT_ID, JSON.stringify({"ok": false, "error": message})])
-	_cleanup()
-	get_tree().quit(1)
+	print("%s %s" % [REPORT_ID, JSON.stringify({"ok": false, "error": message, "out": ProjectSettings.globalize_path(_out_path),
+		"seconds": snappedf((Time.get_ticks_msec() - _started_msec) / 1000.0, 0.1)})])

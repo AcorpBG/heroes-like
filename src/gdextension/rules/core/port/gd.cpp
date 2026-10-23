@@ -1540,6 +1540,9 @@ void append_json(const State &state, const Value &value, int depth, std::vector<
 		case Kind::Int:
 			out += compat::itos(value.i);
 			return;
+		case Kind::Float:
+			out += compat::json_float(value.f);
+			return;
 		case Kind::String:
 		case Kind::StringName:
 			append_json_string(state.text(value.ref), out);

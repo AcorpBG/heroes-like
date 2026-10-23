@@ -205,6 +205,11 @@ const RANDOM_MAP_MONSTER_STRENGTH_OPTIONS := [
 	{"id": "strong", "label": "Strong Monsters"},
 ]
 const RANDOM_MAP_DEFAULT_MONSTER_STRENGTH := "normal"
+# A seat whose faction is drawn from the map's normalized seed
+# (random_map_seat_factions).
+const RANDOM_MAP_RANDOM_FACTION_ID := "random"
+# The player setup's selection_mode when the player's faction was drawn.
+const RANDOM_MAP_SEAT_SELECTION_RANDOM := "random_from_seed"
 const RANDOM_MAP_PLAYER_RETRY_POLICY := {
 	"max_attempts": 5,
 	"mode": "seed_salt",
@@ -872,7 +877,8 @@ static func build_random_map_player_config(
 	template_selection_mode: String = RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT,
 	player_faction_id: String = "",
 	player_hero_id: String = "",
-	monster_strength: String = ""
+	monster_strength: String = "",
+	seat_faction_ids: Array = []
 ) -> Dictionary:
 	var seed_record := random_map_h3maped_seed_record(seed)
 	var normalized_seed := String(seed_record.get("normalized_seed", seed))
@@ -907,9 +913,17 @@ static func build_random_map_player_config(
 	var runtime_policy_status := String(size_option.get("runtime_policy", "blocked_source_size_exceeds_current_144x144x2_cap"))
 	if materialization_available and level_count <= int(RANDOM_MAP_RUNTIME_SIZE_CAP.get("level_count", 2)):
 		runtime_policy_status = "materialize_at_source_size_within_current_144x144x2_cap"
-	var normalized_player_faction_id := _valid_random_map_player_faction_id(player_faction_id)
+	# A seat request (seat_faction_ids, or a random player faction) is settled
+	# here, from the normalized seed. Only seat_faction_ids name every seat: a
+	# random player faction alone makes the config a chosen one makes.
+	var seat_request := seat_faction_ids.duplicate()
+	if seat_request.is_empty() and player_faction_id.strip_edges() == RANDOM_MAP_RANDOM_FACTION_ID:
+		seat_request = [RANDOM_MAP_RANDOM_FACTION_ID]
+	var seat_factions := random_map_seat_factions(normalized_seed, normalized_player_count, seat_request) if not seat_request.is_empty() else []
+	var normalized_player_faction_id := _valid_random_map_player_faction_id(String(seat_factions[0]) if not seat_factions.is_empty() else player_faction_id)
 	var normalized_player_hero_id := _valid_random_map_player_hero_id(player_hero_id, normalized_player_faction_id)
 	var faction_seed_order := _random_map_faction_seed_order(normalized_player_faction_id)
+	var explicit_seat_factions := not seat_faction_ids.is_empty()
 	var normalized_monster_strength := random_map_monster_strength_id(monster_strength)
 	if normalized_monster_strength == "":
 		normalized_monster_strength = RANDOM_MAP_DEFAULT_MONSTER_STRENGTH if auto_catalog_selection else "weak"
@@ -955,7 +969,7 @@ static func build_random_map_player_config(
 			"id": "" if auto_catalog_selection else String(profile_option.get("id", normalized_profile_id)),
 			"template_id": normalized_template_id,
 			"guard_strength_profile": normalized_monster_strength if auto_catalog_selection else String(profile_option.get("guard_strength_profile", "core_low")),
-			"faction_ids": faction_seed_order if normalized_player_faction_id != "" else ([] if auto_catalog_selection else profile_option.get("faction_ids", [])),
+			"faction_ids": seat_factions.duplicate() if explicit_seat_factions else (faction_seed_order if normalized_player_faction_id != "" else ([] if auto_catalog_selection else profile_option.get("faction_ids", []))),
 		},
 		"template_selection": {
 			"mode": RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO if auto_catalog_selection else RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT,
@@ -964,12 +978,49 @@ static func build_random_map_player_config(
 			"fallback_profile_id": String(size_defaults.get("profile_id", "")),
 		},
 	}
+	# The generator gives each seat its entry (by player colour) on the map of
+	# the other generator inputs alone, and puts the list in the map's identity,
+	# so two line-ups share the map but never a package.
+	if explicit_seat_factions:
+		result["seat_faction_ids"] = seat_factions.duplicate()
 	if normalized_player_faction_id != "" and normalized_player_hero_id != "":
 		result["player_setup"] = {
 			"faction_id": normalized_player_faction_id,
 			"hero_id": normalized_player_hero_id,
-			"selection_mode": "player_selected",
+			"selection_mode": RANDOM_MAP_SEAT_SELECTION_RANDOM if not seat_request.is_empty() and String(seat_request[0]).strip_edges() == RANDOM_MAP_RANDOM_FACTION_ID else "player_selected",
 		}
+	return result
+
+## Each seat's faction on a generated map, seat 1 (the human seat) first. A
+## request entry is a faction id; "random", drawn from the normalized seed on
+## its own (two seats may draw one faction), so the same seed and request give
+## the same factions; or "" (also an unknown id or a missing entry): the next
+## faction no seat has, in content order, as the generator always filled the
+## seats after the player's.
+static func random_map_seat_factions(normalized_seed: String, player_count: int, request: Array) -> Array:
+	var faction_ids := []
+	for option in random_map_faction_options():
+		faction_ids.append(String(option.get("id", "")))
+	var result := []
+	for index in range(maxi(player_count, 1)):
+		var entry := String(request[index]).strip_edges() if index < request.size() else ""
+		if entry == RANDOM_MAP_RANDOM_FACTION_ID and not faction_ids.is_empty():
+			var draw := ("%s:seat_faction:%d" % [normalized_seed, index + 1]).sha256_text().left(8).hex_to_int()
+			entry = String(faction_ids[draw % faction_ids.size()])
+		elif not faction_ids.has(entry):
+			entry = ""
+		result.append(entry)
+	var order := _random_map_faction_seed_order(String(result[0]) if String(result[0]) != "" else (String(faction_ids[0]) if not faction_ids.is_empty() else ""))
+	var unused := order.filter(func(faction_id): return faction_id not in result)
+	var next := 0
+	for index in range(result.size()):
+		if String(result[index]) != "" or order.is_empty():
+			continue
+		if next < unused.size():
+			result[index] = unused[next]
+			next += 1
+		else:
+			result[index] = order[index % order.size()]
 	return result
 
 static func _valid_random_map_player_faction_id(faction_id: String) -> String:
@@ -1200,6 +1251,7 @@ static func _build_random_map_skirmish_setup_single_attempt(input_config: Dictio
 			"full_generation_status": String(generated.get("full_generation_status", "")),
 			"validation_status": String(generated.get("validation_status", "")),
 			"supported_parity_config": bool(generated.get("supported_parity_config", false)),
+			"generator_core_reused": bool(generated.get("generator_core_reused", false)),
 		},
 		"package_startup": persisted,
 		"scenario_id": String(identity.get("scenario_id", "")),
@@ -2647,6 +2699,13 @@ static func _random_map_public_h3maped_launch_config(input_config: Dictionary) -
 	var monster_strength := ""
 	if String(template_selection.get("mode", "")) == RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO or bool(input_config.get("monster_strength_selected", false)):
 		monster_strength = String(input_config.get("monster_strength", ""))
+	var player_faction_id := String(player_setup.get("faction_id", ""))
+	var seat_faction_ids: Array = (input_config.get("seat_faction_ids", []) as Array).duplicate() if input_config.get("seat_faction_ids", []) is Array else []
+	# A drawn player faction is drawn again, from the same seed.
+	if String(player_setup.get("selection_mode", "")) == RANDOM_MAP_SEAT_SELECTION_RANDOM:
+		player_faction_id = RANDOM_MAP_RANDOM_FACTION_ID
+		if not seat_faction_ids.is_empty():
+			seat_faction_ids[0] = RANDOM_MAP_RANDOM_FACTION_ID
 	var config := build_random_map_player_config(
 		source_seed,
 		"",
@@ -2656,9 +2715,10 @@ static func _random_map_public_h3maped_launch_config(input_config: Dictionary) -
 		level_count > 1,
 		size_class_id,
 		RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO,
-		String(player_setup.get("faction_id", "")),
+		player_faction_id,
 		String(player_setup.get("hero_id", "")),
-		monster_strength
+		monster_strength,
+		seat_faction_ids
 	)
 	config["seed_source"] = seed_source
 	config["seed_input"] = String(input_config.get("seed_input", seed_identity.get("input_seed", source_seed)))

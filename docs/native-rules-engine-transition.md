@@ -85,7 +85,8 @@ need the same hit/miss behaviour.
 (`std::to_string(double)`, `printf("%f")`, `strtod`, `tolower`), ASCII-only lowering; no `unordered_*` iteration or
 `std::hash` reaching any output; no behaviour depending on `DEBUG_ENABLED` (godot-cpp makes it public in
 `template_debug`); `/fp:precise`, `-ffp-contract=off`, no fast-math, no `-march=native`; checked division; every
-exception caught at the adapter. Numbers become text only in the Godot adapter, through godot-cpp `String::num`/`JSON`.
+exception caught at the adapter. Floats become text only through `compat::num` and `compat::json_float` (the engine's
+`String::num` and `JSON.stringify`) or in the Godot adapter.
 
 **Content.** A native content table is built once per content revision from the Dictionaries ContentService has already
 parsed (no second JSON parser), keeping first-id-wins, file order and per-field presence (defaults differ per call
@@ -496,7 +497,11 @@ every function run inside `resolve_active_battle`, with `_finalize_*` left out. 
   - `maxf`/`minf`/`clampf`/`maxi`/... are the engine's MAX/MIN/CLAMP templates: the second argument wins ties.
     With `lo > hi`, `clampf` returns `lo` when `x < lo` and `hi` otherwise, where `clamp` always returns `hi`.
   - `str(int)` and `"%d" % x` are the same digits (a float is truncated first).
-  - Floats become text only through `String::num` in the adapter.
+  - Floats become text only through `compat::num`/`compat::json_float` or in the adapter. On Windows they call
+    `msvcrt.dll`'s `_vsnprintf` and `log10`, the functions the official build imports: this library's UCRT prints
+    exact digits, where msvcrt keeps 17 and rounds them in its own 80-bit arithmetic (rounding exact digits as msvcrt
+    does still missed 1 of 786,432 fuzz values). On Linux both use glibc. The `json_float` digest checks them; the
+    Linux digest waits for the Linux pass.
 - **C runtime.** The official Windows binary is MinGW-w64 GCC (GNU ld 2.45) on `msvcrt.dll`, which supplies `acos`,
   `asin`, `atan`, `ceil`, `cosh`, `log10`, `sinh`, `tan`, `tanh`, `_hypot` and `_nextafter`. The battle code calls no
   transcendental function. Inside the engine, float-to-text (`log10` plus `snprintf`) is the only path that depends on
@@ -2303,8 +2308,9 @@ Godot dependency, since these slices lead to Phase 8. The bound is 1/(1 - share)
 | P6-5 | The runner's per-day digest becomes the Variant hash of the session instead of sha256 of its JSON: Godot's `hash()` in the game, `gd::hash` (the C++ copy) in runner mode and Phase 8. The JSON stays for the dump day. | 56% of checks | 2.3x on checks |
 | P6-3 | `end_turn` as one native call (done: 1.11x measured; `begin` needed no change) | about 14% | about 1.16x |
 | P6-4 | The native session kept across days; runner mode and game mode give the same digests (done: 1.19x measured; write-backs, content lookups and the compaction stay) | 31-34% | 1.45-1.52x |
-| P6-1 | Several matches per Godot process | 19.9% (s2 50%) | 1.25x (s2 2.0x) |
-| P6-2 | A map corpus, with the adopted session kept per process | 8.3-14.4% | 1.09-1.17x |
+| P6-1 | Several matches per Godot process (done: 1.26x on the six seeds one after another, 1.49x on a small-map batch) | 19.9% (s2 50%) | 1.25x (s2 2.0x) |
+| P6-2 | A map corpus, with the adopted session kept per process (done: 1.20x from the corpus and 1.38x from the kept session on the six seeds in one process, 1.09x on a small-map batch) | 8.3-14.4% | 1.09-1.17x |
+| P6-6 | The generator takes a faction per seat ("random" drawn from the map seed); `ai_match_batch.py --rotate` plays one map in every seat rotation, generating it once (done: a rotation's generation 4.4-6.1x faster on small maps, 12-31x on extra large) | generation | |
 
 - Checks per C++ slice: shadow on the six seeds while working; before pushing, native against main on the six seeds and
   the core suite, plus P6-4's runner-mode against game-mode digests; timing on a quiet machine with Phases 2 and 5
@@ -2410,6 +2416,142 @@ Godot dependency, since these slices lead to Phase 8. The bound is 1/(1 - share)
   1.19x on the summed runs (15.8% less), against the 1.45-1.52x bound. Every seed was faster in every round
   (s2 10 s to 9 s, mw 16-17 s to 14 s, l1 39-40 s to 33-34 s, l2 43 s to 36-37 s).
 
+**P6-1, several matches per Godot process** (`native-rules-phase6-p1-matches-per-process-20261023`, branch
+`native-phase6-matches-per-process`):
+- **What changed.**
+  - The match runner plays a list of matches in one process (`HEROES_AI_MATCH_LIST`: a JSON array whose entries hold
+    one match's `HEROES_AI_MATCH_*` settings in place of the environment's). Each match prints a BEGIN line and its
+    report line, which now carries the match's own seconds; a failed match no longer quits the process, and the next
+    one plays. Between matches the runner closes the digest file, takes `OverworldRules.end_turn` out of
+    `DayEngine.session_calls`, closes the native session on every exit path, and clears the generated drafts and
+    content overrides; the native port's failures count from the match's start (`port_stats` is per process).
+  - `tools/ai_match_batch.py` plays up to `--per-process` matches per Godot process (default 4), fewer when the queue
+    is short enough that more would leave slots idle at the end. The process log is split per match at the BEGIN
+    lines; a match the process never began, after an earlier one crashed or timed out, goes back into the queue.
+  - `tools/rules_parity.py`: `run --one-process` and `check --one-process-a/-b` play a side's seeds in one process.
+  - No native change and no game change.
+- **What a second match could inherit** (an audit of the 247 static vars, the autoloads, the statics the native port
+  reads and writes, and random number use):
+  - Content memos are keyed by the content revision or by their sources, and the revision goes up at every match's
+    start. Per-day AI caches are cleared at both ends of every computer turn.
+  - The AI weight statics hold the last seat's set until a faction turn applies its seat's set again, before any
+    read, exactly as one seat's set replaces another's within a match; a batch gives every match the same weights.
+  - The other per-session statics (normalize signatures, town visit indexes, terrain rows, scoped reads) are keyed by
+    session, opened only on human or save paths, or capped; the global random number generator is not used, and
+    every random source the match uses is seeded from the session.
+  - What the runner itself must reset is listed above: `port_stats` and the kept session.
+- **Checks:**
+  - Six seeds, each in a process of its own against all six in one process, in the order l1, l2, mw, s2, mg-a, mg-b
+    and again from mg-b to l1: all 415 daily digests and the match records identical both times.
+  - Six seeds against main 7bd62e817 (a process per seed): all 415 digests and the records identical.
+  - A batch of four small matches in one process: four rows, records and map packages removed.
+  - Core suite 17/17.
+- **Timing** (a quiet machine, Phases 5 and 7 paused, no per-day digest, two rounds alternating the two ways; the
+  wall clock is read every 1-2 s):
+
+  | | A process per match | One process for several | Gain |
+  |---|---|---|---|
+  | The six seeds one after another | 122.2 s, 122.2 s | 97.3 s, 97.3 s (all six) | 1.26x |
+  | 24 small 2P matches (`ai_match_batch.py`, 6 slots) | 34.9 s, 32.9 s | 22.8 s, 22.8 s (`--per-process 4`) | 1.49x |
+
+  The bound was 1.25x, 2.0x on small maps. Every batch match ended on the same day both ways. In one process the
+  matches after the first take what they took in a process of their own less the start-up (l1 24.4-24.7 s against
+  29-30 s, s2 2.1 s against 7 s).
+
+**P6-2, a map corpus and the adopted session kept per process** (`native-rules-phase6-p2-map-corpus-20261023`, branch
+`native-phase6-map-corpus`):
+- **What changed.**
+  - `HEROES_AI_MATCH_MAP_CORPUS` names a folder of generated maps. A match whose map is there starts from its saved
+    package pair and setup: the pair is copied to where the generator writes it and the session is adopted from the
+    setup, so the session is the one a newly generated map gives. A map not there yet is generated and saved there
+    (the setup with `store_var`, which keeps int and float apart). A map is keyed by everything it depends on: the map
+    seed, the first seat's faction, players, size, guards, water, levels and the package folder (`res://maps` in the
+    editor, `user://maps` in an export).
+  - In a match list, a match on the map of the match before it starts from a copy of the session that match adopted
+    (before its handover), with no package load or adoption. The copy duplicates every container, so a container
+    the adopted session shared between two places is two, as after saving and loading.
+  - `tools/ai_match_batch.py --map-corpus DIR` keeps the batch's maps there, so another batch on the same plan
+    (`--seed` and options, for example with other `--weights`) generates none. `corpus.json` names the commit, and a
+    batch on another commit refuses the folder. A process plays the matches of one seed one after another, and each
+    row says where its map came from (`map`: generated, corpus or kept).
+  - The match runner's report line says the same. No native, game or `rules_parity.py` change (`--env` passes the
+    folder).
+- **Checks:**
+  - Six seeds in a process each, with no corpus, against the same with an empty corpus that they fill and against
+    the same again from the corpus: all 415 digests and the records identical.
+  - All six seeds twice in one process, the first play from the corpus and the second from the kept session: all 12
+    plays identical to the plays with no corpus, digests and records.
+  - Six seeds against main 2dfeaddb7: identical. Core suite 17/17.
+- **Timing** (Phase 5 paused, no per-day digest, two rounds alternating the order; the six seeds in one process,
+  the sum of the matches' own seconds; round 1's corpus, generated and batch runs overlapped two Phase 7 Godot
+  processes, which made the six seeds 5-7% slower and left the batch walls as they were):
+
+  | | Generated | From the corpus | Gain |
+  |---|---|---|---|
+  | The six seeds in one process | 97.5 s, 102.8 s | 81.5 s, 87.0 s | 1.20x |
+  | The six seeds' second plays, from the kept session | | 70.9 s, 70.7 s | 1.38x on generated |
+  | 24 small 2P matches (`ai_match_batch.py`, 6 slots) | 22.8 s, 22.8 s | 20.8 s, 20.9 s (`--map-corpus`) | 1.09x |
+
+  The bound was 1.09-1.17x. Per seed, generated against corpus against kept (round 0): s2 2.3, 1.8, 1.3 s; mw 7.4,
+  6.3, 5.1 s; l1 25.0, 22.4, 19.8 s; l2 28.6, 21.8, 19.4 s. Every batch match ended on the same day all four times.
+
+**P6-6, the generator's faction setup and rotated maps** (`native-rules-phase6-faction-setup-20261023`, branch
+`native-phase6-faction-setup`; owner decision 2026-10-23: one map with the factions rotated through the starts, and the
+generator provisions a random faction):
+- **What changed.**
+  - `ScenarioSelectRules.build_random_map_player_config` takes `seat_faction_ids`, one entry per seat: a faction id,
+    `"random"` (drawn from the normalized seed seat by seat, so the same seed and setup give the same factions) or `""`
+    (the next faction no seat has). The resolved list reaches the native normalize as `seat_faction_ids`. The
+    skirmish menu's faction picker has a "Random" item: the player's faction is drawn from the seed, with its default
+    commander.
+  - Native, `map_package_service.cpp`: `normalize_random_map_config` keeps the seat list (a faction may sit twice),
+    and each seat's faction goes to its town and to the neutral towns and creature dwellings of its town type, as the
+    player's already did. The map and scenario ids hash the seat list, so two line-ups never share a package. A setup with a seat list takes its placement ids from the faction-free id (the map id of a setup that
+    names no faction). Placement ids seed which original site or artifact an object becomes, and at adoption the
+    guard armies and rewards, so every line-up of a seed plays one map. The generator's faction-free core result is
+    kept for the next call with the same generator inputs (`generator_core_reused`). No H3MapEd core change.
+  - A setup without a seat list (the menu, a random player faction, every setup on main) generates as before.
+  - The match runner hands its line-up to the generator instead of refounding seats after generation
+    (`_refound_seat` is gone), so a match's map depends on the seed and setup only. The kept session and the corpus
+    stay keyed by the line-up, since a package holds its factions; a corpus of faction-free cores would need the
+    generator's projection serialized, which this slice leaves out. A match on the same map with another line-up has
+    the generator reuse the core.
+  - `tools/ai_match_batch.py --rotate`: one map per line-up, played once in every seat rotation (`--matches` rounded up
+    to a multiple of the players); a process takes all the queued matches of a seed.
+- **Checks.**
+  - Setups without a seat list (small 3P with embercourt, mireclaw and thornwake, medium 2P water with sunvault, small
+    2P on two levels with no faction): packages identical to main's apart from the new `generator_core_reused` (false).
+  - A seat list naming main's line-up against main's player-only setup: the map and scenario ids and hashes, the
+    prefix of the 274 placement ids, 7 original site and artifact picks and the seat list in the metadata differ.
+  - One medium 3P map in its three rotations: terrain, route graph, placement ids and every object identical apart from
+    the factions (3 towns, the seats, the player setup and hero) and the document ids. Their day-1 sessions: terrain,
+    encounters and artifacts identical; the factions, enemy rosters, the 3 player towns, 1 neutral town and 3 creature
+    dwellings of a seat's town type and the ids differ.
+  - Random seats: the same factions for a seed within a process and across processes. A reused core gives the result
+    of a fresh generation apart from the flag. The skirmish menu run once with "Random" picked, with a screenshot.
+  - Native RMG: the rules selftest, `map_package_api_skeleton_report` and the object-table proxy report pass;
+    `native_rmg_end_to_end_runtime_boundary_report` fails its zero-road check on payload d4f3705f exactly as on main.
+    The H3MapEd core is unchanged.
+  - Six seeds, native against main ad2c5f24a: all differ from day 1, as they must, since the runner now hands its
+    line-up to the generator. The seats and terrain are the same in all six. What differs: neutral towns of a seat's
+    town type take that seat's faction (l1 2, l2 4, mw 2, s2 0, mg-a 1, mg-b 1; on main they kept the default
+    line-up's faction from before `_refound_seat`), and the faction-free placement ids roll other guard armies (l1
+    184 of 192, l2 149/153, mw 82/84, s2 30/30, mg-a 256/261, mg-b 103/105), sites (238/743, 262/1034, 84/249,
+    23/62, 179/440, 155/424) and artifacts (19/27, 22/26, 12/13, 2/2, 35/40, 13/15), and the map, scenario and
+    session ids. Days played, main against P6-6: l1 90/90, l2 70/70, mw 62/71, s2 33/32, mg-a 80/80, mg-b 80/100.
+  - Core suite 17/17. A small 2P `--rotate` batch of 4: each map's second rotation reports its map as `reused`.
+- **Timing** (quiet machine, one process, three rounds; `generate_random_map` alone, a line-up's first generation
+  against its other rotations, which reuse the core and still project the factions and write the package):
+
+  | | First | Each other rotation | Gain |
+  |---|---|---|---|
+  | Small 2P | 215-298 ms | 49 ms | 4.4-6.1x |
+  | Medium 3P | 741-786 ms | 89-98 ms | 7.6-8.8x |
+  | Large 4P | 1,527-1,770 ms | 158-179 ms | 8.5-11.2x |
+  | Extra large 6P | 3,479-7,606 ms | 248-288 ms | 12-31x |
+
+  A rotated batch saves this on every match of a map but the first; the rest of a match is unchanged.
+
 
 ### Phase 7: every rule native, one copy
 
@@ -2427,7 +2569,19 @@ treasury and fog is a later save-schema slice. Branch `native-phase7-human`.
   day switch's `gdscript` mode and its `__gd` bodies are deleted. The tags before each merge are the way back.
 - **D-e, tests.** Tests that call GDScript bodies the phase deletes are retired by the D6 process.
 
-The merge cadence is open. Proposed: four milestones, after 7.2, 7.7, 7.12 and 7.15, against one merge at the end.
+**Plan revision 2** (owner decisions, 2026-10-23; D11 in section 8):
+- **D-f, the campaign runtime.** It is ported with the campaign rework, not in Phase 7: 7.14 leaves the phase.
+- **D-g, the GDScript generator.** `RandomMapGeneratorRules.generate` and the legacy rebuild path are deleted. Its setup
+  part (`normalize_config` and the materialization identity) moves with 7.11. Of the 17 test files that call
+  `generate`, the three core tests (`random_map_seeded_generator_core_report`,
+  `random_map_final_writeout_export_save_schema_report` and `generated_start_hero_growth_seed_report`) move to the
+  native generator in the same slice; the others are retired under D-e.
+- **D-h, the map editor.** The editor's export of the archived authored-scenario format is deleted. Only map-package
+  editing and saving is ported.
+- **Order.** 7.1, then 7.10 to 7.12, then 7.2 to 7.9, 7.13 and 7.15.
+- **Merges.** Four: after 7.1 with 7.10 to 7.12, after 7.2, after 7.7, and at the end. The full checks run only at these
+  merges; while working, the shadow check on the `--human` run. If the first merge looks too big to debug, a split is
+  proposed first.
 
 **Inventory** (2026-10-23, main 7bd62e817; a static call graph of main from a scratch analyzer: calls through
 `class_name`, preload consts, lazy-script getters and autoload names; calls by string, signals and engine callbacks
@@ -2465,13 +2619,14 @@ functions lose their GDScript in the slice that removes their last GDScript call
 | 7.8 Overworld, town and hero panels | `describe_*`, labels, action lists, forecasts, the map views' snapshot (D-c) | 341, 6,326 lines |
 | 7.9 Battle screen | battle text, the action surface, forecasts, presentation events, board reads for drawing | 172, 3,677 lines |
 | 7.10 Content loading | ContentService parsing and queries; the native content tables built from the JSON files | 112, 2,322 lines |
-| 7.11 Game setup | ScenarioSelectRules, ScenarioFactory, package adoption, setup's neutral encounters and rewards, AI seats, MapPackageService's GDScript, the generator's setup part | 256, 4,763 lines |
+| 7.11 Game setup | ScenarioSelectRules, ScenarioFactory, package adoption, setup's neutral encounters and rewards, AI seats, MapPackageService's GDScript, the generator's setup part (`generate` deleted, D-g) | 256, 4,763 lines |
 | 7.12 Saves | the save format, normalization, validation, migration, summaries, the transactional write | 222, 4,026 lines |
-| 7.13 Map editor | TerrainPlacementRules, NativeScenery*, MapDocument, ScenarioDocument, the edit operations inside `MapEditorShell` | 84, 1,204 lines, plus about 150 to 195 functions from the screen |
-| 7.14 Campaign runtime | CampaignRules, CampaignProgression | 146, 2,147 lines |
+| 7.13 Map editor | TerrainPlacementRules, NativeScenery*, MapDocument, ScenarioDocument, the edit operations inside `MapEditorShell`; the authored-scenario export deleted (D-h) | 84, 1,204 lines, plus about 150 to 195 functions from the screen |
+| 7.14 Campaign runtime | out of Phase 7 (D-f): CampaignRules, CampaignProgression, ported with the campaign rework | 146, 2,147 lines |
 | 7.15 One copy | the last two-copy bodies, the C++ functions defined twice, AGENTS.md's two-copy rules | deletions |
 
-The slices port 1,935 functions, 36,852 GDScript lines, plus the editor's operations. Without porting, the phase
+The slices port 1,935 functions, 36,852 GDScript lines, plus the editor's operations; without 7.14, 1,789 functions and
+34,705 lines. Without porting, the phase
 deletes 169 functions only tests reach, and about 190 with no caller found.
 
 7.10 to 7.12 depend on none of the human slices. They give Phase 8 content tables, setup from a map package and
@@ -2498,12 +2653,6 @@ saves without Godot.
 - **7.12.** The D9 copies load to the same session as main's; written saves are identical apart from
   `saved_at_unix`, and load on main and on the branch.
 - **7.13.** Scripted editor operations on generated packages leave the same document as main's.
-
-**Open.**
-- **The campaign runtime.** No check reaches it: the campaigns are archived and their tests are quarantined.
-- **The GDScript generator's `generate`.** Delete it, or port it under `docs/lessons-learned.md`.
-- **The editor's export** of the archived authored-scenario format.
-- **The order of 7.10 to 7.12**, and the merge cadence.
 
 ### Phase 8: a match runner without Godot
 
@@ -2548,7 +2697,7 @@ Sizes are the proposal's unmeasured agent-day guesses, useful only to compare ph
 | D8 | **Decided 2026-10-20:** Phase 1 lives on one port branch, `native-phase1-battle` on GitHub, rebased on main at least weekly and before each slice, and merges to main once, when every battle is native and identical; it is dropped if checkpoint G1 stays under 5x after the interface fix (AGENTS.md "Native rules port") | Phase 1 |
 | D9 | **Decided 2026-10-22:** copies of the owner's five saves on this computer (Mireclaw Zhorra Fenwake days 1 and 14; Veilmourn Ivara Blacktide days 5 and 10 and the autosave; save version 9) and the two generated maps they reference live in `D:\Games\godot\heroes-like-save-copies` (outside git, with `SHA256SUMS` and a README). The originals are never touched; runs read the copies with an isolated user profile | Phase 4 (4.4) |
 | D10 | **Decided 2026-10-20:** main is tagged before each port merge. Owner 2026-10-21: no waiting period after it (the 7 days without behaviour commits was removed) | each merge |
-| D11 | **Decided 2026-10-23:** Phase 7's scope and checks (Phase 7, "Owner decisions", D-a to D-e): a permanent human seat in `tools/rules_parity.py`; every rule native, only the screens in GDScript; one map snapshot per redraw; no GDScript way back; retired tests by D6. Merge cadence open | Phase 7 |
+| D11 | **Decided 2026-10-23:** Phase 7's scope and checks (Phase 7, "Owner decisions", D-a to D-e): a permanent human seat in `tools/rules_parity.py`; every rule native, only the screens in GDScript; one map snapshot per redraw; no GDScript way back; retired tests by D6. Plan revision 2 (D-f to D-h): the campaign runtime moves with the campaign rework, `RandomMapGeneratorRules.generate` and the editor's authored-scenario export are deleted; order 7.1, 7.10 to 7.12, 7.2 to 7.9, 7.13, 7.15; four merges | Phase 7 |
 
 ## 9. Risks and how the plan contains them
 

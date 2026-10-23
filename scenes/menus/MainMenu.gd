@@ -2719,13 +2719,15 @@ func _configure_generated_random_map_controls() -> void:
 	_rebuild_generated_option_picker(_generated_size_picker, options.get("size_classes", []), _generated_size_class_id, "size")
 	_rebuild_generated_option_picker(_generated_template_picker, options.get("templates", []), _generated_template_id, "template")
 	_rebuild_generated_profile_picker()
-	_rebuild_generated_option_picker(_generated_faction_picker, options.get("factions", []), _generated_faction_id, "faction")
+	var faction_choices: Array = options.get("factions", []).duplicate(true)
+	faction_choices.append({"id": ScenarioSelectRulesScript.RANDOM_MAP_RANDOM_FACTION_ID, "label": "Random"})
+	_rebuild_generated_option_picker(_generated_faction_picker, faction_choices, _generated_faction_id, "faction")
 	_rebuild_generated_hero_picker()
 	_generated_template_picker.visible = false
 	_generated_profile_picker.visible = false
 	_generated_template_picker.tooltip_text = "Map layout is chosen automatically from the selected size and seed."
 	_generated_profile_picker.tooltip_text = "Map rules are chosen automatically for this setup."
-	_generated_faction_picker.tooltip_text = "Choose the faction for your starting town and forces."
+	_generated_faction_picker.tooltip_text = "Choose the faction for your starting town and forces, or Random to draw one from the map seed."
 	_generated_hero_picker.tooltip_text = "Choose the commander who leads your selected faction on Day 1."
 
 	_rebuild_generated_player_count_picker()
@@ -2781,6 +2783,11 @@ func _rebuild_generated_option_picker(picker: OptionButton, options: Array, sele
 	picker.tooltip_text = "Choose the generated map %s." % label_key
 
 func _rebuild_generated_hero_picker() -> void:
+	if _generated_faction_id == ScenarioSelectRulesScript.RANDOM_MAP_RANDOM_FACTION_ID:
+		# The commander comes with the faction the seed draws.
+		_generated_hero_id = ""
+		_rebuild_generated_option_picker(_generated_hero_picker, [{"id": "", "label": "Random"}], "", "hero")
+		return
 	var options := ScenarioSelectRulesScript.random_map_hero_options_for_faction(_generated_faction_id)
 	var selection_valid := false
 	for option in options:
@@ -2913,11 +2920,12 @@ func _apply_generated_random_map_setup_surface(setup: Dictionary) -> void:
 			"islands": "Islands",
 		}.get(_generated_water_mode, "Land")
 		var level_label := "Surface + Underground" if _generated_underground else "Surface only"
-		var faction := ContentService.get_faction(_generated_faction_id)
-		var hero := ContentService.get_hero(_generated_hero_id)
+		var random_faction := _generated_faction_id == ScenarioSelectRulesScript.RANDOM_MAP_RANDOM_FACTION_ID
+		var faction := {} if random_faction else ContentService.get_faction(_generated_faction_id)
+		var hero := {} if random_faction else ContentService.get_hero(_generated_hero_id)
 		plan_text = "%s · %s | Seed: %s | %s | %d players | %s | %s | %s" % [
-			String(faction.get("name", _generated_faction_id)),
-			String(hero.get("name", _generated_hero_id)),
+			String(faction.get("name", "Random faction" if random_faction else _generated_faction_id)),
+			String(hero.get("name", "Random commander" if random_faction else _generated_hero_id)),
 			seed_label,
 			ScenarioSelectRulesScript.random_map_size_class_label(_generated_size_class_id),
 			_generated_player_count,

@@ -7,6 +7,11 @@
 // (MinGW) answers +-1 for +-0.49999999999999994 and the Linux build (glibc) +-0,
 // so float_round has one digest per platform (godot_math.hpp, godot_round). A
 // MinGW build of the self-test under Wine checks the Windows one.
+//
+// Their float text differs too: the Windows build prints through msvcrt.dll,
+// the Linux build through glibc (godot_string.hpp, num). json_float has the
+// Windows digest (captured 2026-10-23, Windows 10); the Linux one is captured
+// in the Linux pass, and until then the Linux self-test reports it missing.
 
 struct CompatExpected {
 	const char *helper;
@@ -30,4 +35,7 @@ constexpr CompatExpected kCompatExpected[] = {
 	{ "variant_minmax", "278cf3d6c53fea7977cad2b1c4aa2e64d3b0ade64633336e9cd53a830356815c" },
 	{ "typed_minmax", "9825aee45c61ddea540e22aa16c3eb8fe109c2177cef193327e4db723f48b4c7" },
 	{ "sort", "42d87a139039f1a35597a10bfc40d827fef650d51328872dbf937f7d8bf601ef" },
+#ifdef _WIN32
+	{ "json_float", "4666bda411d8a7292df57b30b27644aad906b6b11d4677180d43063e4f6df669" },
+#endif
 };

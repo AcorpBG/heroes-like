@@ -5,6 +5,7 @@
 
 #include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/scenario_factory_ai.hpp"
+#include "aurelion_rules/port/session_view.hpp"
 #include "aurelion_rules/compat/godot_string.hpp"
 
 #include <algorithm>
@@ -119,9 +120,9 @@ bool json_open(const std::vector<Value> &open, const Value &value) {
 	return false;
 }
 // JSON._stringify with no indent and sorted keys (JSON.stringify(value)): null,
-// bools, ints, Strings, StringNames, Vector2i, Vector3i, Arrays and
-// Dictionaries whose keys are all Strings or all ints. Floats (String::num),
-// packed arrays, other key sets and circular structures are left to GDScript.
+// bools, ints, floats (compat::json_float), Strings, StringNames, Vector2i,
+// Vector3i, Arrays and Dictionaries whose keys are all Strings or all ints.
+// Packed arrays, other key sets and circular structures are left to GDScript.
 void append_json(const State &state, const Value &value, int depth, std::vector<Value> &open, std::string &out) {
 	if (depth > 1024) {
 		json_not_ported("a structure nested too deep");
@@ -135,6 +136,9 @@ void append_json(const State &state, const Value &value, int depth, std::vector<
 			return;
 		case Kind::Int:
 			out += compat::itos(value.i);
+			return;
+		case Kind::Float:
+			out += compat::json_float(value.f);
 			return;
 		case Kind::String:
 		case Kind::StringName:
@@ -246,10 +250,9 @@ Atom _town_read_scope_cache_key(State &state, DictRef session, Atom kind, DictRe
 			gd::stringify(state, gd::index(state, session, str(key::session_id))) != gd::to_string(gd::static_var(state, key::overworld_rules_script, key::_normalized_read_scope_session_id))) {
 		return key::empty;
 	}
-	(void)kind;
-	(void)town;
-	(void)extra;
-	throw state::NotPorted("OverworldRules._town_read_scope_cache_key: session.get_instance_id()");
+	// Nested save-summary reads can inspect a different snapshot with the same
+	// persisted session id and town but different sites, threats or current day.
+	return gd::format(state, key::d_s_s_s, {int_value(session_view::instance_id(state, session)), str(kind), str(_read_scope_town_digest(state, town)), str(extra)});
 }
 
 Atom _read_scope_town_digest(State &state, DictRef town) {
