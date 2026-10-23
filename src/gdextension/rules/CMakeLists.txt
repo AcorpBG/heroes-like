@@ -125,6 +125,8 @@ add_library(aurelion_rules_core STATIC
 	core/compat/godot_string.cpp
 	core/content_store.cpp
 	core/content_validate.cpp
+	core/disk_files.cpp
+	core/map_packages.cpp
 	core/port/ability_helpers.cpp
 	core/port/action_playback.cpp
 	core/port/action_pressure.cpp

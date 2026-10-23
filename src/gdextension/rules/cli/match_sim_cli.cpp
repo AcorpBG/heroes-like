@@ -1,23 +1,26 @@
-// match_sim_cli: the AI match runner without Godot (Phase 8, P8-3 and P8-4;
-// docs/native-rules-engine-transition.md).
+// match_sim_cli: the AI match runner without Godot (Phase 8, P8-3, P8-4 and
+// P8-7; docs/native-rules-engine-transition.md).
 //
 //   match_sim_cli [--threads N]
 //
-// The match runner scene (tests/ai_versus_ai_match_report.gd) sets each match
-// up in the game: the map, the session's adoption and the seats' handover.
-// With HEROES_AI_MATCH_PREPARE it writes the session at that point as a
-// snapshot (aurelion_rules/snapshot.hpp), with the content and the rules
-// scripts' static vars in content.snap beside it, and stops. This tool plays
-// the days from there as the scene goes on: each day is the day registry's
-// OverworldRules.end_turn, and the scene's GDScript around it (the digest, the
-// notes, the ledger, the town weeks, the end of the match, the record and the
-// report line) is C++ here, calling the same native functions. It writes what
-// the scene writes.
+// The match runner scene (tests/ai_versus_ai_match_report.gd) makes each
+// match's map in the game. With HEROES_AI_MATCH_PREPARE it writes the map's
+// setup and its two packages, with the match's settings, as a snapshot
+// (aurelion_rules/snapshot.hpp), with the content and the rules scripts'
+// static vars in content.snap beside it, and stops. This tool goes on from
+// there as the scene does: the session starts natively from the packages
+// (ScenarioSelectRules.start_random_map_skirmish_session_from_setup, Phase 7's
+// 7.11), the human seat goes to the computer (AiSeatRules.hand_human_seat_to_ai)
+// and the days play, each the day registry's OverworldRules.end_turn. The
+// scene's GDScript around them (the handover's check, the digest, the notes,
+// the ledger, the town weeks, the end of the match, the record and the report
+// line) is C++ here, calling the same native functions. It writes what the
+// scene writes.
 //
 // The settings are the scene's: HEROES_AI_MATCH_* in the environment for one
 // match, or HEROES_AI_MATCH_LIST, a JSON array of objects of them, one per
 // match (a setting an object leaves out comes from the environment).
-// HEROES_AI_MATCH_SNAPSHOT names a match's session snapshot and
+// HEROES_AI_MATCH_SNAPSHOT names a match's setup snapshot and
 // HEROES_AI_MATCH_CONTENT its content snapshot (default: content.snap in the
 // same folder). The tool reads HEROES_AI_MATCH_OUT, _MAX_DAYS, _DIGEST, _DUMP,
 // _DUMP_DAY, _DIGEST_BLANK and _TRACE; the snapshot fixes everything else (the
@@ -28,26 +31,35 @@
 // lines, then its report line. A last line, MATCH_SIM_CLI {...}, counts what
 // the host answered. The exit code is 1 when a match failed.
 //
-// The host (P8-3): content rows and files come from the content snapshot, the
-// scenario row and its terrain layers and any content override (seat weight
-// sets) from the session snapshot. Static vars start, in each match, as the
-// content snapshot's capture of a game that has played nothing: memos and
-// caches empty, the AI weights loaded from content/ai_hero_weights.json by the
-// native _use_weights where the game's GDScript loads them. They stay from one
-// day to the next, as the game's do. pow, exp and log are the core's portable
-// ones, as in the game. The session stays one State across the days, as the
-// game's kept session does (P6-4): between days only the scene's own changes
-// reach it, and the State drops what nothing holds any more after each day.
-// A day answers no host call: a host call, or a path the native port leaves
-// to GDScript (a NATIVE FALLBACK in the game), fails the match.
+// The host (P8-3, P8-7): content rows and files come from the content
+// snapshot, any content override (seat weight sets) from the setup snapshot.
+// The map package service and its documents are the core's port of them
+// (aurelion_rules/map_packages.hpp), reading the packages the snapshot carries;
+// the art the packages name is looked up in the project folder the scene ran
+// in (content::DiskFiles). The new session is a SessionData of this host's
+// (SessionStateStore.new_session_data). A generated map's session registers no
+// scenario draft, so its scenario and terrain layers rows are {}. Static vars
+// start, in each match, as the content snapshot's capture of a game that has
+// played nothing: memos and caches empty, the AI weights loaded from
+// content/ai_hero_weights.json by the native _use_weights where the game's
+// GDScript loads them. They stay from one day to the next, as the game's do.
+// pow, exp and log are the core's portable ones, as in the game. The session
+// stays one State across the days, as the game's kept session does (P6-4):
+// between days only the scene's own changes reach it, and the State drops
+// what nothing holds any more after each day. A day answers no host call: a
+// host call, or a path the native port leaves to GDScript (a NATIVE FALLBACK
+// in the game), fails the match.
 
 #include "aurelion_rules/battle_state.hpp"
 #include "aurelion_rules/compat/godot_json.hpp"
 #include "aurelion_rules/compat/godot_math.hpp"
 #include "aurelion_rules/compat/godot_string.hpp"
+#include "aurelion_rules/disk_files.hpp"
+#include "aurelion_rules/map_packages.hpp"
 #include "aurelion_rules/port/content_service_ai.hpp"
 #include "aurelion_rules/port/enemy_turn_rules.hpp"
 #include "aurelion_rules/port/gd.hpp"
+#include "aurelion_rules/port/overworld_rules.hpp"
 #include "aurelion_rules/port/player_identity_rules.hpp"
 #include "aurelion_rules/port/player_identity_rules_ai.hpp"
 #include "aurelion_rules/port/registry.hpp"
@@ -98,6 +110,7 @@ namespace snap = aurelion::rules::snapshot;
 namespace st = aurelion::rules::state;
 namespace key = st::key;
 namespace players = port::player_identity_rules;
+namespace map_packages = aurelion::rules::map_packages;
 using cli::Content;
 using cli::fail;
 using cli::kTableNames;
@@ -485,12 +498,16 @@ struct Source {
 };
 
 // An opaque value of the game: the session (slot 0; its view stands for it),
-// a value the snapshot does not model, or a RandomNumberGenerator.
+// a value the snapshot does not model, a RandomNumberGenerator, or what game
+// setup asks for: the map package service, a map or scenario document (its
+// state in the worker's documents) and the ContentService and SessionState
+// autoloads.
 struct Opaque {
 	std::string what;
 	bool rng = false;
 	uint64_t seed = 0;
 	uint64_t state = 0;
+	int document = -1;
 };
 
 // What the workers counted; summed at the end.
@@ -652,6 +669,8 @@ struct Names {
 
 // The native functions the scene calls, by their registry names.
 struct Calls {
+	const port::Function *start_session = nullptr;
+	const port::Function *normalize = nullptr;
 	const port::Function *end_turn = nullptr;
 	const port::Function *hero_power = nullptr;
 	const port::Function *army_power = nullptr;
@@ -667,6 +686,8 @@ struct Calls {
 		return function;
 	}
 	Calls() :
+			start_session(find("ScenarioSelectRules.start_random_map_skirmish_session_from_setup", 1)),
+			normalize(find("OverworldRules.normalize_overworld_state", 1)),
 			end_turn(find("OverworldRules.end_turn", 1)),
 			hero_power(find("AiHeroRules.hero_power", 1)),
 			army_power(find("AiHeroRules.army_power", 2)),
@@ -797,6 +818,111 @@ public:
 	Value view_object(State &, uint32_t node) override {
 		return node == view_node_ ? Value::of_ref(Kind::Opaque, 0) : Value();
 	}
+	// Game setup takes the new session as an object: its view, one for the
+	// call (the match takes it back when the call returns), reads and writes
+	// its fields.
+	Value object_view(State &, uint32_t slot) override {
+		if (slot != 0 || object_.kind != Kind::Dict) {
+			throw st::ScriptError("a view of " + opaques_.at(slot).what + ", which is no session");
+		}
+		return gd::dict_value(view_node_ != ~0u ? view_node_ : make_view());
+	}
+	Value object_get(State &state, uint32_t slot, uint32_t property) override {
+		const Value view = object_view(state, slot);
+		Value found;
+		if (!state.lookup(view.ref, gd::str(property), found)) {
+			throw st::ScriptError("SessionData has no property " + state.text(property));
+		}
+		return found;
+	}
+	void object_set(State &state, uint32_t slot, uint32_t property, const Value &value) override {
+		const Value view = object_view(state, slot);
+		if (property == names_.meta || property == names_.instance_id || !state.has(view.ref, gd::str(property))) {
+			throw st::ScriptError("SessionData has no script variable " + state.text(property));
+		}
+		state.set(view.ref, gd::str(property), value);
+	}
+
+	// ClassDB.instantiate("MapPackageService"), the core's port of it.
+	Value class_instantiate(State &state, uint32_t name) override {
+		if (state.text(name) != "MapPackageService") {
+			throw st::ScriptError(state.text(name) + ": a class the match runner does not make");
+		}
+		return new_opaque("MapPackageService");
+	}
+	// The autoloads game setup calls: ContentService (canonical_town_id) and
+	// SessionState (its active session, which nothing here reads).
+	Value autoload(State &state, uint32_t name) override {
+		const std::string &text = state.text(name);
+		if (text != "ContentService" && text != "SessionState") {
+			throw st::ScriptError(text + ": an autoload the match runner does not have");
+		}
+		return new_opaque(text);
+	}
+	Value object_call(State &state, uint32_t slot, uint32_t method, const Value *args, size_t count) override {
+		const std::string what = opaques_.at(slot).what;
+		const std::string &name = state.text(method);
+		if (what == "MapPackageService" && (name == "load_map_package" || name == "load_scenario_package")) {
+			if (count < 1 || !args[0].is_string_like()) {
+				throw st::ScriptError("MapPackageService." + name + " takes a String path");
+			}
+			const std::string path = state.text(args[0].ref);
+			if (name == "load_map_package") {
+				const Value document = new_opaque("MapDocument");
+				opaques_[document.ref].document = static_cast<int>(map_documents_.size());
+				map_documents_.push_back(std::make_unique<map_packages::MapDocument>());
+				return map_packages::load_map_package(state, *disk_, path, *map_documents_.back(), document);
+			}
+			const Value document = new_opaque("ScenarioDocument");
+			opaques_[document.ref].document = static_cast<int>(scenario_documents_.size());
+			scenario_documents_.push_back(std::make_unique<map_packages::ScenarioDocument>());
+			return map_packages::load_scenario_package(state, *disk_, path, *scenario_documents_.back(), document);
+		}
+		const int document = opaques_.at(slot).document;
+		if (what == "MapDocument" && document >= 0 && static_cast<size_t>(document) < map_documents_.size()) {
+			return map_packages::map_document_call(state, *map_documents_[document], name, args, count);
+		}
+		if (what == "ScenarioDocument" && document >= 0 && static_cast<size_t>(document) < scenario_documents_.size()) {
+			return map_packages::scenario_document_call(state, *scenario_documents_[document], name, args, count);
+		}
+		if (what == "ContentService" && name == "canonical_town_id" && count == 1) {
+			return canonical_town_id(state, gd::to_string(args[0]));
+		}
+		if (what == "SessionState" && name == "set") {
+			return Value();
+		}
+		throw st::ScriptError(what + "." + name + ": a method the match runner does not answer");
+	}
+	bool object_has_method(State &state, uint32_t slot, uint32_t method) override {
+		const std::string &what = opaques_.at(slot).what;
+		const std::string &name = state.text(method);
+		if (what == "MapDocument") {
+			return map_packages::map_document_has_method(name);
+		}
+		if (what == "ScenarioDocument") {
+			return map_packages::scenario_document_has_method(name);
+		}
+		throw st::ScriptError(what + ".has_method(\"" + name + "\"): a question the match runner does not answer");
+	}
+	bool file_exists(State &state, uint32_t path) override {
+		return disk_ != nullptr && disk_->exists(state.text(path));
+	}
+	bool resource_exists(State &state, uint32_t path) override {
+		return disk_ != nullptr && disk_->resource_exists(state.text(path));
+	}
+	// OS.has_feature("editor"): the scene runs in the editor binary.
+	bool os_has_feature(State &state, uint32_t name) override {
+		if (state.text(name) != "editor") {
+			throw st::ScriptError("OS.has_feature(\"" + state.text(name) + "\"): a feature the match runner does not know");
+		}
+		return true;
+	}
+	uint32_t os_environment(State &state, uint32_t name) override {
+		return state.intern(environment(state.text(name).c_str()));
+	}
+	uint32_t json_stringify(State &state, const Value &value) override {
+		return state.intern(gd::json_stringify(state, value));
+	}
 	bool rng_get(uint32_t slot, uint64_t &seed, uint64_t &rng_state) override {
 		if (slot >= opaques_.size() || !opaques_[slot].rng) {
 			return false;
@@ -821,17 +947,10 @@ public:
 	Value content_row(State &state, st::ContentTable table, uint32_t id) override {
 		switch (table) {
 			case st::ContentTable::Scenario:
-				if (state.text(id) == scenario_id_ && scenario_.kind == Kind::Dict) {
-					return import(match_rows_, scenario_);
-				}
-				return miss(table, id);
 			case st::ContentTable::TerrainLayersForScenario:
-				// A new deep copy on every call, as ContentService makes it.
-				if (state.text(id) == scenario_id_ && terrain_layers_.kind == Kind::Dict) {
-					const Value layers = import(match_rows_, terrain_layers_);
-					return state.dict_size(layers.ref) == 0 ? Value() : gd::dict_value(gd::deep_duplicate_dict(state, layers.ref));
-				}
-				return miss(table, id);
+				// The match's own scenario: a generated map's session
+				// registers no draft, and ContentService answers {}.
+				return state.text(id) == scenario_id_ ? Value() : miss(table, id);
 			case st::ContentTable::BiomeForTerrain:
 				id = port::content_service::normalize_terrain_id(state, id);
 				if (id == key::empty) {
@@ -888,11 +1007,14 @@ public:
 		statics_[static_cast<uint64_t>(script) << 32 | name] = value;
 	}
 
-	Value call_static(State &state, uint32_t script, uint32_t function, const Value *, size_t) override {
+	Value call_static(State &state, uint32_t script, uint32_t function, const Value *args, size_t count) override {
 		const std::string name = port::host_name(state.text(script), state.text(function));
 		++counts.host_calls[name];
 		if (name == "ProfileLog.emit_general") {
 			return Value();
+		}
+		if (name == "SessionStateStore.new_session_data" && count == 7) {
+			return new_session_data(args);
 		}
 		throw st::ScriptError(name + ": a host call the match runner does not answer");
 	}
@@ -933,11 +1055,11 @@ public:
 private:
 	// ------------------------------------------------------- the match
 
-	// The scene's _play from the handover on.
+	// The scene's _play from the map's setup on.
 	void match(const Settings &settings) {
 		const std::string snapshot_text = strip(settings.get("HEROES_AI_MATCH_SNAPSHOT"));
 		if (snapshot_text.empty()) {
-			throw MatchFailed{ "HEROES_AI_MATCH_SNAPSHOT names no session snapshot (the scene's HEROES_AI_MATCH_PREPARE writes them)." };
+			throw MatchFailed{ "HEROES_AI_MATCH_SNAPSHOT names no setup snapshot (the scene's HEROES_AI_MATCH_PREPARE writes them)." };
 		}
 		const fs::path snapshot = fs::u8path(snapshot_text);
 		const std::string content_text = strip(settings.get("HEROES_AI_MATCH_CONTENT"));
@@ -947,14 +1069,11 @@ private:
 		begin_match(content, *match_store);
 		const Store &store = *match_store;
 		const Value root = store.decoded.root;
-		const Value session_view = store.get(root, "session");
-		const Value seats = store.get(root, "seats");
-		if (session_view.kind != Kind::Dict || seats.kind != Kind::Array) {
-			fail(snapshot.string() + " is no session snapshot: it needs session and seats");
+		const Value setup = store.get(root, "setup");
+		const Value packages = store.get(root, "packages");
+		if (setup.kind != Kind::Dict || packages.kind != Kind::Dict) {
+			fail(snapshot.string() + " is no setup snapshot: it needs setup and packages");
 		}
-		scenario_id_ = store.text(store.get(root, "scenario_id"));
-		scenario_ = store.get(root, "scenario");
-		terrain_layers_ = store.get(root, "terrain_layers");
 		files_ = store.get(root, "files");
 		const Value revision = store.get(root, "content_revision");
 		content_revision_ = revision.kind == Kind::Int ? revision.i : 0;
@@ -965,24 +1084,22 @@ private:
 		if (!wanted_seed.empty() && wanted_seed != "random" && wanted_seed != match_seed) {
 			throw MatchFailed{ "HEROES_AI_MATCH_SNAPSHOT " + snapshot_text + " holds match " + match_seed + ", not " + wanted_seed + "." };
 		}
+		// The project folder the scene ran in, with the packages it wrote in
+		// their places.
+		disk_ = std::make_unique<aurelion::rules::content::DiskFiles>(store.text(store.get(root, "project")), true);
+		const st::DictNode &package_node = store.state.dict_node(packages.ref);
+		for (size_t index = 0; index < package_node.keys.size(); ++index) {
+			const Value bytes = package_node.values[index];
+			if (bytes.kind != Kind::PackedByte) {
+				fail(snapshot.string() + " holds a package that is no PackedByteArray");
+			}
+			const std::vector<uint8_t> &data = store.state.packed_node(bytes.ref).bytes;
+			disk_->add(store.text(package_node.keys.list()[index]), std::string(data.begin(), data.end()));
+		}
+		scenario_id_ = store.text(store.get(store.get(store.get(setup, "package_startup"), "session_boundary_record"), "scenario_id"));
 
-		// The session object: its fields and its metadata, in their order.
-		const Value view = import_deep(match_deep_, session_view);
-		object_ = gd::dict_value(state_.new_dict());
-		for (size_t index = 0; index < kFieldCount; ++index) {
-			state_.set(object_.ref, gd::str(names_.fields[index]), state_.get(view.ref, gd::str(names_.fields[index]), Value()));
-		}
-		object_meta_ = state_.get(view.ref, gd::str(names_.meta), Value());
-		if (object_meta_.kind != Kind::Dict) {
-			object_meta_ = gd::dict_value(state_.new_dict());
-		}
-		instance_id_ = state_.get(view.ref, gd::str(names_.instance_id), gd::int_value(0));
-		setup_ = import_deep(match_deep_, store.get(root, "setup"));
-		handover_ = import_deep(match_deep_, store.get(root, "handover"));
-		seats_.clear();
-		for (const Value &seat : store.state.array_node(seats.ref).items) {
-			seats_.push_back(game_atom(match_deep_, seat.ref));
-		}
+		start_session(import_deep(match_deep_, setup));
+		hand_over(store, root, match_seed, map_seed);
 
 		int64_t max_days = kDefaultMaxDays;
 		if (!settings.get("HEROES_AI_MATCH_MAX_DAYS").empty()) {
@@ -1196,8 +1313,263 @@ private:
 		Opaque session;
 		session.what = "SessionData";
 		opaques_.push_back(session);
+		map_documents_.clear();
+		scenario_documents_.clear();
+		disk_.reset();
+		scenario_id_.clear();
 		view_node_ = ~0u;
 		object_ = object_meta_ = instance_id_ = setup_ = handover_ = heroes_seen_ = last_row_ = Value();
+	}
+
+	Value new_opaque(const std::string &what) {
+		Opaque made;
+		made.what = what;
+		opaques_.push_back(made);
+		return Value::of_ref(Kind::Opaque, static_cast<uint32_t>(opaques_.size() - 1));
+	}
+
+	// ------------------------------------------------------ the new session
+
+	// The scene's _start_session from the map's setup:
+	// ScenarioSelectRules.start_random_map_skirmish_session_from_setup loads
+	// the packages, adopts them into a new SessionData and normalizes it, and
+	// the scene normalizes it once more.
+	void start_session(const Value &setup) {
+		state_.drop_memo();
+		const Value session = calls_.start_session->call(state_, &setup);
+		if (view_node_ != ~0u) {
+			take_view(view_node_);
+		}
+		// The documents are the setup's: nothing holds them after it.
+		map_documents_.clear();
+		scenario_documents_.clear();
+		if (session.kind != Kind::Opaque || session.ref != 0 || object_.kind != Kind::Dict || text_of(field(2)) == "") {
+			throw MatchFailed{ "The generated session could not start." };
+		}
+		call_with_view(calls_.normalize, {});
+	}
+
+	// SessionStateStore.new_session_data: SessionData.new(session_id,
+	// scenario_id, hero_id, day, overworld_state, difficulty, launch_mode), the
+	// session object, slot 0: its fields as SessionData._init sets them (the
+	// clock's milliseconds for an empty session id, the launch mode one of
+	// SUPPORTED_LAUNCH_MODES, the overworld state copied deep) and no metadata.
+	Value new_session_data(const Value *args) {
+		const auto text = [&](const Value &value) { return gd::str(gd::to_string(value)); };
+		Value session_id = text(args[0]);
+		if (state_.text(session_id.ref).empty()) {
+			session_id = state_.string(compat::itos(gd::engine_ticks_msec(state_)));
+		}
+		Value launch_mode = text(args[6]);
+		const std::string &mode = state_.text(launch_mode.ref);
+		if (mode != "campaign" && mode != "skirmish" && mode != "generated_draft") {
+			launch_mode = state_.string("campaign");
+		}
+		const Value values[kFieldCount] = {
+			gd::int_value(9),
+			session_id,
+			text(args[1]),
+			text(args[2]),
+			gd::int_value(gd::to_int(state_, args[3])),
+			text(args[5]),
+			launch_mode,
+			state_.string("overworld"),
+			state_.string("in_progress"),
+			state_.string(""),
+			args[4].kind == Kind::Dict ? gd::dict_value(gd::deep_duplicate_dict(state_, args[4].ref)) : gd::dict_value(state_.new_dict()),
+			gd::dict_value(state_.new_dict()),
+			gd::dict_value(state_.new_dict()),
+		};
+		object_ = gd::dict_value(state_.new_dict());
+		for (size_t index = 0; index < kFieldCount; ++index) {
+			state_.set(object_.ref, gd::str(names_.fields[index]), values[index]);
+		}
+		object_meta_ = gd::dict_value(state_.new_dict());
+		instance_id_ = gd::int_value(1);
+		view_node_ = ~0u;
+		return Value::of_ref(Kind::Opaque, 0);
+	}
+
+	// ContentService.canonical_town_id(id): a retired town id's alias.
+	Value canonical_town_id(State &state, uint32_t id) {
+		const Value towns = content_file(state, state.intern(aurelion::rules::content::kTownsPath));
+		const Value aliases = get(towns, state.intern("legacy_aliases"), Value());
+		Value alias;
+		if (aliases.kind != Kind::Dict || !state.lookup(aliases.ref, gd::str(id), alias)) {
+			return gd::str(id);
+		}
+		return gd::str(gd::to_string(alias));
+	}
+
+	// The scene's _play from the session's start to the match: the seats, the
+	// human seat handed to the computer, the battle log, the seats' weight
+	// sets, the handover's check and the record's setup.
+	void hand_over(const Store &store, const Value &root, const std::string &match_seed, const std::string &map_seed) {
+		const auto setting = [&](const char *name) { return import_deep(match_deep_, store.get(root, name)); };
+		const int64_t player_count = gd::to_int(state_, setting("player_count"));
+		const Value seat_factions = setting("seat_factions");
+		const Value seat_weights = setting("seat_weights");
+		seats_.clear();
+		for (const Value &record : gd::items(state_, overworld_list(names_.players))) {
+			seats_.push_back(string_of(get(record, names_.player_id, state_.string(""))));
+		}
+		if (static_cast<int64_t>(seats_.size()) != player_count) {
+			const uint32_t listed = state_.new_array();
+			for (const uint32_t seat : seats_) {
+				state_.append(listed, gd::str(seat));
+			}
+			throw MatchFailed{ "Expected a " + compat::itos(player_count) + "-player map, got " + Json{ state_, "", true, false }.text(gd::array_value(listed)) + "." };
+		}
+		const Value resources = state_.get(overworld(), state_.string("resources"), gd::dict_value(state_.new_dict()));
+		const Value start_treasury = gd::dict_value(gd::deep_duplicate_dict(state_, gd::as_dict(resources)));
+		if (hand_human_seat_to_ai() != seats_.front()) {
+			throw MatchFailed{ "The human seat could not be handed to the computer." };
+		}
+		// AiHeroRules.BATTLE_LOG_FLAG, and each seat's WEIGHT_SET_KEY when it
+		// plays another set than DEFAULT_WEIGHT_SET.
+		state_.set(gd::as_dict(field(kFlags)), state_.string("ai_battle_log_enabled"), gd::bool_value(true));
+		const int64_t weighted = seat_weights.kind == Kind::Array ? state_.array_size(seat_weights.ref) : 0;
+		for (int64_t index = 0; index < weighted; ++index) {
+			const uint32_t weight_set = string_of(get(state_.at(seat_weights.ref, index), state_.intern("set")));
+			if (state_.text(weight_set) != "default") {
+				state_.set(gd::as_dict(seat_state(seats_[static_cast<size_t>(index)])), state_.string("ai_weight_set"), gd::str(weight_set));
+			}
+		}
+		handover_ = check_handover(seat_factions, start_treasury);
+
+		const uint32_t record = state_.new_dict();
+		const auto put = [&](gd::DictRef dict, const char *name, const Value &value) { state_.set(dict, state_.string(name), value); };
+		put(record, "match_seed", state_.string(match_seed));
+		put(record, "map_seed", state_.string(map_seed));
+		put(record, "swapped", setting("swapped"));
+		put(record, "scenario_id", gd::str(string_of(field(2))));
+		put(record, "map_size", state_.get(overworld(), state_.string("map_size"), gd::dict_value(state_.new_dict())));
+		put(record, "guards", setting("guards"));
+		put(record, "water", setting("water"));
+		put(record, "levels", setting("levels"));
+		put(record, "start_treasury", live_resources(start_treasury));
+		const uint32_t seat_rows = state_.new_array();
+		put(record, "seats", gd::array_value(seat_rows));
+		for (size_t index = 0; index < seats_.size(); ++index) {
+			const uint32_t faction_id = players::faction_id(state_, make_view(), seats_[index]);
+			const gd::DictRef faction = gd::content_row(state_, st::ContentTable::Faction, faction_id);
+			const uint32_t capitals = state_.new_array();
+			for (const Value &town : towns_of(seats_[index])) {
+				const uint32_t capital = state_.new_dict();
+				put(capital, "placement_id", gd::str(string_of(get(town, names_.placement_id, state_.string("")))));
+				put(capital, "name", gd::str(string_of(town_name(town))));
+				put(capital, "x", gd::int_value(int_of(town, names_.x, 0)));
+				put(capital, "y", gd::int_value(int_of(town, names_.y, 0)));
+				state_.append(capitals, gd::dict_value(capital));
+			}
+			const uint32_t row = state_.new_dict();
+			put(row, "player_id", gd::str(seats_[index]));
+			put(row, "faction_id", gd::str(faction_id));
+			put(row, "faction", gd::str(string_of(state_.get(faction, gd::str(names_.name), state_.string("")))));
+			put(row, "towns", gd::array_value(capitals));
+			if (weighted != 0) {
+				put(row, "weights", state_.at(seat_weights.ref, static_cast<int64_t>(index)));
+			}
+			state_.append(seat_rows, gd::dict_value(row));
+		}
+		view_node_ = ~0u;
+		setup_ = gd::dict_value(record);
+	}
+
+	// AiSeatRules.hand_human_seat_to_ai(session): the human seat's player, its
+	// towns and its treasury become the computer's; the seat, or "" when there
+	// is no human seat. Its GDScript calls the native normalize; here all of it
+	// runs on one view.
+	uint32_t hand_human_seat_to_ai() {
+		const gd::DictRef view = make_view();
+		state_.drop_memo();
+		const auto overworld_of = [&] { return gd::as_dict(state_.get(view, gd::str(names_.overworld), Value())); };
+		const auto value_of = [&](const char *name, const Value &fallback) { return state_.get(overworld_of(), state_.string(name), fallback); };
+		uint32_t seat = key::empty;
+		if (players::has_human_seat(state_, view)) {
+			seat = string_of(value_of("active_player_id", state_.string("")));
+			const Value records = value_of("players", gd::array_value(state_.new_array()));
+			bool found = false;
+			for (const Value &record : gd::items(state_, records)) {
+				if (record.kind == Kind::Dict && string_of(get(record, names_.player_id, state_.string(""))) == seat) {
+					state_.set(record.ref, state_.string("human"), gd::bool_value(false));
+					state_.set(record.ref, state_.string("computer"), gd::bool_value(true));
+					state_.set(record.ref, gd::str(names_.owner), gd::str(names_.enemy));
+					found = true;
+				}
+			}
+			if (!found) {
+				seat = key::empty;
+			}
+		}
+		if (seat != key::empty) {
+			const gd::ArrayRef towns = gd::duplicate_array(state_, gd::as_array(value_of("towns", gd::array_value(state_.new_array()))));
+			for (const Value &town : gd::items(state_, gd::array_value(towns))) {
+				if (town.kind == Kind::Dict && state_.text(string_of(get(town, names_.owner, state_.string("")))) == "player") {
+					port::overworld_rules::transition_town_control(state_, view, string_of(get(town, names_.placement_id, state_.string(""))), names_.enemy, seat,
+							state_.intern("ai_seat"));
+				}
+			}
+			const Value treasury = gd::dict_value(gd::deep_duplicate_dict(state_, gd::as_dict(value_of("resources", gd::dict_value(state_.new_dict())))));
+			const uint32_t emptied = state_.new_dict();
+			for (const char *name : { "gold", "wood", "ore" }) {
+				state_.set(emptied, state_.string(name), gd::int_value(0));
+			}
+			state_.set(overworld_of(), state_.string("resources"), gd::dict_value(emptied));
+			state_.set(overworld_of(), state_.string("player_heroes"), gd::array_value(state_.new_array()));
+			state_.set(overworld_of(), state_.string("active_hero_id"), state_.string(""));
+			state_.set(view, gd::str(names_.fields[3]), state_.string(""));
+			port::overworld_rules::normalize_overworld_state(state_, view);
+			for (const Value &entry : gd::items(state_, value_of("enemy_states", gd::array_value(state_.new_array())))) {
+				if (entry.kind == Kind::Dict && players::controller_id(state_, entry.ref, key::empty) == seat) {
+					state_.set(entry.ref, gd::str(names_.treasury), treasury);
+				}
+			}
+			port::overworld_rules::invalidate_spatial_lookup(state_, view);
+		}
+		take_view(view);
+		return seat;
+	}
+
+	// The scene's _check_handover: no human seat or hero is left, and each seat
+	// has its computer player state, its drawn faction, a town and the start
+	// treasury; {seat: {faction, towns}}.
+	Value check_handover(const Value &drawn, const Value &start_treasury) {
+		if (players::has_human_seat(state_, make_view())) {
+			throw MatchFailed{ "A human seat is left after the handover." };
+		}
+		if (state_.array_size(gd::as_array(overworld_list(state_.intern("player_heroes")))) != 0) {
+			throw MatchFailed{ "Human heroes are left after the handover." };
+		}
+		const Json compact_json{ state_, "", true, false };
+		const uint32_t result = state_.new_dict();
+		for (size_t index = 0; index < seats_.size(); ++index) {
+			const uint32_t seat = seats_[index];
+			const std::string seat_text = state_.text(seat);
+			const Value seat_state_value = seat_state(seat);
+			if (gd::is_empty(state_, seat_state_value.ref)) {
+				throw MatchFailed{ seat_text + " has no computer player state." };
+			}
+			const uint32_t faction_id = players::faction_id(state_, make_view(), seat);
+			const uint32_t wanted = string_of(drawn.kind == Kind::Array ? state_.at(drawn.ref, static_cast<int64_t>(index)) : Value());
+			if (faction_id != wanted) {
+				throw MatchFailed{ seat_text + " plays " + state_.text(faction_id) + ", not the drawn " + state_.text(wanted) + "." };
+			}
+			const st::ValueList towns = towns_of(seat);
+			if (towns.empty()) {
+				throw MatchFailed{ seat_text + " holds no town." };
+			}
+			const Value treasury = get(seat_state_value, names_.treasury, gd::dict_value(state_.new_dict()));
+			if (!gd::equal(state_, live_resources(treasury), live_resources(start_treasury))) {
+				throw MatchFailed{ seat_text + " starts with " + compact_json.text(treasury) + ", not " + compact_json.text(start_treasury) + "." };
+			}
+			const uint32_t row = state_.new_dict();
+			state_.set(row, gd::str(names_.faction), gd::str(wanted));
+			state_.set(row, gd::str(names_.towns), gd::int_value(static_cast<int64_t>(towns.size())));
+			state_.set(result, gd::str(seat), gd::dict_value(row));
+		}
+		view_node_ = ~0u;
+		return gd::dict_value(result);
 	}
 
 	// ---------------------------------------------------- the session object
@@ -2019,8 +2391,8 @@ private:
 	const Content *content_ = nullptr;
 	const Store *match_store_ = nullptr;
 	// The content snapshot's rows and files (backed, filled when read) and its
-	// static vars (whole); the session snapshot's scenario row, terrain layers
-	// and files (backed) and its session (whole).
+	// static vars (whole); the setup snapshot's files (backed) and its setup and
+	// settings (whole).
 	StoreMap content_rows_;
 	StoreMap content_deep_;
 	StoreMap match_rows_;
@@ -2031,9 +2403,12 @@ private:
 	std::vector<Source> packed_sources_;
 	std::vector<Opaque> opaques_;
 	std::unordered_map<uint64_t, Value> statics_;
+	// The match's scenario id, its files on disk (the packages from the
+	// snapshot) and, while the session starts, the package documents.
 	std::string scenario_id_;
-	Value scenario_;
-	Value terrain_layers_;
+	std::unique_ptr<aurelion::rules::content::DiskFiles> disk_;
+	std::vector<std::unique_ptr<map_packages::MapDocument>> map_documents_;
+	std::vector<std::unique_ptr<map_packages::ScenarioDocument>> scenario_documents_;
 	Value files_;
 	int64_t content_revision_ = 0;
 	// The session object: its fields (kSessionFields' order), its metadata and

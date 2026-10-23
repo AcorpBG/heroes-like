@@ -10,10 +10,18 @@ extends RefCounted
 ## before autoloads exist.
 
 const CONTENT_DIR := "res://content"
-const RULES_DIR := "res://scripts/core"
+# The art files that game setup reads through ContentService.load_json.
+const ART_FILES := [
+	"res://art/overworld/manifest.json",
+	"res://art/overworld/creature_idle.json",
+	"res://art/overworld/native_scenery.json",
+]
+# The scripts the native rules read static vars of: the rules, and the
+# generated map adoption's.
+const RULES_DIRS := ["res://scripts/core", "res://scripts/persistence"]
 # The CLIs' content tables (state::ContentTable): the getter of each, and the
-# file whose ids it is asked for. Scenarios and their terrain layers are each
-# map's own: the tools take them from the map's snapshot.
+# file whose ids it is asked for. A generated map's session registers no
+# scenario draft, so its scenario and terrain layers lookups answer {}.
 const CONTENT_TABLES := {
 	"Unit": ["get_unit", "res://content/units.json"],
 	"Hero": ["get_hero", "res://content/heroes.json"],
@@ -40,6 +48,8 @@ static func content_snapshot(content) -> Dictionary:
 		if name.get_extension() == "json":
 			var path := CONTENT_DIR.path_join(name)
 			files[path] = content.load_json(path)
+	for path in ART_FILES:
+		files[path] = content.load_json(path)
 	var tables := {}
 	for table in CONTENT_TABLES:
 		var getter := String(CONTENT_TABLES[table][0])
@@ -82,22 +92,23 @@ static func content_snapshot(content) -> Dictionary:
 static func static_vars() -> Dictionary:
 	var declaration := RegEx.create_from_string("^static var ([A-Za-z_][A-Za-z0-9_]*)")
 	var statics := {}
-	for name in DirAccess.get_files_at(RULES_DIR):
-		if name.get_extension() != "gd":
-			continue
-		var path := RULES_DIR.path_join(name)
-		var names := []
-		for line in FileAccess.get_file_as_string(path).split("\n"):
-			var found := declaration.search(line)
-			if found != null:
-				names.append(found.get_string(1))
-		var script = load(path) if not names.is_empty() else null
-		if script == null:
-			continue
-		var values := {}
-		for var_name in names:
-			values[var_name] = script.get(var_name)
-		statics[path] = values
+	for dir in RULES_DIRS:
+		for name in DirAccess.get_files_at(dir):
+			if name.get_extension() != "gd":
+				continue
+			var path := String(dir).path_join(name)
+			var names := []
+			for line in FileAccess.get_file_as_string(path).split("\n"):
+				var found := declaration.search(line)
+				if found != null:
+					names.append(found.get_string(1))
+			var script = load(path) if not names.is_empty() else null
+			if script == null:
+				continue
+			var values := {}
+			for var_name in names:
+				values[var_name] = script.get(var_name)
+			statics[path] = values
 	return statics
 
 

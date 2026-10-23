@@ -84,9 +84,11 @@ extends Node
 #                          is the same either way. The packages belong to the
 #                          game revision that generated them
 #                          (tools/ai_match_batch.py --map-corpus checks it).
-# HEROES_AI_MATCH_PREPARE  a file path: the match is set up (map, adoption,
-#                          handover) and written there as a snapshot instead of
-#                          played, for bin/match_sim_cli, which plays its days
+# HEROES_AI_MATCH_PREPARE  a file path: the match's map is made (generated, or
+#                          from the corpus) and written there as a snapshot with
+#                          its setup and its two packages instead of played, for
+#                          bin/match_sim_cli, which starts the session from the
+#                          packages, hands the seats over, plays the days
 #                          outside Godot and writes what this scene would
 #                          (tools/ai_match_batch.py --runner). The content and
 #                          the rules scripts' static vars as a game starts go
@@ -124,10 +126,12 @@ var _blank_fields := {}
 # Where the match's map came from: generated, reused (the generator's map from
 # the match before, with this match's factions), corpus or kept.
 var _map_source := ""
-# In a match list, the last map adopted and a copy of its session as adopted.
+# In a match list, the last map adopted and a copy of its session as adopted
+# (the prepare mode: its setup and packages).
 var _list_mode := false
 var _kept_map_key := ""
 var _kept_map_session = null
+var _kept_prepared := {}
 # The content snapshot for HEROES_AI_MATCH_PREPARE, taken before any match.
 var _cold_content := {}
 
@@ -272,6 +276,21 @@ func _play() -> void:
 	var seat_factions := drawn.duplicate()
 	if swapped:
 		seat_factions.reverse()
+	var prepare_path := _env("HEROES_AI_MATCH_PREPARE").strip_edges()
+	if prepare_path != "":
+		_prepare(prepare_path, {
+			"match_seed": match_seed,
+			"map_seed": map_seed,
+			"swapped": swapped,
+			"seat_factions": seat_factions,
+			"player_count": player_count,
+			"size_class": size_class,
+			"guards": guards,
+			"water": water,
+			"levels": levels,
+			"seat_weights": seat_weights,
+		})
+		return
 	var session = _start_session(map_seed, seat_factions, player_count, size_class, guards, water, levels)
 	if session == null:
 		return
@@ -315,10 +334,6 @@ func _play() -> void:
 		setup.seats.append({"player_id": seat, "faction_id": PlayerRules.faction_id(session, seat), "faction": String(faction.get("name", "")), "towns": capitals})
 		if not seat_weights.is_empty():
 			setup.seats[setup.seats.size() - 1]["weights"] = seat_weights[setup.seats.size() - 1]
-	var prepare_path := _env("HEROES_AI_MATCH_PREPARE").strip_edges()
-	if prepare_path != "":
-		_prepare(prepare_path, session, seats, setup, handover, not seat_weights.is_empty())
-		return
 
 	var ledger := []
 	var timeline := []
@@ -411,42 +426,60 @@ func _play() -> void:
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(summary)])
 
-## HEROES_AI_MATCH_PREPARE: the match as set up, the session as the native
-## rules see it, with what match_sim_cli needs to play on as _play does: the
-## seats, the record's setup and handover, the generated scenario and its
-## terrain layers, and the weight sets the seats play with.
-func _prepare(path: String, session, seats: Array, setup: Dictionary, handover: Dictionary, weighted: bool) -> void:
+## HEROES_AI_MATCH_PREPARE: the match's map as _start_session makes it, with
+## what match_sim_cli needs to go on as _play does: the setup and its two
+## packages (the session starts from them natively), the project folder they
+## name their art in, the match's settings, and the weight sets the seats play
+## with. The packages travel in the snapshot, so the maps folder can lose them.
+func _prepare(path: String, plan: Dictionary) -> void:
 	var snapshots = load(RULES_SNAPSHOT_PATH)
 	var content_path := path.get_base_dir().path_join("content.snap")
 	if not FileAccess.file_exists(content_path) and (_cold_content.is_empty() or not snapshots.write(content_path, _cold_content)):
 		_fail("The content snapshot %s cannot be written." % content_path)
 		return
-	var scenario_id := String(session.scenario_id)
-	var prepared := {
-		"session": DayEngineScript._view(session),
-		"seats": seats,
+	var seat_factions: Array = plan.seat_factions
+	var key := _map_key(String(plan.map_seed), seat_factions, int(plan.player_count), String(plan.size_class), String(plan.guards), String(plan.water), int(plan.levels))
+	var made := {}
+	if key == _kept_map_key and not _kept_prepared.is_empty():
+		_map_source = "kept"
+		made = _kept_prepared
+	else:
+		var generated := _map_setup(key, String(plan.map_seed), seat_factions, int(plan.player_count), String(plan.size_class), String(plan.guards), String(plan.water), int(plan.levels))
+		if generated.is_empty():
+			return
+		var startup: Dictionary = generated.get("package_startup", {})
+		var packages := {}
+		for field in ["map_path", "scenario_path"]:
+			var package_path := String(startup.get(field, ""))
+			if not FileAccess.file_exists(package_path):
+				_fail("The generated setup's %s %s does not exist." % [field, package_path])
+				return
+			packages[package_path] = FileAccess.get_file_as_bytes(package_path)
+		made = {"setup": generated, "packages": packages}
+		_kept_map_key = key if _list_mode else ""
+		_kept_prepared = made if _list_mode else {}
+	var setup: Dictionary = made.setup
+	var scenario_id := String(setup.get("package_startup", {}).get("session_boundary_record", {}).get("scenario_id", ""))
+	var prepared := plan.duplicate()
+	prepared.merge({
 		"setup": setup,
-		"handover": handover,
-		"match_seed": String(setup.match_seed),
-		"map_seed": String(setup.map_seed),
+		"packages": made.packages,
+		"project": ProjectSettings.globalize_path("res://"),
 		"map": _map_source,
-		"scenario_id": scenario_id,
-		"scenario": ContentService.get_scenario_readonly(scenario_id),
-		"terrain_layers": ContentService.get_terrain_layers_for_scenario(scenario_id),
 		"content_revision": ContentService.get_content_revision(),
 		"files": {},
-	}
-	if weighted:
+	})
+	if not (plan.seat_weights as Array).is_empty():
 		prepared.files[AiHeroRulesScript.WEIGHTS_PATH] = ContentService.load_json(AiHeroRulesScript.WEIGHTS_PATH)
 	if not snapshots.write(path, prepared):
-		_fail("The session snapshot %s cannot be written." % path)
+		_fail("The setup snapshot %s cannot be written." % path)
 		return
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
 		"prepared": ProjectSettings.globalize_path(path),
 		"out": ProjectSettings.globalize_path(_out_path),
-		"match_seed": String(setup.match_seed),
-		"map_seed": String(setup.map_seed),
+		"match_seed": String(plan.match_seed),
+		"map_seed": String(plan.map_seed),
 		"map": _map_source,
 		"scenario_id": scenario_id,
 		"seconds": snappedf((Time.get_ticks_msec() - _started_msec) / 1000.0, 0.1),
@@ -522,13 +555,34 @@ func _blanked(value: Dictionary) -> Dictionary:
 ## stamps each seat's faction on the map, which does not depend on them: after
 ## a match on the same map with another line-up it reuses that map.
 func _start_session(map_seed: String, seat_factions: Array, player_count: int = 2, size_class: String = "homm3_small", guards: String = "normal", water: String = "land", levels: int = 1):
-	# Everything the generated package depends on, and where it goes.
-	var key := "%s|%s|%d|%s|%s|%s|%d|%s" % [map_seed, ",".join(seat_factions), player_count, size_class, guards, water, levels, ScenarioSelectRulesScript._generated_map_package_dir()]
+	var key := _map_key(map_seed, seat_factions, player_count, size_class, guards, water, levels)
 	if key == _kept_map_key and _kept_map_session != null:
 		_map_source = "kept"
 		var copy = _copy_session(_kept_map_session)
 		SessionState.active_session = copy
 		return copy
+	var setup := _map_setup(key, map_seed, seat_factions, player_count, size_class, guards, water, levels)
+	if setup.is_empty():
+		return null
+	var session = ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(setup)
+	if session == null or session.scenario_id == "":
+		_fail("The generated session could not start.")
+		return null
+	OverworldRules.normalize_overworld_state(session)
+	_kept_map_key = ""
+	_kept_map_session = null
+	if _list_mode:
+		_kept_map_key = key
+		_kept_map_session = _copy_session(session)
+	return session
+
+## Everything the generated package depends on, and where it goes.
+func _map_key(map_seed: String, seat_factions: Array, player_count: int, size_class: String, guards: String, water: String, levels: int) -> String:
+	return "%s|%s|%d|%s|%s|%s|%d|%s" % [map_seed, ",".join(seat_factions), player_count, size_class, guards, water, levels, ScenarioSelectRulesScript._generated_map_package_dir()]
+
+## The map's setup from the corpus, else newly generated (saved to the corpus);
+## {} when the generation failed.
+func _map_setup(key: String, map_seed: String, seat_factions: Array, player_count: int, size_class: String, guards: String, water: String, levels: int) -> Dictionary:
 	var entry := _corpus_entry(key)
 	var setup := _corpus_setup(entry, key)
 	_map_source = "corpus" if not setup.is_empty() else "generated"
@@ -541,21 +595,11 @@ func _start_session(map_seed: String, seat_factions: Array, player_count: int = 
 		setup = ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(config, "normal", ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY)
 		if not bool(setup.get("ok", false)):
 			_fail("Generated %s setup failed: %s" % [size_class, JSON.stringify(setup).left(600)])
-			return null
+			return {}
 		if bool(setup.get("native_generation", {}).get("generator_core_reused", false)):
 			_map_source = "reused"
 		_corpus_store(entry, key, setup)
-	var session = ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(setup)
-	if session == null or session.scenario_id == "":
-		_fail("The generated session could not start.")
-		return null
-	OverworldRules.normalize_overworld_state(session)
-	_kept_map_key = ""
-	_kept_map_session = null
-	if _list_mode:
-		_kept_map_key = key
-		_kept_map_session = _copy_session(session)
-	return session
+	return setup
 
 ## Every field of the session, its containers copied; what one match changes
 ## never reaches the copy. A container that two places shared is two after the

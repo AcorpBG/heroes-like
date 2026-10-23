@@ -2905,7 +2905,7 @@ Wanted, not optional (owner decision 2026-10-22, D7). The same core as a command
 | P8-4 The runner | `match_sim_cli` playing sessions Godot prepared (snapshots), the runner's glue in C++, the same outputs (done) | P8-2, P8-3 |
 | P8-5 The proof | a runner side in `rules_parity.py`: the six seeds' digests and records identical to game mode (done) | P8-4 |
 | P8-6 Batches | `ai_match_batch.py --runner`: Godot prepares, the runner plays on threads; timing (done) | P8-5 |
-| P8-7 Packages and setup | packages read in the core; sessions created natively from a package and a seed (7.11) | merge 1b |
+| P8-7 Packages and setup | packages read in the core; sessions created natively from a package and a seed (7.11) (done) | merge 1b |
 | P8-8 Generation | the map library's projection Godot-free; the runner generates its maps | P8-7 |
 
 **P8-1, the AI-match elimination day** (`native-rules-phase8-01-elimination-20261023`, branch
@@ -2987,6 +2987,38 @@ branch `native-phase8-runner`, one milestone):
   identical both ways; main 92c672a3e's game against the branch's runner: identical again. The battle arena's
   quick suite (`--plain`) plays its 72 games from the worker's new content snapshot. Core suite 17/17. Windows only: the Linux libraries in `bin/` are not rebuilt and the Linux
   `match_sim_cli` is not built.
+
+**P8-7, packages and setup** (`native-rules-phase8-07-packages-setup-20261023`, branch `native-phase8-packages`,
+after Phase 7's merge 1b):
+- **Packages in the core.** `aurelion_rules/map_packages.hpp` (`core/map_packages.cpp`) ports
+  `MapPackageService.load_map_package` and `load_scenario_package`: the file, the engine's JSON parse
+  (`compat::json_parse`), the schema, document and dimension checks, the same result and failure dictionaries. Like
+  the game's load it does not check `package_hash`. It ports the `MapDocument` and `ScenarioDocument` methods too,
+  all but `get_objects_in_rect`, which takes a `Rect2i` and stays NotPorted. A host keeps each document behind an
+  opaque value. `content::DiskFiles` (`aurelion_rules/disk_files.hpp`) reads res:// files from a project folder,
+  files added in memory first. It answers `ResourceLoader.exists` as the editor does: an imported file's `.import`,
+  or a resource the engine loads as it is.
+- **Sessions created natively.** The scene's prepare mode now stops after the map (generated, from the corpus, or
+  kept in a list). It writes the setup, both packages' bytes, the project folder and the match's settings.
+  `match_sim_cli` starts the session from them with Phase 7's native setup
+  (`ScenarioSelectRules.start_random_map_skirmish_session_from_setup`, 7.11) and answers the engine calls it makes:
+  - the package service and documents: the core port, reading the snapshot's packages;
+  - the art lookups: the project folder on disk;
+  - `SessionStateStore.new_session_data`: a SessionData of its own, as `_init` sets it;
+  - `ContentService.canonical_town_id`: the towns file;
+  - `OS.has_feature("editor")`: true.
+
+  Then the scene's normalize and handover run in C++: `AiSeatRules.hand_human_seat_to_ai` as glue over the
+  ported `transition_town_control`, `normalize_overworld_state` and `invalidate_spatial_lookup`, then the battle
+  log flag, the seats' weight sets, `_check_handover` and the record's setup. `content.snap` gains the three
+  overworld art files the adoption reads and the static vars of `scripts/persistence` (the adoption's caches).
+  The packages travel in the snapshot, so a batch can still delete them from `maps/` after the prepare. Content
+  still comes from `content.snap`, and generation stays in Godot until P8-8.
+- **Checks.** Six seeds, game against runner and against runner in one process: all 443 daily digests and the
+  records identical both ways. The runner's host calls are one `SessionStateStore.new_session_data` per match;
+  its content misses are only the empty-id scenario lookups the scene makes too. A scratch list of one map twice:
+  the kept second match's record equals the first's. The battle arena's quick suite (`--plain`) plays its 72
+  games. Core suite 17/17. Windows only: the Linux libraries in `bin/` are not rebuilt.
 
 ### Totals
 
