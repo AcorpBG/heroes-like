@@ -1744,6 +1744,11 @@ bool engine_equal(State &state, const Value &a, const Value &b) {
 	return state.host().engine_equal(state, a, b);
 }
 
+bool equal_loaded(State &state, const Value &a, const Value &b) {
+	const Value compared = state.host().engine_equal_loaded(state, a, b);
+	return compared.kind == Kind::Bool ? compared.b : equal(state, a, b);
+}
+
 Value engine_duplicate(State &state, const Value &value, bool deep) {
 	if (deep && (value.kind == Kind::Dict || value.kind == Kind::Array)) {
 		const Value copied = state.host().engine_duplicate(state, value, true);

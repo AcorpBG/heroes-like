@@ -501,5 +501,9 @@ Value call_method_engine(State &state, const Value &object, Atom method, std::in
 // a == b, the engine's: for opaque values (a kept text against another, or
 // against a string).
 bool engine_equal(State &state, const Value &a, const Value &b);
+// a == b: two containers the call loaded from GDScript are compared by the
+// engine (as fast as GDScript's for a save's scenario records); the others
+// are equal()'s.
+bool equal_loaded(State &state, const Value &a, const Value &b);
 
 } // namespace aurelion::rules::gd

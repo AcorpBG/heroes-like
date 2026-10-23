@@ -15,6 +15,7 @@
 #include <godot_cpp/classes/json.hpp>
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/classes/os.hpp>
+#include <godot_cpp/classes/project_settings.hpp>
 #include <godot_cpp/classes/random_number_generator.hpp>
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/classes/resource.hpp>
@@ -193,9 +194,17 @@ void PortBridge::begin(bool validating, bool host_calls) {
 		state_.clear();
 		string_cache_.clear();
 		name_cache_.clear();
-	} else {
-		state_.clear_nodes();
 	}
+	end();
+	validating_ = validating;
+	host_calls_ = host_calls && !validating;
+	host_calls_made_.clear();
+	full_host_calls_ = 0;
+	undo_lost_ = false;
+}
+
+void PortBridge::end() {
+	state_.clear_nodes();
 	array_sources_.clear();
 	dict_sources_.clear();
 	array_nodes_.clear();
@@ -212,11 +221,6 @@ void PortBridge::begin(bool validating, bool host_calls) {
 	statics_.clear();
 	static_slots_.clear();
 	memo_shapes_.clear();
-	validating_ = validating;
-	host_calls_ = host_calls && !validating;
-	host_calls_made_.clear();
-	full_host_calls_ = 0;
-	undo_lost_ = false;
 	undo_arrays_.clear();
 	undo_dicts_.clear();
 	undo_packed_.clear();
@@ -1084,7 +1088,7 @@ String PortBridge::path_text(uint32_t path) const {
 }
 
 Value PortBridge::object_call(state::State &state, uint32_t slot, uint32_t method, const Value *args, size_t count) {
-	return load(call_opaque(state, slot, method, args, count));
+	return load_answer(call_opaque(state, slot, method, args, count));
 }
 
 Value PortBridge::object_call_engine(state::State &state, uint32_t slot, uint32_t method, const Value *args, size_t count) {
@@ -1118,11 +1122,18 @@ Variant PortBridge::call_opaque(state::State &state, uint32_t slot, uint32_t met
 }
 
 Value PortBridge::keep_opaque(const Variant &value) {
-	if (value.get_type() == Variant::NIL) {
+	if (value.get_type() == Variant::NIL || (value.get_type() == Variant::OBJECT && static_cast<Object *>(value) == nullptr)) {
 		return Value();
 	}
 	opaque_.push_back(value);
 	return Value::of_ref(Kind::Opaque, static_cast<uint32_t>(opaque_.size() - 1));
+}
+
+Value PortBridge::load_answer(const Variant &value) {
+	if (value.get_type() == Variant::OBJECT && static_cast<Object *>(value) == nullptr) {
+		return Value();
+	}
+	return load(value);
 }
 
 bool PortBridge::object_has_method(state::State &, uint32_t slot, uint32_t method) {
@@ -1228,7 +1239,7 @@ Value PortBridge::class_call_static(state::State &state, uint32_t class_name, ui
 	call_args.push_back(static_name(class_name));
 	call_args.push_back(static_name(method));
 	call_args.append_array(engine_args(args, count, "ClassDB.class_call_static"));
-	return load(godot::ClassDBSingleton::get_singleton()->callv(StringName("class_call_static"), call_args));
+	return load_answer(godot::ClassDBSingleton::get_singleton()->callv(StringName("class_call_static"), call_args));
 }
 
 Value PortBridge::class_call_static_engine(state::State &state, uint32_t class_name, uint32_t method, const Value *args, size_t count) {
@@ -1248,13 +1259,34 @@ bool PortBridge::engine_equal(state::State &, const Value &a, const Value &b) {
 	return exported[0] == exported[1];
 }
 
-Value PortBridge::engine_singleton(state::State &, uint32_t name) {
-	godot::Engine *engine = godot::Engine::get_singleton();
-	const StringName singleton = static_name(name);
-	if (!engine->has_singleton(singleton)) {
+Value PortBridge::engine_equal_loaded(state::State &state, const Value &a, const Value &b) {
+	// Loaded containers export as themselves, so the engine compares them
+	// without the native walk that would load every value first.
+	const auto loaded = [this](const Value &value) {
+		return value.kind == Kind::Array ? value.ref < array_sources_.size() && array_sources_[value.ref]
+										 : value.kind == Kind::Dict && value.ref < dict_sources_.size() && dict_sources_[value.ref];
+	};
+	if (!host_calls_ || !loaded(a) || !loaded(b)) {
 		return Value();
 	}
-	return load(Variant(engine->get_singleton(singleton)));
+	return Value::of_bool(engine_equal(state, a, b));
+}
+
+Value PortBridge::engine_singleton(state::State &, uint32_t name) {
+	// Each singleton through its own get_singleton(): godot-cpp frees those
+	// instance bindings when the library goes. Engine::get_singleton(name)
+	// makes one it never frees, and the engine frees the singleton after the
+	// library is gone, through the binding's callback (a crash at exit).
+	const StringName singleton = static_name(name);
+	Object *object = nullptr;
+	if (singleton == StringName("Time")) {
+		object = godot::Time::get_singleton();
+	} else if (singleton == StringName("ProjectSettings")) {
+		object = godot::ProjectSettings::get_singleton();
+	} else {
+		throw state::ScriptError("PortBridge::engine_singleton does not reach the singleton " + utf8_of(String(singleton)) + ".");
+	}
+	return load(Variant(object));
 }
 
 uint32_t PortBridge::engine_format(state::State &state, uint32_t pattern, const Value *args, size_t count, bool &ok) {

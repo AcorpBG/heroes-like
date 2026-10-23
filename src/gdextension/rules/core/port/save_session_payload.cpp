@@ -167,7 +167,7 @@ DictRef payload_for_storage(State &state, DictRef payload) {
 	if (!gd::is_dict(flags_record) || !gd::is_dict(overworld_record)) {
 		return payload;
 	}
-	if (!gd::is_same(state, flags_record, overworld_record) && !gd::equal(state, flags_record, overworld_record)) {
+	if (!gd::is_same(state, flags_record, overworld_record) && !gd::equal_loaded(state, flags_record, overworld_record)) {
 		return payload;
 	}
 	const DictRef stored_flags = gd::duplicate_dict(state, payload_flags);

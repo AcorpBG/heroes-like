@@ -813,6 +813,10 @@ public:
 	// a == b, the engine's: for opaque values, which native code cannot
 	// compare.
 	virtual bool engine_equal(State &state, const Value &a, const Value &b);
+	// a == b of two containers loaded from GDScript, compared by the engine: a
+	// bool. Nil for other values, or when this host cannot (the caller
+	// compares natively).
+	virtual Value engine_equal_loaded(State &state, const Value &a, const Value &b);
 };
 
 class State {

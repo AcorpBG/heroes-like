@@ -2799,7 +2799,9 @@ C++.
   text stays an engine String, written, measured and compared in the engine. Before that change, each autosave grew
   memory by about 48 MB. `engine_duplicate` now copies in the engine a native container that holds one loaded from
   GDScript: copied natively, an autosave's summary built 77,000 native dictionaries and took 180 ms longer. The atom
-  table is also cleared past 64 MiB of text.
+  table is also cleared past 64 MiB of text. `gd::equal_loaded` compares two containers loaded from GDScript in the
+  engine: `payload_for_storage` compares the save's two copies of the scenario record, and the native walk had made the
+  end of turn's autosave 90 ms slower than main's.
 - Tests: 3 retired (`docs/save-test-retirement.md`). `tools/native_battle_switch.py` reads signatures over several lines.
 Checks, main 2abd6e086 against the branch, with a scratch probe and isolated profiles:
 - Phase a, the five D9 copies: the file list and slot summaries, the screens' 13 texts for each summary, the loads,
@@ -2823,14 +2825,18 @@ Checks, main 2abd6e086 against the branch, with a scratch probe and isolated pro
     need summaries without their recap context;
   - `_migrate_progression_payload` and its step, which nothing reaches while the profile version is 1, its minimum;
   - migration from save versions before 9: no real save is older, and the version 8 copy only shows one normalized
-    as legacy alike.
+    as legacy alike;
+  - a save without player records: its stored summary normalizes the session and stops at the day port's left-out
+    path "enemy configs without player records", now a native failure. Every generated game writes them.
 - Speed, main | branch, in ms:
-  - listing the save files 3,491 | 1,025;
-  - the slot summaries 422 | 585: the branch frees the previous call's parsed saves at the next call's start;
-  - the five loads 564 | 552, 546 | 462, 360 | 325, 339 | 275 and 530 | 478;
-  - the 15 saves from 157 ms faster to 124 ms slower (one save slower).
-  - 15 autosaves of the Veilmourn Day 10 copy: main 1,125 to 1,146 ms with 530 to 570 MB private memory, the branch
-    1,123 to 1,161 ms with 465 to 585 MB.
+  - listing the save files 3,503 | 1,026;
+  - the slot summaries 376 | 609: the branch frees the previous call's parsed saves at the next call's start;
+  - the five loads 574 | 502, 520 | 453, 385 | 313, 336 | 297 and 571 | 443;
+  - the 15 saves 125 to 321 ms faster on the branch;
+  - the end of turn's autosave of the Veilmourn Day 10 copy (a generated map, no summary): main 1,099 to 1,123, the
+    branch 1,007 to 1,037; the save bar's status after it 342 to 366 | 267 to 276;
+  - 15 autosaves of the same copy, before the engine compare: main 1,125 to 1,146 ms with 530 to 570 MB private
+    memory, the branch 1,123 to 1,161 ms with 465 to 585 MB.
 
 ### Phase 8: a match runner without Godot
 

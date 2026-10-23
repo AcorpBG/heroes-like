@@ -109,6 +109,11 @@ public:
 	// host_calls: the call may run GDScript at a host call (a call that writes
 	// back, never a validating one).
 	void begin(bool validating = false, bool host_calls = false);
+	// Ends a call that is not a kept session's: drops what it loaded and kept,
+	// as the next begin() would, so an engine object only the call held (a
+	// save's file, a JSON parser and its data) goes now, not after the engine
+	// at exit.
+	void end();
 	// A session kept across calls (the match runner's days, Phase 6 P6-4).
 	// begin_kept() starts a call that writes back and may make host calls, as
 	// begin(false, true) does, but keeps the nodes the last keep() kept, with
@@ -229,12 +234,16 @@ public:
 	state::Value class_call_static_engine(state::State &state, uint32_t class_name, uint32_t method, const state::Value *args, size_t count) override;
 	state::Value object_call_engine(state::State &state, uint32_t slot, uint32_t method, const state::Value *args, size_t count) override;
 	bool engine_equal(state::State &state, const state::Value &a, const state::Value &b) override;
+	state::Value engine_equal_loaded(state::State &state, const state::Value &a, const state::Value &b) override;
 
 private:
 	// object.method(args) for object_call and object_call_engine.
 	godot::Variant call_opaque(state::State &state, uint32_t slot, uint32_t method, const state::Value *args, size_t count);
 	// An engine value as an opaque value, Nil for null.
 	state::Value keep_opaque(const godot::Variant &value);
+	// An engine service's answer loaded: a null object (DirAccess.open of a
+	// missing folder) is null, as GDScript's == null sees it.
+	state::Value load_answer(const godot::Variant &value);
 	// A container loaded from GDScript, or a native-built one that holds one at
 	// any depth (engine_duplicate copies both by the engine).
 	bool holds_loaded(const state::Value &value) const;

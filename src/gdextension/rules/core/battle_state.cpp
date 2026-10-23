@@ -294,6 +294,10 @@ bool Backing::engine_equal(State &, const Value &, const Value &) {
 	no_host("The engine's ==");
 }
 
+Value Backing::engine_equal_loaded(State &, const Value &, const Value &) {
+	return Value();
+}
+
 bool same_key(const Value &a, const Value &b) {
 	if (a.is_string_like() && b.is_string_like()) {
 		return a.ref == b.ref;
