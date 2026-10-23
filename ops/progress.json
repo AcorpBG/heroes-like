@@ -116635,15 +116635,15 @@
     {
       "id": "native-rules-phase7-02-move-20261023",
       "title": "Phase 7.2: the move and its arrival",
-      "status": "pending",
+      "status": "in_progress",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Transition doc, Phase 7, Slices.",
-      "updatedAt": "2026-10-23T14:30:00Z"
+      "notes": "Started 2026-10-24 on branch native-phase7-human: 176 GDScript functions (3,783 lines) declared in src/gdextension/rules/include/aurelion_rules/port/overworld_rules_move.hpp move to C++ through the human registry, and the native _finalize_action_result gains the rules profile and the event-facts scenario check. Frozen until it merges: the functions that header declares.",
+      "updatedAt": "2026-10-24T02:00:00Z"
     },
     {
       "id": "native-rules-phase7-03-context-actions-20261023",

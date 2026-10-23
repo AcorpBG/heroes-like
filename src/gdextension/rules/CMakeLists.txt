@@ -244,8 +244,16 @@ add_library(aurelion_rules_core STATIC
 	core/port/overworld_rules_ai_recovery.cpp
 	core/port/overworld_rules_ai_sites.cpp
 	core/port/overworld_rules_ai_towns.cpp
+	core/port/overworld_rules_arrival.cpp
+	core/port/overworld_rules_collect.cpp
+	core/port/overworld_rules_encounter_text.cpp
+	core/port/overworld_rules_move.cpp
+	core/port/overworld_rules_recap.cpp
 	core/port/overworld_rules_routes.cpp
 	core/port/overworld_rules_shared.cpp
+	core/port/overworld_rules_site_effects.cpp
+	core/port/overworld_rules_site_queries.cpp
+	core/port/overworld_rules_site_rewards.cpp
 	core/port/overworld_rules_turn.cpp
 	core/port/overworld_rules_turn_rare.cpp
 	core/port/overworld_state_normalize.cpp
@@ -271,7 +279,9 @@ add_library(aurelion_rules_core STATIC
 	core/port/save_service_transaction.cpp
 	core/port/save_session_payload.cpp
 	core/port/scenario_evaluation.cpp
+	core/port/scenario_event_check.cpp
 	core/port/scenario_factory_ai.cpp
+	core/port/scenario_objective_label.cpp
 	core/port/scenario_select_catalog.cpp
 	core/port/scenario_select_maps_folder.cpp
 	core/port/scenario_select_options.cpp
@@ -298,6 +308,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/unit_abilities.cpp
 	core/port/visit_building_rules_ai.cpp
 	core/port/water_travel_rules_ai.cpp
+	core/port/water_travel_rules_human.cpp
 	core/snapshot.cpp
 )
 add_dependencies(aurelion_rules_core aurelion_rules_source_tree)
