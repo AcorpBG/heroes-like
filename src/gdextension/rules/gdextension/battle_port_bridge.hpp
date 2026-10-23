@@ -106,6 +106,24 @@ public:
 	// host_calls: the call may run GDScript at a host call (a call that writes
 	// back, never a validating one).
 	void begin(bool validating = false, bool host_calls = false);
+	// A session kept across calls (the match runner's days, Phase 6 P6-4).
+	// begin_kept() starts a call that writes back and may make host calls, as
+	// begin(false, true) does, but keeps the nodes the last keep() kept, with
+	// their containers, the content rows and the opaque values, so a container
+	// loaded before is the same node, filled as far as it was: the call reads
+	// none of it again. A call that did not end in keep(), a full State or a
+	// changed content revision makes it a begin(false, true). keep() ends a
+	// call that returned: it writes back, exports the result, makes each node
+	// the export made a loaded node of its new container, and keeps the nodes
+	// the arguments, the objects' views and the content rows reach, each now
+	// clean. Between calls only GDScript changes the containers: reread()
+	// backs a container's node by it again, from scratch, after GDScript
+	// changed it in place; drop_kept() makes the next call read everything
+	// again.
+	void begin_kept();
+	godot::Variant keep(const state::Value &result, const state::Value *args, size_t count);
+	void reread(const godot::Variant &container);
+	void drop_kept() { kept_ = false; }
 	state::State &state() { return state_; }
 
 	state::Value load(const godot::Variant &value);
@@ -308,6 +326,9 @@ private:
 	// and the content revision once read (-1 before).
 	std::unordered_map<uint64_t, state::Value> content_;
 	int64_t content_revision_ = -1;
+	// The last call ended in keep(), at this content revision (begin_kept).
+	bool kept_ = false;
+	int64_t kept_revision_ = -1;
 	std::vector<TypeInfo> types_; // TypeRef n is types_[n - 1]; kept across calls
 	std::vector<godot::Variant> string_cache_;
 	std::vector<godot::Variant> name_cache_;

@@ -260,6 +260,133 @@ void State::clear_nodes() {
 	memo_epoch_ = watched_writes_;
 }
 
+State::Compaction State::compact(const std::vector<Value> &roots, size_t opaque_count) {
+	Compaction maps;
+	maps.arrays.assign(arrays_.size(), kDropped);
+	maps.dicts.assign(dicts_.size(), kDropped);
+	maps.packeds.assign(packeds_.size(), kDropped);
+	maps.opaques.assign(opaque_count, kDropped);
+	// Mark what the roots reach (a backed node holds nothing yet).
+	marking_.clear();
+	for (const Value &value : roots) {
+		if (value.is_container() || value.is_packed()) {
+			marking_.push_back(value);
+		} else if (value.kind == Kind::Opaque) {
+			maps.opaques[value.ref] = 0;
+		}
+	}
+	while (!marking_.empty()) {
+		const Value next = marking_.back();
+		marking_.pop_back();
+		if (next.is_packed()) {
+			maps.packeds[next.ref] = 0;
+			continue;
+		}
+		const ValueList *first = nullptr;
+		const ValueList *second = nullptr;
+		if (next.kind == Kind::Array) {
+			if (maps.arrays[next.ref] != kDropped) {
+				continue;
+			}
+			maps.arrays[next.ref] = 0;
+			first = &arrays_[next.ref].items;
+		} else {
+			if (maps.dicts[next.ref] != kDropped) {
+				continue;
+			}
+			maps.dicts[next.ref] = 0;
+			first = &dicts_[next.ref].keys.list();
+			second = &dicts_[next.ref].values;
+		}
+		for (const ValueList *items : { first, second }) {
+			if (items == nullptr) {
+				continue;
+			}
+			for (const Value &item : *items) {
+				if (item.is_container() || item.is_packed()) {
+					marking_.push_back(item);
+				} else if (item.kind == Kind::Opaque) {
+					maps.opaques[item.ref] = 0;
+				}
+			}
+		}
+	}
+	// Number the kept nodes in their order and move them down: a node's new
+	// number is at most its old one, so the slot it moves into holds a dropped
+	// node or one moved already.
+	const auto number = [](std::vector<uint32_t> &map) {
+		uint32_t count = 0;
+		for (uint32_t &to : map) {
+			if (to != kDropped) {
+				to = count++;
+			}
+		}
+		return count;
+	};
+	const uint32_t array_count = number(maps.arrays);
+	const uint32_t dict_count = number(maps.dicts);
+	const uint32_t packed_count = number(maps.packeds);
+	number(maps.opaques);
+	const auto move_down = [](auto &pool, const std::vector<uint32_t> &map) {
+		for (size_t from = 0; from < map.size(); ++from) {
+			if (map[from] != kDropped && map[from] != from) {
+				std::swap(pool[map[from]], pool[from]);
+			}
+		}
+	};
+	move_down(arrays_, maps.arrays);
+	move_down(dicts_, maps.dicts);
+	move_down(packeds_, maps.packeds);
+	arrays_.truncate(array_count);
+	dicts_.truncate(dict_count);
+	packeds_.truncate(packed_count);
+	const auto renumber = [&maps](Value &value) {
+		if (value.kind == Kind::Array) {
+			value.ref = maps.arrays[value.ref];
+		} else if (value.kind == Kind::Dict) {
+			value.ref = maps.dicts[value.ref];
+		} else if (value.is_packed()) {
+			value.ref = maps.packeds[value.ref];
+		} else if (value.kind == Kind::Opaque) {
+			value.ref = maps.opaques[value.ref];
+		}
+	};
+	for (uint32_t index = 0; index < array_count; ++index) {
+		ArrayNode &node = arrays_[index];
+		for (Value &item : node.items) {
+			renumber(item);
+		}
+		node.guard = kWatched;
+		node.dirty = false;
+	}
+	for (uint32_t index = 0; index < dict_count; ++index) {
+		DictNode &node = dicts_[index];
+		bool container_key = false;
+		for (const Value &key : node.keys) {
+			container_key = container_key || key.is_container() || key.is_packed();
+		}
+		if (container_key) {
+			ValueList keys = node.keys.list();
+			for (Value &key : keys) {
+				renumber(key);
+			}
+			node.keys = std::move(keys);
+		}
+		for (Value &value : node.values) {
+			renumber(value);
+		}
+		node.guard = kWatched;
+		node.dirty = false;
+	}
+	for (uint32_t index = 0; index < packed_count; ++index) {
+		packeds_[index].guard = kWatched;
+		packeds_[index].dirty = false;
+	}
+	root = Value();
+	drop_memo();
+	return maps;
+}
+
 bool State::memo_find(const MemoKey &key, std::initializer_list<Value> roots, Value &answer, uint64_t &since) {
 	for (const Value &from : roots) {
 		watch(from);

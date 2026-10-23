@@ -54,6 +54,11 @@ extends Node
 #                          added for this run only. Unset, every seat plays
 #                          the default set and the record is as before; set,
 #                          setup.seats[].weights records each seat's set.
+# HEROES_AI_MATCH_KEEP_SESSION 0 loads the whole session into the native day
+#                          every day, as the game does. By default the day's
+#                          native call keeps the session from one day to the
+#                          next (DayEngine.session_calls); the game is the
+#                          same either way.
 #
 # The match fails at once when the native rules library is not registered:
 # without it every battle hex search errors and battles play out wrong.
@@ -63,6 +68,7 @@ const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
 const AiSeatRulesScript = preload("res://scripts/core/AiSeatRules.gd")
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const NativeRulesScript = preload("res://scripts/core/NativeRules.gd")
+const DayEngineScript = preload("res://scripts/core/DayEngine.gd")
 const REPORT_ID := "AI_VERSUS_AI_MATCH_REPORT"
 const DEFAULT_MAX_DAYS := 320
 const DEFAULT_OUT := "user://ai_versus_ai_match.json"
@@ -112,6 +118,7 @@ func _run() -> void:
 	# Turn time by phase is always recorded; the ledger keeps it per player.
 	OS.set_environment("HEROES_STRATEGIC_AI_PROFILE", "1")
 	var trace := OS.get_environment("HEROES_AI_MATCH_TRACE").strip_edges() not in ["", "0"]
+	var keep_session := OS.get_environment("HEROES_AI_MATCH_KEEP_SESSION").strip_edges() != "0"
 	var out_path := OS.get_environment("HEROES_AI_MATCH_OUT").strip_edges()
 	if out_path == "":
 		out_path = DEFAULT_OUT
@@ -218,6 +225,10 @@ func _run() -> void:
 	# log, which the overworld normalize does not read, so each end_turn can
 	# skip renormalizing the session the previous one left normalized.
 	session.set_meta(OverworldRules.SESSION_UNTOUCHED_BETWEEN_DAYS_META, true)
+	# For the same reason the native day can keep the session from one day to
+	# the next: it reads again only the flags, after the decision log empties.
+	if keep_session:
+		DayEngineScript.session_calls[&"OverworldRules.end_turn"] = true
 	_digest_day(session)
 	while int(session.day) < max_days:
 		var started := Time.get_ticks_msec()
@@ -234,6 +245,7 @@ func _run() -> void:
 		# Every hero decision of the day, with the alternatives it weighed.
 		row["decisions"] = session.flags.get(AiHeroRulesScript.DECISION_LOG_KEY, [])
 		session.flags[AiHeroRulesScript.DECISION_LOG_KEY] = []
+		NativeRulesScript.api().port_session_reread(session.flags)
 		# Where each computer player's turn went, in milliseconds by phase.
 		for faction_profile in turn.get("enemy_turn_profile", {}).get("factions", []):
 			if faction_profile is Dictionary and row.sides.has(String(faction_profile.get("player_id", ""))):
@@ -245,6 +257,8 @@ func _run() -> void:
 			var standing := AiSeatRulesScript.standing_players(session)
 			winner = String(standing[0]) if not standing.is_empty() else "none"
 			break
+	DayEngineScript.session_calls.erase(&"OverworldRules.end_turn")
+	NativeRulesScript.api().port_session_close()
 
 	var battles: Array = session.flags.get(AiHeroRulesScript.BATTLE_LOG_KEY, [])
 	var record := {

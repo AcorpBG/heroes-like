@@ -116544,15 +116544,15 @@
     {
       "id": "native-rules-phase6-p4-session-handle-20261023",
       "title": "Phase 6 P6-4: the native session across days",
-      "status": "pending",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "The match runner keeps the native session across days; Dictionaries written back only for the digest, the record and the runner's per-day reads; runner mode and game mode give the same digests. Measured share (the bridge) 31-34%, bound 1.45-1.52x.",
-      "updatedAt": "2026-10-23T08:30:00Z"
+      "notes": "Branch native-phase6-session-handle. AurelionRules.port_session_call keeps the session's nodes across calls on a bridge of its own (PortBridge::begin_kept and keep; State::compact keeps what the arguments and content rows reach, renumbered, clean); port_session_reread backs a container GDScript changed in place again; another writing port call, a failure, a fallback, a full State or a new content revision drops it. The match runner runs OverworldRules.end_turn on it (DayEngine.session_calls) and rereads the flags after emptying the decision log; HEROES_AI_MATCH_KEEP_SESSION=0 is game mode. The day still writes back daily (the runner reads the session every day). Checks: six seeds runner mode against game mode, and native against main 6e490c9e2: all 415 digests and the records identical; day shadow end_turn 405 checks, all 7,394 checks 0 mismatches 0 errors; core suite 17/17. Timing without the digest, three interleaved rounds, six at once: summed runs 166.5-168.6 s on main (P6-3), 140.4-143.4 s with P6-4, 1.19x; wall 43.2 s against 36.2-37.1 s. Bound 1.45-1.52x not reached: fills and lookups fell 90%, but the write-back, content lookups and the compaction (a day makes 60k-150k containers, keeps 10k-14k) stay.",
+      "updatedAt": "2026-10-23T11:40:00Z"
     },
     {
       "id": "native-rules-phase6-p1-matches-per-process-20261023",

@@ -45,6 +45,12 @@ static var mode: int = _mode_from_environment()
 ## _open_handles (the other subsystems' checks share the numbering).
 static var _shared_views := {}
 static var _open_handles := 0
+## Native mode: the functions whose calls keep the session's nodes from one
+## call to the next (AurelionRules.port_session_call), so a call reads only
+## what GDScript changed since. The AI match runner puts its day here, and
+## between days changes the session only where it says so
+## (port_session_reread).
+static var session_calls := {}
 
 static func _mode_from_environment() -> int:
 	var name := OS.get_environment("HEROES_NATIVE_DAY").strip_edges().to_lower()
@@ -63,10 +69,15 @@ static func native(name: StringName, args: Array) -> Variant:
 	return NativeRules.api().port_call(name, _views(args), false)
 
 ## The native port of a function that writes into its arguments, writing into
-## them; a session takes its view's fields back.
+## them; a session takes its view's fields back. A name in session_calls runs
+## on the native session kept across calls.
 static func native_writing(name: StringName, args: Array) -> Variant:
 	var views := _views(args)
-	var result: Variant = NativeRules.api().port_call(name, views, true)
+	var result: Variant
+	if session_calls.has(name):
+		result = NativeRules.api().port_session_call(name, views)
+	else:
+		result = NativeRules.api().port_call(name, views, true)
 	_take_views(args, views)
 	return result
 

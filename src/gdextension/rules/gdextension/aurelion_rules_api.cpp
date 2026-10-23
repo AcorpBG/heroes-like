@@ -190,6 +190,9 @@ void AurelionRules::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("state_conversion_timing", "start", "end", "made_arrays", "made_dicts", "rounds"), &AurelionRules::state_conversion_timing);
 	ClassDB::bind_method(D_METHOD("port_call", "name", "args", "write_back"), &AurelionRules::port_call);
 	ClassDB::bind_method(D_METHOD("port_not_ported"), &AurelionRules::port_not_ported);
+	ClassDB::bind_method(D_METHOD("port_session_call", "name", "args"), &AurelionRules::port_session_call);
+	ClassDB::bind_method(D_METHOD("port_session_reread", "container"), &AurelionRules::port_session_reread);
+	ClassDB::bind_method(D_METHOD("port_session_close"), &AurelionRules::port_session_close);
 	ClassDB::bind_method(D_METHOD("port_check", "name", "args", "gdscript_result"), &AurelionRules::port_check);
 	ClassDB::bind_method(D_METHOD("port_report", "name", "mismatch"), &AurelionRules::port_report);
 	ClassDB::bind_method(D_METHOD("port_copy", "args"), &AurelionRules::port_copy);
@@ -659,6 +662,24 @@ aurelion::rules::bridge::PortBridge &AurelionRules::port_bridge(size_t depth) {
 }
 
 Variant AurelionRules::port_call(const StringName &name, const Array &args, bool write_back) {
+	return port_call_on(name, args, write_back, false);
+}
+
+Variant AurelionRules::port_session_call(const StringName &name, const Array &args) {
+	return port_call_on(name, args, true, port_depth_ == 0);
+}
+
+void AurelionRules::port_session_reread(const Variant &container) {
+	if (session_port_) {
+		session_port_->reread(container);
+	}
+}
+
+void AurelionRules::port_session_close() {
+	session_port_.reset();
+}
+
+Variant AurelionRules::port_call_on(const StringName &name, const Array &args, bool write_back, bool session) {
 	std::string problem;
 	last_not_ported_ = false;
 	try {
@@ -673,15 +694,22 @@ Variant AurelionRules::port_call(const StringName &name, const Array &args, bool
 		const Nesting nesting(port_depth_);
 		aurelion::rules::bridge::PortBridge *bridge = nullptr;
 		try {
-			aurelion::rules::bridge::PortBridge &port = port_bridge(nesting.level());
+			if (session && !session_port_) {
+				session_port_ = std::make_unique<aurelion::rules::bridge::PortBridge>();
+			}
+			aurelion::rules::bridge::PortBridge &port = session ? *session_port_ : port_bridge(nesting.level());
 			bridge = &port;
 			const std::string arity = arity_problem(*function, args.size());
 			if (!arity.empty()) {
 				problem = std::string(function->name) + " " + arity;
 			} else {
-				// A host call writes back what the call changed so far: only in
-				// a call that writes back.
-				port.begin(false, write_back);
+				if (session) {
+					port.begin_kept();
+				} else {
+					// A host call writes back what the call changed so far:
+					// only in a call that writes back.
+					port.begin(false, write_back);
+				}
 				aurelion::rules::state::Value values[kMaxPortArgs];
 				for (int index = 0; index < function->arity; ++index) {
 					values[index] = port.load(args[index]);
@@ -690,6 +718,14 @@ Variant AurelionRules::port_call(const StringName &name, const Array &args, bool
 				// A call inside a host call may have set it.
 				last_not_ported_ = false;
 				count_host_calls(stats, port);
+				if (session) {
+					return port.keep(result, values, static_cast<size_t>(function->arity));
+				}
+				// What the session kept may hold a container this call wrote
+				// into, or GDScript wrote into at a host call.
+				if (write_back && nesting.level() == 0 && session_port_ && (port.full_host_calls() != 0 || port.changed_a_source())) {
+					session_port_->drop_kept();
+				}
 				if (write_back) {
 					port.write_back();
 				} else if (port.changed_a_source()) {

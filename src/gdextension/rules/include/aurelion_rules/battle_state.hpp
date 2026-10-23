@@ -638,6 +638,8 @@ public:
 		++size_;
 	}
 	void clear() { size_ = 0; }
+	// The first count nodes stay; the rest keep their buffers for reuse.
+	void truncate(size_t count) { size_ = count < size_ ? count : size_; }
 
 private:
 	std::vector<std::unique_ptr<Node[]>> blocks_;
@@ -752,6 +754,21 @@ public:
 	void clear();
 	// Drops the nodes and the root, keeps the atoms.
 	void clear_nodes();
+	// Keeps the nodes the roots reach and drops the rest (the port bridge's
+	// session kept across calls): the kept ones move to the front in their
+	// order, every reference in them renumbered, each as a node just loaded
+	// (watched, not frozen, clean). The memo and the root go. The maps take a
+	// node's old number to its new one, or kDropped; so does opaques, for the
+	// host's opaque slots (opaque_count of them), which the kept nodes now
+	// refer to by their new numbers.
+	struct Compaction {
+		std::vector<uint32_t> arrays;
+		std::vector<uint32_t> dicts;
+		std::vector<uint32_t> packeds;
+		std::vector<uint32_t> opaques;
+	};
+	static constexpr uint32_t kDropped = UINT32_MAX;
+	Compaction compact(const std::vector<Value> &roots, size_t opaque_count);
 
 	uint32_t intern(std::string_view text);
 	// The atom of a text already interned, or false.

@@ -90,6 +90,19 @@ public:
 	// failure does, since the null could pass for GDScript's result.
 	Variant port_call(const StringName &name, const Array &args, bool write_back);
 	bool port_not_ported() const { return last_not_ported_; }
+	// A session kept across calls (the match runner's days, Phase 6 P6-4;
+	// bridge::PortBridge::begin_kept): port_session_call is port_call with
+	// write_back, on a bridge of its own that keeps the session's nodes from
+	// one call to the next, so a call reads none of what it read before.
+	// Between calls GDScript leaves the session's containers alone, or names
+	// each one it changed in place to port_session_reread. Any other port_call
+	// that writes into a container or runs GDScript at a host call drops what
+	// the session kept, and so does a session call that fails or falls back
+	// to GDScript; port_session_close drops it. Inside a host call it is
+	// port_call.
+	Variant port_session_call(const StringName &name, const Array &args);
+	void port_session_reread(const Variant &container);
+	void port_session_close();
 	String port_check(const StringName &name, const Array &args, const Variant &gdscript_result);
 	void port_report(const StringName &name, const String &mismatch);
 	// Shadow: the arguments of a function that writes into them, copied for its
@@ -179,6 +192,8 @@ private:
 	void write_port_stats() const;
 	void record_unknown(const StringName &name, const char *method);
 	aurelion::rules::bridge::PortBridge &port_bridge(size_t depth);
+	// port_call, and port_session_call on the session's bridge.
+	Variant port_call_on(const StringName &name, const Array &args, bool write_back, bool session);
 
 	Dictionary last_state_stats_;
 	// port_call and port_check: one bridge per nesting depth, made on first
@@ -186,6 +201,8 @@ private:
 	// made it still runs on its own bridge.
 	std::vector<std::unique_ptr<aurelion::rules::bridge::PortBridge>> ports_;
 	size_t port_depth_ = 0;
+	// port_session_call's bridge, made on first use.
+	std::unique_ptr<aurelion::rules::bridge::PortBridge> session_port_;
 	// port_validate_*: the open checks are the first open_validations_.
 	std::vector<std::unique_ptr<Validation>> validations_;
 	size_t open_validations_ = 0;

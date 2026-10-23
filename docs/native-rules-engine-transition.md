@@ -2273,7 +2273,7 @@ Godot dependency, since these slices lead to Phase 8. The bound is 1/(1 - share)
 |---|---|---|---|
 | P6-5 | The runner's per-day digest becomes the Variant hash of the session instead of sha256 of its JSON: Godot's `hash()` in the game, `gd::hash` (the C++ copy) in runner mode and Phase 8. The JSON stays for the dump day. | 56% of checks | 2.3x on checks |
 | P6-3 | `end_turn` as one native call (done: 1.11x measured; `begin` needed no change) | about 14% | about 1.16x |
-| P6-4 | The native session kept across days; runner mode and game mode give the same digests | 31-34% | 1.45-1.52x |
+| P6-4 | The native session kept across days; runner mode and game mode give the same digests (done: 1.19x measured; write-backs, content lookups and the compaction stay) | 31-34% | 1.45-1.52x |
 | P6-1 | Several matches per Godot process | 19.9% (s2 50%) | 1.25x (s2 2.0x) |
 | P6-2 | A map corpus, with the adopted session kept per process | 8.3-14.4% | 1.09-1.17x |
 
@@ -2338,6 +2338,47 @@ Godot dependency, since these slices lead to Phase 8. The bound is 1/(1 - share)
 
   1.11x on the summed runs (9.7% less), against the 1.16x bound. Every seed was faster in every round (l1 43 s to
   38–39 s, s2 10 s to 9 s).
+
+**P6-4, the native session across days** (`native-rules-phase6-p4-session-handle-20261023`, branch
+`native-phase6-session-handle`):
+- **What changed.**
+  - `AurelionRules.port_session_call` runs a port with write-back on a bridge of its own that keeps the session from
+    one call to the next (`PortBridge::begin_kept` and `keep`). `keep` writes back and exports the result. Then
+    `State::compact` keeps the nodes that the arguments and the content rows reach, moved down and renumbered, each
+    now a clean loaded node of its container, and drops the rest. The next call finds every container it loaded before
+    as the same node, filled as far as it was, and reads none of it again.
+  - Between calls only GDScript changes the containers: `port_session_reread` backs a container's node by it again.
+    What the session kept is dropped, and the next call loads everything again, after any of these:
+    - another port call that writes into a container or runs GDScript at a host call;
+    - a session call that fails or falls back to GDScript;
+    - a full `State` or a changed content revision.
+  - `DayEngine.session_calls` names the functions that run on the session. The match runner puts
+    `OverworldRules.end_turn` there and rereads the flags after it empties the decision log;
+    `HEROES_AI_MATCH_KEEP_SESSION=0` loads the session every day, as the game does. The game does not change.
+  - The day still writes back what it changed every day, since the runner reads the session every day for its ledger.
+- **Why the bound is not reached.** Scratch timers on mw and mg-b, the day call in game mode against kept mode:
+  - fills and host lookups fell from 2.15 s to 0.21 s (mw) and from 4.00 s to 0.43 s (mg-b);
+  - the write-back (0.45 s and 0.82 s), content lookups and one static read on day 2 (1.1–1.3 s, every mode) stay;
+  - `keep` adds 0.38 s and 0.74 s (compaction, adopting the exported nodes, renumbering sources and identities): a
+    day makes 60,000–150,000 containers and keeps about 10,000–14,000.
+  - The day call fell 25% (mw, 7.74 s to 5.77 s) and 20% (mg-b, 14.58 s to 11.59 s); s2 did not change.
+- **Checks:**
+  - Six seeds, runner mode against game mode in this tree (`HEROES_AI_MATCH_KEEP_SESSION=0`): all 415 daily digests
+    and the match records identical, the four fallback days among them.
+  - Six seeds native against main 6e490c9e2: all 415 daily digests and the records identical.
+  - Day shadow on the six seeds: `end_turn` 405 checks; all functions 7,394 checks, 0 mismatches, 0 errors, 12 not
+    ported (the elimination days, as on main).
+  - Core suite 17/17.
+- **Timing** (as for P6-3: the six seeds as `tools/ai_match_batch.py` plays them, six at once, three rounds alternating
+  main 6e490c9e2 and P6-4 on a quiet machine):
+
+  | | Wall | Sum of the six runs |
+  |---|---|---|
+  | main (P6-3) | 43.2 s, 43.2 s, 43.2 s | 166.5 s, 168.6 s, 168.5 s |
+  | P6-4 | 36.2 s, 36.2 s, 37.1 s | 140.5 s, 140.4 s, 143.4 s |
+
+  1.19x on the summed runs (15.8% less), against the 1.45-1.52x bound. Every seed was faster in every round
+  (s2 10 s to 9 s, mw 16-17 s to 14 s, l1 39-40 s to 33-34 s, l2 43 s to 36-37 s).
 
 
 ### Phase 7: human-side actions and the last GDScript rules

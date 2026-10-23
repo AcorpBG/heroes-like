@@ -221,6 +221,151 @@ void PortBridge::begin(bool validating, bool host_calls) {
 	made_rngs_.clear();
 }
 
+void PortBridge::begin_kept() {
+	const bool keeps = kept_ && state_.atom_count() <= kAtomLimit && static_cast<int64_t>(content_service()->call(StringName("get_content_revision"))) == kept_revision_;
+	// Until this call ends in keep().
+	kept_ = false;
+	if (!keeps) {
+		begin(false, true);
+		return;
+	}
+	// As begin(false, true), but the nodes, their containers, the content rows
+	// and the opaque values stay.
+	views_.clear();
+	content_revision_ = -1;
+	exported_arrays_.clear();
+	exported_dicts_.clear();
+	exported_packed_.clear();
+	statics_.clear();
+	static_slots_.clear();
+	memo_shapes_.clear();
+	validating_ = false;
+	host_calls_ = true;
+	host_calls_made_.clear();
+	full_host_calls_ = 0;
+	undo_lost_ = false;
+	undo_arrays_.clear();
+	undo_dicts_.clear();
+	undo_packed_.clear();
+	undo_statics_.clear();
+	undo_array_kept_.clear();
+	undo_dict_kept_.clear();
+	undo_packed_kept_.clear();
+	array_snapshots_.clear();
+	dict_snapshots_.clear();
+	packed_snapshots_.clear();
+	rng_states_.clear();
+	made_rngs_.clear();
+}
+
+namespace {
+
+// A compaction's new numbers (State::compact) for the nodes' sources, moved
+// down in place as the nodes were, and for the identities that find them.
+template <typename Source>
+void renumber_sources(std::vector<std::optional<Source>> &sources, const std::vector<uint32_t> &map, size_t kept) {
+	const size_t end = std::min(sources.size(), map.size());
+	for (size_t node = 0; node < end; ++node) {
+		const uint32_t to = map[node];
+		if (to == state::State::kDropped) {
+			sources[node].reset();
+		} else if (to != node) {
+			sources[to] = std::move(sources[node]);
+			sources[node].reset();
+		}
+	}
+	sources.resize(kept);
+}
+
+void renumber_identities(std::unordered_map<uint64_t, uint32_t> &nodes, const std::vector<uint32_t> &map) {
+	for (auto entry = nodes.begin(); entry != nodes.end();) {
+		const uint32_t to = entry->second < map.size() ? map[entry->second] : state::State::kDropped;
+		if (to == state::State::kDropped) {
+			entry = nodes.erase(entry);
+		} else {
+			entry->second = to;
+			++entry;
+		}
+	}
+}
+
+} // namespace
+
+Variant PortBridge::keep(const Value &result, const Value *args, size_t count) {
+	write_back();
+	const Variant exported = export_value(result);
+	adopt_exported();
+	std::vector<Value> roots(args, args + count);
+	for (const ObjectView &view : views_) {
+		roots.push_back(Value::of_ref(Kind::Dict, view.node));
+	}
+	for (const auto &row : content_) {
+		roots.push_back(row.second);
+	}
+	views_.clear();
+	const state::State::Compaction maps = state_.compact(roots, opaque_.size());
+	renumber_sources(array_sources_, maps.arrays, state_.array_count());
+	renumber_sources(dict_sources_, maps.dicts, state_.dict_count());
+	renumber_sources(packed_sources_, maps.packeds, state_.packed_count());
+	renumber_identities(array_nodes_, maps.arrays);
+	renumber_identities(dict_nodes_, maps.dicts);
+	renumber_identities(packed_nodes_, maps.packeds);
+	size_t kept_slots = 0;
+	for (size_t slot = 0; slot < maps.opaques.size(); ++slot) {
+		if (maps.opaques[slot] != state::State::kDropped) {
+			if (kept_slots != slot) {
+				opaque_[kept_slots] = std::move(opaque_[slot]);
+			}
+			++kept_slots;
+		}
+	}
+	opaque_.resize(kept_slots);
+	for (auto &row : content_) {
+		row.second.ref = maps.dicts[row.second.ref];
+	}
+	kept_revision_ = static_cast<int64_t>(content_service()->call(StringName("get_content_revision")));
+	kept_ = true;
+	return exported;
+}
+
+void PortBridge::reread(const Variant &container) {
+	if (!kept_) {
+		return;
+	}
+	switch (container.get_type()) {
+		case Variant::ARRAY: {
+			const Array array = container;
+			const auto found = array_nodes_.find(identity_of(array));
+			if (found != array_nodes_.end()) {
+				state_.array_node(found->second).reset();
+				back_array(found->second, array);
+			}
+			break;
+		}
+		case Variant::DICTIONARY: {
+			const Dictionary dict = container;
+			const auto found = dict_nodes_.find(identity_of(dict));
+			if (found != dict_nodes_.end()) {
+				state_.dict_node(found->second).reset();
+				back_dict(found->second, dict);
+			}
+			break;
+		}
+		case Variant::PACKED_BYTE_ARRAY:
+		case Variant::PACKED_INT32_ARRAY:
+		case Variant::PACKED_STRING_ARRAY: {
+			const auto found = packed_nodes_.find(identity_of_packed(container));
+			if (found != packed_nodes_.end()) {
+				state_.packed_node(found->second).reset();
+				back_packed(found->second, container);
+			}
+			break;
+		}
+		default:
+			break;
+	}
+}
+
 state::TypeRef PortBridge::register_type(int64_t builtin, const StringName &class_name, const Variant &script) {
 	for (size_t index = 0; index < types_.size(); ++index) {
 		const TypeInfo &known = types_[index];
