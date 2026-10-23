@@ -2740,6 +2740,17 @@ Checks:
 - Measured in the probes: loading every content file 266 ms on main, 94 to 97 ms on the branch; the start-up checks
   595 ms on main, 331 ms on the branch with the archived checks still in GDScript.
 
+**Merge 1a** (7.1 and 7.10, 2026-10-23): merged to main after main was tagged `pre-native-phase7-merge-1a` (D10).
+- 7.1's 17 functions are NATIVE entries of the human registry: `tools/native_battle_switch.py` writes them as thin
+  wrappers over `HumanEngine.native` and `native_writing`, and deletes their switches and GDScript bodies (716 lines,
+  D-d). No function on main reads `HEROES_NATIVE_HUMAN`; a later slice's switches exist on its branch.
+- While working, on 7.10 (3991505dd): human shadow on the eight `--human` seeds, 5,328,486 checks of the 17
+  functions, 0 mismatches and 0 errors; day shadow on the six seeds, 7,829 checks, 0 mismatches and 0 errors.
+- The merged code (21d6e16b6) against main 4eb648cfe: the `--human` check identical on the eight seeds, 1,896 action
+  digests and the records; the six seeds identical, 443 daily digests and the match records; core suite 17/17.
+- UI speed, screen time per action in ms, main | branch, with other runs on the machine: town actions 1,371 | 1,134, end of turn 1,416 | 1,406, battle 646 | 643, move 216 | 214; every other kind within 6 ms either way (opening a town 92 | 94). No kind got slower beyond that noise.
+- Coverage: the human shadow reached all 17 functions; the two probes above cover 7.10's lookups and checks.
+
 ### Phase 8: a match runner without Godot
 
 Wanted, not optional (owner decision 2026-10-22, D7). The same core as a command-line tool. Needs the copied Variant hash and either deterministic math or accepted last-bit

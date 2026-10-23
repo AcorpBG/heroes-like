@@ -116622,15 +116622,15 @@
     {
       "id": "native-rules-phase7-01-routes-20261023",
       "title": "Phase 7.1: the human route search native",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "The route search out of OverworldShell (_build_path, _route_path_lengths) as one native call, with the route queries it calls (22 GDScript functions, 516 lines); the --human mode of tools/rules_parity.py; HEROES_NATIVE_HUMAN on the branch. Frozen functions named in PLAN.md. Implemented (transition doc, Phase 7, Slice 7.1): human shadow on the eight --human seeds 0 mismatches, day shadow on the six seeds 7,829 checks 0 mismatches. Merges with 7.10 (merge 1a), after the --human check against main.",
-      "updatedAt": "2026-10-23T14:03:00Z"
+      "notes": "The route search out of OverworldShell (_build_path, _route_path_lengths) as one native call, with the route queries it calls (22 GDScript functions, 516 lines); the --human mode of tools/rules_parity.py; HEROES_NATIVE_HUMAN on the branch. Frozen functions named in PLAN.md. Implemented (transition doc, Phase 7, Slice 7.1): human shadow on the eight --human seeds 0 mismatches, day shadow on the six seeds 7,829 checks 0 mismatches. Merges with 7.10 (merge 1a), after the --human check against main. Merged to main 2026-10-23 (merge 1a, main tagged pre-native-phase7-merge-1a): its 17 functions thin wrappers over their port, the GDScript bodies deleted (D-d); --human check against main identical on the eight seeds (1,896 action digests), six seeds identical (443 digests), core suite 17/17.",
+      "updatedAt": "2026-10-23T21:30:00Z"
     },
     {
       "id": "native-rules-phase7-02-move-20261023",
@@ -116739,15 +116739,15 @@
     {
       "id": "native-rules-phase7-10-content-20261023",
       "title": "Phase 7.10: content loading",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Implemented (transition doc, Phase 7, Slice 7.10): the content files parsed in C++ by a port of the engine's JSON.parse, ContentService's lookups, overrides and revision in content::Store, the live files' start-up checks in core/content_validate.cpp; the archived content's start-up checks deleted (owner decision 2026-10-23, D-i). Tables main vs branch: 8,178 lines identical; start-up checks on the shipped files and 1,929 broken copies: the same warnings and runtime-error counts in 1,919 of 1,930 cases; the rest explained in the slice entry (canonical_town_id fixed). Merges with 7.1 (merge 1a).",
-      "updatedAt": "2026-10-23T23:30:00Z"
+      "notes": "Implemented (transition doc, Phase 7, Slice 7.10): the content files parsed in C++ by a port of the engine's JSON.parse, ContentService's lookups, overrides and revision in content::Store, the live files' start-up checks in core/content_validate.cpp; the archived content's start-up checks deleted (owner decision 2026-10-23, D-i). Tables main vs branch: 8,178 lines identical; start-up checks on the shipped files and 1,929 broken copies: the same warnings and runtime-error counts in 1,919 of 1,930 cases; the rest explained in the slice entry (canonical_town_id fixed). Merges with 7.1 (merge 1a). Merged to main 2026-10-23 (merge 1a): --human check against main identical on the eight seeds, six seeds identical, core suite 17/17.",
+      "updatedAt": "2026-10-23T21:30:00Z"
     },
     {
       "id": "native-rules-phase7-11-setup-20261023",
