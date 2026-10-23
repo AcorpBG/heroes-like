@@ -2838,6 +2838,27 @@ Checks, main 2abd6e086 against the branch, with a scratch probe and isolated pro
   - 15 autosaves of the same copy, before the engine compare: main 1,125 to 1,146 ms with 530 to 570 MB private
     memory, the branch 1,123 to 1,161 ms with 465 to 585 MB.
 
+**Merge 1b** (7.11 and 7.12, 2026-10-24): merged to main after main was tagged `pre-native-phase7-merge-1b` (D10).
+- Main was merged into the branch twice on the way, at 92c672a3e (Phase 8's P8-1 and P8-2) and at 36ea734e1 (P8-3 to
+  P8-6). Only the Windows binaries conflicted, and they were rebuilt.
+- Fixed on the way, found by the merge's checks:
+  - The end of turn was about 140 ms slower than main's on all eight `--human` seeds. `payload_for_storage` compared
+    the save's two copies of the scenario record natively; `gd::equal_loaded` compares them in the engine.
+  - `battle_ai_flow_report`: an engine service's null object (`DirAccess.open` of a missing folder) loaded as an
+    opaque value, not null (`PortBridge::load_answer`).
+  - `save_summary_deferred_payload_report` crashed at exit. `engine_singleton` reached `Time` through
+    `Engine::get_singleton(name)`, which leaves an instance binding that the engine frees after the library is gone.
+    `Time` and `ProjectSettings` now come through their own `get_singleton()`, whose bindings godot-cpp frees. A
+    non-session port call also drops what it loaded when it returns (`PortBridge::end`).
+- Checks of the merged code against main 36ea734e1:
+  - the `--human` check identical on the eight seeds, 1,896 action digests and the records;
+  - the six seeds identical, 443 daily digests and the match records;
+  - core suite 17/17.
+- UI speed, screen time per action in ms, main | branch: end of turn 1,350 | 1,305 (before the engine compare
+  1,387 | 1,527), town actions 1,086 | 1,072, battle 622 | 594, move 203 | 192, opening a town 88 | 80, dialogs
+  146 | 140; every other kind within 4 ms either way. No kind got slower.
+- Coverage: the 7.11 and 7.12 entries above.
+
 ### Phase 8: a match runner without Godot
 
 Wanted, not optional (owner decision 2026-10-22, D7). The same core as a command-line tool, `match_sim_cli` beside

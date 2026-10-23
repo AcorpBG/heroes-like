@@ -116752,28 +116752,28 @@
     {
       "id": "native-rules-phase7-11-setup-20261023",
       "title": "Phase 7.11: game setup",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Transition doc, Phase 7, Slices. With the generator's setup part (normalize_config, the materialization identity; D-g): RandomMapGeneratorRules.generate and the legacy rebuild path are deleted, its three core tests (random_map_seeded_generator_core_report, random_map_final_writeout_export_save_schema_report, generated_start_hero_growth_seed_report) move to the native generator and the other tests calling it are retired (D-e). In progress 2026-10-23 on branch native-phase7-human, for merge 1b with 7.12.",
-      "updatedAt": "2026-10-23T22:00:00Z"
+      "notes": "Implemented (transition doc, Phase 7, Slice 7.11): game setup in C++ through the human registry, from the menu's options to the session; RandomMapGeneratorRules.generate, the rest of the GDScript generator, the GDScript MapPackageService and the legacy rebuild path deleted (D-g); three core tests moved to the native generator, 17 tests retired (docs/game-setup-test-retirement.md). New games main vs branch: 28 of 28 identical apart from the packages' file times. Merged to main 2026-10-24 (merge 1b, main tagged pre-native-phase7-merge-1b first): against main 36ea734e1, the --human check identical on the eight seeds, 1,896 action digests; the six seeds identical, 443 daily digests; core suite 17/17.",
+      "updatedAt": "2026-10-23T21:24:39Z"
     },
     {
       "id": "native-rules-phase7-12-saves-20261023",
       "title": "Phase 7.12: saves",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Transition doc, Phase 7, Slices. In progress 2026-10-23 on branch native-phase7-human, for merge 1b with 7.11: SaveService, SessionStateStore.normalize_payload and its helpers, SessionData.payload_for_storage and share_runtime_scenario_record and HeroCommandRules.restore_empty_hero_armies in C++; ProfileLog and the summaries' screen texts stay GDScript as host calls. Implemented 2026-10-23: the D9 copies against main 2abd6e086, phase a 54 labels, phase b 10, phase c 49, 0 differ; 10 of 10 cross-loads the same session; 207 of main's 229 functions reached, 16 deleted, 6 named unproven (transition doc, Slice 7.12). Completes at merge 1b's checks.",
-      "updatedAt": "2026-10-24T00:00:00Z"
+      "notes": "Implemented (transition doc, Phase 7, Slice 7.12): every SaveService function, SessionStateStore.normalize_payload and its helpers and HeroCommandRules.restore_empty_hero_armies in C++ through the human registry; ProfileLog and the summaries' screen texts stay GDScript as host calls; SessionData.payload_for_storage and share_runtime_scenario_record keep a GDScript copy. The D9 copies against main 2abd6e086: phase a 54 labels, phase b 10, phase c 49, 0 differ; 10 of 10 cross-loads the same session; 207 of main's 229 functions reached, 16 deleted, 6 named unproven; a save without player records stops at the day port's left-out path. 3 tests retired (docs/save-test-retirement.md). Merged to main 2026-10-24 (merge 1b, main tagged pre-native-phase7-merge-1b first): against main 36ea734e1, the --human check identical on the eight seeds, 1,896 action digests; the six seeds identical, 443 daily digests; core suite 17/17.",
+      "updatedAt": "2026-10-23T21:24:39Z"
     },
     {
       "id": "native-rules-phase7-13-map-editor-20261023",
