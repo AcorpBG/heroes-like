@@ -88,6 +88,7 @@ class Subsystem:
 # One entry per subsystem: its registry file in core/port and its engine script.
 SUBSYSTEMS = {
     "day": Subsystem("day_registry.cpp", "DayEngine", fallback=True, validate=True),
+    "human": Subsystem("human_registry.cpp", "HumanEngine", fallback=False, validate=True),
 }
 
 

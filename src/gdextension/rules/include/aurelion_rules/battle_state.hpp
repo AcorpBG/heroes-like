@@ -9,7 +9,7 @@
 // Containers live in the State's pools and Values refer to them by index, so a
 // container reached from two places is one node, as it is one object in Godot.
 // Strings are interned: equal texts have one atom, and the texts the port
-// names in code (battle_keys.inc, day_keys.inc, ai_keys.inc, turn_keys.inc) have fixed atoms. Pool references stay valid
+// names in code (battle_keys.inc, day_keys.inc, ai_keys.inc, turn_keys.inc, human_keys.inc) have fixed atoms. Pool references stay valid
 // while nodes are added (NodePool).
 //
 // A node can be backed: its contents still live in the adapter's container and
@@ -126,6 +126,7 @@ enum : uint32_t {
 #include "aurelion_rules/day_keys.inc"
 #include "aurelion_rules/ai_keys.inc"
 #include "aurelion_rules/turn_keys.inc"
+#include "aurelion_rules/human_keys.inc"
 #undef AURELION_KEY
 	known_count,
 };

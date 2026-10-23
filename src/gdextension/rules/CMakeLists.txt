@@ -191,6 +191,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/hero_progression_rules.cpp
 	core/port/hero_progression_rules_shared.cpp
 	core/port/hero_rules_turn.cpp
+	core/port/human_registry.cpp
 	core/port/mine_rules.cpp
 	core/port/mine_rules_ai.cpp
 	core/port/move_orders.cpp
@@ -209,6 +210,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/overworld_rules_ai_recovery.cpp
 	core/port/overworld_rules_ai_sites.cpp
 	core/port/overworld_rules_ai_towns.cpp
+	core/port/overworld_rules_routes.cpp
 	core/port/overworld_rules_shared.cpp
 	core/port/overworld_rules_turn.cpp
 	core/port/overworld_rules_turn_rare.cpp

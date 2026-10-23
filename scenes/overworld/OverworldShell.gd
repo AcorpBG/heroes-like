@@ -9709,73 +9709,8 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 		return []
 	var debug_timing_enabled := _debug_route_timing_active()
 	var debug_profile_start := _profile_begin("route_bfs") if debug_timing_enabled else 0
-	if not _tile_in_bounds(goal):
-		_debug_finish_route_bfs_profile(debug_timing_enabled, debug_profile_start, start, goal, "goal_out_of_bounds", 0, 0, 0, 0)
-		return []
-	if start == goal:
-		_debug_finish_route_bfs_profile(debug_timing_enabled, debug_profile_start, start, goal, "same_tile", 1, 1, 0, 0)
-		return [start]
-	if OverworldRules.hero_route_tile_blocked(_session, goal.x, goal.y) and not OverworldRules.hero_route_destination(_session, goal.x, goal.y):
-		_debug_finish_route_bfs_profile(debug_timing_enabled, debug_profile_start, start, goal, "goal_blocked", 0, 0, 1, 0)
-		return []
-	var queue: Array = [start]
-	var queue_index := 0
-	var visited = {_tile_key(start): true}
-	var came_from = {_tile_key(start): start}
-	var found = false
-	var blocked_tile_lookup_count := 1 if debug_timing_enabled else 0
-	var enqueued_count := 1 if debug_timing_enabled else 0
-	var linked_transit_edges := OverworldRules.active_linked_transit_edges(_session)
-
-	while queue_index < queue.size():
-		var current: Vector2i = queue[queue_index]
-		queue_index += 1
-		if current == goal:
-			found = true
-			break
-		for direction in DIRECTIONS:
-			var next: Vector2i = current + direction
-			if not _tile_in_bounds(next):
-				continue
-			# Skip already-reached tiles before the costly blocking checks.
-			var key = _tile_key(next)
-			if visited.has(key):
-				continue
-			if debug_timing_enabled:
-				blocked_tile_lookup_count += 1
-			if OverworldRules.tile_step_cuts_blocked_corner(_session, current, next):
-				continue
-			if OverworldRules.hero_route_tile_blocked(_session, next.x, next.y) and not (next == goal and OverworldRules.hero_route_destination(_session, next.x, next.y)):
-				continue
-			if next != goal and OverworldRules.tile_has_route_interaction(_session, next.x, next.y):
-				continue
-			visited[key] = true
-			came_from[key] = current
-			queue.append(next)
-			if debug_timing_enabled:
-				enqueued_count += 1
-		for linked_next in OverworldRules.linked_transit_neighbors_from_edges(linked_transit_edges, current):
-			if not (linked_next is Vector2i):
-				continue
-			var linked_key = _tile_key(linked_next)
-			if visited.has(linked_key):
-				continue
-			visited[linked_key] = true
-			came_from[linked_key] = current
-			queue.append(linked_next)
-			if debug_timing_enabled:
-				enqueued_count += 1
-
-	if not found:
-		_debug_finish_route_bfs_profile(debug_timing_enabled, debug_profile_start, start, goal, "not_found", 0, visited.size(), blocked_tile_lookup_count, enqueued_count)
-		return []
-
-	var path: Array = [goal]
-	var walker: Vector2i = goal
-	while walker != start:
-		walker = came_from.get(_tile_key(walker), start)
-		path.push_front(walker)
-	_debug_finish_route_bfs_profile(debug_timing_enabled, debug_profile_start, start, goal, "found", path.size(), visited.size(), blocked_tile_lookup_count, enqueued_count)
+	var path := OverworldRules.hero_route_path(_session, start, goal)
+	_debug_finish_route_bfs_profile(debug_timing_enabled, debug_profile_start, start, goal, "found" if not path.is_empty() else "not_found", path.size(), 0, 0, 0)
 	return path
 
 func _tile_in_bounds(tile: Vector2i) -> bool:
@@ -9881,64 +9816,12 @@ func _opening_route_candidate(hero_pos: Vector2i, target_spec: Dictionary, path_
 		"stable_key": "%s|%05d|%05d" % [String(target_spec.stable_id), target.y, target.x],
 	}
 
-## Route lengths in tiles (start included) to several goals from one
-## breadth-first flood. Each length equals _build_path(start, goal).size():
-## a goal is recorded where that search would first reach it, while the flood
-## itself only crosses tiles an ordinary route may cross, so no goal changes
-## the path to another. Unreachable goals are left out.
+## Route lengths in tiles (start included) to several goals, by goal
+## (OverworldRules.hero_route_path_lengths); unreachable goals are left out.
 func _route_path_lengths(start: Vector2i, goals: Array) -> Dictionary:
-	var lengths := {}
 	if not _viewing_hero_level():
-		return lengths
-	var pending := {}
-	for goal_value in goals:
-		var goal: Vector2i = goal_value
-		if not _tile_in_bounds(goal):
-			continue
-		if goal == start:
-			lengths[goal] = 1
-		elif not OverworldRules.hero_route_tile_blocked(_session, goal.x, goal.y) or OverworldRules.hero_route_destination(_session, goal.x, goal.y):
-			pending[goal] = true
-	if pending.is_empty():
-		return lengths
-	var queue: Array = [start]
-	var queue_index := 0
-	var path_sizes := {_tile_key(start): 1}
-	var transit_edges := OverworldRules.active_linked_transit_edges(_session)
-	while queue_index < queue.size() and not pending.is_empty():
-		var current: Vector2i = queue[queue_index]
-		queue_index += 1
-		var next_size := int(path_sizes[_tile_key(current)]) + 1
-		for direction in DIRECTIONS:
-			var next: Vector2i = current + direction
-			if not _tile_in_bounds(next):
-				continue
-			var key = _tile_key(next)
-			var is_pending_goal := pending.has(next)
-			if path_sizes.has(key) and not is_pending_goal:
-				continue
-			if OverworldRules.tile_step_cuts_blocked_corner(_session, current, next):
-				continue
-			var blocked := OverworldRules.hero_route_tile_blocked(_session, next.x, next.y)
-			if is_pending_goal and (not blocked or OverworldRules.hero_route_destination(_session, next.x, next.y)):
-				lengths[next] = next_size
-				pending.erase(next)
-			if path_sizes.has(key) or blocked or OverworldRules.tile_has_route_interaction(_session, next.x, next.y):
-				continue
-			path_sizes[key] = next_size
-			queue.append(next)
-		for linked_next in OverworldRules.linked_transit_neighbors_from_edges(transit_edges, current):
-			if not (linked_next is Vector2i):
-				continue
-			if pending.has(linked_next):
-				lengths[linked_next] = next_size
-				pending.erase(linked_next)
-			var linked_key = _tile_key(linked_next)
-			if path_sizes.has(linked_key):
-				continue
-			path_sizes[linked_key] = next_size
-			queue.append(linked_next)
-	return lengths
+		return {}
+	return OverworldRules.hero_route_path_lengths(_session, start, goals)
 
 func _prefer_opening_route_candidate(current: Dictionary, candidate: Dictionary) -> Dictionary:
 	if candidate.is_empty():

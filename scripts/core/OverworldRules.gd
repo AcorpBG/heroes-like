@@ -21,6 +21,16 @@ const GENERATED_TRANSIT_TRANSLATION_VERSION := 2
 # Portal trips per traveller, part of the random-exit roll (docs/portal-networks.md).
 const NATIVE_TRANSIT_TRIPS_KEY := "native_transit_trips"
 const ROUTE_LOCK_CHOICE_ID := "open_route"
+## The steps of the active hero's route search, in the order it tries them:
+## the overworld's, and the map view's own search (hero_route_path's `plain`).
+const ROUTE_DIRECTIONS := [
+	Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT,
+	Vector2i(-1, -1), Vector2i(1, -1), Vector2i(-1, 1), Vector2i(1, 1),
+]
+const PLAIN_ROUTE_DIRECTIONS := [
+	Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN,
+	Vector2i(-1, -1), Vector2i(1, -1), Vector2i(-1, 1), Vector2i(1, 1),
+]
 # Troops a claimed site offered that did not fit the visiting hero's army; the
 # hero may dismiss a stack to take them or leave them behind.
 const PENDING_SITE_RECRUITS_KEY := "pending_site_recruits"
@@ -32,6 +42,8 @@ const EXPLORED_TILES_KEY := "explored_tiles"
 const TOWN_VISION_RADIUS := 8
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const DayEngine = preload("res://scripts/core/DayEngine.gd")
+const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 static var _day_engine_mode: int = DayEngine.mode
 const ACTIVE_TOWN_PLACEMENT_KEY := "active_town_placement_id"
 const COMMAND_BRIEFING_KEY := "command_briefing"
@@ -754,7 +766,16 @@ static func try_move(session: SessionStateStoreScript.SessionData, dx: int, dy: 
 		return {"ok": false, "message": "The map edge blocks further travel."}
 	return try_move_along_route(session, [pos, Vector2i(nx, ny)], movement_left)
 
-static func route_movement_preview(
+static func route_movement_preview(session: SessionStateStoreScript.SessionData, route_tiles: Variant, movement_budget: int = -1) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return route_movement_preview__gd(session, route_tiles, movement_budget)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"OverworldRules.route_movement_preview", [session, route_tiles, movement_budget])
+	var result = route_movement_preview__gd(session, route_tiles, movement_budget)
+	HumanEngine.check(&"OverworldRules.route_movement_preview", [session, route_tiles, movement_budget], result)
+	return result
+
+static func route_movement_preview__gd(
 	session: SessionStateStoreScript.SessionData,
 	route_tiles: Variant,
 	movement_budget: int = -1
@@ -991,6 +1012,16 @@ static func _native_travel_message(node: Dictionary, destination: Vector3i) -> S
 	return "Travelled through the %s and came out at %d,%d." % [native_portal_display_name(node), destination.x, destination.y]
 
 static func active_linked_transit_edges(session: SessionStateStoreScript.SessionData, level: int = -1) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return active_linked_transit_edges__gd(session, level)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.active_linked_transit_edges", [session, level])
+	var before := HumanEngine.before_writing(&"OverworldRules.active_linked_transit_edges", [session, level])
+	var result = active_linked_transit_edges__gd(session, level)
+	HumanEngine.check_writing(&"OverworldRules.active_linked_transit_edges", before, [session, level], result)
+	return result
+
+static func active_linked_transit_edges__gd(session: SessionStateStoreScript.SessionData, level: int = -1) -> Array:
 	var edges := []
 	if session == null:
 		return edges
@@ -1127,6 +1158,15 @@ static func active_linked_transit_edges(session: SessionStateStoreScript.Session
 	return edges
 
 static func linked_transit_neighbors_from_edges(edges: Array, tile: Vector2i) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return linked_transit_neighbors_from_edges__gd(edges, tile)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"OverworldRules.linked_transit_neighbors_from_edges", [edges, tile])
+	var result = linked_transit_neighbors_from_edges__gd(edges, tile)
+	HumanEngine.check(&"OverworldRules.linked_transit_neighbors_from_edges", [edges, tile], result)
+	return result
+
+static func linked_transit_neighbors_from_edges__gd(edges: Array, tile: Vector2i) -> Array:
 	var neighbors := []
 	for edge_value in edges:
 		if not (edge_value is Dictionary):
@@ -1158,6 +1198,16 @@ static func active_linked_transit_step(
 	return {}
 
 static func active_linked_transit_signature(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return active_linked_transit_signature__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.active_linked_transit_signature", [session])
+	var before := HumanEngine.before_writing(&"OverworldRules.active_linked_transit_signature", [session])
+	var result = active_linked_transit_signature__gd(session)
+	HumanEngine.check_writing(&"OverworldRules.active_linked_transit_signature", before, [session], result)
+	return result
+
+static func active_linked_transit_signature__gd(session: SessionStateStoreScript.SessionData) -> String:
 	# The shell's selected-route signature asks for this several times per
 	# refresh, and each call rescans every resource node. A normalized read
 	# scope guarantees the session is not changing, so compute it once there.
@@ -3259,9 +3309,29 @@ static func _engaging_encounter_at_tile(session: SessionStateStoreScript.Session
 	return {}
 
 static func guard_engagement_encounter_at_tile(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return guard_engagement_encounter_at_tile__gd(session, x, y, level)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.guard_engagement_encounter_at_tile", [session, x, y, level])
+	var before := HumanEngine.before_writing(&"OverworldRules.guard_engagement_encounter_at_tile", [session, x, y, level])
+	var result = guard_engagement_encounter_at_tile__gd(session, x, y, level)
+	HumanEngine.check_writing(&"OverworldRules.guard_engagement_encounter_at_tile", before, [session, x, y, level], result)
+	return result
+
+static func guard_engagement_encounter_at_tile__gd(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> Dictionary:
 	return _find_guard_engagement_at_tile(session, x, y, level).get("encounter", {})
 
 static func guard_engagement_approach_route(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return guard_engagement_approach_route__gd(session, encounter)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.guard_engagement_approach_route", [session, encounter])
+	var before := HumanEngine.before_writing(&"OverworldRules.guard_engagement_approach_route", [session, encounter])
+	var result = guard_engagement_approach_route__gd(session, encounter)
+	HumanEngine.check_writing(&"OverworldRules.guard_engagement_approach_route", before, [session, encounter], result)
+	return result
+
+static func guard_engagement_approach_route__gd(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> Array:
 	# The painted stack sits inside its terminal engagement ring. A player
 	# selects the stack, but must walk only to the first legal combat entry.
 	# One multi-target BFS avoids repeating a map-sized search for each entry.
@@ -3488,7 +3558,16 @@ static func overworld_object_placement_pathing_surface(
 		"blocks_visual_footprint_rectangle": false,
 	}
 
-static func blocking_object_feedback_surface_at_tile(
+static func blocking_object_feedback_surface_at_tile(session: SessionStateStoreScript.SessionData, x: int, y: int) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return blocking_object_feedback_surface_at_tile__gd(session, x, y)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"OverworldRules.blocking_object_feedback_surface_at_tile", [session, x, y])
+	var result = blocking_object_feedback_surface_at_tile__gd(session, x, y)
+	HumanEngine.check(&"OverworldRules.blocking_object_feedback_surface_at_tile", [session, x, y], result)
+	return result
+
+static func blocking_object_feedback_surface_at_tile__gd(
 	session: SessionStateStoreScript.SessionData,
 	x: int,
 	y: int
@@ -3548,6 +3627,16 @@ static func blocking_object_feedback_surface_at_tile(
 	return {}
 
 static func tile_is_blocked(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return tile_is_blocked__gd(session, x, y, level)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.tile_is_blocked", [session, x, y, level])
+	var before := HumanEngine.before_writing(&"OverworldRules.tile_is_blocked", [session, x, y, level])
+	var result = tile_is_blocked__gd(session, x, y, level)
+	HumanEngine.check_writing(&"OverworldRules.tile_is_blocked", before, [session, x, y, level], result)
+	return result
+
+static func tile_is_blocked__gd(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
 	var map_data = map_for_level(session, level)
 	if y < 0 or not (map_data is Array) or y >= map_data.size():
 		return true
@@ -3583,6 +3672,16 @@ static func _terrain_id_is_passable_uncached(terrain_id: String) -> bool:
 	return true
 
 static func tile_has_route_interaction(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1, exact_target_only: bool = false) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return tile_has_route_interaction__gd(session, x, y, level, exact_target_only)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.tile_has_route_interaction", [session, x, y, level, exact_target_only])
+	var before := HumanEngine.before_writing(&"OverworldRules.tile_has_route_interaction", [session, x, y, level, exact_target_only])
+	var result = tile_has_route_interaction__gd(session, x, y, level, exact_target_only)
+	HumanEngine.check_writing(&"OverworldRules.tile_has_route_interaction", before, [session, x, y, level, exact_target_only], result)
+	return result
+
+static func tile_has_route_interaction__gd(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1, exact_target_only: bool = false) -> bool:
 	if session == null:
 		return false
 	var capture_enabled := bool(_pathing_debug_profile.get("capture_enabled", false))
@@ -3636,11 +3735,31 @@ static func tile_has_route_interaction(session: SessionStateStoreScript.SessionD
 	return false
 
 static func tile_is_actionable_route_destination(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return tile_is_actionable_route_destination__gd(session, x, y, level)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.tile_is_actionable_route_destination", [session, x, y, level])
+	var before := HumanEngine.before_writing(&"OverworldRules.tile_is_actionable_route_destination", [session, x, y, level])
+	var result = tile_is_actionable_route_destination__gd(session, x, y, level)
+	HumanEngine.check_writing(&"OverworldRules.tile_is_actionable_route_destination", before, [session, x, y, level], result)
+	return result
+
+static func tile_is_actionable_route_destination__gd(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
 	return tile_has_route_interaction(session, x, y, level)
 
 ## Route blocking for the active hero. A walking hero treats water as blocked;
 ## a sailing hero moves only on open water (WaterTravelRules).
 static func hero_route_tile_blocked(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return hero_route_tile_blocked__gd(session, x, y, level)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.hero_route_tile_blocked", [session, x, y, level])
+	var before := HumanEngine.before_writing(&"OverworldRules.hero_route_tile_blocked", [session, x, y, level])
+	var result = hero_route_tile_blocked__gd(session, x, y, level)
+	HumanEngine.check_writing(&"OverworldRules.hero_route_tile_blocked", before, [session, x, y, level], result)
+	return result
+
+static func hero_route_tile_blocked__gd(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
 	if not WaterTravel.is_sailing(session):
 		return tile_is_blocked(session, x, y, level)
 	level = OverworldLevelRulesScript.query_level(session, level)
@@ -3654,6 +3773,16 @@ static func hero_route_tile_blocked(session: SessionStateStoreScript.SessionData
 ## end on a free boat to board it, never on other water. A sailing hero may end
 ## on a water interaction, or on open shore or a shore interaction to step off.
 static func hero_route_destination(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return hero_route_destination__gd(session, x, y, level)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.hero_route_destination", [session, x, y, level])
+	var before := HumanEngine.before_writing(&"OverworldRules.hero_route_destination", [session, x, y, level])
+	var result = hero_route_destination__gd(session, x, y, level)
+	HumanEngine.check_writing(&"OverworldRules.hero_route_destination", before, [session, x, y, level], result)
+	return result
+
+static func hero_route_destination__gd(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
 	level = OverworldLevelRulesScript.query_level(session, level)
 	if WaterTravel.is_sailing(session):
 		if WaterTravel.is_water(session, x, y, level):
@@ -3665,7 +3794,147 @@ static func hero_route_destination(session: SessionStateStoreScript.SessionData,
 		return false
 	return tile_is_actionable_route_destination(session, x, y, level)
 
+## The active hero's route from start to goal, both included, or [] when there
+## is none: the first route a breadth-first search finds, stepping in the eight
+## directions without cutting a blocked corner, through tiles the hero may
+## cross that hold no interaction, and along the active linked transit edges.
+## A blocked goal ends a route when it is a route destination (a free boat to
+## board, a site on an object body). `plain` is the map view's own search for
+## a screen without the overworld's route: no blocked goal ends a route, no
+## linked transit edge is crossed, and the steps go in its order.
+static func hero_route_path(session: SessionStateStoreScript.SessionData, start: Vector2i, goal: Vector2i, level: int = -1, plain: bool = false) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return hero_route_path__gd(session, start, goal, level, plain)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.hero_route_path", [session, start, goal, level, plain])
+	var before := HumanEngine.before_writing(&"OverworldRules.hero_route_path", [session, start, goal, level, plain])
+	var result = hero_route_path__gd(session, start, goal, level, plain)
+	HumanEngine.check_writing(&"OverworldRules.hero_route_path", before, [session, start, goal, level, plain], result)
+	return result
+
+static func hero_route_path__gd(session: SessionStateStoreScript.SessionData, start: Vector2i, goal: Vector2i, level: int = -1, plain: bool = false) -> Array:
+	if session == null:
+		return []
+	var size := derive_map_size(session)
+	if goal.x < 0 or goal.y < 0 or goal.x >= size.x or goal.y >= size.y:
+		return []
+	if start == goal:
+		return [start]
+	if hero_route_tile_blocked(session, goal.x, goal.y, level) and (plain or not hero_route_destination(session, goal.x, goal.y, level)):
+		return []
+	var directions: Array = PLAIN_ROUTE_DIRECTIONS if plain else ROUTE_DIRECTIONS
+	var transit_edges := [] if plain else active_linked_transit_edges(session, level)
+	var queue: Array = [start]
+	var queue_index := 0
+	var came_from := {start: start}
+	while queue_index < queue.size():
+		var current: Vector2i = queue[queue_index]
+		queue_index += 1
+		if current == goal:
+			var path: Array = [goal]
+			var walker := goal
+			while walker != start:
+				walker = came_from[walker]
+				path.push_front(walker)
+			return path
+		for direction in directions:
+			var next: Vector2i = current + direction
+			if next.x < 0 or next.y < 0 or next.x >= size.x or next.y >= size.y or came_from.has(next):
+				continue
+			if tile_step_cuts_blocked_corner(session, current, next, level):
+				continue
+			if hero_route_tile_blocked(session, next.x, next.y, level) and (plain or next != goal or not hero_route_destination(session, next.x, next.y, level)):
+				continue
+			if next != goal and tile_has_route_interaction(session, next.x, next.y, level):
+				continue
+			came_from[next] = current
+			queue.append(next)
+		for linked_next in linked_transit_neighbors_from_edges(transit_edges, current):
+			if not (linked_next is Vector2i) or came_from.has(linked_next):
+				continue
+			came_from[linked_next] = current
+			queue.append(linked_next)
+	return []
+
+## Route lengths in tiles (start included) to several goals from one
+## breadth-first flood, by goal. Each length equals hero_route_path(session,
+## start, goal).size(): a goal is recorded where that search would first reach
+## it, while the flood itself only crosses tiles an ordinary route may cross,
+## so no goal changes the path to another. Unreachable goals are left out.
+static func hero_route_path_lengths(session: SessionStateStoreScript.SessionData, start: Vector2i, goals: Array) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return hero_route_path_lengths__gd(session, start, goals)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.hero_route_path_lengths", [session, start, goals])
+	var before := HumanEngine.before_writing(&"OverworldRules.hero_route_path_lengths", [session, start, goals])
+	var result = hero_route_path_lengths__gd(session, start, goals)
+	HumanEngine.check_writing(&"OverworldRules.hero_route_path_lengths", before, [session, start, goals], result)
+	return result
+
+static func hero_route_path_lengths__gd(session: SessionStateStoreScript.SessionData, start: Vector2i, goals: Array) -> Dictionary:
+	var lengths := {}
+	if session == null:
+		return lengths
+	var size := derive_map_size(session)
+	var pending := {}
+	for goal_value in goals:
+		var goal: Vector2i = goal_value
+		if goal.x < 0 or goal.y < 0 or goal.x >= size.x or goal.y >= size.y:
+			continue
+		if goal == start:
+			lengths[goal] = 1
+		elif not hero_route_tile_blocked(session, goal.x, goal.y) or hero_route_destination(session, goal.x, goal.y):
+			pending[goal] = true
+	if pending.is_empty():
+		return lengths
+	var queue: Array = [start]
+	var queue_index := 0
+	var path_sizes := {start: 1}
+	var transit_edges := active_linked_transit_edges(session)
+	while queue_index < queue.size() and not pending.is_empty():
+		var current: Vector2i = queue[queue_index]
+		queue_index += 1
+		var next_size := int(path_sizes[current]) + 1
+		for direction in ROUTE_DIRECTIONS:
+			var next: Vector2i = current + direction
+			if next.x < 0 or next.y < 0 or next.x >= size.x or next.y >= size.y:
+				continue
+			var is_pending_goal := pending.has(next)
+			if path_sizes.has(next) and not is_pending_goal:
+				continue
+			if tile_step_cuts_blocked_corner(session, current, next):
+				continue
+			var blocked := hero_route_tile_blocked(session, next.x, next.y)
+			if is_pending_goal and (not blocked or hero_route_destination(session, next.x, next.y)):
+				lengths[next] = next_size
+				pending.erase(next)
+			if path_sizes.has(next) or blocked or tile_has_route_interaction(session, next.x, next.y):
+				continue
+			path_sizes[next] = next_size
+			queue.append(next)
+		for linked_next in linked_transit_neighbors_from_edges(transit_edges, current):
+			if not (linked_next is Vector2i):
+				continue
+			if pending.has(linked_next):
+				lengths[linked_next] = next_size
+				pending.erase(linked_next)
+			if path_sizes.has(linked_next):
+				continue
+			path_sizes[linked_next] = next_size
+			queue.append(linked_next)
+	return lengths
+
 static func resource_node_interaction_at_tile(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return resource_node_interaction_at_tile__gd(session, x, y, level)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.resource_node_interaction_at_tile", [session, x, y, level])
+	var before := HumanEngine.before_writing(&"OverworldRules.resource_node_interaction_at_tile", [session, x, y, level])
+	var result = resource_node_interaction_at_tile__gd(session, x, y, level)
+	HumanEngine.check_writing(&"OverworldRules.resource_node_interaction_at_tile", before, [session, x, y, level], result)
+	return result
+
+static func resource_node_interaction_at_tile__gd(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> Dictionary:
 	if session == null:
 		return {}
 	var nodes = session.overworld.get("resource_nodes", [])
@@ -3678,6 +3947,16 @@ static func resource_node_interaction_at_tile(session: SessionStateStoreScript.S
 	return {}
 
 static func tile_step_cuts_blocked_corner(session: SessionStateStoreScript.SessionData, from_tile: Vector2i, to_tile: Vector2i, level: int = -1) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return tile_step_cuts_blocked_corner__gd(session, from_tile, to_tile, level)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.tile_step_cuts_blocked_corner", [session, from_tile, to_tile, level])
+	var before := HumanEngine.before_writing(&"OverworldRules.tile_step_cuts_blocked_corner", [session, from_tile, to_tile, level])
+	var result = tile_step_cuts_blocked_corner__gd(session, from_tile, to_tile, level)
+	HumanEngine.check_writing(&"OverworldRules.tile_step_cuts_blocked_corner", before, [session, from_tile, to_tile, level], result)
+	return result
+
+static func tile_step_cuts_blocked_corner__gd(session: SessionStateStoreScript.SessionData, from_tile: Vector2i, to_tile: Vector2i, level: int = -1) -> bool:
 	var dx := to_tile.x - from_tile.x
 	var dy := to_tile.y - from_tile.y
 	if abs(dx) != 1 or abs(dy) != 1:
