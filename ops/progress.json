@@ -116594,6 +116594,19 @@
       "updatedAt": "2026-10-23T17:00:00Z"
     },
     {
+      "id": "native-rules-phase6-random-opponents-20261023",
+      "title": "Phase 6: random skirmish opponents",
+      "status": "completed",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Branch native-phase6-random-opponents (owner decision 2026-10-23: in skirmish games the computer opponents' factions are drawn at random from the map seed by default; the human keeps their pick or Random). MainMenu._generated_random_map_config passes seat_faction_ids: seat 1 the player's pick or random, every other seat random, each drawn from the seed on its own (repeats possible, the player's faction included). No ScenarioSelectRules, native or runner change. Checks: a medium 4P skirmish through the menu with a screenshot; the draw repeats for a seed in a process and across processes; over 200 4P seeds an opponent shares the player's faction in 86, some faction twice in 145; six seeds against main ac046cf67 identical (443 digests and records); core suite 17/17.",
+      "updatedAt": "2026-10-23T18:00:00Z"
+    },
+    {
       "id": "native-rules-phase7-one-copy-20261023",
       "title": "Native rules Phase 7: every rule native, one copy",
       "status": "in_progress",

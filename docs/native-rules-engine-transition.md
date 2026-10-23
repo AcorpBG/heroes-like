@@ -2311,6 +2311,7 @@ Godot dependency, since these slices lead to Phase 8. The bound is 1/(1 - share)
 | P6-1 | Several matches per Godot process (done: 1.26x on the six seeds one after another, 1.49x on a small-map batch) | 19.9% (s2 50%) | 1.25x (s2 2.0x) |
 | P6-2 | A map corpus, with the adopted session kept per process (done: 1.20x from the corpus and 1.38x from the kept session on the six seeds in one process, 1.09x on a small-map batch) | 8.3-14.4% | 1.09-1.17x |
 | P6-6 | The generator takes a faction per seat ("random" drawn from the map seed); `ai_match_batch.py --rotate` plays one map in every seat rotation, generating it once (done: a rotation's generation 4.4-6.1x faster on small maps, 12-31x on extra large) | generation | |
+| P6-7 | Skirmish opponents' factions drawn from the map seed by default; the human keeps their pick or Random (done) | | |
 
 - Checks per C++ slice: shadow on the six seeds while working; before pushing, native against main on the six seeds and
   the core suite, plus P6-4's runner-mode against game-mode digests; timing on a quiet machine with Phases 2 and 5
@@ -2551,6 +2552,23 @@ generator provisions a random faction):
   | Extra large 6P | 3,479-7,606 ms | 248-288 ms | 12-31x |
 
   A rotated batch saves this on every match of a map but the first; the rest of a match is unchanged.
+
+**P6-7, random skirmish opponents** (`native-rules-phase6-random-opponents-20261023`, branch
+`native-phase6-random-opponents`; owner decision 2026-10-23: in skirmish games the computer opponents' factions are
+drawn at random from the map seed by default, and the human keeps their pick or Random):
+- **What changed.** `MainMenu._generated_random_map_config` passes P6-6's `seat_faction_ids`: seat 1 gets the
+  player's pick (or `"random"`), every other seat `"random"`. `ScenarioSelectRules.random_map_seat_factions` draws
+  each seat from the normalized seed on its own, so a seed gives the same opponents whatever the player picks, and two
+  seats, the player's included, can share a faction. No change to `ScenarioSelectRules`, the native side or the match
+  runner, whose line-ups stay explicit. The setup line names no opponents: it is already cut short at its two lines,
+  and with an auto seed the opponents exist only at launch.
+- A skirmish now always has a seat list, so its placement ids come from the faction-free id (P6-6): a seed gives other
+  guards, sites and artifacts than before this slice. Saves load their packages from disk and are not affected.
+- **Checks.** A medium 4P skirmish through the menu (seed `random-opponents-check`, Embercourt): opponents Thornwake,
+  Thornwake and Brasshollow, day 1 started, with a screenshot. Three seeds, with a pick and with Random: the same draw
+  twice in a process and in two processes. Over 200 seeds in 4P with a pick, an opponent shares the player's faction
+  in 86 (43%; 42% expected from six factions) and some faction sits twice in 145 (72.5%; 72% expected). Six seeds against main
+  ac046cf67: all 443 daily digests and the records identical. Core suite 17/17.
 
 
 ### Phase 7: every rule native, one copy
