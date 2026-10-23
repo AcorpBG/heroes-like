@@ -116635,15 +116635,15 @@
     {
       "id": "native-rules-phase7-02-move-20261023",
       "title": "Phase 7.2: the move and its arrival",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Started 2026-10-24 on branch native-phase7-human: 176 GDScript functions (3,783 lines) declared in src/gdextension/rules/include/aurelion_rules/port/overworld_rules_move.hpp move to C++ through the human registry, and the native _finalize_action_result gains the rules profile and the event-facts scenario check. Frozen until it merges: the functions that header declares.",
-      "updatedAt": "2026-10-24T02:00:00Z"
+      "notes": "Implemented (transition doc, Phase 7, Slice 7.2): a human move and its arrival in C++ through the human registry (177 functions declared in src/gdextension/rules/include/aurelion_rules/port/overworld_rules_move.hpp, eleven files); the native _finalize_action_result records the rules profile and checks the scenario narrowed to the action's event facts, as its GDScript copy does; NativeTransitRules.network_colour keeps a GDScript copy for the map view. Human shadow on the eight --human seeds 0 mismatches (62,274 checks, 58 entries; a scratch probe reached all 69, 97,365 checks); day shadow on the six seeds 7,775 checks 0 mismatches. Merged to main 2026-10-24 (merge 2, main tagged pre-native-phase7-merge-2 first): 70 NATIVE entries, 104 bodies deleted (D-d); the battle end visits a site through the port, the HOST entry gone; against main 268324fec, the --human check identical on the eight seeds, 1,896 action digests; the six seeds identical, 443 daily digests; core suite 17/17.",
+      "updatedAt": "2026-10-24T05:00:00Z"
     },
     {
       "id": "native-rules-phase7-03-context-actions-20261023",

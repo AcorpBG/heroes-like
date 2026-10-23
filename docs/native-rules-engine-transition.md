@@ -2887,6 +2887,24 @@ Checks:
   `collect_active_artifact` 351, `_collect_resource_node_result` 322, `_award_experience` 94,
   `evaluate_session_for_event` 12, `travel_native_passage` 9, `capture_active_town` 3,
   `_collect_artifact_node_result` 1).
+- Day shadow on the six seeds: 7,775 checks, 0 mismatches, 0 errors.
+
+**Merge 2** (7.2, 2026-10-24): merged to main after main was tagged `pre-native-phase7-merge-2` (D10). Main was merged
+into the branch first, at 95804319f (Phase 8's P8-8).
+- The 70 entries are NATIVE: their GDScript functions are thin wrappers over `HumanEngine.native`. The 104 bodies that
+  no GDScript outside the slice called are deleted (`OverworldRules.gd` 16,052 lines on main, 13,042 after).
+  `ScenarioRules._scenario_objective_dependency` became an entry at the merge, for `objective_artifact_ids` (the
+  towns' artifact trade). No test calls a deleted body, so none is retired.
+- The battle end visits a site through the C++ port (`battle_end_sites.cpp`). Its host call to
+  `OverworldRules._collect_resource_node_result` and the battle table's HOST entry are gone, and so is
+  `battle_sim_cli`'s answer to it (an arena quick run with `--plain`: 72 games, no failure).
+- Checks of the merged code against main 268324fec:
+  - the `--human` check identical on the eight seeds, 1,896 action digests and the records;
+  - the six seeds identical, 443 daily digests and the match records;
+  - core suite 17/17.
+- UI speed, screen time per action in ms, main | branch: end of turn 1,311 | 1,312, town actions 1,080 | 1,068,
+  battle 597 | 600, move 197 | 196, opening a town 88 | 79, dialogs 137 | 136; every other kind within 3 ms either way.
+- Coverage: the 7.2 entry above.
 
 ### Phase 8: a match runner without Godot
 
