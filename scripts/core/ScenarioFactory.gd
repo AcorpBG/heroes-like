@@ -24,7 +24,6 @@ const EnemyTurnRulesScript = preload("res://scripts/core/EnemyTurnRules.gd")
 const ScenarioScriptRulesScript = preload("res://scripts/core/ScenarioScriptRules.gd")
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
-const RandomMapGeneratorRulesScript = preload("res://scripts/core/RandomMapGeneratorRules.gd")
 
 static func create_session(
 	scenario_id: String,
@@ -99,98 +98,6 @@ static func create_session(
 	session.scenario_summary = ""
 	session.flags = {}
 	return session
-
-static func create_generated_draft_session(
-	generated_map: Dictionary,
-	difficulty: String = "normal"
-) -> SessionStateStoreScript.SessionData:
-	return _create_generated_registered_session(
-		generated_map,
-		difficulty,
-		SessionStateStoreScript.LAUNCH_MODE_GENERATED_DRAFT,
-		{
-			"generated_random_map_draft": true,
-			"generated_random_map_source": "generated_draft_smoke",
-		}
-	)
-
-static func create_generated_skirmish_session(
-	generated_map: Dictionary,
-	difficulty: String = "normal",
-	setup_record: Dictionary = {}
-) -> SessionStateStoreScript.SessionData:
-	return _create_generated_registered_session(
-		generated_map,
-		difficulty,
-		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH,
-		{
-			"generated_random_map": true,
-			"generated_random_map_source": "skirmish_setup",
-			"generated_random_map_setup": setup_record.duplicate(true),
-		}
-	)
-
-static func _create_generated_registered_session(
-	generated_map: Dictionary,
-	difficulty: String,
-	launch_mode: String,
-	extra_flags: Dictionary
-) -> SessionStateStoreScript.SessionData:
-	var scenario: Dictionary = generated_map.get("scenario_record", {})
-	var terrain_layers: Dictionary = generated_map.get("terrain_layers_record", {})
-	var registration: Dictionary = ContentService.register_generated_scenario_draft(scenario, terrain_layers)
-	if not bool(registration.get("ok", false)):
-		push_error("Unable to register generated scenario draft: %s" % String(registration.get("message", "")))
-		return SessionStateStoreScript.new_session_data()
-
-	var scenario_id := String(scenario.get("id", ""))
-	var session := create_session(scenario_id, difficulty, launch_mode)
-	if session.scenario_id == "":
-		return session
-
-	var metadata: Dictionary = generated_map.get("metadata", {})
-	var selection: Dictionary = scenario.get("selection", {}) if scenario.get("selection", {}) is Dictionary else {}
-	var runtime_materialization := RandomMapGeneratorRulesScript.runtime_materialization_for_generated_map(generated_map)
-	var materialization_identity := RandomMapGeneratorRulesScript.runtime_materialization_identity(generated_map)
-	for key in extra_flags.keys():
-		session.flags[String(key)] = extra_flags[key]
-	session.flags["generated_random_map_metadata"] = metadata.duplicate(true)
-	session.flags["generated_random_map_identity"] = _generated_identity(generated_map)
-	session.flags[SessionStateStoreScript.GENERATED_RANDOM_MAP_MATERIALIZATION_FLAG] = materialization_identity.duplicate(true)
-	session.flags["generated_random_map_boundary"] = {
-		"write_policy": String(generated_map.get("write_policy", "")),
-		"registry_write_policy": String(registration.get("write_policy", "")),
-		"menu_policy": String(registration.get("menu_policy", "")),
-		"availability": selection.get("availability", {}),
-		"runtime_materialization_policy": String(runtime_materialization.get("materialization_policy", "")),
-	}
-	session.overworld["generated_random_map_metadata"] = metadata.duplicate(true)
-	session.overworld["generated_random_map_identity"] = _generated_identity(generated_map)
-	session.overworld[SessionStateStoreScript.GENERATED_RANDOM_MAP_MATERIALIZATION_FLAG] = materialization_identity.duplicate(true)
-	session.overworld[SessionStateStoreScript.GENERATED_MAP_RUNTIME_MATERIALIZATION_KEY] = runtime_materialization.duplicate(true)
-	session.overworld["generated_terrain_layers_record_id"] = String(terrain_layers.get("id", ""))
-	# Computer players start with what the human starts with.
-	var states: Array = session.overworld.get("enemy_states", [])
-	for index in range(states.size()):
-		if states[index] is Dictionary:
-			states[index]["treasury"] = _normalize_resources(session.overworld.get("resources", {}))
-	session.overworld["enemy_states"] = states
-	return session
-
-static func _generated_identity(generated_map: Dictionary) -> Dictionary:
-	var scenario: Dictionary = generated_map.get("scenario_record", {}) if generated_map.get("scenario_record", {}) is Dictionary else {}
-	var metadata: Dictionary = generated_map.get("metadata", {}) if generated_map.get("metadata", {}) is Dictionary else {}
-	var profile: Dictionary = metadata.get("profile", {}) if metadata.get("profile", {}) is Dictionary else {}
-	return {
-		"scenario_id": String(scenario.get("id", "")),
-		"stable_signature": String(generated_map.get("stable_signature", "")),
-		"materialized_map_signature": String(generated_map.get("runtime_materialization", {}).get("materialized_map_signature", "")),
-		"generator_version": String(metadata.get("generator_version", "")),
-		"template_id": String(metadata.get("template_id", "")),
-		"profile_id": String(profile.get("id", "")),
-		"normalized_seed": String(metadata.get("normalized_seed", "")),
-		"content_manifest_fingerprint": String(metadata.get("content_manifest_fingerprint", "")),
-	}
 
 static func _build_hero_state(hero_template: Dictionary) -> Dictionary:
 	var command = hero_template.get("command", {})

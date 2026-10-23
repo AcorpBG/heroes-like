@@ -203,6 +203,22 @@ public:
 	double math_pow(double base, double exponent) override;
 	double math_exp(double x) override;
 	double math_log(double x) override;
+	// The engine's services that game setup calls (Backing::object_call and on).
+	state::Value object_call(state::State &state, uint32_t slot, uint32_t method, const state::Value *args, size_t count) override;
+	bool object_has_method(state::State &state, uint32_t slot, uint32_t method) override;
+	state::Value class_instantiate(state::State &state, uint32_t name) override;
+	state::Value autoload(state::State &state, uint32_t name) override;
+	bool file_exists(state::State &state, uint32_t path) override;
+	int64_t file_length(state::State &state, uint32_t path) override;
+	int64_t file_modified_time(state::State &state, uint32_t path) override;
+	bool dir_entries(state::State &state, uint32_t path, std::vector<std::pair<uint32_t, bool>> &out) override;
+	bool resource_exists(state::State &state, uint32_t path) override;
+	uint32_t os_environment(state::State &state, uint32_t name) override;
+	bool os_has_feature(state::State &state, uint32_t name) override;
+	int64_t ticks_msec() override;
+	int64_t ticks_usec() override;
+	double unix_time() override;
+	uint32_t json_stringify(state::State &state, const state::Value &value) override;
 
 private:
 	struct TypeInfo {
@@ -271,6 +287,11 @@ private:
 	void diff_dict_items(const state::DictNode &node, const godot::Dictionary &dict, std::string &path, std::string &out);
 	godot::Object *script_object(uint32_t script);
 	godot::StringName static_name(uint32_t name) const;
+	godot::String path_text(uint32_t path) const;
+	// call_pure's two sides of a host call: every change written back,
+	// undoably while no full host call has run, and each loaded node marked as
+	// what Godot holds now; then the arguments exported.
+	godot::Array begin_pure_call(const state::Value *args, size_t count);
 	// A validating call's record of a loaded generator's state, made on first use;
 	// null outside a validating call and for a generator the call made.
 	uint64_t *validating_state(godot::RandomNumberGenerator *rng);

@@ -8,6 +8,7 @@ const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const DayEngine = preload("res://scripts/core/DayEngine.gd")
+const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
 static var _day_engine_mode: int = DayEngine.mode
 static var DifficultyRulesScript: Variant = load("res://scripts/core/DifficultyRules.gd")
 
@@ -256,7 +257,7 @@ static func starting_army_for_hero(hero_template: Dictionary, seed_key: String) 
 	return {"id": "%s_army" % hero_id, "name": "Field Army", "stacks": stacks}
 
 static func army_has_troops(army: Variant) -> bool:
-	return army is Dictionary and _valid_stack_count(army.get("stacks", [])) > 0
+	return HumanEngine.native_writing(&"HeroCommandRules.army_has_troops", [army])
 
 ## Save migration: older saves hired heroes with no troops. On restore, every
 ## player hero still in play that leads no troops gets its starting army, and
@@ -327,13 +328,7 @@ static func new_growth_seed(hero_id: String, session_source: Variant = null) -> 
 ## games on the same map and seed level it up alike. Never called on load: a
 ## saved hero keeps the seed it was saved with.
 static func seed_start_heroes_from_session(session: SessionStateStoreScript.SessionData) -> void:
-	if session == null:
-		return
-	var heroes: Array = session.overworld.get("player_heroes", []) if session.overworld.get("player_heroes", []) is Array else []
-	# The active hero mirror can be a separate copy of its roster entry.
-	for hero in heroes + [session.overworld.get("hero", {})]:
-		if hero is Dictionary and String(hero.get("id", "")) != "":
-			hero["growth_seed"] = new_growth_seed(String(hero.get("id", "")), session)
+	HumanEngine.native_writing(&"HeroCommandRules.seed_start_heroes_from_session", [session])
 
 static func movement_max_for_hero(hero_state: Dictionary, movement_source: Variant = null) -> int:
 	var artifact_bonuses = ArtifactRulesScript.aggregate_bonuses(hero_state)

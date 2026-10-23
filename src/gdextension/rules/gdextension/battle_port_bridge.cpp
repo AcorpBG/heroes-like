@@ -7,14 +7,20 @@
 #include "aurelion_rules/port/gd.hpp"
 #include "aurelion_rules/port/registry.hpp"
 
+#include <godot_cpp/classes/class_db_singleton.hpp>
+#include <godot_cpp/classes/dir_access.hpp>
 #include <godot_cpp/classes/engine.hpp>
+#include <godot_cpp/classes/file_access.hpp>
 #include <godot_cpp/classes/global_constants.hpp>
+#include <godot_cpp/classes/json.hpp>
 #include <godot_cpp/classes/node.hpp>
+#include <godot_cpp/classes/os.hpp>
 #include <godot_cpp/classes/random_number_generator.hpp>
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/classes/resource.hpp>
 #include <godot_cpp/classes/resource_loader.hpp>
 #include <godot_cpp/classes/scene_tree.hpp>
+#include <godot_cpp/classes/time.hpp>
 #include <godot_cpp/classes/window.hpp>
 #include <godot_cpp/core/object.hpp>
 #include <godot_cpp/variant/node_path.hpp>
@@ -588,6 +594,9 @@ void PortBridge::fill_view(const ObjectView &view) {
 	}
 	keys.push_back(state_.string("meta"));
 	values.push_back(Value::of_ref(Kind::Dict, view.meta));
+	// As DayEngine's views: the read scopes key their caches by it.
+	keys.push_back(state_.string("instance_id"));
+	values.push_back(Value::of_int(static_cast<int64_t>(object->get_instance_id())));
 	state::DictNode &meta = state_.dict_node(view.meta);
 	meta.reset();
 	meta.keys = std::move(meta_keys);
@@ -905,6 +914,12 @@ Value PortBridge::call_pure(state::State &state, uint32_t script, uint32_t funct
 		return call_static(state, script, function, args, count);
 	}
 	host_calls_made_.emplace_back(script, function);
+	const Array call_args = begin_pure_call(args, count);
+	const Variant result = script_object(script)->callv(static_name(function), call_args);
+	return load(result);
+}
+
+Array PortBridge::begin_pure_call(const Value *args, size_t count) {
 	write_back(full_host_calls_ == 0);
 	Array call_args;
 	for (size_t index = 0; index < count; ++index) {
@@ -931,8 +946,7 @@ Value PortBridge::call_pure(state::State &state, uint32_t script, uint32_t funct
 	for (StaticVar &var : statics_) {
 		var.assigned = false;
 	}
-	const Variant result = script_object(script)->callv(static_name(function), call_args);
-	return load(result);
+	return call_args;
 }
 
 void PortBridge::adopt_exported() {
@@ -1029,6 +1043,111 @@ double PortBridge::math_exp(double x) {
 
 double PortBridge::math_log(double x) {
 	return godot::UtilityFunctions::log(x);
+}
+
+String PortBridge::path_text(uint32_t path) const {
+	const std::string &text = state_.text(path);
+	return String::utf8(text.data(), static_cast<int64_t>(text.size()));
+}
+
+Value PortBridge::object_call(state::State &state, uint32_t slot, uint32_t method, const Value *args, size_t count) {
+	Object *object = object_at(slot);
+	if (object == nullptr) {
+		throw state::ScriptError("Cannot call method '" + state.text(method) + "' on a value that is not an object.");
+	}
+	if (!host_calls_) {
+		throw state::ScriptError("Calling the method " + state.text(method) + " of an object runs the engine, which this call may not do (a shadow check or a call that writes nothing back)");
+	}
+	const Array call_args = begin_pure_call(args, count);
+	const Variant result = object->callv(static_name(method), call_args);
+	return load(result);
+}
+
+bool PortBridge::object_has_method(state::State &, uint32_t slot, uint32_t method) {
+	Object *object = object_at(slot);
+	if (object == nullptr) {
+		throw state::ScriptError("Cannot call method 'has_method' on a value that is not an object.");
+	}
+	return object->has_method(static_name(method));
+}
+
+Value PortBridge::class_instantiate(state::State &, uint32_t name) {
+	godot::ClassDBSingleton *classes = godot::ClassDBSingleton::get_singleton();
+	const StringName class_name = static_name(name);
+	if (!classes->class_exists(class_name)) {
+		return Value();
+	}
+	return load(classes->instantiate(class_name));
+}
+
+Value PortBridge::autoload(state::State &, uint32_t name) {
+	godot::SceneTree *tree = Object::cast_to<godot::SceneTree>(godot::Engine::get_singleton()->get_main_loop());
+	godot::Node *node = tree != nullptr && tree->get_root() != nullptr ? tree->get_root()->get_node_or_null(godot::NodePath(path_text(name))) : nullptr;
+	return node == nullptr ? Value() : load(Variant(node));
+}
+
+bool PortBridge::file_exists(state::State &, uint32_t path) {
+	return godot::FileAccess::file_exists(path_text(path));
+}
+
+int64_t PortBridge::file_length(state::State &, uint32_t path) {
+	const Ref<godot::FileAccess> file = godot::FileAccess::open(path_text(path), godot::FileAccess::READ);
+	if (file.is_null()) {
+		return -1;
+	}
+	const int64_t length = static_cast<int64_t>(file->get_length());
+	file->close();
+	return length;
+}
+
+int64_t PortBridge::file_modified_time(state::State &, uint32_t path) {
+	return static_cast<int64_t>(godot::FileAccess::get_modified_time(path_text(path)));
+}
+
+bool PortBridge::dir_entries(state::State &state, uint32_t path, std::vector<std::pair<uint32_t, bool>> &out) {
+	const Ref<godot::DirAccess> dir = godot::DirAccess::open(path_text(path));
+	if (dir.is_null()) {
+		return false;
+	}
+	dir->list_dir_begin();
+	for (String name = dir->get_next(); !name.is_empty(); name = dir->get_next()) {
+		out.emplace_back(state.intern(utf8_of(name)), dir->current_is_dir());
+	}
+	dir->list_dir_end();
+	return true;
+}
+
+bool PortBridge::resource_exists(state::State &, uint32_t path) {
+	return godot::ResourceLoader::get_singleton()->exists(path_text(path));
+}
+
+uint32_t PortBridge::os_environment(state::State &state, uint32_t name) {
+	return state.intern(utf8_of(godot::OS::get_singleton()->get_environment(path_text(name))));
+}
+
+bool PortBridge::os_has_feature(state::State &, uint32_t name) {
+	return godot::OS::get_singleton()->has_feature(path_text(name));
+}
+
+int64_t PortBridge::ticks_msec() {
+	return static_cast<int64_t>(godot::Time::get_singleton()->get_ticks_msec());
+}
+
+int64_t PortBridge::ticks_usec() {
+	return static_cast<int64_t>(godot::Time::get_singleton()->get_ticks_usec());
+}
+
+double PortBridge::unix_time() {
+	return godot::Time::get_singleton()->get_unix_time_from_system();
+}
+
+uint32_t PortBridge::json_stringify(state::State &state, const Value &value) {
+	if (!host_calls_) {
+		throw state::ScriptError("JSON.stringify runs the engine, which this call may not do (a shadow check or a call that writes nothing back)");
+	}
+	// Written back first: a loaded container exports as itself.
+	const Array exported = begin_pure_call(&value, 1);
+	return state.intern(utf8_of(godot::JSON::stringify(exported[0])));
 }
 
 bool PortBridge::same_type(state::TypeRef type, int64_t builtin, const StringName &class_name, const Variant &script) const {

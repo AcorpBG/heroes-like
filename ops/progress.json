@@ -116752,15 +116752,15 @@
     {
       "id": "native-rules-phase7-11-setup-20261023",
       "title": "Phase 7.11: game setup",
-      "status": "pending",
+      "status": "in_progress",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Transition doc, Phase 7, Slices. With the generator's setup part (normalize_config, the materialization identity; D-g): RandomMapGeneratorRules.generate and the legacy rebuild path are deleted, its three core tests (random_map_seeded_generator_core_report, random_map_final_writeout_export_save_schema_report, generated_start_hero_growth_seed_report) move to the native generator and the other tests calling it are retired (D-e).",
-      "updatedAt": "2026-10-23T13:47:00Z"
+      "notes": "Transition doc, Phase 7, Slices. With the generator's setup part (normalize_config, the materialization identity; D-g): RandomMapGeneratorRules.generate and the legacy rebuild path are deleted, its three core tests (random_map_seeded_generator_core_report, random_map_final_writeout_export_save_schema_report, generated_start_hero_growth_seed_report) move to the native generator and the other tests calling it are retired (D-e). In progress 2026-10-23 on branch native-phase7-human, for merge 1b with 7.12.",
+      "updatedAt": "2026-10-23T22:00:00Z"
     },
     {
       "id": "native-rules-phase7-12-saves-20261023",

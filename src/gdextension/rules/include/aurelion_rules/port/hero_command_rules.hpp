@@ -22,4 +22,9 @@ void normalize_session(State &state, DictRef session, gd::Atom primary_hero_id, 
 void _normalize_town_garrison_heroes(State &state, DictRef session);
 void _replace_hero_in_array(State &state, gd::ArrayRef player_heroes, DictRef replacement);
 
+// A new game's start heroes (Phase 7, 7.11; game_setup_heroes.cpp). A session
+// is a SessionData object or its view (gd::object_view).
+bool army_has_troops(State &state, const state::Value &army);
+void seed_start_heroes_from_session(State &state, const state::Value &session);
+
 } // namespace aurelion::rules::port::hero_command_rules

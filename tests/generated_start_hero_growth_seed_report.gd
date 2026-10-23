@@ -6,14 +6,11 @@ extends Node
 ## actions and parted on day 28. Starts two new games from that setup and
 ## checks that the session id, the start hero's seed and its level-up gains
 ## are the same, that the seed has the form every hire's seed has, that a save
-## keeps it and that a seed saved before the fix loads unchanged. The legacy
-## ScenarioFactory start seeds its hero the same way.
+## keeps it and that a seed saved before the fix loads unchanged.
 ##
 ## Run with an isolated user profile: the save checks write manual slot 3.
 
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
-const ScenarioFactoryScript = preload("res://scripts/core/ScenarioFactory.gd")
-const RandomMapGeneratorRulesScript = preload("res://scripts/core/RandomMapGeneratorRules.gd")
 const REPORT_ID := "GENERATED_START_HERO_GROWTH_SEED_REPORT"
 ## tests/generated_full_match_quality.py, case quality_medium.
 const SEED := "10"
@@ -39,7 +36,6 @@ func _run() -> void:
 	var session = _check_generated_games()
 	if session != null:
 		_check_save_load(session)
-	_check_factory_start()
 	_report.merge({"ok": _failures.is_empty(), "checks": _checks, "failures": _failures}, true)
 	print("%s %s" % [REPORT_ID, JSON.stringify(_report)])
 	get_tree().quit(0 if _failures.is_empty() else 1)
@@ -171,25 +167,3 @@ func _copy_with_start_seed(session, seed: String):
 			else:
 				hero["growth_seed"] = seed
 	return copy
-
-## The legacy ScenarioFactory start (generated drafts; authored scenarios and
-## campaigns use it too). Its session id is drawn per launch, so only the
-## form of the seed can be checked here.
-func _check_factory_start() -> void:
-	var config := ScenarioSelectRulesScript.build_random_map_player_config("start-hero-growth-factory-20261010", "border_gate_compact_v1", "border_gate_compact_profile_v1", 3, "land", false, "homm3_small")
-	var generated: Dictionary = RandomMapGeneratorRulesScript.generate(config)
-	_check(bool(generated.get("ok", false)), "the legacy generator makes a draft map")
-	if not bool(generated.get("ok", false)):
-		return
-	var session = ScenarioFactoryScript.create_generated_draft_session(generated.get("generated_map", {}), "normal")
-	_check(session.scenario_id != "", "the draft game starts")
-	if session.scenario_id == "":
-		return
-	var expected := HeroCommandRules.new_growth_seed(session.hero_id, session)
-	var roster: Array = session.overworld.get("player_heroes", [])
-	_check(roster.size() == 1 and String(roster[0].get("growth_seed", "")) == expected, "a ScenarioFactory start hero is seeded from its session (%s)" % (String(roster[0].get("growth_seed", "")) if not roster.is_empty() else "no hero"))
-	_check(String(session.overworld.get("hero", {}).get("growth_seed", "")) == expected, "the ScenarioFactory active hero mirror holds the same seed")
-	OverworldRules.normalize_overworld_state(session)
-	_check(String(HeroCommandRules.active_hero(session).get("growth_seed", "")) == expected, "normalizing the new game keeps the seed")
-	_report["factory_start"] = {"session_id": session.session_id, "growth_seed": expected}
-	ContentService.unregister_generated_scenario_draft(session.scenario_id)

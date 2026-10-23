@@ -479,34 +479,29 @@ static func _generated_session_viability(input_config: Dictionary, generated_sam
 			"ok": false,
 			"status": "deferred",
 			"reason": "generation_failed",
-			"validation": generated.get("report", {}),
+			"validation": generated.get("validation", {}),
 		}
-	var payload: Dictionary = generated.get("generated_map", {})
-	var scenario: Dictionary = payload.get("scenario_record", {})
-	var session: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_generated_draft_session(payload, "normal")
-	OverworldRules.normalize_overworld_state(session)
+	var scenario_id := String(generated.get("scenario_id", ""))
+	var session: SessionStateStoreScript.SessionData = ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(generated)
 	var map_size := OverworldRules.derive_map_size(session)
-	ContentService.unregister_generated_scenario_draft(String(scenario.get("id", "")))
-	var ok: bool = session.scenario_id == String(scenario.get("id", "")) and map_size.x > 0 and map_size.y > 0 and session.overworld.get("towns", []).size() > 0
+	ContentService.unregister_generated_scenario_draft(scenario_id)
+	var ok: bool = session.scenario_id == scenario_id and map_size.x > 0 and map_size.y > 0 and session.overworld.get("towns", []).size() > 0
 	return {
 		"ok": ok,
 		"status": "pass" if ok else "warning",
-		"scenario_id": String(scenario.get("id", "")),
-		"template_id": String(payload.get("metadata", {}).get("template_id", "")),
-		"stable_signature": String(payload.get("stable_signature", "")),
+		"scenario_id": scenario_id,
+		"template_id": String(generated.get("template_id", "")),
 		"map_size": {"x": map_size.x, "y": map_size.y},
 		"town_count": session.overworld.get("towns", []).size(),
 		"resource_node_count": session.overworld.get("resource_nodes", []).size(),
 		"encounter_count": session.overworld.get("encounters", []).size(),
-		"write_policy": String(payload.get("write_policy", "")),
 	}
 
 static func _generated_map_case(input_config: Dictionary, seed: String) -> Dictionary:
 	var config: Dictionary = input_config.get("random_map_config", {}) if input_config.get("random_map_config", {}) is Dictionary else {}
 	if config.is_empty():
 		config = _random_map_config(seed)
-	var generator = RandomMapGeneratorRulesScript.new()
-	return generator.generate(config)
+	return ScenarioSelectRulesScript.build_random_map_skirmish_setup(config, "normal")
 
 static func _random_map_config(seed: String) -> Dictionary:
 	return {

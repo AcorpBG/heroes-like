@@ -1633,6 +1633,82 @@ void push_warning(State &state, const std::string &text) {
 	state.print_warning(text);
 }
 
+namespace {
+
+uint32_t object_slot(State &state, const Value &object, Atom method) {
+	if (object.kind == Kind::Dict) {
+		return view_object(state, object.ref).ref;
+	}
+	if (object.kind == Kind::Nil) {
+		fail("Cannot call method '" + state.text(method) + "' on a null value.");
+	}
+	if (object.kind != Kind::Opaque) {
+		fail("Calling the method '" + state.text(method) + "' of a value of type '" + type_name(object) + "' is not ported.");
+	}
+	return object.ref;
+}
+
+} // namespace
+
+Value call_method(State &state, const Value &object, Atom method, std::initializer_list<Value> args) {
+	const uint32_t slot = object_slot(state, object, method);
+	return state.host().object_call(state, slot, method, args.begin(), args.size());
+}
+
+bool has_method(State &state, const Value &object, Atom method) {
+	return state.host().object_has_method(state, object_slot(state, object, state.intern("has_method")), method);
+}
+
+void set_property(State &state, const Value &object, Atom property, const Value &value) {
+	const Atom set = state.intern("set");
+	const Value args[] = { name_value(property), value };
+	state.host().object_call(state, object_slot(state, object, set), set, args, 2);
+}
+
+Value class_instantiate(State &state, Atom name) {
+	return state.host().class_instantiate(state, name);
+}
+
+Value autoload(State &state, Atom name) {
+	const Value node = state.host().autoload(state, name);
+	if (node.kind != Kind::Opaque) {
+		fail("Identifier \"" + state.text(name) + "\" not declared: the autoload is not in the scene tree.");
+	}
+	return node;
+}
+
+bool file_exists(State &state, Atom path) {
+	return state.host().file_exists(state, path);
+}
+
+int64_t file_length(State &state, Atom path) {
+	return state.host().file_length(state, path);
+}
+
+int64_t file_modified_time(State &state, Atom path) {
+	return state.host().file_modified_time(state, path);
+}
+
+bool dir_entries(State &state, Atom path, std::vector<std::pair<Atom, bool>> &out) {
+	return state.host().dir_entries(state, path, out);
+}
+
+bool resource_exists(State &state, Atom path) {
+	return state.host().resource_exists(state, path);
+}
+
+Atom os_environment(State &state, Atom name) {
+	return state.host().os_environment(state, name);
+}
+
+bool os_has_feature(State &state, Atom name) {
+	return state.host().os_has_feature(state, name);
+}
+
+Atom engine_json_stringify(State &state, const Value &value) {
+	return state.host().json_stringify(state, value);
+}
+
 void refuse_gdscript_only_static(const State &state, Atom script, Atom name) {
 	fail(state.text(script) + "." + state.text(name) + " is GDScript's own memo: a native port neither reads nor fills it (its table's gdscript_only)");
 }

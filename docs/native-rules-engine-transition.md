@@ -2751,6 +2751,33 @@ Checks:
 - UI speed, screen time per action in ms, main | branch, with other runs on the machine: town actions 1,371 | 1,134, end of turn 1,416 | 1,406, battle 646 | 643, move 216 | 214; every other kind within 6 ms either way (opening a town 92 | 94). No kind got slower beyond that noise.
 - Coverage: the human shadow reached all 17 functions; the two probes above cover 7.10's lookups and checks.
 
+**Slice 7.11, game setup** (2026-10-23, branch `native-phase7-human`): a new game is set up in C++, from the menu's
+options to the session.
+- Ported to the human registry (`human_registry.cpp`, no GDScript fallback; files `scenario_select_*.cpp`,
+  `native_random_map_package_session_bridge.cpp`, `generated_reward_rules.cpp`, `generated_neutral_encounter_rules.cpp`,
+  `native_scenery_rules.cpp`, `random_map_generator_rules.cpp`, `game_setup_heroes.cpp`): `ScenarioSelectRules`' options,
+  difficulty, random-map setup, template catalog and maps-folder functions (138); `NativeRandomMapPackageSessionBridge`
+  (43); `GeneratedRewardRules` (33), which replaces Phase 5's transit subset of `resolve`; `GeneratedNeutralEncounterRules`
+  (15); `NativeSceneryRules.is_scenery` and `validate`; `RandomMapGeneratorRules.normalize_config` (29);
+  `HeroCommandRules.army_has_troops` and `seed_start_heroes_from_session`; `HeroProgressionRules.brief_summary`. The
+  57 that GDScript still calls are thin wrappers over `HumanEngine.native_writing`; the other bodies are deleted.
+  `NativeSceneryRules.policy` and `asset_candidates` keep a GDScript copy for the map view.
+- The port bridge gained engine services: object method calls, class instancing, autoloads, files and folders,
+  `ResourceLoader.exists`, the environment and features, the clocks and the engine's `JSON.stringify`. A human-table
+  entry may call a GDScript function as a pure host call (`SessionStateStore.new_session_data`).
+- Deleted by D-g: `RandomMapGeneratorRules.generate` and the rest of the GDScript generator (503 functions),
+  `ScenarioFactory`'s generated-draft sessions (4), the setup's and the bridge's legacy draft paths (14), the GDScript
+  `MapPackageService`, `MapDocument` and `ScenarioDocument`, and the save path that rebuilt a pre-package map (such a
+  save is refused with a message). Constants nothing reads any more went with them: 19,211 GDScript lines deleted in all, 74 written.
+- Tests: three core tests rewritten onto the native generator, 17 tests retired (`docs/game-setup-test-retirement.md`).
+Checks:
+- New games, main against the branch, through the functions the menu calls: 27 setups (Small to Extra Large, 2 to 8
+  players, land, normal water and Islands, one and two levels, the three monster strengths and difficulties), each
+  with its setup, session, summary and maps-folder entry, seven loaded again from the maps folder and four restarted;
+  plus the menu's option lists. 28 of 28 identical, apart from the packages' file times. An Extra Large 8-player
+  normal-water two-level setup (seed 72136) crashes main's native generator as well as the branch's.
+- Core tests covering setup: 5 of 5.
+
 ### Phase 8: a match runner without Godot
 
 Wanted, not optional (owner decision 2026-10-22, D7). The same core as a command-line tool. Needs the copied Variant hash and either deterministic math or accepted last-bit

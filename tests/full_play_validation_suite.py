@@ -63,7 +63,6 @@ REQUIRES_RENDERED = {"active_play_load_resumed_cue_playback_report", "scenario_o
 RMG_SCENES = [
     "native_rmg_end_to_end_runtime_boundary_report",
     "native_random_map_homm3_re_object_table_proxy_report",
-    "random_map_object_pool_value_weighting_report",
     "random_map_generated_density_distribution_report",
     "overworld_map_object_sprite_asset_report",
     "overworld_decorative_sprite_asset_report",

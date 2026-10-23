@@ -52,4 +52,8 @@ Atom command_gain_stat(State &state, DictRef hero_state, int64_t level_number);
 int64_t experience_with_bonus(State &state, DictRef hero_state, int64_t amount);
 Atom pending_choice_summary(State &state, DictRef pending_choice);
 
+// A hero's one-line summary for the setup's launch text (Phase 7, 7.11;
+// game_setup_heroes.cpp).
+Atom brief_summary(State &state, DictRef hero_state);
+
 } // namespace aurelion::rules::port::hero_progression_rules

@@ -4,6 +4,7 @@
 #include "aurelion_rules/compat/godot_string.hpp"
 
 #include <algorithm>
+#include <chrono>
 #include <climits>
 #include <cmath>
 #include <cstdint>
@@ -199,6 +200,66 @@ bool Backing::routes_ai() const {
 void Backing::ai_route_enter(State &, uint32_t) {}
 
 void Backing::ai_route_leave(State &) {}
+
+Value Backing::object_call(State &state, uint32_t, uint32_t method, const Value *, size_t) {
+	throw ScriptError("Calling the method " + state.text(method) + " of an object needs the Godot host, which this State does not have");
+}
+
+bool Backing::object_has_method(State &, uint32_t, uint32_t) {
+	no_host("An object's has_method");
+}
+
+Value Backing::class_instantiate(State &, uint32_t) {
+	no_host("ClassDB");
+}
+
+Value Backing::autoload(State &, uint32_t) {
+	no_host("An autoload");
+}
+
+bool Backing::file_exists(State &, uint32_t) {
+	no_host("FileAccess");
+}
+
+int64_t Backing::file_length(State &, uint32_t) {
+	no_host("FileAccess");
+}
+
+int64_t Backing::file_modified_time(State &, uint32_t) {
+	no_host("FileAccess");
+}
+
+bool Backing::dir_entries(State &, uint32_t, std::vector<std::pair<uint32_t, bool>> &) {
+	no_host("DirAccess");
+}
+
+bool Backing::resource_exists(State &, uint32_t) {
+	no_host("ResourceLoader");
+}
+
+uint32_t Backing::os_environment(State &, uint32_t) {
+	no_host("OS.get_environment");
+}
+
+bool Backing::os_has_feature(State &, uint32_t) {
+	no_host("OS.has_feature");
+}
+
+int64_t Backing::ticks_msec() {
+	return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+}
+
+int64_t Backing::ticks_usec() {
+	return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+}
+
+double Backing::unix_time() {
+	return std::chrono::duration<double>(std::chrono::system_clock::now().time_since_epoch()).count();
+}
+
+uint32_t Backing::json_stringify(State &, const Value &) {
+	no_host("JSON.stringify");
+}
 
 bool same_key(const Value &a, const Value &b) {
 	if (a.is_string_like() && b.is_string_like()) {

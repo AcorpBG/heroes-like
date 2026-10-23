@@ -5,7 +5,7 @@ Each subsystem of the native rules port (docs/native-rules-engine-transition.md)
 lists its ported functions as the PORT(...) entries of its registry file and has
 an engine script that holds its mode (SUBSYSTEMS below; the day port:
 src/gdextension/rules/core/port/day_registry.cpp and DayEngine.gd). For each
-function, scripts/core/<Script>.gd gets:
+function, scripts/core/<Script>.gd (or scripts/persistence/<Script>.gd) gets:
 
     static func normalize_overworld_state(session: SessionData) -> void:      # the switch
         if _day_engine_mode == DayEngine.GDSCRIPT:
@@ -72,11 +72,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 PORT_DIR = ROOT / "src/gdextension/rules/core/port"
-SCRIPTS = ROOT / "scripts/core"
+# The folders of the scripts a registry names (by file name, unique across them).
+SCRIPT_DIRS = (ROOT / "scripts/core", ROOT / "scripts/persistence")
 PORT_LINE = re.compile(r"^\s*(PORT|CHECK|NATIVE)\((\w+), (\w+), (\d+), (true|false),")
 HOST_LINE = re.compile(r"^\s*HOST\((\w+), (\w+), (\d+)\)")
 NEWLINE = chr(10)
-SIGNATURE = re.compile(r"^static func (\w+)\((.*)\)\s*(->\s*([\w\[\], ]+))?\s*:\s*$")
+SIGNATURE = re.compile(r"^static func (\w+)\((.*)\)\s*(->\s*([\w\[\]., ]+))?\s*:\s*$")
 
 
 class Subsystem:
@@ -455,11 +456,12 @@ def switch_subsystem(name: str, subsystem: Subsystem, check: bool) -> int:
         by_script.setdefault(script, []).append((function, arity, True, True, False, False))
     changes = []
     for script, functions in sorted(by_script.items()):
-        if not (SCRIPTS / f"{script}.gd").is_file():
-            raise SystemExit(f"{subsystem.registry.name} names {script}, which is not a script in {SCRIPTS}")
-        changes += switch_script(subsystem, SCRIPTS / f"{script}.gd", functions, check)
+        paths = [folder / f"{script}.gd" for folder in SCRIPT_DIRS if (folder / f"{script}.gd").is_file()]
+        if len(paths) != 1:
+            raise SystemExit(f"{subsystem.registry.name} names {script}, which is not one script in {', '.join(str(f) for f in SCRIPT_DIRS)}")
+        changes += switch_script(subsystem, paths[0], functions, check)
     # Scripts with this subsystem's switches but no registry entries left.
-    for path in sorted(SCRIPTS.glob("*.gd")):
+    for path in sorted(p for folder in SCRIPT_DIRS for p in folder.glob("*.gd")):
         if path.stem not in by_script and subsystem.mode_var in path.read_text(encoding="utf-8"):
             changes += switch_script(subsystem, path, [], check)
     for change in changes:

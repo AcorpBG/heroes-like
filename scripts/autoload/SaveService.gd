@@ -67,9 +67,6 @@ var _lazy_scripts := LazyScriptsScript.new()
 var ScenarioSelectRulesScript:
 	get:
 		return _lazy_scripts.load_once("res://scripts/core/ScenarioSelectRules.gd")
-var RandomMapGeneratorRulesScript:
-	get:
-		return _lazy_scripts.load_once("res://scripts/core/RandomMapGeneratorRules.gd")
 var OverworldRulesScript:
 	get:
 		return _lazy_scripts.load_once("res://scripts/core/OverworldRules.gd")
@@ -3029,69 +3026,9 @@ func _ensure_generated_random_map_scenario_registered(normalized_payload: Dictio
 		provenance = setup.get("provenance", {}) if setup.get("provenance", {}) is Dictionary else {}
 	if String(provenance.get("schema_id", "")) == "aurelion_native_rmg_disk_package_provenance_v1":
 		return _register_native_generated_random_map_scenario_from_payload(normalized_payload, provenance)
-	var config: Dictionary = provenance.get("generator_config", {}) if provenance.get("generator_config", {}) is Dictionary else {}
-	if config.is_empty():
-		return {"ok": false, "registered": false, "message": "Generated random-map save is missing regeneration config provenance."}
-
-	var generated: Dictionary = RandomMapGeneratorRulesScript.generate(config)
-	if not bool(generated.get("ok", false)):
-		return {"ok": false, "registered": false, "message": "Generated random-map save regeneration failed validation."}
-	var payload: Dictionary = generated.get("generated_map", {}) if generated.get("generated_map", {}) is Dictionary else {}
-	var scenario: Dictionary = payload.get("scenario_record", {}) if payload.get("scenario_record", {}) is Dictionary else {}
-	if String(scenario.get("id", "")) != scenario_id:
-		return {
-			"ok": false,
-			"registered": false,
-			"message": "Generated random-map save regenerated scenario id %s but expected %s." % [String(scenario.get("id", "")), scenario_id],
-		}
-
-	var identity: Dictionary = provenance.get("generated_identity", {}) if provenance.get("generated_identity", {}) is Dictionary else {}
-	var generated_export: Dictionary = payload.get("generated_export", {}) if payload.get("generated_export", {}) is Dictionary else {}
-	var export_contract: Dictionary = provenance.get("generated_export", {}) if provenance.get("generated_export", {}) is Dictionary else {}
-	# Gate on the gameplay signatures: terrain, road and river tile bytes and the
-	# object writeout. The whole-payload, materialized-map and export signatures also
-	# hash diagnostic text and the full catalog template, so any generator or catalog
-	# edit would reject the save; they are checked only for saves that predate the
-	# gameplay signatures.
-	var checked_gameplay_signature := false
-	for signature_check in [
-		{"key": "tile_stream_signature", "label": "tile stream"},
-		{"key": "object_writeout_signature", "label": "object writeout"},
-	]:
-		var signature_key := String(signature_check.get("key", ""))
-		var expected_gameplay_signature := String(export_contract.get(signature_key, identity.get(signature_key, "")))
-		if expected_gameplay_signature == "":
-			continue
-		checked_gameplay_signature = true
-		if String(generated_export.get(signature_key, "")) != expected_gameplay_signature:
-			return {"ok": false, "registered": false, "message": "Generated random-map save %s signature no longer matches saved provenance." % String(signature_check.get("label", ""))}
-	if not checked_gameplay_signature:
-		var expected_signature := String(identity.get("stable_signature", ""))
-		if expected_signature != "" and String(payload.get("stable_signature", "")) != expected_signature:
-			return {"ok": false, "registered": false, "message": "Generated random-map save identity signature no longer matches saved provenance."}
-		var expected_materialized_signature := String(identity.get("materialized_map_signature", ""))
-		var materialization: Dictionary = payload.get("runtime_materialization", {}) if payload.get("runtime_materialization", {}) is Dictionary else {}
-		if expected_materialized_signature != "" and String(materialization.get("materialized_map_signature", "")) != expected_materialized_signature:
-			return {"ok": false, "registered": false, "message": "Generated random-map save materialized-map signature no longer matches saved provenance."}
-		var expected_export_signature := String(identity.get("generated_export_signature", ""))
-		if expected_export_signature != "" and String(generated_export.get("round_trip_signature", "")) != expected_export_signature:
-			return {"ok": false, "registered": false, "message": "Generated random-map save export signature no longer matches saved provenance."}
-
-	var registration: Dictionary = ContentService.register_generated_scenario_draft(
-		scenario,
-		payload.get("terrain_layers_record", {}) if payload.get("terrain_layers_record", {}) is Dictionary else {}
-	)
-	if not bool(registration.get("ok", false)):
-		return {
-			"ok": false,
-			"registered": false,
-			"message": "Generated random-map save could not register regenerated scenario: %s" % String(registration.get("message", "")),
-		}
-	return {
-		"ok": true,
-		"registered": true,
-		"message": "Generated random-map scenario restored from saved seed/config provenance.",
-	}
+	# A save from before the map packages: the GDScript generator that rebuilt
+	# its map is gone (owner decision D-g, 2026-10-23).
+	return {"ok": false, "registered": false, "message": "Generated random-map save predates map packages and can no longer be restored."}
 
 func _register_native_generated_random_map_scenario_from_payload(normalized_payload: Dictionary, provenance: Dictionary) -> Dictionary:
 	var scenario_id := String(normalized_payload.get("scenario_id", ""))

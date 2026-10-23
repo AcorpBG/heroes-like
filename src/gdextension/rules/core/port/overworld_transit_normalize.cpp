@@ -1,20 +1,18 @@
 // The transit part of OverworldRules.normalize_overworld_state (Phase 5, slice
 // 06b): the generated map's runtime materialization record, the one-time
-// translation of a random map's transit objects by meaning (with the transit
-// subset of GeneratedRewardRules.resolve), the boats and the heroes aboard them
-// (WaterTravelRules.normalize), native transit links rebuilt for old packages
-// and validated (NativeTransitRules.normalize_legacy_session), and the portal
-// networks' colour slots. Also OverworldLevelRules.canonical_spatial_records.
+// translation of a random map's transit objects by meaning (through
+// GeneratedRewardRules, generated_reward_rules.cpp), the boats and the heroes
+// aboard them (WaterTravelRules.normalize), native transit links rebuilt for
+// old packages and validated (NativeTransitRules.normalize_legacy_session), and
+// the portal networks' colour slots. Also
+// OverworldLevelRules.canonical_spatial_records.
 //
-// Left to GDScript (state::NotPorted): GeneratedRewardRules.resolve of a source
-// record that is no transit object (only a node whose package source record
-// has another HoMM3 type reaches it), a packed array where the scripts type an
+// Left to GDScript (state::NotPorted): a packed array where the scripts type an
 // Array, duplicate() or size() of a value that has none (GDScript's own error),
 // "%06d" of the smallest int, and String() of a float or a container.
 
 #include "aurelion_rules/port/overworld_rules.hpp"
 
-#include "aurelion_rules/port/content_service_ai.hpp"
 #include "aurelion_rules/port/gd.hpp"
 #include "aurelion_rules/port/generated_reward_rules.hpp"
 #include "aurelion_rules/port/native_transit_rules.hpp"
@@ -198,12 +196,6 @@ Atom portal_kind_of_type(int64_t type_id) {
 // OverworldRules.GENERATED_TRANSIT_TRANSLATION_VERSION.
 constexpr int64_t kGeneratedTransitTranslationVersion = 2;
 
-// GeneratedRewardRules' HoMM3 types.
-constexpr int64_t kTypeBoat = 8;
-constexpr int64_t kTypeKeymaster = 10;
-constexpr int64_t kTypeShipyard = 87;
-constexpr int64_t kTypeWhirlpool = 111;
-constexpr int64_t kTypeSubterraneanGate = 103;
 // GeneratedRewardRules.GATE_TYPES, PORTAL_TYPES and TRANSIT_MEANING_TYPES.
 constexpr int64_t kGateTypes[] = {9, 33, 212, 215, 219};
 constexpr int64_t kPortalTypes[] = {43, 44, 45};
@@ -218,60 +210,6 @@ bool in_types(int64_t value, const int64_t (&ids)[N]) {
 		}
 	}
 	return false;
-}
-
-// GeneratedRewardRules.GATE_SITES.
-constexpr Atom kGateSites[] = {
-	key::site_charter_bar_gate,
-	key::site_thorn_seal_gate,
-	key::site_brass_toll_arch,
-	key::site_reef_chain_boom,
-	key::site_frost_toll_bar,
-	key::site_ash_sluice_lock,
-	key::site_toll_chain_court,
-	key::site_root_lease_gate,
-	key::site_pressure_rail_stop,
-};
-
-// GeneratedRewardRules.GATE_SITES_BY_TERRAIN.
-struct TerrainGates {
-	Atom terrain;
-	Atom sites[3];
-	size_t count;
-};
-constexpr TerrainGates kGateSitesByTerrain[] = {
-	{key::grass, {key::site_charter_bar_gate, key::site_toll_chain_court, key::site_thorn_seal_gate}, 3},
-	{key::dirt, {key::site_charter_bar_gate, key::site_brass_toll_arch, 0}, 2},
-	{key::sand, {key::site_toll_chain_court, key::site_reef_chain_boom, 0}, 2},
-	{key::snow, {key::site_frost_toll_bar, 0, 0}, 1},
-	{key::swamp, {key::site_thorn_seal_gate, key::site_root_lease_gate, key::site_reef_chain_boom}, 3},
-	{key::rough, {key::site_brass_toll_arch, key::site_pressure_rail_stop, key::site_charter_bar_gate}, 3},
-	{key::underground, {key::site_brass_toll_arch, key::site_pressure_rail_stop, 0}, 2},
-	{key::lava, {key::site_ash_sluice_lock, 0, 0}, 1},
-};
-
-// GeneratedRewardRules._hash32 of a text's UTF-8: FNV-1a with a MurmurHash3
-// finalizer, in GDScript's 64-bit ints masked to 32 bits (a product that
-// wraps keeps its low 32 bits).
-int64_t hash32_text(const std::string &text) {
-	uint64_t value = 2166136261u;
-	for (const char byte : text) {
-		value = ((value ^ static_cast<uint64_t>(static_cast<unsigned char>(byte))) * 16777619u) & 0xffffffffu;
-	}
-	value ^= value >> 16;
-	value = (value * 0x85ebca6bu) & 0xffffffffu;
-	value ^= value >> 13;
-	value = (value * 0xc2b2ae35u) & 0xffffffffu;
-	value ^= value >> 16;
-	return static_cast<int64_t>(value);
-}
-
-// GeneratedRewardRules._pick over a constant list of Strings.
-Atom pick_atom(State &state, const Atom *options, size_t count, Atom key_text, Atom salt) {
-	if (count == 0) {
-		return key::empty;
-	}
-	return options[generated_reward_rules::_roll(state, key_text, salt, static_cast<int64_t>(count))];
 }
 
 } // namespace
@@ -757,128 +695,6 @@ void normalize(State &state, DictRef session) {
 }
 
 } // namespace water_travel_rules
-
-// GeneratedRewardRules: the transit subset that
-// OverworldRules._migrate_generated_transit_meanings reaches.
-
-namespace generated_reward_rules {
-
-DictRef resolve(State &state, DictRef object, ArrayRef towns, ArrayRef terrain_rows) {
-	(void)towns; // read only by the dwelling translations, which are left to GDScript
-	const int64_t type_id = gd::int_field(state, object, key::h3m_type_id, -1);
-	// var subtype := int(object.get("h3m_subtype", -1)): read by the
-	// translations of other types only.
-	(void)gd::int_field(state, object, key::h3m_subtype, -1);
-	const Atom key_text = gd::strip_edges(state, text(state, object, key::placement_id, key::empty));
-	if (type_id < 0 || key_text == key::empty) {
-		return state.new_dict();
-	}
-	if (in_types(type_id, kGateTypes)) {
-		return _node(state, object, _gate_site(state, object, key_text, terrain_rows), key::resource_site, state.new_dict(), key::empty);
-	}
-	if (in_types(type_id, kPortalTypes)) {
-		// PORTAL_SITES.
-		const Atom site = type_id == 45 ? key::site_wayring : (type_id == 43 ? key::site_waygate : key::site_wayfall);
-		return _node(state, object, site, text(state, object, key::kind, key::resource_site), state.new_dict(), key::empty);
-	}
-	// No creature bank, Pandora's box or warrior's tomb has a transit type.
-	switch (type_id) {
-		case kTypeShipyard:
-			return _node(state, object, key::site_shipyard, key::resource_site, state.new_dict(), key::empty);
-		case kTypeWhirlpool:
-			return _node(state, object, key::site_whirlpool, key::resource_site, state.new_dict(), key::empty);
-		case kTypeSubterraneanGate:
-			return _node(state, object, key::site_basalt_undergate, text(state, object, key::kind, key::resource_site), state.new_dict(), key::empty);
-		default:
-			break;
-	}
-	not_ported("GeneratedRewardRules.resolve of a type that is no transit object (creature banks, rewards, dwellings, mines, visit buildings)");
-}
-
-bool is_skipped(State &state, DictRef object) {
-	const int64_t type_id = gd::int_field(state, object, key::h3m_type_id, -1);
-	return type_id == kTypeBoat || type_id == kTypeKeymaster || native_transit_rules::is_dead_end(state, object);
-}
-
-DictRef boat_tile(State &state, DictRef object) {
-	if (gd::int_field(state, object, key::h3m_type_id, -1) != kTypeBoat) {
-		return state.new_dict();
-	}
-	const DictRef visit = dict_field_or_new(state, object, key::visit_tile);
-	const int64_t level = gd::to_int(state, state.get(visit, str(key::level), gd::field_or(state, object, key::level, int_value(0))));
-	const int64_t x = gd::to_int(state, state.get(visit, str(key::x), gd::field_or(state, object, key::x, int_value(0))));
-	const int64_t y = gd::to_int(state, state.get(visit, str(key::y), gd::field_or(state, object, key::y, int_value(0))));
-	const DictRef tile = state.new_dict();
-	state.set(tile, str(key::x), int_value(x));
-	state.set(tile, str(key::y), int_value(y));
-	state.set(tile, str(key::level), int_value(level));
-	return tile;
-}
-
-Atom _gate_site(State &state, DictRef object, Atom key_text, ArrayRef terrain_rows) {
-	const Atom *options = kGateSites;
-	size_t count = sizeof(kGateSites) / sizeof(kGateSites[0]);
-	const int64_t x = gd::int_field(state, object, key::x, -1);
-	const int64_t y = gd::int_field(state, object, key::y, -1);
-	if (gd::int_field(state, object, key::level, 0) == 0 && y >= 0 && y < state.array_size(terrain_rows)) {
-		const Value row = state.at(terrain_rows, y);
-		if (gd::is_array(row) && x >= 0 && x < state.array_size(row.ref)) {
-			const Atom terrain = content_service::normalize_terrain_id(state, gd::stringify_or_fallback(state, state.at(row.ref, x)));
-			// GATE_SITES_BY_TERRAIN.get(terrain, GATE_SITES)
-			for (const TerrainGates &entry : kGateSitesByTerrain) {
-				if (entry.terrain == terrain) {
-					options = entry.sites;
-					count = entry.count;
-					break;
-				}
-			}
-		}
-	}
-	return pick_atom(state, options, count, key_text, key::gate);
-}
-
-DictRef _node(State &state, DictRef object, Atom site_id, Atom kind, DictRef payload, Atom resource_id) {
-	const DictRef node = gd::deep_duplicate_dict(state, object);
-	state.set(node, str(key::site_id), str(site_id));
-	state.set(node, str(key::kind), str(kind));
-	state.set(node, str(key::native_record_kind), str(kind));
-	if (resource_id != key::empty) {
-		state.set(node, str(key::resource_id), str(resource_id));
-	} else {
-		state.erase(node, str(key::resource_id));
-	}
-	// ContentService.get_map_object_for_resource_site(site_id).
-	const DictRef map_object = gd::content_row(state, state::ContentTable::MapObjectForResourceSite, site_id);
-	const Atom object_id = gd::strip_edges(state, text(state, map_object, key::id, key::empty));
-	if (object_id != key::empty) {
-		state.set(node, str(key::object_id), str(object_id));
-	}
-	for (const Value &payload_key : gd::items(state, array_value(gd::keys(state, payload)))) {
-		state.set(node, payload_key, gd::index(state, payload, payload_key));
-	}
-	const std::string translation = "h3m_type_" + compat::itos(gd::int_field(state, object, key::h3m_type_id, -1));
-	state.set(node, str(key::generated_reward_translation), str(state.intern(translation)));
-	return node;
-}
-
-Atom _pick(State &state, ArrayRef options, Atom key_text, Atom salt) {
-	if (state.array_size(options) == 0) {
-		return key::empty;
-	}
-	return gd::stringify_or_fallback(state, state.at(options, _roll(state, key_text, salt, state.array_size(options))));
-}
-
-int64_t _roll(State &state, Atom key_text, Atom salt, int64_t count) {
-	// _hash32("%s|%s" % [key, salt]) % max(1, count): the hash is never negative.
-	const int64_t hash = hash32_text(state.text(key_text) + "|" + state.text(salt));
-	return hash % compat::engine_max<int64_t>(1, count);
-}
-
-int64_t _hash32(State &state, Atom text) {
-	return hash32_text(state.text(text));
-}
-
-} // namespace generated_reward_rules
 
 // OverworldRules.
 

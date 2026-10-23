@@ -28,6 +28,7 @@
 #include <string>
 #include <string_view>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 namespace aurelion::rules::state {
@@ -743,6 +744,46 @@ public:
 	virtual bool routes_ai() const;
 	virtual void ai_route_enter(State &state, uint32_t side);
 	virtual void ai_route_leave(State &state);
+
+	// The engine's services that game setup calls (Phase 7, 7.11): methods of
+	// engine and extension objects, ClassDB, the autoloads, the file system, OS
+	// and JSON. The defaults are a ScriptError (this host has no engine), but
+	// the clocks, which read the C++ ones.
+	//
+	// object.method(args) of an opaque value: the method of an engine or
+	// extension object (the map package service and its documents), or a
+	// GDScript method of an autoload that changes nothing the native call
+	// holds. Written back first, with nothing read again after, as a pure
+	// host call is (call_pure); in a call where no GDScript may run, a
+	// ScriptError.
+	virtual Value object_call(State &state, uint32_t slot, uint32_t method, const Value *args, size_t count);
+	// object.has_method(method).
+	virtual bool object_has_method(State &state, uint32_t slot, uint32_t method);
+	// ClassDB.instantiate(name) when ClassDB.class_exists(name), else Nil.
+	virtual Value class_instantiate(State &state, uint32_t name);
+	// The autoload `name` (the node /root/<name>), or Nil.
+	virtual Value autoload(State &state, uint32_t name);
+	// FileAccess.file_exists(path); the length of the file FileAccess.open(path,
+	// READ) opens, or -1 when it answers null; FileAccess.get_modified_time(path).
+	virtual bool file_exists(State &state, uint32_t path);
+	virtual int64_t file_length(State &state, uint32_t path);
+	virtual int64_t file_modified_time(State &state, uint32_t path);
+	// DirAccess.open(path), then list_dir_begin() and get_next() to the end:
+	// each name with its current_is_dir(), in that order. False when
+	// DirAccess.open answers null.
+	virtual bool dir_entries(State &state, uint32_t path, std::vector<std::pair<uint32_t, bool>> &out);
+	// ResourceLoader.exists(path).
+	virtual bool resource_exists(State &state, uint32_t path);
+	// OS.get_environment(name) and OS.has_feature(name).
+	virtual uint32_t os_environment(State &state, uint32_t name);
+	virtual bool os_has_feature(State &state, uint32_t name);
+	// Time.get_ticks_msec(), Time.get_ticks_usec() and
+	// Time.get_unix_time_from_system().
+	virtual int64_t ticks_msec();
+	virtual int64_t ticks_usec();
+	virtual double unix_time();
+	// JSON.stringify(value) with its default arguments.
+	virtual uint32_t json_stringify(State &state, const Value &value);
 };
 
 class State {
