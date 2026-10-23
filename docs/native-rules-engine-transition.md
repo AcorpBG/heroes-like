@@ -1296,14 +1296,14 @@ a41e38754 Windows binaries; runtime on main 6a8c9a736, 27bee9e26 Windows binarie
     `create_battle_payload` (town assaults and defences, battle contexts, the human's battles), `normalize_battle_state`
     and the end-of-battle numbers; every payload caller switches. Then the battles per second are measured for G2.
     Merged 2026-10-22: battle shadow on the six seeds 81,039,773 checks, 0 mismatches (`create_battle_payload` 1,536); a probe of the six switched functions on generated maps (27 town assaults, 1,020 resource defences, 1,020 dwelling guards, 171 resumes) 315,419 checks, 0 mismatches; turn shadow 1,766,016 checks, 0 mismatches; native against main identical on 6/6 seeds, turn native and default; core suite 17/17. G2 measured: arena `--plain` standard suite, 480 games (240 battles both ways) on 24 workers, the battle native: 54.2 s on main, 54.2 s with 2a, 53.7 s with 2b, about 8.9 games/s; per game on a worker about 900 ms, of which the session rebuild 698 ms, the payload 30, normalize 7, the fight 32 and the rest 133, so the battle itself is about 69 ms (measured before 4.2 merged).
-  - 2c, the battle tool (`native-rules-phase2-c-battle-tool-20261022`), the command-line `battle_sim_cli` (D7), after
-    the owner sets G2: the backend of `tune.py` and `arena.py`, the native router with each side's weights as data (option (b)), the native
+  - 2c, the battle tool (`native-rules-phase2-c-battle-tool-20261022`), the command-line `battle_sim_cli` (D7), to
+    G2's 100 battles/s: the backend of `tune.py` and `arena.py`, the native router with each side's weights as data (option (b)), the native
     unit and ability tables per content revision.
   - 2d, the exit (`native-rules-phase2-d-exit-20261022`): once `tune.py` and `arena.py` run on the tool, the GDScript
     fight loop, BattleAiRules and the battle switch's other GDScript copies are deleted with D6's test retirements,
     every deleted name grepped across `tests/` and `tools/`.
-- **Gate G2:** a battles-per-second target the owner sets (the synthesis proposes 1M battles in 2 h on this machine).
-  Measured after 2b: about 8.9 games/s in the arena, about 69 ms of each game's 900 ms the battle. Proposed: the synthesis's 1M battles in 2 h (about 139 battles/s, about 16 times the arena now), measured end to end by `tune.py` on `battle_sim_cli`.
+- **Gate G2:** 100 battles per second (owner decision 2026-10-23; 1M battles in about 2.8 h on this machine),
+  measured end to end by `tune.py` on `battle_sim_cli`. Measured after 2b: about 8.9 games/s in the arena, about 69 ms of each game's 900 ms the battle. Proposed was the synthesis's 1M battles in 2 h (about 139 battles/s); the owner set 100 battles/s, about 11 times the arena now.
   **Battle-level genetic algorithms (unit stats, battle-AI weights) run at full speed from here.**
 
 **Slice 2a, frozen functions** (2026-10-22, until 2a merged, two copies since; AGENTS.md; corrected the same day from 32: the first
