@@ -2,6 +2,7 @@ class_name HeroProgressionRules
 extends RefCounted
 
 const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
+const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
 const NativeRules = preload("res://scripts/core/NativeRules.gd")
 const CHOICE_SIZE := 3
 const SPECIALTY_INSIGNIA_ATLAS_PATH := "res://art/heroes/runtime/specialties/hero_specialty_insignia_atlas.png"
@@ -237,19 +238,7 @@ static func describe_specialties(hero_state: Dictionary) -> String:
 	return "\n".join(lines)
 
 static func brief_summary(hero_state: Dictionary) -> String:
-	var hero := ensure_hero_progression(hero_state.duplicate(true))
-	var parts := []
-	for specialty in specialties():
-		var specialty_id := String(specialty.get("id", ""))
-		var rank := specialty_rank(hero, specialty_id)
-		if rank <= 0:
-			continue
-		parts.append("%s %s" % [String(specialty.get("short_name", specialty_id)), rank_label(rank)])
-	var summary := ", ".join(parts) if not parts.is_empty() else "No specialties chosen yet"
-	var pending_count := pending_choices_remaining(hero)
-	if pending_count > 0:
-		summary += " | Pending %d" % pending_count
-	return summary
+	return HumanEngine.native_writing(&"HeroProgressionRules.brief_summary", [hero_state])
 
 static func summarize_specialty_ids(specialty_ids: Variant, use_short_names: bool = true) -> String:
 	var normalized := _normalize_specialty_id_list(specialty_ids)

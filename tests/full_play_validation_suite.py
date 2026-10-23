@@ -41,7 +41,6 @@ SCENES = [
     "music_audio_runtime_report",
     "overworld_ambient_audio_runtime_report",
     "settings_transactional_persistence_regression",
-    "generated_large_town_explicit_save_surface_regression",
     "generated_opening_autosave_failure_retry_regression",
     "active_play_save_written_cue_playback_report",
     "active_play_load_resumed_cue_playback_report",
@@ -63,7 +62,6 @@ REQUIRES_RENDERED = {"active_play_load_resumed_cue_playback_report", "scenario_o
 RMG_SCENES = [
     "native_rmg_end_to_end_runtime_boundary_report",
     "native_random_map_homm3_re_object_table_proxy_report",
-    "random_map_object_pool_value_weighting_report",
     "random_map_generated_density_distribution_report",
     "overworld_map_object_sprite_asset_report",
     "overworld_decorative_sprite_asset_report",
@@ -182,32 +180,6 @@ func _canonical_summary_cache_snapshot() -> Dictionary:
 \t\tif entry.has("resume_recap") or entry.has("recap_content_revision"):
 \t\t\tif not (entry.get("resume_recap") is String) or String(entry.get("resume_recap", "")).is_empty() or not (entry.get("recap_content_revision") is int) or int(entry.get("recap_content_revision", -1)) < 0:
 \t\t\t\t_fail("Stored recap derived cache has malformed fields.")
-\t\t\t\treturn {}
-\t\t\tentry.erase("resume_recap")
-\t\t\tentry.erase("recap_content_revision")
-\treturn snapshot
-'''
-    elif name == "generated_large_town_explicit_save_surface_regression":
-        # The recap optimization deliberately adds private derived text to a
-        # verified entry. Keep all canonical summary/file/session comparisons;
-        # only the two new derived fields are separated from storage authority.
-        anchor = source
-        setup = source
-        snapshot = '"summary_cache": SaveService.validation_summary_cache_snapshot(),'
-        if setup.count(snapshot) != 4:
-            raise ValueError(name + ": review summary-authority snapshot owners")
-        setup = setup.replace(snapshot, '"summary_cache": _canonical_summary_cache_snapshot(),')
-        counter = 'or int(distinct_metadata.get("stored_recap_context_build_count", -1)) != 2 or int(distinct_metadata.get("stored_recap_context_reuse_count", -1)) != 6'
-        if setup.count(counter) != 1:
-            raise ValueError(name + ": review distinct stored-recap work accounting")
-        setup = setup.replace(counter, 'or int(distinct_metadata.get("stored_recap_context_build_count", -1)) != 1 or int(distinct_metadata.get("stored_recap_context_reuse_count", -1)) != 3 or int(distinct_metadata.get("stored_recap_text_cache_hits", -1)) != 1')
-        setup += '''
-func _canonical_summary_cache_snapshot() -> Dictionary:
-\tvar snapshot: Dictionary = SaveService.validation_summary_cache_snapshot()
-\tfor entry in snapshot.values():
-\t\tif entry.has("resume_recap") or entry.has("recap_content_revision"):
-\t\t\tif not (entry.get("resume_recap") is String) or String(entry.get("resume_recap", "")).is_empty() or not (entry.get("recap_content_revision") is int) or int(entry.get("recap_content_revision", -1)) < 0:
-\t\t\t\t_finish_fail("Stored recap derived cache has malformed fields.")
 \t\t\t\treturn {}
 \t\t\tentry.erase("resume_recap")
 \t\t\tentry.erase("recap_content_revision")

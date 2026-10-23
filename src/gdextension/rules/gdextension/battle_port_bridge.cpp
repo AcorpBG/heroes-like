@@ -7,14 +7,21 @@
 #include "aurelion_rules/port/gd.hpp"
 #include "aurelion_rules/port/registry.hpp"
 
+#include <godot_cpp/classes/class_db_singleton.hpp>
+#include <godot_cpp/classes/dir_access.hpp>
 #include <godot_cpp/classes/engine.hpp>
+#include <godot_cpp/classes/file_access.hpp>
 #include <godot_cpp/classes/global_constants.hpp>
+#include <godot_cpp/classes/json.hpp>
 #include <godot_cpp/classes/node.hpp>
+#include <godot_cpp/classes/os.hpp>
+#include <godot_cpp/classes/project_settings.hpp>
 #include <godot_cpp/classes/random_number_generator.hpp>
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/classes/resource.hpp>
 #include <godot_cpp/classes/resource_loader.hpp>
 #include <godot_cpp/classes/scene_tree.hpp>
+#include <godot_cpp/classes/time.hpp>
 #include <godot_cpp/classes/window.hpp>
 #include <godot_cpp/core/object.hpp>
 #include <godot_cpp/variant/node_path.hpp>
@@ -53,6 +60,9 @@ namespace {
 // Strings a long run interns past this are dropped with the atoms at the next
 // call's start.
 constexpr size_t kAtomLimit = size_t(1) << 20;
+// And past this many bytes of text: a save's JSON text is one atom of
+// megabytes, which no later save interns again.
+constexpr size_t kAtomBytesLimit = size_t(64) << 20;
 
 std::string utf8_of(const String &text) {
 	const CharString utf8 = text.utf8();
@@ -180,13 +190,21 @@ PortBridge::PortBridge() {
 }
 
 void PortBridge::begin(bool validating, bool host_calls) {
-	if (state_.atom_count() > kAtomLimit) {
+	if (state_.atom_count() > kAtomLimit || state_.atom_bytes() > kAtomBytesLimit) {
 		state_.clear();
 		string_cache_.clear();
 		name_cache_.clear();
-	} else {
-		state_.clear_nodes();
 	}
+	end();
+	validating_ = validating;
+	host_calls_ = host_calls && !validating;
+	host_calls_made_.clear();
+	full_host_calls_ = 0;
+	undo_lost_ = false;
+}
+
+void PortBridge::end() {
+	state_.clear_nodes();
 	array_sources_.clear();
 	dict_sources_.clear();
 	array_nodes_.clear();
@@ -203,11 +221,6 @@ void PortBridge::begin(bool validating, bool host_calls) {
 	statics_.clear();
 	static_slots_.clear();
 	memo_shapes_.clear();
-	validating_ = validating;
-	host_calls_ = host_calls && !validating;
-	host_calls_made_.clear();
-	full_host_calls_ = 0;
-	undo_lost_ = false;
 	undo_arrays_.clear();
 	undo_dicts_.clear();
 	undo_packed_.clear();
@@ -223,7 +236,8 @@ void PortBridge::begin(bool validating, bool host_calls) {
 }
 
 void PortBridge::begin_kept() {
-	const bool keeps = kept_ && state_.atom_count() <= kAtomLimit && content_host()->revision() == kept_revision_;
+	const bool keeps = kept_ && state_.atom_count() <= kAtomLimit && state_.atom_bytes() <= kAtomBytesLimit
+			&& content_host()->revision() == kept_revision_;
 	// Until this call ends in keep().
 	kept_ = false;
 	if (!keeps) {
@@ -565,7 +579,41 @@ Value PortBridge::view_object(state::State &, uint32_t node) {
 			return Value::of_ref(Kind::Opaque, view.slot);
 		}
 	}
-	return Value();
+	return adopt_view(node);
+}
+
+Value PortBridge::adopt_view(uint32_t node) {
+	if (!host_calls_ || node >= dict_sources_.size() || !dict_sources_[node]) {
+		return Value();
+	}
+	Value id;
+	Value meta;
+	if (!state_.lookup(node, state_.string("instance_id"), id) || id.kind != Kind::Int
+			|| !state_.lookup(node, state_.string("meta"), meta) || meta.kind != Kind::Dict) {
+		return Value();
+	}
+	Object *object = godot::ObjectDB::get_instance(static_cast<uint64_t>(id.i));
+	if (object == nullptr) {
+		return Value();
+	}
+	opaque_.push_back(Variant(object));
+	ObjectView view;
+	view.slot = static_cast<uint32_t>(opaque_.size() - 1);
+	view.node = node;
+	view.meta = meta.ref;
+	view.adopted = true;
+	const godot::TypedArray<Dictionary> properties = object->get_property_list();
+	for (int64_t index = 0; index < properties.size(); ++index) {
+		const Dictionary property = properties[index];
+		if ((static_cast<int64_t>(property["usage"]) & godot::PROPERTY_USAGE_SCRIPT_VARIABLE) != 0) {
+			view.fields.push_back(state_.intern(utf8_of(String(property["name"]))));
+		}
+	}
+	views_.push_back(std::move(view));
+	// The object takes what the native call changed in the view so far; each
+	// write-back from here on writes the view's changes into it.
+	write_view(views_.back());
+	return Value::of_ref(Kind::Opaque, views_.back().slot);
 }
 
 // The nodes are built in place, so they start clean: write_back() writes a
@@ -588,6 +636,9 @@ void PortBridge::fill_view(const ObjectView &view) {
 	}
 	keys.push_back(state_.string("meta"));
 	values.push_back(Value::of_ref(Kind::Dict, view.meta));
+	// As DayEngine's views: the read scopes key their caches by it.
+	keys.push_back(state_.string("instance_id"));
+	values.push_back(Value::of_int(static_cast<int64_t>(object->get_instance_id())));
 	state::DictNode &meta = state_.dict_node(view.meta);
 	meta.reset();
 	meta.keys = std::move(meta_keys);
@@ -596,6 +647,13 @@ void PortBridge::fill_view(const ObjectView &view) {
 	node.reset();
 	node.keys = std::move(keys);
 	node.values = std::move(values);
+	if (view.adopted) {
+		// The DayEngine view in GDScript still holds what it held before the
+		// host call: the next write-back gives it the object's values, which
+		// DayEngine._take_views then finds unchanged.
+		node.dirty = true;
+		meta.dirty = true;
+	}
 }
 
 bool PortBridge::view_changed(const ObjectView &view) const {
@@ -905,6 +963,12 @@ Value PortBridge::call_pure(state::State &state, uint32_t script, uint32_t funct
 		return call_static(state, script, function, args, count);
 	}
 	host_calls_made_.emplace_back(script, function);
+	const Array call_args = begin_pure_call(args, count);
+	const Variant result = script_object(script)->callv(static_name(function), call_args);
+	return load(result);
+}
+
+Array PortBridge::begin_pure_call(const Value *args, size_t count) {
 	write_back(full_host_calls_ == 0);
 	Array call_args;
 	for (size_t index = 0; index < count; ++index) {
@@ -931,8 +995,7 @@ Value PortBridge::call_pure(state::State &state, uint32_t script, uint32_t funct
 	for (StaticVar &var : statics_) {
 		var.assigned = false;
 	}
-	const Variant result = script_object(script)->callv(static_name(function), call_args);
-	return load(result);
+	return call_args;
 }
 
 void PortBridge::adopt_exported() {
@@ -1017,6 +1080,286 @@ void PortBridge::print_error(const std::string &text) {
 
 void PortBridge::print_warning(const std::string &text) {
 	godot::UtilityFunctions::push_warning(String::utf8(text.data(), static_cast<int64_t>(text.size())));
+}
+
+String PortBridge::path_text(uint32_t path) const {
+	const std::string &text = state_.text(path);
+	return String::utf8(text.data(), static_cast<int64_t>(text.size()));
+}
+
+Value PortBridge::object_call(state::State &state, uint32_t slot, uint32_t method, const Value *args, size_t count) {
+	return load_answer(call_opaque(state, slot, method, args, count));
+}
+
+Value PortBridge::object_call_engine(state::State &state, uint32_t slot, uint32_t method, const Value *args, size_t count) {
+	return keep_opaque(call_opaque(state, slot, method, args, count));
+}
+
+Variant PortBridge::call_opaque(state::State &state, uint32_t slot, uint32_t method, const Value *args, size_t count) {
+	if (slot >= opaque_.size() || opaque_[slot].get_type() == Variant::NIL) {
+		throw state::ScriptError("Cannot call method '" + state.text(method) + "' on a value that is not an object.");
+	}
+	if (!host_calls_) {
+		throw state::ScriptError("Calling the method " + state.text(method) + " of an object runs the engine, which this call may not do (a shadow check or a call that writes nothing back)");
+	}
+	const Array call_args = begin_pure_call(args, count);
+	if (Object *object = object_at(slot)) {
+		return object->callv(static_name(method), call_args);
+	}
+	// A kept engine value (a String): its builtin method, on a copy.
+	Variant receiver = opaque_[slot];
+	std::vector<const Variant *> pointers;
+	for (int64_t index = 0; index < call_args.size(); ++index) {
+		pointers.push_back(&call_args[index]);
+	}
+	Variant result;
+	GDExtensionCallError error;
+	receiver.callp(static_name(method), pointers.data(), static_cast<int>(pointers.size()), result, error);
+	if (error.error != GDEXTENSION_CALL_OK) {
+		throw state::ScriptError("Invalid call. Nonexistent function '" + state.text(method) + "' in base '" + utf8_of(Variant::get_type_name(receiver.get_type())) + "'.");
+	}
+	return result;
+}
+
+Value PortBridge::keep_opaque(const Variant &value) {
+	if (value.get_type() == Variant::NIL || (value.get_type() == Variant::OBJECT && static_cast<Object *>(value) == nullptr)) {
+		return Value();
+	}
+	opaque_.push_back(value);
+	return Value::of_ref(Kind::Opaque, static_cast<uint32_t>(opaque_.size() - 1));
+}
+
+Value PortBridge::load_answer(const Variant &value) {
+	if (value.get_type() == Variant::OBJECT && static_cast<Object *>(value) == nullptr) {
+		return Value();
+	}
+	return load(value);
+}
+
+bool PortBridge::object_has_method(state::State &, uint32_t slot, uint32_t method) {
+	Object *object = object_at(slot);
+	if (object == nullptr) {
+		throw state::ScriptError("Cannot call method 'has_method' on a value that is not an object.");
+	}
+	return object->has_method(static_name(method));
+}
+
+Value PortBridge::class_instantiate(state::State &, uint32_t name) {
+	godot::ClassDBSingleton *classes = godot::ClassDBSingleton::get_singleton();
+	const StringName class_name = static_name(name);
+	if (!classes->class_exists(class_name)) {
+		return Value();
+	}
+	return load(classes->instantiate(class_name));
+}
+
+Value PortBridge::autoload(state::State &, uint32_t name) {
+	godot::SceneTree *tree = Object::cast_to<godot::SceneTree>(godot::Engine::get_singleton()->get_main_loop());
+	godot::Node *node = tree != nullptr && tree->get_root() != nullptr ? tree->get_root()->get_node_or_null(godot::NodePath(path_text(name))) : nullptr;
+	return node == nullptr ? Value() : load(Variant(node));
+}
+
+bool PortBridge::file_exists(state::State &, uint32_t path) {
+	return godot::FileAccess::file_exists(path_text(path));
+}
+
+int64_t PortBridge::file_length(state::State &, uint32_t path) {
+	const Ref<godot::FileAccess> file = godot::FileAccess::open(path_text(path), godot::FileAccess::READ);
+	if (file.is_null()) {
+		return -1;
+	}
+	const int64_t length = static_cast<int64_t>(file->get_length());
+	file->close();
+	return length;
+}
+
+int64_t PortBridge::file_modified_time(state::State &, uint32_t path) {
+	return static_cast<int64_t>(godot::FileAccess::get_modified_time(path_text(path)));
+}
+
+bool PortBridge::dir_entries(state::State &state, uint32_t path, std::vector<std::pair<uint32_t, bool>> &out) {
+	const Ref<godot::DirAccess> dir = godot::DirAccess::open(path_text(path));
+	if (dir.is_null()) {
+		return false;
+	}
+	dir->list_dir_begin();
+	for (String name = dir->get_next(); !name.is_empty(); name = dir->get_next()) {
+		out.emplace_back(state.intern(utf8_of(name)), dir->current_is_dir());
+	}
+	dir->list_dir_end();
+	return true;
+}
+
+bool PortBridge::resource_exists(state::State &, uint32_t path) {
+	return godot::ResourceLoader::get_singleton()->exists(path_text(path));
+}
+
+uint32_t PortBridge::os_environment(state::State &state, uint32_t name) {
+	return state.intern(utf8_of(godot::OS::get_singleton()->get_environment(path_text(name))));
+}
+
+bool PortBridge::os_has_feature(state::State &, uint32_t name) {
+	return godot::OS::get_singleton()->has_feature(path_text(name));
+}
+
+int64_t PortBridge::ticks_msec() {
+	return static_cast<int64_t>(godot::Time::get_singleton()->get_ticks_msec());
+}
+
+int64_t PortBridge::ticks_usec() {
+	return static_cast<int64_t>(godot::Time::get_singleton()->get_ticks_usec());
+}
+
+double PortBridge::unix_time() {
+	return godot::Time::get_singleton()->get_unix_time_from_system();
+}
+
+Array PortBridge::engine_args(const Value *args, size_t count, const char *what) {
+	for (size_t index = 0; index < count; ++index) {
+		const Kind kind = args[index].kind;
+		if (kind == Kind::Array || kind == Kind::Dict || kind == Kind::Opaque || args[index].is_packed()) {
+			if (!host_calls_) {
+				throw state::ScriptError(std::string(what) + " runs the engine, which this call may not do (a shadow check or a call that writes nothing back)");
+			}
+			return begin_pure_call(args, count);
+		}
+	}
+	Array exported;
+	for (size_t index = 0; index < count; ++index) {
+		exported.push_back(export_value(args[index]));
+	}
+	return exported;
+}
+
+Value PortBridge::class_call_static(state::State &state, uint32_t class_name, uint32_t method, const Value *args, size_t count) {
+	if (!host_calls_) {
+		throw state::ScriptError("ClassDB.class_call_static(" + state.text(class_name) + ", " + state.text(method) + ") runs the engine, which this call may not do (a shadow check or a call that writes nothing back)");
+	}
+	Array call_args;
+	call_args.push_back(static_name(class_name));
+	call_args.push_back(static_name(method));
+	call_args.append_array(engine_args(args, count, "ClassDB.class_call_static"));
+	return load_answer(godot::ClassDBSingleton::get_singleton()->callv(StringName("class_call_static"), call_args));
+}
+
+Value PortBridge::class_call_static_engine(state::State &state, uint32_t class_name, uint32_t method, const Value *args, size_t count) {
+	if (!host_calls_) {
+		throw state::ScriptError("ClassDB.class_call_static(" + state.text(class_name) + ", " + state.text(method) + ") runs the engine, which this call may not do (a shadow check or a call that writes nothing back)");
+	}
+	Array call_args;
+	call_args.push_back(static_name(class_name));
+	call_args.push_back(static_name(method));
+	call_args.append_array(engine_args(args, count, "ClassDB.class_call_static"));
+	return keep_opaque(godot::ClassDBSingleton::get_singleton()->callv(StringName("class_call_static"), call_args));
+}
+
+bool PortBridge::engine_equal(state::State &, const Value &a, const Value &b) {
+	const Value pair[] = { a, b };
+	const Array exported = engine_args(pair, 2, "==");
+	return exported[0] == exported[1];
+}
+
+Value PortBridge::engine_equal_loaded(state::State &state, const Value &a, const Value &b) {
+	// Loaded containers export as themselves, so the engine compares them
+	// without the native walk that would load every value first.
+	const auto loaded = [this](const Value &value) {
+		return value.kind == Kind::Array ? value.ref < array_sources_.size() && array_sources_[value.ref]
+										 : value.kind == Kind::Dict && value.ref < dict_sources_.size() && dict_sources_[value.ref];
+	};
+	if (!host_calls_ || !loaded(a) || !loaded(b)) {
+		return Value();
+	}
+	return Value::of_bool(engine_equal(state, a, b));
+}
+
+Value PortBridge::engine_singleton(state::State &, uint32_t name) {
+	// Each singleton through its own get_singleton(): godot-cpp frees those
+	// instance bindings when the library goes. Engine::get_singleton(name)
+	// makes one it never frees, and the engine frees the singleton after the
+	// library is gone, through the binding's callback (a crash at exit).
+	const StringName singleton = static_name(name);
+	Object *object = nullptr;
+	if (singleton == StringName("Time")) {
+		object = godot::Time::get_singleton();
+	} else if (singleton == StringName("ProjectSettings")) {
+		object = godot::ProjectSettings::get_singleton();
+	} else {
+		throw state::ScriptError("PortBridge::engine_singleton does not reach the singleton " + utf8_of(String(singleton)) + ".");
+	}
+	return load(Variant(object));
+}
+
+uint32_t PortBridge::engine_format(state::State &state, uint32_t pattern, const Value *args, size_t count, bool &ok) {
+	const Array values = engine_args(args, count, "String formatting");
+	Variant result;
+	bool valid = false;
+	Variant::evaluate(Variant::OP_MODULE, Variant(path_text(pattern)), Variant(values), result, valid);
+	ok = valid;
+	return state.intern(utf8_of(String(result)));
+}
+
+uint32_t PortBridge::engine_str(state::State &state, const Value &value) {
+	const Array exported = engine_args(&value, 1, "str()");
+	return state.intern(utf8_of(exported[0].stringify()));
+}
+
+bool PortBridge::holds_loaded(const Value &root) const {
+	std::vector<Value> pending{ root };
+	std::vector<bool> seen_arrays(state_.array_count());
+	std::vector<bool> seen_dicts(state_.dict_count());
+	while (!pending.empty()) {
+		const Value value = pending.back();
+		pending.pop_back();
+		if (value.kind == Kind::Array) {
+			if (value.ref < array_sources_.size() && array_sources_[value.ref]) {
+				return true;
+			}
+			if (seen_arrays[value.ref]) {
+				continue;
+			}
+			seen_arrays[value.ref] = true;
+			const state::ArrayNode &node = state_.array_node(value.ref);
+			pending.insert(pending.end(), node.items.begin(), node.items.end());
+		} else if (value.kind == Kind::Dict) {
+			if (value.ref < dict_sources_.size() && dict_sources_[value.ref]) {
+				return true;
+			}
+			if (seen_dicts[value.ref]) {
+				continue;
+			}
+			seen_dicts[value.ref] = true;
+			const state::DictNode &node = state_.dict_node(value.ref);
+			pending.insert(pending.end(), node.values.begin(), node.values.end());
+		}
+	}
+	return false;
+}
+
+Value PortBridge::engine_duplicate(state::State &, const Value &value, bool deep) {
+	// A container loaded from GDScript, or a native-built one holding one: the
+	// copy is then GDScript's too, so no later host call exports it, and a
+	// loaded part is not filled to be copied. A wholly native-built one copies
+	// as fast natively, without being exported first.
+	if (!host_calls_ || (value.kind != Kind::Array && value.kind != Kind::Dict)
+			|| !(deep ? holds_loaded(value)
+						: value.kind == Kind::Array ? value.ref < array_sources_.size() && array_sources_[value.ref]
+													: value.ref < dict_sources_.size() && dict_sources_[value.ref])) {
+		return Value();
+	}
+	const Array exported = begin_pure_call(&value, 1);
+	if (value.kind == Kind::Array) {
+		return load(Array(exported[0]).duplicate(deep));
+	}
+	return load(Dictionary(exported[0]).duplicate(deep));
+}
+
+uint32_t PortBridge::json_stringify(state::State &state, const Value &value) {
+	if (!host_calls_) {
+		throw state::ScriptError("JSON.stringify runs the engine, which this call may not do (a shadow check or a call that writes nothing back)");
+	}
+	// Written back first: a loaded container exports as itself.
+	const Array exported = begin_pure_call(&value, 1);
+	return state.intern(utf8_of(godot::JSON::stringify(exported[0])));
 }
 
 bool PortBridge::same_type(state::TypeRef type, int64_t builtin, const StringName &class_name, const Variant &script) const {

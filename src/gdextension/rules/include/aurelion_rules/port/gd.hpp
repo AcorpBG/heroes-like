@@ -426,4 +426,84 @@ std::string json_stringify(const State &state, const Value &value);
 // push_warning(text) and push_error(text) of a script.
 void push_warning(State &state, const std::string &text);
 
+// The engine's services that game setup calls (Backing::object_call and on).
+// object.method(args) of an object value (an opaque Variant, or a view, which
+// stands for its object): an engine or extension object's method, or a
+// GDScript method of an autoload. A host call that is written back to first
+// and reads nothing again after: the method changes nothing the native call
+// holds. A null object is a ScriptError, as GDScript's call on null is.
+Value call_method(State &state, const Value &object, Atom method, std::initializer_list<Value> args);
+// (An opaque engine value that is no object, a String class_call_static_engine
+// kept, calls its builtin method.)
+// object.has_method(method).
+bool has_method(State &state, const Value &object, Atom method);
+// object.set(property, value) of an object that is no view: its setter runs
+// (an autoload's var with a setter).
+void set_property(State &state, const Value &object, Atom property, const Value &value);
+// ClassDB.class_exists(name) and ClassDB.instantiate(name), null when the
+// class does not exist.
+Value class_instantiate(State &state, Atom name);
+// The autoload `name` (the node /root/<name>); a ScriptError when there is
+// none, as the identifier is not declared then.
+Value autoload(State &state, Atom name);
+// FileAccess.file_exists(path); FileAccess.open(path, READ).get_length(),
+// -1 when the open answers null; FileAccess.get_modified_time(path).
+bool file_exists(State &state, Atom path);
+int64_t file_length(State &state, Atom path);
+int64_t file_modified_time(State &state, Atom path);
+// DirAccess.open(path) listed with list_dir_begin and get_next: each entry's
+// name and current_is_dir(), in the order get_next answers them; false when
+// the open answers null.
+bool dir_entries(State &state, Atom path, std::vector<std::pair<Atom, bool>> &out);
+// ResourceLoader.exists(path).
+bool resource_exists(State &state, Atom path);
+// OS.get_environment(name) and OS.has_feature(name).
+Atom os_environment(State &state, Atom name);
+bool os_has_feature(State &state, Atom name);
+// Time.get_ticks_msec(), Time.get_ticks_usec() and
+// Time.get_unix_time_from_system() of the engine.
+inline int64_t engine_ticks_msec(State &state) { return state.host().ticks_msec(); }
+inline int64_t engine_ticks_usec(State &state) { return state.host().ticks_usec(); }
+inline double engine_unix_time(State &state) { return state.host().unix_time(); }
+// JSON.stringify(value) of the engine, for any value (json_stringify ports
+// a part of it).
+Atom engine_json_stringify(State &state, const Value &value);
+
+// The engine's services that saves call (Phase 7, slice 7.12;
+// Backing::class_call_static and on). Each writes back first what it hands the
+// engine, and reads nothing again after.
+// Class.method(args) of a static method of an engine class:
+// FileAccess.get_sha256(path), FileAccess.get_size(path), FileAccess.open(path,
+// mode) (an object value for call_method, Nil when the open fails),
+// DirAccess.open(path), DirAccess.rename_absolute(from, to),
+// JSON.stringify(value, indent, sort_keys) and the like.
+Value class_call_static(State &state, Atom class_name, Atom method, std::initializer_list<Value> args);
+// Time, ProjectSettings and the other engine singletons, an object value for
+// call_method (Time.get_datetime_dict_from_unix_time(t),
+// ProjectSettings.globalize_path(p)).
+Value engine_singleton(State &state, Atom name);
+// pattern % values, the engine's: every conversion, flag and width, and
+// floats and containers as GDScript prints them. A format error prints
+// "String formatting error" and answers the pattern, as format() does.
+Atom engine_format(State &state, Atom pattern, std::initializer_list<Value> values);
+// str(value), the engine's: floats and containers as GDScript prints them.
+Atom engine_str(State &state, const Value &value);
+// value.duplicate(deep): a deep copy of a container the call loaded from
+// GDScript is the engine's (as fast as GDScript's for a whole save); the
+// others are duplicate_value's.
+Value engine_duplicate(State &state, const Value &value, bool deep);
+// class_call_static and call_method whose answer stays the engine's: an
+// opaque value (Nil for null) that call_method, engine_equal and the engine's
+// services take, never copied into an atom. For a save's JSON text of
+// megabytes, which GDScript held as one String.
+Value class_call_static_engine(State &state, Atom class_name, Atom method, std::initializer_list<Value> args);
+Value call_method_engine(State &state, const Value &object, Atom method, std::initializer_list<Value> args);
+// a == b, the engine's: for opaque values (a kept text against another, or
+// against a string).
+bool engine_equal(State &state, const Value &a, const Value &b);
+// a == b: two containers the call loaded from GDScript are compared by the
+// engine (as fast as GDScript's for a save's scenario records); the others
+// are equal()'s.
+bool equal_loaded(State &state, const Value &a, const Value &b);
+
 } // namespace aurelion::rules::gd

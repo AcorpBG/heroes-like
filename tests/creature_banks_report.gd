@@ -16,7 +16,6 @@ const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const GeneratedRewards = preload("res://scripts/persistence/GeneratedRewardRules.gd")
-const GeneratedNeutral = preload("res://scripts/persistence/GeneratedNeutralEncounterRules.gd")
 const NodePayload = preload("res://scripts/core/ResourceNodePayloadRules.gd")
 
 const REPORT_ID := "CREATURE_BANKS_REPORT"
@@ -80,7 +79,7 @@ func _check_table() -> Dictionary:
 				_expect(bank.units.has(int(stack[0])), "bank %s names a unit for creature value %d" % [bank_id, int(stack[0])])
 		_expect(chance == 100, "bank %s levels add to 100%%: %d" % [bank_id, chance])
 		for unit_id in bank.units.values():
-			_expect(_unit_power(String(unit_id)) > 0.0 and GeneratedNeutral._company_art_ready("", String(unit_id)), "bank %s unit %s has power and idle art" % [bank_id, unit_id])
+			_expect(_unit_power(String(unit_id)) > 0.0 and _idle_art_ready(String(unit_id)), "bank %s unit %s has power and idle art" % [bank_id, unit_id])
 		var upgrade: Array = bank.get("upgrade", [])
 		_expect(upgrade.is_empty() or (bank.units.has(int(upgrade[0])) and bank.units.has(int(upgrade[1]))), "bank %s upgrade names its units" % bank_id)
 		rows[bank_id] = site_id
@@ -541,6 +540,10 @@ func _native_power(native: Array) -> float:
 	for stack in native:
 		total += float(stack[0]) * float(stack[1]) * _rate
 	return total
+
+func _idle_art_ready(unit_id: String) -> bool:
+	var idle: Dictionary = ContentService.load_json("res://art/overworld/creature_idle.json").get("units", {}).get(unit_id, {})
+	return not idle.is_empty() and ResourceLoader.exists(String(idle.get("path", "")))
 
 func _unit_power(unit_id: String) -> float:
 	return _army_power([{"unit_id": unit_id, "count": 1}])

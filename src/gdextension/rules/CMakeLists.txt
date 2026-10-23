@@ -211,7 +211,10 @@ add_library(aurelion_rules_core STATIC
 	core/port/enemy_turn_rules_turn.cpp
 	core/port/enemy_turn_rules_turn_rare.cpp
 	core/port/fog.cpp
+	core/port/game_setup_heroes.cpp
 	core/port/gd.cpp
+	core/port/generated_neutral_encounter_rules.cpp
+	core/port/generated_reward_rules.cpp
 	core/port/hero_command_rules.cpp
 	core/port/hero_command_rules_ai.cpp
 	core/port/hero_commit.cpp
@@ -223,6 +226,8 @@ add_library(aurelion_rules_core STATIC
 	core/port/mine_rules_ai.cpp
 	core/port/move_orders.cpp
 	core/port/movement.cpp
+	core/port/native_random_map_package_session_bridge.cpp
+	core/port/native_scenery_rules.cpp
 	core/port/native_transit_rules.cpp
 	core/port/native_transit_rules_ai.cpp
 	core/port/overworld_forecast.cpp
@@ -249,12 +254,26 @@ add_library(aurelion_rules_core STATIC
 	core/port/player_identity_rules_ai.cpp
 	core/port/player_orders.cpp
 	core/port/presentation.cpp
+	core/port/random_map_generator_rules.cpp
 	core/port/registry.cpp
 	core/port/registry_tables.cpp
 	core/port/resource_node_payload_rules_ai.cpp
 	core/port/round_effects.cpp
+	core/port/save_service_describe.cpp
+	core/port/save_service_entry.cpp
+	core/port/save_service_labels.cpp
+	core/port/save_service_restore.cpp
+	core/port/save_service_runtime.cpp
+	core/port/save_service_summary.cpp
+	core/port/save_service_surface.cpp
+	core/port/save_service_transaction.cpp
+	core/port/save_session_payload.cpp
 	core/port/scenario_evaluation.cpp
 	core/port/scenario_factory_ai.cpp
+	core/port/scenario_select_catalog.cpp
+	core/port/scenario_select_maps_folder.cpp
+	core/port/scenario_select_options.cpp
+	core/port/scenario_select_setup.cpp
 	core/port/scenario_turn_rare.cpp
 	core/port/spell_battle.cpp
 	core/port/spell_effects.cpp

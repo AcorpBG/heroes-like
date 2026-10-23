@@ -2751,6 +2751,114 @@ Checks:
 - UI speed, screen time per action in ms, main | branch, with other runs on the machine: town actions 1,371 | 1,134, end of turn 1,416 | 1,406, battle 646 | 643, move 216 | 214; every other kind within 6 ms either way (opening a town 92 | 94). No kind got slower beyond that noise.
 - Coverage: the human shadow reached all 17 functions; the two probes above cover 7.10's lookups and checks.
 
+**Slice 7.11, game setup** (2026-10-23, branch `native-phase7-human`): a new game is set up in C++, from the menu's
+options to the session.
+- Ported to the human registry (`human_registry.cpp`, no GDScript fallback; files `scenario_select_*.cpp`,
+  `native_random_map_package_session_bridge.cpp`, `generated_reward_rules.cpp`, `generated_neutral_encounter_rules.cpp`,
+  `native_scenery_rules.cpp`, `random_map_generator_rules.cpp`, `game_setup_heroes.cpp`): `ScenarioSelectRules`' options,
+  difficulty, random-map setup, template catalog and maps-folder functions (138); `NativeRandomMapPackageSessionBridge`
+  (43); `GeneratedRewardRules` (33), which replaces Phase 5's transit subset of `resolve`; `GeneratedNeutralEncounterRules`
+  (15); `NativeSceneryRules.is_scenery` and `validate`; `RandomMapGeneratorRules.normalize_config` (29);
+  `HeroCommandRules.army_has_troops` and `seed_start_heroes_from_session`; `HeroProgressionRules.brief_summary`. The
+  57 that GDScript still calls are thin wrappers over `HumanEngine.native_writing`; the other bodies are deleted.
+  `NativeSceneryRules.policy` and `asset_candidates` keep a GDScript copy for the map view.
+- The port bridge gained engine services: object method calls, class instancing, autoloads, files and folders,
+  `ResourceLoader.exists`, the environment and features, the clocks and the engine's `JSON.stringify`. A human-table
+  entry may call a GDScript function as a pure host call (`SessionStateStore.new_session_data`).
+- Deleted by D-g: `RandomMapGeneratorRules.generate` and the rest of the GDScript generator (503 functions),
+  `ScenarioFactory`'s generated-draft sessions (4), the setup's and the bridge's legacy draft paths (14), the GDScript
+  `MapPackageService`, `MapDocument` and `ScenarioDocument`, and the save path that rebuilt a pre-package map (such a
+  save is refused with a message). Constants nothing reads any more went with them: 19,211 GDScript lines deleted in all, 74 written.
+- Tests: three core tests rewritten onto the native generator, 17 tests retired (`docs/game-setup-test-retirement.md`).
+Checks:
+- New games, main against the branch, through the functions the menu calls: 27 setups (Small to Extra Large, 2 to 8
+  players, land, normal water and Islands, one and two levels, the three monster strengths and difficulties), each
+  with its setup, session, summary and maps-folder entry, seven loaded again from the maps folder and four restarted;
+  plus the menu's option lists. 28 of 28 identical, apart from the packages' file times. An Extra Large 8-player
+  normal-water two-level setup (seed 72136) crashes main's native generator as well as the branch's.
+- Core tests covering setup: 5 of 5.
+
+**Slice 7.12, saves** (2026-10-23, branch `native-phase7-human`): saves are written, read, summarized and restored in
+C++.
+- Ported to the human registry (files `save_service_*.cpp` and `save_session_payload.cpp`, 215 functions, 6,548 lines):
+  every `SaveService` function (the save format, the slot summaries and their cache, the transactional write with its
+  backup, previous generation and recovery, the restore, the campaign progression file, the save screens' texts),
+  `SessionStateStore.normalize_payload` with its helpers, and `HeroCommandRules.restore_empty_hero_armies`. The 64
+  `SaveService` functions that the game, the tools and the tests call, and `normalize_payload`, are thin wrappers over
+  `HumanEngine.native_writing`; the other bodies are deleted (`SaveService.gd` 4,335 lines before, 247 after).
+  `SessionData.payload_for_storage` and `share_runtime_scenario_record` keep a GDScript copy for `SessionData`.
+- 21 entries call GDScript as host calls: `ProfileLog` (5), `CampaignRules.get_campaign_id_for_scenario`, and the
+  `OverworldRules`, `TownRules`, `BattleRules` and `ScenarioRules` read scopes and texts a summary quotes (15).
+- Deleted because nothing reaches them (no wrapper, no other port code): `_runtime_session_resume_brief`,
+  `_session_changed_recap_line`, `_session_save_resume_recap`, `describe_session_play_check`,
+  `describe_session_return_handoff`, `describe_session_save_check`, `describe_session_save_handoff`,
+  `describe_session_save_handoff_brief`, `describe_session_save_recap`, `has_any_loadable_session`, `has_slot`,
+  `list_loadable_session_summaries` and `save_runtime_selected_manual_session`.
+- The port bridge: a DayEngine view handed back is mapped to its object (`adopt_view`). New engine services: a static
+  call or method whose answer stays the engine's, the engine's `==`, and builtin methods of a kept value. A save's JSON
+  text stays an engine String, written, measured and compared in the engine. Before that change, each autosave grew
+  memory by about 48 MB. `engine_duplicate` now copies in the engine a native container that holds one loaded from
+  GDScript: copied natively, an autosave's summary built 77,000 native dictionaries and took 180 ms longer. The atom
+  table is also cleared past 64 MiB of text. `gd::equal_loaded` compares two containers loaded from GDScript in the
+  engine: `payload_for_storage` compares the save's two copies of the scenario record, and the native walk had made the
+  end of turn's autosave 90 ms slower than main's.
+- Tests: 3 retired (`docs/save-test-retirement.md`). `tools/native_battle_switch.py` reads signatures over several lines.
+Checks, main 2abd6e086 against the branch, with a scratch probe and isolated profiles:
+- Phase a, the five D9 copies: the file list and slot summaries, the screens' 13 texts for each summary, the loads,
+  the in-session surfaces, and a file, manual and autosave write of each loaded session. 54 labels, 0 differ: the
+  written files are identical apart from `saved_at_unix`.
+- Phase b, each side loading the files the other wrote: 10 labels, 0 differ, and 10 of 10 give the same session as
+  the copy.
+- Phase c, the rest:
+  - payload saves and loads, the slot actions, a rename and a delete;
+  - recovery from the backup and from the previous generation, and both failure phases;
+  - the progression file empty, current, newer, older, wrongly typed and broken;
+  - the generated opening's fast and full autosaves, and the validation hooks;
+  - six changed copies: a town visit, a lost town, a missing and a broken battle, a won scenario holding a battle,
+    and save version 8.
+  49 labels, 0 differ. `load_session` of an empty slot stops with the same script error on both sides (main's
+  `_loaded_session_payload`).
+- Coverage of main's 229 GDScript functions: 207 reached. The 16 not reached are deleted: the 13 above and the 3
+  legacy functions a retired test called. Named unproven:
+  - `_battle_aftermath_summary`, which needs a battle save without a recap;
+  - `_describe_session_play_check_from_summary`, `_fallback_resume_decision` and `_summary_objective_line`, which
+    need summaries without their recap context;
+  - `_migrate_progression_payload` and its step, which nothing reaches while the profile version is 1, its minimum;
+  - migration from save versions before 9: no real save is older, and the version 8 copy only shows one normalized
+    as legacy alike;
+  - a save without player records: its stored summary normalizes the session and stops at the day port's left-out
+    path "enemy configs without player records", now a native failure. Every generated game writes them.
+- Speed, main | branch, in ms:
+  - listing the save files 3,503 | 1,026;
+  - the slot summaries 376 | 609: the branch frees the previous call's parsed saves at the next call's start;
+  - the five loads 574 | 502, 520 | 453, 385 | 313, 336 | 297 and 571 | 443;
+  - the 15 saves 125 to 321 ms faster on the branch;
+  - the end of turn's autosave of the Veilmourn Day 10 copy (a generated map, no summary): main 1,099 to 1,123, the
+    branch 1,007 to 1,037; the save bar's status after it 342 to 366 | 267 to 276;
+  - 15 autosaves of the same copy, before the engine compare: main 1,125 to 1,146 ms with 530 to 570 MB private
+    memory, the branch 1,123 to 1,161 ms with 465 to 585 MB.
+
+**Merge 1b** (7.11 and 7.12, 2026-10-24): merged to main after main was tagged `pre-native-phase7-merge-1b` (D10).
+- Main was merged into the branch twice on the way, at 92c672a3e (Phase 8's P8-1 and P8-2) and at 36ea734e1 (P8-3 to
+  P8-6). Only the Windows binaries conflicted, and they were rebuilt.
+- Fixed on the way, found by the merge's checks:
+  - The end of turn was about 140 ms slower than main's on all eight `--human` seeds. `payload_for_storage` compared
+    the save's two copies of the scenario record natively; `gd::equal_loaded` compares them in the engine.
+  - `battle_ai_flow_report`: an engine service's null object (`DirAccess.open` of a missing folder) loaded as an
+    opaque value, not null (`PortBridge::load_answer`).
+  - `save_summary_deferred_payload_report` crashed at exit. `engine_singleton` reached `Time` through
+    `Engine::get_singleton(name)`, which leaves an instance binding that the engine frees after the library is gone.
+    `Time` and `ProjectSettings` now come through their own `get_singleton()`, whose bindings godot-cpp frees. A
+    non-session port call also drops what it loaded when it returns (`PortBridge::end`).
+- Checks of the merged code against main 36ea734e1:
+  - the `--human` check identical on the eight seeds, 1,896 action digests and the records;
+  - the six seeds identical, 443 daily digests and the match records;
+  - core suite 17/17.
+- UI speed, screen time per action in ms, main | branch: end of turn 1,350 | 1,305 (before the engine compare
+  1,387 | 1,527), town actions 1,086 | 1,072, battle 622 | 594, move 203 | 192, opening a town 88 | 80, dialogs
+  146 | 140; every other kind within 4 ms either way. No kind got slower.
+- Coverage: the 7.11 and 7.12 entries above.
+
 ### Phase 8: a match runner without Godot
 
 Wanted, not optional (owner decision 2026-10-22, D7). The same core as a command-line tool, `match_sim_cli` beside

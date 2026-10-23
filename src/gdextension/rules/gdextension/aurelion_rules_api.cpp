@@ -506,6 +506,25 @@ private:
 	size_t level_;
 };
 
+// Ends the call on the bridge it ran on, when it has one and it is no kept
+// session's.
+class EndCall {
+public:
+	EndCall(aurelion::rules::bridge::PortBridge *const &bridge, bool session) :
+			bridge_(bridge), session_(session) {}
+	~EndCall() {
+		if (bridge_ != nullptr && !session_) {
+			bridge_->end();
+		}
+	}
+	EndCall(const EndCall &) = delete;
+	EndCall &operator=(const EndCall &) = delete;
+
+private:
+	aurelion::rules::bridge::PortBridge *const &bridge_;
+	bool session_;
+};
+
 // "BattleRules._finalize_victory" of a host call the native run reached.
 std::string host_text(const aurelion::rules::state::State &state, uint32_t script, uint32_t function) {
 	return aurelion::rules::port::host_name(state.text(script), state.text(function));
@@ -695,6 +714,9 @@ Variant AurelionRules::port_call_on(const StringName &name, const Array &args, b
 		count_port_use();
 		const Nesting nesting(port_depth_);
 		aurelion::rules::bridge::PortBridge *bridge = nullptr;
+		// Once the call has returned, failed or fallen back, what it loaded
+		// goes (bridge::PortBridge::end); a kept session keeps what keep() kept.
+		const EndCall end_call{ bridge, session };
 		try {
 			if (session && !session_port_) {
 				session_port_ = std::make_unique<aurelion::rules::bridge::PortBridge>();
@@ -791,6 +813,7 @@ String AurelionRules::port_check(const StringName &name, const Array &args, cons
 		bool error = false;
 		const Nesting nesting(port_depth_);
 		aurelion::rules::bridge::PortBridge *bridge = nullptr;
+		const EndCall end_call{ bridge, false };
 		try {
 			aurelion::rules::bridge::PortBridge &port = port_bridge(nesting.level());
 			bridge = &port;

@@ -109,6 +109,11 @@ public:
 	// host_calls: the call may run GDScript at a host call (a call that writes
 	// back, never a validating one).
 	void begin(bool validating = false, bool host_calls = false);
+	// Ends a call that is not a kept session's: drops what it loaded and kept,
+	// as the next begin() would, so an engine object only the call held (a
+	// save's file, a JSON parser and its data) goes now, not after the engine
+	// at exit.
+	void end();
 	// A session kept across calls (the match runner's days, Phase 6 P6-4).
 	// begin_kept() starts a call that writes back and may make host calls, as
 	// begin(false, true) does, but keeps the nodes the last keep() kept, with
@@ -186,6 +191,11 @@ public:
 	state::Value object_view(state::State &state, uint32_t slot) override;
 	void object_set(state::State &state, uint32_t slot, uint32_t property, const state::Value &value) override;
 	state::Value view_object(state::State &state, uint32_t node) override;
+	// A DayEngine view (DayEngine._view: an object's script vars, its metadata
+	// under "meta" and its instance id under "instance_id") that a host call
+	// takes as its object: it becomes that object's view, as object_view()
+	// makes one. Nil when the node is no such view, or no GDScript may run.
+	state::Value adopt_view(uint32_t node);
 	bool rng_get(uint32_t slot, uint64_t &seed, uint64_t &state) override;
 	void rng_set_state(uint32_t slot, uint64_t state) override;
 	uint32_t rng_new(uint64_t seed, uint64_t state) override;
@@ -199,9 +209,44 @@ public:
 	state::TypeRef builtin_type(uint8_t builtin) override;
 	void print_error(const std::string &text) override;
 	void print_warning(const std::string &text) override;
-	// The engine's pow, exp and log (UtilityFunctions), as GDScript calls them.
+	// The engine's services that game setup calls (Backing::object_call and on).
+	state::Value object_call(state::State &state, uint32_t slot, uint32_t method, const state::Value *args, size_t count) override;
+	bool object_has_method(state::State &state, uint32_t slot, uint32_t method) override;
+	state::Value class_instantiate(state::State &state, uint32_t name) override;
+	state::Value autoload(state::State &state, uint32_t name) override;
+	bool file_exists(state::State &state, uint32_t path) override;
+	int64_t file_length(state::State &state, uint32_t path) override;
+	int64_t file_modified_time(state::State &state, uint32_t path) override;
+	bool dir_entries(state::State &state, uint32_t path, std::vector<std::pair<uint32_t, bool>> &out) override;
+	bool resource_exists(state::State &state, uint32_t path) override;
+	uint32_t os_environment(state::State &state, uint32_t name) override;
+	bool os_has_feature(state::State &state, uint32_t name) override;
+	int64_t ticks_msec() override;
+	int64_t ticks_usec() override;
+	double unix_time() override;
+	uint32_t json_stringify(state::State &state, const state::Value &value) override;
+	// The engine's services that saves call (Backing::class_call_static and on).
+	state::Value class_call_static(state::State &state, uint32_t class_name, uint32_t method, const state::Value *args, size_t count) override;
+	state::Value engine_singleton(state::State &state, uint32_t name) override;
+	uint32_t engine_format(state::State &state, uint32_t pattern, const state::Value *args, size_t count, bool &ok) override;
+	uint32_t engine_str(state::State &state, const state::Value &value) override;
+	state::Value engine_duplicate(state::State &state, const state::Value &value, bool deep) override;
+	state::Value class_call_static_engine(state::State &state, uint32_t class_name, uint32_t method, const state::Value *args, size_t count) override;
+	state::Value object_call_engine(state::State &state, uint32_t slot, uint32_t method, const state::Value *args, size_t count) override;
+	bool engine_equal(state::State &state, const state::Value &a, const state::Value &b) override;
+	state::Value engine_equal_loaded(state::State &state, const state::Value &a, const state::Value &b) override;
 
 private:
+	// object.method(args) for object_call and object_call_engine.
+	godot::Variant call_opaque(state::State &state, uint32_t slot, uint32_t method, const state::Value *args, size_t count);
+	// An engine value as an opaque value, Nil for null.
+	state::Value keep_opaque(const godot::Variant &value);
+	// An engine service's answer loaded: a null object (DirAccess.open of a
+	// missing folder) is null, as GDScript's == null sees it.
+	state::Value load_answer(const godot::Variant &value);
+	// A container loaded from GDScript, or a native-built one that holds one at
+	// any depth (engine_duplicate copies both by the engine).
+	bool holds_loaded(const state::Value &value) const;
 	struct TypeInfo {
 		uint32_t builtin = 0;
 		godot::StringName class_name;
@@ -229,6 +274,10 @@ private:
 		uint32_t node = 0;
 		uint32_t meta = 0;
 		std::vector<uint32_t> fields;
+		// A DayEngine view loaded from GDScript (adopt_view): its node is also
+		// a loaded container, which takes the object's values after each host
+		// call.
+		bool adopted = false;
 	};
 	struct MemoShape {
 		uint32_t script = 0;
@@ -268,6 +317,14 @@ private:
 	void diff_dict_items(const state::DictNode &node, const godot::Dictionary &dict, std::string &path, std::string &out);
 	godot::Object *script_object(uint32_t script);
 	godot::StringName static_name(uint32_t name) const;
+	godot::String path_text(uint32_t path) const;
+	// call_pure's two sides of a host call: every change written back,
+	// undoably while no full host call has run, and each loaded node marked as
+	// what Godot holds now; then the arguments exported.
+	godot::Array begin_pure_call(const state::Value *args, size_t count);
+	// The arguments of an engine service: scalars as they are, and a call with
+	// a container among them written back first (begin_pure_call).
+	godot::Array engine_args(const state::Value *args, size_t count, const char *what);
 	// A validating call's record of a loaded generator's state, made on first use;
 	// null outside a validating call and for a generator the call made.
 	uint64_t *validating_state(godot::RandomNumberGenerator *rng);

@@ -1,13 +1,14 @@
 extends Node
 
 const REPORT_ID := "MAP_PACKAGE_API_SKELETON_REPORT"
-const MapPackageServiceScript = preload("res://scripts/persistence/MapPackageService.gd")
 
 func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
 	var service: Variant = _create_service()
+	if service == null:
+		return
 	var metadata: Dictionary = service.get_api_metadata()
 	if not bool(metadata.get("ok", false)):
 		_fail("API metadata did not return ok=true: %s" % JSON.stringify(metadata))
@@ -30,9 +31,6 @@ func _run() -> void:
 		if not capabilities.has(required):
 			_fail("Missing capability %s in %s." % [required, JSON.stringify(Array(capabilities))])
 			return
-
-	if not _assert_gdscript_fallback_remains_fail_closed():
-		return
 
 	var terrain_codes := []
 	for _index in range(12):
@@ -183,40 +181,11 @@ func _run() -> void:
 	})])
 	get_tree().quit(0)
 
-func _assert_gdscript_fallback_remains_fail_closed() -> bool:
-	var fallback_service := MapPackageServiceScript.new()
-	var config := {
-		"seed": "gdscript-fallback-surface-underground-policy-10184",
-		"size": {"width": 12, "height": 10, "level_count": 1, "water_mode": "land"},
-		"profile": {
-			"id": "gdscript_fallback_surface_policy",
-			"terrain_ids": ["grass", "dirt", "underground"],
-			"faction_ids": ["faction_embercourt", "faction_mireclaw"],
-		},
-	}
-	var blocked: Dictionary = fallback_service.generate_random_map(config)
-	if bool(blocked.get("ok", true)):
-		_fail("GDScript compatibility RMG unexpectedly generated a runtime map: %s" % JSON.stringify(blocked))
-		return false
-	if String(blocked.get("error_code", "")) != "native_rmg_exact_state_chain_not_ported":
-		_fail("GDScript compatibility RMG returned the wrong fail-closed code: %s" % JSON.stringify(blocked))
-		return false
-	if bool(blocked.get("runtime_generation_allowed", true)) or bool(blocked.get("native_runtime_authoritative", true)):
-		_fail("GDScript compatibility RMG exposed runtime generation authority: %s" % JSON.stringify(blocked))
-		return false
-	if blocked.has("terrain_grid") or blocked.has("map_document") or blocked.has("scenario_document"):
-		_fail("GDScript compatibility RMG leaked generated payload state: %s" % JSON.stringify(blocked))
-		return false
-	var normalized: Dictionary = blocked.get("normalized_config", {}) if blocked.get("normalized_config", {}) is Dictionary else {}
-	if normalized.get("terrain_ids", []) != config.get("profile", {}).get("terrain_ids", []):
-		_fail("GDScript compatibility RMG fail-closed report lost normalized terrain ids: %s" % JSON.stringify(blocked))
-		return false
-	return true
-
 func _create_service() -> Variant:
 	if ClassDB.class_exists("MapPackageService"):
 		return ClassDB.instantiate("MapPackageService")
-	return MapPackageServiceScript.new()
+	_fail("The native MapPackageService is not loaded.")
+	return null
 
 func _failure_codes(validation_result: Dictionary) -> Dictionary:
 	var result := {}

@@ -5,7 +5,7 @@ Each subsystem of the native rules port (docs/native-rules-engine-transition.md)
 lists its ported functions as the PORT(...) entries of its registry file and has
 an engine script that holds its mode (SUBSYSTEMS below; the day port:
 src/gdextension/rules/core/port/day_registry.cpp and DayEngine.gd). For each
-function, scripts/core/<Script>.gd gets:
+function, scripts/core/<Script>.gd (or scripts/persistence/<Script>.gd) gets:
 
     static func normalize_overworld_state(session: SessionData) -> void:      # the switch
         if _day_engine_mode == DayEngine.GDSCRIPT:
@@ -50,6 +50,9 @@ its `__gd` body is deleted:
     static func tile_is_blocked(session: SessionData, x: int, y: int, level: int = -1) -> bool:
         return HumanEngine.native_writing(&"OverworldRules.tile_is_blocked", [session, x, y, level])
 
+An autoload's method (scripts/autoload, SaveService) gets the same wrapper as
+an instance func; its port reads the autoload's vars as the object's members.
+
 A script left without switches keeps the engine's preload and loses its mode.
 A subsystem whose port falls back to GDScript (the day's) has no NATIVE
 entries: a wrapper has no body to fall back to.
@@ -72,11 +75,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 PORT_DIR = ROOT / "src/gdextension/rules/core/port"
-SCRIPTS = ROOT / "scripts/core"
+# The folders of the scripts a registry names (by file name, unique across them).
+SCRIPT_DIRS = (ROOT / "scripts/core", ROOT / "scripts/persistence", ROOT / "scripts/autoload")
 PORT_LINE = re.compile(r"^\s*(PORT|CHECK|NATIVE)\((\w+), (\w+), (\d+), (true|false),")
 HOST_LINE = re.compile(r"^\s*HOST\((\w+), (\w+), (\d+)\)")
 NEWLINE = chr(10)
-SIGNATURE = re.compile(r"^static func (\w+)\((.*)\)\s*(->\s*([\w\[\], ]+))?\s*:\s*$")
+SIGNATURE = re.compile(r"^(?:static )?func (\w+)\((.*)\)\s*(->\s*([\w\[\]., ]+))?\s*:\s*$")
 
 
 class Subsystem:
@@ -277,8 +281,8 @@ def check_lines(subsystem: Subsystem, script: str, name: str, params: str, retur
     ]
 
 
-def native_lines(subsystem: Subsystem, script: str, name: str, params: str, returns: str, writes: bool) -> list[str]:
-    signature = f"static func {name}({params}){' -> ' + returns if returns else ''}:"
+def native_lines(subsystem: Subsystem, script: str, name: str, params: str, returns: str, writes: bool, static: bool = True) -> list[str]:
+    signature = f"{'static ' if static else ''}func {name}({params}){' -> ' + returns if returns else ''}:"
     args = ", ".join(param_name(p) for p in split_params(params))
     if returns == "void" and not writes:
         raise SystemExit(f"{script}.{name}: a void function that writes nothing has no result")
@@ -330,7 +334,7 @@ def add_engine_header(subsystem: Subsystem, lines: list[str], path: Path, with_m
     return True
 
 
-def signature_of(path: Path, lines: list[str], start: int, name: str) -> tuple[str, str]:
+def signature_of(path: Path, lines: list[str], start: int, name: str, untyped: bool = False) -> tuple[str, str]:
     # A signature over several lines (one parameter per line) is read as one.
     line, end = lines[start], start
     while not line.rstrip().endswith(":") and end + 1 < len(lines):
@@ -342,13 +346,14 @@ def signature_of(path: Path, lines: list[str], start: int, name: str) -> tuple[s
     params, returns = match.group(2), (match.group(4) or "").strip()
     if end > start:
         params = ", ".join(split_params(params))
-    if not returns:
+    if not returns and not untyped:
         raise SystemExit(f"{path.name}: {name} has no declared return type")
     return params, returns
 
 
-def definitions(lines: list[str], name: str) -> list[int]:
-    return [i for i, line in enumerate(lines) if line.startswith(f"static func {name}(")]
+def definitions(lines: list[str], name: str, methods: bool = False) -> list[int]:
+    """A static func's lines; with methods, an instance func's too (an autoload's NATIVE entries)."""
+    return [i for i, line in enumerate(lines) if line.startswith(f"static func {name}(") or (methods and line.startswith(f"func {name}("))]
 
 
 def switch_bounds(path: Path, lines: list[str], name: str) -> tuple[int, int]:
@@ -413,17 +418,23 @@ def switch_script(subsystem: Subsystem, path: Path, functions: list[tuple[str, i
     for name, (arity, writes) in merged.items():
         if name in switched:
             continue
-        starts = definitions(lines, name)
+        starts = definitions(lines, name, methods=True)
         if len(starts) != 1:
             raise SystemExit(f"{path.name}: {len(starts)} definitions of {name}")
-        params, returns = signature_of(path, lines, starts[0], name)
+        # An instance func may leave its result untyped (a method that answers a session or null).
+        static = lines[starts[0]].startswith("static func ")
+        params, returns = signature_of(path, lines, starts[0], name, untyped=not static)
         if len(split_params(params)) != arity:
             raise SystemExit(f"{path.name}: {name} takes {len(split_params(params))} parameters, {subsystem.registry.name} says {arity}")
-        expected = native_lines(subsystem, path.stem, name, params, returns, writes)[:-1]
+        expected = native_lines(subsystem, path.stem, name, params, returns, writes, static)[:-1]
         end = body_end(lines, starts[0])
         if lines[starts[0]:end] == expected:
             continue
-        if end - starts[0] != 2 or f"{subsystem.engine}.native" not in lines[starts[0] + 1]:
+        # The body is one line after the signature, which may span lines.
+        signature_end = starts[0]
+        while not lines[signature_end].rstrip().endswith(":"):
+            signature_end += 1
+        if end - signature_end != 2 or f"{subsystem.engine}.native" not in lines[signature_end + 1]:
             raise SystemExit(f"{path.name}: {name} is a NATIVE entry with a GDScript body; delete the body by hand")
         lines[starts[0]:end] = expected
         changes.append(f"{path.name}: {name} wrapper rewritten (signature or registry entry changed)")
@@ -455,11 +466,12 @@ def switch_subsystem(name: str, subsystem: Subsystem, check: bool) -> int:
         by_script.setdefault(script, []).append((function, arity, True, True, False, False))
     changes = []
     for script, functions in sorted(by_script.items()):
-        if not (SCRIPTS / f"{script}.gd").is_file():
-            raise SystemExit(f"{subsystem.registry.name} names {script}, which is not a script in {SCRIPTS}")
-        changes += switch_script(subsystem, SCRIPTS / f"{script}.gd", functions, check)
+        paths = [folder / f"{script}.gd" for folder in SCRIPT_DIRS if (folder / f"{script}.gd").is_file()]
+        if len(paths) != 1:
+            raise SystemExit(f"{subsystem.registry.name} names {script}, which is not one script in {', '.join(str(f) for f in SCRIPT_DIRS)}")
+        changes += switch_script(subsystem, paths[0], functions, check)
     # Scripts with this subsystem's switches but no registry entries left.
-    for path in sorted(SCRIPTS.glob("*.gd")):
+    for path in sorted(p for folder in SCRIPT_DIRS for p in folder.glob("*.gd")):
         if path.stem not in by_script and subsystem.mode_var in path.read_text(encoding="utf-8"):
             changes += switch_script(subsystem, path, [], check)
     for change in changes:

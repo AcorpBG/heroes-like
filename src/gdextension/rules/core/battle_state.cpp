@@ -5,6 +5,7 @@
 #include "aurelion_rules/compat/portable_math.hpp"
 
 #include <algorithm>
+#include <chrono>
 #include <climits>
 #include <cmath>
 #include <cstdint>
@@ -201,6 +202,102 @@ void Backing::ai_route_enter(State &, uint32_t) {}
 
 void Backing::ai_route_leave(State &) {}
 
+Value Backing::object_call(State &state, uint32_t, uint32_t method, const Value *, size_t) {
+	throw ScriptError("Calling the method " + state.text(method) + " of an object needs the Godot host, which this State does not have");
+}
+
+bool Backing::object_has_method(State &, uint32_t, uint32_t) {
+	no_host("An object's has_method");
+}
+
+Value Backing::class_instantiate(State &, uint32_t) {
+	no_host("ClassDB");
+}
+
+Value Backing::autoload(State &, uint32_t) {
+	no_host("An autoload");
+}
+
+bool Backing::file_exists(State &, uint32_t) {
+	no_host("FileAccess");
+}
+
+int64_t Backing::file_length(State &, uint32_t) {
+	no_host("FileAccess");
+}
+
+int64_t Backing::file_modified_time(State &, uint32_t) {
+	no_host("FileAccess");
+}
+
+bool Backing::dir_entries(State &, uint32_t, std::vector<std::pair<uint32_t, bool>> &) {
+	no_host("DirAccess");
+}
+
+bool Backing::resource_exists(State &, uint32_t) {
+	no_host("ResourceLoader");
+}
+
+uint32_t Backing::os_environment(State &, uint32_t) {
+	no_host("OS.get_environment");
+}
+
+bool Backing::os_has_feature(State &, uint32_t) {
+	no_host("OS.has_feature");
+}
+
+int64_t Backing::ticks_msec() {
+	return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+}
+
+int64_t Backing::ticks_usec() {
+	return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+}
+
+double Backing::unix_time() {
+	return std::chrono::duration<double>(std::chrono::system_clock::now().time_since_epoch()).count();
+}
+
+uint32_t Backing::json_stringify(State &, const Value &) {
+	no_host("JSON.stringify");
+}
+
+Value Backing::class_call_static(State &, uint32_t, uint32_t, const Value *, size_t) {
+	no_host("ClassDB.class_call_static");
+}
+
+Value Backing::engine_singleton(State &, uint32_t) {
+	no_host("An engine singleton");
+}
+
+uint32_t Backing::engine_format(State &, uint32_t, const Value *, size_t, bool &) {
+	no_host("The engine's String formatting");
+}
+
+uint32_t Backing::engine_str(State &, const Value &) {
+	no_host("The engine's str()");
+}
+
+Value Backing::engine_duplicate(State &, const Value &, bool) {
+	return Value();
+}
+
+Value Backing::class_call_static_engine(State &, uint32_t, uint32_t, const Value *, size_t) {
+	no_host("ClassDB.class_call_static");
+}
+
+Value Backing::object_call_engine(State &state, uint32_t, uint32_t method, const Value *, size_t) {
+	throw ScriptError("Calling the method " + state.text(method) + " of an object needs the Godot host, which this State does not have");
+}
+
+bool Backing::engine_equal(State &, const Value &, const Value &) {
+	no_host("The engine's ==");
+}
+
+Value Backing::engine_equal_loaded(State &, const Value &, const Value &) {
+	return Value();
+}
+
 bool same_key(const Value &a, const Value &b) {
 	if (a.is_string_like() && b.is_string_like()) {
 		return a.ref == b.ref;
@@ -240,6 +337,7 @@ void State::clear() {
 	atom_ids_.clear();
 	joined_.clear();
 	atoms_.clear();
+	atom_bytes_ = 0;
 	for (std::string_view text : kKnownKeys) {
 		const size_t next = atoms_.size();
 		if (intern(text) != next) {
@@ -565,6 +663,7 @@ uint32_t State::intern(std::string_view text) {
 	}
 	const uint32_t atom = static_cast<uint32_t>(atoms_.size());
 	atoms_.emplace_back(text);
+	atom_bytes_ += text.size();
 	atom_ids_.emplace(std::string_view(atoms_.back()), atom);
 	return atom;
 }

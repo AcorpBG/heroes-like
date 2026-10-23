@@ -28,6 +28,7 @@
 #include <string>
 #include <string_view>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 namespace aurelion::rules::state {
@@ -743,6 +744,79 @@ public:
 	virtual bool routes_ai() const;
 	virtual void ai_route_enter(State &state, uint32_t side);
 	virtual void ai_route_leave(State &state);
+
+	// The engine's services that game setup calls (Phase 7, 7.11): methods of
+	// engine and extension objects, ClassDB, the autoloads, the file system, OS
+	// and JSON. The defaults are a ScriptError (this host has no engine), but
+	// the clocks, which read the C++ ones.
+	//
+	// object.method(args) of an opaque value: the method of an engine or
+	// extension object (the map package service and its documents), a
+	// GDScript method of an autoload that changes nothing the native call
+	// holds, or a builtin method of an engine value kept opaque (a String's
+	// to_utf8_buffer()). Written back first, with nothing read again after, as a pure
+	// host call is (call_pure); in a call where no GDScript may run, a
+	// ScriptError.
+	virtual Value object_call(State &state, uint32_t slot, uint32_t method, const Value *args, size_t count);
+	// object.has_method(method).
+	virtual bool object_has_method(State &state, uint32_t slot, uint32_t method);
+	// ClassDB.instantiate(name) when ClassDB.class_exists(name), else Nil.
+	virtual Value class_instantiate(State &state, uint32_t name);
+	// The autoload `name` (the node /root/<name>), or Nil.
+	virtual Value autoload(State &state, uint32_t name);
+	// FileAccess.file_exists(path); the length of the file FileAccess.open(path,
+	// READ) opens, or -1 when it answers null; FileAccess.get_modified_time(path).
+	virtual bool file_exists(State &state, uint32_t path);
+	virtual int64_t file_length(State &state, uint32_t path);
+	virtual int64_t file_modified_time(State &state, uint32_t path);
+	// DirAccess.open(path), then list_dir_begin() and get_next() to the end:
+	// each name with its current_is_dir(), in that order. False when
+	// DirAccess.open answers null.
+	virtual bool dir_entries(State &state, uint32_t path, std::vector<std::pair<uint32_t, bool>> &out);
+	// ResourceLoader.exists(path).
+	virtual bool resource_exists(State &state, uint32_t path);
+	// OS.get_environment(name) and OS.has_feature(name).
+	virtual uint32_t os_environment(State &state, uint32_t name);
+	virtual bool os_has_feature(State &state, uint32_t name);
+	// Time.get_ticks_msec(), Time.get_ticks_usec() and
+	// Time.get_unix_time_from_system().
+	virtual int64_t ticks_msec();
+	virtual int64_t ticks_usec();
+	virtual double unix_time();
+	// JSON.stringify(value) with its default arguments.
+	virtual uint32_t json_stringify(State &state, const Value &value);
+
+	// The engine's services that saves call (Phase 7, slice 7.12). Each writes
+	// back first what it hands the engine and reads nothing again after, as
+	// object_call does; in a call where no GDScript may run, a ScriptError.
+	//
+	// ClassDB.class_call_static(class, method, args...): a static method of an
+	// engine class (FileAccess.get_sha256, DirAccess.open, JSON.stringify).
+	virtual Value class_call_static(State &state, uint32_t class_name, uint32_t method, const Value *args, size_t count);
+	// Engine.get_singleton(name) (Time, ProjectSettings), or Nil when the
+	// engine has none of that name.
+	virtual Value engine_singleton(State &state, uint32_t name);
+	// pattern % values, the engine's String::sprintf. ok is false on a format
+	// error, and the answer is then the engine's message.
+	virtual uint32_t engine_format(State &state, uint32_t pattern, const Value *args, size_t count, bool &ok);
+	// str(value), the engine's Variant::stringify.
+	virtual uint32_t engine_str(State &state, const Value &value);
+	// value.duplicate(deep) of an Array or Dictionary loaded from GDScript,
+	// copied by the engine: a new container, loaded like any other. Nil for
+	// another value, or when this host cannot (the caller copies natively).
+	virtual Value engine_duplicate(State &state, const Value &value, bool deep);
+	// class_call_static and object_call whose answer stays the engine's value,
+	// an opaque value (Nil for null): a text of megabytes that native code only
+	// hands back to the engine, as a save's JSON text.
+	virtual Value class_call_static_engine(State &state, uint32_t class_name, uint32_t method, const Value *args, size_t count);
+	virtual Value object_call_engine(State &state, uint32_t slot, uint32_t method, const Value *args, size_t count);
+	// a == b, the engine's: for opaque values, which native code cannot
+	// compare.
+	virtual bool engine_equal(State &state, const Value &a, const Value &b);
+	// a == b of two containers loaded from GDScript, compared by the engine: a
+	// bool. Nil for other values, or when this host cannot (the caller
+	// compares natively).
+	virtual Value engine_equal_loaded(State &state, const Value &a, const Value &b);
 };
 
 class State {
@@ -776,6 +850,8 @@ public:
 	bool find_atom(std::string_view text, uint32_t &atom) const;
 	const std::string &text(uint32_t atom) const { return atoms_[atom]; }
 	size_t atom_count() const { return atoms_.size(); }
+	// The atoms' texts, in bytes.
+	size_t atom_bytes() const { return atom_bytes_; }
 	Value string(std::string_view text) { return Value::str(intern(text)); }
 
 	uint32_t new_array();
@@ -944,6 +1020,7 @@ private:
 
 	// A deque, so the views atom_ids_ holds stay valid.
 	std::deque<std::string> atoms_;
+	size_t atom_bytes_ = 0;
 	std::unordered_map<std::string_view, uint32_t> atom_ids_;
 	// joined_atom's atoms: (prefix << 32 | atom) -> atom of the joined text.
 	std::unordered_map<uint64_t, uint32_t> joined_;

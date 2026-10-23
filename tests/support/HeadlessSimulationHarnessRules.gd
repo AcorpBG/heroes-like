@@ -4201,37 +4201,7 @@ static func _generated_restore_check(input_config: Dictionary, generated_sample:
 static func _generated_session_from_setup(setup: Dictionary) -> SessionStateStoreScript.SessionData:
 	if not bool(setup.get("ok", false)):
 		return SessionStateStoreScript.new_session_data()
-	var payload: Dictionary = setup.get("generated_map", {}) if setup.get("generated_map", {}) is Dictionary else {}
-	var session: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_generated_skirmish_session(
-		payload,
-		String(setup.get("difficulty", "normal")),
-		{
-			"provenance": setup.get("provenance", {}),
-			"replay_metadata": setup.get("replay_metadata", {}),
-			"validation": setup.get("validation", {}),
-			"retry_status": setup.get("retry_status", {}),
-			"generated_identity": setup.get("generated_identity", {}),
-			"boundary": {
-				"authored_content_writeback": false,
-				"campaign_adoption": false,
-				"skirmish_browser_authored_listing": false,
-				"alpha_parity_claim": false,
-			},
-		}
-	)
-	if session.scenario_id == "":
-		return session
-	session.flags["generated_random_map_provenance"] = setup.get("provenance", {})
-	session.flags["generated_random_map_replay_metadata"] = setup.get("replay_metadata", {})
-	session.flags["generated_random_map_validation"] = setup.get("validation", {})
-	session.flags["generated_random_map_retry_status"] = setup.get("retry_status", {})
-	session.flags["generated_random_map_boundary"]["adoption_path"] = "skirmish_session_only_no_authored_browser_or_campaign"
-	session.overworld["generated_random_map_provenance"] = setup.get("provenance", {})
-	session.overworld["generated_random_map_replay_metadata"] = setup.get("replay_metadata", {})
-	session.overworld["generated_random_map_validation"] = setup.get("validation", {})
-	session.overworld["generated_random_map_retry_status"] = setup.get("retry_status", {})
-	OverworldRules.normalize_overworld_state(session)
-	return session
+	return ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(setup)
 
 static func _generated_setup(input_config: Dictionary, seed: String) -> Dictionary:
 	var config: Dictionary = input_config.get("random_map_config", {}) if input_config.get("random_map_config", {}) is Dictionary else {}
