@@ -116579,6 +116579,19 @@
       ],
       "notes": "Branch native-phase6-map-corpus (owner decision 2026-10-23: after P6-1). HEROES_AI_MATCH_MAP_CORPUS keeps generated maps (package pair and setup, keyed by everything the map depends on) and a match whose map is there starts from it; in a match list a match on the previous match's map starts from a copy of the adopted session; tools/ai_match_batch.py --map-corpus DIR (one commit per folder). No native, game or rules_parity.py change. Checks: six seeds with no corpus, filling an empty corpus, from the corpus, and each seed twice in one process (corpus then kept): all digests and records identical; against main 2dfeaddb7 identical; core suite 17/17. Timing, two rounds: six seeds in one process 97.5/102.8 s generated, 81.5/87.0 s from the corpus (1.20x), 70.9/70.7 s from the kept session (1.38x); 24 small 2P batch matches at 6 slots 22.8 s vs 20.8-20.9 s with --map-corpus (1.09x; bound 1.09-1.17x).",
       "updatedAt": "2026-10-23T14:45:00Z"
+    },
+    {
+      "id": "native-rules-phase6-faction-setup-20261023",
+      "title": "Phase 6: the generator's faction setup and rotated maps",
+      "status": "completed",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Branch native-phase6-faction-setup (owner decision 2026-10-23: one map with the factions rotated, and the generator provisions a random faction). ScenarioSelectRules.build_random_map_player_config takes seat_faction_ids (a faction id, \"random\" drawn from the normalized seed, or \"\" per seat); the skirmish faction picker has a Random item. Native map_package_service: the normalize keeps the seat list (mirrors allowed), each seat's faction goes to its town and the neutral towns and dwellings of its town type, the ids hash the seat list, a setup with a seat list takes faction-free placement ids so all line-ups of a seed share one map, and the core result is kept for the next call with the same generator inputs (generator_core_reused). Setups without a seat list generate as before. The match runner hands its line-up to the generator (_refound_seat gone); tools/ai_match_batch.py --rotate. The corpus and kept session stay keyed by the line-up. Checks: setups without a seat list identical to main's packages apart from generator_core_reused; a map's rotations share terrain, placement ids and every object, only factions differ; random seats reproducible; native RMG selftest and reports as on main (the end-to-end boundary report fails as on main); six seeds against main ad2c5f24a differ from day 1, each difference named in the transition doc; core suite 17/17. Timing (quiet machine, three rounds): a rotation's generation reuses the core, 49 ms vs 215-298 ms small 2P, 89-98 vs 741-786 ms medium, 158-179 vs 1527-1770 ms large, 248-288 vs 3479-7606 ms extra large.",
+      "updatedAt": "2026-10-23T17:00:00Z"
     }
   ],
   "project": "heroes-like",

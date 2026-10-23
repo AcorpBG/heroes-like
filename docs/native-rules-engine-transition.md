@@ -2304,6 +2304,7 @@ Godot dependency, since these slices lead to Phase 8. The bound is 1/(1 - share)
 | P6-4 | The native session kept across days; runner mode and game mode give the same digests (done: 1.19x measured; write-backs, content lookups and the compaction stay) | 31-34% | 1.45-1.52x |
 | P6-1 | Several matches per Godot process (done: 1.26x on the six seeds one after another, 1.49x on a small-map batch) | 19.9% (s2 50%) | 1.25x (s2 2.0x) |
 | P6-2 | A map corpus, with the adopted session kept per process (done: 1.20x from the corpus and 1.38x from the kept session on the six seeds in one process, 1.09x on a small-map batch) | 8.3-14.4% | 1.09-1.17x |
+| P6-6 | The generator takes a faction per seat ("random" drawn from the map seed); `ai_match_batch.py --rotate` plays one map in every seat rotation, generating it once (done: a rotation's generation 4.4-6.1x faster on small maps, 12-31x on extra large) | generation | |
 
 - Checks per C++ slice: shadow on the six seeds while working; before pushing, native against main on the six seeds and
   the core suite, plus P6-4's runner-mode against game-mode digests; timing on a quiet machine with Phases 2 and 5
@@ -2487,6 +2488,63 @@ Godot dependency, since these slices lead to Phase 8. The bound is 1/(1 - share)
 
   The bound was 1.09-1.17x. Per seed, generated against corpus against kept (round 0): s2 2.3, 1.8, 1.3 s; mw 7.4,
   6.3, 5.1 s; l1 25.0, 22.4, 19.8 s; l2 28.6, 21.8, 19.4 s. Every batch match ended on the same day all four times.
+
+**P6-6, the generator's faction setup and rotated maps** (`native-rules-phase6-faction-setup-20261023`, branch
+`native-phase6-faction-setup`; owner decision 2026-10-23: one map with the factions rotated through the starts, and the
+generator provisions a random faction):
+- **What changed.**
+  - `ScenarioSelectRules.build_random_map_player_config` takes `seat_faction_ids`, one entry per seat: a faction id,
+    `"random"` (drawn from the normalized seed seat by seat, so the same seed and setup give the same factions) or `""`
+    (the next faction no seat has). The resolved list reaches the native normalize as `seat_faction_ids`. The
+    skirmish menu's faction picker has a "Random" item: the player's faction is drawn from the seed, with its default
+    commander.
+  - Native, `map_package_service.cpp`: `normalize_random_map_config` keeps the seat list (a faction may sit twice),
+    and each seat's faction goes to its town and to the neutral towns and creature dwellings of its town type, as the
+    player's already did. The map and scenario ids hash the seat list, so two line-ups never share a package. A setup with a seat list takes its placement ids from the faction-free id (the map id of a setup that
+    names no faction). Placement ids seed which original site or artifact an object becomes, and at adoption the
+    guard armies and rewards, so every line-up of a seed plays one map. The generator's faction-free core result is
+    kept for the next call with the same generator inputs (`generator_core_reused`). No H3MapEd core change.
+  - A setup without a seat list (the menu, a random player faction, every setup on main) generates as before.
+  - The match runner hands its line-up to the generator instead of refounding seats after generation
+    (`_refound_seat` is gone), so a match's map depends on the seed and setup only. The kept session and the corpus
+    stay keyed by the line-up, since a package holds its factions; a corpus of faction-free cores would need the
+    generator's projection serialized, which this slice leaves out. A match on the same map with another line-up has
+    the generator reuse the core.
+  - `tools/ai_match_batch.py --rotate`: one map per line-up, played once in every seat rotation (`--matches` rounded up
+    to a multiple of the players); a process takes all the queued matches of a seed.
+- **Checks.**
+  - Setups without a seat list (small 3P with embercourt, mireclaw and thornwake, medium 2P water with sunvault, small
+    2P on two levels with no faction): packages identical to main's apart from the new `generator_core_reused` (false).
+  - A seat list naming main's line-up against main's player-only setup: the map and scenario ids and hashes, the
+    prefix of the 274 placement ids, 7 original site and artifact picks and the seat list in the metadata differ.
+  - One medium 3P map in its three rotations: terrain, route graph, placement ids and every object identical apart from
+    the factions (3 towns, the seats, the player setup and hero) and the document ids. Their day-1 sessions: terrain,
+    encounters and artifacts identical; the factions, enemy rosters, the 3 player towns, 1 neutral town and 3 creature
+    dwellings of a seat's town type and the ids differ.
+  - Random seats: the same factions for a seed within a process and across processes. A reused core gives the result
+    of a fresh generation apart from the flag. The skirmish menu run once with "Random" picked, with a screenshot.
+  - Native RMG: the rules selftest, `map_package_api_skeleton_report` and the object-table proxy report pass;
+    `native_rmg_end_to_end_runtime_boundary_report` fails its zero-road check on payload d4f3705f exactly as on main.
+    The H3MapEd core is unchanged.
+  - Six seeds, native against main ad2c5f24a: all differ from day 1, as they must, since the runner now hands its
+    line-up to the generator. The seats and terrain are the same in all six. What differs: neutral towns of a seat's
+    town type take that seat's faction (l1 2, l2 4, mw 2, s2 0, mg-a 1, mg-b 1; on main they kept the default
+    line-up's faction from before `_refound_seat`), and the faction-free placement ids roll other guard armies (l1
+    184 of 192, l2 149/153, mw 82/84, s2 30/30, mg-a 256/261, mg-b 103/105), sites (238/743, 262/1034, 84/249,
+    23/62, 179/440, 155/424) and artifacts (19/27, 22/26, 12/13, 2/2, 35/40, 13/15), and the map, scenario and
+    session ids. Days played, main against P6-6: l1 90/90, l2 70/70, mw 62/71, s2 33/32, mg-a 80/80, mg-b 80/100.
+  - Core suite 17/17. A small 2P `--rotate` batch of 4: each map's second rotation reports its map as `reused`.
+- **Timing** (quiet machine, one process, three rounds; `generate_random_map` alone, a line-up's first generation
+  against its other rotations, which reuse the core and still project the factions and write the package):
+
+  | | First | Each other rotation | Gain |
+  |---|---|---|---|
+  | Small 2P | 215-298 ms | 49 ms | 4.4-6.1x |
+  | Medium 3P | 741-786 ms | 89-98 ms | 7.6-8.8x |
+  | Large 4P | 1,527-1,770 ms | 158-179 ms | 8.5-11.2x |
+  | Extra large 6P | 3,479-7,606 ms | 248-288 ms | 12-31x |
+
+  A rotated batch saves this on every match of a map but the first; the rest of a match is unchanged.
 
 
 ### Phase 7: human-side actions and the last GDScript rules

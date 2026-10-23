@@ -372,6 +372,25 @@ Array town_ids_for_factions(Variant requested_value, const Array &faction_ids, i
 	return result;
 }
 
+// A setup's faction for every player colour (ScenarioSelectRules
+// random_map_seat_factions), kept as it is: two seats may play one faction.
+// Empty when the setup gives none or leaves an entry blank.
+Array seat_faction_list(const Variant &value, int32_t count) {
+	Array result;
+	if (value.get_type() != Variant::ARRAY) {
+		return result;
+	}
+	const Array source = value;
+	for (int64_t index = 0; index < source.size(); ++index) {
+		const String text = String(source[index]).strip_edges();
+		if (text.is_empty()) {
+			return Array();
+		}
+		result.append(text);
+	}
+	return ensure_repeated_to_count(result, Array(), count);
+}
+
 Dictionary normalized_player_constraints(const Dictionary &config) {
 	Variant value = config.get("player_constraints", config.get("players", Variant()));
 	Dictionary source = value.get_type() == Variant::DICTIONARY ? Dictionary(value) : Dictionary();
@@ -585,6 +604,48 @@ Dictionary runtime_json_dictionary(const String &path) {
 	}
 	(*cache)[key] = CachedContentCatalog { source_sha256, data.duplicate(true) };
 	return data;
+}
+
+// What the recovered workflow gives for one setup. The workflow never sees a
+// faction: the setup's factions are stamped on its projection afterwards. The
+// last one is kept, so the next generation with the same generator inputs and
+// other factions (an AI batch playing one map with its line-up rotated) skips
+// the workflow and gets the same map. Like the content cache, it is emptied
+// when the extension unloads.
+struct GeneratedCore {
+	std::string key;
+	aurelion::h3maped_rmg_core::RuntimeMapPayloadProjection projection;
+	std::string workflow_status;
+	std::string workflow_phase;
+	std::string workflow_blocked_reason;
+	std::string payload_token;
+	int32_t final_payload_byte_count = 0;
+	int32_t selected_template_catalog_index = -1;
+	int32_t runtime_zone_count = 0;
+	bool cut_off_town_repair_applied = false;
+	int32_t cut_off_towns_before_repair = 0;
+	int32_t cut_off_towns_after_repair = 0;
+	std::string split_template_repicked_from;
+};
+
+std::mutex &generated_core_mutex() {
+	static std::mutex mutex;
+	return mutex;
+}
+
+std::shared_ptr<const GeneratedCore> &last_generated_core() {
+	static std::shared_ptr<const GeneratedCore> core;
+	return core;
+}
+
+// Everything the normalized config holds but the setup's factions and player
+// setup, which only the stamping reads.
+std::string generated_core_key(const Dictionary &normalized) {
+	Dictionary inputs = normalized.duplicate(false);
+	for (const char *field : { "faction_ids", "town_ids", "seat_faction_ids", "player_setup" }) {
+		inputs.erase(field);
+	}
+	return std::string(canonical_variant(inputs).utf8().get_data());
 }
 
 bool runtime_string_array_contains(const Variant &value, const String &needle) {
@@ -2530,6 +2591,10 @@ Dictionary validate_scenario_document_structural_report(Ref<ScenarioDocument> sc
 } // namespace
 
 void MapPackageService::release_runtime_caches() {
+	{
+		std::lock_guard<std::mutex> lock(generated_core_mutex());
+		last_generated_core().reset();
+	}
 	std::lock_guard<std::mutex> lock(runtime_content_cache_mutex());
 	delete runtime_content_cache();
 	runtime_content_cache() = nullptr;
@@ -3231,7 +3296,10 @@ Dictionary MapPackageService::normalize_random_map_config(Dictionary config) con
 	Dictionary player_constraints = normalized_player_constraints(config);
 	const int32_t player_count = int32_t(player_constraints.get("player_count", 2));
 	Array terrain_ids = normalized_string_array(profile.get("terrain_ids", Variant()), default_terrain_pool());
-	Array faction_ids = ensure_repeated_to_count(normalized_string_array(profile.get("faction_ids", Variant()), default_faction_pool()), default_faction_pool(), player_count);
+	const Array seat_faction_ids = seat_faction_list(config.get("seat_faction_ids", Variant()), player_count);
+	Array faction_ids = !seat_faction_ids.is_empty()
+			? seat_faction_ids
+			: ensure_repeated_to_count(normalized_string_array(profile.get("faction_ids", Variant()), default_faction_pool()), default_faction_pool(), player_count);
 	Array town_ids = town_ids_for_factions(profile.get("town_ids", Variant()), faction_ids, player_count);
 
 	Dictionary result;
@@ -3252,6 +3320,9 @@ Dictionary MapPackageService::normalize_random_map_config(Dictionary config) con
 	result["terrain_ids"] = terrain_ids;
 	result["faction_ids"] = faction_ids;
 	result["town_ids"] = town_ids;
+	if (!seat_faction_ids.is_empty()) {
+		result["seat_faction_ids"] = seat_faction_ids;
+	}
 	if (!player_setup.is_empty()) {
 		Dictionary normalized_player_setup;
 		normalized_player_setup["faction_id"] = String(player_setup.get("faction_id", "")).strip_edges();
@@ -3376,30 +3447,59 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 			aurelion::h3maped_rmg_core::DIRECT_ENTRY_OPTIONAL_HANDLER_SENTINEL_0X4602C1;
 
 	const auto workflow_started_at = SteadyClock::now();
-	// The workflow result holds every private generator buffer (hundreds of MB
-	// on Large and XL maps). Only a few fields are read after projection, so
-	// copy those and free the rest before building the runtime documents.
-	// The workflow also projects the map: it checks the projection for towns cut off
-	// (docs/rmg-cut-off-town-repair.md), so the projection time is in its bucket.
-	aurelion::h3maped_rmg_core::RuntimeMapPayloadProjection projection;
-	auto workflow = std::make_unique<aurelion::h3maped_rmg_core::H3MapedRmgWorkflowResult>(
-			aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config, &projection));
+	const std::string core_key = generated_core_key(normalized);
+	std::shared_ptr<const GeneratedCore> core;
+	{
+		std::lock_guard<std::mutex> lock(generated_core_mutex());
+		if (last_generated_core() != nullptr && last_generated_core()->key == core_key) {
+			core = last_generated_core();
+		}
+	}
+	const bool core_reused = core != nullptr;
+	if (!core_reused) {
+		auto fresh = std::make_shared<GeneratedCore>();
+		fresh->key = core_key;
+		// The workflow result holds every private generator buffer (hundreds of MB
+		// on Large and XL maps). Only a few fields are read after projection, so
+		// copy those and free the rest before building the runtime documents.
+		// The workflow also projects the map: it checks the projection for towns cut off
+		// (docs/rmg-cut-off-town-repair.md), so the projection time is in its bucket.
+		auto workflow = std::make_unique<aurelion::h3maped_rmg_core::H3MapedRmgWorkflowResult>(
+				aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config, &fresh->projection));
+		fresh->workflow_status = workflow->status;
+		fresh->workflow_phase = workflow->current_phase_id;
+		fresh->workflow_blocked_reason = workflow->blocked_reason;
+		fresh->payload_token = std::string(hash32_hex_bytes(workflow->final_payload_writeout_0x4ad1e3.payload_bytes).utf8().get_data());
+		fresh->final_payload_byte_count = workflow->final_payload_writeout_0x4ad1e3.total_payload_byte_count;
+		fresh->selected_template_catalog_index = workflow->template_selection_0x4ac552.selected_source_catalog_index;
+		fresh->runtime_zone_count = int32_t(workflow->template_selection_0x4ac552.runtime_seed.runtime_zone_seeds.size());
+		fresh->cut_off_town_repair_applied = workflow->cut_off_town_repair_applied;
+		fresh->cut_off_towns_before_repair = workflow->cut_off_towns_before_repair;
+		fresh->cut_off_towns_after_repair = workflow->cut_off_towns_after_repair;
+		if (workflow->template_selection_0x4ac552.split_link_graph_repicked) {
+			fresh->split_template_repicked_from = workflow->template_selection_0x4ac552.split_link_graph_rolled_template_name;
+		}
+		workflow.reset();
+		core = fresh;
+		if (fresh->projection.applied) {
+			std::lock_guard<std::mutex> lock(generated_core_mutex());
+			last_generated_core() = core;
+		}
+	}
 	record_bucket("recovered_workflow", workflow_started_at);
-	const String workflow_status = String(workflow->status.c_str());
-	const String workflow_phase = String(workflow->current_phase_id.c_str());
-	const String workflow_blocked_reason = String(workflow->blocked_reason.c_str());
-	const String payload_token = hash32_hex_bytes(workflow->final_payload_writeout_0x4ad1e3.payload_bytes);
-	const int32_t final_payload_byte_count = workflow->final_payload_writeout_0x4ad1e3.total_payload_byte_count;
-	const int32_t selected_template_catalog_index = workflow->template_selection_0x4ac552.selected_source_catalog_index;
-	const int32_t runtime_zone_count = int32_t(workflow->template_selection_0x4ac552.runtime_seed.runtime_zone_seeds.size());
+	const aurelion::h3maped_rmg_core::RuntimeMapPayloadProjection &projection = core->projection;
+	const String workflow_status = String(core->workflow_status.c_str());
+	const String workflow_phase = String(core->workflow_phase.c_str());
+	const String workflow_blocked_reason = String(core->workflow_blocked_reason.c_str());
+	const String payload_token = String(core->payload_token.c_str());
+	const int32_t final_payload_byte_count = core->final_payload_byte_count;
+	const int32_t selected_template_catalog_index = core->selected_template_catalog_index;
+	const int32_t runtime_zone_count = core->runtime_zone_count;
 	Dictionary cut_off_town_repair;
-	cut_off_town_repair["applied"] = workflow->cut_off_town_repair_applied;
-	cut_off_town_repair["towns_cut_off_before"] = workflow->cut_off_towns_before_repair;
-	cut_off_town_repair["towns_cut_off_after"] = workflow->cut_off_towns_after_repair;
-	cut_off_town_repair["split_template_repicked_from"] = workflow->template_selection_0x4ac552.split_link_graph_repicked
-			? String(workflow->template_selection_0x4ac552.split_link_graph_rolled_template_name.c_str())
-			: String();
-	workflow.reset();
+	cut_off_town_repair["applied"] = core->cut_off_town_repair_applied;
+	cut_off_town_repair["towns_cut_off_before"] = core->cut_off_towns_before_repair;
+	cut_off_town_repair["towns_cut_off_after"] = core->cut_off_towns_after_repair;
+	cut_off_town_repair["split_template_repicked_from"] = String(core->split_template_repicked_from.c_str());
 	if (!projection.applied) {
 		Dictionary blocked;
 		blocked["ok"] = false;
@@ -3419,11 +3519,28 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	const Dictionary player_setup = normalized.get("player_setup", Dictionary());
 	const String player_faction_id = String(player_setup.get("faction_id", "")).strip_edges();
 	const String player_hero_id = String(player_setup.get("hero_id", "")).strip_edges();
-	const String runtime_identity_token = player_setup.is_empty()
+	// A setup that names every seat's faction puts them all in the identity,
+	// so two line-ups on one map never share a package.
+	const Array seat_faction_ids = normalized.get("seat_faction_ids", Array());
+	String identity_factions = player_faction_id;
+	if (!seat_faction_ids.is_empty()) {
+		PackedStringArray seats;
+		for (int64_t index = 0; index < seat_faction_ids.size(); ++index) {
+			seats.append(String(seat_faction_ids[index]));
+		}
+		identity_factions = String(",").join(seats);
+	}
+	const String runtime_identity_token = player_setup.is_empty() && seat_faction_ids.is_empty()
 			? payload_token
-			: hash32_hex(payload_token + String(":") + player_faction_id + String(":") + player_hero_id);
+			: hash32_hex(payload_token + String(":") + identity_factions + String(":") + player_hero_id);
 	const String map_id = "native_h3maped_" + runtime_identity_token;
 	const String map_hash = "fnv1a32:" + runtime_identity_token;
+	// The placement ids seed each object's content, here (which original site
+	// or artifact it becomes) and when a session adopts the map (guards,
+	// rewards). A setup that names every seat gets the map of its generator
+	// inputs alone, the ids of a setup that names no faction, so its line-ups
+	// share one map; a setup that names only the player's faction keeps its ids.
+	const String placement_seed_id = seat_faction_ids.is_empty() ? map_id : "native_h3maped_" + payload_token;
 	const String scenario_id = map_id + String("_skirmish");
 	const String scenario_hash = String("fnv1a32:") + hash32_hex(map_hash + String(":scenario"));
 
@@ -3483,7 +3600,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	route_graph["edges"] = Array();
 	map_state["route_graph"] = route_graph;
 	const auto objects_started_at = SteadyClock::now();
-	Dictionary runtime_object_projection = runtime_objects(map_id, projection, normalized);
+	Dictionary runtime_object_projection = runtime_objects(placement_seed_id, projection, normalized);
 	record_bucket("object_variant_projection", objects_started_at);
 	if (!bool(runtime_object_projection.get("ok", false))) {
 		Dictionary blocked;
@@ -3560,7 +3677,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 			start["player_type"] = slot.human ? "human" : "computer";
 			start["faction_id"] = configured_runtime_faction_id(&slot, normalized);
 			start["town_id"] = configured_runtime_town_id(&slot, normalized);
-			start["town_placement_id"] = runtime_town_placement_id(map_id, slot, projection);
+			start["town_placement_id"] = runtime_town_placement_id(placement_seed_id, slot, projection);
 			start["x"] = slot.town_x;
 			start["y"] = slot.town_y;
 			start["level"] = slot.town_level;
@@ -3656,6 +3773,8 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	}
 	result["final_payload_byte_count"] = final_payload_byte_count;
 	result["final_payload_fnv1a32"] = payload_token;
+	// True when the workflow's result came from the generation before this one.
+	result["generator_core_reused"] = core_reused;
 	result["runtime_tile_count"] = projection.tile_count;
 	result["runtime_object_count"] = projection.object_count;
 	result["runtime_road_cell_count"] = int32_t(projection.road_tiles.size());

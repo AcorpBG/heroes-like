@@ -26,7 +26,11 @@ package each match writes is deleted when it ends.
 Line-ups (--lineups): balanced (default) plays sets of factions in every seat rotation, each set
 once before any repeats, picked so every faction gets an even share; random draws distinct sets;
 mirrors lets a faction appear twice; --lineup fixes them. Guards, levels and water are crossed over
-the line-ups. Windows and Linux; Godot comes from --godot, $GODOT_BIN, PATH or the owner's install.
+the line-ups. A map comes from its seed and setup alone: the generator gives each seat the faction
+the match names. --rotate plays each line-up on one map in every seat rotation (seat 1 first, then
+seat 2 first, ...), so a map's starts are compared with the factions moved round; --matches is
+rounded up to a multiple of the players. A process plays all the matches of a seed it takes, and
+generates the map once: the matches after the first stamp their factions on the generator's map. Windows and Linux; Godot comes from --godot, $GODOT_BIN, PATH or the owner's install.
 
 --release exports the "<Windows|Linux> AI Batch" preset (the release template, tests/ included) into
 OUT/game first and plays every match on that build instead of the editor binary. It needs the Godot
@@ -40,13 +44,13 @@ processing path the native day port leaves to GDScript runs in GDScript and prin
 line per native call it replaced: each match row counts them by entry and path (native_fallbacks),
 and summary.md totals them.
 
---map-corpus DIR keeps every generated map there (HEROES_AI_MATCH_MAP_CORPUS: its package pair and
-setup), and a match whose map is there already starts from it instead of generating it, with the same
-game. Another batch on the same plan (--seed and options) then skips map generation, for example one
-that compares weight sets. The folder is for one commit: corpus.json names it, and a batch on another
-commit refuses the folder. The matches of one seed that a process plays run one after another, and one
-on the map of the match before it (the same seed, setup and first seat's faction) starts from a copy
-of the session that match adopted.
+--map-corpus DIR keeps every generated map package there (HEROES_AI_MATCH_MAP_CORPUS: its package pair
+and setup, one per map and line-up), and a match whose package is there already starts from it instead
+of generating it, with the same game. Another batch on the same plan (--seed and options) then skips
+map generation, for example one that compares weight sets. The folder is for one commit: corpus.json
+names it, and a batch on another commit refuses the folder. The matches of one seed that a process
+plays run one after another, and one on the map and line-up of the match before it (the same seed,
+setup and seat factions) starts from a copy of the session that match adopted.
 
 --weights W1,W2,... gives each seat its overworld AI weight set in every match (seat order, one per
 player): "default", the name of a set in content/ai_hero_weights.json, or a .json file holding one
@@ -213,6 +217,8 @@ def make_plan(args: argparse.Namespace, groups: list[tuple[int, str, int]]) -> d
     plan_seed = args.seed if args.seed is not None else random.SystemRandom().randrange(1, 2**31)
     rng = random.Random(plan_seed)
     combos = list(itertools.product(args.guards, args.levels, args.water))
+    if args.rotate:
+        return rotated_plan(args, groups, ids, plan_seed, rng, combos)
     rows = []
     for players, size, matches in groups:
         if args.lineup:
@@ -237,6 +243,45 @@ def make_plan(args: argparse.Namespace, groups: list[tuple[int, str, int]]) -> d
             seed = f"ai-match-{rng.randrange(1, 2**32)}"
         seeds.add(seed)
         matches_out.append({"run": f"m{i + 1:03d}", "seed": seed, **row})
+    return plan_record(args, groups, plan_seed, matches_out)
+
+
+def rotated_plan(args: argparse.Namespace, groups: list[tuple[int, str, int]], ids: list[str], plan_seed: int,
+                 rng: random.Random, combos: list[tuple]) -> dict:
+    """--rotate: one map per line-up, played once with the line-up in every seat rotation (seat 1
+    first, then seat 2 first, ...): the matches of a map share its seed and setup, and the generator
+    gives each seat its faction on the same terrain and objects."""
+    maps = []
+    for players, size, matches in groups:
+        count = math.ceil(matches / players)
+        if args.lineup:
+            lineups = fixed_lineups(args.lineup, ids, players, count)
+        elif args.lineups == "balanced":
+            # Consecutive line-ups of balanced_lineups are one set's rotations: keep each set's first.
+            lineups = balanced_lineups(ids, players, count * players, rng)[::players]
+        else:
+            lineups = random_lineups(ids, players, count, rng, args.lineups == "mirrors")
+        offset = rng.randrange(len(combos))
+        for k, lineup in enumerate(lineups):
+            guards, levels, water = combos[(k + offset) % len(combos)]
+            row = {"players": players, "size": size, "guards": guards, "levels": levels, "water": water}
+            if args.weights:
+                row["weights"] = args.weights
+            maps.append([dict(row, factions=lineup[r:] + lineup[:r], rotation=r) for r in range(players)])
+    rng.shuffle(maps)
+    seeds: set[str] = set()
+    matches_out = []
+    for rows in maps:
+        seed = f"ai-match-{rng.randrange(1, 2**32)}"
+        while seed in seeds:
+            seed = f"ai-match-{rng.randrange(1, 2**32)}"
+        seeds.add(seed)
+        for row in rows:
+            matches_out.append({"run": f"m{len(matches_out) + 1:03d}", "seed": seed, **row})
+    return plan_record(args, groups, plan_seed, matches_out)
+
+
+def plan_record(args: argparse.Namespace, groups: list[tuple[int, str, int]], plan_seed: int, matches_out: list[dict]) -> dict:
     return {
         "schema": "ai_match_batch_plan_v1",
         "created": time.strftime("%Y-%m-%d %H:%M:%S"),
@@ -246,6 +291,7 @@ def make_plan(args: argparse.Namespace, groups: list[tuple[int, str, int]]) -> d
         "days": args.days,
         "build": "release" if args.release else "editor",
         "lineups": "fixed" if args.lineup else args.lineups,
+        "rotate": bool(args.rotate),
         "groups": [{"players": p, "size": s, "matches": n} for p, s, n in groups],
         # Map packages already there are never deleted, even if a match writes the same name.
         "maps_before": sorted(p.name for p in MAPS_DIR.iterdir()) if MAPS_DIR.is_dir() else [],
@@ -517,7 +563,7 @@ def match_row(out: Path, m: dict, text: str, run: Running, timed_out: bool, star
         "started": round(started),
         "ended": round(ended),
         "process": run.matches[0]["run"],
-        "map": report.get("map", ""),  # generated, corpus or kept
+        "map": report.get("map", ""),  # generated, reused, corpus or kept
         "script_errors": errors,
         "native_fallbacks": dict(fallbacks),
         "problem": problem,
@@ -595,19 +641,24 @@ def run_batch(out: Path, plan: dict, godot: str, slots: int, timeout_override: f
             while len(running) < slots:
                 # Never two processes with one seed at once: they would share a map package. A process
                 # takes as many matches as spread what is left evenly over the slots, up to per_process,
-                # with the matches of one seed one after another.
+                # in whole seeds (all the queued matches of a seed, one after another, so a rotated map
+                # is generated once), and always at least one seed.
                 want = min(per_process, max(1, math.ceil(len(queue) / slots)))
-                chain: list[dict] = []
-                for m in list(queue):
-                    if len(chain) == want:
-                        break
+                by_seed: dict[str, list[dict]] = {}
+                for m in queue:
                     if m["seed"] not in seeds:
-                        queue.remove(m)
-                        chain.append(m)
+                        by_seed.setdefault(m["seed"], []).append(m)
+                chain: list[dict] = []
+                for group in by_seed.values():
+                    if chain and len(chain) + len(group) > want:
+                        continue
+                    chain += group
+                    if len(chain) >= want:
+                        break
                 if not chain:
                     break
-                first = {m["seed"]: i for i, m in reversed(list(enumerate(chain)))}
-                chain.sort(key=lambda m: first[m["seed"]])
+                for m in chain:
+                    queue.remove(m)
                 seeds |= {m["seed"] for m in chain}
                 timeout_min = sum(timeout_override or TIMEOUT_MIN[m["size"]] for m in chain)
                 running[chain[0]["run"]] = launch(godot, out, chain, plan["days"], timeout_min, game, corpus)
@@ -859,11 +910,12 @@ def main() -> int:
     parser.add_argument("--days", type=int, default=320, help="day cap (default 320)")
     parser.add_argument("--lineups", choices=("balanced", "random", "mirrors"), default="balanced")
     parser.add_argument("--lineup", action="append", metavar="F1,F2,...", help="fixed line-up, seat order; repeat for several (cycled)")
+    parser.add_argument("--rotate", action="store_true", help="play each map with its line-up rotated through every seat (matches rounded up to a multiple of players)")
     parser.add_argument("--seed", type=int, help="plan seed (default random); the same seed and options give the same plan")
     parser.add_argument("--weights", metavar="W1,W2,...", help="overworld AI weight set per seat: default, a set name or a .json file")
     parser.add_argument("--slots", type=int, default=16, help="Godot processes at once (default 16)")
     parser.add_argument("--per-process", type=int, default=4, help="most matches one Godot process plays in a row (default 4)")
-    parser.add_argument("--map-corpus", type=Path, help="folder of generated maps kept for batches on the same plan (one commit)")
+    parser.add_argument("--map-corpus", type=Path, help="folder of generated map packages kept for batches on the same plan (one commit)")
     parser.add_argument("--timeout-min", type=float, help="per-match timeout in minutes (default by size: %s)" % ", ".join(f"{short_size(k)} {v}" for k, v in TIMEOUT_MIN.items()))
     parser.add_argument("--godot", help="Godot editor binary")
     parser.add_argument("--release", action="store_true", help="export the AI batch preset with the release template into OUT/game and play on it")

@@ -19,7 +19,10 @@ extends Node
 # HEROES_AI_MATCH_PLAYERS  computer players on the map (default 2); a match
 #                          of more ends when one player is left standing.
 # HEROES_AI_MATCH_FACTIONS comma-separated faction ids, one per seat, in
-#                          place of the seed's random draw.
+#                          place of the seed's random draw. The map comes from
+#                          the seed alone: the generator gives each seat its
+#                          faction (ScenarioSelectRules seat factions), so the
+#                          same seed with another line-up plays the same map.
 # HEROES_AI_MATCH_GUARDS   guard strength: weak, normal (default, as a new
 #                          game from the main menu) or strong.
 # HEROES_AI_MATCH_SIZE     map size class (default homm3_small; homm3_medium,
@@ -68,17 +71,19 @@ extends Node
 #                          report line, and plays as it would in a process of
 #                          its own; a failed match does not stop the next. The
 #                          process exits 1 when any match failed. A match on
-#                          the map the match before it played (the same map
-#                          seed, setup and first seat's faction) starts from a
-#                          copy of the session that match adopted, before its
-#                          handover, instead of loading the map again.
-# HEROES_AI_MATCH_MAP_CORPUS a folder of generated maps: a match whose map is
-#                          there starts from its saved map package and setup
-#                          instead of generating it, and a map not there yet is
-#                          generated and saved there. The game is the same
-#                          either way. The maps belong to the game revision
-#                          that generated them (tools/ai_match_batch.py
-#                          --map-corpus checks it).
+#                          the map and line-up the match before it played (the
+#                          same map seed, setup and seat factions) starts from
+#                          a copy of the session that match adopted, before its
+#                          handover, instead of loading the map again; one on
+#                          the same map with another line-up has the generator
+#                          reuse the map it made for the match before.
+# HEROES_AI_MATCH_MAP_CORPUS a folder of generated map packages: a match whose
+#                          map and line-up are there starts from the saved
+#                          package and setup instead of generating it, and one
+#                          not there yet is generated and saved there. The game
+#                          is the same either way. The packages belong to the
+#                          game revision that generated them
+#                          (tools/ai_match_batch.py --map-corpus checks it).
 #
 # The match fails at once when the native rules library is not registered:
 # without it every battle hex search errors and battles play out wrong.
@@ -106,7 +111,8 @@ var _dump_path := ""
 var _dump_day := -1
 var _blank_scopes := PackedStringArray()
 var _blank_fields := {}
-# Where the match's map came from: generated, corpus or kept.
+# Where the match's map came from: generated, reused (the generator's map from
+# the match before, with this match's factions), corpus or kept.
 var _map_source := ""
 # In a match list, the last map adopted and a copy of its session as adopted.
 var _list_mode := false
@@ -242,7 +248,11 @@ func _play() -> void:
 	if player_count != 2:
 		map_seed = "%s-p%d" % [map_seed, player_count]
 
-	var session = _start_session(map_seed, drawn[0], player_count, size_class, guards, water, levels)
+	# Swapping keeps the map and trades the two factions' starting places.
+	var seat_factions := drawn.duplicate()
+	if swapped:
+		seat_factions.reverse()
+	var session = _start_session(map_seed, seat_factions, player_count, size_class, guards, water, levels)
 	if session == null:
 		return
 	var seats := []
@@ -255,13 +265,6 @@ func _play() -> void:
 	if AiSeatRulesScript.hand_human_seat_to_ai(session) != seats[0]:
 		_fail("The human seat could not be handed to the computer.")
 		return
-	# Swapping keeps the map and trades the two factions' starting places.
-	var seat_factions := drawn.duplicate()
-	if swapped:
-		seat_factions.reverse()
-	for index in range(seats.size()):
-		if PlayerRules.faction_id(session, seats[index]) != String(seat_factions[index]):
-			_refound_seat(session, seats[index], String(seat_factions[index]))
 	session.flags[AiHeroRulesScript.BATTLE_LOG_FLAG] = true
 	for index in range(seat_weights.size()):
 		var weight_set := String(seat_weights[index].set)
@@ -448,12 +451,14 @@ func _blanked(value: Dictionary) -> Dictionary:
 			out[key] = child
 	return out
 
-## The adopted session of the match's map: a copy of the one the match before
-## adopted on the same map, else adopted from the map corpus's package and
-## setup, else from a newly generated map (saved to the corpus).
-func _start_session(map_seed: String, faction_id: String, player_count: int = 2, size_class: String = "homm3_small", guards: String = "normal", water: String = "land", levels: int = 1):
-	# Everything the generated map depends on, and where its package goes.
-	var key := "%s|%s|%d|%s|%s|%s|%d|%s" % [map_seed, faction_id, player_count, size_class, guards, water, levels, ScenarioSelectRulesScript._generated_map_package_dir()]
+## The adopted session of the match's map and line-up: a copy of the one the
+## match before adopted for both, else adopted from the map corpus's package and
+## setup, else from a newly generated map (saved to the corpus). The generator
+## stamps each seat's faction on the map, which does not depend on them: after
+## a match on the same map with another line-up it reuses that map.
+func _start_session(map_seed: String, seat_factions: Array, player_count: int = 2, size_class: String = "homm3_small", guards: String = "normal", water: String = "land", levels: int = 1):
+	# Everything the generated package depends on, and where it goes.
+	var key := "%s|%s|%d|%s|%s|%s|%d|%s" % [map_seed, ",".join(seat_factions), player_count, size_class, guards, water, levels, ScenarioSelectRulesScript._generated_map_package_dir()]
 	if key == _kept_map_key and _kept_map_session != null:
 		_map_source = "kept"
 		var copy = _copy_session(_kept_map_session)
@@ -466,12 +471,14 @@ func _start_session(map_seed: String, faction_id: String, player_count: int = 2,
 		var config := ScenarioSelectRulesScript.build_random_map_player_config(
 			map_seed, "", "", player_count, water, levels == 2, size_class,
 			ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT,
-			faction_id, "", guards
+			String(seat_factions[0]), "", guards, seat_factions
 		)
 		setup = ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(config, "normal", ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY)
 		if not bool(setup.get("ok", false)):
 			_fail("Generated %s setup failed: %s" % [size_class, JSON.stringify(setup).left(600)])
 			return null
+		if bool(setup.get("native_generation", {}).get("generator_core_reused", false)):
+			_map_source = "reused"
 		_corpus_store(entry, key, setup)
 	var session = ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(setup)
 	if session == null or session.scenario_id == "":
@@ -540,46 +547,6 @@ func _corpus_store(entry: String, key: String, setup: Dictionary) -> void:
 	file.store_var({"key": key, "setup": setup})
 	file.close()
 	DirAccess.rename_absolute(entry + ".setup.part", entry + ".setup")
-
-## The generator never gives two players one faction, and a swapped match keeps
-## the map. A seat whose drawn faction differs from the generator's has its
-## capital set up as that faction's starting capital instead.
-func _refound_seat(session, seat: String, faction_id: String) -> void:
-	var town_id := String(RandomMapGeneratorRules.DEFAULT_TOWN_BY_FACTION.get(faction_id, ""))
-	var template := ContentService.get_town(town_id)
-	var towns: Array = session.overworld.get("towns", [])
-	for index in range(towns.size()):
-		var town: Dictionary = towns[index]
-		if String(town.get("owner", "")) != "enemy" or PlayerRules.town_controller_id(town) != seat:
-			continue
-		town["town_id"] = town_id
-		town["faction_id"] = faction_id
-		town["controlling_faction_id"] = faction_id
-		town["built_buildings"] = template.get("starting_building_ids", []).duplicate(true)
-		town["garrison"] = template.get("garrison", []).duplicate(true)
-		town["available_recruits"] = {}
-		towns[index] = town
-	session.overworld["towns"] = towns
-	var players: Array = session.overworld.get("players", [])
-	for index in range(players.size()):
-		if String(players[index].get("player_id", "")) == seat:
-			players[index]["faction_id"] = faction_id
-	session.overworld["players"] = players
-	var states: Array = session.overworld.get("enemy_states", [])
-	for index in range(states.size()):
-		var state: Dictionary = states[index]
-		if PlayerRules.controller_id(state) == seat:
-			state["faction_id"] = faction_id
-			for key in ["commander_roster", "ai_tavern"]:
-				state.erase(key)
-			states[index] = state
-	session.overworld["enemy_states"] = states
-	OverworldRules.normalize_overworld_state(session)
-	for index in range(towns.size()):
-		var town: Dictionary = session.overworld.towns[index]
-		if PlayerRules.town_controller_id(town) == seat and (town.get("available_recruits", {}) as Dictionary).is_empty():
-			town["available_recruits"] = OverworldRules._seed_recruits_for_town(town)
-			session.overworld.towns[index] = town
 
 func _check_handover(session, seats: Array, drawn: Array, start_treasury: Dictionary) -> Dictionary:
 	if PlayerRules.has_human_seat(session):
