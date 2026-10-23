@@ -7,8 +7,10 @@ extends RefCounted
 ## - gdscript: their GDScript bodies, renamed <name>__gd.
 ## - shadow: the GDScript bodies, with every call checked against the native
 ##   port, as DayEngine's shadow checks the day.
-## The slice's merge deletes the GDScript bodies and this switch: the functions
-## become thin wrappers over their native port. A session reaches the native
+## The slice's merge deletes the GDScript bodies and their switches: the
+## functions become thin wrappers over their native port (the registry's NATIVE
+## entries, 7.1's since merge 1a), and no switch on main reads the mode. A
+## session reaches the native
 ## port as DayEngine's view. A path the port leaves out is a native failure (a
 ## SCRIPT ERROR), in native and shadow mode. HEROES_NATIVE_HUMAN_LOG, set to a
 ## folder, collects every function's counts and mismatches there.

@@ -43,7 +43,6 @@ const TOWN_VISION_RADIUS := 8
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const DayEngine = preload("res://scripts/core/DayEngine.gd")
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
-static var _human_engine_mode: int = HumanEngine.mode
 static var _day_engine_mode: int = DayEngine.mode
 const ACTIVE_TOWN_PLACEMENT_KEY := "active_town_placement_id"
 const COMMAND_BRIEFING_KEY := "command_briefing"
@@ -767,54 +766,7 @@ static func try_move(session: SessionStateStoreScript.SessionData, dx: int, dy: 
 	return try_move_along_route(session, [pos, Vector2i(nx, ny)], movement_left)
 
 static func route_movement_preview(session: SessionStateStoreScript.SessionData, route_tiles: Variant, movement_budget: int = -1) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return route_movement_preview__gd(session, route_tiles, movement_budget)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"OverworldRules.route_movement_preview", [session, route_tiles, movement_budget])
-	var result = route_movement_preview__gd(session, route_tiles, movement_budget)
-	HumanEngine.check(&"OverworldRules.route_movement_preview", [session, route_tiles, movement_budget], result)
-	return result
-
-static func route_movement_preview__gd(
-	session: SessionStateStoreScript.SessionData,
-	route_tiles: Variant,
-	movement_budget: int = -1
-) -> Dictionary:
-	var path := _normalize_route_tiles(route_tiles)
-	var movement_current := 0
-	if session != null:
-		var movement: Variant = session.overworld.get("movement", {})
-		if movement is Dictionary:
-			movement_current = int(movement.get("current", 0))
-	var budget: int = movement_current if movement_budget < 0 else movement_budget
-	budget = max(0, budget)
-	var total_steps: int = max(0, path.size() - 1)
-	var reachable_steps := mini(total_steps, budget)
-	var reachable_tiles := []
-	for index in range(reachable_steps + 1):
-		if index >= 0 and index < path.size():
-			reachable_tiles.append(_route_tile_payload(path[index]))
-	var unreachable_tiles := []
-	for index in range(reachable_steps + 1, path.size()):
-		unreachable_tiles.append(_route_tile_payload(path[index]))
-	var final_tile: Vector2i = path[reachable_steps] if reachable_steps >= 0 and reachable_steps < path.size() else Vector2i(-1, -1)
-	var destination_tile: Vector2i = path[path.size() - 1] if not path.is_empty() else Vector2i(-1, -1)
-	return {
-		"ok": path.size() > 0,
-		"route_tiles": _route_tile_payloads(path),
-		"total_steps": total_steps,
-		"total_cost": total_steps,
-		"movement_budget": budget,
-		"reachable_steps": reachable_steps,
-		"reachable_cost": reachable_steps,
-		"unreachable_steps": max(0, total_steps - reachable_steps),
-		"movement_after_reachable": max(0, budget - reachable_steps),
-		"destination_reachable": total_steps > 0 and reachable_steps >= total_steps,
-		"reachable_tiles": reachable_tiles,
-		"unreachable_tiles": unreachable_tiles,
-		"final_tile": _route_tile_payload(final_tile),
-		"destination_tile": _route_tile_payload(destination_tile),
-	}
+	return HumanEngine.native(&"OverworldRules.route_movement_preview", [session, route_tiles, movement_budget])
 
 ## `fight_on_arrival`: a computer hero that means to fight the guard at the far
 ## end (AiHeroRules._cross_gate) may come out in its zone, as the human does.
@@ -1012,175 +964,10 @@ static func _native_travel_message(node: Dictionary, destination: Vector3i) -> S
 	return "Travelled through the %s and came out at %d,%d." % [native_portal_display_name(node), destination.x, destination.y]
 
 static func active_linked_transit_edges(session: SessionStateStoreScript.SessionData, level: int = -1) -> Array:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return active_linked_transit_edges__gd(session, level)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.active_linked_transit_edges", [session, level])
-	var before := HumanEngine.before_writing(&"OverworldRules.active_linked_transit_edges", [session, level])
-	var result = active_linked_transit_edges__gd(session, level)
-	HumanEngine.check_writing(&"OverworldRules.active_linked_transit_edges", before, [session, level], result)
-	return result
-
-static func active_linked_transit_edges__gd(session: SessionStateStoreScript.SessionData, level: int = -1) -> Array:
-	var edges := []
-	if session == null:
-		return edges
-	level = OverworldLevelRulesScript.query_level(session, level)
-	var map_size := derive_map_size(session)
-	var resource_nodes = session.overworld.get("resource_nodes", [])
-	if not (resource_nodes is Array):
-		return edges
-	for node_value in resource_nodes:
-		if not (node_value is Dictionary) or not OverworldLevelRulesScript.on_level(node_value, level):
-			continue
-		var node: Dictionary = node_value
-		if NativeTransit.is_native(node):
-			continue
-		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
-		if String(site.get("family", "")) != "transit_object":
-			continue
-		var transit_profile: Dictionary = site.get("transit_profile", {}) if site.get("transit_profile", {}) is Dictionary else {}
-		var site_runtime: Dictionary = site.get("runtime_boundary", {}) if site.get("runtime_boundary", {}) is Dictionary else {}
-		var site_route_boundary: Dictionary = site.get("route_effect_boundary", {}) if site.get("route_effect_boundary", {}) is Dictionary else {}
-		var site_contract: Dictionary = site.get("linked_endpoint_contract", {}) if site.get("linked_endpoint_contract", {}) is Dictionary else {}
-		if (
-			not bool(transit_profile.get("runtime_route_effect_adopted", false))
-			or not bool(site_runtime.get("pathing_runtime_adopted", false))
-			or not bool(site_runtime.get("route_effect_runtime_adopted", false))
-			or not bool(site_route_boundary.get("runtime_behavior_adopted", false))
-			or not bool(site_contract.get("runtime_route_effect_adopted", false))
-		):
-			continue
-		if bool(transit_profile.get("requires_repair", false)) and not bool(_resource_site_response_state(session, node, site).get("active", false)):
-			continue
-		var map_object := _map_object_for_resource_node(node)
-		var object_runtime: Dictionary = map_object.get("runtime_boundary", {}) if map_object.get("runtime_boundary", {}) is Dictionary else {}
-		var object_route_boundary: Dictionary = map_object.get("route_effect_boundary", {}) if map_object.get("route_effect_boundary", {}) is Dictionary else {}
-		var object_contract: Dictionary = map_object.get("linked_endpoint_contract", {}) if map_object.get("linked_endpoint_contract", {}) is Dictionary else {}
-		var route_effect: Dictionary = map_object.get("route_effect", {}) if map_object.get("route_effect", {}) is Dictionary else {}
-		var approach: Dictionary = map_object.get("approach", {}) if map_object.get("approach", {}) is Dictionary else {}
-		if (
-			String(route_effect.get("effect_type", "")) != "linked_endpoint"
-			or String(approach.get("mode", "")) != "linked_endpoint"
-			or not bool(object_runtime.get("pathing_runtime_adopted", false))
-			or not bool(object_runtime.get("route_effect_runtime_adopted", false))
-			or not bool(object_route_boundary.get("runtime_behavior_adopted", false))
-			or not bool(object_contract.get("runtime_route_effect_adopted", false))
-		):
-			continue
-		var endpoint_group_id := String(site_contract.get("endpoint_group_id", ""))
-		var directionality := String(site_contract.get("directionality", ""))
-		if (
-			endpoint_group_id == ""
-			or endpoint_group_id != String(object_contract.get("endpoint_group_id", ""))
-			or endpoint_group_id != String(route_effect.get("linked_endpoint_group_id", ""))
-			or directionality not in ["two_way", "one_way"]
-			or directionality != String(object_contract.get("directionality", ""))
-			or bool(transit_profile.get("one_way", false)) != (directionality == "one_way")
-			or bool(transit_profile.get("paired_link_required", false)) != (directionality == "two_way")
-			or not bool(site_contract.get("requires_exit_safety", false))
-			or not bool(object_contract.get("requires_exit_safety", false))
-		):
-			continue
-		if bool(route_effect.get("requires_visit", false)) and not bool(node.get("collected", false)):
-			continue
-		if bool(route_effect.get("requires_owner", false)) and String(node.get("collected_by_faction_id", "")) != "player":
-			continue
-		if not _normalize_resource_dict(route_effect.get("toll_resources", {})).is_empty():
-			continue
-		var blocked_state_ids := _string_array(route_effect.get("blocked_state_ids", []))
-		var route_state_id := String(node.get("route_state_id", node.get("state_id", "")))
-		if route_state_id != "" and route_state_id in blocked_state_ids:
-			continue
-		var entry_offsets = site_contract.get("entry_offsets", [])
-		var exit_offsets = site_contract.get("exit_offsets", [])
-		var object_entry_offsets = object_contract.get("entry_offsets", [])
-		var object_exit_offsets = object_contract.get("exit_offsets", [])
-		if (
-			not (entry_offsets is Array)
-			or entry_offsets.size() != 2
-			or entry_offsets != object_entry_offsets
-			or not (exit_offsets is Array)
-			or exit_offsets.size() != 2
-			or exit_offsets != object_exit_offsets
-			or exit_offsets != approach.get("linked_exit_offsets", [])
-		):
-			continue
-		if directionality == "two_way" and not (
-			exit_offsets.has(entry_offsets[0])
-			and exit_offsets.has(entry_offsets[1])
-		):
-			continue
-		var placement := Vector2i(int(node.get("x", -1)), int(node.get("y", -1)))
-		var endpoint_tiles := []
-		var directed_offsets := [entry_offsets[0], entry_offsets[1]] if directionality == "two_way" else [entry_offsets[0], exit_offsets[0]]
-		for offset_value in directed_offsets:
-			if not (offset_value is Dictionary):
-				endpoint_tiles.clear()
-				break
-			endpoint_tiles.append(placement + Vector2i(int(offset_value.get("x", 0)), int(offset_value.get("y", 0))))
-		if endpoint_tiles.size() != 2 or endpoint_tiles[0] == endpoint_tiles[1]:
-			continue
-		var from_tile: Vector2i = endpoint_tiles[0]
-		var to_tile: Vector2i = endpoint_tiles[1]
-		var endpoint_distance: int = abs(to_tile.x - from_tile.x) + abs(to_tile.y - from_tile.y)
-		var movement_cost: int = endpoint_distance + int(route_effect.get("movement_cost_delta", 0))
-		if movement_cost != 1:
-			continue
-		var endpoints_safe := true
-		var own_body_tiles := _map_object_world_body_tiles(map_object, node)
-		var own_interaction_tiles := _resource_node_world_interaction_tiles(map_object, node)
-		for endpoint in endpoint_tiles:
-			if (
-				endpoint.x < 0
-				or endpoint.y < 0
-				or endpoint.x >= map_size.x
-				or endpoint.y >= map_size.y
-				or (tile_is_blocked(session, endpoint.x, endpoint.y, level) and endpoint not in own_body_tiles)
-				or (tile_has_route_interaction(session, endpoint.x, endpoint.y, level) and endpoint not in own_interaction_tiles)
-			):
-				endpoints_safe = false
-				break
-		if not endpoints_safe:
-			continue
-		edges.append({
-			"placement_id": String(node.get("placement_id", "")),
-			"site_id": String(node.get("site_id", "")),
-			"object_id": String(map_object.get("id", "")),
-			"effect_id": String(route_effect.get("effect_id", "")),
-			"endpoint_group_id": endpoint_group_id,
-			"from_tile": from_tile,
-			"to_tile": to_tile,
-			"movement_cost": movement_cost,
-			"directionality": directionality,
-			"two_way": directionality == "two_way",
-		})
-	return edges
+	return HumanEngine.native_writing(&"OverworldRules.active_linked_transit_edges", [session, level])
 
 static func linked_transit_neighbors_from_edges(edges: Array, tile: Vector2i) -> Array:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return linked_transit_neighbors_from_edges__gd(edges, tile)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"OverworldRules.linked_transit_neighbors_from_edges", [edges, tile])
-	var result = linked_transit_neighbors_from_edges__gd(edges, tile)
-	HumanEngine.check(&"OverworldRules.linked_transit_neighbors_from_edges", [edges, tile], result)
-	return result
-
-static func linked_transit_neighbors_from_edges__gd(edges: Array, tile: Vector2i) -> Array:
-	var neighbors := []
-	for edge_value in edges:
-		if not (edge_value is Dictionary):
-			continue
-		var edge: Dictionary = edge_value
-		if int(edge.get("movement_cost", 0)) != 1:
-			continue
-		var from_tile: Vector2i = edge.get("from_tile", Vector2i(-1, -1))
-		var to_tile: Vector2i = edge.get("to_tile", Vector2i(-1, -1))
-		if tile == from_tile and not neighbors.has(to_tile):
-			neighbors.append(to_tile)
-		elif bool(edge.get("two_way", false)) and tile == to_tile and not neighbors.has(from_tile):
-			neighbors.append(from_tile)
-	return neighbors
+	return HumanEngine.native(&"OverworldRules.linked_transit_neighbors_from_edges", [edges, tile])
 
 static func active_linked_transit_step(
 	session: SessionStateStoreScript.SessionData,
@@ -1198,44 +985,7 @@ static func active_linked_transit_step(
 	return {}
 
 static func active_linked_transit_signature(session: SessionStateStoreScript.SessionData) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return active_linked_transit_signature__gd(session)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.active_linked_transit_signature", [session])
-	var before := HumanEngine.before_writing(&"OverworldRules.active_linked_transit_signature", [session])
-	var result = active_linked_transit_signature__gd(session)
-	HumanEngine.check_writing(&"OverworldRules.active_linked_transit_signature", before, [session], result)
-	return result
-
-static func active_linked_transit_signature__gd(session: SessionStateStoreScript.SessionData) -> String:
-	# The shell's selected-route signature asks for this several times per
-	# refresh, and each call rescans every resource node. A normalized read
-	# scope guarantees the session is not changing, so compute it once there.
-	var scope_key := ""
-	if session != null and _normalized_read_scope_depth > 0 and String(session.session_id) == _normalized_read_scope_session_id:
-		scope_key = "%d|active_linked_transit_signature" % session.get_instance_id()
-		if _normalized_read_scope_cache.has(scope_key):
-			return String(_normalized_read_scope_cache[scope_key])
-	var rows := []
-	for edge_value in active_linked_transit_edges(session):
-		if not (edge_value is Dictionary):
-			continue
-		var edge: Dictionary = edge_value
-		var from_tile: Vector2i = edge.get("from_tile", Vector2i(-1, -1))
-		var to_tile: Vector2i = edge.get("to_tile", Vector2i(-1, -1))
-		rows.append("%s:%s:%d,%d>%d,%d:%d" % [
-			String(edge.get("placement_id", "")),
-			String(edge.get("directionality", "")),
-			from_tile.x,
-			from_tile.y,
-			to_tile.x,
-			to_tile.y,
-			int(edge.get("movement_cost", 0)),
-		])
-	var signature := "linked_transit:%s" % ";".join(rows)
-	if scope_key != "":
-		_normalized_read_scope_cache[scope_key] = signature
-	return signature
+	return HumanEngine.native_writing(&"OverworldRules.active_linked_transit_signature", [session])
 
 static func try_move_along_route(
 	session: SessionStateStoreScript.SessionData,
@@ -3309,87 +3059,10 @@ static func _engaging_encounter_at_tile(session: SessionStateStoreScript.Session
 	return {}
 
 static func guard_engagement_encounter_at_tile(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return guard_engagement_encounter_at_tile__gd(session, x, y, level)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.guard_engagement_encounter_at_tile", [session, x, y, level])
-	var before := HumanEngine.before_writing(&"OverworldRules.guard_engagement_encounter_at_tile", [session, x, y, level])
-	var result = guard_engagement_encounter_at_tile__gd(session, x, y, level)
-	HumanEngine.check_writing(&"OverworldRules.guard_engagement_encounter_at_tile", before, [session, x, y, level], result)
-	return result
-
-static func guard_engagement_encounter_at_tile__gd(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> Dictionary:
-	return _find_guard_engagement_at_tile(session, x, y, level).get("encounter", {})
+	return HumanEngine.native_writing(&"OverworldRules.guard_engagement_encounter_at_tile", [session, x, y, level])
 
 static func guard_engagement_approach_route(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> Array:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return guard_engagement_approach_route__gd(session, encounter)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.guard_engagement_approach_route", [session, encounter])
-	var before := HumanEngine.before_writing(&"OverworldRules.guard_engagement_approach_route", [session, encounter])
-	var result = guard_engagement_approach_route__gd(session, encounter)
-	HumanEngine.check_writing(&"OverworldRules.guard_engagement_approach_route", before, [session, encounter], result)
-	return result
-
-static func guard_engagement_approach_route__gd(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> Array:
-	# The painted stack sits inside its terminal engagement ring. A player
-	# selects the stack, but must walk only to the first legal combat entry.
-	# One multi-target BFS avoids repeating a map-sized search for each entry.
-	if session == null or encounter.is_empty() or is_encounter_resolved(session, encounter):
-		return []
-	var level := hero_level(session)
-	if not OverworldLevelRulesScript.on_level(encounter, level):
-		return []
-	var start := hero_position(session)
-	var anchor := Vector2i(int(encounter.get("x", -1)), int(encounter.get("y", -1)))
-	var targets := {}
-	var identity := encounter_key(encounter)
-	var engagement := _guard_engagement_world_tiles(encounter)
-	if engagement.is_empty() and _ai_hero_guards_against_player(session, encounter):
-		engagement = hero_guard_zone_tiles(session, anchor, level)
-	for tile in engagement:
-		if tile_is_blocked(session, tile.x, tile.y, level) and tile != anchor:
-			continue
-		var owner := guard_engagement_encounter_at_tile(session, tile.x, tile.y, level)
-		if not owner.is_empty() and encounter_key(owner) == identity:
-			targets[tile] = true
-	if targets.is_empty():
-		return []
-	var size := derive_map_size(session)
-	var queue := [start]
-	var parents := {start: start}
-	var cursor := 0
-	var destination := Vector2i(-1, -1)
-	var links := active_linked_transit_edges(session)
-	while cursor < queue.size():
-		var current: Vector2i = queue[cursor]
-		cursor += 1
-		if targets.has(current):
-			destination = current
-			break
-		var neighbors := []
-		for offset in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT, Vector2i(-1,-1), Vector2i(1,-1), Vector2i(-1,1), Vector2i(1,1)]:
-			var next: Vector2i = current + offset
-			if next.x < 0 or next.y < 0 or next.x >= size.x or next.y >= size.y or parents.has(next):
-				continue
-			if tile_step_cuts_blocked_corner(session, current, next, level):
-				continue
-			if tile_is_blocked(session, next.x, next.y, level) and not targets.has(next):
-				continue
-			if tile_has_route_interaction(session, next.x, next.y, level) and not targets.has(next):
-				continue
-			neighbors.append(next)
-		neighbors.append_array(linked_transit_neighbors_from_edges(links, current))
-		for next in neighbors:
-			if parents.has(next): continue
-			parents[next] = current
-			queue.append(next)
-	if destination == Vector2i(-1, -1):
-		return []
-	var path := [destination]
-	while path[0] != start:
-		path.push_front(parents[path[0]])
-	return path
+	return HumanEngine.native_writing(&"OverworldRules.guard_engagement_approach_route", [session, encounter])
 
 static func _resource_node_at_tile(session: SessionStateStoreScript.SessionData, x: int, y: int) -> Dictionary:
 	var nodes = session.overworld.get("resource_nodes", [])
@@ -3559,94 +3232,10 @@ static func overworld_object_placement_pathing_surface(
 	}
 
 static func blocking_object_feedback_surface_at_tile(session: SessionStateStoreScript.SessionData, x: int, y: int) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return blocking_object_feedback_surface_at_tile__gd(session, x, y)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"OverworldRules.blocking_object_feedback_surface_at_tile", [session, x, y])
-	var result = blocking_object_feedback_surface_at_tile__gd(session, x, y)
-	HumanEngine.check(&"OverworldRules.blocking_object_feedback_surface_at_tile", [session, x, y], result)
-	return result
-
-static func blocking_object_feedback_surface_at_tile__gd(
-	session: SessionStateStoreScript.SessionData,
-	x: int,
-	y: int
-) -> Dictionary:
-	if session == null:
-		return {}
-	var map_size := derive_map_size(session)
-	var tile := Vector2i(x, y)
-	if tile.x < 0 or tile.y < 0 or tile.x >= map_size.x or tile.y >= map_size.y:
-		return {}
-	for object_value in session.overworld.get("map_objects", []):
-		if not (object_value is Dictionary):
-			continue
-		var object: Dictionary = object_value
-		var kind := String(object.get("kind", ""))
-		var family := String(object.get("object_family_id", object.get("family_id", "")))
-		var blocks_body := bool(object.get("blocking_body", kind == "decorative_obstacle" or family == "decorative_obstacle"))
-		if tile not in _generated_body_tiles_for_placement(object, blocks_body):
-			continue
-		var object_id := String(object.get("object_id", object.get("id", ""))).strip_edges()
-		var map_object := ContentService.get_map_object(object_id) if object_id != "" else {}
-		var object_name := String(map_object.get("name", object.get("name", ""))).strip_edges()
-		if object_name == "":
-			continue
-		return {
-			"source": "map_objects",
-			"kind": "map_object",
-			"placement_id": String(object.get("placement_id", "")),
-			"object_id": object_id,
-			"site_id": "",
-			"name": object_name,
-			"tile": _tile_payload(tile),
-		}
-	for node_value in session.overworld.get("resource_nodes", []):
-		if not (node_value is Dictionary):
-			continue
-		var node: Dictionary = node_value
-		var map_object := _map_object_for_resource_node(node)
-		if not _resource_node_blocks_body_tiles(node, map_object):
-			continue
-		if tile not in _map_object_world_body_tiles(map_object, node):
-			continue
-		var site_id := String(node.get("site_id", "")).strip_edges()
-		var site := ContentService.get_resource_site(site_id) if site_id != "" else {}
-		var object_name := String(map_object.get("name", site.get("name", node.get("name", "")))).strip_edges()
-		if object_name == "":
-			continue
-		return {
-			"source": "resource_nodes",
-			"kind": "resource_body",
-			"placement_id": String(node.get("placement_id", "")),
-			"object_id": String(map_object.get("id", node.get("object_id", ""))),
-			"site_id": site_id,
-			"name": object_name,
-			"tile": _tile_payload(tile),
-		}
-	return {}
+	return HumanEngine.native(&"OverworldRules.blocking_object_feedback_surface_at_tile", [session, x, y])
 
 static func tile_is_blocked(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return tile_is_blocked__gd(session, x, y, level)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.tile_is_blocked", [session, x, y, level])
-	var before := HumanEngine.before_writing(&"OverworldRules.tile_is_blocked", [session, x, y, level])
-	var result = tile_is_blocked__gd(session, x, y, level)
-	HumanEngine.check_writing(&"OverworldRules.tile_is_blocked", before, [session, x, y, level], result)
-	return result
-
-static func tile_is_blocked__gd(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
-	var map_data = map_for_level(session, level)
-	if y < 0 or not (map_data is Array) or y >= map_data.size():
-		return true
-	var row = map_data[y]
-	if not (row is Array) or x < 0 or x >= row.size():
-		return true
-	var terrain_id := String(row[x])
-	if not terrain_id_is_passable(terrain_id):
-		return true
-	return _blocked_tile_index(session, level).has(_tile_key(Vector2i(x, y)))
+	return HumanEngine.native_writing(&"OverworldRules.tile_is_blocked", [session, x, y, level])
 
 static func terrain_id_is_passable(terrain_id: String) -> bool:
 	# Route searches ask this for every neighbour; the biome table only changes
@@ -3672,127 +3261,21 @@ static func _terrain_id_is_passable_uncached(terrain_id: String) -> bool:
 	return true
 
 static func tile_has_route_interaction(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1, exact_target_only: bool = false) -> bool:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return tile_has_route_interaction__gd(session, x, y, level, exact_target_only)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.tile_has_route_interaction", [session, x, y, level, exact_target_only])
-	var before := HumanEngine.before_writing(&"OverworldRules.tile_has_route_interaction", [session, x, y, level, exact_target_only])
-	var result = tile_has_route_interaction__gd(session, x, y, level, exact_target_only)
-	HumanEngine.check_writing(&"OverworldRules.tile_has_route_interaction", before, [session, x, y, level, exact_target_only], result)
-	return result
-
-static func tile_has_route_interaction__gd(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1, exact_target_only: bool = false) -> bool:
-	if session == null:
-		return false
-	var capture_enabled := bool(_pathing_debug_profile.get("capture_enabled", false))
-	if capture_enabled:
-		_pathing_debug_profile["route_interaction_lookup_count"] = int(_pathing_debug_profile.get("route_interaction_lookup_count", 0)) + 1
-		_pathing_debug_profile["route_interaction_spatial_lookup_count"] = int(_pathing_debug_profile.get("route_interaction_spatial_lookup_count", 0)) + 1
-	var tile := Vector2i(x, y)
-	level = OverworldLevelRulesScript.query_level(session, level)
-	var lookup_index := _spatial_lookup_index(session, level)
-	# Selection ownership excludes surrounding guard zones and town art anchors.
-	# Existing movement callers retain their full interaction/approach semantics.
-	if not exact_target_only and int(_find_guard_engagement_at_tile(session, x, y, level).get("index", -1)) >= 0:
-		return true
-	var towns = session.overworld.get("towns", [])
-	var town_by_tile: Dictionary = lookup_index.get("town_by_tile", {}) if lookup_index.get("town_by_tile", {}) is Dictionary else {}
-	var town_index := int(town_by_tile.get(_tile_key(tile), -1))
-	if towns is Array and town_index >= 0 and town_index < towns.size() and towns[town_index] is Dictionary:
-		if not exact_target_only or OverworldLevelRulesScript.town_entrance(towns[town_index]) == OverworldLevelRulesScript.position({"x": x, "y": y, "level": level}):
-			return true
-	var resource_nodes = session.overworld.get("resource_nodes", [])
-	for node_index in _spatial_lookup_entries(lookup_index, "resource_by_interaction_tile", tile):
-		var index := int(node_index)
-		var node = resource_nodes[index] if resource_nodes is Array and index >= 0 and index < resource_nodes.size() else {}
-		if not (node is Dictionary):
-			continue
-		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
-		if not resource_node_is_present(node, site):
-			continue
-		return true
-	var artifact_nodes = session.overworld.get("artifact_nodes", [])
-	for node_index in _spatial_lookup_entries(lookup_index, "artifact_by_tile", tile):
-		var index := int(node_index)
-		var node = artifact_nodes[index] if artifact_nodes is Array and index >= 0 and index < artifact_nodes.size() else {}
-		if node is Dictionary and not bool(node.get("collected", false)):
-			return true
-	for encounter_index in _spatial_lookup_entries(lookup_index, "encounter_by_tile", tile):
-		var encounter: Dictionary = session.overworld.get("encounters", [])[int(encounter_index)]
-		if is_encounter_resolved(session, encounter):
-			continue
-		if int(encounter.get("x", -1)) == x and int(encounter.get("y", -1)) == y:
-			return true
-	for hero_value in session.overworld.get("player_heroes", []):
-		if not (hero_value is Dictionary):
-			continue
-		var hero: Dictionary = hero_value
-		if String(hero.get("id", "")) == String(session.overworld.get("active_hero_id", "")):
-			continue
-		var position: Dictionary = hero.get("position", {}) if hero.get("position", {}) is Dictionary else {}
-		if OverworldLevelRulesScript.on_level(position, level) and int(position.get("x", -999)) == x and int(position.get("y", -999)) == y:
-			return true
-	return false
+	return HumanEngine.native_writing(&"OverworldRules.tile_has_route_interaction", [session, x, y, level, exact_target_only])
 
 static func tile_is_actionable_route_destination(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return tile_is_actionable_route_destination__gd(session, x, y, level)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.tile_is_actionable_route_destination", [session, x, y, level])
-	var before := HumanEngine.before_writing(&"OverworldRules.tile_is_actionable_route_destination", [session, x, y, level])
-	var result = tile_is_actionable_route_destination__gd(session, x, y, level)
-	HumanEngine.check_writing(&"OverworldRules.tile_is_actionable_route_destination", before, [session, x, y, level], result)
-	return result
-
-static func tile_is_actionable_route_destination__gd(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
-	return tile_has_route_interaction(session, x, y, level)
+	return HumanEngine.native_writing(&"OverworldRules.tile_is_actionable_route_destination", [session, x, y, level])
 
 ## Route blocking for the active hero. A walking hero treats water as blocked;
 ## a sailing hero moves only on open water (WaterTravelRules).
 static func hero_route_tile_blocked(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return hero_route_tile_blocked__gd(session, x, y, level)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.hero_route_tile_blocked", [session, x, y, level])
-	var before := HumanEngine.before_writing(&"OverworldRules.hero_route_tile_blocked", [session, x, y, level])
-	var result = hero_route_tile_blocked__gd(session, x, y, level)
-	HumanEngine.check_writing(&"OverworldRules.hero_route_tile_blocked", before, [session, x, y, level], result)
-	return result
-
-static func hero_route_tile_blocked__gd(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
-	if not WaterTravel.is_sailing(session):
-		return tile_is_blocked(session, x, y, level)
-	level = OverworldLevelRulesScript.query_level(session, level)
-	if not WaterTravel.is_water(session, x, y, level):
-		return true
-	if not WaterTravel.free_boat_at(session, Vector2i(x, y), level).is_empty():
-		return true
-	return _blocked_tile_index(session, level).has(_tile_key(Vector2i(x, y)))
+	return HumanEngine.native_writing(&"OverworldRules.hero_route_tile_blocked", [session, x, y, level])
 
 ## Where the active hero's route may end on a blocked tile. A walking hero may
 ## end on a free boat to board it, never on other water. A sailing hero may end
 ## on a water interaction, or on open shore or a shore interaction to step off.
 static func hero_route_destination(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return hero_route_destination__gd(session, x, y, level)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.hero_route_destination", [session, x, y, level])
-	var before := HumanEngine.before_writing(&"OverworldRules.hero_route_destination", [session, x, y, level])
-	var result = hero_route_destination__gd(session, x, y, level)
-	HumanEngine.check_writing(&"OverworldRules.hero_route_destination", before, [session, x, y, level], result)
-	return result
-
-static func hero_route_destination__gd(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
-	level = OverworldLevelRulesScript.query_level(session, level)
-	if WaterTravel.is_sailing(session):
-		if WaterTravel.is_water(session, x, y, level):
-			return tile_has_route_interaction(session, x, y, level)
-		return not tile_is_blocked(session, x, y, level) or tile_is_actionable_route_destination(session, x, y, level)
-	if not WaterTravel.free_boat_at(session, Vector2i(x, y), level).is_empty():
-		return true
-	if WaterTravel.is_water(session, x, y, level):
-		return false
-	return tile_is_actionable_route_destination(session, x, y, level)
+	return HumanEngine.native_writing(&"OverworldRules.hero_route_destination", [session, x, y, level])
 
 ## The active hero's route from start to goal, both included, or [] when there
 ## is none: the first route a breadth-first search finds, stepping in the eight
@@ -3803,58 +3286,7 @@ static func hero_route_destination__gd(session: SessionStateStoreScript.SessionD
 ## a screen without the overworld's route: no blocked goal ends a route, no
 ## linked transit edge is crossed, and the steps go in its order.
 static func hero_route_path(session: SessionStateStoreScript.SessionData, start: Vector2i, goal: Vector2i, level: int = -1, plain: bool = false) -> Array:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return hero_route_path__gd(session, start, goal, level, plain)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.hero_route_path", [session, start, goal, level, plain])
-	var before := HumanEngine.before_writing(&"OverworldRules.hero_route_path", [session, start, goal, level, plain])
-	var result = hero_route_path__gd(session, start, goal, level, plain)
-	HumanEngine.check_writing(&"OverworldRules.hero_route_path", before, [session, start, goal, level, plain], result)
-	return result
-
-static func hero_route_path__gd(session: SessionStateStoreScript.SessionData, start: Vector2i, goal: Vector2i, level: int = -1, plain: bool = false) -> Array:
-	if session == null:
-		return []
-	var size := derive_map_size(session)
-	if goal.x < 0 or goal.y < 0 or goal.x >= size.x or goal.y >= size.y:
-		return []
-	if start == goal:
-		return [start]
-	if hero_route_tile_blocked(session, goal.x, goal.y, level) and (plain or not hero_route_destination(session, goal.x, goal.y, level)):
-		return []
-	var directions: Array = PLAIN_ROUTE_DIRECTIONS if plain else ROUTE_DIRECTIONS
-	var transit_edges := [] if plain else active_linked_transit_edges(session, level)
-	var queue: Array = [start]
-	var queue_index := 0
-	var came_from := {start: start}
-	while queue_index < queue.size():
-		var current: Vector2i = queue[queue_index]
-		queue_index += 1
-		if current == goal:
-			var path: Array = [goal]
-			var walker := goal
-			while walker != start:
-				walker = came_from[walker]
-				path.push_front(walker)
-			return path
-		for direction in directions:
-			var next: Vector2i = current + direction
-			if next.x < 0 or next.y < 0 or next.x >= size.x or next.y >= size.y or came_from.has(next):
-				continue
-			if tile_step_cuts_blocked_corner(session, current, next, level):
-				continue
-			if hero_route_tile_blocked(session, next.x, next.y, level) and (plain or next != goal or not hero_route_destination(session, next.x, next.y, level)):
-				continue
-			if next != goal and tile_has_route_interaction(session, next.x, next.y, level):
-				continue
-			came_from[next] = current
-			queue.append(next)
-		for linked_next in linked_transit_neighbors_from_edges(transit_edges, current):
-			if not (linked_next is Vector2i) or came_from.has(linked_next):
-				continue
-			came_from[linked_next] = current
-			queue.append(linked_next)
-	return []
+	return HumanEngine.native_writing(&"OverworldRules.hero_route_path", [session, start, goal, level, plain])
 
 ## Route lengths in tiles (start included) to several goals from one
 ## breadth-first flood, by goal. Each length equals hero_route_path(session,
@@ -3862,134 +3294,13 @@ static func hero_route_path__gd(session: SessionStateStoreScript.SessionData, st
 ## it, while the flood itself only crosses tiles an ordinary route may cross,
 ## so no goal changes the path to another. Unreachable goals are left out.
 static func hero_route_path_lengths(session: SessionStateStoreScript.SessionData, start: Vector2i, goals: Array) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return hero_route_path_lengths__gd(session, start, goals)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.hero_route_path_lengths", [session, start, goals])
-	var before := HumanEngine.before_writing(&"OverworldRules.hero_route_path_lengths", [session, start, goals])
-	var result = hero_route_path_lengths__gd(session, start, goals)
-	HumanEngine.check_writing(&"OverworldRules.hero_route_path_lengths", before, [session, start, goals], result)
-	return result
-
-static func hero_route_path_lengths__gd(session: SessionStateStoreScript.SessionData, start: Vector2i, goals: Array) -> Dictionary:
-	var lengths := {}
-	if session == null:
-		return lengths
-	var size := derive_map_size(session)
-	var pending := {}
-	for goal_value in goals:
-		var goal: Vector2i = goal_value
-		if goal.x < 0 or goal.y < 0 or goal.x >= size.x or goal.y >= size.y:
-			continue
-		if goal == start:
-			lengths[goal] = 1
-		elif not hero_route_tile_blocked(session, goal.x, goal.y) or hero_route_destination(session, goal.x, goal.y):
-			pending[goal] = true
-	if pending.is_empty():
-		return lengths
-	var queue: Array = [start]
-	var queue_index := 0
-	var path_sizes := {start: 1}
-	var transit_edges := active_linked_transit_edges(session)
-	while queue_index < queue.size() and not pending.is_empty():
-		var current: Vector2i = queue[queue_index]
-		queue_index += 1
-		var next_size := int(path_sizes[current]) + 1
-		for direction in ROUTE_DIRECTIONS:
-			var next: Vector2i = current + direction
-			if next.x < 0 or next.y < 0 or next.x >= size.x or next.y >= size.y:
-				continue
-			var is_pending_goal := pending.has(next)
-			if path_sizes.has(next) and not is_pending_goal:
-				continue
-			if tile_step_cuts_blocked_corner(session, current, next):
-				continue
-			var blocked := hero_route_tile_blocked(session, next.x, next.y)
-			if is_pending_goal and (not blocked or hero_route_destination(session, next.x, next.y)):
-				lengths[next] = next_size
-				pending.erase(next)
-			if path_sizes.has(next) or blocked or tile_has_route_interaction(session, next.x, next.y):
-				continue
-			path_sizes[next] = next_size
-			queue.append(next)
-		for linked_next in linked_transit_neighbors_from_edges(transit_edges, current):
-			if not (linked_next is Vector2i):
-				continue
-			if pending.has(linked_next):
-				lengths[linked_next] = next_size
-				pending.erase(linked_next)
-			if path_sizes.has(linked_next):
-				continue
-			path_sizes[linked_next] = next_size
-			queue.append(linked_next)
-	return lengths
+	return HumanEngine.native_writing(&"OverworldRules.hero_route_path_lengths", [session, start, goals])
 
 static func resource_node_interaction_at_tile(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return resource_node_interaction_at_tile__gd(session, x, y, level)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.resource_node_interaction_at_tile", [session, x, y, level])
-	var before := HumanEngine.before_writing(&"OverworldRules.resource_node_interaction_at_tile", [session, x, y, level])
-	var result = resource_node_interaction_at_tile__gd(session, x, y, level)
-	HumanEngine.check_writing(&"OverworldRules.resource_node_interaction_at_tile", before, [session, x, y, level], result)
-	return result
-
-static func resource_node_interaction_at_tile__gd(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> Dictionary:
-	if session == null:
-		return {}
-	var nodes = session.overworld.get("resource_nodes", [])
-	var lookup_index := _spatial_lookup_index(session, level)
-	for node_index in _spatial_lookup_entries(lookup_index, "resource_by_interaction_tile", Vector2i(x, y)):
-		var index := int(node_index)
-		var node = nodes[index] if nodes is Array and index >= 0 and index < nodes.size() else {}
-		if node is Dictionary and resource_node_is_present(node, ContentService.get_resource_site(String(node.get("site_id", "")))):
-			return node
-	return {}
+	return HumanEngine.native_writing(&"OverworldRules.resource_node_interaction_at_tile", [session, x, y, level])
 
 static func tile_step_cuts_blocked_corner(session: SessionStateStoreScript.SessionData, from_tile: Vector2i, to_tile: Vector2i, level: int = -1) -> bool:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return tile_step_cuts_blocked_corner__gd(session, from_tile, to_tile, level)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.tile_step_cuts_blocked_corner", [session, from_tile, to_tile, level])
-	var before := HumanEngine.before_writing(&"OverworldRules.tile_step_cuts_blocked_corner", [session, from_tile, to_tile, level])
-	var result = tile_step_cuts_blocked_corner__gd(session, from_tile, to_tile, level)
-	HumanEngine.check_writing(&"OverworldRules.tile_step_cuts_blocked_corner", before, [session, from_tile, to_tile, level], result)
-	return result
-
-static func tile_step_cuts_blocked_corner__gd(session: SessionStateStoreScript.SessionData, from_tile: Vector2i, to_tile: Vector2i, level: int = -1) -> bool:
-	var dx := to_tile.x - from_tile.x
-	var dy := to_tile.y - from_tile.y
-	if abs(dx) != 1 or abs(dy) != 1:
-		return false
-	if NativeTransit.uses_native_adjacency(session):
-		# Native RMG connectivity includes diagonal rock corridors. The move
-		# owner still validates the destination's terrain, body and interaction.
-		return false
-	var side_a := Vector2i(from_tile.x + dx, from_tile.y)
-	var side_b := Vector2i(from_tile.x, from_tile.y + dy)
-	if not hero_route_tile_blocked(session, side_a.x, side_a.y, level) or not hero_route_tile_blocked(session, side_b.x, side_b.y, level):
-		return false
-	# A doorway is an interaction endpoint within the town's exact source body.
-	# Its own wall can border a legal diagonal ingress/egress; unrelated bodies
-	# and impassable terrain still close the corner. Destination blocking is
-	# checked independently by the movement/interaction rules.
-	var blocked := _blocked_tile_index(session, level)
-	var lookup := _spatial_lookup_index(session, level)
-	var towns: Array = session.overworld.get("towns", [])
-	for endpoint in [from_tile, to_tile]:
-		var town_index := int(lookup.get("town_by_tile", {}).get(_tile_key(endpoint), -1))
-		if town_index < 0 or town_index >= towns.size():
-			continue
-		var town: Dictionary = towns[town_index]
-		var entrance: Dictionary = town.get("visit_tile", {}) if town.get("visit_tile", {}) is Dictionary else {}
-		if entrance.is_empty() or not _position_matches(entrance, endpoint):
-			continue
-		var placement_id := String(town.get("placement_id", ""))
-		for side in [side_a, side_b]:
-			var owner: Variant = blocked.get(_tile_key(side), true)
-			if owner is String and owner == placement_id and terrain_id_is_passable(_terrain_id_at(session, side.x, side.y, level)):
-				return false
-	return true
+	return HumanEngine.native_writing(&"OverworldRules.tile_step_cuts_blocked_corner", [session, from_tile, to_tile, level])
 
 static func _tile_blocks_route_step(session: SessionStateStoreScript.SessionData, tile: Vector2i, is_destination: bool) -> bool:
 	if not hero_route_tile_blocked(session, tile.x, tile.y):

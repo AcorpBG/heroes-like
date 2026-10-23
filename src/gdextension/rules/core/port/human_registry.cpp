@@ -39,64 +39,69 @@ void no_null_session(const Value *args) {
 
 #define PORT(script, fn, arity, mutates, body) \
 	{ #script "." #fn, arity, mutates, [](State &s, const Value *a) -> Value { (void)s; (void)a; body; } }
+// A merged slice's function (owner decision D-d): GDScript keeps only a thin
+// wrapper over it, which tools/native_battle_switch.py writes in place of the
+// switch and the GDScript body.
+#define NATIVE(script, fn, arity, mutates, body) PORT(script, fn, arity, mutates, body)
 
 // The human seat's functions ported so far (Phase 7). The ones that write
 // fill the caches in the session's metadata (the blocked-tile and spatial
 // lookup indexes) and the scripts' static vars (terrain passability, the
 // normalized read scope's cache, the pathing debug profile).
 const Function kFunctions[] = {
-	// 7.1, the routes.
-	PORT(OverworldRules, tile_is_blocked, 4, true,
+	// 7.1, the routes (merge 1a).
+	NATIVE(OverworldRules, tile_is_blocked, 4, true,
 			no_null_session(a);
 			return gd::bool_value(overworld::tile_is_blocked(s, D(a, 0), I(a, 1), I(a, 2), I(a, 3)))),
-	PORT(OverworldRules, tile_has_route_interaction, 5, true,
+	NATIVE(OverworldRules, tile_has_route_interaction, 5, true,
 			if (nil(a, 0)) return gd::bool_value(false);
 			return gd::bool_value(overworld::tile_has_route_interaction(s, D(a, 0), I(a, 1), I(a, 2), I(a, 3), B(a, 4)))),
-	PORT(OverworldRules, tile_is_actionable_route_destination, 4, true,
+	NATIVE(OverworldRules, tile_is_actionable_route_destination, 4, true,
 			if (nil(a, 0)) return gd::bool_value(false);
 			return gd::bool_value(overworld::tile_is_actionable_route_destination(s, D(a, 0), I(a, 1), I(a, 2), I(a, 3)))),
-	PORT(OverworldRules, hero_route_tile_blocked, 4, true,
+	NATIVE(OverworldRules, hero_route_tile_blocked, 4, true,
 			no_null_session(a);
 			return gd::bool_value(overworld::hero_route_tile_blocked(s, D(a, 0), I(a, 1), I(a, 2), I(a, 3)))),
-	PORT(OverworldRules, hero_route_destination, 4, true,
+	NATIVE(OverworldRules, hero_route_destination, 4, true,
 			no_null_session(a);
 			return gd::bool_value(overworld::hero_route_destination(s, D(a, 0), I(a, 1), I(a, 2), I(a, 3)))),
 	// The route search, one call per route the screens show.
-	PORT(OverworldRules, hero_route_path, 5, true,
+	NATIVE(OverworldRules, hero_route_path, 5, true,
 			if (nil(a, 0)) return gd::array_value(s.new_array());
 			return gd::array_value(overworld::hero_route_path(s, D(a, 0), V(a, 1), V(a, 2), I(a, 3), B(a, 4)))),
-	PORT(OverworldRules, hero_route_path_lengths, 3, true,
+	NATIVE(OverworldRules, hero_route_path_lengths, 3, true,
 			if (nil(a, 0)) return gd::dict_value(s.new_dict());
 			return gd::dict_value(overworld::hero_route_path_lengths(s, D(a, 0), V(a, 1), a[2]))),
-	PORT(OverworldRules, resource_node_interaction_at_tile, 4, true,
+	NATIVE(OverworldRules, resource_node_interaction_at_tile, 4, true,
 			if (nil(a, 0)) return gd::dict_value(s.new_dict());
 			return gd::dict_value(overworld::resource_node_interaction_at_tile(s, D(a, 0), I(a, 1), I(a, 2), I(a, 3)))),
-	PORT(OverworldRules, tile_step_cuts_blocked_corner, 4, true,
+	NATIVE(OverworldRules, tile_step_cuts_blocked_corner, 4, true,
 			no_null_session(a);
 			return gd::bool_value(overworld::tile_step_cuts_blocked_corner(s, D(a, 0), V(a, 1), V(a, 2), I(a, 3)))),
-	PORT(OverworldRules, active_linked_transit_edges, 2, true,
+	NATIVE(OverworldRules, active_linked_transit_edges, 2, true,
 			if (nil(a, 0)) return gd::array_value(s.new_array());
 			return gd::array_value(overworld::active_linked_transit_edges(s, D(a, 0), I(a, 1)))),
-	PORT(OverworldRules, linked_transit_neighbors_from_edges, 2, false,
+	NATIVE(OverworldRules, linked_transit_neighbors_from_edges, 2, false,
 			return gd::array_value(overworld::linked_transit_neighbors_from_edges(s, a[0], V(a, 1)))),
-	PORT(OverworldRules, active_linked_transit_signature, 1, true,
+	NATIVE(OverworldRules, active_linked_transit_signature, 1, true,
 			if (nil(a, 0)) return s.string("linked_transit:");
 			return gd::str(overworld::active_linked_transit_signature(s, D(a, 0)))),
-	PORT(OverworldRules, route_movement_preview, 3, false,
+	NATIVE(OverworldRules, route_movement_preview, 3, false,
 			return gd::dict_value(overworld::route_movement_preview(s, a[0], a[1], I(a, 2)))),
-	PORT(OverworldRules, guard_engagement_encounter_at_tile, 4, true,
+	NATIVE(OverworldRules, guard_engagement_encounter_at_tile, 4, true,
 			no_null_session(a);
 			return gd::dict_value(overworld::guard_engagement_encounter_at_tile(s, D(a, 0), I(a, 1), I(a, 2), I(a, 3)))),
-	PORT(OverworldRules, guard_engagement_approach_route, 2, true,
+	NATIVE(OverworldRules, guard_engagement_approach_route, 2, true,
 			if (nil(a, 0)) return gd::array_value(s.new_array());
 			return gd::array_value(overworld::guard_engagement_approach_route(s, D(a, 0), D(a, 1)))),
-	PORT(OverworldRules, blocking_object_feedback_surface_at_tile, 3, false,
+	NATIVE(OverworldRules, blocking_object_feedback_surface_at_tile, 3, false,
 			if (nil(a, 0)) return gd::dict_value(s.new_dict());
 			return gd::dict_value(overworld::blocking_object_feedback_surface_at_tile(s, D(a, 0), I(a, 1), I(a, 2)))),
-	PORT(WaterTravelRules, is_sailing, 1, false,
+	NATIVE(WaterTravelRules, is_sailing, 1, false,
 			return gd::bool_value(water::is_sailing(s, a[0]))),
 };
 
+#undef NATIVE
 #undef PORT
 
 } // namespace

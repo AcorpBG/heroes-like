@@ -12,7 +12,6 @@ extends RefCounted
 
 const Levels = preload("res://scripts/core/OverworldLevelRules.gd")
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
-static var _human_engine_mode: int = HumanEngine.mode
 
 const BOATS_KEY := "boats"
 const HERO_BOAT_KEY := "boat_id"
@@ -38,16 +37,7 @@ static func hero_boat_id(hero: Variant) -> String:
 
 ## True when the active hero is aboard a boat.
 static func is_sailing(session) -> bool:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return is_sailing__gd(session)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"WaterTravelRules.is_sailing", [session])
-	var result = is_sailing__gd(session)
-	HumanEngine.check(&"WaterTravelRules.is_sailing", [session], result)
-	return result
-
-static func is_sailing__gd(session) -> bool:
-	return session != null and hero_boat_id(session.overworld.get("hero", {})) != ""
+	return HumanEngine.native(&"WaterTravelRules.is_sailing", [session])
 
 static func is_water(session, x: int, y: int, level: int = -1) -> bool:
 	var rows: Array = Levels.terrain_rows(session, level)
