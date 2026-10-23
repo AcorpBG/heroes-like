@@ -3216,6 +3216,12 @@ func _generated_random_map_config() -> Dictionary:
 	var raw_seed := _generated_seed.strip_edges()
 	var seed_source := "auto_on_launch" if ScenarioSelectRulesScript.random_map_seed_requests_auto(raw_seed) else "explicit"
 	var seed := ScenarioSelectRulesScript.random_map_fresh_auto_seed() if seed_source == "auto_on_launch" else raw_seed
+	# The player's seat keeps the pick; every computer opponent's faction is
+	# drawn from the seed, seat by seat, so a seed and a pick give the same
+	# opponents.
+	var seat_faction_ids := [_generated_faction_id]
+	for _seat in range(1, _generated_player_count):
+		seat_faction_ids.append(ScenarioSelectRulesScript.RANDOM_MAP_RANDOM_FACTION_ID)
 	var config := ScenarioSelectRulesScript.build_random_map_player_config(
 		seed,
 		"",
@@ -3227,7 +3233,8 @@ func _generated_random_map_config() -> Dictionary:
 		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO,
 		_generated_faction_id,
 		_generated_hero_id,
-		_generated_monster_strength
+		_generated_monster_strength,
+		seat_faction_ids
 	)
 	config["seed_source"] = seed_source
 	config["seed_input"] = raw_seed
