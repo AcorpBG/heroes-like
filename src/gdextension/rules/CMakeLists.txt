@@ -97,7 +97,10 @@ add_library(aurelion_rules_core STATIC
 	core/battle_hex.cpp
 	core/battle_state.cpp
 	core/build_info.cpp
+	core/compat/godot_json.cpp
 	core/compat/godot_string.cpp
+	core/content_store.cpp
+	core/content_validate.cpp
 	core/port/ability_helpers.cpp
 	core/port/action_playback.cpp
 	core/port/action_pressure.cpp
@@ -262,6 +265,7 @@ add_library(aurelion_rules SHARED
 	gdextension/aurelion_rules_api.cpp
 	gdextension/battle_port_bridge.cpp
 	gdextension/battle_state_bridge.cpp
+	gdextension/content_host.cpp
 	gdextension/snapshot_encoder.cpp
 )
 target_link_libraries(aurelion_rules PRIVATE aurelion_rules_core godot::cpp)

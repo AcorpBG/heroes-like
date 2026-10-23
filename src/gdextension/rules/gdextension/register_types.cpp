@@ -1,4 +1,5 @@
 #include "aurelion_rules_api.hpp"
+#include "content_host.hpp"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/class_db.hpp>
@@ -11,6 +12,7 @@ void initialize_aurelion_rules(ModuleInitializationLevel level) {
 		return;
 	}
 	ClassDB::register_class<AurelionRules>();
+	ClassDB::register_class<AurelionContent>();
 }
 
 void uninitialize_aurelion_rules(ModuleInitializationLevel level) {

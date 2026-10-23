@@ -38,197 +38,81 @@ const SPELL_SCHOOL_ICONS_PATH := "%s/spell_school_icons.json" % CONTENT_DIR
 const BUILDING_CATEGORY_ICONS_PATH := "%s/building_category_icons.json" % CONTENT_DIR
 const CAMPAIGNS_PATH := "%s/campaigns.json" % AUTHORED_ARCHIVE_DIR
 const AI_HERO_WEIGHTS_PATH := "%s/ai_hero_weights.json" % CONTENT_DIR
-## The AI weights document's tables shared by every player (beside "sets").
-const AI_HERO_WEIGHT_TABLES := ["army_power", "specialty_pick"]
-## The AI weights the game reads as whole numbers (int() in AiHeroRules'
-## _apply_weights and _apply_power_terms and in the helpers' apply_ai_weights;
-## written without a decimal point in the document).
-const AI_HERO_WHOLE_WEIGHTS := [
-	"battle_rounds_estimate", "max_decisions_per_day", "search_days", "far_search_days", "strategic_days",
-	"min_search_radius", "max_gates_weighed", "route_unexplored_min", "route_revisit_days", "boat_saving_days",
-	"field_army_max", "defense_horizon_days", "max_free_fight_previews", "max_fight_vetoes", "max_idle_previews",
-	"home_wait_radius", "hunt_start_day", "hunt_full_day", "sighting_memory_days", "hidden_rival_tiles",
-	"passage_tile_cap", "hero_count_town_max", "extra_hero_day", "threat_reach_margin", "threat_min_reach",
-	"rival_town_tiles_per_day", "avoid_days", "gate_home_detour", "dwelling_hire_min_value",
-	"dwelling_creature_min_value", "visit_stat_value", "visit_level_value", "visit_spell_tier_value", "gold_reserve",
-	"service_gold_reserve", "experience_service_min_gold", "exchange_min_kept", "exchange_gold_cap",
-	"exchange_low_stock",
-]
 const BIOME_TERRAIN_INDEX_KEY := "%s#map_tile_ids" % BIOMES_PATH
 const MAP_OBJECT_SITE_INDEX_KEY := "%s#resource_site_id" % MAP_OBJECTS_PATH
+const ENCOUNTER_KEY := "%s#encounter" % ENCOUNTERS_PATH
+const NATIVE_CLASS := "AurelionContent"
+const NativeRules = preload("res://scripts/core/NativeRules.gd")
 
-var _cache: Dictionary = {}
-var _lookup_indexes: Dictionary = {}
-# Per path, the "items" by "id" index of _lookup_indexes with what it was built
-# from: [raw content, its items array, the array's size, rows by id].
-var _fast_rows: Dictionary = {}
+# The native content tables (docs/native-rules-engine-transition.md, Phase 7,
+# slice 7.10): the files parsed, indexed and looked up in C++, each document
+# and row one read-only Dictionary every caller shares, the port bridge
+# included. The content revision is theirs too.
+var _native: Object = null
+# What this script asked the tables for, so a lookup by id answers without a
+# native call: documents by path, and found rows by id, per path or lookup.
+# Emptied when the tables reload (clear_cache, an override).
+var _files: Dictionary = {}
+var _rows: Dictionary = {}
 var _generated_scenario_drafts: Dictionary = {}
 var _generated_terrain_layer_drafts: Dictionary = {}
-var _content_revision := 0
-# Content documents replaced in memory for one run, by path
-# (docs/native-rules-engine-transition.md, "Content"): a match runner or a
-# tuning tool hands in a whole document without writing the file.
-var _overrides: Dictionary = {}
+
+func _init() -> void:
+	if ClassDB.class_exists(NATIVE_CLASS):
+		_native = ClassDB.instantiate(NATIVE_CLASS)
+	else:
+		push_error("The native rules library is not loaded: %s." % NativeRules.REGISTER_HINT)
 
 func _ready() -> void:
 	_validate_content()
 
 func clear_cache() -> void:
-	_cache.clear()
-	_lookup_indexes.clear()
-	_fast_rows.clear()
-	_content_revision += 1
+	_native.clear_cache()
+	_files.clear()
+	_rows.clear()
 
 func get_content_revision() -> int:
-	return _content_revision
+	return _native.revision()
 
 func clear_generated_scenario_drafts() -> void:
 	_generated_scenario_drafts.clear()
 	_generated_terrain_layer_drafts.clear()
-	_content_revision += 1
+	_native.bump_revision()
 
+## The file's document (an Array root as {"items": ...}), read-only, or {} with
+## an error printed.
 func load_json(path: String) -> Dictionary:
-	if path in _cache:
-		return _cache[path]
-	if path in _overrides:
-		_cache[path] = _overrides[path]
-		return _cache[path]
-
-	if not path.begins_with("res://"):
-		push_error("Only res:// content paths are supported: %s" % path)
-		return {}
-
-	if not FileAccess.file_exists(path):
-		if path.begins_with(AUTHORED_ARCHIVE_DIR):
-			_cache[path] = {}
+	var document: Variant = _files.get(path)
+	if document == null:
+		document = _native.load_json(path)
+		if document == null:
 			return {}
-		push_error("Missing content file: %s" % path)
-		return {}
-
-	var file := FileAccess.open(path, FileAccess.READ)
-	if file == null:
-		push_error("Failed to open content file: %s" % path)
-		return {}
-
-	var text := file.get_as_text()
-	var parser := JSON.new()
-	var error := parser.parse(text)
-	if error != OK:
-		push_error(
-			"Invalid JSON for content file %s at line %d: %s"
-			% [path, parser.get_error_line(), parser.get_error_message()]
-		)
-		return {}
-
-	var parsed = parser.data
-	if parsed is Dictionary:
-		_cache[path] = parsed
-		return parsed
-	if parsed is Array:
-		var wrapped := {"items": parsed}
-		_cache[path] = wrapped
-		return wrapped
-
-	push_error("Unsupported JSON root for content file: %s" % path)
-	return {}
+		_files[path] = document
+	return document
 
 ## Replaces a content file's document for this run; the file stays as it is.
 ## Like clear_cache it bumps the content revision, so whatever is memoized per
 ## revision reads the new document. Refused (false) for a path that is no
 ## content file or a document that does not keep the shipped one's shape.
 func set_content_override(path: String, data: Dictionary) -> bool:
-	if not path.begins_with(CONTENT_DIR + "/") or not FileAccess.file_exists(path):
-		push_error("Content override refused: %s is no content file." % path)
+	if not _native.set_override(path, data):
 		return false
-	var errors: Array[String] = []
-	if path == AI_HERO_WEIGHTS_PATH:
-		var shipped = JSON.parse_string(FileAccess.get_file_as_string(path))
-		errors = ai_hero_weights_errors(data, shipped if shipped is Dictionary else {})
-	for message in errors:
-		push_error("Content override refused for %s: %s" % [path, message])
-	if not errors.is_empty():
-		return false
-	_overrides[path] = data.duplicate(true)
-	clear_cache()
+	_files.clear()
+	_rows.clear()
 	return true
 
 func clear_content_overrides() -> void:
-	if _overrides.is_empty():
-		return
-	_overrides.clear()
-	clear_cache()
+	_native.clear_overrides()
+	_files.clear()
+	_rows.clear()
 
 ## The default overworld AI weight set (AiHeroRules, "Weights").
 func default_ai_hero_weights() -> Dictionary:
 	return load_json(AI_HERO_WEIGHTS_PATH).get("sets", {}).get("default", {})
 
-## What is wrong with an overworld AI weights document (AiHeroRules,
-## "Weights"): every value of a shared table (AI_HERO_WEIGHT_TABLES) and of the
-## default set a number, or for a table such as resource_values numbers by key;
-## every other set changing only values the default has, down to the keys of
-## its tables, a number for a number and a table for a table; a whole number
-## for every AI_HERO_WHOLE_WEIGHTS value; and, given the shipped document,
-## exactly its shared values and default values, tables included.
-func ai_hero_weights_errors(doc: Dictionary, shipped: Dictionary = {}) -> Array[String]:
-	var errors: Array[String] = []
-	for table_name in AI_HERO_WEIGHT_TABLES:
-		if doc.get(table_name) is Dictionary:
-			_ai_hero_weight_errors(table_name, doc[table_name], shipped.get(table_name), "shipped document", errors)
-		else:
-			errors.append("%s must be an object" % table_name)
-	var sets = doc.get("sets")
-	if not (sets is Dictionary) or not (sets.get("default") is Dictionary):
-		errors.append("sets.default must be an object")
-		return errors
-	var shipped_sets = shipped.get("sets")
-	var shipped_default = shipped_sets.get("default") if shipped_sets is Dictionary else null
-	_ai_hero_weight_errors("sets.default", sets["default"], shipped_default, "shipped document", errors)
-	for set_name in sets:
-		if set_name == "default":
-			continue
-		if sets[set_name] is Dictionary:
-			_ai_hero_weight_errors("sets.%s" % set_name, sets[set_name], sets["default"], "default set", errors)
-		else:
-			errors.append("sets.%s must be an object" % set_name)
-	return errors
-
-## One table of AI weights against its reference, when there is one: only the
-## reference's keys, a table where it has a table and a number where it has a
-## number, and, against the shipped document, every key it has. Without one,
-## numbers or tables of numbers.
-func _ai_hero_weight_errors(label: String, values: Dictionary, reference: Variant, reference_name: String, errors: Array[String]) -> void:
-	var checked := reference is Dictionary
-	for key in values:
-		var path := "%s.%s" % [label, key]
-		if checked and not reference.has(key):
-			errors.append("%s is not in the %s" % [path, reference_name])
-			continue
-		var value = values[key]
-		if (reference[key] if checked else value) is Dictionary:
-			if value is Dictionary:
-				_ai_hero_weight_errors(path, value, reference[key] if checked else null, reference_name, errors)
-			else:
-				errors.append("%s must be a table of numbers" % path)
-		elif not _is_finite_number(value):
-			errors.append("%s must be a number" % path)
-		elif String(key) in AI_HERO_WHOLE_WEIGHTS and float(value) != floorf(float(value)):
-			errors.append("%s must be a whole number" % path)
-	if checked and reference_name == "shipped document":
-		for key in reference:
-			if not values.has(key):
-				errors.append("%s.%s is missing" % [label, key])
-
-func _is_finite_number(value: Variant) -> bool:
-	return (value is int or value is float) and is_finite(float(value))
-
 func get_content_ids(path: String, list_key: String = "items") -> Array[String]:
-	var raw := load_json(path)
-	if raw.is_empty():
-		return []
 	var ids: Array[String] = []
-	for item in _items_from_raw(raw, list_key):
-		if item.has("id"):
-			ids.append(String(item["id"]))
+	ids.assign(_native.content_ids(path, list_key))
 	return ids
 
 func get_faction(id: String) -> Dictionary:
@@ -261,8 +145,7 @@ func get_town(id: String) -> Dictionary:
 func canonical_town_id(id: String) -> String:
 	# Retired IDs are references only, never additional selectable templates.
 	# Keeping placed IDs intact preserves old scenario objective/script targets.
-	var aliases: Dictionary = load_json(TOWNS_PATH).get("legacy_aliases", {})
-	return String(aliases.get(id, id))
+	return _native.canonical_town_id(id)
 
 func get_building(id: String) -> Dictionary:
 	return get_content_by_id(BUILDINGS_PATH, id)
@@ -290,101 +173,18 @@ func get_terrain_layers_for_scenario(scenario_id: String) -> Dictionary:
 	return draft.duplicate(true) if not draft.is_empty() else {}
 
 func normalize_terrain_id(terrain_id: String) -> String:
-	var normalized := String(terrain_id).strip_edges()
-	match normalized:
-		"highland", "hills", "ridge":
-			return "rough"
-		"badlands":
-			return "dirt"
-		"wastes":
-			return "sand"
-		"cavern", "underway":
-			return "underground"
-		"coast", "shore":
-			return "water"
-		_:
-			return normalized
+	return _native.normalize_terrain_id(terrain_id)
 
 func get_biome_for_terrain(terrain_id: String) -> Dictionary:
-	var normalized_terrain := normalize_terrain_id(terrain_id)
-	if normalized_terrain == "":
-		return {}
-	var items := _items_from_raw(load_json(BIOMES_PATH))
-	var index: Variant = _lookup_indexes.get(BIOME_TERRAIN_INDEX_KEY)
-	if index == null or not is_same(index["source"], items) or int(index["count"]) != items.size():
-		index = _build_biome_terrain_index(items)
-	if not bool(index["indexed"]):
-		return _scan_biome_for_terrain(items, normalized_terrain)
-	var biome: Variant = index["by_terrain"].get(normalized_terrain)
-	return biome if biome != null else {}
-
-func _scan_biome_for_terrain(items: Array, normalized_terrain: String) -> Dictionary:
-	for biome in items:
-		if not (biome is Dictionary):
-			continue
-		if normalized_terrain in biome.get("map_tile_ids", []):
-			return biome
-	return {}
-
-# Blocked-tile and terrain-profile checks resolve a biome per tile, so index the
-# first biome listing each map tile id instead of scanning every biome. Rows are
-# borrowed exactly as the linear scan returned them. The index lives in the
-# lookup indexes, so clear_cache() drops it and a replaced biome list rebuilds it.
-# If any biome's map_tile_ids is not an Array, keep the original scan: `in` on
-# other Variant types is not a plain membership test.
-func _build_biome_terrain_index(items: Array) -> Dictionary:
-	var indexed := true
-	var by_terrain := {}
-	for biome in items:
-		if not (biome is Dictionary):
-			continue
-		var tile_ids = biome.get("map_tile_ids", [])
-		if not (tile_ids is Array):
-			indexed = false
-			by_terrain.clear()
-			break
-		for tile_id in tile_ids:
-			# Array membership matches String and StringName alike and never
-			# matches a String against any other Variant type.
-			if not (tile_id is String or tile_id is StringName):
-				continue
-			var key := String(tile_id)
-			if not by_terrain.has(key):
-				by_terrain[key] = biome
-	var index := {"source": items, "count": items.size(), "indexed": indexed, "by_terrain": by_terrain}
-	_lookup_indexes[BIOME_TERRAIN_INDEX_KEY] = index
-	return index
+	var row: Variant = _known_row(BIOME_TERRAIN_INDEX_KEY, terrain_id)
+	return row if row != null else _remember_row(BIOME_TERRAIN_INDEX_KEY, terrain_id, _native.biome_for_terrain(terrain_id))
 
 func get_map_object(id: String) -> Dictionary:
 	return get_content_by_id(MAP_OBJECTS_PATH, id)
 
 func get_map_object_for_resource_site(site_id: String) -> Dictionary:
-	var normalized_site_id := site_id.strip_edges()
-	if normalized_site_id == "":
-		return {}
-	var items := _items_from_raw(load_json(MAP_OBJECTS_PATH))
-	var index: Variant = _lookup_indexes.get(MAP_OBJECT_SITE_INDEX_KEY)
-	if index == null or not is_same(index["source"], items) or int(index["count"]) != items.size():
-		index = _build_map_object_site_index(items)
-	var best: Variant = index["by_site"].get(normalized_site_id)
-	return best if best != null else {}
-
-# Presence and route checks ask for a resource node's map object per node, so
-# index each site's object: the largest footprint, the first of equals in
-# authored order, as a scan of the list picks it. Like the biome index it lives
-# in the lookup indexes, and a replaced object list rebuilds it.
-func _build_map_object_site_index(items: Array) -> Dictionary:
-	var by_site := {}
-	for item in items:
-		if not (item is Dictionary):
-			continue
-		var key := String(item.get("resource_site_id", "")).strip_edges()
-		var best: Variant = by_site.get(key)
-		if best == null or _map_object_footprint_area(item) > _map_object_footprint_area(best):
-			by_site[key] = item
-	var index := {"source": items, "count": items.size(), "by_site": by_site}
-	_lookup_indexes[MAP_OBJECT_SITE_INDEX_KEY] = index
-	return index
+	var row: Variant = _known_row(MAP_OBJECT_SITE_INDEX_KEY, site_id)
+	return row if row != null else _remember_row(MAP_OBJECT_SITE_INDEX_KEY, site_id, _native.map_object_for_resource_site(site_id))
 
 func get_neutral_dwelling(id: String) -> Dictionary:
 	return get_content_by_id(NEUTRAL_DWELLINGS_PATH, id)
@@ -465,7 +265,7 @@ func register_generated_scenario_draft(scenario_record: Dictionary, terrain_laye
 	terrain_copy["scenario_id"] = scenario_id
 	terrain_copy["draft_source"] = "generated_random_map_transient_registry"
 	_generated_terrain_layer_drafts[scenario_id] = terrain_copy
-	_content_revision += 1
+	_native.bump_revision()
 	return {
 		"ok": true,
 		"scenario_id": scenario_id,
@@ -476,58 +276,45 @@ func register_generated_scenario_draft(scenario_record: Dictionary, terrain_laye
 func unregister_generated_scenario_draft(id: String) -> void:
 	_generated_scenario_drafts.erase(id)
 	_generated_terrain_layer_drafts.erase(id)
-	_content_revision += 1
+	_native.bump_revision()
 
 func get_encounter(id: String) -> Dictionary:
-	var encounter := get_content_by_id(ENCOUNTERS_PATH, id)
-	if encounter.is_empty() and id.begins_with(GENERATED_COMPANY_ENCOUNTER_PREFIX):
-		return _indexed_content_row(GENERATED_COMPANIES_PATH, id, "encounters", "id")
-	return encounter
+	var row: Variant = _known_row(ENCOUNTER_KEY, id)
+	return row if row != null else _remember_row(ENCOUNTER_KEY, id, _native.encounter(id))
 
+## The first row of the list with that id (the towns by their canonical id), or {}.
 func get_content_by_id(path: String, id: String, list_key: String = "items") -> Dictionary:
-	if list_key == "items":
-		if path == TOWNS_PATH:
-			id = canonical_town_id(id)
-		# Rules ask for rows by id millions of times a game. While the cached
-		# content and its items array are the ones the index was built from, at
-		# the same size, read the index directly; anything else rebuilds below.
-		var fast: Variant = _fast_rows.get(path)
-		if fast != null and is_same(_cache.get(path), fast[0]):
-			var items: Variant = fast[0].get("items")
-			if is_same(items, fast[1]) and items.size() == fast[2]:
-				var row: Variant = fast[3].get(id)
-				return row if row != null else {}
-	return _indexed_content_row(path, id, list_key, "id")
+	# Rules ask for rows by id millions of times a game: a row found once is
+	# answered from _rows until the tables reload.
+	var key := path if list_key == "items" else "%s#%s" % [path, list_key]
+	var rows: Variant = _rows.get(key)
+	if rows != null:
+		var row: Variant = rows.get(id)
+		if row != null:
+			return row
+	return _remember_row(key, id, _native.content_by_id(path, id, list_key))
 
+## The first row whose id_field (else "id") is id, or {}.
 func _indexed_content_row(path: String, id: String, list_key: String, id_field: String) -> Dictionary:
-	var raw := load_json(path)
-	if raw.is_empty():
+	var key := "%s#%s#%s" % [path, list_key, id_field]
+	var row: Variant = _known_row(key, id)
+	return row if row != null else _remember_row(key, id, _native.indexed_row(path, id, list_key, id_field))
+
+## The row remembered for id under key, or null.
+func _known_row(key: String, id: String) -> Variant:
+	var rows: Variant = _rows.get(key)
+	return rows.get(id) if rows != null else null
+
+## A native lookup's row for id (null for none) remembered under key; {} for none.
+func _remember_row(key: String, id: String, found: Variant) -> Dictionary:
+	if found == null:
 		return {}
-	var items := _items_from_raw(raw, list_key)
-	var path_indexes: Dictionary = _lookup_indexes.get(path, {})
-	var list_indexes: Dictionary = path_indexes.get(list_key, {})
-	var cached: Dictionary = list_indexes.get(id_field, {})
-	if cached.is_empty() or not is_same(cached.get("source"), items) or int(cached.get("count", -1)) != items.size():
-		# Authored ids/list membership are immutable between content-cache resets.
-		# Borrow rows, preserving reference identity and first-match ordering. The
-		# source guard also handles replaced fixture/editor arrays without stale ids.
-		var by_id := {}
-		for item in items:
-			if not (item is Dictionary):
-				continue
-			var item_id := String(item.get(id_field, item.get("id", "")))
-			if not by_id.has(item_id):
-				by_id[item_id] = item
-		cached = {"source": items, "count": items.size(), "by_id": by_id}
-		list_indexes[id_field] = cached
-		path_indexes[list_key] = list_indexes
-		_lookup_indexes[path] = path_indexes
-	if list_key == "items" and id_field == "id":
-		if is_same(raw.get("items"), items):
-			_fast_rows[path] = [raw, items, items.size(), cached["by_id"]]
-		else:
-			_fast_rows.erase(path)
-	return cached.get("by_id", {}).get(id, {})
+	var rows: Variant = _rows.get(key)
+	if rows == null:
+		rows = {}
+		_rows[key] = rows
+	rows[id] = found
+	return found
 
 func _scenario_dependency_record_from_source(id: String, scenario: Dictionary, generated: bool) -> Dictionary:
 	var objectives = scenario.get("objectives", {})
@@ -556,366 +343,43 @@ func _index_items(items: Array) -> Dictionary:
 			index[String(item["id"])] = item
 	return index
 
-func _index_unit_art_items(items: Array) -> Dictionary:
-	var index := {}
-	for item in items:
-		if not (item is Dictionary):
-			continue
-		var unit_id := String(item.get("unit_id", item.get("id", "")))
-		if unit_id != "":
-			index[unit_id] = item
-	return index
-
-func _index_hero_art_items(items: Array) -> Dictionary:
-	var index := {}
-	for item in items:
-		if not (item is Dictionary):
-			continue
-		var hero_id := String(item.get("hero_id", item.get("id", "")))
-		if hero_id != "":
-			index[hero_id] = item
-	return index
-
-func _map_object_footprint_area(item: Dictionary) -> int:
-	var footprint = item.get("footprint", {})
-	if not (footprint is Dictionary):
-		return 1
-	return max(1, int(footprint.get("width", 1))) * max(1, int(footprint.get("height", 1)))
-
+## The start-up checks of the content: the live files' in C++
+## (core/content_validate.cpp), then those of the archived authored scenarios,
+## campaigns and terrain layers, which stay here until the campaign rework.
 func _validate_content() -> void:
-	var faction_index := _index_items(_items_from_raw(load_json(FACTIONS_PATH)))
-	var faction_crest_index := _index_items(_items_from_raw(load_json(FACTION_CRESTS_PATH)))
-	var hero_index := _index_items(_items_from_raw(load_json(HEROES_PATH)))
-	var hero_art_index := _index_hero_art_items(_items_from_raw(load_json(HERO_ART_PATH)))
-	var unit_index := _index_items(_items_from_raw(load_json(UNITS_PATH)))
-	var unit_art_index := _index_unit_art_items(_items_from_raw(load_json(UNIT_ART_PATH)))
-	var unit_animation_raw := load_json(UNIT_ANIMATION_PATH)
-	var unit_animation_index := _index_unit_art_items(_items_from_raw(unit_animation_raw))
-	var army_group_index := _index_items(_items_from_raw(load_json(ARMY_GROUPS_PATH)))
-	var town_index := _index_items(_items_from_raw(load_json(TOWNS_PATH)))
-	var building_index := _index_items(_items_from_raw(load_json(BUILDINGS_PATH)))
-	var building_art_index := _index_items(_items_from_raw(load_json(BUILDING_ART_PATH)))
-	var resource_index := _index_items(_items_from_raw(load_json(RESOURCES_PATH)))
-	var resource_site_index := _index_items(_items_from_raw(load_json(RESOURCE_SITES_PATH)))
-	var biome_index := _index_items(_items_from_raw(load_json(BIOMES_PATH)))
-	var terrain_grammar := load_json(TERRAIN_GRAMMAR_PATH)
-	var terrain_layer_index := _index_items(_items_from_raw(load_json(TERRAIN_LAYERS_PATH)))
-	var map_object_index := _index_items(_items_from_raw(load_json(MAP_OBJECTS_PATH)))
-	var neutral_dwelling_index := _index_items(_items_from_raw(load_json(NEUTRAL_DWELLINGS_PATH)))
-	var artifact_raw := load_json(ARTIFACTS_PATH)
-	var artifact_index := _index_items(_items_from_raw(artifact_raw))
-	var artifact_set_index := _index_items(artifact_raw.get("sets", []) if artifact_raw is Dictionary else [])
-	var spell_index := _index_items(_items_from_raw(load_json(SPELLS_PATH)))
-	var spell_icon_index := _index_items(_items_from_raw(load_json(SPELL_ICONS_PATH)))
-	var spell_school_icon_index := _index_items(_items_from_raw(load_json(SPELL_SCHOOL_ICONS_PATH)))
-	var building_category_icon_index := _index_items(_items_from_raw(load_json(BUILDING_CATEGORY_ICONS_PATH)))
-	var campaign_index := _index_items(_items_from_raw(load_json(CAMPAIGNS_PATH)))
-	var encounter_index := _index_items(_items_from_raw(load_json(ENCOUNTERS_PATH)))
+	_native.validate()
 	var scenario_index := _index_items(_items_from_raw(load_json(SCENARIOS_PATH)))
-
-	_validate_terrain_grammar(terrain_grammar, biome_index)
-	for terrain_layer in terrain_layer_index.values():
+	var terrain_grammar := load_json(TERRAIN_GRAMMAR_PATH)
+	for terrain_layer in _index_items(_items_from_raw(load_json(TERRAIN_LAYERS_PATH))).values():
 		_validate_terrain_layer(terrain_layer, scenario_index, terrain_grammar)
-	for biome in biome_index.values():
-		_validate_biome(biome)
-	for resource_site in resource_site_index.values():
-		_validate_resource_site(resource_site, unit_index, spell_index, neutral_dwelling_index, army_group_index, encounter_index)
-	for map_object in map_object_index.values():
-		_validate_map_object(map_object, biome_index, resource_site_index, faction_index)
-	for neutral_dwelling in neutral_dwelling_index.values():
-		_validate_neutral_dwelling(
-			neutral_dwelling,
-			unit_index,
-			resource_site_index,
-			map_object_index,
-			army_group_index,
-			encounter_index,
-			biome_index
-		)
-	for faction in faction_index.values():
-		_validate_faction(faction, town_index, hero_index)
-	_validate_faction_crests(faction_index, faction_crest_index)
-	for hero in hero_index.values():
-		_validate_hero(hero, faction_index, spell_index)
-	_validate_hero_art_manifest(hero_index, hero_art_index)
-	for unit in unit_index.values():
-		_validate_unit(unit, faction_index)
-	_validate_unit_art_manifest(unit_index, unit_art_index)
-	_validate_unit_animation_manifest(unit_index, unit_animation_raw, unit_animation_index)
-	for army_group in army_group_index.values():
-		_validate_army_group(army_group, faction_index, unit_index)
-	for building in building_index.values():
-		_validate_building(building, building_index, unit_index)
-	_validate_building_art_manifest(building_index, building_art_index)
-	_validate_resources(resource_index)
-	for town in town_index.values():
-		_validate_town(town, faction_index, building_index, unit_index, spell_index)
-	for artifact in artifact_index.values():
-		_validate_artifact(artifact)
-	for spell in spell_index.values():
-		_validate_spell(spell)
-	_validate_spell_icons(spell_index, spell_icon_index)
-	_validate_spell_school_icons(spell_school_icon_index)
-	_validate_building_category_icons(building_category_icon_index)
-	for encounter in encounter_index.values():
-		_validate_encounter(encounter, army_group_index, spell_index)
-	for scenario in scenario_index.values():
-		_validate_scenario(
-			scenario,
-			faction_index,
-			hero_index,
-			army_group_index,
-			town_index,
-			building_index,
-			unit_index,
-			resource_site_index,
-			artifact_index,
-			artifact_set_index,
-			encounter_index
-		)
-	for campaign in campaign_index.values():
+	if not scenario_index.is_empty():
+		var artifact_raw := load_json(ARTIFACTS_PATH)
+		var faction_index := _index_items(_items_from_raw(load_json(FACTIONS_PATH)))
+		var hero_index := _index_items(_items_from_raw(load_json(HEROES_PATH)))
+		var army_group_index := _index_items(_items_from_raw(load_json(ARMY_GROUPS_PATH)))
+		var town_index := _index_items(_items_from_raw(load_json(TOWNS_PATH)))
+		var building_index := _index_items(_items_from_raw(load_json(BUILDINGS_PATH)))
+		var unit_index := _index_items(_items_from_raw(load_json(UNITS_PATH)))
+		var resource_site_index := _index_items(_items_from_raw(load_json(RESOURCE_SITES_PATH)))
+		var artifact_index := _index_items(_items_from_raw(artifact_raw))
+		var artifact_set_index := _index_items(artifact_raw.get("sets", []) if artifact_raw is Dictionary else [])
+		var encounter_index := _index_items(_items_from_raw(load_json(ENCOUNTERS_PATH)))
+		for scenario in scenario_index.values():
+			_validate_scenario(
+				scenario,
+				faction_index,
+				hero_index,
+				army_group_index,
+				town_index,
+				building_index,
+				unit_index,
+				resource_site_index,
+				artifact_index,
+				artifact_set_index,
+				encounter_index
+			)
+	for campaign in _index_items(_items_from_raw(load_json(CAMPAIGNS_PATH))).values():
 		_validate_campaign(campaign, scenario_index)
-	for message in ai_hero_weights_errors(load_json(AI_HERO_WEIGHTS_PATH)):
-		push_warning("Overworld AI weights: %s." % message)
-
-func _validate_resources(resource_index: Dictionary) -> void:
-	var expected_ids := [
-		"gold", "wood", "ore", "aetherglass", "embergrain", "peatwax",
-		"verdant_grafts", "brass_scrip", "memory_salt",
-	]
-	if resource_index.size() != expected_ids.size():
-		push_warning("Production resource registry must define exactly the nine live stockpile resources.")
-	for resource_id in expected_ids:
-		var resource: Dictionary = resource_index.get(resource_id, {})
-		if resource.is_empty():
-			push_warning("Production resource registry is missing %s." % resource_id)
-			continue
-		for key in ["display_name", "category", "market_tier", "icon_id", "icon_path", "material_cue"]:
-			if String(resource.get(key, "")).strip_edges() == "":
-				push_warning("Production resource %s must define %s." % [resource_id, key])
-		if not bool(resource.get("stockpile", false)):
-			push_warning("Production resource %s must remain a live stockpile resource." % resource_id)
-		var icon_path := String(resource.get("icon_path", ""))
-		if not icon_path.begins_with("res://art/economy/runtime/resources/") or not icon_path.ends_with(".png"):
-			push_warning("Production resource %s must use the shipped economy resource icon family." % resource_id)
-		else:
-			_validate_art_path(icon_path, "Production resource %s icon" % resource_id)
-
-## A visit-building spell shrine teaches any spell of its tier
-## (docs/visit-buildings.md).
-func _visit_shrine_teaches_spell_tier(site: Dictionary, spell: Dictionary) -> bool:
-	var visit = site.get("visit", {})
-	if String(site.get("family", "")) != "visit_building" or not (visit is Dictionary):
-		return false
-	var effects = visit.get("effects", {})
-	return effects is Dictionary and int(effects.get("spell_tier", 0)) > 0 and int(effects.get("spell_tier", 0)) == int(spell.get("tier", -1))
-
-func _supported_resource_site_families() -> Array:
-	return [
-		"one_shot_pickup",
-		"mine",
-		"neutral_dwelling",
-		"faction_outpost",
-		"frontier_shrine",
-		"guarded_reward_site",
-		"scouting_structure",
-		"transit_object",
-		"repeatable_service",
-		"visit_building",
-		"staged_resource_front",
-		"support_producer",
-		"shrine",
-		"sign_waypoint",
-		"scenario_objective",
-		"faction_landmark",
-	]
-
-func _supported_map_object_families() -> Array:
-	return [
-		"pickup",
-		"mine",
-		"neutral_dwelling",
-		"neutral_encounter",
-		"shrine",
-		"guarded_reward_site",
-		"scouting_structure",
-		"transit_object",
-		"repeatable_service",
-		"blocker",
-		"decoration",
-		"faction_landmark",
-		"staged_resource_front",
-		"support_producer",
-		"sign_waypoint",
-		"scenario_objective",
-	]
-
-func _validate_terrain_grammar(grammar: Dictionary, biome_index: Dictionary) -> void:
-	if String(grammar.get("rendering_model", "")) != "authored_autotile_layers":
-		push_warning("Terrain grammar must declare rendering_model authored_autotile_layers.")
-	if String(grammar.get("primary_base_model", "")) != "original_quiet_tile_bank":
-		push_warning("Terrain grammar must declare original_quiet_tile_bank as the active shippable base model.")
-	if String(grammar.get("generated_source_policy", "")) != "reference_only_inactive":
-		push_warning("Terrain grammar must keep generated renderer-study sources reference-only and inactive.")
-	var classes = grammar.get("terrain_classes", [])
-	if not (classes is Array) or classes.is_empty():
-		push_warning("Terrain grammar must define terrain_classes.")
-		return
-	var terrain_ids: Array[String] = []
-	for terrain_class in classes:
-		if not (terrain_class is Dictionary):
-			push_warning("Terrain grammar contains a non-dictionary terrain class.")
-			continue
-		var terrain_id := String(terrain_class.get("id", ""))
-		if terrain_id == "":
-			push_warning("Terrain grammar terrain classes must define id.")
-			continue
-		if terrain_id in terrain_ids:
-			push_warning("Terrain grammar repeats terrain id %s." % terrain_id)
-		terrain_ids.append(terrain_id)
-		var biome_id := String(terrain_class.get("biome_id", ""))
-		if biome_id == "" or not biome_index.has(biome_id):
-			push_warning("Terrain grammar %s references missing biome %s." % [terrain_id, biome_id])
-		for key in ["terrain_group", "autotile_family", "style_id", "pattern", "readability_role"]:
-			if String(terrain_class.get(key, "")) == "":
-				push_warning("Terrain grammar %s must define %s." % [terrain_id, key])
-		for color_key in ["base_color", "detail_color", "edge_color"]:
-			if not _looks_like_hex_color(String(terrain_class.get(color_key, ""))):
-				push_warning("Terrain grammar %s must define %s as a hex color." % [terrain_id, color_key])
-		if int(terrain_class.get("transition_priority", -1)) < 0:
-			push_warning("Terrain grammar %s must define transition_priority >= 0." % terrain_id)
-		var supports = terrain_class.get("supports", [])
-		if not (supports is Array) or "edge_transitions" not in supports:
-			push_warning("Terrain grammar %s must support edge_transitions." % terrain_id)
-		if terrain_id in ["grass", "plains", "forest", "mire", "swamp", "rough"]:
-			_validate_terrain_tile_art(terrain_class, terrain_id)
-
-	for required_id in ["grass", "snow", "sand", "dirt", "rough", "lava", "underground", "water", "rock"]:
-		if required_id not in terrain_ids:
-			push_warning("Terrain grammar must define authored terrain class %s." % required_id)
-	_validate_editor_base_terrain_options(grammar, terrain_ids)
-
-	var overlay_ids: Array[String] = []
-	var overlays = grammar.get("overlay_classes", [])
-	if not (overlays is Array) or overlays.is_empty():
-		push_warning("Terrain grammar must define overlay_classes.")
-		return
-	for overlay in overlays:
-		if not (overlay is Dictionary):
-			push_warning("Terrain grammar contains a non-dictionary overlay class.")
-			continue
-		var overlay_id := String(overlay.get("id", ""))
-		if overlay_id == "":
-			push_warning("Terrain grammar overlay classes must define id.")
-			continue
-		overlay_ids.append(overlay_id)
-		if String(overlay.get("layer", "")) != "road":
-			push_warning("Terrain grammar overlay %s must currently use layer road." % overlay_id)
-		for color_key in ["color", "edge_color", "shadow_color", "center_color"]:
-			if not _looks_like_hex_color(String(overlay.get(color_key, ""))):
-				push_warning("Terrain grammar overlay %s must define %s as a hex color." % [overlay_id, color_key])
-		if float(overlay.get("width_fraction", 0.0)) <= 0.0:
-			push_warning("Terrain grammar overlay %s must define width_fraction > 0." % overlay_id)
-		if overlay_id == "road_dirt":
-			_validate_road_overlay_tile_art(overlay, overlay_id)
-	if "road_dirt" not in overlay_ids:
-		push_warning("Terrain grammar must define the road_dirt overlay.")
-
-func _validate_editor_base_terrain_options(grammar: Dictionary, terrain_ids: Array[String]) -> void:
-	var expected_options := [
-		{"id": "grass", "label": "Grass", "family": "grass", "atlas": "grastl"},
-		{"id": "snow", "label": "Snow", "family": "snow", "atlas": "snowtl"},
-		{"id": "sand", "label": "Sand", "family": "sand", "atlas": "sandtl"},
-		{"id": "dirt", "label": "Dirt", "family": "dirt", "atlas": "dirttl"},
-		{"id": "rough", "label": "Rough", "family": "rough", "atlas": "rougtl"},
-		{"id": "lava", "label": "Lava", "family": "lava", "atlas": "lavatl"},
-		{"id": "underground", "label": "Underground", "family": "subterranean", "atlas": "subbtl"},
-		{"id": "water", "label": "Water", "family": "water", "atlas": "watrtl"},
-		{"id": "rock", "label": "Rock/None", "family": "rock", "atlas": "rocktl"},
-	]
-	var options = grammar.get("editor_base_terrain_options", [])
-	if not (options is Array):
-		push_warning("Terrain grammar must define editor_base_terrain_options for the map editor picker.")
-		return
-	if options.size() != expected_options.size():
-		push_warning("Terrain grammar editor_base_terrain_options must expose the HoMM3-style base terrain family set.")
-	var homm3 = grammar.get("homm3_local_prototype", {})
-	var terrain_id_map = homm3.get("terrain_id_map", {}) if homm3 is Dictionary else {}
-	var terrain_families = homm3.get("terrain_families", {}) if homm3 is Dictionary else {}
-	for index in range(min(options.size(), expected_options.size())):
-		var option = options[index]
-		if not (option is Dictionary):
-			push_warning("Terrain grammar editor_base_terrain_options contains a non-dictionary option.")
-			continue
-		var expected: Dictionary = expected_options[index]
-		var terrain_id := String(option.get("id", ""))
-		var label := String(option.get("label", ""))
-		var family_id := String(option.get("homm3_family", ""))
-		var atlas_id := String(option.get("homm3_atlas", ""))
-		if terrain_id != String(expected.get("id", "")) or label != String(expected.get("label", "")):
-			push_warning("Terrain grammar editor base terrain option %d must be %s labeled %s." % [index, String(expected.get("id", "")), String(expected.get("label", ""))])
-		if terrain_id not in terrain_ids:
-			push_warning("Terrain grammar editor base terrain option %s must reference an authored terrain id." % terrain_id)
-		if family_id != String(expected.get("family", "")) or atlas_id != String(expected.get("atlas", "")):
-			push_warning("Terrain grammar editor base terrain option %s must map to HoMM3 family %s / atlas %s." % [terrain_id, String(expected.get("family", "")), String(expected.get("atlas", ""))])
-		var mapping = terrain_id_map.get(terrain_id, {}) if terrain_id_map is Dictionary else {}
-		if mapping is Dictionary and String(mapping.get("family", "")) != family_id:
-			push_warning("Terrain grammar editor base terrain option %s must agree with its HoMM3 terrain_id_map family." % terrain_id)
-		var family = terrain_families.get(family_id, {}) if terrain_families is Dictionary else {}
-		if family is Dictionary and String(family.get("atlas", "")) != atlas_id:
-			push_warning("Terrain grammar editor base terrain option %s must agree with its HoMM3 family atlas." % terrain_id)
-
-func _validate_terrain_tile_art(terrain_class: Dictionary, terrain_id: String) -> void:
-	var tile_art = terrain_class.get("tile_art", {})
-	if not (tile_art is Dictionary):
-		push_warning("Terrain grammar %s must define tile_art for the original terrain tile bank." % terrain_id)
-		return
-	var base_tiles = tile_art.get("base_tiles", [])
-	if not (base_tiles is Array) or base_tiles.is_empty():
-		push_warning("Terrain grammar %s tile_art must define base_tiles." % terrain_id)
-	else:
-		for entry in base_tiles:
-			if not (entry is Dictionary):
-				push_warning("Terrain grammar %s tile_art contains a non-dictionary base tile." % terrain_id)
-				continue
-			var path := String(entry.get("path", ""))
-			if String(entry.get("variant_key", "")) == "":
-				push_warning("Terrain grammar %s base tile %s must define variant_key." % [terrain_id, path])
-			_validate_art_path(path, "Terrain grammar %s base tile" % terrain_id)
-	var edge_overlays = tile_art.get("edge_overlays", {})
-	if not (edge_overlays is Dictionary):
-		push_warning("Terrain grammar %s tile_art must define edge_overlays." % terrain_id)
-		return
-	for direction in ["N", "E", "S", "W"]:
-		var path := String(edge_overlays.get(direction, ""))
-		_validate_art_path(path, "Terrain grammar %s edge overlay %s" % [terrain_id, direction])
-
-func _validate_road_overlay_tile_art(overlay: Dictionary, overlay_id: String) -> void:
-	var tile_art = overlay.get("tile_art", {})
-	if not (tile_art is Dictionary):
-		push_warning("Terrain grammar overlay %s must define tile_art." % overlay_id)
-		return
-	_validate_art_path(String(tile_art.get("center", "")), "Terrain grammar overlay %s center tile" % overlay_id)
-	var connectors = tile_art.get("connectors", {})
-	if not (connectors is Dictionary):
-		push_warning("Terrain grammar overlay %s tile_art must define connectors." % overlay_id)
-		return
-	for direction in ["N", "E", "S", "W", "NE", "SE", "SW", "NW"]:
-		_validate_art_path(String(connectors.get(direction, "")), "Terrain grammar overlay %s connector %s" % [overlay_id, direction])
-	var connection_pieces = tile_art.get("connection_pieces", {})
-	if connection_pieces is Dictionary:
-		for connection_key in ["NE+SW", "NW+SE"]:
-			_validate_art_path(String(connection_pieces.get(connection_key, "")), "Terrain grammar overlay %s connection piece %s" % [overlay_id, connection_key])
-
-func _validate_art_path(path: String, label: String) -> void:
-	if path == "":
-		push_warning("%s must define a runtime art path." % label)
-		return
-	if not path.begins_with("res://"):
-		push_warning("%s path %s must be a res:// path." % [label, path])
-		return
-	if not ResourceLoader.exists(path):
-		push_warning("%s path %s does not exist." % [label, path])
 
 func _validate_terrain_layer(layer: Dictionary, scenario_index: Dictionary, grammar: Dictionary) -> void:
 	var scenario_id := String(layer.get("id", ""))
@@ -995,667 +459,6 @@ func _terrain_id_from_map(map_data: Variant, x: int, y: int) -> String:
 	if not (row is Array) or x < 0 or x >= row.size():
 		return ""
 	return String(row[x])
-
-func _looks_like_hex_color(value: String) -> bool:
-	return value.begins_with("#") and value.length() in [7, 9]
-
-func _validate_biome(biome: Dictionary) -> void:
-	var biome_id := String(biome.get("id", ""))
-	if String(biome.get("name", "")) == "":
-		push_warning("Biome %s must define a name." % biome_id)
-	var map_tile_ids = biome.get("map_tile_ids", [])
-	if not (map_tile_ids is Array) or map_tile_ids.is_empty():
-		push_warning("Biome %s must define at least one map_tile_id." % biome_id)
-	elif map_tile_ids is Array:
-		for tile_id_value in map_tile_ids:
-			if String(tile_id_value) == "":
-				push_warning("Biome %s cannot contain an empty map_tile_id." % biome_id)
-	if int(biome.get("movement_cost", 0)) <= 0:
-		push_warning("Biome %s must define movement_cost > 0." % biome_id)
-	if not biome.has("passable"):
-		push_warning("Biome %s must explicitly define passable." % biome_id)
-	for family_id_value in biome.get("allowed_site_families", []):
-		var family_id := String(family_id_value)
-		if family_id != "" and family_id not in _supported_resource_site_families():
-			push_warning("Biome %s references unsupported site family %s." % [biome_id, family_id])
-	for list_key in ["encounter_palette_tags", "decoration_palette", "blocker_palette", "route_roles"]:
-		var values = biome.get(list_key, [])
-		if not (values is Array) or values.is_empty():
-			push_warning("Biome %s must define non-empty %s." % [biome_id, list_key])
-
-func _unit_is_neutral(unit: Dictionary) -> bool:
-	return bool(unit.get("neutral", false)) or String(unit.get("affiliation", "")) == "neutral"
-
-func _validate_recruit_payload(
-	label: String,
-	recruits: Variant,
-	unit_index: Dictionary,
-	require_neutral_units: bool = false
-) -> void:
-	if recruits == null:
-		return
-	if not (recruits is Dictionary):
-		push_warning("%s must be a dictionary." % label)
-		return
-	var payload: Dictionary = recruits
-	for unit_id_value in payload.keys():
-		var unit_id := String(unit_id_value)
-		if unit_id == "" or not unit_index.has(unit_id):
-			push_warning("%s references missing unit %s." % [label, unit_id])
-			continue
-		if int(payload[unit_id_value]) <= 0:
-			push_warning("%s must define positive recruit counts for %s." % [label, unit_id])
-		if require_neutral_units and not _unit_is_neutral(unit_index.get(unit_id, {})):
-			push_warning("%s must use neutral units; %s is faction-linked." % [label, unit_id])
-
-func _validate_resource_site(
-	site: Dictionary,
-	unit_index: Dictionary,
-	spell_index: Dictionary,
-	neutral_dwelling_index: Dictionary,
-	army_group_index: Dictionary,
-	encounter_index: Dictionary
-) -> void:
-	var site_id := String(site.get("id", ""))
-	if String(site.get("name", "")) == "":
-		push_warning("Resource site %s must define a name." % site_id)
-	var family := String(site.get("family", "one_shot_pickup"))
-	if family == "":
-		family = "one_shot_pickup"
-	if family not in _supported_resource_site_families():
-		push_warning("Resource site %s uses unsupported family %s." % [site_id, family])
-
-	for resource_key in ["rewards", "claim_rewards", "control_income", "service_cost"]:
-		var resources = site.get(resource_key, {})
-		if site.has(resource_key) and not (resources is Dictionary):
-			push_warning("Resource site %s %s must be a dictionary." % [site_id, resource_key])
-		elif resources is Dictionary:
-			for key in resources.keys():
-				if String(key) == "":
-					push_warning("Resource site %s %s cannot contain an empty resource key." % [site_id, resource_key])
-				if int(resources[key]) < 0:
-					push_warning("Resource site %s %s values must be >= 0 for %s." % [site_id, resource_key, String(key)])
-
-	for recruit_key in ["claim_recruits", "weekly_recruits"]:
-		var recruits = site.get(recruit_key, {})
-		if site.has(recruit_key) and not (recruits is Dictionary):
-			push_warning("Resource site %s %s must be a dictionary." % [site_id, recruit_key])
-		elif recruits is Dictionary:
-			_validate_recruit_payload("Resource site %s %s" % [site_id, recruit_key], recruits, unit_index)
-
-	if site.has("claim_flags"):
-		var claim_flags = site.get("claim_flags", {})
-		if not (claim_flags is Dictionary):
-			push_warning("Resource site %s claim_flags must be a dictionary." % site_id)
-		else:
-			for flag_key in claim_flags.keys():
-				if String(flag_key).strip_edges() == "":
-					push_warning("Resource site %s claim_flags cannot contain an empty flag key." % site_id)
-
-	var neutral_roster = site.get("neutral_roster", {})
-	if site.has("neutral_roster"):
-		if not (neutral_roster is Dictionary):
-			push_warning("Resource site %s neutral_roster must be a dictionary." % site_id)
-		else:
-			_validate_recruit_payload(
-				"Resource site %s neutral_roster claim_recruits" % site_id,
-				neutral_roster.get("claim_recruits", {}),
-				unit_index,
-				true
-			)
-			_validate_recruit_payload(
-				"Resource site %s neutral_roster weekly_recruits" % site_id,
-				neutral_roster.get("weekly_recruits", {}),
-				unit_index,
-				true
-			)
-			var guard_army_group_id := String(neutral_roster.get("guard_army_group_id", ""))
-			if guard_army_group_id != "" and not army_group_index.has(guard_army_group_id):
-				push_warning("Resource site %s neutral_roster references missing guard army group %s." % [site_id, guard_army_group_id])
-			var guard_encounter_id := String(neutral_roster.get("guard_encounter_id", ""))
-			if guard_encounter_id != "" and not encounter_index.has(guard_encounter_id):
-				push_warning("Resource site %s neutral_roster references missing guard encounter %s." % [site_id, guard_encounter_id])
-
-	var lesson_spell_ids := []
-	var legacy_spell_id := String(site.get("learn_spell_id", ""))
-	if legacy_spell_id != "":
-		lesson_spell_ids.append(legacy_spell_id)
-	var authored_spell_ids = site.get("learn_spell_ids", [])
-	if site.has("learn_spell_ids") and not (authored_spell_ids is Array):
-		push_warning("Resource site %s learn_spell_ids must be an array." % site_id)
-	elif authored_spell_ids is Array:
-		for spell_id_value in authored_spell_ids:
-			var authored_spell_id := String(spell_id_value)
-			if authored_spell_id != "" and authored_spell_id not in lesson_spell_ids:
-				lesson_spell_ids.append(authored_spell_id)
-	var lesson_status := String(site.get("runtime_boundary", {}).get("status", ""))
-	for spell_id in lesson_spell_ids:
-		if not spell_index.has(spell_id):
-			push_warning("Resource site %s references missing lesson spell %s." % [site_id, spell_id])
-		elif String(spell_index.get(spell_id, {}).get("context", "")) != "overworld" \
-				and lesson_status not in ["high_arcanum_live", "triune_arcanum_live"] \
-				and not _visit_shrine_teaches_spell_tier(site, spell_index.get(spell_id, {})):
-			push_warning("Resource site %s lesson spell %s must be an overworld spell." % [site_id, spell_id])
-
-	match family:
-		"mine":
-			if not bool(site.get("persistent_control", false)):
-				push_warning("Mine site %s must be persistent-control content." % site_id)
-			if not (site.get("control_income", {}) is Dictionary) or site.get("control_income", {}).is_empty():
-				push_warning("Mine site %s must define control_income." % site_id)
-		"neutral_dwelling":
-			var dwelling_family_id := String(site.get("neutral_dwelling_family_id", ""))
-			if dwelling_family_id != "" and not neutral_dwelling_index.has(dwelling_family_id):
-				push_warning("Neutral dwelling site %s references missing neutral dwelling family %s." % [site_id, dwelling_family_id])
-			var scope := String(site.get("dwelling_scope", ""))
-			if scope != "" and scope not in ["neutral", "faction_linked", "biome_linked"]:
-				push_warning("Neutral dwelling site %s uses unsupported dwelling_scope %s." % [site_id, scope])
-			var dwelling_recruits = site.get("weekly_recruits", {})
-			var refugee_camp := String(site.get("dwelling_kind", "")) == "refugee_camp"
-			if not refugee_camp and not (dwelling_recruits is Dictionary and not dwelling_recruits.is_empty()):
-				push_warning("Neutral dwelling site %s must define the creatures it musters in weekly_recruits." % site_id)
-			if site.has("claim_recruits"):
-				push_warning("Neutral dwelling site %s must not grant claim_recruits; creatures are hired at the dwelling." % site_id)
-		"scouting_structure":
-			if not bool(site.get("persistent_control", false)):
-				push_warning("Scouting site %s must be persistent-control content." % site_id)
-			if int(site.get("vision_radius", 0)) <= 0:
-				push_warning("Scouting site %s must define vision_radius > 0." % site_id)
-		"guarded_reward_site":
-			if not bool(site.get("guarded", false)):
-				push_warning("Guarded reward site %s must set guarded=true." % site_id)
-			var guard_profile = site.get("guard_profile", {})
-			if not (guard_profile is Dictionary) or guard_profile.is_empty():
-				push_warning("Guarded reward site %s must define guard_profile." % site_id)
-		"transit_object":
-			var transit_profile = site.get("transit_profile", {})
-			if not (transit_profile is Dictionary) or transit_profile.is_empty():
-				push_warning("Transit site %s must define transit_profile." % site_id)
-		"repeatable_service":
-			if not bool(site.get("repeatable", false)):
-				push_warning("Repeatable service site %s must set repeatable=true." % site_id)
-			if int(site.get("visit_cooldown_days", 0)) <= 0:
-				push_warning("Repeatable service site %s must define visit_cooldown_days > 0." % site_id)
-
-func _validate_map_object(
-	map_object: Dictionary,
-	biome_index: Dictionary,
-	resource_site_index: Dictionary,
-	faction_index: Dictionary
-) -> void:
-	var object_id := String(map_object.get("id", ""))
-	if String(map_object.get("name", "")) == "":
-		push_warning("Map object %s must define a name." % object_id)
-	var family := String(map_object.get("family", ""))
-	if family == "" or family not in _supported_map_object_families():
-		push_warning("Map object %s uses unsupported family %s." % [object_id, family])
-	var biome_ids = map_object.get("biome_ids", [])
-	if not (biome_ids is Array) or biome_ids.is_empty():
-		push_warning("Map object %s must define at least one biome_id." % object_id)
-	elif biome_ids is Array:
-		for biome_id_value in biome_ids:
-			var biome_id := String(biome_id_value)
-			if biome_id == "" or not biome_index.has(biome_id):
-				push_warning("Map object %s references missing biome %s." % [object_id, biome_id])
-	var site_id := String(map_object.get("resource_site_id", ""))
-	if site_id != "" and not resource_site_index.has(site_id):
-		push_warning("Map object %s references missing resource_site_id %s." % [object_id, site_id])
-	var faction_id := String(map_object.get("faction_id", ""))
-	if faction_id != "" and not faction_index.has(faction_id):
-		push_warning("Map object %s references missing faction_id %s." % [object_id, faction_id])
-	var footprint = map_object.get("footprint", {})
-	if not (footprint is Dictionary):
-		push_warning("Map object %s must define a footprint dictionary." % object_id)
-	else:
-		if int(footprint.get("width", 0)) <= 0 or int(footprint.get("height", 0)) <= 0:
-			push_warning("Map object %s footprint dimensions must be > 0." % object_id)
-	if not map_object.has("passable"):
-		push_warning("Map object %s must explicitly define passable." % object_id)
-	if not map_object.has("visitable"):
-		push_warning("Map object %s must explicitly define visitable." % object_id)
-	var roles = map_object.get("map_roles", [])
-	if not (roles is Array) or roles.is_empty():
-		push_warning("Map object %s must define non-empty map_roles." % object_id)
-
-func _validate_neutral_dwelling(
-	dwelling: Dictionary,
-	unit_index: Dictionary,
-	resource_site_index: Dictionary,
-	map_object_index: Dictionary,
-	army_group_index: Dictionary,
-	encounter_index: Dictionary,
-	biome_index: Dictionary
-) -> void:
-	var dwelling_id := String(dwelling.get("id", ""))
-	if String(dwelling.get("name", "")) == "":
-		push_warning("Neutral dwelling %s must define a name." % dwelling_id)
-	if String(dwelling.get("summary", "")) == "":
-		push_warning("Neutral dwelling %s must define a summary." % dwelling_id)
-	for biome_id_value in dwelling.get("biome_ids", []):
-		var biome_id := String(biome_id_value)
-		if biome_id == "" or not biome_index.has(biome_id):
-			push_warning("Neutral dwelling %s references missing biome %s." % [dwelling_id, biome_id])
-	var unit_ids = dwelling.get("unit_ids", [])
-	if not (unit_ids is Array) or unit_ids.is_empty():
-		push_warning("Neutral dwelling %s must define unit_ids." % dwelling_id)
-	elif unit_ids is Array:
-		for unit_id_value in unit_ids:
-			var unit_id := String(unit_id_value)
-			if unit_id == "" or not unit_index.has(unit_id):
-				push_warning("Neutral dwelling %s references missing unit %s." % [dwelling_id, unit_id])
-			elif not _unit_is_neutral(unit_index.get(unit_id, {})):
-				push_warning("Neutral dwelling %s unit %s must be authored as neutral." % [dwelling_id, unit_id])
-	for site_id_value in dwelling.get("site_ids", []):
-		var site_id := String(site_id_value)
-		if site_id == "" or not resource_site_index.has(site_id):
-			push_warning("Neutral dwelling %s references missing site %s." % [dwelling_id, site_id])
-			continue
-		var site: Dictionary = resource_site_index.get(site_id, {})
-		if String(site.get("family", "")) != "neutral_dwelling":
-			push_warning("Neutral dwelling %s site %s must use family neutral_dwelling." % [dwelling_id, site_id])
-		if String(site.get("neutral_dwelling_family_id", "")) not in ["", dwelling_id]:
-			push_warning("Neutral dwelling %s site %s references a different neutral_dwelling_family_id." % [dwelling_id, site_id])
-	for object_id_value in dwelling.get("map_object_ids", []):
-		var object_id := String(object_id_value)
-		if object_id == "" or not map_object_index.has(object_id):
-			push_warning("Neutral dwelling %s references missing map object %s." % [dwelling_id, object_id])
-			continue
-		if String(map_object_index.get(object_id, {}).get("family", "")) != "neutral_dwelling":
-			push_warning("Neutral dwelling %s map object %s must use family neutral_dwelling." % [dwelling_id, object_id])
-	for group_id_value in dwelling.get("army_group_ids", []):
-		var group_id := String(group_id_value)
-		if group_id == "" or not army_group_index.has(group_id):
-			push_warning("Neutral dwelling %s references missing army group %s." % [dwelling_id, group_id])
-			continue
-		if String(army_group_index.get(group_id, {}).get("affiliation", "")) != "neutral":
-			push_warning("Neutral dwelling %s army group %s must be neutral." % [dwelling_id, group_id])
-	for encounter_id_value in dwelling.get("encounter_ids", []):
-		var encounter_id := String(encounter_id_value)
-		if encounter_id == "" or not encounter_index.has(encounter_id):
-			push_warning("Neutral dwelling %s references missing encounter %s." % [dwelling_id, encounter_id])
-			continue
-		var encounter_group_id := String(encounter_index.get(encounter_id, {}).get("enemy_group_id", ""))
-		if encounter_group_id != "" and army_group_index.has(encounter_group_id):
-			if String(army_group_index.get(encounter_group_id, {}).get("affiliation", "")) != "neutral":
-				push_warning("Neutral dwelling %s encounter %s must use a neutral army group." % [dwelling_id, encounter_id])
-
-func _validate_faction(faction: Dictionary, town_index: Dictionary, hero_index: Dictionary) -> void:
-	var faction_id := String(faction.get("id", ""))
-	for town_id_value in faction.get("town_ids", []):
-		var town_id := String(town_id_value)
-		if town_id != "" and not town_index.has(town_id):
-			push_warning("Faction %s references missing town id %s." % [faction_id, town_id])
-	for hero_id_value in faction.get("hero_ids", []):
-		var hero_id := String(hero_id_value)
-		if hero_id != "" and not hero_index.has(hero_id):
-			push_warning("Faction %s references missing hero id %s." % [faction_id, hero_id])
-
-func _validate_hero(hero: Dictionary, faction_index: Dictionary, spell_index: Dictionary) -> void:
-	var hero_id := String(hero.get("id", ""))
-	var faction_id := String(hero.get("faction_id", ""))
-	if faction_id == "" or not faction_index.has(faction_id):
-		push_warning("Hero %s references missing faction id %s." % [hero_id, faction_id])
-	elif hero_id not in faction_index.get(faction_id, {}).get("hero_ids", []):
-		push_warning("Hero %s must be listed in faction %s hero_ids." % [hero_id, faction_id])
-	if int(hero.get("base_movement", 0)) <= 0:
-		push_warning("Hero %s must define base_movement > 0." % hero_id)
-	var recruit_cost = hero.get("recruit_cost", {})
-	if hero.has("recruit_cost") and not (recruit_cost is Dictionary):
-		push_warning("Hero %s recruit_cost must be a dictionary." % hero_id)
-	elif recruit_cost is Dictionary:
-		for resource_key in recruit_cost.keys():
-			if String(resource_key) == "":
-				push_warning("Hero %s recruit_cost cannot contain an empty resource key." % hero_id)
-			if int(recruit_cost[resource_key]) < 0:
-				push_warning("Hero %s recruit_cost must be >= 0 for %s." % [hero_id, String(resource_key)])
-	for spell_id_value in hero.get("starting_spell_ids", []):
-		var spell_id := String(spell_id_value)
-		if spell_id != "" and not spell_index.has(spell_id):
-			push_warning("Hero %s references missing starting spell id %s." % [hero_id, spell_id])
-
-func _validate_unit(unit: Dictionary, faction_index: Dictionary) -> void:
-	var unit_id := String(unit.get("id", ""))
-	var faction_id := String(unit.get("faction_id", ""))
-	if _unit_is_neutral(unit):
-		if faction_id != "":
-			push_warning("Neutral unit %s should not reference faction id %s." % [unit_id, faction_id])
-	elif faction_id == "" or not faction_index.has(faction_id):
-		push_warning("Unit %s references missing faction id %s." % [unit_id, faction_id])
-	if int(unit.get("hp", 0)) <= 0:
-		push_warning("Unit %s must define hp > 0." % unit_id)
-	if int(unit.get("max_damage", 0)) <= 0:
-		push_warning("Unit %s must define max_damage > 0." % unit_id)
-
-func _validate_hero_art_manifest(hero_index: Dictionary, hero_art_index: Dictionary) -> void:
-	for hero_id in hero_index.keys():
-		if not hero_art_index.has(hero_id):
-			push_warning("Hero art manifest is missing hero %s." % hero_id)
-			continue
-		var record: Dictionary = hero_art_index.get(hero_id, {})
-		var path := String(record.get("portrait", ""))
-		if path == "" or not path.begins_with("res://"):
-			push_warning("Hero art %s must define portrait as a res:// path." % hero_id)
-		elif not ResourceLoader.exists(path):
-			push_warning("Hero art %s portrait file is missing: %s." % [hero_id, path])
-	for hero_id in hero_art_index.keys():
-		if not hero_index.has(hero_id):
-			push_warning("Hero art manifest references unknown hero %s." % hero_id)
-
-func _validate_unit_art_manifest(unit_index: Dictionary, unit_art_index: Dictionary) -> void:
-	for unit_id in unit_index.keys():
-		if not unit_art_index.has(unit_id):
-			push_warning("Unit art manifest is missing unit %s." % unit_id)
-			continue
-		var record: Dictionary = unit_art_index.get(unit_id, {})
-		for surface in ["portrait", "battle_icon", "battle_standee", "overworld_icon"]:
-			var path := String(record.get(surface, ""))
-			if path == "" or not path.begins_with("res://"):
-				push_warning("Unit art %s must define %s as a res:// path." % [unit_id, surface])
-			elif not ResourceLoader.exists(path):
-				push_warning("Unit art %s %s file is missing: %s." % [unit_id, surface, path])
-	for unit_id in unit_art_index.keys():
-		if not unit_index.has(unit_id):
-			push_warning("Unit art manifest references unknown unit %s." % unit_id)
-
-func _validate_unit_animation_manifest(unit_index: Dictionary, manifest: Dictionary, unit_animation_index: Dictionary) -> void:
-	if String(manifest.get("schema_id", "")) != "unit_animation_manifest_v1":
-		push_warning("Unit animation manifest has unexpected schema id %s." % manifest.get("schema_id", ""))
-	if int(manifest.get("frames_per_state", 0)) <= 0:
-		push_warning("Unit animation manifest must define frames_per_state > 0.")
-	var states: Array = manifest.get("states", []) if manifest.get("states", []) is Array else []
-	if states.is_empty():
-		push_warning("Unit animation manifest must define battle troop states.")
-	for unit_id in unit_index.keys():
-		if not unit_animation_index.has(unit_id):
-			push_warning("Unit animation manifest is missing unit %s." % unit_id)
-			continue
-		var record: Dictionary = unit_animation_index.get(unit_id, {})
-		var path := String(record.get("sprite_sheet", ""))
-		if path == "" or not path.begins_with("res://"):
-			push_warning("Unit animation %s must define sprite_sheet as a res:// path." % unit_id)
-		elif not ResourceLoader.exists(path):
-			push_warning("Unit animation %s sprite sheet file is missing: %s." % [unit_id, path])
-		var record_states: Array = record.get("states", []) if record.get("states", []) is Array else []
-		if record_states.size() != states.size():
-			push_warning("Unit animation %s state count %d does not match manifest state count %d." % [unit_id, record_states.size(), states.size()])
-	for unit_id in unit_animation_index.keys():
-		if not unit_index.has(unit_id):
-			push_warning("Unit animation manifest references unknown unit %s." % unit_id)
-
-func _validate_army_group(army_group: Dictionary, faction_index: Dictionary, unit_index: Dictionary) -> void:
-	var group_id := String(army_group.get("id", ""))
-	var faction_id := String(army_group.get("faction_id", ""))
-	var affiliation := String(army_group.get("affiliation", ""))
-	if affiliation == "neutral":
-		if faction_id != "":
-			push_warning("Neutral army group %s should not reference faction id %s." % [group_id, faction_id])
-	elif faction_id == "":
-		push_warning("Army group %s must define faction_id or affiliation=neutral." % group_id)
-	elif not faction_index.has(faction_id):
-		push_warning("Army group %s references missing faction id %s." % [group_id, faction_id])
-
-	var stacks = army_group.get("stacks", [])
-	if not (stacks is Array) or stacks.is_empty():
-		push_warning("Army group %s has no stacks." % group_id)
-		return
-
-	for stack in stacks:
-		if not (stack is Dictionary):
-			continue
-		var unit_id := String(stack.get("unit_id", ""))
-		if unit_id == "" or not unit_index.has(unit_id):
-			push_warning("Army group %s references missing unit id %s." % [group_id, unit_id])
-		elif affiliation == "neutral" and not _unit_is_neutral(unit_index.get(unit_id, {})):
-			push_warning("Neutral army group %s stack %s must use neutral units." % [group_id, unit_id])
-		if int(stack.get("count", 0)) <= 0:
-			push_warning("Army group %s has non-positive stack count for unit %s." % [group_id, unit_id])
-
-func _validate_building(building: Dictionary, building_index: Dictionary, unit_index: Dictionary) -> void:
-	var building_id := String(building.get("id", ""))
-	var unlock_unit_id := String(building.get("unlock_unit_id", ""))
-	if unlock_unit_id != "" and not unit_index.has(unlock_unit_id):
-		push_warning("Building %s references missing unlock_unit_id %s." % [building_id, unlock_unit_id])
-	if building.has("spell_tier") and int(building.get("spell_tier", 0)) <= 0:
-		push_warning("Building %s must define spell_tier > 0 when present." % building_id)
-
-	var requires = building.get("requires", [])
-	if requires is Array:
-		for requirement in requires:
-			var requirement_id := String(requirement)
-			if requirement_id != "" and not building_index.has(requirement_id):
-				push_warning("Building %s references missing requirement %s." % [building_id, requirement_id])
-
-func _validate_town(
-	town: Dictionary,
-	faction_index: Dictionary,
-	building_index: Dictionary,
-	unit_index: Dictionary,
-	spell_index: Dictionary
-) -> void:
-	var town_id := String(town.get("id", ""))
-	var faction_id := String(town.get("faction_id", ""))
-	if faction_id == "" or not faction_index.has(faction_id):
-		push_warning("Town %s references missing faction id %s." % [town_id, faction_id])
-
-	for building_id_value in town.get("starting_building_ids", []):
-		var building_id := String(building_id_value)
-		if building_id != "" and not building_index.has(building_id):
-			push_warning("Town %s references missing starting building id %s." % [town_id, building_id])
-
-	for building_id_value in town.get("buildable_building_ids", []):
-		var building_id := String(building_id_value)
-		if building_id != "" and not building_index.has(building_id):
-			push_warning("Town %s references missing buildable building id %s." % [town_id, building_id])
-
-	for garrison_stack in town.get("garrison", []):
-		if not (garrison_stack is Dictionary):
-			continue
-		var unit_id := String(garrison_stack.get("unit_id", ""))
-		if unit_id == "" or not unit_index.has(unit_id):
-			push_warning("Town %s references missing garrison unit id %s." % [town_id, unit_id])
-
-	var spell_library = town.get("spell_library", [])
-	if spell_library is Array:
-		for entry in spell_library:
-			if not (entry is Dictionary):
-				push_warning("Town %s contains a non-dictionary spell library entry." % town_id)
-				continue
-			if int(entry.get("tier", 0)) <= 0:
-				push_warning("Town %s spell library entries must define tier > 0." % town_id)
-			for spell_id_value in entry.get("spell_ids", []):
-				var spell_id := String(spell_id_value)
-				if spell_id == "" or not spell_index.has(spell_id):
-					push_warning("Town %s references missing spell library id %s." % [town_id, spell_id])
-
-func _validate_encounter(encounter: Dictionary, army_group_index: Dictionary, spell_index: Dictionary) -> void:
-	var encounter_id := String(encounter.get("id", ""))
-	var enemy_group_id := String(encounter.get("enemy_group_id", ""))
-	if enemy_group_id == "" or not army_group_index.has(enemy_group_id):
-		push_warning("Encounter %s references missing enemy_group_id %s." % [encounter_id, enemy_group_id])
-	if int(encounter.get("max_rounds", 0)) <= 0:
-		push_warning("Encounter %s must define max_rounds > 0." % encounter_id)
-	var commander = encounter.get("enemy_commander", {})
-	if encounter.has("enemy_commander") and not (commander is Dictionary):
-		push_warning("Encounter %s enemy commander must be a dictionary." % encounter_id)
-	if commander is Dictionary and not commander.is_empty():
-		if not (commander.get("command", {}) is Dictionary):
-			push_warning("Encounter %s enemy commander must define a command dictionary." % encounter_id)
-		for spell_id_value in commander.get("starting_spell_ids", []):
-			var spell_id := String(spell_id_value)
-			if spell_id == "" or not spell_index.has(spell_id):
-				push_warning("Encounter %s references missing enemy commander spell id %s." % [encounter_id, spell_id])
-				continue
-			var spell = spell_index.get(spell_id, {})
-			if String(spell.get("context", "")) != "battle":
-				push_warning("Encounter %s enemy commander spell %s must be a battle spell." % [encounter_id, spell_id])
-
-func _validate_artifact(artifact: Dictionary) -> void:
-	var artifact_id := String(artifact.get("id", ""))
-	var slot := String(artifact.get("slot", ""))
-	if slot == "":
-		push_warning("Artifact %s must define a slot." % artifact_id)
-	elif slot not in ["boots", "banner", "armor", "trinket"]:
-		push_warning("Artifact %s uses unsupported slot %s." % [artifact_id, slot])
-
-	var bonuses = artifact.get("bonuses", {})
-	if not (bonuses is Dictionary) or bonuses.is_empty():
-		push_warning("Artifact %s must define at least one bonus." % artifact_id)
-
-func _validate_spell_school_icons(icon_index: Dictionary) -> void:
-	var expected_school_ids := ["beacon", "mire", "lens", "root", "furnace", "veil", "old_measure"]
-	for school_id in expected_school_ids:
-		var icon: Dictionary = icon_index.get(school_id, {}) if icon_index.get(school_id, {}) is Dictionary else {}
-		if icon.is_empty():
-			push_warning("Spell school %s must define an icon manifest row." % school_id)
-			continue
-		if String(icon.get("icon_id", "")) != "spell_school_sigil_%s" % school_id:
-			push_warning("Spell school %s must own its stable sigil icon id." % school_id)
-		if String(icon.get("material_language", "")).strip_edges() == "":
-			push_warning("Spell school %s must define material language." % school_id)
-		_validate_art_path(String(icon.get("icon_path", "")), "Spell school %s sigil" % school_id)
-	for school_id in icon_index:
-		if String(school_id) not in expected_school_ids:
-			push_warning("Spell school icon manifest contains unsupported school %s." % String(school_id))
-
-func _validate_spell_icons(spell_index: Dictionary, icon_index: Dictionary) -> void:
-	for spell_id_value in icon_index:
-		var spell_id := String(spell_id_value)
-		var icon: Dictionary = icon_index.get(spell_id, {}) if icon_index.get(spell_id, {}) is Dictionary else {}
-		var spell: Dictionary = spell_index.get(spell_id, {}) if spell_index.get(spell_id, {}) is Dictionary else {}
-		if spell.is_empty():
-			push_warning("Spell icon manifest references unsupported spell %s." % spell_id)
-			continue
-		if String(icon.get("spell_id", "")) != spell_id:
-			push_warning("Spell icon %s must retain its exact spell id." % spell_id)
-		if String(icon.get("school_id", "")) != String(spell.get("school_id", "")):
-			push_warning("Spell icon %s must retain its authored school id." % spell_id)
-		if String(icon.get("icon_id", "")) != "spell_signature_icon_%s" % spell_id.trim_prefix("spell_"):
-			push_warning("Spell icon %s must own its stable signature icon id." % spell_id)
-		_validate_art_path(String(icon.get("icon_path", "")), "Spell %s signature icon" % spell_id)
-
-func _validate_faction_crests(faction_index: Dictionary, crest_index: Dictionary) -> void:
-	for faction_id_value in faction_index:
-		var faction_id := String(faction_id_value)
-		var crest: Dictionary = crest_index.get(faction_id, {}) if crest_index.get(faction_id, {}) is Dictionary else {}
-		if crest.is_empty():
-			push_warning("Faction %s must define a crest manifest row." % faction_id)
-			continue
-		if String(crest.get("crest_id", "")) != "faction_crest_%s" % faction_id.trim_prefix("faction_"):
-			push_warning("Faction %s must own its stable crest id." % faction_id)
-		if String(crest.get("material_language", "")).strip_edges() == "":
-			push_warning("Faction %s must define crest material language." % faction_id)
-		var icon_path := String(crest.get("icon_path", ""))
-		if not icon_path.begins_with("res://art/factions/runtime/crests/") or not icon_path.ends_with(".png"):
-			push_warning("Faction %s crest must use the production faction crest art domain." % faction_id)
-		else:
-			_validate_art_path(icon_path, "Faction %s crest" % faction_id)
-	for faction_id_value in crest_index:
-		var faction_id := String(faction_id_value)
-		if not faction_index.has(faction_id):
-			push_warning("Faction crest manifest contains unsupported faction %s." % faction_id)
-
-func _validate_building_category_icons(icon_index: Dictionary) -> void:
-	var expected_category_ids := ["civic", "dwelling", "economy", "support", "magic"]
-	for category_id in expected_category_ids:
-		var icon: Dictionary = icon_index.get(category_id, {}) if icon_index.get(category_id, {}) is Dictionary else {}
-		if icon.is_empty():
-			push_warning("Building category %s must define an icon manifest row." % category_id)
-			continue
-		if String(icon.get("icon_id", "")) != "building_category_sigil_%s" % category_id:
-			push_warning("Building category %s must own its stable sigil icon id." % category_id)
-		if String(icon.get("material_language", "")).strip_edges() == "":
-			push_warning("Building category %s must define material language." % category_id)
-		_validate_art_path(String(icon.get("icon_path", "")), "Building category %s sigil" % category_id)
-	for category_id in icon_index:
-		if String(category_id) not in expected_category_ids:
-			push_warning("Building category icon manifest contains unsupported category %s." % String(category_id))
-
-func _validate_building_art_manifest(building_index: Dictionary, art_index: Dictionary) -> void:
-	for building_id_value in art_index:
-		var building_id := String(building_id_value)
-		var art: Dictionary = art_index.get(building_id, {}) if art_index.get(building_id, {}) is Dictionary else {}
-		if not building_index.has(building_id) or String(art.get("building_id", "")) != building_id:
-			push_warning("Building art manifest contains unsupported building %s." % building_id)
-			continue
-		if String(art.get("source_kind", "")) != "curated_original_building":
-			push_warning("Building %s must own curated original building art." % building_id)
-		var source_path := String(art.get("source_path", ""))
-		var icon_path := String(art.get("icon_path", ""))
-		if not source_path.begins_with("res://art/towns/source/buildings/curated/"):
-			push_warning("Building %s source must use the curated building art domain." % building_id)
-		elif OS.has_feature("editor"):
-			_validate_art_path(source_path, "Building %s curated source" % building_id)
-		if not icon_path.begins_with("res://art/towns/runtime/buildings/"):
-			push_warning("Building %s icon must use the runtime building art domain." % building_id)
-		else:
-			_validate_art_path(icon_path, "Building %s runtime icon" % building_id)
-
-func _validate_spell(spell: Dictionary) -> void:
-	var spell_id := String(spell.get("id", ""))
-	var school_id := String(spell.get("school_id", ""))
-	var tier := int(spell.get("tier", 0))
-	var accord_family := String(spell.get("accord_family", ""))
-	var primary_role := String(spell.get("primary_role", ""))
-	var role_categories = spell.get("role_categories", [])
-	var context := String(spell.get("context", ""))
-	if school_id not in ["beacon", "mire", "lens", "root", "furnace", "veil", "old_measure"]:
-		push_warning("Spell %s uses unsupported school_id %s." % [spell_id, school_id])
-	if tier < 1 or tier > 5:
-		push_warning("Spell %s tier must be between 1 and 5." % spell_id)
-	if accord_family == "":
-		push_warning("Spell %s must define accord_family." % spell_id)
-	if primary_role == "":
-		push_warning("Spell %s must define primary_role." % spell_id)
-	if not (role_categories is Array) or role_categories.is_empty():
-		push_warning("Spell %s must define role_categories." % spell_id)
-	elif "economy_map_utility" in role_categories and context != "overworld":
-		push_warning("Spell %s economy_map_utility role must use overworld context." % spell_id)
-	if context not in ["overworld", "battle"]:
-		push_warning("Spell %s uses unsupported context %s." % [spell_id, context])
-	if int(spell.get("mana_cost", 0)) <= 0:
-		push_warning("Spell %s must define mana_cost > 0." % spell_id)
-
-	var effect = spell.get("effect", {})
-	if not (effect is Dictionary):
-		push_warning("Spell %s must define an effect payload." % spell_id)
-		return
-
-	match String(effect.get("type", "")):
-		"restore_movement":
-			if int(effect.get("amount", 0)) <= 0:
-				push_warning("Spell %s must define restore_movement amount > 0." % spell_id)
-		"reveal_radius":
-			if int(effect.get("amount", effect.get("radius", 0))) <= 0:
-				push_warning("Spell %s must define reveal_radius amount > 0." % spell_id)
-		"damage_enemy":
-			if int(effect.get("base_damage", 0)) <= 0:
-				push_warning("Spell %s must define damage base_damage > 0." % spell_id)
-			if int(effect.get("power_scale", -1)) < 0:
-				push_warning("Spell %s must define damage power_scale >= 0." % spell_id)
-		"defense_buff", "initiative_buff", "attack_buff":
-			if int(effect.get("amount", 0)) <= 0:
-				push_warning("Spell %s must define buff amount > 0." % spell_id)
-			if int(effect.get("duration_rounds", 0)) <= 0:
-				push_warning("Spell %s must define duration_rounds > 0." % spell_id)
-		"control_enemy":
-			var status_effect = effect.get("status_effect", {})
-			if not (status_effect is Dictionary) or String(status_effect.get("effect_id", "")) == "":
-				push_warning("Spell %s must define control status_effect.effect_id." % spell_id)
-			if int(status_effect.get("duration_rounds", 0)) <= 0:
-				push_warning("Spell %s must define control duration_rounds > 0." % spell_id)
-		"recover_ally":
-			if int(effect.get("base_restore", effect.get("amount", 0))) <= 0:
-				push_warning("Spell %s must define recovery amount > 0." % spell_id)
-			if int(effect.get("duration_rounds", 0)) <= 0:
-				push_warning("Spell %s must define duration_rounds > 0." % spell_id)
-		"cleanse_ally":
-			var cleanse_effect_ids = effect.get("cleanse_effect_ids", [])
-			if not (cleanse_effect_ids is Array) or cleanse_effect_ids.is_empty():
-				push_warning("Spell %s must define cleanse_effect_ids." % spell_id)
-			if int(effect.get("duration_rounds", 0)) <= 0:
-				push_warning("Spell %s must define duration_rounds > 0." % spell_id)
-		_:
-			push_warning("Spell %s uses unsupported effect type %s." % [spell_id, String(effect.get("type", ""))])
 
 func _validate_scenario(
 	scenario: Dictionary,

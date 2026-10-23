@@ -4,12 +4,14 @@
 
 #include "compat_fuzz.hpp"
 
+#include "aurelion_rules/compat/godot_json.hpp"
 #include "aurelion_rules/compat/godot_math.hpp"
 #include "aurelion_rules/compat/godot_pcg.hpp"
 #include "aurelion_rules/compat/godot_string.hpp"
 #include "aurelion_rules/compat/sort_array.hpp"
 
 #include <cmath>
+#include <cstdio>
 #include <cstring>
 #include <limits>
 #include <vector>
@@ -215,6 +217,8 @@ public:
 	}
 
 	void emit_bool(bool value) { buffer_.push_back(value ? 1 : 0); }
+
+	void emit_byte(uint8_t value) { buffer_.push_back(value); }
 
 	void emit_text(const std::string &text) {
 		uint32_t length = static_cast<uint32_t>(text.size());
@@ -441,6 +445,198 @@ void fuzz_json_float(Fuzz &f, int64_t count) {
 	}
 }
 
+// --- JSON.parse: texts built from the draws, the same on both sides ---
+
+constexpr uint32_t kStringChars[8] = { 0x61, 0x5A, 0x20, 0x0A, 0xE9, 0x3A9, 0x4E2D, 0x1F600 };
+const char *const kSoup[24] = { "{", "}", "[", "]", ":", ",", "\"k\"", "\"a\"", "1", "-", "2.5e3", "true", "false", "null", "nul", "True", " ", "\n", "\t", "\r", "x", ".5", "1e", "\"" };
+const char *const kWords[5] = { "true", "false", "null", "nul", "True" };
+const char *const kKeys[5] = { "a", "b", "id", "a", "items" };
+const char *const kSeparators[4] = { ",", ", ", ",\n", " , " };
+
+std::string hex4(Fuzz &f, int64_t value) {
+	char text[8];
+	std::snprintf(text, sizeof(text), f.below(2) == 0 ? "%04x" : "%04X", static_cast<unsigned>(value));
+	return text;
+}
+
+void append_digits(Fuzz &f, std::string &text, int64_t count) {
+	for (int64_t d = 0; d < count; ++d) {
+		text.push_back(static_cast<char>('0' + f.below(10)));
+	}
+}
+
+std::string rand_number_text(Fuzz &f) {
+	std::string text;
+	if (f.below(4) == 0) {
+		text += "-";
+	}
+	append_digits(f, text, f.below(4) == 0 ? f.below(25) : 1 + f.below(6));
+	if (f.below(2) == 0) {
+		text += ".";
+		append_digits(f, text, f.below(4) == 0 ? f.below(25) : f.below(8));
+	}
+	if (f.below(3) == 0) {
+		text += f.below(2) == 0 ? "e" : "E";
+		const int64_t sign = f.below(3);
+		text += sign == 0 ? "" : (sign == 1 ? "+" : "-");
+		append_digits(f, text, f.below(4) == 0 ? 0 : (f.below(16) == 0 ? 3 : 1 + f.below(2)));
+	}
+	return text;
+}
+
+std::string rand_json_string(Fuzz &f) {
+	std::string text = "\"";
+	const int64_t pieces = f.below(12);
+	for (int64_t i = 0; i < pieces; ++i) {
+		const int64_t pick = f.below(20);
+		if (pick < 8) {
+			append_utf8(text, kStringChars[pick]);
+		} else if (pick < 16) {
+			static const char *const escapes[8] = { "\\b", "\\t", "\\n", "\\f", "\\r", "\\\"", "\\\\", "\\/" };
+			text += escapes[pick - 8];
+		} else if (pick == 16) {
+			text += "\\u" + hex4(f, f.below(65536));
+		} else if (pick == 17) {
+			text += "\\u" + hex4(f, 0xD800 + f.below(0x400));
+			text += "\\u" + hex4(f, 0xDC00 + f.below(0x400));
+		} else if (pick == 18) {
+			text += "\\u0000";
+		} else {
+			static const char *const bad[3] = { "\\x", "\\u12G4", "\\" };
+			text += bad[f.below(3)];
+		}
+	}
+	if (f.below(16) != 0) {
+		text += "\"";
+	}
+	return text;
+}
+
+std::string rand_json_value(Fuzz &f, int64_t depth) {
+	const int64_t mode = f.below(depth >= 3 ? 4 : 7);
+	if (mode == 0 || mode == 3) {
+		return rand_number_text(f);
+	}
+	if (mode == 1) {
+		return rand_json_string(f);
+	}
+	if (mode == 2) {
+		return kWords[f.below(5)];
+	}
+	std::string text = mode == 6 ? "{" : "[";
+	const int64_t count = f.below(5);
+	for (int64_t i = 0; i < count; ++i) {
+		if (i > 0) {
+			text += kSeparators[f.below(4)];
+		}
+		if (mode == 6) {
+			// One draw per statement: the operands of + have no set order.
+			text += std::string("\"") + kKeys[f.below(5)] + "\"";
+			text += f.below(2) == 0 ? ":" : ": ";
+		}
+		text += rand_json_value(f, depth + 1);
+	}
+	if (count > 0 && f.below(8) == 0) {
+		text += ",";
+	}
+	text += mode == 6 ? "}" : "]";
+	return text;
+}
+
+std::string rand_json_text(Fuzz &f) {
+	const int64_t mode = f.below(10);
+	if (mode <= 1) {
+		return rand_number_text(f);
+	}
+	if (mode == 2) {
+		return "[" + rand_number_text(f) + "]";
+	}
+	if (mode == 3) {
+		return rand_json_string(f);
+	}
+	if (mode <= 7) {
+		return rand_json_value(f, 0);
+	}
+	if (mode == 8) {
+		std::string text;
+		for (int64_t pieces = f.below(12); pieces > 0; --pieces) {
+			text += kSoup[f.below(24)];
+		}
+		return text;
+	}
+	if (f.below(128) == 0) {
+		const int64_t depth = 1020 + f.below(10);
+		const int64_t closes = f.below(2) == 0 ? depth : depth - 1;
+		return std::string(static_cast<size_t>(depth), '[') + std::string(static_cast<size_t>(closes), ']');
+	}
+	std::string text = " \n" + rand_json_value(f, 0) + "\n\t ";
+	if (f.below(4) == 0) {
+		text += "x";
+	}
+	return text;
+}
+
+void emit_json_value(Fuzz &f, const aurelion::rules::state::State &state, const aurelion::rules::state::Value &value) {
+	using aurelion::rules::state::Kind;
+	switch (value.kind) {
+		case Kind::Nil:
+			f.emit_byte(0);
+			return;
+		case Kind::Bool:
+			f.emit_byte(1);
+			f.emit_bool(value.b);
+			return;
+		case Kind::Float:
+			f.emit_byte(2);
+			f.emit_float(value.f);
+			return;
+		case Kind::String:
+			f.emit_byte(3);
+			f.emit_text(state.text(value.ref));
+			return;
+		case Kind::Array: {
+			f.emit_byte(4);
+			const int64_t size = state.array_size(value.ref);
+			f.emit_int(size);
+			for (int64_t index = 0; index < size; ++index) {
+				emit_json_value(f, state, state.at(value.ref, index));
+			}
+			return;
+		}
+		case Kind::Dict: {
+			f.emit_byte(5);
+			const auto &node = state.dict(value.ref);
+			f.emit_int(static_cast<int64_t>(node.keys.size()));
+			for (size_t index = 0; index < node.keys.size(); ++index) {
+				f.emit_text(state.text(node.keys[index].ref));
+				emit_json_value(f, state, node.values[index]);
+			}
+			return;
+		}
+		default:
+			f.emit_byte(9);
+			return;
+	}
+}
+
+// JSON.new().parse(text): the error, its line and message, and the data.
+void fuzz_json_parse(Fuzz &f, int64_t count) {
+	aurelion::rules::state::State state;
+	for (int64_t i = 0; i < count; ++i) {
+		if ((i & 0xFFFF) == 0) {
+			state.clear();
+		} else {
+			state.clear_nodes();
+		}
+		const compat::JsonParse parsed = compat::json_parse(state, rand_json_text(f));
+		f.emit_int(parsed.error);
+		f.emit_int(parsed.error_line);
+		f.emit_text(parsed.error_message);
+		emit_json_value(f, state, parsed.data);
+		f.flush();
+	}
+}
+
 } // namespace
 
 std::vector<CompatDigest> compat_digests(int64_t count) {
@@ -461,6 +657,7 @@ std::vector<CompatDigest> compat_digests(int64_t count) {
 		{ "typed_minmax", fuzz_typed_minmax },
 		{ "sort", fuzz_sort },
 		{ "json_float", fuzz_json_float },
+		{ "json_parse", fuzz_json_parse },
 	};
 	std::vector<CompatDigest> digests;
 	int64_t helper_index = 0;

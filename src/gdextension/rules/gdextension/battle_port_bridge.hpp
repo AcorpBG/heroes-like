@@ -16,13 +16,15 @@
 //
 // The host services: an opaque object's properties are read with Object::get,
 // a RandomNumberGenerator's seed and state through its methods, content rows
-// from the ContentService autoload, loaded as the containers they are, and a
+// from the native content tables the ContentService autoload holds
+// (content_host.hpp), loaded as the read-only containers GDScript gets for
+// them, scenarios and their terrain layers from ContentService itself, and a
 // script's static vars through its script object (Object::get and set, which
 // GDScript answers with its static vars). A static var is read once per call
 // (and again after a host call); assignments wait for write_back().
-// A row or document is asked for once per call: within a call no GDScript
-// runs but a host call's, so ContentService would return the same object
-// again. Its empty results (an unknown id, a missing file) and a scenario's
+// A row or document is asked for once per call: within a call nothing
+// reloads the tables but a host call, so they would give the same object
+// again. Empty results (an unknown id, a missing file) and a scenario's
 // terrain layers are new objects each time, so they are asked for again.
 //
 // An object's view (object_view): the session as a Dictionary of its script
@@ -83,6 +85,7 @@
 #include <vector>
 
 namespace godot {
+class AurelionContent;
 class RandomNumberGenerator;
 }
 
@@ -256,6 +259,7 @@ private:
 	state::TypeRef register_type(int64_t builtin, const godot::StringName &class_name, const godot::Variant &script);
 	godot::Object *object_at(uint32_t slot) const;
 	godot::Object *content_service();
+	godot::AurelionContent *content_host();
 	const godot::Variant &string_variant(uint32_t atom, bool name);
 	godot::Variant key_variant(const state::Value &key);
 	godot::Array fresh_array(const state::ArrayNode &node) const;
@@ -322,6 +326,7 @@ private:
 	std::vector<std::pair<uint64_t, uint64_t>> rng_states_;
 	std::vector<uint64_t> made_rngs_;
 	godot::ObjectID content_service_;
+	godot::ObjectID content_host_;
 	// Per call: the content rows and documents loaded, by table and id atom,
 	// and the content revision once read (-1 before).
 	std::unordered_map<uint64_t, state::Value> content_;

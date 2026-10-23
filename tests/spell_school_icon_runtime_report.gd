@@ -604,11 +604,11 @@ func _signature_fallback_contract() -> Dictionary:
 			row_value["school_id"] = "mire"
 			row_value["icon_path"] = "res://art/magic/runtime/spells/missing.png"
 			break
-	ContentService._cache[ContentService.SPELL_ICONS_PATH] = malformed_manifest
+	ContentService.set_content_override(ContentService.SPELL_ICONS_PATH, malformed_manifest)
 	var malformed_fallback := SpellRules.spell_icon_path(spell_id)
-	ContentService._cache[ContentService.SPELL_ICONS_PATH] = {"items": []}
+	ContentService.set_content_override(ContentService.SPELL_ICONS_PATH, {"items": []})
 	var missing_fallback := SpellRules.spell_icon_path(spell_id)
-	ContentService._cache[ContentService.SPELL_ICONS_PATH] = original_manifest
+	ContentService.clear_content_overrides()
 	var restored_path := SpellRules.spell_icon_path(spell_id)
 	return {
 		"ok": (
