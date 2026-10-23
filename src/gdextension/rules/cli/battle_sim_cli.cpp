@@ -40,6 +40,7 @@
 #include "aurelion_rules/port/gd.hpp"
 #include "aurelion_rules/port/registry.hpp"
 #include "aurelion_rules/snapshot.hpp"
+#include "snapshot_store.hpp"
 
 #include <algorithm>
 #include <atomic>
@@ -91,17 +92,13 @@ constexpr size_t kAtomLimit = 1u << 20;
 // BattleAutoResolveRules.DEFAULT_STEP_LIMIT, resolve_active_battle's default.
 constexpr int64_t kStepLimit = 240;
 
-[[noreturn]] void fail(const std::string &text) {
-	throw std::runtime_error(text);
-}
-
-std::vector<uint8_t> read_file(const fs::path &path) {
-	std::ifstream in(path, std::ios::binary);
-	if (!in) {
-		fail("cannot read " + path.string());
-	}
-	return std::vector<uint8_t>(std::istreambuf_iterator<char>(in), std::istreambuf_iterator<char>());
-}
+using aurelion::rules::cli::Content;
+using aurelion::rules::cli::fail;
+using aurelion::rules::cli::kTableNames;
+using aurelion::rules::cli::load_content;
+using aurelion::rules::cli::load_store;
+using aurelion::rules::cli::Store;
+using aurelion::rules::cli::Types;
 
 void append_json_string(std::string &out, std::string_view text) {
 	out += '"';
@@ -148,113 +145,6 @@ void append_json_number(std::string &out, double number) {
 	char text[32];
 	std::snprintf(text, sizeof(text), "%.17g", number);
 	out += text;
-}
-
-// Every type the stores and the ported code name, one TypeRef each, shared by
-// the workers' States.
-class Types {
-public:
-	TypeRef ref(const snap::TypeInfo &info) {
-		const std::lock_guard<std::mutex> lock(mutex_);
-		for (size_t index = 0; index < types_.size(); ++index) {
-			if (types_[index] == info) {
-				return static_cast<TypeRef>(index + 1);
-			}
-		}
-		types_.push_back(info);
-		return static_cast<TypeRef>(types_.size());
-	}
-	// Registers in state the types it does not know yet (known: how many it does).
-	void sync(State &state, size_t &known) const {
-		const std::lock_guard<std::mutex> lock(mutex_);
-		for (; known < types_.size(); ++known) {
-			state.set_type_builtin(static_cast<TypeRef>(known + 1), types_[known].builtin);
-		}
-	}
-
-private:
-	mutable std::mutex mutex_;
-	std::vector<snap::TypeInfo> types_;
-};
-
-// A decoded snapshot: read by every worker, written by none.
-struct Store {
-	State state;
-	snap::Decoded decoded;
-	// The snapshot's type ids (0 untyped) as the tool's TypeRefs.
-	std::vector<TypeRef> types;
-
-	Value get(const Value &dict, std::string_view name) const {
-		uint32_t atom = 0;
-		Value found;
-		if (dict.kind == Kind::Dict && state.find_atom(name, atom) && state.lookup(dict.ref, Value::str(atom), found)) {
-			return found;
-		}
-		return Value();
-	}
-	std::string text(const Value &value) const {
-		return value.is_string_like() ? state.text(value.ref) : std::string();
-	}
-};
-
-std::unique_ptr<Store> load_store(const fs::path &path, Types &types) {
-	auto store = std::make_unique<Store>();
-	const std::vector<uint8_t> bytes = read_file(path);
-	store->decoded = snap::decode(store->state, bytes.data(), bytes.size());
-	store->types.push_back(0);
-	for (const snap::TypeInfo &info : store->decoded.types) {
-		store->types.push_back(types.ref(info));
-	}
-	return store;
-}
-
-// The ContentService getters' tables, as the setup worker names them
-// (worker.gd, CONTENT_TABLES), in ContentTable's order.
-constexpr const char *kTableNames[] = {
-	"Unit",
-	"Hero",
-	"Faction",
-	"Spell",
-	"Artifact",
-	"ResourceSite",
-	"Building",
-	"Town",
-	"MapObject",
-	"Encounter",
-	"ArmyGroup",
-	"Scenario",
-	"Resource",
-	"MapObjectForResourceSite",
-	"BiomeForTerrain",
-	"TerrainLayersForScenario",
-};
-constexpr size_t kTableCount = sizeof(kTableNames) / sizeof(kTableNames[0]);
-static_assert(static_cast<size_t>(st::ContentTable::TerrainLayersForScenario) + 1 == kTableCount, "a name per content table");
-
-// The content snapshot: {files: {path: data}, tables: {name: {id: row}},
-// statics: {script path: {name: value}}, revision}.
-struct Content {
-	std::unique_ptr<Store> store;
-	Value files;
-	Value tables[kTableCount];
-	Value statics;
-};
-
-Content load_content(const fs::path &path, Types &types) {
-	Content content;
-	content.store = load_store(path, types);
-	const Store &store = *content.store;
-	const Value root = store.decoded.root;
-	content.files = store.get(root, "files");
-	content.statics = store.get(root, "statics");
-	const Value tables = store.get(root, "tables");
-	if (content.files.kind != Kind::Dict || content.statics.kind != Kind::Dict || tables.kind != Kind::Dict) {
-		fail(path.string() + " is no content snapshot: it needs files, tables and statics");
-	}
-	for (size_t index = 0; index < kTableCount; ++index) {
-		content.tables[index] = store.get(tables, kTableNames[index]);
-	}
-	return content;
 }
 
 // One battle of a map, as the setup worker left it before the payload.

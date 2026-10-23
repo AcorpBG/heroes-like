@@ -3,6 +3,7 @@
 
     python tools/ai_match_batch.py OUT --players 4 --size large --matches 60 --guards weak,normal,strong --levels 1,2
     python tools/ai_match_batch.py OUT --group 3:medium:30 --group 4:large:30
+    python tools/ai_match_batch.py OUT --size small --players 2 --matches 24 --runner   # days outside Godot
     python tools/ai_match_batch.py OUT --resume       # finish an interrupted batch (same commit only)
     python tools/ai_match_batch.py OUT --summarize    # rewrite summary.md from results.jsonl
 
@@ -52,6 +53,14 @@ names it, and a batch on another commit refuses the folder. The matches of one s
 plays run one after another, and one on the map and line-up of the match before it (the same seed,
 setup and seat factions) starts from a copy of the session that match adopted.
 
+--runner plays the days outside Godot (docs/native-rules-engine-transition.md, Phase 8): the Godot processes
+only set each match up (map, adoption, handover) and write it as a snapshot into OUT/snapshots
+(HEROES_AI_MATCH_PREPARE), then one bin/match_sim_cli process plays every prepared match, biggest first, on
+--slots threads, and writes the record and report line the scene would; each row is written as its match
+ends. The games are the same as without --runner (tools/rules_parity.py --runner-b checks it). A match whose
+setup failed fails as it would; a snapshot is deleted once its match is played. --runner needs a built
+bin/match_sim_cli and no --release.
+
 --weights W1,W2,... gives each seat its overworld AI weight set in every match (seat order, one per
 player): "default", the name of a set in content/ai_hero_weights.json, or a .json file holding one
 set (only the values it changes). Each match record names its seats' sets (setup.seats[].weights);
@@ -79,6 +88,7 @@ import time
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 from pathlib import Path
+import threading
 from typing import IO
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -101,6 +111,8 @@ IS_WINDOWS = platform.system() == "Windows"
 BATCH_PRESET = "Windows AI Batch" if IS_WINDOWS else "Linux AI Batch"
 # The exported batch build in OUT/game: the Windows console wrapper keeps stdout, Linux runs the binary.
 GAME_BINARY = "heroes-like.console.exe" if IS_WINDOWS else "heroes-like.x86_64"
+# --runner: the days of every prepared match, outside Godot.
+MATCH_CLI = ROOT / "bin" / ("match_sim_cli.exe" if IS_WINDOWS else "match_sim_cli")
 
 
 def short(faction_id: str) -> str:
@@ -289,7 +301,7 @@ def plan_record(args: argparse.Namespace, groups: list[tuple[int, str, int]], pl
         "dirty": bool(git("status", "--porcelain", "--untracked-files=no")),
         "plan_seed": plan_seed,
         "days": args.days,
-        "build": "release" if args.release else "editor",
+        "build": "release" if args.release else "runner" if args.runner else "editor",
         "lineups": "fixed" if args.lineup else args.lineups,
         "rotate": bool(args.rotate),
         "groups": [{"players": p, "size": s, "matches": n} for p, s, n in groups],
@@ -406,9 +418,9 @@ def match_settings(out: Path, m: dict, days: int) -> dict[str, str]:
 
 
 def launch(godot: str, out: Path, matches: list[dict], days: int, timeout_min: float, game: str | None = None,
-           corpus: Path | None = None) -> Running:
+           corpus: Path | None = None, prepare: Path | None = None) -> Running:
     """One Godot process for the matches, played in order (one match: its settings in the environment;
-    more: a match list, HEROES_AI_MATCH_LIST)."""
+    more: a match list, HEROES_AI_MATCH_LIST); with prepare (--runner), set up and written there instead."""
     first = matches[0]["run"]
     profile = tempfile.mkdtemp(prefix=f"heroes-ai-{first}-")
     env = {k: v for k, v in os.environ.items() if not k.startswith("HEROES_AI_MATCH_")}
@@ -421,12 +433,16 @@ def launch(godot: str, out: Path, matches: list[dict], days: int, timeout_min: f
         env["HEROES_AI_MATCH_MAP_CORPUS"] = corpus.as_posix()
     for m in matches:
         (out / f"{m['run']}.json").unlink(missing_ok=True)
+    settings = [match_settings(out, m, days) for m in matches]
+    if prepare:
+        for s, m in zip(settings, matches):
+            s["HEROES_AI_MATCH_PREPARE"] = (prepare / f"{m['run']}.snap").as_posix()
     if len(matches) == 1:
-        env.update(match_settings(out, matches[0], days))
+        env.update(settings[0])
         log_path = out / f"{first}.log"
     else:
         list_path = out / f"{first}.list.json"
-        list_path.write_text(json.dumps([match_settings(out, m, days) for m in matches], indent=1), encoding="utf-8")
+        list_path.write_text(json.dumps(settings, indent=1), encoding="utf-8")
         env["HEROES_AI_MATCH_LIST"] = str(list_path)
         log_path = out / f"{first}.process.log"
     log = open(log_path, "w", encoding="utf-8", errors="replace")
@@ -484,6 +500,32 @@ def split_match_log(text: str) -> tuple[list[str], list[tuple[str, list[str]]]]:
 def finish(out: Path, run: Running, timed_out: bool, keep_maps: set[str]) -> tuple[list[dict], list[dict]]:
     """A row per match the process began, and the matches it never began (an earlier one crashed or
     timed out), which go back into the queue. A process that began none fails its first match."""
+    parts, clocks = process_parts(out, run)
+    rows = [match_row(out, m, part, run, timed_out and index == len(parts) - 1, *clocks[index], keep_maps)
+            for index, (m, part) in enumerate(parts)]
+    return rows, run.matches[len(parts):]
+
+
+def finish_prepare(out: Path, run: Running, timed_out: bool, keep_maps: set[str]) -> tuple[list[dict], list[dict], list[dict]]:
+    """A prepare process (--runner): the matches it wrote, each with its log and setup time; a failed row per
+    match it began and did not write; and the matches it never began. The map packages it wrote go now."""
+    parts, clocks = process_parts(out, run)
+    prepared, rows = [], []
+    for index, (m, part) in enumerate(parts):
+        report = report_of(part)
+        if report.get("ok") and report.get("prepared"):
+            remove_match_maps(str(report.get("scenario_id", "")), run.started, keep_maps)
+            (out / f"{m['run']}.log").unlink(missing_ok=True)
+            prepared.append({"m": m, "snapshot": Path(report["prepared"]), "text": part, "seconds": clocks[index][1] - clocks[index][0],
+                             "process": run.matches[0]["run"]})
+        else:
+            rows.append(match_row(out, m, part, run, timed_out and index == len(parts) - 1, *clocks[index], keep_maps))
+    return rows, prepared, run.matches[len(parts):]
+
+
+def process_parts(out: Path, run: Running) -> tuple[list[tuple[dict, str]], list[tuple[float, float]]]:
+    """Each match the process began with its part of the log (written to OUT/<run>.log), and when it started
+    and ended."""
     run.log.close()
     text = run.log_path.read_text(encoding="utf-8", errors="replace") if run.log_path.exists() else ""
     if len(run.matches) == 1:
@@ -503,13 +545,13 @@ def finish(out: Path, run: Running, timed_out: bool, keep_maps: set[str]) -> tup
     seconds = [report_of(part).get("seconds") for _, part in parts]
     if None not in seconds:
         seconds[0] += time.time() - run.started - sum(seconds)
-    rows = []
+    clocks = []
     clock = run.started
-    for index, (m, part) in enumerate(parts):
+    for index in range(len(parts)):
         ended = clock + seconds[index] if seconds[index] is not None else time.time()
-        rows.append(match_row(out, m, part, run, timed_out and index == len(parts) - 1, clock, ended, keep_maps))
+        clocks.append((clock, ended))
         clock = ended
-    return rows, run.matches[len(parts):]
+    return parts, clocks
 
 
 def report_of(text: str) -> dict:
@@ -611,10 +653,20 @@ class Output:
 
 
 def run_batch(out: Path, plan: dict, godot: str, slots: int, timeout_override: float | None, game: str | None = None,
-              per_process: int = 4, corpus: Path | None = None) -> int:
+              per_process: int = 4, corpus: Path | None = None, runner: bool = False) -> int:
     say = Output(out)
     done = {row["run"] for row in read_results(out)}
     queue = sorted((m for m in plan["matches"] if m["run"] not in done), key=expected_cost, reverse=True)
+    # --runner: the Godot processes prepare the matches (snapshots written whole, so one there from an
+    # interrupted batch is ready), match_sim_cli plays them once all are prepared.
+    snapshots = out / "snapshots" if runner else None
+    prepared: list[dict] = []
+    if snapshots:
+        snapshots.mkdir(exist_ok=True)
+        for m in list(queue):
+            if (snapshots / f"{m['run']}.snap").exists():
+                queue.remove(m)
+                prepared.append({"m": m, "snapshot": snapshots / f"{m['run']}.snap", "text": "", "seconds": 0.0, "process": ""})
     total = len(plan["matches"])
     finished = len(done)
     others = count_games(godot_processes())
@@ -626,8 +678,10 @@ def run_batch(out: Path, plan: dict, godot: str, slots: int, timeout_override: f
     running: dict[str, Running] = {}
     inflight_path = out / "inflight.json"
     started = time.time()
-    say(f"START {len(queue)} of {total} matches on {plan['commit'][:9]}{' (dirty tree)' if plan.get('dirty') else ''}, "
-        f"{slots} processes at a time, up to {per_process} matches each{' on the release build' if game else ''}, at {time.strftime('%H:%M:%S')}")
+    say(f"START {len(queue) + len(prepared)} of {total} matches on {plan['commit'][:9]}{' (dirty tree)' if plan.get('dirty') else ''}, "
+        f"{slots} processes at a time, up to {per_process} matches each{' on the release build' if game else ''}"
+        f"{f', set up in Godot and played in bin/match_sim_cli on {slots} threads ({len(prepared)} set up already)' if runner else ''}, "
+        f"at {time.strftime('%H:%M:%S')}")
 
     def save_inflight() -> None:
         inflight_path.write_text(json.dumps({m["run"]: x.proc.pid for x in running.values() for m in x.matches}), encoding="utf-8")
@@ -661,7 +715,7 @@ def run_batch(out: Path, plan: dict, godot: str, slots: int, timeout_override: f
                     queue.remove(m)
                 seeds |= {m["seed"] for m in chain}
                 timeout_min = sum(timeout_override or TIMEOUT_MIN[m["size"]] for m in chain)
-                running[chain[0]["run"]] = launch(godot, out, chain, plan["days"], timeout_min, game, corpus)
+                running[chain[0]["run"]] = launch(godot, out, chain, plan["days"], timeout_min, game, corpus, snapshots)
                 save_inflight()
             time.sleep(2)
             for name, x in list(running.items()):
@@ -671,17 +725,23 @@ def run_batch(out: Path, plan: dict, godot: str, slots: int, timeout_override: f
                 if x.proc.poll() is None:
                     continue
                 del running[name]
-                rows, unplayed = finish(out, x, timed_out, keep_maps)
+                if snapshots:
+                    rows, ready, unplayed = finish_prepare(out, x, timed_out, keep_maps)
+                    prepared += ready
+                else:
+                    rows, unplayed = finish(out, x, timed_out, keep_maps)
                 queue = sorted(queue + unplayed, key=expected_cost, reverse=True)
                 for row in rows:
-                    row["slots"] = slots
-                    with open(out / "results.jsonl", "a", encoding="utf-8") as f:
-                        f.write(json.dumps(row) + "\n")
                     finished += 1
-                    say(f"{match_text(row)} -> {result_text(row)} ({row['minutes']} min) [{finished}/{total}, {len(running)} running]")
+                    write_row(out, row, slots, say, f"{finished}/{total}, {len(running)} running")
+                if snapshots and not rows:
+                    say(f"  set up {', '.join(m['run'] for m in x.matches[:len(x.matches) - len(unplayed)])} [{len(prepared)} ready, {len(running)} running]")
                 if unplayed:
                     say(f"  {len(unplayed)} matches of that process were never begun, back in the queue: {', '.join(m['run'] for m in unplayed)}")
                 save_inflight()
+        if snapshots and prepared:
+            finished = play_prepared(out, plan, prepared, slots, timeout_override, keep_maps, say, finished, total)
+            shutil.rmtree(snapshots, ignore_errors=True)
     except KeyboardInterrupt:
         for x in running.values():
             kill(x.proc)
@@ -702,6 +762,89 @@ def run_batch(out: Path, plan: dict, godot: str, slots: int, timeout_override: f
     write_summary(out, plan)
     say(f"DONE {finished}/{total} in {(time.time() - started) / 60:.1f} min at {time.strftime('%H:%M:%S')}; read {out / 'summary.md'}")
     return 0
+
+
+def write_row(out: Path, row: dict, slots: int, say, progress: str) -> None:
+    row["slots"] = slots
+    with open(out / "results.jsonl", "a", encoding="utf-8") as f:
+        f.write(json.dumps(row) + "\n")
+    say(f"{match_text(row)} -> {result_text(row)} ({row['minutes']} min) [{progress}]")
+
+
+def play_prepared(out: Path, plan: dict, prepared: list[dict], threads: int, timeout_override: float | None,
+                  keep_maps: set[str], say, finished: int, total: int) -> int:
+    """--runner: one bin/match_sim_cli process plays the prepared matches, biggest first, on threads
+    threads; each match's row is written as it ends (its log: the prepare's part and the play's).
+    Returns the finished count."""
+    order = sorted(prepared, key=lambda p: expected_cost(p["m"]), reverse=True)
+    by_out = {(out / f"{p['m']['run']}.json").as_posix(): p for p in order}
+    list_path = out / "play.list.json"
+    list_path.write_text(json.dumps([{**match_settings(out, p["m"], plan["days"]), "HEROES_AI_MATCH_SNAPSHOT": p["snapshot"].as_posix()}
+                                     for p in order], indent=1), encoding="utf-8")
+    for p in order:
+        (out / f"{p['m']['run']}.json").unlink(missing_ok=True)
+    env = {k: v for k, v in os.environ.items() if not k.startswith("HEROES_AI_MATCH_")}
+    env["HEROES_AI_MATCH_LIST"] = str(list_path)
+    threads = max(1, min(threads, len(order)))
+    say(f"PLAY {len(order)} matches in bin/match_sim_cli on {threads} threads at {time.strftime('%H:%M:%S')}")
+    timeouts = [timeout_override or TIMEOUT_MIN[p["m"]["size"]] for p in order]
+    limit = (sum(timeouts) / threads + max(timeouts)) * 60
+    extra = {} if IS_WINDOWS else {"start_new_session": True}
+    proc = subprocess.Popen([str(MATCH_CLI), "--threads", str(threads)], env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                            stdin=subprocess.DEVNULL, text=True, encoding="utf-8", errors="replace", **extra)
+    fired = threading.Event()
+    timer = threading.Timer(limit, lambda: (fired.set(), kill(proc)))
+    timer.start()
+    reported: set[str] = set()
+    block: list[str] = []
+    current = None
+    tail: list[str] = []
+    try:
+        for line in proc.stdout:
+            line = line.rstrip("\n")
+            if line.startswith(BEGIN_ID + " "):
+                try:
+                    current = by_out.get(str(json.loads(line[len(BEGIN_ID) + 1:]).get("out", "")))
+                except ValueError:
+                    current = None
+                block = [line]
+                continue
+            block.append(line)
+            if current is None:
+                tail.append(line)
+                continue
+            if line.startswith(REPORT_ID + " "):
+                m = current["m"]
+                text = current["text"] + "\n".join(block) + "\n"
+                (out / f"{m['run']}.log").write_text(text, encoding="utf-8")
+                ended = time.time()
+                started = ended - current["seconds"] - float(report_of(line).get("seconds") or 0.0)
+                run = Running([m], proc, None, out / f"{m['run']}.log", "", started, ended)
+                row = match_row(out, m, text, run, False, started, ended, keep_maps)
+                row["process"] = current["process"] or m["run"]
+                finished += 1
+                reported.add(m["run"])
+                write_row(out, row, threads, say, f"{finished}/{total}, {len(order) - len(reported)} playing")
+                current["snapshot"].unlink(missing_ok=True)
+                current = None
+    finally:
+        timer.cancel()
+        proc.wait()
+        list_path.unlink(missing_ok=True)
+    timed_out = fired.is_set()
+    for p in order:
+        m = p["m"]
+        if m["run"] in reported:
+            continue
+        text = p["text"] + "\n".join(tail[-3:]) + "\n"
+        (out / f"{m['run']}.log").write_text(text, encoding="utf-8")
+        run = Running([m], proc, None, out / f"{m['run']}.log", "", time.time() - limit, time.time())
+        row = match_row(out, m, text, run, timed_out, run.started, run.deadline, keep_maps)
+        row["process"] = p["process"] or m["run"]
+        finished += 1
+        write_row(out, row, threads, say, f"{finished}/{total}")
+    say(f"PLAYED in bin/match_sim_cli: {' '.join(line for line in tail if line.startswith('MATCH_SIM_CLI '))[:400]}")
+    return finished
 
 
 # ---------------------------------------------------------------- summary
@@ -776,7 +919,8 @@ def write_summary(out: Path, plan: dict) -> None:
         f"# AI match batch {out.name}",
         "",
         f"Commit {plan['commit'][:9]}{' (dirty tree)' if plan.get('dirty') else ''}, plan seed {plan['plan_seed']}, "
-        f"line-ups {plan['lineups']}, day cap {plan['days']}{', release build' if plan.get('build') == 'release' else ''}: "
+        f"line-ups {plan['lineups']}, day cap {plan['days']}{', release build' if plan.get('build') == 'release' else ''}"
+        f"{', days in bin/match_sim_cli' if plan.get('build') == 'runner' else ''}: "
         f"{groups}.",
         f"{len(rows)} of {len(plan['matches'])} matches played: {len(decided)} decided, {len(capped)} at the day cap, "
         f"{len(failed)} failed or timed out.",
@@ -920,11 +1064,14 @@ def main() -> int:
     parser.add_argument("--godot", help="Godot editor binary")
     parser.add_argument("--release", action="store_true", help="export the AI batch preset with the release template into OUT/game and play on it")
     parser.add_argument("--templates", help="export templates folder for --release (default: the editor's own)")
+    parser.add_argument("--runner", action="store_true", help="set the matches up in Godot and play their days in bin/match_sim_cli")
     parser.add_argument("--resume", action="store_true", help="play the matches plan.json still lacks (same commit only)")
     parser.add_argument("--summarize", action="store_true", help="only rewrite summary.md")
     parser.add_argument("--plan-only", action="store_true", help="write plan.json and stop")
     args = parser.parse_args()
     args.levels = [int(x) for x in args.levels]
+    if args.runner and args.release:
+        sys.exit("--runner sets the matches up in the editor's match runner; it takes no --release")
 
     out = args.out.resolve()
     plan_path = out / "plan.json"
@@ -975,7 +1122,10 @@ def main() -> int:
         if not args.resume or not Path(game).exists():
             game = export_batch_game(godot, out / "game", args.templates)
     corpus = map_corpus(args.map_corpus.resolve(), plan) if args.map_corpus else None
-    code = run_batch(out, plan, godot, max(1, args.slots), args.timeout_min, game, max(1, args.per_process), corpus)
+    runner = plan.get("build") == "runner"
+    if runner and not MATCH_CLI.exists():
+        sys.exit(f"--runner needs {MATCH_CLI} (python tools/build_native.py windows --part rules)")
+    code = run_batch(out, plan, godot, max(1, args.slots), args.timeout_min, game, max(1, args.per_process), corpus, runner)
     if game and code == 0:
         shutil.rmtree(out / "game", ignore_errors=True)  # about 5 GB; an interrupted batch keeps it for --resume
     return code

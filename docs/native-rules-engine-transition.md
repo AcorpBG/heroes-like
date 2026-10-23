@@ -2880,10 +2880,10 @@ Wanted, not optional (owner decision 2026-10-22, D7). The same core as a command
 |---|---|---|
 | P8-1 Elimination day | the computer branch of `apply_daily` in C++ (done) | |
 | P8-2 D4 | one `pow`/`exp`/`log` in the core for the game and the runner; the named behaviour change (done) | P8-1 |
-| P8-3 Statics | a native statics store in the runner's host, initial values checked against Godot's | |
-| P8-4 The runner | `match_sim_cli` playing sessions Godot prepared (snapshots), the runner's glue in C++, the same outputs | P8-2, P8-3 |
-| P8-5 The proof | a runner side in `rules_parity.py`: the six seeds' digests and records identical to game mode | P8-4 |
-| P8-6 Batches | `ai_match_batch.py --runner`: Godot prepares, the runner plays on threads; timing | P8-5 |
+| P8-3 Statics | a native statics store in the runner's host, initial values checked against Godot's (done) | |
+| P8-4 The runner | `match_sim_cli` playing sessions Godot prepared (snapshots), the runner's glue in C++, the same outputs (done) | P8-2, P8-3 |
+| P8-5 The proof | a runner side in `rules_parity.py`: the six seeds' digests and records identical to game mode (done) | P8-4 |
+| P8-6 Batches | `ai_match_batch.py --runner`: Godot prepares, the runner plays on threads; timing (done) | P8-5 |
 | P8-7 Packages and setup | packages read in the core; sessions created natively from a package and a seed (7.11) | merge 1b |
 | P8-8 Generation | the map library's projection Godot-free; the runner generates its maps | P8-7 |
 
@@ -2918,6 +2918,54 @@ Wanted, not optional (owner decision 2026-10-22, D7). The same core as a command
 - **Checks.** Native against main f5d2ddfb8 on the six seeds: all 443 daily digests and the records identical, so no
   rounding difference changed a game there. `--human` against main: all 1,896 action digests and the records of the
   eight human seeds identical. Core suite 17/17. `rules_selftest` ok (13 helpers).
+
+**P8-3 to P8-6, the runner** (`native-rules-phase8-03-statics-20261023` to `native-rules-phase8-06-batch-20261023`,
+branch `native-phase8-runner`, one milestone):
+- **P8-3, statics.** `match_sim_cli`'s host keeps the rules scripts' static vars as native state
+  (`Backing::static_get` and `static_set`, one table per match), kept from day to day as the game keeps them. They
+  start as a capture of a game that has played nothing (`tools/rules_snapshot/rules_snapshot.gd`, `static_vars`,
+  written into `content.snap` by the first prepare): memos and caches empty, the weight revision cold, so the native
+  `_use_weights` loads `content/ai_hero_weights.json` (or the seat's weight set) where the game's GDScript loads it.
+  A day answers no host call; a host call or a NATIVE FALLBACK path fails the match. The game itself still reads
+  the GDScript statics.
+- **P8-4, `match_sim_cli`.** The match runner scene's prepare mode (`HEROES_AI_MATCH_PREPARE`) sets a match up as
+  before (map, adoption, the seats' handover), writes the session as a snapshot (the session view, seats, setup,
+  handover, seeds, map, scenario row and terrain layers, content revision, the weight document of weighted seats)
+  and `content.snap` beside it when missing (content tables and files, the statics capture), and stops.
+  `src/gdextension/rules/cli/match_sim_cli.cpp` plays the days from there: each day is the registry's
+  `OverworldRules.end_turn` on one State kept across the days and compacted after each, and the scene's GDScript
+  around it (digest, notes, ledger, town weeks, the end of the match, the record and the report line) is C++ calling
+  the same native functions. It reads the scene's settings (`HEROES_AI_MATCH_*` or `HEROES_AI_MATCH_LIST`) and writes
+  the scene's outputs: the record JSON text byte for byte apart from the timing fields, the report and BEGIN lines,
+  the digest file. Matches play on `--threads`, one per thread; the rules core has no mutable statics.
+  `battle_sim_cli` and the battle arena's worker share the snapshot reader and writer (`cli/snapshot_store.hpp`,
+  `rules_snapshot.gd`); `godot_string`'s `json_float` gains the full-precision form. Built by `build_native.py`
+  with the rules part.
+- **P8-5, the proof.** `rules_parity.py` has a runner side: `--runner-a`/`--runner-b` for `check`, `--runner` for
+  `run`; Godot prepares each seed, then `match_sim_cli` plays it, with `--one-process` all six in one CLI process on
+  threads. Game mode against the runner on the six seeds: all 443 daily digests and the records identical, and
+  again with the six in one process. Host calls 0; content misses only the empty-id scenario and terrain-layer
+  lookups the scene makes too.
+- **P8-6, batches.** `ai_match_batch.py --runner`: the Godot processes prepare the matches (slots and matches per
+  process as before; a snapshot already there counts as prepared, so a resumed batch reuses it), then one
+  `match_sim_cli` process plays them, biggest first, on the batch's slots as threads, writing each row as its match
+  ends and deleting its snapshot. Rows, records and summary are the current path's; not with `--release`. A three-match
+  batch gave records equal to the editor path, the summaries differing only in the slowest AI day's time.
+- **Timing** (Windows, 32 logical cores, nothing else running):
+  - The six seeds, each side in one process: game 125.6 s (one Godot process, one seed after another), runner
+    56.6 s (prepared in 28.5 s in one Godot process, then the 437 days in 22.7 s on 6 threads), 2.2 times faster.
+  - 24 small 2P matches (plan seed 8231, 16 slots): game 17.0 s, runner 19.5 s (705 days in 4.4 s; the rest is
+    the setup in Godot).
+  - 24 medium 3P matches (plan seed 8232, 16 slots): game 41.3 s, runner 43.4 s (1,820 days in 23.5 s).
+  - All 48 batch records equal apart from the timing fields.
+  - So at the same slot count the runner gives no batch speed-up yet. The days are the same native code on both
+    sides and about as fast (l1: about 25 s of days in the game, 22.6 s in the runner), and a batch's Godot
+    processes already fill its slots. The runner gains where the game would play one match after another in one
+    process. The setup stays in Godot until P8-7 and P8-8.
+- **Checks.** Six seeds, game against runner and against runner in one process: 443 digests and the records
+  identical both ways; main 92c672a3e's game against the branch's runner: identical again. The battle arena's
+  quick suite (`--plain`) plays its 72 games from the worker's new content snapshot. Core suite 17/17. Windows only: the Linux libraries in `bin/` are not rebuilt and the Linux
+  `match_sim_cli` is not built.
 
 ### Totals
 
