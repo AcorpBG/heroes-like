@@ -84,6 +84,14 @@ extends Node
 #                          is the same either way. The packages belong to the
 #                          game revision that generated them
 #                          (tools/ai_match_batch.py --map-corpus checks it).
+# HEROES_AI_MATCH_PREPARE  a file path: the match is set up (map, adoption,
+#                          handover) and written there as a snapshot instead of
+#                          played, for bin/match_sim_cli, which plays its days
+#                          outside Godot and writes what this scene would
+#                          (tools/ai_match_batch.py --runner). The content and
+#                          the rules scripts' static vars as a game starts go
+#                          into content.snap in the same folder when it is not
+#                          there yet. The report line says "prepared".
 #
 # The match fails at once when the native rules library is not registered:
 # without it every battle hex search errors and battles play out wrong.
@@ -95,6 +103,8 @@ const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const NativeRulesScript = preload("res://scripts/core/NativeRules.gd")
 const DayEngineScript = preload("res://scripts/core/DayEngine.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
+# The prepare mode's snapshots; loaded only there (tools/ is not exported).
+const RULES_SNAPSHOT_PATH := "res://tools/rules_snapshot/rules_snapshot.gd"
 const REPORT_ID := "AI_VERSUS_AI_MATCH_REPORT"
 const BEGIN_ID := "AI_VERSUS_AI_MATCH_BEGIN"
 const DEFAULT_MAX_DAYS := 320
@@ -118,6 +128,8 @@ var _map_source := ""
 var _list_mode := false
 var _kept_map_key := ""
 var _kept_map_session = null
+# The content snapshot for HEROES_AI_MATCH_PREPARE, taken before any match.
+var _cold_content := {}
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -137,6 +149,14 @@ func _run() -> void:
 			return
 		matches = parsed
 		_list_mode = true
+	# A prepared match's content snapshot holds the static vars as a game
+	# starts, so it is taken before any match plays.
+	for entry in matches:
+		_settings = entry
+		var prepare := _env("HEROES_AI_MATCH_PREPARE").strip_edges()
+		if prepare != "" and not FileAccess.file_exists(prepare.get_base_dir().path_join("content.snap")):
+			_cold_content = load(RULES_SNAPSHOT_PATH).content_snapshot(ContentService)
+			break
 	var all_ok := true
 	for entry in matches:
 		_begin_match(entry)
@@ -295,6 +315,10 @@ func _play() -> void:
 		setup.seats.append({"player_id": seat, "faction_id": PlayerRules.faction_id(session, seat), "faction": String(faction.get("name", "")), "towns": capitals})
 		if not seat_weights.is_empty():
 			setup.seats[setup.seats.size() - 1]["weights"] = seat_weights[setup.seats.size() - 1]
+	var prepare_path := _env("HEROES_AI_MATCH_PREPARE").strip_edges()
+	if prepare_path != "":
+		_prepare(prepare_path, session, seats, setup, handover, not seat_weights.is_empty())
+		return
 
 	var ledger := []
 	var timeline := []
@@ -386,6 +410,47 @@ func _play() -> void:
 		"map": _map_source,
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(summary)])
+
+## HEROES_AI_MATCH_PREPARE: the match as set up, the session as the native
+## rules see it, with what match_sim_cli needs to play on as _play does: the
+## seats, the record's setup and handover, the generated scenario and its
+## terrain layers, and the weight sets the seats play with.
+func _prepare(path: String, session, seats: Array, setup: Dictionary, handover: Dictionary, weighted: bool) -> void:
+	var snapshots = load(RULES_SNAPSHOT_PATH)
+	var content_path := path.get_base_dir().path_join("content.snap")
+	if not FileAccess.file_exists(content_path) and (_cold_content.is_empty() or not snapshots.write(content_path, _cold_content)):
+		_fail("The content snapshot %s cannot be written." % content_path)
+		return
+	var scenario_id := String(session.scenario_id)
+	var prepared := {
+		"session": DayEngineScript._view(session),
+		"seats": seats,
+		"setup": setup,
+		"handover": handover,
+		"match_seed": String(setup.match_seed),
+		"map_seed": String(setup.map_seed),
+		"map": _map_source,
+		"scenario_id": scenario_id,
+		"scenario": ContentService.get_scenario_readonly(scenario_id),
+		"terrain_layers": ContentService.get_terrain_layers_for_scenario(scenario_id),
+		"content_revision": ContentService.get_content_revision(),
+		"files": {},
+	}
+	if weighted:
+		prepared.files[AiHeroRulesScript.WEIGHTS_PATH] = ContentService.load_json(AiHeroRulesScript.WEIGHTS_PATH)
+	if not snapshots.write(path, prepared):
+		_fail("The session snapshot %s cannot be written." % path)
+		return
+	print("%s %s" % [REPORT_ID, JSON.stringify({
+		"ok": true,
+		"prepared": ProjectSettings.globalize_path(path),
+		"out": ProjectSettings.globalize_path(_out_path),
+		"match_seed": String(setup.match_seed),
+		"map_seed": String(setup.map_seed),
+		"map": _map_source,
+		"scenario_id": scenario_id,
+		"seconds": snappedf((Time.get_ticks_msec() - _started_msec) / 1000.0, 0.1),
+	})])
 
 ## The whole session state of the day, before the runner empties the decision
 ## log; timings are kept outside the session, in the turn result.

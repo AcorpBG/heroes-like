@@ -24,11 +24,11 @@ std::string itos(int64_t value);
 // half to even).
 std::string num(double value, int decimals = -1);
 
-// JSON.stringify(value) of a float (JSON::_stringify, not full precision):
-// "0.0" for either zero, 1e99999 and -1e99999 for the infinities, null for NaN
-// (the engine also warns once; this does not), else
-// num(value, max(1, 14 - floor(log10(|value|)))).
-std::string json_float(double value);
+// JSON.stringify(value) of a float (JSON::_stringify): "0.0" for either zero,
+// 1e99999 and -1e99999 for the infinities, null for NaN (the engine also warns
+// once; this does not), else num(value, max(1, 14 - floor(log10(|value|)))),
+// 17 in place of 14 with full_precision.
+std::string json_float(double value, bool full_precision = false);
 
 // String::to_int(), which int(String) calls: the digits before the first '.'
 // count, every other character is skipped, and each '-' met before the first

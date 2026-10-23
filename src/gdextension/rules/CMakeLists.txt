@@ -10,6 +10,7 @@ project(aurelion_rules LANGUAGES C CXX)
 #   aurelion_rules       the GDExtension (src/gdextension/rules.gdextension)
 #   rules_selftest       golden vectors without Godot
 #   battle_sim_cli       the battle AI arena's battles without Godot
+#   match_sim_cli        the AI match runner's days without Godot
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -318,7 +319,13 @@ target_link_libraries(battle_sim_cli PRIVATE aurelion_rules_core)
 find_package(Threads REQUIRED)
 target_link_libraries(battle_sim_cli PRIVATE Threads::Threads)
 
-foreach(AURELION_RULES_TARGET aurelion_rules_core aurelion_rules rules_selftest battle_port_replay battle_sim_cli)
+# The match runner (Phase 8, P8-4): the AI match runner's days outside Godot,
+# from the sessions its scene prepares, for tools/ai_match_batch.py --runner
+# and tools/rules_parity.py.
+add_executable(match_sim_cli cli/match_sim_cli.cpp)
+target_link_libraries(match_sim_cli PRIVATE aurelion_rules_core Threads::Threads)
+
+foreach(AURELION_RULES_TARGET aurelion_rules_core aurelion_rules rules_selftest battle_port_replay battle_sim_cli match_sim_cli)
 	if(MSVC)
 		target_compile_options(${AURELION_RULES_TARGET} PRIVATE /W4)
 	else()
@@ -329,6 +336,7 @@ endforeach()
 if(WIN32 AND NOT MSVC)
 	target_link_options(rules_selftest PRIVATE -static -static-libgcc -static-libstdc++)
 	target_link_options(battle_sim_cli PRIVATE -static -static-libgcc -static-libstdc++)
+	target_link_options(match_sim_cli PRIVATE -static -static-libgcc -static-libstdc++)
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
@@ -346,7 +354,7 @@ set_target_properties(aurelion_rules PROPERTIES
 	PREFIX "${AURELION_OUTPUT_PREFIX}"
 	OUTPUT_NAME "aurelion_rules.${AURELION_GODOT_PLATFORM}.${AURELION_GODOTCPP_TARGET}.x86_64"
 )
-foreach(AURELION_RULES_OUTPUT aurelion_rules rules_selftest battle_sim_cli)
+foreach(AURELION_RULES_OUTPUT aurelion_rules rules_selftest battle_sim_cli match_sim_cli)
 	set_target_properties(${AURELION_RULES_OUTPUT} PROPERTIES
 		LIBRARY_OUTPUT_DIRECTORY "${AURELION_BIN_OUTPUT_DIR}"
 		RUNTIME_OUTPUT_DIRECTORY "${AURELION_BIN_OUTPUT_DIR}"

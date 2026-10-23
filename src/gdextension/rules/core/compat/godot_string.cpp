@@ -177,7 +177,7 @@ std::string num(double value, int decimals) {
 	return text;
 }
 
-std::string json_float(double value) {
+std::string json_float(double value, bool full_precision) {
 	if (!std::isfinite(value)) {
 		if (std::isnan(value)) {
 			return "null";
@@ -188,7 +188,7 @@ std::string json_float(double value) {
 		return "0.0";
 	}
 	const double magnitude = engine_log10(std::fabs(value));
-	return num(value, std::max(1, 14 - static_cast<int>(std::floor(magnitude))));
+	return num(value, std::max(1, (full_precision ? 17 : 14) - static_cast<int>(std::floor(magnitude))));
 }
 
 int64_t to_int(const std::string &text) {

@@ -10,6 +10,7 @@
     python tools/rules_parity.py remove DEST               # delete a prepared copy (junctions first)
     python tools/rules_parity.py seeds
     python tools/rules_parity.py check A B --human         # a human player on seat 1, through the screens
+    python tools/rules_parity.py check A A --runner-b      # the game against the match runner outside Godot
 
 A side is a project directory (run with the editor binary, --godot / --godot-a / --godot-b) or an
 exported game binary of an AI batch preset (export_presets.cfg; it starts the match runner and
@@ -46,6 +47,13 @@ again. Only debug builds print SCRIPT ERROR lines: on an editor side a script er
 on a release export (template_release) it goes unseen and only the runner's own failures count.
 Exit codes: 0 identical, 1 different, 2 a run failed.
 
+--runner-a/--runner-b (check) and --runner (run) play that side through the match runner outside Godot (Phase 8):
+the side's Godot match runner sets each match up and writes it as a snapshot (HEROES_AI_MATCH_PREPARE), and the
+side's bin/match_sim_cli plays its days and writes the digest, the record and the report line the scene would.
+The prepare's own lines go into the log behind "PREPARE ". With --one-process one Godot process prepares the
+seeds and one match_sim_cli process plays them, on threads. A runner side must be a project directory with a
+built bin/match_sim_cli; it plays AI seeds only.
+
 --human (Phase 7, owner decision D-a) plays HUMAN_SEEDS instead: tests/human_seat_report.tscn plays seat 1 by
 fixed rules through the real main menu, overworld, town and battle screens, on generated maps or on the D9 copies
 of the owner's saves (HEROES_SAVE_COPIES, default D:\\Games\\godot\\heroes-like-save-copies). It writes a digest
@@ -76,7 +84,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
-from ai_match_batch import SIZES, kill, remove_match_maps, split_match_log  # noqa: E402
+from ai_match_batch import BEGIN_ID, SIZES, kill, remove_match_maps, split_match_log  # noqa: E402
 from core_suite import find_godot  # noqa: E402
 
 SCENE = "res://tests/ai_versus_ai_match_report.tscn"
@@ -147,10 +155,16 @@ class Side:
     path: Path
     godot: str
     env: dict[str, str] = field(default_factory=dict)
+    # --runner: the Godot match runner prepares the matches, bin/match_sim_cli plays them.
+    runner: bool = False
 
     @property
     def is_project(self) -> bool:
         return self.path.is_dir()
+
+    @property
+    def cli(self) -> Path:
+        return self.path / "bin" / ("match_sim_cli.exe" if IS_WINDOWS else "match_sim_cli")
 
     def command(self, scene: str = SCENE) -> list[str]:
         if self.is_project:
@@ -290,10 +304,17 @@ def start(job: Job, profiles: Path) -> tuple[subprocess.Popen, Path, float]:
     env.update(job.side.env)
     env.update({"APPDATA": str(profile), "XDG_DATA_HOME": str(profile), "XDG_CONFIG_HOME": str(profile), "XDG_CACHE_HOME": str(profile)})
     scene = SCENE
+    command = None
     if job.human:
         env.update(human_settings(job, profile))
         scene = HUMAN_SCENE
         log_path = job.out / f"{job.stem(job.key)}.log"
+    elif job.side.runner:
+        runner_job = profile / "runner.json"
+        runner_job.write_text(json.dumps({"godot": job.side.command(scene), "cli": str(job.side.cli), "snapshots": str(profile / "snapshots"),
+                                          "matches": [match_settings(job, key) for key in job.keys]}, indent=1), encoding="utf-8")
+        command = [sys.executable, str(Path(__file__).resolve()), "runner-job", str(runner_job)]
+        log_path = job.out / (f"{job.key}.process.log" if job.more else f"{job.stem(job.key)}.log")
     elif job.more:
         list_path = job.out / f"{job.key}.list.json"
         list_path.write_text(json.dumps([match_settings(job, key) for key in job.keys], indent=1), encoding="utf-8")
@@ -304,7 +325,7 @@ def start(job: Job, profiles: Path) -> tuple[subprocess.Popen, Path, float]:
         log_path = job.out / f"{job.stem(job.key)}.log"
     log = open(log_path, "w", encoding="utf-8", errors="replace")
     extra = {} if IS_WINDOWS else {"start_new_session": True}
-    proc = subprocess.Popen(job.side.command(scene), env=env, stdout=log, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL, **extra)
+    proc = subprocess.Popen(command or job.side.command(scene), env=env, stdout=log, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL, **extra)
     log.close()
     return proc, profile, time.time()
 
@@ -339,8 +360,11 @@ def finish(job: Job, proc: subprocess.Popen, profile: Path, started: float, time
         # Each seed's log: the lines before the first match and its own.
         process_log = job.out / f"{job.key}.process.log"
         preamble, sections = split_match_log(process_log.read_text(encoding="utf-8", errors="replace"))
+        # By the record each match names: the match runner outside Godot ends them in any order.
+        by_out = {out: lines for out, lines in sections}
         for index, key in enumerate(job.keys):
-            lines = sections[index][1] if index < len(sections) else ["(the process ended before this match began)"]
+            out = (job.out / f"{job.stem(key)}.json").as_posix()
+            lines = by_out[out] if out in by_out else sections[index][1] if index < len(sections) else ["(the process ended before this match began)"]
             (job.out / f"{key}.log").write_text("\n".join(preamble + lines) + "\n", encoding="utf-8")
         process_log.unlink(missing_ok=True)
         (job.out / f"{job.key}.list.json").unlink(missing_ok=True)
@@ -605,13 +629,20 @@ def pick_seeds(text: str | None, human: bool = False) -> list[str]:
     return keys
 
 
-def make_side(name: str, path: str, godot: str | None, env: dict[str, str]) -> Side:
+def make_side(name: str, path: str, godot: str | None, env: dict[str, str], runner: bool = False) -> Side:
     p = Path(path).resolve()
     if not p.exists():
         sys.exit(f"{name}: {p} does not exist")
     if p.is_dir() and not (p / "project.godot").exists():
         sys.exit(f"{name}: {p} has no project.godot")
-    return Side(name, p, find_godot(godot) if p.is_dir() else "", env)
+    side = Side(name, p, find_godot(godot) if p.is_dir() else "", env, runner)
+    if runner and not (side.is_project and side.cli.exists()):
+        sys.exit(f"{name}: --runner needs a project directory with a built bin/match_sim_cli")
+    return side
+
+
+def side_text(side: Side) -> str:
+    return f"{side.path}{' (match runner)' if side.runner else ''}{' ' + str(side.env) if side.env else ''}"
 
 
 def portable(args, env: dict[str, str]) -> dict[str, str]:
@@ -653,7 +684,7 @@ def human_keys_ready(keys: list[str], sides: list[Side], one_process: bool) -> N
     if not any(is_human(k) for k in keys):
         return
     if one_process:
-        sys.exit("--one-process plays AI seeds only; the human seat runs one seed per process")
+        sys.exit("--one-process and --runner play AI seeds only; the human seat runs one seed per process")
     for side in sides:
         install_human_runner(side)
 
@@ -671,14 +702,14 @@ class Say:
 def cmd_check(args) -> int:
     work = make_work(args.work)
     say = Say(work / "parity.log")
-    a = make_side("A", args.a, args.godot_a or args.godot, portable(args, parse_env(args.env_a)))
-    b = make_side("B", args.b, args.godot_b or args.godot, portable(args, parse_env(args.env_b)))
+    a = make_side("A", args.a, args.godot_a or args.godot, portable(args, parse_env(args.env_a)), args.runner_a)
+    b = make_side("B", args.b, args.godot_b or args.godot, portable(args, parse_env(args.env_b)), args.runner_b)
     keys = pick_seeds(args.seeds, args.human)
-    human_keys_ready(keys, [a, b], args.one_process_a or args.one_process_b)
+    human_keys_ready(keys, [a, b], args.one_process_a or args.one_process_b or args.runner_a or args.runner_b)
     dirs = {"A": work / "A", "B": work / "B"}
     for d in dirs.values():
         d.mkdir(exist_ok=True)
-    say(f"PARITY {', '.join(keys)}: A {a.path}{' ' + str(a.env) if a.env else ''} | B {b.path}{' ' + str(b.env) if b.env else ''}; "
+    say(f"PARITY {', '.join(keys)}: A {side_text(a)} | B {side_text(b)}; "
         f"{args.jobs} at once; output {work}")
     started = time.time()
     jobs = []
@@ -719,10 +750,10 @@ def cmd_check(args) -> int:
 def cmd_run(args) -> int:
     out = make_work(args.out)
     say = Say(out / "parity.log")
-    side = make_side("A", args.side, args.godot, portable(args, parse_env(args.env)))
+    side = make_side("A", args.side, args.godot, portable(args, parse_env(args.env)), args.runner)
     keys = pick_seeds(args.seeds, args.human)
-    human_keys_ready(keys, [side], args.one_process)
-    say(f"RUN {', '.join(keys)} on {side.path}{' in one process' if args.one_process else ''}; output {out}")
+    human_keys_ready(keys, [side], args.one_process or args.runner)
+    say(f"RUN {', '.join(keys)} on {side_text(side)}{' in one process' if args.one_process else ''}; output {out}")
     jobs = [Job(side, keys[0], out, args.dump_day, tuple(keys[1:]))] if args.one_process else [Job(side, k, out, args.dump_day) for k in keys]
     results = run_jobs(jobs, args.jobs, args.timeout_min, out, say)
     (out / "runs.json").write_text(json.dumps(results, indent=1), encoding="utf-8")
@@ -746,6 +777,62 @@ def cmd_compare(args) -> int:
     same = bool(rows) and all(r["identical"] for r in rows)
     print("IDENTICAL" if same else "DIFFERENT")
     return 0 if same else 1
+
+
+def cmd_runner_job(args) -> int:
+    """A runner side's run (start(), hidden): the Godot match runner prepares the job's matches, the side's
+    bin/match_sim_cli plays them. The prepare's lines go to the log behind "PREPARE ", so only match_sim_cli's
+    lines begin and report a match; a match the prepare did not write reports the prepare's failure."""
+    job = json.loads(Path(args.job).read_text(encoding="utf-8"))
+    snapshots = Path(job["snapshots"])
+    snapshots.mkdir(parents=True, exist_ok=True)
+    matches: list[dict] = job["matches"]
+    listed = len(matches) > 1
+    unprepared = ("HEROES_AI_MATCH_DIGEST", "HEROES_AI_MATCH_DUMP", "HEROES_AI_MATCH_DUMP_DAY")
+    prepares = [{**{k: v for k, v in settings.items() if k not in unprepared},
+                 "HEROES_AI_MATCH_PREPARE": (snapshots / f"match{index}.snap").as_posix()} for index, settings in enumerate(matches)]
+    env = dict(os.environ)
+    if listed:
+        (snapshots / "prepare.json").write_text(json.dumps(prepares, indent=1), encoding="utf-8")
+        env["HEROES_AI_MATCH_LIST"] = str(snapshots / "prepare.json")
+    else:
+        env.update(prepares[0])
+    proc = subprocess.run(job["godot"], env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL)
+    prepared: set[str] = set()
+    failures: dict[str, str] = {}
+    for line in proc.stdout.decode("utf-8", errors="replace").splitlines():
+        print("PREPARE " + line)
+        if line.startswith(REPORT_ID + " "):
+            try:
+                report = json.loads(line[len(REPORT_ID) + 1:])
+            except ValueError:
+                continue
+            if report.get("ok") and report.get("prepared"):
+                prepared.add(Path(report["prepared"]).resolve().as_posix())
+            elif not report.get("ok"):
+                failures[str(report.get("out", ""))] = line
+    play = []
+    failed = False
+    for settings, prepare in zip(matches, prepares):
+        if Path(prepare["HEROES_AI_MATCH_PREPARE"]).resolve().as_posix() in prepared:
+            play.append({**settings, "HEROES_AI_MATCH_SNAPSHOT": prepare["HEROES_AI_MATCH_PREPARE"]})
+            continue
+        failed = True
+        out = settings["HEROES_AI_MATCH_OUT"]
+        if listed:
+            print(f"{BEGIN_ID} {json.dumps({'out': out})}")
+        error = f"the match runner did not prepare the match (exit {proc.returncode})"
+        print(failures.get(out) or f"{REPORT_ID} " + json.dumps({"ok": False, "out": out, "error": error}))
+    sys.stdout.flush()
+    if play:
+        env = dict(os.environ)
+        if listed:
+            (snapshots / "play.json").write_text(json.dumps(play, indent=1), encoding="utf-8")
+            env["HEROES_AI_MATCH_LIST"] = str(snapshots / "play.json")
+        else:
+            env.update(play[0])
+        failed = subprocess.run([job["cli"]], env=env, stdin=subprocess.DEVNULL).returncode != 0 or failed
+    return 1 if failed else 0
 
 
 def link_dir(link: Path, target: Path) -> None:
@@ -827,6 +914,8 @@ def main() -> int:
     p.add_argument("--env-b", action="append", metavar="NAME=VALUE")
     p.add_argument("--one-process-a", action="store_true", help="play side A's seeds in one Godot process, in --seeds order")
     p.add_argument("--one-process-b", action="store_true", help="play side B's seeds in one Godot process, in --seeds order")
+    p.add_argument("--runner-a", action="store_true", help="play side A through the match runner outside Godot (bin/match_sim_cli)")
+    p.add_argument("--runner-b", action="store_true", help="play side B through the match runner outside Godot (bin/match_sim_cli)")
     p.add_argument("--work", help="output folder (default a new temp folder)")
     p.add_argument("--no-dump", action="store_true", help="skip the replay with a full state dump")
     p.add_argument("--keep", action="store_true", help="keep the state dumps")
@@ -838,7 +927,12 @@ def main() -> int:
     p.add_argument("--out", help="output folder (default a new temp folder)")
     p.add_argument("--dump-day", type=int, help="stop on this day (the human seat: step) with a full state dump")
     p.add_argument("--one-process", action="store_true", help="play the seeds in one Godot process, in --seeds order")
+    p.add_argument("--runner", action="store_true", help="play through the match runner outside Godot (bin/match_sim_cli)")
     p.set_defaults(func=cmd_run)
+
+    p = sub.add_parser("runner-job")
+    p.add_argument("job")
+    p.set_defaults(func=cmd_runner_job)
 
     p = sub.add_parser("compare", help="compare two `run` folders")
     p.add_argument("a")

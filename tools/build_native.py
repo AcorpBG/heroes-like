@@ -6,8 +6,9 @@
     python tools/build_native.py linux                   # rules library on the Linux build server
     python tools/build_native.py linux --part all        # rules and map persistence there
 
-Parts: `rules` (src/gdextension/rules: aurelion_rules, rules_selftest, battle_sim_cli) and `map`
-(src/gdextension: aurelion_map_persistence, the generator's CLI and self-test).
+Parts: `rules` (src/gdextension/rules: aurelion_rules, rules_selftest, battle_sim_cli,
+match_sim_cli) and `map` (src/gdextension: aurelion_map_persistence, the generator's CLI and
+self-test).
 Each flavour (template_debug, template_release) has its own build tree in .artifacts/.
 
 `windows` runs CMake with Visual Studio 2022 on this machine at below-normal priority,
@@ -58,16 +59,16 @@ PARTS = {
 		"source": RULES_DIR,
 		"paths": [RULES_DIR, "src/gdextension/cmake"],
 		"trees": {
-			"template_debug": ["aurelion_rules", "rules_selftest", "battle_sim_cli"],
+			"template_debug": ["aurelion_rules", "rules_selftest", "battle_sim_cli", "match_sim_cli"],
 			"template_release": ["aurelion_rules"],
 		},
 		"outputs": {
 			"windows": {
-				"template_debug": ["aurelion_rules.windows.template_debug.x86_64.dll", "rules_selftest.exe", "battle_sim_cli.exe"],
+				"template_debug": ["aurelion_rules.windows.template_debug.x86_64.dll", "rules_selftest.exe", "battle_sim_cli.exe", "match_sim_cli.exe"],
 				"template_release": ["aurelion_rules.windows.template_release.x86_64.dll"],
 			},
 			"linux": {
-				"template_debug": ["libaurelion_rules.linux.template_debug.x86_64.so", "rules_selftest", "battle_sim_cli"],
+				"template_debug": ["libaurelion_rules.linux.template_debug.x86_64.so", "rules_selftest", "battle_sim_cli", "match_sim_cli"],
 				"template_release": ["libaurelion_rules.linux.template_release.x86_64.so"],
 			},
 		},
