@@ -1,10 +1,10 @@
-// ContentService._validate_content (scripts/autoload/ContentService.gd) and the
-// checks it runs on the live content, ported under their GDScript names: what
-// is wrong with the shipped files, as push_warning lines. The checks of the
-// archived authored scenarios, campaigns and terrain layers stay in GDScript
-// (_validate_content runs them after these). A check GDScript stops on with a
-// runtime error ends that check with an error message, and the next one runs,
-// as GDScript goes on with the caller.
+// ContentService's start-up checks of the live content (its _validate_content
+// and the checks it ran), ported under their GDScript names: what is wrong with
+// the shipped files, as push_warning lines. The archived authored scenarios,
+// campaigns and terrain layers are no longer checked (owner decision
+// 2026-10-23). A check GDScript stops on with a runtime error ends that check
+// with an error message, and the next one runs, as GDScript goes on with the
+// caller.
 
 #include "aurelion_rules/content_store.hpp"
 
