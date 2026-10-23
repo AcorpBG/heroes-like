@@ -48,11 +48,11 @@ on a release export (template_release) it goes unseen and only the runner's own 
 Exit codes: 0 identical, 1 different, 2 a run failed.
 
 --runner-a/--runner-b (check) and --runner (run) play that side through the match runner outside Godot (Phase 8):
-the side's Godot match runner sets each match up and writes it as a snapshot (HEROES_AI_MATCH_PREPARE), and the
-side's bin/match_sim_cli plays its days and writes the digest, the record and the report line the scene would.
-The prepare's own lines go into the log behind "PREPARE ". With --one-process one Godot process prepares the
-seeds and one match_sim_cli process plays them, on threads. A runner side must be a project directory with a
-built bin/match_sim_cli; it plays AI seeds only.
+the side's Godot match runner writes its content snapshot once (HEROES_AI_MATCH_CONTENT_SNAPSHOT), and the
+side's bin/match_sim_cli generates each match's map from it as the scene does, plays its days and writes the
+digest, the record and the report line the scene would. The snapshot run's own lines go into the log behind
+"CONTENT ". With --one-process one match_sim_cli process plays the seeds, on threads. A runner side must be a
+project directory with a built bin/match_sim_cli; it plays AI seeds only.
 
 --human (Phase 7, owner decision D-a) plays HUMAN_SEEDS instead: tests/human_seat_report.tscn plays seat 1 by
 fixed rules through the real main menu, overworld, town and battle screens, on generated maps or on the D9 copies
@@ -155,7 +155,7 @@ class Side:
     path: Path
     godot: str
     env: dict[str, str] = field(default_factory=dict)
-    # --runner: the Godot match runner prepares the matches, bin/match_sim_cli plays them.
+    # --runner: bin/match_sim_cli generates and plays the matches from the Godot match runner's content snapshot.
     runner: bool = False
 
     @property
@@ -780,59 +780,46 @@ def cmd_compare(args) -> int:
 
 
 def cmd_runner_job(args) -> int:
-    """A runner side's run (start(), hidden): the Godot match runner prepares the job's matches, the side's
-    bin/match_sim_cli plays them. The prepare's lines go to the log behind "PREPARE ", so only match_sim_cli's
-    lines begin and report a match; a match the prepare did not write reports the prepare's failure."""
+    """A runner side's run (start(), hidden): the Godot match runner writes the content snapshot once
+    (HEROES_AI_MATCH_CONTENT_SNAPSHOT), the side's bin/match_sim_cli generates the job's maps from it and plays
+    them. The snapshot run's lines go to the log behind "CONTENT ", so only match_sim_cli's lines begin and report
+    a match; without the snapshot every match reports the snapshot run's failure."""
     job = json.loads(Path(args.job).read_text(encoding="utf-8"))
     snapshots = Path(job["snapshots"])
     snapshots.mkdir(parents=True, exist_ok=True)
     matches: list[dict] = job["matches"]
     listed = len(matches) > 1
-    unprepared = ("HEROES_AI_MATCH_DIGEST", "HEROES_AI_MATCH_DUMP", "HEROES_AI_MATCH_DUMP_DAY")
-    prepares = [{**{k: v for k, v in settings.items() if k not in unprepared},
-                 "HEROES_AI_MATCH_PREPARE": (snapshots / f"match{index}.snap").as_posix()} for index, settings in enumerate(matches)]
-    env = dict(os.environ)
-    if listed:
-        (snapshots / "prepare.json").write_text(json.dumps(prepares, indent=1), encoding="utf-8")
-        env["HEROES_AI_MATCH_LIST"] = str(snapshots / "prepare.json")
-    else:
-        env.update(prepares[0])
+    content = (snapshots / "content.snap").as_posix()
+    env = {**os.environ, "HEROES_AI_MATCH_CONTENT_SNAPSHOT": content}
     proc = subprocess.run(job["godot"], env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL)
-    prepared: set[str] = set()
-    failures: dict[str, str] = {}
+    written = ""
     for line in proc.stdout.decode("utf-8", errors="replace").splitlines():
-        print("PREPARE " + line)
+        print("CONTENT " + line)
         if line.startswith(REPORT_ID + " "):
             try:
                 report = json.loads(line[len(REPORT_ID) + 1:])
             except ValueError:
                 continue
-            if report.get("ok") and report.get("prepared"):
-                prepared.add(Path(report["prepared"]).resolve().as_posix())
+            if report.get("ok") and report.get("content"):
+                written = line
             elif not report.get("ok"):
-                failures[str(report.get("out", ""))] = line
-    play = []
-    failed = False
-    for settings, prepare in zip(matches, prepares):
-        if Path(prepare["HEROES_AI_MATCH_PREPARE"]).resolve().as_posix() in prepared:
-            play.append({**settings, "HEROES_AI_MATCH_SNAPSHOT": prepare["HEROES_AI_MATCH_PREPARE"]})
-            continue
-        failed = True
-        out = settings["HEROES_AI_MATCH_OUT"]
-        if listed:
-            print(f"{BEGIN_ID} {json.dumps({'out': out})}")
-        error = f"the match runner did not prepare the match (exit {proc.returncode})"
-        print(failures.get(out) or f"{REPORT_ID} " + json.dumps({"ok": False, "out": out, "error": error}))
+                written = ""
     sys.stdout.flush()
-    if play:
-        env = dict(os.environ)
-        if listed:
-            (snapshots / "play.json").write_text(json.dumps(play, indent=1), encoding="utf-8")
-            env["HEROES_AI_MATCH_LIST"] = str(snapshots / "play.json")
-        else:
-            env.update(play[0])
-        failed = subprocess.run([job["cli"]], env=env, stdin=subprocess.DEVNULL).returncode != 0 or failed
-    return 1 if failed else 0
+    if not written or proc.returncode != 0 or not Path(content).exists():
+        error = f"the match runner did not write the content snapshot (exit {proc.returncode})"
+        for settings in matches:
+            out = settings["HEROES_AI_MATCH_OUT"]
+            if listed:
+                print(f"{BEGIN_ID} {json.dumps({'out': out})}")
+            print(f"{REPORT_ID} " + json.dumps({"ok": False, "out": out, "error": error}))
+        return 1
+    env = {**os.environ, "HEROES_AI_MATCH_CONTENT": content}
+    if listed:
+        (snapshots / "play.json").write_text(json.dumps(matches, indent=1), encoding="utf-8")
+        env["HEROES_AI_MATCH_LIST"] = str(snapshots / "play.json")
+    else:
+        env.update(matches[0])
+    return 1 if subprocess.run([job["cli"]], env=env, stdin=subprocess.DEVNULL).returncode != 0 else 0
 
 
 def link_dir(link: Path, target: Path) -> None:

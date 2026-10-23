@@ -3,7 +3,9 @@
 // The game's res:// files from a project folder on disk, for a host without
 // Godot (Phase 8, P8-7): the content::Files that ContentService and the map
 // package loads read through FileAccess and ResourceLoader in the game. Files
-// added with add() (a package a snapshot carries) answer before the disk.
+// added with add() (a package a snapshot carries) answer before the disk, and
+// so do the files written (the packages the runner generates, P8-8): they stay
+// in memory and the disk is never written.
 
 #include "aurelion_rules/content_store.hpp"
 
@@ -28,6 +30,16 @@ public:
 	// .scn, .gd, .json).
 	bool resource_exists(const std::string &path) override;
 	bool editor() override { return editor_; }
+	// add(path, bytes).
+	bool write(const std::string &path, const std::string &bytes) override {
+		add(path, bytes);
+		return true;
+	}
+	// A file added or written, or nullptr.
+	const std::string *added(const std::string &path) const {
+		const auto found = added_.find(path);
+		return found == added_.end() ? nullptr : &found->second;
+	}
 
 private:
 	// The disk path of a res:// path; false for another scheme.

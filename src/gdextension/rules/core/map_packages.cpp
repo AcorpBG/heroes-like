@@ -98,53 +98,6 @@ void make_read_only_recursive(State &state, const Value &value) {
 	}
 }
 
-Value package_operation_report(State &state, const char *operation, const char *status, const std::string &path, const Value &failures) {
-	const Value report = new_dict(state);
-	put(state, report, "schema_id", state.string("aurelion_package_operation_report"));
-	put(state, report, "schema_version", Value::of_int(1));
-	put(state, report, "operation", state.string(operation));
-	put(state, report, "status", state.string(status));
-	put(state, report, "path", state.string(path));
-	put(state, report, "failure_count", Value::of_int(state.array_size(failures.ref)));
-	put(state, report, "warning_count", Value::of_int(0));
-	put(state, report, "failures", failures);
-	put(state, report, "warnings", new_array(state));
-	return report;
-}
-
-Value package_failure(State &state, const char *operation, const std::string &path, const char *code, const char *message) {
-	const Value failure = new_dict(state);
-	put(state, failure, "code", state.string(code));
-	put(state, failure, "severity", state.string("fail"));
-	put(state, failure, "path", state.string(operation));
-	put(state, failure, "message", state.string(message));
-	put(state, failure, "context", new_dict(state));
-	const Value failures = new_array(state);
-	state.append(failures.ref, failure);
-
-	const Value result = new_dict(state);
-	put(state, result, "ok", Value::of_bool(false));
-	put(state, result, "status", state.string("fail"));
-	put(state, result, "error_code", state.string(code));
-	put(state, result, "message", state.string(message));
-	put(state, result, "operation", state.string(operation));
-	put(state, result, "path", state.string(path));
-	put(state, result, "report", package_operation_report(state, operation, "fail", path, failures));
-	put(state, result, "recoverable", Value::of_bool(true));
-	return result;
-}
-
-// package_success: the payload (built for this result alone) with the result's
-// fields after its own.
-Value package_success(State &state, const char *operation, const std::string &path, const Value &payload) {
-	put(state, payload, "ok", Value::of_bool(true));
-	put(state, payload, "status", state.string("pass"));
-	put(state, payload, "operation", state.string(operation));
-	put(state, payload, "path", state.string(path));
-	put(state, payload, "report", package_operation_report(state, operation, "pass", path, new_array(state)));
-	return payload;
-}
-
 // read_package_dictionary: the package, or the failure result in failure.
 bool read_package_dictionary(State &state, content::Files &files, const char *operation, const std::string &path, Value &package,
 		Value &failure) {
@@ -188,10 +141,10 @@ bool payload_dimension_in_range(const State &state, const Value &document, const
 	return number >= 1.0 && number <= double(maximum) && number == double(int64_t(number));
 }
 
-// MapDocument::assign_state with copy_containers, from a Dictionary holding
-// the state's keys (configure's argument, or the package's document, which
+// MapDocument::assign_state, from a Dictionary holding the state's keys
+// (configure's argument, or the package's document, which
 // map_document_state_from_payload passes on key by key).
-void assign_map_state(State &state, MapDocument &document, const Value &initial, const char *source_kind_fallback) {
+void assign_map_state(State &state, MapDocument &document, const Value &initial, const char *source_kind_fallback, bool copy_containers = true) {
 	document.map_id = text_value(state, get(state, initial, "map_id", state.string("")));
 	document.map_hash = text_value(state, get(state, initial, "map_hash", state.string("")));
 	document.source_kind = text_value(state, get(state, initial, "source_kind", state.string(source_kind_fallback)));
@@ -199,12 +152,13 @@ void assign_map_state(State &state, MapDocument &document, const Value &initial,
 	document.height = std::max<int32_t>(0, static_cast<int32_t>(gd::to_int(state, get(state, initial, "height", Value::of_int(0)))));
 	document.level_count = std::max<int32_t>(1, static_cast<int32_t>(gd::to_int(state, get(state, initial, "level_count", Value::of_int(1)))));
 	document.metadata = dict_or_new(state, get(state, initial, "metadata", Value()));
+	const auto copy = [&](const Value &value) { return copy_containers ? deep_copy(state, value) : value; };
 	const Value terrain_layers = get(state, initial, "terrain_layers", Value());
-	document.terrain_layers = terrain_layers.kind == Kind::Dict ? deep_copy(state, terrain_layers) : new_dict(state);
+	document.terrain_layers = terrain_layers.kind == Kind::Dict ? copy(terrain_layers) : new_dict(state);
 	const Value route_graph = get(state, initial, "route_graph", Value());
-	document.route_graph = route_graph.kind == Kind::Dict ? deep_copy(state, route_graph) : new_dict(state);
+	document.route_graph = route_graph.kind == Kind::Dict ? copy(route_graph) : new_dict(state);
 	const Value objects = get(state, initial, "objects", Value());
-	document.objects = objects.kind == Kind::Array ? deep_copy(state, objects) : new_array(state);
+	document.objects = objects.kind == Kind::Array ? copy(objects) : new_array(state);
 	make_read_only_recursive(state, document.objects);
 }
 
@@ -278,7 +232,62 @@ bool listed(const char *const (&names)[N], std::string_view method) {
 	return std::find(std::begin(names), std::end(names), method) != std::end(names);
 }
 
+Value package_operation_report(State &state, const char *operation, const char *status, const std::string &path, const Value &failures) {
+	const Value report = new_dict(state);
+	put(state, report, "schema_id", state.string("aurelion_package_operation_report"));
+	put(state, report, "schema_version", Value::of_int(1));
+	put(state, report, "operation", state.string(operation));
+	put(state, report, "status", state.string(status));
+	put(state, report, "path", state.string(path));
+	put(state, report, "failure_count", Value::of_int(state.array_size(failures.ref)));
+	put(state, report, "warning_count", Value::of_int(0));
+	put(state, report, "failures", failures);
+	put(state, report, "warnings", new_array(state));
+	return report;
+}
+
 } // namespace
+
+Value package_failure(State &state, const char *operation, const std::string &path, const char *code, const char *message) {
+	const Value failure = new_dict(state);
+	put(state, failure, "code", state.string(code));
+	put(state, failure, "severity", state.string("fail"));
+	put(state, failure, "path", state.string(operation));
+	put(state, failure, "message", state.string(message));
+	put(state, failure, "context", new_dict(state));
+	const Value failures = new_array(state);
+	state.append(failures.ref, failure);
+
+	const Value result = new_dict(state);
+	put(state, result, "ok", Value::of_bool(false));
+	put(state, result, "status", state.string("fail"));
+	put(state, result, "error_code", state.string(code));
+	put(state, result, "message", state.string(message));
+	put(state, result, "operation", state.string(operation));
+	put(state, result, "path", state.string(path));
+	put(state, result, "report", package_operation_report(state, operation, "fail", path, failures));
+	put(state, result, "recoverable", Value::of_bool(true));
+	return result;
+}
+
+// package_success: the payload (built for this result alone) with the result's
+// fields after its own.
+Value package_success(State &state, const char *operation, const std::string &path, const Value &payload) {
+	put(state, payload, "ok", Value::of_bool(true));
+	put(state, payload, "status", state.string("pass"));
+	put(state, payload, "operation", state.string(operation));
+	put(state, payload, "path", state.string(path));
+	put(state, payload, "report", package_operation_report(state, operation, "pass", path, new_array(state)));
+	return payload;
+}
+
+void configure_map_document(State &state, MapDocument &document, const Value &initial, bool copy_containers) {
+	assign_map_state(state, document, initial, "test_fixture", copy_containers);
+}
+
+void configure_scenario_document(State &state, ScenarioDocument &document, const Value &initial) {
+	assign_scenario_state(state, document, initial);
+}
 
 Value load_map_package(State &state, content::Files &files, const std::string &path, MapDocument &document, const Value &document_object) {
 	const char *operation = "load_map_package";

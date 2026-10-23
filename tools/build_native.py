@@ -57,7 +57,10 @@ RULES_DIR = "src/gdextension/rules"
 PARTS = {
 	"rules": {
 		"source": RULES_DIR,
-		"paths": [RULES_DIR, "src/gdextension/cmake"],
+		# The runner compiles the map library's generator core too (P8-8).
+		"paths": [RULES_DIR, "src/gdextension/cmake", "src/gdextension/src/h3maped_rmg_core.cpp", "src/gdextension/src/h3maped_rmg_object_catalog.cpp",
+			"src/gdextension/src/h3maped_rmg_template_catalog.cpp", "src/gdextension/include/h3maped_rmg_core.hpp",
+			"src/gdextension/include/runtime_object_classification.hpp"],
 		"trees": {
 			"template_debug": ["aurelion_rules", "rules_selftest", "battle_sim_cli", "match_sim_cli"],
 			"template_release": ["aurelion_rules"],

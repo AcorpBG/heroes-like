@@ -94,6 +94,12 @@ extends Node
 #                          the rules scripts' static vars as a game starts go
 #                          into content.snap in the same folder when it is not
 #                          there yet. The report line says "prepared".
+# HEROES_AI_MATCH_CONTENT_SNAPSHOT a file path: only that content snapshot is
+#                          written, with the project folder, and no match
+#                          plays. bin/match_sim_cli generates the matches' maps
+#                          from it and plays them as this scene would
+#                          (HEROES_AI_MATCH_CONTENT; tools/ai_match_batch.py
+#                          --runner, tools/rules_parity.py --runner-b).
 #
 # The match fails at once when the native rules library is not registered:
 # without it every battle hex search errors and battles play out wrong.
@@ -143,6 +149,15 @@ func _run() -> void:
 		_fail("The native rules library is not loaded: %s." % NativeRulesScript.REGISTER_HINT)
 		get_tree().quit(1)
 		return
+	var content_only := OS.get_environment("HEROES_AI_MATCH_CONTENT_SNAPSHOT").strip_edges()
+	if content_only != "":
+		if not load(RULES_SNAPSHOT_PATH).write(content_only, _content_snapshot()):
+			_fail("The content snapshot %s cannot be written." % content_only)
+			get_tree().quit(1)
+			return
+		print("%s %s" % [REPORT_ID, JSON.stringify({"ok": true, "content": ProjectSettings.globalize_path(content_only)})])
+		get_tree().quit(0)
+		return
 	var matches := [{}]
 	var list_path := OS.get_environment("HEROES_AI_MATCH_LIST").strip_edges()
 	if list_path != "":
@@ -159,7 +174,7 @@ func _run() -> void:
 		_settings = entry
 		var prepare := _env("HEROES_AI_MATCH_PREPARE").strip_edges()
 		if prepare != "" and not FileAccess.file_exists(prepare.get_base_dir().path_join("content.snap")):
-			_cold_content = load(RULES_SNAPSHOT_PATH).content_snapshot(ContentService)
+			_cold_content = _content_snapshot()
 			break
 	var all_ok := true
 	for entry in matches:
@@ -170,6 +185,14 @@ func _run() -> void:
 		_end_match()
 		all_ok = all_ok and not _failed
 	get_tree().quit(0 if all_ok else 1)
+
+## The content and the rules scripts' static vars as a game starts, and the
+## project folder whose files match_sim_cli reads (the content catalogs the map
+## generation reads, the art the packages name).
+func _content_snapshot() -> Dictionary:
+	var content: Dictionary = load(RULES_SNAPSHOT_PATH).content_snapshot(ContentService)
+	content["project"] = ProjectSettings.globalize_path("res://")
+	return content
 
 ## A match setting: the match list's entry, else the environment.
 func _env(name: String) -> String:

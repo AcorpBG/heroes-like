@@ -1,42 +1,56 @@
-// match_sim_cli: the AI match runner without Godot (Phase 8, P8-3, P8-4 and
-// P8-7; docs/native-rules-engine-transition.md).
+// match_sim_cli: the AI match runner without Godot (Phase 8, P8-3, P8-4, P8-7
+// and P8-8; docs/native-rules-engine-transition.md).
 //
 //   match_sim_cli [--threads N]
 //
-// The match runner scene (tests/ai_versus_ai_match_report.gd) makes each
-// match's map in the game. With HEROES_AI_MATCH_PREPARE it writes the map's
-// setup and its two packages, with the match's settings, as a snapshot
-// (aurelion_rules/snapshot.hpp), with the content and the rules scripts'
-// static vars in content.snap beside it, and stops. This tool goes on from
-// there as the scene does: the session starts natively from the packages
-// (ScenarioSelectRules.start_random_map_skirmish_session_from_setup, Phase 7's
-// 7.11), the human seat goes to the computer (AiSeatRules.hand_human_seat_to_ai)
-// and the days play, each the day registry's OverworldRules.end_turn. The
-// scene's GDScript around them (the handover's check, the digest, the notes,
-// the ledger, the town weeks, the end of the match, the record and the report
-// line) is C++ here, calling the same native functions. It writes what the
-// scene writes.
+// It plays the matches of the match runner scene
+// (tests/ai_versus_ai_match_report.gd) as the scene does. A match's map is
+// generated here as the scene generates it
+// (ScenarioSelectRules.build_random_map_skirmish_setup_with_retry over the
+// core's port of the map library's generation, aurelion_rules/map_generation.hpp),
+// from the content snapshot that the scene's HEROES_AI_MATCH_CONTENT_SNAPSHOT
+// writes and HEROES_AI_MATCH_CONTENT names. Or the scene makes the map
+// (HEROES_AI_MATCH_PREPARE: from its map corpus, or for a weight set from a
+// .json file) and writes the map's setup and its two packages, with the
+// match's settings, as a snapshot (aurelion_rules/snapshot.hpp), with the
+// content snapshot content.snap beside it, and stops; HEROES_AI_MATCH_SNAPSHOT
+// names that snapshot. From the setup on the session starts natively from the
+// packages (ScenarioSelectRules.start_random_map_skirmish_session_from_setup,
+// Phase 7's 7.11), the human seat goes to the computer
+// (AiSeatRules.hand_human_seat_to_ai) and the days play, each the day
+// registry's OverworldRules.end_turn. The scene's GDScript around them (the
+// line-up's and the map seed's draw, the handover's check, the digest, the
+// notes, the ledger, the town weeks, the end of the match, the record and the
+// report line) is C++ here, calling the same native functions. It writes what
+// the scene writes.
 //
 // The settings are the scene's: HEROES_AI_MATCH_* in the environment for one
 // match, or HEROES_AI_MATCH_LIST, a JSON array of objects of them, one per
-// match (a setting an object leaves out comes from the environment).
-// HEROES_AI_MATCH_SNAPSHOT names a match's setup snapshot and
-// HEROES_AI_MATCH_CONTENT its content snapshot (default: content.snap in the
-// same folder). The tool reads HEROES_AI_MATCH_OUT, _MAX_DAYS, _DIGEST, _DUMP,
-// _DUMP_DAY, _DIGEST_BLANK and _TRACE; the snapshot fixes everything else (the
-// seed, the map, the line-up, the weight sets). The matches play on --threads
-// threads (default: one per core, at most one per match), one match per thread
-// at a time. Each match prints its lines together when it ends: in a list its
-// AI_VERSUS_AI_MATCH_BEGIN line first, then its errors, warnings and trace
-// lines, then its report line. A last line, MATCH_SIM_CLI {...}, counts what
-// the host answered. The exit code is 1 when a match failed.
+// match (a setting an object leaves out comes from the environment). A
+// generated match takes every setting but the map corpus, and weight sets by
+// name only. A prepared match takes HEROES_AI_MATCH_OUT, _MAX_DAYS, _DIGEST,
+// _DUMP, _DUMP_DAY, _DIGEST_BLANK and _TRACE, and its snapshot fixes everything
+// else (the seed, the map, the line-up, the weight sets); its content snapshot
+// is HEROES_AI_MATCH_CONTENT, else content.snap in the snapshot's folder. The
+// matches play on --threads threads (default: one per core, at most one per
+// match), one match per thread at a time. In a list, a thread's match on the
+// map and line-up of its match before is "kept", as in the scene's process: its
+// map comes again from the generator's kept result, as one on the same map
+// with another line-up does ("reused"). Each match prints its lines together
+// when it ends: in a list its AI_VERSUS_AI_MATCH_BEGIN line first, then its
+// errors, warnings and trace lines, then its report line. A last line,
+// MATCH_SIM_CLI {...}, counts what the host answered. The exit code is 1 when
+// a match failed.
 //
-// The host (P8-3, P8-7): content rows and files come from the content
+// The host (P8-3, P8-7, P8-8): content rows and files come from the content
 // snapshot, any content override (seat weight sets) from the setup snapshot.
 // The map package service and its documents are the core's port of them
-// (aurelion_rules/map_packages.hpp), reading the packages the snapshot carries;
-// the art the packages name is looked up in the project folder the scene ran
-// in (content::DiskFiles). The new session is a SessionData of this host's
+// (aurelion_rules/map_packages.hpp and map_generation.hpp), with the files of
+// the project folder the scene ran in (content::DiskFiles: the content
+// catalogs the generation reads, the art the packages name) and the packages
+// the snapshot carries or the generation writes, which stay in memory. The
+// generator's last result is kept per thread (map_generation::GeneratorCache).
+// The new session is a SessionData of this host's
 // (SessionStateStore.new_session_data). A generated map's session registers no
 // scenario draft, so its scenario and terrain layers rows are {}. Static vars
 // start, in each match, as the content snapshot's capture of a game that has
@@ -53,8 +67,11 @@
 #include "aurelion_rules/battle_state.hpp"
 #include "aurelion_rules/compat/godot_json.hpp"
 #include "aurelion_rules/compat/godot_math.hpp"
+#include "aurelion_rules/compat/godot_pcg.hpp"
 #include "aurelion_rules/compat/godot_string.hpp"
+#include "aurelion_rules/compat/json_writer.hpp"
 #include "aurelion_rules/disk_files.hpp"
+#include "aurelion_rules/map_generation.hpp"
 #include "aurelion_rules/map_packages.hpp"
 #include "aurelion_rules/port/content_service_ai.hpp"
 #include "aurelion_rules/port/enemy_turn_rules.hpp"
@@ -81,6 +98,7 @@
 #include <map>
 #include <memory>
 #include <mutex>
+#include <random>
 #include <set>
 #include <string>
 #include <string_view>
@@ -111,6 +129,7 @@ namespace st = aurelion::rules::state;
 namespace key = st::key;
 namespace players = port::player_identity_rules;
 namespace map_packages = aurelion::rules::map_packages;
+namespace map_generation = aurelion::rules::map_generation;
 using cli::Content;
 using cli::fail;
 using cli::kTableNames;
@@ -127,6 +146,9 @@ constexpr const char *kReportId = "AI_VERSUS_AI_MATCH_REPORT";
 constexpr const char *kBeginId = "AI_VERSUS_AI_MATCH_BEGIN";
 constexpr int64_t kDefaultMaxDays = 320;
 constexpr const char *kDefaultOut = "ai_versus_ai_match.json";
+// ScenarioSelectRules._generated_map_package_dir() in the editor, as the
+// scene's map keys name it.
+constexpr const char *kGeneratedMapDir = "res://maps";
 // A worker's State is cleared whole, atoms too, between matches once it holds
 // more atoms than this: the logs' texts would grow it without end.
 constexpr size_t kAtomLimit = size_t(1) << 20;
@@ -161,219 +183,9 @@ enum Field : size_t {
 
 // --------------------------------------------------------------- JSON text
 
-// "\"" + text.json_escape() + "\"" (String::json_escape): the backslash,
-// \b \f \n \r \t \v and the quote; other characters as they are.
-void append_json_string(std::string &out, std::string_view text) {
-	out += '"';
-	for (const char c : text) {
-		switch (c) {
-			case '\\':
-				out += "\\\\";
-				break;
-			case '\b':
-				out += "\\b";
-				break;
-			case '\f':
-				out += "\\f";
-				break;
-			case '\n':
-				out += "\\n";
-				break;
-			case '\r':
-				out += "\\r";
-				break;
-			case '\t':
-				out += "\\t";
-				break;
-			case '\v':
-				out += "\\v";
-				break;
-			case '"':
-				out += "\\\"";
-				break;
-			default:
-				out += c;
-		}
-	}
-	out += '"';
-}
-
-std::string vector_text(const Value &value) {
-	if (value.kind == Kind::Vector2i) {
-		return "(" + compat::itos(value.vx()) + ", " + compat::itos(value.vy()) + ")";
-	}
-	return "(" + compat::itos(value.vx()) + ", " + compat::itos(value.vy()) + ", " + compat::itos(value.vz()) + ")";
-}
-
-// String(key) of a Dictionary key, as JSON writes it.
-std::string key_text(const State &state, const Value &value) {
-	switch (value.kind) {
-		case Kind::String:
-		case Kind::StringName:
-			return state.text(value.ref);
-		case Kind::Int:
-			return compat::itos(value.i);
-		case Kind::Float:
-			return compat::num(value.f);
-		case Kind::Bool:
-			return value.b ? "true" : "false";
-		case Kind::Nil:
-			return "<null>";
-		case Kind::Vector2i:
-		case Kind::Vector3i:
-			return vector_text(value);
-		default:
-			return gd::type_name(value);
-	}
-}
-
-// StringLikeVariantOrder: String-likes by their text (UTF-8 byte order is code
-// point order), anything else by Variant's <, its type first.
-bool key_less(const State &state, const Value &a, const Value &b) {
-	if (a.is_string_like() && b.is_string_like()) {
-		return state.text(a.ref) < state.text(b.ref);
-	}
-	if (a.kind != b.kind) {
-		return gd::type_of(a) < gd::type_of(b);
-	}
-	switch (a.kind) {
-		case Kind::Int:
-			return a.i < b.i;
-		case Kind::Float:
-			return a.f < b.f;
-		case Kind::Bool:
-			return !a.b && b.b;
-		default:
-			return false;
-	}
-}
-
-// JSON.stringify(value, indent, sort_keys, full_precision) (JSON::_stringify),
-// at depth levels of indent.
-struct Json {
-	const State &state;
-	std::string indent;
-	bool sort_keys = true;
-	bool full_precision = false;
-
-	void pad(std::string &out, int depth) const {
-		for (int level = 0; level < depth; ++level) {
-			out += indent;
-		}
-	}
-	const char *newline() const { return indent.empty() ? "" : "\n"; }
-
-	// [items], each item written at depth + 1.
-	template <typename Write>
-	void list(std::string &out, size_t count, int depth, Write write) const {
-		if (count == 0) {
-			out += "[]";
-			return;
-		}
-		out += '[';
-		out += newline();
-		for (size_t index = 0; index < count; ++index) {
-			if (index > 0) {
-				out += ',';
-				out += newline();
-			}
-			pad(out, depth + 1);
-			write(index);
-		}
-		out += newline();
-		pad(out, depth);
-		out += ']';
-	}
-
-	void write(std::string &out, const Value &value, int depth) const {
-		switch (value.kind) {
-			case Kind::Nil:
-			case Kind::Opaque:
-				out += "null";
-				return;
-			case Kind::Bool:
-				out += value.b ? "true" : "false";
-				return;
-			case Kind::Int:
-				out += compat::itos(value.i);
-				return;
-			case Kind::Float:
-				out += compat::json_float(value.f, full_precision);
-				return;
-			case Kind::String:
-			case Kind::StringName:
-				append_json_string(out, state.text(value.ref));
-				return;
-			case Kind::Vector2i:
-			case Kind::Vector3i:
-				append_json_string(out, vector_text(value));
-				return;
-			case Kind::Array: {
-				const st::ValueList &items = state.array(value.ref).items;
-				list(out, items.size(), depth, [&](size_t index) { write(out, items[index], depth + 1); });
-				return;
-			}
-			case Kind::PackedByte:
-			case Kind::PackedInt32:
-			case Kind::PackedString: {
-				const st::PackedNode &node = state.packed(value.ref);
-				list(out, node.size(), depth, [&](size_t index) {
-					if (node.kind == Kind::PackedByte) {
-						out += compat::itos(node.bytes[index]);
-					} else if (node.kind == Kind::PackedInt32) {
-						out += compat::itos(node.ints[index]);
-					} else {
-						append_json_string(out, state.text(node.atoms[index]));
-					}
-				});
-				return;
-			}
-			case Kind::Dict: {
-				const st::DictNode &node = state.dict(value.ref);
-				std::vector<size_t> order(node.keys.size());
-				for (size_t index = 0; index < order.size(); ++index) {
-					order[index] = index;
-				}
-				const st::ValueList &keys = node.keys.list();
-				if (sort_keys) {
-					std::sort(order.begin(), order.end(), [&](size_t a, size_t b) { return key_less(state, keys[a], keys[b]); });
-				}
-				if (order.empty()) {
-					// An empty Array is "[]", an empty Dictionary its two
-					// statement ends and its closing indent.
-					out += '{';
-					out += newline();
-					out += newline();
-					pad(out, depth);
-					out += '}';
-					return;
-				}
-				out += '{';
-				out += newline();
-				for (size_t index = 0; index < order.size(); ++index) {
-					if (index > 0) {
-						out += ',';
-						out += newline();
-					}
-					pad(out, depth + 1);
-					append_json_string(out, key_text(state, keys[order[index]]));
-					out += indent.empty() ? ":" : ": ";
-					write(out, node.values[order[index]], depth + 1);
-				}
-				out += newline();
-				pad(out, depth);
-				out += '}';
-				return;
-			}
-		}
-	}
-
-	std::string text(const Value &value, int depth = 0) const {
-		std::string out;
-		write(out, value, depth);
-		return out;
-	}
-};
+using compat::append_json_string;
+using compat::key_text;
+using Json = compat::JsonWriter;
 
 // ------------------------------------------------------------ settings
 
@@ -387,6 +199,45 @@ std::string strip(const std::string &text) {
 		--end;
 	}
 	return text.substr(begin, end - begin);
+}
+
+// String::to_lower of the ASCII texts the settings hold.
+std::string ascii_lower(std::string text) {
+	for (char &c : text) {
+		if (c >= 'A' && c <= 'Z') {
+			c = static_cast<char>(c - 'A' + 'a');
+		}
+	}
+	return text;
+}
+
+// String::split(",", allow_empty).
+std::vector<std::string> split(const std::string &text, bool allow_empty) {
+	std::vector<std::string> parts;
+	size_t start = 0;
+	for (;;) {
+		const size_t comma = text.find(',', start);
+		const std::string part = text.substr(start, comma == std::string::npos ? std::string::npos : comma - start);
+		if (allow_empty || !part.empty()) {
+			parts.push_back(part);
+		}
+		if (comma == std::string::npos) {
+			return parts;
+		}
+		start = comma + 1;
+	}
+}
+
+// String::left(count) of UTF-8 text: its first count characters.
+std::string left(const std::string &text, size_t count) {
+	size_t end = 0;
+	for (size_t characters = 0; end < text.size() && characters < count; ++characters) {
+		++end;
+		while (end < text.size() && (static_cast<unsigned char>(text[end]) & 0xC0) == 0x80) {
+			++end;
+		}
+	}
+	return text.substr(0, end);
 }
 
 // OS.get_environment(name), as the port reads it.
@@ -479,6 +330,15 @@ struct StoreMap {
 		arrays.assign(to->state.array_count(), 0);
 		dicts.assign(to->state.dict_count(), 0);
 		packeds.assign(to->state.packed_count(), 0);
+	}
+	// No store: a generated match has no setup snapshot.
+	void unbind() {
+		store = nullptr;
+		atoms.clear();
+		back.clear();
+		arrays.clear();
+		dicts.clear();
+		packeds.clear();
 	}
 	void forget_atoms() {
 		std::fill(atoms.begin(), atoms.end(), 0);
@@ -677,6 +537,9 @@ struct Calls {
 	const port::Function *active_hero_entries = nullptr;
 	const port::Function *hero_name = nullptr;
 	const port::Function *town_name = nullptr;
+	const port::Function *faction_options = nullptr;
+	const port::Function *player_config = nullptr;
+	const port::Function *skirmish_setup = nullptr;
 
 	static const port::Function *find(const char *name, int arity) {
 		const port::Function *function = port::find_function(name);
@@ -693,7 +556,10 @@ struct Calls {
 			army_power(find("AiHeroRules.army_power", 2)),
 			active_hero_entries(find("AiHeroRules.active_hero_entries", 2)),
 			hero_name(find("AiHeroRules.hero_name", 1)),
-			town_name(find("EnemyTurnRules._town_name", 1)) {}
+			town_name(find("EnemyTurnRules._town_name", 1)),
+			faction_options(find("ScenarioSelectRules.random_map_faction_options", 0)),
+			player_config(find("ScenarioSelectRules.build_random_map_player_config", 12)),
+			skirmish_setup(find("ScenarioSelectRules.build_random_map_skirmish_setup_with_retry", 3)) {}
 };
 
 // The match failed: the scene's _fail, which ends the match.
@@ -701,8 +567,9 @@ struct MatchFailed {
 	std::string message;
 };
 
-// One thread's player: its own State and the host the ported code asks.
-class Worker final : public st::Backing {
+// One thread's player: its own State and the host the ported code asks, whose
+// map package service makes its documents (map_generation::Documents).
+class Worker final : public st::Backing, public map_generation::Documents {
 public:
 	Worker(Contents &contents, Types &types, const Calls &calls) :
 			contents_(contents), types_(types), calls_(calls) {
@@ -868,15 +735,29 @@ public:
 			}
 			const std::string path = state.text(args[0].ref);
 			if (name == "load_map_package") {
-				const Value document = new_opaque("MapDocument");
-				opaques_[document.ref].document = static_cast<int>(map_documents_.size());
-				map_documents_.push_back(std::make_unique<map_packages::MapDocument>());
-				return map_packages::load_map_package(state, *disk_, path, *map_documents_.back(), document);
+				map_packages::MapDocument *document = nullptr;
+				const Value value = new_map_document(document);
+				return map_packages::load_map_package(state, *disk_, path, *document, value);
 			}
-			const Value document = new_opaque("ScenarioDocument");
-			opaques_[document.ref].document = static_cast<int>(scenario_documents_.size());
-			scenario_documents_.push_back(std::make_unique<map_packages::ScenarioDocument>());
-			return map_packages::load_scenario_package(state, *disk_, path, *scenario_documents_.back(), document);
+			map_packages::ScenarioDocument *document = nullptr;
+			const Value value = new_scenario_document(document);
+			return map_packages::load_scenario_package(state, *disk_, path, *document, value);
+		}
+		// The generation's calls (P8-8): what a call leaves out is {}.
+		const auto arg = [&](size_t index) { return index < count ? args[index] : gd::dict_value(state.new_dict()); };
+		if (what == "MapPackageService" && name == "generate_random_map") {
+			return map_generation::generate_random_map(state, *disk_, *this, generator_cache_, arg(0), arg(1));
+		}
+		if (what == "MapPackageService" && name == "convert_generated_payload") {
+			return map_generation::convert_generated_payload(state, arg(0), arg(1));
+		}
+		if (what == "MapPackageService" && (name == "save_map_package" || name == "save_scenario_package")) {
+			if (count < 2 || !args[1].is_string_like()) {
+				throw st::ScriptError("MapPackageService." + name + " takes a document and a String path");
+			}
+			const std::string path = state.text(args[1].ref);
+			return name == "save_map_package" ? map_generation::save_map_package(state, *disk_, *this, args[0], path, arg(2))
+											  : map_generation::save_scenario_package(state, *disk_, *this, args[0], path, arg(2));
 		}
 		const int document = opaques_.at(slot).document;
 		if (what == "MapDocument" && document >= 0 && static_cast<size_t>(document) < map_documents_.size()) {
@@ -887,6 +768,9 @@ public:
 		}
 		if (what == "ContentService" && name == "canonical_town_id" && count == 1) {
 			return canonical_town_id(state, gd::to_string(args[0]));
+		}
+		if (what == "ContentService" && name == "get_content_ids" && (count == 1 || count == 2)) {
+			return content_ids(state, gd::to_string(args[0]), count == 2 ? gd::to_string(args[1]) : state.intern("items"));
 		}
 		if (what == "SessionState" && name == "set") {
 			return Value();
@@ -903,6 +787,31 @@ public:
 			return map_packages::scenario_document_has_method(name);
 		}
 		throw st::ScriptError(what + ".has_method(\"" + name + "\"): a question the match runner does not answer");
+	}
+
+	// map_generation::Documents: each document behind an opaque value of its
+	// own, as the package loads make them.
+	Value new_map_document(map_packages::MapDocument *&out) override {
+		const Value value = new_opaque("MapDocument");
+		opaques_[value.ref].document = static_cast<int>(map_documents_.size());
+		map_documents_.push_back(std::make_unique<map_packages::MapDocument>());
+		out = map_documents_.back().get();
+		return value;
+	}
+	Value new_scenario_document(map_packages::ScenarioDocument *&out) override {
+		const Value value = new_opaque("ScenarioDocument");
+		opaques_[value.ref].document = static_cast<int>(scenario_documents_.size());
+		scenario_documents_.push_back(std::make_unique<map_packages::ScenarioDocument>());
+		out = scenario_documents_.back().get();
+		return value;
+	}
+	map_packages::MapDocument *map_document(const Value &value) override {
+		const int document = document_of(value, "MapDocument");
+		return document >= 0 && static_cast<size_t>(document) < map_documents_.size() ? map_documents_[document].get() : nullptr;
+	}
+	map_packages::ScenarioDocument *scenario_document(const Value &value) override {
+		const int document = document_of(value, "ScenarioDocument");
+		return document >= 0 && static_cast<size_t>(document) < scenario_documents_.size() ? scenario_documents_[document].get() : nullptr;
 	}
 	bool file_exists(State &state, uint32_t path) override {
 		return disk_ != nullptr && disk_->exists(state.text(path));
@@ -1055,51 +964,15 @@ public:
 private:
 	// ------------------------------------------------------- the match
 
-	// The scene's _play from the map's setup on.
+	// The scene's _play: the match's session from a setup snapshot the scene
+	// prepared, else on a map generated here, then the match.
 	void match(const Settings &settings) {
-		const std::string snapshot_text = strip(settings.get("HEROES_AI_MATCH_SNAPSHOT"));
-		if (snapshot_text.empty()) {
-			throw MatchFailed{ "HEROES_AI_MATCH_SNAPSHOT names no setup snapshot (the scene's HEROES_AI_MATCH_PREPARE writes them)." };
-		}
-		const fs::path snapshot = fs::u8path(snapshot_text);
-		const std::string content_text = strip(settings.get("HEROES_AI_MATCH_CONTENT"));
-		const fs::path content_path = content_text.empty() ? snapshot.parent_path() / "content.snap" : fs::u8path(content_text);
-		const Content &content = contents_.get(content_path);
-		std::unique_ptr<Store> match_store = cli::load_store(snapshot, types_);
-		begin_match(content, *match_store);
-		const Store &store = *match_store;
-		const Value root = store.decoded.root;
-		const Value setup = store.get(root, "setup");
-		const Value packages = store.get(root, "packages");
-		if (setup.kind != Kind::Dict || packages.kind != Kind::Dict) {
-			fail(snapshot.string() + " is no setup snapshot: it needs setup and packages");
-		}
-		files_ = store.get(root, "files");
-		const Value revision = store.get(root, "content_revision");
-		content_revision_ = revision.kind == Kind::Int ? revision.i : 0;
-		const std::string match_seed = store.text(store.get(root, "match_seed"));
-		const std::string map_seed = store.text(store.get(root, "map_seed"));
-		const std::string map_source = store.text(store.get(root, "map"));
-		const std::string wanted_seed = strip(settings.get("HEROES_AI_MATCH_SEED"));
-		if (!wanted_seed.empty() && wanted_seed != "random" && wanted_seed != match_seed) {
-			throw MatchFailed{ "HEROES_AI_MATCH_SNAPSHOT " + snapshot_text + " holds match " + match_seed + ", not " + wanted_seed + "." };
-		}
-		// The project folder the scene ran in, with the packages it wrote in
-		// their places.
-		disk_ = std::make_unique<aurelion::rules::content::DiskFiles>(store.text(store.get(root, "project")), true);
-		const st::DictNode &package_node = store.state.dict_node(packages.ref);
-		for (size_t index = 0; index < package_node.keys.size(); ++index) {
-			const Value bytes = package_node.values[index];
-			if (bytes.kind != Kind::PackedByte) {
-				fail(snapshot.string() + " holds a package that is no PackedByteArray");
-			}
-			const std::vector<uint8_t> &data = store.state.packed_node(bytes.ref).bytes;
-			disk_->add(store.text(package_node.keys.list()[index]), std::string(data.begin(), data.end()));
-		}
-		scenario_id_ = store.text(store.get(store.get(store.get(setup, "package_startup"), "session_boundary_record"), "scenario_id"));
-
-		start_session(import_deep(match_deep_, setup));
-		hand_over(store, root, match_seed, map_seed);
+		std::unique_ptr<Store> match_store;
+		const Value plan = strip(settings.get("HEROES_AI_MATCH_SNAPSHOT")).empty() ? start_generated(settings) : start_prepared(settings, match_store);
+		const std::string match_seed = text_of(get(plan, state_.intern("match_seed")));
+		const std::string map_seed = text_of(get(plan, state_.intern("map_seed")));
+		const std::string map_source = text_of(get(plan, state_.intern("map")));
+		hand_over(plan, match_seed, map_seed);
 
 		int64_t max_days = kDefaultMaxDays;
 		if (!settings.get("HEROES_AI_MATCH_MAX_DAYS").empty()) {
@@ -1282,7 +1155,243 @@ private:
 		}
 	}
 
-	void begin_match(const Content &content, const Store &match_store) {
+	// The session of the setup snapshot the scene prepared (match_store keeps
+	// it); the plan: the match's settings the snapshot holds.
+	Value start_prepared(const Settings &settings, std::unique_ptr<Store> &match_store) {
+		const std::string snapshot_text = strip(settings.get("HEROES_AI_MATCH_SNAPSHOT"));
+		const fs::path snapshot = fs::u8path(snapshot_text);
+		const std::string content_text = strip(settings.get("HEROES_AI_MATCH_CONTENT"));
+		const fs::path content_path = content_text.empty() ? snapshot.parent_path() / "content.snap" : fs::u8path(content_text);
+		const Content &content = contents_.get(content_path);
+		match_store = cli::load_store(snapshot, types_);
+		begin_match(content, match_store.get());
+		const Store &store = *match_store;
+		const Value root = store.decoded.root;
+		const Value setup = store.get(root, "setup");
+		const Value packages = store.get(root, "packages");
+		if (setup.kind != Kind::Dict || packages.kind != Kind::Dict) {
+			fail(snapshot.string() + " is no setup snapshot: it needs setup and packages");
+		}
+		files_ = store.get(root, "files");
+		const Value revision = store.get(root, "content_revision");
+		content_revision_ = revision.kind == Kind::Int ? revision.i : 0;
+		const std::string match_seed = store.text(store.get(root, "match_seed"));
+		const std::string wanted_seed = strip(settings.get("HEROES_AI_MATCH_SEED"));
+		if (!wanted_seed.empty() && wanted_seed != "random" && wanted_seed != match_seed) {
+			throw MatchFailed{ "HEROES_AI_MATCH_SNAPSHOT " + snapshot_text + " holds match " + match_seed + ", not " + wanted_seed + "." };
+		}
+		// The project folder the scene ran in, with the packages it wrote in
+		// their places.
+		disk_ = std::make_unique<aurelion::rules::content::DiskFiles>(store.text(store.get(root, "project")), true);
+		const st::DictNode &package_node = store.state.dict_node(packages.ref);
+		for (size_t index = 0; index < package_node.keys.size(); ++index) {
+			const Value bytes = package_node.values[index];
+			if (bytes.kind != Kind::PackedByte) {
+				fail(snapshot.string() + " holds a package that is no PackedByteArray");
+			}
+			const std::vector<uint8_t> &data = store.state.packed_node(bytes.ref).bytes;
+			disk_->add(store.text(package_node.keys.list()[index]), std::string(data.begin(), data.end()));
+		}
+		scenario_id_ = store.text(store.get(store.get(store.get(setup, "package_startup"), "session_boundary_record"), "scenario_id"));
+
+		start_session(import_deep(match_deep_, setup));
+		const uint32_t plan = state_.new_dict();
+		for (const char *name : { "match_seed", "map_seed", "swapped", "seat_factions", "player_count", "guards", "water", "levels", "seat_weights", "map" }) {
+			state_.set(plan, state_.string(name), import_deep(match_deep_, store.get(root, name)));
+		}
+		return gd::dict_value(plan);
+	}
+
+	// The scene's _play up to the session on its generated map (P8-8): the
+	// settings checked, the line-up and the map seed drawn, the map generated
+	// as _map_setup generates it (its packages into disk_) and the session
+	// started from it. The plan: the match's settings, as the scene's prepare
+	// writes them.
+	Value start_generated(const Settings &settings) {
+		const std::string content_text = strip(settings.get("HEROES_AI_MATCH_CONTENT"));
+		if (content_text.empty()) {
+			throw MatchFailed{ "match_sim_cli needs HEROES_AI_MATCH_CONTENT, the content snapshot it generates the map from (the scene's "
+							   "HEROES_AI_MATCH_CONTENT_SNAPSHOT writes it), or HEROES_AI_MATCH_SNAPSHOT, a setup snapshot the scene prepared." };
+		}
+		const Content &content = contents_.get(fs::u8path(content_text));
+		begin_match(content, nullptr);
+		const Store &content_store = *content.store;
+		const std::string project = content_store.text(content_store.get(content_store.decoded.root, "project"));
+		if (project.empty()) {
+			throw MatchFailed{ "The content snapshot " + content_text + " names no project folder (the scene's HEROES_AI_MATCH_CONTENT_SNAPSHOT writes it)." };
+		}
+		const Value revision = content_store.get(content_store.decoded.root, "revision");
+		content_revision_ = revision.kind == Kind::Int ? revision.i : 0;
+		files_ = Value();
+		disk_ = std::make_unique<aurelion::rules::content::DiskFiles>(project, true);
+
+		std::string match_seed = strip(settings.get("HEROES_AI_MATCH_SEED"));
+		if (match_seed.empty() || match_seed == "random") {
+			match_seed = "ai-match-" + compat::itos(std::random_device()());
+		}
+		const std::string swap = strip(settings.get("HEROES_AI_MATCH_SWAP"));
+		const bool swapped = !swap.empty() && swap != "0";
+		const int64_t player_count = settings.get("HEROES_AI_MATCH_PLAYERS").empty() ? 2 : std::clamp<int64_t>(compat::to_int(settings.get("HEROES_AI_MATCH_PLAYERS")), 2, 8);
+		std::string guards = ascii_lower(strip(settings.get("HEROES_AI_MATCH_GUARDS")));
+		if (guards.empty()) {
+			guards = "normal";
+		}
+		if (guards != "weak" && guards != "normal" && guards != "strong") {
+			throw MatchFailed{ "HEROES_AI_MATCH_GUARDS must be weak, normal or strong, got " + guards + "." };
+		}
+		std::string size_class = strip(settings.get("HEROES_AI_MATCH_SIZE"));
+		if (size_class.empty()) {
+			size_class = "homm3_small";
+		}
+		std::string water = ascii_lower(strip(settings.get("HEROES_AI_MATCH_WATER")));
+		if (water.empty()) {
+			water = "land";
+		}
+		if (water != "land" && water != "normal_water" && water != "islands") {
+			throw MatchFailed{ "HEROES_AI_MATCH_WATER must be land, normal_water or islands, got " + water + "." };
+		}
+		const int64_t levels = settings.get("HEROES_AI_MATCH_LEVELS").empty() ? 1 : compat::to_int(settings.get("HEROES_AI_MATCH_LEVELS"));
+		if (levels != 1 && levels != 2) {
+			throw MatchFailed{ "HEROES_AI_MATCH_LEVELS must be 1 or 2, got " + compat::itos(levels) + "." };
+		}
+
+		// rng.seed = hash(match_seed): the line-up from the sorted faction ids,
+		// then the map seed.
+		compat::GodotPcg rng;
+		rng.seed(compat::string_hash(match_seed));
+		std::vector<std::string> faction_ids;
+		for (const Value &option : gd::items(state_, calls_.faction_options->call(state_, nullptr))) {
+			faction_ids.push_back(state_.text(string_of(get(option, names_.id, state_.string("")))));
+		}
+		std::sort(faction_ids.begin(), faction_ids.end());
+		std::vector<std::string> drawn;
+		for (int64_t seat = 0; seat < player_count; ++seat) {
+			drawn.push_back(faction_ids.at(static_cast<size_t>(rng.randi_range(0, static_cast<int64_t>(faction_ids.size()) - 1))));
+		}
+		const std::string chosen = strip(settings.get("HEROES_AI_MATCH_FACTIONS"));
+		if (!chosen.empty()) {
+			drawn.clear();
+			for (const std::string &item : split(chosen, false)) {
+				drawn.push_back(strip(item));
+			}
+			const bool known = std::all_of(drawn.begin(), drawn.end(), [&](const std::string &id) { return std::find(faction_ids.begin(), faction_ids.end(), id) != faction_ids.end(); });
+			if (static_cast<int64_t>(drawn.size()) != player_count || !known) {
+				throw MatchFailed{ "HEROES_AI_MATCH_FACTIONS needs " + compat::itos(player_count) + " of " + gd::json_stringify(state_, strings_value(faction_ids)) + ", got " + chosen + "." };
+			}
+		}
+		const Value seat_weights = named_seat_weights(settings.get("HEROES_AI_MATCH_WEIGHTS"), player_count);
+		std::string map_seed = compat::itos(rng.next());
+		// A two-player match keeps the map seed it always drew.
+		if (player_count != 2) {
+			map_seed += "-p" + compat::itos(player_count);
+		}
+		// Swapping keeps the map and trades the two factions' starting places.
+		std::vector<std::string> seat_factions = drawn;
+		if (swapped) {
+			std::reverse(seat_factions.begin(), seat_factions.end());
+		}
+
+		// _map_key and _map_setup without a corpus.
+		std::string seat_text;
+		for (size_t index = 0; index < seat_factions.size(); ++index) {
+			seat_text += (index == 0 ? "" : ",") + seat_factions[index];
+		}
+		const std::string map_key = map_seed + "|" + seat_text + "|" + compat::itos(player_count) + "|" + size_class + "|" + guards + "|" + water + "|" +
+				compat::itos(levels) + "|" + kGeneratedMapDir;
+		const bool kept = settings.listed && map_key == kept_map_key_;
+		const Value seat_list = strings_value(seat_factions);
+		const Value config_args[12] = {
+			state_.string(map_seed),
+			state_.string(""),
+			state_.string(""),
+			gd::int_value(player_count),
+			state_.string(water),
+			gd::bool_value(levels == 2),
+			state_.string(size_class),
+			state_.string("size_default"),
+			state_.string(seat_factions.front()),
+			state_.string(""),
+			state_.string(guards),
+			seat_list,
+		};
+		const Value config = calls_.player_config->call(state_, config_args);
+		// ScenarioSelectRules.RANDOM_MAP_PLAYER_RETRY_POLICY.
+		const uint32_t policy = state_.new_dict();
+		state_.set(policy, state_.string("max_attempts"), gd::int_value(5));
+		state_.set(policy, state_.string("mode"), state_.string("seed_salt"));
+		const Value setup_args[3] = { config, state_.string("normal"), gd::dict_value(policy) };
+		const Value setup = calls_.skirmish_setup->call(state_, setup_args);
+		if (!gd::to_bool(get(setup, key::ok, gd::bool_value(false)))) {
+			throw MatchFailed{ "Generated " + size_class + " setup failed: " + left(gd::json_stringify(state_, setup), 600) };
+		}
+		std::string map_source = "generated";
+		if (kept) {
+			map_source = "kept";
+		} else if (gd::to_bool(get(get(setup, state_.intern("native_generation"), Value()), state_.intern("generator_core_reused"), gd::bool_value(false)))) {
+			map_source = "reused";
+		}
+		scenario_id_ = text_of(get(get(get(setup, state_.intern("package_startup")), state_.intern("session_boundary_record")), state_.intern("scenario_id")));
+
+		start_session(setup);
+		kept_map_key_ = settings.listed ? map_key : "";
+		const uint32_t plan = state_.new_dict();
+		const auto put = [&](const char *name, const Value &value) { state_.set(plan, state_.string(name), value); };
+		put("match_seed", state_.string(match_seed));
+		put("map_seed", state_.string(map_seed));
+		put("swapped", gd::bool_value(swapped));
+		put("seat_factions", seat_list);
+		put("player_count", gd::int_value(player_count));
+		put("size_class", state_.string(size_class));
+		put("guards", state_.string(guards));
+		put("water", state_.string(water));
+		put("levels", gd::int_value(levels));
+		put("seat_weights", seat_weights);
+		put("map", state_.string(map_source));
+		return gd::dict_value(plan);
+	}
+
+	// The scene's _seat_weights for a generated match: each seat's weight set
+	// from HEROES_AI_MATCH_WEIGHTS, [] when it is unset. A set from a .json file
+	// joins the content for the run (a content override), which only the scene
+	// makes: its match is a prepared one.
+	Value named_seat_weights(const std::string &spec, int64_t player_count) {
+		const uint32_t result = state_.new_array();
+		if (strip(spec).empty()) {
+			return gd::array_value(result);
+		}
+		const std::vector<std::string> entries = split(spec, true);
+		if (static_cast<int64_t>(entries.size()) != player_count) {
+			throw MatchFailed{ "HEROES_AI_MATCH_WEIGHTS needs " + compat::itos(player_count) + " entries, got " + spec + "." };
+		}
+		const Value doc = content_file(state_, state_.intern(aurelion::rules::content::kAiHeroWeightsPath));
+		const Value sets = get(doc, state_.intern("sets"), gd::dict_value(state_.new_dict()));
+		for (const std::string &item : entries) {
+			std::string entry = strip(item);
+			if (entry.empty()) {
+				entry = "default";
+			}
+			if (entry.size() >= 5 && entry.compare(entry.size() - 5, 5, ".json") == 0) {
+				throw MatchFailed{ "HEROES_AI_MATCH_WEIGHTS: " + entry + " is a weight set from a file, which only a match the scene prepared plays (HEROES_AI_MATCH_PREPARE)." };
+			}
+			if (sets.kind != Kind::Dict || !state_.has(sets.ref, state_.string(entry))) {
+				throw MatchFailed{ std::string("HEROES_AI_MATCH_WEIGHTS: ") + aurelion::rules::content::kAiHeroWeightsPath + " has no weight set " + entry + "." };
+			}
+			const uint32_t row = state_.new_dict();
+			state_.set(row, state_.string("set"), state_.string(entry));
+			state_.append(result, gd::dict_value(row));
+		}
+		return gd::array_value(result);
+	}
+
+	Value strings_value(const std::vector<std::string> &items) {
+		const uint32_t result = state_.new_array();
+		for (const std::string &item : items) {
+			state_.append(result, state_.string(item));
+		}
+		return gd::array_value(result);
+	}
+
+	void begin_match(const Content &content, const Store *match_store) {
 		if (state_.atom_count() > kAtomLimit) {
 			state_.clear();
 			content_rows_.forget_atoms();
@@ -1297,9 +1406,14 @@ private:
 			content_rows_.bind(content.store.get());
 			content_deep_.bind(content.store.get());
 		}
-		match_store_ = &match_store;
-		match_rows_.bind(&match_store);
-		match_deep_.bind(&match_store);
+		match_store_ = match_store;
+		if (match_store != nullptr) {
+			match_rows_.bind(match_store);
+			match_deep_.bind(match_store);
+		} else {
+			match_rows_.unbind();
+			match_deep_.unbind();
+		}
 		if (++epoch_ == 0) {
 			content_rows_.forget_nodes();
 			content_deep_.forget_nodes();
@@ -1316,6 +1430,7 @@ private:
 		map_documents_.clear();
 		scenario_documents_.clear();
 		disk_.reset();
+		files_ = Value();
 		scenario_id_.clear();
 		view_node_ = ~0u;
 		object_ = object_meta_ = instance_id_ = setup_ = handover_ = heroes_seen_ = last_row_ = Value();
@@ -1326,6 +1441,13 @@ private:
 		made.what = what;
 		opaques_.push_back(made);
 		return Value::of_ref(Kind::Opaque, static_cast<uint32_t>(opaques_.size() - 1));
+	}
+	// The document index of an opaque value of that class, else -1.
+	int document_of(const Value &value, const char *what) const {
+		if (value.kind != Kind::Opaque || value.ref >= opaques_.size() || opaques_[value.ref].what != what) {
+			return -1;
+		}
+		return opaques_[value.ref].document;
 	}
 
 	// ------------------------------------------------------ the new session
@@ -1401,11 +1523,34 @@ private:
 		return gd::str(gd::to_string(alias));
 	}
 
+	// ContentService.get_content_ids(path, list_key): the ids of the file's
+	// items (its list_key, else its "entries"), as the content snapshot holds
+	// the file.
+	Value content_ids(State &state, uint32_t path, uint32_t list_key) {
+		const uint32_t ids = state.new_array();
+		const Value raw = content_file(state, path);
+		Value items;
+		if (raw.kind != Kind::Dict || (!state.lookup(raw.ref, gd::str(list_key), items) && !state.lookup(raw.ref, state.string("entries"), items)) ||
+				items.kind != Kind::Array) {
+			return gd::array_value(ids);
+		}
+		for (const Value &item : gd::items(state, items)) {
+			if (item.kind != Kind::Dict) {
+				throw st::NotPorted("ContentService.get_content_ids over an item that is no Dictionary");
+			}
+			Value id;
+			if (state.lookup(item.ref, state.string("id"), id)) {
+				state.append(ids, gd::str(gd::stringify(state, id)));
+			}
+		}
+		return gd::array_value(ids);
+	}
+
 	// The scene's _play from the session's start to the match: the seats, the
 	// human seat handed to the computer, the battle log, the seats' weight
 	// sets, the handover's check and the record's setup.
-	void hand_over(const Store &store, const Value &root, const std::string &match_seed, const std::string &map_seed) {
-		const auto setting = [&](const char *name) { return import_deep(match_deep_, store.get(root, name)); };
+	void hand_over(const Value &plan, const std::string &match_seed, const std::string &map_seed) {
+		const auto setting = [&](const char *name) { return get(plan, state_.intern(name)); };
 		const int64_t player_count = gd::to_int(state_, setting("player_count"));
 		const Value seat_factions = setting("seat_factions");
 		const Value seat_weights = setting("seat_weights");
@@ -2410,6 +2555,10 @@ private:
 	std::vector<std::unique_ptr<map_packages::MapDocument>> map_documents_;
 	std::vector<std::unique_ptr<map_packages::ScenarioDocument>> scenario_documents_;
 	Value files_;
+	// The generator's last result, and in a list the map key of the match
+	// before (the scene's _kept_map_key).
+	map_generation::GeneratorCache generator_cache_;
+	std::string kept_map_key_;
 	int64_t content_revision_ = 0;
 	// The session object: its fields (kSessionFields' order), its metadata and
 	// its instance id; the view of the native call in progress.
