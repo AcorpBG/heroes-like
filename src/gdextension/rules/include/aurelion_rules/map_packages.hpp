@@ -45,6 +45,17 @@ struct ScenarioDocument {
 	state::Value start_contract;
 };
 
+// The map library's package_failure(operation, path, code, message) and
+// package_success(operation, path, payload) results; the payload, built for
+// the result alone, becomes it.
+state::Value package_failure(state::State &state, const char *operation, const std::string &path, const char *code, const char *message);
+state::Value package_success(state::State &state, const char *operation, const std::string &path, const state::Value &payload);
+
+// MapDocument.configure(initial) (copy_containers) and the map library's
+// configure_owned (not), and ScenarioDocument.configure(initial).
+void configure_map_document(state::State &state, MapDocument &document, const state::Value &initial, bool copy_containers);
+void configure_scenario_document(state::State &state, ScenarioDocument &document, const state::Value &initial);
+
 // MapPackageService.load_map_package(path) and load_scenario_package(path):
 // the result Dictionary. The file comes from files (FileAccess in the game).
 // On success the document is configured from the package and the result's

@@ -10,6 +10,8 @@ project(aurelion_rules LANGUAGES C CXX)
 #   aurelion_rules       the GDExtension (src/gdextension/rules.gdextension)
 #   rules_selftest       golden vectors without Godot
 #   battle_sim_cli       the battle AI arena's battles without Godot
+#   aurelion_h3maped_rmg the H3MapEd generator core (../src/h3maped_rmg_*.cpp), as the map library compiles it
+#   aurelion_rules_generation  the map library's generation without Godot (core/map_generation.cpp)
 #   match_sim_cli        the AI match runner's days without Godot
 
 set(CMAKE_CXX_STANDARD 17)
@@ -123,6 +125,7 @@ add_library(aurelion_rules_core STATIC
 	core/build_info.cpp
 	core/compat/godot_json.cpp
 	core/compat/godot_string.cpp
+	core/compat/json_writer.cpp
 	core/content_store.cpp
 	core/content_validate.cpp
 	core/disk_files.cpp
@@ -340,13 +343,39 @@ target_link_libraries(battle_sim_cli PRIVATE aurelion_rules_core)
 find_package(Threads REQUIRED)
 target_link_libraries(battle_sim_cli PRIVATE Threads::Threads)
 
-# The match runner (Phase 8, P8-4): the AI match runner's days outside Godot,
-# from the sessions its scene prepares, for tools/ai_match_batch.py --runner
-# and tools/rules_parity.py.
-add_executable(match_sim_cli cli/match_sim_cli.cpp)
-target_link_libraries(match_sim_cli PRIVATE aurelion_rules_core Threads::Threads)
+# The map generator (Phase 8, P8-8): the H3MapEd core's sources of the map
+# library (src/gdextension/src), compiled here as well, and the map library's
+# projection and package writes over it without Godot.
+set(AURELION_MAP_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../src")
+add_library(aurelion_h3maped_rmg STATIC
+	${AURELION_MAP_SOURCE_DIR}/h3maped_rmg_core.cpp
+	${AURELION_MAP_SOURCE_DIR}/h3maped_rmg_object_catalog.cpp
+	${AURELION_MAP_SOURCE_DIR}/h3maped_rmg_template_catalog.cpp
+)
+target_include_directories(aurelion_h3maped_rmg PUBLIC "${CMAKE_CURRENT_LIST_DIR}/../include")
+if(MSVC)
+	target_compile_options(aurelion_h3maped_rmg PRIVATE /bigobj)
+elseif(WIN32)
+	target_compile_options(aurelion_h3maped_rmg PRIVATE -Wa,-mbig-obj)
+endif()
 
-foreach(AURELION_RULES_TARGET aurelion_rules_core aurelion_rules rules_selftest battle_port_replay battle_sim_cli match_sim_cli)
+add_library(aurelion_rules_generation STATIC core/map_generation.cpp)
+target_link_libraries(aurelion_rules_generation PUBLIC aurelion_rules_core aurelion_h3maped_rmg)
+
+# The match runner (Phase 8, P8-4): the AI match runner's days outside Godot,
+# for tools/ai_match_batch.py --runner and tools/rules_parity.py; it generates
+# its maps (P8-8) or plays the sessions its scene prepares.
+add_executable(match_sim_cli cli/match_sim_cli.cpp)
+target_link_libraries(match_sim_cli PRIVATE aurelion_rules_core aurelion_rules_generation Threads::Threads)
+# The generator core needs the 8 MiB stack Linux gives every thread; the
+# runner's match threads take the executable's reserve on Windows.
+if(MSVC)
+	target_link_options(match_sim_cli PRIVATE /STACK:8388608)
+elseif(WIN32)
+	target_link_options(match_sim_cli PRIVATE -Wl,--stack,8388608)
+endif()
+
+foreach(AURELION_RULES_TARGET aurelion_rules_core aurelion_rules_generation aurelion_rules rules_selftest battle_port_replay battle_sim_cli match_sim_cli)
 	if(MSVC)
 		target_compile_options(${AURELION_RULES_TARGET} PRIVATE /W4)
 	else()

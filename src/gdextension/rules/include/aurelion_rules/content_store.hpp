@@ -62,6 +62,13 @@ public:
 	virtual bool resource_exists(const std::string &path) = 0;
 	// OS.has_feature("editor").
 	virtual bool editor() = 0;
+	// The file at path now holds bytes (a map package the core saves); false
+	// when it cannot be written. The default writes nothing.
+	virtual bool write(const std::string &path, const std::string &bytes) {
+		(void)path;
+		(void)bytes;
+		return false;
+	}
 };
 
 // A message ContentService prints: push_error, or push_warning.
