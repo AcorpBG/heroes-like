@@ -6,6 +6,7 @@
 
 #include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/artifact_rules.hpp"
+#include "aurelion_rules/port/ai_route.hpp"
 #include "aurelion_rules/port/battle_ai_rules.hpp"
 #include "aurelion_rules/port/battle_ends.hpp"
 #include "aurelion_rules/port/hero_command_rules.hpp"
@@ -371,7 +372,7 @@ DictRef _enemy_commander_state_with_payload(State &state, const Value &session, 
 	if (!nonempty_dict_field(state, session_battle(state, session), key::enemy_hero_payload, payload)) {
 		return commander_state;
 	}
-	return battle_ai_rules::_merged_commander_ai_payload(state, commander_state, payload.ref);
+	return ai_route::by_side(state, key::empty, [&] { return battle_ai_rules::_merged_commander_ai_payload(state, commander_state, payload.ref); });
 }
 
 DictRef _apply_enemy_commander_battle_memory(State &state, const Value &session, DictRef commander_state) {

@@ -3,6 +3,7 @@
 
 #include "aurelion_rules/port/battle_rules.hpp"
 
+#include "aurelion_rules/port/ai_route.hpp"
 #include "aurelion_rules/port/battle_ai_rules.hpp"
 
 namespace aurelion::rules::port::battle_rules {
@@ -11,11 +12,11 @@ namespace key = state::key;
 
 DictRef ai_melee_approach(State &state, DictRef battle, DictRef stack, DictRef target) {
 	const ArrayRef cells = melee_approach_cells(state, battle, stack, target);
-	return battle_ai_rules::choose_melee_approach(state, battle, stack, target, cells);
+	return ai_route::by_stack(state, gd::dict_value(stack), [&] { return battle_ai_rules::choose_melee_approach(state, battle, stack, target, cells); });
 }
 
 DictRef ai_advance_plan(State &state, DictRef battle, DictRef stack) {
-	return battle_ai_rules::advance_plan(state, battle, stack);
+	return ai_route::by_stack(state, gd::dict_value(stack), [&] { return battle_ai_rules::advance_plan(state, battle, stack); });
 }
 
 bool _apply_auto_advance_movement(State &state, DictRef battle, DictRef active_stack) {
@@ -26,9 +27,9 @@ bool _apply_auto_advance_movement(State &state, DictRef battle, DictRef active_s
 	const Atom start_key = _hex_key(state, _stack_hex(state, active_stack));
 	// GDScript's board-read scope: the native board reads keep their own memo.
 	// The arguments in the GDScript order: the target, then the gap.
-	const DictRef preferred_target = battle_ai_rules::advance_target(state, battle, active_stack);
+	const DictRef preferred_target = ai_route::by_stack(state, gd::dict_value(active_stack), [&] { return battle_ai_rules::advance_target(state, battle, active_stack); });
 	const int64_t desired_gap = _advance_desired_gap(state, active_stack, battle);
-	const DictRef destination = battle_ai_rules::best_advance_destination(state, battle, active_stack, preferred_target, desired_gap);
+	const DictRef destination = ai_route::by_stack(state, gd::dict_value(active_stack), [&] { return battle_ai_rules::best_advance_destination(state, battle, active_stack, preferred_target, desired_gap); });
 	// End of GDScript's board-read scope.
 	if (!gd::is_empty(state, destination)) {
 		_set_stack_hex(state, battle, battle_id, destination);

@@ -3,6 +3,7 @@
 
 #include "aurelion_rules/port/battle_auto_resolve_rules.hpp"
 
+#include "aurelion_rules/port/ai_route.hpp"
 #include "aurelion_rules/port/battle_ai_rules.hpp"
 #include "aurelion_rules/port/battle_rules.hpp"
 #include "aurelion_rules/port/spell_rules.hpp"
@@ -81,7 +82,7 @@ DictRef player_autoplay_decision(State &state, const Value &session, bool apply_
 			commander_payload = commander_state.ref;
 		}
 	}
-	const DictRef decision = battle_ai_rules::choose_stack_tactical_order(state, session_battle(state, session), active_stack, key::enemy, commander_payload, allow_hero_cast);
+	const DictRef decision = ai_route::by_stack(state, dict_value(active_stack), [&] { return battle_ai_rules::choose_stack_tactical_order(state, session_battle(state, session), active_stack, key::enemy, commander_payload, allow_hero_cast); });
 	if (gd::is_empty(state, decision)) {
 		return _fallback_player_autoplay_decision(state, session, key::no_scored_tactical_order, apply_selection, state.new_dict());
 	}

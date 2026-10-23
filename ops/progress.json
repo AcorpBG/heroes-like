@@ -116219,15 +116219,15 @@
     {
       "id": "native-rules-phase2-c-battle-tool-20261022",
       "title": "Native rules Phase 2c: the battle tool for the tuner",
-      "status": "pending",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "the backend of `tune.py` and `arena.py`, the native router with each side's weights as data, the native unit and ability tables.",
-      "updatedAt": "2026-10-22T09:58:17Z"
+      "notes": "battle_sim_cli (src/gdextension/rules/cli) is the default backend of tune.py and arena.py (--backend cli; godot as before): Godot setup workers write each battle's session before the payload as snapshots (content tables, files and static vars per run; one per map), the tool plays every order with the native router (each side's weights as data). Records identical to in-Godot battles on the arena's --plain and routed standard and holdout suites and one tune.py generation, apart from the ai_calls diagnostic; native against main identical on 6/6 seeds; core suite 17/17. G2 met: 164.9 battles/s end to end through tune.py on a quiet machine. Windows only.",
+      "updatedAt": "2026-10-23T09:00:00Z"
     },
     {
       "id": "native-rules-phase2-d-exit-20261022",

@@ -3,6 +3,7 @@
 
 #include "aurelion_rules/port/battle_rules.hpp"
 
+#include "aurelion_rules/port/ai_route.hpp"
 #include "aurelion_rules/port/battle_ai_rules.hpp"
 #include "aurelion_rules/port/spell_rules.hpp"
 
@@ -226,7 +227,7 @@ DictRef _run_enemy_turn(State &state, const Value &session, DictRef active_stack
 	}
 
 	const DictRef enemy_hero = gd::as_dict(get_or_new_dict(state, session_battle(state, session), key::enemy_hero));
-	const DictRef action = battle_ai_rules::choose_enemy_action(state, session_battle(state, session), active_stack, enemy_hero, true);
+	const DictRef action = ai_route::by_stack(state, dict_value(active_stack), [&] { return battle_ai_rules::choose_enemy_action(state, session_battle(state, session), active_stack, enemy_hero, true); });
 	if (string_or_empty(state, action, key::action) != key::cast_spell) {
 		return _run_enemy_stack_order(state, session, active_stack, action);
 	}
@@ -239,7 +240,7 @@ DictRef _run_enemy_turn(State &state, const Value &session, DictRef active_stack
 	const Atom cast_message = gd::bool_field(state, cast_result, key::ok, false) ? string_or_empty(state, cast_result, key::message) : static_cast<Atom>(key::empty);
 	active_stack = _get_stack_by_id(state, session_battle(state, session), string_or_empty(state, active_stack, key::battle_id));
 	const DictRef order_hero = gd::as_dict(get_or_new_dict(state, session_battle(state, session), key::enemy_hero));
-	const DictRef order = battle_ai_rules::choose_enemy_action(state, session_battle(state, session), active_stack, order_hero, false);
+	const DictRef order = ai_route::by_stack(state, dict_value(active_stack), [&] { return battle_ai_rules::choose_enemy_action(state, session_battle(state, session), active_stack, order_hero, false); });
 	const DictRef order_result = _run_enemy_stack_order(state, session, active_stack, order);
 	if (cast_message != key::empty) {
 		state.set(order_result, str(key::message), str(join_two(state, cast_message, string_or_empty(state, order_result, key::message))));
@@ -339,8 +340,8 @@ DictRef _cast_enemy_spell(State &state, const Value &session, DictRef active_sta
 	const DictRef target = _get_stack_by_id(state, session_battle(state, session), string_or_empty(state, action, key::target_battle_id));
 	const DictRef caster = _hero_caster(state, session_battle(state, session), key::enemy);
 	const DictRef raw_enemy_hero = stored_dict_or_new(state, session_battle(state, session), key::enemy_hero);
-	const DictRef enemy_hero_state = battle_ai_rules::_enemy_hero_state_for_ai(state, session_battle(state, session), raw_enemy_hero);
-	DictRef resolved_enemy_hero = battle_ai_rules::_commander_payload_for_tactical_scoring(state, enemy_hero_state);
+	const DictRef enemy_hero_state = ai_route::by_side(state, key::enemy, [&] { return battle_ai_rules::_enemy_hero_state_for_ai(state, session_battle(state, session), raw_enemy_hero); });
+	DictRef resolved_enemy_hero = ai_route::by_side(state, key::empty, [&] { return battle_ai_rules::_commander_payload_for_tactical_scoring(state, enemy_hero_state); });
 	if (gd::is_empty(state, resolved_enemy_hero)) {
 		resolved_enemy_hero = raw_enemy_hero;
 	}

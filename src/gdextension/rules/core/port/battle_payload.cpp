@@ -9,6 +9,7 @@
 #include "aurelion_rules/compat/godot_pcg.hpp"
 #include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/artifact_rules.hpp"
+#include "aurelion_rules/port/ai_route.hpp"
 #include "aurelion_rules/port/battle_ai_rules.hpp"
 #include "aurelion_rules/port/battle_ends.hpp"
 #include "aurelion_rules/port/battle_rules.hpp"
@@ -674,7 +675,8 @@ ArrayRef _with_army_battlefield_tags(State &state, ArrayRef tags, ArrayRef stack
 		if (!gd::is_dict(stack)) {
 			continue;
 		}
-		for (const Value &tag_value : gd::items(state, array_value(battle_ai_rules::faction_brought_tags(state, stack.ref)))) {
+		const ArrayRef brought = ai_route::by_stack(state, stack, [&] { return battle_ai_rules::faction_brought_tags(state, stack.ref); });
+		for (const Value &tag_value : gd::items(state, array_value(brought))) {
 			const Atom tag = gd::stringify(state, tag_value);
 			if (!gd::array_has(state, result, str(tag))) {
 				state.append(result, str(tag));
