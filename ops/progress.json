@@ -116616,8 +116616,8 @@
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "The route search out of OverworldShell (_build_path, _route_path_lengths) as one native call, with the route queries it calls (22 GDScript functions, 516 lines); the --human mode of tools/rules_parity.py; HEROES_NATIVE_HUMAN on the branch. Frozen functions named in PLAN.md. Not merged before the owner decides the cadence.",
-      "updatedAt": "2026-10-23T14:30:00Z"
+      "notes": "The route search out of OverworldShell (_build_path, _route_path_lengths) as one native call, with the route queries it calls (22 GDScript functions, 516 lines); the --human mode of tools/rules_parity.py; HEROES_NATIVE_HUMAN on the branch. Frozen functions named in PLAN.md. Implemented (transition doc, Phase 7, Slice 7.1): human shadow on the eight --human seeds 0 mismatches, day shadow on the six seeds 7,829 checks 0 mismatches. Merges with 7.10-7.12 (merge 1), after the --human check against main.",
+      "updatedAt": "2026-10-23T14:03:00Z"
     },
     {
       "id": "native-rules-phase7-02-move-20261023",

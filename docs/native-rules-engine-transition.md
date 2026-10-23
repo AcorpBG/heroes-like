@@ -2654,6 +2654,26 @@ saves without Godot.
   `saved_at_unix`, and load on main and on the branch.
 - **7.13.** Scripted editor operations on generated packages leave the same document as main's.
 
+**Slice 7.1, routes** (2026-10-23, branch `native-phase7-human`): the human route search is one native call.
+`OverworldShell._build_path` and `_route_path_lengths` and the map view's searches call `OverworldRules.hero_route_path`
+and `hero_route_path_lengths`. The human registry (`human_registry.cpp`, `HEROES_NATIVE_HUMAN`, no GDScript fallback)
+ports them with 15 route queries: `tile_is_blocked`, `tile_step_cuts_blocked_corner`, `tile_has_route_interaction`,
+`tile_is_actionable_route_destination`, `hero_route_tile_blocked`, `hero_route_destination`,
+`active_linked_transit_edges`, `active_linked_transit_signature`, `linked_transit_neighbors_from_edges`,
+`route_movement_preview`, `guard_engagement_approach_route`, `guard_engagement_encounter_at_tile`,
+`resource_node_interaction_at_tile`, `blocking_object_feedback_surface_at_tile` and `WaterTravelRules.is_sailing`, and
+their seven helpers. The shell's validation hooks (`_build_validation_path`) still call the queries per tile. Checks:
+- Human shadow on the eight `--human` seeds (seven before the main merge, h-s2 after it, which the read-scope fix of
+  main ac046cf67 lets finish), 0 mismatches and 0 errors: `tile_is_blocked` 1,537,029 checks,
+  `tile_step_cuts_blocked_corner` 1,443,258, `tile_has_route_interaction` 643,287, `is_sailing` 630,231,
+  `hero_route_tile_blocked` 553,299, `linked_transit_neighbors_from_edges` 435,273, `hero_route_destination` 76,654,
+  `tile_is_actionable_route_destination` 76,654, `guard_engagement_encounter_at_tile` 6,637,
+  `active_linked_transit_signature` 4,836, `active_linked_transit_edges` 3,800, `resource_node_interaction_at_tile`
+  2,089, `route_movement_preview` 1,140, `guard_engagement_approach_route` 802, `hero_route_path` 388,
+  `hero_route_path_lengths` 301, `blocking_object_feedback_surface_at_tile` 8.
+- Day shadow on the six seeds, after the main merge: 7,829 checks, 0 mismatches, 0 errors.
+- The `--human` check against main runs at the first merge.
+
 ### Phase 8: a match runner without Godot
 
 Wanted, not optional (owner decision 2026-10-22, D7). The same core as a command-line tool. Needs the copied Variant hash and either deterministic math or accepted last-bit
