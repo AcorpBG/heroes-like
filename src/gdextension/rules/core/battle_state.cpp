@@ -191,6 +191,14 @@ double Backing::math_log(double x) {
 	return std::log(x);
 }
 
+bool Backing::routes_ai() const {
+	return false;
+}
+
+void Backing::ai_route_enter(State &, uint32_t) {}
+
+void Backing::ai_route_leave(State &) {}
+
 bool same_key(const Value &a, const Value &b) {
 	if (a.is_string_like() && b.is_string_like()) {
 		return a.ref == b.ref;

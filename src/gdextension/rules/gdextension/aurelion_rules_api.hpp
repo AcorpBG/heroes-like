@@ -146,6 +146,12 @@ public:
 	// none, and phase then too.
 	Array ai_search_walk(int64_t width, int64_t height, int64_t start, int64_t start_phase, int64_t radius, bool native_corners, const PackedByteArray &blocked, const PackedByteArray &stop_mask, const PackedByteArray &pass_mask, const PackedByteArray &hero_zone, const PackedInt32Array &portals, const PackedByteArray &seen, const PackedByteArray &water, const PackedByteArray &sea_open, const PackedByteArray &boats, const PackedInt32Array &docks, int64_t shore_cost, int64_t dock_cost) const;
 
+	// value as a snapshot for the battle tool, battle_sim_cli
+	// (aurelion_rules/snapshot.hpp): what the native State models of it, with
+	// its key order, types and shared containers. Empty, with an error, on
+	// data nested too deep.
+	PackedByteArray snapshot_encode(const Variant &value) const;
+
 private:
 	struct Validation;
 	struct PortStats {

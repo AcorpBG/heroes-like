@@ -1,5 +1,6 @@
 // Layer 2: the commander payload: a side's hero payload, its specialty bonuses and difficulty terms.
 
+#include "aurelion_rules/port/ai_route.hpp"
 #include "aurelion_rules/port/battle_ai_rules.hpp"
 #include "aurelion_rules/port/battle_rules.hpp"
 #include "aurelion_rules/port/difficulty_rules.hpp"
@@ -253,7 +254,7 @@ DictRef _side_payload_with_commander_fallback(State &state, const Value &existin
 	if (gd::is_empty(state, existing_payload)) {
 		return fallback_payload;
 	}
-	const DictRef merged = battle_ai_rules::_merged_commander_ai_payload(state, existing_payload, fallback_payload);
+	const DictRef merged = ai_route::by_side(state, key::empty, [&] { return battle_ai_rules::_merged_commander_ai_payload(state, existing_payload, fallback_payload); });
 	const auto copy_missing = [&](Atom field) {
 		if (!state.has(merged, str(field)) && state.has(fallback_payload, str(field))) {
 			state.set(merged, str(field), gd::field(state, fallback_payload, field));
@@ -303,7 +304,7 @@ DictRef _enemy_hero_payload_from_state(State &state, DictRef hero_state, const V
 	if (gd::is_empty(state, existing)) {
 		return payload;
 	}
-	return battle_ai_rules::_merged_commander_ai_payload(state, payload, existing);
+	return ai_route::by_side(state, key::empty, [&] { return battle_ai_rules::_merged_commander_ai_payload(state, payload, existing); });
 }
 
 DictRef _hero_payload_from_state(State &state, DictRef hero_state, DictRef bonuses, const Value &session, Atom side) {

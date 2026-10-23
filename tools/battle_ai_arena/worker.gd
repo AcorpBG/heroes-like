@@ -12,6 +12,13 @@ extends SceneTree
 ## A plain job ("plain": true) installs no router and compiles no variant: the
 ## game's own BattleAiRules plays both sides.
 ##
+## A setup job ("setup": {"corpus_dir", "content"}) plays nothing: it builds each
+## battle's session as a game does up to the battle payload, which every order
+## shares, and writes each map's battles as a snapshot into corpus_dir for
+## battle_sim_cli (src/gdextension/rules/cli), which plays the orders outside
+## Godot (arena.py --backend cli). With "content", it first writes the content
+## and the rules scripts' static vars that battle_sim_cli reads to that path.
+##
 ## Game scripts are loaded at runtime: a -s script compiles before autoloads exist.
 
 const AI_PATH := "res://scripts/core/BattleAiRules.gd"
@@ -26,9 +33,29 @@ const FACTION_DEFENSE := {
 	"faction_veilmourn": "building_dev_veilmourn_unique_3",
 }
 const ECHO_KEYS := ["type", "week", "player_doctrine", "enemy_doctrine", "enemy_week", "guard_ratio", "fort_level", "faction_defense"]
+const CONTENT_DIR := "res://content"
+const RULES_DIR := "res://scripts/core"
+# battle_sim_cli's content tables (state::ContentTable): the getter of each, and
+# the file whose ids it is asked for. Scenarios and their terrain layers are
+# each map's own (_write_corpus).
+const CONTENT_TABLES := {
+	"Unit": ["get_unit", "res://content/units.json"],
+	"Hero": ["get_hero", "res://content/heroes.json"],
+	"Faction": ["get_faction", "res://content/factions.json"],
+	"Spell": ["get_spell", "res://content/spells.json"],
+	"Artifact": ["get_artifact", "res://content/artifacts.json"],
+	"ResourceSite": ["get_resource_site", "res://content/resource_sites.json"],
+	"Building": ["get_building", "res://content/buildings.json"],
+	"Town": ["get_town", "res://content/towns.json"],
+	"MapObject": ["get_map_object", "res://content/map_objects.json"],
+	"Encounter": ["get_encounter", "res://content/encounters.json"],
+	"ArmyGroup": ["get_army_group", "res://content/army_groups.json"],
+	"Resource": ["get_resource", "res://content/resources.json"],
+}
+const GENERATED_COMPANIES_PATH := "res://content/generated_neutral_companies.json"
 
 var _started := false
-var _content: Node
+var _content  # the ContentService autoload; untyped, so its script's methods resolve at runtime
 var _scenario_select: Script
 var _session_store: Script
 var _auto_resolve: Script
@@ -84,8 +111,9 @@ func _run() -> int:
 	_hero_command = load("res://scripts/core/HeroCommandRules.gd")
 	_ai_heroes = load("res://scripts/core/AiHeroRules.gd")
 	_town_development = load("res://scripts/core/TownDevelopmentRules.gd")
+	var setup: Dictionary = job.get("setup", {}) if job.get("setup", {}) is Dictionary else {}
 	var variants := {}
-	if not bool(job.get("plain", false)):
+	if setup.is_empty() and not bool(job.get("plain", false)):
 		for label in (job.get("variants", {}) as Dictionary).keys():
 			var variant := _compile_variant(String(job.variants[label]))
 			if variant == null:
@@ -95,12 +123,26 @@ func _run() -> int:
 		_default_variant = variants.get(String(job.get("default_variant", "A")))
 		if not _install_router(String(job.get("router", "")), _default_variant):
 			return 3
+	# Before any map: the static vars as a game starts. army_power applies its
+	# terms from the content at its first call, which every game's setup has
+	# made before its record reads them (_commander_features).
+	if String(setup.get("content", "")) != "":
+		_ai_heroes.army_power([], {})
+	if String(setup.get("content", "")) != "" and not _write_snapshot(String(setup.content), _content_snapshot()):
+		printerr("ARENA cannot write the content snapshot %s" % setup.content)
+		return 2
 	# Map and battle setup already call the AI's helpers: route them all to the
 	# default variant until a game installs its sides.
 	_route({})
 	_emit({"kind": "worker_ready", "boot_ms": Time.get_ticks_msec()})
 	for group in job.get("groups", []):
-		_play_group(group, variants, job.get("orders", [["A", "B"], ["B", "A"]]))
+		# A setup job may run ahead of its caller (tune.py): a group waits for its go.
+		var wait_for := String(group.get("wait_for", ""))
+		while wait_for != "" and not FileAccess.file_exists(wait_for):
+			OS.delay_msec(100)
+		_play_group(group, variants, job.get("orders", [["A", "B"], ["B", "A"]]), String(group.get("corpus_dir", setup.get("corpus_dir", ""))))
+		if not setup.is_empty():
+			_emit({"kind": "group_done", "group_id": group.get("group_id", ""), "tag": group.get("tag", "")})
 	return 0
 
 
@@ -135,8 +177,9 @@ func _route(sides: Dictionary) -> void:
 		_router._arena_install(sides, _default_variant)
 
 
-## One generated map, made as the skirmish menu makes it, and its battles.
-func _play_group(group: Dictionary, variants: Dictionary, orders: Array) -> void:
+## One generated map, made as the skirmish menu makes it, and its battles: played,
+## or, in a setup job (corpus_dir), written for battle_sim_cli.
+func _play_group(group: Dictionary, variants: Dictionary, orders: Array, corpus_dir: String) -> void:
 	var started := Time.get_ticks_usec()
 	_route({})
 	var config = _scenario_select.build_random_map_player_config(
@@ -169,6 +212,7 @@ func _play_group(group: Dictionary, variants: Dictionary, orders: Array) -> void
 	var base: Dictionary = session.to_dict().duplicate(true)
 	_emit({"kind": "group_ready", "group_id": group.get("group_id", ""), "setup_ms": (Time.get_ticks_usec() - started) / 1000.0, "guards": guards.size(), "towns": towns.size()})
 	var used := {}
+	var corpus := []
 	for battle in group.get("battles", []):
 		var kind := String(battle.get("type", ""))
 		if guards.is_empty() or (kind == "siege" and towns.is_empty()):
@@ -184,8 +228,16 @@ func _play_group(group: Dictionary, variants: Dictionary, orders: Array) -> void
 			ground["town"] = towns[int(battle.get("site_index", 0)) % towns.size()]
 		else:
 			ground["guard"] = guards[int(battle.get("site_index", 0)) % guards.size()]
+		if corpus_dir != "":
+			# The probe is the session a game builds: one build serves both.
+			var entry := _corpus_battle(base, group, battle, ground, orders, ai_controller, probe)
+			if not entry.is_empty():
+				corpus.append(entry)
+			continue
 		for order in orders:
 			_play_game(base, group, battle, ground, String(order[0]), String(order[1]), variants, ai_controller)
+	if corpus_dir != "":
+		_write_corpus(corpus_dir, group, String(session.scenario_id), corpus)
 
 
 ## The guard whose strength is nearest the wanted strength (by ratio), a fresh one if close.
@@ -222,6 +274,63 @@ func _player_session(base: Dictionary, battle: Dictionary):
 
 func _play_game(base: Dictionary, group: Dictionary, battle: Dictionary, ground: Dictionary, player_variant: String, enemy_variant: String, variants: Dictionary, ai_controller: String) -> void:
 	var started := Time.get_ticks_usec()
+	var game := _prepare_game(base, group, battle, ground, ai_controller)
+	var row: Dictionary = game.row
+	row["player_variant"] = player_variant
+	row["enemy_variant"] = enemy_variant
+	if bool(game.skipped):
+		_emit({"kind": "skipped", "battle_id": row.battle_id})
+		return
+	var session = game.session
+	var site: Dictionary = game.site
+	var kind := String(battle.get("type", ""))
+	# Installed before the battle is built: building it already asks the AI.
+	# Calls tied to no side (shared payload plumbing) always take the default.
+	if _router != null:
+		_route({"player": variants[player_variant], "enemy": variants[enemy_variant]})
+	var payload: Dictionary = {}
+	if kind == "siege":
+		payload = _battle_rules.create_town_assault_payload(session, String(ground.get("town", "")))
+	else:
+		payload = _battle_rules.create_battle_payload(session, site)
+	if payload.is_empty():
+		row["error"] = "battle payload is empty"
+		_emit(row)
+		return
+	# The same battle with other dice (a group's "dice"): how much of a result
+	# is luck. The battle's damage rolls restart from the new seed.
+	var dice := int(group.get("dice", 0))
+	if dice != 0:
+		payload["combat_seed"] = hash([int(payload.get("combat_seed", 0)), dice])
+		for key in ["damage_rng_version", "damage_rng_state", "damage_rng_roll_count", "damage_rng_integrity"]:
+			payload.erase(key)
+		row["dice"] = dice
+	session.battle = payload
+	session.game_state = "battle"
+	_battle_rules.normalize_battle_state(session)
+	row["start_ledger"] = _battle_rules.battle_report_casualty_ledger_bridge(session.battle)
+	row["player_commander"] = _commander_features(session.battle.get("player_commander_state", {}))
+	row["enemy_commander"] = _commander_features(session.battle.get("enemy_hero", {}))
+	row["player_hero"] = not (session.battle.get("player_commander_state", {}) as Dictionary).is_empty()
+	if kind != "siege":
+		row["enemy_hero"] = not (session.battle.get("enemy_hero", {}) as Dictionary).is_empty() and kind == "hero"
+	var resolution: Dictionary = _auto_resolve.resolve_active_battle(session)
+	var report = session.flags.get("last_battle_aftermath", {})
+	row["state"] = String(resolution.get("state", ""))
+	row["completed"] = bool(resolution.get("completed", false))
+	row["invalid_orders"] = int(resolution.get("invalid_orders", 0))
+	row["outcome"] = String(report.get("outcome", "")) if report is Dictionary else ""
+	row["rounds"] = int(report.get("rounds", 0)) if report is Dictionary else 0
+	row["end_ledger"] = report.get("casualties", {}) if report is Dictionary else {}
+	row["ai_calls"] = _router._arena_calls.duplicate() if _router != null else {}
+	row["ms"] = (Time.get_ticks_usec() - started) / 1000.0
+	_emit(row)
+
+
+## A game up to its battle payload, the same for every order: {row (the record
+## so far, without the variants), session, site, skipped (outside the group's
+## odds)}. The session is built from base unless one built so is given.
+func _prepare_game(base: Dictionary, group: Dictionary, battle: Dictionary, ground: Dictionary, ai_controller: String, probe = null) -> Dictionary:
 	var row := {
 		"kind": "game",
 		"group_id": group.get("group_id", ""),
@@ -230,14 +339,12 @@ func _play_game(base: Dictionary, group: Dictionary, battle: Dictionary, ground:
 		"map_size": group.get("map_size", ""),
 		"player_faction": group.get("player_faction", ""),
 		"enemy_faction": battle.get("enemy_faction", ""),
-		"player_variant": player_variant,
-		"enemy_variant": enemy_variant,
 	}
 	for key in ECHO_KEYS:
 		if battle.has(key):
 			row[key] = battle[key]
 	_route({})
-	var session = _player_session(base, battle)
+	var session = probe if probe != null else _player_session(base, battle)
 	var kind := String(battle.get("type", ""))
 	var enemy_power := 0.0
 	var site := {}
@@ -284,52 +391,146 @@ func _play_game(base: Dictionary, group: Dictionary, battle: Dictionary, ground:
 	row["enemy_power"] = snappedf(enemy_power, 0.1)
 	# A contested run plays only the battles whose odds fall in its band.
 	var odds: Array = group.get("odds", [])
+	var skipped := false
 	if odds.size() == 2:
 		var ratio := float(ground.get("player_power", 0.0)) / maxf(1.0, enemy_power)
-		if ratio < float(odds[0]) or ratio > float(odds[1]):
+		skipped = ratio < float(odds[0]) or ratio > float(odds[1])
+	return {"row": row, "session": session, "site": site, "skipped": skipped}
+
+
+## A battle for battle_sim_cli (a setup job): its session as a game holds it
+## before the payload, with the record so far. A skipped battle is skipped in
+## every order here, and leaves nothing to play.
+func _corpus_battle(base: Dictionary, group: Dictionary, battle: Dictionary, ground: Dictionary, orders: Array, ai_controller: String, probe) -> Dictionary:
+	var game := _prepare_game(base, group, battle, ground, ai_controller, probe)
+	var row: Dictionary = game.row
+	if bool(game.skipped):
+		for order in orders:
 			_emit({"kind": "skipped", "battle_id": row.battle_id})
-			return
-	# Installed before the battle is built: building it already asks the AI.
-	# Calls tied to no side (shared payload plumbing) always take the default.
-	if _router != null:
-		_route({"player": variants[player_variant], "enemy": variants[enemy_variant]})
-	var payload: Dictionary = {}
-	if kind == "siege":
-		payload = _battle_rules.create_town_assault_payload(session, String(ground.get("town", "")))
-	else:
-		payload = _battle_rules.create_battle_payload(session, site)
-	if payload.is_empty():
-		row["error"] = "battle payload is empty"
-		_emit(row)
+		return {}
+	var record := JSON.stringify(row)
+	return {
+		"battle_id": String(row.battle_id),
+		"kind": String(battle.get("type", "")),
+		"town": String(ground.get("town", "")),
+		"dice": int(group.get("dice", 0)),
+		# The record without its closing brace: battle_sim_cli adds the rest.
+		"prefix": record.substr(0, record.length() - 1),
+		"session": _session_view(game.session),
+		"site": game.site,
+	}
+
+
+## A map's battles for battle_sim_cli, with the generated scenario they read.
+func _write_corpus(corpus_dir: String, group: Dictionary, scenario_id: String, battles: Array) -> void:
+	var corpus := {
+		"group": {
+			"scenario_id": scenario_id,
+			"scenario": _content.get_scenario_readonly(scenario_id),
+			"terrain_layers": _content.get_terrain_layers_for_scenario(scenario_id),
+			"content_revision": _content.get_content_revision(),
+		},
+		"battles": battles,
+	}
+	var path := corpus_dir.path_join(String(group.get("corpus_file", "group_%s.snap" % group.get("group_id", ""))))
+	if not _write_snapshot(path, corpus):
+		_emit({"kind": "group_error", "group_id": group.get("group_id", ""), "error": "cannot write %s" % path})
 		return
-	# The same battle with other dice (a group's "dice"): how much of a result
-	# is luck. The battle's damage rolls restart from the new seed.
-	var dice := int(group.get("dice", 0))
-	if dice != 0:
-		payload["combat_seed"] = hash([int(payload.get("combat_seed", 0)), dice])
-		for key in ["damage_rng_version", "damage_rng_state", "damage_rng_roll_count", "damage_rng_integrity"]:
-			payload.erase(key)
-		row["dice"] = dice
-	session.battle = payload
-	session.game_state = "battle"
-	_battle_rules.normalize_battle_state(session)
-	row["start_ledger"] = _battle_rules.battle_report_casualty_ledger_bridge(session.battle)
-	row["player_commander"] = _commander_features(session.battle.get("player_commander_state", {}))
-	row["enemy_commander"] = _commander_features(session.battle.get("enemy_hero", {}))
-	row["player_hero"] = not (session.battle.get("player_commander_state", {}) as Dictionary).is_empty()
-	if kind != "siege":
-		row["enemy_hero"] = not (session.battle.get("enemy_hero", {}) as Dictionary).is_empty() and kind == "hero"
-	var resolution: Dictionary = _auto_resolve.resolve_active_battle(session)
-	var report = session.flags.get("last_battle_aftermath", {})
-	row["state"] = String(resolution.get("state", ""))
-	row["completed"] = bool(resolution.get("completed", false))
-	row["invalid_orders"] = int(resolution.get("invalid_orders", 0))
-	row["outcome"] = String(report.get("outcome", "")) if report is Dictionary else ""
-	row["rounds"] = int(report.get("rounds", 0)) if report is Dictionary else 0
-	row["end_ledger"] = report.get("casualties", {}) if report is Dictionary else {}
-	row["ai_calls"] = _router._arena_calls.duplicate() if _router != null else {}
-	row["ms"] = (Time.get_ticks_usec() - started) / 1000.0
-	_emit(row)
+	_emit({"kind": "corpus", "group_id": group.get("group_id", ""), "battles": battles.size()})
+
+
+## The session as the native rules see an object (PortBridge::object_view): its
+## script variables in property list order, then its metadata under "meta".
+func _session_view(session) -> Dictionary:
+	var view := {}
+	for property in session.get_property_list():
+		if int(property.get("usage", 0)) & PROPERTY_USAGE_SCRIPT_VARIABLE:
+			view[String(property.name)] = session.get(property.name)
+	var meta := {}
+	for name in session.get_meta_list():
+		meta[name] = session.get_meta(name)
+	view["meta"] = meta
+	return view
+
+
+## What battle_sim_cli reads besides a map's battles: the content files, the
+## content tables by id (as ContentService's getters answer), and the rules
+## scripts' static vars.
+func _content_snapshot() -> Dictionary:
+	var files := {}
+	for name in DirAccess.get_files_at(CONTENT_DIR):
+		if name.get_extension() == "json":
+			var path := CONTENT_DIR.path_join(name)
+			files[path] = _content.load_json(path)
+	var tables := {}
+	for table in CONTENT_TABLES:
+		var getter := String(CONTENT_TABLES[table][0])
+		var path := String(CONTENT_TABLES[table][1])
+		# "" too: an item without an id is the row of id "".
+		var ids: Array = [""]
+		ids.append_array(_content.get_content_ids(path))
+		if table == "Town":
+			ids.append_array((_content.load_json(path).get("legacy_aliases", {}) as Dictionary).keys())
+		elif table == "Encounter":
+			ids.append_array(_content.get_content_ids(GENERATED_COMPANIES_PATH, "encounters"))
+		var rows := {}
+		for id in ids:
+			var row: Dictionary = _content.call(getter, String(id))
+			if not rows.has(String(id)) and not row.is_empty():
+				rows[String(id)] = row
+		tables[table] = rows
+	# By the id each lookup asks with: the stripped site id, the normalized terrain.
+	var by_site := {}
+	for item in _content._items_from_raw(_content.load_json("res://content/map_objects.json")):
+		var site_id := String(item.get("resource_site_id", "")).strip_edges() if item is Dictionary else ""
+		if site_id != "" and not by_site.has(site_id):
+			by_site[site_id] = _content.get_map_object_for_resource_site(site_id)
+	tables["MapObjectForResourceSite"] = by_site
+	var by_terrain := {}
+	for biome in _content._items_from_raw(_content.load_json("res://content/biomes.json")):
+		if not (biome is Dictionary) or not (biome.get("map_tile_ids", []) is Array):
+			continue
+		for tile_id in biome.get("map_tile_ids", []):
+			var terrain := String(tile_id) if tile_id is String or tile_id is StringName else ""
+			if terrain != "" and _content.normalize_terrain_id(terrain) == terrain and not by_terrain.has(terrain):
+				var row: Dictionary = _content.get_biome_for_terrain(terrain)
+				if not row.is_empty():
+					by_terrain[terrain] = row
+	tables["BiomeForTerrain"] = by_terrain
+	return {"files": files, "tables": tables, "statics": _static_vars(), "revision": _content.get_content_revision()}
+
+
+## Each rules script's static vars, by its path and their names.
+func _static_vars() -> Dictionary:
+	var declaration := RegEx.create_from_string("^static var ([A-Za-z_][A-Za-z0-9_]*)")
+	var statics := {}
+	for name in DirAccess.get_files_at(RULES_DIR):
+		if name.get_extension() != "gd":
+			continue
+		var path := RULES_DIR.path_join(name)
+		var names := []
+		for line in FileAccess.get_file_as_string(path).split("\n"):
+			var found := declaration.search(line)
+			if found != null:
+				names.append(found.get_string(1))
+		var script = load(path) if not names.is_empty() else null
+		if script == null:
+			continue
+		var values := {}
+		for var_name in names:
+			values[var_name] = script.get(var_name)
+		statics[path] = values
+	return statics
+
+
+func _write_snapshot(path: String, value: Variant) -> bool:
+	var bytes: PackedByteArray = load("res://scripts/core/NativeRules.gd").api().snapshot_encode(value)
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	if bytes.is_empty() or file == null:
+		return false
+	file.store_buffer(bytes)
+	file.close()
+	return true
 
 
 func _town(session, placement_id: String) -> Dictionary:

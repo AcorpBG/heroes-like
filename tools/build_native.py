@@ -6,7 +6,7 @@
     python tools/build_native.py linux                   # rules library on the Linux build server
     python tools/build_native.py linux --part all        # rules and map persistence there
 
-Parts: `rules` (src/gdextension/rules: aurelion_rules, rules_selftest) and `map`
+Parts: `rules` (src/gdextension/rules: aurelion_rules, rules_selftest, battle_sim_cli) and `map`
 (src/gdextension: aurelion_map_persistence, the generator's CLI and self-test).
 Each flavour (template_debug, template_release) has its own build tree in .artifacts/.
 
@@ -58,16 +58,16 @@ PARTS = {
 		"source": RULES_DIR,
 		"paths": [RULES_DIR, "src/gdextension/cmake"],
 		"trees": {
-			"template_debug": ["aurelion_rules", "rules_selftest"],
+			"template_debug": ["aurelion_rules", "rules_selftest", "battle_sim_cli"],
 			"template_release": ["aurelion_rules"],
 		},
 		"outputs": {
 			"windows": {
-				"template_debug": ["aurelion_rules.windows.template_debug.x86_64.dll", "rules_selftest.exe"],
+				"template_debug": ["aurelion_rules.windows.template_debug.x86_64.dll", "rules_selftest.exe", "battle_sim_cli.exe"],
 				"template_release": ["aurelion_rules.windows.template_release.x86_64.dll"],
 			},
 			"linux": {
-				"template_debug": ["libaurelion_rules.linux.template_debug.x86_64.so", "rules_selftest"],
+				"template_debug": ["libaurelion_rules.linux.template_debug.x86_64.so", "rules_selftest", "battle_sim_cli"],
 				"template_release": ["libaurelion_rules.linux.template_release.x86_64.so"],
 			},
 		},

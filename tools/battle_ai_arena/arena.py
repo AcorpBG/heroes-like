@@ -18,6 +18,14 @@ stacks and hero are commanded by its own variant, swapped in memory inside the G
 --plain plays the game's own BattleAiRules on both sides, with no router and no variants, for
 the native battle engine's parity checks: the native port reads the AI's memos from the game's
 script, which the router replaces (docs/native-rules-engine-transition.md, Phase 1).
+
+--backend cli (the default) plays the battles with battle_sim_cli (bin/, built with the rules
+library by tools/build_native.py) outside Godot: Godot workers build each battle up to its
+payload once (worker.gd, a setup job), and battle_sim_cli plays every order from there, each
+side with its variant's weights, through the native router. The records are those of
+--backend godot, which plays every game in Godot. battle_sim_cli runs the working tree's battle
+AI, so its variants are the working tree's BattleAiRules.gd with their own weights; a variant
+with other code needs --backend godot.
 """
 from __future__ import annotations
 
@@ -47,6 +55,7 @@ AI_SOURCE = ROOT / "scripts" / "core" / "BattleAiRules.gd"
 WEIGHTS_FILE = ROOT / "content" / "battle_ai_weights.json"
 WEIGHTS_DECLARATION = "static var _weights: Dictionary = {}"
 MAPS_DIR = ROOT / "maps"
+CLI = ROOT / "bin" / ("battle_sim_cli.exe" if os.name == "nt" else "battle_sim_cli")
 
 # Suites of realistic battles (scenarios.py): generated maps, battles on each.
 SUITES = {
@@ -82,23 +91,35 @@ def load_weights(path: Path | str | None = None) -> dict[str, float]:
     return {key: float(value) for key, value in weights.items()}
 
 
+def full_weights(weights: dict[str, float]) -> dict[str, float]:
+    """Every weight the game's file names, the given ones replacing its values."""
+    full = load_weights()
+    full.update(weights)
+    return full
+
+
+def weight_text(value: float) -> str:
+    """A weight as a variant's source holds it. Both GDScript and battle_sim_cli read such a
+    text as its nearest float while it has at most 15 significant digits."""
+    if not abs(value) < 1e9:
+        sys.exit(f"a weight of {value} is outside the variants' text format")
+    return f"{value:.6f}"
+
+
 def weighted_source(source: str, weights: dict[str, float]) -> str:
     """The variant's source with its weights built in, in place of reading the game's file.
     Every weight the game's file names must be given (missing ones keep the file's values)."""
     if WEIGHTS_DECLARATION not in source:
         sys.exit("this BattleAiRules.gd reads no weights file, so it cannot take weights")
-    full = load_weights()
-    full.update(weights)
-    literal = "{" + ", ".join(f'"{key}": {value:.6f}' for key, value in sorted(full.items())) + "}"
+    literal = "{" + ", ".join(f'"{key}": {weight_text(value)}' for key, value in sorted(full_weights(weights).items())) + "}"
     return source.replace(WEIGHTS_DECLARATION, f"static var _weights: Dictionary = {literal}", 1)
 
 
-def resolve_variant(spec: str, dest: Path, weights: dict[str, float] | None = None) -> str:
-    """'current' (the working tree), 'git:<rev>', or a path to a BattleAiRules.gd copy,
-    optionally with its weights replaced."""
+def variant_source(spec: str) -> str:
+    """'current' (the working tree), 'git:<rev>', or a path to a BattleAiRules.gd copy."""
     if spec == "current":
-        source = AI_SOURCE.read_text(encoding="utf-8")
-    elif spec.startswith("git:"):
+        return AI_SOURCE.read_text(encoding="utf-8")
+    if spec.startswith("git:"):
         rev = spec[4:]
         proc = subprocess.run(
             ["git", "-C", str(ROOT), "show", f"{rev}:scripts/core/BattleAiRules.gd"],
@@ -106,22 +127,57 @@ def resolve_variant(spec: str, dest: Path, weights: dict[str, float] | None = No
         )
         if proc.returncode != 0:
             sys.exit(f"cannot read BattleAiRules.gd at {rev}: {proc.stderr.strip()}")
-        source = proc.stdout
-    else:
-        source = Path(spec).read_text(encoding="utf-8")
-    if weights is None and spec.startswith("git:") and WEIGHTS_DECLARATION in source:
-        # The revision's own weights, not the working tree's file the game would read.
-        proc = subprocess.run(
-            ["git", "-C", str(ROOT), "show", f"{spec[4:]}:content/battle_ai_weights.json"],
-            capture_output=True, text=True, encoding="utf-8",
-        )
-        if proc.returncode == 0:
-            data = json.loads(proc.stdout)
-            weights = {key: float(value) for key, value in data.get("weights", data).items()}
+        return proc.stdout
+    return Path(spec).read_text(encoding="utf-8")
+
+
+def revision_weights(spec: str, source: str) -> dict[str, float] | None:
+    """A git:<rev> variant's own weights, not the working tree's file the game would read."""
+    if not spec.startswith("git:") or WEIGHTS_DECLARATION not in source:
+        return None
+    proc = subprocess.run(
+        ["git", "-C", str(ROOT), "show", f"{spec[4:]}:content/battle_ai_weights.json"],
+        capture_output=True, text=True, encoding="utf-8",
+    )
+    if proc.returncode != 0:
+        return None
+    data = json.loads(proc.stdout)
+    return {key: float(value) for key, value in data.get("weights", data).items()}
+
+
+def resolve_variant(spec: str, dest: Path, weights: dict[str, float] | None = None) -> str:
+    """'current' (the working tree), 'git:<rev>', or a path to a BattleAiRules.gd copy,
+    optionally with its weights replaced."""
+    source = variant_source(spec)
+    if weights is None:
+        weights = revision_weights(spec, source)
     if weights is not None:
         source = weighted_source(source, weights)
     dest.write_text(router.strip_class_name(source), encoding="utf-8")
     return source
+
+
+def cli_weights(spec: str, weights: dict[str, float] | None = None) -> dict[str, float] | None:
+    """The weights battle_sim_cli plays a variant with (resolve_variant's), None for a variant
+    that reads the game's weights file. battle_sim_cli runs the working tree's battle AI, so the
+    variant must be that code."""
+    source = variant_source(spec)
+    if source != AI_SOURCE.read_text(encoding="utf-8"):
+        sys.exit(f"{spec}: its BattleAiRules.gd is not the working tree's, which battle_sim_cli runs; use --backend godot")
+    if weights is None:
+        weights = revision_weights(spec, source)
+    return full_weights(weights) if weights is not None else None
+
+
+def write_variants(path: Path, variants: dict[str, dict[str, float] | None]) -> None:
+    """battle_sim_cli's variants file: label, weight and value per line; a label alone reads
+    the game's weights file."""
+    lines = []
+    for label, weights in variants.items():
+        if weights is None:
+            lines.append(label)
+        lines.extend(f"{label}\t{key}\t{weight_text(value)}" for key, value in sorted((weights or {}).items()))
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def parse_odds(text: str | None) -> tuple[float, float] | None:
@@ -186,9 +242,11 @@ def run_workers(
     timeout: int,
     orders: list[list[str]] | None = None,
     default_variant: str = "A",
+    setup: dict | None = None,
 ) -> tuple[list[dict], list[str]]:
     """Plays every battle of groups once per order ([player variant, enemy variant]). Without a router the game's
-    own AI plays both sides (--plain)."""
+    own AI plays both sides (--plain). With setup ({corpus_dir, content}) the workers play nothing and write the
+    battles for battle_sim_cli instead (run_cli)."""
     chunks = [groups[i::workers] for i in range(workers)]
     procs = []
     profiles = []
@@ -203,21 +261,10 @@ def run_workers(
             "plain": router_path is None,
             "orders": orders or [["A", "B"], ["B", "A"]],
             "groups": chunk,
+            # The first worker also writes the content snapshot.
+            **({"setup": {"corpus_dir": setup["corpus_dir"], "content": setup["content"] if index == 0 else ""}} if setup else {}),
         }), encoding="utf-8")
-        profile = tempfile.mkdtemp(prefix="heroes-arena-")
-        profiles.append(profile)
-        env = dict(os.environ)
-        env["APPDATA"] = profile  # Windows user data
-        env["XDG_DATA_HOME"] = profile  # Linux user data
-        env["XDG_CONFIG_HOME"] = profile
-        if router_path is not None:
-            # The router and the variants replace the GDScript BattleAiRules, which only the battle switch's GDScript
-            # copy runs (scripts/core/BattleEngine.gd). A plain run keeps the caller's switch, native by default.
-            env["HEROES_NATIVE_BATTLE"] = "gdscript"
-        out = run_dir / f"results_{index}.jsonl"
-        log = (run_dir / f"worker_{index}.log").open("w", encoding="utf-8")
-        cmd = [godot, "--headless", "--path", str(ROOT), "--audio-driver", "Dummy", "-s", str(HERE / "worker.gd"), "--", str(job), str(out)]
-        procs.append((index, subprocess.Popen(cmd, env=env, stdout=log, stderr=subprocess.STDOUT), out, log))
+        procs.append(start_worker(godot, run_dir, index, job, router_path is not None, profiles))
     problems = []
     deadline = time.monotonic() + timeout
     for index, proc, _out, log in procs:
@@ -241,6 +288,94 @@ def run_workers(
         if errors:
             problems.append(f"worker {index}: {errors} script errors (see worker_{index}.log)")
     return rows, problems
+
+
+def start_worker(godot: str, run_dir: Path, index: int, job: Path, routed: bool, profiles: list[str]) -> tuple:
+    """A Godot worker on its job, with a user profile of its own: (index, process, results path, log)."""
+    profile = tempfile.mkdtemp(prefix="heroes-arena-")
+    profiles.append(profile)
+    env = dict(os.environ)
+    env["APPDATA"] = profile  # Windows user data
+    env["XDG_DATA_HOME"] = profile  # Linux user data
+    env["XDG_CONFIG_HOME"] = profile
+    if routed:
+        # The router and the variants replace the GDScript BattleAiRules, which only the battle switch's GDScript
+        # copy runs (scripts/core/BattleEngine.gd). A plain run keeps the caller's switch, native by default.
+        env["HEROES_NATIVE_BATTLE"] = "gdscript"
+    out = run_dir / f"results_{index}.jsonl"
+    log = (run_dir / f"worker_{index}.log").open("w", encoding="utf-8")
+    cmd = [godot, "--headless", "--path", str(ROOT), "--audio-driver", "Dummy", "-s", str(HERE / "worker.gd"), "--", str(job), str(out)]
+    return (index, subprocess.Popen(cmd, env=env, stdout=log, stderr=subprocess.STDOUT), out, log)
+
+
+def run_cli(
+    godot: str,
+    run_dir: Path,
+    groups: list[dict],
+    workers: int,
+    variants: dict[str, dict[str, float] | None] | None,
+    timeout: int,
+    orders: list[list[str]] | None = None,
+    default_variant: str = "A",
+    threads: int = 0,
+) -> tuple[list[dict], list[str], dict]:
+    """run_workers' games played by battle_sim_cli, with the same records: Godot workers build each battle up to
+    its payload once (worker.gd, a setup job), and battle_sim_cli plays every order from there. variants: each
+    label's weights (cli_weights), None for a plain run. Also returns battle_sim_cli's counts."""
+    orders = orders or [["A", "B"], ["B", "A"]]
+    corpus = run_dir / "corpus"
+    shutil.rmtree(corpus, ignore_errors=True)
+    corpus.mkdir(parents=True)
+    content = run_dir / "content.snap"
+    numbered = [dict(group, corpus_file=f"group_{index:05d}.snap") for index, group in enumerate(groups)]
+    started = time.monotonic()
+    rows, problems = run_workers(godot, run_dir, numbered, workers, {}, None, timeout, orders, default_variant,
+                                 setup={"corpus_dir": str(corpus), "content": str(content)})
+    games, cli_problems, stats = play_cli(run_dir, content, corpus, variants, orders, default_variant,
+                                          max(1, int(timeout - (time.monotonic() - started))), threads)
+    shutil.rmtree(corpus, ignore_errors=True)
+    content.unlink(missing_ok=True)
+    return rows + games, problems + cli_problems, stats
+
+
+def play_cli(
+    out_dir: Path,
+    content: Path,
+    corpus: Path,
+    variants: dict[str, dict[str, float] | None] | None,
+    orders: list[list[str]],
+    default_variant: str,
+    timeout: int,
+    threads: int = 0,
+) -> tuple[list[dict], list[str], dict]:
+    """battle_sim_cli on a corpus of setup snapshots: its game records, problems and counts. Writes
+    cli_games.jsonl (the records) and variants.txt into out_dir."""
+    if not CLI.exists():
+        sys.exit(f"{CLI} is missing: build it with python tools/build_native.py windows")
+    games = out_dir / "cli_games.jsonl"
+    cmd = [str(CLI), "--content", str(content), "--corpus-dir", str(corpus), "--out", str(games),
+           "--orders", ",".join(f"{player}:{enemy}" for player, enemy in orders)]
+    if variants is None:
+        cmd.append("--plain")
+    else:
+        write_variants(out_dir / "variants.txt", variants)
+        cmd += ["--variants", str(out_dir / "variants.txt"), "--default", default_variant]
+    if threads:
+        cmd += ["--threads", str(threads)]
+    problems = []
+    started = time.monotonic()
+    try:
+        proc = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", timeout=timeout)
+    except subprocess.TimeoutExpired:
+        return [], ["battle_sim_cli timed out"], {}
+    lines = [line for line in proc.stdout.splitlines() if line.strip()]
+    stats = json.loads(lines[-1]) if lines and lines[-1].startswith("{") else {}
+    stats["wall_seconds"] = round(time.monotonic() - started, 1)
+    if proc.returncode != 0:
+        problems.append(f"battle_sim_cli exited with {proc.returncode}: {proc.stderr.strip()[-400:]}")
+    problems.extend(f"battle_sim_cli: {error}" for error in stats.get("group_errors", []))
+    rows = [json.loads(line) for line in games.read_text(encoding="utf-8").splitlines() if line.strip()] if games.exists() else []
+    return rows, problems, stats
 
 
 def mean_ci(values: list[float]) -> tuple[float, float]:
@@ -398,6 +533,8 @@ def main() -> int:
     parser.add_argument("--roles", action="store_true", help="also play A against A, to split B's gain into its play as player and as enemy")
     parser.add_argument("--keep-logs", action="store_true", help="keep worker jobs, logs and raw results")
     parser.add_argument("--plain", action="store_true", help="the game's own BattleAiRules on both sides, no router or variants (--a and --b unused)")
+    parser.add_argument("--backend", choices=("cli", "godot"), default="cli", help="cli: battle_sim_cli plays the battles (default); godot: Godot workers play every game")
+    parser.add_argument("--threads", type=int, default=0, help="battle_sim_cli's threads (default: one per core)")
     args = parser.parse_args()
     if args.plain and (args.a_weights or args.b_weights):
         parser.error("--plain plays the game's own weights")
@@ -407,7 +544,13 @@ def main() -> int:
     run_dir.mkdir(parents=True, exist_ok=True)
     variant_paths: dict = {}
     router_path = None
-    if not args.plain:
+    cli_variants = None
+    if args.backend == "cli" and not args.plain:
+        cli_variants = {
+            "A": cli_weights(args.a, load_weights(args.a_weights) if args.a_weights else None),
+            "B": cli_weights(args.b, load_weights(args.b_weights) if args.b_weights else None),
+        }
+    elif not args.plain:
         variants_dir = run_dir / "variants"
         variants_dir.mkdir(exist_ok=True)
         variant_paths = {"A": variants_dir / "A.gd", "B": variants_dir / "B.gd"}
@@ -423,14 +566,20 @@ def main() -> int:
     maps_before = set(MAPS_DIR.iterdir()) if MAPS_DIR.exists() else set()
     print(f"Arena: {sum(len(g['battles']) for g in groups)} battles x {len(orders)} games on {len(groups)} maps, {workers} workers ...")
     started = time.monotonic()
-    rows, problems = run_workers(godot, run_dir, groups, workers, variant_paths, router_path, args.timeout, orders)
+    cli_stats = None
+    if args.backend == "cli":
+        rows, problems, cli_stats = run_cli(godot, run_dir, groups, workers, cli_variants, args.timeout, orders, "A", args.threads)
+    else:
+        rows, problems = run_workers(godot, run_dir, groups, workers, variant_paths, router_path, args.timeout, orders)
     wall = time.monotonic() - started
     summary, game_problems = summarize(rows, unit_values(), args.plain)
     problems = problems + game_problems
     leftovers = sorted(p.name for p in (set(MAPS_DIR.iterdir()) if MAPS_DIR.exists() else set()) - maps_before)
     if leftovers:
         problems.append(f"maps/ gained {len(leftovers)} files during the run (workers remove their own): {leftovers[:6]}")
-    summary.update({"suite": args.suite, "odds": args.odds, "skipped": sum(1 for row in rows if row.get("kind") == "skipped") // max(1, len(orders)), "a": args.a, "b": args.b, "plain": args.plain, "workers": workers, "wall_seconds": round(wall, 1), "problems": problems})
+    summary.update({"suite": args.suite, "odds": args.odds, "skipped": sum(1 for row in rows if row.get("kind") == "skipped") // max(1, len(orders)), "a": args.a, "b": args.b, "plain": args.plain, "backend": args.backend, "workers": workers, "wall_seconds": round(wall, 1), "problems": problems})
+    if cli_stats is not None:
+        summary["battle_sim_cli"] = cli_stats
     (run_dir / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
     values = unit_values()
     with (run_dir / "games.jsonl").open("w", encoding="utf-8", newline="\n") as handle:
@@ -443,7 +592,7 @@ def main() -> int:
                     line["kept"] = {side: round(share, 6) for side, share in scored["kept"].items()}
                 handle.write(json.dumps(line) + "\n")
     if not args.keep_logs and not problems:
-        for path in list(run_dir.glob("job_*.json")) + list(run_dir.glob("results_*.jsonl")) + list(run_dir.glob("worker_*.log")):
+        for path in list(run_dir.glob("job_*.json")) + list(run_dir.glob("results_*.jsonl")) + list(run_dir.glob("worker_*.log")) + list(run_dir.glob("cli_games.jsonl")) + list(run_dir.glob("variants.txt")):
             path.unlink()
     print_report(summary, problems, args, wall, run_dir)
     return 1 if problems else 0

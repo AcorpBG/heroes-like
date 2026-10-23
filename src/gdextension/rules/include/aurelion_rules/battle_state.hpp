@@ -465,6 +465,14 @@ public:
 		return -1;
 	}
 
+	// Builds the table now if find() would ever build one: from then on find()
+	// writes nothing, so threads may share a KeyList that nothing changes.
+	void prepare_index() const {
+		if (!indexed_ && keys_.size() > kIndexAbove && keys_.size() < kIndexBelow) {
+			build_index();
+		}
+	}
+
 private:
 	// A table entry is its key's slot + 1, 0 when empty; so at most this many keys.
 	static constexpr size_t kIndexBelow = 0xFFFF;
@@ -722,6 +730,16 @@ public:
 	virtual double math_pow(double base, double exponent);
 	virtual double math_exp(double x);
 	virtual double math_log(double x);
+	// The battle AI arena's router (tools/battle_ai_arena): battle_sim_cli
+	// plays each side's stacks with that side's AI weights. The battle code
+	// enters each call into the battle AI that the arena's GDScript router
+	// routes (its stubs of BattleAiRules' static funcs, called from the other
+	// scripts) with the atom of the side the router picks (port/ai_route.hpp),
+	// and leaves it when the call returns or throws. The defaults route
+	// nothing: routes_ai is false, and the side is not worked out.
+	virtual bool routes_ai() const;
+	virtual void ai_route_enter(State &state, uint32_t side);
+	virtual void ai_route_leave(State &state);
 };
 
 class State {
