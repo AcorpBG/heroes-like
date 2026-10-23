@@ -2859,6 +2859,35 @@ Checks, main 2abd6e086 against the branch, with a scratch probe and isolated pro
   146 | 140; every other kind within 4 ms either way. No kind got slower.
 - Coverage: the 7.11 and 7.12 entries above.
 
+**Slice 7.2, the move and its arrival** (2026-10-24, branch `native-phase7-human`): a human move and what its
+destination does run in C++.
+- Ported to the human registry (header `overworld_rules_move.hpp`, eleven files `overworld_rules_move.cpp`,
+  `water_travel_rules_human.cpp`, `overworld_rules_arrival.cpp`, `overworld_rules_collect.cpp`,
+  `overworld_rules_site_queries.cpp`, `overworld_rules_site_effects.cpp`, `overworld_rules_site_rewards.cpp`,
+  `overworld_rules_encounter_text.cpp`, `overworld_rules_recap.cpp`, `scenario_event_check.cpp` and
+  `scenario_objective_label.cpp`; 177 functions, 6,754 lines): the keyboard step, the route (cached and not), native
+  transit and levels, boats and whirlpools, the arrival (encounters, rendezvous, towns), resource sites, their claims,
+  rewards, guards and texts, dwellings, visit buildings, artifact pickups, the encounter's texts, the post-action
+  recap, `ScenarioRules.evaluate_session_for_event` with its dependency helpers, and `_objective_label`.
+- The action frame: the C++ `_finalize_action_result` records the rules profile and checks the scenario narrowed to
+  the action's event facts, as its GDScript copy does; the fog payload and sources, the encounter lookup and the
+  blocked-tile index record their profile lines. `_end_turn_open_day` and `_end_turn_close_day` still refuse a
+  recording profile.
+- 69 entries: what the screens, the panels, the battle end, `ScenarioScriptRules` (`_award_experience`) and the tests
+  call. `NativeTransitRules.network_colour` keeps a GDScript copy for the map view, which calls it for every portal
+  it draws; its C++ copy reads the GDScript const `NETWORK_COLOURS`.
+- The port bridge: a missing content row answers Nil, so `gd::content_row` gives the port a new empty Dictionary of its
+  own, as ContentService gives a new `{}` (a shadow check had counted it as one the port was given). The scenario
+  check's dependency signature stringifies the record natively where `json_stringify` covers it.
+Checks:
+- Human shadow on the eight `--human` seeds, 0 mismatches and 0 errors: 62,274 checks on 58 entries.
+- With a scratch copy of the runner that also steps by keyboard, makes the route take its uncached path, presses the
+  collect context actions and asks the panels' texts: 97,365 checks on all 69 entries, 0 mismatches and 0 errors
+  (`try_move` 380, `try_move_along_route` 500, `execute_prevalidated_route` 123, `collect_active_resource` 453,
+  `collect_active_artifact` 351, `_collect_resource_node_result` 322, `_award_experience` 94,
+  `evaluate_session_for_event` 12, `travel_native_passage` 9, `capture_active_town` 3,
+  `_collect_artifact_node_result` 1).
+
 ### Phase 8: a match runner without Godot
 
 Wanted, not optional (owner decision 2026-10-22, D7). The same core as a command-line tool, `match_sim_cli` beside

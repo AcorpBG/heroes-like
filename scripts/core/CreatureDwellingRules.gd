@@ -9,8 +9,6 @@ extends RefCounted
 ## towns. See docs/creature-dwellings.md.
 
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
-static var _human_engine_mode: int = HumanEngine.mode
-
 
 const FAMILY := "neutral_dwelling"
 const KIND_REFUGEE_CAMP := "refugee_camp"
@@ -198,36 +196,9 @@ static func record_guard_result(node: Dictionary, side: String, survivor_stacks:
 	else:
 		node[GUARD_SURVIVORS] = survivors
 
-static func describe_creatures(node: Dictionary, site: Dictionary, day: int) -> String:
-	var parts := []
-	var growth := weekly_growth(node, site, day)
-	for unit_id in growth.keys():
-		parts.append("%d %s" % [int(growth[unit_id]), String(ContentService.get_unit(unit_id).get("name", unit_id))])
-	return ", ".join(parts)
-
 ## A short line for map tooltips and the context panel.
 static func summary(node: Dictionary, site: Dictionary, day: int) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return summary__gd(node, site, day)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"CreatureDwellingRules.summary", [node, site, day])
-	var result = summary__gd(node, site, day)
-	HumanEngine.check(&"CreatureDwellingRules.summary", [node, site, day], result)
-	return result
-
-static func summary__gd(node: Dictionary, site: Dictionary, day: int) -> String:
-	if is_refugee_camp(site):
-		var unit_id := refugee_unit(node, day)
-		return "This week %s; a new creature each week" % describe_creatures(node, site, day) if unit_id != "" else "A new creature each week"
-	var parts := ["Hire %s a week" % describe_creatures(node, site, day)]
-	for unit_id in creatures(node, site, day):
-		if unit_tier(unit_id) <= FREE_TIER:
-			parts.append("free")
-			break
-	var guard := full_guard(node, site, day)
-	if not guard.is_empty():
-		parts.append("guarded by %d %s" % [int(guard[0].get("count", 0)), String(ContentService.get_unit(String(guard[0].get("unit_id", ""))).get("name", ""))])
-	return ", ".join(parts)
+	return HumanEngine.native(&"CreatureDwellingRules.summary", [node, site, day])
 
 ## Gold-equivalent value of a week's creatures, for AI targeting.
 static func week_value(node: Dictionary, site: Dictionary, day: int, available_only: bool = false) -> int:

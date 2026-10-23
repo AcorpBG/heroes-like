@@ -6,8 +6,6 @@ extends RefCounted
 ## or survey once. See docs/visit-buildings.md.
 
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
-static var _human_engine_mode: int = HumanEngine.mode
-
 
 const FAMILY := "visit_building"
 const HERO_VISITS := "hero_visits"
@@ -83,11 +81,6 @@ static func effects(site: Dictionary, choice_id: String = "") -> Dictionary:
 static func week_index(day: int) -> int:
 	return int(floor(float(max(1, day) - 1) / float(WEEK_LENGTH)))
 
-## The side a visitor plays for: the human player, or "ai:<faction>".
-static func side_key(session) -> String:
-	var player_id := String(session.overworld.get("active_player_id", "")) if session != null else ""
-	return "player:%s" % (player_id if player_id != "" else "player")
-
 ## Whether visitor_key (a hero id, or "ai:<faction>" for computer players) may
 ## use the building on this day. A once-per-side building checks side (the
 ## visitor key when empty). Returns {ok, message}.
@@ -133,28 +126,7 @@ static func record_visit(node: Dictionary, site: Dictionary, visitor_key: String
 		node[SITE_LAST_VISIT_DAY] = day
 
 static func cadence_label(site: Dictionary) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return cadence_label__gd(site)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"VisitBuildingRules.cadence_label", [site])
-	var result = cadence_label__gd(site)
-	HumanEngine.check(&"VisitBuildingRules.cadence_label", [site], result)
-	return result
-
-static func cadence_label__gd(site: Dictionary) -> String:
-	match cadence(site):
-		CADENCE_ONCE_PER_SIDE:
-			return "once per player"
-		CADENCE_DAILY_PER_HERO:
-			return "once per hero each day"
-		CADENCE_WEEKLY_PER_HERO:
-			return "once per hero each week"
-		CADENCE_WEEKLY_SITE:
-			return "once a week"
-		CADENCE_ALWAYS:
-			return "any time"
-		_:
-			return "once per hero"
+	return HumanEngine.native(&"VisitBuildingRules.cadence_label", [site])
 
 static func effect_summary(effect: Dictionary) -> String:
 	var parts := []
@@ -201,65 +173,7 @@ static func effect_summary(effect: Dictionary) -> String:
 
 ## One line for tooltips and inspection: effect, price and cadence.
 static func summary(site: Dictionary) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return summary__gd(site)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"VisitBuildingRules.summary", [site])
-	var result = summary__gd(site)
-	HumanEngine.check(&"VisitBuildingRules.summary", [site], result)
-	return result
-
-static func summary__gd(site: Dictionary) -> String:
-	var text := ""
-	var options := choices(site)
-	if not options.is_empty():
-		var labels := []
-		for choice in options:
-			if choice is Dictionary:
-				var label := String(choice.get("label", ""))
-				labels.append(label if label != "" else effect_summary(choice.get("effects", {})))
-		text = "choose %s" % " or ".join(labels)
-	else:
-		text = effect_summary(effects(site))
-	var price := cost(site)
-	if not price.is_empty():
-		text = "%s for %s" % [text, _resource_text(price)]
-	if required_level(site) > 0:
-		text = "%s (hero level %d+)" % [text, required_level(site)]
-	return "%s, %s" % [text, cadence_label(site)] if text != "" else cadence_label(site)
-
-static func status_line(node: Dictionary, site: Dictionary, visitor_key: String, day: int, side: String = "") -> String:
-	var ready := readiness(node, site, visitor_key, day, side)
-	if not bool(ready.get("ok", false)):
-		return String(ready.get("message", ""))
-	return "Ready" if cadence(site) == CADENCE_ONCE_PER_SIDE else "Ready for this hero"
-
-## Adds this-week bonuses and next-battle boosts to a hero dictionary.
-static func add_week_bonus(hero: Dictionary, key: String, amount: int) -> void:
-	var bonuses = hero.get(WEEK_BONUSES, {})
-	if not (bonuses is Dictionary):
-		bonuses = {}
-	bonuses[key] = int(bonuses.get(key, 0)) + amount
-	hero[WEEK_BONUSES] = bonuses
-
-static func week_bonus(hero: Dictionary, key: String) -> int:
-	var bonuses = hero.get(WEEK_BONUSES, {})
-	return int(bonuses.get(key, 0)) if bonuses is Dictionary else 0
-
-static func add_battle_boosts(hero: Dictionary, boosts: Dictionary) -> Dictionary:
-	var current = hero.get(BATTLE_BOOSTS, {})
-	if not (current is Dictionary):
-		current = {}
-	var applied := {}
-	for key in BOOST_KEYS:
-		var amount := int(boosts.get(key, 0))
-		if amount == 0:
-			continue
-		var before := int(current.get(key, 0))
-		current[key] = clampi(before + amount, 0, BOOST_CAP)
-		applied[key] = int(current[key]) - before
-	hero[BATTLE_BOOSTS] = current
-	return applied
+	return HumanEngine.native(&"VisitBuildingRules.summary", [site])
 
 ## AI weighting in gold-equivalent value, so computer heroes seek stat, spell
 ## and growth buildings the way they seek pickups.

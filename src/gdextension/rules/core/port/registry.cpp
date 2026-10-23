@@ -863,10 +863,6 @@ constexpr ScriptStatic kSharedMemos[] = {
 constexpr Host kHosts[] = {
 	// create_battle_payload (battle_payload.cpp), only while profiling is on.
 	HOST(ProfileLog, emit_general, 7),
-	// collect_resource_node_result (battle_end_sites.cpp): a site's visit, at a
-	// battle end, at most once a battle, when the guards of a dwelling the
-	// player does not control or a field site's defenders are beaten.
-	HOST(OverworldRules, _collect_resource_node_result, 5),
 };
 
 #undef HOST

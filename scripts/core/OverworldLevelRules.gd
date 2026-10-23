@@ -1,6 +1,5 @@
 extends RefCounted
 
-
 # A local Vector2i is meaningful only together with a level. Keep world records
 # global; callers select a level for terrain, occupancy and presentation queries.
 # Missing level fields in authored content / legacy saves mean surface (zero).
@@ -53,17 +52,6 @@ static func position(value: Variant) -> Dictionary:
 	if value is Vector2i:
 		return {"x": value.x, "y": value.y}
 	return {"x": 0, "y": 0}
-
-static func moved_position(previous: Variant, tile: Vector2i, level: int = -1) -> Dictionary:
-	var result := position(previous)
-	result["x"] = tile.x
-	result["y"] = tile.y
-	if level >= 0:
-		if level == 0:
-			result.erase("level")
-		else:
-			result["level"] = level
-	return result
 
 static func canonical_spatial_records(owned_records: Array) -> Array:
 	# Only detached spatial records, never hero/commander progression records.

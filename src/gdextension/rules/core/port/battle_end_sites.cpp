@@ -16,6 +16,7 @@
 #include "aurelion_rules/port/hero_commit.hpp"
 #include "aurelion_rules/port/overworld_rules.hpp"
 #include "aurelion_rules/port/overworld_rules_ai.hpp"
+#include "aurelion_rules/port/overworld_rules_move.hpp"
 #include "aurelion_rules/port/player_identity_rules.hpp"
 #include "aurelion_rules/port/player_identity_rules_ai.hpp"
 #include "aurelion_rules/port/resource_node_payload_rules_ai.hpp"
@@ -130,12 +131,10 @@ int64_t clamp_untyped(int64_t value, int64_t lo, int64_t hi) {
 	return value;
 }
 
-// _collect_resource_node_result(session, node_result, refresh_fog_after_action):
-// the host target's one call site. It takes the session object, not its view,
-// and every argument (native_transit_cost = 1, reward_choice_id = "").
+// _collect_resource_node_result(session, node_result, refresh_fog_after_action),
+// the human move's port (Phase 7, slice 7.2).
 DictRef collect_resource_node_result(State &state, DictRef session, DictRef node_result, bool refresh_fog_after_action) {
-	return gd::as_dict(gd::call_static(state, key::overworld_rules_script, key::_collect_resource_node_result,
-			{gd::view_object(state, session), dict_value(node_result), gd::bool_value(refresh_fog_after_action), int_value(1), str(key::empty)}));
+	return overworld_rules::_collect_resource_node_result(state, session, node_result, refresh_fog_after_action, 1, key::empty);
 }
 
 } // namespace

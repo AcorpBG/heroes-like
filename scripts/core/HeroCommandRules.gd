@@ -9,7 +9,6 @@ const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const DayEngine = preload("res://scripts/core/DayEngine.gd")
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
-static var _human_engine_mode: int = HumanEngine.mode
 static var _day_engine_mode: int = DayEngine.mode
 static var DifficultyRulesScript: Variant = load("res://scripts/core/DifficultyRules.gd")
 
@@ -1244,34 +1243,7 @@ static func manage_army_slots(
 	}
 
 static func field_rendezvous_heroes(session: SessionStateStoreScript.SessionData) -> Array:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return field_rendezvous_heroes__gd(session)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"HeroCommandRules.field_rendezvous_heroes", [session])
-	var before := HumanEngine.before_writing(&"HeroCommandRules.field_rendezvous_heroes", [session])
-	var result = field_rendezvous_heroes__gd(session)
-	HumanEngine.check_writing(&"HeroCommandRules.field_rendezvous_heroes", before, [session], result)
-	return result
-
-static func field_rendezvous_heroes__gd(session: SessionStateStoreScript.SessionData) -> Array:
-	normalize_session(session)
-	var rendezvous := []
-	if session == null:
-		return rendezvous
-	var active := active_hero(session)
-	if active.is_empty():
-		return rendezvous
-	var active_id := String(active.get("id", ""))
-	var active_position := _normalize_position(active.get("position", {}))
-	for hero_value in session.overworld.get("player_heroes", []):
-		if not (hero_value is Dictionary):
-			continue
-		var hero: Dictionary = hero_value
-		if String(hero.get("id", "")) == active_id:
-			continue
-		if _normalize_position(hero.get("position", {})) == active_position:
-			rendezvous.append(hero)
-	return rendezvous
+	return HumanEngine.native_writing(&"HeroCommandRules.field_rendezvous_heroes", [session])
 
 static func describe_field_rendezvous(session: SessionStateStoreScript.SessionData) -> String:
 	var active := active_hero(session)

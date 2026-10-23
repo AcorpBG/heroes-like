@@ -26,10 +26,9 @@
 // --plain).
 //
 // What the tool leaves out of the game: a battle starts from the snapshot's
-// session; the host call a battle end makes when the player beats a site's
-// guards (OverworldRules._collect_resource_node_result, the site's visit)
-// answers {} and is counted, since the record reads nothing it changes;
-// ProfileLog answers nothing; pow, exp and log are this build's C runtime's,
+// session; a battle end where the player beats a site's guards visits the
+// site through its port (OverworldRules._collect_resource_node_result), which
+// the record does not read; ProfileLog answers nothing; pow, exp and log are this build's C runtime's,
 // not the engine's (decision D4), and are counted. The run's counts go to
 // stdout as one JSON line.
 
@@ -563,10 +562,6 @@ public:
 		if (name == "ProfileLog.emit_general") {
 			++counts.host_calls[name];
 			return Value();
-		}
-		if (name == "OverworldRules._collect_resource_node_result") {
-			++counts.host_calls[name];
-			return gd::dict_value(state.new_dict());
 		}
 		throw st::ScriptError(name + ": a host call the battle tool does not answer");
 	}
