@@ -116501,6 +116501,84 @@
       ],
       "notes": "Merged to main 2026-10-23, main tagged pre-native-phase4-faction-turn-4.4 first (157138710 source, effbae9ba Windows binaries). The turn runs native in every game: HEROES_NATIVE_TURN and its gdscript and shadow modes are gone, the turn table no longer falls back (a path the port leaves out is a SCRIPT ERROR). scripts/core -9,758 / +130 lines: 233 functions' GDScript deleted (183 of the turn, 42 of Phase 3's AiHeroRules wrappers, ai_registry.cpp 64 to 22 entries, four Phase 3 two-copy functions, 309 stay, four helpers); 69 thin wrappers (turn table 456 to 70 entries); 203 functions of other scripts keep a GDScript copy (two copies; transition doc, Phase 4, 4.4, names them). Phase 5's nine forecast stubs call 4.2's ports; the two authored defeat objectives still leave the day to GDScript (ScenarioRules._objective_met). Checks: owner save copies (D9) 5 saves x 10 days, all GDScript and all native identical, turn+day shadow 69,837 checks / 0 mismatches, codec round trip 0 differences, the same 50 days native after the deletions; a threat built on each save copy identical in native, GDScript, day shadow (10 checks / 0 mismatches, no fallback) and main; native identical to main on the six seeds; core suite 17/17; whole games main/change/change/main 587, 391, 390, 586 s (1.50x). Windows only; the Linux libraries wait for the Linux pass.",
       "updatedAt": "2026-10-23T01:05:00Z"
+    },
+    {
+      "id": "native-rules-phase6-match-throughput-20261023",
+      "title": "Native rules Phase 6: match throughput",
+      "status": "in_progress",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Owner decision 2026-10-23: P6-5 first, then P6-3 and P6-4; P6-1 and P6-2 later; Windows only, lean checks. Profile of main bb79014da (transition doc, Phase 6): four seeds 205.4 s in rules_parity.py, 89.5 s as ai_match_batch plays them; the per-day digest is 56% of every check; in a batch match the turn 43.4%, the day close 17.1%, start-up per process 19.9%, map generation 11.1%; the bridge 31-34%, native rules work 27-30%.",
+      "updatedAt": "2026-10-23T08:30:00Z"
+    },
+    {
+      "id": "native-rules-phase6-p5-variant-digest-20261023",
+      "title": "Phase 6 P6-5: the per-day digest as the Variant hash",
+      "status": "completed",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Done on branch native-phase6-digest, merged to main. The match runner's per-day digest is the Variant hash of the session (Godot's hash() of the header fields, overworld, battle and flags, 8 hex digits each; gd::hash copies it for runner mode and Phase 8) instead of sha256 of its JSON; the JSON stays for the dump day. rules_parity.py reads both formats; two sides with different formats compare records only and never count as identical. No native change. Checks: scratch probe on a small 2P map (5 days) and a large 4P two-level map (3 days), 68 checks, 0 failures: gd::hash equals hash() on every part every day; one planted value (a town's x, a flag, a computer hero's army count and its commander's experience, an int turned float, a float's last bit) changes only its part and restores. Six seeds against main 2dfcc8d15: identical match records and final days (formats differ, digests not compared). A repeat run: 415 daily digests and records identical. Core suite 17/17. The six seeds took 204 s in one run on a quiet machine (4.4's JSON-digest measurement on an older main: 391 s; not interleaved).",
+      "updatedAt": "2026-10-23T08:30:00Z"
+    },
+    {
+      "id": "native-rules-phase6-p3-day-call-20261023",
+      "title": "Phase 6 P6-3: end_turn as one native call",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "The day open, the computer players' turn and the day close in one port call; PortBridge::begin clears only what the last call used. Measured share about 14% of a batch match, bound about 1.16x.",
+      "updatedAt": "2026-10-23T08:30:00Z"
+    },
+    {
+      "id": "native-rules-phase6-p4-session-handle-20261023",
+      "title": "Phase 6 P6-4: the native session across days",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "The match runner keeps the native session across days; Dictionaries written back only for the digest, the record and the runner's per-day reads; runner mode and game mode give the same digests. Measured share (the bridge) 31-34%, bound 1.45-1.52x.",
+      "updatedAt": "2026-10-23T08:30:00Z"
+    },
+    {
+      "id": "native-rules-phase6-p1-matches-per-process-20261023",
+      "title": "Phase 6 P6-1: several matches per Godot process",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Later (owner decision 2026-10-23). Measured share 19.9% on four seeds, 50% on s2; bound 1.25x, 2.0x on small maps.",
+      "updatedAt": "2026-10-23T08:30:00Z"
+    },
+    {
+      "id": "native-rules-phase6-p2-map-corpus-20261023",
+      "title": "Phase 6 P6-2: a map corpus",
+      "status": "pending",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Later (owner decision 2026-10-23). For batches that replay fixed maps; measured share 8.3-14.4%, bound 1.09-1.17x.",
+      "updatedAt": "2026-10-23T08:30:00Z"
     }
   ],
   "project": "heroes-like",
