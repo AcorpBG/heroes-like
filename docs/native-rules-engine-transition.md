@@ -2303,7 +2303,7 @@ Godot dependency, since these slices lead to Phase 8. The bound is 1/(1 - share)
 | P6-3 | `end_turn` as one native call (done: 1.11x measured; `begin` needed no change) | about 14% | about 1.16x |
 | P6-4 | The native session kept across days; runner mode and game mode give the same digests (done: 1.19x measured; write-backs, content lookups and the compaction stay) | 31-34% | 1.45-1.52x |
 | P6-1 | Several matches per Godot process (done: 1.26x on the six seeds one after another, 1.49x on a small-map batch) | 19.9% (s2 50%) | 1.25x (s2 2.0x) |
-| P6-2 | A map corpus, with the adopted session kept per process | 8.3-14.4% | 1.09-1.17x |
+| P6-2 | A map corpus, with the adopted session kept per process (done: 1.20x from the corpus and 1.38x from the kept session on the six seeds in one process, 1.09x on a small-map batch) | 8.3-14.4% | 1.09-1.17x |
 
 - Checks per C++ slice: shadow on the six seeds while working; before pushing, native against main on the six seeds and
   the core suite, plus P6-4's runner-mode against game-mode digests; timing on a quiet machine with Phases 2 and 5
@@ -2450,6 +2450,43 @@ Godot dependency, since these slices lead to Phase 8. The bound is 1/(1 - share)
   The bound was 1.25x, 2.0x on small maps. Every batch match ended on the same day both ways. In one process the
   matches after the first take what they took in a process of their own less the start-up (l1 24.4-24.7 s against
   29-30 s, s2 2.1 s against 7 s).
+
+**P6-2, a map corpus and the adopted session kept per process** (`native-rules-phase6-p2-map-corpus-20261023`, branch
+`native-phase6-map-corpus`):
+- **What changed.**
+  - `HEROES_AI_MATCH_MAP_CORPUS` names a folder of generated maps. A match whose map is there starts from its saved
+    package pair and setup: the pair is copied to where the generator writes it and the session is adopted from the
+    setup, so the session is the one a newly generated map gives. A map not there yet is generated and saved there
+    (the setup with `store_var`, which keeps int and float apart). A map is keyed by everything it depends on: the map
+    seed, the first seat's faction, players, size, guards, water, levels and the package folder (`res://maps` in the
+    editor, `user://maps` in an export).
+  - In a match list, a match on the map of the match before it starts from a copy of the session that match adopted
+    (before its handover), with no package load or adoption. The copy duplicates every container, so a container
+    the adopted session shared between two places is two, as after saving and loading.
+  - `tools/ai_match_batch.py --map-corpus DIR` keeps the batch's maps there, so another batch on the same plan
+    (`--seed` and options, for example with other `--weights`) generates none. `corpus.json` names the commit, and a
+    batch on another commit refuses the folder. A process plays the matches of one seed one after another, and each
+    row says where its map came from (`map`: generated, corpus or kept).
+  - The match runner's report line says the same. No native, game or `rules_parity.py` change (`--env` passes the
+    folder).
+- **Checks:**
+  - Six seeds in a process each, with no corpus, against the same with an empty corpus that they fill and against
+    the same again from the corpus: all 415 digests and the records identical.
+  - All six seeds twice in one process, the first play from the corpus and the second from the kept session: all 12
+    plays identical to the plays with no corpus, digests and records.
+  - Six seeds against main 2dfeaddb7: identical. Core suite 17/17.
+- **Timing** (Phase 5 paused, no per-day digest, two rounds alternating the order; the six seeds in one process,
+  the sum of the matches' own seconds; round 1's corpus, generated and batch runs overlapped two Phase 7 Godot
+  processes, which made the six seeds 5-7% slower and left the batch walls as they were):
+
+  | | Generated | From the corpus | Gain |
+  |---|---|---|---|
+  | The six seeds in one process | 97.5 s, 102.8 s | 81.5 s, 87.0 s | 1.20x |
+  | The six seeds' second plays, from the kept session | | 70.9 s, 70.7 s | 1.38x on generated |
+  | 24 small 2P matches (`ai_match_batch.py`, 6 slots) | 22.8 s, 22.8 s | 20.8 s, 20.9 s (`--map-corpus`) | 1.09x |
+
+  The bound was 1.09-1.17x. Per seed, generated against corpus against kept (round 0): s2 2.3, 1.8, 1.3 s; mw 7.4,
+  6.3, 5.1 s; l1 25.0, 22.4, 19.8 s; l2 28.6, 21.8, 19.4 s. Every batch match ended on the same day all four times.
 
 
 ### Phase 7: human-side actions and the last GDScript rules

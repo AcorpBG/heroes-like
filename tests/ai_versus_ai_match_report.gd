@@ -67,7 +67,18 @@ extends Node
 #                          prints an AI_VERSUS_AI_MATCH_BEGIN line, then its
 #                          report line, and plays as it would in a process of
 #                          its own; a failed match does not stop the next. The
-#                          process exits 1 when any match failed.
+#                          process exits 1 when any match failed. A match on
+#                          the map the match before it played (the same map
+#                          seed, setup and first seat's faction) starts from a
+#                          copy of the session that match adopted, before its
+#                          handover, instead of loading the map again.
+# HEROES_AI_MATCH_MAP_CORPUS a folder of generated maps: a match whose map is
+#                          there starts from its saved map package and setup
+#                          instead of generating it, and a map not there yet is
+#                          generated and saved there. The game is the same
+#                          either way. The maps belong to the game revision
+#                          that generated them (tools/ai_match_batch.py
+#                          --map-corpus checks it).
 #
 # The match fails at once when the native rules library is not registered:
 # without it every battle hex search errors and battles play out wrong.
@@ -78,6 +89,7 @@ const AiSeatRulesScript = preload("res://scripts/core/AiSeatRules.gd")
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const NativeRulesScript = preload("res://scripts/core/NativeRules.gd")
 const DayEngineScript = preload("res://scripts/core/DayEngine.gd")
+const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const REPORT_ID := "AI_VERSUS_AI_MATCH_REPORT"
 const BEGIN_ID := "AI_VERSUS_AI_MATCH_BEGIN"
 const DEFAULT_MAX_DAYS := 320
@@ -94,6 +106,12 @@ var _dump_path := ""
 var _dump_day := -1
 var _blank_scopes := PackedStringArray()
 var _blank_fields := {}
+# Where the match's map came from: generated, corpus or kept.
+var _map_source := ""
+# In a match list, the last map adopted and a copy of its session as adopted.
+var _list_mode := false
+var _kept_map_key := ""
+var _kept_map_session = null
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -112,6 +130,7 @@ func _run() -> void:
 			get_tree().quit(1)
 			return
 		matches = parsed
+		_list_mode = true
 	var all_ok := true
 	for entry in matches:
 		_begin_match(entry)
@@ -139,6 +158,7 @@ func _begin_match(settings: Dictionary) -> void:
 	_dump_day = -1
 	_blank_scopes = PackedStringArray()
 	_blank_fields = {}
+	_map_source = ""
 
 ## What one match leaves behind is gone before the next one starts.
 func _end_match() -> void:
@@ -360,6 +380,7 @@ func _play() -> void:
 		"final": ledger[ledger.size() - 1],
 		"out": ProjectSettings.globalize_path(_out_path),
 		"seconds": snappedf((Time.get_ticks_msec() - _started_msec) / 1000.0, 0.1),
+		"map": _map_source,
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(summary)])
 
@@ -427,22 +448,98 @@ func _blanked(value: Dictionary) -> Dictionary:
 			out[key] = child
 	return out
 
+## The adopted session of the match's map: a copy of the one the match before
+## adopted on the same map, else adopted from the map corpus's package and
+## setup, else from a newly generated map (saved to the corpus).
 func _start_session(map_seed: String, faction_id: String, player_count: int = 2, size_class: String = "homm3_small", guards: String = "normal", water: String = "land", levels: int = 1):
-	var config := ScenarioSelectRulesScript.build_random_map_player_config(
-		map_seed, "", "", player_count, water, levels == 2, size_class,
-		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT,
-		faction_id, "", guards
-	)
-	var setup := ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(config, "normal", ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY)
-	if not bool(setup.get("ok", false)):
-		_fail("Generated %s setup failed: %s" % [size_class, JSON.stringify(setup).left(600)])
-		return null
+	# Everything the generated map depends on, and where its package goes.
+	var key := "%s|%s|%d|%s|%s|%s|%d|%s" % [map_seed, faction_id, player_count, size_class, guards, water, levels, ScenarioSelectRulesScript._generated_map_package_dir()]
+	if key == _kept_map_key and _kept_map_session != null:
+		_map_source = "kept"
+		var copy = _copy_session(_kept_map_session)
+		SessionState.active_session = copy
+		return copy
+	var entry := _corpus_entry(key)
+	var setup := _corpus_setup(entry, key)
+	_map_source = "corpus" if not setup.is_empty() else "generated"
+	if setup.is_empty():
+		var config := ScenarioSelectRulesScript.build_random_map_player_config(
+			map_seed, "", "", player_count, water, levels == 2, size_class,
+			ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT,
+			faction_id, "", guards
+		)
+		setup = ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(config, "normal", ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY)
+		if not bool(setup.get("ok", false)):
+			_fail("Generated %s setup failed: %s" % [size_class, JSON.stringify(setup).left(600)])
+			return null
+		_corpus_store(entry, key, setup)
 	var session = ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(setup)
 	if session == null or session.scenario_id == "":
 		_fail("The generated session could not start.")
 		return null
 	OverworldRules.normalize_overworld_state(session)
+	_kept_map_key = ""
+	_kept_map_session = null
+	if _list_mode:
+		_kept_map_key = key
+		_kept_map_session = _copy_session(session)
 	return session
+
+## Every field of the session, its containers copied; what one match changes
+## never reaches the copy. A container that two places shared is two after the
+## copy, as after saving and loading.
+func _copy_session(source):
+	var copy = SessionStateStoreScript.SessionData.new()
+	for property in source.get_property_list():
+		if property.usage & PROPERTY_USAGE_SCRIPT_VARIABLE:
+			var value = source.get(property.name)
+			copy.set(property.name, value.duplicate(true) if value is Dictionary or value is Array else value)
+	for name in source.get_meta_list():
+		var value = source.get_meta(name)
+		copy.set_meta(name, value.duplicate(true) if value is Dictionary or value is Array else value)
+	return copy
+
+## The corpus file stem of the map named by key, "" without a corpus.
+func _corpus_entry(key: String) -> String:
+	var corpus := _env("HEROES_AI_MATCH_MAP_CORPUS").strip_edges()
+	return corpus.path_join(key.sha256_text().left(24)) if corpus != "" else ""
+
+## The setup saved with the map, {} when the corpus has none; its package
+## pair is copied to where the generator writes it, so the session is the one
+## a newly generated map gives.
+func _corpus_setup(entry: String, key: String) -> Dictionary:
+	if entry == "" or not FileAccess.file_exists(entry + ".setup"):
+		return {}
+	var file := FileAccess.open(entry + ".setup", FileAccess.READ)
+	var saved = file.get_var() if file != null else null
+	if not (saved is Dictionary) or String(saved.get("key", "")) != key or not (saved.get("setup") is Dictionary):
+		return {}
+	var setup: Dictionary = saved.setup
+	var startup: Dictionary = setup.get("package_startup", {})
+	for pair in [[".amap", "map_path"], [".ascenario", "scenario_path"]]:
+		var target := ProjectSettings.globalize_path(String(startup.get(pair[1], "")))
+		DirAccess.make_dir_recursive_absolute(target.get_base_dir())
+		if DirAccess.copy_absolute(entry + pair[0], target) != OK:
+			return {}
+	return setup
+
+## Saves a generated map's package pair and setup; the setup goes last, so a
+## map counts only when it is whole.
+func _corpus_store(entry: String, key: String, setup: Dictionary) -> void:
+	if entry == "" or FileAccess.file_exists(entry + ".setup"):
+		return
+	DirAccess.make_dir_recursive_absolute(entry.get_base_dir())
+	var startup: Dictionary = setup.get("package_startup", {})
+	for pair in [[".amap", "map_path"], [".ascenario", "scenario_path"]]:
+		if DirAccess.copy_absolute(ProjectSettings.globalize_path(String(startup.get(pair[1], ""))), entry + pair[0]) != OK:
+			push_warning("The map corpus could not take %s." % String(startup.get(pair[1], "")))
+			return
+	var file := FileAccess.open(entry + ".setup.part", FileAccess.WRITE)
+	if file == null:
+		return
+	file.store_var({"key": key, "setup": setup})
+	file.close()
+	DirAccess.rename_absolute(entry + ".setup.part", entry + ".setup")
 
 ## The generator never gives two players one faction, and a swapped match keeps
 ## the map. A seat whose drawn faction differs from the generator's has its

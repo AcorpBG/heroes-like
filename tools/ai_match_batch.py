@@ -40,6 +40,14 @@ processing path the native day port leaves to GDScript runs in GDScript and prin
 line per native call it replaced: each match row counts them by entry and path (native_fallbacks),
 and summary.md totals them.
 
+--map-corpus DIR keeps every generated map there (HEROES_AI_MATCH_MAP_CORPUS: its package pair and
+setup), and a match whose map is there already starts from it instead of generating it, with the same
+game. Another batch on the same plan (--seed and options) then skips map generation, for example one
+that compares weight sets. The folder is for one commit: corpus.json names it, and a batch on another
+commit refuses the folder. The matches of one seed that a process plays run one after another, and one
+on the map of the match before it (the same seed, setup and first seat's faction) starts from a copy
+of the session that match adopted.
+
 --weights W1,W2,... gives each seat its overworld AI weight set in every match (seat order, one per
 player): "default", the name of a set in content/ai_hero_weights.json, or a .json file holding one
 set (only the values it changes). Each match record names its seats' sets (setup.seats[].weights);
@@ -351,7 +359,8 @@ def match_settings(out: Path, m: dict, days: int) -> dict[str, str]:
     return settings
 
 
-def launch(godot: str, out: Path, matches: list[dict], days: int, timeout_min: float, game: str | None = None) -> Running:
+def launch(godot: str, out: Path, matches: list[dict], days: int, timeout_min: float, game: str | None = None,
+           corpus: Path | None = None) -> Running:
     """One Godot process for the matches, played in order (one match: its settings in the environment;
     more: a match list, HEROES_AI_MATCH_LIST)."""
     first = matches[0]["run"]
@@ -362,6 +371,8 @@ def launch(godot: str, out: Path, matches: list[dict], days: int, timeout_min: f
         "XDG_DATA_HOME": profile,  # Linux user data
         "XDG_CONFIG_HOME": profile,
     })
+    if corpus:
+        env["HEROES_AI_MATCH_MAP_CORPUS"] = corpus.as_posix()
     for m in matches:
         (out / f"{m['run']}.json").unlink(missing_ok=True)
     if len(matches) == 1:
@@ -506,6 +517,7 @@ def match_row(out: Path, m: dict, text: str, run: Running, timed_out: bool, star
         "started": round(started),
         "ended": round(ended),
         "process": run.matches[0]["run"],
+        "map": report.get("map", ""),  # generated, corpus or kept
         "script_errors": errors,
         "native_fallbacks": dict(fallbacks),
         "problem": problem,
@@ -553,7 +565,7 @@ class Output:
 
 
 def run_batch(out: Path, plan: dict, godot: str, slots: int, timeout_override: float | None, game: str | None = None,
-              per_process: int = 4) -> int:
+              per_process: int = 4, corpus: Path | None = None) -> int:
     say = Output(out)
     done = {row["run"] for row in read_results(out)}
     queue = sorted((m for m in plan["matches"] if m["run"] not in done), key=expected_cost, reverse=True)
@@ -581,8 +593,9 @@ def run_batch(out: Path, plan: dict, godot: str, slots: int, timeout_override: f
         while queue or running:
             seeds = {m["seed"] for x in running.values() for m in x.matches}
             while len(running) < slots:
-                # Never two matches with one seed at once: they would share a map package. A process
-                # takes as many matches as spread what is left evenly over the slots, up to per_process.
+                # Never two processes with one seed at once: they would share a map package. A process
+                # takes as many matches as spread what is left evenly over the slots, up to per_process,
+                # with the matches of one seed one after another.
                 want = min(per_process, max(1, math.ceil(len(queue) / slots)))
                 chain: list[dict] = []
                 for m in list(queue):
@@ -590,12 +603,14 @@ def run_batch(out: Path, plan: dict, godot: str, slots: int, timeout_override: f
                         break
                     if m["seed"] not in seeds:
                         queue.remove(m)
-                        seeds.add(m["seed"])
                         chain.append(m)
                 if not chain:
                     break
+                first = {m["seed"]: i for i, m in reversed(list(enumerate(chain)))}
+                chain.sort(key=lambda m: first[m["seed"]])
+                seeds |= {m["seed"] for m in chain}
                 timeout_min = sum(timeout_override or TIMEOUT_MIN[m["size"]] for m in chain)
-                running[chain[0]["run"]] = launch(godot, out, chain, plan["days"], timeout_min, game)
+                running[chain[0]["run"]] = launch(godot, out, chain, plan["days"], timeout_min, game, corpus)
                 save_inflight()
             time.sleep(2)
             for name, x in list(running.items()):
@@ -792,6 +807,23 @@ def write_summary(out: Path, plan: dict) -> None:
 
 # ---------------------------------------------------------------- main
 
+def map_corpus(folder: Path, plan: dict) -> Path:
+    """The --map-corpus folder, made for the plan's commit or checked against it: the generator of
+    another commit may make other maps from the same setup."""
+    folder.mkdir(parents=True, exist_ok=True)
+    stamp = folder / "corpus.json"
+    if stamp.exists():
+        made = json.loads(stamp.read_text(encoding="utf-8"))
+        if made.get("commit") != plan["commit"]:
+            sys.exit(f"--map-corpus {folder} holds maps of {str(made.get('commit'))[:9]}, not {plan['commit'][:9]}; use a new folder")
+        if made.get("dirty") or plan.get("dirty"):
+            print(f"WARNING: --map-corpus {folder} or this batch is from a tree with uncommitted changes; its maps may not match")
+    else:
+        stamp.write_text(json.dumps({"commit": plan["commit"], "dirty": plan.get("dirty", False),
+                                     "created": time.strftime("%Y-%m-%d %H:%M:%S")}, indent=1), encoding="utf-8")
+    return folder
+
+
 def parse_groups(args: argparse.Namespace) -> list[tuple[int, str, int]]:
     if not args.group:
         return [(args.players, args.size, args.matches)]
@@ -831,6 +863,7 @@ def main() -> int:
     parser.add_argument("--weights", metavar="W1,W2,...", help="overworld AI weight set per seat: default, a set name or a .json file")
     parser.add_argument("--slots", type=int, default=16, help="Godot processes at once (default 16)")
     parser.add_argument("--per-process", type=int, default=4, help="most matches one Godot process plays in a row (default 4)")
+    parser.add_argument("--map-corpus", type=Path, help="folder of generated maps kept for batches on the same plan (one commit)")
     parser.add_argument("--timeout-min", type=float, help="per-match timeout in minutes (default by size: %s)" % ", ".join(f"{short_size(k)} {v}" for k, v in TIMEOUT_MIN.items()))
     parser.add_argument("--godot", help="Godot editor binary")
     parser.add_argument("--release", action="store_true", help="export the AI batch preset with the release template into OUT/game and play on it")
@@ -889,7 +922,8 @@ def main() -> int:
         game = str(out / "game" / GAME_BINARY)
         if not args.resume or not Path(game).exists():
             game = export_batch_game(godot, out / "game", args.templates)
-    code = run_batch(out, plan, godot, max(1, args.slots), args.timeout_min, game, max(1, args.per_process))
+    corpus = map_corpus(args.map_corpus.resolve(), plan) if args.map_corpus else None
+    code = run_batch(out, plan, godot, max(1, args.slots), args.timeout_min, game, max(1, args.per_process), corpus)
     if game and code == 0:
         shutil.rmtree(out / "game", ignore_errors=True)  # about 5 GB; an interrupted batch keeps it for --resume
     return code
