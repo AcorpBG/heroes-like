@@ -159,10 +159,10 @@ double army_power(State &state, const Value &stacks, const Value &commander) {
 		const double damage_dealt = battle_damage_rules::attack_defense_multiplier(state, compat::engine_max<int64_t>(0, attack), 0);
 		const int64_t defense = has_command ? gd::int_field(state, command.ref, key::defense, 0) : 0;
 		const double damage_taken = battle_damage_rules::attack_defense_multiplier(state, 0, compat::engine_max<int64_t>(0, defense));
-		total *= gd::engine_pow(state, damage_dealt / compat::engine_max(0.01, damage_taken), ai::static_float(state, kScript, key::HERO_COMMAND_POWER));
+		total *= gd::math_pow(state, damage_dealt / compat::engine_max(0.01, damage_taken), ai::static_float(state, kScript, key::HERO_COMMAND_POWER));
 		const double spell_damage = _spell_damage_per_round(state, commander.ref);
 		if (spell_damage > 0.0 && damage_per_round > 0.0) {
-			total *= gd::engine_pow(state, 1.0 + spell_damage / damage_per_round, ai::static_float(state, kScript, key::HERO_SPELL_POWER));
+			total *= gd::math_pow(state, 1.0 + spell_damage / damage_per_round, ai::static_float(state, kScript, key::HERO_SPELL_POWER));
 		}
 	}
 	return total;
@@ -219,15 +219,15 @@ ArrayRef _unit_power_figures(State &state, Atom unit_id) {
 	const double max_damage = gd::float_field(state, unit, key::max_damage, 1.0);
 	const double damage = (min_damage + max_damage) * 0.5;
 	const double health = gd::float_field(state, unit, key::hp, 1.0);
-	double per = ai::static_float(state, kScript, key::POWER_SCALE) * gd::engine_pow(state, compat::engine_max(1.0, health), ai::static_float(state, kScript, key::POWER_HEALTH));
-	per = per * gd::engine_pow(state, compat::engine_max(0.5, damage), ai::static_float(state, kScript, key::POWER_DAMAGE));
+	double per = ai::static_float(state, kScript, key::POWER_SCALE) * gd::math_pow(state, compat::engine_max(1.0, health), ai::static_float(state, kScript, key::POWER_HEALTH));
+	per = per * gd::math_pow(state, compat::engine_max(0.5, damage), ai::static_float(state, kScript, key::POWER_DAMAGE));
 	const double defense = static_cast<double>(gd::int_field(state, unit, key::defense, 0));
 	const double speed = static_cast<double>(gd::int_field(state, unit, key::speed, 0));
 	const double initiative = static_cast<double>(gd::int_field(state, unit, key::initiative, 0));
 	const double by_defense = ai::static_float(state, kScript, key::POWER_PER_DEFENSE) * defense;
 	const double by_speed = ai::static_float(state, kScript, key::POWER_PER_SPEED) * speed;
 	const double by_initiative = ai::static_float(state, kScript, key::POWER_PER_INITIATIVE) * initiative;
-	per *= gd::engine_exp(state, by_defense + by_speed + by_initiative);
+	per *= gd::math_exp(state, by_defense + by_speed + by_initiative);
 	if (gd::bool_field(state, unit, key::ranged, false)) {
 		per *= ai::static_float(state, kScript, key::RANGED_POWER);
 	}

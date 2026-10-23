@@ -431,7 +431,7 @@ double _route_loss_limit(State &state, double value) {
 	if (share < 1.0) {
 		return 0.0;
 	}
-	return gd::engine_pow(state, 2.0, compat::godot_floor(gd::engine_log(state, share) / gd::engine_log(state, 2.0)));
+	return gd::math_pow(state, 2.0, compat::godot_floor(gd::math_log(state, share) / gd::math_log(state, 2.0)));
 }
 
 void _route_through(State &state, DictRef session, DictRef context, DictRef entry, DictRef search, int64_t movement_max, DictRef map, double power, double limit, ArrayRef towns, bool explore, DictRef result) {

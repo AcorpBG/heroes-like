@@ -1,11 +1,12 @@
 cmake_minimum_required(VERSION 3.22)
-project(aurelion_rules LANGUAGES CXX)
+project(aurelion_rules LANGUAGES C CXX)
 
 # The game's rules in C++ (docs/native-rules-engine-transition.md). A project of
 # its own, so a rules change never rebuilds the map generator, and its flags
 # apply to this tree only.
 #
 #   aurelion_rules_core  pure std:: core, compiled once per tree
+#   aurelion_rules_math  pow, exp and log for every rules copy (third_party/arm_optimized_routines)
 #   aurelion_rules       the GDExtension (src/gdextension/rules.gdextension)
 #   rules_selftest       golden vectors without Godot
 #   battle_sim_cli       the battle AI arena's battles without Godot
@@ -13,6 +14,9 @@ project(aurelion_rules LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_C_EXTENSIONS OFF)
 
 get_property(AURELION_MULTI_CONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 if(NOT AURELION_MULTI_CONFIG AND NOT CMAKE_BUILD_TYPE)
@@ -31,6 +35,7 @@ else()
 endif()
 foreach(AURELION_CONFIG RELEASE RELWITHDEBINFO MINSIZEREL)
 	set(CMAKE_CXX_FLAGS_${AURELION_CONFIG} "${AURELION_RULES_OPT_FLAGS}")
+	set(CMAKE_C_FLAGS_${AURELION_CONFIG} "${AURELION_RULES_OPT_FLAGS}")
 	if(MSVC)
 		# A PDB in both flavours, without the incremental-link padding.
 		set(CMAKE_SHARED_LINKER_FLAGS_${AURELION_CONFIG} "/DEBUG:FULL /INCREMENTAL:NO /OPT:REF /OPT:ICF")
@@ -75,6 +80,7 @@ if(NOT MSVC)
 	# No build paths in the binaries: the same sources give the same bytes in
 	# any directory. The last matching map wins, so the innermost comes last.
 	string(APPEND CMAKE_CXX_FLAGS " -ffile-prefix-map=${AURELION_PROJECT_ROOT}/= -ffile-prefix-map=${AURELION_GODOT_CPP_ROOT}/=godot-cpp/ -ffile-prefix-map=${CMAKE_BINARY_DIR}/=build/")
+	string(APPEND CMAKE_C_FLAGS " -ffile-prefix-map=${AURELION_PROJECT_ROOT}/= -ffile-prefix-map=${CMAKE_BINARY_DIR}/=build/")
 endif()
 
 # godot-cpp first: it sets the MSVC runtime the targets below inherit.
@@ -91,6 +97,23 @@ add_custom_target(aurelion_rules_source_tree
 	BYPRODUCTS "${AURELION_RULES_GENERATED_DIR}/aurelion_rules_source_tree.hpp"
 	COMMENT "Rules source tree id"
 	VERBATIM)
+
+# pow, exp and log (decision D4, option B): ARM's optimized-routines, the same
+# bits on every compiler and platform, where the C runtimes differ in the last
+# bit. Pinned to the generic paths: no FMA, no fast rounding instructions, no
+# errno, none of glibc's aliases (third_party/arm_optimized_routines/README.md).
+set(AURELION_ARM_MATH_DIR third_party/arm_optimized_routines/math)
+add_library(aurelion_rules_math STATIC
+	${AURELION_ARM_MATH_DIR}/exp.c
+	${AURELION_ARM_MATH_DIR}/exp_data.c
+	${AURELION_ARM_MATH_DIR}/log.c
+	${AURELION_ARM_MATH_DIR}/log_data.c
+	${AURELION_ARM_MATH_DIR}/math_err.c
+	${AURELION_ARM_MATH_DIR}/pow.c
+	${AURELION_ARM_MATH_DIR}/pow_log_data.c
+)
+target_compile_definitions(aurelion_rules_math PRIVATE HAVE_FAST_FMA=0 HAVE_FAST_ROUND=0 HAVE_FAST_LROUND=0 WANT_ROUNDING=1 WANT_ERRNO=0 USE_GLIBC_ABI=0)
+set_target_properties(aurelion_rules_math PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 add_library(aurelion_rules_core STATIC
 	core/ai_search.cpp
@@ -257,6 +280,7 @@ add_library(aurelion_rules_core STATIC
 )
 add_dependencies(aurelion_rules_core aurelion_rules_source_tree)
 target_include_directories(aurelion_rules_core PUBLIC include PRIVATE "${AURELION_RULES_GENERATED_DIR}")
+target_link_libraries(aurelion_rules_core PUBLIC aurelion_rules_math)
 target_compile_definitions(aurelion_rules_core PRIVATE "AURELION_GODOT_CPP_COMMIT=\"${AURELION_GODOT_CPP_COMMIT_RESOLVED}\"")
 set_target_properties(aurelion_rules_core PROPERTIES POSITION_INDEPENDENT_CODE ON)
 

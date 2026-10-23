@@ -8,6 +8,7 @@
 #include "aurelion_rules/compat/godot_math.hpp"
 #include "aurelion_rules/compat/godot_pcg.hpp"
 #include "aurelion_rules/compat/godot_string.hpp"
+#include "aurelion_rules/compat/portable_math.hpp"
 #include "aurelion_rules/compat/sort_array.hpp"
 
 #include <cmath>
@@ -637,6 +638,31 @@ void fuzz_json_parse(Fuzz &f, int64_t count) {
 	}
 }
 
+// The core's own pow(), exp() and log() (portable_math.hpp, decision D4 option
+// B), not the engine's: the game's offer draw and AI power ranges, then any
+// float. capture_vectors.gd has no counterpart.
+void fuzz_portable_math(Fuzz &f, int64_t count) {
+	static const double offer_exponents[3] = { 1.0, 1.0 / 2.5, 1.0 / 4.0 };
+	// One draw per statement: the order of a call's arguments is unspecified.
+	for (int64_t i = 0; i < count; ++i) {
+		const double draw = (static_cast<double>(f.next31()) + 1.0) / 2147483648.0;
+		const double offer_exponent = offer_exponents[f.below(3)];
+		f.emit_float(compat::portable_pow(draw, offer_exponent));
+		const double numerator = static_cast<double>(f.next31());
+		const double base = numerator / static_cast<double>(1 + f.below(100000));
+		const double exponent = static_cast<double>(f.below(6001) - 3000) / 1000.0;
+		f.emit_float(compat::portable_pow(base, exponent));
+		const double any_base = f.rand_float();
+		const double any_exponent = f.rand_float();
+		f.emit_float(compat::portable_pow(any_base, any_exponent));
+		f.emit_float(compat::portable_exp(static_cast<double>(f.below(200001) - 100000) / 2000.0));
+		f.emit_float(compat::portable_exp(f.rand_float()));
+		f.emit_float(compat::portable_log(base));
+		f.emit_float(compat::portable_log(f.rand_float()));
+		f.flush();
+	}
+}
+
 } // namespace
 
 std::vector<CompatDigest> compat_digests(int64_t count) {
@@ -658,6 +684,7 @@ std::vector<CompatDigest> compat_digests(int64_t count) {
 		{ "sort", fuzz_sort },
 		{ "json_float", fuzz_json_float },
 		{ "json_parse", fuzz_json_parse },
+		{ "portable_math", fuzz_portable_math },
 	};
 	std::vector<CompatDigest> digests;
 	int64_t helper_index = 0;

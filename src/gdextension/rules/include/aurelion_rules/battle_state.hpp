@@ -726,10 +726,10 @@ public:
 	// The defaults write to stderr.
 	virtual void print_error(const std::string &text);
 	virtual void print_warning(const std::string &text);
-	// GDScript's pow(), exp() and log(): the engine's own, because the C
-	// runtime that answers them differs between builds (the official Windows
-	// build is MinGW's, this library's MSVC's) and may round differently in
-	// the last bit. The defaults are this library's C runtime.
+	// The rules' pow(), exp() and log(): the core's portable ones
+	// (compat/portable_math.hpp), the same bits in every build, where the C
+	// runtimes differ in the last bit. A host overrides them only to count
+	// the calls; it answers with these defaults.
 	virtual double math_pow(double base, double exponent);
 	virtual double math_exp(double x);
 	virtual double math_log(double x);

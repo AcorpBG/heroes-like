@@ -116843,15 +116843,15 @@
     {
       "id": "native-rules-phase8-02-math-20261023",
       "title": "Phase 8.2: D4 option B, one pow/exp/log",
-      "status": "pending",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Transition doc, Phase 8, Slices.",
-      "updatedAt": "2026-10-23T19:00:00Z"
+      "notes": "Branch native-phase8-math, merged as its own named behaviour change (main tagged pre-native-phase8-math first). The rules' pow, exp and log are Arm optimized-routines v26.07 (src/gdextension/rules/third_party/arm_optimized_routines, MIT; README with source, version and the three local changes), built as aurelion_rules_math without FMA or rounding instructions; Backing::math_* answer with them, the GDExtension host no longer overrides them with the engine's, battle_sim_cli only counts calls, and the GDScript offer draw calls AurelionRules.math_pow. rules_selftest pins a portable_math digest. Behaviour change: the new pow differs from the engine's by 1 ulp in 710 of 1,000,000 offer draws and 1,276 of 1,000,000 army-power calls. Checks: native against main f5d2ddfb8 identical on the six seeds (443 digests and the records); --human identical (1,896 action digests, 8 seeds); core suite 17/17. Windows only; Linux libraries not rebuilt.",
+      "updatedAt": "2026-10-23T22:30:00Z"
     },
     {
       "id": "native-rules-phase8-03-statics-20261023",

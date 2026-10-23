@@ -7,7 +7,9 @@
 //    under MSVC, GCC and MinGW and from one run to the next.
 // 3. The engine-exact helpers (core/compat) on 2^20 inputs each, digested and
 //    compared with the engine's digests (compat_digests.inc, captured by
-//    tools/rules_compat/capture_vectors.gd).
+//    tools/rules_compat/capture_vectors.gd). The core's own pow, exp and log
+//    (portable_math, decision D4 option B) are digested alike against the
+//    core's digest, which must be the same under MSVC, GCC and MinGW.
 //
 // Exit 0 and a RULES_SELFTEST ok line, or exit 1 with the first difference.
 

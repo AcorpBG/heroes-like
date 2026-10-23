@@ -2,6 +2,7 @@ class_name HeroProgressionRules
 extends RefCounted
 
 const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
+const NativeRules = preload("res://scripts/core/NativeRules.gd")
 const CHOICE_SIZE := 3
 const SPECIALTY_INSIGNIA_ATLAS_PATH := "res://art/heroes/runtime/specialties/hero_specialty_insignia_atlas.png"
 const SPECIALTY_INSIGNIA_CELL_SIZE := Vector2i(28, 28)
@@ -545,7 +546,8 @@ static func _offer_order(hero_state: Dictionary, level_number: int) -> Array:
 			weight = OFFER_PATH_WEIGHT
 		var digest := ("%s|offer|%d|%s" % [seed_text, level_number, specialty_id]).sha256_text()
 		var draw := (float(digest.substr(0, 8).hex_to_int()) + 1.0) / 4294967297.0
-		keyed.append({"id": specialty_id, "key": pow(draw, 1.0 / weight)})
+		# The rules' pow, the native copy's (decision D4, option B), not the engine's.
+		keyed.append({"id": specialty_id, "key": NativeRules.api().math_pow(draw, 1.0 / weight)})
 	keyed.sort_custom(func(a, b): return float(a.key) > float(b.key))
 	var ordered := []
 	for entry in keyed:

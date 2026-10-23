@@ -200,9 +200,6 @@ public:
 	void print_error(const std::string &text) override;
 	void print_warning(const std::string &text) override;
 	// The engine's pow, exp and log (UtilityFunctions), as GDScript calls them.
-	double math_pow(double base, double exponent) override;
-	double math_exp(double x) override;
-	double math_log(double x) override;
 
 private:
 	struct TypeInfo {

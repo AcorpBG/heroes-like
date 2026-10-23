@@ -15,6 +15,10 @@
 //
 // json_parse (captured 2026-10-23, Windows 10) is plain double arithmetic in
 // the engine's own strtod, so both platforms share its digest.
+//
+// portable_math is not the engine's: it is the core's own pow, exp and log
+// (compat/portable_math.hpp, decision D4 option B), pinned from the MSVC build
+// of 2026-10-23. Every build must give it; the Linux pass checks GCC and MinGW.
 
 struct CompatExpected {
 	const char *helper;
@@ -42,4 +46,5 @@ constexpr CompatExpected kCompatExpected[] = {
 	{ "json_float", "4666bda411d8a7292df57b30b27644aad906b6b11d4677180d43063e4f6df669" },
 #endif
 	{ "json_parse", "ba995e47e94d2eef67b588ffd573047bd81d6f48771d9312e52e62a409a6d218" },
+	{ "portable_math", "103a007b8c1148c6853233d64162f3d72d82a2a16be250ca4d6807644faa6bad" },
 };

@@ -2792,7 +2792,7 @@ Wanted, not optional (owner decision 2026-10-22, D7). The same core as a command
 | Slice | What | After |
 |---|---|---|
 | P8-1 Elimination day | the computer branch of `apply_daily` in C++ (done) | |
-| P8-2 D4 | one `pow`/`exp`/`log` in the core for the game and the runner; the named behaviour change | P8-1 |
+| P8-2 D4 | one `pow`/`exp`/`log` in the core for the game and the runner; the named behaviour change (done) | P8-1 |
 | P8-3 Statics | a native statics store in the runner's host, initial values checked against Godot's | |
 | P8-4 The runner | `match_sim_cli` playing sessions Godot prepared (snapshots), the runner's glue in C++, the same outputs | P8-2, P8-3 |
 | P8-5 The proof | a runner side in `rules_parity.py`: the six seeds' digests and records identical to game mode | P8-4 |
@@ -2811,6 +2811,26 @@ Wanted, not optional (owner decision 2026-10-22, D7). The same core as a command
   `apply_daily` checked 437 times, the 4 elimination days (l1 2, mw 2) among them. Native against main 2abd6e086:
   all 443 daily digests and the records identical; NATIVE FALLBACK lines 12 on main, 0 on the branch. Core suite
   17/17.
+
+**P8-2, one `pow`/`exp`/`log`** (`native-rules-phase8-02-math-20261023`, branch `native-phase8-math`; D4 option B):
+- **What changed.** The rules' `pow`, `exp` and `log` are Arm's optimized-routines v26.07
+  (`src/gdextension/rules/third_party/arm_optimized_routines`, MIT; its README records the source, the version, the
+  three local changes and why not CORE-MATH), built as `aurelion_rules_math` on the generic paths: no FMA, no
+  rounding instructions. `Backing::math_pow`, `math_exp` and `math_log` answer with them (`compat/portable_math.hpp`);
+  the game's host no longer overrides them with the engine's, and `battle_sim_cli` overrides them only to count the
+  calls. `gd::engine_pow`, `engine_exp` and `engine_log` are renamed `gd::math_pow`, `math_exp` and `math_log`. The
+  GDScript offer draw (`HeroProgressionRules._offer_order`, human level-ups) calls `AurelionRules.math_pow`. No other
+  GDScript the game runs as a rule calls `pow`, `exp` or `log`; the rest are animation and sound (`CombatVfxMotion`,
+  `OverworldGainFloaters`, `OverworldMapView`, `OverworldPortalFx`, the audio autoloads) and one test report.
+  `rules_selftest` digests the three on 2^20 rounds (`portable_math`), a digest every build must give.
+- **The behaviour change.** On 1,000,000 offer draws and 1,000,000 army-power calls in the game's ranges, the new
+  `pow` differs from the engine's by 1 ulp in 710 (0.071%) and 1,276 (0.128%) calls, never by more. Neither rounds
+  correctly every time: where they differ, the engine's result is the correctly rounded one in 625 and 708 of the
+  calls, the new one in 85 and 568. The game takes the new one because every build gives the same bits, not for
+  accuracy.
+- **Checks.** Native against main f5d2ddfb8 on the six seeds: all 443 daily digests and the records identical, so no
+  rounding difference changed a game there. `--human` against main: all 1,896 action digests and the records of the
+  eight human seeds identical. Core suite 17/17. `rules_selftest` ok (13 helpers).
 
 ### Totals
 
@@ -2843,7 +2863,7 @@ Sizes are the proposal's unmeasured agent-day guesses, useful only to compare ph
 | D1 | **Decided 2026-10-20:** `project.md:49` records the move to C++ subsystem by subsystem; the ownership list changes as each phase lands | before Phase 0 code |
 | D2 | **Decided 2026-10-20:** parity runs are allowed on port slices, never while an owner batch is running (AGENTS.md "Validation budget") | Phase 0 |
 | D3 | **Decided 2026-10-20:** native binaries stay committed; the Linux debug library is stripped (50.8 MB today) and its debug info kept outside git | Phase 0 |
-| D4 | **Decided 2026-10-23, option B:** one portable `pow`/`exp`/`log` in the core for the game and the runner, accepted as one named behaviour change (Phase 8, P8-2); every rules copy uses it. Options A (copy the engine's MinGW-w64 math) and C (accept last-bit differences) were declined | Phase 8 |
+| D4 | **Decided 2026-10-23, option B:** one portable `pow`/`exp`/`log` in the core for the game and the runner, accepted as one named behaviour change (Phase 8, P8-2); every rules copy uses it. Options A (copy the engine's MinGW-w64 math) and C (accept last-bit differences) were declined. Done in P8-2 (Arm optimized-routines v26.07) | Phase 8 |
 | D5 | **Phase 1 decided 2026-10-20:** battle-rule and battle-AI code take no behaviour changes from the start of Phase 1 to its merge; an urgent fix lands in GDScript on main and is ported on the branch; content JSON and `battle_ai_weights.json` stay open (AGENTS.md "Native rules port"). AI code: decided before Phase 4 | before each |
 | D6 | **Decided 2026-10-20:** tests that call private battle functions the port deletes are retired at the Phase 1 merge by the `docs/rmg-test-retirement.md` process; the parity corpus and the core suite cover battles. Done with Phase 2d, 2026-10-23: 46 tests (`docs/battle-test-retirement.md`) | Phase 1 |
 | D7 | **Decided 2026-10-22:** battle and match simulators run outside Godot, as command-line tools built from the same core: `battle_sim_cli` is Phase 2's battle tool, and Phase 8's match runner is wanted. There was never an owner rule against a simulator outside Godot; that wording in PLAN.md was an agent's, and it is removed | Phase 2 |
