@@ -53,6 +53,12 @@ its `__gd` body is deleted:
 An autoload's method (scripts/autoload, SaveService) gets the same wrapper as
 an instance func; its port reads the autoload's vars as the object's members.
 
+A scene script's methods (METHOD_DIRS: the map editor's rules are methods of
+MapEditorShell, Phase 7, slice 7.13) are switched as instance funcs whose
+engine calls pass self first: the port takes the screen as its first argument
+and reads and writes its vars as the object's members. Their registry entries
+count self in their arity.
+
 A script left without switches keeps the engine's preload and loses its mode.
 A subsystem whose port falls back to GDScript has no NATIVE entries: a
 wrapper has no body to fall back to.
@@ -77,6 +83,8 @@ ROOT = Path(__file__).resolve().parent.parent
 PORT_DIR = ROOT / "src/gdextension/rules/core/port"
 # The folders of the scripts a registry names (by file name, unique across them).
 SCRIPT_DIRS = (ROOT / "scripts/core", ROOT / "scripts/persistence", ROOT / "scripts/autoload")
+# The folders of the scene scripts whose methods a registry names: self goes first.
+METHOD_DIRS = (ROOT / "scenes/editor",)
 PORT_LINE = re.compile(r"^\s*(PORT|CHECK|NATIVE)\((\w+), (\w+), (\d+), (true|false),")
 HOST_LINE = re.compile(r"^\s*HOST\((\w+), (\w+), (\d+)\)")
 NEWLINE = chr(10)
@@ -169,12 +177,17 @@ def local_name(base: str, names: list[str]) -> str:
     return name
 
 
-def switch_lines(subsystem: Subsystem, script: str, name: str, params: str, returns: str, writes: bool) -> list[str]:
-    signature = f"static func {name}({params}){' -> ' + returns if returns else ''}:"
+def engine_args(names: list[str], method: bool) -> str:
+    """A switch's argument list for the engine: a method's self first."""
+    return ", ".join((["self"] if method else []) + names)
+
+
+def switch_lines(subsystem: Subsystem, script: str, name: str, params: str, returns: str, writes: bool, method: bool = False) -> list[str]:
+    signature = f"{'' if method else 'static '}func {name}({params}){' -> ' + returns if returns else ''}:"
     names = [param_name(p) for p in split_params(params)]
-    args = ", ".join(names)
+    call = f"{name}__gd({', '.join(names)})"
+    args = engine_args(names, method)
     result, before, native_result = (local_name(base, names) for base in ("result", "before", "native_result"))
-    call = f"{name}__gd({args})"
     key = f'&"{script}.{name}"'
     void = returns == "void"
     mode, engine = subsystem.mode_var, subsystem.engine
@@ -281,9 +294,10 @@ def check_lines(subsystem: Subsystem, script: str, name: str, params: str, retur
     ]
 
 
-def native_lines(subsystem: Subsystem, script: str, name: str, params: str, returns: str, writes: bool, static: bool = True) -> list[str]:
+def native_lines(subsystem: Subsystem, script: str, name: str, params: str, returns: str, writes: bool, static: bool = True,
+                 method: bool = False) -> list[str]:
     signature = f"{'static ' if static else ''}func {name}({params}){' -> ' + returns if returns else ''}:"
-    args = ", ".join(param_name(p) for p in split_params(params))
+    args = engine_args([param_name(p) for p in split_params(params)], method)
     if returns == "void" and not writes:
         raise SystemExit(f"{script}.{name}: a void function that writes nothing has no result")
     call = f'{subsystem.engine}.{"native_writing" if writes else "native"}(&"{script}.{name}", [{args}])'
@@ -303,12 +317,15 @@ def body_end(lines: list[str], start: int) -> int:
     return end
 
 
-def wrapper_lines(subsystem: Subsystem, script: str, name: str, params: str, returns: str, writes: bool, host: bool, checked: bool = False) -> list[str]:
+def wrapper_lines(subsystem: Subsystem, script: str, name: str, params: str, returns: str, writes: bool, host: bool, checked: bool = False,
+                  method: bool = False) -> list[str]:
+    if method and (host or checked):
+        raise SystemExit(f"{script}.{name}: a scene script's method can only be a PORT or NATIVE entry")
     if host:
         return host_lines(subsystem, script, name, params, returns)
     if checked:
         return check_lines(subsystem, script, name, params, returns)
-    return switch_lines(subsystem, script, name, params, returns, writes)
+    return switch_lines(subsystem, script, name, params, returns, writes, method)
 
 
 def add_engine_header(subsystem: Subsystem, lines: list[str], path: Path, with_mode: bool = True) -> bool:
@@ -356,9 +373,9 @@ def definitions(lines: list[str], name: str, methods: bool = False) -> list[int]
     return [i for i, line in enumerate(lines) if line.startswith(f"static func {name}(") or (methods and line.startswith(f"func {name}("))]
 
 
-def switch_bounds(path: Path, lines: list[str], name: str) -> tuple[int, int]:
-    gd = definitions(lines, f"{name}__gd")
-    tops = definitions(lines, name)
+def switch_bounds(path: Path, lines: list[str], name: str, method: bool = False) -> tuple[int, int]:
+    gd = definitions(lines, f"{name}__gd", method)
+    tops = definitions(lines, name, method)
     if len(gd) != 1 or len(tops) != 1 or tops[0] > gd[0]:
         raise SystemExit(f"{path.name}: {name} must have one switch right above one {name}__gd")
     return tops[0], gd[0]
@@ -366,38 +383,41 @@ def switch_bounds(path: Path, lines: list[str], name: str) -> tuple[int, int]:
 
 def switch_script(subsystem: Subsystem, path: Path, functions: list[tuple[str, int, bool, bool, bool, bool]], check: bool) -> list[str]:
     lines = path.read_text(encoding="utf-8").split(NEWLINE)
+    # A scene script's methods: self goes first, the arity counts it.
+    method = path.parent in METHOD_DIRS
+    prefix, self_arg = ("func", 1) if method else ("static func", 0)
     # A host function's wrapper reads the mode too: it is registered as a switch is.
     registered = {name: (arity, writes, host, checked) for name, arity, writes, host, checked, merged in functions if not merged}
     merged = {name: (arity, writes) for name, arity, writes, host, checked, is_merged in functions if is_merged}
     changes = []
     if functions and add_engine_header(subsystem, lines, path, with_mode=bool(registered)):
         changes.append(f"{path.name}: {subsystem.engine} preload" + (" and mode" if registered else ""))
-    all_switched = [m.group(1) for m in (re.match(r"^static func (\w+)__gd\(", line) for line in lines) if m]
+    all_switched = [m.group(1) for m in (re.match(rf"^{prefix} (\w+)__gd\(", line) for line in lines) if m]
     switched = []
     for name in all_switched:
-        top, gd = switch_bounds(path, lines, name)
+        top, gd = switch_bounds(path, lines, name, method)
         if any(subsystem.mode_var in line for line in lines[top:gd]):
             switched.append(name)
     for name in switched:
-        top, gd = switch_bounds(path, lines, name)
-        params, returns = signature_of(path, lines, gd, f"{name}__gd")
+        top, gd = switch_bounds(path, lines, name, method)
+        params, returns = signature_of(path, lines, gd, f"{name}__gd", untyped=method)
         if name in merged:
             arity, writes = merged[name]
-            if len(split_params(params)) != arity:
-                raise SystemExit(f"{path.name}: {name} takes {len(split_params(params))} parameters, {subsystem.registry.name} says {arity}")
-            lines[top:body_end(lines, gd)] = native_lines(subsystem, path.stem, name, params, returns, writes)[:-1]
+            if len(split_params(params)) + self_arg != arity:
+                raise SystemExit(f"{path.name}: {name} takes {len(split_params(params)) + self_arg} arguments, {subsystem.registry.name} says {arity}")
+            lines[top:body_end(lines, gd)] = native_lines(subsystem, path.stem, name, params, returns, writes, not method, method)[:-1]
             changes.append(f"{path.name}: {name} merged, a wrapper over its port (its __gd body deleted)")
             continue
         if name not in registered:
             # Renamed or removed in the registry: the switch would call a missing native function.
-            lines[gd] = lines[gd].replace(f"static func {name}__gd(", f"static func {name}(", 1)
+            lines[gd] = lines[gd].replace(f"{prefix} {name}__gd(", f"{prefix} {name}(", 1)
             del lines[top:gd]
             changes.append(f"{path.name}: {name} has no registry entry, switch removed")
             continue
         arity, writes, host, checked = registered[name]
-        if len(split_params(params)) != arity:
-            raise SystemExit(f"{path.name}: {name} takes {len(split_params(params))} parameters, {subsystem.registry.name} says {arity}")
-        expected = wrapper_lines(subsystem, path.stem, name, params, returns, writes, host, checked)
+        if len(split_params(params)) + self_arg != arity:
+            raise SystemExit(f"{path.name}: {name} takes {len(split_params(params)) + self_arg} arguments, {subsystem.registry.name} says {arity}")
+        expected = wrapper_lines(subsystem, path.stem, name, params, returns, writes, host, checked, method)
         if lines[top:gd] != expected:
             lines[top:gd] = expected
             changes.append(f"{path.name}: {name} switch rewritten (signature or registry entry changed)")
@@ -406,14 +426,14 @@ def switch_script(subsystem: Subsystem, path: Path, functions: list[tuple[str, i
             continue
         if name in all_switched:
             raise SystemExit(f"{path.name}: {name} is already switched by another subsystem")
-        starts = definitions(lines, name)
+        starts = definitions(lines, name, method)
         if len(starts) != 1:
             raise SystemExit(f"{path.name}: {len(starts)} definitions of {name}")
-        params, returns = signature_of(path, lines, starts[0], name)
-        if len(split_params(params)) != arity:
-            raise SystemExit(f"{path.name}: {name} takes {len(split_params(params))} parameters, {subsystem.registry.name} says {arity}")
-        lines[starts[0]] = lines[starts[0]].replace(f"static func {name}(", f"static func {name}__gd(", 1)
-        lines[starts[0]:starts[0]] = wrapper_lines(subsystem, path.stem, name, params, returns, writes, host, checked)
+        params, returns = signature_of(path, lines, starts[0], name, untyped=method)
+        if len(split_params(params)) + self_arg != arity:
+            raise SystemExit(f"{path.name}: {name} takes {len(split_params(params)) + self_arg} arguments, {subsystem.registry.name} says {arity}")
+        lines[starts[0]] = lines[starts[0]].replace(f"{prefix} {name}(", f"{prefix} {name}__gd(", 1)
+        lines[starts[0]:starts[0]] = wrapper_lines(subsystem, path.stem, name, params, returns, writes, host, checked, method)
         changes.append(f"{path.name}: {name}" + (" (host wrapper)" if host else ""))
     for name, (arity, writes) in merged.items():
         if name in switched:
@@ -424,9 +444,9 @@ def switch_script(subsystem: Subsystem, path: Path, functions: list[tuple[str, i
         # An instance func may leave its result untyped (a method that answers a session or null).
         static = lines[starts[0]].startswith("static func ")
         params, returns = signature_of(path, lines, starts[0], name, untyped=not static)
-        if len(split_params(params)) != arity:
-            raise SystemExit(f"{path.name}: {name} takes {len(split_params(params))} parameters, {subsystem.registry.name} says {arity}")
-        expected = native_lines(subsystem, path.stem, name, params, returns, writes, static)[:-1]
+        if len(split_params(params)) + self_arg != arity:
+            raise SystemExit(f"{path.name}: {name} takes {len(split_params(params)) + self_arg} arguments, {subsystem.registry.name} says {arity}")
+        expected = native_lines(subsystem, path.stem, name, params, returns, writes, static, method)[:-1]
         end = body_end(lines, starts[0])
         if lines[starts[0]:end] == expected:
             continue
@@ -466,12 +486,12 @@ def switch_subsystem(name: str, subsystem: Subsystem, check: bool) -> int:
         by_script.setdefault(script, []).append((function, arity, True, True, False, False))
     changes = []
     for script, functions in sorted(by_script.items()):
-        paths = [folder / f"{script}.gd" for folder in SCRIPT_DIRS if (folder / f"{script}.gd").is_file()]
+        paths = [folder / f"{script}.gd" for folder in SCRIPT_DIRS + METHOD_DIRS if (folder / f"{script}.gd").is_file()]
         if len(paths) != 1:
-            raise SystemExit(f"{subsystem.registry.name} names {script}, which is not one script in {', '.join(str(f) for f in SCRIPT_DIRS)}")
+            raise SystemExit(f"{subsystem.registry.name} names {script}, which is not one script in {', '.join(str(f) for f in SCRIPT_DIRS + METHOD_DIRS)}")
         changes += switch_script(subsystem, paths[0], functions, check)
     # Scripts with this subsystem's switches but no registry entries left.
-    for path in sorted(p for folder in SCRIPT_DIRS for p in folder.glob("*.gd")):
+    for path in sorted(p for folder in SCRIPT_DIRS + METHOD_DIRS for p in folder.glob("*.gd")):
         if path.stem not in by_script and subsystem.mode_var in path.read_text(encoding="utf-8"):
             changes += switch_script(subsystem, path, [], check)
     for change in changes:

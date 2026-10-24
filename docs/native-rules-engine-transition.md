@@ -3036,6 +3036,55 @@ Checks:
 - h-s2, sv-v5 and sv-m1 with a scratch copy of the runner that asks for them before each order: 28,123 checks on 60
   entries, 0 mismatches and 0 errors. With the first run every entry is checked.
 
+**Slice 7.13, the map editor** (2026-10-24, branch `native-phase7-human`): the map editor's rules run in C++: the
+palette and pickers, the placement checks and guidance, the authoring validation, the working copy and Save Copy, the
+terrain and road tools, the object commands, the handoffs and inspection texts, and the terrain placement.
+- Ported to the human registry (header `map_editor.hpp`, 12 files `map_editor_common.cpp`, `map_editor_palette.cpp`,
+  `map_editor_checks.cpp`, `map_editor_guidance.cpp`, `map_editor_validation.cpp`, `map_editor_working_copy.cpp`,
+  `map_editor_terrain.cpp`, `map_editor_objects.cpp`, `map_editor_export.cpp`, `map_editor_handoffs.cpp`,
+  `map_editor_inspection.cpp` and `terrain_placement_rules.cpp`; 338 functions, 268 of `MapEditorShell` and 70 of
+  `TerrainPlacementRules`, 6,888 GDScript lines). The screen code (nodes, input, audio, the router) stays GDScript;
+  the functions that mixed both are split into a rule and its screen part.
+- 104 entries: 101 `MapEditorShell` methods, which take the screen first and read and write its members through the
+  object (`_session` and `_dirty` through their setters' revision bump), and `TerrainPlacementRules.apply_paint`,
+  `final_normalization_payload` and `visual_selection_payload`. The editor's rules call the engine: the SessionState
+  autoload, `MapPackageService`, `DirAccess` and `ProjectSettings`.
+- D-h: the authored-scenario export is deleted. The export contract becomes Save Copy's gate and draft; the export
+  intent text, the legacy authored loads and their validation hooks are gone, and the scenario template and objectives
+  lose their archived-scenario branch. Four tests that called the deleted hooks are retired (D-e): `map_editor_smoke`,
+  `map_editor_scenario_export_contract_report`, `map_editor_canvas_failed_action_audio_report` and
+  `map_editor_terrain_paint_performance_report`.
+- `NativeSceneryRules` and `NativeSceneryFormation`, the map view's drawing helpers, move to 7.15 with the map view's
+  snapshot per redraw (D-c). MapDocument and ScenarioDocument were deleted in 7.11.
+- `OverworldRules.describe_recruit_source_compact` (7.8) takes the session as a value: the palette calls it with none
+  before a map is loaded.
+- The shadow check keeps each object's metadata Dictionary until its diff ends (`battle_port_bridge.cpp`,
+  `verify_after`). In a call that loads two objects, the editor and its session, the second's metadata took the
+  first's freed address, which the diff read as a Dictionary that GDScript repeats.
+- `tools/rules_parity.py --editor` (seeds e-s2, e-m3 and e-dusk) runs `tests/map_editor_seat_report.tscn`. It opens a
+  one-level package in the editor and, through its pickers, buttons and map clicks, paints, fills, draws lines,
+  rectangles and roads, moves the hero start, and places, edits, rethemes, moves, duplicates and removes an object of
+  each family. It also restores tiles, saves a copy, plays it and returns: 121 digest rows per seed.
+  `tools/native_battle_switch.py` switches the editor's methods (`scenes/editor`).
+Checks:
+- Native mode against the branch's GDScript on the three editor seeds: 121 of 121 rows identical on each, 0 script
+  errors; 66, 144 and 197 s native, 77, 171 and 225 s GDScript.
+- Human shadow on the three editor seeds: 317,276 checks on 96 of the 104 entries. There are 0 mismatches apart from
+  two explained kinds, 3 of each:
+  - `_edit_selected_object_properties` on a town's owner: GDScript's copy of `OverworldRules.transition_town_control`
+    finds the town through the spatial lookup index and so fills that cache, where the C++ `_find_town_by_placement`
+    scans the towns. It is the same town, and native and GDScript mode leave the same caches after each edit. 7.15
+    deletes the GDScript copy.
+  - `_finish_package_copy`: `SessionStateStore.new_session_data`, a host call, has no shadow point in its GDScript
+    body, so the check stops there.
+  Shadow cannot run the four entries that call the engine (`_open_maps_folder_package_entry`, `_write_package_copy`,
+  `_stage_working_copy_for_play` and `_resume_working_copy_session`, which gets the session as the snapshot's view):
+  15 errors. The native run checks them. Not reached: the map cursor's semantic texts
+  (`_editor_map_direction_for_action`, `_editor_map_cursor_semantic_context`,
+  `_editor_map_action_result_semantic_text`, `_bounded_editor_map_semantic_text` and `_editor_tile_payload`),
+  `_select_property_object_at_tile`, `_apply_object_property_value` and `_save_copy_failure`.
+- One review of the 12 entries shadow did not check, and the helpers only they reach: no differences.
+
 ### Phase 8: a match runner without Godot
 
 Wanted, not optional (owner decision 2026-10-22, D7). The same core as a command-line tool, `match_sim_cli` beside

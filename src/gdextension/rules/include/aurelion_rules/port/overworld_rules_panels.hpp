@@ -163,7 +163,8 @@ DictRef _raid_interception_surface(State &state, DictRef session, DictRef encoun
 Atom _raid_interception_why(State &state, Atom target_kind, Atom target_label, bool objective_anchor);
 Atom _event_feed_convoy_line(State &state, DictRef session);
 Atom _dispatch_context_brief(State &state, DictRef session);
-Atom describe_recruit_source_compact(State &state, DictRef session, DictRef node, DictRef site);
+// session: Nil in the map editor's palette before a map is loaded.
+Atom describe_recruit_source_compact(State &state, const Value &session, DictRef node, DictRef site);
 Atom describe_resource_site_control_summary(State &state, DictRef session, DictRef node, DictRef site);
 Atom describe_encounter_object_surface(State &state, DictRef encounter);
 Atom _encounter_object_tag_summary(State &state, DictRef encounter, DictRef map_object);

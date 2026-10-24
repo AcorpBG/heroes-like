@@ -301,7 +301,7 @@ private:
 	void fill_view(const ObjectView &view);
 	void write_view(const ObjectView &view);
 	bool view_changed(const ObjectView &view) const;
-	void verify_object_view(const ObjectView &view, std::string &out);
+	void verify_object_view(const ObjectView &view, std::vector<godot::Dictionary> &metas, std::string &out);
 	state::TypeRef register_type(int64_t builtin, const godot::StringName &class_name, const godot::Variant &script);
 	godot::Object *object_at(uint32_t slot) const;
 	godot::Object *content_service();

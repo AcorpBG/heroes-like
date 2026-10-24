@@ -1,6 +1,9 @@
 class_name TerrainPlacementRules
 extends RefCounted
 
+const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
+
 const PLACEMENT_MODEL := "homm3_owner_queue_rewrite_final_normalization.v1"
 const PAINT_ORDER_MODEL := "paint_tiles_in_tool_order_then_drain_set_a_set_b"
 const FINAL_NORMALIZATION_MODEL := "final_normalization_4bbfcc_reclassifies_settled_owner_map"
@@ -246,7 +249,17 @@ class OrderedPointSet:
 	func _tile_key(tile: Vector2i) -> String:
 		return "%d,%d" % [tile.x, tile.y]
 
-static func apply_paint(
+static func apply_paint(map_data: Array, map_size: Vector2i, brush_terrain_id: String, paint_tiles: Array, terrain_grammar: Dictionary, include_final_normalization: bool = true) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return apply_paint__gd(map_data, map_size, brush_terrain_id, paint_tiles, terrain_grammar, include_final_normalization)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TerrainPlacementRules.apply_paint", [map_data, map_size, brush_terrain_id, paint_tiles, terrain_grammar, include_final_normalization])
+	var before := HumanEngine.before_writing(&"TerrainPlacementRules.apply_paint", [map_data, map_size, brush_terrain_id, paint_tiles, terrain_grammar, include_final_normalization])
+	var result = apply_paint__gd(map_data, map_size, brush_terrain_id, paint_tiles, terrain_grammar, include_final_normalization)
+	HumanEngine.check_writing(&"TerrainPlacementRules.apply_paint", before, [map_data, map_size, brush_terrain_id, paint_tiles, terrain_grammar, include_final_normalization], result)
+	return result
+
+static func apply_paint__gd(
 	map_data: Array,
 	map_size: Vector2i,
 	brush_terrain_id: String,
@@ -332,6 +345,16 @@ static func apply_paint(
 	}
 
 static func final_normalization_payload(map_data: Array, map_size: Vector2i, terrain_grammar: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return final_normalization_payload__gd(map_data, map_size, terrain_grammar)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TerrainPlacementRules.final_normalization_payload", [map_data, map_size, terrain_grammar])
+	var before := HumanEngine.before_writing(&"TerrainPlacementRules.final_normalization_payload", [map_data, map_size, terrain_grammar])
+	var result = final_normalization_payload__gd(map_data, map_size, terrain_grammar)
+	HumanEngine.check_writing(&"TerrainPlacementRules.final_normalization_payload", before, [map_data, map_size, terrain_grammar], result)
+	return result
+
+static func final_normalization_payload__gd(map_data: Array, map_size: Vector2i, terrain_grammar: Dictionary) -> Dictionary:
 	var boundary_counts := _compute_boundary_counts(map_data, map_size, terrain_grammar)
 	var class_counts := {}
 	var missing_buckets := []
@@ -385,6 +408,16 @@ static func final_normalization_payload(map_data: Array, map_size: Vector2i, ter
 	}
 
 static func visual_selection_payload(map_data: Array, map_size: Vector2i, terrain_grammar: Dictionary, tile: Vector2i) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return visual_selection_payload__gd(map_data, map_size, terrain_grammar, tile)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TerrainPlacementRules.visual_selection_payload", [map_data, map_size, terrain_grammar, tile])
+	var before := HumanEngine.before_writing(&"TerrainPlacementRules.visual_selection_payload", [map_data, map_size, terrain_grammar, tile])
+	var result = visual_selection_payload__gd(map_data, map_size, terrain_grammar, tile)
+	HumanEngine.check_writing(&"TerrainPlacementRules.visual_selection_payload", before, [map_data, map_size, terrain_grammar, tile], result)
+	return result
+
+static func visual_selection_payload__gd(map_data: Array, map_size: Vector2i, terrain_grammar: Dictionary, tile: Vector2i) -> Dictionary:
 	if not (map_data is Array) or map_data.is_empty() or not _in_bounds(tile, map_size):
 		return {}
 	var terrain_id := _terrain_at(map_data, tile)

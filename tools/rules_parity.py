@@ -10,6 +10,7 @@
     python tools/rules_parity.py remove DEST               # delete a prepared copy (junctions first)
     python tools/rules_parity.py seeds
     python tools/rules_parity.py check A B --human         # a human player on seat 1, through the screens
+    python tools/rules_parity.py check A B --editor        # the map editor's edits, through its screen
     python tools/rules_parity.py check A A --runner-b      # the game against the match runner outside Godot
 
 A side is a project directory (run with the editor binary, --godot / --godot-a / --godot-b) or an
@@ -64,6 +65,13 @@ other project side must already have the same one. A save run gets the save in i
 the maps the save names in <side>/maps, copied with their times kept and removed after the runs unless they were
 there. Each human seed runs in a process of its own (--one-process plays AI seeds only). `check` also prints each
 action kind's time on both sides, the screens' speed.
+
+--editor (Phase 7, slice 7.13) plays EDITOR_SEEDS the same way: tests/map_editor_seat_report.tscn opens a one-level
+package in the map editor (generated from the seed's setup, or a D9 map copy), edits it by fixed rules through the
+editor's pickers, buttons and map clicks, saves a copy, plays it and returns. Its digest rows are the human seat's,
+with day 0: the hash of the working copy, its baseline and the editor's own state, and the hash of the editor's
+validation snapshot and screen texts (the package picker, which lists the side's maps folder, left out). The record
+has the saved copy's file hashes. Both sides play this checkout's runner, as for --human.
 """
 from __future__ import annotations
 
@@ -92,6 +100,9 @@ REPORT_ID = "AI_VERSUS_AI_MATCH_REPORT"
 HUMAN_SCENE = "res://tests/human_seat_report.tscn"
 HUMAN_REPORT_ID = "HUMAN_SEAT_REPORT"
 HUMAN_RUNNER = ("tests/human_seat_report.gd", "tests/human_seat_report.tscn")
+EDITOR_SCENE = "res://tests/map_editor_seat_report.tscn"
+EDITOR_REPORT_ID = "MAP_EDITOR_SEAT_REPORT"
+EDITOR_RUNNER = ("tests/map_editor_seat_report.gd", "tests/map_editor_seat_report.tscn")
 SAVE_COPIES = Path(os.environ.get("HEROES_SAVE_COPIES", r"D:\Games\godot\heroes-like-save-copies"))
 IS_WINDOWS = platform.system() == "Windows"
 COPY_MARKER = ".rules_parity_copy"
@@ -131,7 +142,17 @@ HUMAN_SEEDS: dict[str, dict] = {
     "sv-auto": {"kind": "human", "save": "autosave.json", "maps": ["medium-fallow-field-spring-a9c4612b"],
                 "players": 2, "size": "homm3_medium", "days": 10, "levels": 2},
 }
-ALL_SEEDS = {**SEEDS, **EXTRA_SEEDS, **HUMAN_SEEDS}
+# --editor (Phase 7, slice 7.13): one-level packages, two generated at their own seeds (the human seat's would write
+# the same package at once) and the D9 copy of a map the owner played.
+EDITOR_SEEDS: dict[str, dict] = {
+    "e-s2": {"kind": "editor", "seed": "editor-s2", "players": 2, "size": "homm3_small", "water": "land", "levels": 1},
+    "e-m3": {"kind": "editor", "seed": "editor-m3", "players": 3, "size": "homm3_medium", "water": "normal_water", "levels": 1},
+    "e-dusk": {"kind": "editor", "package": "medium-dusk-lantern-deep-64efd5b1", "maps": ["medium-dusk-lantern-deep-64efd5b1"],
+               "players": 2, "size": "homm3_medium", "levels": 1},
+}
+ALL_SEEDS = {**SEEDS, **EXTRA_SEEDS, **HUMAN_SEEDS, **EDITOR_SEEDS}
+# A seat's scene, its report line and its runner files.
+SEATS = {"human": (HUMAN_SCENE, HUMAN_REPORT_ID, HUMAN_RUNNER), "editor": (EDITOR_SCENE, EDITOR_REPORT_ID, EDITOR_RUNNER)}
 # Record fields that hold wall-clock time, left out of the comparison.
 TIMING_KEYS = ("ai_turn_ms_max", "turn_ms", "timing")
 # --portable: where the map package was written (res://maps under the editor, user://maps in an
@@ -193,16 +214,17 @@ class Job:
         return {(str(self.side.path.resolve()), key) for key in self.keys}
 
     @property
-    def human(self) -> bool:
-        return is_human(self.key)
+    def seat(self) -> bool:
+        return is_seat(self.key)
 
 
-def is_human(key: str) -> bool:
-    return ALL_SEEDS[key].get("kind") == "human"
+def is_seat(key: str) -> bool:
+    """A seat seed (the human seat's or the editor's) writes a digest row per action, not per day."""
+    return ALL_SEEDS[key].get("kind") in SEATS
 
 
 def report_id(key: str) -> str:
-    return HUMAN_REPORT_ID if is_human(key) else REPORT_ID
+    return SEATS[ALL_SEEDS[key]["kind"]][1] if is_seat(key) else REPORT_ID
 
 
 def user_dir(profile: Path) -> Path:
@@ -234,6 +256,25 @@ def human_settings(job: Job, profile: Path) -> dict[str, str]:
     return settings
 
 
+def editor_settings(job: Job) -> dict[str, str]:
+    """The map editor runner's setup: a generated package, or one in the side's maps folder."""
+    setup = ALL_SEEDS[job.key]
+    stem = job.stem(job.key)
+    settings = {"HEROES_EDITOR_OUT": (job.out / f"{stem}.json").as_posix(),
+                "HEROES_EDITOR_DIGEST": (job.out / f"{stem}.digest").as_posix()}
+    if "package" in setup:
+        settings["HEROES_EDITOR_PACKAGE"] = setup["package"]
+    else:
+        settings.update({"HEROES_EDITOR_SEED": setup["seed"], "HEROES_EDITOR_PLAYERS": str(setup["players"]),
+                         "HEROES_EDITOR_SIZE": setup["size"], "HEROES_EDITOR_WATER": setup["water"]})
+    if job.dump_day is not None:
+        settings["HEROES_EDITOR_DUMP"] = (job.out / f"{stem}.state.json").as_posix()
+        settings["HEROES_EDITOR_DUMP_STEP"] = str(job.dump_day)
+    for suffix in (".json", ".digest", ".state.json"):
+        (job.out / f"{stem}{suffix}").unlink(missing_ok=True)
+    return settings
+
+
 def place_save_maps(jobs: list[Job]) -> list[Path]:
     """The map packages the save runs name, copied into each side's maps folder with their times kept (so the
     match-map cleanup leaves them); returns the files placed, never one that was there."""
@@ -252,13 +293,13 @@ def place_save_maps(jobs: list[Job]) -> list[Path]:
     return placed
 
 
-def install_human_runner(side: Side) -> None:
+def install_seat_runner(side: Side, kind: str) -> None:
     """Both sides play this checkout's runner: copied into a `prepare` copy, required as is anywhere else."""
     if not side.is_project:
-        sys.exit(f"{side.name}: --human needs a project directory, not {side.path}")
+        sys.exit(f"{side.name}: --{kind} needs a project directory, not {side.path}")
     if side.path.resolve() == ROOT.resolve():
         return
-    for name in HUMAN_RUNNER:
+    for name in SEATS[kind][2]:
         mine, theirs = ROOT / name, side.path / name
         if (side.path / COPY_MARKER).exists():
             shutil.copy2(mine, theirs)
@@ -300,14 +341,15 @@ def match_settings(job: Job, key: str) -> dict[str, str]:
 
 def start(job: Job, profiles: Path) -> tuple[subprocess.Popen, Path, float]:
     profile = Path(tempfile.mkdtemp(prefix=f"{job.side.name}-{job.key}-", dir=profiles))
-    env = {k: v for k, v in os.environ.items() if not k.startswith(("HEROES_AI_MATCH_", "HEROES_HUMAN_"))}
+    env = {k: v for k, v in os.environ.items() if not k.startswith(("HEROES_AI_MATCH_", "HEROES_HUMAN_", "HEROES_EDITOR_"))}
     env.update(job.side.env)
     env.update({"APPDATA": str(profile), "XDG_DATA_HOME": str(profile), "XDG_CONFIG_HOME": str(profile), "XDG_CACHE_HOME": str(profile)})
     scene = SCENE
     command = None
-    if job.human:
-        env.update(human_settings(job, profile))
-        scene = HUMAN_SCENE
+    if job.seat:
+        kind = ALL_SEEDS[job.key]["kind"]
+        env.update(human_settings(job, profile) if kind == "human" else editor_settings(job))
+        scene = SEATS[kind][0]
         log_path = job.out / f"{job.stem(job.key)}.log"
     elif job.side.runner:
         runner_job = profile / "runner.json"
@@ -394,7 +436,7 @@ def finish(job: Job, proc: subprocess.Popen, profile: Path, started: float, time
 def run_jobs(jobs: list[Job], parallel: int, timeout_min: float, work: Path, say) -> list[dict]:
     profiles = work / "profiles"
     profiles.mkdir(parents=True, exist_ok=True)
-    placed = place_save_maps([j for j in jobs if j.human])
+    placed = place_save_maps([j for j in jobs if j.seat])
     keep_maps: dict[str, set[str]] = {}
     for job in jobs:
         maps = job.side.path / "maps"
@@ -526,7 +568,7 @@ def compare_seed(key: str, dir_a: Path, dir_b: Path, failed: list[str]) -> dict:
     first = first_differing_row(da, db)
     row = {"seed": key, "days_a": len(da), "days_b": len(db), "first_day": None if first is None else first[0], "record": [],
            "failed": failed, "formats": ""}
-    if first is not None and is_human(key):
+    if first is not None and is_seat(key):
         row["first_step"] = first[1]
         row["first_action"] = first[2]
     if da and db and digest_format(da) != digest_format(db):
@@ -560,14 +602,14 @@ def run_failures(folder: Path, key: str) -> list[str]:
 
 def dump_point(row: dict) -> int:
     """Where a differing seed is replayed to: its first differing day, or step for the human seat."""
-    return row["first_step"] if is_human(row["seed"]) else row["first_day"]
+    return row["first_step"] if is_seat(row["seed"]) else row["first_day"]
 
 
 def explain_dump(key: str, day: int, dir_a: Path, dir_b: Path, first_a: list, first_b: list) -> dict:
     """The first differing paths of the day's full state (the human seat's: of its step's state and panel texts),
     after checking each side replayed itself."""
     stem = f"{key}.dump{day}"
-    human = is_human(key)
+    human = is_seat(key)
     info: dict = {"day": day, "label": f"step {day}" if human else f"day {day}", "paths": []}
     for name, folder, first in (("A", dir_a, first_a), ("B", dir_b, first_b)):
         again = read_digest(folder / f"{stem}.digest")
@@ -595,7 +637,7 @@ def explain_dump(key: str, day: int, dir_a: Path, dir_b: Path, first_a: list, fi
 def print_rows(rows: list[dict], say) -> None:
     for row in rows:
         if row["identical"]:
-            what = "action digests and the record" if is_human(row["seed"]) else "daily digests and the match record"
+            what = "action digests and the record" if is_seat(row["seed"]) else "daily digests and the match record"
             say(f"{row['seed']:5} identical: {row['days_a']} {what}")
             continue
         where = (row["formats"] if row["formats"]
@@ -621,8 +663,9 @@ def print_rows(rows: list[dict], say) -> None:
 
 # ---------------------------------------------------------------- commands
 
-def pick_seeds(text: str | None, human: bool = False) -> list[str]:
-    keys = [k.strip() for k in (text or ",".join(HUMAN_SEEDS if human else SEEDS)).split(",") if k.strip()]
+def pick_seeds(text: str | None, human: bool = False, editor: bool = False) -> list[str]:
+    default = [*(HUMAN_SEEDS if human else []), *(EDITOR_SEEDS if editor else [])] or list(SEEDS)
+    keys = [k.strip() for k in (text or ",".join(default)).split(",") if k.strip()]
     unknown = [k for k in keys if k not in ALL_SEEDS]
     if unknown:
         sys.exit(f"unknown seeds {unknown}; known: {', '.join(ALL_SEEDS)}")
@@ -656,7 +699,7 @@ def make_work(text: str | None) -> Path:
 
 
 def print_screen_times(keys: list[str], dirs: dict[str, Path], say) -> None:
-    """The human seat's time per action kind on both sides, summed over its seeds: the screens' speed."""
+    """A seat's time per action kind on both sides, summed over its seeds: the screens' speed."""
     totals: dict[str, dict[str, list[float]]] = {}
     for key in keys:
         for side, folder in dirs.items():
@@ -679,14 +722,16 @@ def print_screen_times(keys: list[str], dirs: dict[str, Path], say) -> None:
         say(f"  {kind:16} " + " | ".join(cells))
 
 
-def human_keys_ready(keys: list[str], sides: list[Side], one_process: bool) -> None:
-    """Installs the human seat runner on each side when keys has a human seed."""
-    if not any(is_human(k) for k in keys):
+def seat_keys_ready(keys: list[str], sides: list[Side], one_process: bool) -> None:
+    """Installs the seat runners on each side for the seat seeds in keys."""
+    kinds = sorted({ALL_SEEDS[k]["kind"] for k in keys if is_seat(k)})
+    if not kinds:
         return
     if one_process:
-        sys.exit("--one-process and --runner play AI seeds only; the human seat runs one seed per process")
+        sys.exit("--one-process and --runner play AI seeds only; a seat runs one seed per process")
     for side in sides:
-        install_human_runner(side)
+        for kind in kinds:
+            install_seat_runner(side, kind)
 
 
 class Say:
@@ -704,8 +749,8 @@ def cmd_check(args) -> int:
     say = Say(work / "parity.log")
     a = make_side("A", args.a, args.godot_a or args.godot, portable(args, parse_env(args.env_a)), args.runner_a)
     b = make_side("B", args.b, args.godot_b or args.godot, portable(args, parse_env(args.env_b)), args.runner_b)
-    keys = pick_seeds(args.seeds, args.human)
-    human_keys_ready(keys, [a, b], args.one_process_a or args.one_process_b or args.runner_a or args.runner_b)
+    keys = pick_seeds(args.seeds, args.human, args.editor)
+    seat_keys_ready(keys, [a, b], args.one_process_a or args.one_process_b or args.runner_a or args.runner_b)
     dirs = {"A": work / "A", "B": work / "B"}
     for d in dirs.values():
         d.mkdir(exist_ok=True)
@@ -731,7 +776,7 @@ def cmd_check(args) -> int:
                     (dirs[side] / f"{r['seed']}.dump{dump_point(r)}.state.json").unlink(missing_ok=True)
     say(f"RESULT after {(time.time() - started) / 60:.1f} min:")
     print_rows(rows, say)
-    print_screen_times([k for k in keys if is_human(k)], dirs, say)
+    print_screen_times([k for k in keys if is_seat(k)], dirs, say)
     errors = sorted({e for r in results for e in r["script_errors"]})
     if errors:
         say(f"{len(errors)} distinct SCRIPT ERROR lines (both sides; see the logs in {work}):")
@@ -751,8 +796,8 @@ def cmd_run(args) -> int:
     out = make_work(args.out)
     say = Say(out / "parity.log")
     side = make_side("A", args.side, args.godot, portable(args, parse_env(args.env)), args.runner)
-    keys = pick_seeds(args.seeds, args.human)
-    human_keys_ready(keys, [side], args.one_process or args.runner)
+    keys = pick_seeds(args.seeds, args.human, args.editor)
+    seat_keys_ready(keys, [side], args.one_process or args.runner)
     say(f"RUN {', '.join(keys)} on {side_text(side)}{' in one process' if args.one_process else ''}; output {out}")
     jobs = [Job(side, keys[0], out, args.dump_day, tuple(keys[1:]))] if args.one_process else [Job(side, k, out, args.dump_day) for k in keys]
     results = run_jobs(jobs, args.jobs, args.timeout_min, out, say)
@@ -762,14 +807,14 @@ def cmd_run(args) -> int:
 
 def cmd_compare(args) -> int:
     da, db = Path(args.a).resolve(), Path(args.b).resolve()
-    keys = [k for k in pick_seeds(args.seeds, args.human) if (da / f"{k}.digest").exists() or (db / f"{k}.digest").exists()]
+    keys = [k for k in pick_seeds(args.seeds, args.human, args.editor) if (da / f"{k}.digest").exists() or (db / f"{k}.digest").exists()]
     rows = [compare_seed(k, da, db, [f"{name} {problem}" for name, folder in (("A", da), ("B", db)) for problem in run_failures(folder, k)])
             for k in keys]
     for r in rows:
         if r["first_day"] is not None and (da / f"{r['seed']}.dump{dump_point(r)}.state.json").exists():
             r["dump"] = explain_dump(r["seed"], dump_point(r), da, db, read_digest(da / f"{r['seed']}.digest"), read_digest(db / f"{r['seed']}.digest"))
     print_rows(rows, print)
-    print_screen_times([k for k in keys if is_human(k)], {"A": da, "B": db}, print)
+    print_screen_times([k for k in keys if is_seat(k)], {"A": da, "B": db}, print)
     failed = [r["seed"] for r in rows if r["failed"]]
     if failed:
         print(f"{len(failed)} seeds FAILED: {', '.join(failed)}")
@@ -888,6 +933,7 @@ def main() -> int:
         p.add_argument("--portable", action="store_true",
                        help="blank the map package's location in the digest (editor against an exported build)")
         p.add_argument("--human", action="store_true", help=f"default to the human seat's set: {', '.join(HUMAN_SEEDS)}")
+        p.add_argument("--editor", action="store_true", help=f"default to the map editor's set: {', '.join(EDITOR_SEEDS)}")
         if with_side_env:
             p.add_argument("--env", action="append", metavar="NAME=VALUE", help="extra environment for the runs")
 
@@ -912,7 +958,7 @@ def main() -> int:
     p.add_argument("side")
     common(p, True)
     p.add_argument("--out", help="output folder (default a new temp folder)")
-    p.add_argument("--dump-day", type=int, help="stop on this day (the human seat: step) with a full state dump")
+    p.add_argument("--dump-day", type=int, help="stop on this day (a seat: step) with a full state dump")
     p.add_argument("--one-process", action="store_true", help="play the seeds in one Godot process, in --seeds order")
     p.add_argument("--runner", action="store_true", help="play through the match runner outside Godot (bin/match_sim_cli)")
     p.set_defaults(func=cmd_run)
@@ -926,6 +972,7 @@ def main() -> int:
     p.add_argument("b")
     p.add_argument("--seeds")
     p.add_argument("--human", action="store_true")
+    p.add_argument("--editor", action="store_true")
     p.set_defaults(func=cmd_compare)
 
     p = sub.add_parser("prepare", help="copy a revision outside the repo")

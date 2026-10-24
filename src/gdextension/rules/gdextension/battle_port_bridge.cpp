@@ -2331,8 +2331,12 @@ std::string PortBridge::verify_after(const Value *args, size_t count, const Arra
 	if (!out.empty()) {
 		return "arguments afterwards: " + out;
 	}
+	// Each object's metadata Dictionary lives until the diff ends: a freed one's
+	// address could come back as the next one's, which the diff would take for
+	// a Dictionary GDScript repeats.
+	std::vector<Dictionary> metas;
 	for (const ObjectView &view : views_) {
-		verify_object_view(view, out);
+		verify_object_view(view, metas, out);
 		if (!out.empty()) {
 			return "an object afterwards: " + out;
 		}
@@ -2424,7 +2428,7 @@ void PortBridge::verify_view(uint32_t node, const Dictionary &now, std::string &
 
 // A validating call writes no view back: each property as GDScript's call left
 // it, and the metadata as a Dictionary in get_meta_list()'s order.
-void PortBridge::verify_object_view(const ObjectView &view, std::string &out) {
+void PortBridge::verify_object_view(const ObjectView &view, std::vector<Dictionary> &metas, std::string &out) {
 	Object *object = object_at(view.slot);
 	std::string path;
 	for (const uint32_t field : view.fields) {
@@ -2444,7 +2448,7 @@ void PortBridge::verify_object_view(const ObjectView &view, std::string &out) {
 		out = ".meta: the native view dropped it";
 		return;
 	}
-	Dictionary now;
+	Dictionary now = metas.emplace_back();
 	const godot::TypedArray<StringName> names = object->get_meta_list();
 	for (int64_t index = 0; index < names.size(); ++index) {
 		const StringName name = names[index];

@@ -244,6 +244,17 @@ add_library(aurelion_rules_core STATIC
 	core/port/hero_rules_panels.cpp
 	core/port/hero_rules_turn.cpp
 	core/port/human_registry.cpp
+	core/port/map_editor_checks.cpp
+	core/port/map_editor_common.cpp
+	core/port/map_editor_export.cpp
+	core/port/map_editor_guidance.cpp
+	core/port/map_editor_handoffs.cpp
+	core/port/map_editor_inspection.cpp
+	core/port/map_editor_objects.cpp
+	core/port/map_editor_palette.cpp
+	core/port/map_editor_terrain.cpp
+	core/port/map_editor_validation.cpp
+	core/port/map_editor_working_copy.cpp
 	core/port/map_view_rules.cpp
 	core/port/mine_rules.cpp
 	core/port/mine_rules_ai.cpp
@@ -336,6 +347,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/stack_effects.cpp
 	core/port/stat_totals.cpp
 	core/port/target_selection.cpp
+	core/port/terrain_placement_rules.cpp
 	core/port/town_building_panel.cpp
 	core/port/town_construction_board.cpp
 	core/port/town_development_rules_ai.cpp

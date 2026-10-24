@@ -855,7 +855,7 @@ Atom _dispatch_context_brief(State &state, DictRef session) {
 	return gd::format(state, key::open_ground_at_d_d_on, {int_value(pos.x), int_value(pos.y), str(terrain)});
 }
 
-Atom describe_recruit_source_compact(State &state, DictRef session, DictRef node, DictRef site) {
+Atom describe_recruit_source_compact(State &state, const Value &session, DictRef node, DictRef site) {
 	if (!resource_site_is_recruit_source(state, site)) {
 		return key::empty;
 	}
@@ -869,7 +869,7 @@ Atom describe_recruit_source_compact(State &state, DictRef session, DictRef node
 	if (weekly_line != key::empty) {
 		state.append(parts, str(weekly_line));
 	}
-	const Atom guard_line = _resource_site_guard_or_contest_line(state, dict_value(session), node, site);
+	const Atom guard_line = _resource_site_guard_or_contest_line(state, session, node, site);
 	if (guard_line != key::empty) {
 		state.append(parts, str(guard_line));
 	}

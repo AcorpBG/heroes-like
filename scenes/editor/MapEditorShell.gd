@@ -7,10 +7,11 @@ const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const TerrainPlacementRulesScript = preload("res://scripts/core/TerrainPlacementRules.gd")
 const OverworldLevelRulesScript = preload("res://scripts/core/OverworldLevelRules.gd")
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
+const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 
 const DEFAULT_TERRAIN_ID := "grass"
 const EDITOR_ROAD_LAYER_ID := "editor_working_road"
-const SCENARIO_EXPORT_CONTRACT_ID := "editor_authored_scenario_export_contract_v1"
 const EDITOR_ROAD_OVERLAY_ID := "road_dirt"
 const TERRAIN_LINE_RULE_ID := "manhattan_l_horizontal_then_vertical"
 const TERRAIN_LINE_RULE_LABEL := "Manhattan L line, horizontal first, then vertical"
@@ -207,7 +208,6 @@ func _ready() -> void:
 	_refresh_state()
 	call_deferred("_configure_editor_keyboard_focus")
 
-
 func _exit_tree() -> void:
 	_stop_editor_map_joypad_repeat()
 	_cancel_editor_map_cursor_semantic()
@@ -249,7 +249,6 @@ func _connect_ui() -> void:
 		_map_view.tile_pressed.connect(_on_map_tile_pressed)
 		_map_view.tile_hovered.connect(_on_map_tile_hovered)
 
-
 func _configure_editor_top_bar_layout() -> void:
 	if (
 		_editor_top_pad == null
@@ -266,13 +265,11 @@ func _configure_editor_top_bar_layout() -> void:
 		theme_changed.connect(_queue_editor_top_bar_layout_sync)
 	_queue_editor_top_bar_layout_sync()
 
-
 func _queue_editor_top_bar_layout_sync() -> void:
 	if _editor_top_bar_layout_sync_queued or not is_inside_tree():
 		return
 	_editor_top_bar_layout_sync_queued = true
 	call_deferred("_sync_editor_top_bar_layout")
-
 
 func _sync_editor_top_bar_layout() -> void:
 	_editor_top_bar_layout_sync_queued = false
@@ -349,7 +346,6 @@ func _sync_editor_top_bar_layout() -> void:
 	picker_minimum.x = floorf(picker_width)
 	_map_package_picker.custom_minimum_size = picker_minimum
 
-
 func _editor_top_bar_text_minimum_width(control: Control, text: String) -> float:
 	if control == null:
 		return 0.0
@@ -366,7 +362,6 @@ func _editor_top_bar_text_minimum_width(control: Control, text: String) -> float
 		text_width += normal_style.get_minimum_size().x
 	return ceilf(text_width)
 
-
 func _editor_top_bar_picker_text_minimum_width(text: String) -> float:
 	var width := _editor_top_bar_text_minimum_width(_map_package_picker, text)
 	var arrow := _map_package_picker.get_theme_icon("arrow")
@@ -375,7 +370,6 @@ func _editor_top_bar_picker_text_minimum_width(text: String) -> float:
 	width += float(_map_package_picker.get_theme_constant("arrow_margin"))
 	return ceilf(width)
 
-
 func _selected_map_package_picker_text() -> String:
 	if _map_package_picker == null:
 		return ""
@@ -383,7 +377,6 @@ func _selected_map_package_picker_text() -> String:
 	if selected_index < 0 or selected_index >= _map_package_picker.get_item_count():
 		return ""
 	return _map_package_picker.get_item_text(selected_index)
-
 
 func _configure_editor_tool_rail_layout() -> void:
 	if _tool_scroll == null or _tool_buttons == null:
@@ -394,13 +387,11 @@ func _configure_editor_tool_rail_layout() -> void:
 		_tool_buttons.minimum_size_changed.connect(_queue_editor_tool_rail_layout_sync)
 	_queue_editor_tool_rail_layout_sync()
 
-
 func _queue_editor_tool_rail_layout_sync() -> void:
 	if _editor_tool_rail_layout_sync_queued or not is_inside_tree():
 		return
 	_editor_tool_rail_layout_sync_queued = true
 	call_deferred("_sync_editor_tool_rail_layout")
-
 
 func _sync_editor_tool_rail_layout() -> void:
 	_editor_tool_rail_layout_sync_queued = false
@@ -425,7 +416,6 @@ func _sync_editor_tool_rail_layout() -> void:
 	_tool_buttons.columns = desired_columns
 	_queue_editor_tool_rail_layout_sync()
 
-
 func _editor_tool_buttons_two_column_minimum_width() -> float:
 	var column_widths := [0.0, 0.0]
 	var visible_control_index := 0
@@ -447,7 +437,6 @@ func _editor_tool_buttons_two_column_minimum_width() -> float:
 		+ float(_tool_buttons.get_theme_constant("h_separation"))
 	)
 
-
 func _configure_editor_map_keyboard_input() -> void:
 	if _map_view == null:
 		return
@@ -463,7 +452,6 @@ func _configure_editor_map_keyboard_input() -> void:
 		add_child(_editor_map_joypad_repeat_timer)
 	if not _editor_map_joypad_repeat_timer.timeout.is_connected(_on_editor_map_joypad_repeat_timeout):
 		_editor_map_joypad_repeat_timer.timeout.connect(_on_editor_map_joypad_repeat_timeout)
-
 
 func _on_editor_map_gui_input(event: InputEvent) -> void:
 	if not (event is InputEventKey or event is InputEventJoypadButton):
@@ -504,7 +492,6 @@ func _on_editor_map_gui_input(event: InputEvent) -> void:
 		_handle_editor_map_cancel()
 		_map_view.accept_event()
 
-
 func _handle_editor_map_cancel() -> void:
 	var source_session = _session
 	var canceled_tile := _selected_tile
@@ -520,7 +507,6 @@ func _handle_editor_map_cancel() -> void:
 		focus_owner
 	)
 
-
 func _editor_map_cancel_pressed(event: InputEvent) -> bool:
 	if event.is_action_pressed("ui_cancel"):
 		return true
@@ -532,7 +518,6 @@ func _editor_map_cancel_pressed(event: InputEvent) -> bool:
 		and not key_event.echo
 		and (key_event.keycode == KEY_ESCAPE or key_event.physical_keycode == KEY_ESCAPE)
 	)
-
 
 func _editor_map_keyboard_input_owned() -> bool:
 	if (
@@ -546,7 +531,6 @@ func _editor_map_keyboard_input_owned() -> bool:
 	var viewport := get_viewport()
 	return viewport != null and viewport.gui_get_focus_owner() == _map_view
 
-
 func _editor_map_cardinal_action(event: InputEvent) -> StringName:
 	if event.is_action_pressed("ui_left", true):
 		return &"ui_left"
@@ -558,8 +542,17 @@ func _editor_map_cardinal_action(event: InputEvent) -> StringName:
 		return &"ui_down"
 	return &""
 
-
 func _editor_map_direction_for_action(action: StringName) -> Vector2i:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _editor_map_direction_for_action__gd(action)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._editor_map_direction_for_action", [self, action])
+	var before := HumanEngine.before_writing(&"MapEditorShell._editor_map_direction_for_action", [self, action])
+	var result = _editor_map_direction_for_action__gd(action)
+	HumanEngine.check_writing(&"MapEditorShell._editor_map_direction_for_action", before, [self, action], result)
+	return result
+
+func _editor_map_direction_for_action__gd(action: StringName) -> Vector2i:
 	match action:
 		&"ui_left":
 			return Vector2i.LEFT
@@ -571,7 +564,6 @@ func _editor_map_direction_for_action(action: StringName) -> Vector2i:
 			return Vector2i.DOWN
 		_:
 			return Vector2i.ZERO
-
 
 func _start_editor_map_joypad_repeat(
 	event: InputEventJoypadButton,
@@ -586,7 +578,6 @@ func _start_editor_map_joypad_repeat(
 	_held_editor_map_joypad_device = event.device
 	_editor_map_joypad_repeat_timer.start(EDITOR_MAP_JOYPAD_REPEAT_INITIAL_DELAY_SECONDS)
 
-
 func _editor_map_joypad_hold_matches(
 	event: InputEventJoypadButton,
 	action: StringName,
@@ -599,7 +590,6 @@ func _editor_map_joypad_hold_matches(
 		and _held_editor_map_joypad_device == event.device
 	)
 
-
 func _editor_map_joypad_release_matches(event: InputEventJoypadButton) -> bool:
 	return (
 		_held_editor_map_joypad_direction != Vector2i.ZERO
@@ -607,7 +597,6 @@ func _editor_map_joypad_release_matches(event: InputEventJoypadButton) -> bool:
 		and _held_editor_map_joypad_button == event.button_index
 		and _held_editor_map_joypad_device == event.device
 	)
-
 
 func _on_editor_map_joypad_repeat_timeout() -> void:
 	if (
@@ -624,7 +613,6 @@ func _on_editor_map_joypad_repeat_timeout() -> void:
 		return
 	_editor_map_joypad_repeat_timer.start(EDITOR_MAP_JOYPAD_REPEAT_INTERVAL_SECONDS)
 
-
 func _stop_editor_map_joypad_repeat() -> void:
 	if _editor_map_joypad_repeat_timer != null and is_instance_valid(_editor_map_joypad_repeat_timer):
 		_editor_map_joypad_repeat_timer.stop()
@@ -632,7 +620,6 @@ func _stop_editor_map_joypad_repeat() -> void:
 	_held_editor_map_joypad_action = &""
 	_held_editor_map_joypad_button = -1
 	_held_editor_map_joypad_device = -1
-
 
 func _move_editor_map_cursor(direction: Vector2i) -> void:
 	if _session == null:
@@ -653,7 +640,6 @@ func _move_editor_map_cursor(direction: Vector2i) -> void:
 	_refresh_state()
 	_schedule_editor_map_cursor_semantic()
 
-
 func _configure_editor_map_cursor_semantic_timer() -> void:
 	if _editor_map_cursor_semantic_timer != null and is_instance_valid(_editor_map_cursor_semantic_timer):
 		return
@@ -663,11 +649,9 @@ func _configure_editor_map_cursor_semantic_timer() -> void:
 	_editor_map_cursor_semantic_timer.timeout.connect(_on_editor_map_cursor_semantic_timeout)
 	add_child(_editor_map_cursor_semantic_timer)
 
-
 func _on_editor_map_focus_exited() -> void:
 	_stop_editor_map_joypad_repeat()
 	_cancel_editor_map_cursor_semantic()
-
 
 func _schedule_editor_map_cursor_semantic() -> void:
 	_cancel_editor_map_cursor_semantic()
@@ -684,8 +668,17 @@ func _schedule_editor_map_cursor_semantic() -> void:
 	}
 	_editor_map_cursor_semantic_timer.start(EDITOR_MAP_CURSOR_SEMANTIC_DEBOUNCE_SECONDS)
 
-
 func _editor_map_cursor_semantic_context() -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _editor_map_cursor_semantic_context__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._editor_map_cursor_semantic_context", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._editor_map_cursor_semantic_context", [self])
+	var result = _editor_map_cursor_semantic_context__gd()
+	HumanEngine.check_writing(&"MapEditorShell._editor_map_cursor_semantic_context", before, [self], result)
+	return result
+
+func _editor_map_cursor_semantic_context__gd() -> String:
 	if _session == null or not _tile_in_bounds(_selected_tile):
 		return ""
 	var terrain_id := _terrain_at(_selected_tile)
@@ -732,8 +725,17 @@ func _editor_map_cursor_semantic_context() -> String:
 	]
 	return _bounded_editor_map_semantic_text(text, EDITOR_MAP_CURSOR_SEMANTIC_MAX_CHARS)
 
-
 func _editor_map_action_result_semantic_text() -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _editor_map_action_result_semantic_text__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._editor_map_action_result_semantic_text", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._editor_map_action_result_semantic_text", [self])
+	var result = _editor_map_action_result_semantic_text__gd()
+	HumanEngine.check_writing(&"MapEditorShell._editor_map_action_result_semantic_text", before, [self], result)
+	return result
+
+func _editor_map_action_result_semantic_text__gd() -> String:
 	var result_text := _bounded_editor_map_semantic_text(_last_message, 240)
 	if result_text == "":
 		result_text = "%s applied." % _tool_label(_tool)
@@ -741,7 +743,6 @@ func _editor_map_action_result_semantic_text() -> String:
 		"Map action result at %d,%d: %s" % [_selected_tile.x, _selected_tile.y, result_text],
 		EDITOR_MAP_CURSOR_SEMANTIC_MAX_CHARS
 	)
-
 
 func _publish_editor_map_cursor_semantic_result(
 	text: String,
@@ -774,7 +775,6 @@ func _publish_editor_map_cursor_semantic_result(
 	}
 	_editor_map_cursor_semantic_timer.start(EDITOR_MAP_CURSOR_RESULT_VISIBLE_SECONDS)
 
-
 func _on_editor_map_cursor_semantic_timeout() -> void:
 	var pending := _editor_map_cursor_semantic_pending
 	if pending.is_empty() or int(pending.get("generation", -1)) != _editor_map_cursor_semantic_generation:
@@ -787,7 +787,6 @@ func _on_editor_map_cursor_semantic_timeout() -> void:
 			_clear_editor_map_cursor_semantic_result(pending)
 		_:
 			_cancel_editor_map_cursor_semantic()
-
 
 func _publish_pending_editor_map_cursor_context(pending: Dictionary) -> void:
 	var selected_value: Variant = pending.get("selected_tile", {})
@@ -811,7 +810,6 @@ func _publish_pending_editor_map_cursor_context(pending: Dictionary) -> void:
 		return
 	_editor_map_cursor_live_label.text = context.left(EDITOR_MAP_CURSOR_SEMANTIC_MAX_CHARS)
 
-
 func _clear_editor_map_cursor_semantic_result(pending: Dictionary) -> void:
 	if int(pending.get("generation", -1)) != _editor_map_cursor_semantic_generation:
 		return
@@ -833,7 +831,6 @@ func _clear_editor_map_cursor_semantic_result(pending: Dictionary) -> void:
 	if _editor_map_cursor_live_label.text == String(pending.get("label_text", "")):
 		_editor_map_cursor_live_label.text = ""
 
-
 func _cancel_editor_map_cursor_semantic() -> void:
 	_editor_map_cursor_semantic_generation += 1
 	_editor_map_cursor_semantic_pending.clear()
@@ -842,17 +839,34 @@ func _cancel_editor_map_cursor_semantic() -> void:
 	if _editor_map_cursor_live_label != null and is_instance_valid(_editor_map_cursor_live_label):
 		_editor_map_cursor_live_label.text = ""
 
-
 func _bounded_editor_map_semantic_text(value: String, maximum_characters: int) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _bounded_editor_map_semantic_text__gd(value, maximum_characters)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._bounded_editor_map_semantic_text", [self, value, maximum_characters])
+	var before := HumanEngine.before_writing(&"MapEditorShell._bounded_editor_map_semantic_text", [self, value, maximum_characters])
+	var result = _bounded_editor_map_semantic_text__gd(value, maximum_characters)
+	HumanEngine.check_writing(&"MapEditorShell._bounded_editor_map_semantic_text", before, [self, value, maximum_characters], result)
+	return result
+
+func _bounded_editor_map_semantic_text__gd(value: String, maximum_characters: int) -> String:
 	var normalized := " ".join(value.replace("\r", "\n").split("\n", false)).strip_edges()
 	while normalized.contains("  "):
 		normalized = normalized.replace("  ", " ")
 	return normalized.left(maximum_characters)
 
-
 func _editor_tile_payload(tile: Vector2i) -> Dictionary:
-	return {"x": tile.x, "y": tile.y}
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _editor_tile_payload__gd(tile)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._editor_tile_payload", [self, tile])
+	var before := HumanEngine.before_writing(&"MapEditorShell._editor_tile_payload", [self, tile])
+	var result = _editor_tile_payload__gd(tile)
+	HumanEngine.check_writing(&"MapEditorShell._editor_tile_payload", before, [self, tile], result)
+	return result
 
+func _editor_tile_payload__gd(tile: Vector2i) -> Dictionary:
+	return {"x": tile.x, "y": tile.y}
 
 func _restore_editor_command_focus() -> void:
 	var target := _active_tool_focus_control()
@@ -863,7 +877,6 @@ func _restore_editor_command_focus() -> void:
 	if FrontierVisualKit.is_keyboard_focusable(target):
 		target.grab_focus()
 		_reveal_editor_focus(target)
-
 
 func _active_tool_focus_control() -> Control:
 	match _tool:
@@ -891,7 +904,6 @@ func _active_tool_focus_control() -> Control:
 			return _retheme_object_tool_button
 		_:
 			return _inspect_tool_button
-
 
 func _editor_focus_surfaces() -> Array:
 	return [
@@ -925,7 +937,6 @@ func _editor_focus_surfaces() -> Array:
 		_property_apply_button,
 	]
 
-
 func _connect_editor_focus_visibility() -> void:
 	for control_value in _editor_focus_surfaces():
 		var control := control_value as Control
@@ -934,7 +945,6 @@ func _connect_editor_focus_visibility() -> void:
 		var callback := _on_editor_focus_entered.bind(control)
 		if not control.focus_entered.is_connected(callback):
 			control.focus_entered.connect(callback)
-
 
 func _configure_editor_keyboard_focus() -> void:
 	if (
@@ -956,7 +966,6 @@ func _configure_editor_keyboard_focus() -> void:
 	)
 	_reveal_editor_focus(focused)
 
-
 func _on_editor_focus_entered(control: Control) -> void:
 	_cancel_editor_map_cursor_semantic()
 	if (
@@ -967,7 +976,6 @@ func _on_editor_focus_entered(control: Control) -> void:
 	if control != _map_view and FrontierVisualKit.is_keyboard_focusable(control):
 		_last_editor_command_focus = control
 	call_deferred("_reveal_editor_focus", control)
-
 
 func _reveal_editor_focus(control: Control) -> void:
 	if (
@@ -999,7 +1007,6 @@ func _configure_dirty_transition_confirmation() -> void:
 	if root_window != null and not root_window.window_input.is_connected(_on_root_window_input):
 		root_window.window_input.connect(_on_root_window_input)
 
-
 func _on_root_window_input(event: InputEvent) -> void:
 	if (
 		_forwarding_dirty_transition_root_physical_input
@@ -1025,7 +1032,6 @@ func _on_root_window_input(event: InputEvent) -> void:
 		pending,
 		detached_event
 	)
-
 
 func _forward_root_physical_input_to_dirty_transition(
 	dialog: ConfirmationDialog,
@@ -1210,6 +1216,16 @@ func _sync_property_value_controls(detail: Dictionary) -> void:
 	_property_collected_check.tooltip_text = handoff_tooltip
 
 func _property_summary_text(detail: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _property_summary_text__gd(detail)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._property_summary_text", [self, detail])
+	var before := HumanEngine.before_writing(&"MapEditorShell._property_summary_text", [self, detail])
+	var result = _property_summary_text__gd(detail)
+	HumanEngine.check_writing(&"MapEditorShell._property_summary_text", before, [self, detail], result)
+	return result
+
+func _property_summary_text__gd(detail: Dictionary) -> String:
 	if detail.is_empty():
 		return "Select a tile with a town, site, artifact, or encounter."
 	var taxonomy = detail.get("taxonomy", {})
@@ -1227,6 +1243,16 @@ func _property_summary_text(detail: Dictionary) -> String:
 			return "No mutable object property is available for this selection."
 
 func _selected_property_handoff_payload(detail: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _selected_property_handoff_payload__gd(detail)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._selected_property_handoff_payload", [self, detail])
+	var before := HumanEngine.before_writing(&"MapEditorShell._selected_property_handoff_payload", [self, detail])
+	var result = _selected_property_handoff_payload__gd(detail)
+	HumanEngine.check_writing(&"MapEditorShell._selected_property_handoff_payload", before, [self, detail], result)
+	return result
+
+func _selected_property_handoff_payload__gd(detail: Dictionary) -> Dictionary:
 	if detail.is_empty():
 		var empty_text := "Selection handoff: choose a placed town, site, artifact, or encounter to edit working-copy properties."
 		return {
@@ -1306,6 +1332,16 @@ func _selected_property_handoff_payload(detail: Dictionary) -> Dictionary:
 	}
 
 func _property_object_options_at(tile: Vector2i) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _property_object_options_at__gd(tile)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._property_object_options_at", [self, tile])
+	var before := HumanEngine.before_writing(&"MapEditorShell._property_object_options_at", [self, tile])
+	var result = _property_object_options_at__gd(tile)
+	HumanEngine.check_writing(&"MapEditorShell._property_object_options_at", before, [self, tile], result)
+	return result
+
+func _property_object_options_at__gd(tile: Vector2i) -> Array:
 	var options := []
 	if _session == null or not _tile_in_bounds(tile):
 		return options
@@ -1318,6 +1354,16 @@ func _property_object_options_at(tile: Vector2i) -> Array:
 	return options
 
 func _selected_property_object_detail() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _selected_property_object_detail__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._selected_property_object_detail", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._selected_property_object_detail", [self])
+	var result = _selected_property_object_detail__gd()
+	HumanEngine.check_writing(&"MapEditorShell._selected_property_object_detail", before, [self], result)
+	return result
+
+func _selected_property_object_detail__gd() -> Dictionary:
 	if _selected_property_object_key == "":
 		return {}
 	for detail in _property_object_options_at(_selected_tile):
@@ -1326,6 +1372,16 @@ func _selected_property_object_detail() -> Dictionary:
 	return {}
 
 func _object_detail_by_key(property_key: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _object_detail_by_key__gd(property_key)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._object_detail_by_key", [self, property_key])
+	var before := HumanEngine.before_writing(&"MapEditorShell._object_detail_by_key", [self, property_key])
+	var result = _object_detail_by_key__gd(property_key)
+	HumanEngine.check_writing(&"MapEditorShell._object_detail_by_key", before, [self, property_key], result)
+	return result
+
+func _object_detail_by_key__gd(property_key: String) -> Dictionary:
 	if _session == null or property_key == "":
 		return {}
 	for family in [OBJECT_FAMILY_TOWN, OBJECT_FAMILY_RESOURCE, OBJECT_FAMILY_ARTIFACT, OBJECT_FAMILY_ENCOUNTER]:
@@ -1343,6 +1399,16 @@ func _object_detail_by_key(property_key: String) -> Dictionary:
 	return {}
 
 func _selected_property_object_payload() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _selected_property_object_payload__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._selected_property_object_payload", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._selected_property_object_payload", [self])
+	var result = _selected_property_object_payload__gd()
+	HumanEngine.check_writing(&"MapEditorShell._selected_property_object_payload", before, [self], result)
+	return result
+
+func _selected_property_object_payload__gd() -> Dictionary:
 	var detail := _selected_property_object_detail()
 	return _property_object_payload_from_detail(detail)
 
@@ -1378,12 +1444,42 @@ func _property_object_payload_from_detail(detail: Dictionary) -> Dictionary:
 	}
 
 func _pending_move_object_payload() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _pending_move_object_payload__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._pending_move_object_payload", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._pending_move_object_payload", [self])
+	var result = _pending_move_object_payload__gd()
+	HumanEngine.check_writing(&"MapEditorShell._pending_move_object_payload", before, [self], result)
+	return result
+
+func _pending_move_object_payload__gd() -> Dictionary:
 	return _property_object_payload_from_detail(_object_detail_by_key(_pending_move_object_key))
 
 func _pending_duplicate_object_payload() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _pending_duplicate_object_payload__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._pending_duplicate_object_payload", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._pending_duplicate_object_payload", [self])
+	var result = _pending_duplicate_object_payload__gd()
+	HumanEngine.check_writing(&"MapEditorShell._pending_duplicate_object_payload", before, [self], result)
+	return result
+
+func _pending_duplicate_object_payload__gd() -> Dictionary:
 	return _property_object_payload_from_detail(_object_detail_by_key(_pending_duplicate_object_key))
 
 func _select_property_object_at_tile(family: String) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _select_property_object_at_tile__gd(family)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._select_property_object_at_tile", [self, family])
+	var before := HumanEngine.before_writing(&"MapEditorShell._select_property_object_at_tile", [self, family])
+	var result = _select_property_object_at_tile__gd(family)
+	HumanEngine.check_writing(&"MapEditorShell._select_property_object_at_tile", before, [self, family], result)
+	return result
+
+func _select_property_object_at_tile__gd(family: String) -> bool:
 	for detail in _property_object_options_at(_selected_tile):
 		if not (detail is Dictionary):
 			continue
@@ -1395,6 +1491,16 @@ func _select_property_object_at_tile(family: String) -> bool:
 	return false
 
 func _apply_object_property_value(property_name: String, value: Variant) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _apply_object_property_value__gd(property_name, value)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._apply_object_property_value", [self, property_name, value])
+	var before := HumanEngine.before_writing(&"MapEditorShell._apply_object_property_value", [self, property_name, value])
+	var result = _apply_object_property_value__gd(property_name, value)
+	HumanEngine.check_writing(&"MapEditorShell._apply_object_property_value", before, [self, property_name, value], result)
+	return result
+
+func _apply_object_property_value__gd(property_name: String, value: Variant) -> Dictionary:
 	var detail := _selected_property_object_detail()
 	if detail.is_empty():
 		return {"ok": false, "changed": false, "message": "No selected object property target."}
@@ -1417,6 +1523,16 @@ func _apply_object_property_value(property_name: String, value: Variant) -> Dict
 			return {"ok": false, "changed": false, "message": "Unsupported editable property %s." % property_name}
 
 func _property_object_label(detail: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _property_object_label__gd(detail)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._property_object_label", [self, detail])
+	var before := HumanEngine.before_writing(&"MapEditorShell._property_object_label", [self, detail])
+	var result = _property_object_label__gd(detail)
+	HumanEngine.check_writing(&"MapEditorShell._property_object_label", before, [self, detail], result)
+	return result
+
+func _property_object_label__gd(detail: Dictionary) -> String:
 	var kind := String(detail.get("kind", ""))
 	var name := String(detail.get("name", detail.get("content_id", "")))
 	var placement_id := String(detail.get("placement_id", ""))
@@ -1455,12 +1571,17 @@ func _selected_picker_metadata(picker: OptionButton, fallback: String = "") -> S
 		return fallback
 	return String(picker.get_item_metadata(selected_index))
 
-func _legacy_authored_scenario_items_for_dev_validation() -> Array:
-	var raw := ContentService.load_json(ContentService.SCENARIOS_PATH)
-	var items = raw.get("items", [])
-	return items if items is Array else []
-
 func _terrain_items() -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _terrain_items__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._terrain_items", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._terrain_items", [self])
+	var result = _terrain_items__gd()
+	HumanEngine.check_writing(&"MapEditorShell._terrain_items", before, [self], result)
+	return result
+
+func _terrain_items__gd() -> Array:
 	var grammar := ContentService.get_terrain_grammar()
 	var class_index := _terrain_class_index(grammar)
 	var curated_options = grammar.get(TERRAIN_OPTION_SOURCE, [])
@@ -1515,6 +1636,16 @@ func _terrain_class_index(grammar: Dictionary) -> Dictionary:
 	return index
 
 func _terrain_label_for_id(terrain_id: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _terrain_label_for_id__gd(terrain_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._terrain_label_for_id", [self, terrain_id])
+	var before := HumanEngine.before_writing(&"MapEditorShell._terrain_label_for_id", [self, terrain_id])
+	var result = _terrain_label_for_id__gd(terrain_id)
+	HumanEngine.check_writing(&"MapEditorShell._terrain_label_for_id", before, [self, terrain_id], result)
+	return result
+
+func _terrain_label_for_id__gd(terrain_id: String) -> String:
 	for entry in _terrain_entries:
 		if not (entry is Dictionary):
 			continue
@@ -1523,6 +1654,16 @@ func _terrain_label_for_id(terrain_id: String) -> String:
 	return terrain_id.capitalize()
 
 func _terrain_option_payload() -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _terrain_option_payload__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._terrain_option_payload", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._terrain_option_payload", [self])
+	var result = _terrain_option_payload__gd()
+	HumanEngine.check_writing(&"MapEditorShell._terrain_option_payload", before, [self], result)
+	return result
+
+func _terrain_option_payload__gd() -> Array:
 	var options := []
 	for entry in _terrain_entries:
 		if not (entry is Dictionary):
@@ -1538,6 +1679,16 @@ func _terrain_option_payload() -> Array:
 	return options
 
 func _terrain_option_ids() -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _terrain_option_ids__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._terrain_option_ids", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._terrain_option_ids", [self])
+	var result = _terrain_option_ids__gd()
+	HumanEngine.check_writing(&"MapEditorShell._terrain_option_ids", before, [self], result)
+	return result
+
+func _terrain_option_ids__gd() -> Array:
 	var ids := []
 	for entry in _terrain_entries:
 		if entry is Dictionary:
@@ -1545,6 +1696,16 @@ func _terrain_option_ids() -> Array:
 	return ids
 
 func _authored_terrain_ids() -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _authored_terrain_ids__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._authored_terrain_ids", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._authored_terrain_ids", [self])
+	var result = _authored_terrain_ids__gd()
+	HumanEngine.check_writing(&"MapEditorShell._authored_terrain_ids", before, [self], result)
+	return result
+
+func _authored_terrain_ids__gd() -> Array:
 	var grammar := ContentService.get_terrain_grammar()
 	var classes = grammar.get("terrain_classes", [])
 	var ids := []
@@ -1559,6 +1720,16 @@ func _authored_terrain_ids() -> Array:
 	return ids
 
 func _hidden_terrain_ids() -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _hidden_terrain_ids__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._hidden_terrain_ids", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._hidden_terrain_ids", [self])
+	var result = _hidden_terrain_ids__gd()
+	HumanEngine.check_writing(&"MapEditorShell._hidden_terrain_ids", before, [self], result)
+	return result
+
+func _hidden_terrain_ids__gd() -> Array:
 	var option_ids := _terrain_option_ids()
 	var hidden := []
 	for terrain_id in _authored_terrain_ids():
@@ -1567,6 +1738,16 @@ func _hidden_terrain_ids() -> Array:
 	return hidden
 
 func _object_content_items(family: String) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _object_content_items__gd(family)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._object_content_items", [self, family])
+	var before := HumanEngine.before_writing(&"MapEditorShell._object_content_items", [self, family])
+	var result = _object_content_items__gd(family)
+	HumanEngine.check_writing(&"MapEditorShell._object_content_items", before, [self, family], result)
+	return result
+
+func _object_content_items__gd(family: String) -> Array:
 	var path := _object_content_path(family)
 	if path == "":
 		return []
@@ -1604,6 +1785,16 @@ func _object_content_path(family: String) -> String:
 			return ""
 
 func _object_content_label(entry: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _object_content_label__gd(entry)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._object_content_label", [self, entry])
+	var before := HumanEngine.before_writing(&"MapEditorShell._object_content_label", [self, entry])
+	var result = _object_content_label__gd(entry)
+	HumanEngine.check_writing(&"MapEditorShell._object_content_label", before, [self, entry], result)
+	return result
+
+func _object_content_label__gd(entry: Dictionary) -> String:
 	var content_id := String(entry.get("id", ""))
 	var label := String(entry.get("name", content_id))
 	var family := String(entry.get("family", ""))
@@ -1612,6 +1803,16 @@ func _object_content_label(entry: Dictionary) -> String:
 	return label
 
 func _object_content_taxonomy_payload(family: String, content_id: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _object_content_taxonomy_payload__gd(family, content_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._object_content_taxonomy_payload", [self, family, content_id])
+	var before := HumanEngine.before_writing(&"MapEditorShell._object_content_taxonomy_payload", [self, family, content_id])
+	var result = _object_content_taxonomy_payload__gd(family, content_id)
+	HumanEngine.check_writing(&"MapEditorShell._object_content_taxonomy_payload", before, [self, family, content_id], result)
+	return result
+
+func _object_content_taxonomy_payload__gd(family: String, content_id: String) -> Dictionary:
 	if content_id == "":
 		return {}
 	match family:
@@ -1921,6 +2122,16 @@ func _recruit_source_summary_lines_for_editor(payload: Dictionary, limit: int) -
 	return lines
 
 func _object_palette_guidance_text(payload: Dictionary, guidance: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _object_palette_guidance_text__gd(payload, guidance)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._object_palette_guidance_text", [self, payload, guidance])
+	var before := HumanEngine.before_writing(&"MapEditorShell._object_palette_guidance_text", [self, payload, guidance])
+	var result = _object_palette_guidance_text__gd(payload, guidance)
+	HumanEngine.check_writing(&"MapEditorShell._object_palette_guidance_text", before, [self, payload, guidance], result)
+	return result
+
+func _object_palette_guidance_text__gd(payload: Dictionary, guidance: Dictionary) -> String:
 	if payload.is_empty():
 		return ""
 	var lines := []
@@ -1963,11 +2174,31 @@ func _object_palette_guidance_text(payload: Dictionary, guidance: Dictionary) ->
 	return "\n".join(lines)
 
 func _placement_preview_tile() -> Vector2i:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _placement_preview_tile__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._placement_preview_tile", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._placement_preview_tile", [self])
+	var result = _placement_preview_tile__gd()
+	HumanEngine.check_writing(&"MapEditorShell._placement_preview_tile", before, [self], result)
+	return result
+
+func _placement_preview_tile__gd() -> Vector2i:
 	if _tool == TOOL_PLACE_OBJECT and _tile_in_bounds(_hovered_tile):
 		return _hovered_tile
 	return _selected_tile
 
 func _selected_object_placement_preview_payload(tile: Vector2i) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _selected_object_placement_preview_payload__gd(tile)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._selected_object_placement_preview_payload", [self, tile])
+	var before := HumanEngine.before_writing(&"MapEditorShell._selected_object_placement_preview_payload", [self, tile])
+	var result = _selected_object_placement_preview_payload__gd(tile)
+	HumanEngine.check_writing(&"MapEditorShell._selected_object_placement_preview_payload", before, [self, tile], result)
+	return result
+
+func _selected_object_placement_preview_payload__gd(tile: Vector2i) -> Dictionary:
 	# Several status surfaces show the same hover preview; build it once per
 	# edit revision, tile and palette choice. Callers must not mutate it.
 	var memo_key := "placement_preview:%d,%d:%s:%s" % [tile.x, tile.y, _selected_object_family, _selected_object_content_id]
@@ -2027,6 +2258,16 @@ func _build_selected_object_placement_preview_payload(tile: Vector2i) -> Diction
 	}
 
 func _editor_object_preview_check_payload() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _editor_object_preview_check_payload__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._editor_object_preview_check_payload", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._editor_object_preview_check_payload", [self])
+	var result = _editor_object_preview_check_payload__gd()
+	HumanEngine.check_writing(&"MapEditorShell._editor_object_preview_check_payload", before, [self], result)
+	return result
+
+func _editor_object_preview_check_payload__gd() -> Dictionary:
 	if _session == null:
 		return {}
 	var preview := _selected_object_placement_preview_payload(_placement_preview_tile())
@@ -2108,6 +2349,16 @@ func _editor_object_preview_check_payload() -> Dictionary:
 	}
 
 func _editor_acceptance_cue_payload() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _editor_acceptance_cue_payload__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._editor_acceptance_cue_payload", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._editor_acceptance_cue_payload", [self])
+	var result = _editor_acceptance_cue_payload__gd()
+	HumanEngine.check_writing(&"MapEditorShell._editor_acceptance_cue_payload", before, [self], result)
+	return result
+
+func _editor_acceptance_cue_payload__gd() -> Dictionary:
 	if _session == null:
 		return {}
 	var recap: Dictionary = _last_object_authoring_recap if _last_object_authoring_recap is Dictionary else {}
@@ -2171,6 +2422,16 @@ func _editor_acceptance_cue_payload() -> Dictionary:
 	return {}
 
 func _editor_placement_action_cue_payload() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _editor_placement_action_cue_payload__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._editor_placement_action_cue_payload", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._editor_placement_action_cue_payload", [self])
+	var result = _editor_placement_action_cue_payload__gd()
+	HumanEngine.check_writing(&"MapEditorShell._editor_placement_action_cue_payload", before, [self], result)
+	return result
+
+func _editor_placement_action_cue_payload__gd() -> Dictionary:
 	if _session == null:
 		return {}
 	var preview := _selected_object_placement_preview_payload(_placement_preview_tile())
@@ -2232,6 +2493,16 @@ func _editor_placement_action_cue_payload() -> Dictionary:
 	}
 
 func _editor_terrain_paint_check_payload(tool: String = "") -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _editor_terrain_paint_check_payload__gd(tool)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._editor_terrain_paint_check_payload", [self, tool])
+	var before := HumanEngine.before_writing(&"MapEditorShell._editor_terrain_paint_check_payload", [self, tool])
+	var result = _editor_terrain_paint_check_payload__gd(tool)
+	HumanEngine.check_writing(&"MapEditorShell._editor_terrain_paint_check_payload", before, [self, tool], result)
+	return result
+
+func _editor_terrain_paint_check_payload__gd(tool: String = "") -> Dictionary:
 	var tool_id := _tool if tool == "" else tool
 	if not (tool_id in [TOOL_TERRAIN, TOOL_TERRAIN_LINE, TOOL_TERRAIN_RECTANGLE]):
 		return {}
@@ -2332,6 +2603,16 @@ func _editor_terrain_paint_check_payload(tool: String = "") -> Dictionary:
 	}
 
 func _editor_road_check_payload(tool: String = "") -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _editor_road_check_payload__gd(tool)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._editor_road_check_payload", [self, tool])
+	var before := HumanEngine.before_writing(&"MapEditorShell._editor_road_check_payload", [self, tool])
+	var result = _editor_road_check_payload__gd(tool)
+	HumanEngine.check_writing(&"MapEditorShell._editor_road_check_payload", before, [self, tool], result)
+	return result
+
+func _editor_road_check_payload__gd(tool: String = "") -> Dictionary:
 	var tool_id := _tool if tool == "" else tool
 	if not (tool_id in [TOOL_ROAD, TOOL_ROAD_PATH]):
 		return {}
@@ -2445,7 +2726,17 @@ func _terrain_changed_tile_count(tiles: Array, terrain_id: String) -> int:
 			changed_count += 1
 	return changed_count
 
-func _set_object_authoring_recap(
+func _set_object_authoring_recap(action: String, changed: bool, before_detail: Dictionary, after_detail: Dictionary, from_tile: Vector2i, to_tile: Vector2i, preview: Dictionary = {}, property_name: String = "", previous_value: Variant = null, new_value: Variant = null) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _set_object_authoring_recap__gd(action, changed, before_detail, after_detail, from_tile, to_tile, preview, property_name, previous_value, new_value)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._set_object_authoring_recap", [self, action, changed, before_detail, after_detail, from_tile, to_tile, preview, property_name, previous_value, new_value])
+	var before := HumanEngine.before_writing(&"MapEditorShell._set_object_authoring_recap", [self, action, changed, before_detail, after_detail, from_tile, to_tile, preview, property_name, previous_value, new_value])
+	var result = _set_object_authoring_recap__gd(action, changed, before_detail, after_detail, from_tile, to_tile, preview, property_name, previous_value, new_value)
+	HumanEngine.check_writing(&"MapEditorShell._set_object_authoring_recap", before, [self, action, changed, before_detail, after_detail, from_tile, to_tile, preview, property_name, previous_value, new_value], result)
+	return result
+
+func _set_object_authoring_recap__gd(
 	action: String,
 	changed: bool,
 	before_detail: Dictionary,
@@ -2709,6 +3000,16 @@ func _editor_variant_text(value: Variant) -> String:
 	return String(value)
 
 func _placement_availability_for_selected_object(tile: Vector2i) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _placement_availability_for_selected_object__gd(tile)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._placement_availability_for_selected_object", [self, tile])
+	var before := HumanEngine.before_writing(&"MapEditorShell._placement_availability_for_selected_object", [self, tile])
+	var result = _placement_availability_for_selected_object__gd(tile)
+	HumanEngine.check_writing(&"MapEditorShell._placement_availability_for_selected_object", before, [self, tile], result)
+	return result
+
+func _placement_availability_for_selected_object__gd(tile: Vector2i) -> Dictionary:
 	if not _tile_in_bounds(tile):
 		return {"can_place": false, "blocked_reason": "Target tile is outside the map."}
 	if _selected_object_family == "" or _selected_object_content_id == "":
@@ -2918,6 +3219,16 @@ func _placement_authoring_consequence(family: String, content_id: String, payloa
 	return "creates a %s placement for %s." % [role.to_lower(), content_id]
 
 func _placement_guidance_payload(payload: Dictionary, tile: Vector2i) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _placement_guidance_payload__gd(payload, tile)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._placement_guidance_payload", [self, payload, tile])
+	var before := HumanEngine.before_writing(&"MapEditorShell._placement_guidance_payload", [self, payload, tile])
+	var result = _placement_guidance_payload__gd(payload, tile)
+	HumanEngine.check_writing(&"MapEditorShell._placement_guidance_payload", before, [self, payload, tile], result)
+	return result
+
+func _placement_guidance_payload__gd(payload: Dictionary, tile: Vector2i) -> Dictionary:
 	if payload.is_empty():
 		return {}
 	var flags := _placement_role_flags(payload)
@@ -3178,6 +3489,16 @@ func _editor_validation_memo_lookup(key: String) -> Variant:
 	return _editor_validation_memo.get(key, null)
 
 func _scenario_authoring_validation_payload() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _scenario_authoring_validation_payload__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._scenario_authoring_validation_payload", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._scenario_authoring_validation_payload", [self])
+	var result = _scenario_authoring_validation_payload__gd()
+	HumanEngine.check_writing(&"MapEditorShell._scenario_authoring_validation_payload", before, [self], result)
+	return result
+
+func _scenario_authoring_validation_payload__gd() -> Dictionary:
 	# Returns a memoised payload shared by every caller in the same edit revision;
 	# callers must not mutate it.
 	if _session == null:
@@ -3663,6 +3984,16 @@ func _string_array_for_editor(value: Variant) -> Array:
 	return strings
 
 func _humanize_editor_id(value: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _humanize_editor_id__gd(value)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._humanize_editor_id", [self, value])
+	var before := HumanEngine.before_writing(&"MapEditorShell._humanize_editor_id", [self, value])
+	var result = _humanize_editor_id__gd(value)
+	HumanEngine.check_writing(&"MapEditorShell._humanize_editor_id", before, [self, value], result)
+	return result
+
+func _humanize_editor_id__gd(value: String) -> String:
 	var normalized := value.strip_edges().replace("_", " ").replace("-", " ")
 	if normalized == "":
 		return ""
@@ -3683,41 +4014,6 @@ func _resource_delta_text(resources: Dictionary) -> String:
 		parts.append("%+d %s" % [amount, _humanize_editor_id(String(key))])
 	return ", ".join(parts)
 
-func _load_legacy_authored_scenario_working_copy_for_dev_validation(scenario_id: String) -> bool:
-	var session = ScenarioFactoryScript.create_session(
-		scenario_id,
-		"normal",
-		SessionState.LAUNCH_MODE_SKIRMISH
-	)
-	if session == null or session.scenario_id == "":
-		_last_message = "Unable to load legacy authored scenario %s into the editor." % scenario_id
-		_refresh_state()
-		return false
-	var level_block := _editor_level_support_block_message(session, scenario_id)
-	if level_block != "":
-		_last_message = level_block
-		_refresh_state()
-		return false
-	_cancel_editor_map_cursor_semantic()
-	_session = session
-	_authored_baseline_cache = null
-	_authored_baseline_cache_id = ""
-	OverworldRules.normalize_overworld_state(_session)
-	_make_all_tiles_visible(_session)
-	_selected_map_package_id = ""
-	_selected_tile = OverworldRules.hero_position(_session)
-	_selected_property_object_key = ""
-	_pending_move_object_key = ""
-	_pending_duplicate_object_key = ""
-	_pending_terrain_line_start = Vector2i(-1, -1)
-	_pending_road_path_start = Vector2i(-1, -1)
-	_terrain_paint_order = 0
-	_dirty = false
-	_restored_from_play_copy = false
-	_last_message = "Loaded legacy authored scenario into a mutable editor working copy for dev validation."
-	_refresh_state()
-	return true
-
 func _load_maps_folder_package_working_copy(package_id: String) -> bool:
 	var index_options := {
 		"include_non_launchable_generated_packages": true,
@@ -3731,6 +4027,25 @@ func _load_maps_folder_package_working_copy(package_id: String) -> bool:
 	return _load_maps_folder_package_entry_working_copy(entry)
 
 func _load_maps_folder_package_entry_working_copy(entry: Dictionary) -> bool:
+	var opened := _open_maps_folder_package_entry(entry)
+	if opened:
+		_cancel_editor_map_cursor_semantic()
+		_select_map_package_picker_by_id(_selected_map_package_id)
+	_refresh_state()
+	return opened
+
+## The package's session becomes the working copy, its copy the baseline.
+func _open_maps_folder_package_entry(entry: Dictionary) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _open_maps_folder_package_entry__gd(entry)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._open_maps_folder_package_entry", [self, entry])
+	var before := HumanEngine.before_writing(&"MapEditorShell._open_maps_folder_package_entry", [self, entry])
+	var result = _open_maps_folder_package_entry__gd(entry)
+	HumanEngine.check_writing(&"MapEditorShell._open_maps_folder_package_entry", before, [self, entry], result)
+	return result
+
+func _open_maps_folder_package_entry__gd(entry: Dictionary) -> bool:
 	var package_id := String(entry.get("package_id", ""))
 	var session = ScenarioSelectRulesScript.load_maps_folder_package_session_from_entry(
 		entry,
@@ -3743,15 +4058,12 @@ func _load_maps_folder_package_entry_working_copy(entry: Dictionary) -> bool:
 	)
 	if session == null or session.scenario_id == "":
 		_last_message = "Unable to load package %s into the editor." % package_id
-		_refresh_state()
 		return false
 	var level_block := _editor_level_support_block_message(session, String(entry.get("display_name", package_id)))
 	if level_block != "":
 		_last_message = level_block
-		_refresh_state()
 		return false
 	SessionState.set_editor_working_copy_session(null)
-	_cancel_editor_map_cursor_semantic()
 	_session = session
 	entry = _session.flags.get("maps_folder_package_entry", entry) if _session.flags.get("maps_folder_package_entry", entry) is Dictionary else entry
 	_session.flags["editor_source_kind"] = "maps_folder_package"
@@ -3764,7 +4076,6 @@ func _load_maps_folder_package_entry_working_copy(entry: Dictionary) -> bool:
 	OverworldRules.normalize_overworld_state(_session)
 	_make_all_tiles_visible(_session)
 	_selected_map_package_id = package_id
-	_select_map_package_picker_by_id(package_id)
 	_selected_tile = OverworldRules.hero_position(_session)
 	_selected_property_object_key = ""
 	_pending_move_object_key = ""
@@ -3776,7 +4087,6 @@ func _load_maps_folder_package_entry_working_copy(entry: Dictionary) -> bool:
 	_dirty = false
 	_restored_from_play_copy = false
 	_last_message = "Loaded editor package into a mutable working copy."
-	_refresh_state()
 	return true
 
 func _editor_level_support_block_message(session, label: String) -> String:
@@ -3795,6 +4105,29 @@ func _duplicate_session(session):
 	return copy
 
 func _resume_working_copy_from_memory(session, baseline_session = null, package_identity: Dictionary = {}) -> bool:
+	if not _resume_working_copy_session(session, baseline_session, package_identity):
+		return false
+	_cancel_editor_map_cursor_semantic()
+	_select_map_package_picker_by_id(_selected_map_package_id)
+	_restore_editor_ui_metadata()
+	_restored_from_play_copy = true
+	_last_message = "Returned from Play Copy with the editor launch snapshot still in memory."
+	_refresh_state()
+	return true
+
+## The play copy's launch snapshot becomes the working copy again, when it
+## and its baseline are the same package's.
+func _resume_working_copy_session(session, baseline_session, package_identity: Dictionary) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _resume_working_copy_session__gd(session, baseline_session, package_identity)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._resume_working_copy_session", [self, session, baseline_session, package_identity])
+	var before := HumanEngine.before_writing(&"MapEditorShell._resume_working_copy_session", [self, session, baseline_session, package_identity])
+	var result = _resume_working_copy_session__gd(session, baseline_session, package_identity)
+	HumanEngine.check_writing(&"MapEditorShell._resume_working_copy_session", before, [self, session, baseline_session, package_identity], result)
+	return result
+
+func _resume_working_copy_session__gd(session, baseline_session, package_identity: Dictionary) -> bool:
 	if session == null or session.scenario_id == "":
 		return false
 	var session_package_identity := SessionState.editor_package_identity(session)
@@ -3814,7 +4147,6 @@ func _resume_working_copy_from_memory(session, baseline_session = null, package_
 	var resumed_baseline = _duplicate_session(baseline_session) if not session_package_identity.is_empty() else null
 	if resumed_session == null or (not session_package_identity.is_empty() and resumed_baseline == null):
 		return false
-	_cancel_editor_map_cursor_semantic()
 	_session = resumed_session
 	_authored_baseline_cache = null
 	_authored_baseline_cache_id = ""
@@ -3825,11 +4157,6 @@ func _resume_working_copy_from_memory(session, baseline_session = null, package_
 		OverworldRules.normalize_overworld_state(_session)
 		_make_all_tiles_visible(_session)
 	_selected_map_package_id = String(_session.flags.get("editor_source_package_id", ""))
-	_select_map_package_picker_by_id(_selected_map_package_id)
-	_restore_editor_ui_metadata()
-	_restored_from_play_copy = true
-	_last_message = "Returned from Play Copy with the editor launch snapshot still in memory."
-	_refresh_state()
 	return true
 
 func _restore_editor_ui_metadata() -> void:
@@ -3947,7 +4274,7 @@ func _sync_play_handoff_surface() -> void:
 func _sync_save_copy_surface() -> void:
 	if _save_copy_button == null:
 		return
-	var contract := _authored_scenario_export_contract_payload(false)
+	var contract := _save_copy_readiness_payload()
 	var package_backed := _session != null and String(_session.flags.get("editor_source_kind", "")) == "maps_folder_package"
 	_save_copy_button.disabled = not package_backed or not bool(contract.get("ready", false))
 	_save_copy_button.text = "Save Copy"
@@ -3972,9 +4299,6 @@ func _sync_map_package_load_surface() -> void:
 	var focus_tooltip := String(_editor_selected_validation_focus_payload().get("tooltip", "")).strip_edges()
 	if focus_tooltip != "":
 		tooltip_lines.append(focus_tooltip)
-	var export_tooltip := String(_editor_export_intent_payload().get("tooltip", "")).strip_edges()
-	if export_tooltip != "":
-		tooltip_lines.append(export_tooltip)
 	_map_package_picker.tooltip_text = "\n".join(tooltip_lines)
 	if _load_map_button != null:
 		_load_map_button.disabled = _selected_map_package_id == ""
@@ -4046,10 +4370,30 @@ func _sync_preview_tooltip() -> void:
 	_map_view.tooltip_text = "\n".join(tooltip_sections)
 
 func _refresh_labels() -> void:
+	var texts := _editor_label_texts()
+	_header_label.text = String(texts.header)
+	_header_label.tooltip_text = _header_label.text
 	if _session == null:
-		_header_label.text = "Map Editor"
-		_header_label.tooltip_text = _header_label.text
-		_set_compact_label(_tile_info_label, "No map package loaded.", 4)
+		_set_compact_label(_tile_info_label, String(texts.tile_info), int(texts.tile_info_lines))
+		_set_compact_label(_status_label, String(texts.status), int(texts.status_lines))
+		return
+	_set_compact_label(_status_label, String(texts.status), int(texts.status_lines))
+	_set_compact_label(_tile_info_label, String(texts.tile_info), int(texts.tile_info_lines))
+
+## The header's, the status's and the tile inspection's texts, with the lines
+## each label shows.
+func _editor_label_texts() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _editor_label_texts__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._editor_label_texts", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._editor_label_texts", [self])
+	var result = _editor_label_texts__gd()
+	HumanEngine.check_writing(&"MapEditorShell._editor_label_texts", before, [self], result)
+	return result
+
+func _editor_label_texts__gd() -> Dictionary:
+	if _session == null:
 		var empty_lines := []
 		var load_handoff := String(_editor_map_load_handoff_payload().get("text", "")).strip_edges()
 		if load_handoff != "":
@@ -4063,11 +4407,8 @@ func _refresh_labels() -> void:
 			empty_lines.append("Invalid map package pairs were skipped; check maps/ for matching .amap and .ascenario files.")
 		if _last_message != "":
 			empty_lines.append(_last_message)
-		_set_compact_label(_status_label, "\n".join(empty_lines), 3)
-		return
+		return {"header": "Map Editor", "tile_info": "No map package loaded.", "tile_info_lines": 4, "status": "\n".join(empty_lines), "status_lines": 3}
 	var map_size := OverworldRules.derive_map_size(_session)
-	_header_label.text = "Map Editor | %s" % _current_scenario_display_name()
-	_header_label.tooltip_text = _header_label.text
 	var state_line := "Working copy | %dx%d | Tool %s | Terrain %s | Roads %d" % [
 		map_size.x,
 		map_size.y,
@@ -4126,9 +4467,6 @@ func _refresh_labels() -> void:
 	var scenario_check_text := String(_editor_scenario_validation_check_payload().get("text", "")).strip_edges()
 	if scenario_check_text != "":
 		status_lines.append(scenario_check_text)
-	var export_intent_text := String(_editor_export_intent_payload().get("text", "")).strip_edges()
-	if export_intent_text != "":
-		status_lines.append(export_intent_text)
 	var selected_validation_focus_text := String(_editor_selected_validation_focus_payload().get("text", "")).strip_edges()
 	if selected_validation_focus_text != "":
 		status_lines.append(selected_validation_focus_text)
@@ -4167,8 +4505,13 @@ func _refresh_labels() -> void:
 		status_lines.append(cue_text)
 	if _last_message != "":
 		status_lines.append(_last_message)
-	_set_compact_label(_status_label, "\n".join(status_lines), 4)
-	_set_compact_label(_tile_info_label, _tile_inspection_text(_selected_tile), 12)
+	return {
+		"header": "Map Editor | %s" % _current_scenario_display_name(),
+		"tile_info": _tile_inspection_text(_selected_tile),
+		"tile_info_lines": 12,
+		"status": "\n".join(status_lines),
+		"status_lines": 4,
+	}
 
 func _set_placement_debug_overlay_enabled(enabled: bool) -> void:
 	_placement_debug_overlay_enabled = enabled
@@ -4187,9 +4530,29 @@ func _current_scenario_display_name() -> String:
 	return String(scenario.get("name", _session.scenario_id))
 
 func _selected_map_package_label() -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _selected_map_package_label__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._selected_map_package_label", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._selected_map_package_label", [self])
+	var result = _selected_map_package_label__gd()
+	HumanEngine.check_writing(&"MapEditorShell._selected_map_package_label", before, [self], result)
+	return result
+
+func _selected_map_package_label__gd() -> String:
 	return _map_package_label_for_id(_selected_map_package_id)
 
 func _map_package_label_for_id(package_id: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _map_package_label_for_id__gd(package_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._map_package_label_for_id", [self, package_id])
+	var before := HumanEngine.before_writing(&"MapEditorShell._map_package_label_for_id", [self, package_id])
+	var result = _map_package_label_for_id__gd(package_id)
+	HumanEngine.check_writing(&"MapEditorShell._map_package_label_for_id", before, [self, package_id], result)
+	return result
+
+func _map_package_label_for_id__gd(package_id: String) -> String:
 	if package_id == "":
 		return ""
 	for entry in _map_package_entries:
@@ -4200,6 +4563,16 @@ func _map_package_label_for_id(package_id: String) -> String:
 	return package_id
 
 func _tool_label(tool: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _tool_label__gd(tool)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._tool_label", [self, tool])
+	var before := HumanEngine.before_writing(&"MapEditorShell._tool_label", [self, tool])
+	var result = _tool_label__gd(tool)
+	HumanEngine.check_writing(&"MapEditorShell._tool_label", before, [self, tool], result)
+	return result
+
+func _tool_label__gd(tool: String) -> String:
 	match tool:
 		TOOL_TERRAIN:
 			return "Terrain"
@@ -4228,6 +4601,25 @@ func _tool_label(tool: String) -> String:
 
 func _select_tool(tool: String) -> void:
 	_cancel_editor_map_cursor_semantic()
+	_set_tool(tool)
+	_sync_tool_buttons()
+	_sync_terrain_paint_surface()
+	_sync_object_taxonomy_summary()
+	_sync_preview()
+	_refresh_labels()
+
+## The tool, and the two-click starts the other tools leave.
+func _set_tool(tool: String) -> void:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		_set_tool__gd(tool)
+	elif _human_engine_mode == HumanEngine.NATIVE:
+		HumanEngine.native_writing(&"MapEditorShell._set_tool", [self, tool])
+	else:
+		var before := HumanEngine.before_writing(&"MapEditorShell._set_tool", [self, tool])
+		_set_tool__gd(tool)
+		HumanEngine.check_writing(&"MapEditorShell._set_tool", before, [self, tool], null)
+
+func _set_tool__gd(tool: String) -> void:
 	var valid_tools := [
 		TOOL_INSPECT,
 		TOOL_TERRAIN,
@@ -4253,11 +4645,6 @@ func _select_tool(tool: String) -> void:
 		_pending_terrain_rectangle_corner = Vector2i(-1, -1)
 	if _tool != TOOL_ROAD_PATH:
 		_pending_road_path_start = Vector2i(-1, -1)
-	_sync_tool_buttons()
-	_sync_terrain_paint_surface()
-	_sync_object_taxonomy_summary()
-	_sync_preview()
-	_refresh_labels()
 
 func _sync_tool_buttons() -> void:
 	var buttons := {
@@ -4343,22 +4730,50 @@ func _on_save_copy_pressed() -> void:
 	_save_package_working_copy()
 
 func _save_package_working_copy(target_dir_override: String = "", target_stem_override: String = "") -> Dictionary:
+	var written := _write_package_copy(target_dir_override, target_stem_override)
+	if not bool(written.get("ok", false)):
+		_refresh_state()
+		return written
+	var saved_entry: Dictionary = written.saved_entry
+	if not _load_maps_folder_package_entry_working_copy(saved_entry):
+		return _finish_save_copy_failure("saved_pair_adoption_failed", "The saved package pair could not be adopted as the editor baseline.", written.output_paths, {"index": written.index})
+	var default_dir := String(ScenarioSelectRulesScript.generated_map_package_directory_policy().get("active_dir", ""))
+	if String(written.target_dir) == default_dir:
+		_rebuild_map_package_picker()
+		_select_map_package_picker_by_id(String(saved_entry.get("package_id", "")))
+	var result := _finish_package_copy(written)
+	_refresh_state()
+	return result
+
+## Save Copy's package pair written, reloaded, checked and found in the
+## index; a failure removes what it wrote.
+func _write_package_copy(target_dir_override: String, target_stem_override: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _write_package_copy__gd(target_dir_override, target_stem_override)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._write_package_copy", [self, target_dir_override, target_stem_override])
+	var before := HumanEngine.before_writing(&"MapEditorShell._write_package_copy", [self, target_dir_override, target_stem_override])
+	var result = _write_package_copy__gd(target_dir_override, target_stem_override)
+	HumanEngine.check_writing(&"MapEditorShell._write_package_copy", before, [self, target_dir_override, target_stem_override], result)
+	return result
+
+func _write_package_copy__gd(target_dir_override: String, target_stem_override: String) -> Dictionary:
 	if _session == null or String(_session.flags.get("editor_source_kind", "")) != "maps_folder_package":
-		return _finish_save_copy_failure("package_working_copy_required", "Load a map package working copy before saving a copy.")
-	var contract := _authored_scenario_export_contract_payload(true)
+		return _save_copy_failure("package_working_copy_required", "Load a map package working copy before saving a copy.")
+	var contract := _save_copy_draft_payload()
 	if not bool(contract.get("ready", false)):
-		return _finish_save_copy_failure("draft_validation_failed", "Resolve editor validation blockers before saving a copy.", [], {"blockers": contract.get("blockers", [])})
+		return _save_copy_failure("draft_validation_failed", "Resolve editor validation blockers before saving a copy.", [], {"blockers": contract.get("blockers", [])})
 	if not ClassDB.class_exists("MapPackageService"):
-		return _finish_save_copy_failure("native_service_unavailable", "Native map package persistence is unavailable.")
+		return _save_copy_failure("native_service_unavailable", "Native map package persistence is unavailable.")
 	var service: Variant = ClassDB.instantiate("MapPackageService")
 	if not service.get_capabilities().has("legacy_scenario_record_conversion"):
-		return _finish_save_copy_failure("native_conversion_unavailable", "Native scenario conversion is unavailable.")
+		return _save_copy_failure("native_conversion_unavailable", "Native scenario conversion is unavailable.")
 	var target_dir := target_dir_override.strip_edges()
 	if target_dir == "":
 		target_dir = String(ScenarioSelectRulesScript.generated_map_package_directory_policy().get("active_dir", "user://maps"))
 	var mkdir_error := DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(target_dir))
 	if mkdir_error != OK:
-		return _finish_save_copy_failure("target_directory_failed", "Could not create the map package directory.", [], {"error": mkdir_error, "target_dir": target_dir})
+		return _save_copy_failure("target_directory_failed", "Could not create the map package directory.", [], {"error": mkdir_error, "target_dir": target_dir})
 	var source_entry: Dictionary = _session.flags.get("maps_folder_package_entry", {}) if _session.flags.get("maps_folder_package_entry", {}) is Dictionary else {}
 	var source_stem := String(source_entry.get("package_stem", _session.scenario_id))
 	var requested_stem := target_stem_override.strip_edges()
@@ -4382,18 +4797,18 @@ func _save_package_working_copy(target_dir_override: String = "", target_stem_ov
 		{"map_id": "%s-map" % target_stem, "scenario_id": target_stem}
 	)
 	if not bool(conversion.get("ok", false)):
-		return _finish_save_copy_failure("conversion_failed", "The editor working copy could not be converted to package documents.", output_paths, {"conversion": conversion})
+		return _save_copy_failure("conversion_failed", "The editor working copy could not be converted to package documents.", output_paths, {"conversion": conversion})
 	var map_document: Variant = conversion.get("map_document", null)
 	var scenario_document: Variant = conversion.get("scenario_document", null)
 	if map_document == null or scenario_document == null:
-		return _finish_save_copy_failure("conversion_missing_documents", "Native conversion did not return package documents.", output_paths)
+		return _save_copy_failure("conversion_missing_documents", "Native conversion did not return package documents.", output_paths)
 	var save_options := {"path_policy": "editor_non_overwriting_package_copy", "return_package": false}
 	var map_save: Dictionary = service.save_map_package(map_document, map_path, save_options)
 	if not bool(map_save.get("ok", false)):
-		return _finish_save_copy_failure("map_save_failed", "The map package copy could not be written.", output_paths, {"map_save": map_save})
+		return _save_copy_failure("map_save_failed", "The map package copy could not be written.", output_paths, {"map_save": map_save})
 	var map_load: Dictionary = service.load_map_package(map_path)
 	if not bool(map_load.get("ok", false)):
-		return _finish_save_copy_failure("map_reload_failed", "The written map package could not be reloaded.", output_paths, {"map_load": map_load})
+		return _save_copy_failure("map_reload_failed", "The written map package could not be reloaded.", output_paths, {"map_load": map_load})
 	scenario_document.configure({
 		"scenario_id": scenario_document.get_scenario_id(),
 		"scenario_hash": scenario_document.get_scenario_hash(),
@@ -4407,16 +4822,16 @@ func _save_package_working_copy(target_dir_override: String = "", target_stem_ov
 	})
 	var scenario_save: Dictionary = service.save_scenario_package(scenario_document, scenario_path, save_options)
 	if not bool(scenario_save.get("ok", false)):
-		return _finish_save_copy_failure("scenario_save_failed", "The scenario package copy could not be written.", output_paths, {"scenario_save": scenario_save})
+		return _save_copy_failure("scenario_save_failed", "The scenario package copy could not be written.", output_paths, {"scenario_save": scenario_save})
 	var scenario_load: Dictionary = service.load_scenario_package(scenario_path)
 	if not bool(scenario_load.get("ok", false)):
-		return _finish_save_copy_failure("scenario_reload_failed", "The written scenario package could not be reloaded.", output_paths, {"scenario_load": scenario_load})
+		return _save_copy_failure("scenario_reload_failed", "The written scenario package could not be reloaded.", output_paths, {"scenario_load": scenario_load})
 	var loaded_map: Variant = map_load.get("map_document", null)
 	var loaded_scenario: Variant = scenario_load.get("scenario_document", null)
 	var map_validation: Dictionary = service.validate_map_document(loaded_map)
 	var scenario_validation: Dictionary = service.validate_scenario_document(loaded_scenario, loaded_map)
 	if not bool(map_validation.get("ok", false)) or not bool(scenario_validation.get("ok", false)):
-		return _finish_save_copy_failure("saved_pair_validation_failed", "The written package pair failed structural validation.", output_paths, {"map_validation": map_validation, "scenario_validation": scenario_validation})
+		return _save_copy_failure("saved_pair_validation_failed", "The written package pair failed structural validation.", output_paths, {"map_validation": map_validation, "scenario_validation": scenario_validation})
 	var index := ScenarioSelectRulesScript.maps_folder_package_index({
 		"package_dir": target_dir,
 		"include_non_launchable_generated_packages": true,
@@ -4427,12 +4842,36 @@ func _save_package_working_copy(target_dir_override: String = "", target_stem_ov
 		if entry_value is Dictionary and String(entry_value.get("package_stem", "")) == target_stem:
 			saved_entry = entry_value
 			break
-	if saved_entry.is_empty() or not _load_maps_folder_package_entry_working_copy(saved_entry):
-		return _finish_save_copy_failure("saved_pair_adoption_failed", "The saved package pair could not be adopted as the editor baseline.", output_paths, {"index": index})
-	var default_dir := String(ScenarioSelectRulesScript.generated_map_package_directory_policy().get("active_dir", ""))
-	if target_dir == default_dir:
-		_rebuild_map_package_picker()
-		_select_map_package_picker_by_id(String(saved_entry.get("package_id", "")))
+	if saved_entry.is_empty():
+		return _save_copy_failure("saved_pair_adoption_failed", "The saved package pair could not be adopted as the editor baseline.", output_paths, {"index": index})
+	return {
+		"ok": true,
+		"saved_entry": saved_entry,
+		"index": index,
+		"output_paths": output_paths,
+		"target_dir": target_dir,
+		"target_stem": target_stem,
+		"map_path": map_path,
+		"scenario_path": scenario_path,
+		"loaded_map": loaded_map,
+		"loaded_scenario": loaded_scenario,
+	}
+
+## The adopted copy is the clean working copy and its own baseline.
+func _finish_package_copy(written: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _finish_package_copy__gd(written)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._finish_package_copy", [self, written])
+	var before := HumanEngine.before_writing(&"MapEditorShell._finish_package_copy", [self, written])
+	var result = _finish_package_copy__gd(written)
+	HumanEngine.check_writing(&"MapEditorShell._finish_package_copy", before, [self, written], result)
+	return result
+
+func _finish_package_copy__gd(written: Dictionary) -> Dictionary:
+	var saved_entry: Dictionary = written.saved_entry
+	var loaded_map: Variant = written.loaded_map
+	var loaded_scenario: Variant = written.loaded_scenario
 	_dirty = false
 	_authored_baseline_cache = _duplicate_session(_session)
 	_authored_baseline_cache_id = _session.scenario_id
@@ -4440,10 +4879,10 @@ func _save_package_working_copy(target_dir_override: String = "", target_stem_ov
 		"ok": true,
 		"status": "saved_copy",
 		"package_id": String(saved_entry.get("package_id", "")),
-		"package_stem": target_stem,
-		"target_dir": target_dir,
-		"map_path": map_path,
-		"scenario_path": scenario_path,
+		"package_stem": String(written.target_stem),
+		"target_dir": String(written.target_dir),
+		"map_path": String(written.map_path),
+		"scenario_path": String(written.scenario_path),
 		"map_hash": loaded_map.get_map_hash(),
 		"scenario_hash": loaded_scenario.get_scenario_hash(),
 		"object_count": loaded_map.get_object_count(),
@@ -4453,8 +4892,7 @@ func _save_package_working_copy(target_dir_override: String = "", target_stem_ov
 		"editor_inspection_only": bool(saved_entry.get("editor_inspection_only", false)),
 	}
 	_last_save_copy_result = result.duplicate(true)
-	_last_message = "Saved %s as a new map package copy." % target_stem
-	_refresh_state()
+	_last_message = "Saved %s as a new map package copy." % String(written.target_stem)
 	return result
 
 func _unique_package_copy_stem(target_dir: String, base_stem: String) -> String:
@@ -4466,6 +4904,22 @@ func _unique_package_copy_stem(target_dir: String, base_stem: String) -> String:
 	return candidate
 
 func _finish_save_copy_failure(code: String, message: String, cleanup_paths: Array = [], details: Dictionary = {}) -> Dictionary:
+	var result := _save_copy_failure(code, message, cleanup_paths, details)
+	_refresh_state()
+	return result
+
+## A failed Save Copy: what it wrote removed, the failure kept and shown.
+func _save_copy_failure(code: String, message: String, cleanup_paths: Array = [], details: Dictionary = {}) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _save_copy_failure__gd(code, message, cleanup_paths, details)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._save_copy_failure", [self, code, message, cleanup_paths, details])
+	var before := HumanEngine.before_writing(&"MapEditorShell._save_copy_failure", [self, code, message, cleanup_paths, details])
+	var result = _save_copy_failure__gd(code, message, cleanup_paths, details)
+	HumanEngine.check_writing(&"MapEditorShell._save_copy_failure", before, [self, code, message, cleanup_paths, details], result)
+	return result
+
+func _save_copy_failure__gd(code: String, message: String, cleanup_paths: Array = [], details: Dictionary = {}) -> Dictionary:
 	for path_value in cleanup_paths:
 		var path := String(path_value)
 		if FileAccess.file_exists(path):
@@ -4480,7 +4934,6 @@ func _finish_save_copy_failure(code: String, message: String, cleanup_paths: Arr
 	result.merge(details, true)
 	_last_save_copy_result = result.duplicate(true)
 	_last_message = message
-	_refresh_state()
 	return result
 
 func _on_terrain_selected(index: int) -> void:
@@ -4519,15 +4972,35 @@ func _on_selected_property_object_selected(index: int) -> void:
 
 func _on_apply_object_properties_pressed() -> void:
 	var detail := _selected_property_object_detail()
+	var owner := ""
+	var difficulty := ""
+	if not detail.is_empty():
+		owner = _selected_picker_metadata(_property_owner_picker, String(detail.get("owner", "neutral")))
+		difficulty = _selected_picker_metadata(_property_difficulty_picker, String(detail.get("difficulty", "medium")))
+	_edit_selected_object_properties(owner, difficulty, _property_collected_check.button_pressed)
+	_refresh_state()
+
+## The property controls' values on the selected object, with the recap.
+func _edit_selected_object_properties(owner: String, difficulty: String, collected: bool) -> void:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		_edit_selected_object_properties__gd(owner, difficulty, collected)
+	elif _human_engine_mode == HumanEngine.NATIVE:
+		HumanEngine.native_writing(&"MapEditorShell._edit_selected_object_properties", [self, owner, difficulty, collected])
+	else:
+		var before := HumanEngine.before_writing(&"MapEditorShell._edit_selected_object_properties", [self, owner, difficulty, collected])
+		_edit_selected_object_properties__gd(owner, difficulty, collected)
+		HumanEngine.check_writing(&"MapEditorShell._edit_selected_object_properties", before, [self, owner, difficulty, collected], null)
+
+func _edit_selected_object_properties__gd(owner: String, difficulty: String, collected: bool) -> void:
+	var detail := _selected_property_object_detail()
 	if detail.is_empty():
 		_last_message = "Select a supported overworld object before editing properties."
-		_refresh_state()
 		return
 	var property_name := _primary_editable_property_for_kind(String(detail.get("kind", "")))
 	var previous_value: Variant = null
 	if property_name != "":
 		previous_value = detail.get(property_name, null)
-	var result := _apply_selected_object_properties(detail)
+	var result := _apply_object_properties(detail, owner, difficulty, collected)
 	if bool(result.get("ok", false)):
 		_dirty = _dirty or bool(result.get("changed", false))
 		var after_detail := _object_detail_by_key(String(detail.get("property_key", "")))
@@ -4549,21 +5022,48 @@ func _on_apply_object_properties_pressed() -> void:
 		)
 	else:
 		_last_message = String(result.get("message", "Could not update selected object properties."))
-	_refresh_state()
 
 func _on_fill_terrain_pressed() -> void:
+	_fill_terrain_tool()
+	_refresh_state()
+
+## Fill Terrain: the selected tile's region in the brush's terrain.
+func _fill_terrain_tool() -> void:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		_fill_terrain_tool__gd()
+	elif _human_engine_mode == HumanEngine.NATIVE:
+		HumanEngine.native_writing(&"MapEditorShell._fill_terrain_tool", [self])
+	else:
+		var before := HumanEngine.before_writing(&"MapEditorShell._fill_terrain_tool", [self])
+		_fill_terrain_tool__gd()
+		HumanEngine.check_writing(&"MapEditorShell._fill_terrain_tool", before, [self], null)
+
+func _fill_terrain_tool__gd() -> void:
 	var result := _fill_terrain_from_selected_tile()
 	if bool(result.get("ok", false)):
 		_dirty = _dirty or bool(result.get("changed", false))
 	_last_message = String(result.get("message", "Could not fill selected terrain region."))
-	_refresh_state()
 
 func _on_restore_selected_tile_pressed() -> void:
+	_restore_tile_tool()
+	_refresh_state()
+
+## Restore Tile: the selected tile as the baseline has it.
+func _restore_tile_tool() -> void:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		_restore_tile_tool__gd()
+	elif _human_engine_mode == HumanEngine.NATIVE:
+		HumanEngine.native_writing(&"MapEditorShell._restore_tile_tool", [self])
+	else:
+		var before := HumanEngine.before_writing(&"MapEditorShell._restore_tile_tool", [self])
+		_restore_tile_tool__gd()
+		HumanEngine.check_writing(&"MapEditorShell._restore_tile_tool", before, [self], null)
+
+func _restore_tile_tool__gd() -> void:
 	var result := _restore_selected_tile_from_authored()
 	if bool(result.get("ok", false)):
 		_dirty = _dirty or bool(result.get("changed", false))
 	_last_message = String(result.get("message", "Could not restore selected tile."))
-	_refresh_state()
 
 func _on_map_tile_hovered(tile: Vector2i) -> void:
 	# Hover only moves the placement or paint preview. The map state, selection and
@@ -4585,6 +5085,22 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 	if _session == null or not _tile_in_bounds(tile):
 		return
 	_cancel_editor_map_cursor_semantic()
+	var action_succeeded := _apply_map_tool(tile)
+	_record_editor_map_action_result(action_succeeded, tile)
+	_refresh_state()
+
+## The active tool on a clicked tile; false when the click did nothing.
+func _apply_map_tool(tile: Vector2i) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _apply_map_tool__gd(tile)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._apply_map_tool", [self, tile])
+	var before := HumanEngine.before_writing(&"MapEditorShell._apply_map_tool", [self, tile])
+	var result = _apply_map_tool__gd(tile)
+	HumanEngine.check_writing(&"MapEditorShell._apply_map_tool", before, [self, tile], result)
+	return result
+
+func _apply_map_tool__gd(tile: Vector2i) -> bool:
 	_selected_tile = tile
 	var action_succeeded: bool = true
 	match _tool:
@@ -4612,9 +5128,7 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 			action_succeeded = _retheme_object(tile)
 		_:
 			_last_message = "Inspected tile %d,%d." % [tile.x, tile.y]
-	_record_editor_map_action_result(action_succeeded, tile)
-	_refresh_state()
-
+	return action_succeeded
 
 func _record_editor_map_action_result(action_succeeded: bool, tile: Vector2i) -> void:
 	var message := _last_message.strip_edges()
@@ -4628,6 +5142,16 @@ func _record_editor_map_action_result(action_succeeded: bool, tile: Vector2i) ->
 	})
 
 func _paint_terrain(tile: Vector2i, terrain_id: String) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _paint_terrain__gd(tile, terrain_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._paint_terrain", [self, tile, terrain_id])
+	var before := HumanEngine.before_writing(&"MapEditorShell._paint_terrain", [self, tile, terrain_id])
+	var result = _paint_terrain__gd(tile, terrain_id)
+	HumanEngine.check_writing(&"MapEditorShell._paint_terrain", before, [self, tile, terrain_id], result)
+	return result
+
+func _paint_terrain__gd(tile: Vector2i, terrain_id: String) -> bool:
 	if not _tile_in_bounds(tile) or terrain_id == "":
 		return false
 	var previous := _terrain_at(tile)
@@ -4680,6 +5204,16 @@ func _apply_terrain_placement(paint_tiles: Array, terrain_id: String) -> Diction
 	return result
 
 func _materialize_last_terrain_final_normalization() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _materialize_last_terrain_final_normalization__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._materialize_last_terrain_final_normalization", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._materialize_last_terrain_final_normalization", [self])
+	var result = _materialize_last_terrain_final_normalization__gd()
+	HumanEngine.check_writing(&"MapEditorShell._materialize_last_terrain_final_normalization", before, [self], result)
+	return result
+
+func _materialize_last_terrain_final_normalization__gd() -> Dictionary:
 	if _session == null or _last_terrain_placement_result.is_empty():
 		return _last_terrain_placement_result
 	if bool(_last_terrain_placement_result.get("final_normalization_deferred", false)):
@@ -4718,6 +5252,16 @@ func _terrain_line_tool_click(tile: Vector2i) -> bool:
 	return bool(result.get("ok", false))
 
 func _apply_terrain_line(start_tile: Vector2i, end_tile: Vector2i, terrain_id: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _apply_terrain_line__gd(start_tile, end_tile, terrain_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._apply_terrain_line", [self, start_tile, end_tile, terrain_id])
+	var before := HumanEngine.before_writing(&"MapEditorShell._apply_terrain_line", [self, start_tile, end_tile, terrain_id])
+	var result = _apply_terrain_line__gd(start_tile, end_tile, terrain_id)
+	HumanEngine.check_writing(&"MapEditorShell._apply_terrain_line", before, [self, start_tile, end_tile, terrain_id], result)
+	return result
+
+func _apply_terrain_line__gd(start_tile: Vector2i, end_tile: Vector2i, terrain_id: String) -> Dictionary:
 	if _session == null:
 		return {"ok": false, "changed": false, "message": "No editor working copy is loaded."}
 	if not _tile_in_bounds(start_tile) or not _tile_in_bounds(end_tile):
@@ -4812,6 +5356,16 @@ func _terrain_rectangle_tool_click(tile: Vector2i) -> bool:
 	return bool(result.get("ok", false))
 
 func _apply_terrain_rectangle(corner_tile: Vector2i, opposite_tile: Vector2i, terrain_id: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _apply_terrain_rectangle__gd(corner_tile, opposite_tile, terrain_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._apply_terrain_rectangle", [self, corner_tile, opposite_tile, terrain_id])
+	var before := HumanEngine.before_writing(&"MapEditorShell._apply_terrain_rectangle", [self, corner_tile, opposite_tile, terrain_id])
+	var result = _apply_terrain_rectangle__gd(corner_tile, opposite_tile, terrain_id)
+	HumanEngine.check_writing(&"MapEditorShell._apply_terrain_rectangle", before, [self, corner_tile, opposite_tile, terrain_id], result)
+	return result
+
+func _apply_terrain_rectangle__gd(corner_tile: Vector2i, opposite_tile: Vector2i, terrain_id: String) -> Dictionary:
 	if _session == null:
 		return {"ok": false, "changed": false, "message": "No editor working copy is loaded."}
 	if not _tile_in_bounds(corner_tile) or not _tile_in_bounds(opposite_tile):
@@ -4893,6 +5447,16 @@ func _terrain_rectangle_tiles(corner_tile: Vector2i, opposite_tile: Vector2i) ->
 	return tiles
 
 func _terrain_rectangle_bounds(corner_tile: Vector2i, opposite_tile: Vector2i) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _terrain_rectangle_bounds__gd(corner_tile, opposite_tile)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._terrain_rectangle_bounds", [self, corner_tile, opposite_tile])
+	var before := HumanEngine.before_writing(&"MapEditorShell._terrain_rectangle_bounds", [self, corner_tile, opposite_tile])
+	var result = _terrain_rectangle_bounds__gd(corner_tile, opposite_tile)
+	HumanEngine.check_writing(&"MapEditorShell._terrain_rectangle_bounds", before, [self, corner_tile, opposite_tile], result)
+	return result
+
+func _terrain_rectangle_bounds__gd(corner_tile: Vector2i, opposite_tile: Vector2i) -> Dictionary:
 	return {
 		"min_x": min(corner_tile.x, opposite_tile.x),
 		"min_y": min(corner_tile.y, opposite_tile.y),
@@ -4901,6 +5465,16 @@ func _terrain_rectangle_bounds(corner_tile: Vector2i, opposite_tile: Vector2i) -
 	}
 
 func _fill_terrain_region(start_tile: Vector2i, terrain_id: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _fill_terrain_region__gd(start_tile, terrain_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._fill_terrain_region", [self, start_tile, terrain_id])
+	var before := HumanEngine.before_writing(&"MapEditorShell._fill_terrain_region", [self, start_tile, terrain_id])
+	var result = _fill_terrain_region__gd(start_tile, terrain_id)
+	HumanEngine.check_writing(&"MapEditorShell._fill_terrain_region", before, [self, start_tile, terrain_id], result)
+	return result
+
+func _fill_terrain_region__gd(start_tile: Vector2i, terrain_id: String) -> Dictionary:
 	if _session == null:
 		return {"ok": false, "changed": false, "message": "No editor working copy is loaded."}
 	if not _tile_in_bounds(start_tile):
@@ -4985,6 +5559,16 @@ func _fill_terrain_region(start_tile: Vector2i, terrain_id: String) -> Dictionar
 	}
 
 func _toggle_road(tile: Vector2i) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _toggle_road__gd(tile)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._toggle_road", [self, tile])
+	var before := HumanEngine.before_writing(&"MapEditorShell._toggle_road", [self, tile])
+	var result = _toggle_road__gd(tile)
+	HumanEngine.check_writing(&"MapEditorShell._toggle_road", before, [self, tile], result)
+	return result
+
+func _toggle_road__gd(tile: Vector2i) -> bool:
 	if not _tile_in_bounds(tile):
 		return false
 	var terrain_layers := _terrain_layers()
@@ -5053,6 +5637,16 @@ func _road_path_tool_click(tile: Vector2i) -> bool:
 	return bool(result.get("ok", false))
 
 func _apply_road_path(start_tile: Vector2i, end_tile: Vector2i, requested_action: String = "toggle") -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _apply_road_path__gd(start_tile, end_tile, requested_action)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._apply_road_path", [self, start_tile, end_tile, requested_action])
+	var before := HumanEngine.before_writing(&"MapEditorShell._apply_road_path", [self, start_tile, end_tile, requested_action])
+	var result = _apply_road_path__gd(start_tile, end_tile, requested_action)
+	HumanEngine.check_writing(&"MapEditorShell._apply_road_path", before, [self, start_tile, end_tile, requested_action], result)
+	return result
+
+func _apply_road_path__gd(start_tile: Vector2i, end_tile: Vector2i, requested_action: String = "toggle") -> Dictionary:
 	if _session == null:
 		return {"ok": false, "changed": false, "message": "No editor working copy is loaded."}
 	if not _tile_in_bounds(start_tile) or not _tile_in_bounds(end_tile):
@@ -5229,25 +5823,85 @@ func _road_tile_keys_from_layers(roads: Array) -> Dictionary:
 	return keys
 
 func _has_pending_terrain_line_start() -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _has_pending_terrain_line_start__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._has_pending_terrain_line_start", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._has_pending_terrain_line_start", [self])
+	var result = _has_pending_terrain_line_start__gd()
+	HumanEngine.check_writing(&"MapEditorShell._has_pending_terrain_line_start", before, [self], result)
+	return result
+
+func _has_pending_terrain_line_start__gd() -> bool:
 	return _pending_terrain_line_start.x >= 0 and _pending_terrain_line_start.y >= 0 and _tile_in_bounds(_pending_terrain_line_start)
 
 func _pending_terrain_line_start_payload() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _pending_terrain_line_start_payload__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._pending_terrain_line_start_payload", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._pending_terrain_line_start_payload", [self])
+	var result = _pending_terrain_line_start_payload__gd()
+	HumanEngine.check_writing(&"MapEditorShell._pending_terrain_line_start_payload", before, [self], result)
+	return result
+
+func _pending_terrain_line_start_payload__gd() -> Dictionary:
 	if not _has_pending_terrain_line_start():
 		return {}
 	return {"x": _pending_terrain_line_start.x, "y": _pending_terrain_line_start.y}
 
 func _has_pending_terrain_rectangle_corner() -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _has_pending_terrain_rectangle_corner__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._has_pending_terrain_rectangle_corner", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._has_pending_terrain_rectangle_corner", [self])
+	var result = _has_pending_terrain_rectangle_corner__gd()
+	HumanEngine.check_writing(&"MapEditorShell._has_pending_terrain_rectangle_corner", before, [self], result)
+	return result
+
+func _has_pending_terrain_rectangle_corner__gd() -> bool:
 	return _pending_terrain_rectangle_corner.x >= 0 and _pending_terrain_rectangle_corner.y >= 0 and _tile_in_bounds(_pending_terrain_rectangle_corner)
 
 func _pending_terrain_rectangle_corner_payload() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _pending_terrain_rectangle_corner_payload__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._pending_terrain_rectangle_corner_payload", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._pending_terrain_rectangle_corner_payload", [self])
+	var result = _pending_terrain_rectangle_corner_payload__gd()
+	HumanEngine.check_writing(&"MapEditorShell._pending_terrain_rectangle_corner_payload", before, [self], result)
+	return result
+
+func _pending_terrain_rectangle_corner_payload__gd() -> Dictionary:
 	if not _has_pending_terrain_rectangle_corner():
 		return {}
 	return {"x": _pending_terrain_rectangle_corner.x, "y": _pending_terrain_rectangle_corner.y}
 
 func _has_pending_road_path_start() -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _has_pending_road_path_start__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._has_pending_road_path_start", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._has_pending_road_path_start", [self])
+	var result = _has_pending_road_path_start__gd()
+	HumanEngine.check_writing(&"MapEditorShell._has_pending_road_path_start", before, [self], result)
+	return result
+
+func _has_pending_road_path_start__gd() -> bool:
 	return _pending_road_path_start.x >= 0 and _pending_road_path_start.y >= 0 and _tile_in_bounds(_pending_road_path_start)
 
 func _pending_road_path_start_payload() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _pending_road_path_start_payload__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._pending_road_path_start_payload", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._pending_road_path_start_payload", [self])
+	var result = _pending_road_path_start_payload__gd()
+	HumanEngine.check_writing(&"MapEditorShell._pending_road_path_start_payload", before, [self], result)
+	return result
+
+func _pending_road_path_start_payload__gd() -> Dictionary:
 	if not _has_pending_road_path_start():
 		return {}
 	return {"x": _pending_road_path_start.x, "y": _pending_road_path_start.y}
@@ -5266,6 +5920,16 @@ func _editor_road_layer_index(roads: Array) -> int:
 	return -1
 
 func _set_hero_start(tile: Vector2i) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _set_hero_start__gd(tile)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._set_hero_start", [self, tile])
+	var before := HumanEngine.before_writing(&"MapEditorShell._set_hero_start", [self, tile])
+	var result = _set_hero_start__gd(tile)
+	HumanEngine.check_writing(&"MapEditorShell._set_hero_start", before, [self, tile], result)
+	return result
+
+func _set_hero_start__gd(tile: Vector2i) -> bool:
 	if not _set_hero_position(tile):
 		return false
 	_dirty = true
@@ -5295,6 +5959,16 @@ func _set_hero_position(tile: Vector2i) -> bool:
 	return true
 
 func _place_object(tile: Vector2i) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _place_object__gd(tile)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._place_object", [self, tile])
+	var before := HumanEngine.before_writing(&"MapEditorShell._place_object", [self, tile])
+	var result = _place_object__gd(tile)
+	HumanEngine.check_writing(&"MapEditorShell._place_object", before, [self, tile], result)
+	return result
+
+func _place_object__gd(tile: Vector2i) -> bool:
 	if not _tile_in_bounds(tile):
 		return false
 	if _selected_object_family == "" or _selected_object_content_id == "":
@@ -5335,6 +6009,16 @@ func _place_object(tile: Vector2i) -> bool:
 	return true
 
 func _remove_object(tile: Vector2i) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _remove_object__gd(tile)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._remove_object", [self, tile])
+	var before := HumanEngine.before_writing(&"MapEditorShell._remove_object", [self, tile])
+	var result = _remove_object__gd(tile)
+	HumanEngine.check_writing(&"MapEditorShell._remove_object", before, [self, tile], result)
+	return result
+
+func _remove_object__gd(tile: Vector2i) -> bool:
 	if not _tile_in_bounds(tile):
 		return false
 	var array_key := _placement_array_key(_selected_object_family)
@@ -5391,6 +6075,16 @@ func _move_object_tool_click(tile: Vector2i) -> bool:
 	return bool(result.get("ok", false))
 
 func _preferred_move_detail_at(tile: Vector2i) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _preferred_move_detail_at__gd(tile)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._preferred_move_detail_at", [self, tile])
+	var before := HumanEngine.before_writing(&"MapEditorShell._preferred_move_detail_at", [self, tile])
+	var result = _preferred_move_detail_at__gd(tile)
+	HumanEngine.check_writing(&"MapEditorShell._preferred_move_detail_at", before, [self, tile], result)
+	return result
+
+func _preferred_move_detail_at__gd(tile: Vector2i) -> Dictionary:
 	var options := _property_object_options_at(tile)
 	if options.is_empty():
 		return {}
@@ -5403,6 +6097,16 @@ func _preferred_move_detail_at(tile: Vector2i) -> Dictionary:
 	return {}
 
 func _move_object_by_key(property_key: String, destination_tile: Vector2i) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _move_object_by_key__gd(property_key, destination_tile)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._move_object_by_key", [self, property_key, destination_tile])
+	var before := HumanEngine.before_writing(&"MapEditorShell._move_object_by_key", [self, property_key, destination_tile])
+	var result = _move_object_by_key__gd(property_key, destination_tile)
+	HumanEngine.check_writing(&"MapEditorShell._move_object_by_key", before, [self, property_key, destination_tile], result)
+	return result
+
+func _move_object_by_key__gd(property_key: String, destination_tile: Vector2i) -> Dictionary:
 	if not _tile_in_bounds(destination_tile):
 		return {"ok": false, "changed": false, "message": "Destination tile is outside the map."}
 	var detail := _object_detail_by_key(property_key)
@@ -5498,6 +6202,16 @@ func _duplicate_object_tool_click(tile: Vector2i) -> bool:
 	return bool(result.get("ok", false))
 
 func _duplicate_object_by_key(property_key: String, destination_tile: Vector2i) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _duplicate_object_by_key__gd(property_key, destination_tile)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._duplicate_object_by_key", [self, property_key, destination_tile])
+	var before := HumanEngine.before_writing(&"MapEditorShell._duplicate_object_by_key", [self, property_key, destination_tile])
+	var result = _duplicate_object_by_key__gd(property_key, destination_tile)
+	HumanEngine.check_writing(&"MapEditorShell._duplicate_object_by_key", before, [self, property_key, destination_tile], result)
+	return result
+
+func _duplicate_object_by_key__gd(property_key: String, destination_tile: Vector2i) -> Dictionary:
 	if not _tile_in_bounds(destination_tile):
 		return {"ok": false, "changed": false, "message": "Destination tile is outside the map."}
 	var detail := _object_detail_by_key(property_key)
@@ -5581,12 +6295,32 @@ func _retheme_object(tile: Vector2i) -> bool:
 	return bool(result.get("ok", false))
 
 func _object_detail_for_family_at(tile: Vector2i, family: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _object_detail_for_family_at__gd(tile, family)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._object_detail_for_family_at", [self, tile, family])
+	var before := HumanEngine.before_writing(&"MapEditorShell._object_detail_for_family_at", [self, tile, family])
+	var result = _object_detail_for_family_at__gd(tile, family)
+	HumanEngine.check_writing(&"MapEditorShell._object_detail_for_family_at", before, [self, tile, family], result)
+	return result
+
+func _object_detail_for_family_at__gd(tile: Vector2i, family: String) -> Dictionary:
 	for detail in _property_object_options_at(tile):
 		if detail is Dictionary and String(detail.get("kind", "")) == family:
 			return detail
 	return {}
 
 func _retheme_object_by_key(property_key: String, replacement_content_id: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _retheme_object_by_key__gd(property_key, replacement_content_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._retheme_object_by_key", [self, property_key, replacement_content_id])
+	var before := HumanEngine.before_writing(&"MapEditorShell._retheme_object_by_key", [self, property_key, replacement_content_id])
+	var result = _retheme_object_by_key__gd(property_key, replacement_content_id)
+	HumanEngine.check_writing(&"MapEditorShell._retheme_object_by_key", before, [self, property_key, replacement_content_id], result)
+	return result
+
+func _retheme_object_by_key__gd(property_key: String, replacement_content_id: String) -> Dictionary:
 	var detail := _object_detail_by_key(property_key)
 	if detail.is_empty():
 		return {"ok": false, "changed": false, "message": "No rethemeable object %s exists in the working copy." % property_key}
@@ -5654,20 +6388,34 @@ func _first_blocking_object_detail_at(tile: Vector2i, ignored_property_key: Stri
 	return {}
 
 func _apply_selected_object_properties(detail: Dictionary) -> Dictionary:
+	var owner := _selected_picker_metadata(_property_owner_picker, String(detail.get("owner", "neutral")))
+	var difficulty := _selected_picker_metadata(_property_difficulty_picker, String(detail.get("difficulty", "medium")))
+	return _apply_object_properties(detail, owner, difficulty, _property_collected_check.button_pressed)
+
+## The property controls' values on the selected object.
+func _apply_object_properties(detail: Dictionary, owner: String, difficulty: String, collected: bool) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _apply_object_properties__gd(detail, owner, difficulty, collected)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._apply_object_properties", [self, detail, owner, difficulty, collected])
+	var before := HumanEngine.before_writing(&"MapEditorShell._apply_object_properties", [self, detail, owner, difficulty, collected])
+	var result = _apply_object_properties__gd(detail, owner, difficulty, collected)
+	HumanEngine.check_writing(&"MapEditorShell._apply_object_properties", before, [self, detail, owner, difficulty, collected], result)
+	return result
+
+func _apply_object_properties__gd(detail: Dictionary, owner: String, difficulty: String, collected: bool) -> Dictionary:
 	var kind := String(detail.get("kind", ""))
 	var placement_id := String(detail.get("placement_id", ""))
 	if placement_id == "":
 		return {"ok": false, "changed": false, "message": "Selected object has no placement id."}
 	match kind:
 		OBJECT_FAMILY_TOWN:
-			var owner := _selected_picker_metadata(_property_owner_picker, String(detail.get("owner", "neutral")))
 			return _set_town_owner_property(placement_id, owner)
 		OBJECT_FAMILY_RESOURCE:
-			return _set_collected_property(OBJECT_FAMILY_RESOURCE, placement_id, _property_collected_check.button_pressed)
+			return _set_collected_property(OBJECT_FAMILY_RESOURCE, placement_id, collected)
 		OBJECT_FAMILY_ARTIFACT:
-			return _set_collected_property(OBJECT_FAMILY_ARTIFACT, placement_id, _property_collected_check.button_pressed)
+			return _set_collected_property(OBJECT_FAMILY_ARTIFACT, placement_id, collected)
 		OBJECT_FAMILY_ENCOUNTER:
-			var difficulty := _selected_picker_metadata(_property_difficulty_picker, String(detail.get("difficulty", "medium")))
 			return _set_encounter_difficulty_property(placement_id, difficulty)
 		_:
 			return {"ok": false, "changed": false, "message": "No mutable properties for %s." % kind}
@@ -5817,6 +6565,16 @@ func _remove_resolved_encounter_ids(placement_ids: Array) -> void:
 	_session.overworld["resolved_encounters"] = updated
 
 func _restore_selected_tile_from_authored() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _restore_selected_tile_from_authored__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._restore_selected_tile_from_authored", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._restore_selected_tile_from_authored", [self])
+	var result = _restore_selected_tile_from_authored__gd()
+	HumanEngine.check_writing(&"MapEditorShell._restore_selected_tile_from_authored", before, [self], result)
+	return result
+
+func _restore_selected_tile_from_authored__gd() -> Dictionary:
 	if _session == null:
 		return {"ok": false, "changed": false, "message": "No editor working copy is loaded."}
 	var tile := _selected_tile
@@ -5861,17 +6619,7 @@ func _authored_baseline_session():
 		return null
 	if _authored_baseline_cache != null and _authored_baseline_cache_id == _session.scenario_id:
 		return _authored_baseline_cache
-	var baseline = ScenarioFactoryScript.create_session(
-		_session.scenario_id,
-		"normal",
-		SessionState.LAUNCH_MODE_SKIRMISH
-	)
-	if baseline == null or baseline.scenario_id == "":
-		return null
-	OverworldRules.normalize_overworld_state(baseline)
-	_authored_baseline_cache = baseline
-	_authored_baseline_cache_id = _session.scenario_id
-	return baseline
+	return null
 
 func _restore_tile_terrain_from_baseline(tile: Vector2i, baseline) -> Dictionary:
 	var authored_terrain := _terrain_at_in_overworld(baseline.overworld, tile)
@@ -6090,6 +6838,16 @@ func _terrain_at_in_overworld(overworld: Dictionary, tile: Vector2i) -> String:
 	return String(row[tile.x])
 
 func _set_tile_terrain(tile: Vector2i, terrain_id: String) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _set_tile_terrain__gd(tile, terrain_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._set_tile_terrain", [self, tile, terrain_id])
+	var before := HumanEngine.before_writing(&"MapEditorShell._set_tile_terrain", [self, tile, terrain_id])
+	var result = _set_tile_terrain__gd(tile, terrain_id)
+	HumanEngine.check_writing(&"MapEditorShell._set_tile_terrain", before, [self, tile, terrain_id], result)
+	return result
+
+func _set_tile_terrain__gd(tile: Vector2i, terrain_id: String) -> bool:
 	if not _tile_in_bounds(tile) or terrain_id == "":
 		return false
 	_materialize_last_terrain_final_normalization()
@@ -6115,19 +6873,46 @@ func _remove_stale_editor_object_keys() -> void:
 func _on_play_working_copy_pressed() -> void:
 	if _session == null:
 		return
+	if not _stage_working_copy_for_play():
+		_refresh_state()
+		return
+	AppRouter.go_to_overworld()
+
+## The working copy and its baseline staged for the return, and a copy of it
+## the active session.
+func _stage_working_copy_for_play() -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _stage_working_copy_for_play__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._stage_working_copy_for_play", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._stage_working_copy_for_play", [self])
+	var result = _stage_working_copy_for_play__gd()
+	HumanEngine.check_writing(&"MapEditorShell._stage_working_copy_for_play", before, [self], result)
+	return result
+
+func _stage_working_copy_for_play__gd() -> bool:
 	_prepare_working_copy_snapshot_for_return()
 	var staged_session = SessionState.set_editor_working_copy_session(_session, _authored_baseline_session())
 	var play_session = SessionState.duplicate_editor_working_copy_session()
 	if staged_session == null or play_session == null:
 		SessionState.set_editor_working_copy_session(null)
 		_last_message = "Could not stage the editor working copy for play."
-		_refresh_state()
-		return
+		return false
 	_prepare_working_copy_for_play(play_session)
 	SessionState.set_active_session(play_session)
-	AppRouter.go_to_overworld()
+	return true
 
 func _editor_play_readiness_gate_payload() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _editor_play_readiness_gate_payload__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._editor_play_readiness_gate_payload", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._editor_play_readiness_gate_payload", [self])
+	var result = _editor_play_readiness_gate_payload__gd()
+	HumanEngine.check_writing(&"MapEditorShell._editor_play_readiness_gate_payload", before, [self], result)
+	return result
+
+func _editor_play_readiness_gate_payload__gd() -> Dictionary:
 	if _session == null:
 		return {
 			"button_label": "Play Copy",
@@ -6172,6 +6957,16 @@ func _editor_play_readiness_gate_payload() -> Dictionary:
 	}
 
 func _editor_scenario_validation_check_payload() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _editor_scenario_validation_check_payload__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._editor_scenario_validation_check_payload", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._editor_scenario_validation_check_payload", [self])
+	var result = _editor_scenario_validation_check_payload__gd()
+	HumanEngine.check_writing(&"MapEditorShell._editor_scenario_validation_check_payload", before, [self], result)
+	return result
+
+func _editor_scenario_validation_check_payload__gd() -> Dictionary:
 	if _session == null:
 		return {
 			"text": "",
@@ -6231,200 +7026,79 @@ func _editor_scenario_validation_check_payload() -> Dictionary:
 		"scope": "editor_working_copy_only",
 	}
 
-func _editor_export_intent_payload() -> Dictionary:
-	if _session == null:
-		return {
-			"text": "",
-			"tooltip": "Load a map package working copy before reviewing export intent.",
-			"state": "no_working_copy",
-			"dirty": false,
-			"ready": false,
-		}
-	var scenario := ContentService.get_scenario_readonly(_session.scenario_id)
-	var scenario_name := String(scenario.get("name", _session.scenario_id))
-	var export_contract := _authored_scenario_export_contract_payload(false)
-	var warning_count := int(export_contract.get("warning_count", 0))
-	var missing_count := int(export_contract.get("missing_objective_anchor_count", 0))
-	var covered_count := int(export_contract.get("covered_objective_anchor_count", 0))
-	var objective_count := int(export_contract.get("objective_anchor_count", 0))
-	var hero_position := OverworldRules.hero_position(_session)
-	var ready := bool(export_contract.get("ready", false)) and missing_count == 0
-	var state := "dirty" if _dirty else "clean"
-	var next_step := "validated authored draft is ready for a future writeback gate" if ready else "review blockers before authored export"
-	var write_context := String(export_contract.get("write_context", "validated draft only; no authored file or campaign progress is written"))
-	var text := "Export intent: %s | %s working copy; %s before future authored export; %s." % [
-		scenario_name,
-		state,
-		next_step,
-		write_context,
-	]
-	var tooltip := "Editor Export Intent\n- Scenario: %s.\n- State: %s working copy.\n- Current check: Objectives %d/%d covered; warnings %d.\n- Hero start: %d,%d.\n- Objects: %d.\n- Next: %s before future authored export.\n- Scope: editor working copy only; %s." % [
-		scenario_name,
-		state,
-		covered_count,
-		objective_count,
-		warning_count,
-		hero_position.x,
-		hero_position.y,
-		_placement_count(),
-		next_step,
-		write_context,
-	]
-	return {
-		"text": text,
-		"tooltip": tooltip,
-		"state": state,
-		"dirty": _dirty,
-		"ready": ready,
-		"scenario_id": _session.scenario_id,
-		"scenario_name": scenario_name,
-		"next_step": next_step,
-		"write_context": write_context,
-		"covered_objective_anchor_count": covered_count,
-		"objective_anchor_count": objective_count,
-		"missing_objective_anchor_count": missing_count,
-		"warning_count": warning_count,
-		"hero_position": {"x": hero_position.x, "y": hero_position.y},
-		"object_count": _placement_count(),
-		"scope": "editor_working_copy_export_intent",
-		"export_contract": export_contract,
-	}
+## Save Copy's gate: the editor validation's warnings as blockers, memoised
+## per edit revision. (Owner decision D-h, 2026-10-23: the authored-scenario
+## export is deleted; its validation stays the gate of Save Copy.)
+func _save_copy_readiness_payload() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _save_copy_readiness_payload__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._save_copy_readiness_payload", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._save_copy_readiness_payload", [self])
+	var result = _save_copy_readiness_payload__gd()
+	HumanEngine.check_writing(&"MapEditorShell._save_copy_readiness_payload", before, [self], result)
+	return result
 
-func _authored_scenario_export_contract_payload(include_draft: bool = true) -> Dictionary:
+func _save_copy_readiness_payload__gd() -> Dictionary:
 	if _session == null:
-		return {
-			"ok": false,
-			"ready": false,
-			"contract_id": SCENARIO_EXPORT_CONTRACT_ID,
-			"state": "no_working_copy",
-			"writeback_allowed": false,
-			"writeback_supported": false,
-			"writeback_state": "disabled_no_working_copy",
-			"write_context": "validated draft only; no authored file or campaign progress is written",
-			"blockers": ["No editor working copy is loaded."],
-		}
-	if include_draft:
-		# The full draft feeds Save Copy, so it always revalidates.
-		_editor_edit_revision += 1
-	else:
-		var memo: Variant = _editor_validation_memo_lookup("export_contract_summary")
-		if memo is Dictionary:
-			return memo
+		return {"ready": false, "blockers": ["No editor working copy is loaded."]}
+	var memo: Variant = _editor_validation_memo_lookup("save_copy_readiness")
+	if memo is Dictionary:
+		return memo
+	if _editor_scenario_template().is_empty():
+		return {"ready": false, "blockers": [_missing_scenario_template_blocker()]}
+	var blockers := _save_copy_validation_blockers()
+	_editor_validation_memo["save_copy_readiness"] = {"ready": blockers.is_empty(), "blockers": blockers}
+	return _editor_validation_memo["save_copy_readiness"]
+
+## The records Save Copy converts, from the working copy, with the editor
+## validation's blockers and the records' own; it always revalidates.
+func _save_copy_draft_payload() -> Dictionary:
+	if _session == null:
+		return {"ready": false, "blockers": ["No editor working copy is loaded."]}
+	_editor_edit_revision += 1
 	var scenario := _editor_scenario_template()
 	if scenario.is_empty():
-		return {
-			"ok": false,
-			"ready": false,
-			"contract_id": SCENARIO_EXPORT_CONTRACT_ID,
-			"state": "missing_scenario",
-			"scenario_id": _session.scenario_id,
-			"writeback_allowed": false,
-			"writeback_supported": false,
-			"writeback_state": "disabled_missing_scenario",
-			"write_context": "validated draft only; no authored file or campaign progress is written",
-			"blockers": ["Scenario template %s could not be reconstructed from the loaded working copy." % _session.scenario_id],
-		}
+		return {"ready": false, "blockers": [_missing_scenario_template_blocker()]}
+	var blockers := _save_copy_validation_blockers()
+	var scenario_record := _export_scenario_record_from_working_copy(scenario)
+	var terrain_layers_record := _export_terrain_layers_record_from_working_copy()
+	blockers.append_array(_validate_export_scenario_record(scenario_record))
+	blockers.append_array(_validate_export_terrain_layers_record(terrain_layers_record))
+	return {
+		"ready": blockers.is_empty(),
+		"blockers": blockers,
+		"draft": {"scenario_record": scenario_record, "terrain_layers_record": terrain_layers_record},
+	}
 
-	var validation := _scenario_authoring_validation_payload()
+func _missing_scenario_template_blocker() -> String:
+	return "Scenario template %s could not be reconstructed from the loaded working copy." % _session.scenario_id
+
+func _save_copy_validation_blockers() -> Array:
 	var blockers := []
-	for warning in validation.get("warnings", []):
+	for warning in _scenario_authoring_validation_payload().get("warnings", []):
 		var warning_text := String(warning).strip_edges()
 		if warning_text != "":
 			blockers.append(warning_text)
-	if not include_draft:
-		_editor_validation_memo["export_contract_summary"] = {
-			"ok": blockers.is_empty(),
-			"ready": blockers.is_empty(),
-			"contract_id": SCENARIO_EXPORT_CONTRACT_ID,
-			"state": "summary_ready" if blockers.is_empty() else "blocked",
-			"scenario_id": _session.scenario_id,
-			"scenario_name": String(scenario.get("name", _session.scenario_id)),
-			"dirty": _dirty,
-			"changed": _dirty,
-			"target_paths": [ContentService.SCENARIOS_PATH, ContentService.TERRAIN_LAYERS_PATH],
-			"writeback_allowed": false,
-			"writeback_supported": false,
-			"writeback_state": "validated_draft_only",
-			"write_context": "validated draft only; no authored file or campaign progress is written",
-			"blockers": blockers,
-			"blocker_count": blockers.size(),
-			"warning_count": int(validation.get("warning_count", 0)),
-			"covered_objective_anchor_count": int(validation.get("covered_objective_anchor_count", 0)),
-			"objective_anchor_count": int(validation.get("objective_anchors", []).size()),
-			"missing_objective_anchor_count": int(validation.get("missing_objective_anchor_count", 0)),
-			"export_scope": "authored_scenario_and_terrain_layers_draft",
-		}
-		return _editor_validation_memo["export_contract_summary"]
-
-	var scenario_record := _export_scenario_record_from_working_copy(scenario)
-	var terrain_layers_record := _export_terrain_layers_record_from_working_copy()
-	for blocker in _validate_export_scenario_record(scenario_record):
-		blockers.append(blocker)
-	for blocker in _validate_export_terrain_layers_record(terrain_layers_record):
-		blockers.append(blocker)
-	var baseline_session = _authored_baseline_session()
-	var baseline_scenario_record := _export_scenario_record_from_session(scenario, baseline_session) if baseline_session != null else scenario
-	var baseline_layers: Dictionary = baseline_session.overworld.get("terrain_layers", {}) if baseline_session != null else {}
-	var baseline_terrain_layers_record := _export_terrain_layers_record_from_layers(baseline_layers)
-	var changed_domains := _export_changed_domains(baseline_scenario_record, baseline_terrain_layers_record, scenario_record, terrain_layers_record)
-	var draft := {
-		"scenario_record": scenario_record,
-		"terrain_layers_record": terrain_layers_record,
-	}
-	var draft_signature := _export_draft_signature(scenario_record, terrain_layers_record, changed_domains)
-	return {
-		"ok": blockers.is_empty(),
-		"ready": blockers.is_empty(),
-		"contract_id": SCENARIO_EXPORT_CONTRACT_ID,
-		"state": "validated_draft" if blockers.is_empty() else "blocked",
-		"scenario_id": _session.scenario_id,
-		"scenario_name": String(scenario.get("name", _session.scenario_id)),
-		"dirty": _dirty,
-		"changed": not changed_domains.is_empty(),
-		"changed_domains": changed_domains,
-		"target_paths": [ContentService.SCENARIOS_PATH, ContentService.TERRAIN_LAYERS_PATH],
-		"writeback_allowed": false,
-		"writeback_supported": false,
-		"writeback_state": "validated_draft_only",
-		"write_context": "validated draft only; no authored file or campaign progress is written",
-		"blockers": blockers,
-		"blocker_count": blockers.size(),
-		"warning_count": int(validation.get("warning_count", 0)),
-		"covered_objective_anchor_count": int(validation.get("covered_objective_anchor_count", 0)),
-		"objective_anchor_count": int(validation.get("objective_anchors", []).size()),
-		"missing_objective_anchor_count": int(validation.get("missing_objective_anchor_count", 0)),
-		"draft": draft,
-		"scenario_record": scenario_record,
-		"terrain_layers_record": terrain_layers_record,
-		"draft_signature": draft_signature,
-		"draft_signature_hash": hash(draft_signature),
-		"export_scope": "authored_scenario_and_terrain_layers_draft",
-	}
+	return blockers
 
 func _editor_scenario_objectives() -> Dictionary:
 	# Maps-folder packages are not registered with ContentService, so read the
-	# objectives from the same runtime record the export draft is built from.
+	# objectives from the same runtime record the save draft is built from.
 	# Returned read-only; callers must not mutate it.
 	if _session == null or _session.scenario_id == "":
 		return {}
-	var authored := ContentService.get_scenario_readonly(_session.scenario_id)
 	var objectives: Variant = {}
-	if not authored.is_empty():
-		objectives = authored.get("objectives", {})
-	else:
-		var runtime_record = _session.flags.get("native_random_map_runtime_scenario_record", {})
-		if not (runtime_record is Dictionary) or runtime_record.is_empty():
-			runtime_record = _session.overworld.get("native_random_map_runtime_scenario_record", {})
-		if runtime_record is Dictionary:
-			objectives = runtime_record.get("objectives", {})
+	var runtime_record = _session.flags.get("native_random_map_runtime_scenario_record", {})
+	if not (runtime_record is Dictionary) or runtime_record.is_empty():
+		runtime_record = _session.overworld.get("native_random_map_runtime_scenario_record", {})
+	if runtime_record is Dictionary:
+		objectives = runtime_record.get("objectives", {})
 	return objectives if objectives is Dictionary else {}
 
 func _editor_scenario_template() -> Dictionary:
 	if _session == null or _session.scenario_id == "":
 		return {}
-	var authored := ContentService.get_scenario(_session.scenario_id)
-	if not authored.is_empty():
-		return authored
 	var runtime_record = _session.flags.get("native_random_map_runtime_scenario_record", {})
 	if not (runtime_record is Dictionary) or runtime_record.is_empty():
 		runtime_record = _session.overworld.get("native_random_map_runtime_scenario_record", {})
@@ -6439,31 +7113,6 @@ func _editor_scenario_template() -> Dictionary:
 		var hero_position := OverworldRules.hero_position(_session)
 		scenario["start"] = {"x": hero_position.x, "y": hero_position.y}
 	return scenario
-
-func _export_draft_signature(scenario_record: Dictionary, terrain_layers_record: Dictionary, changed_domains: Array) -> String:
-	var map_rows = scenario_record.get("map", [])
-	var map_height: int = map_rows.size() if map_rows is Array else 0
-	var map_width := 0
-	if map_height > 0 and map_rows[0] is Array:
-		map_width = map_rows[0].size()
-	var start: Dictionary = scenario_record.get("start", {})
-	var changed_labels := []
-	for domain in changed_domains:
-		changed_labels.append(String(domain))
-	return "%s|%dx%d|start=%d,%d|towns=%d|resources=%d|artifacts=%d|encounters=%d|objects=%d|roads=%d|changed=%s" % [
-		String(scenario_record.get("id", "")),
-		map_width,
-		map_height,
-		int(start.get("x", -1)),
-		int(start.get("y", -1)),
-		scenario_record.get("towns", []).size(),
-		scenario_record.get("resource_nodes", []).size(),
-		scenario_record.get("artifact_nodes", []).size(),
-		scenario_record.get("encounters", []).size(),
-		scenario_record.get("map_objects", []).size(),
-		terrain_layers_record.get("roads", []).size(),
-		",".join(changed_labels),
-	]
 
 func _export_scenario_record_from_working_copy(baseline_scenario: Dictionary) -> Dictionary:
 	return _export_scenario_record_from_session(baseline_scenario, _session)
@@ -6639,15 +7288,6 @@ func _copy_optional_positive_int(target: Dictionary, source: Dictionary, key: St
 	if value > 0:
 		target[key] = value
 
-func _export_changed_domains(baseline_scenario: Dictionary, baseline_layers: Dictionary, scenario_record: Dictionary, terrain_layers_record: Dictionary) -> Array:
-	var domains := []
-	for key in ["map", "start", "towns", "resource_nodes", "artifact_nodes", "encounters", "map_objects"]:
-		if baseline_scenario.get(key, null) != scenario_record.get(key, null):
-			domains.append(key)
-	if baseline_layers != terrain_layers_record:
-		domains.append("terrain_layers")
-	return domains
-
 func _validate_export_scenario_record(record: Dictionary) -> Array:
 	var blockers := []
 	if String(record.get("id", "")).strip_edges() == "":
@@ -6758,6 +7398,16 @@ func _validate_export_terrain_layers_record(record: Dictionary) -> Array:
 	return blockers
 
 func _editor_map_load_handoff_payload() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _editor_map_load_handoff_payload__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._editor_map_load_handoff_payload", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._editor_map_load_handoff_payload", [self])
+	var result = _editor_map_load_handoff_payload__gd()
+	HumanEngine.check_writing(&"MapEditorShell._editor_map_load_handoff_payload", before, [self], result)
+	return result
+
+func _editor_map_load_handoff_payload__gd() -> Dictionary:
 	var selected_label := _selected_map_package_label()
 	var warnings: Array = _map_package_index_status.get("warnings", []) if _map_package_index_status.get("warnings", []) is Array else []
 	var unpaired_count := int(_map_package_index_status.get("unpaired_map_count", 0)) + int(_map_package_index_status.get("unpaired_scenario_count", 0))
@@ -6823,9 +7473,29 @@ func _editor_map_load_handoff_payload() -> Dictionary:
 	}
 
 func _editor_scenario_switch_handoff_payload() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _editor_scenario_switch_handoff_payload__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._editor_scenario_switch_handoff_payload", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._editor_scenario_switch_handoff_payload", [self])
+	var result = _editor_scenario_switch_handoff_payload__gd()
+	HumanEngine.check_writing(&"MapEditorShell._editor_scenario_switch_handoff_payload", before, [self], result)
+	return result
+
+func _editor_scenario_switch_handoff_payload__gd() -> Dictionary:
 	return _editor_map_load_handoff_payload()
 
 func _editor_selected_validation_focus_payload() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _editor_selected_validation_focus_payload__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._editor_selected_validation_focus_payload", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._editor_selected_validation_focus_payload", [self])
+	var result = _editor_selected_validation_focus_payload__gd()
+	HumanEngine.check_writing(&"MapEditorShell._editor_selected_validation_focus_payload", before, [self], result)
+	return result
+
+func _editor_selected_validation_focus_payload__gd() -> Dictionary:
 	if _session == null or not _tile_in_bounds(_selected_tile):
 		return {
 			"text": "",
@@ -6952,6 +7622,16 @@ func _selected_validation_focus_summary(counts: Dictionary) -> String:
 	return " | ".join(parts) if not parts.is_empty() else "no selected authoring links"
 
 func _editor_play_handoff_payload() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _editor_play_handoff_payload__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._editor_play_handoff_payload", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._editor_play_handoff_payload", [self])
+	var result = _editor_play_handoff_payload__gd()
+	HumanEngine.check_writing(&"MapEditorShell._editor_play_handoff_payload", before, [self], result)
+	return result
+
+func _editor_play_handoff_payload__gd() -> Dictionary:
 	if _session == null:
 		return {
 			"button_label": "Play Copy",
@@ -6996,6 +7676,16 @@ func _editor_play_handoff_payload() -> Dictionary:
 	}
 
 func _editor_play_return_context_payload() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _editor_play_return_context_payload__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._editor_play_return_context_payload", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._editor_play_return_context_payload", [self])
+	var result = _editor_play_return_context_payload__gd()
+	HumanEngine.check_writing(&"MapEditorShell._editor_play_return_context_payload", before, [self], result)
+	return result
+
+func _editor_play_return_context_payload__gd() -> Dictionary:
 	if _session == null or not _restored_from_play_copy:
 		return {
 			"text": "",
@@ -7036,6 +7726,16 @@ func _editor_play_return_context_payload() -> Dictionary:
 	}
 
 func _editor_restore_tile_cue_payload() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _editor_restore_tile_cue_payload__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._editor_restore_tile_cue_payload", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._editor_restore_tile_cue_payload", [self])
+	var result = _editor_restore_tile_cue_payload__gd()
+	HumanEngine.check_writing(&"MapEditorShell._editor_restore_tile_cue_payload", before, [self], result)
+	return result
+
+func _editor_restore_tile_cue_payload__gd() -> Dictionary:
 	if _session == null:
 		return {
 			"button_label": "Restore Tile",
@@ -7163,6 +7863,16 @@ func _tile_authoring_signature_summary(signature: Dictionary) -> String:
 	]
 
 func _editor_menu_return_payload() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _editor_menu_return_payload__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._editor_menu_return_payload", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._editor_menu_return_payload", [self])
+	var result = _editor_menu_return_payload__gd()
+	HumanEngine.check_writing(&"MapEditorShell._editor_menu_return_payload", before, [self], result)
+	return result
+
+func _editor_menu_return_payload__gd() -> Dictionary:
 	if _session == null:
 		var empty_text := "Menu return: Main menu; no editor working copy is loaded."
 		return {
@@ -7202,6 +7912,16 @@ func _editor_menu_return_payload() -> Dictionary:
 	}
 
 func _editor_active_tool_cue_payload(tool: String = "") -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _editor_active_tool_cue_payload__gd(tool)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._editor_active_tool_cue_payload", [self, tool])
+	var before := HumanEngine.before_writing(&"MapEditorShell._editor_active_tool_cue_payload", [self, tool])
+	var result = _editor_active_tool_cue_payload__gd(tool)
+	HumanEngine.check_writing(&"MapEditorShell._editor_active_tool_cue_payload", before, [self, tool], result)
+	return result
+
+func _editor_active_tool_cue_payload__gd(tool: String = "") -> Dictionary:
 	var tool_id := _tool if tool == "" else tool
 	var selected_text := "%d,%d" % [_selected_tile.x, _selected_tile.y]
 	var hovered_text := "%d,%d" % [_hovered_tile.x, _hovered_tile.y] if _tile_in_bounds(_hovered_tile) else "none"
@@ -7903,6 +8623,16 @@ func _object_detail_for_placement(family: String, placement: Dictionary) -> Dict
 			return {}
 
 func _object_details_at(tile: Vector2i, include_hero: bool = true) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _object_details_at__gd(tile, include_hero)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._object_details_at", [self, tile, include_hero])
+	var before := HumanEngine.before_writing(&"MapEditorShell._object_details_at", [self, tile, include_hero])
+	var result = _object_details_at__gd(tile, include_hero)
+	HumanEngine.check_writing(&"MapEditorShell._object_details_at", before, [self, tile, include_hero], result)
+	return result
+
+func _object_details_at__gd(tile: Vector2i, include_hero: bool = true) -> Array:
 	var details := []
 	if OverworldRules.hero_position(_session) == tile:
 		var hero = _session.overworld.get("hero", {})
@@ -7969,6 +8699,16 @@ func _placement_content_key(family: String) -> String:
 			return ""
 
 func _object_property_key(kind: String, placement_id: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _object_property_key__gd(kind, placement_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._object_property_key", [self, kind, placement_id])
+	var before := HumanEngine.before_writing(&"MapEditorShell._object_property_key", [self, kind, placement_id])
+	var result = _object_property_key__gd(kind, placement_id)
+	HumanEngine.check_writing(&"MapEditorShell._object_property_key", before, [self, kind, placement_id], result)
+	return result
+
+func _object_property_key__gd(kind: String, placement_id: String) -> String:
 	if kind == "" or placement_id == "":
 		return ""
 	return "%s:%s" % [kind, placement_id]
@@ -7991,6 +8731,16 @@ func _primary_editable_property_for_kind(kind: String) -> String:
 	return String(properties[0]) if not properties.is_empty() else ""
 
 func _object_family_label(family: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _object_family_label__gd(family)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._object_family_label", [self, family])
+	var before := HumanEngine.before_writing(&"MapEditorShell._object_family_label", [self, family])
+	var result = _object_family_label__gd(family)
+	HumanEngine.check_writing(&"MapEditorShell._object_family_label", before, [self, family], result)
+	return result
+
+func _object_family_label__gd(family: String) -> String:
 	match family:
 		OBJECT_FAMILY_TOWN:
 			return "Town"
@@ -8092,6 +8842,16 @@ func _terrain_layers() -> Dictionary:
 	return {"id": _session.scenario_id, "terrain_layer_status": "editor_working_copy", "roads": []}
 
 func _has_road_at(tile: Vector2i) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _has_road_at__gd(tile)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._has_road_at", [self, tile])
+	var before := HumanEngine.before_writing(&"MapEditorShell._has_road_at", [self, tile])
+	var result = _has_road_at__gd(tile)
+	HumanEngine.check_writing(&"MapEditorShell._has_road_at", before, [self, tile], result)
+	return result
+
+func _has_road_at__gd(tile: Vector2i) -> bool:
 	return not _road_layer_ids_at(tile).is_empty()
 
 func _road_layer_ids_at(tile: Vector2i) -> Array:
@@ -8114,6 +8874,16 @@ func _road_layer_ids_at(tile: Vector2i) -> Array:
 	return ids
 
 func _road_tile_count() -> int:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _road_tile_count__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._road_tile_count", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._road_tile_count", [self])
+	var result = _road_tile_count__gd()
+	HumanEngine.check_writing(&"MapEditorShell._road_tile_count", before, [self], result)
+	return result
+
+func _road_tile_count__gd() -> int:
 	if _session == null:
 		return 0
 	var unique_tiles := {}
@@ -8132,6 +8902,16 @@ func _road_tile_count() -> int:
 	return unique_tiles.size()
 
 func _placement_count() -> int:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _placement_count__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._placement_count", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._placement_count", [self])
+	var result = _placement_count__gd()
+	HumanEngine.check_writing(&"MapEditorShell._placement_count", before, [self], result)
+	return result
+
+func _placement_count__gd() -> int:
 	if _session == null:
 		return 0
 	var total := 0
@@ -8142,6 +8922,16 @@ func _placement_count() -> int:
 	return total
 
 func _terrain_at(tile: Vector2i) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _terrain_at__gd(tile)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._terrain_at", [self, tile])
+	var before := HumanEngine.before_writing(&"MapEditorShell._terrain_at", [self, tile])
+	var result = _terrain_at__gd(tile)
+	HumanEngine.check_writing(&"MapEditorShell._terrain_at", before, [self, tile], result)
+	return result
+
+func _terrain_at__gd(tile: Vector2i) -> String:
 	if _session == null:
 		return ""
 	var map_data = _session.overworld.get("map", [])
@@ -8153,6 +8943,16 @@ func _terrain_at(tile: Vector2i) -> String:
 	return String(row[tile.x])
 
 func _terrain_id_in_grammar(terrain_id: String) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _terrain_id_in_grammar__gd(terrain_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._terrain_id_in_grammar", [self, terrain_id])
+	var before := HumanEngine.before_writing(&"MapEditorShell._terrain_id_in_grammar", [self, terrain_id])
+	var result = _terrain_id_in_grammar__gd(terrain_id)
+	HumanEngine.check_writing(&"MapEditorShell._terrain_id_in_grammar", before, [self, terrain_id], result)
+	return result
+
+func _terrain_id_in_grammar__gd(terrain_id: String) -> bool:
 	if terrain_id == "":
 		return false
 	for authored_terrain_id in _authored_terrain_ids():
@@ -8161,12 +8961,32 @@ func _terrain_id_in_grammar(terrain_id: String) -> bool:
 	return false
 
 func _tile_in_bounds(tile: Vector2i) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _tile_in_bounds__gd(tile)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._tile_in_bounds", [self, tile])
+	var before := HumanEngine.before_writing(&"MapEditorShell._tile_in_bounds", [self, tile])
+	var result = _tile_in_bounds__gd(tile)
+	HumanEngine.check_writing(&"MapEditorShell._tile_in_bounds", before, [self, tile], result)
+	return result
+
+func _tile_in_bounds__gd(tile: Vector2i) -> bool:
 	if _session == null:
 		return false
 	var map_size := OverworldRules.derive_map_size(_session)
 	return tile.x >= 0 and tile.y >= 0 and tile.x < map_size.x and tile.y < map_size.y
 
 func _tile_key(tile: Vector2i) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _tile_key__gd(tile)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._tile_key", [self, tile])
+	var before := HumanEngine.before_writing(&"MapEditorShell._tile_key", [self, tile])
+	var result = _tile_key__gd(tile)
+	HumanEngine.check_writing(&"MapEditorShell._tile_key", before, [self, tile], result)
+	return result
+
+func _tile_key__gd(tile: Vector2i) -> String:
 	return "%d,%d" % [tile.x, tile.y]
 
 func _set_compact_label(label: Label, text: String, max_lines: int) -> void:
@@ -8215,7 +9035,6 @@ func _apply_visual_theme() -> void:
 	]:
 		_apply_editor_option_surface(picker)
 
-
 func _apply_editor_button_surface(button: BaseButton, role: String) -> void:
 	if button == null:
 		return
@@ -8223,7 +9042,6 @@ func _apply_editor_button_surface(button: BaseButton, role: String) -> void:
 	var font_size := button.get_theme_font_size("font_size")
 	button.focus_mode = Control.FOCUS_ALL
 	FrontierVisualKit.apply_button(button, role, minimum.x, minimum.y, font_size)
-
 
 func _apply_editor_option_surface(picker: OptionButton) -> void:
 	if picker == null:
@@ -8369,10 +9187,6 @@ func validation_snapshot() -> Dictionary:
 		"visible_status_full": _status_label.tooltip_text if _status_label != null else "",
 		"scenario_validation_check": _editor_scenario_validation_check_payload(),
 		"scenario_validation_check_text": String(_editor_scenario_validation_check_payload().get("text", "")),
-		"export_intent": _editor_export_intent_payload(),
-		"export_intent_text": String(_editor_export_intent_payload().get("text", "")),
-		"export_intent_tooltip": String(_editor_export_intent_payload().get("tooltip", "")),
-		"authored_scenario_export_contract": _authored_scenario_export_contract_payload(false),
 		"scenario_switch_handoff": _editor_scenario_switch_handoff_payload(),
 		"scenario_switch_handoff_text": String(_editor_scenario_switch_handoff_payload().get("text", "")),
 		"scenario_switch_handoff_tooltip": String(_editor_scenario_switch_handoff_payload().get("tooltip", "")),
@@ -8510,6 +9324,16 @@ func _map_package_picker_metadata() -> Array:
 	return metadata
 
 func _public_map_package_index_status() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _public_map_package_index_status__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._public_map_package_index_status", [self])
+	var before := HumanEngine.before_writing(&"MapEditorShell._public_map_package_index_status", [self])
+	var result = _public_map_package_index_status__gd()
+	HumanEngine.check_writing(&"MapEditorShell._public_map_package_index_status", before, [self], result)
+	return result
+
+func _public_map_package_index_status__gd() -> Dictionary:
 	var warnings: Array = _map_package_index_status.get("warnings", []) if _map_package_index_status.get("warnings", []) is Array else []
 	var inspection_only_count := 0
 	for entry in _map_package_entries:
@@ -8528,13 +9352,6 @@ func _public_map_package_index_status() -> Dictionary:
 		"unpaired_scenario_count": int(_map_package_index_status.get("unpaired_scenario_count", 0)),
 		"authored_json_scenarios_used": false,
 	}
-
-func validation_load_legacy_authored_scenario_for_dev(scenario_id: String) -> Dictionary:
-	var loaded := _load_legacy_authored_scenario_working_copy_for_dev_validation(scenario_id)
-	var snapshot := validation_snapshot()
-	snapshot["ok"] = loaded
-	snapshot["legacy_authored_scenario_dev_validation"] = true
-	return snapshot
 
 func validation_load_maps_folder_package(package_id: String) -> Dictionary:
 	var loaded := _load_maps_folder_package_working_copy(package_id)
@@ -9224,13 +10041,20 @@ func validation_launch_working_copy() -> Dictionary:
 		"launch_handoff": launch_handoff,
 	}
 
-func validation_authored_scenario_export_contract() -> Dictionary:
-	return _authored_scenario_export_contract_payload(true)
-
 func validation_save_copy(target_dir: String = "", target_stem: String = "") -> Dictionary:
 	return _save_package_working_copy(target_dir, target_stem)
 
 func _tile_inspection_payload(tile: Vector2i) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _tile_inspection_payload__gd(tile)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell._tile_inspection_payload", [self, tile])
+	var before := HumanEngine.before_writing(&"MapEditorShell._tile_inspection_payload", [self, tile])
+	var result = _tile_inspection_payload__gd(tile)
+	HumanEngine.check_writing(&"MapEditorShell._tile_inspection_payload", before, [self, tile], result)
+	return result
+
+func _tile_inspection_payload__gd(tile: Vector2i) -> Dictionary:
 	if _session == null or not _tile_in_bounds(tile):
 		return {}
 	var object_lines := _object_lines_at(tile)
