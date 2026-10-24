@@ -98,35 +98,6 @@ void make_read_only_recursive(State &state, const Value &value) {
 	}
 }
 
-// read_package_dictionary: the package, or the failure result in failure.
-bool read_package_dictionary(State &state, content::Files &files, const char *operation, const std::string &path, Value &package,
-		Value &failure) {
-	if (!files.exists(path)) {
-		failure = package_failure(state, operation, path, "missing_package", "Package file does not exist.");
-		return false;
-	}
-	std::string bytes;
-	if (!files.read(path, bytes)) {
-		failure = package_failure(state, operation, path, "open_failed", "Package file could not be opened for reading.");
-		return false;
-	}
-	if (bytes.size() > kMaxPackageFileBytes) {
-		failure = package_failure(state, operation, path, "package_too_large", "Package file is larger than any supported map package.");
-		return false;
-	}
-	const compat::JsonParse parsed = compat::json_parse(state, bytes);
-	if (parsed.error != 0) {
-		failure = package_failure(state, operation, path, "invalid_package_json", "Package file could not be parsed.");
-		return false;
-	}
-	if (parsed.data.kind != Kind::Dict) {
-		failure = package_failure(state, operation, path, "invalid_package_root", "Package root must be a dictionary.");
-		return false;
-	}
-	package = parsed.data;
-	return true;
-}
-
 // payload_dimension_in_range: an int or a float, whole, from 1 to maximum.
 bool payload_dimension_in_range(const State &state, const Value &document, const char *key, const Value &fallback, int32_t maximum) {
 	const Value value = get(state, document, key, fallback);
@@ -247,6 +218,34 @@ Value package_operation_report(State &state, const char *operation, const char *
 }
 
 } // namespace
+
+bool read_package_dictionary(State &state, content::Files &files, const char *operation, const std::string &path, Value &package,
+		Value &failure) {
+	if (!files.exists(path)) {
+		failure = package_failure(state, operation, path, "missing_package", "Package file does not exist.");
+		return false;
+	}
+	std::string bytes;
+	if (!files.read(path, bytes)) {
+		failure = package_failure(state, operation, path, "open_failed", "Package file could not be opened for reading.");
+		return false;
+	}
+	if (bytes.size() > kMaxPackageFileBytes) {
+		failure = package_failure(state, operation, path, "package_too_large", "Package file is larger than any supported map package.");
+		return false;
+	}
+	const compat::JsonParse parsed = compat::json_parse(state, bytes);
+	if (parsed.error != 0) {
+		failure = package_failure(state, operation, path, "invalid_package_json", "Package file could not be parsed.");
+		return false;
+	}
+	if (parsed.data.kind != Kind::Dict) {
+		failure = package_failure(state, operation, path, "invalid_package_root", "Package root must be a dictionary.");
+		return false;
+	}
+	package = parsed.data;
+	return true;
+}
 
 Value package_failure(State &state, const char *operation, const std::string &path, const char *code, const char *message) {
 	const Value failure = new_dict(state);

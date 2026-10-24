@@ -116930,6 +116930,19 @@
       ],
       "notes": "Branch native-phase8-generation from main 3b3d50b0a (P8-7); main tagged pre-native-phase8-generation first. aurelion_rules/map_generation.hpp (core/map_generation.cpp, library aurelion_rules_generation) ports MapPackageService's normalize_random_map_config, generate_random_map (generator core kept per thread), convert_generated_payload, save_map_package and save_scenario_package with what they call, over the H3MapEd generator core compiled from the map library's sources (aurelion_h3maped_rmg, one copy); packages written with compat::JsonWriter (JSON.stringify(package, \"\t\", true)) into content::Files, in memory in the runner. Two copies of the projection and the package loads/writes: a behaviour change goes into both, plus one six-seed rules_parity --runner-b check. The scene's HEROES_AI_MATCH_CONTENT_SNAPSHOT writes only content.snap; match_sim_cli with HEROES_AI_MATCH_CONTENT draws the line-up and map seed, builds the setup with 7.11's native build_random_map_skirmish_setup_with_retry and starts the session; weight sets by name only (a .json set or a map corpus still uses the prepare mode). rules_parity.py --runner and ai_match_batch.py --runner generate in the runner. Checks: six seeds game against runner in one process, 443 digests and the records identical; four setups (small 2P, medium 3P normal water, large 4P two levels, XL 6P islands two levels) eight package files byte-identical to the game's; a two-match batch smoke; core suite 17/17. Windows only; Linux libraries and Linux match_sim_cli not built.",
       "updatedAt": "2026-10-23T23:00:00Z"
+    },
+    {
+      "id": "native-rules-phase8-09-fold-20261024",
+      "title": "Phase 8.9: one copy of the package code",
+      "status": "completed",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Branch native-phase8-fold from main ec2efc954 (Phase 7 merge 3); main tagged pre-native-phase8-fold first. MapPackageService (src/gdextension/src/map_package_service.cpp, 3,789 to 1,034 lines) is thin wrappers over the core's package code: the loads and document checks (core/map_packages.cpp), config normalize and identity, generation, conversion, package writes and document hashes (core/map_generation.cpp), compiled into the map library as aurelion_map_rules_core with the core's pow/exp/log. src/gdextension/src/core_bridge.cpp converts at the Godot boundary (State in, unchanged containers out as they came, documents read lazily, files through FileAccess with the checked write and rename, the browser manifest cache filled after a write); exceptions on in the map library build. One copy of the package loads, projection, writes and checks; the MapDocument/ScenarioDocument accessors keep a Godot copy beside the core's. Checks: four setups (small 2P, medium 3P normal water, large 4P two levels, XL 6P islands two levels) eight package files byte-identical to main's, records' setups equal; six seeds against main, game and --runner-b, 443 digests and the records identical; core suite 17/17. Windows only; Linux libraries not rebuilt.",
+      "updatedAt": "2026-10-24T12:00:00Z"
     }
   ],
   "project": "heroes-like",
