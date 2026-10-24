@@ -3404,6 +3404,33 @@ rounds, the runner's own seconds.
   a 119-day game at 3.1 and 4.3 GB instead of 2.5 GB at every second and fourth day. Records identical at every
   interval. The option (`--compact-every`, with `State::settle` marking the day's new nodes as a compaction would)
   is on branch `native-phase8-compact`.
+- D after P8-12, still not merged: with the node buffers freed, compacting less often no longer pays. The 320-day
+  game alone: 1.36, 2.11 and 3.37 GB and 258.9, 273.3 and 294.8 s at every 1, 2 and 4 days. 16 games at once
+  (seeds `p8mem-0` to `p8mem-15`): every day, the peaks sum to 15.3 GB, at most 12.7 GB in use at once. Both builds
+  side by side, 8 + 8 games, two rounds: every second day 2,803.9 s against 2,827.9 s (-0.85%; -1.7% and 0.0%) for
+  about 30% more memory. Records identical at every interval (16/16). N stays 1.
+
+**P8-12, node buffers freed on reset** (`native-rules-phase8-12-buffers-20261024`, branch `native-phase8-buffers`):
+- Cause: `NodePool` reuses node slots after each compaction, and `ArrayNode`, `DictNode` and `PackedNode::reset()`
+  kept their lists' heap buffers (the `ValueList` capacity, the `KeyList` table, the packed vectors). A game makes
+  1.4 to 2.6 million nodes a day and keeps about 0.65 million, so every slot came to hold the largest list it ever
+  held: an extra large 6P game grew about 37 MB a day while its live nodes stayed flat.
+- Change: `reset()` frees them (`ValueList::reset`, `KeyList::reset`, the packed vectors swapped empty).
+- Peak private memory, extra large 6P, land, normal guards, one game at a time (seeds `p8mem-2`, 119 days, and
+  `p8mem-9`, 320 days):
+
+  | | Day 119 | Day 320 | 320-day game |
+  |---|---:|---:|---:|
+  | Godot, before | 3.0 GB | 13.6 GB | 376 s |
+  | Godot, after | 1.2 GB | 2.3 GB | 281 s |
+  | Runner, before | 2.5 GB | 12.8 GB | 354.2 s |
+  | Runner, after | | 1.4 GB | 319.9 s |
+
+  The runner's times are three games at once; the records are identical in every pair.
+- What still grows: 1.6 GB to 2.3 GB from day 30 to day 320 in Godot. The atom table only grows (43,072 to 576,407
+  strings in the 320-day runner game); the rest is not split further.
+- Checks: six seeds against main, game and `--runner-b`, all 443 daily digests and the records identical;
+  core suite 17/17. Windows only: the Linux libraries in `bin/` are not rebuilt.
 
 ### Totals
 
