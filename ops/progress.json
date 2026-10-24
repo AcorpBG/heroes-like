@@ -116982,6 +116982,19 @@
       ],
       "notes": "Branch native-phase8-spatial from main 3d18e3e66; main tagged pre-native-phase8-spatial first. State::pair_atom keeps the tile-key atoms by their numbers; _spatial_resource_section compares the fingerprint fields in place and builds the fingerprint only on a rebuild. The index is built and dropped at the same points: an index placement_level builds is read stale during AI hero walks (139 reads in the XL 6P one-level profile game), so skipping that build or updating the index in place would change games and is not done. Checks: six seeds against main, game and --runner-b, 443 digests and the records identical; core suite 17/17; rules_selftest OK. Timing, eight profile games on the runner, both builds 16 at once, two rounds: 599.0 s to 584.0 s (-2.5%; -0.2% to -4.3% per game), records identical. Windows only; Linux libraries not rebuilt.",
       "updatedAt": "2026-10-24T16:00:00Z"
+    },
+    {
+      "id": "native-rules-phase8-12-buffers-20261024",
+      "title": "Phase 8.12: State node buffers freed on reset",
+      "status": "completed",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Branch native-phase8-buffers from main 77e4ef2a7; main tagged pre-native-phase8-buffers first. NodePool reuses node slots after each compaction, and ArrayNode/DictNode/PackedNode reset() kept their lists' heap buffers, so every slot held the largest list it ever held: an XL 6P game grew about 37 MB a day with its live nodes flat (0.65M kept of 1.4-2.6M made a day). reset() now frees them (ValueList::reset, KeyList::reset, packed vectors swapped empty). Peak private memory, XL 6P, one game at a time: Godot 3.0 GB to 1.2 GB at day 119 and 13.6 GB to 2.3 GB at day 320 (376 s to 281 s); runner 12.8 GB to 1.4 GB at day 320 (354.2 s to 319.9 s, three at once); records identical. Checks: six seeds against main, game and --runner-b, 443 digests and the records identical; core suite 17/17. Windows only; Linux libraries not rebuilt.",
+      "updatedAt": "2026-10-24T20:00:00Z"
     }
   ],
   "project": "heroes-like",
