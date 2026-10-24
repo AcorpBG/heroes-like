@@ -67,6 +67,9 @@ static func native_writing(name: StringName, args: Array) -> Variant:
 		result = NativeRules.api().port_session_call(name, views)
 	else:
 		result = NativeRules.api().port_call(name, views, true)
+		# A call that changed nothing it loaded left each view as its session.
+		if not NativeRules.api().port_last_wrote():
+			return result
 	_take_views(args, views)
 	return result
 
@@ -121,9 +124,22 @@ static func _shared(args: Array) -> Array:
 	return out
 
 static func _view(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	var view := {}
-	for field in SESSION_FIELDS:
-		view[field] = session.get(field)
+	# SESSION_FIELDS, read as members (faster than get()).
+	var view := {
+		"save_version": session.save_version,
+		"session_id": session.session_id,
+		"scenario_id": session.scenario_id,
+		"hero_id": session.hero_id,
+		"day": session.day,
+		"difficulty": session.difficulty,
+		"launch_mode": session.launch_mode,
+		"game_state": session.game_state,
+		"scenario_status": session.scenario_status,
+		"scenario_summary": session.scenario_summary,
+		"overworld": session.overworld,
+		"battle": session.battle,
+		"flags": session.flags,
+	}
 	var meta := {}
 	for key in session.get_meta_list():
 		meta[key] = session.get_meta(key)

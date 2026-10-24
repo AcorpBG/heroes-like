@@ -90,6 +90,10 @@ public:
 	// failure does, since the null could pass for GDScript's result.
 	Variant port_call(const StringName &name, const Array &args, bool write_back);
 	bool port_not_ported() const { return last_not_ported_; }
+	// After a port_call that wrote back: false when it changed nothing it
+	// loaded and made no host call, so the arguments are as they were (a
+	// session's view is still the session). True after any other call.
+	bool port_last_wrote() const { return last_wrote_; }
 	// A session kept across calls (the match runner's days, Phase 6 P6-4;
 	// bridge::PortBridge::begin_kept): port_session_call is port_call with
 	// write_back, on a bridge of its own that keeps the session's nodes from
@@ -217,6 +221,7 @@ private:
 	std::vector<std::string> port_log_paths_;
 	int64_t port_uses_ = 0;
 	bool last_not_ported_ = false;
+	bool last_wrote_ = true;
 	int64_t unknown_calls_ = 0;
 	// Each host target's calls, by its name ("BattleRules._finalize_victory").
 	std::vector<std::pair<std::string, int64_t>> host_call_counts_;

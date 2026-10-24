@@ -1822,7 +1822,8 @@ func _placement_array_cache_signature(values, fields: Array) -> int:
 		var fallback_y = position.get("y", -1) if position is Dictionary else -1
 		signature = _combine_cache_signature(signature, int(entry.get("x", fallback_x)))
 		signature = _combine_cache_signature(signature, int(entry.get("y", fallback_y)))
-		signature = _combine_cache_signature(signature, LevelRules.level_of(entry))
+		# The fields LevelRules.level_of reads, so the signature changes with the level.
+		signature = _combine_cache_signature(signature, hash(var_to_str([position.get("level") if position is Dictionary else null, entry.get("level"), entry.get("visit_tile", {}).get("level") if entry.get("visit_tile") is Dictionary else null, entry.get("primary_tile", {}).get("level") if entry.get("primary_tile") is Dictionary else null])))
 		for field in fields:
 			signature = _combine_cache_signature(signature, hash(str(entry.get(str(field), ""))))
 	return signature

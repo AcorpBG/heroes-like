@@ -355,6 +355,11 @@ var _last_generated_opening_autosave_reconciliation_result: Dictionary = {}
 var _opening_route_suggested := false
 var _opening_route_suggestion_kind := ""
 var _refresh_cache: Dictionary = {}
+## Each resource node's pathing surface, by placement id, as [the node's hash,
+## the surface], for _pathing_surfaces_session. The surface reads only the node
+## and content, so it stays while the node is unchanged.
+var _pathing_surfaces: Dictionary = {}
+var _pathing_surfaces_session := 0
 var _hero_actions_cache: Array = []
 var _hero_actions_cache_signature := ""
 var _selected_route_state: Dictionary = {}
@@ -9871,8 +9876,10 @@ func _town_at(x: int, y: int) -> Dictionary:
 	var cache_key := "town_at:%d,%d" % [x, y]
 	if _refresh_cache.has(cache_key):
 		return _refresh_cache[cache_key]
+	var level := LevelRules.view_level(_session)
+	var entrance := LevelRules.position({"x": x, "y": y, "level": level})
 	for town in _session.overworld.get("towns", []):
-		if town is Dictionary and LevelRules.on_level(town, LevelRules.view_level(_session)) and LevelRules.town_entrance(town) == LevelRules.position({"x": x, "y": y, "level": LevelRules.view_level(_session)}):
+		if town is Dictionary and LevelRules.on_level(town, level) and LevelRules.town_entrance(town) == entrance:
 			_refresh_cache[cache_key] = town
 			return town
 	_refresh_cache[cache_key] = {}
@@ -9906,8 +9913,9 @@ func _active_resource_nodes() -> Array:
 	if _refresh_cache.has("active_resource_nodes"):
 		return _refresh_cache["active_resource_nodes"]
 	var nodes := []
+	var level := LevelRules.view_level(_session)
 	for node in _session.overworld.get("resource_nodes", []):
-		if not (node is Dictionary) or not LevelRules.on_level(node, LevelRules.view_level(_session)):
+		if not (node is Dictionary) or not LevelRules.on_level(node, level):
 			continue
 		var site = ContentService.get_resource_site(String(node.get("site_id", "")))
 		if OverworldRules.resource_node_is_present(node, site):
@@ -10039,14 +10047,24 @@ func _resource_node_pathing_surface(node: Dictionary) -> Dictionary:
 	var placement_id := String(node.get("placement_id", ""))
 	if placement_id == "":
 		return {}
-	return OverworldRules.overworld_object_placement_pathing_surface(_session, placement_id)
+	var session_id := _session.get_instance_id()
+	if session_id != _pathing_surfaces_session:
+		_pathing_surfaces.clear()
+		_pathing_surfaces_session = session_id
+	var node_hash := node.hash()
+	var cached: Array = _pathing_surfaces.get(placement_id, [])
+	if cached.is_empty() or cached[0] != node_hash:
+		cached = [node_hash, OverworldRules.overworld_object_placement_pathing_surface(_session, placement_id)]
+		_pathing_surfaces[placement_id] = cached
+	return cached[1]
 
 func _artifact_node_at(x: int, y: int) -> Dictionary:
 	var cache_key := "artifact_node_at:%d,%d" % [x, y]
 	if _refresh_cache.has(cache_key):
 		return _refresh_cache[cache_key]
+	var level := LevelRules.view_level(_session)
 	for node in _session.overworld.get("artifact_nodes", []):
-		if node is Dictionary and LevelRules.on_level(node, LevelRules.view_level(_session)) and not bool(node.get("collected", false)) and int(node.get("x", -1)) == x and int(node.get("y", -1)) == y:
+		if node is Dictionary and LevelRules.on_level(node, level) and not bool(node.get("collected", false)) and int(node.get("x", -1)) == x and int(node.get("y", -1)) == y:
 			_refresh_cache[cache_key] = node
 			return node
 	_refresh_cache[cache_key] = {}
@@ -10056,12 +10074,13 @@ func _encounter_at(x: int, y: int) -> Dictionary:
 	var cache_key := "encounter_at:%d,%d" % [x, y]
 	if _refresh_cache.has(cache_key):
 		return _refresh_cache[cache_key]
+	var level := LevelRules.view_level(_session)
 	for encounter in _session.overworld.get("encounters", []):
-		if encounter is Dictionary and LevelRules.on_level(encounter, LevelRules.view_level(_session)) and int(encounter.get("x", -1)) == x and int(encounter.get("y", -1)) == y:
+		if encounter is Dictionary and LevelRules.on_level(encounter, level) and int(encounter.get("x", -1)) == x and int(encounter.get("y", -1)) == y:
 			if not OverworldRules.is_encounter_resolved(_session, encounter):
 				_refresh_cache[cache_key] = encounter
 				return encounter
-	var guard_encounter := OverworldRules.guard_engagement_encounter_at_tile(_session, x, y, LevelRules.view_level(_session))
+	var guard_encounter := OverworldRules.guard_engagement_encounter_at_tile(_session, x, y, level)
 	if not guard_encounter.is_empty():
 		_refresh_cache[cache_key] = guard_encounter
 		return guard_encounter

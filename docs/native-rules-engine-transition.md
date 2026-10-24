@@ -3168,6 +3168,21 @@ Checks:
   the branch: arming a move 38.4 | 53.7, hero 74.9 | 88.2, dialogs 95.1 | 109.1, move 190 |
   200, hover 1.4 | 4.6.
 
+**UI speed after merge 4** (2026-10-24, owner decision: speed up the screen actions merge 4 made slower, results
+identical). Profiled per native call: arming a move made 1,571 native calls, 1,022 of them `level_of`.
+- The map view's placement signature hashes the level fields instead of calling `level_of` per entry; the shell's
+  town, resource, artifact and encounter lookups read the view level once per loop, and it keeps each resource node's
+  pathing surface while the node is unchanged; the stockpile menu keeps its resource definitions.
+- Seven `OverworldLevelRules` entries that write nothing are no longer writing calls. A writing call that changed
+  nothing it loaded and made no host call leaves its arguments as they were (`AurelionRules.port_last_wrote`), and
+  `DayEngine.native_writing` then skips taking the views back. `_view` reads the session's members directly.
+- Checks against main 6ef5ae55c: the `--human` check identical on the eight seeds (1,896 action digests and the
+  records), the six seeds identical (443 daily digests and the match records) and the core suite 17/17.
+- Screen time per action in ms, main 6ef5ae55c | merge 4 | now (the eight seeds, two runs at once for main and now;
+  merge 4's numbers are its six-at-once run): arming a move 37.3 | 53.7 | 40.7, hero 75.1 | 88.2 | 75.7, dialogs
+  94.5 | 109.1 | 98.6, hover 1.4 | 4.6 | 1.3, move 185.8 | 200 | 186.7. Arming a move still makes about 400 small
+  native calls (view level, hero position, level checks), each about 10 µs of view and boundary.
+
 ### Phase 8: a match runner without Godot
 
 Wanted, not optional (owner decision 2026-10-22, D7). The same core as a command-line tool, `match_sim_cli` beside

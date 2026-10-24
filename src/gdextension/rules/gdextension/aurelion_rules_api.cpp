@@ -191,6 +191,7 @@ void AurelionRules::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("state_conversion_timing", "start", "end", "made_arrays", "made_dicts", "rounds"), &AurelionRules::state_conversion_timing);
 	ClassDB::bind_method(D_METHOD("port_call", "name", "args", "write_back"), &AurelionRules::port_call);
 	ClassDB::bind_method(D_METHOD("port_not_ported"), &AurelionRules::port_not_ported);
+	ClassDB::bind_method(D_METHOD("port_last_wrote"), &AurelionRules::port_last_wrote);
 	ClassDB::bind_method(D_METHOD("port_session_call", "name", "args"), &AurelionRules::port_session_call);
 	ClassDB::bind_method(D_METHOD("port_session_reread", "container"), &AurelionRules::port_session_reread);
 	ClassDB::bind_method(D_METHOD("port_session_close"), &AurelionRules::port_session_close);
@@ -703,6 +704,7 @@ void AurelionRules::port_session_close() {
 Variant AurelionRules::port_call_on(const StringName &name, const Array &args, bool write_back, bool session) {
 	std::string problem;
 	last_not_ported_ = false;
+	last_wrote_ = true;
 	try {
 		const aurelion::rules::port::Function *function = port_function(name);
 		if (function == nullptr) {
@@ -743,8 +745,12 @@ Variant AurelionRules::port_call_on(const StringName &name, const Array &args, b
 				last_not_ported_ = false;
 				count_host_calls(stats, port);
 				if (session) {
+					last_wrote_ = true;
 					return port.keep(result, values, static_cast<size_t>(function->arity));
 				}
+				// Read before write_back, which leaves the nodes dirty; a call
+				// inside this one's host calls set it too.
+				const bool wrote = port.changed_a_source() || !port.host_calls_made().empty();
 				// What the session kept may hold a container this call wrote
 				// into, or GDScript wrote into at a host call.
 				if (write_back && nesting.level() == 0 && session_port_ && (port.full_host_calls() != 0 || port.changed_a_source())) {
@@ -756,7 +762,9 @@ Variant AurelionRules::port_call_on(const StringName &name, const Array &args, b
 					problem = std::string(function->name) + ": native wrote into an argument";
 				}
 				if (problem.empty()) {
-					return port.export_value(result);
+					const Variant exported = port.export_value(result);
+					last_wrote_ = wrote;
+					return exported;
 				}
 			}
 		} catch (const aurelion::rules::state::NotPorted &reason) {
@@ -775,6 +783,7 @@ Variant AurelionRules::port_call_on(const StringName &name, const Array &args, b
 				}
 				keep_not_ported(stats, reason.what());
 				report_fallback(function->name, reason.what());
+				last_wrote_ = true;
 				return Variant();
 			}
 			last_not_ported_ = false;
@@ -795,6 +804,7 @@ Variant AurelionRules::port_call_on(const StringName &name, const Array &args, b
 	} catch (...) {
 		problem = "unknown native exception outside the port";
 	}
+	last_wrote_ = true;
 	report_port_failure("port_call", problem);
 	return Variant();
 }

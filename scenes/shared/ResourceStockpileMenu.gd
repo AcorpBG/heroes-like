@@ -27,6 +27,8 @@ var _compact_mode := false
 var _return_focus_on_hide := false
 var _resource_values: Dictionary = {}
 var _resource_income: Dictionary = {}
+## OverworldRules.resource_definition by resource id (content, fixed).
+var _definitions: Dictionary = {}
 var _inline_row: HBoxContainer
 var _inline_cells: Dictionary = {}
 
@@ -232,7 +234,7 @@ func _rebuild_popup() -> void:
 	var row := 0
 	for resource_id_value in OverworldRules.LIVE_STOCKPILE_RESOURCE_KEYS:
 		var resource_id := String(resource_id_value)
-		var definition := OverworldRules.resource_definition(resource_id)
+		var definition := _definition(resource_id)
 		if definition.is_empty():
 			continue
 		var display_name := String(definition.get("display_name", "")).strip_edges()
@@ -268,13 +270,19 @@ func _rebuild_popup() -> void:
 	_sync_inline_icons()
 
 
+func _definition(resource_id: String) -> Dictionary:
+	if not _definitions.has(resource_id):
+		_definitions[resource_id] = OverworldRules.resource_definition(resource_id)
+	return _definitions[resource_id]
+
+
 ## True when the popup already lists exactly the resources a rebuild would
 ## list, in order and with the same icons.
 func _popup_lists_current_resources(popup: PopupMenu) -> bool:
 	var index := 0
 	for resource_id_value in OverworldRules.LIVE_STOCKPILE_RESOURCE_KEYS:
 		var resource_id := String(resource_id_value)
-		var definition := OverworldRules.resource_definition(resource_id)
+		var definition := _definition(resource_id)
 		if definition.is_empty() or String(definition.get("display_name", "")).strip_edges() == "":
 			continue
 		if index >= popup.item_count:
