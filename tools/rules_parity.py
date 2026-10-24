@@ -2,7 +2,7 @@
 """Rules parity check: the six committed seed setups played by two copies of the game, compared day by day.
 
     python tools/rules_parity.py check A B                 # play both, compare, explain the first difference
-    python tools/rules_parity.py check A B --seeds l1,s2 --env-b HEROES_NATIVE_DAY=shadow
+    python tools/rules_parity.py check A B --seeds l1,s2 --env-b HEROES_NATIVE_HUMAN=shadow
     python tools/rules_parity.py run A --out DIR           # play one side only (for example on Linux)
     python tools/rules_parity.py check A A --one-process-b # every seed fresh against all in one process
     python tools/rules_parity.py compare DIR_A DIR_B       # compare two `run` outputs

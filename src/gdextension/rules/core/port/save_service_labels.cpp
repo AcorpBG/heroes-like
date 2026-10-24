@@ -6,6 +6,7 @@
 #include "aurelion_rules/port/battle_payload.hpp"
 #include "aurelion_rules/port/scenario_select_rules_turn.hpp"
 #include "aurelion_rules/port/session_state_store.hpp"
+#include "aurelion_rules/port/town_rules_actions.hpp"
 
 #include <cstdint>
 #include <initializer_list>
@@ -586,8 +587,7 @@ Atom _resume_target_for_session(State &state, const Value &session) {
 		return key::battle;
 	}
 	if (string_of(state, gd::index(state, view, gd::str(key::game_state))) == key::town) {
-		const Value object = session.kind == Kind::Dict ? gd::view_object(state, session.ref) : session;
-		if (gd::truthy(state, gd::call_static(state, key::town_rules_script, key::can_visit_active_town, {object}))) {
+		if (town_rules::can_visit_active_town(state, gd::object_view(state, session))) {
 			return key::town;
 		}
 	}

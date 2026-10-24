@@ -32,77 +32,80 @@ Value nil() {
 	return Value();
 }
 
-#define PORT(script, fn, arity, mutates, body) \
+#define NATIVE(script, fn, arity, mutates, body) \
 	{ #script "." #fn, arity, mutates, [](State &s, const Value *a) -> Value { (void)s; (void)a; body; } }
 
-// The entry points of the day processing ported so far; the functions they
-// reach run native inside them.
+// The entry points of the day processing; the functions they reach run native
+// inside them. Their GDScript functions are thin wrappers over DayEngine's
+// native call (Phase 7, merge 3, owner decision D-d): a path the port leaves
+// out is a native failure.
 const Function kFunctions[] = {
-	PORT(OverworldRules, _normalize_fog_of_war, 1, true, overworld::_normalize_fog_of_war(s, D(a, 0)); return nil()),
+	NATIVE(OverworldRules, _normalize_fog_of_war, 1, true, overworld::_normalize_fog_of_war(s, D(a, 0)); return nil()),
 	// Writes the session's cached scenery layers and resolved-encounter set.
-	PORT(OverworldRules, _build_blocked_tile_index, 4, true,
+	NATIVE(OverworldRules, _build_blocked_tile_index, 4, true,
 			if (a[0].kind == state::Kind::Nil) return gd::dict_value(s.new_dict());
 			return gd::dict_value(overworld::_build_blocked_tile_index(s, D(a, 0), I(a, 1), S(a, 2), D(a, 3)))),
-	PORT(OverworldRules, _normalize_resource_nodes, 1, false, return gd::array_value(overworld::_normalize_resource_nodes(s, A(a, 0)))),
+	NATIVE(OverworldRules, _normalize_resource_nodes, 1, false, return gd::array_value(overworld::_normalize_resource_nodes(s, A(a, 0)))),
 	// The computer players' states, their raid hosts and commander rosters;
 	// writes the session's difficulty and the fallen heroes' days in its metadata.
-	PORT(EnemyTurnRules, normalize_enemy_states, 1, true,
+	NATIVE(EnemyTurnRules, normalize_enemy_states, 1, true,
 			if (a[0].kind == state::Kind::Nil) return nil();
 			enemy_turn_rules::normalize_enemy_states(s, D(a, 0)); return nil()),
 	// The scenario's state and objectives: writes its status, its script state
 	// and the computer players' states.
-	PORT(ScenarioRules, evaluate_session, 1, true,
-			if (a[0].kind == state::Kind::Nil) throw state::NotPorted("left to GDScript: a null session");
+	NATIVE(ScenarioRules, evaluate_session, 1, true,
+			if (a[0].kind == state::Kind::Nil) {
+				const gd::DictRef invalid = s.new_dict();
+				s.set(invalid, gd::str(state::key::status), gd::str(state::key::invalid));
+				s.set(invalid, gd::str(state::key::message), gd::str(state::key::empty));
+				return gd::dict_value(invalid);
+			}
 			return gd::dict_value(scenario_rules::evaluate_session(s, D(a, 0)))),
 	// The townless days: writes the session's townless_since.
-	PORT(PlayerEliminationRules, apply_daily, 1, true,
+	NATIVE(PlayerEliminationRules, apply_daily, 1, true,
 			if (a[0].kind == state::Kind::Nil) return gd::array_value(s.new_array());
 			return gd::array_value(player_elimination_rules::apply_daily(s, D(a, 0)))),
 	// The active hero's mirrors written back into the player's roster.
-	PORT(HeroCommandRules, commit_active_hero, 1, true,
+	NATIVE(HeroCommandRules, commit_active_hero, 1, true,
 			if (a[0].kind == state::Kind::Nil) return nil();
 			hero_command_rules::commit_active_hero(s, D(a, 0)); return nil()),
 	// The whole session normalized: its fields, heroes, towns, nodes, transit,
 	// blocked tiles, fog, briefing, risk forecast and scenario state; writes the
 	// runtime signature into OverworldRules._runtime_normalized_signatures.
-	PORT(OverworldRules, normalize_overworld_state, 1, true,
+	NATIVE(OverworldRules, normalize_overworld_state, 1, true,
 			if (a[0].kind == state::Kind::Nil) return nil();
 			overworld::normalize_overworld_state(s, D(a, 0)); return nil()),
 	// end_turn up to the AI turn: the closing normalize, the hero commit and the
 	// new day's economy; writes the session's day, towns, treasury, heroes and
 	// resource nodes, and returns the day's messages and income.
-	PORT(OverworldRules, _end_turn_open_day, 1, true,
+	NATIVE(OverworldRules, _end_turn_open_day, 1, true,
 			if (a[0].kind == state::Kind::Nil) throw state::NotPorted("left to GDScript: a null session");
 			return gd::dict_value(overworld::_end_turn_open_day(s, D(a, 0)))),
 	// end_turn after the AI turn: elimination, the action result, the closing
 	// normalize and the day's summaries; appends to the opened messages.
-	PORT(OverworldRules, _end_turn_close_day, 3, true,
+	NATIVE(OverworldRules, _end_turn_close_day, 3, true,
 			if (a[0].kind == state::Kind::Nil) throw state::NotPorted("left to GDScript: a null session");
 			return gd::dict_value(overworld::_end_turn_close_day(s, D(a, 0), D(a, 1), D(a, 2)))),
 	// The whole day in one call (Phase 6 P6-3): _end_turn_open_day, the
 	// computer players' turn and _end_turn_close_day, so the session loads
-	// once a day. The turn makes no host call, so a path left to GDScript
-	// anywhere in it undoes the whole call, and the switch runs the three
-	// parts.
-	PORT(OverworldRules, end_turn, 1, true,
+	// once a day.
+	NATIVE(OverworldRules, end_turn, 1, true,
 			if (a[0].kind == state::Kind::Nil) throw state::NotPorted("left to GDScript: a null session");
 			return gd::dict_value(overworld::end_turn(s, D(a, 0)))),
 	// An action's close: the hero committed, the fog refreshed, the scenario
 	// evaluated, the runtime signature recorded.
-	PORT(OverworldRules, _finalize_action_result, 6, true,
+	NATIVE(OverworldRules, _finalize_action_result, 6, true,
 			if (a[0].kind == state::Kind::Nil) throw state::NotPorted("left to GDScript: a null session");
 			return gd::dict_value(overworld::_finalize_action_result(s, D(a, 0), gd::to_bool(a[1]), S(a, 2), gd::to_bool(a[3]), gd::to_bool(a[4]), D(a, 5)))),
 };
 
-#undef PORT
+#undef NATIVE
 
 } // namespace
 
-// The day port's table, listed in registry_tables.cpp. Its switches run the
-// GDScript body on a path the port leaves to GDScript.
+// The day port's table, listed in registry_tables.cpp.
 Table day_table() {
 	Table table{"HEROES_NATIVE_DAY_LOG", kFunctions, sizeof(kFunctions) / sizeof(kFunctions[0])};
-	table.fallback = true;
 	return table;
 }
 

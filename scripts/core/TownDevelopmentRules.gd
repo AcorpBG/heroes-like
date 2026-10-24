@@ -6,6 +6,7 @@ const Heroes = preload("res://scripts/core/HeroCommandRules.gd")
 const Progression = preload("res://scripts/core/HeroProgressionRules.gd")
 const Artifacts = preload("res://scripts/core/ArtifactRules.gd")
 const FactionServices = preload("res://scripts/core/FactionTownServices.gd")
+const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
 
 static func data() -> Dictionary:
 	return ContentService.load_json(DATA_PATH)
@@ -201,20 +202,9 @@ static func income(town: Dictionary) -> Dictionary:
 			if resource != "": result[resource] = int(result.get(resource, 0)) + amount
 	return result
 
-static func visiting_active_hero(session, town: Dictionary) -> bool:
-	var id := String(session.overworld.get("hero", {}).get("id", ""))
-	for hero in Heroes.stationed_heroes(session, town):
-		if String(hero.get("id", "")) == id: return true
-	return false
-
 static func price(artifact: Dictionary) -> int:
 	var tier := String(artifact.get("rarity", "common"))
 	return int({"common": 1500, "uncommon": 2500, "rare": 4000, "epic": 6500, "legendary": 10000}.get(tier, 2500))
-
-static func objective_artifact_ids(session) -> Array:
-	# Loaded lazily: ScenarioRules preloads this script.
-	if session == null: return []
-	return load("res://scripts/core/ScenarioRules.gd").objective_artifact_ids(session)
 
 static func offers(town: Dictionary, day: int, excluded_ids: Array = []) -> Array:
 	var eligible: Array = []
@@ -311,92 +301,14 @@ static func trade_artifact(hero: Dictionary, town: Dictionary, day: int, artifac
 		town["artifact_shop_purchases"] = purchases
 	return result
 
-static func service_actions(session, town: Dictionary) -> Array:
-	var actions: Array = []
-	if town.is_empty() or town.get("owner", "") != "player": return actions
-	var resources: Dictionary = session.overworld.get("resources", {})
-	var hero: Dictionary = session.overworld.get("hero", {})
-	var present := visiting_active_hero(session, town)
-	for id in active_buildings(town):
-		var b := ContentService.get_building(String(id))
-		if b.has("hero_visit_reward") and present:
-			var claimed: Array = hero.get("town_training_claims", [])
-			actions.append({"id":"town_train:"+String(id),"label":"Visit "+String(b.name),"summary":String(b.description),"disabled":id in claimed})
-		if b.has("faction_service") and present:
-			var reason := FactionServices.unavailable_reason(hero, town, b, int(session.day), resources)
-			var service: Dictionary = b.faction_service
-			# An exchange's description already names what it takes.
-			var cost_line := "" if String(service.get("kind", "")) == "resource_exchange" else " Cost: %s." % cost_text(service.get("cost", {}))
-			actions.append({"id": "town_faction:" + String(id), "label": String(service.label) + " — " + cost_text(service.get("cost", {})),
-				"summary": "%s%s Once per week per %s. %s" % [String(service.description), cost_line, String(service.get("scope", "town")), reason], "disabled": reason != ""})
-		var target := String(b.get("unlock_unit_id", ""))
-		var base := String(ContentService.get_unit(target).get("upgrade_from", ""))
-		if base != "":
-			for holder in Heroes._stationed_holder_ids(session,town):
-				var count := 0
-				for stack in Heroes._holder_stacks(session,town,String(holder)):
-					if stack.get("unit_id", "") == base: count += int(stack.get("count",0))
-				if count <= 0: continue
-				var cost := upgrade_cost(base,target,count)
-				actions.append({"id":"town_upgrade:%s:%s" % [holder,base],"label":"Upgrade %d %s (%s)" % [count,ContentService.get_unit(base).get("name",base),Heroes._holder_label(session,town,String(holder))],"summary":"Train the entire stack into %s. Cost: %s." % [ContentService.get_unit(target).get("name",target),cost_text(cost)],"disabled":not can_pay(resources,cost)})
-		if bool(b.get("artifact_exchange", false)) and present:
-			var week := maxi(0,(int(session.day)-1)/7)
-			var sold: Array = town.get("artifact_shop_purchases",{}).get(str(week),[])
-			var objective_ids := objective_artifact_ids(session)
-			for aid in offers(town,session.day,objective_ids):
-				var a := ContentService.get_artifact(String(aid))
-				var cost := price(a)
-				actions.append({"id":"town_buy:"+String(aid),"label":"Buy %s — %d gold" % [a.get("name",aid),cost],"summary":Artifacts.artifact_effect_summary(String(aid)),"disabled":aid in sold or Artifacts.has_artifact(hero,String(aid)) or int(resources.get("gold",0))<cost})
-			for aid in Artifacts.normalize_hero_artifacts(hero.get("artifacts",{})).get("inventory",[]):
-				var a := ContentService.get_artifact(String(aid))
-				if bool(a.get("quest_item",false)) or String(aid) in objective_ids: continue
-				actions.append({"id":"town_sell:"+String(aid),"label":"Sell %s — %d gold" % [a.get("name",aid),price(a)/2],"summary":"Sell this unequipped artifact. The sale is permanent.","disabled":false})
-	return actions
+static func objective_artifact_ids(session) -> Array:
+	return HumanEngine.native_writing(&"TownDevelopmentRules.objective_artifact_ids", [session])
 
-static func cost_text(cost: Dictionary) -> String:
-	var parts: Array = []
-	for key in cost: parts.append("%d %s" % [int(cost[key]),String(key).replace("_"," ")])
-	return ", ".join(parts)
+static func visiting_active_hero(session, town: Dictionary) -> bool:
+	return HumanEngine.native_writing(&"TownDevelopmentRules.visiting_active_hero", [session, town])
+
+static func service_actions(session, town: Dictionary) -> Array:
+	return HumanEngine.native_writing(&"TownDevelopmentRules.service_actions", [session, town])
 
 static func perform_service(session, town: Dictionary, action_id: String) -> Dictionary:
-	# Rebuild authorization from current location, ownership, stock and funds.
-	var allowed := false
-	for action in service_actions(session,town):
-		if action.id == action_id and not bool(action.get("disabled",false)): allowed=true; break
-	if not allowed: return {"ok":false,"message":"This town service is no longer available."}
-	var parts := action_id.split(":")
-	var hero: Dictionary = session.overworld.get("hero",{}).duplicate(true)
-	var resources: Dictionary = session.overworld.get("resources",{}).duplicate(true)
-	var message := ""
-	match parts[0]:
-		"town_faction":
-			var result := FactionServices.perform(hero, town, ContentService.get_building(parts[1]), int(session.day), resources)
-			if not result.ok: return result
-			hero = result.hero
-			message = result.message
-		"town_train":
-			var b := ContentService.get_building(parts[1])
-			var result := train_hero(hero, town, parts[1])
-			if not result.ok: return result
-			hero = result.hero
-			message=String(b.description)
-		"town_upgrade":
-			var base := String(parts[2])
-			var stacks := Heroes._holder_stacks(session,town,parts[1])
-			var result := upgrade_army(town, stacks, base, resources)
-			if not result.ok: return result
-			Heroes._set_holder_stacks(session,town,parts[1],result.stacks)
-			message="Upgraded %d creatures for %s." % [result.count,cost_text(result.cost)]
-		"town_buy":
-			var result := trade_artifact(hero, town, session.day, parts[1], true, resources, objective_artifact_ids(session))
-			if not bool(result.get("ok",false)): return result
-			hero=result.hero
-			message="Bought "+String(ContentService.get_artifact(parts[1]).get("name",parts[1]))+"."
-		"town_sell":
-			var result := trade_artifact(hero, town, session.day, parts[1], false, resources, objective_artifact_ids(session))
-			if not bool(result.get("ok",false)): return result
-			hero=result.hero
-			message="Sold "+String(ContentService.get_artifact(parts[1]).get("name",parts[1]))+"."
-	if parts[0] != "town_upgrade": session.overworld["hero"]=hero
-	session.overworld["resources"]=resources
-	return {"ok":true,"message":message}
+	return HumanEngine.native_writing(&"TownDevelopmentRules.perform_service", [session, town, action_id])

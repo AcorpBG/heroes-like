@@ -14,7 +14,6 @@ extends RefCounted
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const DayEngine = preload("res://scripts/core/DayEngine.gd")
-static var _day_engine_mode: int = DayEngine.mode
 
 const TOWNLESS_DAYS := 7
 const NATIVE_SESSION_FLAG := "native_random_map_package_session_adoption"
@@ -49,54 +48,7 @@ static func heroes_held(session: SessionStateStoreScript.SessionData, player: Di
 ## has gone without a town, removes computer players whose time is up and ends
 ## the game for the human whose time is up. Returns messages for the human.
 static func apply_daily(session: SessionStateStoreScript.SessionData) -> Array:
-	if _day_engine_mode == DayEngine.GDSCRIPT:
-		return apply_daily__gd(session)
-	if _day_engine_mode == DayEngine.NATIVE:
-		var native_result = DayEngine.native_writing(&"PlayerEliminationRules.apply_daily", [session])
-		return apply_daily__gd(session) if DayEngine.not_ported() else native_result
-	var before := DayEngine.before_writing(&"PlayerEliminationRules.apply_daily", [session])
-	var result = apply_daily__gd(session)
-	DayEngine.check_writing(&"PlayerEliminationRules.apply_daily", before, [session], result)
-	return result
-
-static func apply_daily__gd(session: SessionStateStoreScript.SessionData) -> Array:
-	var messages := []
-	if not applies(session):
-		return messages
-	var since: Dictionary = session.overworld.get(TOWNLESS_SINCE_KEY, {}) if session.overworld.get(TOWNLESS_SINCE_KEY, {}) is Dictionary else {}
-	var rosters_settled := false
-	for player in session.overworld.get("players", []):
-		if not (player is Dictionary):
-			continue
-		var player_id := String(player.get("player_id", ""))
-		var human := bool(player.get("human", false))
-		if towns_held(session, player) > 0:
-			since.erase(player_id)
-			continue
-		if heroes_held(session, player) == 0:
-			since.erase(player_id)
-			if human and session.scenario_status == "in_progress":
-				_defeat_human(session, "Your realm has no town and no hero left.")
-			continue
-		if not since.has(player_id):
-			since[player_id] = int(session.day)
-		var left := TOWNLESS_DAYS - (int(session.day) - int(since[player_id]))
-		if left > 0:
-			if human:
-				messages.append("You hold no town. Take one within %d day%s or your realm falls." % [left, "" if left == 1 else "s"])
-			continue
-		since.erase(player_id)
-		if human:
-			_defeat_human(session, "Your realm has held no town for %d days." % TOWNLESS_DAYS)
-		else:
-			if not rosters_settled:
-				# The enemy turn leaves its rosters to the scenario check after this.
-				_enemy_adventure().normalize_all_commander_rosters(session)
-				rosters_settled = true
-			_remove_computer_player(session, player_id)
-			messages.append("%s has held no town for %d days and leaves the war." % [String(ContentService.get_faction(String(player.get("faction_id", ""))).get("name", player_id)), TOWNLESS_DAYS])
-	session.overworld[TOWNLESS_SINCE_KEY] = since
-	return messages
+	return DayEngine.native_writing(&"PlayerEliminationRules.apply_daily", [session])
 
 static func _defeat_human(session: SessionStateStoreScript.SessionData, summary: String) -> void:
 	session.flags["campaign"] = "defeat"

@@ -9,6 +9,7 @@
 #include "aurelion_rules/port/overworld_rules.hpp"
 #include "aurelion_rules/port/scenario_select_rules_turn.hpp"
 #include "aurelion_rules/port/session_state_store.hpp"
+#include "aurelion_rules/port/town_rules_actions.hpp"
 
 #include <algorithm>
 
@@ -266,7 +267,7 @@ DictRef _normalize_restore_result(State &state, DictRef payload, Atom slot_type)
 			validity = _degraded_validity(state, validity);
 			state.append(warnings, str(key::stale_battle_payload_was_ignored_because));
 		}
-		if (!gd::truthy(state, gd::call_static(state, key::town_rules_script, key::can_visit_active_town, { session }))) {
+		if (!town_rules::can_visit_active_town(state, view)) {
 			state.set(view, str(key::game_state), str(key::overworld));
 			validity = _degraded_validity(state, validity);
 			state.append(warnings, str(key::town_visit_state_was_invalid_and));

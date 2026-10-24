@@ -6,7 +6,7 @@ extends RefCounted
 ## - native, the default (an unknown value too, with an error): the native ports.
 ## - gdscript: their GDScript bodies, renamed <name>__gd.
 ## - shadow: the GDScript bodies, with every call checked against the native
-##   port, as DayEngine's shadow checks the day.
+##   port, with DayEngine's shadow checks.
 ## The slice's merge deletes the GDScript bodies and their switches: the
 ## functions become thin wrappers over their native port (the registry's NATIVE
 ## entries, 7.1's since merge 1a), and no switch on main reads the mode. A

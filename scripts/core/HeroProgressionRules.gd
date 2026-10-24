@@ -3,7 +3,6 @@ extends RefCounted
 
 const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
-static var _human_engine_mode: int = HumanEngine.mode
 const NativeRules = preload("res://scripts/core/NativeRules.gd")
 const CHOICE_SIZE := 3
 const SPECIALTY_INSIGNIA_ATLAS_PATH := "res://art/heroes/runtime/specialties/hero_specialty_insignia_atlas.png"
@@ -50,39 +49,7 @@ static func ensure_hero_progression(hero_state: Dictionary) -> Dictionary:
 	return hero
 
 static func level_up_summary(hero_state: Dictionary) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return level_up_summary__gd(hero_state)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"HeroProgressionRules.level_up_summary", [hero_state])
-	var before := HumanEngine.before_writing(&"HeroProgressionRules.level_up_summary", [hero_state])
-	var result = level_up_summary__gd(hero_state)
-	HumanEngine.check_writing(&"HeroProgressionRules.level_up_summary", before, [hero_state], result)
-	return result
-
-static func level_up_summary__gd(hero_state: Dictionary) -> Dictionary:
-	var hero := ensure_hero_progression(hero_state.duplicate(true))
-	var previous := int(hero["level_up_presented"])
-	var level := int(hero["level"])
-	if previous >= level:
-		return {}
-	var gains := {}
-	var rolls := []
-	for earned_level in range(previous + 1, level + 1):
-		var stat := command_gain_stat(hero, earned_level)
-		gains = _apply_command_gain(gains, stat)
-		rolls.append({"level": earned_level, "stat": stat})
-	var path := command_path(hero)
-	return {
-		"previous_level": previous,
-		"level": level,
-		"command_gains": gains,
-		"command_rolls": rolls,
-		"command_path": path,
-		"command_odds": (COMMAND_GAIN_WEIGHTS[path] as Dictionary).duplicate(),
-		"movement_gain": level - previous,
-		"choice": current_pending_choice(hero),
-		"choices_remaining": pending_choices_remaining(hero),
-	}
+	return HumanEngine.native_writing(&"HeroProgressionRules.level_up_summary", [hero_state])
 
 static func add_experience(hero_state: Dictionary, amount: int) -> Dictionary:
 	return _add_experience(hero_state, experience_with_bonus(hero_state, amount))
@@ -188,41 +155,7 @@ static func choose_specialty(hero_state: Dictionary, specialty_id: String) -> Di
 	return {"ok": true, "hero": hero, "message": message}
 
 static func get_choice_actions(hero_state: Dictionary) -> Array:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return get_choice_actions__gd(hero_state)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"HeroProgressionRules.get_choice_actions", [hero_state])
-	var before := HumanEngine.before_writing(&"HeroProgressionRules.get_choice_actions", [hero_state])
-	var result = get_choice_actions__gd(hero_state)
-	HumanEngine.check_writing(&"HeroProgressionRules.get_choice_actions", before, [hero_state], result)
-	return result
-
-static func get_choice_actions__gd(hero_state: Dictionary) -> Array:
-	var hero := ensure_hero_progression(hero_state.duplicate(true))
-	var pending_choice := current_pending_choice(hero)
-	if pending_choice.is_empty():
-		return []
-
-	var actions := []
-	for specialty_id_value in pending_choice.get("options", []):
-		var specialty_id := String(specialty_id_value)
-		var specialty := specialty_definition(specialty_id)
-		if specialty.is_empty():
-			continue
-		var next_rank := specialty_rank(hero, specialty_id) + 1
-		actions.append(
-			{
-				"id": "choose_specialty:%s" % specialty_id,
-				"label": "Choose %s" % String(specialty.get("short_name", specialty_id)),
-				"summary": "%s %s | %s" % [
-					String(specialty.get("name", specialty_id)),
-					rank_label(next_rank),
-					rank_text(specialty_id, next_rank),
-				],
-				"disabled": false,
-			}
-		)
-	return actions
+	return HumanEngine.native_writing(&"HeroProgressionRules.get_choice_actions", [hero_state])
 
 static func describe_specialties(hero_state: Dictionary) -> String:
 	var hero := ensure_hero_progression(hero_state.duplicate(true))
@@ -262,27 +195,7 @@ static func brief_summary(hero_state: Dictionary) -> String:
 	return HumanEngine.native_writing(&"HeroProgressionRules.brief_summary", [hero_state])
 
 static func summarize_specialty_ids(specialty_ids: Variant, use_short_names: bool = true) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return summarize_specialty_ids__gd(specialty_ids, use_short_names)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"HeroProgressionRules.summarize_specialty_ids", [specialty_ids, use_short_names])
-	var before := HumanEngine.before_writing(&"HeroProgressionRules.summarize_specialty_ids", [specialty_ids, use_short_names])
-	var result = summarize_specialty_ids__gd(specialty_ids, use_short_names)
-	HumanEngine.check_writing(&"HeroProgressionRules.summarize_specialty_ids", before, [specialty_ids, use_short_names], result)
-	return result
-
-static func summarize_specialty_ids__gd(specialty_ids: Variant, use_short_names: bool = true) -> String:
-	var normalized := _normalize_specialty_id_list(specialty_ids)
-	var names := []
-	for specialty_id in normalized:
-		var specialty := specialty_definition(specialty_id)
-		if specialty.is_empty():
-			continue
-		var key := "short_name" if use_short_names else "name"
-		var label := String(specialty.get(key, specialty.get("name", specialty_id)))
-		if label != "" and label not in names:
-			names.append(label)
-	return ", ".join(names)
+	return HumanEngine.native_writing(&"HeroProgressionRules.summarize_specialty_ids", [specialty_ids, use_short_names])
 
 static func pending_choices_remaining(hero_state: Dictionary) -> int:
 	var hero := ensure_hero_progression(hero_state.duplicate(true))
@@ -327,19 +240,7 @@ static func specialty_definition(specialty_id: String) -> Dictionary:
 
 ## What `specialty_id` gives at `rank` (1-based), as shown to the player.
 static func rank_text(specialty_id: String, rank: int) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return rank_text__gd(specialty_id, rank)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"HeroProgressionRules.rank_text", [specialty_id, rank])
-	var result = rank_text__gd(specialty_id, rank)
-	HumanEngine.check(&"HeroProgressionRules.rank_text", [specialty_id, rank], result)
-	return result
-
-static func rank_text__gd(specialty_id: String, rank: int) -> String:
-	var ranks: Array = _specialty_row(specialty_id).get("ranks", [])
-	if rank < 1 or rank > ranks.size():
-		return ""
-	return String(ranks[rank - 1].get("text", ""))
+	return HumanEngine.native(&"HeroProgressionRules.rank_text", [specialty_id, rank])
 
 static func _specialty_row(specialty_id: String) -> Dictionary:
 	return _specialty_catalog().get(specialty_id, {})
@@ -419,19 +320,6 @@ static func scale_recruit_growth(hero_state: Dictionary, growth_payload: Variant
 		if amount > 0 and adjusted <= 0:
 			adjusted = 1
 		scaled[String(unit_id)] = adjusted
-	return scaled
-
-static func scale_recruit_cost(hero_state: Dictionary, cost_payload: Variant) -> Dictionary:
-	var bonuses := aggregate_bonuses(hero_state)
-	var multiplier := clampf(1.0 + float(bonuses.get("recruit_cost_delta", 0.0)), 0.5, 1.0)
-	# Rounded up, so a small discount never halves a 2-resource T7 price.
-	var scaled := {}
-	if not (cost_payload is Dictionary):
-		return scaled
-	for key in cost_payload.keys():
-		var amount := int(cost_payload[key])
-		if amount > 0:
-			scaled[String(key)] = maxi(1, ceili(float(amount) * multiplier - 0.0001))
 	return scaled
 
 static func scale_raid_pillage(hero_state: Dictionary, losses: Variant) -> Dictionary:

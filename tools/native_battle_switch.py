@@ -54,8 +54,8 @@ An autoload's method (scripts/autoload, SaveService) gets the same wrapper as
 an instance func; its port reads the autoload's vars as the object's members.
 
 A script left without switches keeps the engine's preload and loses its mode.
-A subsystem whose port falls back to GDScript (the day's) has no NATIVE
-entries: a wrapper has no body to fall back to.
+A subsystem whose port falls back to GDScript has no NATIVE entries: a
+wrapper has no body to fall back to.
 
 The battle port's switch went with its GDScript copies in Phase 2d: battles run
 native only, and its functions that GDScript still calls are thin wrappers over
@@ -103,7 +103,7 @@ class Subsystem:
 
 # One entry per subsystem: its registry file in core/port and its engine script.
 SUBSYSTEMS = {
-    "day": Subsystem("day_registry.cpp", "DayEngine", fallback=True, validate=True),
+    "day": Subsystem("day_registry.cpp", "DayEngine", fallback=False, validate=True),
     "human": Subsystem("human_registry.cpp", "HumanEngine", fallback=False, validate=True),
 }
 

@@ -5,6 +5,7 @@
 #include "aurelion_rules/port/save_service.hpp"
 
 #include "aurelion_rules/port/session_state_store.hpp"
+#include "aurelion_rules/port/town_rules_actions.hpp"
 
 #include <cstdint>
 #include <string>
@@ -439,7 +440,7 @@ bool _can_use_trusted_live_autosave_payload(State &state, const Value &session, 
 	}
 	if (resume_target == key::town) {
 		// TownRules.can_visit_active_town_bridge(session) is can_visit_active_town(session).
-		return gd::truthy(state, gd::call_static(state, key::town_rules_script, key::can_visit_active_town, { session_object(state, session) }));
+		return town_rules::can_visit_active_town(state, gd::object_view(state, session));
 	}
 	if (resume_target == key::outcome) {
 		return gd::to_string(session_field(state, gd::object_view(state, session), key::scenario_status)) != key::in_progress;

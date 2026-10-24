@@ -116648,67 +116648,67 @@
     {
       "id": "native-rules-phase7-03-context-actions-20261023",
       "title": "Phase 7.3: context and site actions",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Started 2026-10-24 on branch native-phase7-human: 101 GDScript functions (2,426 lines) declared in src/gdextension/rules/include/aurelion_rules/port/overworld_rules_context.hpp move to C++ through the human registry: the context and its actions, a site's response order and reserve delivery, the resource sites' surfaces, building and recruiting in the visited town from the map, the reward choice, dwelling hire, site recruits, level-up, specialties, army slots and artifact texts. Frozen until it merges: the functions that header declares.",
-      "updatedAt": "2026-10-24T05:30:00Z"
+      "notes": "Started 2026-10-24 on branch native-phase7-human: 101 GDScript functions (2,426 lines) declared in src/gdextension/rules/include/aurelion_rules/port/overworld_rules_context.hpp move to C++ through the human registry: the context and its actions, a site's response order and reserve delivery, the resource sites' surfaces, building and recruiting in the visited town from the map, the reward choice, dwelling hire, site recruits, level-up, specialties, army slots and artifact texts. Frozen until it merges: the functions that header declares. Completed 2026-10-24 at merge 3 (main tagged pre-native-phase7-merge-3): the entries are thin wrappers over their port, the other bodies deleted; the day's switch and GDScript fallback deleted (D-d).",
+      "updatedAt": "2026-10-24T03:18:11Z"
     },
     {
       "id": "native-rules-phase7-04-overworld-spells-20261023",
       "title": "Phase 7.4: overworld spells",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "In progress 2026-10-24, ported together with 7.5 and 7.6: 23 GDScript functions (520 lines), declared in src/gdextension/rules/include/aurelion_rules/port/overworld_rules_spells.hpp, frozen until the merge after 7.7.",
-      "updatedAt": "2026-10-24T00:51:00Z"
+      "notes": "In progress 2026-10-24, ported together with 7.5 and 7.6: 23 GDScript functions (520 lines), declared in src/gdextension/rules/include/aurelion_rules/port/overworld_rules_spells.hpp, frozen until the merge after 7.7. Completed 2026-10-24 at merge 3 (main tagged pre-native-phase7-merge-3): the entries are thin wrappers over their port, the other bodies deleted; the day's switch and GDScript fallback deleted (D-d).",
+      "updatedAt": "2026-10-24T03:18:11Z"
     },
     {
       "id": "native-rules-phase7-05-heroes-20261023",
       "title": "Phase 7.5: hero transfers, rendezvous, garrison, tavern, artifacts",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "In progress 2026-10-24: 74 GDScript functions (1,486 lines), declared in src/gdextension/rules/include/aurelion_rules/port/overworld_rules_heroes.hpp, frozen until the merge after 7.7.",
-      "updatedAt": "2026-10-24T00:51:00Z"
+      "notes": "In progress 2026-10-24: 74 GDScript functions (1,486 lines), declared in src/gdextension/rules/include/aurelion_rules/port/overworld_rules_heroes.hpp, frozen until the merge after 7.7. Completed 2026-10-24 at merge 3 (main tagged pre-native-phase7-merge-3): the entries are thin wrappers over their port, the other bodies deleted; the day's switch and GDScript fallback deleted (D-d).",
+      "updatedAt": "2026-10-24T03:18:11Z"
     },
     {
       "id": "native-rules-phase7-06-town-actions-20261023",
       "title": "Phase 7.6: town actions",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "In progress 2026-10-24: 110 GDScript functions (2,116 lines), declared in src/gdextension/rules/include/aurelion_rules/port/town_rules_actions.hpp, frozen until the merge after 7.7.",
-      "updatedAt": "2026-10-24T00:51:00Z"
+      "notes": "In progress 2026-10-24: 110 GDScript functions (2,116 lines), declared in src/gdextension/rules/include/aurelion_rules/port/town_rules_actions.hpp, frozen until the merge after 7.7. Completed 2026-10-24 at merge 3 (main tagged pre-native-phase7-merge-3): the entries are thin wrappers over their port, the other bodies deleted; the day's switch and GDScript fallback deleted (D-d).",
+      "updatedAt": "2026-10-24T03:18:11Z"
     },
     {
       "id": "native-rules-phase7-07-day-human-outcome-20261023",
       "title": "Phase 7.7: the day's human paths and the outcome screen",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Branch native-phase7-human, ported with 7.4 to 7.6: the day's human paths (town growth, convoys, a defeat for holding no town, the normalize's human paths) and the outcome screen with its texts; the campaign branches stay out (D-f). Merge 3 deletes the day switch's gdscript mode and __gd bodies.",
-      "updatedAt": "2026-10-24T06:00:00Z"
+      "notes": "Branch native-phase7-human, ported with 7.4 to 7.6: the day's human paths (town growth, convoys, a defeat for holding no town, the normalize's human paths) and the outcome screen with its texts; the campaign branches stay out (D-f). Merge 3 deletes the day switch's gdscript mode and __gd bodies. Completed 2026-10-24 at merge 3 (main tagged pre-native-phase7-merge-3): the entries are thin wrappers over their port, the other bodies deleted; the day's switch and GDScript fallback deleted (D-d).",
+      "updatedAt": "2026-10-24T03:18:11Z"
     },
     {
       "id": "native-rules-phase7-08-panels-20261023",

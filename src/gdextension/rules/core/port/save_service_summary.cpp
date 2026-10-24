@@ -6,6 +6,7 @@
 
 #include "aurelion_rules/port/overworld_rules.hpp"
 #include "aurelion_rules/port/scenario_evaluation.hpp"
+#include "aurelion_rules/port/scenario_outcome.hpp"
 #include "aurelion_rules/port/scenario_select_rules_setup.hpp"
 #include "aurelion_rules/port/scenario_select_rules_turn.hpp"
 #include "aurelion_rules/port/session_state_store.hpp"
@@ -85,8 +86,10 @@ Atom host_text(State &state, Atom script, Atom function, const Value &session) {
 
 // ScenarioRules.describe_session_progress_recap(session, include_header).
 Atom progress_recap_of(State &state, const Value &session, bool include_header) {
-	return gd::to_string(gd::call_static(state, key::scenario_rules_script, key::describe_session_progress_recap,
-			{ session_object(state, session), gd::bool_value(include_header) }));
+	if (session.kind == Kind::Nil) {
+		return include_header ? key::progress_recap_no_active_scenario_progress : key::empty;
+	}
+	return scenario_rules::describe_session_progress_recap(state, gd::object_view(state, session), include_header);
 }
 
 // session.to_dict().
@@ -244,15 +247,14 @@ DictRef _finalize_summary_from_session(State &state, DictRef summary, const Valu
 	const int64_t context_started = profile_begin_usec(state);
 	const Value object = session_object(state, trusted_session);
 	gd::call_static(state, key::overworld_rules_script, key::begin_normalized_read_scope, { object });
-	gd::call_static(state, key::town_rules_script, key::begin_read_scope, { object });
-	const Atom progress_recap = gd::to_string(gd::call_static(state, key::scenario_rules_script,
-			key::describe_session_progress_recap_from_normalized_session,
-			{ object, gd::bool_value(true), gd::dict_value(state.new_dict()) }));
+	const DictRef trusted_view = gd::object_view(state, trusted_session);
+	town_rules::begin_read_scope(state, trusted_view);
+	const Atom progress_recap = scenario_rules::describe_session_progress_recap_from_normalized_session(state, trusted_view, true, state.new_dict());
 	const Atom progress_without_header = gd::trim_prefix(state, progress_recap, key::progress_recap_2);
 	const DictRef recap_context = _session_save_recap_context(state, trusted_session, summary, progress_without_header, false, state.new_dict());
 	put(state, summary, key::summary, gd::str(describe_slot(state, summary)));
 	put(state, summary, key::detail, gd::str(_describe_slot_details(state, summary, trusted_session, recap_context, progress_recap)));
-	gd::call_static(state, key::town_rules_script, key::end_read_scope, { object });
+	town_rules::end_read_scope(state, trusted_view);
 	gd::call_static(state, key::overworld_rules_script, key::end_normalized_read_scope, { object });
 	if (!gd::is_empty(state, profile)) {
 		bump(state, profile, key::summary_detail_context_build_count, 1);

@@ -43,8 +43,6 @@ const TOWN_VISION_RADIUS := 8
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const DayEngine = preload("res://scripts/core/DayEngine.gd")
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
-static var _human_engine_mode: int = HumanEngine.mode
-static var _day_engine_mode: int = DayEngine.mode
 const ACTIVE_TOWN_PLACEMENT_KEY := "active_town_placement_id"
 const COMMAND_BRIEFING_KEY := "command_briefing"
 const COMMAND_RISK_FORECAST_KEY := "command_risk_forecast"
@@ -183,9 +181,6 @@ static func _build_scenario_resource_states(placements: Variant) -> Array:
 static func _seed_scenario_recruits_for_town_state(town: Dictionary) -> Dictionary:
 	return _scenario_factory()._seed_recruits_for_town_state(town)
 
-static func _scenario_unit_growth(unit_id: String) -> int:
-	return _scenario_factory()._unit_growth(unit_id)
-
 static func _normalize_scenario_state_rules(session: SessionStateStoreScript.SessionData, normalize_enemies: bool = true) -> void:
 	_scenario_rules().normalize_scenario_state(session, normalize_enemies)
 
@@ -260,85 +255,7 @@ static func _raid_is_public(session: SessionStateStoreScript.SessionData, encoun
 	return _enemy_adventure_rules()._raid_is_public(session, encounter)
 
 static func normalize_overworld_state(session: SessionStateStoreScript.SessionData) -> void:
-	if _day_engine_mode == DayEngine.GDSCRIPT:
-		normalize_overworld_state__gd(session)
-	elif _day_engine_mode == DayEngine.NATIVE:
-		DayEngine.native_writing(&"OverworldRules.normalize_overworld_state", [session])
-		if DayEngine.not_ported():
-			normalize_overworld_state__gd(session)
-	else:
-		var before := DayEngine.before_writing(&"OverworldRules.normalize_overworld_state", [session])
-		normalize_overworld_state__gd(session)
-		DayEngine.check_writing(&"OverworldRules.normalize_overworld_state", before, [session], null)
-
-static func normalize_overworld_state__gd(session: SessionStateStoreScript.SessionData) -> void:
-	if session == null:
-		return
-	if _normalized_read_scope_depth > 0 and String(session.session_id) == _normalized_read_scope_session_id:
-		return
-	session.save_version = SessionStateStoreScript.SAVE_VERSION
-	DifficultyRulesScript.normalize_session(session)
-	PlayerRules.normalize_compatibility(session)
-
-	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
-	var hero_id := session.hero_id
-	if hero_id == "":
-		hero_id = String(scenario.get("hero_id", ""))
-		session.hero_id = hero_id
-	var player_army_id := String(scenario.get("player_army_id", session.overworld.get("player_army_id", "")))
-	HeroCommandRulesScript.normalize_session(
-		session,
-		hero_id,
-		scenario.get("start", {"x": 0, "y": 0}),
-		_build_scenario_army_state(ContentService.get_army_group(player_army_id))
-	)
-
-	var resources = session.overworld.get("resources", {})
-	if not (resources is Dictionary) or resources.is_empty():
-		resources = _normalize_scenario_resources(scenario.get("starting_resources", {}))
-	session.overworld["resources"] = _normalize_live_resource_stockpile(_normalize_scenario_resources(resources))
-
-	if not session.overworld.has("towns") or not (session.overworld.get("towns") is Array):
-		session.overworld["towns"] = _build_scenario_town_states(scenario.get("towns", []))
-	else:
-		session.overworld["towns"] = _normalize_towns(session.overworld.get("towns", []), int(session.day))
-	_normalize_active_town_visit_context(session)
-
-	if not session.overworld.has("resource_nodes") or not (session.overworld.get("resource_nodes") is Array):
-		session.overworld["resource_nodes"] = _build_scenario_resource_states(scenario.get("resource_nodes", []))
-	else:
-		session.overworld["resource_nodes"] = _normalize_resource_nodes(session.overworld.get("resource_nodes", []))
-
-	if not session.overworld.has("artifact_nodes") or not (session.overworld.get("artifact_nodes") is Array):
-		session.overworld["artifact_nodes"] = ArtifactRulesScript.build_artifact_nodes(scenario.get("artifact_nodes", []), session.scenario_id)
-	else:
-		session.overworld["artifact_nodes"] = _normalize_artifact_nodes(session.overworld.get("artifact_nodes", []), session.scenario_id)
-
-	if not session.overworld.has("encounters") or not (session.overworld.get("encounters") is Array):
-		session.overworld["encounters"] = scenario.get("encounters", [])
-	if not session.overworld.has("resolved_encounters") or not (session.overworld.get("resolved_encounters") is Array):
-		session.overworld["resolved_encounters"] = []
-	if not session.overworld.has("map") or not (session.overworld.get("map") is Array):
-		session.overworld["map"] = scenario.get("map", [])
-	if not session.overworld.has("map_size") or not (session.overworld.get("map_size") is Dictionary):
-		session.overworld["map_size"] = scenario.get("map_size", {})
-	if not session.overworld.has("terrain_layers") or not (session.overworld.get("terrain_layers") is Dictionary) or session.overworld.get("terrain_layers", {}).is_empty():
-		session.overworld["terrain_layers"] = ContentService.get_terrain_layers_for_scenario(session.scenario_id)
-	_normalize_generated_runtime_materialization(session, scenario)
-	_migrate_generated_transit_meanings(session)
-	WaterTravel.normalize(session)
-	NativeTransit.normalize_legacy_session(session)
-	NativeTransit.assign_network_colours(session.overworld.get("resource_nodes", []))
-	if not session.overworld.has("hero_position") or not (session.overworld.get("hero_position") is Dictionary):
-		session.overworld["hero_position"] = scenario.get("start", {"x": 0, "y": 0})
-	_refresh_blocked_tile_index(session)
-	_normalize_fog_of_war(session)
-	_normalize_command_briefing(session)
-	# The forecast normalizes the enemy states first; the scenario rules reuse them.
-	_normalize_command_risk_forecast(session)
-
-	_normalize_scenario_state_rules(session, false)
-	_mark_runtime_normalized(session)
+	DayEngine.native_writing(&"OverworldRules.normalize_overworld_state", [session])
 
 ## Older random-map saves picked a random transit object for HoMM3 boats,
 ## shipyards, whirlpools, gates and portals. Translate them by meaning once:
@@ -823,44 +740,7 @@ static func native_portal_display_name(node: Dictionary) -> String:
 ## Says what kind of portal this is, its network and where it can take you.
 ## Exits on tiles the player has not explored are counted but not located.
 static func describe_native_portal(session: SessionStateStoreScript.SessionData, node: Dictionary) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return describe_native_portal__gd(session, node)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.describe_native_portal", [session, node])
-	var before := HumanEngine.before_writing(&"OverworldRules.describe_native_portal", [session, node])
-	var result = describe_native_portal__gd(session, node)
-	HumanEngine.check_writing(&"OverworldRules.describe_native_portal", before, [session, node], result)
-	return result
-
-static func describe_native_portal__gd(session: SessionStateStoreScript.SessionData, node: Dictionary) -> String:
-	var indexed := NativeTransit.nodes_by_id(session.overworld.get("resource_nodes", []))
-	var error := NativeTransit.contract_error(node, indexed)
-	if error != "":
-		return "This portal has an invalid destination (%s)." % error
-	var name := native_portal_display_name(node)
-	var colour := String(NativeTransit.network_colour(node).get("name", ""))
-	var options := NativeTransit.destinations(node)
-	var places := []
-	for destination in options:
-		var tile := NativeTransit.point(destination.get("exit"))
-		if is_tile_explored(session, tile.x, tile.y, tile.z):
-			places.append("%d,%d" % [tile.x, tile.y])
-	var where := " (%s)" % ", ".join(places) if not places.is_empty() else ""
-	var peer_name := native_portal_display_name(indexed.get(String(options[0].get("target_placement_id", "")), {})) if not options.is_empty() else ""
-	match NativeTransit.portal_kind(node):
-		"one_way_exit":
-			return "%s: a one-way exit. Travellers from %s Waygates come out here; it cannot be entered." % [name, colour]
-		"one_way_entrance":
-			if options.is_empty():
-				return "%s: a one-way portal whose network has no exit on this map." % name
-			if options.size() == 1:
-				return "%s: a one-way portal to the %s%s. There is no way back through it." % [name, peer_name, where]
-			return "%s: a one-way portal. It sends you to one of %d %ss%s at random. There is no way back through it." % [name, options.size(), peer_name, where]
-	if options.is_empty():
-		return "%s: a two-way portal whose network has no other end on this map." % name
-	if options.size() == 1:
-		return "%s: a two-way portal to the other %s%s, and back." % [name, peer_name, where]
-	return "%s: a two-way portal. It sends you to one of %d other %ss%s at random." % [name, options.size(), peer_name, where]
+	return HumanEngine.native_writing(&"OverworldRules.describe_native_portal", [session, node])
 
 static func active_linked_transit_edges(session: SessionStateStoreScript.SessionData, level: int = -1) -> Array:
 	return HumanEngine.native_writing(&"OverworldRules.active_linked_transit_edges", [session, level])
@@ -878,183 +758,23 @@ static func execute_prevalidated_route(session: SessionStateStoreScript.SessionD
 	return HumanEngine.native_writing(&"OverworldRules.execute_prevalidated_route", [session, route_tiles, route_preview, movement_budget, destination_descriptor])
 
 static func end_turn(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	if _day_engine_mode == DayEngine.GDSCRIPT:
-		return end_turn__gd(session)
-	if _day_engine_mode == DayEngine.NATIVE:
-		var native_result = DayEngine.native_writing(&"OverworldRules.end_turn", [session])
-		return end_turn__gd(session) if DayEngine.not_ported() else native_result
-	var before := DayEngine.before_writing(&"OverworldRules.end_turn", [session])
-	var result = end_turn__gd(session)
-	DayEngine.check_writing(&"OverworldRules.end_turn", before, [session], result)
-	return result
-
-static func end_turn__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	var opened := _end_turn_open_day(session)
-	var enemy_turn_result: Dictionary = _run_enemy_turn_cycle(session)
-	return _end_turn_close_day(session, opened, enemy_turn_result)
+	return DayEngine.native_writing(&"OverworldRules.end_turn", [session])
 
 ## end_turn up to the AI turn: the closing normalize, the new day's economy
 ## and its messages.
 static func _end_turn_open_day(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	if _day_engine_mode == DayEngine.GDSCRIPT:
-		return _end_turn_open_day__gd(session)
-	if _day_engine_mode == DayEngine.NATIVE:
-		var native_result = DayEngine.native_writing(&"OverworldRules._end_turn_open_day", [session])
-		return _end_turn_open_day__gd(session) if DayEngine.not_ported() else native_result
-	var before := DayEngine.before_writing(&"OverworldRules._end_turn_open_day", [session])
-	var result = _end_turn_open_day__gd(session)
-	DayEngine.check_writing(&"OverworldRules._end_turn_open_day", before, [session], result)
-	return result
-
-static func _end_turn_open_day__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	if not (
-		bool(session.get_meta(SESSION_UNTOUCHED_BETWEEN_DAYS_META, false))
-		and int(session.get_meta(CLOSING_NORMALIZE_DAY_META, -1)) == int(session.day)
-	):
-		normalize_overworld_state(session)
-	HeroCommandRulesScript.commit_active_hero(session)
-	session.day += 1
-
-	var occupation_messages := _advance_all_town_occupations(session)
-	var recovery_messages := _advance_all_town_recovery(session)
-	var town_income := _empty_live_resource_stockpile()
-	var weekly_growth_messages := []
-	var should_apply_weekly_growth := is_weekly_growth_day(session.day)
-	var towns = session.overworld.get("towns", [])
-	for index in range(towns.size()):
-		var town = towns[index]
-		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "player":
-			continue
-
-		var income := DifficultyRulesScript.scale_income_resources(session, _calculate_town_income(town, session))
-		town_income = _add_resource_sets(town_income, income)
-		if should_apply_weekly_growth:
-			var growth_summary := _describe_recruit_delta(_growth_tick_town(session, town))
-			if growth_summary != "":
-				weekly_growth_messages.append("%s (%s)" % [_town_name(town), growth_summary])
-		towns[index] = town
-	session.overworld["towns"] = towns
-
-	var hero_income := _player_heroes_daily_income(session)
-	var artifact_income: Dictionary = hero_income.get("artifact", {})
-	var specialty_income: Dictionary = hero_income.get("specialty", {})
-	var site_income = DifficultyRulesScript.scale_income_resources(session, controlled_resource_site_income(session, "player"))
-	var total_income := _add_resource_sets(
-		_add_resource_sets(_add_resource_sets(town_income, artifact_income), specialty_income),
-		site_income
-	)
-	var site_muster_messages := []
-	if should_apply_weekly_growth:
-		site_muster_messages = apply_controlled_resource_site_musters(session, "player")
-	_add_resources(session, total_income)
-	_refresh_all_player_heroes_for_new_day(session)
-	var hero_state = session.overworld.get("hero", {})
-	var movement_after = session.overworld.get("movement", {})
-
-	var messages := ["Day %d begins." % session.day]
-	var town_income_summary := _describe_resource_delta(town_income)
-	if town_income_summary != "":
-		messages.append("Town income %s." % town_income_summary)
-	if not occupation_messages.is_empty():
-		messages.append("Occupation lines %s." % "; ".join(occupation_messages))
-	if not recovery_messages.is_empty():
-		messages.append("Recovery lines %s." % "; ".join(recovery_messages))
-	if not weekly_growth_messages.is_empty():
-		messages.append("Weekly musters %s." % "; ".join(weekly_growth_messages))
-	var artifact_income_summary := _describe_resource_delta(artifact_income)
-	if artifact_income_summary != "":
-		messages.append("Artifact income %s." % artifact_income_summary)
-	var specialty_income_summary := _describe_resource_delta(specialty_income)
-	if specialty_income_summary != "":
-		messages.append("Specialty income %s." % specialty_income_summary)
-	var site_income_summary := _describe_resource_delta(site_income)
-	if site_income_summary != "":
-		messages.append("Field sites yield %s." % site_income_summary)
-	if not site_muster_messages.is_empty():
-		messages.append("Outlying musters %s." % "; ".join(site_muster_messages))
-	var delivery_messages := _advance_player_reserve_deliveries(session)
-	if not delivery_messages.is_empty():
-		messages.append("Reserve deliveries %s." % "; ".join(delivery_messages))
-	return {
-		"messages": messages,
-		"occupation_messages": occupation_messages,
-		"recovery_messages": recovery_messages,
-		"weekly_growth_messages": weekly_growth_messages,
-		"site_muster_messages": site_muster_messages,
-		"delivery_messages": delivery_messages,
-		"total_income": total_income,
-		"movement_after": movement_after,
-	}
+	return DayEngine.native_writing(&"OverworldRules._end_turn_open_day", [session])
 
 ## end_turn after the AI turn: elimination, the action result, the closing
 ## normalize and the day's summaries.
 static func _end_turn_close_day(session: SessionStateStoreScript.SessionData, opened: Dictionary, enemy_turn_result: Dictionary) -> Dictionary:
-	if _day_engine_mode == DayEngine.GDSCRIPT:
-		return _end_turn_close_day__gd(session, opened, enemy_turn_result)
-	if _day_engine_mode == DayEngine.NATIVE:
-		var native_result = DayEngine.native_writing(&"OverworldRules._end_turn_close_day", [session, opened, enemy_turn_result])
-		return _end_turn_close_day__gd(session, opened, enemy_turn_result) if DayEngine.not_ported() else native_result
-	var before := DayEngine.before_writing(&"OverworldRules._end_turn_close_day", [session, opened, enemy_turn_result])
-	var result = _end_turn_close_day__gd(session, opened, enemy_turn_result)
-	DayEngine.check_writing(&"OverworldRules._end_turn_close_day", before, [session, opened, enemy_turn_result], result)
-	return result
-
-static func _end_turn_close_day__gd(session: SessionStateStoreScript.SessionData, opened: Dictionary, enemy_turn_result: Dictionary) -> Dictionary:
-	var messages: Array = opened["messages"]
-	var occupation_messages: Array = opened["occupation_messages"]
-	var recovery_messages: Array = opened["recovery_messages"]
-	var weekly_growth_messages: Array = opened["weekly_growth_messages"]
-	var site_muster_messages: Array = opened["site_muster_messages"]
-	var delivery_messages: Array = opened["delivery_messages"]
-	var total_income: Dictionary = opened["total_income"]
-	var movement_after = opened["movement_after"]
-	var enemy_activity_summary := describe_enemy_activity(enemy_turn_result.get("events", []), 4)
-	var enemy_message := String(enemy_turn_result.get("message", ""))
-	if enemy_message != "":
-		messages.append(enemy_message)
-	# A player with no town for a week, or with nothing left, is out.
-	messages.append_array(PlayerEliminationRulesScript.apply_daily(session))
-	var result := _finalize_action_result(session, true, " ".join(messages))
-	normalize_overworld_state(session)
-	session.set_meta(CLOSING_NORMALIZE_DAY_META, int(session.day))
-	result["enemy_activity_summary"] = enemy_activity_summary
-	result["enemy_activity_events"] = _compact_enemy_activity_events(enemy_turn_result.get("events", []), 10)
-	if enemy_turn_result.get("profile", {}) is Dictionary and not enemy_turn_result.get("profile", {}).is_empty():
-		result["enemy_turn_profile"] = enemy_turn_result.get("profile", {})
-	result["resource_income_summary"] = _describe_resource_delta(total_income)
-	result["weekly_muster_summary"] = _end_turn_muster_summary(weekly_growth_messages, site_muster_messages)
-	result["movement_reset_summary"] = "Move %d/%d ready" % [
-		int(movement_after.get("current", 0)),
-		int(movement_after.get("max", 0)),
-	]
-	result["town_economy_summary"] = _end_turn_town_economy_summary(
-		occupation_messages,
-		recovery_messages,
-		delivery_messages
-	)
-	result["turn_resolution_summary"] = _end_turn_resolution_summary(session, result)
-	return result
+	return DayEngine.native_writing(&"OverworldRules._end_turn_close_day", [session, opened, enemy_turn_result])
 
 static func collect_active_resource(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	return HumanEngine.native_writing(&"OverworldRules.collect_active_resource", [session])
 
 static func choose_resource_reward(session: SessionStateStoreScript.SessionData, choice_id: String, expected_context: Dictionary) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return choose_resource_reward__gd(session, choice_id, expected_context)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.choose_resource_reward", [session, choice_id, expected_context])
-	var before := HumanEngine.before_writing(&"OverworldRules.choose_resource_reward", [session, choice_id, expected_context])
-	var result = choose_resource_reward__gd(session, choice_id, expected_context)
-	HumanEngine.check_writing(&"OverworldRules.choose_resource_reward", before, [session, choice_id, expected_context], result)
-	return result
-
-static func choose_resource_reward__gd(session: SessionStateStoreScript.SessionData, choice_id: String, expected_context: Dictionary) -> Dictionary:
-	normalize_overworld_state_for_runtime(session)
-	var node_result := _find_context_resource_node(session)
-	var node: Dictionary = node_result.get("node", {})
-	if choice_id.is_empty() or int(node_result.get("index", -1)) < 0 or _resource_reward_choice_context(session, node) != expected_context:
-		return {"ok": false, "message": "This chest is no longer being visited by that hero."}
-	return _collect_resource_node_result(session, node_result, true, 1, choice_id)
+	return HumanEngine.native_writing(&"OverworldRules.choose_resource_reward", [session, choice_id, expected_context])
 
 static func _route_lock_prompt(session: SessionStateStoreScript.SessionData, node: Dictionary, site: Dictionary) -> Dictionary:
 	return HumanEngine.native_writing(&"OverworldRules._route_lock_prompt", [session, node, site])
@@ -1079,63 +799,7 @@ static func _collect_resource_node_result(session: SessionStateStoreScript.Sessi
 ## Hires creatures at the dwelling the active hero is visiting. hires maps
 ## unit ids to counts; tier 1 creatures are free.
 static func hire_from_dwelling(session: SessionStateStoreScript.SessionData, hires: Dictionary, expected_context: Dictionary) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return hire_from_dwelling__gd(session, hires, expected_context)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.hire_from_dwelling", [session, hires, expected_context])
-	var before := HumanEngine.before_writing(&"OverworldRules.hire_from_dwelling", [session, hires, expected_context])
-	var result = hire_from_dwelling__gd(session, hires, expected_context)
-	HumanEngine.check_writing(&"OverworldRules.hire_from_dwelling", before, [session, hires, expected_context], result)
-	return result
-
-static func hire_from_dwelling__gd(
-	session: SessionStateStoreScript.SessionData,
-	hires: Dictionary,
-	expected_context: Dictionary
-) -> Dictionary:
-	normalize_overworld_state_for_runtime(session)
-	var node_result := _find_context_resource_node(session)
-	var index := int(node_result.get("index", -1))
-	if index < 0:
-		return {"ok": false, "message": "No dwelling is being visited."}
-	var node: Dictionary = node_result.get("node", {})
-	var site := NodePayload.site_for_node(node)
-	if not CreatureDwellings.is_dwelling(site) or _resource_reward_choice_context(session, node) != expected_context:
-		return {"ok": false, "message": "This dwelling is no longer being visited by that hero."}
-	if PlayerRules.resource_controller_id(node) != "player":
-		return {"ok": false, "message": "Flag %s before hiring there." % String(site.get("name", "the dwelling"))}
-	var available := CreatureDwellings.population(node, site, session.day)
-	var chosen := {}
-	for unit_id_value in hires.keys():
-		var unit_id := String(unit_id_value)
-		var count := mini(max(0, int(hires[unit_id_value])), int(available.get(unit_id, 0)))
-		if count > 0:
-			chosen[unit_id] = count
-	if chosen.is_empty():
-		return {"ok": false, "message": "Choose how many creatures to hire."}
-	var admission := HeroCommandRulesScript.army_addition_plan(session.overworld.get("army", {}).get("stacks", []), chosen)
-	if not bool(admission.get("ok", false)):
-		return admission
-	var price := CreatureDwellings.hire_cost(chosen)
-	if not price.is_empty() and not _can_afford(session, price):
-		return {"ok": false, "message": "You cannot afford %s." % _describe_resource_delta(price)}
-	if not price.is_empty():
-		_spend_resources(session, price)
-	for unit_id in chosen.keys():
-		CreatureDwellings.take(node, site, unit_id, int(chosen[unit_id]), session.day)
-	var nodes: Array = session.overworld.get("resource_nodes", [])
-	nodes[index] = node
-	session.overworld["resource_nodes"] = nodes
-	var hero = session.overworld.get("hero", {})
-	var army: Dictionary = hero.get("army", {}).duplicate(true)
-	army["stacks"] = admission.get("stacks", [])
-	hero["army"] = army
-	session.overworld["hero"] = hero
-	session.overworld["army"] = army
-	HeroCommandRulesScript.commit_active_hero(session)
-	var message := "%s hires %s at %s" % [String(hero.get("name", "The hero")), _describe_recruit_delta(chosen), String(site.get("name", "the dwelling"))]
-	message += " for %s." % _describe_resource_delta(price) if not price.is_empty() else " for free."
-	return _finalize_action_result(session, true, message, false, false, {"recruits": chosen.duplicate(true)})
+	return HumanEngine.native_writing(&"OverworldRules.hire_from_dwelling", [session, hires, expected_context])
 
 static func _stacks_to_recruits(stacks: Array) -> Dictionary:
 	var recruits := {}
@@ -1181,31 +845,7 @@ static func _collect_artifact_node_result(session: SessionStateStoreScript.Sessi
 	return HumanEngine.native_writing(&"OverworldRules._collect_artifact_node_result", [session, node_result, refresh_fog_after_action])
 
 static func perform_context_action(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return perform_context_action__gd(session, action_id)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.perform_context_action", [session, action_id])
-	var before := HumanEngine.before_writing(&"OverworldRules.perform_context_action", [session, action_id])
-	var result = perform_context_action__gd(session, action_id)
-	HumanEngine.check_writing(&"OverworldRules.perform_context_action", before, [session, action_id], result)
-	return result
-
-static func perform_context_action__gd(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
-	if session == null:
-		return {}
-	if action_id == "collect_resource":
-		return collect_active_resource(session)
-	if action_id == "collect_artifact":
-		return collect_active_artifact(session)
-	if action_id == "capture_town":
-		return capture_active_town(session)
-	if action_id == "site_response":
-		return _issue_active_site_response(session)
-	if action_id.begins_with("build:"):
-		return build_in_active_town(session, action_id.trim_prefix("build:"))
-	if action_id.begins_with("recruit:"):
-		return recruit_in_active_town(session, action_id.trim_prefix("recruit:"))
-	return {}
+	return HumanEngine.native_writing(&"OverworldRules.perform_context_action", [session, action_id])
 
 static func set_active_town_visit(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
 	normalize_overworld_state_for_runtime(session)
@@ -1405,195 +1045,13 @@ static func describe_encounter_consequence_surface(session: SessionStateStoreScr
 	return HumanEngine.native_writing(&"OverworldRules.describe_encounter_consequence_surface", [session, encounter, compact])
 
 static func build_in_active_town(session: SessionStateStoreScript.SessionData, building_id: String) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return build_in_active_town__gd(session, building_id)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.build_in_active_town", [session, building_id])
-	var before := HumanEngine.before_writing(&"OverworldRules.build_in_active_town", [session, building_id])
-	var result = build_in_active_town__gd(session, building_id)
-	HumanEngine.check_writing(&"OverworldRules.build_in_active_town", before, [session, building_id], result)
-	return result
-
-static func build_in_active_town__gd(session: SessionStateStoreScript.SessionData, building_id: String) -> Dictionary:
-	normalize_overworld_state(session)
-	var town_result := _find_active_town(session)
-	if int(town_result.get("index", -1)) < 0:
-		return {"ok": false, "message": "No town is available for construction here."}
-
-	var towns = session.overworld.get("towns", [])
-	var town = town_result.get("town", {})
-	if String(town.get("owner", "neutral")) != "player":
-		return {"ok": false, "message": "Capture the town before issuing orders there."}
-
-	var build_status := get_town_build_status(town, building_id)
-	if town_built_today(town, int(session.day)):
-		return {"ok": false, "message": "This town has already completed a build order today."}
-	if not bool(build_status.get("buildable", false)):
-		return {"ok": false, "message": String(build_status.get("blocked_message", "That building is not available in this town."))}
-
-	var building: Dictionary = build_status.get("building", {})
-	var cost = building.get("cost", {})
-	if not _can_afford(session, cost):
-		var readiness := town_cost_readiness(town, session.overworld.get("resources", {}), cost, int(session.day))
-		var shortfall := _describe_cost_shortfall(readiness)
-		return {
-			"ok": false,
-			"message": "Insufficient resources for %s.%s" % [
-				String(building.get("name", building_id)),
-				" Missing %s." % shortfall if shortfall != "" else "",
-			],
-		}
-
-	var income_before := _calculate_town_income(town, session)
-	var growth_before := town_weekly_growth(town, session)
-	_spend_resources(session, cost)
-	var built_buildings = _normalize_built_buildings_for_town_state(town)
-	built_buildings.append(building_id)
-	town["built_buildings"] = built_buildings
-	TownDevelopment.migrate_town(town)
-	town["last_build_day"] = int(session.day)
-	town["available_recruits"] = _add_recruit_growth(
-		town.get("available_recruits", {}),
-		HeroProgressionRulesScript.scale_recruit_growth(
-			_town_scaling_hero(session, town),
-			_building_growth_payload(building_id)
-		)
-	)
-	towns[int(town_result.get("index", -1))] = town
-	session.overworld["towns"] = towns
-	var income_after := _calculate_town_income(town, session)
-	var growth_after := town_weekly_growth(town, session)
-	var message_parts := ["Built %s in %s." % [String(building.get("name", building_id)), _town_name(town)]]
-	if int(building.get("spell_tier", 0)) > 0:
-		_teach_visiting_town_spells(session, town)
-	var cost_summary := _describe_resource_delta(cost)
-	if cost_summary != "":
-		message_parts.append("Spent %s." % cost_summary)
-	var income_change := _describe_resource_change(income_before, income_after)
-	if income_change != "":
-		message_parts.append("Daily income now %s (%s)." % [
-			_describe_resource_delta(income_after),
-			income_change,
-		])
-	var growth_change := _describe_recruit_projection(growth_before, growth_after)
-	if growth_change != "":
-		message_parts.append("Weekly muster %s." % growth_change)
-	return _finalize_action_result(
-		session,
-		true,
-		" ".join(message_parts)
-	)
+	return HumanEngine.native_writing(&"OverworldRules.build_in_active_town", [session, building_id])
 
 static func recruit_in_active_town(session: SessionStateStoreScript.SessionData, unit_id: String, requested_count: int = -1, runtime_normalized: bool = false) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return recruit_in_active_town__gd(session, unit_id, requested_count, runtime_normalized)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.recruit_in_active_town", [session, unit_id, requested_count, runtime_normalized])
-	var before := HumanEngine.before_writing(&"OverworldRules.recruit_in_active_town", [session, unit_id, requested_count, runtime_normalized])
-	var result = recruit_in_active_town__gd(session, unit_id, requested_count, runtime_normalized)
-	HumanEngine.check_writing(&"OverworldRules.recruit_in_active_town", before, [session, unit_id, requested_count, runtime_normalized], result)
-	return result
-
-static func recruit_in_active_town__gd(session: SessionStateStoreScript.SessionData, unit_id: String, requested_count: int = -1, runtime_normalized: bool = false) -> Dictionary:
-	if runtime_normalized:
-		normalize_overworld_state_for_runtime(session)
-	else:
-		normalize_overworld_state(session)
-	var town_result := _find_active_town(session)
-	if int(town_result.get("index", -1)) < 0:
-		return {"ok": false, "message": "No town is available for recruitment here."}
-
-	var towns = session.overworld.get("towns", [])
-	var town = town_result.get("town", {})
-	if String(town.get("owner", "neutral")) != "player":
-		return {"ok": false, "message": "Recruitment requires control of the town."}
-
-	var recruits = town.get("available_recruits", {})
-	var available_count := int(recruits.get(unit_id, 0))
-	if available_count <= 0:
-		return {"ok": false, "message": "No recruits are waiting for that unit."}
-
-	var unit := ContentService.get_unit(unit_id)
-	var adjusted_unit_cost := town_recruit_cost(session, town, unit_id)
-	var max_affordable := _max_affordable_count(session, adjusted_unit_cost)
-	var recruit_count = available_count if requested_count <= 0 else min(requested_count, available_count)
-	recruit_count = min(recruit_count, max_affordable)
-	if recruit_count <= 0:
-		var readiness := town_cost_readiness(town, session.overworld.get("resources", {}), adjusted_unit_cost, int(session.day))
-		var shortfall := _describe_cost_shortfall(readiness)
-		return {
-			"ok": false,
-			"message": "Resources are too thin to recruit %s.%s" % [
-				String(unit.get("name", unit_id)),
-				" Missing %s." % shortfall if shortfall != "" else "",
-			],
-		}
-
-	var recruit_cost := _multiply_cost(adjusted_unit_cost, recruit_count)
-	var destination := HeroCommandRulesScript.town_recruitment_destination(session, town)
-	var admission := HeroCommandRulesScript.army_addition_plan(destination.get("stacks", []), {unit_id: recruit_count})
-	if not bool(admission.get("ok", false)):
-		admission["message"] = "%s: %s" % [destination.label, String(admission.get("message", "Formation full."))]
-		return admission
-	_spend_resources(session, recruit_cost)
-	recruits[unit_id] = available_count - recruit_count
-	town["available_recruits"] = recruits
-	towns[int(town_result.get("index", -1))] = town
-	session.overworld["towns"] = towns
-
-	var stacks: Array = admission.get("stacks", [])
-	HeroCommandRulesScript._set_holder_stacks(session, town, String(destination.holder_id), stacks)
-	var field_total := _army_unit_count(stacks, unit_id)
-	var message_parts := ["Recruited %d %s." % [recruit_count, String(unit.get("name", unit_id))]]
-	var cost_summary := _describe_resource_delta(recruit_cost)
-	if cost_summary != "":
-		message_parts.append("Spent %s." % cost_summary)
-	message_parts.append("Arrived immediately in %s; %d remain in town reserve; destination now has %d." % [
-		String(destination.label),
-		max(0, int(recruits.get(unit_id, 0))),
-		field_total,
-	])
-	return _finalize_action_result(
-		session,
-		true,
-		" ".join(message_parts)
-	)
+	return HumanEngine.native_writing(&"OverworldRules.recruit_in_active_town", [session, unit_id, requested_count, runtime_normalized])
 
 static func cast_overworld_spell(session: SessionStateStoreScript.SessionData, spell_id: String) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return cast_overworld_spell__gd(session, spell_id)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.cast_overworld_spell", [session, spell_id])
-	var before := HumanEngine.before_writing(&"OverworldRules.cast_overworld_spell", [session, spell_id])
-	var result = cast_overworld_spell__gd(session, spell_id)
-	HumanEngine.check_writing(&"OverworldRules.cast_overworld_spell", before, [session, spell_id], result)
-	return result
-
-static func cast_overworld_spell__gd(session: SessionStateStoreScript.SessionData, spell_id: String) -> Dictionary:
-	normalize_overworld_state(session)
-	var hero = session.overworld.get("hero", {})
-	var movement = session.overworld.get("movement", {})
-	var result := SpellRulesScript.cast_overworld_spell(hero, movement, spell_id, session.day)
-	if not bool(result.get("ok", false)):
-		return {"ok": false, "message": String(result.get("message", "Spell casting failed."))}
-
-	session.overworld["hero"] = result.get("hero", hero)
-	session.overworld["movement"] = result.get("movement", movement)
-	var revealed_tiles := _reveal_spell_fog(session, int(result.get("fog_reveal_radius", 0)))
-	var consequence_preview: Dictionary = result.get("consequence_preview", {}) if result.get("consequence_preview", {}) is Dictionary else {}
-	if revealed_tiles > 0:
-		consequence_preview["revealed_tiles"] = revealed_tiles
-	return _attach_post_action_recap(
-		_finalize_action_result(session, true, String(result.get("message", ""))),
-		session,
-		"spell",
-		{
-			"spell_id": String(result.get("spell_id", spell_id)),
-			"spell_name": String(result.get("spell_name", spell_id)),
-			"target_contract": result.get("target_contract", {}),
-			"consequence_preview": consequence_preview,
-		}
-	)
+	return HumanEngine.native_writing(&"OverworldRules.cast_overworld_spell", [session, spell_id])
 
 static func equip_artifact(session: SessionStateStoreScript.SessionData, artifact_id: String) -> Dictionary:
 	normalize_overworld_state(session)
@@ -1618,67 +1076,10 @@ static func unequip_artifact(session: SessionStateStoreScript.SessionData, slot:
 	return _finalize_action_result(session, true, String(result.get("message", "")))
 
 static func perform_artifact_action(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return perform_artifact_action__gd(session, action_id)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.perform_artifact_action", [session, action_id])
-	var before := HumanEngine.before_writing(&"OverworldRules.perform_artifact_action", [session, action_id])
-	var result = perform_artifact_action__gd(session, action_id)
-	HumanEngine.check_writing(&"OverworldRules.perform_artifact_action", before, [session, action_id], result)
-	return result
-
-static func perform_artifact_action__gd(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
-	normalize_overworld_state(session)
-	var previous_max := _movement_max_from_hero(session.overworld.get("hero", {}), session)
-	var result := ArtifactRulesScript.perform_management_action(session.overworld.get("hero", {}), action_id)
-	if not bool(result.get("ok", false)):
-		return {"ok": false, "message": String(result.get("message", "Unable to manage artifact."))}
-
-	session.overworld["hero"] = result.get("hero", session.overworld.get("hero", {}))
-	_sync_movement_to_hero(session, previous_max)
-	return _finalize_action_result(session, true, String(result.get("message", "")))
+	return HumanEngine.native_writing(&"OverworldRules.perform_artifact_action", [session, action_id])
 
 static func get_active_context(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return get_active_context__gd(session)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.get_active_context", [session])
-	var before := HumanEngine.before_writing(&"OverworldRules.get_active_context", [session])
-	var result = get_active_context__gd(session)
-	HumanEngine.check_writing(&"OverworldRules.get_active_context", before, [session], result)
-	return result
-
-static func get_active_context__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	normalize_overworld_state(session)
-	var pos := hero_position(session)
-	if not is_tile_visible(session, pos.x, pos.y):
-		return {"type": "empty"}
-
-	var guard_result := _find_guard_engagement_at_tile(session, pos.x, pos.y)
-	if int(guard_result.get("index", -1)) >= 0:
-		return {"type": "encounter", "encounter": guard_result.get("encounter", {})}
-
-	var town_result := _find_active_town(session)
-	if int(town_result.get("index", -1)) >= 0:
-		return {"type": "town", "town": town_result.get("town", {})}
-
-	var resource_result := _find_context_resource_node(session)
-	if int(resource_result.get("index", -1)) >= 0:
-		return {"type": "resource", "node": resource_result.get("node", {})}
-
-	var artifact_result := _find_active_artifact_node(session)
-	if int(artifact_result.get("index", -1)) >= 0:
-		return {"type": "artifact", "node": artifact_result.get("node", {})}
-
-	var encounter := get_active_encounter(session)
-	if not encounter.is_empty():
-		return {"type": "encounter", "encounter": encounter}
-
-	var rendezvous := _field_rendezvous_hero_at_tile(session, pos)
-	if not rendezvous.is_empty():
-		return {"type": "rendezvous", "hero": rendezvous}
-
-	return {"type": "empty"}
+	return HumanEngine.native_writing(&"OverworldRules.get_active_context", [session])
 
 static func _field_rendezvous_hero_at_tile(session: SessionStateStoreScript.SessionData, tile: Vector2i) -> Dictionary:
 	return HumanEngine.native_writing(&"OverworldRules._field_rendezvous_hero_at_tile", [session, tile])
@@ -2244,75 +1645,7 @@ static func _spatial_lookup_entries(index: Dictionary, name: String, tile: Vecto
 	return table.get(_tile_key(tile), []) if table.get(_tile_key(tile), []) is Array else []
 
 static func _build_blocked_tile_index(session: SessionStateStoreScript.SessionData, level: int = -1, ignore_actor_id: String = "", combat_defenders: Dictionary = {}) -> Dictionary:
-	if _day_engine_mode == DayEngine.GDSCRIPT:
-		return _build_blocked_tile_index__gd(session, level, ignore_actor_id, combat_defenders)
-	if _day_engine_mode == DayEngine.NATIVE:
-		var native_result = DayEngine.native_writing(&"OverworldRules._build_blocked_tile_index", [session, level, ignore_actor_id, combat_defenders])
-		return _build_blocked_tile_index__gd(session, level, ignore_actor_id, combat_defenders) if DayEngine.not_ported() else native_result
-	var before := DayEngine.before_writing(&"OverworldRules._build_blocked_tile_index", [session, level, ignore_actor_id, combat_defenders])
-	var result = _build_blocked_tile_index__gd(session, level, ignore_actor_id, combat_defenders)
-	DayEngine.check_writing(&"OverworldRules._build_blocked_tile_index", before, [session, level, ignore_actor_id, combat_defenders], result)
-	return result
-
-static func _build_blocked_tile_index__gd(session: SessionStateStoreScript.SessionData, level: int = -1, ignore_actor_id: String = "", combat_defenders: Dictionary = {}) -> Dictionary:
-	var index := {}
-	if session == null:
-		return index
-	level = OverworldLevelRulesScript.query_level(session, level)
-	for town_value in session.overworld.get("towns", []):
-		if not (town_value is Dictionary):
-			continue
-		if not OverworldLevelRulesScript.on_level(town_value, level):
-			continue
-		# Nonempty strings retain exclusive town-wall ownership for doorway
-		# corner checks. Membership remains the authoritative blocking bit.
-		# Any overlapping town or non-town body replaces this token with true.
-		var town_id := String(town_value.get("placement_id", ""))
-		for tile in _generated_body_tiles_for_placement(town_value, true):
-			var key := _tile_key(tile)
-			index[key] = town_id if town_id != "" and not index.has(key) else true
-	for encounter_value in session.overworld.get("encounters", []):
-		if not (encounter_value is Dictionary):
-			continue
-		var encounter: Dictionary = encounter_value
-		if ignore_actor_id != "" and String(encounter.get("placement_id", "")) == ignore_actor_id:
-			continue
-		if combat_defenders.has(encounter_key(encounter)):
-			continue
-		if not OverworldLevelRulesScript.on_level(encounter, level) or is_encounter_resolved(session, encounter):
-			continue
-		_append_generated_body_tiles_to_blocked_index(index, encounter, bool(encounter.get("blocking_body", true)))
-	# The same keys set to true, in the same order, as walking the objects here.
-	index.merge(_blocked_scenery_layer(session, level), true)
-	for node_value in session.overworld.get("resource_nodes", []):
-		if not (node_value is Dictionary):
-			continue
-		var node: Dictionary = node_value
-		if not OverworldLevelRulesScript.on_level(node, level):
-			continue
-		var body_tiles: Array
-		var package_mask: Variant = node.get("package_block_tiles", null)
-		if not Mines.resource(node).is_empty():
-			if not resource_node_is_present(node): continue
-			body_tiles = Mines.block_tiles(node)
-		elif package_mask is Array:
-			# Package masks already override authored geometry, including an
-			# explicitly empty mask. Preserve presence and decode only once;
-			# resolving a content definition cannot affect this branch.
-			if not resource_node_is_present(node):
-				continue
-			body_tiles = _world_tiles_from_payload_array(package_mask)
-		else:
-			var map_object := _map_object_for_resource_node(node)
-			if not _resource_node_blocks_body_tiles(node, map_object):
-				continue
-			body_tiles = _map_object_world_body_tiles(map_object, node)
-		for body_tile in body_tiles:
-			if body_tile is Vector2i:
-				var key := _tile_key(body_tile)
-				var id := String(node.get("placement_id", ""))
-				index[key] = id if NativeTransit.is_native(node) and id != "" and not index.has(key) else true
-	return index
+	return DayEngine.native_writing(&"OverworldRules._build_blocked_tile_index", [session, level, ignore_actor_id, combat_defenders])
 
 ## The tiles the map objects block on one level, each set to true in the order
 ## the blocked index first meets them. Map objects are scenery: the session is
@@ -2362,16 +1695,7 @@ static func town_footprint_tiles(town: Dictionary) -> Array:
 
 ## A town completes at most one build order per day.
 static func town_built_today(town: Dictionary, day: int) -> bool:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return town_built_today__gd(town, day)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"OverworldRules.town_built_today", [town, day])
-	var result = town_built_today__gd(town, day)
-	HumanEngine.check(&"OverworldRules.town_built_today", [town, day], result)
-	return result
-
-static func town_built_today__gd(town: Dictionary, day: int) -> bool:
-	return day > 0 and int(town.get("last_build_day", 0)) == day
+	return HumanEngine.native(&"OverworldRules.town_built_today", [town, day])
 
 ## True when the player's hero has used today's overworld spell.
 static func hero_cast_spell_today(session: SessionStateStoreScript.SessionData, hero_id: String) -> bool:
@@ -2561,37 +1885,10 @@ static func terrain_profile_at(session: SessionStateStoreScript.SessionData, x: 
 	return profile
 
 static func describe_resources(session: SessionStateStoreScript.SessionData) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return describe_resources__gd(session)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.describe_resources", [session])
-	var before := HumanEngine.before_writing(&"OverworldRules.describe_resources", [session])
-	var result = describe_resources__gd(session)
-	HumanEngine.check_writing(&"OverworldRules.describe_resources", before, [session], result)
-	return result
-
-static func describe_resources__gd(session: SessionStateStoreScript.SessionData) -> String:
-	return describe_resource_stockpile(session.overworld.get("resources", {}))
+	return HumanEngine.native_writing(&"OverworldRules.describe_resources", [session])
 
 static func describe_resource_stockpile(resources: Variant, include_zero_rare: bool = false) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return describe_resource_stockpile__gd(resources, include_zero_rare)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.describe_resource_stockpile", [resources, include_zero_rare])
-	var before := HumanEngine.before_writing(&"OverworldRules.describe_resource_stockpile", [resources, include_zero_rare])
-	var result = describe_resource_stockpile__gd(resources, include_zero_rare)
-	HumanEngine.check_writing(&"OverworldRules.describe_resource_stockpile", before, [resources, include_zero_rare], result)
-	return result
-
-static func describe_resource_stockpile__gd(resources: Variant, include_zero_rare: bool = false) -> String:
-	var normalized := _normalize_live_resource_stockpile(resources)
-	var parts := []
-	for resource_key in _resource_keys_for_payload(normalized):
-		var amount := int(normalized.get(resource_key, 0))
-		var common_resource: bool = resource_key in ["gold", "wood", "ore"]
-		if common_resource or include_zero_rare or amount > 0:
-			parts.append("%s %d" % [_resource_display_name(resource_key), amount])
-	return " | ".join(parts)
+	return HumanEngine.native_writing(&"OverworldRules.describe_resource_stockpile", [resources, include_zero_rare])
 
 static func describe_status(session: SessionStateStoreScript.SessionData) -> String:
 	normalize_overworld_state(session)
@@ -2705,25 +2002,7 @@ static func _weekday_of_day(day: int) -> int:
 	return ((max(day, 1) - 1) % 7) + 1
 
 static func describe_hero(session: SessionStateStoreScript.SessionData) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return describe_hero__gd(session)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.describe_hero", [session])
-	var before := HumanEngine.before_writing(&"OverworldRules.describe_hero", [session])
-	var result = describe_hero__gd(session)
-	HumanEngine.check_writing(&"OverworldRules.describe_hero", before, [session], result)
-	return result
-
-static func describe_hero__gd(session: SessionStateStoreScript.SessionData) -> String:
-	var hero = session.overworld.get("hero", {})
-	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
-	return "\n".join(
-		[
-			HeroCommandRulesScript.hero_identity_context_line(hero, String(scenario.get("player_faction_id", ""))),
-			HeroCommandRulesScript.hero_progress_context_line(hero),
-			HeroCommandRulesScript.hero_readiness_context_line(hero, true),
-		]
-	)
+	return HumanEngine.native_writing(&"OverworldRules.describe_hero", [session])
 
 static func _overworld_hero_line(hero: Dictionary) -> String:
 	return "%s | %s | %s" % [
@@ -2754,163 +2033,16 @@ static func describe_heroes(session: SessionStateStoreScript.SessionData) -> Str
 	return "\n".join(lines)
 
 static func describe_army(session: SessionStateStoreScript.SessionData) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return describe_army__gd(session)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.describe_army", [session])
-	var before := HumanEngine.before_writing(&"OverworldRules.describe_army", [session])
-	var result = describe_army__gd(session)
-	HumanEngine.check_writing(&"OverworldRules.describe_army", before, [session], result)
-	return result
-
-static func describe_army__gd(session: SessionStateStoreScript.SessionData) -> String:
-	if session == null:
-		return "Marching Army\n0 troops in 0 groups | Strength 0\nNo standing force"
-	var army = session.overworld.get("army", {})
-	var lines := []
-	var headcount := 0
-	var strength := 0
-	for stack in army.get("stacks", []):
-		if not (stack is Dictionary):
-			continue
-		var count := int(stack.get("count", 0))
-		if count <= 0:
-			continue
-		headcount += count
-		strength += unit_stack_strength_value(String(stack.get("unit_id", "")), count)
-		lines.append("- %s" % describe_stack_inspection_line(stack))
-	return "Marching Army\n%d troops in %d groups | Strength %d\n%s" % [
-		headcount,
-		lines.size(),
-		strength,
-		"\n".join(lines) if not lines.is_empty() else "No standing force",
-	]
+	return HumanEngine.native_writing(&"OverworldRules.describe_army", [session])
 
 static func describe_stack_inspection_line(stack: Dictionary, options: Dictionary = {}) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return describe_stack_inspection_line__gd(stack, options)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.describe_stack_inspection_line", [stack, options])
-	var before := HumanEngine.before_writing(&"OverworldRules.describe_stack_inspection_line", [stack, options])
-	var result = describe_stack_inspection_line__gd(stack, options)
-	HumanEngine.check_writing(&"OverworldRules.describe_stack_inspection_line", before, [stack, options], result)
-	return result
-
-static func describe_stack_inspection_line__gd(stack: Dictionary, options: Dictionary = {}) -> String:
-	var unit_id := String(stack.get("unit_id", ""))
-	var unit := ContentService.get_unit(unit_id)
-	var unit_name := String(unit.get("name", unit_id))
-	var count := _stack_display_count(stack, unit)
-	var health := _stack_display_health(stack, unit, count)
-	var max_health := _stack_display_max_health(stack, unit, count)
-	var health_text := "%d/%d" % [health, max_health] if max_health > health else "%d" % health
-	var include_name := bool(options.get("include_name", true))
-	var parts := []
-	if include_name:
-		parts.append("%s x%d" % [unit_name, count])
-	else:
-		parts.append("Count %d" % count)
-	parts.append("%s %s" % [unit_tier_label(unit), unit_role_label(unit)])
-	parts.append("HP %s" % health_text)
-	parts.append("Strength %d" % unit_stack_strength_value(unit_id, count))
-	parts.append(_stack_readiness_label(stack, health, max_health))
-	return " | ".join(parts)
+	return HumanEngine.native_writing(&"OverworldRules.describe_stack_inspection_line", [stack, options])
 
 static func describe_unit_recruit_brief(unit_id: String, count: int = 0) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return describe_unit_recruit_brief__gd(unit_id, count)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"OverworldRules.describe_unit_recruit_brief", [unit_id, count])
-	var result = describe_unit_recruit_brief__gd(unit_id, count)
-	HumanEngine.check(&"OverworldRules.describe_unit_recruit_brief", [unit_id, count], result)
-	return result
-
-static func describe_unit_recruit_brief__gd(unit_id: String, count: int = 0) -> String:
-	var unit := ContentService.get_unit(unit_id)
-	if unit.is_empty():
-		return "Unknown unit"
-	var strength_count: int = max(1, count)
-	var strength_label: String = "reserve" if count > 0 else "each"
-	return "%s %s | HP %d each | Strength %d %s" % [
-		unit_tier_label(unit),
-		unit_role_label(unit),
-		max(1, int(unit.get("hp", 1))),
-		unit_stack_strength_value(unit_id, strength_count),
-		strength_label,
-	]
-
-static func unit_tier_label(unit: Dictionary) -> String:
-	return "T%d" % max(1, int(unit.get("tier", 1)))
-
-static func unit_role_label(unit: Dictionary) -> String:
-	var role := String(unit.get("role", "")).strip_edges()
-	if role == "":
-		role = "ranged" if bool(unit.get("ranged", false)) else "melee"
-	return role.capitalize()
+	return HumanEngine.native(&"OverworldRules.describe_unit_recruit_brief", [unit_id, count])
 
 static func unit_stack_strength_value(unit_id: String, count: int) -> int:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return unit_stack_strength_value__gd(unit_id, count)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"OverworldRules.unit_stack_strength_value", [unit_id, count])
-	var result = unit_stack_strength_value__gd(unit_id, count)
-	HumanEngine.check(&"OverworldRules.unit_stack_strength_value", [unit_id, count], result)
-	return result
-
-static func unit_stack_strength_value__gd(unit_id: String, count: int) -> int:
-	var unit := ContentService.get_unit(unit_id)
-	if unit.is_empty() or count <= 0:
-		return 0
-	return max(0, count) * unit_strength_value(unit_id)
-
-static func unit_strength_value(unit_id: String) -> int:
-	var unit := ContentService.get_unit(unit_id)
-	if unit.is_empty():
-		return 0
-	var damage_average := int(round(float(int(unit.get("min_damage", 1)) + int(unit.get("max_damage", 1))) / 2.0))
-	return (
-		max(1, int(unit.get("hp", 1)))
-		+ max(0, int(unit.get("attack", 0)))
-		+ max(0, int(unit.get("defense", 0)))
-		+ max(1, damage_average)
-		+ max(1, int(unit.get("speed", 1)))
-		+ max(1, int(unit.get("initiative", 1)))
-		+ (3 if bool(unit.get("ranged", false)) else 0)
-		+ max(0, int(unit.get("tier", 1)) - 1)
-	)
-
-static func _stack_display_count(stack: Dictionary, unit: Dictionary) -> int:
-	if stack.has("total_health"):
-		var unit_hp: int = max(1, int(stack.get("unit_hp", unit.get("hp", 1))))
-		return max(0, int(ceil(float(max(0, int(stack.get("total_health", 0)))) / float(unit_hp))))
-	if stack.has("count"):
-		return max(0, int(stack.get("count", 0)))
-	return max(0, int(stack.get("base_count", 0)))
-
-static func _stack_display_health(stack: Dictionary, unit: Dictionary, count: int) -> int:
-	if stack.has("total_health"):
-		return max(0, int(stack.get("total_health", 0)))
-	return max(0, count) * max(1, int(unit.get("hp", 1)))
-
-static func _stack_display_max_health(stack: Dictionary, unit: Dictionary, count: int) -> int:
-	var unit_hp: int = max(1, int(stack.get("unit_hp", unit.get("hp", 1))))
-	if stack.has("base_count"):
-		return max(0, int(stack.get("base_count", 0))) * unit_hp
-	return max(0, count) * unit_hp
-
-static func _stack_readiness_label(stack: Dictionary, health: int, max_health: int) -> String:
-	if health <= 0:
-		return "Broken"
-	if bool(stack.get("defending", false)):
-		return "Braced"
-	if max_health <= 0:
-		return "Ready"
-	var ratio := float(health) / float(max_health)
-	if ratio < 0.35:
-		return "Critical"
-	if ratio < 0.70:
-		return "Wounded"
-	return "Ready"
+	return HumanEngine.native(&"OverworldRules.unit_stack_strength_value", [unit_id, count])
 
 static func is_weekly_growth_day(day: int) -> bool:
 	return day > 1 and ((day - 1) % WEEKLY_GROWTH_INTERVAL) == 0
@@ -4501,58 +3633,13 @@ static func town_income(town: Dictionary, session: SessionStateStoreScript.Sessi
 	return _calculate_town_income(town, session)
 
 static func town_reinforcement_quality(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> int:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return town_reinforcement_quality__gd(town, session)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.town_reinforcement_quality", [town, session])
-	var before := HumanEngine.before_writing(&"OverworldRules.town_reinforcement_quality", [town, session])
-	var result = town_reinforcement_quality__gd(town, session)
-	HumanEngine.check_writing(&"OverworldRules.town_reinforcement_quality", before, [town, session], result)
-	return result
-
-static func town_reinforcement_quality__gd(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> int:
-	var cache_key := _town_read_scope_cache_key(session, "reinforcement_quality", town)
-	if _town_read_scope_cache_has(cache_key):
-		return int(_town_read_scope_cache_get(cache_key))
-	var result := _town_reinforcement_quality(town, session)
-	_town_read_scope_cache_store(cache_key, result)
-	return result
+	return HumanEngine.native_writing(&"OverworldRules.town_reinforcement_quality", [town, session])
 
 static func town_battle_readiness(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> int:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return town_battle_readiness__gd(town, session)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.town_battle_readiness", [town, session])
-	var before := HumanEngine.before_writing(&"OverworldRules.town_battle_readiness", [town, session])
-	var result = town_battle_readiness__gd(town, session)
-	HumanEngine.check_writing(&"OverworldRules.town_battle_readiness", before, [town, session], result)
-	return result
-
-static func town_battle_readiness__gd(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> int:
-	var cache_key := _town_read_scope_cache_key(session, "battle_readiness", town)
-	if _town_read_scope_cache_has(cache_key):
-		return int(_town_read_scope_cache_get(cache_key))
-	var result := _town_battle_readiness(town, session)
-	_town_read_scope_cache_store(cache_key, result)
-	return result
+	return HumanEngine.native_writing(&"OverworldRules.town_battle_readiness", [town, session])
 
 static func town_pressure_output(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> int:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return town_pressure_output__gd(town, session)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.town_pressure_output", [town, session])
-	var before := HumanEngine.before_writing(&"OverworldRules.town_pressure_output", [town, session])
-	var result = town_pressure_output__gd(town, session)
-	HumanEngine.check_writing(&"OverworldRules.town_pressure_output", before, [town, session], result)
-	return result
-
-static func town_pressure_output__gd(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> int:
-	var cache_key := _town_read_scope_cache_key(session, "pressure_output", town)
-	if _town_read_scope_cache_has(cache_key):
-		return int(_town_read_scope_cache_get(cache_key))
-	var result := _town_pressure_output(town, session)
-	_town_read_scope_cache_store(cache_key, result)
-	return result
+	return HumanEngine.native_writing(&"OverworldRules.town_pressure_output", [town, session])
 
 static func town_development_metrics(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
 	var cache_key := _town_read_scope_cache_key(session, "development_metrics", town)
@@ -4602,17 +3689,7 @@ static func town_capital_project_state(town: Dictionary, session: SessionStateSt
 	return result
 
 static func town_logistics_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return town_logistics_state__gd(session, town)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.town_logistics_state", [session, town])
-	var before := HumanEngine.before_writing(&"OverworldRules.town_logistics_state", [session, town])
-	var result = town_logistics_state__gd(session, town)
-	HumanEngine.check_writing(&"OverworldRules.town_logistics_state", before, [session, town], result)
-	return result
-
-static func town_logistics_state__gd(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
-	return _town_logistics_state(session, town)
+	return HumanEngine.native_writing(&"OverworldRules.town_logistics_state", [session, town])
 
 static func town_recovery_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
 	var cache_key := _town_read_scope_cache_key(session, "recovery", town)
@@ -4660,28 +3737,8 @@ static func town_market_state(town: Dictionary) -> Dictionary:
 static func describe_town_market(session: SessionStateStoreScript.SessionData, town: Dictionary) -> String:
 	return "\n".join(_town_market_panel_lines(session, town))
 
-static func get_town_market_actions(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
-	return _town_market_actions(session, town)
-
-static func perform_town_market_action(
-	session: SessionStateStoreScript.SessionData,
-	town: Dictionary,
-	action_id: String
-) -> Dictionary:
-	return _execute_town_market_action(session, town, action_id)
-
 static func describe_town_response_panel(session: SessionStateStoreScript.SessionData, town: Dictionary) -> String:
 	return "\n".join(_town_response_panel_lines(session, town))
-
-static func get_town_response_actions(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
-	return _town_response_actions(session, town)
-
-static func perform_town_response_action(
-	session: SessionStateStoreScript.SessionData,
-	town: Dictionary,
-	action_id: String
-) -> Dictionary:
-	return _execute_town_response_action(session, town, action_id)
 
 static func controlled_resource_site_income(
 	session: SessionStateStoreScript.SessionData,
@@ -4892,31 +3949,11 @@ static func _end_turn_resolution_summary(session: SessionStateStoreScript.Sessio
 		parts.append("enemy %s" % _short_player_text(enemy_summary, 96))
 	return " | ".join(parts)
 
-static func can_afford_cost_with_town_market(town: Dictionary, pool: Dictionary, cost: Variant, current_day: int = -1) -> bool:
-	return bool(_town_market_cost_coverage(town, pool, cost, current_day).get("affordable", false))
-
 static func apply_market_cost_coverage(town: Dictionary, pool: Dictionary, cost: Variant, current_day: int = -1) -> Array:
 	return _apply_market_cost_coverage(town, pool, cost, current_day)
 
 static func town_cost_readiness(town: Dictionary, pool: Dictionary, cost: Variant, current_day: int = -1) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return town_cost_readiness__gd(town, pool, cost, current_day)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.town_cost_readiness", [town, pool, cost, current_day])
-	var before := HumanEngine.before_writing(&"OverworldRules.town_cost_readiness", [town, pool, cost, current_day])
-	var result = town_cost_readiness__gd(town, pool, cost, current_day)
-	HumanEngine.check_writing(&"OverworldRules.town_cost_readiness", before, [town, pool, cost, current_day], result)
-	return result
-
-static func town_cost_readiness__gd(town: Dictionary, pool: Dictionary, cost: Variant, current_day: int = -1) -> Dictionary:
-	var readiness := _town_market_cost_coverage(town, pool, cost, current_day)
-	var market_actions := []
-	if bool(readiness.get("market_affordable", false)):
-		var simulated_pool: Dictionary = readiness.get("pool", {}).duplicate(true)
-		var simulated_town: Dictionary = town.duplicate(true)
-		market_actions = _apply_market_cost_coverage(simulated_town, simulated_pool, readiness.get("cost", {}), current_day)
-	readiness["market_actions"] = market_actions
-	return readiness
+	return HumanEngine.native_writing(&"OverworldRules.town_cost_readiness", [town, pool, cost, current_day])
 
 static func controlled_resource_site_pressure_bonus(session: SessionStateStoreScript.SessionData, controller_id: String) -> int:
 	var total := 0
@@ -5060,91 +4097,8 @@ static func _describe_management_watch_from_normalized_session(
 		return "Town lines are stable."
 	return " | ".join(parts)
 
-static func describe_town_build_projection(
-	session: SessionStateStoreScript.SessionData,
-	town: Dictionary,
-	building_id: String
-) -> String:
-	var building := ContentService.get_building(building_id)
-	if building.is_empty():
-		return "Projection unavailable."
-	var current_growth := town_weekly_growth(town, session)
-	var current_logistics := town_logistics_state(session, town)
-	var current_quality := town_reinforcement_quality(town, session)
-	var current_readiness := town_battle_readiness(town, session)
-	var current_pressure := town_pressure_output(town, session)
-	var current_recovery := town_recovery_state(session, town)
-	var current_project := town_capital_project_state(town, session)
-	var projected_town := town.duplicate(true)
-	var built_buildings = _normalize_built_buildings_for_town_state(projected_town)
-	if building_id not in built_buildings:
-		built_buildings.append(building_id)
-	projected_town["built_buildings"] = built_buildings
-	var projected_growth := town_weekly_growth(projected_town, session)
-	var projected_logistics := town_logistics_state(session, projected_town)
-	var projected_quality := town_reinforcement_quality(projected_town, session)
-	var projected_readiness := town_battle_readiness(projected_town, session)
-	var projected_pressure := town_pressure_output(projected_town, session)
-	var projected_recovery := town_recovery_state(session, projected_town)
-	var projected_project := town_capital_project_state(projected_town, session)
-	var parts := []
-	var growth_projection := _describe_recruit_projection(current_growth, projected_growth)
-	if growth_projection != "":
-		parts.append("Weekly %s" % growth_projection)
-	var quality_delta := projected_quality - current_quality
-	if quality_delta != 0:
-		parts.append("Quality %s" % _describe_signed_int(quality_delta))
-	var readiness_delta := projected_readiness - current_readiness
-	if readiness_delta != 0:
-		parts.append("Readiness %s" % _describe_signed_int(readiness_delta))
-	var pressure_delta := projected_pressure - current_pressure
-	if pressure_delta != 0:
-		parts.append("%s %s" % [_town_pressure_label(town), _describe_signed_int(pressure_delta)])
-	var relief_delta := int(projected_recovery.get("relief_per_day", 1)) - int(current_recovery.get("relief_per_day", 1))
-	if relief_delta != 0:
-		parts.append("Recovery %s/day" % _describe_signed_int(relief_delta))
-	if int(projected_project.get("progress_complete", 0)) != int(current_project.get("progress_complete", 0)):
-		parts.append("Project %d/%d" % [
-			int(projected_project.get("progress_complete", 0)),
-			int(projected_project.get("progress_total", 0)),
-		])
-	if int(projected_project.get("support_total", 0)) > 0 and (
-		int(projected_project.get("progress_complete", 0)) != int(current_project.get("progress_complete", 0))
-		or bool(projected_project.get("active", false))
-	):
-		var anchor_summary := "Anchor watch %d/%d" % [
-			int(projected_project.get("support_met", 0)),
-			int(projected_project.get("support_total", 0)),
-		]
-		var missing_support = projected_project.get("missing_support_labels", [])
-		if missing_support is Array and not missing_support.is_empty():
-			anchor_summary += " | Missing %s" % ", ".join(missing_support)
-		if int(projected_project.get("recovery_guard", 0)) > 0:
-			anchor_summary += " | Recovery +%d/day" % int(projected_project.get("recovery_guard", 0))
-		parts.append(anchor_summary)
-	var logistics_required_total = max(
-		int(current_logistics.get("required_total", 0)),
-		int(projected_logistics.get("required_total", 0))
-	)
-	if logistics_required_total > 0 and (
-		int(projected_logistics.get("support_gap", 0)) != int(current_logistics.get("support_gap", 0))
-		or int(projected_logistics.get("met_requirements", 0)) != int(current_logistics.get("met_requirements", 0))
-	):
-		var logistics_summary := "Logistics %d/%d anchors" % [
-			int(projected_logistics.get("met_requirements", 0)),
-			int(projected_logistics.get("required_total", 0)),
-		]
-		var missing_families = projected_logistics.get("missing_family_labels", [])
-		if missing_families is Array and not missing_families.is_empty():
-			logistics_summary += " | Missing %s" % ", ".join(missing_families)
-		parts.append(logistics_summary)
-	if bool(projected_project.get("vulnerable", false)) and not bool(current_project.get("vulnerable", false)):
-		parts.append("Vulnerability window opens")
-	elif not bool(projected_project.get("vulnerable", false)) and bool(current_project.get("vulnerable", false)):
-		parts.append("Closes vulnerability window")
-	if parts.is_empty():
-		return "Projection: steadies current output."
-	return "Projection: %s." % " | ".join(parts)
+static func describe_town_build_projection(session: SessionStateStoreScript.SessionData, town: Dictionary, building_id: String) -> String:
+	return HumanEngine.native_writing(&"OverworldRules.describe_town_build_projection", [session, town, building_id])
 
 static func apply_town_recovery_pressure(
 	session: SessionStateStoreScript.SessionData,
@@ -5218,19 +4172,7 @@ static func apply_resource_site_disruption(
 	)
 
 static func town_recruit_cost(session: SessionStateStoreScript.SessionData, town: Dictionary, unit_id: String) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return town_recruit_cost__gd(session, town, unit_id)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.town_recruit_cost", [session, town, unit_id])
-	var before := HumanEngine.before_writing(&"OverworldRules.town_recruit_cost", [session, town, unit_id])
-	var result = town_recruit_cost__gd(session, town, unit_id)
-	HumanEngine.check_writing(&"OverworldRules.town_recruit_cost", before, [session, town, unit_id], result)
-	return result
-
-static func town_recruit_cost__gd(session: SessionStateStoreScript.SessionData, town: Dictionary, unit_id: String) -> Dictionary:
-	var unit := ContentService.get_unit(unit_id)
-	var adjusted_cost := HeroProgressionRulesScript.scale_recruit_cost(_town_scaling_hero(session, town), unit.get("cost", {}))
-	return _apply_percent_discount(adjusted_cost, _recruitment_discount_percent(town, unit_id))
+	return HumanEngine.native_writing(&"OverworldRules.town_recruit_cost", [session, town, unit_id])
 
 static func _town_scaling_hero(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
 	# Recruit prices and growth follow the commander stationed in this town, not
@@ -5374,100 +4316,7 @@ static func _missing_build_requirements_among(building: Dictionary, satisfied: D
 	return missing
 
 static func get_context_actions(session: SessionStateStoreScript.SessionData) -> Array:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return get_context_actions__gd(session)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.get_context_actions", [session])
-	var before := HumanEngine.before_writing(&"OverworldRules.get_context_actions", [session])
-	var result = get_context_actions__gd(session)
-	HumanEngine.check_writing(&"OverworldRules.get_context_actions", before, [session], result)
-	return result
-
-static func get_context_actions__gd(session: SessionStateStoreScript.SessionData) -> Array:
-	var actions := []
-	var context := get_active_context(session)
-	match String(context.get("type", "empty")):
-		"town":
-			var town = context.get("town", {})
-			if String(town.get("owner", "neutral")) != "player":
-				var owner := String(town.get("owner", "neutral"))
-				actions.append(
-					{
-						"id": "capture_town",
-						"label": (
-							"Assault Town"
-							if owner == "enemy" and _town_requires_assault(town)
-							else ("Capture Town" if owner == "enemy" else "Claim Town")
-						),
-						"summary": _context_action_summary(session, "capture_town", context),
-					}
-				)
-			else:
-				actions.append(
-					{
-						"id": "visit_town",
-						"label": "Visit Town",
-						"summary": _context_action_summary(session, "visit_town", context),
-					}
-				)
-		"resource":
-			var node = context.get("node", {})
-			var site := NodePayload.site_for_node(node)
-			if _resource_node_claimable_by_player(node, site, session):
-				var collection_resource_id := resource_site_primary_stockpile_resource_id(site)
-				var admission: Dictionary = HeroCommandRulesScript.army_addition_split(session.overworld.get("army", {}).get("stacks", []), _resource_site_claim_recruits(site))
-				var overflow: Dictionary = admission.get("overflow", {})
-				actions.append(
-					{
-						"id": "collect_resource",
-						"label": _resource_site_action_label(node, site),
-						"summary": _context_action_summary(session, "collect_resource", context) if overflow.is_empty() else "No room for %s: you may dismiss a stack to take them." % _describe_recruit_count(overflow),
-						"disabled": false,
-						"resource_id": collection_resource_id,
-						"resource_icon_path": resource_icon_path(collection_resource_id),
-					}
-				)
-			elif _resource_site_is_persistent(site) and String(node.get("collected_by_faction_id", "")) == "player":
-				var response_action := _resource_site_response_action(session, node, site)
-				if not response_action.is_empty():
-					actions.append(response_action)
-			var artifact_result := _find_active_artifact_node(session)
-			if int(artifact_result.get("index", -1)) >= 0:
-				actions.append(
-					{
-						"id": "collect_artifact",
-						"label": "Recover Artifact",
-						"summary": _context_action_summary(
-							session,
-							"collect_artifact",
-							{"type": "artifact", "node": artifact_result.get("node", {})}
-						),
-					}
-				)
-		"artifact":
-			actions.append(
-				{
-					"id": "collect_artifact",
-					"label": "Recover Artifact",
-					"summary": _context_action_summary(session, "collect_artifact", context),
-				}
-			)
-		"encounter":
-			actions.append(
-				{
-					"id": "enter_battle",
-					"label": "Enter Battle",
-					"summary": _context_action_summary(session, "enter_battle", context),
-				}
-			)
-		"rendezvous":
-			var hero: Dictionary = context.get("hero", {}) if context.get("hero", {}) is Dictionary else {}
-			actions.append({
-				"id": "open_rendezvous",
-				"label": "Meet",
-				"summary": "Meet %s to exchange troops, artifacts, or spell knowledge without spending movement." % String(hero.get("name", "the reserve commander")),
-			})
-	return actions
+	return HumanEngine.native_writing(&"OverworldRules.get_context_actions", [session])
 
 static func get_rendezvous_transfer_actions(session: SessionStateStoreScript.SessionData) -> Array:
 	normalize_overworld_state_for_runtime(session)
@@ -5481,320 +4330,34 @@ static func get_rendezvous_actions(session: SessionStateStoreScript.SessionData)
 	return actions
 
 static func perform_rendezvous_transfer_action(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
-	normalize_overworld_state_for_runtime(session)
-	var parts := action_id.split(":")
-	if parts.size() != 5 or String(parts[0]) != "field_transfer":
-		return {"ok": false, "message": "That field transfer order is invalid."}
-	var result := HeroCommandRulesScript.transfer_field_stack(
-		session,
-		String(parts[1]),
-		String(parts[2]),
-		String(parts[3]),
-		String(parts[4])
-	)
-	if not bool(result.get("ok", false)):
-		return result
-	var finalized := _finalize_action_result(session, true, String(result.get("message", "Troops transferred.")), false, false)
-	for key in ["source_hero_id", "target_hero_id", "unit_id", "transferred_count"]:
-		if result.has(key):
-			finalized[key] = result.get(key)
-	return finalized
+	return HumanEngine.native_writing(&"OverworldRules.perform_rendezvous_transfer_action", [session, action_id])
 
 static func perform_rendezvous_action(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return perform_rendezvous_action__gd(session, action_id)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.perform_rendezvous_action", [session, action_id])
-	var before := HumanEngine.before_writing(&"OverworldRules.perform_rendezvous_action", [session, action_id])
-	var result = perform_rendezvous_action__gd(session, action_id)
-	HumanEngine.check_writing(&"OverworldRules.perform_rendezvous_action", before, [session, action_id], result)
-	return result
-
-static func perform_rendezvous_action__gd(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
-	if action_id.begins_with("field_transfer:"):
-		return perform_rendezvous_transfer_action(session, action_id)
-	# Hero meeting screen orders (HeroCommandRules.field_*_action_id).
-	if action_id.begins_with("field_slot:"):
-		normalize_overworld_state_for_runtime(session)
-		var parts := action_id.split(":")
-		if parts.size() != 6 or not String(parts[2]).is_valid_int() or not String(parts[4]).is_valid_int():
-			return {"ok": false, "message": "That army slot order is invalid."}
-		return _finalize_rendezvous_exchange(
-			session,
-			HeroCommandRulesScript.manage_army_slots(session, {}, String(parts[1]), int(parts[2]), String(parts[3]), int(parts[4]), String(parts[5])),
-			"Troops rearranged.",
-			["operation", "source_holder_id", "source_slot_index", "target_holder_id", "target_slot_index", "unit_id", "moved_count"]
-		)
-	if action_id.begins_with("field_troops_all:"):
-		normalize_overworld_state_for_runtime(session)
-		var parts := action_id.split(":")
-		if parts.size() != 3:
-			return {"ok": false, "message": "That troop order is invalid."}
-		return _finalize_rendezvous_exchange(
-			session,
-			HeroCommandRulesScript.move_all_field_troops(session, String(parts[1]), String(parts[2])),
-			"Troops transferred.",
-			["source_hero_id", "target_hero_id", "moved_count", "kept_unit_id"]
-		)
-	if action_id.begins_with("field_artifact_place:"):
-		normalize_overworld_state_for_runtime(session)
-		var parts := action_id.split(":")
-		if parts.size() != 5:
-			return {"ok": false, "message": "That artifact handoff order is invalid."}
-		return _finalize_rendezvous_exchange(
-			session,
-			HeroCommandRulesScript.place_field_artifact(session, String(parts[1]), String(parts[2]), String(parts[3]), String(parts[4])),
-			"Artifact transferred.",
-			["source_hero_id", "target_hero_id", "artifact_id", "source_previous_location", "source_previous_slot", "target_location", "target_slot", "auto_equipped", "displaced_artifact_id"]
-		)
-	if action_id.begins_with("field_artifacts_all:"):
-		normalize_overworld_state_for_runtime(session)
-		var parts := action_id.split(":")
-		if parts.size() != 3:
-			return {"ok": false, "message": "That artifact handoff order is invalid."}
-		return _finalize_rendezvous_exchange(
-			session,
-			HeroCommandRulesScript.move_all_field_artifacts(session, String(parts[1]), String(parts[2])),
-			"Artifacts transferred.",
-			["source_hero_id", "target_hero_id", "moved_artifact_ids", "kept_artifact_ids"]
-		)
-	if action_id.begins_with("field_artifact_transfer:"):
-		normalize_overworld_state_for_runtime(session)
-		var parts := action_id.split(":")
-		if parts.size() != 4:
-			return {"ok": false, "message": "That artifact handoff order is invalid."}
-		var result := HeroCommandRulesScript.transfer_field_artifact(
-			session,
-			String(parts[1]),
-			String(parts[2]),
-			String(parts[3])
-		)
-		if not bool(result.get("ok", false)):
-			return result
-		var finalized := _finalize_action_result(session, true, String(result.get("message", "Artifact transferred.")), false, false)
-		for key in ["source_hero_id", "target_hero_id", "artifact_id", "source_previous_location", "source_previous_slot", "target_location", "target_slot", "auto_equipped"]:
-			if result.has(key):
-				finalized[key] = result.get(key)
-		return finalized
-	if action_id.begins_with("field_spell_share:"):
-		normalize_overworld_state_for_runtime(session)
-		var parts := action_id.split(":")
-		if parts.size() != 4:
-			return {"ok": false, "message": "That spell teaching order is invalid."}
-		var result := HeroCommandRulesScript.teach_field_spell(
-			session,
-			String(parts[1]),
-			String(parts[2]),
-			String(parts[3])
-		)
-		if not bool(result.get("ok", false)):
-			return result
-		var finalized := _finalize_action_result(session, true, String(result.get("message", "Spell taught.")), false, false)
-		for key in ["source_hero_id", "target_hero_id", "spell_id"]:
-			if result.has(key):
-				finalized[key] = result.get(key)
-		return finalized
-	return {"ok": false, "message": "That rendezvous order is invalid."}
-
-static func _finalize_rendezvous_exchange(
-	session: SessionStateStoreScript.SessionData,
-	result: Dictionary,
-	fallback_message: String,
-	result_keys: Array
-) -> Dictionary:
-	if not bool(result.get("ok", false)):
-		return result
-	var finalized := _finalize_action_result(session, true, String(result.get("message", fallback_message)), false, false)
-	for key in result_keys:
-		if result.has(key):
-			finalized[key] = result.get(key)
-	return finalized
+	return HumanEngine.native_writing(&"OverworldRules.perform_rendezvous_action", [session, action_id])
 
 static func get_artifact_actions(session: SessionStateStoreScript.SessionData) -> Array:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return get_artifact_actions__gd(session)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.get_artifact_actions", [session])
-	var before := HumanEngine.before_writing(&"OverworldRules.get_artifact_actions", [session])
-	var result = get_artifact_actions__gd(session)
-	HumanEngine.check_writing(&"OverworldRules.get_artifact_actions", before, [session], result)
-	return result
-
-static func get_artifact_actions__gd(session: SessionStateStoreScript.SessionData) -> Array:
-	normalize_overworld_state_for_runtime(session)
-	return ArtifactRulesScript.get_management_actions(session.overworld.get("hero", {}))
+	return HumanEngine.native_writing(&"OverworldRules.get_artifact_actions", [session])
 
 static func get_spell_actions(session: SessionStateStoreScript.SessionData) -> Array:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return get_spell_actions__gd(session)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.get_spell_actions", [session])
-	var before := HumanEngine.before_writing(&"OverworldRules.get_spell_actions", [session])
-	var result = get_spell_actions__gd(session)
-	HumanEngine.check_writing(&"OverworldRules.get_spell_actions", before, [session], result)
-	return result
-
-static func get_spell_actions__gd(session: SessionStateStoreScript.SessionData) -> Array:
-	normalize_overworld_state_for_runtime(session)
-	return SpellRulesScript.get_overworld_actions(
-		session.overworld.get("hero", {}),
-		session.overworld.get("movement", {}),
-		session.day
-	)
+	return HumanEngine.native_writing(&"OverworldRules.get_spell_actions", [session])
 
 static func get_hero_actions(session: SessionStateStoreScript.SessionData) -> Array:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return get_hero_actions__gd(session)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.get_hero_actions", [session])
-	var before := HumanEngine.before_writing(&"OverworldRules.get_hero_actions", [session])
-	var result = get_hero_actions__gd(session)
-	HumanEngine.check_writing(&"OverworldRules.get_hero_actions", before, [session], result)
-	return result
-
-static func get_hero_actions__gd(session: SessionStateStoreScript.SessionData) -> Array:
-	normalize_overworld_state_for_runtime(session)
-	return HeroCommandRulesScript.get_overworld_switch_actions(session)
+	return HumanEngine.native_writing(&"OverworldRules.get_hero_actions", [session])
 
 static func switch_active_hero(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return switch_active_hero__gd(session, hero_id)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.switch_active_hero", [session, hero_id])
-	var before := HumanEngine.before_writing(&"OverworldRules.switch_active_hero", [session, hero_id])
-	var result = switch_active_hero__gd(session, hero_id)
-	HumanEngine.check_writing(&"OverworldRules.switch_active_hero", before, [session, hero_id], result)
-	return result
-
-static func switch_active_hero__gd(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
-	normalize_overworld_state(session)
-	var result := HeroCommandRulesScript.set_active_hero(session, hero_id)
-	if not bool(result.get("ok", false)):
-		return {"ok": false, "message": String(result.get("message", "Unable to change command."))}
-	return _finalize_action_result(session, true, String(result.get("message", "")))
+	return HumanEngine.native_writing(&"OverworldRules.switch_active_hero", [session, hero_id])
 
 static func get_level_up_prompt(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return get_level_up_prompt__gd(session)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.get_level_up_prompt", [session])
-	var before := HumanEngine.before_writing(&"OverworldRules.get_level_up_prompt", [session])
-	var result = get_level_up_prompt__gd(session)
-	HumanEngine.check_writing(&"OverworldRules.get_level_up_prompt", before, [session], result)
-	return result
-
-static func get_level_up_prompt__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	if session == null or session.game_state != "overworld":
-		return {}
-	var hero: Dictionary = session.overworld.get("hero", {})
-	var summary := HeroProgressionRulesScript.level_up_summary(hero)
-	if summary.is_empty():
-		for candidate in session.overworld.get("player_heroes", []):
-			if String(candidate.get("id", "")) == String(hero.get("id", "")): continue
-			var candidate_summary := HeroProgressionRulesScript.level_up_summary(candidate)
-			if not candidate_summary.is_empty():
-				hero = candidate
-				summary = candidate_summary
-				break
-	if summary.is_empty():
-		return {}
-	summary["hero"] = hero.duplicate(true)
-	summary["context"] = {
-		"hero_id": String(hero.get("id", "")),
-		"level": summary["level"],
-		"previous_level": summary["previous_level"],
-		"choice": summary["choice"].duplicate(true),
-	}
-	return summary
+	return HumanEngine.native_writing(&"OverworldRules.get_level_up_prompt", [session])
 
 static func resolve_level_up(session: SessionStateStoreScript.SessionData, context: Dictionary, specialty_id: String = "") -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return resolve_level_up__gd(session, context, specialty_id)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.resolve_level_up", [session, context, specialty_id])
-	var before := HumanEngine.before_writing(&"OverworldRules.resolve_level_up", [session, context, specialty_id])
-	var result = resolve_level_up__gd(session, context, specialty_id)
-	HumanEngine.check_writing(&"OverworldRules.resolve_level_up", before, [session, context, specialty_id], result)
-	return result
-
-static func resolve_level_up__gd(session: SessionStateStoreScript.SessionData, context: Dictionary, specialty_id: String = "") -> Dictionary:
-	if session == null or session.game_state != "overworld":
-		return {"ok": false, "message": "Return to the adventure map to review this level."}
-	normalize_overworld_state(session)
-	var prompt := get_level_up_prompt(session)
-	if prompt.is_empty() or prompt.get("context", {}) != context:
-		return {"ok": false, "message": "This hero's level-up choice has changed. Please review it again."}
-	var result := {"ok": true, "message": "Level-up reviewed. Unchosen specialties remain available in the hero commands."}
-	var hero_id := String(prompt["hero"].get("id", ""))
-	if specialty_id != "":
-		result = choose_specialty(session, specialty_id, hero_id)
-		if not bool(result.get("ok", false)):
-			return result
-	var hero := HeroCommandRulesScript.hero_by_id(session, hero_id)
-	if specialty_id == "" or HeroProgressionRulesScript.current_pending_choice(hero).is_empty():
-		hero["level_up_presented"] = int(prompt["level"])
-		if hero_id == String(session.overworld.get("active_hero_id", "")):
-			session.overworld["hero"]["level_up_presented"] = int(prompt["level"])
-			HeroCommandRulesScript.commit_active_hero(session)
-	return result
+	return HumanEngine.native_writing(&"OverworldRules.resolve_level_up", [session, context, specialty_id])
 
 static func get_specialty_actions(session: SessionStateStoreScript.SessionData) -> Array:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return get_specialty_actions__gd(session)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.get_specialty_actions", [session])
-	var before := HumanEngine.before_writing(&"OverworldRules.get_specialty_actions", [session])
-	var result = get_specialty_actions__gd(session)
-	HumanEngine.check_writing(&"OverworldRules.get_specialty_actions", before, [session], result)
-	return result
-
-static func get_specialty_actions__gd(session: SessionStateStoreScript.SessionData) -> Array:
-	normalize_overworld_state_for_runtime(session)
-	return HeroProgressionRulesScript.get_choice_actions(session.overworld.get("hero", {}))
+	return HumanEngine.native_writing(&"OverworldRules.get_specialty_actions", [session])
 
 static func choose_specialty(session: SessionStateStoreScript.SessionData, specialty_id: String, hero_id: String = "") -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return choose_specialty__gd(session, specialty_id, hero_id)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.choose_specialty", [session, specialty_id, hero_id])
-	var before := HumanEngine.before_writing(&"OverworldRules.choose_specialty", [session, specialty_id, hero_id])
-	var result = choose_specialty__gd(session, specialty_id, hero_id)
-	HumanEngine.check_writing(&"OverworldRules.choose_specialty", before, [session, specialty_id, hero_id], result)
-	return result
-
-static func choose_specialty__gd(session: SessionStateStoreScript.SessionData, specialty_id: String, hero_id: String = "") -> Dictionary:
-	normalize_overworld_state(session)
-	var active_id := String(session.overworld.get("active_hero_id", ""))
-	if hero_id == "": hero_id = active_id
-	var hero := HeroCommandRulesScript.hero_by_id(session, hero_id)
-	if hero.is_empty():
-		return {"ok": false, "message": "That hero is no longer in your company."}
-	var previous_movement_max := _movement_max_from_hero(hero, session)
-	var previous_mana_max := int(hero.get("spellbook", {}).get("mana", {}).get("max", SpellRulesScript.mana_max_from_hero(hero)))
-	var result := HeroProgressionRulesScript.choose_specialty(hero, specialty_id)
-	if not bool(result.get("ok", false)):
-		return {"ok": false, "message": String(result.get("message", "Unable to choose specialty."))}
-
-	var updated := ArtifactRulesScript.ensure_hero_artifacts(
-		SpellRulesScript.ensure_hero_spellbook(result.get("hero", hero))
-	)
-	if hero_id == active_id:
-		session.overworld["hero"] = updated
-		_sync_movement_to_hero(session, previous_movement_max)
-		_sync_spellbook_to_hero(session, previous_mana_max)
-	else:
-		# Town defenders can level while another commander is selected. Apply
-		# their bonuses without switching the active hero, camera or route.
-		var movement: Dictionary = updated.get("movement", {})
-		var new_max := _movement_max_from_hero(updated, session)
-		movement["current"] = clampi(int(movement.get("current", previous_movement_max)) + new_max - previous_movement_max, 0, new_max)
-		movement["max"] = new_max
-		updated["movement"] = movement
-		var mana: Dictionary = updated.get("spellbook", {}).get("mana", {})
-		var mana_max := int(mana.get("max", previous_mana_max))
-		mana["current"] = clampi(int(mana.get("current", previous_mana_max)) + mana_max - previous_mana_max, 0, mana_max)
-		HeroCommandRulesScript._replace_hero_in_array(session.overworld["player_heroes"], updated)
-	return _finalize_action_result(session, true, String(result.get("message", "")))
+	return HumanEngine.native_writing(&"OverworldRules.choose_specialty", [session, specialty_id, hero_id])
 
 static func get_town_build_options(town: Dictionary, current_day: int = -1) -> Array:
 	var options := []
@@ -5807,16 +4370,6 @@ static func get_town_build_options(town: Dictionary, current_day: int = -1) -> A
 		var status := get_town_build_status(town, building_id, current_day) if context.is_empty() else _town_build_status_in(context, town, building_id, current_day)
 		if bool(status.get("buildable", false)):
 			options.append(building_id)
-	return options
-
-static func get_town_recruit_options(town: Dictionary) -> Array:
-	var options := []
-	var available_recruits = town.get("available_recruits", {})
-	if not (available_recruits is Dictionary):
-		return options
-	for unit_id in available_recruits.keys():
-		if int(available_recruits[unit_id]) > 0:
-			options.append(String(unit_id))
 	return options
 
 static func _normalize_army_state(army: Dictionary) -> Dictionary:
@@ -5915,50 +4468,7 @@ static func _copy_town_runtime_metadata(target: Dictionary, source: Dictionary) 
 			target[key] = source[key].duplicate(true) if source[key] is Array or source[key] is Dictionary else source[key]
 
 static func _normalize_resource_nodes(nodes: Array) -> Array:
-	if _day_engine_mode == DayEngine.GDSCRIPT:
-		return _normalize_resource_nodes__gd(nodes)
-	if _day_engine_mode == DayEngine.NATIVE:
-		var native_result = DayEngine.native(&"OverworldRules._normalize_resource_nodes", [nodes])
-		return _normalize_resource_nodes__gd(nodes) if DayEngine.not_ported() else native_result
-	var result = _normalize_resource_nodes__gd(nodes)
-	DayEngine.check(&"OverworldRules._normalize_resource_nodes", [nodes], result)
-	return result
-
-static func _normalize_resource_nodes__gd(nodes: Array) -> Array:
-	var normalized := []
-	for node in nodes:
-		if not (node is Dictionary):
-			continue
-		var normalized_node := {
-			"placement_id": String(node.get("placement_id", "")),
-			"site_id": String(node.get("site_id", "")),
-			"x": int(node.get("x", 0)),
-			"y": int(node.get("y", 0)),
-			"collected": bool(node.get("collected", false)),
-			"collected_by_faction_id": String(node.get("collected_by_faction_id", "")),
-			"collected_day": max(0, int(node.get("collected_day", 0))),
-			"response_origin": String(node.get("response_origin", "")),
-			"response_source_town_id": String(node.get("response_source_town_id", "")),
-			"response_last_day": max(0, int(node.get("response_last_day", 0))),
-			"response_until_day": max(0, int(node.get("response_until_day", 0))),
-			"response_commander_id": String(node.get("response_commander_id", "")),
-			"response_security_rating": max(0, int(node.get("response_security_rating", 0))),
-			"delivery_controller_id": String(node.get("delivery_controller_id", "")),
-			"delivery_origin_town_id": String(node.get("delivery_origin_town_id", "")),
-			"delivery_target_kind": String(node.get("delivery_target_kind", "")),
-			"delivery_target_id": String(node.get("delivery_target_id", "")),
-			"delivery_target_label": String(node.get("delivery_target_label", "")),
-			"delivery_arrival_day": max(0, int(node.get("delivery_arrival_day", 0))),
-			"delivery_manifest": _normalize_recruit_payload(node.get("delivery_manifest", {})),
-			"delivery_completion_counts": _normalize_delivery_completion_counts(node.get("delivery_completion_counts", {})),
-			"last_delivery_target_kind": String(node.get("last_delivery_target_kind", "")),
-			"last_delivery_target_id": String(node.get("last_delivery_target_id", "")),
-			"last_delivery_day": max(0, int(node.get("last_delivery_day", 0))),
-			"last_delivery_manifest": _normalize_recruit_payload(node.get("last_delivery_manifest", {})),
-		}
-		_copy_resource_runtime_metadata(normalized_node, node)
-		normalized.append(normalized_node)
-	return normalized
+	return DayEngine.native(&"OverworldRules._normalize_resource_nodes", [nodes])
 
 static func _copy_resource_runtime_metadata(target: Dictionary, source: Dictionary) -> void:
 	for key in [
@@ -6236,137 +4746,10 @@ static func describe_recruit_source_compact(
 	return " | ".join(_non_empty_strings(parts))
 
 static func describe_recruit_source_inspection(session: SessionStateStoreScript.SessionData, node: Dictionary, site: Dictionary) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return describe_recruit_source_inspection__gd(session, node, site)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.describe_recruit_source_inspection", [session, node, site])
-	var before := HumanEngine.before_writing(&"OverworldRules.describe_recruit_source_inspection", [session, node, site])
-	var result = describe_recruit_source_inspection__gd(session, node, site)
-	HumanEngine.check_writing(&"OverworldRules.describe_recruit_source_inspection", before, [session, node, site], result)
-	return result
-
-static func describe_recruit_source_inspection__gd(
-	session: SessionStateStoreScript.SessionData,
-	node: Dictionary,
-	site: Dictionary
-) -> String:
-	if not resource_site_is_recruit_source(site):
-		return ""
-	var lines := []
-	var dwelling_label := _resource_site_neutral_dwelling_label(site)
-	var scope := String(site.get("dwelling_scope", "")).strip_edges()
-	if dwelling_label != "":
-		lines.append("Recruit Source: %s | Neutral dwelling" % dwelling_label)
-	elif scope == "faction_linked":
-		lines.append("Recruit Source: %s | Faction-linked muster" % String(site.get("name", "Recruit source")))
-	else:
-		lines.append("Recruit Source: %s" % String(site.get("name", "Recruit source")))
-	var dwelling_id := String(site.get("neutral_dwelling_family_id", ""))
-	if dwelling_id != "":
-		var dwelling := ContentService.get_neutral_dwelling(dwelling_id)
-		var summary := _short_player_text(String(dwelling.get("summary", "")), 112)
-		if summary != "":
-			lines.append("Identity: %s" % summary)
-	var claim_line := _recruit_source_roster_line("Ready", _resource_site_claim_recruits(site), 4)
-	if claim_line != "":
-		lines.append(claim_line)
-	var weekly_line := _recruit_source_roster_line("Weekly", _resource_site_weekly_recruits(site), 4, CreatureDwellings.is_dwelling(site))
-	if weekly_line != "":
-		lines.append("%s hired here" % weekly_line if CreatureDwellings.is_dwelling(site) else "%s to nearest held town" % weekly_line)
-	if CreatureDwellings.is_dwelling(site):
-		var dwelling_guard := CreatureDwellings.full_guard(node, site, session.day if session != null else 1)
-		if not dwelling_guard.is_empty():
-			lines.append("Guard: %s, which every side must beat once" % _describe_recruit_delta(_stacks_to_recruits(dwelling_guard)))
-	lines.append("Cadence: %s | %s" % [
-		_interaction_cadence_label(_resource_site_interaction_cadence(site, ContentService.get_map_object_for_resource_site(String(node.get("site_id", site.get("id", "")))))).trim_prefix("Cadence: "),
-		_resource_site_control_brief(node, site),
-	])
-	var support_line := _recruit_source_support_readiness_line(session, node, site)
-	if support_line != "":
-		lines.append(support_line)
-	var route_line := _resource_site_route_line(session, node, site)
-	if route_line != "":
-		lines.append("Route: %s" % route_line)
-	var guard_line := _resource_site_guard_or_contest_line(session, node, site)
-	if guard_line != "":
-		lines.append("Guard: %s" % guard_line)
-	lines.append(_recruit_source_why_line(site))
-	return "\n".join(_non_empty_strings(lines))
-
-static func _resource_site_neutral_dwelling_label(site: Dictionary) -> String:
-	var dwelling_id := String(site.get("neutral_dwelling_family_id", ""))
-	if dwelling_id == "":
-		return ""
-	var dwelling := ContentService.get_neutral_dwelling(dwelling_id)
-	if dwelling.is_empty():
-		return dwelling_id
-	return String(dwelling.get("name", dwelling_id))
-
-static func _resource_site_family_label(site: Dictionary) -> String:
-	match String(site.get("family", "")):
-		"mine":
-			return "Mine"
-		"neutral_dwelling":
-			return "Neutral Dwelling"
-		"faction_outpost":
-			return "Faction Outpost"
-		"frontier_shrine":
-			return "Frontier Shrine"
-		"guarded_reward_site":
-			return "Guarded Reward Site"
-		"scouting_structure":
-			return "Scouting Structure"
-		"transit_object":
-			return "Transit Object"
-		"repeatable_service":
-			return "Service Building"
-		_:
-			return "Resource Site"
+	return HumanEngine.native_writing(&"OverworldRules.describe_recruit_source_inspection", [session, node, site])
 
 static func describe_resource_site_surface(session: SessionStateStoreScript.SessionData, node: Dictionary, site: Dictionary) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return describe_resource_site_surface__gd(session, node, site)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.describe_resource_site_surface", [session, node, site])
-	var before := HumanEngine.before_writing(&"OverworldRules.describe_resource_site_surface", [session, node, site])
-	var result = describe_resource_site_surface__gd(session, node, site)
-	HumanEngine.check_writing(&"OverworldRules.describe_resource_site_surface", before, [session, node, site], result)
-	return result
-
-static func describe_resource_site_surface__gd(
-	session: SessionStateStoreScript.SessionData,
-	node: Dictionary,
-	site: Dictionary
-) -> String:
-	site = NodePayload.site_for_node(node, site)
-	if VisitBuildings.is_visit_building(site):
-		return " | ".join(_non_empty_strings([String(site.get("name", "Visit building")), VisitBuildings.summary(site)]))
-	if CreatureDwellings.is_dwelling(site):
-		return " | ".join(_non_empty_strings([
-			String(site.get("name", "Creature dwelling")),
-			_resource_site_control_label(node, site),
-			CreatureDwellings.summary(node, site, session.day if session != null else 1),
-		]))
-	var parts := [_resource_site_role_label(node, site), _resource_site_family_label(site)]
-	var control_label := _resource_site_control_label(node, site)
-	if control_label != "":
-		parts.append(control_label)
-	var income_summary := _describe_resource_delta(site.get("control_income", {}))
-	if income_summary != "":
-		parts.append("%s %s" % [_resource_site_income_cadence_label(site), income_summary])
-	var weekly_summary := _describe_recruit_delta(_resource_site_weekly_recruits(site))
-	if weekly_summary != "":
-		parts.append("Weekly %s" % weekly_summary)
-	var claim_recruit_summary := _describe_recruit_delta(_resource_site_claim_recruits(site))
-	if claim_recruit_summary != "":
-		parts.append("Field recruits %s" % claim_recruit_summary)
-	var reward_summary := _resource_site_reward_summary(site)
-	if reward_summary != "" and not _resource_site_is_persistent(site):
-		parts.append("Reward %s" % reward_summary)
-	var response_state := _resource_site_response_state(session, node, site)
-	if String(node.get("collected_by_faction_id", "")) == "player" and int(response_state.get("watch_days", 0)) > 0:
-		parts.append("Support order ready")
-	return " | ".join(_non_empty_strings(parts))
+	return HumanEngine.native_writing(&"OverworldRules.describe_resource_site_surface", [session, node, site])
 
 static func describe_resource_site_control_summary(
 	session: SessionStateStoreScript.SessionData,
@@ -6386,73 +4769,10 @@ static func describe_resource_site_control_summary(
 	return " | ".join(_non_empty_strings(parts))
 
 static func describe_resource_site_control_inspection(session: SessionStateStoreScript.SessionData, node: Dictionary, site: Dictionary) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return describe_resource_site_control_inspection__gd(session, node, site)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.describe_resource_site_control_inspection", [session, node, site])
-	var before := HumanEngine.before_writing(&"OverworldRules.describe_resource_site_control_inspection", [session, node, site])
-	var result = describe_resource_site_control_inspection__gd(session, node, site)
-	HumanEngine.check_writing(&"OverworldRules.describe_resource_site_control_inspection", before, [session, node, site], result)
-	return result
-
-static func describe_resource_site_control_inspection__gd(
-	session: SessionStateStoreScript.SessionData,
-	node: Dictionary,
-	site: Dictionary
-) -> String:
-	var lines := []
-	var control_detail := _resource_site_control_detail(node, site)
-	if control_detail != "":
-		lines.append("Control: %s" % control_detail)
-	var yield_line := _resource_site_yield_line(session, node, site)
-	if yield_line != "":
-		lines.append("Economy: %s" % yield_line)
-	var route_line := _resource_site_route_line(session, node, site)
-	if route_line != "":
-		lines.append("Route: %s" % route_line)
-	var guard_line := _resource_site_guard_or_contest_line(session, node, site)
-	if guard_line != "":
-		lines.append("Guard: %s" % guard_line)
-	var recruit_source := describe_recruit_source_inspection(session, node, site)
-	if recruit_source != "":
-		lines.append(recruit_source)
-	return "\n".join(lines)
+	return HumanEngine.native_writing(&"OverworldRules.describe_resource_site_control_inspection", [session, node, site])
 
 static func describe_resource_site_interaction_surface(node: Dictionary, site: Dictionary) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return describe_resource_site_interaction_surface__gd(node, site)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"OverworldRules.describe_resource_site_interaction_surface", [node, site])
-	var result = describe_resource_site_interaction_surface__gd(node, site)
-	HumanEngine.check(&"OverworldRules.describe_resource_site_interaction_surface", [node, site], result)
-	return result
-
-static func describe_resource_site_interaction_surface__gd(node: Dictionary, site: Dictionary) -> String:
-	var map_object := ContentService.get_map_object_for_resource_site(String(node.get("site_id", "")))
-	var cadence := _resource_site_interaction_cadence(site, map_object)
-	var interaction_parts := [_interaction_cadence_label(cadence)]
-	if VisitBuildings.is_visit_building(site):
-		interaction_parts = ["Cadence: %s" % VisitBuildings.cadence_label(site), "visit building"]
-	elif _resource_site_is_persistent(site):
-		interaction_parts.append("capture/ownership")
-		var control_income = site.get("control_income", {})
-		if control_income is Dictionary and not control_income.is_empty():
-			interaction_parts.append("income")
-		if not _resource_site_weekly_recruits(site).is_empty():
-			interaction_parts.append("weekly recruits")
-		if site.has("response_profile"):
-			interaction_parts.append("support response")
-	elif _resource_site_is_repeatable(site):
-		interaction_parts.append("repeat service")
-	else:
-		interaction_parts.append("pickup/cache")
-	var object_class := _resource_site_object_class_label(site, map_object)
-	if object_class != "":
-		interaction_parts.push_front(object_class)
-	var role_tags := _resource_site_role_tag_summary(site, map_object)
-	if role_tags != "":
-		interaction_parts.append(role_tags)
-	return " | ".join(_non_empty_strings(interaction_parts))
+	return HumanEngine.native(&"OverworldRules.describe_resource_site_interaction_surface", [node, site])
 
 static func describe_encounter_object_surface(encounter: Dictionary) -> String:
 	var map_object := ContentService.get_map_object(String(encounter.get("object_id", "")))
@@ -6481,299 +4801,22 @@ static func describe_encounter_object_surface(encounter: Dictionary) -> String:
 	return " | ".join(_non_empty_strings(parts))
 
 static func _recruit_source_roster_line(label: String, recruits: Variant, limit: int, dwelling_prices: bool = false) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _recruit_source_roster_line__gd(label, recruits, limit, dwelling_prices)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"OverworldRules._recruit_source_roster_line", [label, recruits, limit, dwelling_prices])
-	var result = _recruit_source_roster_line__gd(label, recruits, limit, dwelling_prices)
-	HumanEngine.check(&"OverworldRules._recruit_source_roster_line", [label, recruits, limit, dwelling_prices], result)
-	return result
-
-static func _recruit_source_roster_line__gd(label: String, recruits: Variant, limit: int, dwelling_prices: bool = false) -> String:
-	if not (recruits is Dictionary) or recruits.is_empty():
-		return ""
-	var unit_ids := []
-	for unit_id_value in recruits.keys():
-		var unit_id := String(unit_id_value)
-		if unit_id != "":
-			unit_ids.append(unit_id)
-	unit_ids.sort()
-	var parts := []
-	for unit_id in unit_ids:
-		var count: int = maxi(0, int(recruits.get(unit_id, 0)))
-		if count <= 0:
-			continue
-		var unit := ContentService.get_unit(unit_id)
-		var unit_name := String(unit.get("name", unit_id))
-		var role_label := _unit_role_tier_label(unit)
-		var cost_label := _describe_resource_delta(unit.get("cost", {}))
-		if dwelling_prices and CreatureDwellings.unit_cost(unit_id).is_empty():
-			cost_label = "free"
-		var detail_parts := _non_empty_strings([role_label, cost_label])
-		parts.append("+%d %s%s" % [
-			count,
-			unit_name,
-			" (%s)" % ", ".join(detail_parts) if not detail_parts.is_empty() else "",
-		])
-		if parts.size() >= max(1, limit):
-			break
-	var hidden_count: int = maxi(0, unit_ids.size() - parts.size())
-	if hidden_count > 0:
-		parts.append("%d more" % hidden_count)
-	return "%s: %s" % [label, ", ".join(parts)] if not parts.is_empty() else ""
-
-static func _unit_role_tier_label(unit: Dictionary) -> String:
-	var tier: int = maxi(1, int(unit.get("tier", 1)))
-	var role := String(unit.get("role", "")).strip_edges()
-	if role == "":
-		role = "ranged" if bool(unit.get("ranged", false)) else "melee"
-	return "T%d %s" % [tier, _humanize_id(role)]
-
-static func _recruit_source_support_readiness_line(
-	session: SessionStateStoreScript.SessionData,
-	node: Dictionary,
-	site: Dictionary
-) -> String:
-	var response_state := _resource_site_response_state(session, node, site)
-	if int(response_state.get("watch_days", 0)) <= 0:
-		return ""
-	var parts := [String(response_state.get("action_label", "Support response"))]
-	var cost: Dictionary = _normalize_resource_dict(response_state.get("resource_cost", {}))
-	var cost_summary := _describe_resource_delta(cost)
-	if cost_summary != "":
-		var readiness := "ready"
-		if session != null and not _can_afford(session, cost):
-			var shortfall := _describe_resource_delta(_resource_pool_shortfall(session.overworld.get("resources", {}), cost))
-			readiness = "needs %s" % shortfall if shortfall != "" else "not ready"
-		parts.append("%s %s" % [cost_summary, readiness])
-	var movement_cost := int(response_state.get("movement_cost", 0))
-	if movement_cost > 0:
-		var movement_left := int(session.overworld.get("movement", {}).get("current", 0)) if session != null else 0
-		parts.append("move %d/%d" % [movement_left, movement_cost])
-	parts.append("%d day%s" % [
-		int(response_state.get("watch_days", 0)),
-		"" if int(response_state.get("watch_days", 0)) == 1 else "s",
-	])
-	var impact_summary := _resource_site_response_effect_summary(response_state)
-	if impact_summary != "":
-		parts.append(impact_summary)
-	return "Support: %s" % " | ".join(_non_empty_strings(parts))
-
-static func _recruit_source_why_line(site: Dictionary) -> String:
-	if CreatureDwellings.is_dwelling(site):
-		return "Why: Hire here each week; holding it adds +1 weekly growth for its creature in your towns."
-	var reasons := []
-	if not _resource_site_claim_recruits(site).is_empty():
-		reasons.append("adds field recruits")
-	if not _resource_site_weekly_recruits(site).is_empty():
-		reasons.append("feeds weekly musters")
-	var control_income = site.get("control_income", {})
-	if control_income is Dictionary and not control_income.is_empty():
-		reasons.append("keeps local pay flowing")
-	if reasons.is_empty():
-		return "Why: Securing it strengthens the local route."
-	return "Why: Capture %s." % ", ".join(reasons)
+	return HumanEngine.native(&"OverworldRules._recruit_source_roster_line", [label, recruits, limit, dwelling_prices])
 
 static func _resource_site_action_label(node: Dictionary, site: Dictionary) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _resource_site_action_label__gd(node, site)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"OverworldRules._resource_site_action_label", [node, site])
-	var result = _resource_site_action_label__gd(node, site)
-	HumanEngine.check(&"OverworldRules._resource_site_action_label", [node, site], result)
-	return result
-
-static func _resource_site_action_label__gd(node: Dictionary, site: Dictionary) -> String:
-	if NativeTransit.is_native(node):
-		var link := NativeTransit.link_of(node)
-		if String(link.get("kind", "")) == "paired_cave":
-			return "Travel Underground" if int(link.get("exit", {}).get("level", 0)) > 0 else "Travel to Surface"
-		return "Step Through" if not NativeTransit.destinations(node).is_empty() else "Inspect"
-	var authored_label := String(site.get("action_label", ""))
-	if authored_label != "":
-		return authored_label
-	if VisitBuildings.is_visit_building(site):
-		return "Visit %s" % String(site.get("name", "Site"))
-	if CreatureDwellings.is_dwelling(site):
-		if CreatureDwellings.is_guarded(node, site, 1) and not CreatureDwellings.guard_beaten(node, "player"):
-			return "Fight the Guards"
-		return "Hire Creatures" if String(node.get("collected_by_faction_id", "")) == "player" else "Visit Dwelling"
-	if _resource_site_is_persistent(site) and String(node.get("collected_by_faction_id", "")) not in ["", "player"]:
-		return "Reclaim Site"
-	match String(site.get("family", "")):
-		"mine":
-			return "Claim Mine"
-		"neutral_dwelling":
-			return "Secure Dwelling"
-		"faction_outpost":
-			return "Secure Outpost"
-		"frontier_shrine":
-			return "Bind Shrine"
-		"guarded_reward_site":
-			return "Search Vault"
-		"scouting_structure":
-			return "Secure Watch"
-		"transit_object":
-			return "Open Route"
-		"repeatable_service":
-			return "Use Service"
-		_:
-			return "Claim Site"
+	return HumanEngine.native(&"OverworldRules._resource_site_action_label", [node, site])
 
 static func _resource_site_role_label(node: Dictionary, site: Dictionary) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _resource_site_role_label__gd(node, site)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"OverworldRules._resource_site_role_label", [node, site])
-	var result = _resource_site_role_label__gd(node, site)
-	HumanEngine.check(&"OverworldRules._resource_site_role_label", [node, site], result)
-	return result
-
-static func _resource_site_role_label__gd(node: Dictionary, site: Dictionary) -> String:
-	if _resource_site_is_persistent(site):
-		match String(site.get("family", "")):
-			"mine":
-				return "Persistent economy site"
-			"neutral_dwelling":
-				return "Persistent recruit site"
-			"faction_outpost", "scouting_structure", "transit_object":
-				return "Transit/support object"
-			"frontier_shrine":
-				return "Support shrine"
-			"guarded_reward_site":
-				return "Persistent reward site"
-			_:
-				return "Persistent economy site"
-	if _resource_site_is_repeatable(site):
-		return "Repeatable service"
-	var site_id := String(node.get("site_id", ""))
-	var map_object := ContentService.get_map_object_for_resource_site(site_id)
-	if String(map_object.get("family", "")) == "pickup":
-		return "Pickup/cache"
-	return "Pickup/cache"
-
-static func _resource_site_control_label(node: Dictionary, site: Dictionary) -> String:
-	if _resource_site_is_persistent(site):
-		var controller := PlayerRules.resource_controller_id(node)
-		if controller == "":
-			return "Unclaimed"
-		if controller == "player":
-			return "Player held"
-		return "AI held: %s" % _controller_display_name(controller, String(node.get("collected_by_faction_id", "")))
-	if bool(node.get("collected", false)):
-		return "Collected"
-	return "Unclaimed"
+	return HumanEngine.native(&"OverworldRules._resource_site_role_label", [node, site])
 
 static func _resource_site_control_brief(node: Dictionary, site: Dictionary) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _resource_site_control_brief__gd(node, site)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"OverworldRules._resource_site_control_brief", [node, site])
-	var result = _resource_site_control_brief__gd(node, site)
-	HumanEngine.check(&"OverworldRules._resource_site_control_brief", [node, site], result)
-	return result
-
-static func _resource_site_control_brief__gd(node: Dictionary, site: Dictionary) -> String:
-	if _resource_site_is_persistent(site):
-		var controller := PlayerRules.resource_controller_id(node)
-		if controller == "":
-			return "Control unclaimed"
-		if controller == "player":
-			return "Control player held"
-		return "Control held by %s" % _controller_display_name(controller, String(node.get("collected_by_faction_id", "")))
-	if bool(node.get("collected", false)):
-		var controller := PlayerRules.resource_controller_id(node)
-		if controller == "" or controller == "player":
-			return "State collected"
-		return "State collected by %s" % _controller_display_name(controller, String(node.get("collected_by_faction_id", "")))
-	return "State uncollected"
-
-static func _resource_site_control_detail(node: Dictionary, site: Dictionary) -> String:
-	if VisitBuildings.is_visit_building(site):
-		return "Stays on the map; each visit is tracked %s." % VisitBuildings.cadence_label(site)
-	if _resource_site_is_persistent(site):
-		var controller := PlayerRules.resource_controller_id(node)
-		if controller == "":
-			return "Unclaimed; capture flips control."
-		var held_effects := "income and support" if not _describe_resource_delta(site.get("control_income", {})).is_empty() else "support"
-		if controller == "player":
-			return "Player held; %s stay%s active while held." % [held_effects, "" if held_effects.contains(" and ") else "s"]
-		return "%s held; reclaim to deny its %s." % [_controller_display_name(controller, String(node.get("collected_by_faction_id", ""))), held_effects]
-	if bool(node.get("collected", false)):
-		var collected_day := int(node.get("collected_day", 0))
-		var day_clause := " on day %d" % collected_day if collected_day > 0 else ""
-		var controller := PlayerRules.resource_controller_id(node)
-		if controller == "" or controller == "player":
-			return "Collected%s." % day_clause
-		return "Collected by %s%s." % [_controller_display_name(controller, String(node.get("collected_by_faction_id", ""))), day_clause]
-	return "Uncollected; one visit can claim it."
+	return HumanEngine.native(&"OverworldRules._resource_site_control_brief", [node, site])
 
 static func _resource_site_yield_line(session: SessionStateStoreScript.SessionData, node: Dictionary, site: Dictionary) -> String:
 	return HumanEngine.native_writing(&"OverworldRules._resource_site_yield_line", [session, node, site])
 
-static func _resource_site_route_line(
-	session: SessionStateStoreScript.SessionData,
-	node: Dictionary,
-	site: Dictionary
-) -> String:
-	var parts := []
-	if session == null or node.is_empty():
-		return ""
-	var linked_town_result := _resource_node_linked_town(session, node, "player")
-	if int(linked_town_result.get("index", -1)) >= 0:
-		parts.append("Linked %s" % _town_name(linked_town_result.get("town", {})))
-	elif String(node.get("collected_by_faction_id", "")) == "player":
-		parts.append("No owned town support in range")
-	var response_state := _resource_site_response_state(session, node, site)
-	if bool(response_state.get("active", false)):
-		var response_line := "%s active %d day%s" % [
-			String(response_state.get("action_label", "Route security")),
-			int(response_state.get("remaining_days", 0)),
-			"" if int(response_state.get("remaining_days", 0)) == 1 else "s",
-		]
-		if String(response_state.get("commander_name", "")) != "":
-			response_line += "; %s detached" % String(response_state.get("commander_name", ""))
-		parts.append(response_line)
-	elif String(node.get("collected_by_faction_id", "")) == "player" and int(response_state.get("watch_days", 0)) > 0:
-		parts.append("%s available" % String(response_state.get("action_label", "Route security")))
-	var delivery_line := _resource_site_delivery_line(session, node, site)
-	if delivery_line != "":
-		parts.append(delivery_line)
-	return " | ".join(_non_empty_strings(parts))
-
 static func _resource_site_guard_or_contest_line(session: SessionStateStoreScript.SessionData, node: Dictionary, site: Dictionary) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _resource_site_guard_or_contest_line__gd(session, node, site)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules._resource_site_guard_or_contest_line", [session, node, site])
-	var before := HumanEngine.before_writing(&"OverworldRules._resource_site_guard_or_contest_line", [session, node, site])
-	var result = _resource_site_guard_or_contest_line__gd(session, node, site)
-	HumanEngine.check_writing(&"OverworldRules._resource_site_guard_or_contest_line", before, [session, node, site], result)
-	return result
-
-static func _resource_site_guard_or_contest_line__gd(
-	session: SessionStateStoreScript.SessionData,
-	node: Dictionary,
-	site: Dictionary
-) -> String:
-	var guard_encounter := _resource_site_guard_encounter(session, node, site)
-	if not guard_encounter.is_empty():
-		var guard := _resource_site_guard_link_for_encounter(guard_encounter)
-		var line := "Guarded by %s" % encounter_display_name(guard_encounter)
-		if _resource_site_guard_blocks_node(guard_encounter, node):
-			line += "; clear guard to use site"
-		elif bool(guard.get("blocks_approach", false)):
-			line += "; blocks approach"
-		return line
-	var controller := PlayerRules.resource_controller_id(node)
-	if controller == "":
-		return ""
-	var contest_encounter := _resource_site_contest_encounter(session, node, controller)
-	if not contest_encounter.is_empty():
-		return "%s is contesting this site" % encounter_display_name(contest_encounter)
-	if _resource_site_under_threat(session, node, controller):
-		return "Hostile pressure is contesting this site"
-	return ""
+	return HumanEngine.native_writing(&"OverworldRules._resource_site_guard_or_contest_line", [session, node, site])
 
 ## positions: an Array limits the scan to the encounters at these list
 ## positions, in ascending order, for a caller that knows no other encounter can
@@ -6794,27 +4837,6 @@ static func resource_site_blocking_guard(
 	var encounter := _resource_site_guard_encounter(session, node, site, positions)
 	return encounter if _resource_site_guard_blocks_node(encounter, node) else {}
 
-static func _resource_site_contest_encounter(
-	session: SessionStateStoreScript.SessionData,
-	node: Dictionary,
-	controller_id: String
-) -> Dictionary:
-	if session == null:
-		return {}
-	var best := {}
-	for encounter in session.overworld.get("encounters", []):
-		if not (encounter is Dictionary) or is_encounter_resolved(session, encounter):
-			continue
-		if PlayerRules.raid_controller_id(encounter) == "" or PlayerRules.allied(session, PlayerRules.raid_controller_id(encounter), controller_id):
-			continue
-		if String(encounter.get("target_kind", "")) != "resource":
-			continue
-		if String(encounter.get("target_placement_id", "")) != String(node.get("placement_id", "")):
-			continue
-		if best.is_empty() or int(encounter.get("goal_distance", 9999)) < int(best.get("goal_distance", 9999)):
-			best = encounter
-	return best
-
 static func _resource_site_guard_link_for_encounter(encounter: Dictionary) -> Dictionary:
 	var guard = encounter.get("guard_link", {})
 	if guard is Dictionary and not guard.is_empty():
@@ -6823,87 +4845,8 @@ static func _resource_site_guard_link_for_encounter(encounter: Dictionary) -> Di
 	guard = metadata.get("guard_link", {})
 	return guard if guard is Dictionary else {}
 
-static func _resource_site_object_class_label(site: Dictionary, map_object: Dictionary) -> String:
-	var primary_class := String(map_object.get("primary_class", "")).strip_edges()
-	if primary_class == "":
-		primary_class = String(site.get("family", "")).strip_edges()
-	if primary_class == "":
-		return ""
-	return "Class: %s" % _humanize_id(primary_class)
-
-static func _resource_site_interaction_cadence(site: Dictionary, map_object: Dictionary) -> String:
-	var interaction = map_object.get("interaction", {})
-	if interaction is Dictionary:
-		var cadence := String(interaction.get("cadence", "")).strip_edges()
-		if cadence != "":
-			return cadence
-	if _resource_site_is_persistent(site):
-		return "persistent_control"
-	if _resource_site_is_repeatable(site):
-		return "repeatable"
-	return "one_time"
-
 static func _interaction_cadence_label(cadence: String) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _interaction_cadence_label__gd(cadence)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"OverworldRules._interaction_cadence_label", [cadence])
-	var result = _interaction_cadence_label__gd(cadence)
-	HumanEngine.check(&"OverworldRules._interaction_cadence_label", [cadence], result)
-	return result
-
-static func _interaction_cadence_label__gd(cadence: String) -> String:
-	match cadence:
-		"persistent_control":
-			return "Cadence: persistent control"
-		"one_time":
-			return "Cadence: one-time"
-		"repeatable":
-			return "Cadence: repeatable"
-		"repeatable_daily":
-			return "Cadence: repeatable daily"
-		"repeatable_weekly":
-			return "Cadence: repeatable weekly"
-		"cooldown_days":
-			return "Cadence: cooldown days"
-		"conditional":
-			return "Cadence: conditional"
-		"none":
-			return "Cadence: none"
-		_:
-			return "Cadence: %s" % _humanize_id(cadence) if cadence != "" else ""
-
-static func _resource_site_role_tag_summary(site: Dictionary, map_object: Dictionary) -> String:
-	var roles: Array[String] = _string_array(map_object.get("secondary_tags", []))
-	if roles.is_empty():
-		roles = _string_array(map_object.get("map_roles", []))
-	if roles.is_empty():
-		roles = _fallback_resource_site_roles(site)
-	var visible := []
-	for role in roles:
-		var label := _humanize_id(role)
-		if label != "" and label not in visible:
-			visible.append(label)
-		if visible.size() >= 3:
-			break
-	return "Roles: %s" % ", ".join(visible) if not visible.is_empty() else ""
-
-static func _fallback_resource_site_roles(site: Dictionary) -> Array[String]:
-	match String(site.get("family", "")):
-		"mine":
-			return ["income"]
-		"neutral_dwelling":
-			return ["recruit source", "weekly muster"]
-		"faction_outpost":
-			return ["frontier watch", "route support"]
-		"frontier_shrine":
-			return ["spell route", "recovery"]
-		"transit_object":
-			return ["route link"]
-		"repeatable_service":
-			return ["service"]
-		_:
-			return ["route pacing"]
+	return HumanEngine.native(&"OverworldRules._interaction_cadence_label", [cadence])
 
 static func _encounter_object_tag_summary(encounter: Dictionary, map_object: Dictionary) -> String:
 	var tags := _string_array(map_object.get("secondary_tags", []))
@@ -7008,15 +4951,6 @@ static func _encounter_tags(encounter: Dictionary, map_object: Dictionary) -> Ar
 	if tags.is_empty():
 		tags = _string_array(metadata.get("secondary_tags", []))
 	return tags
-
-static func _controller_display_name(controller_id: String, faction_id: String = "") -> String:
-	if controller_id == "enemy":
-		return "enemy"
-	var faction := ContentService.get_faction(faction_id if faction_id != "" else controller_id)
-	if not faction.is_empty():
-		var label := String(faction.get("name", controller_id))
-		return "%s (Player %s)" % [label, controller_id.trim_prefix("player_")] if controller_id.begins_with("player_") else label
-	return controller_id
 
 static func _string_array(value: Variant) -> Array[String]:
 	var strings: Array[String] = []
@@ -7188,29 +5122,7 @@ static func _resource_site_response_state(
 	}
 
 static func _resource_site_response_effect_summary(response_state: Dictionary) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _resource_site_response_effect_summary__gd(response_state)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"OverworldRules._resource_site_response_effect_summary", [response_state])
-	var result = _resource_site_response_effect_summary__gd(response_state)
-	HumanEngine.check(&"OverworldRules._resource_site_response_effect_summary", [response_state], result)
-	return result
-
-static func _resource_site_response_effect_summary__gd(response_state: Dictionary) -> String:
-	var parts := []
-	if int(response_state.get("quality_bonus", 0)) > 0:
-		parts.append("quality +%d" % int(response_state.get("quality_bonus", 0)))
-	if int(response_state.get("readiness_bonus", 0)) > 0:
-		parts.append("readiness +%d" % int(response_state.get("readiness_bonus", 0)))
-	if int(response_state.get("pressure_bonus", 0)) > 0:
-		parts.append("pressure +%d" % int(response_state.get("pressure_bonus", 0)))
-	if int(response_state.get("recovery_relief", 0)) > 0:
-		parts.append("recovery -%d" % int(response_state.get("recovery_relief", 0)))
-	if int(response_state.get("growth_bonus_percent", 0)) > 0:
-		parts.append("musters +%d%%" % int(response_state.get("growth_bonus_percent", 0)))
-	if int(response_state.get("pressure_guard_bonus", 0)) > 0:
-		parts.append("pressure guard +%d" % int(response_state.get("pressure_guard_bonus", 0)))
-	return ", ".join(parts)
+	return HumanEngine.native(&"OverworldRules._resource_site_response_effect_summary", [response_state])
 
 static func _resource_site_delivery_target_label(
 	session: SessionStateStoreScript.SessionData,
@@ -7509,304 +5421,11 @@ static func _resource_site_delivery_line(
 			])
 	return " | ".join(parts)
 
-static func _estimate_reserve_delivery_eta(
-	origin: Vector2i,
-	target: Vector2i,
-	security_rating: int,
-	max_days: int
-) -> int:
-	var distance = abs(origin.x - target.x) + abs(origin.y - target.y)
-	var travel_speed = max(2, security_rating + 1)
-	return clamp(int(ceili(float(max(distance, 1)) / float(travel_speed))), 1, max(1, max_days))
-
 static func _player_reserve_delivery_plan(session: SessionStateStoreScript.SessionData, source_town: Dictionary, response_state: Dictionary) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _player_reserve_delivery_plan__gd(session, source_town, response_state)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules._player_reserve_delivery_plan", [session, source_town, response_state])
-	var before := HumanEngine.before_writing(&"OverworldRules._player_reserve_delivery_plan", [session, source_town, response_state])
-	var result = _player_reserve_delivery_plan__gd(session, source_town, response_state)
-	HumanEngine.check_writing(&"OverworldRules._player_reserve_delivery_plan", before, [session, source_town, response_state], result)
-	return result
-
-static func _player_reserve_delivery_plan__gd(
-	session: SessionStateStoreScript.SessionData,
-	source_town: Dictionary,
-	response_state: Dictionary
-) -> Dictionary:
-	if session == null or source_town.is_empty():
-		return {}
-	var available_recruits = _normalize_recruit_payload(source_town.get("available_recruits", {}))
-	if available_recruits.is_empty():
-		return {}
-	var candidates = _player_reserve_delivery_candidates(session, source_town, response_state)
-	if candidates.is_empty():
-		return {}
-	candidates.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
-		var a_priority := int(a.get("priority", 0))
-		var b_priority := int(b.get("priority", 0))
-		if a_priority == b_priority:
-			var a_eta := int(a.get("eta_days", 999))
-			var b_eta := int(b.get("eta_days", 999))
-			if a_eta == b_eta:
-				return String(a.get("label", "")) < String(b.get("label", ""))
-			return a_eta < b_eta
-		return a_priority > b_priority
-	)
-	var best_candidate: Dictionary = candidates[0]
-	var manifest = _reserve_delivery_manifest_for_candidate(session, source_town, best_candidate, response_state)
-	if manifest.is_empty():
-		return {}
-	return {
-		"target_kind": String(best_candidate.get("target_kind", "")),
-		"target_id": String(best_candidate.get("target_id", "")),
-		"target_label": String(best_candidate.get("label", "")),
-		"eta_days": int(best_candidate.get("eta_days", 1)),
-		"manifest": manifest,
-		"priority": int(best_candidate.get("priority", 0)),
-	}
-
-static func _player_reserve_delivery_candidates(
-	session: SessionStateStoreScript.SessionData,
-	source_town: Dictionary,
-	response_state: Dictionary
-) -> Array:
-	var candidates = []
-	if session == null or source_town.is_empty():
-		return candidates
-	var source_position = Vector2i(int(source_town.get("x", 0)), int(source_town.get("y", 0)))
-	var support_radius = max(1, int(_town_logistics_plan(source_town).get("support_radius", 0)))
-	var range_bonus = max(0, int(response_state.get("security_rating", 1)) - 1)
-	var max_range = support_radius + range_bonus
-	var source_placement_id = String(source_town.get("placement_id", ""))
-	for town in session.overworld.get("towns", []):
-		if not (town is Dictionary) or not OverworldLevelRulesScript.same_level(town, source_town) or String(town.get("owner", "neutral")) != "player":
-			continue
-		var placement_id = String(town.get("placement_id", ""))
-		if placement_id == "" or placement_id == source_placement_id:
-			continue
-		var target_position = Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
-		var distance = abs(source_position.x - target_position.x) + abs(source_position.y - target_position.y)
-		var front = _town_front_state(session, town)
-		var occupation = _town_occupation_state(session, town)
-		var emergency_range_bonus := 0
-		if bool(front.get("active", false)) and String(front.get("mode", "")) == "retake":
-			emergency_range_bonus += 2
-		if bool(occupation.get("active", false)):
-			emergency_range_bonus += 2
-		if distance > max_range + emergency_range_bonus:
-			continue
-		var threat_state = _town_command_risk_state(session, town)
-		var recovery = _town_recovery_state(session, town)
-		var logistics = _town_logistics_state(session, town)
-		var capital_project = _town_capital_project_state(town, session)
-		var priority = int(threat_state.get("visible_pressuring", 0)) * 52
-		priority += int(threat_state.get("visible_marching", 0)) * 22
-		if bool(threat_state.get("hidden_targeting", false)):
-			priority += 10
-		if bool(front.get("active", false)) and String(front.get("mode", "")) == "retake":
-			priority += 26 + int(round(float(int(front.get("priority_bonus", 0))) / 8.0))
-		if bool(occupation.get("active", false)):
-			priority += 18 + int(occupation.get("pressure", 0)) * 12 + min(28, int(occupation.get("locked_headcount", 0)) * 2)
-		priority += int(recovery.get("pressure", 0)) * 18
-		priority += int(logistics.get("disrupted_count", 0)) * 18
-		priority += int(logistics.get("threatened_count", 0)) * 10
-		priority += int(logistics.get("support_gap", 0)) * 14
-		match _town_strategic_role(town):
-			"capital":
-				priority += 24
-			"stronghold":
-				priority += 12
-		if bool(capital_project.get("vulnerable", false)):
-			priority += 18
-		elif bool(capital_project.get("active", false)):
-			priority += 8
-		if priority <= 0:
-			continue
-		candidates.append(
-			{
-				"target_kind": "town",
-				"target_id": placement_id,
-				"label": _town_name(town),
-				"priority": priority,
-				"eta_days": _estimate_reserve_delivery_eta(
-					source_position,
-					target_position,
-					int(response_state.get("security_rating", 1)),
-					int(response_state.get("watch_days", 1))
-				),
-			}
-		)
-	for hero in session.overworld.get("player_heroes", []):
-		if not (hero is Dictionary) or not OverworldLevelRulesScript.same_level(hero, source_town):
-			continue
-		var hero_id = String(hero.get("id", ""))
-		if hero_id == "":
-			continue
-		var hero_position = Vector2i(int(hero.get("position", {}).get("x", 0)), int(hero.get("position", {}).get("y", 0)))
-		if hero_position == source_position:
-			continue
-		var hero_distance = abs(source_position.x - hero_position.x) + abs(source_position.y - hero_position.y)
-		if hero_distance > max_range:
-			continue
-		var hero_priority = _player_hero_delivery_priority(session, hero)
-		if hero_priority <= 0:
-			continue
-		candidates.append(
-			{
-				"target_kind": "hero",
-				"target_id": hero_id,
-				"label": String(hero.get("name", "the hero")),
-				"priority": hero_priority,
-				"eta_days": _estimate_reserve_delivery_eta(
-					source_position,
-					hero_position,
-					int(response_state.get("security_rating", 1)),
-					int(response_state.get("watch_days", 1))
-				),
-			}
-		)
-	return candidates
-
-static func _player_hero_delivery_priority(session: SessionStateStoreScript.SessionData, hero: Dictionary) -> int:
-	if session == null or hero.is_empty():
-		return 0
-	var hero_position = Vector2i(int(hero.get("position", {}).get("x", 0)), int(hero.get("position", {}).get("y", 0)))
-	var priority = 0
-	var active_hero_id = String(session.overworld.get("active_hero_id", ""))
-	if String(hero.get("id", "")) == active_hero_id:
-		priority += 16
-	if bool(hero.get("is_primary", false)):
-		priority += 10
-	var army_strength = _army_strength_value(hero.get("army", {}).get("stacks", []))
-	if army_strength <= 90:
-		priority += 28
-	elif army_strength <= 140:
-		priority += 18
-	elif army_strength <= 200:
-		priority += 8
-	for encounter in session.overworld.get("encounters", []):
-		if not (encounter is Dictionary) or not OverworldLevelRulesScript.same_level(encounter, hero) or is_encounter_resolved(session, encounter):
-			continue
-		var encounter_x := int(encounter.get("x", -1))
-		var encounter_y := int(encounter.get("y", -1))
-		if not is_tile_visible(session, encounter_x, encounter_y, OverworldLevelRulesScript.level_of(hero)):
-			continue
-		var distance = abs(hero_position.x - encounter_x) + abs(hero_position.y - encounter_y)
-		if distance <= 1:
-			priority += 38
-		elif distance <= 3:
-			priority += 20
-		if String(encounter.get("target_kind", "")) == "hero" and bool(encounter.get("arrived", false)):
-			priority += 10
-	for town in session.overworld.get("towns", []):
-		if not (town is Dictionary) or not OverworldLevelRulesScript.same_level(town, hero) or String(town.get("owner", "neutral")) != "enemy":
-			continue
-		if not is_tile_visible(session, int(town.get("x", -1)), int(town.get("y", -1)), OverworldLevelRulesScript.level_of(hero)):
-			continue
-		var town_distance = abs(hero_position.x - int(town.get("x", 0))) + abs(hero_position.y - int(town.get("y", 0)))
-		if town_distance <= 2:
-			priority += 16
-		elif town_distance <= 4:
-			priority += 8
-	return priority
-
-static func _reserve_delivery_manifest_for_candidate(
-	session: SessionStateStoreScript.SessionData,
-	source_town: Dictionary,
-	candidate: Dictionary,
-	response_state: Dictionary
-) -> Dictionary:
-	var recruits = _normalize_recruit_payload(source_town.get("available_recruits", {}))
-	if recruits.is_empty():
-		return {}
-	var capacity = 10 + (max(1, int(response_state.get("security_rating", 1))) * 6)
-	capacity += int(response_state.get("quality_bonus", 0)) * 2
-	capacity += int(response_state.get("readiness_bonus", 0)) * 2
-	if String(candidate.get("target_kind", "")) == "town":
-		capacity += 6
-	if int(candidate.get("priority", 0)) >= 70:
-		capacity += 8
-	elif int(candidate.get("priority", 0)) >= 40:
-		capacity += 4
-	var hold_back := _town_should_hold_back_reserves(session, source_town)
-	var unit_ids = []
-	for unit_id_value in recruits.keys():
-		var unit_id := String(unit_id_value)
-		var available := int(recruits.get(unit_id_value, 0))
-		var keep_count := 1 if hold_back and available > 2 else 0
-		if max(0, available - keep_count) <= 0:
-			continue
-		unit_ids.append(unit_id)
-	unit_ids.sort_custom(func(a: String, b: String) -> bool:
-		var a_priority := _reserve_delivery_unit_priority(a, String(candidate.get("target_kind", "")))
-		var b_priority := _reserve_delivery_unit_priority(b, String(candidate.get("target_kind", "")))
-		if a_priority == b_priority:
-			return a < b
-		return a_priority > b_priority
-	)
-	var manifest = {}
-	var remaining_capacity = max(1, capacity)
-	for unit_id in unit_ids:
-		var available_count = int(recruits.get(unit_id, 0))
-		var keep_count = 1 if hold_back and available_count > 2 else 0
-		var sendable = max(0, available_count - keep_count)
-		if sendable <= 0:
-			continue
-		var unit_value = _reserve_delivery_unit_value(unit_id)
-		var max_by_capacity = max(1, int(floor(float(max(remaining_capacity, unit_value)) / float(unit_value))))
-		var send_count = min(sendable, max_by_capacity)
-		if send_count <= 0:
-			continue
-		manifest[unit_id] = send_count
-		remaining_capacity -= send_count * unit_value
-		if remaining_capacity <= 0:
-			break
-	if manifest.is_empty() and not unit_ids.is_empty():
-		manifest[unit_ids[0]] = 1
-	return manifest
-
-static func _reserve_delivery_unit_priority(unit_id: String, target_kind: String) -> int:
-	var unit = ContentService.get_unit(unit_id)
-	var priority = (max(1, int(unit.get("tier", 1))) * 10)
-	priority += int(unit.get("attack", 0)) + int(unit.get("defense", 0))
-	if bool(unit.get("ranged", false)):
-		priority += 6 if target_kind == "town" else 3
-	return priority
-
-static func _reserve_delivery_unit_value(unit_id: String) -> int:
-	return max(1, _weighted_recruit_value({unit_id: 1}))
-
-static func _town_should_hold_back_reserves(session: SessionStateStoreScript.SessionData, town: Dictionary) -> bool:
-	if session == null or town.is_empty():
-		return false
-	var recovery := _town_recovery_state(session, town)
-	var threat_state := _town_command_risk_state(session, town)
-	if bool(recovery.get("active", false)):
-		return true
-	if int(threat_state.get("visible_pressuring", 0)) > 0 or int(threat_state.get("visible_marching", 0)) > 0 or bool(threat_state.get("hidden_targeting", false)):
-		return true
-	return _town_strategic_role(town) in ["capital", "stronghold"]
+	return HumanEngine.native_writing(&"OverworldRules._player_reserve_delivery_plan", [session, source_town, response_state])
 
 static func _consume_recruit_payload(recruits: Variant, manifest: Variant) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _consume_recruit_payload__gd(recruits, manifest)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules._consume_recruit_payload", [recruits, manifest])
-	var before := HumanEngine.before_writing(&"OverworldRules._consume_recruit_payload", [recruits, manifest])
-	var result = _consume_recruit_payload__gd(recruits, manifest)
-	HumanEngine.check_writing(&"OverworldRules._consume_recruit_payload", before, [recruits, manifest], result)
-	return result
-
-static func _consume_recruit_payload__gd(recruits: Variant, manifest: Variant) -> Dictionary:
-	var remaining := _normalize_recruit_payload(recruits)
-	var shipment := _normalize_recruit_payload(manifest)
-	for unit_id_value in shipment.keys():
-		var unit_id := String(unit_id_value)
-		remaining[unit_id] = max(0, int(remaining.get(unit_id, 0)) - int(shipment.get(unit_id_value, 0)))
-		if int(remaining.get(unit_id, 0)) <= 0:
-			remaining.erase(unit_id)
-	return remaining
+	return HumanEngine.native_writing(&"OverworldRules._consume_recruit_payload", [recruits, manifest])
 
 static func _clear_resource_site_delivery(node: Dictionary) -> Dictionary:
 	var cleared := node.duplicate(true)
@@ -7819,333 +5438,25 @@ static func _clear_resource_site_delivery(node: Dictionary) -> Dictionary:
 	cleared["delivery_manifest"] = {}
 	return cleared
 
-static func _resource_site_response_action(
-	session: SessionStateStoreScript.SessionData,
-	node: Dictionary,
-	site: Dictionary
-) -> Dictionary:
-	var response_state := _resource_site_response_state(session, node, site)
-	if int(response_state.get("watch_days", 0)) <= 0:
-		return {}
-	if bool(response_state.get("active", false)):
-		return {}
-	var linked_town_result := _resource_node_linked_town(session, node, "player")
-	var cost = response_state.get("resource_cost", {})
-	var movement_cost := int(response_state.get("movement_cost", 0))
-	var movement_left := int(session.overworld.get("movement", {}).get("current", 0)) if session != null else 0
-	var disabled := (not _can_afford(session, cost)) or movement_left < movement_cost
-	var summary_parts := []
-	var summary := String(response_state.get("summary", ""))
-	if summary != "":
-		summary_parts.append(summary)
-	var commander_name := String(response_state.get("commander_name", ""))
-	if commander_name != "":
-		summary_parts.append("Commander %s" % commander_name)
-	if int(linked_town_result.get("index", -1)) >= 0:
-		summary_parts.append("Linked %s" % _town_name(linked_town_result.get("town", {})))
-	var delivery_plan := {}
-	if int(linked_town_result.get("index", -1)) >= 0:
-		delivery_plan = _player_reserve_delivery_plan(session, linked_town_result.get("town", {}), response_state)
-	if not delivery_plan.is_empty():
-		summary_parts.append(
-			"Load %s for %s" % [
-				_describe_recruit_delta(delivery_plan.get("manifest", {})),
-				String(delivery_plan.get("target_label", "the front")),
-			]
-		)
-		summary_parts.append(
-			"ETA %d day%s" % [
-				int(delivery_plan.get("eta_days", 1)),
-				"" if int(delivery_plan.get("eta_days", 1)) == 1 else "s",
-			]
-		)
-	var impact_summary := _resource_site_response_effect_summary(response_state)
-	if impact_summary != "":
-		summary_parts.append(impact_summary)
-	summary_parts.append("Escort %d" % int(response_state.get("security_rating", 1)))
-	var cost_summary := _describe_resource_delta(cost)
-	if cost_summary != "":
-		summary_parts.append("Cost %s" % cost_summary)
-	if movement_cost > 0:
-		summary_parts.append("Move -%d" % movement_cost)
-	summary_parts.append("%d day%s" % [
-		int(response_state.get("watch_days", 0)),
-		"" if int(response_state.get("watch_days", 0)) == 1 else "s",
-	])
-	return {
-		"id": "site_response",
-		"label": String(response_state.get("action_label", "Secure Route")),
-		"summary": " | ".join(summary_parts),
-		"disabled": disabled,
-	}
-
 static func _resource_site_context_summary(session: SessionStateStoreScript.SessionData, node: Dictionary, site: Dictionary) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _resource_site_context_summary__gd(session, node, site)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules._resource_site_context_summary", [session, node, site])
-	var before := HumanEngine.before_writing(&"OverworldRules._resource_site_context_summary", [session, node, site])
-	var result = _resource_site_context_summary__gd(session, node, site)
-	HumanEngine.check_writing(&"OverworldRules._resource_site_context_summary", before, [session, node, site], result)
-	return result
-
-static func _resource_site_context_summary__gd(session: SessionStateStoreScript.SessionData, node: Dictionary, site: Dictionary) -> String:
-	site = NodePayload.site_for_node(node, site)
-	if NativeTransit.is_native(node):
-		if NativeTransit.portal_kind(node) != "":
-			return describe_native_portal(session, node)
-		var resolved := NativeTransit.resolve(session.overworld.get("resource_nodes", []), node)
-		if not bool(resolved.get("ok", false)):
-			return String(resolved.get("message", "This passage is unavailable."))
-		var exit: Vector3i = resolved.exit
-		return "Paired passage to %s (%d,%d). Travel through the entrance; no claim, toll or repair is required." % ["the underground" if exit.z > 0 else "the surface", exit.x, exit.y]
-	var parts := []
-	var surface := describe_resource_site_surface(session, node, site)
-	if surface != "":
-		parts.append(surface)
-	var interaction_surface := describe_resource_site_interaction_surface(node, site)
-	if interaction_surface != "":
-		parts.append(interaction_surface)
-	var control_inspection := describe_resource_site_control_inspection(session, node, site)
-	if control_inspection != "":
-		parts.append(control_inspection)
-	if _resource_site_is_persistent(site):
-		var controller := PlayerRules.resource_controller_id(node)
-		match controller:
-			"":
-				parts.append("Control unclaimed")
-			"player":
-				parts.append("Control secured")
-			_:
-				parts.append("Control denied by %s" % String(ContentService.get_faction(controller).get("name", controller)))
-	var neutral_dwelling_label := _resource_site_neutral_dwelling_label(site)
-	if neutral_dwelling_label != "":
-		parts.append("Neutral family %s" % neutral_dwelling_label)
-	var income_summary := _describe_resource_delta(site.get("control_income", {}))
-	if income_summary != "":
-		parts.append("%s %s" % [_resource_site_income_cadence_label(site), income_summary])
-	var weekly_summary := _describe_recruit_delta(_resource_site_weekly_recruits(site))
-	if weekly_summary != "":
-		parts.append("Weekly %s" % weekly_summary)
-	var claim_summary := _describe_recruit_delta(_resource_site_claim_recruits(site))
-	if claim_summary != "":
-		parts.append("Field recruits %s" % claim_summary)
-	var reward_summary := _resource_site_reward_summary(site)
-	if reward_summary != "":
-		parts.append("Reward %s" % reward_summary)
-	var artifact_summary := _resource_site_artifact_summary(site)
-	if artifact_summary != "":
-		parts.append("Holds %s" % artifact_summary)
-	var vision_radius = max(0, int(site.get("vision_radius", 0)))
-	if vision_radius > 0:
-		parts.append("Scout ring %d" % vision_radius)
-	var pressure_guard = max(0, int(site.get("pressure_guard", 0)))
-	if pressure_guard > 0:
-		parts.append("Pressure guard %d" % pressure_guard)
-	var town_support := _resource_site_town_support(site)
-	var support_parts := []
-	if int(town_support.get("readiness_bonus", 0)) > 0:
-		support_parts.append("readiness +%d" % int(town_support.get("readiness_bonus", 0)))
-	if int(town_support.get("quality_bonus", 0)) > 0:
-		support_parts.append("quality +%d" % int(town_support.get("quality_bonus", 0)))
-	if int(town_support.get("pressure_bonus", 0)) > 0:
-		support_parts.append("pressure +%d" % int(town_support.get("pressure_bonus", 0)))
-	if int(town_support.get("growth_bonus_percent", 0)) > 0:
-		support_parts.append("growth +%d%%" % int(town_support.get("growth_bonus_percent", 0)))
-	if int(town_support.get("recovery_relief", 0)) > 0:
-		support_parts.append("recovery +%d" % int(town_support.get("recovery_relief", 0)))
-	if not support_parts.is_empty():
-		parts.append("Town support %s" % ", ".join(support_parts))
-	var lesson_names := _resource_site_spell_names(site)
-	if not lesson_names.is_empty():
-		parts.append("Teaches %s" % _spell_list_text(lesson_names))
-	if _resource_site_is_repeatable(site):
-		var service_summary := String(site.get("service_summary", ""))
-		if service_summary != "":
-			parts.append(service_summary)
-		var visit_cost_summary := _describe_resource_delta(_resource_site_visit_cost(site))
-		if visit_cost_summary != "":
-			parts.append("Service cost %s" % visit_cost_summary)
-		if _resource_site_repeat_ready(session, node, site):
-			parts.append("Service ready")
-		elif bool(node.get("collected", false)):
-			parts.append("Next service day %d" % _resource_site_next_visit_day(node, site))
-	var guard_profile = site.get("guard_profile", {})
-	if guard_profile is Dictionary and not guard_profile.is_empty():
-		parts.append("Guard %s | %s" % [
-			String(guard_profile.get("threat", "unknown")),
-			String(guard_profile.get("reward_tone", "reward site")),
-		])
-	var transit_profile = site.get("transit_profile", {})
-	if transit_profile is Dictionary and not transit_profile.is_empty():
-		parts.append("Transit %s | %s" % [
-			String(transit_profile.get("mode", "route")),
-			String(transit_profile.get("route_role", "link")),
-		])
-	var response_state := _resource_site_response_state(session, node, site)
-	var delivery_state := _resource_site_delivery_state(session, node, site)
-	if bool(response_state.get("active", false)):
-		var response_line := "%s escort %d day%s" % [
-			String(response_state.get("action_label", "Route secure")),
-			int(response_state.get("remaining_days", 0)),
-			"" if int(response_state.get("remaining_days", 0)) == 1 else "s",
-		]
-		var commander_name := String(response_state.get("commander_name", ""))
-		if commander_name != "":
-			response_line += " | %s detached" % commander_name
-		var impact_summary := _resource_site_response_effect_summary(response_state)
-		if impact_summary != "":
-			response_line += " | %s" % impact_summary
-		parts.append(response_line)
-		if bool(delivery_state.get("active", false)):
-			parts.append(_resource_site_delivery_line(session, node, site))
-	elif String(node.get("collected_by_faction_id", "")) == "player" and int(response_state.get("watch_days", 0)) > 0:
-		var ready_commander := String(response_state.get("commander_name", ""))
-		if ready_commander != "":
-			parts.append("Commit %s to escort %s and steady nearby threat lanes." % [
-				ready_commander,
-				String(response_state.get("action_label", "route security")).to_lower(),
-			])
-		else:
-			parts.append("Order %s to steady nearby threat lanes." % String(response_state.get("action_label", "route security")))
-		var linked_town_result := _resource_node_linked_town(session, node, "player")
-		if int(linked_town_result.get("index", -1)) >= 0:
-			var delivery_plan := _player_reserve_delivery_plan(session, linked_town_result.get("town", {}), response_state)
-			if not delivery_plan.is_empty():
-				parts.append(
-					"Next convoy %s for %s in %d day%s." % [
-						_describe_recruit_delta(delivery_plan.get("manifest", {})),
-						String(delivery_plan.get("target_label", "the front")),
-						int(delivery_plan.get("eta_days", 1)),
-						"" if int(delivery_plan.get("eta_days", 1)) == 1 else "s",
-					]
-				)
-	if parts.is_empty():
-		return "Claim the site to add its stores immediately."
-	return " | ".join(parts)
+	return HumanEngine.native_writing(&"OverworldRules._resource_site_context_summary", [session, node, site])
 
 static func _describe_recruit_count(recruits: Dictionary) -> String:
 	return HumanEngine.native(&"OverworldRules._describe_recruit_count", [recruits])
 
-## The waiting troops of a claimed site, while the hero who claimed it still
-## stands there; a stale offer (another hero, or the hero moved) is dropped.
-static func _pending_site_recruits(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	var pending = session.overworld.get(PENDING_SITE_RECRUITS_KEY, {})
-	if not (pending is Dictionary) or pending.is_empty():
-		return {}
-	var tile: Variant = pending.get("tile", {})
-	var still_there: bool = String(pending.get("hero_id", "")) == String(session.overworld.get("active_hero_id", "")) and tile is Dictionary and Vector2i(int(tile.get("x", -1)), int(tile.get("y", -1))) == hero_position(session)
-	if not still_there or not (pending.get("recruits", {}) is Dictionary) or pending.get("recruits", {}).is_empty():
-		session.overworld.erase(PENDING_SITE_RECRUITS_KEY)
-		return {}
-	return pending
-
 ## Dialog payload for troops that did not fit: the site, the waiting troops
 ## (the first one takes the next freed slot) and the hero's seven slots.
 static func site_recruit_overflow_prompt(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return site_recruit_overflow_prompt__gd(session)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.site_recruit_overflow_prompt", [session])
-	var before := HumanEngine.before_writing(&"OverworldRules.site_recruit_overflow_prompt", [session])
-	var result = site_recruit_overflow_prompt__gd(session)
-	HumanEngine.check_writing(&"OverworldRules.site_recruit_overflow_prompt", before, [session], result)
-	return result
-
-static func site_recruit_overflow_prompt__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	if session == null:
-		return {}
-	var pending := _pending_site_recruits(session)
-	if pending.is_empty():
-		return {}
-	var hero_id := String(pending.get("hero_id", ""))
-	var waiting := []
-	var recruits: Dictionary = pending.get("recruits", {})
-	var unit_ids := recruits.keys()
-	unit_ids.sort()
-	for unit_id_value in unit_ids:
-		var unit_id := String(unit_id_value)
-		waiting.append({
-			"unit_id": unit_id,
-			"unit_name": String(ContentService.get_unit(unit_id).get("name", unit_id)),
-			"count": int(recruits[unit_id_value]),
-			"portrait": String(ContentService.get_unit_art(unit_id).get("portrait", "")),
-		})
-	return {
-		"title": String(pending.get("site_name", "Claimed site")),
-		"site_name": String(pending.get("site_name", "")),
-		"waiting": waiting,
-		"slots": HeroCommandRulesScript.army_slot_snapshot(session, {}, hero_id).get("slots", []),
-		"context": {"hero_id": hero_id, "placement_id": String(pending.get("placement_id", ""))},
-	}
-
-static func _pending_matches(pending: Dictionary, expected_context: Dictionary) -> bool:
-	return not pending.is_empty() and String(pending.get("hero_id", "")) == String(expected_context.get("hero_id", "")) and String(pending.get("placement_id", "")) == String(expected_context.get("placement_id", ""))
+	return HumanEngine.native_writing(&"OverworldRules.site_recruit_overflow_prompt", [session])
 
 ## Dismisses the stack in slot_index; the first waiting unit type takes its
 ## place and any other waiting troops that now fit join too.
 static func take_site_recruits_by_dismissing(session: SessionStateStoreScript.SessionData, slot_index: int, expected_context: Dictionary) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return take_site_recruits_by_dismissing__gd(session, slot_index, expected_context)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.take_site_recruits_by_dismissing", [session, slot_index, expected_context])
-	var before := HumanEngine.before_writing(&"OverworldRules.take_site_recruits_by_dismissing", [session, slot_index, expected_context])
-	var result = take_site_recruits_by_dismissing__gd(session, slot_index, expected_context)
-	HumanEngine.check_writing(&"OverworldRules.take_site_recruits_by_dismissing", before, [session, slot_index, expected_context], result)
-	return result
-
-static func take_site_recruits_by_dismissing__gd(session: SessionStateStoreScript.SessionData, slot_index: int, expected_context: Dictionary) -> Dictionary:
-	var pending := _pending_site_recruits(session)
-	if not _pending_matches(pending, expected_context):
-		return {"ok": false, "message": "Those troops are no longer waiting."}
-	var hero = session.overworld.get("hero", {})
-	var army: Dictionary = hero.get("army", {}).duplicate(true)
-	var kept := []
-	var dismissed := {}
-	for stack in HeroCommandRulesScript._slotted_stacks(army.get("stacks", [])):
-		if dismissed.is_empty() and int(stack.get(HeroCommandRulesScript.ARMY_SLOT_INDEX_KEY, -1)) == slot_index:
-			dismissed = stack
-		else:
-			kept.append(stack)
-	if dismissed.is_empty():
-		return {"ok": false, "message": "Choose one of your stacks to dismiss."}
-	var split := HeroCommandRulesScript.army_addition_split(kept, pending.get("recruits", {}))
-	var added: Dictionary = split.get("added", {})
-	army["stacks"] = split.get("stacks", kept)
-	hero["army"] = army
-	session.overworld["hero"] = hero
-	session.overworld["army"] = army
-	HeroCommandRulesScript.commit_active_hero(session)
-	var remaining: Dictionary = split.get("overflow", {})
-	if remaining.is_empty():
-		session.overworld.erase(PENDING_SITE_RECRUITS_KEY)
-	else:
-		pending["recruits"] = remaining
-		session.overworld[PENDING_SITE_RECRUITS_KEY] = pending
-	var message := "Dismissed %d %s. %s join the field army." % [
-		int(dismissed.get("count", 0)),
-		String(ContentService.get_unit(String(dismissed.get("unit_id", ""))).get("name", dismissed.get("unit_id", ""))),
-		_describe_recruit_count(added),
-	]
-	return {"ok": true, "message": message, "dismissed": dismissed, "added": added, "remaining": remaining.duplicate(true)}
+	return HumanEngine.native_writing(&"OverworldRules.take_site_recruits_by_dismissing", [session, slot_index, expected_context])
 
 ## Leaves the waiting troops behind; they are lost.
 static func leave_site_recruits(session: SessionStateStoreScript.SessionData, expected_context: Dictionary) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return leave_site_recruits__gd(session, expected_context)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules.leave_site_recruits", [session, expected_context])
-	var before := HumanEngine.before_writing(&"OverworldRules.leave_site_recruits", [session, expected_context])
-	var result = leave_site_recruits__gd(session, expected_context)
-	HumanEngine.check_writing(&"OverworldRules.leave_site_recruits", before, [session, expected_context], result)
-	return result
-
-static func leave_site_recruits__gd(session: SessionStateStoreScript.SessionData, expected_context: Dictionary) -> Dictionary:
-	var pending := _pending_site_recruits(session)
-	if not _pending_matches(pending, expected_context):
-		return {"ok": false, "message": "Those troops are no longer waiting."}
-	session.overworld.erase(PENDING_SITE_RECRUITS_KEY)
-	return {"ok": true, "message": "%s stay behind at %s." % [_describe_recruit_count(pending.get("recruits", {})), String(pending.get("site_name", "the site"))]}
+	return HumanEngine.native_writing(&"OverworldRules.leave_site_recruits", [session, expected_context])
 
 static func _resource_site_spell_ids(site: Dictionary) -> Array:
 	var result := []
@@ -8163,136 +5474,8 @@ static func _resource_site_spell_ids(site: Dictionary) -> Array:
 static func _resource_site_spell_names(site: Dictionary) -> Array:
 	return HumanEngine.native(&"OverworldRules._resource_site_spell_names", [site])
 
-static func _issue_active_site_response(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	var node_result := _find_context_resource_node(session)
-	if int(node_result.get("index", -1)) < 0:
-		return {"ok": false, "message": "No logistics site is ready for response orders here."}
-	return _issue_resource_site_response(session, String(node_result.get("node", {}).get("placement_id", "")), "field")
-
 static func _issue_resource_site_response(session: SessionStateStoreScript.SessionData, placement_id: String, origin: String) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _issue_resource_site_response__gd(session, placement_id, origin)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules._issue_resource_site_response", [session, placement_id, origin])
-	var before := HumanEngine.before_writing(&"OverworldRules._issue_resource_site_response", [session, placement_id, origin])
-	var result = _issue_resource_site_response__gd(session, placement_id, origin)
-	HumanEngine.check_writing(&"OverworldRules._issue_resource_site_response", before, [session, placement_id, origin], result)
-	return result
-
-static func _issue_resource_site_response__gd(
-	session: SessionStateStoreScript.SessionData,
-	placement_id: String,
-	origin: String
-) -> Dictionary:
-	normalize_overworld_state(session)
-	var node_result := _find_resource_node_by_placement(session, placement_id)
-	if int(node_result.get("index", -1)) < 0:
-		return {"ok": false, "message": "That logistics site is no longer available."}
-	var node = node_result.get("node", {})
-	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
-	if not _resource_site_is_persistent(site) or String(node.get("collected_by_faction_id", "")) != "player":
-		return {"ok": false, "message": "Only player-controlled logistics sites can receive response orders."}
-	var response_state := _resource_site_response_state(session, node, site)
-	if int(response_state.get("watch_days", 0)) <= 0:
-		return {"ok": false, "message": "This site has no authored response order."}
-	if bool(response_state.get("active", false)):
-		return {"ok": false, "message": "%s is already active here." % String(response_state.get("action_label", "Route security"))}
-	var cost = response_state.get("resource_cost", {})
-	if not _can_afford(session, cost):
-		return {"ok": false, "message": "Insufficient resources for %s." % String(response_state.get("action_label", "that response"))}
-	var movement_result := HeroCommandRulesScript.spend_active_hero_movement(
-		session,
-		int(response_state.get("movement_cost", 0)),
-		String(response_state.get("action_label", "response order")).to_lower()
-	)
-	if not bool(movement_result.get("ok", false)):
-		return movement_result
-	if cost is Dictionary and not cost.is_empty():
-		_spend_resources(session, cost)
-
-	var active_hero := HeroCommandRulesScript.active_hero(session)
-	var commander_id := String(active_hero.get("id", ""))
-	var commander_name := String(active_hero.get("name", "The commander"))
-	var security_rating := _route_security_rating_for_hero(active_hero)
-	var linked_town_result := _resource_node_linked_town(session, node, "player")
-	var delivery_plan := {}
-	if int(linked_town_result.get("index", -1)) >= 0:
-		delivery_plan = _player_reserve_delivery_plan(session, linked_town_result.get("town", {}), response_state)
-	node["response_origin"] = origin
-	node["response_source_town_id"] = String(linked_town_result.get("town", {}).get("placement_id", ""))
-	node["response_last_day"] = session.day
-	node["response_until_day"] = session.day + max(1, int(response_state.get("watch_days", 0))) - 1
-	node["response_commander_id"] = commander_id
-	node["response_security_rating"] = security_rating
-	node = _clear_resource_site_delivery(node)
-	if not delivery_plan.is_empty():
-		var source_town = linked_town_result.get("town", {})
-		var towns = session.overworld.get("towns", [])
-		source_town["available_recruits"] = _consume_recruit_payload(
-			source_town.get("available_recruits", {}),
-			delivery_plan.get("manifest", {})
-		)
-		towns[int(linked_town_result.get("index", -1))] = source_town
-		session.overworld["towns"] = towns
-		node["delivery_controller_id"] = "player"
-		node["delivery_origin_town_id"] = String(source_town.get("placement_id", ""))
-		node["delivery_target_kind"] = String(delivery_plan.get("target_kind", ""))
-		node["delivery_target_id"] = String(delivery_plan.get("target_id", ""))
-		node["delivery_target_label"] = String(delivery_plan.get("target_label", ""))
-		node["delivery_arrival_day"] = session.day + max(1, int(delivery_plan.get("eta_days", 1)))
-		node["delivery_manifest"] = _normalize_recruit_payload(delivery_plan.get("manifest", {}))
-	var nodes = session.overworld.get("resource_nodes", [])
-	nodes[int(node_result.get("index", -1))] = node
-	session.overworld["resource_nodes"] = nodes
-
-	var messages := [
-		"%s commits %s at %s for %d day%s." % [
-			commander_name,
-			String(response_state.get("action_label", "route security")).to_lower(),
-			String(site.get("name", "the site")),
-			int(response_state.get("watch_days", 0)),
-			"" if int(response_state.get("watch_days", 0)) == 1 else "s",
-		]
-	]
-	var cost_summary := _describe_resource_delta(cost)
-	if cost_summary != "":
-		messages.append("Spent %s." % cost_summary)
-	var impact_summary := _resource_site_response_effect_summary(response_state)
-	if impact_summary != "":
-		messages.append("Escort line %s while active." % impact_summary)
-	messages.append("Route escort strength %d." % security_rating)
-	if not delivery_plan.is_empty():
-		messages.append(
-			"%s loads %s for %s (%d day%s)." % [
-				String(site.get("name", "The route")),
-				_describe_recruit_delta(delivery_plan.get("manifest", {})),
-				String(delivery_plan.get("target_label", "the front")),
-				int(delivery_plan.get("eta_days", 1)),
-				"" if int(delivery_plan.get("eta_days", 1)) == 1 else "s",
-			]
-		)
-	var relief_message := ""
-	if int(linked_town_result.get("index", -1)) >= 0 and int(response_state.get("recovery_relief", 0)) > 0:
-		relief_message = relieve_town_recovery_pressure(
-			session,
-			String(linked_town_result.get("town", {}).get("placement_id", "")),
-			int(response_state.get("recovery_relief", 0)),
-			String(site.get("name", "frontier route"))
-		)
-	if relief_message != "":
-		messages.append(relief_message)
-	var result := _finalize_action_result(session, true, " ".join(messages))
-	return _attach_post_action_recap(
-		result,
-		session,
-		"site_response",
-		{
-			"placement_id": String(node.get("placement_id", "")),
-			"site_id": String(node.get("site_id", "")),
-			"x": int(node.get("x", 0)),
-			"y": int(node.get("y", 0)),
-		}
-	)
+	return HumanEngine.native_writing(&"OverworldRules._issue_resource_site_response", [session, placement_id, origin])
 
 static func _resource_node_linked_town(
 	session: SessionStateStoreScript.SessionData,
@@ -8620,21 +5803,7 @@ static func _add_army_stack(stacks: Variant, unit_id: String, amount: int) -> Ar
 	return normalized
 
 static func _army_unit_count(stacks: Variant, unit_id: String) -> int:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _army_unit_count__gd(stacks, unit_id)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"OverworldRules._army_unit_count", [stacks, unit_id])
-	var result = _army_unit_count__gd(stacks, unit_id)
-	HumanEngine.check(&"OverworldRules._army_unit_count", [stacks, unit_id], result)
-	return result
-
-static func _army_unit_count__gd(stacks: Variant, unit_id: String) -> int:
-	var total := 0
-	if stacks is Array:
-		for stack_value in stacks:
-			if stack_value is Dictionary and String(stack_value.get("unit_id", "")) == unit_id:
-				total += max(0, int(stack_value.get("count", 0)))
-	return total
+	return HumanEngine.native(&"OverworldRules._army_unit_count", [stacks, unit_id])
 
 static func _movement_max_from_hero(hero: Dictionary, session: SessionStateStoreScript.SessionData = null) -> int:
 	return HeroCommandRulesScript.movement_max_for_hero(hero, session)
@@ -10108,192 +7277,7 @@ static func _town_response_panel_lines(session: SessionStateStoreScript.SessionD
 	return lines
 
 static func _town_response_actions(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _town_response_actions__gd(session, town)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules._town_response_actions", [session, town])
-	var before := HumanEngine.before_writing(&"OverworldRules._town_response_actions", [session, town])
-	var result = _town_response_actions__gd(session, town)
-	HumanEngine.check_writing(&"OverworldRules._town_response_actions", before, [session, town], result)
-	return result
-
-static func _town_response_actions__gd(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
-	var actions := []
-	if session == null or town.is_empty() or String(town.get("owner", "neutral")) != "player":
-		return actions
-	var recovery := _town_recovery_state(session, town)
-	var logistics := _town_logistics_state(session, town)
-	var capital_project := _town_capital_project_state(town, session)
-	var stabilize_profile := _town_recovery_stabilize_profile(town)
-	var movement_left := int(session.overworld.get("movement", {}).get("current", 0))
-	if bool(recovery.get("active", false)):
-		var stabilize_cost = stabilize_profile.get("resource_cost", {})
-		var stabilize_readiness := town_cost_readiness(town, session.overworld.get("resources", {}), stabilize_cost, int(session.day))
-		var stabilize_market_summary := ""
-		if bool(stabilize_readiness.get("market_affordable", false)) and not bool(stabilize_readiness.get("direct_affordable", false)):
-			stabilize_market_summary = _summarize_market_actions(stabilize_readiness.get("market_actions", []))
-		actions.append(
-			{
-				"id": "stabilize_recovery",
-				"label": String(stabilize_profile.get("label", "Stabilize Recovery")),
-				"summary": "%s | %s | Cost %s | Move -%d" % [
-					String(stabilize_profile.get("summary", "Push reserve labor back onto the damaged line.")),
-					"Recovery -%d" % int(stabilize_profile.get("relief_amount", 1)),
-					_describe_resource_delta(stabilize_cost),
-					int(stabilize_profile.get("movement_cost", 0)),
-				],
-				"disabled": (not _can_afford(session, stabilize_cost)) or movement_left < int(stabilize_profile.get("movement_cost", 0)),
-				"resource_cost": stabilize_cost,
-				"movement_cost": int(stabilize_profile.get("movement_cost", 0)),
-				"remaining_movement_after_order": max(0, movement_left - int(stabilize_profile.get("movement_cost", 0))),
-				"market_coverable": bool(stabilize_readiness.get("market_affordable", false)) and not bool(stabilize_readiness.get("direct_affordable", false)),
-				"market_summary": stabilize_market_summary,
-				"resource_blocked": not bool(stabilize_readiness.get("direct_affordable", false)),
-				"movement_blocked": movement_left < int(stabilize_profile.get("movement_cost", 0)),
-			}
-		)
-
-	for node in session.overworld.get("resource_nodes", []):
-		if not (node is Dictionary):
-			continue
-		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
-		if not _resource_site_is_persistent(site) or String(node.get("collected_by_faction_id", "")) != "player":
-			continue
-		var linked_town_result := _resource_node_linked_town(session, node, "player")
-		if String(linked_town_result.get("town", {}).get("placement_id", "")) != String(town.get("placement_id", "")):
-			continue
-		var response_state := _resource_site_response_state(session, node, site)
-		if int(response_state.get("watch_days", 0)) <= 0 or bool(response_state.get("active", false)):
-			continue
-		var threatened := _resource_site_under_threat(session, node, "player")
-		if not threatened and not bool(recovery.get("active", false)) and int(logistics.get("support_gap", 0)) <= 0 and not bool(capital_project.get("vulnerable", false)):
-			continue
-		var cost = response_state.get("resource_cost", {})
-		var readiness := town_cost_readiness(town, session.overworld.get("resources", {}), cost, int(session.day))
-		var market_summary := ""
-		if bool(readiness.get("market_affordable", false)) and not bool(readiness.get("direct_affordable", false)):
-			market_summary = _summarize_market_actions(readiness.get("market_actions", []))
-		var delivery_plan := _player_reserve_delivery_plan(session, town, response_state)
-		var delivery_summary := ""
-		if not delivery_plan.is_empty():
-			delivery_summary = "Load %s for %s (%d day%s)" % [
-				_describe_recruit_delta(delivery_plan.get("manifest", {})),
-				String(delivery_plan.get("target_label", "the front")),
-				int(delivery_plan.get("eta_days", 1)),
-				"" if int(delivery_plan.get("eta_days", 1)) == 1 else "s",
-			]
-		var site_summary_parts := [
-			String(response_state.get("summary", "")),
-			"Site %s" % String(site.get("name", "Frontier site")),
-		]
-		if delivery_summary != "":
-			site_summary_parts.append(delivery_summary)
-		var impact_summary := _resource_site_response_effect_summary(response_state)
-		if impact_summary != "":
-			site_summary_parts.append(impact_summary)
-		var cost_summary := _describe_resource_delta(cost)
-		if cost_summary != "":
-			site_summary_parts.append("Cost %s" % cost_summary)
-		site_summary_parts.append("Move -%d" % int(response_state.get("movement_cost", 0)))
-		site_summary_parts.append("%d day%s" % [
-			int(response_state.get("watch_days", 0)),
-			"" if int(response_state.get("watch_days", 0)) == 1 else "s",
-		])
-		actions.append(
-			{
-				"id": "site_response:%s" % String(node.get("placement_id", "")),
-				"label": "%s: %s" % [String(response_state.get("action_label", "Secure Route")), String(site.get("name", "Frontier site"))],
-				"summary": " | ".join(site_summary_parts),
-				"disabled": (not _can_afford(session, cost)) or movement_left < int(response_state.get("movement_cost", 0)),
-				"resource_cost": cost,
-				"movement_cost": int(response_state.get("movement_cost", 0)),
-				"remaining_movement_after_order": max(0, movement_left - int(response_state.get("movement_cost", 0))),
-				"market_coverable": bool(readiness.get("market_affordable", false)) and not bool(readiness.get("direct_affordable", false)),
-				"market_summary": market_summary,
-				"delivery_summary": delivery_summary,
-				"resource_blocked": not bool(readiness.get("direct_affordable", false)),
-				"movement_blocked": movement_left < int(response_state.get("movement_cost", 0)),
-			}
-		)
-	return actions
-
-static func _execute_town_response_action(
-	session: SessionStateStoreScript.SessionData,
-	town: Dictionary,
-	action_id: String
-) -> Dictionary:
-	if session == null or town.is_empty():
-		return {"ok": false, "message": "No town is available for strategic response orders."}
-	if action_id == "stabilize_recovery":
-		return _stabilize_town_recovery(session, town)
-	if action_id.begins_with("site_response:"):
-		var placement_id := action_id.trim_prefix("site_response:")
-		var node_result := _find_resource_node_by_placement(session, placement_id)
-		if int(node_result.get("index", -1)) < 0:
-			return {"ok": false, "message": "That route order no longer has a valid site."}
-		var linked_town_result := _resource_node_linked_town(session, node_result.get("node", {}), "player")
-		if String(linked_town_result.get("town", {}).get("placement_id", "")) != String(town.get("placement_id", "")):
-			return {"ok": false, "message": "That site is no longer linked to %s." % _town_name(town)}
-		return _issue_resource_site_response(session, placement_id, "town")
-	return {"ok": false, "message": "That response order is not recognized."}
-
-static func _town_recovery_stabilize_profile(town: Dictionary) -> Dictionary:
-	match _town_strategic_role(town):
-		"capital":
-			return {
-				"label": "Stabilize Recovery",
-				"summary": "Pull charter labor, reserve wagons, and watch captains back onto the damaged line.",
-				"movement_cost": 4,
-				"resource_cost": {"gold": 220, "wood": 1, "ore": 1},
-				"relief_amount": 2,
-			}
-		"stronghold":
-			return {
-				"label": "Stabilize Recovery",
-				"summary": "Cycle garrison crews and line labor to steady the battered approaches.",
-				"movement_cost": 3,
-				"resource_cost": {"gold": 170, "wood": 1},
-				"relief_amount": 1,
-			}
-		_:
-			return {
-				"label": "Stabilize Recovery",
-				"summary": "Push local labor and reserve stores back into the town's damaged routes.",
-				"movement_cost": 2,
-				"resource_cost": {"gold": 140},
-				"relief_amount": 1,
-			}
-
-static func _stabilize_town_recovery(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
-	var recovery := _town_recovery_state(session, town)
-	if not bool(recovery.get("active", false)):
-		return {"ok": false, "message": "%s has no active recovery pressure." % _town_name(town)}
-	var profile := _town_recovery_stabilize_profile(town)
-	var cost = profile.get("resource_cost", {})
-	if not _can_afford(session, cost):
-		return {"ok": false, "message": "Insufficient resources to stabilize %s." % _town_name(town)}
-	var movement_result := HeroCommandRulesScript.spend_active_hero_movement(
-		session,
-		int(profile.get("movement_cost", 0)),
-		"recovery stabilization"
-	)
-	if not bool(movement_result.get("ok", false)):
-		return movement_result
-	if cost is Dictionary and not cost.is_empty():
-		_spend_resources(session, cost)
-	var relief_message := relieve_town_recovery_pressure(
-		session,
-		String(town.get("placement_id", "")),
-		int(profile.get("relief_amount", 1)),
-		_town_name(town)
-	)
-	var messages := ["Ordered recovery stabilization in %s." % _town_name(town)]
-	var cost_summary := _describe_resource_delta(cost)
-	if cost_summary != "":
-		messages.append("Spent %s." % cost_summary)
-	if relief_message != "":
-		messages.append(relief_message)
-	return _finalize_action_result(session, true, " ".join(messages))
+	return HumanEngine.native_writing(&"OverworldRules._town_response_actions", [session, town])
 
 static func _town_market_panel_lines(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
 	var state := _town_market_state(town)
@@ -10352,159 +7336,7 @@ static func _town_market_panel_lines(session: SessionStateStoreScript.SessionDat
 	return lines
 
 static func _town_market_actions(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _town_market_actions__gd(session, town)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules._town_market_actions", [session, town])
-	var before := HumanEngine.before_writing(&"OverworldRules._town_market_actions", [session, town])
-	var result = _town_market_actions__gd(session, town)
-	HumanEngine.check_writing(&"OverworldRules._town_market_actions", before, [session, town], result)
-	return result
-
-static func _town_market_actions__gd(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
-	var actions := []
-	if session == null or town.is_empty() or String(town.get("owner", "neutral")) != "player":
-		return actions
-	var state := _town_market_state(town)
-	if not bool(state.get("active", false)):
-		return actions
-	var resource_order := _market_buy_resources(state)
-	var bulk_resources := _market_bulk_resources(state)
-	for index in range(bulk_resources.size() - 1, -1, -1):
-		var bulk_resource := String(bulk_resources[index])
-		if bulk_resource in resource_order:
-			resource_order.erase(bulk_resource)
-			resource_order.push_front(bulk_resource)
-	for resource_key in resource_order:
-		for action_type in ["buy", "sell"]:
-			var quote := _market_quote_from_state(state, action_type, resource_key, 1)
-			if quote.is_empty():
-				continue
-			actions.append(_market_action_entry(session, town, state, quote))
-	if int(state.get("bulk_amount", 0)) > 1:
-		for bulk_resource_value in bulk_resources:
-			var bulk_resource := String(bulk_resource_value)
-			for action_type in ["buy", "sell"]:
-				var bulk_quote := _market_quote_from_state(state, action_type, bulk_resource, int(state.get("bulk_amount", 0)))
-				if bulk_quote.is_empty():
-					continue
-				actions.append(_market_action_entry(session, town, state, bulk_quote))
-	return actions
-
-static func _market_action_entry(
-	session: SessionStateStoreScript.SessionData,
-	town: Dictionary,
-	state: Dictionary,
-	quote: Dictionary
-) -> Dictionary:
-	var action_type := String(quote.get("action_type", ""))
-	var resource_key := String(quote.get("resource", ""))
-	var amount := int(quote.get("amount", 0))
-	var cap_state := _market_cap_state_for_quote(
-		town,
-		state,
-		quote,
-		int(session.day) if session != null else -1
-	)
-	var disabled := int(cap_state.get("remaining", 0)) < amount
-	var disabled_reason := "Weekly market cap reached for %s %s." % [resource_key, action_type] if disabled else ""
-	var summary := "%s | %s | %s" % [
-		String(quote.get("summary", "")),
-		String(quote.get("rate_summary", "")),
-		String(quote.get("building_summary", "")),
-	]
-	summary = "%s | Weekly cap %d/%d" % [
-		summary,
-		int(cap_state.get("used", 0)),
-		int(cap_state.get("limit", 0)),
-	]
-	if not _can_afford(session, quote.get("cost", {})):
-		disabled = true
-		disabled_reason = "Insufficient reserves for this exchange."
-	return {
-		"id": "market:%s:%s:%d" % [action_type, resource_key, amount],
-		"label": "%s %d %s" % [
-			"Buy" if action_type == "buy" else "Sell",
-			amount,
-			resource_key.replace("_", " ").capitalize(),
-		],
-		"summary": summary,
-		"disabled": disabled,
-		"disabled_reason": disabled_reason,
-		"cap_week": int(cap_state.get("week", 1)),
-		"cap_used": int(cap_state.get("used", 0)),
-		"cap_limit": int(cap_state.get("limit", 0)),
-		"cap_remaining": int(cap_state.get("remaining", 0)),
-		"refresh_cadence": String(cap_state.get("refresh_cadence", "weekly")),
-	}
-
-static func _execute_town_market_action(
-	session: SessionStateStoreScript.SessionData,
-	town: Dictionary,
-	action_id: String
-) -> Dictionary:
-	if session == null or town.is_empty():
-		return {"ok": false, "message": "No town is available for exchange orders."}
-	var parts := action_id.split(":")
-	if parts.size() != 4 or parts[0] != "market":
-		return {"ok": false, "message": "That exchange order is invalid."}
-	var action_type := String(parts[1])
-	var resource_key := String(parts[2])
-	var amount = max(0, int(parts[3]))
-	var town_result := _find_town_by_placement(session, String(town.get("placement_id", "")))
-	var live_town: Dictionary = town_result.get("town", town) if town_result.get("town", town) is Dictionary else town
-	var state := _town_market_state(live_town)
-	var quote := _market_quote_from_state(state, action_type, resource_key, amount)
-	if quote.is_empty():
-		return {"ok": false, "message": "That exchange order is not available in %s." % _town_name(live_town)}
-	var cap_state := _market_cap_state_for_quote(live_town, state, quote, int(session.day))
-	if int(cap_state.get("remaining", 0)) < amount:
-		return {
-			"ok": false,
-			"message": "Weekly market cap reached for %s %s in %s." % [
-				resource_key,
-				action_type,
-				_town_name(live_town),
-			],
-		}
-	var cost = quote.get("cost", {})
-	if not _can_afford(session, cost):
-		var verb := "buy" if action_type == "buy" else "sell"
-		return {"ok": false, "message": "Insufficient reserves to %s through %s." % [verb, _town_name(live_town)]}
-	_spend_resources(session, cost)
-	_add_resources(session, quote.get("gain", {}))
-	var usage := _normalize_town_market_usage_state(live_town.get("market_usage", {}), int(session.day))
-	var bucket: Dictionary = usage.get(action_type, {}) if usage.get(action_type, {}) is Dictionary else _empty_market_usage_bucket()
-	bucket[resource_key] = int(bucket.get(resource_key, 0)) + amount
-	usage[action_type] = bucket
-	live_town["market_usage"] = usage
-	if int(town_result.get("index", -1)) >= 0:
-		var towns = session.overworld.get("towns", [])
-		if towns is Array:
-			towns[int(town_result.get("index", -1))] = live_town
-			session.overworld["towns"] = towns
-	var amount_label := "%d %s" % [amount, resource_key]
-	if action_type == "buy":
-		return _finalize_action_result(
-			session,
-			true,
-			"Bought %s in %s for %d gold through %s." % [
-				amount_label,
-				_town_name(live_town),
-				int(quote.get("gold_value", 0)),
-				String(quote.get("building_name", "the exchange")),
-			]
-		)
-	return _finalize_action_result(
-		session,
-		true,
-		"Sold %s in %s for %d gold through %s." % [
-			amount_label,
-			_town_name(live_town),
-			int(quote.get("gold_value", 0)),
-			String(quote.get("building_name", "the exchange")),
-		]
-	)
+	return HumanEngine.native_writing(&"OverworldRules._town_market_actions", [session, town])
 
 static func _town_market_state(town: Dictionary) -> Dictionary:
 	var inactive := {
@@ -10603,17 +7435,7 @@ static func _town_market_state(town: Dictionary) -> Dictionary:
 	}
 
 static func _market_buy_resources(state: Dictionary) -> Array:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _market_buy_resources__gd(state)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules._market_buy_resources", [state])
-	var before := HumanEngine.before_writing(&"OverworldRules._market_buy_resources", [state])
-	var result = _market_buy_resources__gd(state)
-	HumanEngine.check_writing(&"OverworldRules._market_buy_resources", before, [state], result)
-	return result
-
-static func _market_buy_resources__gd(state: Dictionary) -> Array:
-	return MARKET_RESOURCE_KEYS.duplicate() if bool(state.get("active", false)) else []
+	return HumanEngine.native_writing(&"OverworldRules._market_buy_resources", [state])
 
 ## A market profile's rate adjustment for one resource; rare resources follow
 ## the profile's wood and ore adjustment.
@@ -10833,148 +7655,10 @@ static func _market_quote_from_state(state: Dictionary, action_type: String, res
 	}
 
 static func _town_market_cost_coverage(town: Dictionary, pool: Dictionary, cost: Variant, current_day: int = -1) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _town_market_cost_coverage__gd(town, pool, cost, current_day)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules._town_market_cost_coverage", [town, pool, cost, current_day])
-	var before := HumanEngine.before_writing(&"OverworldRules._town_market_cost_coverage", [town, pool, cost, current_day])
-	var result = _town_market_cost_coverage__gd(town, pool, cost, current_day)
-	HumanEngine.check_writing(&"OverworldRules._town_market_cost_coverage", before, [town, pool, cost, current_day], result)
-	return result
-
-static func _town_market_cost_coverage__gd(town: Dictionary, pool: Dictionary, cost: Variant, current_day: int = -1) -> Dictionary:
-	var state := _town_market_state(town)
-	var normalized_pool := _add_resource_sets(_empty_live_resource_stockpile(), _normalize_resource_dict(pool))
-	var normalized_cost := _add_resource_sets(_empty_live_resource_stockpile(), _normalize_resource_dict(cost))
-	var direct_affordable := _resource_pool_meets_cost(normalized_pool, normalized_cost)
-	var market_active := bool(state.get("active", false))
-	var direct_shortfall := _resource_pool_shortfall(normalized_pool, normalized_cost)
-	if not bool(state.get("active", false)):
-		return {
-			"affordable": direct_affordable,
-			"direct_affordable": direct_affordable,
-			"market_affordable": direct_affordable,
-			"market_active": market_active,
-			"pool": normalized_pool,
-			"cost": normalized_cost,
-			"direct_shortfall": direct_shortfall,
-			"liquidatable_gold": 0,
-			"available_gold_total": int(normalized_pool.get("gold", 0)),
-			"required_gold_total": int(normalized_cost.get("gold", 0)),
-		}
-	var required_gold_total := int(normalized_cost.get("gold", 0))
-	var liquidatable_gold := 0
-	var market_cap_blockers := []
-	var restricted_resource_blockers := []
-	var buy_resources := _market_buy_resources(state)
-	for resource_key in buy_resources:
-		var required_amount := int(normalized_cost.get(resource_key, 0))
-		var current_amount := int(normalized_pool.get(resource_key, 0))
-		var deficit = max(0, required_amount - current_amount)
-		var surplus = max(0, current_amount - required_amount)
-		if deficit > 0:
-			var buy_quote := _market_quote_from_state(state, "buy", resource_key, deficit)
-			var buy_remaining := int(_market_cap_state_for_quote(town, state, buy_quote, current_day).get("remaining", deficit))
-			if (current_day > 0 or resource_key in state.get("rare_resources", [])) and buy_remaining < deficit:
-				market_cap_blockers.append("buy %s %d/%d" % [resource_key, buy_remaining, deficit])
-			else:
-				required_gold_total += deficit * int(state.get("buy_rates", {}).get(resource_key, 0))
-		if surplus > 0 and resource_key in NORMAL_MARKET_RESOURCE_KEYS:
-			var sell_quote := _market_quote_from_state(state, "sell", resource_key, surplus)
-			var sell_remaining := int(_market_cap_state_for_quote(town, state, sell_quote, current_day).get("remaining", surplus))
-			var sellable_surplus: int = surplus if current_day <= 0 else min(surplus, sell_remaining)
-			liquidatable_gold += sellable_surplus * int(state.get("sell_rates", {}).get(resource_key, 0))
-	for resource_key in LIVE_STOCKPILE_RESOURCE_KEYS:
-		if resource_key == "gold" or resource_key in buy_resources:
-			continue
-		var restricted_deficit = max(0, int(normalized_cost.get(resource_key, 0)) - int(normalized_pool.get(resource_key, 0)))
-		if restricted_deficit > 0:
-			restricted_resource_blockers.append("%s %d" % [resource_key, restricted_deficit])
-	var available_gold_total := int(normalized_pool.get("gold", 0)) + liquidatable_gold
-	var market_affordable := (
-		available_gold_total >= required_gold_total
-		and market_cap_blockers.is_empty()
-		and restricted_resource_blockers.is_empty()
-	)
-	return {
-		"affordable": market_affordable,
-		"direct_affordable": direct_affordable,
-		"market_affordable": market_affordable,
-		"market_active": market_active,
-		"pool": normalized_pool,
-		"cost": normalized_cost,
-		"direct_shortfall": direct_shortfall,
-		"liquidatable_gold": liquidatable_gold,
-		"available_gold_total": available_gold_total,
-		"required_gold_total": required_gold_total,
-		"market_cap_blockers": market_cap_blockers,
-		"restricted_resource_blockers": restricted_resource_blockers,
-	}
+	return HumanEngine.native_writing(&"OverworldRules._town_market_cost_coverage", [town, pool, cost, current_day])
 
 static func _apply_market_cost_coverage(town: Dictionary, pool: Dictionary, cost: Variant, current_day: int = -1) -> Array:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _apply_market_cost_coverage__gd(town, pool, cost, current_day)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules._apply_market_cost_coverage", [town, pool, cost, current_day])
-	var before := HumanEngine.before_writing(&"OverworldRules._apply_market_cost_coverage", [town, pool, cost, current_day])
-	var result = _apply_market_cost_coverage__gd(town, pool, cost, current_day)
-	HumanEngine.check_writing(&"OverworldRules._apply_market_cost_coverage", before, [town, pool, cost, current_day], result)
-	return result
-
-static func _apply_market_cost_coverage__gd(town: Dictionary, pool: Dictionary, cost: Variant, current_day: int = -1) -> Array:
-	var coverage := _town_market_cost_coverage(town, pool, cost, current_day)
-	if not bool(coverage.get("affordable", false)):
-		return []
-	var state := _town_market_state(town)
-	if not bool(state.get("active", false)):
-		return []
-	var normalized_cost: Dictionary = coverage.get("cost", {})
-	var required_gold_total := int(coverage.get("required_gold_total", 0))
-	var actions := []
-	var local_usage := _normalize_town_market_usage_state(town.get("market_usage", {}), current_day)
-	var sell_order := NORMAL_MARKET_RESOURCE_KEYS.duplicate()
-	sell_order.sort_custom(func(a: String, b: String) -> bool:
-		return int(state.get("sell_rates", {}).get(a, 0)) > int(state.get("sell_rates", {}).get(b, 0))
-	)
-	for resource_key in sell_order:
-		var surplus = max(0, int(pool.get(resource_key, 0)) - int(normalized_cost.get(resource_key, 0)))
-		while int(pool.get("gold", 0)) < required_gold_total and surplus > 0:
-			var sell_quote := _market_quote_from_state(state, "sell", resource_key, 1)
-			if sell_quote.is_empty():
-				break
-			if current_day > 0:
-				var sell_cap := _market_cap_state_for_quote({"market_usage": local_usage}, state, sell_quote, current_day)
-				if int(sell_cap.get("remaining", 0)) <= 0:
-					break
-			_apply_resource_transaction_to_pool(pool, sell_quote.get("cost", {}), sell_quote.get("gain", {}))
-			if current_day > 0:
-				var sell_bucket: Dictionary = local_usage.get("sell", {})
-				sell_bucket[resource_key] = int(sell_bucket.get(resource_key, 0)) + 1
-				local_usage["sell"] = sell_bucket
-			surplus -= 1
-			actions.append("%s sold 1 %s for %d gold" % [_town_name(town), resource_key, int(sell_quote.get("gold_value", 0))])
-		if int(pool.get("gold", 0)) >= required_gold_total:
-			break
-	for resource_key in _market_buy_resources(state):
-		var deficit = max(0, int(normalized_cost.get(resource_key, 0)) - int(pool.get(resource_key, 0)))
-		while deficit > 0:
-			var buy_quote := _market_quote_from_state(state, "buy", resource_key, 1)
-			if buy_quote.is_empty() or int(pool.get("gold", 0)) < int(buy_quote.get("gold_value", 0)):
-				return actions
-			if current_day > 0 or resource_key in state.get("rare_resources", []):
-				var buy_cap := _market_cap_state_for_quote({"market_usage": local_usage}, state, buy_quote, current_day)
-				if int(buy_cap.get("remaining", 0)) <= 0:
-					return actions
-			_apply_resource_transaction_to_pool(pool, buy_quote.get("cost", {}), buy_quote.get("gain", {}))
-			if current_day > 0 or resource_key in state.get("rare_resources", []):
-				var buy_bucket: Dictionary = local_usage.get("buy", {})
-				buy_bucket[resource_key] = int(buy_bucket.get(resource_key, 0)) + 1
-				local_usage["buy"] = buy_bucket
-			deficit -= 1
-			actions.append("%s bought 1 %s for %d gold" % [_town_name(town), resource_key, int(buy_quote.get("gold_value", 0))])
-	if not actions.is_empty() and (current_day > 0 or not state.get("rare_resources", []).is_empty()):
-		town["market_usage"] = local_usage
-	return actions
+	return HumanEngine.native_writing(&"OverworldRules._apply_market_cost_coverage", [town, pool, cost, current_day])
 
 static func _town_battlefront_profile(town: Dictionary) -> Dictionary:
 	var role := _town_strategic_role(town)
@@ -11089,27 +7773,7 @@ static func _town_role_pressure_bonus(role: String) -> int:
 			return 0
 
 static func _building_growth_payload(building_id: String) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _building_growth_payload__gd(building_id)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"OverworldRules._building_growth_payload", [building_id])
-	var result = _building_growth_payload__gd(building_id)
-	HumanEngine.check(&"OverworldRules._building_growth_payload", [building_id], result)
-	return result
-
-static func _building_growth_payload__gd(building_id: String) -> Dictionary:
-	var building := ContentService.get_building(building_id)
-	if int(building.get("development_version", 0)) == 1:
-		return TownDevelopment.construction_growth(building)
-	var payload := {}
-	var unlock_unit_id := String(building.get("unlock_unit_id", ""))
-	if unlock_unit_id != "":
-		payload[unlock_unit_id] = _scenario_unit_growth(unlock_unit_id)
-	var growth_bonus = building.get("growth_bonus", {})
-	if growth_bonus is Dictionary:
-		for unit_id in growth_bonus.keys():
-			payload[String(unit_id)] = int(payload.get(String(unit_id), 0)) + int(growth_bonus[unit_id])
-	return payload
+	return HumanEngine.native(&"OverworldRules._building_growth_payload", [building_id])
 
 static func _add_recruit_growth(base_recruits: Variant, delta_recruits: Variant) -> Dictionary:
 	var merged := {}
@@ -11279,38 +7943,7 @@ static func _can_afford(session: SessionStateStoreScript.SessionData, cost: Vari
 	return HumanEngine.native_writing(&"OverworldRules._can_afford", [session, cost])
 
 static func _max_affordable_count(session: SessionStateStoreScript.SessionData, unit_cost: Variant) -> int:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _max_affordable_count__gd(session, unit_cost)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules._max_affordable_count", [session, unit_cost])
-	var before := HumanEngine.before_writing(&"OverworldRules._max_affordable_count", [session, unit_cost])
-	var result = _max_affordable_count__gd(session, unit_cost)
-	HumanEngine.check_writing(&"OverworldRules._max_affordable_count", before, [session, unit_cost], result)
-	return result
-
-static func _max_affordable_count__gd(session: SessionStateStoreScript.SessionData, unit_cost: Variant) -> int:
-	if not (unit_cost is Dictionary) or unit_cost.is_empty():
-		return 999
-	var resources = session.overworld.get("resources", {})
-	var max_affordable := 999
-	for key in unit_cost.keys():
-			var price = max(1, int(unit_cost[key]))
-			max_affordable = min(max_affordable, int(int(resources.get(String(key), 0)) / price))
-	return max_affordable
-
-static func _resource_pool_meets_cost(pool: Dictionary, cost: Dictionary) -> bool:
-	for resource_key in _resource_keys_for_payload(cost):
-		if int(pool.get(resource_key, 0)) < int(cost.get(resource_key, 0)):
-			return false
-	return true
-
-static func _resource_pool_shortfall(pool: Dictionary, cost: Dictionary) -> Dictionary:
-	var shortfall := {}
-	for resource_key in _resource_keys_for_payload(cost):
-		var missing = max(0, int(cost.get(resource_key, 0)) - int(pool.get(resource_key, 0)))
-		if missing > 0:
-			shortfall[resource_key] = missing
-	return shortfall
+	return HumanEngine.native_writing(&"OverworldRules._max_affordable_count", [session, unit_cost])
 
 static func _multiply_cost(cost: Variant, multiplier: int) -> Dictionary:
 	var scaled := {}
@@ -11318,38 +7951,6 @@ static func _multiply_cost(cost: Variant, multiplier: int) -> Dictionary:
 		for key in cost.keys():
 			scaled[String(key)] = int(cost[key]) * multiplier
 	return scaled
-
-static func _apply_percent_discount(cost: Variant, discount_percent: int) -> Dictionary:
-	var discounted := {}
-	var clamped_discount = clamp(discount_percent, 0, 75)
-	if cost is Dictionary:
-		for key in cost.keys():
-			var resource_key := String(key)
-			var base_amount = max(0, int(cost[key]))
-			discounted[resource_key] = int(ceili(float(base_amount * (100 - clamped_discount)) / 100.0))
-	return discounted
-
-static func _recruitment_discount_percent(town: Dictionary, unit_id: String) -> int:
-	var town_template := ContentService.get_town(String(town.get("town_id", "")))
-	var total_discount := _cost_discount_from_profile(town_template.get("recruitment", {}), unit_id)
-	total_discount += _cost_discount_from_profile(
-		ContentService.get_faction(String(town_template.get("faction_id", ""))).get("recruitment", {}),
-		unit_id
-	)
-	for building_id_value in _normalize_built_buildings_for_town_state(town):
-		var building := ContentService.get_building(String(building_id_value))
-		var building_discount = building.get("recruitment_discount_percent", {})
-		if building_discount is Dictionary:
-			total_discount += int(building_discount.get(unit_id, 0))
-	return total_discount
-
-static func _cost_discount_from_profile(profile: Variant, unit_id: String) -> int:
-	if not (profile is Dictionary):
-		return 0
-	var discounts = profile.get("cost_discount_percent", {})
-	if not (discounts is Dictionary):
-		return 0
-	return int(discounts.get(unit_id, 0))
 
 static func _spend_resources(session: SessionStateStoreScript.SessionData, cost: Variant) -> void:
 	var resources := _normalize_live_resource_stockpile(session.overworld.get("resources", {}))
@@ -11383,26 +7984,7 @@ static func _add_resources(session: SessionStateStoreScript.SessionData, delta: 
 	session.overworld["resources"] = resources
 
 static func _apply_resource_transaction_to_pool(pool: Dictionary, cost: Variant, gain: Variant) -> void:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		_apply_resource_transaction_to_pool__gd(pool, cost, gain)
-	elif _human_engine_mode == HumanEngine.NATIVE:
-		HumanEngine.native_writing(&"OverworldRules._apply_resource_transaction_to_pool", [pool, cost, gain])
-	else:
-		var before := HumanEngine.before_writing(&"OverworldRules._apply_resource_transaction_to_pool", [pool, cost, gain])
-		_apply_resource_transaction_to_pool__gd(pool, cost, gain)
-		HumanEngine.check_writing(&"OverworldRules._apply_resource_transaction_to_pool", before, [pool, cost, gain], null)
-
-static func _apply_resource_transaction_to_pool__gd(pool: Dictionary, cost: Variant, gain: Variant) -> void:
-	if cost is Dictionary:
-		for key in cost.keys():
-			var resource_key := String(key)
-			pool[resource_key] = max(0, int(pool.get(resource_key, 0)) - int(cost[key]))
-	if gain is Dictionary:
-		for key in gain.keys():
-			var resource_key := String(key)
-			if resource_key == "experience":
-				continue
-			pool[resource_key] = max(0, int(pool.get(resource_key, 0)) + int(gain[key]))
+	HumanEngine.native_writing(&"OverworldRules._apply_resource_transaction_to_pool", [pool, cost, gain])
 
 static func _add_resource_sets(base: Variant, delta: Variant) -> Dictionary:
 	var merged := {}
@@ -11435,29 +8017,7 @@ static func resource_definition(resource_id: String) -> Dictionary:
 	return resource.duplicate(true) if String(resource.get("id", "")) == normalized_id and bool(resource.get("stockpile", false)) else {}
 
 static func resource_icon_path(resource_id: String) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return resource_icon_path__gd(resource_id)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"OverworldRules.resource_icon_path", [resource_id])
-	var result = resource_icon_path__gd(resource_id)
-	HumanEngine.check(&"OverworldRules.resource_icon_path", [resource_id], result)
-	return result
-
-static func resource_icon_path__gd(resource_id: String) -> String:
-	var resource := resource_definition(resource_id)
-	if String(resource.get("icon_id", "")) != "resource_icon_%s" % resource_id:
-		return ""
-	var icon_path := String(resource.get("icon_path", ""))
-	if not icon_path.begins_with("res://art/economy/runtime/resources/") or not ResourceLoader.exists(icon_path, "Texture2D"):
-		return ""
-	return icon_path
-
-static func resource_site_primary_stockpile_resource_id(site: Dictionary) -> String:
-	var rewards := _resource_site_claim_rewards(site)
-	for resource_id in LIVE_STOCKPILE_RESOURCE_KEYS:
-		if resource_id != "gold" and int(rewards.get(resource_id, 0)) > 0:
-			return resource_id
-	return "gold" if int(rewards.get("gold", 0)) > 0 else ""
+	return HumanEngine.native(&"OverworldRules.resource_icon_path", [resource_id])
 
 static func _empty_live_resource_stockpile() -> Dictionary:
 	var resources := {}
@@ -11476,38 +8036,7 @@ static func _normalize_live_resource_stockpile(value: Variant) -> Dictionary:
 	return normalized
 
 static func _resource_display_name(resource_key: String) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _resource_display_name__gd(resource_key)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"OverworldRules._resource_display_name", [resource_key])
-	var result = _resource_display_name__gd(resource_key)
-	HumanEngine.check(&"OverworldRules._resource_display_name", [resource_key], result)
-	return result
-
-static func _resource_display_name__gd(resource_key: String) -> String:
-	var production_name := String(resource_definition(resource_key).get("display_name", ""))
-	if production_name != "":
-		return production_name
-	match resource_key:
-		"gold":
-			return "Gold"
-		"wood":
-			return "Wood"
-		"ore":
-			return "Ore"
-		"aetherglass":
-			return "Aetherglass"
-		"embergrain":
-			return "Embergrain"
-		"peatwax":
-			return "Peatwax"
-		"verdant_grafts":
-			return "Verdant grafts"
-		"brass_scrip":
-			return "Brass scrip"
-		"memory_salt":
-			return "Memory salt"
-	return resource_key.replace("_", " ").capitalize()
+	return HumanEngine.native(&"OverworldRules._resource_display_name", [resource_key])
 
 static func _resource_keys_for_payload(value: Variant) -> Array:
 	var keys := []
@@ -11562,32 +8091,6 @@ static func _describe_resource_delta(delta: Variant) -> String:
 			parts.append("%d %s" % [amount, key])
 	return ", ".join(parts)
 
-static func _describe_resource_change(before: Variant, after: Variant) -> String:
-	if not (after is Dictionary):
-		return ""
-	var parts := []
-	for key in _resource_keys_for_payload(after):
-		var previous := int(before.get(key, 0)) if before is Dictionary else 0
-		var current := int(after.get(key, 0))
-		var delta := current - previous
-		if delta != 0:
-			parts.append("%+d %s" % [delta, key])
-	return ", ".join(parts)
-
-static func _describe_cost_shortfall(readiness: Dictionary) -> String:
-	var shortfall_summary := _describe_resource_delta(readiness.get("direct_shortfall", {}))
-	var gold_short = max(
-		0,
-		int(readiness.get("required_gold_total", 0)) - int(readiness.get("available_gold_total", 0))
-	)
-	if shortfall_summary != "":
-		if bool(readiness.get("market_active", false)) and gold_short > 0:
-			return "%s; even full exchange leaves %d gold short" % [shortfall_summary, gold_short]
-		return shortfall_summary
-	if gold_short > 0:
-		return "%d gold after exchange" % gold_short if bool(readiness.get("market_active", false)) else "%d gold" % gold_short
-	return ""
-
 static func _describe_reward_delta(delta: Variant) -> String:
 	if not (delta is Dictionary):
 		return ""
@@ -11607,20 +8110,6 @@ static func _describe_reward_delta(delta: Variant) -> String:
 			parts.append("%d %s" % [amount, resource_key])
 	return ", ".join(parts)
 
-static func _summarize_market_actions(actions: Variant, max_steps: int = 2) -> String:
-	if not (actions is Array) or actions.is_empty():
-		return ""
-	var shown := []
-	for index in range(min(max_steps, actions.size())):
-		shown.append(String(actions[index]))
-	var summary := "; ".join(shown)
-	if actions.size() > max_steps:
-		summary += "; %d more step%s" % [
-			actions.size() - max_steps,
-			"" if actions.size() - max_steps == 1 else "s",
-		]
-	return summary
-
 static func _describe_recruit_delta(delta: Variant) -> String:
 	if not (delta is Dictionary):
 		return ""
@@ -11638,50 +8127,10 @@ static func _describe_recruit_delta(delta: Variant) -> String:
 	return ", ".join(parts)
 
 static func _describe_recruit_projection(current: Variant, projected: Variant) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _describe_recruit_projection__gd(current, projected)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"OverworldRules._describe_recruit_projection", [current, projected])
-	var result = _describe_recruit_projection__gd(current, projected)
-	HumanEngine.check(&"OverworldRules._describe_recruit_projection", [current, projected], result)
-	return result
-
-static func _describe_recruit_projection__gd(current: Variant, projected: Variant) -> String:
-	if not (projected is Dictionary):
-		return ""
-	var unit_ids := []
-	if current is Dictionary:
-		for unit_id_value in current.keys():
-			var unit_id := String(unit_id_value)
-			if unit_id != "" and unit_id not in unit_ids:
-				unit_ids.append(unit_id)
-	for unit_id_value in projected.keys():
-		var unit_id := String(unit_id_value)
-		if unit_id != "" and unit_id not in unit_ids:
-			unit_ids.append(unit_id)
-	unit_ids.sort()
-	var parts := []
-	for unit_id in unit_ids:
-		var before := int(current.get(unit_id, 0)) if current is Dictionary else 0
-		var after := int(projected.get(unit_id, 0))
-		var delta := after - before
-		if delta == 0:
-			continue
-		var unit := ContentService.get_unit(unit_id)
-		parts.append("%s %s" % [_describe_signed_int(delta), String(unit.get("name", unit_id))])
-	return ", ".join(parts)
+	return HumanEngine.native(&"OverworldRules._describe_recruit_projection", [current, projected])
 
 static func _describe_signed_int(value: int) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _describe_signed_int__gd(value)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"OverworldRules._describe_signed_int", [value])
-	var result = _describe_signed_int__gd(value)
-	HumanEngine.check(&"OverworldRules._describe_signed_int", [value], result)
-	return result
-
-static func _describe_signed_int__gd(value: int) -> String:
-	return "%+d" % value
+	return HumanEngine.native(&"OverworldRules._describe_signed_int", [value])
 
 static func _find_town_by_placement(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
 	if session == null or placement_id == "":
@@ -11962,44 +8411,7 @@ static func _route_tile_payloads(tiles: Array) -> Array:
 	return payloads
 
 static func _normalize_fog_of_war(session: SessionStateStoreScript.SessionData) -> void:
-	if _day_engine_mode == DayEngine.GDSCRIPT:
-		_normalize_fog_of_war__gd(session)
-	elif _day_engine_mode == DayEngine.NATIVE:
-		DayEngine.native_writing(&"OverworldRules._normalize_fog_of_war", [session])
-		if DayEngine.not_ported():
-			_normalize_fog_of_war__gd(session)
-	else:
-		var before := DayEngine.before_writing(&"OverworldRules._normalize_fog_of_war", [session])
-		_normalize_fog_of_war__gd(session)
-		DayEngine.check_writing(&"OverworldRules._normalize_fog_of_war", before, [session], null)
-
-static func _normalize_fog_of_war__gd(session: SessionStateStoreScript.SessionData) -> void:
-	var map_size := derive_map_size(session)
-	if OverworldLevelRulesScript.level_count(session) > 1:
-		var levels := {}
-		for level in range(OverworldLevelRulesScript.level_count(session)):
-			var existing := fog_for_level(session, level)
-			var explored := _normalize_visibility_grid(existing.get(EXPLORED_TILES_KEY, []), map_size)
-			explored = _merge_visibility_grids(explored, _normalize_visibility_grid(existing.get(VISIBLE_TILES_KEY, []), map_size), map_size)
-			_reveal_all_current_fog_sources(session, explored, map_size, level)
-			levels[str(level)] = _build_fog_payload(_duplicate_visibility_grid(explored), explored, map_size)
-		var active: Dictionary = levels.get(str(hero_level(session)), {}).duplicate(false)
-		active["levels"] = levels
-		active["active_level"] = hero_level(session)
-		session.overworld[FOG_KEY] = active
-		return
-	var fog = session.overworld.get(FOG_KEY, {})
-	if not (fog is Dictionary):
-		fog = {}
-	var explored_tiles := []
-	if fog.has(EXPLORED_TILES_KEY):
-		explored_tiles = _normalize_visibility_grid(fog.get(EXPLORED_TILES_KEY, []), map_size)
-	else:
-		explored_tiles = _blank_visibility_grid(map_size)
-	if fog.has(VISIBLE_TILES_KEY):
-		explored_tiles = _merge_visibility_grids(explored_tiles, _normalize_visibility_grid(fog.get(VISIBLE_TILES_KEY, []), map_size), map_size)
-	_reveal_all_current_fog_sources(session, explored_tiles, map_size)
-	session.overworld[FOG_KEY] = _build_fog_payload(_duplicate_visibility_grid(explored_tiles), explored_tiles, map_size)
+	DayEngine.native_writing(&"OverworldRules._normalize_fog_of_war", [session])
 
 static func _reveal_current_fog_sources(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
@@ -12015,29 +8427,6 @@ static func _reveal_current_fog_sources(session: SessionStateStoreScript.Session
 	var explored_tiles := _normalize_visibility_grid(fog.get(EXPLORED_TILES_KEY, []), map_size)
 	_reveal_all_current_fog_sources(session, explored_tiles, map_size)
 	session.overworld[FOG_KEY] = _build_fog_payload(_duplicate_visibility_grid(explored_tiles), explored_tiles, map_size)
-
-static func _reveal_spell_fog(session: SessionStateStoreScript.SessionData, radius: int) -> int:
-	if session == null or radius <= 0:
-		return 0
-	if not _fog_state_ready(session):
-		_normalize_fog_of_war(session)
-	var map_size := derive_map_size(session)
-	var fog: Dictionary = session.overworld.get(FOG_KEY, {})
-	var before_count := int(fog.get("explored_count", 0))
-	var explored_tiles := _normalize_visibility_grid(fog.get(EXPLORED_TILES_KEY, []), map_size)
-	var hero: Dictionary = session.overworld.get("hero", {}) if session.overworld.get("hero", {}) is Dictionary else {}
-	var position = hero.get("position", {})
-	var position_dict: Dictionary = position if position is Dictionary else {}
-	_apply_site_reveal(
-		explored_tiles,
-		{"x": int(position_dict.get("x", 0)), "y": int(position_dict.get("y", 0))},
-		radius,
-		map_size
-	)
-	_reveal_all_current_fog_sources(session, explored_tiles, map_size)
-	var payload := _build_fog_payload(_duplicate_visibility_grid(explored_tiles), explored_tiles, map_size)
-	_store_level_fog(session, payload)
-	return max(0, int(payload.get("explored_count", before_count)) - before_count)
 
 static func _reveal_all_current_fog_sources(session: SessionStateStoreScript.SessionData, explored_tiles: Array, map_size: Vector2i, level: int = -1) -> void:
 	level = OverworldLevelRulesScript.query_level(session, level)
@@ -12201,89 +8590,7 @@ static func _explored_tile_count(session: SessionStateStoreScript.SessionData) -
 	return int(fog.get("explored_count", 0))
 
 static func _finalize_action_result(session: SessionStateStoreScript.SessionData, ok: bool, base_message: String, refresh_fog: bool = true, incremental_fog: bool = false, scenario_event_facts: Dictionary = {}) -> Dictionary:
-	if _day_engine_mode == DayEngine.GDSCRIPT:
-		return _finalize_action_result__gd(session, ok, base_message, refresh_fog, incremental_fog, scenario_event_facts)
-	if _day_engine_mode == DayEngine.NATIVE:
-		var native_result = DayEngine.native_writing(&"OverworldRules._finalize_action_result", [session, ok, base_message, refresh_fog, incremental_fog, scenario_event_facts])
-		return _finalize_action_result__gd(session, ok, base_message, refresh_fog, incremental_fog, scenario_event_facts) if DayEngine.not_ported() else native_result
-	var before := DayEngine.before_writing(&"OverworldRules._finalize_action_result", [session, ok, base_message, refresh_fog, incremental_fog, scenario_event_facts])
-	var result = _finalize_action_result__gd(session, ok, base_message, refresh_fog, incremental_fog, scenario_event_facts)
-	DayEngine.check_writing(&"OverworldRules._finalize_action_result", before, [session, ok, base_message, refresh_fog, incremental_fog, scenario_event_facts], result)
-	return result
-
-static func _finalize_action_result__gd(
-	session: SessionStateStoreScript.SessionData,
-	ok: bool,
-	base_message: String,
-	refresh_fog: bool = true,
-	incremental_fog: bool = false,
-	scenario_event_facts: Dictionary = {}
-) -> Dictionary:
-	var finalize_started_usec := _rules_profile_timer()
-	var commit_before_started_usec := _rules_profile_timer()
-	HeroCommandRulesScript.commit_active_hero(session)
-	_rules_profile_add_ms("finalize_commit_before_ms", commit_before_started_usec)
-	var fog_before_started_usec := _rules_profile_timer()
-	if refresh_fog:
-		refresh_fog_of_war(session)
-	elif incremental_fog:
-		_reveal_current_fog_sources(session)
-	_rules_profile_add_ms("finalize_fog_before_ms", fog_before_started_usec)
-	var messages := []
-	if base_message != "":
-		messages.append(base_message)
-
-	var objective_count := 0
-	var hook_count := 0
-	if scenario_event_facts.is_empty():
-		var scenario := ContentService.get_scenario_readonly(session.scenario_id) if session != null else {}
-		var objectives = _scenario_rules().objectives_for_session(session)
-		if objectives is Dictionary:
-			var victory_objectives = objectives.get("victory", [])
-			var defeat_objectives = objectives.get("defeat", [])
-			objective_count += victory_objectives.size() if victory_objectives is Array else 0
-			objective_count += defeat_objectives.size() if defeat_objectives is Array else 0
-		var hooks = scenario.get("script_hooks", []) if scenario is Dictionary else []
-		hook_count = hooks.size() if hooks is Array else 0
-		_rules_profile_set("scenario_eval", "objective_count", objective_count)
-		_rules_profile_set("scenario_eval", "hook_count", hook_count)
-	var scenario_started_usec := _rules_profile_timer()
-	var scenario_result: Dictionary = _evaluate_scenario_state(session) if scenario_event_facts.is_empty() else _evaluate_scenario_state_for_event(session, scenario_event_facts)
-	_rules_profile_add_ms("finalize_scenario_eval_ms", scenario_started_usec)
-	var scenario_profile: Dictionary = scenario_result.get("profile", {}) if scenario_result.get("profile", {}) is Dictionary else {}
-	if scenario_profile.is_empty():
-		scenario_profile = {
-			"dependency_mode": "full",
-			"fallback_reason": "",
-			"objective_count": objective_count,
-			"hook_count": hook_count,
-			"objectives_checked": objective_count,
-			"objectives_skipped": 0,
-			"hooks_checked": hook_count,
-			"hooks_skipped": 0,
-		}
-	for profile_key in scenario_profile.keys():
-		_rules_profile_set("scenario_eval", String(profile_key), scenario_profile.get(profile_key))
-	var scenario_message := String(scenario_result.get("message", ""))
-	var commit_after_started_usec := _rules_profile_timer()
-	HeroCommandRulesScript.commit_active_hero(session)
-	_rules_profile_add_ms("finalize_commit_after_ms", commit_after_started_usec)
-	var fog_after_started_usec := _rules_profile_timer()
-	if refresh_fog:
-		refresh_fog_of_war(session)
-	elif incremental_fog:
-		_reveal_current_fog_sources(session)
-	_rules_profile_add_ms("finalize_fog_after_ms", fog_after_started_usec)
-	if scenario_message != "":
-		messages.append(scenario_message)
-	_mark_runtime_normalized(session)
-	_rules_profile_add_ms("finalize_action_total_ms", finalize_started_usec)
-
-	return {
-		"ok": ok,
-		"message": " ".join(messages),
-		"scenario_status": session.scenario_status,
-	}
+	return DayEngine.native_writing(&"OverworldRules._finalize_action_result", [session, ok, base_message, refresh_fog, incremental_fog, scenario_event_facts])
 
 static func _normalize_command_briefing(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null or session.scenario_id == "":
@@ -12464,208 +8771,10 @@ static func _command_briefing_orders_line(session: SessionStateStoreScript.Sessi
 	return "Immediate orders: Expand the scout ring, secure the nearest lane, and shape the first contact on favorable ground."
 
 static func _context_action_briefing(session: SessionStateStoreScript.SessionData, action: Variant, context: Dictionary) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _context_action_briefing__gd(session, action, context)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules._context_action_briefing", [session, action, context])
-	var before := HumanEngine.before_writing(&"OverworldRules._context_action_briefing", [session, action, context])
-	var result = _context_action_briefing__gd(session, action, context)
-	HumanEngine.check_writing(&"OverworldRules._context_action_briefing", before, [session, action, context], result)
-	return result
-
-static func _context_action_briefing__gd(session: SessionStateStoreScript.SessionData, action: Variant, context: Dictionary) -> String:
-	if not (action is Dictionary):
-		return "Review the current tile and commit the next order."
-	var action_id := String(action.get("id", ""))
-	match action_id:
-		"visit_town":
-			var town = context.get("town", {})
-			return "Enter %s now to review construction, recruitment, market, and recovery orders." % _town_name(town)
-		"capture_town":
-			var town = context.get("town", {})
-			var owner := String(town.get("owner", "neutral"))
-			if owner == "enemy":
-				if _town_requires_assault(town):
-					return "Storm %s now. The hostile garrison must be broken in battle before the banner changes." % _town_name(town)
-				return "Capture %s from the hostile garrison before it can anchor the local front." % _town_name(town)
-			return "Claim %s now to secure a foothold and unlock local command options." % _town_name(town)
-		"collect_resource":
-			var node = context.get("node", {})
-			if NativeTransit.is_native(node):
-				if NativeTransit.portal_kind(node) != "":
-					return "Step through the %s. Costs 1 movement when you already stand at it; walking onto it includes the trip." % native_portal_display_name(node)
-				return "Use the paired passage. Costs 1 movement when already at its entrance; approaching it includes travel. The destination must be clear."
-			var site := NodePayload.site_for_node(node)
-			return "Secure %s now to %s." % [
-				String(site.get("name", "this site")),
-				_resource_site_opening_value(site),
-			]
-		"site_response":
-			var node = context.get("node", {})
-			var site := NodePayload.site_for_node(node)
-			var response_state := _resource_site_response_state(session, node, site)
-			var command_clause := "Commit %s at %s" % [
-				String(response_state.get("action_label", "Secure Route")),
-				String(site.get("name", "the frontier site")),
-			]
-			if String(response_state.get("commander_name", "")) != "":
-				command_clause = "Commit %s to %s at %s" % [
-					String(response_state.get("commander_name", "")),
-					String(response_state.get("action_label", "secure the route")).to_lower(),
-					String(site.get("name", "the frontier site")),
-				]
-			return "%s to steady the local route for %d day%s with escort strength %d." % [
-				command_clause,
-				int(response_state.get("watch_days", 0)),
-				"" if int(response_state.get("watch_days", 0)) == 1 else "s",
-				int(response_state.get("security_rating", 1)),
-			]
-		"collect_artifact":
-			var artifact_node = context.get("node", {})
-			return "Recover %s now; %s." % [
-				ArtifactRulesScript.artifact_name(String(artifact_node.get("artifact_id", ""))),
-				ArtifactRulesScript.artifact_collection_state(
-					session.overworld.get("hero", {}),
-					String(artifact_node.get("artifact_id", "")),
-					bool(artifact_node.get("collected", false)),
-					String(artifact_node.get("collected_by_faction_id", ""))
-				),
-			]
-		"enter_battle":
-			var encounter = context.get("encounter", {})
-			var delivery_pressure: String = _encounter_delivery_pressure_summary(session, encounter, true)
-			if delivery_pressure != "":
-				return delivery_pressure
-			return "Break %s now before the host can widen pressure across the frontier." % encounter_display_name(encounter)
-	return String(action.get("summary", "Review the current tile and commit the next order."))
-
-static func _context_action_summary(session: SessionStateStoreScript.SessionData, action_id: String, context: Dictionary) -> String:
-	match action_id:
-		"visit_town", "capture_town":
-			return _context_action_briefing(session, {"id": action_id}, context)
-		"collect_resource":
-			var node = context.get("node", {})
-			var site := NodePayload.site_for_node(node)
-			return _resource_site_context_summary(session, node, site)
-		"collect_artifact":
-			var artifact_node = context.get("node", {})
-			var artifact_id := String(artifact_node.get("artifact_id", ""))
-			return "Recover %s for the active hero. %s. %s." % [
-				ArtifactRulesScript.describe_artifact_short(artifact_id),
-				ArtifactRulesScript.artifact_collection_state(
-					session.overworld.get("hero", {}),
-					artifact_id,
-					bool(artifact_node.get("collected", false)),
-					String(artifact_node.get("collected_by_faction_id", ""))
-				),
-				ArtifactRulesScript.describe_single_artifact_impact(artifact_id),
-			]
-		"enter_battle":
-			var encounter = context.get("encounter", {})
-			return _encounter_pressure_summary(session, encounter, true)
-	return _context_action_briefing(session, {"id": action_id}, context)
-
-static func _encounter_delivery_pressure_summary(
-	session: SessionStateStoreScript.SessionData,
-	encounter: Dictionary,
-	for_battle_prompt: bool = false
-) -> String:
-	var delivery_context: Dictionary = delivery_interception_context_for_encounter(session, encounter)
-	if not bool(delivery_context.get("active", false)):
-		return ""
-	var encounter_name := encounter_display_name(encounter)
-	var route_label := String(delivery_context.get("route_label", delivery_context.get("pressure_label", "the relief lane")))
-	var recruit_summary := String(delivery_context.get("recruit_summary", "the convoy"))
-	var interception_state: Dictionary = delivery_context.get("interception", {})
-	if for_battle_prompt:
-		if bool(interception_state.get("blocks_delivery", false)):
-			return "Break %s now to reopen %s before %s is intercepted." % [
-				encounter_name,
-				route_label,
-				recruit_summary,
-			]
-		return "Break %s now to keep %s moving toward %s." % [
-			encounter_name,
-			recruit_summary,
-			String(delivery_context.get("target_label", "the front")),
-		]
-	if bool(interception_state.get("blocks_delivery", false)):
-		return "%s is on %s. If left standing, %s is intercepted before it reaches %s." % [
-			encounter_name,
-			route_label,
-			recruit_summary,
-			String(delivery_context.get("target_label", "the front")),
-		]
-	return "%s is hunting %s. Breaking it protects %s on the road to %s." % [
-		encounter_name,
-		route_label,
-		recruit_summary,
-		String(delivery_context.get("target_label", "the front")),
-	]
+	return HumanEngine.native_writing(&"OverworldRules._context_action_briefing", [session, action, context])
 
 static func _encounter_pressure_summary(session: SessionStateStoreScript.SessionData, encounter: Dictionary, for_battle_prompt: bool = false) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _encounter_pressure_summary__gd(session, encounter, for_battle_prompt)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"OverworldRules._encounter_pressure_summary", [session, encounter, for_battle_prompt])
-	var before := HumanEngine.before_writing(&"OverworldRules._encounter_pressure_summary", [session, encounter, for_battle_prompt])
-	var result = _encounter_pressure_summary__gd(session, encounter, for_battle_prompt)
-	HumanEngine.check_writing(&"OverworldRules._encounter_pressure_summary", before, [session, encounter, for_battle_prompt], result)
-	return result
-
-static func _encounter_pressure_summary__gd(
-	session: SessionStateStoreScript.SessionData,
-	encounter: Dictionary,
-	for_battle_prompt: bool = false
-) -> String:
-	var delivery_pressure: String = _encounter_delivery_pressure_summary(session, encounter, for_battle_prompt)
-	if delivery_pressure != "":
-		return delivery_pressure
-
-	var encounter_name := encounter_display_name(encounter)
-	if String(encounter.get("spawned_by_faction_id", "")) == "":
-		var readability := describe_encounter_compact_readability(session, encounter)
-		if for_battle_prompt:
-			var battle_order := "Break %s on %s before the host can widen pressure across the frontier." % [
-				encounter_name,
-				_terrain_name_at(session, int(encounter.get("x", 0)), int(encounter.get("y", 0))),
-			]
-			return battle_order if readability == "" else "%s %s." % [battle_order, readability]
-		return "Scout report: %s." % readability if readability != "" else "Approach strength unknown beyond authored scouting notes. Enter battle to break the host."
-
-	var target_kind := String(encounter.get("target_kind", ""))
-	var target_label := String(encounter.get("target_label", "the frontier"))
-	var goal_distance := int(encounter.get("goal_distance", 9999))
-	var pressuring := bool(encounter.get("arrived", false)) or goal_distance <= 0
-	match target_kind:
-		"hero":
-			if for_battle_prompt:
-				return "Break %s now before it pins %s in a forced field battle." % [encounter_name, target_label]
-			if pressuring or goal_distance <= 1:
-				return "%s is on %s's march line and can force a field battle at day's end." % [encounter_name, target_label]
-			return "%s is hunting %s across the frontier." % [encounter_name, target_label]
-		"town":
-			if for_battle_prompt:
-				return "Break %s now before it reaches %s and forces a town assault." % [encounter_name, target_label]
-			if pressuring or goal_distance <= 1:
-				return "%s already presses %s and can trigger a town fight at day's end." % [encounter_name, target_label]
-			return "%s is marching on %s." % [encounter_name, target_label]
-		"resource":
-			if for_battle_prompt:
-				return "Break %s now before it denies %s." % [encounter_name, target_label]
-			return "%s is moving to deny %s." % [encounter_name, target_label]
-		"artifact":
-			if for_battle_prompt:
-				return "Break %s now before it secures %s." % [encounter_name, target_label]
-			return "%s is closing on %s." % [encounter_name, target_label]
-		"encounter":
-			if for_battle_prompt:
-				return "Break %s now before it locks down %s and widens the hostile front." % [encounter_name, target_label]
-			return "%s is trying to lock down %s and widen the hostile front." % [encounter_name, target_label]
-		_:
-			if for_battle_prompt:
-				return "Break %s now before the host can widen pressure across the frontier." % encounter_name
-			return "This host is moving through the frontier under hostile orders."
+	return HumanEngine.native_writing(&"OverworldRules._encounter_pressure_summary", [session, encounter, for_battle_prompt])
 
 static func _command_commitment_action_line(session: SessionStateStoreScript.SessionData) -> String:
 	var context_actions := get_context_actions(session)
@@ -12953,24 +9062,7 @@ static func _nearest_visible_encounter_plan(session: SessionStateStoreScript.Ses
 	return best
 
 static func _resource_site_opening_value(site: Dictionary) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _resource_site_opening_value__gd(site)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"OverworldRules._resource_site_opening_value", [site])
-	var result = _resource_site_opening_value__gd(site)
-	HumanEngine.check(&"OverworldRules._resource_site_opening_value", [site], result)
-	return result
-
-static func _resource_site_opening_value__gd(site: Dictionary) -> String:
-	match String(site.get("family", "")):
-		"faction_outpost":
-			return "extend scouting and hold the frontier watch"
-		"frontier_shrine":
-			return "keep spell routes and recovery lanes open"
-		"neutral_dwelling":
-			return "feed musters into the nearest town"
-		_:
-			return "strengthen your early reserves"
+	return HumanEngine.native(&"OverworldRules._resource_site_opening_value", [site])
 
 static func _direction_from_to(origin: Vector2i, target: Vector2i) -> String:
 	var vertical := ""
@@ -13694,3 +9786,15 @@ static func _refresh_all_player_heroes_for_new_day(session: SessionStateStoreScr
 	session.overworld["army"] = active_hero.get("army", {}).duplicate(true)
 	session.overworld["movement"] = active_hero.get("movement", {}).duplicate(true)
 	session.overworld["hero_position"] = active_hero.get("position", {}).duplicate(true)
+
+static func _resource_site_control_label(node: Dictionary, site: Dictionary) -> String:
+	return HumanEngine.native_writing(&"OverworldRules._resource_site_control_label", [node, site])
+
+static func can_afford_cost_with_town_market(town: Dictionary, pool: Dictionary, cost: Variant, current_day: int = -1) -> bool:
+	return HumanEngine.native_writing(&"OverworldRules.can_afford_cost_with_town_market", [town, pool, cost, current_day])
+
+static func get_town_market_actions(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
+	return HumanEngine.native_writing(&"OverworldRules.get_town_market_actions", [session, town])
+
+static func get_town_recruit_options(town: Dictionary) -> Array:
+	return HumanEngine.native_writing(&"OverworldRules.get_town_recruit_options", [town])

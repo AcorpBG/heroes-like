@@ -89,15 +89,6 @@ static func unit_cost(unit_id: String) -> Dictionary:
 	var cost = unit.get("cost", {})
 	return cost.duplicate(true) if cost is Dictionary else {}
 
-static func hire_cost(hires: Dictionary) -> Dictionary:
-	var total := {}
-	for unit_id in hires.keys():
-		var count := int(hires[unit_id])
-		var cost := unit_cost(String(unit_id))
-		for key in cost.keys():
-			total[key] = int(total.get(key, 0)) + int(cost[key]) * count
-	return total
-
 ## The Drifters' Camp offers a different base creature each week, rolled from
 ## a stable hash of the placement and the week.
 static func refugee_unit(node: Dictionary, day: int) -> String:

@@ -2961,6 +2961,29 @@ Checks:
   errors. Not reached: `SpellRules.effect_summary` (the battle screen's spell text), `OverworldRules.perform_rendezvous_action` (no two heroes met), and TownRules' `switch_active_hero_at_town`, `learn_spell_at_active_town`, `choose_specialty_at_active_town` and `_describe_vulnerability_penalties`.
 - Day shadow in the same run: 20,450 checks on the 12 day entries (`end_turn` 105), 0 mismatches, 0 errors and no path
   left to GDScript.
+- Day shadow on the six seeds: 7,775 checks, 0 mismatches, 0 errors, none left to GDScript.
+
+**Merge 3** (7.3 to 7.7, 2026-10-24): merged to main after main was tagged `pre-native-phase7-merge-3` (D10). Main had
+no commits since merge 2.
+- The 220 entries of 7.3 to 7.7 are NATIVE: their GDScript functions are thin wrappers over `HumanEngine.native`. 195
+  are the slices'; 25 functions that only tests call became entries at the merge, as 7.2's did (13 that GDScript tests
+  call, 12 that the Python regressions' GDScript calls). The 166 other bodies of the slices that no GDScript outside
+  them calls are deleted, with the day's 12 `__gd` bodies: the 16 scripts the merge touches have 29,035 lines on main
+  and 20,736 after. No test calls a deleted body, so none is retired.
+- The day runs native only (D-d): the day registry's 12 entries are NATIVE wrappers over `DayEngine.native`, and its
+  table has no GDScript fallback. `HEROES_NATIVE_DAY` with its `gdscript` and `shadow` modes and the day's `__gd`
+  bodies are gone; a path the port leaves out is a native failure. `ScenarioRules.evaluate_session` on a null session
+  answers `{"status": "invalid", "message": ""}` as its GDScript did. `DayEngine.gd` keeps the views and the shadow
+  checks that HumanEngine's switch borrows.
+- The save service calls the town's read scopes, `can_visit_active_town` and the progress recaps in C++; their five
+  host entries are gone.
+- Checks of the merged code against main 3a9edbca9:
+  - the `--human` check identical on the eight seeds, 1,896 action digests and the records;
+  - the six seeds identical, 443 daily digests and the match records;
+  - core suite 17/17.
+- UI speed, screen time per action in ms, main | branch: town actions 1,094 | 249, end of turn 1,326 | 1,295,
+  battle 597 | 594, move 197 | 193, opening a town 84 | 72, dialogs 141 | 97, hero 83 | 77; every other kind
+  within 1 ms either way.
 
 ### Phase 8: a match runner without Godot
 

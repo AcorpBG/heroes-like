@@ -1,17 +1,18 @@
 extends RefCounted
-## The native day engine's switch (docs/native-rules-engine-transition.md,
-## Phase 5). HEROES_NATIVE_DAY picks who runs the day-processing functions
-## ported so far (src/gdextension/rules/core/port/day_registry.cpp):
-## - native, the default (an unknown value too, with an error): the native ports.
-## - gdscript: their GDScript bodies, renamed <name>__gd; the way back if the
-##   native day goes wrong in a real game.
+## The native day engine (docs/native-rules-engine-transition.md, Phase 5):
+## the day-processing functions run as their native ports
+## (src/gdextension/rules/core/port/day_registry.cpp). Since Phase 7's merge 3
+## (owner decision D-d, 2026-10-24) there is no switch and no GDScript day:
+## each is a thin wrapper over native() or native_writing(), and a path the
+## port leaves out is a native failure (a SCRIPT ERROR).
+## HumanEngine's switch, on a Phase 7 slice's branch, borrows the modes, the
+## views and the shadow checks below:
 ## - shadow: the GDScript bodies, with every call checked against the native
 ##   port: the result with its types, key order and container identities. A
 ##   function that writes into its arguments has its native port run first, on
 ##   the arguments themselves and writing nothing back, then the GDScript body,
 ##   and the check compares the result and everything the native port loaded or
 ##   set (AurelionRules.port_validate_begin and port_validate_end).
-##   One six-seed shadow run checks a change to a function with two copies.
 ## A session reaches the native port as a view: a Dictionary of its fields, the
 ## very overworld, battle and flags Dictionaries among them, its metadata
 ## under "meta" and its instance id under "instance_id". After a native call
@@ -19,12 +20,10 @@ extends RefCounted
 ## In shadow mode every open check reads one view per session, brought up to
 ## date before each check.
 ## Mismatches and native failures print a SCRIPT ERROR (the first 20), which
-## fails rules_parity runs and the core suite, and, with HEROES_NATIVE_DAY_LOG
-## set to a folder, go with every function's counts into shadow_<pid>.json there.
-## A port leaves the paths AI matches never run to GDScript: a native call that
-## reaches one changes nothing, not_ported() says so and the switch runs the
-## GDScript body; shadow mode skips the check (counted as not_ported).
-## tools/native_battle_switch.py writes the switch into each ported function.
+## fails rules_parity runs and the core suite, and, with the subsystem's log
+## folder set (HEROES_NATIVE_HUMAN_LOG), go with every function's counts into
+## shadow_<pid>.json there.
+## tools/native_battle_switch.py writes the wrappers and switches.
 
 const NativeRules = preload("res://scripts/core/NativeRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
@@ -42,7 +41,6 @@ const META := "meta"
 ## session.get_instance_id(), which the read scopes key their caches by.
 const INSTANCE_ID := "instance_id"
 
-static var mode: int = _mode_from_environment()
 ## Shadow: the view of each session the checks read, by the session's instance
 ## id, kept while a check is open: the open checks' handles are below
 ## _open_handles (the other subsystems' checks share the numbering).
@@ -54,18 +52,6 @@ static var _open_handles := 0
 ## between days changes the session only where it says so
 ## (port_session_reread).
 static var session_calls := {}
-
-static func _mode_from_environment() -> int:
-	var name := OS.get_environment("HEROES_NATIVE_DAY").strip_edges().to_lower()
-	if name == "":
-		name = "native"
-	elif not MODES.has(name):
-		push_error("HEROES_NATIVE_DAY=%s is none of gdscript, native, shadow; running native." % name)
-		name = "native"
-	if name != "gdscript":
-		# Without the library every native call fails loudly; available() says why.
-		NativeRules.available()
-	return int(MODES[name])
 
 ## The native port's result.
 static func native(name: StringName, args: Array) -> Variant:
@@ -83,10 +69,6 @@ static func native_writing(name: StringName, args: Array) -> Variant:
 		result = NativeRules.api().port_call(name, views, true)
 	_take_views(args, views)
 	return result
-
-## Whether the last native call reached a path the port leaves to GDScript.
-static func not_ported() -> bool:
-	return NativeRules.api().port_not_ported()
 
 ## Shadow: checks GDScript's result against the native port's.
 static func check(name: StringName, args: Array, result: Variant) -> void:

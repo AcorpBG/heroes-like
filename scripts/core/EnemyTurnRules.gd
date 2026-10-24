@@ -12,7 +12,6 @@ const EnemyAdventureRulesScript = preload("res://scripts/core/EnemyAdventureRule
 const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
 const DayEngine = preload("res://scripts/core/DayEngine.gd")
 const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
-static var _day_engine_mode: int = DayEngine.mode
 # Computer-player state AiHeroRules keeps between days.
 const AI_PLAYER_STATE_KEYS := ["ai_start_hero_granted", "ai_opening_granted", "ai_tavern", "ai_hero_counter", "ai_explored", "ai_boat_wanted_day", "ai_sightings", "ai_weight_set"]
 static var TownRulesScript: Variant = load("res://scripts/core/TownRules.gd")
@@ -60,30 +59,7 @@ static func build_enemy_states(configs: Variant) -> Array:
 	return states
 
 static func normalize_enemy_states(session: SessionStateStoreScript.SessionData) -> void:
-	if _day_engine_mode == DayEngine.GDSCRIPT:
-		normalize_enemy_states__gd(session)
-	elif _day_engine_mode == DayEngine.NATIVE:
-		DayEngine.native_writing(&"EnemyTurnRules.normalize_enemy_states", [session])
-		if DayEngine.not_ported():
-			normalize_enemy_states__gd(session)
-	else:
-		var before := DayEngine.before_writing(&"EnemyTurnRules.normalize_enemy_states", [session])
-		normalize_enemy_states__gd(session)
-		DayEngine.check_writing(&"EnemyTurnRules.normalize_enemy_states", before, [session], null)
-
-static func normalize_enemy_states__gd(session: SessionStateStoreScript.SessionData) -> void:
-	if session == null or session.scenario_id == "":
-		return
-	# Roster entries built during this normalization are reused within it (see
-	# EnemyAdventureRules._normalize_commander_roster_entries); the outermost
-	# call owns the memo and drops it at the end, even when the body stops on
-	# a script error.
-	var owns_entry_memo := not session.has_meta(EnemyAdventureRulesScript.COMMANDER_ENTRY_MEMO_META)
-	if owns_entry_memo:
-		session.set_meta(EnemyAdventureRulesScript.COMMANDER_ENTRY_MEMO_META, {})
-	_normalize_enemy_states_body(session)
-	if owns_entry_memo:
-		session.remove_meta(EnemyAdventureRulesScript.COMMANDER_ENTRY_MEMO_META)
+	DayEngine.native_writing(&"EnemyTurnRules.normalize_enemy_states", [session])
 
 static func _normalize_enemy_states_body(session: SessionStateStoreScript.SessionData) -> void:
 	DifficultyRulesScript.normalize_session(session)

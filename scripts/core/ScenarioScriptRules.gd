@@ -8,7 +8,6 @@ const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const PlayerIdentityRulesScript = preload("res://scripts/core/PlayerIdentityRules.gd")
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
-static var _human_engine_mode: int = HumanEngine.mode
 
 const SCRIPT_STATE_KEY := "scenario_script_state"
 const PENDING_REINFORCEMENTS_KEY := "pending_reinforcements"
@@ -290,38 +289,7 @@ static func _apply_effect(session: SessionStateStoreScript.SessionData, effect: 
 			return {"messages": []}
 
 static func describe_recent_events(session: SessionStateStoreScript.SessionData, limit: int = 2) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return describe_recent_events__gd(session, limit)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"ScenarioScriptRules.describe_recent_events", [session, limit])
-	var before := HumanEngine.before_writing(&"ScenarioScriptRules.describe_recent_events", [session, limit])
-	var result = describe_recent_events__gd(session, limit)
-	HumanEngine.check_writing(&"ScenarioScriptRules.describe_recent_events", before, [session, limit], result)
-	return result
-
-static func describe_recent_events__gd(session: SessionStateStoreScript.SessionData, limit: int = 2) -> String:
-	normalize_script_state(session)
-	if session == null:
-		return ""
-	var state: Dictionary = session.overworld.get(SCRIPT_STATE_KEY, {})
-	var event_log = state.get("event_log", [])
-	if not (event_log is Array):
-		event_log = []
-	var count = clamp(limit, 1, EVENT_LOG_LIMIT)
-	var start_index = max(0, event_log.size() - count)
-	var parts = []
-	var pending = state.get(PENDING_REINFORCEMENTS_KEY, {})
-	if pending is Dictionary and not pending.is_empty():
-		parts.append("%d earned reinforcement grant(s) wait for their original army or garrison to have room." % pending.size())
-	for index in range(start_index, event_log.size()):
-		var entry = event_log[index]
-		if not (entry is Dictionary):
-			continue
-		var message = String(entry.get("message", ""))
-		if message == "":
-			continue
-		parts.append("Day %d: %s" % [int(entry.get("day", session.day)), message])
-	return " | ".join(parts)
+	return HumanEngine.native_writing(&"ScenarioScriptRules.describe_recent_events", [session, limit])
 
 static func _spawn_resource_node(session: SessionStateStoreScript.SessionData, placement: Variant) -> Dictionary:
 	if not (placement is Dictionary):

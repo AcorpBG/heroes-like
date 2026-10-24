@@ -5,6 +5,7 @@
 
 #include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/overworld_rules.hpp"
+#include "aurelion_rules/port/scenario_outcome.hpp"
 #include "aurelion_rules/port/session_state_store.hpp"
 
 #include <algorithm>
@@ -103,10 +104,12 @@ void bucket(State &state, DictRef buckets, Atom name, int64_t started) {
 	state.set(buckets, str(name), float_value(save_service::profile_elapsed_ms(state, started)));
 }
 
-// load("res://scripts/core/ScenarioRules.gd").describe_session_progress_recap_from_normalized_session(session, false).
+// ScenarioRules.describe_session_progress_recap_from_normalized_session(session, false).
 Atom progress_recap_from_normalized_session(State &state, const Value &session) {
-	return gd::to_string(gd::call_static(state, key::scenario_rules_script, key::describe_session_progress_recap_from_normalized_session,
-			{ session_object(state, session), bool_value(false), dict_value(state.new_dict()) }));
+	if (session.kind == Kind::Nil) {
+		return key::empty;
+	}
+	return scenario_rules::describe_session_progress_recap_from_normalized_session(state, gd::object_view(state, session), false, state.new_dict());
 }
 
 } // namespace
@@ -283,7 +286,9 @@ DictRef build_in_session_save_surface(State &state, const Value &session, int64_
 	bucket(state, buckets, key::detached_normalization, normalization_started);
 	const int64_t read_scope_started = profile_begin_usec(state);
 	gd::call_static(state, key::overworld_rules_script, key::begin_normalized_read_scope, { detached_live_session });
-	gd::call_static(state, key::town_rules_script, key::begin_read_scope, { detached_live_session });
+	if (detached_live_session.kind != Kind::Nil) {
+		town_rules::begin_read_scope(state, gd::object_view(state, detached_live_session));
+	}
 	bucket(state, buckets, key::detached_read_scope_begin, read_scope_started);
 	const int64_t recap_started = profile_begin_usec(state);
 	const int64_t recap_context_started = profile_begin_usec(state);
@@ -308,7 +313,9 @@ DictRef build_in_session_save_surface(State &state, const Value &session, int64_
 	const Atom play_check = _describe_session_play_check_from_context(state, detached_live_session, default_live_summary, recap_context);
 	bucket(state, buckets, key::play_check, play_check_started);
 	bucket(state, buckets, key::recap_surfaces, recap_started);
-	gd::call_static(state, key::town_rules_script, key::end_read_scope, { detached_live_session });
+	if (detached_live_session.kind != Kind::Nil) {
+		town_rules::end_read_scope(state, gd::object_view(state, detached_live_session));
+	}
 	gd::call_static(state, key::overworld_rules_script, key::end_normalized_read_scope, { detached_live_session });
 	if (!include_stored_summaries) {
 		const DictRef current = state.new_dict();

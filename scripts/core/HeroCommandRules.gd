@@ -9,8 +9,6 @@ const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const DayEngine = preload("res://scripts/core/DayEngine.gd")
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
-static var _human_engine_mode: int = HumanEngine.mode
-static var _day_engine_mode: int = DayEngine.mode
 static var DifficultyRulesScript: Variant = load("res://scripts/core/DifficultyRules.gd")
 
 const HALL_BUILDING_ID := "building_wayfarers_hall"
@@ -349,135 +347,16 @@ static func hero_by_id(session: SessionStateStoreScript.SessionData, hero_id: St
 	return {}
 
 static func hero_inspection_snapshot(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return hero_inspection_snapshot__gd(session, hero_id)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"HeroCommandRules.hero_inspection_snapshot", [session, hero_id])
-	var before := HumanEngine.before_writing(&"HeroCommandRules.hero_inspection_snapshot", [session, hero_id])
-	var result = hero_inspection_snapshot__gd(session, hero_id)
-	HumanEngine.check_writing(&"HeroCommandRules.hero_inspection_snapshot", before, [session, hero_id], result)
-	return result
-
-static func hero_inspection_snapshot__gd(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
-	# Inspection must not normalize/commit the live session. The active mirrors
-	# are authoritative until commit_active_hero synchronizes the roster.
-	var hero := hero_by_id(session, hero_id).duplicate(true)
-	if hero.is_empty():
-		return {}
-	if hero_id == String(session.overworld.get("active_hero_id", "")):
-		hero = session.overworld.get("hero", hero).duplicate(true)
-		for pair in [["army", "army"], ["movement", "movement"], ["position", "hero_position"]]:
-			hero[pair[0]] = session.overworld.get(pair[1], hero.get(pair[0], {})).duplicate(true)
-	hero = HeroProgressionRulesScript.ensure_hero_progression(hero)
-	hero = ArtifactRulesScript.ensure_hero_artifacts(hero)
-	hero["army"] = _normalize_army(hero.get("army", {}), hero_id)
-	hero["inspection_army_slots"] = _slotted_stacks(hero.army.get("stacks", []))
-	hero["inspection_overflow_stacks"] = hero.army.get("stacks", []).slice(ARMY_SLOT_COUNT)
-	return hero
+	return HumanEngine.native_writing(&"HeroCommandRules.hero_inspection_snapshot", [session, hero_id])
 
 static func player_hero_count(session: SessionStateStoreScript.SessionData) -> int:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return player_hero_count__gd(session)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"HeroCommandRules.player_hero_count", [session])
-	var before := HumanEngine.before_writing(&"HeroCommandRules.player_hero_count", [session])
-	var result = player_hero_count__gd(session)
-	HumanEngine.check_writing(&"HeroCommandRules.player_hero_count", before, [session], result)
-	return result
-
-static func player_hero_count__gd(session: SessionStateStoreScript.SessionData) -> int:
-	return hero_count_from_overworld(session.overworld if session != null else {})
+	return HumanEngine.native_writing(&"HeroCommandRules.player_hero_count", [session])
 
 static func spend_active_hero_movement(session: SessionStateStoreScript.SessionData, amount: int, reason: String = "") -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return spend_active_hero_movement__gd(session, amount, reason)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"HeroCommandRules.spend_active_hero_movement", [session, amount, reason])
-	var before := HumanEngine.before_writing(&"HeroCommandRules.spend_active_hero_movement", [session, amount, reason])
-	var result = spend_active_hero_movement__gd(session, amount, reason)
-	HumanEngine.check_writing(&"HeroCommandRules.spend_active_hero_movement", before, [session, amount, reason], result)
-	return result
-
-static func spend_active_hero_movement__gd(
-	session: SessionStateStoreScript.SessionData,
-	amount: int,
-	reason: String = ""
-) -> Dictionary:
-	normalize_session(session)
-	if amount <= 0:
-		return {"ok": true, "message": "", "remaining_movement": int(session.overworld.get("movement", {}).get("current", 0))}
-	commit_active_hero(session)
-	var hero := active_hero(session)
-	if hero.is_empty():
-		return {"ok": false, "message": "No active commander is available."}
-	var heroes = session.overworld.get("player_heroes", [])
-	var hero_id := String(hero.get("id", ""))
-	var hero_index := _hero_index_by_id(heroes, hero_id)
-	if hero_index < 0:
-		return {"ok": false, "message": "The active commander could not be synchronized."}
-
-	var movement := _normalize_movement(hero.get("movement", {}), movement_max_for_hero(hero, session))
-	var current := int(movement.get("current", 0))
-	if current < amount:
-		var reason_clause := " for %s" % reason if reason != "" else ""
-		return {
-			"ok": false,
-			"message": "%s needs %d movement%s but only has %d left." % [
-				String(hero.get("name", "The commander")),
-				amount,
-				reason_clause,
-				current,
-			],
-		}
-
-	movement["current"] = current - amount
-	hero["movement"] = movement
-	heroes[hero_index] = hero
-	session.overworld["player_heroes"] = heroes
-	_sync_active_hero_mirror(session)
-	return {
-		"ok": true,
-		"message": "",
-		"remaining_movement": int(movement.get("current", 0)),
-	}
+	return HumanEngine.native_writing(&"HeroCommandRules.spend_active_hero_movement", [session, amount, reason])
 
 static func commit_active_hero(session: SessionStateStoreScript.SessionData) -> void:
-	if _day_engine_mode == DayEngine.GDSCRIPT:
-		commit_active_hero__gd(session)
-	elif _day_engine_mode == DayEngine.NATIVE:
-		DayEngine.native_writing(&"HeroCommandRules.commit_active_hero", [session])
-		if DayEngine.not_ported():
-			commit_active_hero__gd(session)
-	else:
-		var before := DayEngine.before_writing(&"HeroCommandRules.commit_active_hero", [session])
-		commit_active_hero__gd(session)
-		DayEngine.check_writing(&"HeroCommandRules.commit_active_hero", before, [session], null)
-
-static func commit_active_hero__gd(session: SessionStateStoreScript.SessionData) -> void:
-	if session == null:
-		return
-	var heroes = session.overworld.get("player_heroes", [])
-	if not (heroes is Array) or heroes.is_empty():
-		return
-	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
-	var active_index := _hero_index_by_id(heroes, active_hero_id)
-	if active_index < 0:
-		return
-
-	var committed = session.overworld.get("hero", {})
-	if not (committed is Dictionary) or committed.is_empty():
-		committed = heroes[active_index]
-	committed = committed.duplicate(true)
-	committed["position"] = _normalize_position(session.overworld.get("hero_position", committed.get("position", {})))
-	committed["army"] = _normalize_army(session.overworld.get("army", committed.get("army", {})), String(committed.get("id", "")))
-	committed["movement"] = _normalize_movement(
-		session.overworld.get("movement", committed.get("movement", {})),
-		movement_max_for_hero(committed, session)
-	)
-	committed = _normalize_player_hero(committed, session, committed.get("position", {}), committed.get("army", {}), committed.get("movement", {}))
-	heroes[active_index] = committed
-	session.overworld["player_heroes"] = heroes
-	_sync_active_hero_mirror(session)
+	DayEngine.native_writing(&"HeroCommandRules.commit_active_hero", [session])
 
 static func set_active_hero(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
 	normalize_session(session)
@@ -494,174 +373,29 @@ static func set_active_hero(session: SessionStateStoreScript.SessionData, hero_i
 	return {"ok": true, "message": "%s takes command." % String(hero.get("name", "The hero"))}
 
 static func hero_template(payload: Dictionary) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return hero_template__gd(payload)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"HeroCommandRules.hero_template", [payload])
-	var before := HumanEngine.before_writing(&"HeroCommandRules.hero_template", [payload])
-	var result = hero_template__gd(payload)
-	HumanEngine.check_writing(&"HeroCommandRules.hero_template", before, [payload], result)
-	return result
-
-static func hero_template__gd(payload: Dictionary) -> Dictionary:
-	if payload.is_empty():
-		return {}
-	if payload.has("starting_spell_ids") and payload.has("faction_id"):
-		return payload
-	return ContentService.get_hero(String(payload.get("id", "")))
-
-static func hero_archetype_label(payload: Dictionary) -> String:
-	var template := hero_template(payload)
-	var archetype := String(template.get("archetype", payload.get("archetype", "field captain")))
-	return archetype.capitalize()
+	return HumanEngine.native_writing(&"HeroCommandRules.hero_template", [payload])
 
 static func hero_faction_label(payload: Dictionary, fallback_faction_id: String = "") -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return hero_faction_label__gd(payload, fallback_faction_id)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"HeroCommandRules.hero_faction_label", [payload, fallback_faction_id])
-	var before := HumanEngine.before_writing(&"HeroCommandRules.hero_faction_label", [payload, fallback_faction_id])
-	var result = hero_faction_label__gd(payload, fallback_faction_id)
-	HumanEngine.check_writing(&"HeroCommandRules.hero_faction_label", before, [payload, fallback_faction_id], result)
-	return result
-
-static func hero_faction_label__gd(payload: Dictionary, fallback_faction_id: String = "") -> String:
-	var template := hero_template(payload)
-	var faction_id := String(payload.get("faction_id", template.get("faction_id", fallback_faction_id)))
-	if faction_id == "":
-		return "Free Banner"
-	var faction := ContentService.get_faction(faction_id)
-	return String(faction.get("name", faction_id))
+	return HumanEngine.native_writing(&"HeroCommandRules.hero_faction_label", [payload, fallback_faction_id])
 
 static func hero_identity_summary(payload: Dictionary) -> String:
 	var template := hero_template(payload)
 	return String(template.get("identity_summary", ""))
 
 static func hero_role_label(payload: Dictionary) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return hero_role_label__gd(payload)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"HeroCommandRules.hero_role_label", [payload])
-	var before := HumanEngine.before_writing(&"HeroCommandRules.hero_role_label", [payload])
-	var result = hero_role_label__gd(payload)
-	HumanEngine.check_writing(&"HeroCommandRules.hero_role_label", before, [payload], result)
-	return result
-
-static func hero_role_label__gd(payload: Dictionary) -> String:
-	var template := hero_template(payload)
-	var roster_summary := String(template.get("roster_summary", payload.get("roster_summary", "")))
-	if roster_summary != "":
-		return roster_summary
-	return hero_archetype_label(payload)
+	return HumanEngine.native_writing(&"HeroCommandRules.hero_role_label", [payload])
 
 static func hero_identity_context_line(payload: Dictionary, fallback_faction_id: String = "") -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return hero_identity_context_line__gd(payload, fallback_faction_id)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"HeroCommandRules.hero_identity_context_line", [payload, fallback_faction_id])
-	var before := HumanEngine.before_writing(&"HeroCommandRules.hero_identity_context_line", [payload, fallback_faction_id])
-	var result = hero_identity_context_line__gd(payload, fallback_faction_id)
-	HumanEngine.check_writing(&"HeroCommandRules.hero_identity_context_line", before, [payload, fallback_faction_id], result)
-	return result
-
-static func hero_identity_context_line__gd(payload: Dictionary, fallback_faction_id: String = "") -> String:
-	return "%s | %s | %s" % [
-		String(payload.get("name", hero_template(payload).get("name", "Field Commander"))),
-		hero_faction_label(payload, fallback_faction_id),
-		hero_role_label(payload),
-	]
+	return HumanEngine.native_writing(&"HeroCommandRules.hero_identity_context_line", [payload, fallback_faction_id])
 
 static func hero_progress_context_line(hero_state: Dictionary) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return hero_progress_context_line__gd(hero_state)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"HeroCommandRules.hero_progress_context_line", [hero_state])
-	var before := HumanEngine.before_writing(&"HeroCommandRules.hero_progress_context_line", [hero_state])
-	var result = hero_progress_context_line__gd(hero_state)
-	HumanEngine.check_writing(&"HeroCommandRules.hero_progress_context_line", before, [hero_state], result)
-	return result
-
-static func hero_progress_context_line__gd(hero_state: Dictionary) -> String:
-	var hero := HeroProgressionRulesScript.ensure_hero_progression(hero_state.duplicate(true))
-	var summary := HeroProgressionRulesScript.brief_summary(hero)
-	if summary == "":
-		summary = "No specialty"
-	return "Lv%d | XP %d/%d | %s" % [
-		int(hero.get("level", 1)),
-		int(hero.get("experience", 0)),
-		int(hero.get("next_level_experience", 250)),
-		summary,
-	]
+	return HumanEngine.native_writing(&"HeroCommandRules.hero_progress_context_line", [hero_state])
 
 static func hero_readiness_context_line(hero_state: Dictionary, include_position: bool = false) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return hero_readiness_context_line__gd(hero_state, include_position)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"HeroCommandRules.hero_readiness_context_line", [hero_state, include_position])
-	var before := HumanEngine.before_writing(&"HeroCommandRules.hero_readiness_context_line", [hero_state, include_position])
-	var result = hero_readiness_context_line__gd(hero_state, include_position)
-	HumanEngine.check_writing(&"HeroCommandRules.hero_readiness_context_line", before, [hero_state, include_position], result)
-	return result
-
-static func hero_readiness_context_line__gd(hero_state: Dictionary, include_position: bool = false) -> String:
-	var parts := []
-	if include_position:
-		var position := _normalize_position(hero_state.get("position", {}))
-		parts.append("Pos %d,%d" % [int(position.get("x", 0)), int(position.get("y", 0))])
-	var movement = hero_state.get("movement", {})
-	if movement is Dictionary and not movement.is_empty():
-		parts.append("Move %d/%d" % [int(movement.get("current", 0)), int(movement.get("max", 0))])
-	var mana = hero_state.get("spellbook", {}).get("mana", {})
-	if mana is Dictionary and int(mana.get("max", 0)) > 0:
-		parts.append("Mana %d/%d" % [int(mana.get("current", 0)), int(mana.get("max", 0))])
-	var army_totals := _army_count_summary(hero_state.get("army", {}))
-	parts.append(
-		"Scout %d | %s"
-		% [
-			scouting_radius_for_hero(hero_state),
-			"Army %d/%d" % [int(army_totals.get("troops", 0)), int(army_totals.get("groups", 0))],
-		]
-	)
-	var command = hero_state.get("command", {})
-	parts.append(
-		"A%d D%d P%d K%d"
-		% [
-			int(command.get("attack", 0)),
-			int(command.get("defense", 0)),
-			int(command.get("power", 0)),
-			int(command.get("knowledge", 0)),
-		]
-	)
-	return " | ".join(parts)
+	return HumanEngine.native_writing(&"HeroCommandRules.hero_readiness_context_line", [hero_state, include_position])
 
 static func hero_profile_summary(payload: Dictionary, include_focus: bool = false) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return hero_profile_summary__gd(payload, include_focus)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"HeroCommandRules.hero_profile_summary", [payload, include_focus])
-	var before := HumanEngine.before_writing(&"HeroCommandRules.hero_profile_summary", [payload, include_focus])
-	var result = hero_profile_summary__gd(payload, include_focus)
-	HumanEngine.check_writing(&"HeroCommandRules.hero_profile_summary", before, [payload, include_focus], result)
-	return result
-
-static func hero_profile_summary__gd(payload: Dictionary, include_focus: bool = false) -> String:
-	var template := hero_template(payload)
-	if template.is_empty():
-		return ""
-	var parts := []
-	var roster_summary := String(template.get("roster_summary", ""))
-	if roster_summary != "":
-		parts.append(roster_summary)
-	else:
-		parts.append(hero_archetype_label(template))
-	var starting_specialties: String = HeroProgressionRulesScript.summarize_specialty_ids(template.get("starting_specialties", []))
-	if starting_specialties != "":
-		parts.append("Starts %s" % starting_specialties)
-	if include_focus:
-		var focus_specialties: String = HeroProgressionRulesScript.summarize_specialty_ids(template.get("specialty_focus_ids", []))
-		if focus_specialties != "":
-			parts.append("Focus %s" % focus_specialties)
-	return " | ".join(parts)
+	return HumanEngine.native_writing(&"HeroCommandRules.hero_profile_summary", [payload, include_focus])
 
 static func describe_roster(session: SessionStateStoreScript.SessionData, stationed_only: bool = false, town: Dictionary = {}) -> String:
 	normalize_session(session)
@@ -677,40 +411,6 @@ static func describe_roster(session: SessionStateStoreScript.SessionData, statio
 	if lines.size() == 1:
 		lines.append("- No stationed heroes")
 	return "\n".join(lines)
-
-static func get_overworld_switch_actions(session: SessionStateStoreScript.SessionData) -> Array:
-	normalize_session(session)
-	var actions := []
-	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
-	for hero in session.overworld.get("player_heroes", []):
-		if not (hero is Dictionary):
-			continue
-		var hero_id := String(hero.get("id", ""))
-		actions.append(
-			{
-				"id": "switch_hero:%s" % hero_id,
-				"label": "Command %s" % String(hero.get("name", hero_id)),
-				"summary": _hero_roster_line(hero, active_hero_id),
-				"disabled": hero_id == active_hero_id,
-			}
-		)
-	return actions
-
-static func get_town_switch_actions(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
-	normalize_session(session)
-	var actions := []
-	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
-	for hero in stationed_heroes(session, town):
-		var hero_id := String(hero.get("id", ""))
-		actions.append(
-			{
-				"id": "switch_hero:%s" % hero_id,
-				"label": "Command %s" % String(hero.get("name", hero_id)),
-				"summary": _hero_roster_line(hero, active_hero_id),
-				"disabled": hero_id == active_hero_id,
-			}
-		)
-	return actions
 
 static func stationed_heroes(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
 	var stationed := []
@@ -752,26 +452,7 @@ static func town_garrison_hero(session: SessionStateStoreScript.SessionData, tow
 	return hero
 
 static func town_visiting_hero(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return town_visiting_hero__gd(session, town)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"HeroCommandRules.town_visiting_hero", [session, town])
-	var before := HumanEngine.before_writing(&"HeroCommandRules.town_visiting_hero", [session, town])
-	var result = town_visiting_hero__gd(session, town)
-	HumanEngine.check_writing(&"HeroCommandRules.town_visiting_hero", before, [session, town], result)
-	return result
-
-static func town_visiting_hero__gd(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
-	var garrison_id := String(town_garrison_hero(session, town).get("id", ""))
-	var visitors := []
-	for hero in stationed_heroes(session, town):
-		if String(hero.get("id", "")) != garrison_id:
-			visitors.append(hero)
-	var active_hero_id := String(session.overworld.get("active_hero_id", "")) if session != null else ""
-	for hero in visitors:
-		if String(hero.get("id", "")) == active_hero_id:
-			return hero
-	return visitors[0] if not visitors.is_empty() else {}
+	return HumanEngine.native_writing(&"HeroCommandRules.town_visiting_hero", [session, town])
 
 ## The army slot holder of the garrison row: the garrison hero, else the town.
 static func town_garrison_holder_id(session: SessionStateStoreScript.SessionData, town: Dictionary) -> String:
@@ -783,44 +464,7 @@ static func town_garrison_holder_id(session: SessionStateStoreScript.SessionData
 ## hero's army (they must fit in seven slots); entering a held garrison swaps the
 ## two heroes, the old garrison hero leaving with its own army.
 static func set_town_garrison_hero(session: SessionStateStoreScript.SessionData, town: Dictionary, hero_id: String) -> Dictionary:
-	normalize_session(session)
-	var live_town := _live_town(session, town)
-	if live_town.is_empty():
-		return {"ok": false, "message": "No town is available for its garrison."}
-	if String(live_town.get("owner", "neutral")) != "player":
-		return {"ok": false, "message": "Only your towns take a garrison hero."}
-	var current := town_garrison_hero(session, live_town)
-	var current_id := String(current.get("id", ""))
-	if hero_id == "":
-		if current.is_empty():
-			return {"ok": false, "message": "No hero holds the garrison."}
-		var visitor := town_visiting_hero(session, live_town)
-		if not visitor.is_empty():
-			return {"ok": false, "message": "%s already waits at the gate. Swap the two heroes instead." % String(visitor.get("name", "A hero"))}
-		_write_town_garrison_hero(session, live_town, "")
-		town[TOWN_GARRISON_HERO_KEY] = ""
-		return {"ok": true, "operation": "release", "hero_id": current_id, "message": "%s leaves the garrison and waits at the gate." % String(current.get("name", "The hero"))}
-	if hero_id == current_id:
-		return {"ok": false, "message": "%s already holds the garrison." % String(current.get("name", "That hero"))}
-	var hero := hero_by_id(session, hero_id)
-	if hero.is_empty() or not _hero_is_stationed_at_town(hero, live_town):
-		return {"ok": false, "message": "Only a hero at this town can enter its garrison."}
-	var hero_name := String(hero.get("name", "The hero"))
-	if current.is_empty():
-		var town_stacks: Array = live_town.get("garrison", []) if live_town.get("garrison", []) is Array else []
-		var merged := merge_stacks_into_army(_holder_stacks(session, live_town, hero_id), town_stacks)
-		if merged.is_empty() and _valid_stack_count(town_stacks) > 0:
-			return {"ok": false, "message": "%s's army has no room for the garrison's troops. Free a slot or merge stacks first." % hero_name}
-		if _valid_stack_count(town_stacks) > 0:
-			_set_holder_stacks(session, live_town, hero_id, merged)
-			_set_holder_stacks(session, live_town, HOLDER_GARRISON, [])
-		_write_town_garrison_hero(session, live_town, hero_id)
-		town[TOWN_GARRISON_HERO_KEY] = hero_id
-		town["garrison"] = []
-		return {"ok": true, "operation": "garrison", "hero_id": hero_id, "message": "%s takes command of the garrison." % hero_name}
-	_write_town_garrison_hero(session, live_town, hero_id)
-	town[TOWN_GARRISON_HERO_KEY] = hero_id
-	return {"ok": true, "operation": "swap", "hero_id": hero_id, "released_hero_id": current_id, "message": "%s takes the garrison; %s waits at the gate." % [hero_name, String(current.get("name", "the other hero"))]}
+	return HumanEngine.native_writing(&"HeroCommandRules.set_town_garrison_hero", [session, town, hero_id])
 
 ## Merges `incoming` stacks into `army` (same units join, new units take free
 ## slots). Returns the slotted result, or [] when the units do not fit.
@@ -852,22 +496,6 @@ static func merge_stacks_into_army(army: Array, incoming: Array) -> Array:
 		merged.append(placed)
 	merged.sort_custom(_stack_slot_less)
 	return merged
-
-static func _live_town(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
-	var placement_id := String(town.get("placement_id", ""))
-	for entry in session.overworld.get("towns", []):
-		if entry is Dictionary and String(entry.get("placement_id", "")) == placement_id:
-			return entry
-	return {}
-
-static func _write_town_garrison_hero(session: SessionStateStoreScript.SessionData, town: Dictionary, hero_id: String) -> void:
-	var live_town := _live_town(session, town)
-	if live_town.is_empty():
-		return
-	if hero_id == "":
-		live_town.erase(TOWN_GARRISON_HERO_KEY)
-	else:
-		live_town[TOWN_GARRISON_HERO_KEY] = hero_id
 
 ## Clears garrison heroes that left, lost their town or no longer exist, and
 ## once per save gives towns holding two of the player's heroes a garrison hero
@@ -905,28 +533,7 @@ static func _normalize_town_garrison_heroes(session: SessionStateStoreScript.Ses
 	session.overworld[TOWN_GARRISON_HEROES_VERSION_KEY] = TOWN_GARRISON_HEROES_VERSION
 
 static func town_recruitment_destination(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return town_recruitment_destination__gd(session, town)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"HeroCommandRules.town_recruitment_destination", [session, town])
-	var before := HumanEngine.before_writing(&"HeroCommandRules.town_recruitment_destination", [session, town])
-	var result = town_recruitment_destination__gd(session, town)
-	HumanEngine.check_writing(&"HeroCommandRules.town_recruitment_destination", before, [session, town], result)
-	return result
-
-static func town_recruitment_destination__gd(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
-	# Remote management is not hero presence. Share the entrance/level and
-	# deterministic local-hero preference used by town defense.
-	var hero := town_defending_hero(session, town)
-	var holder_id := String(hero.get("id", HOLDER_GARRISON))
-	var label := _holder_label(session, town, holder_id)
-	var stacks := _holder_stacks(session, town, holder_id)
-	var occupied := 0
-	for stack in stacks:
-		if stack is Dictionary and int(stack.get("count", 0)) > 0:
-			occupied += 1
-	return {"holder_id": holder_id, "label": label, "stacks": stacks,
-		"summary": "Destination: %s | Arrives immediately here | %d/%d stacks." % [label, occupied, ARMY_SLOT_COUNT]}
+	return HumanEngine.native_writing(&"HeroCommandRules.town_recruitment_destination", [session, town])
 
 static func town_defense_force(session: SessionStateStoreScript.SessionData, town: Dictionary, preferred_hero_id: String = "") -> Dictionary:
 	# A town fields its garrison and ONE eligible visiting hero, not the remotely
@@ -1004,79 +611,7 @@ static func describe_tavern(session: SessionStateStoreScript.SessionData, town: 
 	return "\n".join(lines)
 
 static func get_tavern_actions(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return get_tavern_actions__gd(session, town)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"HeroCommandRules.get_tavern_actions", [session, town])
-	var before := HumanEngine.before_writing(&"HeroCommandRules.get_tavern_actions", [session, town])
-	var result = get_tavern_actions__gd(session, town)
-	HumanEngine.check_writing(&"HeroCommandRules.get_tavern_actions", before, [session, town], result)
-	return result
-
-static func get_tavern_actions__gd(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
-	normalize_session(session)
-	var actions := []
-	if session == null or town.is_empty() or not town_has_hall(town):
-		return actions
-	if player_hero_count(session) >= HERO_LIMIT:
-		return actions
-
-	for hero_id in tavern_offer_ids(session):
-		var hero_template := ContentService.get_hero(hero_id)
-		if hero_template.is_empty():
-			continue
-		var cost := hero_recruit_cost(hero_template)
-		var offer := tavern_offer(session, hero_id)
-		actions.append(
-			{
-				"id": "hire_hero:%s" % hero_id,
-				"label": "Hire %s" % String(hero_template.get("name", hero_id)),
-				"summary": "%s | Level %d | Army %s | Cost %s" % [
-					hero_profile_summary(hero_template, true),
-					int(offer.get("level", 1)),
-					_army_summary(offer.get("army", {})),
-					_describe_resources(cost),
-				],
-				"disabled": not _can_afford(session, cost),
-			}
-		)
-	return actions
-
-static func recruit_hero_at_town(session: SessionStateStoreScript.SessionData, town: Dictionary, hero_id: String) -> Dictionary:
-	normalize_session(session)
-	if session == null or town.is_empty():
-		return {"ok": false, "message": "No town is available for hero recruitment."}
-	if String(town.get("owner", "neutral")) != "player":
-		return {"ok": false, "message": "Only controlled towns can hire new commanders."}
-	if not town_has_hall(town):
-		return {"ok": false, "message": "A Wayfarers Hall is required before a new commander can be hired."}
-	var offer := tavern_offer_ids(session)
-	if hero_id not in offer:
-		return {"ok": false, "message": "That commander is not in this week's tavern."}
-	if player_hero_count(session) >= HERO_LIMIT:
-		return {"ok": false, "message": "The command limit has already been reached."}
-
-	var hero_template := ContentService.get_hero(hero_id)
-	var cost := hero_recruit_cost(hero_template)
-	if not _can_afford(session, cost):
-		return {"ok": false, "message": "Insufficient resources to hire %s." % String(hero_template.get("name", hero_id))}
-
-	_spend_resources(session, cost)
-	var position := OverworldLevelRulesScript.town_entrance(town)
-	# The hero arrives exactly as the tavern card showed: level and army.
-	var hired := tavern_offer(session, hero_id)
-	var hero := build_recruited_hero(hero_template, position, session, int(hired.get("level", 1)), hired.get("army", {}))
-	var heroes = session.overworld.get("player_heroes", [])
-	if not (heroes is Array):
-		heroes = []
-	heroes.append(hero)
-	session.overworld["player_heroes"] = heroes
-	# The hired hero's tavern place stays empty until the next weekly draw.
-	offer.erase(hero_id)
-	session.overworld[TAVERN_ROTATION_KEY] = {"week": tavern_week(session), "hero_ids": offer}
-	normalize_session(session)
-	var town_name := String(ContentService.get_town(String(town.get("town_id", ""))).get("name", town.get("town_id", "the town")))
-	return {"ok": true, "message": "%s joins the command roster at %s." % [String(hero.get("name", hero_id)), town_name]}
+	return HumanEngine.native_writing(&"HeroCommandRules.get_tavern_actions", [session, town])
 
 static func describe_town_transfer(session: SessionStateStoreScript.SessionData, town: Dictionary) -> String:
 	normalize_session(session)
@@ -1085,44 +620,6 @@ static func describe_town_transfer(session: SessionStateStoreScript.SessionData,
 	for hero in stationed_heroes(session, town):
 		lines.append("- %s | %s" % [String(hero.get("name", "Hero")), _army_summary(hero.get("army", {}))])
 	return "\n".join(lines)
-
-static func get_town_transfer_actions(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
-	normalize_session(session)
-	var actions := []
-	if session == null or town.is_empty():
-		return actions
-	var holders := _stationed_holder_ids(session, town)
-	if holders.size() < 2:
-		return actions
-
-	for source_holder in holders:
-		for target_holder in holders:
-			if source_holder == target_holder:
-				continue
-			for stack in _holder_stacks(session, town, source_holder):
-				if not (stack is Dictionary):
-					continue
-				var unit_id := String(stack.get("unit_id", ""))
-				var count := int(stack.get("count", 0))
-				if unit_id == "" or count <= 0:
-					continue
-				var admission := army_addition_plan(_holder_stacks(session, town, target_holder), {unit_id: 1})
-				var source_stacks := _holder_stacks(session, town, source_holder)
-				for amount_token in _transfer_amount_tokens(count):
-					var amount_label := _transfer_amount_label(amount_token, count)
-					var unit_name := String(ContentService.get_unit(unit_id).get("name", unit_id))
-					var blocker := "" if bool(admission.get("ok", false)) else String(admission.get("message", ""))
-					if blocker == "" and _transfer_empties_hero_army(source_holder, source_stacks, _resolve_transfer_amount(amount_token, count), count):
-						blocker = _last_stack_message(session, town, source_holder)
-					actions.append(
-						{
-							"id": "transfer:%s:%s:%s:%s" % [source_holder, target_holder, unit_id, amount_token],
-							"label": "Move %s %s" % [amount_label, unit_name],
-							"summary": "%s -> %s%s" % [_holder_label(session, town, source_holder), _holder_label(session, town, target_holder), " | " + blocker if blocker != "" else ""],
-							"disabled": blocker != "",
-						}
-					)
-	return actions
 
 static func army_addition_plan(stacks_value: Variant, additions: Dictionary) -> Dictionary:
 	# Plan before charging, consuming rewards or removing source troops. A
@@ -1180,218 +677,10 @@ static func army_addition_split(stacks_value: Variant, additions: Dictionary) ->
 	return {"stacks": stacks, "added": added, "overflow": overflow}
 
 static func army_slot_snapshot(session: SessionStateStoreScript.SessionData, town: Dictionary, holder_id: String) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return army_slot_snapshot__gd(session, town, holder_id)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"HeroCommandRules.army_slot_snapshot", [session, town, holder_id])
-	var before := HumanEngine.before_writing(&"HeroCommandRules.army_slot_snapshot", [session, town, holder_id])
-	var result = army_slot_snapshot__gd(session, town, holder_id)
-	HumanEngine.check_writing(&"HeroCommandRules.army_slot_snapshot", before, [session, town, holder_id], result)
-	return result
-
-static func army_slot_snapshot__gd(
-	session: SessionStateStoreScript.SessionData,
-	town: Dictionary,
-	holder_id: String
-) -> Dictionary:
-	normalize_session(session)
-	if session == null or holder_id == "":
-		return {}
-	if not _army_slot_holder_is_available(session, town, holder_id):
-		return {}
-	var holder_stacks := _holder_stacks(session, town, holder_id)
-	var occupied_count := _valid_stack_count(holder_stacks)
-	var overflow_stacks := []
-	var troop_count := 0
-	var valid_index := 0
-	for stack in holder_stacks:
-		if not (stack is Dictionary) or String(stack.get("unit_id", "")) == "" or int(stack.get("count", 0)) <= 0:
-			continue
-		troop_count += int(stack.get("count", 0))
-		if valid_index >= ARMY_SLOT_COUNT:
-			var unit_id := String(stack.get("unit_id", ""))
-			overflow_stacks.append({"unit_id": unit_id, "unit_name": String(ContentService.get_unit(unit_id).get("name", unit_id)), "count": int(stack.get("count", 0))})
-		valid_index += 1
-	var stacks := _slotted_stacks(holder_stacks)
-	var by_slot := {}
-	for stack_value in stacks:
-		if not (stack_value is Dictionary):
-			continue
-		var stack: Dictionary = stack_value
-		by_slot[int(stack.get(ARMY_SLOT_INDEX_KEY, -1))] = stack
-	var slots := []
-	for slot_index in range(ARMY_SLOT_COUNT):
-		var stack: Dictionary = by_slot.get(slot_index, {})
-		var unit_id := String(stack.get("unit_id", ""))
-		var count := int(stack.get("count", 0))
-		if unit_id == "" or count <= 0:
-			slots.append({
-				"slot_index": slot_index,
-				"occupied": false,
-				"holder_id": holder_id,
-			})
-			continue
-		var unit := ContentService.get_unit(unit_id)
-		var art := ContentService.get_unit_art(unit_id)
-		slots.append({
-			"slot_index": slot_index,
-			"occupied": true,
-			"holder_id": holder_id,
-			"unit_id": unit_id,
-			"unit_name": String(unit.get("name", unit_id)),
-			"count": count,
-			"tier": clampi(int(unit.get("tier", 1)), 1, 7),
-			"role": String(unit.get("role", "")),
-			"battle_icon": String(art.get("battle_icon", "")),
-			"portrait": String(art.get("portrait", "")),
-		})
-	return {
-		"model": "authoritative_seven_slot_army_bar",
-		"holder_id": holder_id,
-		"holder_label": _holder_label(session, town, holder_id),
-		"slot_count": ARMY_SLOT_COUNT,
-		"capacity_valid": occupied_count <= ARMY_SLOT_COUNT,
-		"occupied_slot_count": occupied_count,
-		"overflow_stack_count": overflow_stacks.size(),
-		"overflow_stacks": overflow_stacks,
-		"message": "%d stacks exceed the seven-slot limit. Merge stacks or move some to another army; no troops were removed." % occupied_count if occupied_count > ARMY_SLOT_COUNT else "",
-		"troop_count": troop_count,
-		"slots": slots,
-	}
+	return HumanEngine.native_writing(&"HeroCommandRules.army_slot_snapshot", [session, town, holder_id])
 
 static func manage_army_slots(session: SessionStateStoreScript.SessionData, town: Dictionary, source_holder_id: String, source_slot_index: int, target_holder_id: String, target_slot_index: int, amount_token: String = "all") -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return manage_army_slots__gd(session, town, source_holder_id, source_slot_index, target_holder_id, target_slot_index, amount_token)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"HeroCommandRules.manage_army_slots", [session, town, source_holder_id, source_slot_index, target_holder_id, target_slot_index, amount_token])
-	var before := HumanEngine.before_writing(&"HeroCommandRules.manage_army_slots", [session, town, source_holder_id, source_slot_index, target_holder_id, target_slot_index, amount_token])
-	var result = manage_army_slots__gd(session, town, source_holder_id, source_slot_index, target_holder_id, target_slot_index, amount_token)
-	HumanEngine.check_writing(&"HeroCommandRules.manage_army_slots", before, [session, town, source_holder_id, source_slot_index, target_holder_id, target_slot_index, amount_token], result)
-	return result
-
-static func manage_army_slots__gd(
-	session: SessionStateStoreScript.SessionData,
-	town: Dictionary,
-	source_holder_id: String,
-	source_slot_index: int,
-	target_holder_id: String,
-	target_slot_index: int,
-	amount_token: String = "all"
-) -> Dictionary:
-	normalize_session(session)
-	if session == null:
-		return {"ok": false, "message": "No expedition is available for army management."}
-	if not _army_slot_holder_is_available(session, town, source_holder_id) or not _army_slot_holder_is_available(session, town, target_holder_id):
-		return {"ok": false, "message": "Army management is limited to the active commander, a commander meeting it on the same tile, or holders stationed in this town."}
-	if town.is_empty() and source_holder_id != target_holder_id and String(session.overworld.get("active_hero_id", "")) not in [source_holder_id, target_holder_id]:
-		return {"ok": false, "message": "Field transfers must include the active commander."}
-	if source_slot_index < 0 or source_slot_index >= ARMY_SLOT_COUNT or target_slot_index < 0 or target_slot_index >= ARMY_SLOT_COUNT:
-		return {"ok": false, "message": "Choose two valid army slots."}
-	if source_holder_id == target_holder_id and source_slot_index == target_slot_index:
-		return {"ok": false, "message": "Choose a different destination slot."}
-	if _valid_stack_count(_holder_stacks(session, town, source_holder_id)) > ARMY_SLOT_COUNT or _valid_stack_count(_holder_stacks(session, town, target_holder_id)) > ARMY_SLOT_COUNT:
-		return {"ok": false, "message": "Army management is blocked because a holder exceeds the seven-stack formation capacity."}
-
-	var source_stacks := _slotted_stacks(_holder_stacks(session, town, source_holder_id))
-	var target_stacks := source_stacks.duplicate(true) if source_holder_id == target_holder_id else _slotted_stacks(_holder_stacks(session, town, target_holder_id))
-	var source_array_index := _stack_index_by_slot(source_stacks, source_slot_index)
-	if source_array_index < 0:
-		return {"ok": false, "message": "Select an occupied source slot first."}
-	var target_array_index := _stack_index_by_slot(target_stacks, target_slot_index)
-	var source_stack: Dictionary = source_stacks[source_array_index].duplicate(true)
-	var available := int(source_stack.get("count", 0))
-	var transfer_count := _resolve_transfer_amount(amount_token, available)
-	if transfer_count <= 0:
-		return {"ok": false, "message": "That split amount leaves no troops to move."}
-	var target_stack: Dictionary = target_stacks[target_array_index].duplicate(true) if target_array_index >= 0 else {}
-	var same_unit := not target_stack.is_empty() and String(target_stack.get("unit_id", "")) == String(source_stack.get("unit_id", ""))
-	if not target_stack.is_empty() and not same_unit and transfer_count != available:
-		return {"ok": false, "message": "Split stacks can move only into an empty slot or merge with the same unit."}
-
-	if source_holder_id != target_holder_id and _transfer_empties_hero_army(source_holder_id, source_stacks, transfer_count, available, target_stack.is_empty() or same_unit):
-		return {"ok": false, "message": _last_stack_message(session, town, source_holder_id)}
-
-	var operation := "move"
-	if source_holder_id == target_holder_id:
-		if target_stack.is_empty():
-			if transfer_count == available:
-				source_stack[ARMY_SLOT_INDEX_KEY] = target_slot_index
-				source_stacks[source_array_index] = source_stack
-			else:
-				source_stack["count"] = available - transfer_count
-				source_stacks[source_array_index] = source_stack
-				var split_stack := source_stack.duplicate(true)
-				split_stack["count"] = transfer_count
-				split_stack[ARMY_SLOT_INDEX_KEY] = target_slot_index
-				source_stacks.append(split_stack)
-				operation = "split"
-		elif same_unit:
-			target_stack["count"] = int(target_stack.get("count", 0)) + transfer_count
-			source_stacks[target_array_index] = target_stack
-			if transfer_count == available:
-				source_stacks.remove_at(source_array_index)
-			else:
-				source_stack["count"] = available - transfer_count
-				source_stacks[source_array_index] = source_stack
-			operation = "merge"
-		else:
-			var source_slot := int(source_stack.get(ARMY_SLOT_INDEX_KEY, source_slot_index))
-			source_stack[ARMY_SLOT_INDEX_KEY] = target_slot_index
-			target_stack[ARMY_SLOT_INDEX_KEY] = source_slot
-			source_stacks[source_array_index] = source_stack
-			source_stacks[target_array_index] = target_stack
-			operation = "swap"
-		target_stacks = source_stacks
-	else:
-		if target_stack.is_empty():
-			var moved_stack := source_stack.duplicate(true)
-			moved_stack["count"] = transfer_count
-			moved_stack[ARMY_SLOT_INDEX_KEY] = target_slot_index
-			target_stacks.append(moved_stack)
-			operation = "move" if transfer_count == available else "split"
-		elif same_unit:
-			target_stack["count"] = int(target_stack.get("count", 0)) + transfer_count
-			target_stacks[target_array_index] = target_stack
-			operation = "merge"
-		else:
-			var target_slot := int(target_stack.get(ARMY_SLOT_INDEX_KEY, target_slot_index))
-			target_stack[ARMY_SLOT_INDEX_KEY] = source_slot_index
-			source_stack[ARMY_SLOT_INDEX_KEY] = target_slot
-			target_stacks[target_array_index] = source_stack
-			source_stacks[source_array_index] = target_stack
-			operation = "swap"
-		if operation != "swap":
-			if transfer_count == available:
-				source_stacks.remove_at(source_array_index)
-			else:
-				source_stack["count"] = available - transfer_count
-				source_stacks[source_array_index] = source_stack
-
-	source_stacks = _slotted_stacks(source_stacks)
-	target_stacks = source_stacks if source_holder_id == target_holder_id else _slotted_stacks(target_stacks)
-	_set_holder_stacks(session, town, source_holder_id, source_stacks)
-	if source_holder_id != target_holder_id:
-		_set_holder_stacks(session, town, target_holder_id, target_stacks)
-	commit_active_hero(session)
-	var unit_id := String(source_stack.get("unit_id", ""))
-	var unit_name := String(ContentService.get_unit(unit_id).get("name", unit_id))
-	return {
-		"ok": true,
-		"operation": operation,
-		"message": "%s %d %s: %s slot %d -> %s slot %d." % [
-			operation.capitalize(), transfer_count, unit_name,
-			_holder_label(session, town, source_holder_id), source_slot_index + 1,
-			_holder_label(session, town, target_holder_id), target_slot_index + 1,
-		],
-		"source_holder_id": source_holder_id,
-		"source_slot_index": source_slot_index,
-		"target_holder_id": target_holder_id,
-		"target_slot_index": target_slot_index,
-		"unit_id": unit_id,
-		"moved_count": transfer_count,
-		"source": army_slot_snapshot(session, town, source_holder_id),
-		"target": army_slot_snapshot(session, town, target_holder_id),
-	}
+	return HumanEngine.native_writing(&"HeroCommandRules.manage_army_slots", [session, town, source_holder_id, source_slot_index, target_holder_id, target_slot_index, amount_token])
 
 static func field_rendezvous_heroes(session: SessionStateStoreScript.SessionData) -> Array:
 	return HumanEngine.native_writing(&"HeroCommandRules.field_rendezvous_heroes", [session])
@@ -1465,179 +754,14 @@ static func get_field_spell_share_actions(session: SessionStateStoreScript.Sessi
 		_append_field_spell_share_actions(actions, reserve, active)
 	return actions
 
-static func transfer_field_stack(
-	session: SessionStateStoreScript.SessionData,
-	source_hero_id: String,
-	target_hero_id: String,
-	unit_id: String,
-	amount_token: String
-) -> Dictionary:
-	normalize_session(session)
-	if session == null:
-		return {"ok": false, "message": "No expedition is available for a field transfer."}
-	if source_hero_id == "" or target_hero_id == "" or source_hero_id == target_hero_id:
-		return {"ok": false, "message": "Choose two different controlled commanders."}
-	var source := hero_by_id(session, source_hero_id)
-	var target := hero_by_id(session, target_hero_id)
-	if source.is_empty() or target.is_empty():
-		return {"ok": false, "message": "Both commanders must remain under player control."}
-	var active_id := String(session.overworld.get("active_hero_id", ""))
-	if source_hero_id != active_id and target_hero_id != active_id:
-		return {"ok": false, "message": "Field transfers must include the active commander."}
-	if _normalize_position(source.get("position", {})) != _normalize_position(target.get("position", {})):
-		return {"ok": false, "message": "The commanders must occupy the same field tile."}
-	if unit_id == "":
-		return {"ok": false, "message": "That transfer order is missing a unit id."}
+static func transfer_field_stack(session: SessionStateStoreScript.SessionData, source_hero_id: String, target_hero_id: String, unit_id: String, amount_token: String) -> Dictionary:
+	return HumanEngine.native_writing(&"HeroCommandRules.transfer_field_stack", [session, source_hero_id, target_hero_id, unit_id, amount_token])
 
-	var source_stacks := _holder_stacks(session, {}, source_hero_id)
-	var source_index := _stack_index_by_unit(source_stacks, unit_id)
-	if source_index < 0:
-		return {"ok": false, "message": "That stack is no longer available for transfer."}
-	var source_stack: Dictionary = source_stacks[source_index]
-	var available := int(source_stack.get("count", 0))
-	var transfer_count := _resolve_transfer_amount(amount_token, available)
-	if transfer_count <= 0:
-		return {"ok": false, "message": "No troops are available for transfer."}
-	if _transfer_empties_hero_army(source_hero_id, source_stacks, transfer_count, available):
-		return {"ok": false, "message": _last_stack_message(session, {}, source_hero_id)}
+static func transfer_field_artifact(session: SessionStateStoreScript.SessionData, source_hero_id: String, target_hero_id: String, artifact_id: String) -> Dictionary:
+	return HumanEngine.native_writing(&"HeroCommandRules.transfer_field_artifact", [session, source_hero_id, target_hero_id, artifact_id])
 
-	var admission := army_addition_plan(_holder_stacks(session, {}, target_hero_id), {unit_id: transfer_count})
-	if not bool(admission.get("ok", false)):
-		return admission
-	source_stack["count"] = available - transfer_count
-	if int(source_stack.get("count", 0)) > 0:
-		source_stacks[source_index] = source_stack
-	else:
-		source_stacks.remove_at(source_index)
-	var target_stacks: Array = admission.get("stacks", [])
-
-	_set_holder_stacks(session, {}, source_hero_id, source_stacks)
-	_set_holder_stacks(session, {}, target_hero_id, target_stacks)
-	var unit_name := String(ContentService.get_unit(unit_id).get("name", unit_id))
-	return {
-		"ok": true,
-		"message": "Moved %d %s from %s to %s." % [
-			transfer_count,
-			unit_name,
-			String(source.get("name", source_hero_id)),
-			String(target.get("name", target_hero_id)),
-		],
-		"source_hero_id": source_hero_id,
-		"target_hero_id": target_hero_id,
-		"unit_id": unit_id,
-		"transferred_count": transfer_count,
-	}
-
-static func transfer_field_artifact(
-	session: SessionStateStoreScript.SessionData,
-	source_hero_id: String,
-	target_hero_id: String,
-	artifact_id: String
-) -> Dictionary:
-	normalize_session(session)
-	if session == null:
-		return {"ok": false, "message": "No expedition is available for an artifact handoff."}
-	if source_hero_id == "" or target_hero_id == "" or source_hero_id == target_hero_id:
-		return {"ok": false, "message": "Choose two different controlled commanders."}
-	var source := hero_by_id(session, source_hero_id)
-	var target := hero_by_id(session, target_hero_id)
-	if source.is_empty() or target.is_empty():
-		return {"ok": false, "message": "Both commanders must remain under player control."}
-	var active_id := String(session.overworld.get("active_hero_id", ""))
-	if source_hero_id != active_id and target_hero_id != active_id:
-		return {"ok": false, "message": "Field handoffs must include the active commander."}
-	if _normalize_position(source.get("position", {})) != _normalize_position(target.get("position", {})):
-		return {"ok": false, "message": "The commanders must occupy the same field tile."}
-	if artifact_id == "" or ContentService.get_artifact(artifact_id).is_empty():
-		return {"ok": false, "message": "That artifact handoff is invalid."}
-	if not ArtifactRulesScript.has_artifact(source, artifact_id):
-		return {"ok": false, "message": "That artifact is no longer owned by %s." % String(source.get("name", source_hero_id))}
-	if ArtifactRulesScript.has_artifact(target, artifact_id):
-		return {"ok": false, "message": "%s already owns %s." % [String(target.get("name", target_hero_id)), ArtifactRulesScript.artifact_name(artifact_id)]}
-
-	var source_previous_max := movement_max_for_hero(source, session)
-	var target_previous_max := movement_max_for_hero(target, session)
-	var removal := ArtifactRulesScript.remove_owned_artifact(source, artifact_id)
-	if not bool(removal.get("ok", false)):
-		return {"ok": false, "message": String(removal.get("message", "Artifact handoff failed."))}
-	var claim := ArtifactRulesScript.claim_artifact(target, artifact_id, "Received", true)
-	if not bool(claim.get("ok", false)) or bool(claim.get("duplicate", false)):
-		return {"ok": false, "message": String(claim.get("message", "Artifact handoff failed."))}
-	var source_updated: Dictionary = removal.get("hero", source)
-	var target_updated: Dictionary = claim.get("hero", target)
-	source_updated = _preserve_movement_deficit_after_artifact_change(source_updated, source_previous_max, session)
-	target_updated = _preserve_movement_deficit_after_artifact_change(target_updated, target_previous_max, session)
-	var heroes: Array = session.overworld.get("player_heroes", []) if session.overworld.get("player_heroes", []) is Array else []
-	_replace_hero_in_array(heroes, source_updated)
-	_replace_hero_in_array(heroes, target_updated)
-	session.overworld["player_heroes"] = heroes
-	_sync_active_hero_mirror(session)
-	var target_location := ArtifactRulesScript.locate_artifact(target_updated, artifact_id)
-	return {
-		"ok": true,
-		"message": "Passed %s from %s to %s. %s." % [
-			ArtifactRulesScript.artifact_name(artifact_id),
-			String(source.get("name", source_hero_id)),
-			String(target.get("name", target_hero_id)),
-			ArtifactRulesScript.artifact_collection_state(target_updated, artifact_id),
-		],
-		"source_hero_id": source_hero_id,
-		"target_hero_id": target_hero_id,
-		"artifact_id": artifact_id,
-		"source_previous_location": String(removal.get("previous_location", "")),
-		"source_previous_slot": String(removal.get("previous_slot", "")),
-		"target_location": String(target_location.get("location", "")),
-		"target_slot": String(target_location.get("slot", "")),
-		"auto_equipped": bool(claim.get("auto_equipped", false)),
-	}
-
-static func teach_field_spell(
-	session: SessionStateStoreScript.SessionData,
-	source_hero_id: String,
-	target_hero_id: String,
-	spell_id: String
-) -> Dictionary:
-	normalize_session(session)
-	if session == null:
-		return {"ok": false, "message": "No expedition is available for spell teaching."}
-	if source_hero_id == "" or target_hero_id == "" or source_hero_id == target_hero_id:
-		return {"ok": false, "message": "Choose two different controlled commanders."}
-	var source := hero_by_id(session, source_hero_id)
-	var target := hero_by_id(session, target_hero_id)
-	if source.is_empty() or target.is_empty():
-		return {"ok": false, "message": "Both commanders must remain under player control."}
-	var active_id := String(session.overworld.get("active_hero_id", ""))
-	if source_hero_id != active_id and target_hero_id != active_id:
-		return {"ok": false, "message": "Field teaching must include the active commander."}
-	if _normalize_position(source.get("position", {})) != _normalize_position(target.get("position", {})):
-		return {"ok": false, "message": "The commanders must occupy the same field tile."}
-	var spell := ContentService.get_spell(spell_id)
-	if spell_id == "" or spell.is_empty():
-		return {"ok": false, "message": "That spell teaching order is invalid."}
-	if not SpellRulesScript.knows_spell(source, spell_id):
-		return {"ok": false, "message": "%s no longer knows %s." % [String(source.get("name", source_hero_id)), String(spell.get("name", spell_id))]}
-	if SpellRulesScript.knows_spell(target, spell_id):
-		return {"ok": false, "message": "%s already knows %s." % [String(target.get("name", target_hero_id)), String(spell.get("name", spell_id))]}
-
-	var learning := SpellRulesScript.learn_spell(target, spell_id)
-	if not bool(learning.get("ok", false)):
-		return {"ok": false, "message": String(learning.get("message", "Spell teaching failed."))}
-	var target_updated: Dictionary = learning.get("hero", target)
-	var heroes: Array = session.overworld.get("player_heroes", []) if session.overworld.get("player_heroes", []) is Array else []
-	_replace_hero_in_array(heroes, target_updated)
-	session.overworld["player_heroes"] = heroes
-	_sync_active_hero_mirror(session)
-	return {
-		"ok": true,
-		"message": "%s teaches %s to %s." % [
-			String(source.get("name", source_hero_id)),
-			String(spell.get("name", spell_id)),
-			String(target.get("name", target_hero_id)),
-		],
-		"source_hero_id": source_hero_id,
-		"target_hero_id": target_hero_id,
-		"spell_id": spell_id,
-	}
+static func teach_field_spell(session: SessionStateStoreScript.SessionData, source_hero_id: String, target_hero_id: String, spell_id: String) -> Dictionary:
+	return HumanEngine.native_writing(&"HeroCommandRules.teach_field_spell", [session, source_hero_id, target_hero_id, spell_id])
 
 # Hero meeting screen (HoMM-style exchange between two commanders on one
 # field tile). Slot moves, merges, swaps and splits use manage_army_slots; the
@@ -1645,456 +769,22 @@ static func teach_field_spell(
 const FIELD_ARTIFACT_PACK_SLOT := "pack"
 
 static func field_slot_action_id(source_hero_id: String, source_slot_index: int, target_hero_id: String, target_slot_index: int, amount_token: String = "all") -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return field_slot_action_id__gd(source_hero_id, source_slot_index, target_hero_id, target_slot_index, amount_token)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"HeroCommandRules.field_slot_action_id", [source_hero_id, source_slot_index, target_hero_id, target_slot_index, amount_token])
-	var result = field_slot_action_id__gd(source_hero_id, source_slot_index, target_hero_id, target_slot_index, amount_token)
-	HumanEngine.check(&"HeroCommandRules.field_slot_action_id", [source_hero_id, source_slot_index, target_hero_id, target_slot_index, amount_token], result)
-	return result
-
-static func field_slot_action_id__gd(source_hero_id: String, source_slot_index: int, target_hero_id: String, target_slot_index: int, amount_token: String = "all") -> String:
-	return "field_slot:%s:%d:%s:%d:%s" % [source_hero_id, source_slot_index, target_hero_id, target_slot_index, amount_token]
+	return HumanEngine.native(&"HeroCommandRules.field_slot_action_id", [source_hero_id, source_slot_index, target_hero_id, target_slot_index, amount_token])
 
 static func field_troops_all_action_id(source_hero_id: String, target_hero_id: String) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return field_troops_all_action_id__gd(source_hero_id, target_hero_id)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"HeroCommandRules.field_troops_all_action_id", [source_hero_id, target_hero_id])
-	var result = field_troops_all_action_id__gd(source_hero_id, target_hero_id)
-	HumanEngine.check(&"HeroCommandRules.field_troops_all_action_id", [source_hero_id, target_hero_id], result)
-	return result
-
-static func field_troops_all_action_id__gd(source_hero_id: String, target_hero_id: String) -> String:
-	return "field_troops_all:%s:%s" % [source_hero_id, target_hero_id]
+	return HumanEngine.native(&"HeroCommandRules.field_troops_all_action_id", [source_hero_id, target_hero_id])
 
 static func field_artifact_place_action_id(source_hero_id: String, target_hero_id: String, artifact_id: String, target_slot: String = "") -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return field_artifact_place_action_id__gd(source_hero_id, target_hero_id, artifact_id, target_slot)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"HeroCommandRules.field_artifact_place_action_id", [source_hero_id, target_hero_id, artifact_id, target_slot])
-	var result = field_artifact_place_action_id__gd(source_hero_id, target_hero_id, artifact_id, target_slot)
-	HumanEngine.check(&"HeroCommandRules.field_artifact_place_action_id", [source_hero_id, target_hero_id, artifact_id, target_slot], result)
-	return result
-
-static func field_artifact_place_action_id__gd(source_hero_id: String, target_hero_id: String, artifact_id: String, target_slot: String = "") -> String:
-	return "field_artifact_place:%s:%s:%s:%s" % [source_hero_id, target_hero_id, artifact_id, target_slot]
+	return HumanEngine.native(&"HeroCommandRules.field_artifact_place_action_id", [source_hero_id, target_hero_id, artifact_id, target_slot])
 
 static func field_artifacts_all_action_id(source_hero_id: String, target_hero_id: String) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return field_artifacts_all_action_id__gd(source_hero_id, target_hero_id)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"HeroCommandRules.field_artifacts_all_action_id", [source_hero_id, target_hero_id])
-	var result = field_artifacts_all_action_id__gd(source_hero_id, target_hero_id)
-	HumanEngine.check(&"HeroCommandRules.field_artifacts_all_action_id", [source_hero_id, target_hero_id], result)
-	return result
-
-static func field_artifacts_all_action_id__gd(source_hero_id: String, target_hero_id: String) -> String:
-	return "field_artifacts_all:%s:%s" % [source_hero_id, target_hero_id]
+	return HumanEngine.native(&"HeroCommandRules.field_artifacts_all_action_id", [source_hero_id, target_hero_id])
 
 static func field_spell_share_action_id(source_hero_id: String, target_hero_id: String, spell_id: String) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return field_spell_share_action_id__gd(source_hero_id, target_hero_id, spell_id)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"HeroCommandRules.field_spell_share_action_id", [source_hero_id, target_hero_id, spell_id])
-	var result = field_spell_share_action_id__gd(source_hero_id, target_hero_id, spell_id)
-	HumanEngine.check(&"HeroCommandRules.field_spell_share_action_id", [source_hero_id, target_hero_id, spell_id], result)
-	return result
-
-static func field_spell_share_action_id__gd(source_hero_id: String, target_hero_id: String, spell_id: String) -> String:
-	return "field_spell_share:%s:%s:%s" % [source_hero_id, target_hero_id, spell_id]
+	return HumanEngine.native(&"HeroCommandRules.field_spell_share_action_id", [source_hero_id, target_hero_id, spell_id])
 
 static func field_exchange_state(session: SessionStateStoreScript.SessionData, partner_hero_id: String = "") -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return field_exchange_state__gd(session, partner_hero_id)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"HeroCommandRules.field_exchange_state", [session, partner_hero_id])
-	var before := HumanEngine.before_writing(&"HeroCommandRules.field_exchange_state", [session, partner_hero_id])
-	var result = field_exchange_state__gd(session, partner_hero_id)
-	HumanEngine.check_writing(&"HeroCommandRules.field_exchange_state", before, [session, partner_hero_id], result)
-	return result
-
-static func field_exchange_state__gd(session: SessionStateStoreScript.SessionData, partner_hero_id: String = "") -> Dictionary:
-	# The active commander faces one partner on its tile (the first one when
-	# the requested partner is not there). Empty when nobody shares the tile.
-	var partners := []
-	var partner_ids := []
-	for hero_value in field_rendezvous_heroes(session):
-		if not (hero_value is Dictionary):
-			continue
-		var hero_id := String(hero_value.get("id", ""))
-		partner_ids.append(hero_id)
-		partners.append({
-			"hero_id": hero_id,
-			"name": String(hero_value.get("name", hero_id)),
-			"portrait": String(ContentService.get_hero_art(hero_id).get("portrait", "")),
-		})
-	if partner_ids.is_empty():
-		return {}
-	var partner_id := partner_hero_id if partner_hero_id in partner_ids else String(partner_ids[0])
-	var left := field_exchange_snapshot(session, String(session.overworld.get("active_hero_id", "")))
-	var right := field_exchange_snapshot(session, partner_id)
-	if left.is_empty() or right.is_empty():
-		return {}
-	return {"left": left, "right": right, "partners": partners, "partner_id": partner_id}
-
-static func field_exchange_snapshot(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
-	# Read model for one side of the hero meeting screen: identity, primary
-	# stats, the seven army slots, worn and carried artifacts, known spells.
-	var army := army_slot_snapshot(session, {}, hero_id)
-	if army.is_empty():
-		return {}
-	var hero := hero_inspection_snapshot(session, hero_id)
-	if hero.is_empty():
-		return {}
-	var artifact_bonuses := ArtifactRulesScript.aggregate_bonuses(hero.duplicate(true))
-	var specialty_bonuses := HeroProgressionRulesScript.aggregate_bonuses(hero)
-	var stats := []
-	for stat in ["attack", "defense", "power", "knowledge"]:
-		var base := int(hero.get("command", {}).get(stat, 0))
-		var bonus := int(artifact_bonuses.get("battle_" + stat, 0)) + int(specialty_bonuses.get("battle_" + stat, 0)) if stat in ["attack", "defense"] else 0
-		stats.append({"id": stat, "label": stat.capitalize(), "base": base, "bonus": bonus, "value": base + bonus})
-	var artifacts := ArtifactRulesScript.normalize_hero_artifacts(hero.get("artifacts", {}))
-	var spell_ids := []
-	for spell_value in SpellRulesScript.known_spells(hero):
-		if spell_value is Dictionary and String(spell_value.get("id", "")) != "":
-			spell_ids.append(String(spell_value.get("id", "")))
-	var mana: Dictionary = hero.get("spellbook", {}).get("mana", {}) if hero.get("spellbook", {}).get("mana", {}) is Dictionary else {}
-	var movement: Dictionary = hero.get("movement", {}) if hero.get("movement", {}) is Dictionary else {}
-	return {
-		"hero_id": hero_id,
-		"name": String(hero.get("name", hero_id)),
-		"level": int(hero.get("level", 1)),
-		"archetype": hero_archetype_label(hero),
-		"portrait": String(ContentService.get_hero_art(hero_id).get("portrait", "")),
-		"active": hero_id == String(session.overworld.get("active_hero_id", "")),
-		"stats": stats,
-		"mana": {"current": int(mana.get("current", 0)), "max": int(mana.get("max", 0))},
-		"movement": {"current": int(movement.get("current", 0)), "max": int(movement.get("max", 0))},
-		"army": army,
-		"equipped": artifacts.get("equipped", {}),
-		"inventory": artifacts.get("inventory", []),
-		"spell_ids": spell_ids,
-	}
-
-static func move_all_field_troops(
-	session: SessionStateStoreScript.SessionData,
-	source_hero_id: String,
-	target_hero_id: String
-) -> Dictionary:
-	# HoMM-style "move all": every stack that fits merges into a matching
-	# target stack or takes a free slot (its own index when open). When that
-	# would empty the source, its lowest-tier stack leaves one creature behind.
-	normalize_session(session)
-	var pair_error := _field_exchange_pair_error(session, source_hero_id, target_hero_id)
-	if pair_error != "":
-		return {"ok": false, "message": pair_error}
-	var source_raw := _holder_stacks(session, {}, source_hero_id)
-	var target_raw := _holder_stacks(session, {}, target_hero_id)
-	if _valid_stack_count(source_raw) > ARMY_SLOT_COUNT or _valid_stack_count(target_raw) > ARMY_SLOT_COUNT:
-		return {"ok": false, "message": "Army management is blocked because a holder exceeds the seven-stack formation capacity."}
-	var source_stacks := _slotted_stacks(source_raw)
-	var target_stacks := _slotted_stacks(target_raw)
-	var source_name := _holder_label(session, {}, source_hero_id)
-	var target_name := _holder_label(session, {}, target_hero_id)
-	if source_stacks.is_empty():
-		return {"ok": false, "message": "%s has no troops to hand over." % source_name}
-	var keeper_index := -1
-	var plan := _plan_move_all_troops(source_stacks, target_stacks, keeper_index)
-	if (plan.get("remaining", []) as Array).is_empty():
-		keeper_index = _move_all_keeper_index(source_stacks)
-		plan = _plan_move_all_troops(source_stacks, target_stacks, keeper_index)
-	var moved_count := int(plan.get("moved_count", 0))
-	if moved_count <= 0:
-		if keeper_index >= 0:
-			return {"ok": false, "message": _last_stack_message(session, {}, source_hero_id)}
-		return {"ok": false, "message": "%s has no free army slot for these troops." % target_name}
-	_set_holder_stacks(session, {}, source_hero_id, _slotted_stacks(plan.get("remaining", [])))
-	_set_holder_stacks(session, {}, target_hero_id, _slotted_stacks(plan.get("target", [])))
-	commit_active_hero(session)
-	var message := "Moved %d troops from %s to %s." % [moved_count, source_name, target_name]
-	var kept_unit_id := ""
-	if keeper_index >= 0:
-		kept_unit_id = String(source_stacks[keeper_index].get("unit_id", ""))
-		message += " %s keeps one %s." % [source_name, String(ContentService.get_unit(kept_unit_id).get("name", kept_unit_id))]
-	elif not (plan.get("remaining", []) as Array).is_empty():
-		message += " %s has no free slot for the rest." % target_name
-	return {
-		"ok": true,
-		"message": message,
-		"source_hero_id": source_hero_id,
-		"target_hero_id": target_hero_id,
-		"moved_count": moved_count,
-		"kept_unit_id": kept_unit_id,
-	}
-
-static func place_field_artifact(
-	session: SessionStateStoreScript.SessionData,
-	source_hero_id: String,
-	target_hero_id: String,
-	artifact_id: String,
-	target_slot: String = ""
-) -> Dictionary:
-	# Slot-precise artifact orders for the meeting screen. An empty target slot
-	# keeps the classic handoff (matching empty slot, otherwise backpack);
-	# FIELD_ARTIFACT_PACK_SLOT stows it; an equipment slot must accept it and
-	# pushes any artifact already worn there into that commander's backpack.
-	normalize_session(session)
-	if session == null:
-		return {"ok": false, "message": "No expedition is available for an artifact handoff."}
-	if target_slot != "" and target_slot != FIELD_ARTIFACT_PACK_SLOT and target_slot not in ArtifactRulesScript.EQUIPMENT_SLOTS:
-		return {"ok": false, "message": "That artifact slot does not exist."}
-	if artifact_id == "" or ContentService.get_artifact(artifact_id).is_empty():
-		return {"ok": false, "message": "That artifact handoff is invalid."}
-	if target_slot not in ["", FIELD_ARTIFACT_PACK_SLOT] and not ArtifactRulesScript.equipment_slot_accepts(target_slot, artifact_id):
-		var fits := ArtifactRulesScript.artifact_slot(artifact_id)
-		return {"ok": false, "message": "%s %s." % [
-			ArtifactRulesScript.artifact_name(artifact_id),
-			"is carried in the backpack, not worn" if fits == "" else "is worn in the %s slot" % fits,
-		]}
-	if source_hero_id == target_hero_id:
-		return _rearrange_field_artifact(session, source_hero_id, artifact_id, target_slot)
-	if target_slot == "":
-		return transfer_field_artifact(session, source_hero_id, target_hero_id, artifact_id)
-	var pair_error := _field_exchange_pair_error(session, source_hero_id, target_hero_id)
-	if pair_error != "":
-		return {"ok": false, "message": pair_error}
-	var source := hero_by_id(session, source_hero_id)
-	var target := hero_by_id(session, target_hero_id)
-	if not ArtifactRulesScript.has_artifact(source, artifact_id):
-		return {"ok": false, "message": "That artifact is no longer owned by %s." % String(source.get("name", source_hero_id))}
-	if ArtifactRulesScript.has_artifact(target, artifact_id):
-		return {"ok": false, "message": "%s already owns %s." % [String(target.get("name", target_hero_id)), ArtifactRulesScript.artifact_name(artifact_id)]}
-	var source_previous_max := movement_max_for_hero(source, session)
-	var target_previous_max := movement_max_for_hero(target, session)
-	var removal := ArtifactRulesScript.remove_owned_artifact(source, artifact_id)
-	if not bool(removal.get("ok", false)):
-		return {"ok": false, "message": String(removal.get("message", "Artifact handoff failed."))}
-	var claim := ArtifactRulesScript.claim_artifact(target, artifact_id, "Received", false)
-	if not bool(claim.get("ok", false)) or bool(claim.get("duplicate", false)):
-		return {"ok": false, "message": String(claim.get("message", "Artifact handoff failed."))}
-	var target_updated: Dictionary = claim.get("hero", target)
-	var displaced_id := ""
-	if target_slot != FIELD_ARTIFACT_PACK_SLOT:
-		var equip := ArtifactRulesScript.equip_artifact_in_slot(target_updated, artifact_id, target_slot)
-		if not bool(equip.get("ok", false)):
-			return {"ok": false, "message": String(equip.get("message", "Artifact handoff failed."))}
-		target_updated = equip.get("hero", target_updated)
-		displaced_id = String(equip.get("swapped_out_artifact_id", ""))
-	var source_updated: Dictionary = _preserve_movement_deficit_after_artifact_change(removal.get("hero", source), source_previous_max, session)
-	target_updated = _preserve_movement_deficit_after_artifact_change(target_updated, target_previous_max, session)
-	_store_field_heroes(session, [source_updated, target_updated])
-	var target_location := ArtifactRulesScript.locate_artifact(target_updated, artifact_id)
-	var message := "Passed %s from %s to %s%s." % [
-		ArtifactRulesScript.artifact_name(artifact_id),
-		String(source.get("name", source_hero_id)),
-		String(target.get("name", target_hero_id)),
-		"'s backpack" if target_slot == FIELD_ARTIFACT_PACK_SLOT else "",
-	]
-	if displaced_id != "":
-		message += " %s goes to the backpack." % ArtifactRulesScript.artifact_name(displaced_id)
-	return {
-		"ok": true,
-		"message": message,
-		"source_hero_id": source_hero_id,
-		"target_hero_id": target_hero_id,
-		"artifact_id": artifact_id,
-		"source_previous_location": String(removal.get("previous_location", "")),
-		"source_previous_slot": String(removal.get("previous_slot", "")),
-		"target_location": String(target_location.get("location", "")),
-		"target_slot": String(target_location.get("slot", "")),
-		"displaced_artifact_id": displaced_id,
-	}
-
-static func move_all_field_artifacts(
-	session: SessionStateStoreScript.SessionData,
-	source_hero_id: String,
-	target_hero_id: String
-) -> Dictionary:
-	# Hands over every artifact the target does not already own, each through
-	# the classic handoff (matching empty slot, otherwise backpack).
-	normalize_session(session)
-	var pair_error := _field_exchange_pair_error(session, source_hero_id, target_hero_id)
-	if pair_error != "":
-		return {"ok": false, "message": pair_error}
-	var source_name := _holder_label(session, {}, source_hero_id)
-	var target_name := _holder_label(session, {}, target_hero_id)
-	var owned := ArtifactRulesScript.owned_artifact_ids(hero_by_id(session, source_hero_id))
-	if owned.is_empty():
-		return {"ok": false, "message": "%s carries no artifacts." % source_name}
-	var moved := []
-	var kept := []
-	for artifact_id_value in owned:
-		var artifact_id := String(artifact_id_value)
-		if ArtifactRulesScript.has_artifact(hero_by_id(session, target_hero_id), artifact_id):
-			kept.append(artifact_id)
-			continue
-		var result := transfer_field_artifact(session, source_hero_id, target_hero_id, artifact_id)
-		if bool(result.get("ok", false)):
-			moved.append(artifact_id)
-		else:
-			kept.append(artifact_id)
-	if moved.is_empty():
-		return {"ok": false, "message": "%s already owns every artifact %s carries." % [target_name, source_name]}
-	var message := "Passed %d artifact%s from %s to %s." % [moved.size(), "" if moved.size() == 1 else "s", source_name, target_name]
-	if not kept.is_empty():
-		message += " %d already owned stay%s with %s." % [kept.size(), "s" if kept.size() == 1 else "", source_name]
-	return {
-		"ok": true,
-		"message": message,
-		"source_hero_id": source_hero_id,
-		"target_hero_id": target_hero_id,
-		"moved_artifact_ids": moved,
-		"kept_artifact_ids": kept,
-	}
-
-static func _rearrange_field_artifact(
-	session: SessionStateStoreScript.SessionData,
-	hero_id: String,
-	artifact_id: String,
-	target_slot: String
-) -> Dictionary:
-	if not _army_slot_holder_is_available(session, {}, hero_id):
-		return {"ok": false, "message": "Only commanders at the meeting can rearrange their gear here."}
-	var hero := hero_by_id(session, hero_id)
-	var location := ArtifactRulesScript.locate_artifact(hero, artifact_id)
-	if String(location.get("location", "missing")) == "missing":
-		return {"ok": false, "message": "That artifact is no longer owned by %s." % String(hero.get("name", hero_id))}
-	var change := {}
-	if target_slot == FIELD_ARTIFACT_PACK_SLOT or target_slot == "":
-		if String(location.get("location", "")) != "equipped":
-			return {"ok": false, "message": "%s is already in the backpack." % ArtifactRulesScript.artifact_name(artifact_id)}
-		change = ArtifactRulesScript.unequip_artifact(hero, String(location.get("slot", "")))
-	else:
-		change = ArtifactRulesScript.equip_artifact_in_slot(hero, artifact_id, target_slot)
-	if not bool(change.get("ok", false)):
-		return {"ok": false, "message": String(change.get("message", "The gear did not change."))}
-	var updated := _preserve_movement_deficit_after_artifact_change(change.get("hero", hero), movement_max_for_hero(hero, session), session)
-	_store_field_heroes(session, [updated])
-	var new_location := ArtifactRulesScript.locate_artifact(updated, artifact_id)
-	return {
-		"ok": true,
-		"message": String(change.get("message", "")),
-		"source_hero_id": hero_id,
-		"target_hero_id": hero_id,
-		"artifact_id": artifact_id,
-		"target_location": String(new_location.get("location", "")),
-		"target_slot": String(new_location.get("slot", "")),
-		"displaced_artifact_id": String(change.get("swapped_out_artifact_id", "")),
-	}
-
-static func _store_field_heroes(session: SessionStateStoreScript.SessionData, updated_heroes: Array) -> void:
-	var heroes: Array = session.overworld.get("player_heroes", []) if session.overworld.get("player_heroes", []) is Array else []
-	for hero_value in updated_heroes:
-		if hero_value is Dictionary:
-			_replace_hero_in_array(heroes, hero_value)
-	session.overworld["player_heroes"] = heroes
-	_sync_active_hero_mirror(session)
-
-static func _plan_move_all_troops(source_stacks: Array, target_stacks: Array, keeper_index: int) -> Dictionary:
-	var remaining := []
-	var target := target_stacks.duplicate(true)
-	var moved_count := 0
-	for index in range(source_stacks.size()):
-		var stack: Dictionary = source_stacks[index].duplicate(true)
-		var count := int(stack.get("count", 0))
-		var amount := count - 1 if index == keeper_index else count
-		if amount <= 0:
-			remaining.append(stack)
-			continue
-		var unit_id := String(stack.get("unit_id", ""))
-		var matching := -1
-		var claimed := {}
-		for target_index in range(target.size()):
-			claimed[int(target[target_index].get(ARMY_SLOT_INDEX_KEY, -1))] = true
-			if matching < 0 and String(target[target_index].get("unit_id", "")) == unit_id:
-				matching = target_index
-		if matching >= 0:
-			target[matching]["count"] = int(target[matching].get("count", 0)) + amount
-		else:
-			var open_slot := int(stack.get(ARMY_SLOT_INDEX_KEY, -1))
-			if open_slot < 0 or open_slot >= ARMY_SLOT_COUNT or claimed.has(open_slot):
-				open_slot = _first_open_army_slot(claimed)
-			if open_slot < 0:
-				remaining.append(stack)
-				continue
-			var moved_stack := stack.duplicate(true)
-			moved_stack["count"] = amount
-			moved_stack[ARMY_SLOT_INDEX_KEY] = open_slot
-			target.append(moved_stack)
-		moved_count += amount
-		if amount < count:
-			stack["count"] = count - amount
-			remaining.append(stack)
-	return {"remaining": remaining, "target": target, "moved_count": moved_count}
-
-static func _move_all_keeper_index(source_stacks: Array) -> int:
-	# The creature left behind comes from the lowest-tier stack (first slot on ties).
-	var keeper := -1
-	var keeper_tier := 99
-	for index in range(source_stacks.size()):
-		var tier := int(ContentService.get_unit(String(source_stacks[index].get("unit_id", ""))).get("tier", 1))
-		if keeper < 0 or tier < keeper_tier:
-			keeper = index
-			keeper_tier = tier
-	return keeper
-
-static func transfer_town_stack(
-	session: SessionStateStoreScript.SessionData,
-	town: Dictionary,
-	source_holder: String,
-	target_holder: String,
-	unit_id: String,
-	amount_token: String
-) -> Dictionary:
-	normalize_session(session)
-	if session == null or town.is_empty():
-		return {"ok": false, "message": "No town is available for army transfer."}
-	if source_holder == target_holder:
-		return {"ok": false, "message": "Choose a different transfer target."}
-	var stationed_holders := _stationed_holder_ids(session, town)
-	if source_holder not in stationed_holders or target_holder not in stationed_holders:
-		return {"ok": false, "message": "Transfer orders are limited to the active town garrison and stationed heroes."}
-	if unit_id == "":
-		return {"ok": false, "message": "That transfer order is missing a unit id."}
-
-	var source_stacks := _holder_stacks(session, town, source_holder)
-	var source_index := _stack_index_by_unit(source_stacks, unit_id)
-	if source_index < 0:
-		return {"ok": false, "message": "That stack is no longer available for transfer."}
-	var source_stack = source_stacks[source_index]
-	var available := int(source_stack.get("count", 0))
-	var transfer_count := _resolve_transfer_amount(amount_token, available)
-	if transfer_count <= 0:
-		return {"ok": false, "message": "No troops are available for transfer."}
-	if _transfer_empties_hero_army(source_holder, source_stacks, transfer_count, available):
-		return {"ok": false, "message": _last_stack_message(session, town, source_holder)}
-
-	var admission := army_addition_plan(_holder_stacks(session, town, target_holder), {unit_id: transfer_count})
-	if not bool(admission.get("ok", false)):
-		return admission
-	source_stack["count"] = available - transfer_count
-	if int(source_stack.get("count", 0)) > 0:
-		source_stacks[source_index] = source_stack
-	else:
-		source_stacks.remove_at(source_index)
-
-	var target_stacks: Array = admission.get("stacks", [])
-
-	_set_holder_stacks(session, town, source_holder, source_stacks)
-	_set_holder_stacks(session, town, target_holder, target_stacks)
-	commit_active_hero(session)
-
-	var unit_name := String(ContentService.get_unit(unit_id).get("name", unit_id))
-	return {
-		"ok": true,
-		"message": "Moved %d %s from %s to %s." % [
-			transfer_count,
-			unit_name,
-			_holder_label(session, town, source_holder),
-			_holder_label(session, town, target_holder),
-		],
-	}
+	return HumanEngine.native_writing(&"HeroCommandRules.field_exchange_state", [session, partner_hero_id])
 
 ## The leading heroes that have fallen on a generated map, by id: none of them
 ## is brought back from the scenario or made leader again, and the next hero
@@ -2112,40 +802,10 @@ static func hero_recruit_cost(hero_template: Dictionary) -> Dictionary:
 ## at the start of each week from the faction's hireable heroes; a hired
 ## hero's place stays empty until then. Reading never changes the session.
 static func tavern_offer_ids(session: SessionStateStoreScript.SessionData) -> Array:
-	if session == null:
-		return []
-	var pool := recruitable_hero_ids(session)
-	var week := tavern_week(session)
-	var stored = session.overworld.get(TAVERN_ROTATION_KEY, {})
-	if stored is Dictionary and int(stored.get("week", -1)) == week and stored.get("hero_ids", []) is Array:
-		var kept := []
-		for hero_id_value in stored.get("hero_ids", []):
-			if String(hero_id_value) in pool:
-				kept.append(String(hero_id_value))
-		return kept
-	# Shuffle every hireable hero, controlled ones included, so a change in who
-	# is in command moves the weekly pair as little as possible.
-	var candidates := _tavern_candidate_ids(session)
-	var rng := RandomNumberGenerator.new()
-	rng.seed = hash("%s|%s|tavern|%d" % [String(session.session_id), String(session.scenario_id), week])
-	for index in range(candidates.size() - 1, 0, -1):
-		var swap := rng.randi_range(0, index)
-		var held = candidates[index]
-		candidates[index] = candidates[swap]
-		candidates[swap] = held
-	var offer := []
-	for hero_id_value in candidates:
-		if String(hero_id_value) in pool:
-			offer.append(String(hero_id_value))
-			if offer.size() >= TAVERN_OFFER_SIZE:
-				break
-	return offer
+	return HumanEngine.native_writing(&"HeroCommandRules.tavern_offer_ids", [session])
 
 static func tavern_week(session: SessionStateStoreScript.SessionData) -> int:
 	return maxi(0, (int(session.day) - 1) / 7) if session != null else 0
-
-static func days_until_tavern_rotation(session: SessionStateStoreScript.SessionData) -> int:
-	return 7 - ((maxi(1, int(session.day)) - 1) % 7) if session != null else 7
 
 ## What hiring `hero_id` this week brings: {hero_id, week, level, army}. Level
 ## 1 most weeks, 2 about one offer in ten, 3 about one in thirty. Decided with
@@ -2166,60 +826,8 @@ static func tavern_offer(session: SessionStateStoreScript.SessionData, hero_id: 
 		level = 2
 	return {"hero_id": hero_id, "week": offer_week, "level": level, "army": starting_army_for_hero(hero_template, seed_key)}
 
-## The commander a hire of this week's `hero_id` would put in the field, for
-## the tavern card: its level's stats and specialties, movement and army.
-static func tavern_offer_preview(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
-	var offer := tavern_offer(session, hero_id)
-	if offer.is_empty():
-		return {}
-	return build_recruited_hero(ContentService.get_hero(hero_id), {}, session, int(offer.get("level", 1)), offer.get("army", {}))
-
 static func recruitable_hero_ids(session: SessionStateStoreScript.SessionData) -> Array:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return recruitable_hero_ids__gd(session)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"HeroCommandRules.recruitable_hero_ids", [session])
-	var before := HumanEngine.before_writing(&"HeroCommandRules.recruitable_hero_ids", [session])
-	var result = recruitable_hero_ids__gd(session)
-	HumanEngine.check_writing(&"HeroCommandRules.recruitable_hero_ids", before, [session], result)
-	return result
-
-static func recruitable_hero_ids__gd(session: SessionStateStoreScript.SessionData) -> Array:
-	var controlled := {}
-	if session != null:
-		for hero in session.overworld.get("player_heroes", []):
-			if hero is Dictionary:
-				controlled[String(hero.get("id", ""))] = true
-	return _tavern_candidate_ids(session).filter(func(hero_id): return not controlled.has(String(hero_id)))
-
-static func _tavern_candidate_ids(session: SessionStateStoreScript.SessionData) -> Array:
-	var recruitable := []
-	if session == null:
-		return recruitable
-	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
-	var player_faction := ContentService.get_faction(String(scenario.get("player_faction_id", "")))
-	for hero_id_value in player_faction.get("hero_ids", []):
-		var hero_id := String(hero_id_value)
-		if hero_id == "" or hero_id in recruitable:
-			continue
-		if not _hero_recruitable_for_scenario(hero_id, scenario):
-			continue
-		recruitable.append(hero_id)
-	recruitable.sort()
-	return recruitable
-
-static func _hero_recruitable_for_scenario(hero_id: String, scenario: Dictionary) -> bool:
-	var hero := ContentService.get_hero(hero_id)
-	if hero.is_empty():
-		return false
-	if String(hero.get("roster_state", "live")) != "scaffold":
-		return true
-	if bool(scenario.get("allow_scaffold_roster", false)):
-		return true
-	for start_id_value in scenario.get("hero_starts", []):
-		if String(start_id_value) == hero_id:
-			return true
-	return false
+	return HumanEngine.native_writing(&"HeroCommandRules.recruitable_hero_ids", [session])
 
 static func primary_hero_from_overworld(overworld_state: Variant, primary_hero_id: String = "") -> Dictionary:
 	if overworld_state is Dictionary:
@@ -2251,13 +859,6 @@ static func active_hero_from_overworld(overworld_state: Variant) -> Dictionary:
 		if hero is Dictionary:
 			return hero
 	return {}
-
-static func hero_count_from_overworld(overworld_state: Variant) -> int:
-	if overworld_state is Dictionary and overworld_state.get("player_heroes", []) is Array:
-		return int(overworld_state.get("player_heroes", []).size())
-	if overworld_state is Dictionary and overworld_state.get("hero", {}) is Dictionary and not overworld_state.get("hero", {}).is_empty():
-		return 1
-	return 0
 
 static func closest_hero_target(session: SessionStateStoreScript.SessionData, origin: Vector2i = Vector2i.ZERO, level: int = 0) -> Dictionary:
 	normalize_session(session)
@@ -2400,42 +1001,7 @@ static func _normalize_army(value: Variant, hero_id: String = "") -> Dictionary:
 	}
 
 static func _hero_roster_line(hero: Dictionary, active_hero_id: String) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _hero_roster_line__gd(hero, active_hero_id)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"HeroCommandRules._hero_roster_line", [hero, active_hero_id])
-	var before := HumanEngine.before_writing(&"HeroCommandRules._hero_roster_line", [hero, active_hero_id])
-	var result = _hero_roster_line__gd(hero, active_hero_id)
-	HumanEngine.check_writing(&"HeroCommandRules._hero_roster_line", before, [hero, active_hero_id], result)
-	return result
-
-static func _hero_roster_line__gd(hero: Dictionary, active_hero_id: String) -> String:
-	var tags := []
-	if bool(hero.get("is_primary", false)):
-		tags.append("Primary")
-	if String(hero.get("id", "")) == active_hero_id:
-		tags.append("Active")
-	return "%s | %s%s | %s" % [
-		hero_identity_context_line(hero),
-		", ".join(tags) + " | " if not tags.is_empty() else "",
-		hero_progress_context_line(hero),
-		hero_readiness_context_line(hero, true),
-	]
-
-static func _army_count_summary(army: Variant) -> Dictionary:
-	var stacks = army.get("stacks", []) if army is Dictionary else []
-	var troops := 0
-	var groups := 0
-	if stacks is Array:
-		for stack in stacks:
-			if not (stack is Dictionary):
-				continue
-			var count := int(stack.get("count", 0))
-			if count <= 0:
-				continue
-			troops += count
-			groups += 1
-	return {"troops": troops, "groups": groups}
+	return HumanEngine.native_writing(&"HeroCommandRules._hero_roster_line", [hero, active_hero_id])
 
 static func _normalize_authored_specialties(value: Variant) -> Array:
 	var normalized := []
@@ -2448,62 +1014,16 @@ static func _normalize_authored_specialties(value: Variant) -> Array:
 	return normalized
 
 static func _army_summary(army: Variant) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _army_summary__gd(army)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"HeroCommandRules._army_summary", [army])
-	var before := HumanEngine.before_writing(&"HeroCommandRules._army_summary", [army])
-	var result = _army_summary__gd(army)
-	HumanEngine.check_writing(&"HeroCommandRules._army_summary", before, [army], result)
-	return result
-
-static func _army_summary__gd(army: Variant) -> String:
-	var stacks = army.get("stacks", []) if army is Dictionary else []
-	return _stack_summary_from_array(stacks)
+	return HumanEngine.native_writing(&"HeroCommandRules._army_summary", [army])
 
 static func _stack_summary_from_array(stacks: Variant) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _stack_summary_from_array__gd(stacks)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"HeroCommandRules._stack_summary_from_array", [stacks])
-	var before := HumanEngine.before_writing(&"HeroCommandRules._stack_summary_from_array", [stacks])
-	var result = _stack_summary_from_array__gd(stacks)
-	HumanEngine.check_writing(&"HeroCommandRules._stack_summary_from_array", before, [stacks], result)
-	return result
-
-static func _stack_summary_from_array__gd(stacks: Variant) -> String:
-	if not (stacks is Array):
-		return "No troops"
-	var parts := []
-	for stack in stacks:
-		if not (stack is Dictionary):
-			continue
-		var count := int(stack.get("count", 0))
-		if count <= 0:
-			continue
-		var unit_id := String(stack.get("unit_id", ""))
-		var unit_name := String(ContentService.get_unit(unit_id).get("name", unit_id))
-		parts.append("%s x%d" % [unit_name, count])
-	return ", ".join(parts) if not parts.is_empty() else "No troops"
+	return HumanEngine.native_writing(&"HeroCommandRules._stack_summary_from_array", [stacks])
 
 static func _hero_is_stationed_at_town(hero: Dictionary, town: Dictionary) -> bool:
 	return _normalize_position(hero.get("position", {})) == OverworldLevelRulesScript.town_entrance(town)
 
 static func _stationed_holder_ids(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _stationed_holder_ids__gd(session, town)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"HeroCommandRules._stationed_holder_ids", [session, town])
-	var before := HumanEngine.before_writing(&"HeroCommandRules._stationed_holder_ids", [session, town])
-	var result = _stationed_holder_ids__gd(session, town)
-	HumanEngine.check_writing(&"HeroCommandRules._stationed_holder_ids", before, [session, town], result)
-	return result
-
-static func _stationed_holder_ids__gd(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
-	var holders := [HOLDER_GARRISON]
-	for hero in stationed_heroes(session, town):
-		holders.append(String(hero.get("id", "")))
-	return holders
+	return HumanEngine.native_writing(&"HeroCommandRules._stationed_holder_ids", [session, town])
 
 static func _holder_stacks(session: SessionStateStoreScript.SessionData, town: Dictionary, holder_id: String) -> Array:
 	if holder_id == HOLDER_GARRISON:
@@ -2648,93 +1168,11 @@ static func _append_field_spell_share_actions(actions: Array, source: Dictionary
 			"kind": "spell",
 		})
 
-static func _preserve_movement_deficit_after_artifact_change(
-	hero: Dictionary,
-	previous_max: int,
-	session: SessionStateStoreScript.SessionData
-) -> Dictionary:
-	var updated := hero.duplicate(true)
-	var movement: Dictionary = updated.get("movement", {}) if updated.get("movement", {}) is Dictionary else {}
-	var new_max := movement_max_for_hero(updated, session)
-	var current := int(movement.get("current", previous_max))
-	movement["current"] = clamp(current + (new_max - previous_max), 0, new_max)
-	movement["max"] = new_max
-	updated["movement"] = movement
-	return updated
-
 static func _transfer_empties_hero_army(holder_id: String, stacks: Variant, transfer_count: int, available: int, stack_leaves: bool = true) -> bool:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _transfer_empties_hero_army__gd(holder_id, stacks, transfer_count, available, stack_leaves)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"HeroCommandRules._transfer_empties_hero_army", [holder_id, stacks, transfer_count, available, stack_leaves])
-	var before := HumanEngine.before_writing(&"HeroCommandRules._transfer_empties_hero_army", [holder_id, stacks, transfer_count, available, stack_leaves])
-	var result = _transfer_empties_hero_army__gd(holder_id, stacks, transfer_count, available, stack_leaves)
-	HumanEngine.check_writing(&"HeroCommandRules._transfer_empties_hero_army", before, [holder_id, stacks, transfer_count, available, stack_leaves], result)
-	return result
-
-static func _transfer_empties_hero_army__gd(holder_id: String, stacks: Variant, transfer_count: int, available: int, stack_leaves: bool = true) -> bool:
-	# A commander may not hand away its last troops and walk the map empty.
-	# The garrison may be emptied; a swap never leaves the source empty.
-	if holder_id == HOLDER_GARRISON or not stack_leaves or transfer_count < available:
-		return false
-	return _valid_stack_count(stacks) <= 1
-
-static func _last_stack_message(session: SessionStateStoreScript.SessionData, town: Dictionary, holder_id: String) -> String:
-	return "%s must keep at least one troop stack." % _holder_label(session, town, holder_id)
-
-static func _stack_index_by_unit(stacks: Array, unit_id: String) -> int:
-	for index in range(stacks.size()):
-		var stack = stacks[index]
-		if stack is Dictionary and String(stack.get("unit_id", "")) == unit_id:
-			return index
-	return -1
+	return HumanEngine.native_writing(&"HeroCommandRules._transfer_empties_hero_army", [holder_id, stacks, transfer_count, available, stack_leaves])
 
 static func _army_slot_holder_is_available(session: SessionStateStoreScript.SessionData, town: Dictionary, holder_id: String) -> bool:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _army_slot_holder_is_available__gd(session, town, holder_id)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"HeroCommandRules._army_slot_holder_is_available", [session, town, holder_id])
-	var before := HumanEngine.before_writing(&"HeroCommandRules._army_slot_holder_is_available", [session, town, holder_id])
-	var result = _army_slot_holder_is_available__gd(session, town, holder_id)
-	HumanEngine.check_writing(&"HeroCommandRules._army_slot_holder_is_available", before, [session, town, holder_id], result)
-	return result
-
-static func _army_slot_holder_is_available__gd(
-	session: SessionStateStoreScript.SessionData,
-	town: Dictionary,
-	holder_id: String
-) -> bool:
-	if session == null or holder_id == "":
-		return false
-	if not town.is_empty():
-		return holder_id in _stationed_holder_ids(session, town)
-	if holder_id == String(session.overworld.get("active_hero_id", "")):
-		return not hero_by_id(session, holder_id).is_empty()
-	# In the field, a commander sharing the active commander's tile joins the
-	# hero meeting, so slot orders may move troops between the two.
-	return _is_field_exchange_partner(session, holder_id)
-
-static func _is_field_exchange_partner(session: SessionStateStoreScript.SessionData, hero_id: String) -> bool:
-	var active := active_hero(session)
-	var partner := hero_by_id(session, hero_id)
-	if active.is_empty() or partner.is_empty() or hero_id == String(active.get("id", "")):
-		return false
-	return _normalize_position(partner.get("position", {})) == _normalize_position(active.get("position", {}))
-
-static func _field_exchange_pair_error(
-	session: SessionStateStoreScript.SessionData,
-	source_hero_id: String,
-	target_hero_id: String
-) -> String:
-	if session == null:
-		return "No expedition is available for a hero meeting."
-	if source_hero_id == "" or target_hero_id == "" or source_hero_id == target_hero_id:
-		return "Choose two different controlled commanders."
-	if not _army_slot_holder_is_available(session, {}, source_hero_id) or not _army_slot_holder_is_available(session, {}, target_hero_id):
-		return "Both commanders must stand together on the active commander's tile."
-	if String(session.overworld.get("active_hero_id", "")) not in [source_hero_id, target_hero_id]:
-		return "Field transfers must include the active commander."
-	return ""
+	return HumanEngine.native_writing(&"HeroCommandRules._army_slot_holder_is_available", [session, town, holder_id])
 
 static func _slotted_stacks(value: Variant) -> Array:
 	var stacks := []
@@ -2776,84 +1214,17 @@ static func _first_open_army_slot(claimed: Dictionary) -> int:
 static func _stack_slot_less(left: Dictionary, right: Dictionary) -> bool:
 	return int(left.get(ARMY_SLOT_INDEX_KEY, ARMY_SLOT_COUNT)) < int(right.get(ARMY_SLOT_INDEX_KEY, ARMY_SLOT_COUNT))
 
-static func _stack_index_by_slot(stacks: Array, slot_index: int) -> int:
-	for index in range(stacks.size()):
-		var stack = stacks[index]
-		if stack is Dictionary and int(stack.get(ARMY_SLOT_INDEX_KEY, -1)) == slot_index:
-			return index
-	return -1
-
 static func _transfer_amount_tokens(count: int) -> Array:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _transfer_amount_tokens__gd(count)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"HeroCommandRules._transfer_amount_tokens", [count])
-	var result = _transfer_amount_tokens__gd(count)
-	HumanEngine.check(&"HeroCommandRules._transfer_amount_tokens", [count], result)
-	return result
-
-static func _transfer_amount_tokens__gd(count: int) -> Array:
-	if count <= 0:
-		return []
-	var tokens := ["1"]
-	if count > 1:
-		tokens.append("half")
-		tokens.append("all")
-	return tokens
+	return HumanEngine.native(&"HeroCommandRules._transfer_amount_tokens", [count])
 
 static func _transfer_amount_label(amount_token: String, available: int) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _transfer_amount_label__gd(amount_token, available)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"HeroCommandRules._transfer_amount_label", [amount_token, available])
-	var result = _transfer_amount_label__gd(amount_token, available)
-	HumanEngine.check(&"HeroCommandRules._transfer_amount_label", [amount_token, available], result)
-	return result
-
-static func _transfer_amount_label__gd(amount_token: String, available: int) -> String:
-	match amount_token:
-		"all":
-			return "all"
-		"half":
-			return "half"
-		_:
-			return str(_resolve_transfer_amount(amount_token, available))
+	return HumanEngine.native(&"HeroCommandRules._transfer_amount_label", [amount_token, available])
 
 static func _resolve_transfer_amount(amount_token: String, available: int) -> int:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _resolve_transfer_amount__gd(amount_token, available)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"HeroCommandRules._resolve_transfer_amount", [amount_token, available])
-	var result = _resolve_transfer_amount__gd(amount_token, available)
-	HumanEngine.check(&"HeroCommandRules._resolve_transfer_amount", [amount_token, available], result)
-	return result
-
-static func _resolve_transfer_amount__gd(amount_token: String, available: int) -> int:
-	if available <= 0:
-		return 0
-	match amount_token:
-		"all":
-			return available
-		"half":
-			return max(1, int(floor(float(available) / 2.0)))
-		_:
-			return clamp(int(amount_token), 0, available)
+	return HumanEngine.native(&"HeroCommandRules._resolve_transfer_amount", [amount_token, available])
 
 static func _holder_label(session: SessionStateStoreScript.SessionData, town: Dictionary, holder_id: String) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _holder_label__gd(session, town, holder_id)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"HeroCommandRules._holder_label", [session, town, holder_id])
-	var before := HumanEngine.before_writing(&"HeroCommandRules._holder_label", [session, town, holder_id])
-	var result = _holder_label__gd(session, town, holder_id)
-	HumanEngine.check_writing(&"HeroCommandRules._holder_label", before, [session, town, holder_id], result)
-	return result
-
-static func _holder_label__gd(session: SessionStateStoreScript.SessionData, town: Dictionary, holder_id: String) -> String:
-	if holder_id == HOLDER_GARRISON:
-		return "%s garrison" % String(ContentService.get_town(String(town.get("town_id", ""))).get("name", town.get("town_id", "Town")))
-	var hero := hero_by_id(session, holder_id)
-	return String(hero.get("name", holder_id))
+	return HumanEngine.native_writing(&"HeroCommandRules._holder_label", [session, town, holder_id])
 
 static func _seeded_rng(seed_key: String) -> RandomNumberGenerator:
 	var rng := RandomNumberGenerator.new()
@@ -2884,23 +1255,6 @@ static func _starting_company_size(rng: RandomNumberGenerator, unit_id: String, 
 	var low := maxi(1, ceili(growth * float(growth_share[0])))
 	return rng.randi_range(low, maxi(low, ceili(growth * float(growth_share[1]))))
 
-static func _can_afford(session: SessionStateStoreScript.SessionData, cost: Variant) -> bool:
-	var resources = session.overworld.get("resources", {})
-	if not (cost is Dictionary):
-		return true
-	for key in cost.keys():
-		if int(resources.get(String(key), 0)) < int(cost[key]):
-			return false
-	return true
-
-static func _spend_resources(session: SessionStateStoreScript.SessionData, cost: Variant) -> void:
-	var resources = session.overworld.get("resources", {}).duplicate(true)
-	if cost is Dictionary:
-		for key in cost.keys():
-			var resource_key := String(key)
-			resources[resource_key] = max(0, int(resources.get(resource_key, 0)) - int(cost[key]))
-	session.overworld["resources"] = resources
-
 static func _normalize_resources(value: Variant) -> Dictionary:
 	var resources := {}
 	if value is Dictionary:
@@ -2911,13 +1265,8 @@ static func _normalize_resources(value: Variant) -> Dictionary:
 				resources[resource_key] = amount
 	return resources
 
-static func _describe_resources(resources: Variant) -> String:
-	var normalized := _normalize_resources(resources)
-	var parts := []
-	var keys := normalized.keys()
-	keys.sort()
-	for key in keys:
-		var amount := int(normalized.get(key, 0))
-		if amount > 0:
-			parts.append("%d %s" % [amount, key])
-	return ", ".join(parts) if not parts.is_empty() else "free"
+static func get_town_transfer_actions(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
+	return HumanEngine.native_writing(&"HeroCommandRules.get_town_transfer_actions", [session, town])
+
+static func transfer_town_stack(session: SessionStateStoreScript.SessionData, town: Dictionary, source_holder: String, target_holder: String, unit_id: String, amount_token: String) -> Dictionary:
+	return HumanEngine.native_writing(&"HeroCommandRules.transfer_town_stack", [session, town, source_holder, target_holder, unit_id, amount_token])
