@@ -7,11 +7,21 @@ const Progression = preload("res://scripts/core/HeroProgressionRules.gd")
 const Artifacts = preload("res://scripts/core/ArtifactRules.gd")
 const FactionServices = preload("res://scripts/core/FactionTownServices.gd")
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 
 static func data() -> Dictionary:
 	return ContentService.load_json(DATA_PATH)
 
 static func faction_id(town: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return faction_id__gd(town)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"TownDevelopmentRules.faction_id", [town])
+	var result = faction_id__gd(town)
+	HumanEngine.check(&"TownDevelopmentRules.faction_id", [town], result)
+	return result
+
+static func faction_id__gd(town: Dictionary) -> String:
 	return String(ContentService.get_town(String(town.get("town_id", ""))).get("faction_id", ""))
 
 static func is_current(town: Dictionary) -> bool:

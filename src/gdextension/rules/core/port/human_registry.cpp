@@ -1,3 +1,4 @@
+#include "aurelion_rules/port/ai_hero_rules.hpp"
 #include "aurelion_rules/port/registry.hpp"
 
 #include "aurelion_rules/port/artifact_rules.hpp"
@@ -6,8 +7,10 @@
 #include "aurelion_rules/port/battle_payload.hpp"
 #include "aurelion_rules/port/battle_screen.hpp"
 #include "aurelion_rules/port/enemy_states.hpp"
+#include "aurelion_rules/port/enemy_turn_rules.hpp"
 #include "aurelion_rules/port/generated_reward_rules.hpp"
 #include "aurelion_rules/port/hero_command_rules.hpp"
+#include "aurelion_rules/port/hero_commit.hpp"
 #include "aurelion_rules/port/hero_command_rules_ai.hpp"
 #include "aurelion_rules/port/hero_command_rules_turn.hpp"
 #include "aurelion_rules/port/hero_progression_rules.hpp"
@@ -15,6 +18,8 @@
 #include "aurelion_rules/port/map_editor.hpp"
 #include "aurelion_rules/port/mine_rules.hpp"
 #include "aurelion_rules/port/native_random_map_package_session_bridge.hpp"
+#include "aurelion_rules/port/native_scenery_rules.hpp"
+#include "aurelion_rules/port/native_transit_rules.hpp"
 #include "aurelion_rules/port/native_transit_rules_ai.hpp"
 #include "aurelion_rules/port/overworld_level_rules.hpp"
 #include "aurelion_rules/port/overworld_level_rules_ai.hpp"
@@ -30,10 +35,18 @@
 #include "aurelion_rules/port/player_identity_rules_ai.hpp"
 #include "aurelion_rules/port/random_map_generator_rules.hpp"
 #include "aurelion_rules/port/save_service.hpp"
+#include "aurelion_rules/port/scenario_evaluation.hpp"
+#include "aurelion_rules/port/scenario_factory.hpp"
+#include "aurelion_rules/port/scenario_factory_ai.hpp"
+#include "aurelion_rules/port/scenario_factory_turn.hpp"
 #include "aurelion_rules/port/scenario_outcome.hpp"
+#include "aurelion_rules/port/scenario_script_rules_turn.hpp"
 #include "aurelion_rules/port/scenario_select_rules_setup.hpp"
+#include "aurelion_rules/port/scenario_select_rules_turn.hpp"
 #include "aurelion_rules/port/session_state_store.hpp"
+#include "aurelion_rules/port/spell_rules.hpp"
 #include "aurelion_rules/port/spell_rules_ai.hpp"
+#include "aurelion_rules/port/town_development_rules_ai.hpp"
 #include "aurelion_rules/port/town_rules.hpp"
 #include "aurelion_rules/port/water_travel_rules_ai.hpp"
 
@@ -46,6 +59,28 @@ int64_t specialty_rank(State &state, DictRef hero_state, Atom specialty_id);
 Value specialties(State &state);
 DictRef specialty_definition(State &state, Atom specialty_id);
 } // namespace hero_progression_rules
+
+// 7.15: and these (enemy_states.cpp and scenario_evaluation.cpp).
+namespace enemy_turn_rules {
+DictRef _blank_resource_pool(State &state);
+ArrayRef _enemy_faction_configs_for_session(State &state, DictRef session);
+} // namespace enemy_turn_rules
+
+namespace hero_command_rules {
+Atom new_growth_seed(State &state, Atom hero_id, DictRef session);
+Atom random_growth_seed(State &state);
+} // namespace hero_command_rules
+
+namespace enemy_adventure_rules {
+DictRef build_roster_commander_state(State &state, Atom roster_hero_id, Atom faction_id, DictRef existing_state, const Value &record_source);
+Atom commander_record_summary(State &state, const Value &source);
+Atom commander_memory_summary(State &state, const Value &source);
+Atom commander_army_summary(State &state, const Value &source);
+} // namespace enemy_adventure_rules
+
+namespace generated_scenario_objective_rules {
+DictRef progress(State &state, DictRef session);
+} // namespace generated_scenario_objective_rules
 
 namespace {
 
@@ -1996,6 +2031,166 @@ const Function kFunctions[] = {
 			return gd::dict_value(terrain_placement_rules::final_normalization_payload(s, A(a, 0), V(a, 1), D(a, 2)))),
 	PORT(TerrainPlacementRules, visual_selection_payload, 4, true,
 			return gd::dict_value(terrain_placement_rules::visual_selection_payload(s, A(a, 0), V(a, 1), D(a, 2), V(a, 3)))),
+	// 7.15, one copy: the bodies GDScript still reached beside their C++ copies
+	// (the screens, the setup of the archived scenarios and the tests' harness).
+	PORT(ArtifactRules, ensure_hero_artifacts, 1, true,
+			return gd::dict_value(artifacts::ensure_hero_artifacts(s, D(a, 0)))),
+	PORT(ArtifactRules, build_artifact_nodes, 2, true,
+			return gd::array_value(artifacts::build_artifact_nodes(s, a[0], S(a, 1)))),
+	PORT(ArtifactRules, _equipment_slot_label, 1, false,
+			return gd::str(artifacts::_equipment_slot_label(s, S(a, 0)))),
+	PORT(EnemyTurnRules, _blank_resource_pool, 0, false,
+			return gd::dict_value(enemy_turn_rules::_blank_resource_pool(s))),
+	PORT(HeroCommandRules, build_hero_from_template, 4, true,
+			return gd::dict_value(hero_command::build_hero_from_template(s, D(a, 0), D(a, 1), D(a, 2), a[3]))),
+	PORT(HeroCommandRules, starting_army_for_hero, 2, true,
+			return gd::dict_value(hero_command::starting_army_for_hero(s, D(a, 0), S(a, 1)))),
+	PORT(HeroProgressionRules, _specialty_row, 1, true,
+			return gd::dict_value(hero_progression::_specialty_row(s, S(a, 0)))),
+	PORT(NativeSceneryRules, asset_candidates, 3, true,
+			return gd::array_value(native_scenery_rules::asset_candidates(s, D(a, 0), S(a, 1), S(a, 2)))),
+	PORT(NativeSceneryRules, policy, 1, false,
+			return gd::dict_value(native_scenery_rules::policy(s, D(a, 0)))),
+	PORT(NativeTransitRules, network_colour, 1, false,
+			return gd::dict_value(native_transit::network_colour(s, D(a, 0)))),
+	PORT(ScenarioFactory, _build_army_state, 1, true,
+			return gd::dict_value(scenario_factory::_build_army_state(s, D(a, 0)))),
+	PORT(ScenarioFactory, _build_town_states, 1, true,
+			return gd::array_value(scenario_factory::_build_town_states(s, a[0]))),
+	PORT(ScenarioFactory, _build_resource_states, 1, true,
+			return gd::array_value(scenario_factory::_build_resource_states(s, a[0]))),
+	PORT(ScenarioFactory, _normalize_resources, 1, false,
+			return gd::dict_value(scenario_factory::_normalize_resources(s, a[0]))),
+	PORT(ScenarioFactory, _duplicate_array, 1, false,
+			return gd::array_value(scenario_factory::_duplicate_array(s, a[0]))),
+	PORT(ScenarioFactory, _duplicate_dict, 1, false,
+			return gd::dict_value(scenario_factory::_duplicate_dict(s, a[0]))),
+	PORT(ScenarioRules, normalize_scenario_state, 2, true,
+			if (nil(a, 0)) return Value();
+			scenario::normalize_scenario_state(s, D(a, 0), B(a, 1));
+			return Value()),
+	PORT(ScenarioRules, scenario_record_for_session, 1, true,
+			if (nil(a, 0)) return gd::dict_value(s.new_dict());
+			return gd::dict_value(scenario::scenario_record_for_session(s, D(a, 0)))),
+	PORT(ScenarioRules, objective_definitions, 1, true,
+			return scenario::objective_definitions(s, D(a, 0))),
+	PORT(ScenarioRules, objectives_for_session, 1, true,
+			if (nil(a, 0)) return scenario::objective_definitions(s, s.new_dict());
+			return scenario::objectives_for_session(s, D(a, 0))),
+	PORT(ScenarioScriptRules, build_script_state, 0, false,
+			return gd::dict_value(scenario_script::build_script_state(s))),
+	PORT(ScenarioSelectRules, default_difficulty_id, 0, false,
+			return gd::str(ssr::default_difficulty_id(s))),
+	PORT(ScenarioSelectRules, normalize_difficulty, 1, false,
+			return gd::str(ssr::normalize_difficulty(s, a[0]))),
+	// 7.15, one copy: what the campaign (GDScript, D-f) calls.
+	PORT(ArtifactRules, merge_hero_artifacts, 2, false,
+			return gd::dict_value(artifacts::merge_hero_artifacts(s, a[0], a[1]))),
+	PORT(HeroCommandRules, movement_max_for_hero, 2, true,
+			return gd::int_value(hero_command::movement_max_for_hero(s, D(a, 0), a[1]))),
+	PORT(HeroCommandRules, normalize_session, 4, true,
+			if (nil(a, 0)) return Value();
+			hero_command::normalize_session(s, D(a, 0), S(a, 1), D(a, 2), D(a, 3));
+			return Value()),
+	PORT(OverworldRules, refresh_fog_of_war, 1, true,
+			if (nil(a, 0)) return Value();
+			overworld::refresh_fog_of_war(s, D(a, 0));
+			return Value()),
+	PORT(SpellRules, refresh_daily_mana, 1, false,
+			return gd::dict_value(spells::refresh_daily_mana(s, D(a, 0)))),
+	// 7.15, one copy: what the router, the audio palette, the battle screen's
+	// snapshot, the editor's close guard and the battle AI arena's worker call.
+	PORT(EnemyAdventureRules, build_roster_commander_state, 4, true,
+			return gd::dict_value(enemy_adventure_rules::build_roster_commander_state(s, S(a, 0), S(a, 1), D(a, 2), a[3]))),
+	PORT(EnemyAdventureRules, commander_record_summary, 1, true,
+			return gd::str(enemy_adventure_rules::commander_record_summary(s, a[0]))),
+	PORT(EnemyAdventureRules, commander_memory_summary, 1, true,
+			return gd::str(enemy_adventure_rules::commander_memory_summary(s, a[0]))),
+	PORT(EnemyAdventureRules, commander_army_summary, 1, true,
+			return gd::str(enemy_adventure_rules::commander_army_summary(s, a[0]))),
+	PORT(GeneratedScenarioObjectiveRules, progress, 1, true,
+			return gd::dict_value(generated_scenario_objective_rules::progress(s, nil(a, 0) ? s.new_dict() : D(a, 0)))),
+	PORT(HeroProgressionRules, advance_to_level, 2, true,
+			return gd::dict_value(hero_progression::advance_to_level(s, D(a, 0), I(a, 1)))),
+	PORT(MapEditorShell, consume_safe_close_guard_confirmation, 2, true,
+			return gd::dict_value(map_editor::consume_safe_close_guard_confirmation(s, a[0], S(a, 1)))),
+	PORT(OverworldRules, _find_encounter_by_placement, 2, true,
+			if (nil(a, 0)) {
+				const gd::DictRef missing = s.new_dict();
+				s.set(missing, gd::str(state::key::index), gd::int_value(-1));
+				s.set(missing, gd::str(state::key::encounter), gd::dict_value(s.new_dict()));
+				return gd::dict_value(missing);
+			}
+			return gd::dict_value(overworld::_find_encounter_by_placement(s, D(a, 0), S(a, 1)))),
+	PORT(OverworldRules, _mark_runtime_normalized, 1, true,
+			if (nil(a, 0)) return Value();
+			overworld::_mark_runtime_normalized(s, D(a, 0));
+			return Value()),
+	PORT(OverworldRules, is_runtime_session_normalized, 1, true,
+			if (nil(a, 0)) return gd::bool_value(false);
+			return gd::bool_value(overworld::is_runtime_session_normalized(s, D(a, 0)))),
+	PORT(TownDevelopmentRules, faction_id, 1, false,
+			return gd::str(town_development::faction_id(s, D(a, 0)))),
+	// 7.15, one copy: what the core tests and the AI match runner call, directly
+	// or through AiSeatRules (GDScript, beside match_sim_cli's own seats).
+	PORT(AiHeroRules, active_hero_count, 2, true,
+			return gd::int_value(ai_hero_rules::active_hero_count(s, D(a, 0), S(a, 1)))),
+	PORT(AiHeroRules, is_ai_hero, 1, false,
+			return gd::bool_value(ai_hero_rules::is_ai_hero(s, a[0]))),
+	PORT(HeroCommandRules, active_hero, 1, true,
+			if (nil(a, 0)) return gd::dict_value(s.new_dict());
+			return gd::dict_value(hero_command::active_hero(s, D(a, 0)))),
+	PORT(HeroCommandRules, new_growth_seed, 2, false,
+			if (nil(a, 1) || !gd::is_dict(a[1])) return gd::str(hero_command::random_growth_seed(s));
+			return gd::str(hero_command::new_growth_seed(s, S(a, 0), D(a, 1)))),
+	PORT(HeroProgressionRules, command_gain_stat, 2, true,
+			return gd::str(hero_progression::command_gain_stat(s, D(a, 0), I(a, 1)))),
+	PORT(PlayerIdentityRules, faction_id, 2, true,
+			if (nil(a, 0)) return gd::str(S(a, 1));
+			return gd::str(player_identity_rules::faction_id(s, D(a, 0), S(a, 1)))),
+	PORT(BattleRules, _build_battle_stack, 6, true,
+			return gd::dict_value(battle_rules::_build_battle_stack(s, S(a, 0), I(a, 1), S(a, 2), I(a, 3), D(a, 4), I(a, 5)))),
+	PORT(BattleRules, _enemy_withdrawal_allowed, 3, true,
+			return gd::bool_value(battle_rules::_enemy_withdrawal_allowed(s, a[0], D(a, 1), D(a, 2)))),
+	PORT(EnemyTurnRules, _enemy_faction_configs_for_session, 1, true,
+			if (nil(a, 0)) return gd::array_value(s.new_array());
+			return gd::array_value(enemy_turn_rules::_enemy_faction_configs_for_session(s, D(a, 0)))),
+	PORT(EnemyTurnRules, _owned_town_entries, 2, true,
+			no_null_session(a);
+			return gd::array_value(enemy_turn_rules::_owned_town_entries(s, D(a, 0), S(a, 1)))),
+	PORT(OverworldRules, invalidate_spatial_lookup, 1, true,
+			if (nil(a, 0)) return Value();
+			overworld::invalidate_spatial_lookup(s, D(a, 0));
+			return Value()),
+	PORT(OverworldRules, transition_town_control, 5, true,
+			if (nil(a, 0)) {
+				const gd::DictRef none = s.new_dict();
+				s.set(none, gd::str(state::key::ok), gd::bool_value(false));
+				s.set(none, gd::str(state::key::changed), gd::bool_value(false));
+				s.set(none, gd::str(state::key::town), gd::dict_value(s.new_dict()));
+				return gd::dict_value(none);
+			}
+			return gd::dict_value(overworld::transition_town_control(s, D(a, 0), S(a, 1), S(a, 2), S(a, 3), S(a, 4)))),
+	PORT(PlayerEliminationRules, applies, 1, true,
+			if (nil(a, 0)) return gd::bool_value(false);
+			return gd::bool_value(player_elimination_rules::applies(s, D(a, 0)))),
+	PORT(PlayerIdentityRules, allied, 3, true,
+			return gd::bool_value(player_identity_rules::allied(s, a[0], S(a, 1), S(a, 2)))),
+	PORT(PlayerIdentityRules, controller_id, 2, false,
+			return gd::str(player_identity_rules::controller_id(s, D(a, 0), S(a, 1)))),
+	PORT(PlayerIdentityRules, has_human_seat, 1, true,
+			if (nil(a, 0)) return gd::bool_value(false);
+			return gd::bool_value(player_identity_rules::has_human_seat(s, D(a, 0)))),
+	// 7.15, one copy: what the full-match quality tool calls
+	// (tests/generated_full_match_quality.py).
+	PORT(NativeTransitRules, is_native, 1, false,
+			return gd::bool_value(native_transit::is_native(s, D(a, 0)))),
+	PORT(NativeTransitRules, destinations, 1, true,
+			return gd::array_value(native_transit::destinations(s, D(a, 0)))),
+	PORT(NativeTransitRules, point, 1, false,
+			return native_transit::point(s, a[0])),
+	PORT(OverworldRules, _guard_engagement_world_tiles, 1, true,
+			return gd::array_value(overworld::_guard_engagement_world_tiles(s, D(a, 0)))),
 };
 
 // The host calls of a merged slice's functions (gd::call_static), as HOST

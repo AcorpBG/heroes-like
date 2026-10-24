@@ -115,6 +115,16 @@ static func experience_for_level(level: int) -> int:
 ## taken at once, the hero's focus specialty first, and no level-up is left
 ## to present.
 static func advance_to_level(hero_state: Dictionary, target_level: int) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return advance_to_level__gd(hero_state, target_level)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"HeroProgressionRules.advance_to_level", [hero_state, target_level])
+	var before := HumanEngine.before_writing(&"HeroProgressionRules.advance_to_level", [hero_state, target_level])
+	var result = advance_to_level__gd(hero_state, target_level)
+	HumanEngine.check_writing(&"HeroProgressionRules.advance_to_level", before, [hero_state, target_level], result)
+	return result
+
+static func advance_to_level__gd(hero_state: Dictionary, target_level: int) -> Dictionary:
 	var hero := ensure_hero_progression(hero_state.duplicate(true))
 	var missing := experience_for_level(target_level) - int(hero.get("experience", 0))
 	if missing > 0:
@@ -312,6 +322,16 @@ static func rank_text(specialty_id: String, rank: int) -> String:
 	return HumanEngine.native(&"HeroProgressionRules.rank_text", [specialty_id, rank])
 
 static func _specialty_row(specialty_id: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _specialty_row__gd(specialty_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"HeroProgressionRules._specialty_row", [specialty_id])
+	var before := HumanEngine.before_writing(&"HeroProgressionRules._specialty_row", [specialty_id])
+	var result = _specialty_row__gd(specialty_id)
+	HumanEngine.check_writing(&"HeroProgressionRules._specialty_row", before, [specialty_id], result)
+	return result
+
+static func _specialty_row__gd(specialty_id: String) -> Dictionary:
 	return _specialty_catalog().get(specialty_id, {})
 
 ## The catalog rows by id, shared and read-only; rebuilt when the content changes.
@@ -610,6 +630,16 @@ static func command_path(hero_state: Dictionary) -> String:
 ## The command stat `hero_state` gains on reaching `level_number`: a roll
 ## weighted by its command path, drawn from its growth seed and that level.
 static func command_gain_stat(hero_state: Dictionary, level_number: int) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return command_gain_stat__gd(hero_state, level_number)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"HeroProgressionRules.command_gain_stat", [hero_state, level_number])
+	var before := HumanEngine.before_writing(&"HeroProgressionRules.command_gain_stat", [hero_state, level_number])
+	var result = command_gain_stat__gd(hero_state, level_number)
+	HumanEngine.check_writing(&"HeroProgressionRules.command_gain_stat", before, [hero_state, level_number], result)
+	return result
+
+static func command_gain_stat__gd(hero_state: Dictionary, level_number: int) -> String:
 	var weights: Dictionary = COMMAND_GAIN_WEIGHTS[command_path(hero_state)]
 	var total := 0
 	for stat in COMMAND_STATS:

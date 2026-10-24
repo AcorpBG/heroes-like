@@ -14,6 +14,8 @@ extends RefCounted
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const DayEngine = preload("res://scripts/core/DayEngine.gd")
+const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 
 const TOWNLESS_DAYS := 7
 const NATIVE_SESSION_FLAG := "native_random_map_package_session_adoption"
@@ -21,6 +23,16 @@ const NATIVE_SESSION_FLAG := "native_random_map_package_session_adoption"
 const TOWNLESS_SINCE_KEY := "townless_since"
 
 static func applies(session: SessionStateStoreScript.SessionData) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return applies__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"PlayerEliminationRules.applies", [session])
+	var before := HumanEngine.before_writing(&"PlayerEliminationRules.applies", [session])
+	var result = applies__gd(session)
+	HumanEngine.check_writing(&"PlayerEliminationRules.applies", before, [session], result)
+	return result
+
+static func applies__gd(session: SessionStateStoreScript.SessionData) -> bool:
 	return session != null and bool(session.flags.get(NATIVE_SESSION_FLAG, false))
 
 ## Towns a player holds: the human's are owner "player", a computer player's

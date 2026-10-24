@@ -6,6 +6,7 @@
 #include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/enemy_turn_rules_turn.hpp"
 #include "aurelion_rules/port/hero_command_rules_turn.hpp"
+#include "aurelion_rules/port/native_random_map_package_session_bridge.hpp"
 #include "aurelion_rules/port/overworld_level_rules.hpp"
 #include "aurelion_rules/port/overworld_rules_ai.hpp"
 #include "aurelion_rules/port/overworld_rules_turn.hpp"
@@ -142,18 +143,6 @@ Atom generated_start_army(Atom faction_id) {
 	return key::empty;
 }
 
-// NativeRandomMapPackageSessionBridge._opening_resource_stockpile.
-DictRef opening_resource_stockpile(State &state) {
-	const DictRef resources = state.new_dict();
-	for (const Atom resource_key : { key::gold, key::wood, key::ore, key::aetherglass, key::embergrain, key::peatwax, key::verdant_grafts, key::brass_scrip, key::memory_salt }) {
-		state.set(resources, str(resource_key), int_value(0));
-	}
-	state.set(resources, str(key::gold), int_value(5000));
-	state.set(resources, str(key::wood), int_value(10));
-	state.set(resources, str(key::ore), int_value(10));
-	return resources;
-}
-
 } // namespace
 
 namespace ai_hero_rules {
@@ -171,7 +160,7 @@ void _ensure_opening_stockpile(State &state, DictRef session, DictRef context) {
 	if (!state.lookup(session_view::overworld(state, session), str(key::native_random_map_package_session_adoption), adoption) || !gd::is_dict(adoption) || gd::is_empty(state, adoption.ref)) {
 		return;
 	}
-	const DictRef opening = opening_resource_stockpile(state);
+	const DictRef opening = native_random_map_package_session_bridge::_opening_resource_stockpile(state);
 	_add_pool(state, gd::as_dict(gd::index(state, state_, str(key::treasury))), dict_value(opening));
 }
 

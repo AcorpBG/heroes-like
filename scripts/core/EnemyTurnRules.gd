@@ -12,6 +12,8 @@ const EnemyAdventureRulesScript = preload("res://scripts/core/EnemyAdventureRule
 const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
 const DayEngine = preload("res://scripts/core/DayEngine.gd")
 const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
+const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 # Computer-player state AiHeroRules keeps between days.
 const AI_PLAYER_STATE_KEYS := ["ai_start_hero_granted", "ai_opening_granted", "ai_tavern", "ai_hero_counter", "ai_explored", "ai_boat_wanted_day", "ai_sightings", "ai_weight_set"]
 static var TownRulesScript: Variant = load("res://scripts/core/TownRules.gd")
@@ -325,6 +327,16 @@ static func _public_posture_label(state: Dictionary, raid_threshold: int, factio
 			return "Scouts report patrols probing for openings"
 
 static func _enemy_faction_configs_for_session(session: SessionStateStoreScript.SessionData) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _enemy_faction_configs_for_session__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"EnemyTurnRules._enemy_faction_configs_for_session", [session])
+	var before := HumanEngine.before_writing(&"EnemyTurnRules._enemy_faction_configs_for_session", [session])
+	var result = _enemy_faction_configs_for_session__gd(session)
+	HumanEngine.check_writing(&"EnemyTurnRules._enemy_faction_configs_for_session", before, [session], result)
+	return result
+
+static func _enemy_faction_configs_for_session__gd(session: SessionStateStoreScript.SessionData) -> Array:
 	if session == null:
 		return []
 	var players: Array = session.overworld.get("players", [])
@@ -442,6 +454,16 @@ static func _owned_town_count(session: SessionStateStoreScript.SessionData, fact
 	return TurnEngine.native_writing(&"EnemyTurnRules._owned_town_count", [session, faction_id])
 
 static func _owned_town_entries(session: SessionStateStoreScript.SessionData, faction_id: String) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _owned_town_entries__gd(session, faction_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"EnemyTurnRules._owned_town_entries", [session, faction_id])
+	var before := HumanEngine.before_writing(&"EnemyTurnRules._owned_town_entries", [session, faction_id])
+	var result = _owned_town_entries__gd(session, faction_id)
+	HumanEngine.check_writing(&"EnemyTurnRules._owned_town_entries", before, [session, faction_id], result)
+	return result
+
+static func _owned_town_entries__gd(session: SessionStateStoreScript.SessionData, faction_id: String) -> Array:
 	var entries = []
 	var towns = session.overworld.get("towns", [])
 	for index in range(towns.size()):
@@ -492,6 +514,15 @@ static func _normalize_resource_pool(value: Variant) -> Dictionary:
 	return normalized
 
 static func _blank_resource_pool() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _blank_resource_pool__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"EnemyTurnRules._blank_resource_pool", [])
+	var result = _blank_resource_pool__gd()
+	HumanEngine.check(&"EnemyTurnRules._blank_resource_pool", [], result)
+	return result
+
+static func _blank_resource_pool__gd() -> Dictionary:
 	var resources = {}
 	for resource_key in TRACKED_RESOURCES:
 		resources[resource_key] = 0

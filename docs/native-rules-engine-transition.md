@@ -3085,6 +3085,54 @@ Checks:
   `_select_property_object_at_tile`, `_apply_object_property_value` and `_save_copy_failure`.
 - One review of the 12 entries shadow did not check, and the helpers only they reach: no differences.
 
+**Slice 7.15, one copy** (2026-10-24, branch `native-phase7-human`): each rule gets one copy, its C++ port. On the
+branch, the two-copy bodies that GDScript still reaches become human registry entries, and the C++ functions defined
+twice are folded into one. The merge deletes the GDScript bodies that nothing reaches any more.
+- C++ folded, one definition each:
+  - the private copies in `overworld_forecast.cpp` (enemy state, pressure, posture, town defence and command risk,
+    the occupation release, terrain names, town lookups);
+  - `overworld_rules_ai_towns.cpp` (the resource site guard checks) and `overworld_rules_ai_sites.cpp`;
+  - `enemy_states.cpp` (army strength, now with its memo), `ai_hero_rules_turn_towns.cpp` (the opening stockpile),
+    `overworld_level_rules_ai.cpp` (`level_of`) and `map_generation.cpp` (`num_real`);
+  - `HeroProgressionRules.choose_specialty`: one function (`overworld_rules_hero_choices.cpp`) that the hero turn, the
+    AI's commanders and the human choice call;
+  - `random_growth_seed` moved into `hero_command_rules`. `new_growth_seed` without a session draws it, as
+    `build_hero_from_template` does.
+
+  Left as they are: the battle files' `_find_resource_node_by_placement` (`battle_context.cpp`,
+  `battle_payload_callers.cpp`, `battle_resume.cpp`), the forwarders (`_town_controller_faction_id`, `risk_board_of`,
+  `progress_recap_of`) and `copy_resource_amounts`, which differs from its namesakes.
+- 59 entries in five groups. Each takes the C++ the game already ran inside the native calls:
+  - 23 bodies that GDScript still reached beside their C++ copies: artifacts, the hero builder, the scenario state and
+    objectives, the setup helpers, `NativeSceneryRules.policy` and `asset_candidates`, and
+    `NativeTransitRules.network_colour`;
+  - 5 that the campaign (GDScript, D-f) calls, with `ArtifactRules.merge_hero_artifacts` ported for its carry-over;
+  - 11 that the router, the audio palette, the battle screen's snapshot, the editor's close guard and the battle AI
+    arena's worker call;
+  - 16 that the core tests and the AI match runner's `AiSeatRules` call;
+  - 4 that the full-match quality tool calls (`tests/generated_full_match_quality.py`).
+- Phase 7's five functions with a GDScript copy:
+  - `NativeSceneryRules.policy`, `asset_candidates` and `NativeTransitRules.network_colour` are entries. The map view
+    memoizes the first two by what they read (`drawn_policy`, `drawn_asset_candidates`).
+  - `SessionData.from_dict` reads the C++ `normalize_payload` and `normalize_launch_mode`. `payload_for_storage` and
+    `share_runtime_scenario_record` are deleted, with the autoload's copies.
+Checks:
+- Six seeds, native against main 77e4ef2a7, with all 59 entries: identical (443 daily digests and the match
+  records). The same six seeds through the match runner (`--runner-b`) were identical after the C++ folds.
+- Human shadow, 8 seeds, with a probe in the runner that calls every 7.15 entry after each move: 18,555,825 checks
+  on 238 functions. 58 of the 59 entries were reached. Every mismatch comes from the probe's own calls (843 of
+  843 traced to it):
+  - growth seeds that both sides draw at random;
+  - `movement_max_for_hero` and `normalize_difficulty` with a null argument: GDScript fails (`String(null)`), and
+    the C++ uses the default difficulty;
+  - `new_growth_seed` without a session, which C++ refused at the time (now fixed, see above).
+- Editor shadow, 3 seeds: 1,381,269 checks on 181 functions, only 7.13's known kinds (15 engine-call errors, 3 + 3
+  explained mismatches). The one entry no run reached, `MapEditorShell.consume_safe_close_guard_confirmation`, was
+  read against its GDScript body: the same.
+- Shadow on the six AI seeds: 1,024,369 checks on 25 functions; on five core tests (`ai_town_knowledge_report`,
+  `battle_ai_flow_report`, `battle_deterministic_rng_state_report`, `player_elimination_rules_report`,
+  `generated_start_hero_growth_seed_report`; all pass): 276,677 checks on 74 functions. 0 mismatches in both.
+
 ### Phase 8: a match runner without Godot
 
 Wanted, not optional (owner decision 2026-10-22, D7). The same core as a command-line tool, `match_sim_cli` beside

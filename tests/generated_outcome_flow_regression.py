@@ -105,7 +105,9 @@ func run() -> void:
 	session=SessionState.set_active_session(session)
 	for key in ["saved_at_unix","save_slot_type","saved_from_game_state","saved_from_scenario_status","saved_from_launch_mode"]:payload.erase(key)
 	# A save stores an equal native runtime scenario record once; loading restores the flags copy.
-	Store.SessionData.share_runtime_scenario_record(payload.overworld,payload.flags)
+	var record_key := "native_random_map_runtime_scenario_record"
+	if bool(payload.flags.get("native_random_map_package_session_adoption",false)) and not payload.flags.has(record_key) and payload.overworld.get(record_key) is Dictionary:
+		payload.flags[record_key]=payload.overworld[record_key]
 	check(normalized(session.to_dict())==payload,"production load changed terminal gameplay state")
 	AppRouter.resume_active_session()
 	await settle()

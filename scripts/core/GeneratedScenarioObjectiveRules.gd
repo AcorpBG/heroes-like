@@ -2,6 +2,8 @@ extends RefCounted
 
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const Adventure = preload("res://scripts/core/EnemyAdventureRules.gd")
+const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 const KIND := "defeat_generated_rivals"
 
 static func uses_kind(scenario: Dictionary) -> bool:
@@ -20,6 +22,16 @@ static func definitions(scenario: Dictionary) -> Variant:
 	return result
 
 static func progress(session) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return progress__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"GeneratedScenarioObjectiveRules.progress", [session])
+	var before := HumanEngine.before_writing(&"GeneratedScenarioObjectiveRules.progress", [session])
+	var result = progress__gd(session)
+	HumanEngine.check_writing(&"GeneratedScenarioObjectiveRules.progress", before, [session], result)
+	return result
+
+static func progress__gd(session) -> Dictionary:
 	var result := {"known": false, "complete": false, "total": 0, "defeated": 0, "remaining": [], "reason": "Player ownership is unavailable."}
 	if session == null:
 		return result

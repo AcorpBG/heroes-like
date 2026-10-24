@@ -21,6 +21,8 @@ const AdventureRules = preload("res://scripts/core/EnemyAdventureRules.gd")
 const WaterTravel = preload("res://scripts/core/WaterTravelRules.gd")
 const AiEngine = preload("res://scripts/core/AiEngine.gd")
 const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
+const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 
 const AI_HERO_KEY := "ai_hero"
 # Battle settings (terrain, length, rewards) for fights against an AI hero. The
@@ -387,6 +389,15 @@ static func _turn_rules() -> Variant:
 # --- Identity -----------------------------------------------------------------
 
 static func is_ai_hero(entry: Variant) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return is_ai_hero__gd(entry)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"AiHeroRules.is_ai_hero", [entry])
+	var result = is_ai_hero__gd(entry)
+	HumanEngine.check(&"AiHeroRules.is_ai_hero", [entry], result)
+	return result
+
+static func is_ai_hero__gd(entry: Variant) -> bool:
 	return entry is Dictionary and entry.get(AI_HERO_KEY, null) is Dictionary
 
 static func hero_name(entry: Dictionary) -> String:
@@ -396,6 +407,16 @@ static func active_hero_entries(session: SessionStateStoreScript.SessionData, co
 	return AiEngine.native_writing(&"AiHeroRules.active_hero_entries", [session, controller])
 
 static func active_hero_count(session: SessionStateStoreScript.SessionData, controller: String) -> int:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return active_hero_count__gd(session, controller)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"AiHeroRules.active_hero_count", [session, controller])
+	var before := HumanEngine.before_writing(&"AiHeroRules.active_hero_count", [session, controller])
+	var result = active_hero_count__gd(session, controller)
+	HumanEngine.check_writing(&"AiHeroRules.active_hero_count", before, [session, controller], result)
+	return result
+
+static func active_hero_count__gd(session: SessionStateStoreScript.SessionData, controller: String) -> int:
 	return active_hero_entries(session, controller).size()
 
 # Tiles this faction's towns and heroes have seen on one map level.

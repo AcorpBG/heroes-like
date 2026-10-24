@@ -34,21 +34,14 @@ void dict_clear(State &state, DictRef dict) {
 	node.values.clear();
 	node.dirty = true;
 }
-// OverworldLevelRules.level_of, with a Vector3i's level (its z).
-int64_t level_of_value(State &state, const Value &value) {
-	if (gd::is_vector3i(value)) {
-		return value.vz();
-	}
-	return overworld_level_rules::level_of(state, value);
-}
 
 } // namespace
 
 namespace overworld_level_rules {
 
 bool same_level(State &state, const Value &a, const Value &b) {
-	const int64_t level_a = level_of_value(state, a);
-	return level_a == level_of_value(state, b);
+	const int64_t level_a = level_of(state, a);
+	return level_a == level_of(state, b);
 }
 
 ArrayRef terrain_rows(State &state, const Value &session_value, int64_t requested) {

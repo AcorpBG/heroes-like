@@ -24,6 +24,8 @@ const EnemyTurnRulesScript = preload("res://scripts/core/EnemyTurnRules.gd")
 const ScenarioScriptRulesScript = preload("res://scripts/core/ScenarioScriptRules.gd")
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
+const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 
 static func create_session(
 	scenario_id: String,
@@ -124,6 +126,16 @@ static func _build_hero_state(hero_template: Dictionary) -> Dictionary:
 	)
 
 static func _build_army_state(army_template: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _build_army_state__gd(army_template)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ScenarioFactory._build_army_state", [army_template])
+	var before := HumanEngine.before_writing(&"ScenarioFactory._build_army_state", [army_template])
+	var result = _build_army_state__gd(army_template)
+	HumanEngine.check_writing(&"ScenarioFactory._build_army_state", before, [army_template], result)
+	return result
+
+static func _build_army_state__gd(army_template: Dictionary) -> Dictionary:
 	var stacks := []
 	for stack in army_template.get("stacks", []):
 		if not (stack is Dictionary):
@@ -142,6 +154,16 @@ static func _build_army_state(army_template: Dictionary) -> Dictionary:
 	}
 
 static func _build_town_states(placements: Variant) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _build_town_states__gd(placements)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ScenarioFactory._build_town_states", [placements])
+	var before := HumanEngine.before_writing(&"ScenarioFactory._build_town_states", [placements])
+	var result = _build_town_states__gd(placements)
+	HumanEngine.check_writing(&"ScenarioFactory._build_town_states", before, [placements], result)
+	return result
+
+static func _build_town_states__gd(placements: Variant) -> Array:
 	var towns := []
 	if not (placements is Array):
 		return towns
@@ -363,6 +385,16 @@ static func _add_resource_sets(left: Dictionary, right: Dictionary) -> Dictionar
 	return result
 
 static func _build_resource_states(placements: Variant) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _build_resource_states__gd(placements)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ScenarioFactory._build_resource_states", [placements])
+	var before := HumanEngine.before_writing(&"ScenarioFactory._build_resource_states", [placements])
+	var result = _build_resource_states__gd(placements)
+	HumanEngine.check_writing(&"ScenarioFactory._build_resource_states", before, [placements], result)
+	return result
+
+static func _build_resource_states__gd(placements: Variant) -> Array:
 	var nodes := []
 	if not (placements is Array):
 		return nodes
@@ -489,6 +521,15 @@ static func _normalize_position(value: Variant) -> Dictionary:
 	return {"x": 0, "y": 0}
 
 static func _normalize_resources(value: Variant) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _normalize_resources__gd(value)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"ScenarioFactory._normalize_resources", [value])
+	var result = _normalize_resources__gd(value)
+	HumanEngine.check(&"ScenarioFactory._normalize_resources", [value], result)
+	return result
+
+static func _normalize_resources__gd(value: Variant) -> Dictionary:
 	var resources := {}
 	for resource_key in LIVE_STOCKPILE_RESOURCE_KEYS:
 		resources[resource_key] = 0
@@ -501,7 +542,25 @@ static func _normalize_resources(value: Variant) -> Dictionary:
 	return resources
 
 static func _duplicate_array(value: Variant) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _duplicate_array__gd(value)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"ScenarioFactory._duplicate_array", [value])
+	var result = _duplicate_array__gd(value)
+	HumanEngine.check(&"ScenarioFactory._duplicate_array", [value], result)
+	return result
+
+static func _duplicate_array__gd(value: Variant) -> Array:
 	return value.duplicate(true) if value is Array else []
 
 static func _duplicate_dict(value: Variant) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _duplicate_dict__gd(value)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"ScenarioFactory._duplicate_dict", [value])
+	var result = _duplicate_dict__gd(value)
+	HumanEngine.check(&"ScenarioFactory._duplicate_dict", [value], result)
+	return result
+
+static func _duplicate_dict__gd(value: Variant) -> Dictionary:
 	return value.duplicate(true) if value is Dictionary else {}

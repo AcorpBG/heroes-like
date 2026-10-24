@@ -324,7 +324,17 @@ static func _battle_surrender_allowed(battle: Dictionary) -> bool:
 ## (an AI hero, or a hero holding a site) keeps its survivors when it leaves the
 ## field. A neutral guard has nowhere to go, so it fights to the end; its units
 ## may still belong to a faction, so the stacks' faction does not count.
-static func _enemy_withdrawal_allowed(
+static func _enemy_withdrawal_allowed(session: SessionStateStoreScript.SessionData, battle_context: Dictionary, encounter_placement: Dictionary) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _enemy_withdrawal_allowed__gd(session, battle_context, encounter_placement)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules._enemy_withdrawal_allowed", [session, battle_context, encounter_placement])
+	var before := HumanEngine.before_writing(&"BattleRules._enemy_withdrawal_allowed", [session, battle_context, encounter_placement])
+	var result = _enemy_withdrawal_allowed__gd(session, battle_context, encounter_placement)
+	HumanEngine.check_writing(&"BattleRules._enemy_withdrawal_allowed", before, [session, battle_context, encounter_placement], result)
+	return result
+
+static func _enemy_withdrawal_allowed__gd(
 	session: SessionStateStoreScript.SessionData,
 	battle_context: Dictionary,
 	encounter_placement: Dictionary
@@ -4816,7 +4826,17 @@ static func _battle_report_casualty_ledger(battle: Dictionary) -> Dictionary:
 static func battle_report_casualty_ledger_bridge(battle: Dictionary) -> Dictionary:
 	return _battle_report_casualty_ledger(battle).duplicate(true)
 
-static func _build_battle_stack(
+static func _build_battle_stack(unit_id: String, count: int, side: String, index: int, source: Dictionary = {}, army_slot_index: int = -1) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _build_battle_stack__gd(unit_id, count, side, index, source, army_slot_index)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules._build_battle_stack", [unit_id, count, side, index, source, army_slot_index])
+	var before := HumanEngine.before_writing(&"BattleRules._build_battle_stack", [unit_id, count, side, index, source, army_slot_index])
+	var result = _build_battle_stack__gd(unit_id, count, side, index, source, army_slot_index)
+	HumanEngine.check_writing(&"BattleRules._build_battle_stack", before, [unit_id, count, side, index, source, army_slot_index], result)
+	return result
+
+static func _build_battle_stack__gd(
 	unit_id: String,
 	count: int,
 	side: String,

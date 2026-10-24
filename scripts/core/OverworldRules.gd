@@ -316,6 +316,16 @@ static func normalize_overworld_state_for_runtime(session: SessionStateStoreScri
 	HumanEngine.native_writing(&"OverworldRules.normalize_overworld_state_for_runtime", [session])
 
 static func is_runtime_session_normalized(session: SessionStateStoreScript.SessionData) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return is_runtime_session_normalized__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.is_runtime_session_normalized", [session])
+	var before := HumanEngine.before_writing(&"OverworldRules.is_runtime_session_normalized", [session])
+	var result = is_runtime_session_normalized__gd(session)
+	HumanEngine.check_writing(&"OverworldRules.is_runtime_session_normalized", before, [session], result)
+	return result
+
+static func is_runtime_session_normalized__gd(session: SessionStateStoreScript.SessionData) -> bool:
 	if session == null:
 		return false
 	return String(_runtime_normalized_signatures.get(String(session.session_id), "")) == _runtime_normalization_signature(session)
@@ -329,6 +339,16 @@ static func mark_runtime_normalized_transition_state(session: SessionStateStoreS
 	_mark_runtime_normalized(session)
 
 static func _mark_runtime_normalized(session: SessionStateStoreScript.SessionData) -> void:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		_mark_runtime_normalized__gd(session)
+	elif _human_engine_mode == HumanEngine.NATIVE:
+		HumanEngine.native_writing(&"OverworldRules._mark_runtime_normalized", [session])
+	else:
+		var before := HumanEngine.before_writing(&"OverworldRules._mark_runtime_normalized", [session])
+		_mark_runtime_normalized__gd(session)
+		HumanEngine.check_writing(&"OverworldRules._mark_runtime_normalized", before, [session], null)
+
+static func _mark_runtime_normalized__gd(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
 		return
 	_runtime_normalized_signatures[String(session.session_id)] = _runtime_normalization_signature(session)
@@ -564,6 +584,16 @@ static func validation_set_pathing_profile_capture_enabled__gd(enabled: bool) ->
 		_pathing_debug_profile["post_action_tile_context_scan_count"] = 0
 
 static func refresh_fog_of_war(session: SessionStateStoreScript.SessionData) -> void:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		refresh_fog_of_war__gd(session)
+	elif _human_engine_mode == HumanEngine.NATIVE:
+		HumanEngine.native_writing(&"OverworldRules.refresh_fog_of_war", [session])
+	else:
+		var before := HumanEngine.before_writing(&"OverworldRules.refresh_fog_of_war", [session])
+		refresh_fog_of_war__gd(session)
+		HumanEngine.check_writing(&"OverworldRules.refresh_fog_of_war", before, [session], null)
+
+static func refresh_fog_of_war__gd(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
 		return
 	if not session.overworld.has("map") or not (session.overworld.get("map") is Array):
@@ -1016,7 +1046,17 @@ static func capture_town_by_placement(session: SessionStateStoreScript.SessionDa
 		return ""
 	return _claim_town(session, town_result)
 
-static func transition_town_control(
+static func transition_town_control(session: SessionStateStoreScript.SessionData, placement_id: String, new_owner: String, controlling_faction_id: String = "", source: String = "") -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return transition_town_control__gd(session, placement_id, new_owner, controlling_faction_id, source)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.transition_town_control", [session, placement_id, new_owner, controlling_faction_id, source])
+	var before := HumanEngine.before_writing(&"OverworldRules.transition_town_control", [session, placement_id, new_owner, controlling_faction_id, source])
+	var result = transition_town_control__gd(session, placement_id, new_owner, controlling_faction_id, source)
+	HumanEngine.check_writing(&"OverworldRules.transition_town_control", before, [session, placement_id, new_owner, controlling_faction_id, source], result)
+	return result
+
+static func transition_town_control__gd(
 	session: SessionStateStoreScript.SessionData,
 	placement_id: String,
 	new_owner: String,
@@ -1592,6 +1632,16 @@ static func _spatial_lookup_index(session: SessionStateStoreScript.SessionData, 
 	return levels[resolved_level]
 
 static func invalidate_spatial_lookup(session: SessionStateStoreScript.SessionData) -> void:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		invalidate_spatial_lookup__gd(session)
+	elif _human_engine_mode == HumanEngine.NATIVE:
+		HumanEngine.native_writing(&"OverworldRules.invalidate_spatial_lookup", [session])
+	else:
+		var before := HumanEngine.before_writing(&"OverworldRules.invalidate_spatial_lookup", [session])
+		invalidate_spatial_lookup__gd(session)
+		HumanEngine.check_writing(&"OverworldRules.invalidate_spatial_lookup", before, [session], null)
+
+static func invalidate_spatial_lookup__gd(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
 		return
 	session.remove_meta(SPATIAL_LOOKUP_INDEX_META)
@@ -1839,6 +1889,16 @@ static func _town_entrance_at(session: SessionStateStoreScript.SessionData, tile
 	return false
 
 static func _guard_engagement_world_tiles(encounter: Dictionary) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _guard_engagement_world_tiles__gd(encounter)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules._guard_engagement_world_tiles", [encounter])
+	var before := HumanEngine.before_writing(&"OverworldRules._guard_engagement_world_tiles", [encounter])
+	var result = _guard_engagement_world_tiles__gd(encounter)
+	HumanEngine.check_writing(&"OverworldRules._guard_engagement_world_tiles", before, [encounter], result)
+	return result
+
+static func _guard_engagement_world_tiles__gd(encounter: Dictionary) -> Array:
 	for key in ["package_guard_engagement_tiles", "package_guard_control_zone_tiles", "guard_control_zone_tiles"]:
 		var tiles = encounter.get(key, null)
 		if tiles is Array:
@@ -8979,6 +9039,16 @@ static func _find_town_by_placement(session: SessionStateStoreScript.SessionData
 	return {"index": -1, "town": {}}
 
 static func _find_encounter_by_placement(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _find_encounter_by_placement__gd(session, placement_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules._find_encounter_by_placement", [session, placement_id])
+	var before := HumanEngine.before_writing(&"OverworldRules._find_encounter_by_placement", [session, placement_id])
+	var result = _find_encounter_by_placement__gd(session, placement_id)
+	HumanEngine.check_writing(&"OverworldRules._find_encounter_by_placement", before, [session, placement_id], result)
+	return result
+
+static func _find_encounter_by_placement__gd(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
 	if session == null or placement_id == "":
 		return {"index": -1, "encounter": {}}
 	var lookup_started_usec := _rules_profile_timer()

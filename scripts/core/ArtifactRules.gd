@@ -70,11 +70,31 @@ static var _active_set_catalog := []
 static var _active_set_sources := []
 
 static func ensure_hero_artifacts(hero_state: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return ensure_hero_artifacts__gd(hero_state)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ArtifactRules.ensure_hero_artifacts", [hero_state])
+	var before := HumanEngine.before_writing(&"ArtifactRules.ensure_hero_artifacts", [hero_state])
+	var result = ensure_hero_artifacts__gd(hero_state)
+	HumanEngine.check_writing(&"ArtifactRules.ensure_hero_artifacts", before, [hero_state], result)
+	return result
+
+static func ensure_hero_artifacts__gd(hero_state: Dictionary) -> Dictionary:
 	var artifacts = normalize_hero_artifacts(hero_state.get("artifacts", {}))
 	hero_state["artifacts"] = artifacts
 	return hero_state
 
 static func build_artifact_nodes(placements: Variant, scenario_id: String = "") -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return build_artifact_nodes__gd(placements, scenario_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ArtifactRules.build_artifact_nodes", [placements, scenario_id])
+	var before := HumanEngine.before_writing(&"ArtifactRules.build_artifact_nodes", [placements, scenario_id])
+	var result = build_artifact_nodes__gd(placements, scenario_id)
+	HumanEngine.check_writing(&"ArtifactRules.build_artifact_nodes", before, [placements, scenario_id], result)
+	return result
+
+static func build_artifact_nodes__gd(placements: Variant, scenario_id: String = "") -> Array:
 	var nodes := []
 	if not (placements is Array):
 		return nodes
@@ -1153,6 +1173,15 @@ static func remove_owned_artifact(hero_state: Dictionary, artifact_id: String) -
 	}
 
 static func merge_hero_artifacts(base_artifacts: Variant, imported_artifacts: Variant) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return merge_hero_artifacts__gd(base_artifacts, imported_artifacts)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"ArtifactRules.merge_hero_artifacts", [base_artifacts, imported_artifacts])
+	var result = merge_hero_artifacts__gd(base_artifacts, imported_artifacts)
+	HumanEngine.check(&"ArtifactRules.merge_hero_artifacts", [base_artifacts, imported_artifacts], result)
+	return result
+
+static func merge_hero_artifacts__gd(base_artifacts: Variant, imported_artifacts: Variant) -> Dictionary:
 	var merged = normalize_hero_artifacts(base_artifacts)
 	var imported = normalize_hero_artifacts(imported_artifacts)
 	var equipped = merged.get("equipped", {})
@@ -1672,6 +1701,15 @@ static func _first_empty_slot_from_candidates(equipped: Dictionary, candidates: 
 	return ""
 
 static func _equipment_slot_label(slot: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _equipment_slot_label__gd(slot)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"ArtifactRules._equipment_slot_label", [slot])
+	var result = _equipment_slot_label__gd(slot)
+	HumanEngine.check(&"ArtifactRules._equipment_slot_label", [slot], result)
+	return result
+
+static func _equipment_slot_label__gd(slot: String) -> String:
 	if slot == "trinket_2":
 		return "Trinket II"
 	return slot.capitalize()

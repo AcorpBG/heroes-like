@@ -3,9 +3,9 @@
 // scripts/persistence/NativeSceneryRules.gd, ported function by function
 // under the GDScript names (docs/native-rules-engine-transition.md, Phase 7,
 // 7.11; native_scenery_rules.cpp): which random map objects are scenery and
-// whether the art covers them. policy and asset_candidates keep their
-// GDScript copies too, for the overworld map's drawing: a behaviour change to
-// one goes into both copies in the same commit.
+// whether the art covers them. The overworld map draws through policy and
+// asset_candidates too (NativeSceneryRules.drawn_policy and
+// drawn_asset_candidates memoize them; Phase 7, 7.15).
 
 #include "aurelion_rules/port/gd.hpp"
 

@@ -67,17 +67,6 @@ Value dict_or_new(State &state, DictRef dict, Atom field) {
 	return found;
 }
 
-// HeroCommandRules.new_growth_seed without a session: GDScript draws "%08x%08x" from a randomized
-// RandomNumberGenerator, a value no run repeats, so a draw from the system's random source is as good.
-Atom random_growth_seed(State &state) {
-	std::random_device device;
-	const unsigned int high = device();
-	const unsigned int low = device();
-	char text[17];
-	std::snprintf(text, sizeof(text), "%08x%08x", high, low);
-	return state.intern(text);
-}
-
 // STARTING_*_COMPANY_GROWTH_SHARE: a const Array that _starting_company_size only reads.
 ArrayRef growth_share(State &state, double low, double high) {
 	const ArrayRef share = state.new_array();
@@ -138,7 +127,8 @@ Value deep_duplicate(State &state, const Value &value) {
 
 } // namespace
 
-// Defined in hero_commit.cpp and enemy_states.cpp (Phase 5) without a header.
+// Defined in hero_commit.cpp, enemy_states.cpp (Phase 5) and
+// overworld_rules_hero_choices.cpp without a header.
 
 namespace hero_command_rules {
 Atom new_growth_seed(State &state, Atom hero_id, DictRef session);
@@ -147,8 +137,6 @@ ArrayRef _normalize_authored_specialties(State &state, const Value &value);
 
 namespace hero_progression_rules {
 int64_t raw_pending_choices_remaining(State &state, DictRef hero_state);
-int64_t max_rank_for_specialty(State &state, Atom specialty_id);
-int64_t specialty_rank(State &state, DictRef hero_state, Atom specialty_id);
 Atom growth_seed(State &state, DictRef hero_state);
 Atom command_path(State &state, DictRef hero_state);
 DictRef _build_choice_group(State &state, DictRef hero_state, int64_t level_number);
@@ -160,6 +148,17 @@ DictRef choose_specialty(State &state, DictRef hero_state, Atom specialty_id);
 // HeroCommandRules.
 
 namespace hero_command_rules {
+
+// HeroCommandRules.new_growth_seed without a session: GDScript draws "%08x%08x" from a randomized
+// RandomNumberGenerator, a value no run repeats, so a draw from the system's random source is as good.
+Atom random_growth_seed(State &state) {
+	std::random_device device;
+	const unsigned int high = device();
+	const unsigned int low = device();
+	char text[17];
+	std::snprintf(text, sizeof(text), "%08x%08x", high, low);
+	return state.intern(text);
+}
 
 DictRef build_hero_from_template(State &state, DictRef hero_template, DictRef position, DictRef army_state, const Value &movement_source) {
 	if (gd::is_empty(state, hero_template)) {
@@ -466,15 +465,11 @@ DictRef advance_to_level(State &state, DictRef hero_state, int64_t target_level)
 		if (state.array_size(gd::as_array(options)) == 0) {
 			break;
 		}
-		const Atom specialty_id = gd::stringify(state, state.at(options.ref, 0));
-		// choose_specialty answers the hero alone. Its refusals: no choice waiting
-		// or an id not offered cannot happen (the option comes from the same
-		// ensured hero), and a mastered specialty is checked here as it checks it
-		// (the hero's specialties are already normalized).
-		if (specialty_rank(state, hero, specialty_id) >= max_rank_for_specialty(state, specialty_id)) {
+		const DictRef choice = choose_specialty(state, hero, gd::stringify(state, state.at(options.ref, 0)));
+		if (!gd::bool_field(state, choice, key::ok, false)) {
 			break;
 		}
-		hero = choose_specialty(state, hero, specialty_id);
+		hero = gd::as_dict(state.get(choice, str(key::hero), dict_value(hero)));
 	}
 	state.set(hero, str(key::level_up_presented), int_value(gd::int_field(state, hero, key::level, 1)));
 	return hero;

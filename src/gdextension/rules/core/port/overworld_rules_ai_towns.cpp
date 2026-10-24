@@ -5,6 +5,7 @@
 
 #include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/mine_rules_ai.hpp"
+#include "aurelion_rules/port/overworld_rules_move.hpp"
 #include "aurelion_rules/port/player_identity_rules_ai.hpp"
 #include "aurelion_rules/port/session_view.hpp"
 #include "aurelion_rules/port/town_development_rules_ai.hpp"
@@ -56,66 +57,6 @@ Atom join_items(State &state, Atom separator, ArrayRef items) {
 		joined += gd::text(state, state.at(items, index));
 	}
 	return state.intern(joined);
-}
-
-// OverworldRules._resource_site_guard_targets_node.
-bool guard_targets_node(State &state, DictRef guard, DictRef node, DictRef site) {
-	const Atom node_placement_id = ai::string_or_empty(state, node, key::placement_id);
-	const Atom site_id = gd::stringify(state, state.get(site, str(key::id), state.get(node, str(key::site_id), str(key::empty))));
-	const Atom target_placement_id = ai::string_or_empty(state, guard, key::target_placement_id);
-	const Atom target_id = ai::string_or_empty(state, guard, key::target_id);
-	if (target_placement_id != key::empty) {
-		return target_placement_id == node_placement_id;
-	}
-	if (target_id != key::empty && (target_id == node_placement_id || target_id == site_id)) {
-		return true;
-	}
-	return false;
-}
-
-// OverworldRules._resource_site_guard_encounter (a session is never null here).
-DictRef guard_encounter(State &state, DictRef session, DictRef node, DictRef site, const Value &positions) {
-	const Atom guard_front_id = ai::string_or_empty(state, node, key::guard_front_id);
-	Value encounters;
-	if (!state.lookup(session_view::overworld(state, session), str(key::encounters), encounters)) {
-		encounters = array_value(state.new_array());
-	}
-	if (gd::is_array(positions)) {
-		const ArrayRef listed = state.new_array();
-		for (const Value &position : gd::items(state, positions)) {
-			state.append(listed, ai::vindex(state, encounters, int_value(gd::to_int(state, position))));
-		}
-		encounters = array_value(listed);
-	}
-	for (const Value &encounter : gd::items(state, encounters)) {
-		if (!gd::is_dict(encounter) || overworld_rules::is_encounter_resolved(state, session, encounter.ref)) {
-			continue;
-		}
-		if (guard_front_id != key::empty && guard_front_id == ai::string_or_empty(state, encounter.ref, key::placement_id)) {
-			return encounter.ref;
-		}
-		const DictRef guard = overworld_rules::_resource_site_guard_link_for_encounter(state, encounter.ref);
-		if (gd::is_empty(state, guard)) {
-			continue;
-		}
-		if (guard_targets_node(state, guard, node, site)) {
-			return encounter.ref;
-		}
-	}
-	return state.new_dict();
-}
-
-// OverworldRules._resource_site_guard_blocks_node.
-bool guard_blocks_node(State &state, DictRef encounter, DictRef node) {
-	if (gd::is_empty(state, encounter)) {
-		return false;
-	}
-	const Atom explicit_guard_front_id = ai::string_or_empty(state, node, key::guard_front_id);
-	if (explicit_guard_front_id != key::empty && explicit_guard_front_id == ai::string_or_empty(state, encounter, key::placement_id)) {
-		return true;
-	}
-	const DictRef guard_link = overworld_rules::_resource_site_guard_link_for_encounter(state, encounter);
-	return gd::bool_field(state, guard_link, key::clear_required_for_target, false);
 }
 
 } // namespace
@@ -296,8 +237,8 @@ ArrayRef get_town_build_options(State &state, DictRef town, int64_t current_day)
 }
 
 DictRef resource_site_blocking_guard(State &state, DictRef session, DictRef node, DictRef site, const Value &positions) {
-	const DictRef encounter = guard_encounter(state, session, node, site, positions);
-	return guard_blocks_node(state, encounter, node) ? encounter : state.new_dict();
+	const DictRef encounter = overworld_rules::_resource_site_guard_encounter(state, session, node, site, positions);
+	return overworld_rules::_resource_site_guard_blocks_node(state, encounter, node) ? encounter : state.new_dict();
 }
 
 DictRef _resource_site_guard_link_for_encounter(State &state, DictRef encounter) {

@@ -8081,6 +8081,16 @@ func request_safe_close_guard(source: String) -> Dictionary:
 	)
 
 func consume_safe_close_guard_confirmation(source: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return consume_safe_close_guard_confirmation__gd(source)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"MapEditorShell.consume_safe_close_guard_confirmation", [self, source])
+	var before := HumanEngine.before_writing(&"MapEditorShell.consume_safe_close_guard_confirmation", [self, source])
+	var result = consume_safe_close_guard_confirmation__gd(source)
+	HumanEngine.check_writing(&"MapEditorShell.consume_safe_close_guard_confirmation", before, [self, source], result)
+	return result
+
+func consume_safe_close_guard_confirmation__gd(source: String) -> Dictionary:
 	var normalized_source := source.strip_edges().left(64)
 	var authorized := (
 		_safe_close_guard_authorized

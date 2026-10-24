@@ -160,6 +160,27 @@ DictRef normalize_hero_artifacts(State &state, const Value &value) {
 	return normalized;
 }
 
+// The campaign's carry-over (CampaignRules, D-f): the imported artifacts added
+// to a hero's own, the equipped ones into their slots where they fit.
+DictRef merge_hero_artifacts(State &state, const Value &base_artifacts, const Value &imported_artifacts) {
+	const DictRef merged = normalize_hero_artifacts(state, base_artifacts);
+	const DictRef imported = normalize_hero_artifacts(state, imported_artifacts);
+	const DictRef equipped = gd::as_dict(gd::field(state, merged, key::equipped));
+	const ArrayRef inventory = gd::as_array(gd::field(state, merged, key::inventory));
+	const DictRef imported_equipped = gd::as_dict(gd::field(state, imported, key::equipped));
+	for (const Atom slot : kEquipmentSlots) {
+		const Atom imported_id = string_of_field(state, imported_equipped, slot, key::empty);
+		if (imported_id == key::empty || _artifact_is_owned(state, equipped, inventory, imported_id)) {
+			continue;
+		}
+		_register_equipped_candidate(state, imported_id, equipped, inventory, slot);
+	}
+	for (const Value &artifact_id_value : gd::items(state, gd::field(state, imported, key::inventory))) {
+		_append_inventory_artifact(state, gd::stringify(state, artifact_id_value), equipped, inventory);
+	}
+	return normalize_hero_artifacts(state, dict_value(merged));
+}
+
 DictRef _blank_equipped_slots(State &state) {
 	const DictRef equipped = state.new_dict();
 	for (const Atom slot : kEquipmentSlots) {

@@ -36,9 +36,11 @@ int64_t level_of(State &state, const Value &value) {
 			}
 		}
 	}
+	if (gd::is_vector3i(value)) {
+		return value.vz();
+	}
 	if (value.kind == state::Kind::Opaque) {
-		// A Vector3i's z is its level; the State does not model Vector3i.
-		throw state::ScriptError("OverworldLevelRules.level_of of an Object or a Vector3i is not ported");
+		throw state::ScriptError("OverworldLevelRules.level_of of an Object is not ported");
 	}
 	return 0;
 }

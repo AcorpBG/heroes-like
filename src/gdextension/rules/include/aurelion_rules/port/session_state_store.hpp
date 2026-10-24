@@ -35,8 +35,8 @@ constexpr int64_t kSaveVersion = 9;
 
 // The save format's payload (Phase 7, 7.12; save_session_payload.cpp):
 // SessionStateStore.normalize_payload and its helpers, and SessionData's
-// payload_for_storage and share_runtime_scenario_record, whose GDScript copies
-// SessionData.from_dict and to_dict keep (two copies).
+// payload_for_storage and share_runtime_scenario_record. SessionData.from_dict
+// reads normalize_payload (Phase 7, 7.15).
 DictRef normalize_payload(State &state, const Value &value);
 Atom _normalize_game_state(State &state, const Value &value);
 Atom _normalize_scenario_status(State &state, const Value &value);

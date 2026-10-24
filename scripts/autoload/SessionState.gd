@@ -24,37 +24,10 @@ var _last_playable_scenario_id := ""
 var _last_playable_draft_rebuildable := false
 
 static func normalize_payload(value: Variant) -> Dictionary:
-	var normalized: Dictionary = SessionStateStoreScript.normalize_payload(value)
-	return {
-		"save_version": max(0, int(normalized.get("save_version", SAVE_VERSION))),
-		"session_id": String(normalized.get("session_id", str(Time.get_ticks_msec()))),
-		"scenario_id": String(normalized.get("scenario_id", "")),
-		"hero_id": String(normalized.get("hero_id", "")),
-		"day": max(1, int(normalized.get("day", 1))),
-		"difficulty": String(normalized.get("difficulty", "normal")),
-		"launch_mode": normalize_launch_mode(normalized.get("launch_mode", LAUNCH_MODE_CAMPAIGN)),
-		"game_state": _normalize_game_state(normalized.get("game_state", "overworld")),
-		"scenario_status": _normalize_scenario_status(normalized.get("scenario_status", "in_progress")),
-		"scenario_summary": String(normalized.get("scenario_summary", "")),
-		"overworld": _dict_or_empty_value(normalized.get("overworld", {})),
-		"battle": _dict_or_empty_value(normalized.get("battle", {})),
-		"flags": _dict_or_empty_value(normalized.get("flags", {})),
-	}
+	return SessionStateStoreScript.normalize_payload(value)
 
 static func normalize_launch_mode(value: Variant) -> String:
-	var launch_mode := String(value)
-	return launch_mode if launch_mode in SUPPORTED_LAUNCH_MODES else LAUNCH_MODE_CAMPAIGN
-
-static func _normalize_game_state(value: Variant) -> String:
-	var game_state := String(value)
-	return game_state if game_state in SUPPORTED_GAME_STATES else "overworld"
-
-static func _normalize_scenario_status(value: Variant) -> String:
-	var scenario_status := String(value)
-	return scenario_status if scenario_status in SUPPORTED_SCENARIO_STATUSES else "in_progress"
-
-static func _dict_or_empty_value(value: Variant) -> Dictionary:
-	return value.duplicate(true) if value is Dictionary else {}
+	return SessionStateStoreScript.normalize_launch_mode(value)
 
 static func new_session_data(
 	session_id: String = "",

@@ -19,6 +19,7 @@ using state::Value;
 DictRef aggregate_bonuses(State &state, DictRef hero_state);
 DictRef ensure_hero_artifacts(State &state, DictRef hero_state);
 DictRef normalize_hero_artifacts(State &state, const Value &value);
+DictRef merge_hero_artifacts(State &state, const Value &base_artifacts, const Value &imported_artifacts);
 DictRef _blank_equipped_slots(State &state);
 void _register_equipped_candidate(State &state, Atom artifact_id, DictRef equipped, ArrayRef inventory, Atom preferred_slot);
 Atom _first_empty_slot_from_candidates(State &state, DictRef equipped, ArrayRef candidates);

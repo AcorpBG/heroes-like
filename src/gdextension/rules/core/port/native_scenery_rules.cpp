@@ -1,5 +1,5 @@
 // NativeSceneryRules: which random map objects are scenery, their art
-// candidates (memoized in _candidate_cache, shared with the GDScript copy) and
+// candidates (memoized in the script's _candidate_cache) and
 // whether the art covers every scenery object of a map.
 
 #include "aurelion_rules/port/native_scenery_rules.hpp"

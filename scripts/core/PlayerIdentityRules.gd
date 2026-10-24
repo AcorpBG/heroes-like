@@ -8,6 +8,15 @@ static var _human_engine_mode: int = HumanEngine.mode
 # immutable content reference. Legacy authored scenarios keep faction-keyed
 # controllers; generated packages supply explicit player ids and source teams.
 static func controller_id(record: Dictionary, fallback: String = "") -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return controller_id__gd(record, fallback)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"PlayerIdentityRules.controller_id", [record, fallback])
+	var result = controller_id__gd(record, fallback)
+	HumanEngine.check(&"PlayerIdentityRules.controller_id", [record, fallback], result)
+	return result
+
+static func controller_id__gd(record: Dictionary, fallback: String = "") -> String:
 	var player_id := String(record.get("player_id", ""))
 	return player_id if player_id != "" else String(record.get("faction_id", fallback))
 
@@ -100,6 +109,16 @@ static func player__gd(session, player_id: String) -> Dictionary:
 	return {}
 
 static func faction_id(session, controller: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return faction_id__gd(session, controller)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"PlayerIdentityRules.faction_id", [session, controller])
+	var before := HumanEngine.before_writing(&"PlayerIdentityRules.faction_id", [session, controller])
+	var result = faction_id__gd(session, controller)
+	HumanEngine.check_writing(&"PlayerIdentityRules.faction_id", before, [session, controller], result)
+	return result
+
+static func faction_id__gd(session, controller: String) -> String:
 	var record := player(session, controller)
 	return String(record.get("faction_id", controller))
 
@@ -114,6 +133,16 @@ static func identity_fields(session, controller: String) -> Dictionary:
 ## Whether a person plays this session. A session whose every seat was handed
 ## to the computer (AiSeatRules) has none, and so no human heroes.
 static func has_human_seat(session) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return has_human_seat__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"PlayerIdentityRules.has_human_seat", [session])
+	var before := HumanEngine.before_writing(&"PlayerIdentityRules.has_human_seat", [session])
+	var result = has_human_seat__gd(session)
+	HumanEngine.check_writing(&"PlayerIdentityRules.has_human_seat", before, [session], result)
+	return result
+
+static func has_human_seat__gd(session) -> bool:
 	if session == null:
 		return false
 	var players = session.overworld.get("players", [])
@@ -130,6 +159,16 @@ static func config_for_controller(session, controller: String) -> Dictionary:
 	return result
 
 static func allied(session, first: String, second: String) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return allied__gd(session, first, second)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"PlayerIdentityRules.allied", [session, first, second])
+	var before := HumanEngine.before_writing(&"PlayerIdentityRules.allied", [session, first, second])
+	var result = allied__gd(session, first, second)
+	HumanEngine.check_writing(&"PlayerIdentityRules.allied", before, [session, first, second], result)
+	return result
+
+static func allied__gd(session, first: String, second: String) -> bool:
 	# The one-human runtime retains "player" in legacy interaction APIs.
 	if session != null:
 		if first == "player":

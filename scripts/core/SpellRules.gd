@@ -78,6 +78,15 @@ static func cast_overworld_spell_on_day(hero: Dictionary, day: int) -> bool:
 	return HumanEngine.native_writing(&"SpellRules.cast_overworld_spell_on_day", [hero, day])
 
 static func refresh_daily_mana(hero_state: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return refresh_daily_mana__gd(hero_state)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"SpellRules.refresh_daily_mana", [hero_state])
+	var result = refresh_daily_mana__gd(hero_state)
+	HumanEngine.check(&"SpellRules.refresh_daily_mana", [hero_state], result)
+	return result
+
+static func refresh_daily_mana__gd(hero_state: Dictionary) -> Dictionary:
 	var hero: Dictionary = ensure_hero_spellbook(hero_state.duplicate(true))
 	var spellbook = hero.get("spellbook", {})
 	var mana = spellbook.get("mana", {})

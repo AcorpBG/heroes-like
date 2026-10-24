@@ -15,6 +15,8 @@ const NodePayload = preload("res://scripts/core/ResourceNodePayloadRules.gd")
 const VisitBuildings = preload("res://scripts/core/VisitBuildingRules.gd")
 const CreatureDwellings = preload("res://scripts/core/CreatureDwellingRules.gd")
 const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
+const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 static var OverworldRulesScript: Variant = load("res://scripts/core/OverworldRules.gd")
 static var _path_distance_surface_cache: Dictionary = {}
 static var _native_navigation_surface_cache: Dictionary = {}
@@ -557,6 +559,16 @@ static func commander_display_name(source: Variant, include_veterancy: bool = tr
 	return TurnEngine.native_writing(&"EnemyAdventureRules.commander_display_name", [source, include_veterancy])
 
 static func commander_record_summary(source: Variant) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return commander_record_summary__gd(source)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"EnemyAdventureRules.commander_record_summary", [source])
+	var before := HumanEngine.before_writing(&"EnemyAdventureRules.commander_record_summary", [source])
+	var result = commander_record_summary__gd(source)
+	HumanEngine.check_writing(&"EnemyAdventureRules.commander_record_summary", before, [source], result)
+	return result
+
+static func commander_record_summary__gd(source: Variant) -> String:
 	var record := _normalized_commander_record(source)
 	var deployments: int = max(0, int(record.get("deployments", 0)))
 	var wins: int = max(0, int(record.get("battle_wins", 0)))
@@ -597,6 +609,16 @@ static func commander_memory_brief(source: Variant) -> String:
 	return ""
 
 static func commander_memory_summary(source: Variant) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return commander_memory_summary__gd(source)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"EnemyAdventureRules.commander_memory_summary", [source])
+	var before := HumanEngine.before_writing(&"EnemyAdventureRules.commander_memory_summary", [source])
+	var result = commander_memory_summary__gd(source)
+	HumanEngine.check_writing(&"EnemyAdventureRules.commander_memory_summary", before, [source], result)
+	return result
+
+static func commander_memory_summary__gd(source: Variant) -> String:
 	var memory := _normalized_commander_memory(source)
 	if memory.is_empty():
 		return ""
@@ -637,6 +659,16 @@ static func commander_recent_outcome_brief(source: Variant) -> String:
 	return TurnEngine.native_writing(&"EnemyAdventureRules.commander_recent_outcome_brief", [source])
 
 static func commander_army_summary(source: Variant) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return commander_army_summary__gd(source)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"EnemyAdventureRules.commander_army_summary", [source])
+	var before := HumanEngine.before_writing(&"EnemyAdventureRules.commander_army_summary", [source])
+	var result = commander_army_summary__gd(source)
+	HumanEngine.check_writing(&"EnemyAdventureRules.commander_army_summary", before, [source], result)
+	return result
+
+static func commander_army_summary__gd(source: Variant) -> String:
 	return String(_normalized_commander_army_continuity(source).get("summary", ""))
 
 static func commander_can_deploy(source: Variant) -> bool:
@@ -758,7 +790,17 @@ static func public_commander_rebuild_summary(
 		summary += " (+%d more)" % (total_rebuilding - rebuilding.size())
 	return summary
 
-static func build_roster_commander_state(
+static func build_roster_commander_state(roster_hero_id: String, faction_id: String, existing_state: Dictionary = {}, record_source: Variant = {}) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return build_roster_commander_state__gd(roster_hero_id, faction_id, existing_state, record_source)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"EnemyAdventureRules.build_roster_commander_state", [roster_hero_id, faction_id, existing_state, record_source])
+	var before := HumanEngine.before_writing(&"EnemyAdventureRules.build_roster_commander_state", [roster_hero_id, faction_id, existing_state, record_source])
+	var result = build_roster_commander_state__gd(roster_hero_id, faction_id, existing_state, record_source)
+	HumanEngine.check_writing(&"EnemyAdventureRules.build_roster_commander_state", before, [roster_hero_id, faction_id, existing_state, record_source], result)
+	return result
+
+static func build_roster_commander_state__gd(
 	roster_hero_id: String,
 	faction_id: String,
 	existing_state: Dictionary = {},

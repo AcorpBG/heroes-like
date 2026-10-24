@@ -265,20 +265,6 @@ Value string_array(State &state, std::initializer_list<const char *> values) {
 
 // ------------------------------------------------------- canonical text
 
-// String::num_real(value): a whole value as an int and ".0", else 14 decimals
-// less the integer digits past the first.
-std::string num_real(double value) {
-	if (value == static_cast<double>(static_cast<int64_t>(value))) {
-		return compat::itos(static_cast<int64_t>(value)) + ".0";
-	}
-	int decimals = 14;
-	const double magnitude = std::abs(value);
-	if (magnitude > 10) {
-		decimals -= static_cast<int>(std::floor(std::log10(magnitude)));
-	}
-	return compat::num(value, decimals);
-}
-
 void append_escaped_atom(std::string &out, std::string_view value) {
 	for (const char c : value) {
 		switch (c) {
@@ -315,7 +301,7 @@ void canonical_variant(State &state, const Value &value, std::string &out, const
 			return;
 		case Kind::Float:
 			out += "float:";
-			out += num_real(value.f);
+			out += compat::num_real(value.f);
 			return;
 		case Kind::String:
 		case Kind::StringName:

@@ -37,7 +37,17 @@ const STARTING_SECOND_COMPANY_TIER_TWO_PERCENT := 70
 const STARTING_FIRST_COMPANY_GROWTH_SHARE := [0.55, 1.1]
 const STARTING_SECOND_COMPANY_GROWTH_SHARE := [0.33, 0.65]
 
-static func normalize_session(
+static func normalize_session(session: SessionStateStoreScript.SessionData, primary_hero_id: String = "", default_position: Dictionary = {}, default_army: Dictionary = {}) -> void:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		normalize_session__gd(session, primary_hero_id, default_position, default_army)
+	elif _human_engine_mode == HumanEngine.NATIVE:
+		HumanEngine.native_writing(&"HeroCommandRules.normalize_session", [session, primary_hero_id, default_position, default_army])
+	else:
+		var before := HumanEngine.before_writing(&"HeroCommandRules.normalize_session", [session, primary_hero_id, default_position, default_army])
+		normalize_session__gd(session, primary_hero_id, default_position, default_army)
+		HumanEngine.check_writing(&"HeroCommandRules.normalize_session", before, [session, primary_hero_id, default_position, default_army], null)
+
+static func normalize_session__gd(
 	session: SessionStateStoreScript.SessionData,
 	primary_hero_id: String = "",
 	default_position: Dictionary = {},
@@ -138,7 +148,17 @@ static func normalize_session(
 	_sync_active_hero_mirror(session)
 	_normalize_town_garrison_heroes(session)
 
-static func build_hero_from_template(
+static func build_hero_from_template(hero_template: Dictionary, position: Dictionary = {}, army_state: Dictionary = {}, movement_source: Variant = null) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return build_hero_from_template__gd(hero_template, position, army_state, movement_source)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"HeroCommandRules.build_hero_from_template", [hero_template, position, army_state, movement_source])
+	var before := HumanEngine.before_writing(&"HeroCommandRules.build_hero_from_template", [hero_template, position, army_state, movement_source])
+	var result = build_hero_from_template__gd(hero_template, position, army_state, movement_source)
+	HumanEngine.check_writing(&"HeroCommandRules.build_hero_from_template", before, [hero_template, position, army_state, movement_source], result)
+	return result
+
+static func build_hero_from_template__gd(
 	hero_template: Dictionary,
 	position: Dictionary = {},
 	army_state: Dictionary = {},
@@ -228,6 +248,16 @@ static func build_recruited_hero(
 ## Always at least one creature when the faction has any; the same `seed_key`
 ## always gives the same army.
 static func starting_army_for_hero(hero_template: Dictionary, seed_key: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return starting_army_for_hero__gd(hero_template, seed_key)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"HeroCommandRules.starting_army_for_hero", [hero_template, seed_key])
+	var before := HumanEngine.before_writing(&"HeroCommandRules.starting_army_for_hero", [hero_template, seed_key])
+	var result = starting_army_for_hero__gd(hero_template, seed_key)
+	HumanEngine.check_writing(&"HeroCommandRules.starting_army_for_hero", before, [hero_template, seed_key], result)
+	return result
+
+static func starting_army_for_hero__gd(hero_template: Dictionary, seed_key: String) -> Dictionary:
 	var hero_id := String(hero_template.get("id", ""))
 	var rng := _seeded_rng("%s|starting_army" % seed_key)
 	var stacks := []
@@ -263,6 +293,15 @@ static func army_has_troops(army: Variant) -> bool:
 ## session and hero when a session is known, so the tavern's preview and the
 ## hire it shows roll alike, else drawn at random.
 static func new_growth_seed(hero_id: String, session_source: Variant = null) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return new_growth_seed__gd(hero_id, session_source)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"HeroCommandRules.new_growth_seed", [hero_id, session_source])
+	var result = new_growth_seed__gd(hero_id, session_source)
+	HumanEngine.check(&"HeroCommandRules.new_growth_seed", [hero_id, session_source], result)
+	return result
+
+static func new_growth_seed__gd(hero_id: String, session_source: Variant = null) -> String:
 	if session_source is SessionStateStoreScript.SessionData:
 		return "%s|%s|%s" % [String(session_source.session_id), String(session_source.scenario_id), hero_id]
 	var rng := RandomNumberGenerator.new()
@@ -278,6 +317,16 @@ static func seed_start_heroes_from_session(session: SessionStateStoreScript.Sess
 	HumanEngine.native_writing(&"HeroCommandRules.seed_start_heroes_from_session", [session])
 
 static func movement_max_for_hero(hero_state: Dictionary, movement_source: Variant = null) -> int:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return movement_max_for_hero__gd(hero_state, movement_source)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"HeroCommandRules.movement_max_for_hero", [hero_state, movement_source])
+	var before := HumanEngine.before_writing(&"HeroCommandRules.movement_max_for_hero", [hero_state, movement_source])
+	var result = movement_max_for_hero__gd(hero_state, movement_source)
+	HumanEngine.check_writing(&"HeroCommandRules.movement_max_for_hero", before, [hero_state, movement_source], result)
+	return result
+
+static func movement_max_for_hero__gd(hero_state: Dictionary, movement_source: Variant = null) -> int:
 	var artifact_bonuses = ArtifactRulesScript.aggregate_bonuses(hero_state)
 	var specialty_bonuses = HeroProgressionRulesScript.aggregate_bonuses(hero_state)
 	var difficulty_bonus := 0
@@ -338,6 +387,16 @@ static func scout_row_half_width(dy: int, radius: int) -> int:
 	return half_width
 
 static func active_hero(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return active_hero__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"HeroCommandRules.active_hero", [session])
+	var before := HumanEngine.before_writing(&"HeroCommandRules.active_hero", [session])
+	var result = active_hero__gd(session)
+	HumanEngine.check_writing(&"HeroCommandRules.active_hero", before, [session], result)
+	return result
+
+static func active_hero__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null:
 		return {}
 	var active_hero_id := String(session.overworld.get("active_hero_id", ""))

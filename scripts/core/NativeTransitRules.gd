@@ -8,6 +8,15 @@ const NAVIGATION_DELTAS := [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vec
 # Package connectivity is separate from the original artwork's authored local
 # route effect. Never infer a generated exit from that artwork's offsets.
 static func is_native(node: Dictionary) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return is_native__gd(node)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"NativeTransitRules.is_native", [node])
+	var result = is_native__gd(node)
+	HumanEngine.check(&"NativeTransitRules.is_native", [node], result)
+	return result
+
+static func is_native__gd(node: Dictionary) -> bool:
 	return node.has("native_transit") or int(node.get("h3m_type_id", -1)) in [43, 44, 45, 103]
 
 static func uses_native_adjacency(session) -> bool:
@@ -22,6 +31,16 @@ static func link_of(node: Dictionary) -> Dictionary:
 	return link if link is Dictionary else {}
 
 static func destinations(node: Dictionary) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return destinations__gd(node)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"NativeTransitRules.destinations", [node])
+	var before := HumanEngine.before_writing(&"NativeTransitRules.destinations", [node])
+	var result = destinations__gd(node)
+	HumanEngine.check_writing(&"NativeTransitRules.destinations", before, [node], result)
+	return result
+
+static func destinations__gd(node: Dictionary) -> Array:
 	var link := link_of(node)
 	if String(link.get("kind", "")) == "paired_cave":
 		return [{"target_placement_id": link.get("target_placement_id", ""), "exit": link.get("exit", {})}]
@@ -78,6 +97,15 @@ static func network_index(node: Dictionary) -> int:
 	return int(link.get("network_index", node.get("h3m_subtype", 0)))
 
 static func network_colour(node: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return network_colour__gd(node)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"NativeTransitRules.network_colour", [node])
+	var result = network_colour__gd(node)
+	HumanEngine.check(&"NativeTransitRules.network_colour", [node], result)
+	return result
+
+static func network_colour__gd(node: Dictionary) -> Dictionary:
 	return NETWORK_COLOURS[posmod(int(node.get("portal_colour", network_index(node))), NETWORK_COLOURS.size())]
 
 ## Gives every portal network on the map its own colour slot (portal_colour):
@@ -114,6 +142,15 @@ static func exit_order(node: Dictionary, key: String) -> Array:
 	return options.slice(start) + options.slice(0, start)
 
 static func point(value: Variant) -> Vector3i:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return point__gd(value)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"NativeTransitRules.point", [value])
+	var result = point__gd(value)
+	HumanEngine.check(&"NativeTransitRules.point", [value], result)
+	return result
+
+static func point__gd(value: Variant) -> Vector3i:
 	if value is Dictionary:
 		return Vector3i(int(value.get("x", -1)), int(value.get("y", -1)), Levels.level_of(value))
 	return Vector3i(-1, -1, -1)

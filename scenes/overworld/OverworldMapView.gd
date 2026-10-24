@@ -11831,7 +11831,7 @@ func _scenery_cell_is_bare(cell: Dictionary, tile: Vector2i, key: String) -> boo
 	return true
 
 func _scenery_cell_filler(cell: Dictionary, tile: Vector2i, scenery: Dictionary, scale_rules: Dictionary) -> Dictionary:
-	var policy: Dictionary = preload("res://scripts/persistence/NativeSceneryRules.gd").policy(cell)
+	var policy: Dictionary = preload("res://scripts/persistence/NativeSceneryRules.gd").drawn_policy(cell)
 	var family := String(policy.get("landscape_family", policy.get("variation_family", "")))
 	var terrain := _terrain_at(tile)
 	var by_terrain: Dictionary = scenery.get("terrain_component_palettes", {}).get(terrain, {})
@@ -11900,7 +11900,7 @@ func _index_connected_scenery_patches() -> void:
 		var terrain := _terrain_at(tile)
 		var profile: Dictionary = profiles.get(terrain,{})
 		if profile.is_empty(): continue
-		var policy: Dictionary = rules.policy(cell)
+		var policy: Dictionary = rules.drawn_policy(cell)
 		var family := String(policy.get("landscape_family",policy.get("variation_family","")))
 		if policy.has("variation_biome"): continue
 		var choices: Array = [profile]
@@ -11969,7 +11969,7 @@ func _index_native_scenery_layers() -> void:
 				var own: Dictionary = neighbor.get("generated_body_formation", {})
 				var neighbor_group := String(own.get("overlap_group", ""))
 				if neighbor_group == "":
-					var policy := preload("res://scripts/persistence/NativeSceneryRules.gd").policy(neighbor)
+					var policy := preload("res://scripts/persistence/NativeSceneryRules.gd").drawn_policy(neighbor)
 					var family := String(policy.get("landscape_family", policy.get("variation_family", "")))
 					if family == "rock": neighbor_group = "rock"
 					if family in ["woods", "conifers", "wetland", "deadwood", "fungi", "scrub"]: neighbor_group = "vegetation"
@@ -11998,7 +11998,7 @@ func _index_native_scenery_layers() -> void:
 
 func _index_native_scenery_formations(object: Dictionary, body_tiles: Array) -> void:
 	if int(object.get("native_scenery_art_version", 0)) < 2: return
-	var policy := preload("res://scripts/persistence/NativeSceneryRules.gd").policy(object)
+	var policy := preload("res://scripts/persistence/NativeSceneryRules.gd").drawn_policy(object)
 	var family := String(policy.get("landscape_family", policy.get("variation_family", "")))
 	if family not in ["rock", "woods", "conifers", "deadwood", "wetland", "fungi", "scrub"]: return
 	var source_id := String(object.get("placement_id", ""))
@@ -12081,7 +12081,7 @@ func _generated_decorative_body_asset_id(object: Dictionary, tile: Vector2i) -> 
 
 func _native_scenery_assets(object: Dictionary, tile: Vector2i) -> Array:
 	var biome_id := String(GENERATED_DECORATIVE_BIOME_BY_TERRAIN.get(_terrain_at(tile), ""))
-	return preload("res://scripts/persistence/NativeSceneryRules.gd").asset_candidates(object, biome_id, _terrain_at(tile))
+	return preload("res://scripts/persistence/NativeSceneryRules.gd").drawn_asset_candidates(object, biome_id, _terrain_at(tile))
 
 func _native_scenery_modulate(object: Dictionary, tile: Vector2i, asset_id: String) -> Color:
 	var biome_id := String(GENERATED_DECORATIVE_BIOME_BY_TERRAIN.get(_terrain_at(tile), ""))
@@ -12091,7 +12091,7 @@ func _generated_decorative_body_motif_key(object: Dictionary, tile: Vector2i) ->
 	var terrain_id := _terrain_at(tile)
 	var biome_id := String(GENERATED_DECORATIVE_BIOME_BY_TERRAIN.get(terrain_id, ""))
 	if int(object.get("native_scenery_art_version", 0)) >= 2:
-		var family := str(preload("res://scripts/persistence/NativeSceneryRules.gd").policy(object).get("landscape_family", object.get("h3m_type_id", -1)))
+		var family := str(preload("res://scripts/persistence/NativeSceneryRules.gd").drawn_policy(object).get("landscape_family", object.get("h3m_type_id", -1)))
 		# Local variation removes repeated rectangular bands without consuming
 		# simulation RNG or changing source placement/collision.
 		return "%s|%s|%s|%d,%d" % [biome_id, terrain_id, family, tile.x, tile.y]

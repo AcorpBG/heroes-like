@@ -1,12 +1,42 @@
 extends RefCounted
 
+const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
+
 # Original-game presentation of recovered nonvisitable bodies. This never
 # invents placements or masks. Versioned appearance selection also works on reload.
 const MANIFEST := "res://art/overworld/native_scenery.json"
 const PRESENTATION_VERSION := 2
 static var _candidate_cache: Dictionary = {}
+# The map view draws through the native policy and art candidates, memoized by
+# what they read: the object's type and art version, the biome and the terrain
+# (the manifest stays the same while the game runs).
+static var _drawn_policies: Dictionary = {}
+static var _drawn_candidates: Dictionary = {}
+
+static func drawn_policy(object: Dictionary) -> Dictionary:
+	var type_id: Variant = object.get("h3m_type_id", -1)
+	if not _drawn_policies.has(type_id):
+		_drawn_policies[type_id] = policy(object)
+	return _drawn_policies[type_id]
+
+static func drawn_asset_candidates(object: Dictionary, biome_id: String, terrain_id: String = "") -> Array:
+	var memo_key := [object.get("native_scenery_art_version", 0), object.get("h3m_type_id", -1), biome_id, terrain_id]
+	if not _drawn_candidates.has(memo_key):
+		_drawn_candidates[memo_key] = asset_candidates(object, biome_id, terrain_id)
+	return _drawn_candidates[memo_key]
 
 static func asset_candidates(object: Dictionary, biome_id: String, terrain_id: String = "") -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return asset_candidates__gd(object, biome_id, terrain_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"NativeSceneryRules.asset_candidates", [object, biome_id, terrain_id])
+	var before := HumanEngine.before_writing(&"NativeSceneryRules.asset_candidates", [object, biome_id, terrain_id])
+	var result = asset_candidates__gd(object, biome_id, terrain_id)
+	HumanEngine.check_writing(&"NativeSceneryRules.asset_candidates", before, [object, biome_id, terrain_id], result)
+	return result
+
+static func asset_candidates__gd(object: Dictionary, biome_id: String, terrain_id: String = "") -> Array:
 	var version := int(object.get("native_scenery_art_version", 0))
 	if version < 1: return []
 	var cache_key := "%d|%s|%s|%s" % [version, object.get("h3m_type_id", -1), biome_id, terrain_id]
@@ -45,7 +75,7 @@ static func asset_candidates(object: Dictionary, biome_id: String, terrain_id: S
 
 static func mountain_candidates(object: Dictionary, biome_id: String, terrain_id: String) -> Array:
 	var manifest := ContentService.load_json(MANIFEST)
-	var entry := policy(object)
+	var entry := drawn_policy(object)
 	var art_biome := String(entry.get("variation_biome", biome_id))
 	if not entry.has("variation_biome"):
 		var terrain_pool: Array = manifest.get("terrain_mountain_palettes", {}).get(terrain_id, [])
@@ -53,11 +83,20 @@ static func mountain_candidates(object: Dictionary, biome_id: String, terrain_id
 	return manifest.get("mountain_palettes", {}).get(art_biome, [])
 
 static func policy(object: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return policy__gd(object)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"NativeSceneryRules.policy", [object])
+	var result = policy__gd(object)
+	HumanEngine.check(&"NativeSceneryRules.policy", [object], result)
+	return result
+
+static func policy__gd(object: Dictionary) -> Dictionary:
 	return ContentService.load_json(MANIFEST).get("source_types", {}).get(str(int(object.get("h3m_type_id", -1))), {})
 
 static func vegetation_candidates(object: Dictionary, biome_id: String, terrain_id: String, family: String = "") -> Array:
 	var manifest := ContentService.load_json(MANIFEST)
-	var entry := policy(object)
+	var entry := drawn_policy(object)
 	if family == "": family = String(entry.get("landscape_family", entry.get("variation_family", "")))
 	if not entry.has("variation_biome"):
 		var terrain_pool: Array = manifest.get("terrain_vegetation_palettes", {}).get(terrain_id, {}).get(family, [])
@@ -68,7 +107,7 @@ static func ground_modulate(object: Dictionary, biome_id: String, asset_id: Stri
 	if int(object.get("native_scenery_art_version", 0)) < PRESENTATION_VERSION:
 		return Color.WHITE
 	var tones: Dictionary = ContentService.load_json(MANIFEST).get("grounding_tints", {}).get(biome_id, {})
-	var entry := policy(object)
+	var entry := drawn_policy(object)
 	var family := String(entry.get("landscape_family", entry.get("variation_family", "")))
 	if asset_id.begins_with("plains_grove_v2_"): family = "woods"
 	if asset_id.begins_with("native_vegetation_"): family = asset_id.trim_prefix("native_vegetation_").get_slice("_", 0)
@@ -77,7 +116,7 @@ static func ground_modulate(object: Dictionary, biome_id: String, asset_id: Stri
 	return Color(String(tones.get(family, tones.get("base", "ffffff"))))
 
 static func body_scale(object: Dictionary, asset_id: String, edge: bool = false, terrain_id: String = "") -> Vector2:
-	var entry := policy(object)
+	var entry := drawn_policy(object)
 	var family := String(entry.get("landscape_family", entry.get("variation_family", "")))
 	if asset_id.begins_with("plains_grove_v2_"): family = "woods"
 	var rules := ContentService.load_json("res://art/overworld/scenery_scale.json")

@@ -1,6 +1,6 @@
 // The save format's payload: SessionStateStore.normalize_payload and its
 // helpers, SessionData.payload_for_storage and share_runtime_scenario_record
-// (SessionData.from_dict and to_dict keep their GDScript copies), and
+// (SessionData.from_dict reads normalize_payload), and
 // HeroCommandRules.restore_empty_hero_armies, which a restored save runs.
 
 #include "aurelion_rules/port/session_state_store.hpp"

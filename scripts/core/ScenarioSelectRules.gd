@@ -10,6 +10,7 @@ const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 
 const DIFFICULTY_OPTIONS := [
 	{
@@ -43,9 +44,27 @@ static func _campaign_rules():
 	return load("res://scripts/core/CampaignRules.gd")
 
 static func default_difficulty_id() -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return default_difficulty_id__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"ScenarioSelectRules.default_difficulty_id", [])
+	var result = default_difficulty_id__gd()
+	HumanEngine.check(&"ScenarioSelectRules.default_difficulty_id", [], result)
+	return result
+
+static func default_difficulty_id__gd() -> String:
 	return "normal"
 
 static func normalize_difficulty(value: Variant) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return normalize_difficulty__gd(value)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"ScenarioSelectRules.normalize_difficulty", [value])
+	var result = normalize_difficulty__gd(value)
+	HumanEngine.check(&"ScenarioSelectRules.normalize_difficulty", [value], result)
+	return result
+
+static func normalize_difficulty__gd(value: Variant) -> String:
 	var difficulty_id := String(value)
 	for option in DIFFICULTY_OPTIONS:
 		if String(option.get("id", "")) == difficulty_id:

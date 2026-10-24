@@ -267,6 +267,7 @@ ArrayRef _offer_order(State &state, DictRef hero_state, int64_t level_number);
 DictRef _build_choice_group(State &state, DictRef hero_state, int64_t level_number);
 DictRef current_pending_choice(State &state, DictRef hero_state);
 DictRef specialty_definition(State &state, Atom specialty_id);
+// Defined in overworld_rules_hero_choices.cpp.
 DictRef choose_specialty(State &state, DictRef hero_state, Atom specialty_id);
 } // namespace hero_progression_rules
 
@@ -1065,34 +1066,6 @@ DictRef current_pending_choice(State &state, DictRef hero_state) {
 DictRef specialty_definition(State &state, Atom specialty_id) {
 	const DictRef row = _specialty_row(state, specialty_id);
 	return gd::is_empty(state, row) ? state.new_dict() : gd::deep_duplicate_dict(state, row);
-}
-
-DictRef choose_specialty(State &state, DictRef hero_state, Atom specialty_id) {
-	// The result's "hero" (every outcome has one); its message is not built, as
-	// the one caller here reads only the hero.
-	DictRef hero = ensure_hero_progression(state, gd::deep_duplicate_dict(state, hero_state));
-	const Value pending_choices = get_or_new_array(state, hero, key::pending_specialty_choices);
-	if (!gd::is_array(pending_choices) || state.array_size(pending_choices.ref) == 0) {
-		return hero;
-	}
-	// var current_choice: Dictionary = pending_choices[0]
-	const DictRef current_choice = gd::as_dict(state.at(pending_choices.ref, 0));
-	const Value options = get_or_new_array(state, current_choice, key::options);
-	if (!gd::is_array(options) || !gd::array_has(state, options.ref, str(specialty_id))) {
-		return hero;
-	}
-	if (specialty_rank(state, hero, specialty_id) >= max_rank_for_specialty(state, specialty_id)) {
-		return hero;
-	}
-	Value specialties = get_or_new_array(state, hero, key::specialties);
-	if (!gd::is_array(specialties)) {
-		specialties = array_value(state.new_array());
-	}
-	state.append(specialties.ref, str(specialty_id));
-	state.set(hero, str(key::specialties), specialties);
-	gd::remove_at(state, pending_choices.ref, 0);
-	state.set(hero, str(key::pending_specialty_choices), pending_choices);
-	return ensure_hero_progression(state, hero);
 }
 
 } // namespace hero_progression_rules
@@ -2284,8 +2257,7 @@ int64_t _army_strength(State &state, const Value &stacks) {
 	if (!gd::is_array(stacks)) {
 		return total;
 	}
-	// Without the unit strength memo (_sync_unit_strength_memo): each value is
-	// computed from the unit's row.
+	_sync_unit_strength_memo(state);
 	for (const Value &stack_value : gd::items(state, stacks)) {
 		if (!gd::is_dict(stack_value)) {
 			continue;
@@ -2301,10 +2273,17 @@ int64_t _army_strength(State &state, const Value &stacks) {
 }
 
 int64_t _unit_strength_value(State &state, Atom unit_id) {
+	const DictRef memo = ai::static_dict(state, key::enemy_adventure_rules_script, key::_unit_strength_memo);
+	const Value strength = state.get(memo, str(unit_id), Value());
+	if (strength.kind != state::Kind::Nil) {
+		return gd::to_int(state, strength);
+	}
 	const DictRef unit = gd::content_row(state, state::ContentTable::Unit, unit_id);
 	const int64_t ranged_bonus = gd::bool_field(state, unit, key::ranged, false) ? 3 : 0;
 	const int64_t sum = gd::add(gd::add(gd::add(gd::int_field(state, unit, key::hp, 1), gd::int_field(state, unit, key::min_damage, 1)), gd::int_field(state, unit, key::max_damage, 1)), ranged_bonus);
-	return imax(6, sum);
+	const int64_t made = imax(6, sum);
+	state.set(memo, str(unit_id), int_value(made));
+	return made;
 }
 
 DictRef _base_enemy_army(State &state, Atom encounter_id) {
@@ -2357,7 +2336,7 @@ DictRef _normalize_command_payload(State &state, const Value &value) {
 DictRef _normalize_enemy_progression(State &state, DictRef commander_state) {
 	DictRef commander = hero_progression_rules::ensure_hero_progression(state, gd::deep_duplicate_dict(state, commander_state));
 	int64_t guard = 0;
-	// commander stays progression-ensured: the ensure above, then choose_specialty's result.
+	// commander stays progression-ensured: the ensure above, then choose_specialty's hero.
 	while (hero_progression_rules::raw_pending_choices_remaining(state, commander) > 0 && guard < 8) {
 		const DictRef pending_choice = hero_progression_rules::current_pending_choice(state, commander);
 		if (gd::is_empty(state, pending_choice)) {
@@ -2367,7 +2346,8 @@ DictRef _normalize_enemy_progression(State &state, DictRef commander_state) {
 		if (chosen_specialty == key::empty) {
 			break;
 		}
-		commander = hero_progression_rules::choose_specialty(state, commander, chosen_specialty);
+		const DictRef choice_result = hero_progression_rules::choose_specialty(state, commander, chosen_specialty);
+		commander = gd::as_dict(state.get(choice_result, str(key::hero), dict_value(commander)));
 		++guard;
 	}
 	return guard > 0 ? hero_progression_rules::ensure_hero_progression(state, commander) : commander;

@@ -34,6 +34,16 @@ static func _overworld_rules() -> Variant:
 
 ## normalize_enemies false: the caller has just normalized the enemy states.
 static func normalize_scenario_state(session: SessionStateStoreScript.SessionData, normalize_enemies: bool = true) -> void:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		normalize_scenario_state__gd(session, normalize_enemies)
+	elif _human_engine_mode == HumanEngine.NATIVE:
+		HumanEngine.native_writing(&"ScenarioRules.normalize_scenario_state", [session, normalize_enemies])
+	else:
+		var before := HumanEngine.before_writing(&"ScenarioRules.normalize_scenario_state", [session, normalize_enemies])
+		normalize_scenario_state__gd(session, normalize_enemies)
+		HumanEngine.check_writing(&"ScenarioRules.normalize_scenario_state", before, [session, normalize_enemies], null)
+
+static func normalize_scenario_state__gd(session: SessionStateStoreScript.SessionData, normalize_enemies: bool = true) -> void:
 	if session == null:
 		return
 	if session.scenario_status == "":
@@ -45,6 +55,16 @@ static func normalize_scenario_state(session: SessionStateStoreScript.SessionDat
 		_enemy_turn_rules().normalize_enemy_states(session)
 
 static func scenario_record_for_session(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return scenario_record_for_session__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ScenarioRules.scenario_record_for_session", [session])
+	var before := HumanEngine.before_writing(&"ScenarioRules.scenario_record_for_session", [session])
+	var result = scenario_record_for_session__gd(session)
+	HumanEngine.check_writing(&"ScenarioRules.scenario_record_for_session", before, [session], result)
+	return result
+
+static func scenario_record_for_session__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null or session.scenario_id == "":
 		return {}
 	var runtime_record: Dictionary = session.flags.get("native_random_map_runtime_scenario_record", {}) if session.flags.get("native_random_map_runtime_scenario_record", {}) is Dictionary else {}
@@ -59,9 +79,29 @@ static func evaluate_session(session: SessionStateStoreScript.SessionData) -> Di
 	return DayEngine.native_writing(&"ScenarioRules.evaluate_session", [session])
 
 static func objective_definitions(scenario: Dictionary) -> Variant:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return objective_definitions__gd(scenario)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ScenarioRules.objective_definitions", [scenario])
+	var before := HumanEngine.before_writing(&"ScenarioRules.objective_definitions", [scenario])
+	var result = objective_definitions__gd(scenario)
+	HumanEngine.check_writing(&"ScenarioRules.objective_definitions", before, [scenario], result)
+	return result
+
+static func objective_definitions__gd(scenario: Dictionary) -> Variant:
 	return GeneratedObjectives.definitions(scenario)
 
 static func objectives_for_session(session: SessionStateStoreScript.SessionData) -> Variant:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return objectives_for_session__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ScenarioRules.objectives_for_session", [session])
+	var before := HumanEngine.before_writing(&"ScenarioRules.objectives_for_session", [session])
+	var result = objectives_for_session__gd(session)
+	HumanEngine.check_writing(&"ScenarioRules.objectives_for_session", before, [session], result)
+	return result
+
+static func objectives_for_session__gd(session: SessionStateStoreScript.SessionData) -> Variant:
 	return objective_definitions(scenario_record_for_session(session))
 
 static func evaluate_session_for_event(session: SessionStateStoreScript.SessionData, event_facts: Dictionary = {}) -> Dictionary:

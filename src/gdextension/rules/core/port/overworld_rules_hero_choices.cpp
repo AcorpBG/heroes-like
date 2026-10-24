@@ -32,6 +32,8 @@ int64_t specialty_rank(State &state, DictRef hero_state, Atom specialty_id);
 Atom command_path(State &state, DictRef hero_state);
 DictRef current_pending_choice(State &state, DictRef hero_state);
 DictRef specialty_definition(State &state, Atom specialty_id);
+// Defined below.
+DictRef choose_specialty(State &state, DictRef hero_state, Atom specialty_id);
 } // namespace hero_progression_rules
 
 namespace {
@@ -135,50 +137,6 @@ DictRef specialty_choice_result(State &state, bool ok, DictRef hero, Atom messag
 	state.set(result, str(key::hero), dict_value(hero));
 	state.set(result, str(key::message), str(message));
 	return result;
-}
-
-// HeroProgressionRules.choose_specialty with its whole result: the port in
-// enemy_states.cpp answers only the hero.
-DictRef choose_specialty_result(State &state, DictRef hero_state, Atom specialty_id) {
-	namespace hpr = hero_progression_rules;
-	DictRef hero = hpr::ensure_hero_progression(state, gd::as_dict(gd::engine_duplicate(state, dict_value(hero_state), true)));
-	const Value pending_choices = state.get(hero, str(key::pending_specialty_choices), array_value(state.new_array()));
-	if (!gd::is_array(pending_choices) || state.array_size(pending_choices.ref) == 0) {
-		return specialty_choice_result(state, false, hero, key::no_specialty_choice_is_waiting);
-	}
-	// var current_choice: Dictionary = pending_choices[0]
-	const DictRef current_choice = gd::as_dict(state.at(pending_choices.ref, 0));
-	// current_choice.get("options", []): a missing list holds nothing.
-	Value options;
-	const bool has_options = state.lookup(current_choice, str(key::options), options);
-	if (!has_options || !gd::is_array(options) || !gd::array_has(state, options.ref, str(specialty_id))) {
-		return specialty_choice_result(state, false, hero, key::that_specialty_is_not_available_for);
-	}
-	if (hpr::specialty_rank(state, hero, specialty_id) >= hpr::max_rank_for_specialty(state, specialty_id)) {
-		return specialty_choice_result(state, false, hero, key::that_specialty_is_already_mastered);
-	}
-	Value specialties = state.get(hero, str(key::specialties), array_value(state.new_array()));
-	if (!gd::is_array(specialties)) {
-		specialties = array_value(state.new_array());
-	}
-	state.append(specialties.ref, str(specialty_id));
-	state.set(hero, str(key::specialties), specialties);
-	gd::remove_at(state, pending_choices.ref, 0);
-	state.set(hero, str(key::pending_specialty_choices), pending_choices);
-	hero = hpr::ensure_hero_progression(state, hero);
-
-	const DictRef specialty = hpr::specialty_definition(state, specialty_id);
-	Atom message = gd::format(state, key::s_adopts_s_s, {
-			str(text_or(state, hero, key::name, key::the_hero_text)),
-			str(text_or(state, specialty, key::name, specialty_id)),
-			str(hpr::rank_label(state, hpr::specialty_rank(state, hero, specialty_id))),
-	});
-	if (hpr::pending_choices_remaining(state, hero) > 0) {
-		const int64_t remaining = hpr::pending_choices_remaining(state, hero);
-		const Atom plural = hpr::pending_choices_remaining(state, hero) == 1 ? static_cast<Atom>(key::empty) : static_cast<Atom>(key::s);
-		message = concat(state, message, gd::format(state, key::d_specialty_choice_s_remain_queued, {int_value(remaining), str(plural)}));
-	}
-	return specialty_choice_result(state, true, hero, message);
 }
 
 } // namespace
@@ -366,7 +324,7 @@ DictRef choose_specialty(State &state, DictRef session, Atom specialty_id, Atom 
 	const Value mana = ai::vget(state, spellbook, key::mana, dict_value(state.new_dict()));
 	const int64_t mana_fallback = spell_rules::mana_max_from_hero(state, hero);
 	const int64_t previous_mana_max = gd::to_int(state, ai::vget(state, mana, key::max, int_value(mana_fallback)));
-	const DictRef result = choose_specialty_result(state, hero, specialty_id);
+	const DictRef result = hero_progression_rules::choose_specialty(state, hero, specialty_id);
 	if (!gd::bool_field(state, result, key::ok, false)) {
 		return refusal(state, text_or(state, result, key::message, key::unable_to_choose_specialty));
 	}
@@ -663,6 +621,48 @@ Atom _holder_label(State &state, DictRef session, DictRef town, Atom holder_id) 
 } // namespace hero_command_rules
 
 namespace hero_progression_rules {
+
+DictRef choose_specialty(State &state, DictRef hero_state, Atom specialty_id) {
+	namespace hpr = hero_progression_rules;
+	DictRef hero = hpr::ensure_hero_progression(state, gd::as_dict(gd::engine_duplicate(state, dict_value(hero_state), true)));
+	const Value pending_choices = state.get(hero, str(key::pending_specialty_choices), array_value(state.new_array()));
+	if (!gd::is_array(pending_choices) || state.array_size(pending_choices.ref) == 0) {
+		return specialty_choice_result(state, false, hero, key::no_specialty_choice_is_waiting);
+	}
+	// var current_choice: Dictionary = pending_choices[0]
+	const DictRef current_choice = gd::as_dict(state.at(pending_choices.ref, 0));
+	// current_choice.get("options", []): a missing list holds nothing.
+	Value options;
+	const bool has_options = state.lookup(current_choice, str(key::options), options);
+	if (!has_options || !gd::is_array(options) || !gd::array_has(state, options.ref, str(specialty_id))) {
+		return specialty_choice_result(state, false, hero, key::that_specialty_is_not_available_for);
+	}
+	if (hpr::specialty_rank(state, hero, specialty_id) >= hpr::max_rank_for_specialty(state, specialty_id)) {
+		return specialty_choice_result(state, false, hero, key::that_specialty_is_already_mastered);
+	}
+	Value specialties = state.get(hero, str(key::specialties), array_value(state.new_array()));
+	if (!gd::is_array(specialties)) {
+		specialties = array_value(state.new_array());
+	}
+	state.append(specialties.ref, str(specialty_id));
+	state.set(hero, str(key::specialties), specialties);
+	gd::remove_at(state, pending_choices.ref, 0);
+	state.set(hero, str(key::pending_specialty_choices), pending_choices);
+	hero = hpr::ensure_hero_progression(state, hero);
+
+	const DictRef specialty = hpr::specialty_definition(state, specialty_id);
+	Atom message = gd::format(state, key::s_adopts_s_s, {
+			str(text_or(state, hero, key::name, key::the_hero_text)),
+			str(text_or(state, specialty, key::name, specialty_id)),
+			str(hpr::rank_label(state, hpr::specialty_rank(state, hero, specialty_id))),
+	});
+	if (hpr::pending_choices_remaining(state, hero) > 0) {
+		const int64_t remaining = hpr::pending_choices_remaining(state, hero);
+		const Atom plural = hpr::pending_choices_remaining(state, hero) == 1 ? static_cast<Atom>(key::empty) : static_cast<Atom>(key::s);
+		message = concat(state, message, gd::format(state, key::d_specialty_choice_s_remain_queued, {int_value(remaining), str(plural)}));
+	}
+	return specialty_choice_result(state, true, hero, message);
+}
 
 DictRef level_up_summary(State &state, DictRef hero_state) {
 	const DictRef hero = ensure_hero_progression(state, gd::as_dict(gd::engine_duplicate(state, dict_value(hero_state), true)));

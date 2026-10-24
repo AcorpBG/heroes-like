@@ -19,6 +19,7 @@
 #include "aurelion_rules/port/difficulty_rules.hpp"
 #include "aurelion_rules/port/difficulty_rules_ai.hpp"
 #include "aurelion_rules/port/enemy_adventure_rules.hpp"
+#include "aurelion_rules/port/enemy_adventure_rules_turn.hpp"
 #include "aurelion_rules/port/enemy_states.hpp"
 #include "aurelion_rules/port/overworld_level_rules.hpp"
 #include "aurelion_rules/port/overworld_level_rules_ai.hpp"
@@ -356,175 +357,6 @@ Atom json_stringify(State &state, const Value &value) {
 	return state.intern(json);
 }
 
-// --- GDScript functions on these paths outside this group's list, small
-// enough to port here (anonymous, so another port of them cannot clash).
-
-// OverworldRules._enemy_state_for_faction.
-DictRef enemy_state_for_faction(State &state, DictRef session, Atom faction_id) {
-	for (const Value &enemy_state : gd::field_items(state, session_view::overworld(state, session), str(key::enemy_states))) {
-		if (gd::is_dict(enemy_state) && player_identity_rules::controller_id(state, enemy_state.ref, key::empty) == faction_id) {
-			return enemy_state.ref;
-		}
-	}
-	return state.new_dict();
-}
-
-// OverworldRules._public_enemy_pressure_gain with
-// DifficultyRules.adjust_enemy_pressure_gain.
-int64_t public_enemy_pressure_gain(State &state, DictRef session, DictRef config) {
-	const int64_t base_gain = compat::engine_max<int64_t>(0, gd::add(gd::int_field(state, config, key::pressure_per_day, 0), gd::int_field(state, config, key::pressure_per_enemy_town, 0)));
-	const DictRef profile = difficulty_rules::profile_for_session(state, dict_value(session));
-	const int64_t adjusted = compat::engine_max<int64_t>(0, gd::add(base_gain, gd::int_field(state, profile, key::enemy_pressure_bonus, 0)));
-	return compat::engine_max<int64_t>(1, adjusted);
-}
-
-// OverworldRules._posture_label.
-Atom posture_label(Atom posture) {
-	if (posture == key::fortifying || posture == key::raiding || posture == key::massing || posture == key::collapsed) {
-		return posture;
-	}
-	return key::probing;
-}
-
-// OverworldRules._town_defense_summary.
-Atom town_defense_summary(State &state, DictRef town) {
-	int64_t garrison_strength = 0;
-	for (const Value &stack : gd::field_items(state, town, str(key::garrison))) {
-		if (!gd::is_dict(stack)) {
-			continue;
-		}
-		const DictRef unit = gd::content_row(state, ContentTable::Unit, text(state, stack.ref, key::unit_id));
-		const int64_t count = compat::engine_max<int64_t>(0, gd::int_field(state, stack.ref, key::count, 0));
-		int64_t strength = gd::int_field(state, unit, key::hp, 1);
-		strength = gd::add(strength, gd::int_field(state, unit, key::min_damage, 1));
-		strength = gd::add(strength, gd::int_field(state, unit, key::max_damage, 1));
-		strength = gd::add(strength, gd::bool_field(state, unit, key::ranged, false) ? 3 : 0);
-		garrison_strength = gd::add(garrison_strength, gd::mul(count, compat::engine_max<int64_t>(6, strength)));
-	}
-	if (garrison_strength <= 0) {
-		return key::empty;
-	}
-	if (garrison_strength >= 260) {
-		return key::fortified_walls;
-	}
-	if (garrison_strength >= 140) {
-		return key::steady_watch;
-	}
-	return key::thin_watch;
-}
-
-// OverworldRules._town_command_risk_consequence.
-Atom town_command_risk_consequence(State &state, DictRef town, int64_t readiness, DictRef logistics, DictRef recovery, DictRef capital_project, bool objective_anchor) {
-	if (gd::bool_field(state, capital_project, key::vulnerable, false) && text(state, capital_project, key::vulnerability_summary) != key::empty) {
-		return text(state, capital_project, key::vulnerability_summary);
-	}
-	std::vector<Atom> consequence_parts;
-	if (gd::int_field(state, logistics, key::gap_readiness_penalty, 0) > 0) {
-		consequence_parts.push_back(gd::format(state, key::readiness_stays_d, {int_value(gd::int_field(state, logistics, key::gap_readiness_penalty, 0))}));
-	}
-	if (gd::int_field(state, logistics, key::gap_growth_penalty_percent, 0) > 0) {
-		consequence_parts.push_back(gd::format(state, key::recruits_stay_d, {int_value(gd::int_field(state, logistics, key::gap_growth_penalty_percent, 0))}));
-	}
-	if (gd::bool_field(state, recovery, key::active, false)) {
-		consequence_parts.push_back(gd::format(state, key::d_recovery_pressure_remains, {int_value(gd::int_field(state, recovery, key::pressure, 0))}));
-	}
-	if (!consequence_parts.empty()) {
-		return gd::format(state, key::if_you_hold_this_posture_s, {str(join_atoms(state, key::comma_space, consequence_parts))});
-	}
-	if (readiness <= 18 || town_defense_summary(state, town) == key::thin_watch) {
-		return key::ending_the_day_here_leaves_a;
-	}
-	if (objective_anchor) {
-		return key::this_lane_also_sits_on_an;
-	}
-	return key::another_quiet_day_leaves_the_front;
-}
-
-// OverworldRules._release_town_occupation_reserves.
-DictRef release_town_occupation_reserves(State &state, DictRef town) {
-	const DictRef occupation = overworld_rules::_normalize_town_occupation_state(state, field_or_new_dict(state, town, key::occupation));
-	const DictRef locked = overworld_rules::_normalize_recruit_payload(state, field_or_new_dict(state, occupation, key::locked_recruits));
-	if (gd::is_empty(state, locked)) {
-		state.set(town, str(key::occupation), dict_value(overworld_rules::_normalize_town_occupation_state(state, dict_value(state.new_dict()))));
-		return town;
-	}
-	state.set(town, str(key::available_recruits), dict_value(overworld_rules::_add_recruit_growth(state, field_or_new_dict(state, town, key::available_recruits), dict_value(locked))));
-	state.set(town, str(key::occupation), dict_value(overworld_rules::_normalize_town_occupation_state(state, dict_value(state.new_dict()))));
-	return town;
-}
-
-// OverworldRules._terrain_id_at(session, x, y) on the hero's level, through
-// map_for_level (OverworldLevelRules.terrain_rows).
-Atom terrain_id_at(State &state, DictRef session, int64_t x, int64_t y) {
-	const ArrayRef map_data = overworld_level_rules::terrain_rows(state, dict_value(session), -1);
-	if (y < 0 || y >= state.array_size(map_data)) {
-		return key::empty;
-	}
-	const Value row = state.at(map_data, y);
-	if (!gd::is_array(row) || x < 0 || x >= state.array_size(row.ref)) {
-		return key::empty;
-	}
-	return gd::stringify_or_fallback(state, state.at(row.ref, x));
-}
-
-// OverworldRules._terrain_name_at.
-Atom terrain_name_at(State &state, DictRef session, int64_t x, int64_t y) {
-	const Atom terrain = terrain_id_at(state, session, x, y);
-	const DictRef biome = gd::content_row(state, ContentTable::BiomeForTerrain, terrain);
-	if (!gd::is_empty(state, biome)) {
-		// biome.get("name", terrain.capitalize()): the fallback is computed first.
-		const Atom capitalized = gd::capitalize(state, terrain);
-		return gd::stringify_or_fallback(state, state.get(biome, str(key::name), str(capitalized)));
-	}
-	return terrain != key::empty ? gd::capitalize(state, terrain) : key::unknown_terrain;
-}
-
-// OverworldRules._find_active_town_by_visit_context (a session is never null here).
-DictRef find_active_town_by_visit_context(State &state, DictRef session) {
-	const Atom placement_id = text(state, gd::as_dict(gd::index(state, session, str(key::flags))), key::active_town_placement_id);
-	if (placement_id == key::empty) {
-		return no_town(state);
-	}
-	const DictRef town_result = overworld_rules::_find_town_by_placement(state, session, placement_id);
-	const DictRef town = gd::as_dict(field_or_new_dict(state, town_result, key::town));
-	if (gd::int_field(state, town_result, key::index, -1) >= 0 && text(state, town, key::owner, key::neutral) == key::player) {
-		return town_result;
-	}
-	// session.flags.erase(ACTIVE_TOWN_PLACEMENT_KEY): the view's flags Dictionary.
-	state.erase(gd::as_dict(gd::index(state, session, str(key::flags))), str(key::active_town_placement_id));
-	return no_town(state);
-}
-
-// OverworldRules._find_active_town.
-DictRef find_active_town(State &state, DictRef session) {
-	const DictRef visit_result = find_active_town_by_visit_context(state, session);
-	if (gd::int_field(state, visit_result, key::index, -1) >= 0) {
-		return visit_result;
-	}
-	const Vector2i pos = overworld_rules::hero_position(state, session);
-	const Value towns = field_or_new_array(state, session_view::overworld(state, session), key::towns);
-	const DictRef lookup_index = overworld_rules::_spatial_lookup_index(state, session, -1);
-	const DictRef town_by_tile = dict_field(state, lookup_index, key::town_by_tile);
-	const int64_t index = gd::to_int(state, state.get(town_by_tile, str(overworld_rules::_tile_key(state, pos)), int_value(-1)));
-	if (gd::is_array(towns) && index >= 0 && index < state.array_size(towns.ref) && gd::is_dict(state.at(towns.ref, index))) {
-		return town_at(state, index, state.at(towns.ref, index));
-	}
-	return no_town(state);
-}
-
-// EnemyAdventureRules._find_town_by_placement.
-DictRef adventure_find_town_by_placement(State &state, DictRef session, Atom placement_id) {
-	const Value towns = field_or_new_array(state, session_view::overworld(state, session), key::towns);
-	const int64_t count = ai::vsize(state, towns);
-	for (int64_t index = 0; index < count; ++index) {
-		const Value town = ai::vindex(state, towns, int_value(index));
-		if (gd::is_dict(town) && text(state, town.ref, key::placement_id) == placement_id) {
-			return town_at(state, index, town);
-		}
-	}
-	return no_town(state);
-}
-
 // The daybreak projection of the town at an index: its session and town, or
 // the live ones.
 struct Projection {
@@ -769,7 +601,7 @@ ArrayRef _command_risk_town_items(State &state, DictRef session, ArrayRef daybre
 		const Projection projection = projection_at(state, session, daybreak_contexts, town_index, town);
 		const DictRef development = town_development_metrics(state, projection.town, dict_value(projection.session));
 		const int64_t readiness = gd::int_field(state, development, key::battle_readiness, 0);
-		const Atom defense = town_defense_summary(state, projection.town);
+		const Atom defense = overworld_rules::_town_defense_summary(state, projection.town);
 		const DictRef logistics = dict_field(state, development, key::logistics);
 		const DictRef recovery = dict_field(state, development, key::recovery);
 		const DictRef capital_project = dict_field(state, development, key::capital_project);
@@ -843,7 +675,7 @@ ArrayRef _command_risk_town_items(State &state, DictRef session, ArrayRef daybre
 			const Atom town_name = _town_name(state, town);
 			const Atom threats = join_atoms(state, key::semicolon_space, threat_clauses);
 			const Atom fronts = join_atoms(state, key::space_bar_space, front_parts);
-			const Atom consequence = town_command_risk_consequence(state, projection.town, readiness, logistics, recovery, capital_project, objective_anchor);
+			const Atom consequence = overworld_rules::_town_command_risk_consequence(state, projection.town, readiness, logistics, recovery, capital_project, objective_anchor);
 			state.set(item, str(key::detail), str(gd::format(state, key::s_s_s_s, {str(town_name), str(threats), str(fronts), str(consequence)})));
 		}
 		state.append(items, dict_value(item));
@@ -994,7 +826,7 @@ ArrayRef _command_risk_posture_items(State &state, DictRef session, bool include
 			continue;
 		}
 		const Atom faction_id = text(state, config.ref, key::faction_id);
-		const DictRef enemy_state = enemy_state_for_faction(state, session, faction_id);
+		const DictRef enemy_state = overworld_rules::_enemy_state_for_faction(state, session, faction_id);
 		const int64_t current_pressure = gd::int_field(state, enemy_state, key::pressure, 0);
 		const int64_t threshold = _enemy_raid_threshold_for_strategy(state, session, config.ref, faction_id);
 		const int64_t active_raids = _enemy_active_raids(state, session, faction_id);
@@ -1012,13 +844,13 @@ ArrayRef _command_risk_posture_items(State &state, DictRef session, bool include
 		int64_t severity = 2;
 		if (posture == key::raiding || current_pressure >= threshold) {
 			severity = 4;
-		} else if (posture == key::massing || gd::add(current_pressure, public_enemy_pressure_gain(state, session, config.ref)) >= threshold) {
+		} else if (posture == key::massing || gd::add(current_pressure, overworld_rules::_public_enemy_pressure_gain(state, session, config.ref)) >= threshold) {
 			severity = 3;
 		}
 		const DictRef item = new_item(state, gd::format(state, key::posture_s, {str(faction_id)}), severity, false,
 				gd::format(state, key::s_is_gathering_strength, {str(label)}));
 		if (include_details) {
-			state.set(item, str(key::detail), str(gd::format(state, key::s_sits_at_d_d_pressure, {str(label), int_value(current_pressure), int_value(threshold), int_value(active_raids), int_value(max_raids), str(posture_label(posture))})));
+			state.set(item, str(key::detail), str(gd::format(state, key::s_sits_at_d_d_pressure, {str(label), int_value(current_pressure), int_value(threshold), int_value(active_raids), int_value(max_raids), str(overworld_rules::_posture_label(state, posture))})));
 		}
 		state.append(items, dict_value(item));
 	}
@@ -1054,7 +886,7 @@ DictRef _command_risk_field_item(State &state, DictRef session, bool include_det
 			: gd::add(
 					  compat::absi(gd::sub(pos.x, gd::int_field(state, nearest_town, key::x, 0))),
 					  compat::absi(gd::sub(pos.y, gd::int_field(state, nearest_town, key::y, 0))));
-	if (gd::int_field(state, find_active_town(state, session), key::index, -1) >= 0) {
+	if (gd::int_field(state, overworld_rules::_find_active_town(state, session), key::index, -1) >= 0) {
 		return state.new_dict();
 	}
 	if (nearest_town_distance <= 2 && local_public_contacts <= 1) {
@@ -1063,7 +895,7 @@ DictRef _command_risk_field_item(State &state, DictRef session, bool include_det
 	const int64_t severity = local_public_contacts > 1 || nearest_distance <= 1 ? 3 : 2;
 	const DictRef item = new_item(state, gd::format(state, key::field_d_d, {int_value(pos.x), int_value(pos.y)}), severity, severity >= 3, key::active_command_exposed);
 	if (include_details) {
-		const Atom terrain = terrain_name_at(state, session, pos.x, pos.y);
+		const Atom terrain = overworld_rules::_terrain_name_at(state, session, pos.x, pos.y);
 		Atom town_clause = key::no_owned_town_anchors_the_current;
 		if (!gd::is_empty(state, nearest_town)) {
 			town_clause = gd::format(state, key::s_d_tile_s_away, {str(_town_name(state, nearest_town)), int_value(nearest_town_distance), plural_s(nearest_town_distance)});
@@ -1161,7 +993,7 @@ DictRef _town_command_risk_state(State &state, DictRef session, DictRef town, bo
 		if (text(state, config.ref, key::siege_target_placement_id) != placement_id) {
 			continue;
 		}
-		const DictRef faction_state = enemy_state_for_faction(state, session, text(state, config.ref, key::faction_id));
+		const DictRef faction_state = overworld_rules::_enemy_state_for_faction(state, session, text(state, config.ref, key::faction_id));
 		state.set(risk, str(key::siege_progress), int_value(compat::engine_max<int64_t>(gd::int_field(state, risk, key::siege_progress, 0), gd::int_field(state, faction_state, key::siege_progress, 0))));
 		state.set(risk, str(key::siege_capture_progress), int_value(compat::engine_max<int64_t>(1, gd::int_field(state, config.ref, key::siege_capture_progress, 1))));
 	}
@@ -1245,7 +1077,7 @@ DictRef _advance_town_occupation(State &state, DictRef session, DictRef town) {
 	state.set(town, str(key::occupation), dict_value(occupation));
 	if (gd::int_field(state, occupation, key::pressure, 0) <= 0) {
 		const int64_t locked_headcount = _recruit_payload_total(state, field_or_new_dict(state, occupation, key::locked_recruits));
-		const DictRef released = release_town_occupation_reserves(state, town);
+		const DictRef released = overworld_rules::_release_town_occupation_reserves(state, town);
 		Atom release_clause = key::empty;
 		if (locked_headcount > 0) {
 			release_clause = gd::format(state, key::d_held_levy_s_now_answer, {int_value(locked_headcount), str(locked_headcount == 1 ? key::y : key::ies)});
@@ -1606,7 +1438,7 @@ bool _raid_is_public(State &state, DictRef session, DictRef encounter) {
 	// session == null cannot happen: a session is its view.
 	if (gd::bool_field(state, encounter, key::arrived, false)) {
 		if (text(state, encounter, key::target_kind) == key::town) {
-			const DictRef town_result = adventure_find_town_by_placement(state, session, text(state, encounter, key::target_placement_id));
+			const DictRef town_result = enemy_adventure_rules::_find_town_by_placement(state, session, text(state, encounter, key::target_placement_id));
 			if (gd::int_field(state, town_result, key::index, -1) >= 0
 					&& text(state, gd::as_dict(field_or_new_dict(state, town_result, key::town)), key::owner, key::neutral) == key::player) {
 				return true;

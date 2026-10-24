@@ -8,6 +8,7 @@ const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const PlayerIdentityRulesScript = preload("res://scripts/core/PlayerIdentityRules.gd")
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 
 const SCRIPT_STATE_KEY := "scenario_script_state"
 const PENDING_REINFORCEMENTS_KEY := "pending_reinforcements"
@@ -22,6 +23,15 @@ static func _scenario_factory() -> Variant:
 	return load("res://scripts/core/ScenarioFactory.gd")
 
 static func build_script_state() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return build_script_state__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"ScenarioScriptRules.build_script_state", [])
+	var result = build_script_state__gd()
+	HumanEngine.check(&"ScenarioScriptRules.build_script_state", [], result)
+	return result
+
+static func build_script_state__gd() -> Dictionary:
 	return {
 		"fired_hook_ids": [],
 		"event_log": [],
