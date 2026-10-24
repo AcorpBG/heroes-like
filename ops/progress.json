@@ -22311,8 +22311,8 @@
         "PLAN.md",
         "docs/common-town-building-template.md"
       ],
-      "notes": "Implemented native damage and battle-AI recognition of Mireclaw own snare without stacking with generic Harried; both T3 branches rebalanced across base/upgraded forms; twelve recruitable Sunvault ranged forms cost about 10% more gold. Windows rules libraries and both CLIs rebuilt. Focused native/content checks: 16 passed; six-seed Godot/native-runner parity: 476 daily digests and six records identical; core suite: 17/17. Linux builds paused by owner; Linux binaries unchanged. Owner-requested same-plan 300-match two-level evaluation follows the implementation commit.",
-      "updatedAt": "2026-10-24T20:59:06Z",
+      "notes": "Implemented native damage and battle-AI recognition of Mireclaw own snare without stacking with generic Harried; both T3 branches rebalanced across base/upgraded forms; twelve recruitable Sunvault ranged forms cost about 10% more gold. Windows rules libraries and both CLIs rebuilt. Focused native/content checks: 16 passed; six-seed Godot/native-runner parity: 476 daily digests and six records identical; core suite: 17/17. Linux builds paused by owner; Linux binaries unchanged. Owner-requested same-plan 300-match two-level evaluation on 32bd3f623: 285 decided, 15 capped, zero failures/timeouts, 23.9 minutes. Place points / fair: Sunvault 1.035 (was 1.157), Mireclaw 0.855 (was 0.870); Sunvault movement is promising but just under two paired map standard deviations, Mireclaw has no measured improvement. Four caps remain on the known gate-loop seed; eleven are active wars.",
+      "updatedAt": "2026-10-24T21:27:00Z",
       "validatedAt": "2026-10-24T20:59:06Z"
     },
     {
