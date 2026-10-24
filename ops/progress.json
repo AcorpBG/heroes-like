@@ -22302,6 +22302,20 @@
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
+      "id": "balance-mireclaw-snare-t3-sunvault-cost-round9-20261024",
+      "title": "Balance round 9: Mireclaw snare payoff and viable T3 choices; Sunvault ranged prices",
+      "status": "completed",
+      "classification": "balance",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/common-town-building-template.md"
+      ],
+      "notes": "Implemented native damage and battle-AI recognition of Mireclaw own snare without stacking with generic Harried; both T3 branches rebalanced across base/upgraded forms; twelve recruitable Sunvault ranged forms cost about 10% more gold. Windows rules libraries and both CLIs rebuilt. Focused native/content checks: 16 passed; six-seed Godot/native-runner parity: 476 daily digests and six records identical; core suite: 17/17. Linux builds paused by owner; Linux binaries unchanged. Owner-requested same-plan 300-match two-level evaluation follows the implementation commit.",
+      "updatedAt": "2026-10-24T20:59:06Z",
+      "validatedAt": "2026-10-24T20:59:06Z"
+    },
+    {
       "id": "ai-match-native-process-pool-20261024",
       "title": "Native AI batch process pool with desktop preset and worker recycling",
       "status": "completed",

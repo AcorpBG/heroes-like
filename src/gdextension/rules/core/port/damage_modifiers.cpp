@@ -375,7 +375,7 @@ double _faction_damage_modifier(State &state, DictRef attacker, DictRef defender
 		if (wounded_count > 0) {
 			modifier *= 1.0 + (static_cast<double>(engine_min<int64_t>(wounded_count, 3)) * 0.04);
 		}
-		if (spell_rules::has_effect_id(state, defender, battle, key::status_harried)) {
+		if (spell_rules::has_any_effect_ids(state, defender, battle, array_value(string_array(state, { key::status_harried, state.intern("status_mire_harried") })))) {
 			modifier *= 1.08;
 		}
 		if (!is_ranged && gd::int_field(state, battle, key::round, 1) >= 3 && attack_distance <= 0) {
