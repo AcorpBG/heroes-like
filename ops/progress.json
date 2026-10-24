@@ -116954,7 +116954,7 @@
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Owner decision 2026-10-24 on the AI-turn profile (large and XL games on the runner): A, KeyList indexes Int and Vector2i keys (P8-10); B, the placement-id tables apart from the tile tables, then the spatial index updated instead of rebuilt; C, the day close's repeated enemy-state normalizes skipped when they would rebuild identical states, or dropped; D, the runner compacts every N days. Every change keeps games identical; each lands and merges on its own, main tagged first; measured on the same eight profile games before and after. _search over flat arrays waits until A to C are measured. A merged 2026-10-24.",
+      "notes": "Owner decision 2026-10-24 on the AI-turn profile (large and XL games on the runner): A, KeyList indexes Int and Vector2i keys (P8-10); B, the placement-id tables apart from the tile tables, then the spatial index updated instead of rebuilt; C, the day close's repeated enemy-state normalizes skipped when they would rebuild identical states, or dropped; D, the runner compacts every N days. Every change keeps games identical; each lands and merges on its own, main tagged first; measured on the same eight profile games before and after. _search over flat arrays waits until A to C are measured. A merged 2026-10-24 (P8-10); B merged 2026-10-24 without its placement and in-place parts (P8-11), which would change games.",
       "updatedAt": "2026-10-24T14:00:00Z"
     },
     {
@@ -116969,6 +116969,19 @@
       ],
       "notes": "Branch native-phase8-keyindex from main f15bceda9; main tagged pre-native-phase8-keyindex first. KeyList (battle_state.hpp) puts Int, Vector2i and Vector3i keys in the table its string keys use, first slot per key, built at the same point and following push_back; nil, bool, float and container keys scanned as before; a key matches as before. Checks: six seeds against main, game and --runner-b, 443 digests and the records identical; --human 1,896 action digests identical (8 seeds); core suite 17/17; rules_selftest OK. Timing: eight AI games on the runner (large 3P/4P, XL 5P/6P, one and two levels, land, normal guards, cap 320, seeds p8prof-<game>), both builds 16 at once, two rounds, the runner's own seconds: 710.1 s to 622.6 s (-12.3%; -3.4% to -23.4% per game), records identical. Windows only; Linux libraries not rebuilt.",
       "updatedAt": "2026-10-24T14:00:00Z"
+    },
+    {
+      "id": "native-rules-phase8-11-spatial-20261024",
+      "title": "Phase 8.11: cheaper spatial index rebuilds",
+      "status": "completed",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Branch native-phase8-spatial from main 3d18e3e66; main tagged pre-native-phase8-spatial first. State::pair_atom keeps the tile-key atoms by their numbers; _spatial_resource_section compares the fingerprint fields in place and builds the fingerprint only on a rebuild. The index is built and dropped at the same points: an index placement_level builds is read stale during AI hero walks (139 reads in the XL 6P one-level profile game), so skipping that build or updating the index in place would change games and is not done. Checks: six seeds against main, game and --runner-b, 443 digests and the records identical; core suite 17/17; rules_selftest OK. Timing, eight profile games on the runner, both builds 16 at once, two rounds: 599.0 s to 584.0 s (-2.5%; -0.2% to -4.3% per game), records identical. Windows only; Linux libraries not rebuilt.",
+      "updatedAt": "2026-10-24T16:00:00Z"
     }
   ],
   "project": "heroes-like",

@@ -3231,6 +3231,20 @@ rounds, the runner's own seconds.
 - Timing: 710.1 s to 622.6 s (-12.3%). Per game -3.4% (large 3P two levels) to -23.4% (extra large 5P one level).
   Records identical. Windows only: the Linux libraries in `bin/` are not rebuilt.
 
+**P8-11, cheaper spatial index rebuilds** (`native-rules-phase8-11-spatial-20261024`, branch `native-phase8-spatial`):
+- `State::pair_atom` keeps the atoms of the tile keys ("x,y") by their numbers, so a rebuild formats and hashes each
+  tile's text once per State.
+- `_spatial_resource_section` compares the resource nodes' fingerprint fields with the kept copy in place and builds
+  the fingerprint only when it rebuilds the section.
+- The index is built and dropped at the same points as before. The index is read stale: during an AI hero's walk
+  the hero's steps are written before `invalidate_spatial_lookup`, and queries in the walk read the index built
+  before it. In the extra large 6P one-level game, 139 such reads use an index that `placement_level` built.
+  Skipping that build, or updating the index in place, would hand those reads a fresher index and change games, so
+  neither is done.
+- Checks: six seeds against main, game and `--runner-b`, all 443 daily digests and the records identical; core suite
+  17/17.
+- Timing: 599.0 s to 584.0 s (-2.5%), per game -0.2% to -4.3%. Records identical. Windows only.
+
 ### Totals
 
 Sizes are the proposal's unmeasured agent-day guesses, useful only to compare phases (see section 6).
