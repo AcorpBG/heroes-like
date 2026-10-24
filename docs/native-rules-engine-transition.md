@@ -3213,6 +3213,24 @@ after Phase 7's merge 1b):
     both ways.
   - Core suite 17/17. Windows only: the Linux libraries in `bin/` are not rebuilt.
 
+**AI turn speed** (`native-rules-phase8-ai-speed-20261024`, owner decision 2026-10-24). On large and extra large maps
+about two-thirds of a match's time was in the generic State dictionary and value layer. Four changes, in this order,
+each merged on its own, each keeping games identical: A, the key index for Int and Vector2i keys; B, the placement-id
+tables apart from the tile tables, then the spatial index updated instead of rebuilt; C, the day close's repeated
+enemy-state normalizes skipped when they would rebuild identical states, or dropped; D, the runner compacting every
+N days. Timing: eight AI games on the runner (large 3P and 4P, extra large 5P and 6P, one and two levels, land,
+normal guards, day cap 320, seeds `p8prof-<game>`), the build before and after side by side, 16 runners at once, two
+rounds, the runner's own seconds.
+
+**P8-10, the key index** (`native-rules-phase8-10-keyindex-20261024`, branch `native-phase8-keyindex`):
+- `KeyList` (`battle_state.hpp`) puts Int, Vector2i and Vector3i keys in the table its string keys use, the first
+  slot of each key, built at the same point and following `push_back`. Nil, bool, float and container keys are
+  scanned as before. A key matches as before: the same kind and value.
+- Checks: six seeds against main, game and `--runner-b`, all 443 daily digests and the records identical;
+  `--human` on its eight seeds, 1,896 action digests identical; core suite 17/17.
+- Timing: 710.1 s to 622.6 s (-12.3%). Per game -3.4% (large 3P two levels) to -23.4% (extra large 5P one level).
+  Records identical. Windows only: the Linux libraries in `bin/` are not rebuilt.
+
 ### Totals
 
 Sizes are the proposal's unmeasured agent-day guesses, useful only to compare phases (see section 6).

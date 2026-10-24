@@ -116943,6 +116943,32 @@
       ],
       "notes": "Branch native-phase8-fold from main ec2efc954 (Phase 7 merge 3); main tagged pre-native-phase8-fold first. MapPackageService (src/gdextension/src/map_package_service.cpp, 3,789 to 1,034 lines) is thin wrappers over the core's package code: the loads and document checks (core/map_packages.cpp), config normalize and identity, generation, conversion, package writes and document hashes (core/map_generation.cpp), compiled into the map library as aurelion_map_rules_core with the core's pow/exp/log. src/gdextension/src/core_bridge.cpp converts at the Godot boundary (State in, unchanged containers out as they came, documents read lazily, files through FileAccess with the checked write and rename, the browser manifest cache filled after a write); exceptions on in the map library build. One copy of the package loads, projection, writes and checks; the MapDocument/ScenarioDocument accessors keep a Godot copy beside the core's. Checks: four setups (small 2P, medium 3P normal water, large 4P two levels, XL 6P islands two levels) eight package files byte-identical to main's, records' setups equal; six seeds against main, game and --runner-b, 443 digests and the records identical; core suite 17/17. Windows only; Linux libraries not rebuilt.",
       "updatedAt": "2026-10-24T12:00:00Z"
+    },
+    {
+      "id": "native-rules-phase8-ai-speed-20261024",
+      "title": "Phase 8: AI turn speed on large and extra large maps",
+      "status": "in_progress",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Owner decision 2026-10-24 on the AI-turn profile (large and XL games on the runner): A, KeyList indexes Int and Vector2i keys (P8-10); B, the placement-id tables apart from the tile tables, then the spatial index updated instead of rebuilt; C, the day close's repeated enemy-state normalizes skipped when they would rebuild identical states, or dropped; D, the runner compacts every N days. Every change keeps games identical; each lands and merges on its own, main tagged first; measured on the same eight profile games before and after. _search over flat arrays waits until A to C are measured. A merged 2026-10-24.",
+      "updatedAt": "2026-10-24T14:00:00Z"
+    },
+    {
+      "id": "native-rules-phase8-10-keyindex-20261024",
+      "title": "Phase 8.10: the key index for Int and Vector2i keys",
+      "status": "completed",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Branch native-phase8-keyindex from main f15bceda9; main tagged pre-native-phase8-keyindex first. KeyList (battle_state.hpp) puts Int, Vector2i and Vector3i keys in the table its string keys use, first slot per key, built at the same point and following push_back; nil, bool, float and container keys scanned as before; a key matches as before. Checks: six seeds against main, game and --runner-b, 443 digests and the records identical; --human 1,896 action digests identical (8 seeds); core suite 17/17; rules_selftest OK. Timing: eight AI games on the runner (large 3P/4P, XL 5P/6P, one and two levels, land, normal guards, cap 320, seeds p8prof-<game>), both builds 16 at once, two rounds, the runner's own seconds: 710.1 s to 622.6 s (-12.3%; -3.4% to -23.4% per game), records identical. Windows only; Linux libraries not rebuilt.",
+      "updatedAt": "2026-10-24T14:00:00Z"
     }
   ],
   "project": "heroes-like",
