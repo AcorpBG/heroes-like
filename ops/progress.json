@@ -116930,6 +116930,58 @@
       ],
       "notes": "Branch native-phase8-generation from main 3b3d50b0a (P8-7); main tagged pre-native-phase8-generation first. aurelion_rules/map_generation.hpp (core/map_generation.cpp, library aurelion_rules_generation) ports MapPackageService's normalize_random_map_config, generate_random_map (generator core kept per thread), convert_generated_payload, save_map_package and save_scenario_package with what they call, over the H3MapEd generator core compiled from the map library's sources (aurelion_h3maped_rmg, one copy); packages written with compat::JsonWriter (JSON.stringify(package, \"\t\", true)) into content::Files, in memory in the runner. Two copies of the projection and the package loads/writes: a behaviour change goes into both, plus one six-seed rules_parity --runner-b check. The scene's HEROES_AI_MATCH_CONTENT_SNAPSHOT writes only content.snap; match_sim_cli with HEROES_AI_MATCH_CONTENT draws the line-up and map seed, builds the setup with 7.11's native build_random_map_skirmish_setup_with_retry and starts the session; weight sets by name only (a .json set or a map corpus still uses the prepare mode). rules_parity.py --runner and ai_match_batch.py --runner generate in the runner. Checks: six seeds game against runner in one process, 443 digests and the records identical; four setups (small 2P, medium 3P normal water, large 4P two levels, XL 6P islands two levels) eight package files byte-identical to the game's; a two-match batch smoke; core suite 17/17. Windows only; Linux libraries and Linux match_sim_cli not built.",
       "updatedAt": "2026-10-23T23:00:00Z"
+    },
+    {
+      "id": "native-rules-phase8-09-fold-20261024",
+      "title": "Phase 8.9: one copy of the package code",
+      "status": "completed",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Branch native-phase8-fold from main ec2efc954 (Phase 7 merge 3); main tagged pre-native-phase8-fold first. MapPackageService (src/gdextension/src/map_package_service.cpp, 3,789 to 1,034 lines) is thin wrappers over the core's package code: the loads and document checks (core/map_packages.cpp), config normalize and identity, generation, conversion, package writes and document hashes (core/map_generation.cpp), compiled into the map library as aurelion_map_rules_core with the core's pow/exp/log. src/gdextension/src/core_bridge.cpp converts at the Godot boundary (State in, unchanged containers out as they came, documents read lazily, files through FileAccess with the checked write and rename, the browser manifest cache filled after a write); exceptions on in the map library build. One copy of the package loads, projection, writes and checks; the MapDocument/ScenarioDocument accessors keep a Godot copy beside the core's. Checks: four setups (small 2P, medium 3P normal water, large 4P two levels, XL 6P islands two levels) eight package files byte-identical to main's, records' setups equal; six seeds against main, game and --runner-b, 443 digests and the records identical; core suite 17/17. Windows only; Linux libraries not rebuilt.",
+      "updatedAt": "2026-10-24T12:00:00Z"
+    },
+    {
+      "id": "native-rules-phase8-ai-speed-20261024",
+      "title": "Phase 8: AI turn speed on large and extra large maps",
+      "status": "completed",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Owner decision 2026-10-24 on the AI-turn profile (large and XL games on the runner): A, KeyList indexes Int and Vector2i keys (P8-10); B, the placement-id tables apart from the tile tables, then the spatial index updated instead of rebuilt; C, the day close's repeated enemy-state normalizes skipped when they would rebuild identical states, or dropped; D, the runner compacts every N days. Every change keeps games identical; each lands and merges on its own, main tagged first; measured on the same eight profile games before and after. _search over flat arrays waits until A to C are measured. A merged 2026-10-24 (P8-10); B merged 2026-10-24 without its placement and in-place parts (P8-11), which would change games. C dropped: the second day-close normalize never changed a value on the eight games (1,406 day closes), but identical states cannot be shown without auditing its read set (normalize_overworld_state rewrites what it reads in between). D kept at every day: 16 XL 6P games at once peak at 92 GB summed on the 64 GB machine at N=1 (2.5-12.8 GB each); every second day adds about 22% (320-day game 12.8 to 15.6 GB, -8.8% time), records identical; --compact-every and State::settle on branch native-phase8-compact, not merged. Completed 2026-10-24.",
+      "updatedAt": "2026-10-24T18:00:00Z"
+    },
+    {
+      "id": "native-rules-phase8-10-keyindex-20261024",
+      "title": "Phase 8.10: the key index for Int and Vector2i keys",
+      "status": "completed",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Branch native-phase8-keyindex from main f15bceda9; main tagged pre-native-phase8-keyindex first. KeyList (battle_state.hpp) puts Int, Vector2i and Vector3i keys in the table its string keys use, first slot per key, built at the same point and following push_back; nil, bool, float and container keys scanned as before; a key matches as before. Checks: six seeds against main, game and --runner-b, 443 digests and the records identical; --human 1,896 action digests identical (8 seeds); core suite 17/17; rules_selftest OK. Timing: eight AI games on the runner (large 3P/4P, XL 5P/6P, one and two levels, land, normal guards, cap 320, seeds p8prof-<game>), both builds 16 at once, two rounds, the runner's own seconds: 710.1 s to 622.6 s (-12.3%; -3.4% to -23.4% per game), records identical. Windows only; Linux libraries not rebuilt.",
+      "updatedAt": "2026-10-24T14:00:00Z"
+    },
+    {
+      "id": "native-rules-phase8-11-spatial-20261024",
+      "title": "Phase 8.11: cheaper spatial index rebuilds",
+      "status": "completed",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/native-rules-engine-transition.md"
+      ],
+      "notes": "Branch native-phase8-spatial from main 3d18e3e66; main tagged pre-native-phase8-spatial first. State::pair_atom keeps the tile-key atoms by their numbers; _spatial_resource_section compares the fingerprint fields in place and builds the fingerprint only on a rebuild. The index is built and dropped at the same points: an index placement_level builds is read stale during AI hero walks (139 reads in the XL 6P one-level profile game), so skipping that build or updating the index in place would change games and is not done. Checks: six seeds against main, game and --runner-b, 443 digests and the records identical; core suite 17/17; rules_selftest OK. Timing, eight profile games on the runner, both builds 16 at once, two rounds: 599.0 s to 584.0 s (-2.5%; -0.2% to -4.3% per game), records identical. Windows only; Linux libraries not rebuilt.",
+      "updatedAt": "2026-10-24T16:00:00Z"
     }
   ],
   "project": "heroes-like",

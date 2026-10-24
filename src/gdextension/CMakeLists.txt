@@ -1,9 +1,12 @@
 cmake_minimum_required(VERSION 3.22)
-project(aurelion_map_persistence LANGUAGES CXX)
+project(aurelion_map_persistence LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_C_EXTENSIONS OFF)
 
 get_property(AURELION_MULTI_CONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 if(NOT AURELION_MULTI_CONFIG AND NOT CMAKE_BUILD_TYPE)
@@ -36,12 +39,46 @@ else()
 	message(FATAL_ERROR "AURELION_GODOTCPP_TARGET must be auto, template_debug or template_release, got '${AURELION_GODOTCPP_TARGET}'.")
 endif()
 set(GODOTCPP_TARGET "${AURELION_RESOLVED_GODOTCPP_TARGET}" CACHE STRING "Which target to generate. valid values are: template_debug, template_release, and editor" FORCE)
+# MapPackageService catches what the rules core's package code throws, so the
+# STL must keep exceptions (godot-cpp turns them off by default).
+set(GODOTCPP_DISABLE_EXCEPTIONS OFF CACHE BOOL "Keep C++ exceptions for the rules core's package code" FORCE)
 
 set(AURELION_PROJECT_ROOT "${CMAKE_CURRENT_LIST_DIR}/../.." CACHE PATH "Godot project root.")
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/AurelionGodotCpp.cmake")
 aurelion_resolve_godot_cpp_root("${AURELION_PROJECT_ROOT}" AURELION_GODOT_CPP_ROOT)
 
 add_subdirectory("${AURELION_GODOT_CPP_ROOT}" "${CMAKE_CURRENT_BINARY_DIR}/godot-cpp")
+
+# The rules core's package code (Phase 8, the fold): MapPackageService is a thin
+# wrapper over rules/core/map_packages.cpp and map_generation.cpp, compiled here
+# with the core sources they reach and the core's pow, exp and log
+# (rules/CMakeLists.txt builds the same files for match_sim_cli).
+set(AURELION_RULES_DIR "${CMAKE_CURRENT_LIST_DIR}/rules")
+set(AURELION_ARM_MATH_DIR "${AURELION_RULES_DIR}/third_party/arm_optimized_routines/math")
+add_library(aurelion_map_rules_math STATIC
+	${AURELION_ARM_MATH_DIR}/exp.c
+	${AURELION_ARM_MATH_DIR}/exp_data.c
+	${AURELION_ARM_MATH_DIR}/log.c
+	${AURELION_ARM_MATH_DIR}/log_data.c
+	${AURELION_ARM_MATH_DIR}/math_err.c
+	${AURELION_ARM_MATH_DIR}/pow.c
+	${AURELION_ARM_MATH_DIR}/pow_log_data.c
+)
+target_compile_definitions(aurelion_map_rules_math PRIVATE HAVE_FAST_FMA=0 HAVE_FAST_ROUND=0 HAVE_FAST_LROUND=0 WANT_ROUNDING=1 WANT_ERRNO=0 USE_GLIBC_ABI=0)
+set_target_properties(aurelion_map_rules_math PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+add_library(aurelion_map_rules_core STATIC
+	${AURELION_RULES_DIR}/core/battle_state.cpp
+	${AURELION_RULES_DIR}/core/compat/godot_json.cpp
+	${AURELION_RULES_DIR}/core/compat/godot_string.cpp
+	${AURELION_RULES_DIR}/core/compat/json_writer.cpp
+	${AURELION_RULES_DIR}/core/port/gd.cpp
+	${AURELION_RULES_DIR}/core/map_packages.cpp
+	${AURELION_RULES_DIR}/core/map_generation.cpp
+)
+target_include_directories(aurelion_map_rules_core PUBLIC "${AURELION_RULES_DIR}/include" PRIVATE include)
+target_link_libraries(aurelion_map_rules_core PUBLIC aurelion_map_rules_math)
+set_target_properties(aurelion_map_rules_core PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 add_library(aurelion_map_persistence SHARED
 	src/register_types.cpp
@@ -51,7 +88,9 @@ add_library(aurelion_map_persistence SHARED
 	src/map_document.cpp
 	src/scenario_document.cpp
 	src/map_package_service.cpp
+	src/core_bridge.cpp
 	src/rmg_data_model.cpp
+	${AURELION_RULES_DIR}/gdextension/battle_state_bridge.cpp
 )
 
 add_executable(rmg_native_batch_export_cli
@@ -71,6 +110,7 @@ add_executable(h3maped_rmg_core_selftest
 
 target_include_directories(aurelion_map_persistence PRIVATE
 	include
+	"${AURELION_RULES_DIR}/gdextension"
 )
 
 target_include_directories(rmg_native_batch_export_cli PRIVATE
@@ -81,7 +121,7 @@ target_include_directories(h3maped_rmg_core_selftest PRIVATE
 	include
 )
 
-target_link_libraries(aurelion_map_persistence PRIVATE godot::cpp)
+target_link_libraries(aurelion_map_persistence PRIVATE aurelion_map_rules_core godot::cpp)
 # Treat the godot-cpp headers as system headers so the warnings enabled below
 # report this project's code, not dozens of godot-cpp lines per source file.
 get_target_property(AURELION_GODOT_CPP_INCLUDES godot::cpp INTERFACE_INCLUDE_DIRECTORIES)
@@ -91,7 +131,7 @@ endif()
 
 target_compile_definitions(aurelion_map_persistence PRIVATE GDEXTENSION)
 
-foreach(AURELION_NATIVE_TARGET aurelion_map_persistence rmg_native_batch_export_cli h3maped_rmg_core_selftest)
+foreach(AURELION_NATIVE_TARGET aurelion_map_persistence aurelion_map_rules_core rmg_native_batch_export_cli h3maped_rmg_core_selftest)
 	if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
 		target_compile_options(${AURELION_NATIVE_TARGET} PRIVATE -Wall -Wextra)
 	elseif(MSVC)
@@ -101,12 +141,12 @@ endforeach()
 
 if(WIN32)
 	if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-		foreach(AURELION_NATIVE_TARGET aurelion_map_persistence rmg_native_batch_export_cli h3maped_rmg_core_selftest)
+		foreach(AURELION_NATIVE_TARGET aurelion_map_persistence aurelion_map_rules_core rmg_native_batch_export_cli h3maped_rmg_core_selftest)
 			target_compile_options(${AURELION_NATIVE_TARGET} PRIVATE -Wa,-mbig-obj)
 			target_link_options(${AURELION_NATIVE_TARGET} PRIVATE -static-libgcc -static-libstdc++)
 		endforeach()
 	elseif(MSVC)
-		foreach(AURELION_NATIVE_TARGET aurelion_map_persistence rmg_native_batch_export_cli h3maped_rmg_core_selftest)
+		foreach(AURELION_NATIVE_TARGET aurelion_map_persistence aurelion_map_rules_core rmg_native_batch_export_cli h3maped_rmg_core_selftest)
 			target_compile_options(${AURELION_NATIVE_TARGET} PRIVATE /bigobj)
 		endforeach()
 	endif()

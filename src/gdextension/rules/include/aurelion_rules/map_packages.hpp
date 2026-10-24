@@ -1,12 +1,15 @@
 #pragma once
 
-// The map library's package loads and documents without Godot (Phase 8, P8-7;
+// The map library's package loads and documents (Phase 8, P8-7 and the fold;
 // docs/native-rules-engine-transition.md): MapPackageService.load_map_package
-// and load_scenario_package (src/gdextension/src/map_package_service.cpp) and
-// the methods of the MapDocument and ScenarioDocument they make
-// (map_document.cpp, scenario_document.cpp), which game setup calls. A host
-// keeps each document behind an opaque value of its own and answers the
-// document's methods with its call().
+// and load_scenario_package, which the map library's MapPackageService
+// (src/gdextension/src/map_package_service.cpp) is a thin wrapper over, and
+// the methods of the MapDocument and ScenarioDocument they make, for a host
+// without Godot (match_sim_cli). A host keeps each document behind an opaque
+// value of its own and answers the document's methods with its call(). The map
+// library's MapDocument and ScenarioDocument (map_document.cpp,
+// scenario_document.cpp) keep their own methods: a change to one goes into both
+// copies in the same commit.
 
 #include "aurelion_rules/battle_state.hpp"
 #include "aurelion_rules/content_store.hpp"
@@ -55,6 +58,11 @@ state::Value package_success(state::State &state, const char *operation, const s
 // configure_owned (not), and ScenarioDocument.configure(initial).
 void configure_map_document(state::State &state, MapDocument &document, const state::Value &initial, bool copy_containers);
 void configure_scenario_document(state::State &state, ScenarioDocument &document, const state::Value &initial);
+
+// The map library's read_package_dictionary(operation, path): true with the
+// parsed package, or false with the failure result. The file comes from files.
+bool read_package_dictionary(state::State &state, content::Files &files, const char *operation, const std::string &path, state::Value &package,
+		state::Value &failure);
 
 // MapPackageService.load_map_package(path) and load_scenario_package(path):
 // the result Dictionary. The file comes from files (FileAccess in the game).

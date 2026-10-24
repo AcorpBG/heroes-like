@@ -306,18 +306,6 @@ ArrayRef _spatial_resource_section(State &state, DictRef session, ArrayRef resou
 		key::object_id,
 	};
 	const Value missing = gd::name_value(key::_overworld_spatial_fingerprint_missing);
-	const ArrayRef fingerprint = state.new_array();
-	for (const Value &node : gd::items(state, array_value(resources))) {
-		if (!gd::is_dict(node)) {
-			state.append(fingerprint, Value());
-			continue;
-		}
-		const ArrayRef fields = state.new_array();
-		for (const Atom field : kFingerprintFields) {
-			state.append(fields, state.get(node.ref, str(field), missing));
-		}
-		state.append(fingerprint, array_value(fields));
-	}
 	const int64_t revision = gd::content_revision(state);
 	const DictRef map_objects = gd::content_file(state, key::map_objects_path);
 	const DictRef resource_sites = gd::content_file(state, key::resource_sites_path);
@@ -332,10 +320,42 @@ ArrayRef _spatial_resource_section(State &state, DictRef session, ArrayRef resou
 		if (state.array_size(cached) == 5 &&
 				gd::to_int(state, state.at(cached, 0)) == revision &&
 				gd::is_same(state, state.at(cached, 1), dict_value(map_objects)) &&
-				gd::is_same(state, state.at(cached, 2), dict_value(resource_sites)) &&
-				gd::equal(state, state.at(cached, 3), array_value(fingerprint))) {
-			return gd::as_array(state.at(cached, 4));
+				gd::is_same(state, state.at(cached, 2), dict_value(resource_sites))) {
+			// The fingerprint the nodes would make, compared where it is kept: per
+			// node null, or its fields in kFingerprintFields' order, element by
+			// element as == of the two Arrays compares them.
+			const Value kept = state.at(cached, 3);
+			const int64_t count = state.array_size(resources);
+			bool same = gd::is_array(kept) && state.array_size(kept.ref) == count;
+			for (int64_t node_index = 0; same && node_index < count; ++node_index) {
+				const Value node = state.at(resources, node_index);
+				const Value kept_fields = state.at(kept.ref, node_index);
+				if (!gd::is_dict(node)) {
+					same = gd::hash_compare(state, kept_fields, Value(), false);
+					continue;
+				}
+				constexpr int64_t field_count = static_cast<int64_t>(sizeof(kFingerprintFields) / sizeof(kFingerprintFields[0]));
+				same = gd::is_array(kept_fields) && state.array_size(kept_fields.ref) == field_count;
+				for (int64_t field = 0; same && field < field_count; ++field) {
+					same = gd::hash_compare(state, state.at(kept_fields.ref, field), state.get(node.ref, str(kFingerprintFields[field]), missing), false);
+				}
+			}
+			if (same) {
+				return gd::as_array(state.at(cached, 4));
+			}
 		}
+	}
+	const ArrayRef fingerprint = state.new_array();
+	for (const Value &node : gd::items(state, array_value(resources))) {
+		if (!gd::is_dict(node)) {
+			state.append(fingerprint, Value());
+			continue;
+		}
+		const ArrayRef fields = state.new_array();
+		for (const Atom field : kFingerprintFields) {
+			state.append(fields, state.get(node.ref, str(field), missing));
+		}
+		state.append(fingerprint, array_value(fields));
 	}
 	const ArrayRef section = _build_spatial_resource_section(state, resources, level);
 	const ArrayRef entry = state.new_array();

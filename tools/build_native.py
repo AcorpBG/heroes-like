@@ -78,7 +78,8 @@ PARTS = {
 	},
 	"map": {
 		"source": "src/gdextension",
-		"paths": ["src/gdextension/CMakeLists.txt", "src/gdextension/src", "src/gdextension/include", "src/gdextension/cmake"],
+		# MapPackageService compiles the rules core's package code (Phase 8, the fold).
+		"paths": ["src/gdextension/CMakeLists.txt", "src/gdextension/src", "src/gdextension/include", "src/gdextension/cmake", RULES_DIR],
 		"trees": {
 			"template_debug": [],
 			"template_release": [],

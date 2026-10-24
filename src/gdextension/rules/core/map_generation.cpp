@@ -1767,7 +1767,8 @@ int64_t tile_layer_size(State &state, const map_packages::MapDocument &document,
 	return codes.kind == Kind::Array ? state.array_size(codes.ref) : 0;
 }
 
-Value validate_map_document(State &state, const map_packages::MapDocument &document) {
+// validate_map_document_structural_report of a document.
+Value map_document_report(State &state, const map_packages::MapDocument &document) {
 	const Value failures = new_array(state);
 	const Value warnings = new_array(state);
 	const Value metrics = new_dict(state);
@@ -1910,9 +1911,9 @@ Value validate_map_document(State &state, const map_packages::MapDocument &docum
 			warnings, metrics);
 }
 
-// validate_scenario_document_structural_report with the map's report already
-// made.
-Value validate_scenario_document(State &state, const map_packages::ScenarioDocument &scenario, const map_packages::MapDocument &map,
+// validate_scenario_document_structural_report of a document, with the map's
+// report already made when map_validation is one.
+Value scenario_document_report(State &state, const map_packages::ScenarioDocument &scenario, const map_packages::MapDocument *map,
 		const Value &map_validation) {
 	const Value failures = new_array(state);
 	const Value warnings = new_array(state);
@@ -1933,15 +1934,23 @@ Value validate_scenario_document(State &state, const map_packages::ScenarioDocum
 	if (is_empty(state, scenario.player_slots)) {
 		append_issue(state, failures, "missing_player_slots", "player_slots", "Scenario document must include player slot records.");
 	}
-	const Value map_report = dict_or_new(state, get(state, map_validation, "report"));
-	if (string_field(state, map_report, "status") != "pass") {
-		append_issue(state, failures, "referenced_map_invalid", "map_document", "Referenced map document did not pass structural validation.", map_report);
-	}
-	if (string_field(state, map_ref, "map_id") != state.text(map.map_id.ref)) {
-		append_issue(state, failures, "map_ref_id_mismatch", "map_ref.map_id", "Scenario map reference id must match the referenced MapDocument.");
-	}
-	if (string_field(state, map_ref, "map_hash") != state.text(map.map_hash.ref)) {
-		append_issue(state, failures, "map_ref_hash_mismatch", "map_ref.map_hash", "Scenario map reference hash must match the referenced MapDocument.");
+	if (map == nullptr) {
+		append_issue(state, failures, "missing_map_document", "map_document", "Scenario validation requires the referenced MapDocument.");
+	} else {
+		// Callers that already validated this map pass the report in, so the
+		// map is not walked a second time.
+		const Value report_of_map = is_empty(state, map_validation) ? map_document_report(state, *map) : map_validation;
+		const Value map_report = dict_or_new(state, get(state, report_of_map, "report"));
+		if (string_field(state, map_report, "status") != "pass") {
+			append_issue(state, failures, "referenced_map_invalid", "map_document", "Referenced map document did not pass structural validation.",
+					map_report);
+		}
+		if (string_field(state, map_ref, "map_id") != state.text(map->map_id.ref)) {
+			append_issue(state, failures, "map_ref_id_mismatch", "map_ref.map_id", "Scenario map reference id must match the referenced MapDocument.");
+		}
+		if (string_field(state, map_ref, "map_hash") != state.text(map->map_hash.ref)) {
+			append_issue(state, failures, "map_ref_hash_mismatch", "map_ref.map_hash", "Scenario map reference hash must match the referenced MapDocument.");
+		}
 	}
 	return validation_report_result(state, "validate_scenario_document", "aurelion_scenario_validation_report", scenario.scenario_id,
 			scenario.scenario_hash, failures, warnings, metrics);
@@ -2001,7 +2010,105 @@ Value map_ref_of(State &state, const Value &map_id, const Value &map_hash) {
 	return map_ref;
 }
 
+// variant_contains_object: an opaque value anywhere in the containers.
+bool holds_opaque(State &state, const Value &value) {
+	switch (value.kind) {
+		case Kind::Opaque:
+			return true;
+		case Kind::Dict: {
+			const state::DictNode &node = state.dict(value.ref);
+			for (size_t index = 0; index < node.keys.size(); ++index) {
+				if (holds_opaque(state, node.keys[index]) || holds_opaque(state, node.values[index])) {
+					return true;
+				}
+			}
+			return false;
+		}
+		case Kind::Array: {
+			const int64_t count = state.array_size(value.ref);
+			for (int64_t index = 0; index < count; ++index) {
+				if (holds_opaque(state, state.at(value.ref, index))) {
+					return true;
+				}
+			}
+			return false;
+		}
+		default:
+			return false;
+	}
+}
+
+// write_package_dictionary's failures.
+const char *write_failure_message(const std::string &code) {
+	if (code == "create_directory_failed") {
+		return "Package parent directory could not be created.";
+	}
+	if (code == "write_failed") {
+		return "Package file could not be written completely.";
+	}
+	if (code == "replace_failed") {
+		return "Written package could not replace the previous file.";
+	}
+	return "Package file could not be opened for writing.";
+}
+
 } // namespace
+
+const char *Documents::write_package(content::Files &files, const std::string &path, const std::string &json) {
+	return files.write(path, json) ? nullptr : "open_failed";
+}
+
+Value Documents::package_written(State &, const std::string &, const Value &, bool cache_profile) {
+	if (cache_profile) {
+		throw state::NotPorted("left out of the map generation port: the package browser cache profile");
+	}
+	return Value();
+}
+
+Value validate_map_document(State &state, const map_packages::MapDocument *document) {
+	if (document == nullptr) {
+		const Value failures = new_array(state);
+		append_issue(state, failures, "missing_map_document", "map_document", "Map validation requires a MapDocument.");
+		return validation_report_result(state, "validate_map_document", "aurelion_map_validation_report", text(state, ""), text(state, ""), failures,
+				new_array(state), new_dict(state));
+	}
+	return map_document_report(state, *document);
+}
+
+Value validate_scenario_document(State &state, const map_packages::ScenarioDocument *scenario, const map_packages::MapDocument *map) {
+	if (scenario == nullptr) {
+		const Value failures = new_array(state);
+		append_issue(state, failures, "missing_scenario_document", "scenario_document", "Scenario validation requires a ScenarioDocument.");
+		return validation_report_result(state, "validate_scenario_document", "aurelion_scenario_validation_report", text(state, ""), text(state, ""),
+				failures, new_array(state), new_dict(state));
+	}
+	return scenario_document_report(state, *scenario, map, Value());
+}
+
+Value compute_document_hash(State &state, const Value &document) {
+	const Value result = new_dict(state);
+	if (holds_opaque(state, document)) {
+		put(state, result, "ok", boolean(false));
+		put(state, result, "status", text(state, "fail"));
+		put(state, result, "error_code", text(state, "unhashable_object_value"));
+		put(state, result, "message", text(state, "Document hashes cover plain data only; object values have no stable identity."));
+		put(state, result, "algorithm", text(state, "canonical_variant_fnv1a32"));
+		return result;
+	}
+	put(state, result, "ok", boolean(true));
+	put(state, result, "status", text(state, "pass"));
+	put(state, result, "algorithm", text(state, "canonical_variant_fnv1a32"));
+	put(state, result, "hash", text(state, document_hash(state, document)));
+	return result;
+}
+
+std::string document_hash(State &state, const Value &value) {
+	return "fnv1a32:" + hash32_hex(canonical(state, value));
+}
+
+std::string text_hash(std::string_view text) {
+	return hash32_hex(text);
+}
 
 Value normalize_random_map_config(State &state, const Value &config) {
 	const Value size = dict_or_new(state, get(state, config, "size"));
@@ -2062,6 +2169,36 @@ Value normalize_random_map_config(State &state, const Value &config) {
 	put(state, result, "h3maped_strict_scope", text(state, strict_scope_id(state, result)));
 	put(state, result, "normalization_scope",
 			text(state, supported_parity_config ? "native_runtime_generation_supported_scope" : "native_runtime_generation_unsupported_scope"));
+	return result;
+}
+
+Value random_map_config_identity(State &state, const Value &config) {
+	const Value normalized = normalize_random_map_config(state, config);
+	const std::string canonical_config = canonical(state, normalized);
+	const std::string signature = hash32_hex(canonical_config);
+
+	const Value result = new_dict(state);
+	put(state, result, "ok", boolean(true));
+	put(state, result, "schema_id", text(state, "aurelion_native_random_map_identity"));
+	put(state, result, "schema_version", integer(1));
+	put(state, result, "algorithm", text(state, "canonical_variant_fnv1a32_config_normalization"));
+	put(state, result, "signature", text(state, signature));
+	put(state, result, "config_hash", text(state, "fnv1a32:" + signature));
+	put(state, result, "map_id", text(state, "native_rmg_" + signature));
+	put(state, result, "normalized_seed", text(state, string_field(state, normalized, "normalized_seed")));
+	put(state, result, "width", integer(int32_field(state, normalized, "width", 0)));
+	put(state, result, "height", integer(int32_field(state, normalized, "height", 0)));
+	put(state, result, "level_count", integer(int32_field(state, normalized, "level_count", 1)));
+	put(state, result, "template_id", text(state, string_field(state, normalized, "template_id")));
+	put(state, result, "profile_id", text(state, string_field(state, normalized, "profile_id")));
+	put(state, result, "canonical_config", text(state, canonical_config));
+	put(state, result, "normalized_config", normalized);
+	const Value runtime_policy = runtime_policy_classification(state, normalized);
+	const bool supported = bool_field(state, runtime_policy, "runtime_generation_allowed", false);
+	put(state, result, "full_generation_status",
+			text(state, supported ? "native_runtime_ready_for_supported_scope" : "native_runtime_blocked_outside_supported_scope"));
+	put(state, result, "supported_parity_config", boolean(supported));
+	put(state, result, "runtime_policy_classification", runtime_policy);
 	return result;
 }
 
@@ -2381,8 +2518,8 @@ Value generate_random_map(State &state, content::Files &files, Documents &docume
 	map_packages::configure_scenario_document(state, *scenario_document, scenario_state);
 
 	const auto validation_started_at = SteadyClock::now();
-	const Value map_validation = validate_map_document(state, *map_document);
-	const Value scenario_validation = validate_scenario_document(state, *scenario_document, *map_document, map_validation);
+	const Value map_validation = map_document_report(state, *map_document);
+	const Value scenario_validation = scenario_document_report(state, *scenario_document, map_document, map_validation);
 	record_bucket("document_validation", validation_started_at);
 	if (!bool_field(state, map_validation, "ok", false) || !bool_field(state, scenario_validation, "ok", false)) {
 		const Value result = blocked(state, "native_rmg_runtime_document_validation_failed",
@@ -2514,28 +2651,29 @@ Value convert_generated_payload(State &state, const Value &generated_map, const 
 
 namespace {
 
-// write_package_dictionary: the package's JSON in files at path (the map
-// library writes it beside the target and renames it over), then the result.
-Value write_package(State &state, content::Files &files, const char *operation, const std::string &path, const Value &package, const Value &options) {
-	if (bool_field(state, options, "include_browser_manifest_cache_profile", false)) {
-		throw state::NotPorted("left out of the map generation port: the package browser cache profile");
-	}
+// write_package_dictionary: the package's JSON written to path, what the host
+// keeps beside it, then the result.
+Value write_package(State &state, content::Files &files, Documents &documents, const char *operation, const std::string &path, const Value &package,
+		const Value &options) {
 	const std::string json = compat::JsonWriter{ state, "\t", true, false }.text(package);
-	if (!files.write(path, json)) {
-		return map_packages::package_failure(state, operation, path, "open_failed", "Package file could not be opened for writing.");
+	if (const char *code = documents.write_package(files, path, json)) {
+		return map_packages::package_failure(state, operation, path, code, write_failure_message(code));
 	}
+	const Value profile = documents.package_written(state, path, package, bool_field(state, options, "include_browser_manifest_cache_profile", false));
 	const Value payload = new_dict(state);
 	if (bool_field(state, options, "return_package", true)) {
-		// The map library hands back a deep copy; nothing here changes the
-		// package after it is written.
-		put(state, payload, "package", package);
+		// A copy: the package holds the document's own containers.
+		put(state, payload, "package", deep_copy(state, package));
 	}
 	put(state, payload, "package_hash", get(state, package, "package_hash", text(state, "")));
+	if (profile.kind != Kind::Nil) {
+		put(state, payload, "browser_manifest_cache_profile", profile);
+	}
 	return map_packages::package_success(state, operation, path, payload);
 }
 
 Value package_hash_of(State &state, const Value &package) {
-	return text(state, "fnv1a32:" + hash32_hex(canonical(state, package)));
+	return text(state, document_hash(state, package));
 }
 
 } // namespace
@@ -2595,7 +2733,7 @@ Value save_map_package(State &state, content::Files &files, Documents &documents
 	const Value final_map_ref = deep_copy(state, map_ref);
 	put(state, final_map_ref, "package_hash", get(state, package, "package_hash", text(state, "")));
 	put(state, package, "map_ref", final_map_ref);
-	return write_package(state, files, operation, path, package, options);
+	return write_package(state, files, documents, operation, path, package, options);
 }
 
 Value save_scenario_package(State &state, content::Files &files, Documents &documents, const Value &scenario_document, const std::string &path,
@@ -2651,7 +2789,7 @@ Value save_scenario_package(State &state, content::Files &files, Documents &docu
 	const Value final_scenario_ref = deep_copy(state, scenario_ref);
 	put(state, final_scenario_ref, "package_hash", get(state, package, "package_hash", text(state, "")));
 	put(state, package, "scenario_ref", final_scenario_ref);
-	return write_package(state, files, operation, path, package, options);
+	return write_package(state, files, documents, operation, path, package, options);
 }
 
 } // namespace aurelion::rules::map_generation

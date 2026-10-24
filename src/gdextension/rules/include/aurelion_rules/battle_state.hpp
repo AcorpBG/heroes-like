@@ -366,14 +366,16 @@ private:
 	Value inline_[kInline];
 };
 
-// A Dictionary's keys in insertion order. A lookup of a string key scans them
-// until, above kIndexAbove keys, the scans have read kScansPerKey times as many
-// keys as there are: from then on it goes through a table of slots by atom (a
-// battle stack has 40 keys and is read in every loop). A Dictionary read a few
-// times never pays for the table, which costs about as much as eight scans to
-// build. The table follows push_back and is dropped by any other change, and
-// keeps its buffer for the next one. The keys are read-only in place, so
-// nothing can change one behind the table.
+// A Dictionary's keys in insertion order. A lookup of a string, Int, Vector2i
+// or Vector3i key scans them until, above kIndexAbove keys, the scans have read
+// kScansPerKey times as many keys as there are: from then on it goes through a
+// table of slots by key (a battle stack has 40 keys and is read in every loop;
+// the AI's tile tables are keyed by tile index). A Dictionary read a few times
+// never pays for the table, which costs about as much as eight scans to build.
+// The table follows push_back, growing with the keys, and is dropped by any
+// other change, and keeps its buffer for the next one. The keys are read-only
+// in place, so nothing can change one behind the table. Other keys (nil, bool,
+// float, containers) are always scanned.
 class KeyList {
 public:
 	static constexpr size_t kIndexAbove = 8;
@@ -429,10 +431,12 @@ public:
 		const Value copy = key;
 		keys_.push_back(copy);
 		if (indexed_) {
-			if (keys_.size() * 2 > table_.size() || keys_.size() >= kIndexBelow) {
+			if (keys_.size() >= kIndexBelow) {
 				drop_index();
-			} else if (copy.is_string_like()) {
-				insert(copy.ref, keys_.size() - 1);
+			} else if (keys_.size() * 2 > table_.size()) {
+				build_index();
+			} else if (indexed_kind(copy)) {
+				insert(copy, keys_.size() - 1);
 			}
 		}
 	}
@@ -448,35 +452,44 @@ public:
 
 	// The first slot whose key is the same key (same_key), or -1.
 	int64_t find(const Value &key) const {
-		if (key.is_string_like()) {
-			if (indexed_) {
-				const size_t mask = table_.size() - 1;
-				for (size_t probe = hash(key.ref) & mask;; probe = (probe + 1) & mask) {
-					const uint16_t entry = table_[probe];
-					if (entry == 0) {
-						return -1;
-					}
-					if (keys_[entry - 1u].ref == key.ref) {
-						return static_cast<int64_t>(entry - 1u);
-					}
+		if (!indexed_kind(key)) {
+			for (size_t index = 0; index < keys_.size(); ++index) {
+				if (same_key(keys_[index], key)) {
+					return static_cast<int64_t>(index);
 				}
 			}
+			return -1;
+		}
+		if (indexed_) {
+			const size_t mask = table_.size() - 1;
+			for (size_t probe = hash(key) & mask;; probe = (probe + 1) & mask) {
+				const uint16_t entry = table_[probe];
+				if (entry == 0) {
+					return -1;
+				}
+				if (same_indexed(keys_[entry - 1u], key)) {
+					return static_cast<int64_t>(entry - 1u);
+				}
+			}
+		}
+		const size_t count = keys_.size();
+		if (key.is_string_like()) {
 			// same_key of two string keys: the same atom.
-			const size_t count = keys_.size();
 			for (size_t index = 0; index < count; ++index) {
 				if (keys_[index].is_string_like() && keys_[index].ref == key.ref) {
 					scanned(index + 1);
 					return static_cast<int64_t>(index);
 				}
 			}
-			scanned(count);
-			return -1;
-		}
-		for (size_t index = 0; index < keys_.size(); ++index) {
-			if (same_key(keys_[index], key)) {
-				return static_cast<int64_t>(index);
+		} else {
+			for (size_t index = 0; index < count; ++index) {
+				if (same_indexed(keys_[index], key)) {
+					scanned(index + 1);
+					return static_cast<int64_t>(index);
+				}
 			}
 		}
+		scanned(count);
 		return -1;
 	}
 
@@ -492,7 +505,26 @@ private:
 	// A table entry is its key's slot + 1, 0 when empty; so at most this many keys.
 	static constexpr size_t kIndexBelow = 0xFFFF;
 
-	static size_t hash(uint32_t atom) { return static_cast<size_t>((static_cast<uint64_t>(atom) * 0x9E3779B97F4A7C15ULL) >> 32); }
+	// The keys the table holds.
+	static bool indexed_kind(const Value &key) {
+		return key.is_string_like() || key.kind == Kind::Int || key.kind == Kind::Vector2i || key.kind == Kind::Vector3i;
+	}
+	// same_key of a key and an indexed key.
+	static bool same_indexed(const Value &slot, const Value &key) {
+		if (key.is_string_like()) {
+			return slot.is_string_like() && slot.ref == key.ref;
+		}
+		return slot.kind == key.kind && slot.i == key.i && (key.kind != Kind::Vector3i || slot.z == key.z);
+	}
+	// A String and a StringName of one atom hash alike, as same_key matches them.
+	static size_t hash(const Value &key) {
+		uint64_t bits = key.is_string_like() ? key.ref : static_cast<uint64_t>(key.i) ^ (static_cast<uint64_t>(key.kind) << 56);
+		if (key.kind == Kind::Vector3i) {
+			bits ^= static_cast<uint64_t>(static_cast<uint32_t>(key.z)) * 0xC2B2AE3D27D4EB4FULL;
+		}
+		bits = (bits ^ (bits >> 33)) * 0xFF51AFD7ED558CCDULL;
+		return static_cast<size_t>(bits ^ (bits >> 33));
+	}
 
 	void drop_index() const {
 		indexed_ = false;
@@ -506,16 +538,16 @@ private:
 			}
 		}
 	}
-	// The first string key of each atom keeps its slot, as the linear scan finds it.
-	void insert(uint32_t atom, size_t slot) const {
+	// The first slot of each key keeps it, as the linear scan finds it.
+	void insert(const Value &key, size_t slot) const {
 		const size_t mask = table_.size() - 1;
-		for (size_t probe = hash(atom) & mask;; probe = (probe + 1) & mask) {
+		for (size_t probe = hash(key) & mask;; probe = (probe + 1) & mask) {
 			const uint16_t entry = table_[probe];
 			if (entry == 0) {
 				table_[probe] = static_cast<uint16_t>(slot + 1);
 				return;
 			}
-			if (keys_[entry - 1u].ref == atom) {
+			if (same_indexed(keys_[entry - 1u], key)) {
 				return;
 			}
 		}
@@ -528,8 +560,8 @@ private:
 		}
 		table_.assign(capacity, 0);
 		for (size_t index = 0; index < keys_.size(); ++index) {
-			if (keys_[index].is_string_like()) {
-				insert(keys_[index].ref, index);
+			if (indexed_kind(keys_[index])) {
+				insert(keys_[index], index);
 			}
 		}
 		indexed_ = true;
@@ -949,7 +981,8 @@ public:
 
 	// The atom of "q,r" ("%d,%d" % [q, r], BattleRules._hex_key_from_coords).
 	// The board's cells have fixed atoms, made with the known keys, so they need
-	// no formatting or hashing; any other pair is interned.
+	// no formatting or hashing; any other pair is interned once and kept by its
+	// numbers (the overworld's tile keys).
 	uint32_t pair_atom(int64_t q, int64_t r);
 
 	// The memo: native answers kept by what they were asked (slice 04c, the
@@ -1037,6 +1070,8 @@ private:
 	std::unordered_map<std::string_view, uint32_t> atom_ids_;
 	// joined_atom's atoms: (prefix << 32 | atom) -> atom of the joined text.
 	std::unordered_map<uint64_t, uint32_t> joined_;
+	// pair_atom's interned atoms: (q << 32 | r) -> atom, for q and r that fit 32 bits.
+	std::unordered_map<uint64_t, uint32_t> pairs_;
 	NodePool<ArrayNode> arrays_;
 	NodePool<DictNode> dicts_;
 	NodePool<PackedNode> packeds_;
