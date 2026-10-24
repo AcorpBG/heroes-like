@@ -22308,7 +22308,10 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "tooling_implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["PLAN.md", "docs/ai-plays-by-player-rules.md"],
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/ai-plays-by-player-rules.md"
+      ],
       "notes": "Implemented the refilling native process pool: 16 single-threaded workers, --desktop 8, --per-process 32 with whole rotation groups, adaptive tail batches, saved execution settings, native/content-exporter PID resume guards, per-game timeout and unstarted-game requeue. Godot preparation stays capped at four games or one rotation group. Existing rows, records and prepared inputs remain compatible. Windows checks: 36 direct/prepared generated-record comparisons with the old runner identical apart from timing; recycling, concurrency, crashes, timeouts, exporter/startup cleanup, CLI interrupt/resume and legacy/desktop settings pass; skill validator passes; core suite 17/17. No native builds or Linux checks.",
       "updatedAt": "2026-10-24"
     },
@@ -117006,6 +117009,20 @@
       ],
       "notes": "Branch native-phase8-buffers from main 77e4ef2a7; main tagged pre-native-phase8-buffers first. NodePool reuses node slots after each compaction, and ArrayNode/DictNode/PackedNode reset() kept their lists' heap buffers, so every slot held the largest list it ever held: an XL 6P game grew about 37 MB a day with its live nodes flat (0.65M kept of 1.4-2.6M made a day). reset() now frees them (ValueList::reset, KeyList::reset, packed vectors swapped empty). Peak private memory, XL 6P, one game at a time: Godot 3.0 GB to 1.2 GB at day 119 and 13.6 GB to 2.3 GB at day 320 (376 s to 281 s); runner 12.8 GB to 1.4 GB at day 320 (354.2 s to 319.9 s, three at once); records identical. Checks: six seeds against main, game and --runner-b, 443 digests and the records identical; core suite 17/17. Windows only; Linux libraries not rebuilt.",
       "updatedAt": "2026-10-24T20:00:00Z"
+    },
+    {
+      "id": "balance-sunvault-round-8-20261024",
+      "title": "Balance round 8: Sunvault's Aurora Relay and Harrier harries removed",
+      "status": "completed",
+      "classification": "balance",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/common-town-building-template.md"
+      ],
+      "notes": "Owner decision 2026-10-24 (\"A. Aurora Relay off both Ballista forms + Harriers' harries off (Glare Splinters, Glarewing Pursuit) implement this only, don't run any balance simulations or arenas after the change\"). content/units.json: formation_guard removed from unit_aurora_ballista(_veteran), harry removed from unit_prism_adept(_veteran). Arena prediction before the change (round 7 notes): attack 1.089 -> 1.015, defend 0.990 -> 0.966. Validation: content check and core suite; no AI matches or arena runs after the change, by the owner's instruction.",
+      "updatedAt": "2026-10-24T19:08:39Z",
+      "validatedAt": "2026-10-24T19:08:39Z"
     }
   ],
   "project": "heroes-like",
