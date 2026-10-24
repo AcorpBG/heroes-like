@@ -298,6 +298,11 @@ public:
 		size_ = static_cast<uint32_t>(count);
 	}
 	void clear() { size_ = 0; }
+	// Empty and back in place: the heap buffer is freed.
+	void reset() {
+		size_ = 0;
+		release();
+	}
 	void erase_at(size_t index) {
 		for (size_t next = index + 1; next < size_; ++next) {
 			data_[next - 1] = data_[next];
@@ -449,6 +454,12 @@ public:
 		keys_.clear();
 		drop_index();
 	}
+	// Empty, with the keys' and the table's buffers freed.
+	void reset() {
+		keys_.reset();
+		std::vector<uint16_t>().swap(table_);
+		drop_index();
+	}
 
 	// The first slot whose key is the same key (same_key), or -1.
 	int64_t find(const Value &key) const {
@@ -585,9 +596,9 @@ struct ArrayNode {
 	// Reads of a backed node so far (State::backed_at).
 	uint32_t reads = 0;
 
-	// As new, keeping the buffer.
+	// As new, with the buffer freed (NodePool).
 	void reset() {
-		items.clear();
+		items.reset();
 		element_type = 0;
 		read_only = false;
 		backed = false;
@@ -612,10 +623,10 @@ struct DictNode {
 	uint32_t reads = 0;
 	uint32_t fill_at = 0;
 
-	// As new, keeping the buffers.
+	// As new, with the buffers freed.
 	void reset() {
-		keys.clear();
-		values.clear();
+		keys.reset();
+		values.reset();
 		key_type = 0;
 		value_type = 0;
 		read_only = false;
@@ -640,11 +651,12 @@ struct PackedNode {
 	bool dirty = false;
 	uint8_t guard = 0;
 
+	// As new, with the buffers freed.
 	void reset() {
 		kind = Kind::PackedInt32;
-		bytes.clear();
-		ints.clear();
-		atoms.clear();
+		std::vector<uint8_t>().swap(bytes);
+		std::vector<int32_t>().swap(ints);
+		std::vector<uint32_t>().swap(atoms);
 		backed = false;
 		dirty = false;
 		guard = 0;
@@ -663,8 +675,10 @@ struct PackedNode {
 
 // Nodes in blocks of kBlock: making one rarely allocates, and references stay
 // valid while nodes are added. (std::deque holds one node per block on MSVC.)
-// clear() keeps the blocks, and the nodes their buffers, for the next nodes: a
-// node used before is reset when it is made again.
+// clear() keeps the blocks for the next nodes: a node used before is reset
+// when it is made again, which frees its buffers. (Keeping them let every slot
+// hold the largest list it ever held: a slot is reused every day, and an extra
+// large game grew to 12.8 GB by day 320 with its live nodes flat.)
 template <typename Node>
 class NodePool {
 public:
@@ -685,7 +699,7 @@ public:
 		++size_;
 	}
 	void clear() { size_ = 0; }
-	// The first count nodes stay; the rest keep their buffers for reuse.
+	// The first count nodes stay; the rest are reset when they are made again.
 	void truncate(size_t count) { size_ = count < size_ ? count : size_; }
 
 private:
