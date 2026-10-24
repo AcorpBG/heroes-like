@@ -5,6 +5,7 @@
 
 #include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/overworld_rules.hpp"
+#include "aurelion_rules/port/overworld_rules_panels.hpp"
 #include "aurelion_rules/port/scenario_outcome.hpp"
 #include "aurelion_rules/port/session_state_store.hpp"
 
@@ -277,16 +278,16 @@ DictRef build_in_session_save_surface(State &state, const Value &session, int64_
 	const Atom current_context = !gd::is_empty(state, default_live_summary) ? describe_resume_brief(state, default_live_summary) : key::empty;
 	bucket(state, buckets, key::current_context, context_started);
 	const int64_t normalization_started = profile_begin_usec(state);
-	const bool detached_was_runtime_normalized = gd::to_bool(
-			gd::call_static(state, key::overworld_rules_script, key::is_runtime_session_normalized, { detached_live_session }));
+	const bool detached_was_runtime_normalized = detached_live_session.kind != Kind::Nil &&
+			overworld_rules::is_runtime_session_normalized(state, gd::object_view(state, detached_live_session));
 	const bool detached_normalization_fallback = detached_live_session.kind != Kind::Nil && !detached_was_runtime_normalized;
 	if (detached_normalization_fallback) {
 		overworld_rules::normalize_overworld_state(state, gd::object_view(state, detached_live_session));
 	}
 	bucket(state, buckets, key::detached_normalization, normalization_started);
 	const int64_t read_scope_started = profile_begin_usec(state);
-	gd::call_static(state, key::overworld_rules_script, key::begin_normalized_read_scope, { detached_live_session });
 	if (detached_live_session.kind != Kind::Nil) {
+		overworld_rules::begin_normalized_read_scope(state, gd::object_view(state, detached_live_session));
 		town_rules::begin_read_scope(state, gd::object_view(state, detached_live_session));
 	}
 	bucket(state, buckets, key::detached_read_scope_begin, read_scope_started);
@@ -315,8 +316,8 @@ DictRef build_in_session_save_surface(State &state, const Value &session, int64_
 	bucket(state, buckets, key::recap_surfaces, recap_started);
 	if (detached_live_session.kind != Kind::Nil) {
 		town_rules::end_read_scope(state, gd::object_view(state, detached_live_session));
+		overworld_rules::end_normalized_read_scope(state, gd::object_view(state, detached_live_session));
 	}
-	gd::call_static(state, key::overworld_rules_script, key::end_normalized_read_scope, { detached_live_session });
 	if (!include_stored_summaries) {
 		const DictRef current = state.new_dict();
 		state.set(current, str(key::save_check), str(save_check));
@@ -634,8 +635,7 @@ Atom _describe_session_play_check_from_summary(State &state, const Value &sessio
 			gd::strip_edges(state, gd::trim_prefix(state, describe_summary_next_play_action(state, summary), key::next_play_action)), 72);
 	Atom state_line = key::empty;
 	if (string_get(state, summary, key::resume_target, key::overworld) == key::town) {
-		const Atom headline = gd::to_string(
-				gd::call_static(state, key::town_rules_script, key::describe_defense_headline, { session_object(state, session) }));
+		const Atom headline = town_rules::describe_defense_headline(state, gd::object_view(state, session));
 		const ArrayRef ignored_lines = state.new_array();
 		state.append(ignored_lines, str(key::Defense));
 		const Atom defense_line = _first_meaningful_line(state, headline, ignored_lines);

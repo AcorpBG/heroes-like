@@ -2985,6 +2985,34 @@ no commits since merge 2.
   battle 597 | 594, move 197 | 193, opening a town 84 | 72, dialogs 141 | 97, hero 83 | 77; every other kind
   within 1 ms either way.
 
+**Slice 7.8, the panels** (2026-10-24, branch `native-phase7-human`): the texts, boards, forecasts and feeds the
+overworld, town and hero screens show, and the queries they read, run in C++.
+- Ported to the human registry (header `overworld_rules_panels.hpp`, 13 files `overworld_rules_panel_status.cpp`,
+  `overworld_rules_panel_objectives.cpp`, `overworld_rules_panel_forecast.cpp`, `overworld_rules_panel_feed.cpp`,
+  `town_rules_panels.cpp`, `town_rules_handoff.cpp`, `scenario_rules_panels.cpp`, `enemy_rules_panels.cpp`,
+  `artifact_rules_panels.cpp`, `spell_rules_panels.cpp`, `hero_rules_panels.cpp`, `map_view_rules.cpp` and
+  `town_panel_boards.cpp`; 294 functions, 9,054 lines): the overworld's status, objectives and stakes, the end-turn
+  forecast and the command risk, the dispatch and event feed, the town panels and the town handoff, the operational
+  board, the enemy pressure texts, the artifact, spell and hero panels, the map view's reads and the town panels'
+  boards.
+- 192 entries: what the screens, the other rules scripts and the tests call, with the two-copy functions the screens
+  call (`NativeTransitRules.network_colour` keeps its GDScript copy for the map view).
+- The save service calls the read scopes, the command risk, the frontier threats, the management watch and the
+  town's defense texts in C++; their nine host entries are gone.
+- The map view and the minimap read the fog from one snapshot per redraw, the level's explored and visible grids
+  (D-c), instead of one native read per tile.
+- A projected session (a town at daybreak, `_project_player_town_at_daybreak`) has its own instance id, -1, -2 and on,
+  for the read scopes' cache keys, as GDScript's new SessionData has its own object id. The shadow check reads such
+  a key as GDScript's (`battle_port_bridge.cpp`, `same_projected_key`).
+Checks:
+- Human shadow on the eight `--human` seeds: 16,781,929 checks on 152 of the 192 entries, 0 mismatches and 0 errors.
+  Not reached: the overworld panels the runner never opens (status, heroes, objectives, the stakes board, threats,
+  defense warnings, spellbook rail, specialties, artifacts, the commitment board, the end-turn forecast and its
+  surfaces, dispatch and event feed, the management watch), the operational board's lines, the pending choice
+  texts, specialty and spell action ids, the construction board's slots, artifact location and equipping,
+  `army_addition_plan`, `_resource_site_delivery_interception` and the pathing profile's validation functions. A
+  probe for them runs after Phase 8's timing pause.
+
 ### Phase 8: a match runner without Godot
 
 Wanted, not optional (owner decision 2026-10-22, D7). The same core as a command-line tool, `match_sim_cli` beside

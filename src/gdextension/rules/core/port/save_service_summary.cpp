@@ -5,6 +5,7 @@
 #include "aurelion_rules/port/save_service.hpp"
 
 #include "aurelion_rules/port/overworld_rules.hpp"
+#include "aurelion_rules/port/overworld_rules_panels.hpp"
 #include "aurelion_rules/port/scenario_evaluation.hpp"
 #include "aurelion_rules/port/scenario_outcome.hpp"
 #include "aurelion_rules/port/scenario_select_rules_setup.hpp"
@@ -245,9 +246,8 @@ DictRef _finalize_summary_from_session(State &state, DictRef summary, const Valu
 		bump(state, profile, key::summary_owned_session_materialization_count, 1);
 	}
 	const int64_t context_started = profile_begin_usec(state);
-	const Value object = session_object(state, trusted_session);
-	gd::call_static(state, key::overworld_rules_script, key::begin_normalized_read_scope, { object });
 	const DictRef trusted_view = gd::object_view(state, trusted_session);
+	overworld_rules::begin_normalized_read_scope(state, trusted_view);
 	town_rules::begin_read_scope(state, trusted_view);
 	const Atom progress_recap = scenario_rules::describe_session_progress_recap_from_normalized_session(state, trusted_view, true, state.new_dict());
 	const Atom progress_without_header = gd::trim_prefix(state, progress_recap, key::progress_recap_2);
@@ -255,7 +255,7 @@ DictRef _finalize_summary_from_session(State &state, DictRef summary, const Valu
 	put(state, summary, key::summary, gd::str(describe_slot(state, summary)));
 	put(state, summary, key::detail, gd::str(_describe_slot_details(state, summary, trusted_session, recap_context, progress_recap)));
 	town_rules::end_read_scope(state, trusted_view);
-	gd::call_static(state, key::overworld_rules_script, key::end_normalized_read_scope, { object });
+	overworld_rules::end_normalized_read_scope(state, trusted_view);
 	if (!gd::is_empty(state, profile)) {
 		bump(state, profile, key::summary_detail_context_build_count, 1);
 		bump(state, profile, key::summary_detail_context_reuse_count, 3);
@@ -627,7 +627,7 @@ Atom _summary_play_check_state_line(State &state, const Value &session, DictRef 
 			return _safe_player_text(state, gd::format(state, key::battle_s, { gd::str(trimmed(state, outlook, key::outlook)) }), 72);
 		}
 	} else if (resume_target == key::town) {
-		const Atom defense = host_text(state, key::town_rules_script, key::describe_defense, session);
+		const Atom defense = town_rules::describe_defense(state, gd::object_view(state, session));
 		const Atom defense_line = _first_meaningful_line(state, defense, one_line(state, key::Defense));
 		if (defense_line != key::empty) {
 			return _safe_player_text(state, gd::format(state, key::defense_s, { gd::str(trimmed(state, defense_line, key::text_2)) }), 72);
@@ -662,7 +662,7 @@ Atom _summary_play_check_state_line_from_context(State &state, const Value &sess
 			return _safe_player_text(state, gd::format(state, key::battle_s, { gd::str(battle_watch) }), 72);
 		}
 	} else if (resume_target == key::town) {
-		const Atom defense = host_text(state, key::town_rules_script, key::describe_defense_headline, session);
+		const Atom defense = town_rules::describe_defense_headline(state, gd::object_view(state, session));
 		const Atom defense_line = _first_meaningful_line(state, defense, one_line(state, key::Defense));
 		if (defense_line != key::empty) {
 			return _safe_player_text(state, gd::format(state, key::defense_s, { gd::str(trimmed(state, defense_line, key::text_2)) }), 72);
@@ -712,22 +712,22 @@ Atom _summary_watch_state_line(State &state, const Value &session, DictRef summa
 				risk_line = string_get(state, forecast.ref, key::summary, key::empty);
 			}
 		} else if (trusted_normalized_session) {
-			risk_line = host_text(state, key::overworld_rules_script, key::describe_command_risk_summary_from_normalized_session, session);
+			risk_line = overworld_rules::describe_command_risk_summary_from_normalized_session(state, gd::object_view(state, session));
 		} else {
-			const Atom command_risk = host_text(state, key::overworld_rules_script, key::describe_command_risk, session);
+			const Atom command_risk = overworld_rules::describe_command_risk(state, gd::object_view(state, session));
 			risk_line = _first_meaningful_line(state, command_risk, one_line(state, key::command_risk));
 		}
 		if (risk_line != key::empty && !gd::begins_with(state, risk_line, key::steady_watch_2)) {
 			return gd::format(state, key::risk_watch_s, { gd::str(risk_line) });
 		}
-		const Atom frontier_watch = host_text(state, key::overworld_rules_script, key::describe_frontier_threats, session);
+		const Atom frontier_watch = overworld_rules::describe_frontier_threats(state, gd::object_view(state, session));
 		const Atom frontier_line = _first_meaningful_line(state, frontier_watch, one_line(state, key::frontier_watch));
 		if (frontier_line != key::empty && !contains(state, frontier_line, key::no_hostile_factions_are_active)) {
 			return gd::format(state, key::risk_watch_s, { gd::str(trimmed(state, frontier_line, key::text_2)) });
 		}
 		const Atom management_watch = state.has(refresh_watch_context, gd::str(key::management_watch))
 				? string_get(state, refresh_watch_context, key::management_watch, key::empty)
-				: host_text(state, key::overworld_rules_script, key::describe_management_watch, session);
+				: overworld_rules::describe_management_watch(state, gd::object_view(state, session));
 		if (management_watch != key::empty && management_watch != key::town_lines_are_stable) {
 			return gd::format(state, key::risk_watch_s, { gd::str(management_watch) });
 		}

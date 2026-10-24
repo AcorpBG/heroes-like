@@ -8,12 +8,24 @@ extends RefCounted
 const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
+const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 
 const STAT_NAMES := {"attack": "Attack", "defense": "Defense", "power": "Spell power", "knowledge": "Knowledge"}
 const BOOST_NAMES := {"cohesion": "Cohesion", "momentum": "Momentum"}
 
 ## The parts of the session an overworld gain can change.
 static func snapshot(session) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return snapshot__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldGainFeed.snapshot", [session])
+	var before := HumanEngine.before_writing(&"OverworldGainFeed.snapshot", [session])
+	var result = snapshot__gd(session)
+	HumanEngine.check_writing(&"OverworldGainFeed.snapshot", before, [session], result)
+	return result
+
+static func snapshot__gd(session) -> Dictionary:
 	if session == null:
 		return {}
 	var hero: Dictionary = session.overworld.get("hero", {}) if session.overworld.get("hero", {}) is Dictionary else {}
@@ -51,6 +63,16 @@ static func snapshot(session) -> Dictionary:
 ## `movement_walked` is the movement the action's walk spent, so a stable at
 ## the end of a route shows what it restored rather than the net change.
 static func gains(before: Dictionary, after: Dictionary, movement_walked: int = 0) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return gains__gd(before, after, movement_walked)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldGainFeed.gains", [before, after, movement_walked])
+	var switch_before := HumanEngine.before_writing(&"OverworldGainFeed.gains", [before, after, movement_walked])
+	var result = gains__gd(before, after, movement_walked)
+	HumanEngine.check_writing(&"OverworldGainFeed.gains", switch_before, [before, after, movement_walked], result)
+	return result
+
+static func gains__gd(before: Dictionary, after: Dictionary, movement_walked: int = 0) -> Array:
 	var lines := []
 	if before.is_empty() or after.is_empty():
 		return lines

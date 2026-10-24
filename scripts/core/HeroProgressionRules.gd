@@ -3,6 +3,7 @@ extends RefCounted
 
 const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 const NativeRules = preload("res://scripts/core/NativeRules.gd")
 const CHOICE_SIZE := 3
 const SPECIALTY_INSIGNIA_ATLAS_PATH := "res://art/heroes/runtime/specialties/hero_specialty_insignia_atlas.png"
@@ -33,6 +34,16 @@ const COMMAND_GAIN_WEIGHTS := {
 const COMMAND_STATS := ["attack", "defense", "power", "knowledge"]
 
 static func ensure_hero_progression(hero_state: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return ensure_hero_progression__gd(hero_state)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"HeroProgressionRules.ensure_hero_progression", [hero_state])
+	var before := HumanEngine.before_writing(&"HeroProgressionRules.ensure_hero_progression", [hero_state])
+	var result = ensure_hero_progression__gd(hero_state)
+	HumanEngine.check_writing(&"HeroProgressionRules.ensure_hero_progression", before, [hero_state], result)
+	return result
+
+static func ensure_hero_progression__gd(hero_state: Dictionary) -> Dictionary:
 	var hero := hero_state
 	var level := int(max(1, int(hero.get("level", 1))))
 	hero["level"] = level
@@ -198,10 +209,30 @@ static func summarize_specialty_ids(specialty_ids: Variant, use_short_names: boo
 	return HumanEngine.native_writing(&"HeroProgressionRules.summarize_specialty_ids", [specialty_ids, use_short_names])
 
 static func pending_choices_remaining(hero_state: Dictionary) -> int:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return pending_choices_remaining__gd(hero_state)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"HeroProgressionRules.pending_choices_remaining", [hero_state])
+	var before := HumanEngine.before_writing(&"HeroProgressionRules.pending_choices_remaining", [hero_state])
+	var result = pending_choices_remaining__gd(hero_state)
+	HumanEngine.check_writing(&"HeroProgressionRules.pending_choices_remaining", before, [hero_state], result)
+	return result
+
+static func pending_choices_remaining__gd(hero_state: Dictionary) -> int:
 	var hero := ensure_hero_progression(hero_state.duplicate(true))
 	return raw_pending_choices_remaining(hero)
 
 static func current_pending_choice(hero_state: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return current_pending_choice__gd(hero_state)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"HeroProgressionRules.current_pending_choice", [hero_state])
+	var before := HumanEngine.before_writing(&"HeroProgressionRules.current_pending_choice", [hero_state])
+	var result = current_pending_choice__gd(hero_state)
+	HumanEngine.check_writing(&"HeroProgressionRules.current_pending_choice", before, [hero_state], result)
+	return result
+
+static func current_pending_choice__gd(hero_state: Dictionary) -> Dictionary:
 	var hero := ensure_hero_progression(hero_state.duplicate(true))
 	var pending_choices = hero.get("pending_specialty_choices", [])
 	if pending_choices is Array and not pending_choices.is_empty() and pending_choices[0] is Dictionary:
@@ -209,6 +240,16 @@ static func current_pending_choice(hero_state: Dictionary) -> Dictionary:
 	return {}
 
 static func pending_choice_summary(pending_choice: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return pending_choice_summary__gd(pending_choice)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"HeroProgressionRules.pending_choice_summary", [pending_choice])
+	var before := HumanEngine.before_writing(&"HeroProgressionRules.pending_choice_summary", [pending_choice])
+	var result = pending_choice_summary__gd(pending_choice)
+	HumanEngine.check_writing(&"HeroProgressionRules.pending_choice_summary", before, [pending_choice], result)
+	return result
+
+static func pending_choice_summary__gd(pending_choice: Dictionary) -> String:
 	var names := []
 	for specialty_id_value in pending_choice.get("options", []):
 		var specialty := specialty_definition(String(specialty_id_value))
@@ -218,6 +259,16 @@ static func pending_choice_summary(pending_choice: Dictionary) -> String:
 	return ", ".join(names)
 
 static func specialty_rank(hero_state: Dictionary, specialty_id: String) -> int:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return specialty_rank__gd(hero_state, specialty_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"HeroProgressionRules.specialty_rank", [hero_state, specialty_id])
+	var before := HumanEngine.before_writing(&"HeroProgressionRules.specialty_rank", [hero_state, specialty_id])
+	var result = specialty_rank__gd(hero_state, specialty_id)
+	HumanEngine.check_writing(&"HeroProgressionRules.specialty_rank", before, [hero_state, specialty_id], result)
+	return result
+
+static func specialty_rank__gd(hero_state: Dictionary, specialty_id: String) -> int:
 	var count := 0
 	if hero_state.get("specialties", []) is Array:
 		for specialty_id_value in hero_state.get("specialties", []):
@@ -227,6 +278,15 @@ static func specialty_rank(hero_state: Dictionary, specialty_id: String) -> int:
 
 ## The catalog's specialties in authored order (read-only rows).
 static func specialties() -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return specialties__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"HeroProgressionRules.specialties", [])
+	var result = specialties__gd()
+	HumanEngine.check(&"HeroProgressionRules.specialties", [], result)
+	return result
+
+static func specialties__gd() -> Array:
 	var items = ContentService.load_json(SPECIALTIES_PATH).get("items", [])
 	return items if items is Array else []
 
@@ -235,6 +295,15 @@ static func max_specialties_per_hero() -> int:
 	return maxi(1, int(ContentService.load_json(SPECIALTIES_PATH).get("max_specialties_per_hero", 6)))
 
 static func specialty_definition(specialty_id: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return specialty_definition__gd(specialty_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"HeroProgressionRules.specialty_definition", [specialty_id])
+	var result = specialty_definition__gd(specialty_id)
+	HumanEngine.check(&"HeroProgressionRules.specialty_definition", [specialty_id], result)
+	return result
+
+static func specialty_definition__gd(specialty_id: String) -> Dictionary:
 	var row := _specialty_row(specialty_id)
 	return row.duplicate(true) if not row.is_empty() else {}
 
@@ -253,6 +322,15 @@ static func has_specialty(specialty_id: String) -> bool:
 	return not _specialty_row(specialty_id).is_empty()
 
 static func specialty_id_for_action(action_id: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return specialty_id_for_action__gd(action_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"HeroProgressionRules.specialty_id_for_action", [action_id])
+	var result = specialty_id_for_action__gd(action_id)
+	HumanEngine.check(&"HeroProgressionRules.specialty_id_for_action", [action_id], result)
+	return result
+
+static func specialty_id_for_action__gd(action_id: String) -> String:
 	const PREFIX := "choose_specialty:"
 	if not action_id.begins_with(PREFIX):
 		return ""
@@ -260,6 +338,15 @@ static func specialty_id_for_action(action_id: String) -> String:
 	return specialty_id if has_specialty(specialty_id) else ""
 
 static func specialty_insignia_description(specialty_id: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return specialty_insignia_description__gd(specialty_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"HeroProgressionRules.specialty_insignia_description", [specialty_id])
+	var result = specialty_insignia_description__gd(specialty_id)
+	HumanEngine.check(&"HeroProgressionRules.specialty_insignia_description", [specialty_id], result)
+	return result
+
+static func specialty_insignia_description__gd(specialty_id: String) -> String:
 	return String(_specialty_row(specialty_id).get("icon_description", ""))
 
 static func specialty_insignia_texture(specialty_id: String) -> Texture2D:
@@ -328,6 +415,15 @@ static func scale_raid_pillage(hero_state: Dictionary, losses: Variant) -> Dicti
 	return _scale_resource_payload(losses, multiplier)
 
 static func rank_label(rank: int) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return rank_label__gd(rank)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"HeroProgressionRules.rank_label", [rank])
+	var result = rank_label__gd(rank)
+	HumanEngine.check(&"HeroProgressionRules.rank_label", [rank], result)
+	return result
+
+static func rank_label__gd(rank: int) -> String:
 	if rank <= 0:
 		return "0"
 	return RANK_LABELS[min(rank - 1, RANK_LABELS.size() - 1)]

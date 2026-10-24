@@ -9,6 +9,7 @@ const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const DayEngine = preload("res://scripts/core/DayEngine.gd")
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 static var DifficultyRulesScript: Variant = load("res://scripts/core/DifficultyRules.gd")
 
 const HALL_BUILDING_ID := "building_wayfarers_hall"
@@ -302,6 +303,16 @@ static func _week_bonus(hero_state: Dictionary, key: String) -> int:
 	return int(bonuses.get(key, 0)) if bonuses is Dictionary else 0
 
 static func scouting_radius_for_hero(hero_state: Dictionary) -> int:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return scouting_radius_for_hero__gd(hero_state)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"HeroCommandRules.scouting_radius_for_hero", [hero_state])
+	var before := HumanEngine.before_writing(&"HeroCommandRules.scouting_radius_for_hero", [hero_state])
+	var result = scouting_radius_for_hero__gd(hero_state)
+	HumanEngine.check_writing(&"HeroCommandRules.scouting_radius_for_hero", before, [hero_state], result)
+	return result
+
+static func scouting_radius_for_hero__gd(hero_state: Dictionary) -> int:
 	var artifact_bonuses = ArtifactRulesScript.aggregate_bonuses(hero_state)
 	var specialty_bonuses = HeroProgressionRulesScript.aggregate_bonuses(hero_state)
 	return max(
@@ -339,6 +350,16 @@ static func primary_hero(session: SessionStateStoreScript.SessionData) -> Dictio
 	return primary_hero_from_overworld(session.overworld if session != null else {}, session.hero_id if session != null else "")
 
 static func hero_by_id(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return hero_by_id__gd(session, hero_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"HeroCommandRules.hero_by_id", [session, hero_id])
+	var before := HumanEngine.before_writing(&"HeroCommandRules.hero_by_id", [session, hero_id])
+	var result = hero_by_id__gd(session, hero_id)
+	HumanEngine.check_writing(&"HeroCommandRules.hero_by_id", before, [session, hero_id], result)
+	return result
+
+static func hero_by_id__gd(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
 	if session == null or hero_id == "":
 		return {}
 	for hero in session.overworld.get("player_heroes", []):
@@ -413,6 +434,16 @@ static func describe_roster(session: SessionStateStoreScript.SessionData, statio
 	return "\n".join(lines)
 
 static func stationed_heroes(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return stationed_heroes__gd(session, town)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"HeroCommandRules.stationed_heroes", [session, town])
+	var before := HumanEngine.before_writing(&"HeroCommandRules.stationed_heroes", [session, town])
+	var result = stationed_heroes__gd(session, town)
+	HumanEngine.check_writing(&"HeroCommandRules.stationed_heroes", before, [session, town], result)
+	return result
+
+static func stationed_heroes__gd(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
 	var stationed := []
 	if session == null or town.is_empty():
 		return stationed
@@ -441,6 +472,16 @@ static func town_defending_hero(session: SessionStateStoreScript.SessionData, to
 ## HoMM-style town slots. Both heroes stand on the town entrance tile: one may
 ## hold the garrison (its army is the garrison row) and one visits at the gate.
 static func town_garrison_hero(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return town_garrison_hero__gd(session, town)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"HeroCommandRules.town_garrison_hero", [session, town])
+	var before := HumanEngine.before_writing(&"HeroCommandRules.town_garrison_hero", [session, town])
+	var result = town_garrison_hero__gd(session, town)
+	HumanEngine.check_writing(&"HeroCommandRules.town_garrison_hero", before, [session, town], result)
+	return result
+
+static func town_garrison_hero__gd(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
 	if session == null or town.is_empty():
 		return {}
 	var hero_id := String(town.get(TOWN_GARRISON_HERO_KEY, ""))
@@ -456,6 +497,16 @@ static func town_visiting_hero(session: SessionStateStoreScript.SessionData, tow
 
 ## The army slot holder of the garrison row: the garrison hero, else the town.
 static func town_garrison_holder_id(session: SessionStateStoreScript.SessionData, town: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return town_garrison_holder_id__gd(session, town)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"HeroCommandRules.town_garrison_holder_id", [session, town])
+	var before := HumanEngine.before_writing(&"HeroCommandRules.town_garrison_holder_id", [session, town])
+	var result = town_garrison_holder_id__gd(session, town)
+	HumanEngine.check_writing(&"HeroCommandRules.town_garrison_holder_id", before, [session, town], result)
+	return result
+
+static func town_garrison_holder_id__gd(session: SessionStateStoreScript.SessionData, town: Dictionary) -> String:
 	var hero := town_garrison_hero(session, town)
 	return String(hero.get("id", "")) if not hero.is_empty() else HOLDER_GARRISON
 
@@ -536,6 +587,16 @@ static func town_recruitment_destination(session: SessionStateStoreScript.Sessio
 	return HumanEngine.native_writing(&"HeroCommandRules.town_recruitment_destination", [session, town])
 
 static func town_defense_force(session: SessionStateStoreScript.SessionData, town: Dictionary, preferred_hero_id: String = "") -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return town_defense_force__gd(session, town, preferred_hero_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"HeroCommandRules.town_defense_force", [session, town, preferred_hero_id])
+	var before := HumanEngine.before_writing(&"HeroCommandRules.town_defense_force", [session, town, preferred_hero_id])
+	var result = town_defense_force__gd(session, town, preferred_hero_id)
+	HumanEngine.check_writing(&"HeroCommandRules.town_defense_force", before, [session, town, preferred_hero_id], result)
+	return result
+
+static func town_defense_force__gd(session: SessionStateStoreScript.SessionData, town: Dictionary, preferred_hero_id: String = "") -> Dictionary:
 	# A town fields its garrison and ONE eligible visiting hero, not the remotely
 	# selected army or every reserve commander. Battle setup consumes these rows.
 	var hero := town_defending_hero(session, town, preferred_hero_id)
@@ -568,6 +629,16 @@ static func town_defense_force(session: SessionStateStoreScript.SessionData, tow
 		"hero_troops": hero_troops, "hero_stacks": hero_stacks}
 
 static func describe_town_defense_force(session: SessionStateStoreScript.SessionData, town: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_town_defense_force__gd(session, town)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"HeroCommandRules.describe_town_defense_force", [session, town])
+	var before := HumanEngine.before_writing(&"HeroCommandRules.describe_town_defense_force", [session, town])
+	var result = describe_town_defense_force__gd(session, town)
+	HumanEngine.check_writing(&"HeroCommandRules.describe_town_defense_force", before, [session, town], result)
+	return result
+
+static func describe_town_defense_force__gd(session: SessionStateStoreScript.SessionData, town: Dictionary) -> String:
 	var force := town_defense_force(session, town)
 	var hero: Dictionary = force.hero
 	return "Defenders: %d troops / %d stacks\nGarrison: %d troops / %d stacks%s\n%s" % [
@@ -577,6 +648,16 @@ static func describe_town_defense_force(session: SessionStateStoreScript.Session
 		if not hero.is_empty() else "No visiting defender. Remote heroes do not defend this town."]
 
 static func empty_owned_towns(session: SessionStateStoreScript.SessionData) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return empty_owned_towns__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"HeroCommandRules.empty_owned_towns", [session])
+	var before := HumanEngine.before_writing(&"HeroCommandRules.empty_owned_towns", [session])
+	var result = empty_owned_towns__gd(session)
+	HumanEngine.check_writing(&"HeroCommandRules.empty_owned_towns", before, [session], result)
+	return result
+
+static func empty_owned_towns__gd(session: SessionStateStoreScript.SessionData) -> Array:
 	# Own troops are known without consulting hidden enemy positions/AI plans.
 	var result := []
 	if session == null: return result
@@ -622,6 +703,16 @@ static func describe_town_transfer(session: SessionStateStoreScript.SessionData,
 	return "\n".join(lines)
 
 static func army_addition_plan(stacks_value: Variant, additions: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return army_addition_plan__gd(stacks_value, additions)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"HeroCommandRules.army_addition_plan", [stacks_value, additions])
+	var before := HumanEngine.before_writing(&"HeroCommandRules.army_addition_plan", [stacks_value, additions])
+	var result = army_addition_plan__gd(stacks_value, additions)
+	HumanEngine.check_writing(&"HeroCommandRules.army_addition_plan", before, [stacks_value, additions], result)
+	return result
+
+static func army_addition_plan__gd(stacks_value: Variant, additions: Dictionary) -> Dictionary:
 	# Plan before charging, consuming rewards or removing source troops. A
 	# rejected manifest must never discard troops, including legacy excess.
 	var stacks: Array = stacks_value.duplicate(true) if stacks_value is Array else []
@@ -795,6 +886,16 @@ static func town_has_hall(town: Dictionary) -> bool:
 	return HALL_BUILDING_ID in town.get("built_buildings", [])
 
 static func hero_recruit_cost(hero_template: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return hero_recruit_cost__gd(hero_template)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"HeroCommandRules.hero_recruit_cost", [hero_template])
+	var before := HumanEngine.before_writing(&"HeroCommandRules.hero_recruit_cost", [hero_template])
+	var result = hero_recruit_cost__gd(hero_template)
+	HumanEngine.check_writing(&"HeroCommandRules.hero_recruit_cost", before, [hero_template], result)
+	return result
+
+static func hero_recruit_cost__gd(hero_template: Dictionary) -> Dictionary:
 	var cost = hero_template.get("recruit_cost", DEFAULT_RECRUIT_COST)
 	return _normalize_resources(cost)
 
@@ -885,6 +986,16 @@ static func hero_position_by_id(session: SessionStateStoreScript.SessionData, he
 	return _normalize_position(hero.get("position", {}))
 
 static func hero_positions(session: SessionStateStoreScript.SessionData) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return hero_positions__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"HeroCommandRules.hero_positions", [session])
+	var before := HumanEngine.before_writing(&"HeroCommandRules.hero_positions", [session])
+	var result = hero_positions__gd(session)
+	HumanEngine.check_writing(&"HeroCommandRules.hero_positions", before, [session], result)
+	return result
+
+static func hero_positions__gd(session: SessionStateStoreScript.SessionData) -> Array:
 	var positions := []
 	if session == null:
 		return positions

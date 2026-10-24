@@ -33,7 +33,7 @@ func _refresh_interaction_highlights() -> void:
 func _draw_interaction_highlight(tile: Vector2i, rect: Rect2, viewport_rect: Rect2) -> void:
 	if not _interaction_highlights or not _interaction_highlight_index.has(tile): return
 	# Recheck visibility at the draw boundary, including during AI playback.
-	if not OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y, _level): return
+	if not _fog_visible(tile.x, tile.y): return
 	var state := String(_interaction_highlight_index[tile].get("state", "Available"))
 	var font := get_theme_default_font()
 	var font_size := 11
@@ -591,6 +591,12 @@ const SPELL_CAST_MAX_DURATION_MSEC := 700
 
 var _level: int = 0
 var _session = null
+
+# Phase 7, D-c: while a layer redraws, the fog comes from one native snapshot of
+# the level's [explored, visible] grids, taken at the first read; outside a
+# redraw each query asks the rules.
+var _fog_snapshot_depth := 0
+var _fog_snapshot := {}
 var _map_data: Array = []
 var _map_size := Vector2i.ONE
 var _selected_tile := Vector2i(-1, -1)
@@ -701,7 +707,7 @@ func show_turn_playback_event(event: Dictionary) -> void:
 	_turn_playback_event = event
 	_turn_playback_progress = 0.0
 	var point: Dictionary = event.get("from",event.get("to",{}))
-	if not point.is_empty() and OverworldRulesScript.is_tile_visible(_session,int(point.x),int(point.y),_level):
+	if not point.is_empty() and _fog_visible(int(point.x), int(point.y)):
 		var tile := Vector2i(int(point.x),int(point.y))
 		var rect := _tile_rect(_board_rect(),tile)
 		var safe_view := _map_viewport_rect().grow(-maxf(rect.size.x,rect.size.y)*2.0)
@@ -739,7 +745,7 @@ func _draw_turn_playback_actor(board_rect: Rect2) -> void:
 	var from: Dictionary = _turn_playback_event.from
 	var to: Dictionary = _turn_playback_event.to
 	var tile := Vector2i(int(from.x),int(from.y))
-	if not OverworldRulesScript.is_tile_visible(_session,tile.x,tile.y,_level): return
+	if not _fog_visible(tile.x, tile.y): return
 	var rect := _tile_rect(board_rect,tile)
 	var target_rect := _tile_rect(board_rect,Vector2i(int(to.x),int(to.y)))
 	var progress := 1.0 if SettingsService.reduced_motion_enabled() else Motion.travel(_turn_playback_progress)
@@ -1512,7 +1518,7 @@ func _sync_object_focus_presentation(presentation: Dictionary) -> void:
 	var tile := Vector2i(int(tile_payload.get("x", -1)), int(tile_payload.get("y", -1)))
 	if tile != _selected_tile or tile.x < 0 or tile.y < 0 or tile.x >= _map_size.x or tile.y >= _map_size.y:
 		return
-	if not OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y, _level):
+	if not _fog_visible(tile.x, tile.y):
 		return
 	var live_identity := _object_focus_identity_at(tile)
 	if String(live_identity.get("object_kind", "")) != _object_focus_kind or String(live_identity.get("object_id", "")) != _object_focus_id:
@@ -1731,6 +1737,47 @@ func _roads_cache_signature(roads) -> int:
 			else:
 				signature = _combine_cache_signature(signature, hash(var_to_str(tile_value)))
 	return signature
+
+func _begin_fog_snapshot() -> void:
+	if _session == null:
+		return
+	if _fog_snapshot_depth == 0:
+		_fog_snapshot = {}
+	_fog_snapshot_depth += 1
+
+func _end_fog_snapshot() -> void:
+	if _fog_snapshot_depth <= 0:
+		return
+	_fog_snapshot_depth -= 1
+	if _fog_snapshot_depth == 0:
+		_fog_snapshot = {}
+
+func _fog_explored(x: int, y: int) -> bool:
+	if _session == null:
+		return false
+	if _fog_snapshot_depth > 0:
+		return _fog_snapshot_cell(0, x, y)
+	return OverworldRulesScript.is_tile_explored(_session, x, y, _level)
+
+func _fog_visible(x: int, y: int) -> bool:
+	if _session == null:
+		return false
+	if _fog_snapshot_depth > 0:
+		return _fog_snapshot_cell(1, x, y)
+	return OverworldRulesScript.is_tile_visible(_session, x, y, _level)
+
+func _fog_snapshot_cell(index: int, x: int, y: int) -> bool:
+	var grids = _fog_snapshot.get(_level)
+	if grids == null:
+		grids = OverworldRulesScript._fog_grids_uncached(_session, _level)
+		_fog_snapshot[_level] = grids
+	var grid = grids[index]
+	if not (grid is Array) or y < 0 or y >= grid.size():
+		return false
+	var row = grid[y]
+	if not (row is Array) or x < 0 or x >= row.size():
+		return false
+	return bool(row[x])
 
 func _fog_cache_signature(fog) -> int:
 	if not (fog is Dictionary):
@@ -2201,7 +2248,7 @@ func _draw_session_static_layer() -> void:
 	var board_rect = _board_rect()
 	var visible_bounds := _visible_tile_bounds(board_rect, viewport_rect)
 	_record_layer_paint_origin(_session_static_layer, board_rect, visible_bounds)
-	OverworldRulesScript.begin_fog_read_scope(_session)
+	_begin_fog_snapshot()
 	var painted_ground := not _homm3_runtime_rendering_enabled()
 	# Production terrain is one original-raster surface. Never silently return
 	# to square edge PNGs/polygon corner hints on an invalid material mapping.
@@ -2223,7 +2270,7 @@ func _draw_session_static_layer() -> void:
 			if not _road_tile_payload(tile).is_empty():
 				road_draws += 1
 			_draw_road_overlay(tile, rect)
-	OverworldRulesScript.end_fog_read_scope(_session)
+	_end_fog_snapshot()
 	_draw_canvas_item = previous_target
 	_profile_add("terrain_tile_draws", terrain_draws)
 	_profile_add("terrain_grain_overlay_draws", 1 if terrain_grain_drawn else 0)
@@ -2266,11 +2313,11 @@ func _overworld_terrain_ambient_entries(board_rect: Rect2, visible_bounds: Rect2
 	if site_key != _terrain_ambient_site_key:
 		_terrain_ambient_site_key = site_key
 		_terrain_ambient_sites = []
-		OverworldRulesScript.begin_fog_read_scope(_session)
+		_begin_fog_snapshot()
 		for y in range(visible_bounds.position.y, visible_bounds.end.y):
 			for x in range(visible_bounds.position.x, visible_bounds.end.x):
 				var tile := Vector2i(x, y)
-				if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
+				if not _fog_explored(tile.x, tile.y):
 					continue
 				var profile := _overworld_terrain_ambient_profile(tile)
 				if profile.is_empty():
@@ -2280,7 +2327,7 @@ func _overworld_terrain_ambient_entries(board_rect: Rect2, visible_bounds: Rect2
 				if seed % TERRAIN_AMBIENT_DENSITY_MODULUS != 0:
 					continue
 				_terrain_ambient_sites.append([tile, profile, profile_id, seed])
-		OverworldRulesScript.end_fog_read_scope(_session)
+		_end_fog_snapshot()
 	var entries: Array = []
 	for site in _terrain_ambient_sites:
 		var tile: Vector2i = site[0]
@@ -2394,13 +2441,13 @@ func _draw_state_layer() -> void:
 	_record_layer_paint_origin(_state_layer, board_rect, visible_bounds)
 	_sync_object_shadow_mask(board_rect)
 	# About ten fog lookups per tile follow; read the level's grids once.
-	OverworldRulesScript.begin_fog_read_scope(_session)
+	_begin_fog_snapshot()
 	for y in range(visible_bounds.position.y, visible_bounds.position.y + visible_bounds.size.y):
 		for x in range(visible_bounds.position.x, visible_bounds.position.x + visible_bounds.size.x):
 			var tile = Vector2i(x, y)
 			var rect = _tile_rect(board_rect, tile)
 			tile_checks += 1
-			if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
+			if not _fog_explored(tile.x, tile.y):
 				hidden_checks += 1
 			else:
 				object_presentations += _visible_object_presentation_count(tile)
@@ -2421,7 +2468,7 @@ func _draw_state_layer() -> void:
 			_draw_tile_ground_pickups(tile, rect)
 			_draw_tile_state_icon(tile, rect, false)
 	_object_shadows_casting = false
-	OverworldRulesScript.end_fog_read_scope(_session)
+	_end_fog_snapshot()
 	_scenery_batches.finish()
 	_draw_canvas_item = previous_target
 	# Scenery batches are added to the state layer as needed; keep the portal
@@ -2447,7 +2494,7 @@ func _draw_dynamic_layer() -> void:
 	var viewport_rect := _map_viewport_rect()
 	var board_rect = _board_rect()
 	var visible_bounds := _visible_tile_bounds(board_rect, viewport_rect)
-	OverworldRulesScript.begin_fog_read_scope(_session)
+	_begin_fog_snapshot()
 	_draw_route(board_rect)
 	_draw_placement_debug_overlay(board_rect, visible_bounds)
 	for y in range(visible_bounds.position.y, visible_bounds.position.y + visible_bounds.size.y):
@@ -2465,7 +2512,7 @@ func _draw_dynamic_layer() -> void:
 	_draw_object_focus_presentation(board_rect)
 	_draw_guarded_site_presentation(board_rect)
 	_draw_spell_cast_presentation(board_rect)
-	OverworldRulesScript.end_fog_read_scope(_session)
+	_end_fog_snapshot()
 	_draw_canvas_item = previous_target
 	_profile_add("dynamic_tile_checks", tile_checks)
 	_profile_end("draw_dynamic", profile_start, {
@@ -2523,7 +2570,7 @@ func _draw_tile_state_overlay(tile: Vector2i, rect: Rect2) -> void:
 	# The soft fog surface draws all fog above the objects; the per-tile veil
 	# and frontier feather remain for the HoMM3 tile renderer.
 	var soft_fog := _soft_fog_active()
-	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
+	if not _fog_explored(tile.x, tile.y):
 		if not soft_fog:
 			_canvas_draw_rect(rect, UNEXPLORED_COLOR, true)
 			_draw_unexplored_shroud(tile, rect)
@@ -2599,7 +2646,7 @@ func _explored_fog_frontier_directions(tile: Vector2i) -> Array:
 		var neighbor: Vector2i = tile + checks[direction]
 		if neighbor.x < 0 or neighbor.y < 0 or neighbor.x >= _map_size.x or neighbor.y >= _map_size.y:
 			continue
-		if OverworldRulesScript.is_tile_explored(_session, neighbor.x, neighbor.y, _level):
+		if _fog_explored(neighbor.x, neighbor.y):
 			continue
 		directions.append(direction)
 	return directions
@@ -4045,9 +4092,9 @@ func _draw_tile_icon(tile: Vector2i, rect: Rect2) -> void:
 	_draw_tile_dynamic_icon(tile, rect)
 
 func _draw_tile_scenery_icon(tile: Vector2i, rect: Rect2) -> void:
-	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
+	if not _fog_explored(tile.x, tile.y):
 		return
-	var remembered := not OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y, _level)
+	var remembered := not _fog_visible(tile.x, tile.y)
 	var decorative_object := _decorative_object_at(tile)
 	if not decorative_object.is_empty():
 		var decorative_rect := _decorative_object_footprint_rect(decorative_object, rect)
@@ -4060,9 +4107,9 @@ func _draw_tile_scenery_icon(tile: Vector2i, rect: Rect2) -> void:
 	_draw_native_scenery_layers_at(tile, rect, remembered)
 
 func _draw_tile_ground_pickups(tile: Vector2i, rect: Rect2) -> void:
-	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
+	if not _fog_explored(tile.x, tile.y):
 		return
-	var remembered := not OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y, _level)
+	var remembered := not _fog_visible(tile.x, tile.y)
 	var standalone := _standalone_map_object_at(tile)
 	if not standalone.is_empty() and _object_is_portable(_standalone_map_object_profile(standalone)):
 		var object_rect := _decorative_object_footprint_rect(standalone, rect)
@@ -4094,9 +4141,9 @@ func _draw_pickup_glint(rect: Rect2) -> void:
 	_canvas_draw_circle(center, waist * 1.6, Color(1.0, 1.0, 1.0, 0.9))
 
 func _draw_tile_state_icon(tile: Vector2i, rect: Rect2, include_scenery: bool = true) -> void:
-	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
+	if not _fog_explored(tile.x, tile.y):
 		return
-	var visible := OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y, _level)
+	var visible := _fog_visible(tile.x, tile.y)
 	var remembered := not visible
 	if include_scenery:
 		_draw_tile_ground_pickups(tile, rect)
@@ -4124,9 +4171,9 @@ func _draw_tile_state_icon(tile: Vector2i, rect: Rect2, include_scenery: bool = 
 			_draw_encounter_marker(rect, remembered, tile)
 
 func _draw_tile_dynamic_icon(tile: Vector2i, rect: Rect2) -> void:
-	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
+	if not _fog_explored(tile.x, tile.y):
 		return
-	var visible := OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y, _level)
+	var visible := _fog_visible(tile.x, tile.y)
 	if visible and _has_hero_at(tile) and not (_hero_movement_active and tile == _hero_tile):
 		_draw_hero_marker(rect, tile)
 		if OverworldRulesScript.hero_cast_spell_today(_session, String(_hero_presentation_entry(tile).get("id", ""))):
@@ -4636,7 +4683,7 @@ func _draw_mine(node: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i)
 	var tint := OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE
 	for y in range(first.y, last.y + 1):
 		for x in range(first.x, last.x + 1):
-			if not OverworldRulesScript.is_tile_explored(_session, x, y, _level): continue
+			if not _fog_explored(x, y): continue
 			var cell := Rect2(board.position + Vector2(x, y) * cell_size, cell_size)
 			var clipped := draw_rect.intersection(cell)
 			if clipped.size.x <= 0.0 or clipped.size.y <= 0.0: continue
@@ -4685,7 +4732,7 @@ func _town_explored_sprite_slices(sprite_rect: Rect2, texture_size: Vector2) -> 
 	var last := Vector2i((sprite_rect.end - board.position) / cell_size).clamp(Vector2i.ZERO, _map_size - Vector2i.ONE)
 	for y in range(first.y, last.y + 1):
 		for x in range(first.x, last.x + 1):
-			if not OverworldRulesScript.is_tile_explored(_session, x, y, _level): continue
+			if not _fog_explored(x, y): continue
 			var clipped := sprite_rect.intersection(Rect2(board.position + Vector2(x, y) * cell_size, cell_size))
 			if not clipped.has_area(): continue
 			result.append({"cell": Vector2i(x, y), "rect": clipped,
@@ -7905,7 +7952,7 @@ func validation_terrain_ambient_summary() -> Dictionary:
 		if profile_id not in profile_ids:
 			profile_ids.append(profile_id)
 		all_contained = all_contained and bool(entry.get("contained", false))
-		all_explored = all_explored and bool(entry.get("explored", false)) and OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level)
+		all_explored = all_explored and bool(entry.get("explored", false)) and _fog_explored(tile.x, tile.y)
 		identity_rows.append({
 			"x": tile.x,
 			"y": tile.y,
@@ -8374,8 +8421,8 @@ func _rect2i_payload(rect: Rect2i) -> Dictionary:
 	}
 
 func validation_tile_presentation(tile: Vector2i) -> Dictionary:
-	var explored := _session != null and OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level)
-	var visible := _session != null and OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y, _level)
+	var explored := _session != null and _fog_explored(tile.x, tile.y)
+	var visible := _session != null and _fog_visible(tile.x, tile.y)
 	var has_town := explored and _has_town_at(tile)
 	var has_resource := explored and _has_resource_at(tile)
 	var has_artifact := explored and _has_artifact_at(tile)
@@ -10345,8 +10392,8 @@ func _homm3_editor_restamp_tile_payload(
 ) -> Dictionary:
 	var tile := painted_tile + offset_from_painted_tile
 	var in_bounds := _tile_in_bounds(tile)
-	var explored := in_bounds and _session != null and OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level)
-	var visible := in_bounds and _session != null and OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y, _level)
+	var explored := in_bounds and _session != null and _fog_explored(tile.x, tile.y)
+	var visible := in_bounds and _session != null and _fog_visible(tile.x, tile.y)
 	var terrain_payload := _terrain_visual_payload(tile, explored, visible) if in_bounds else {}
 	var expected_source_offset := painted_tile - tile
 	return {
@@ -10638,7 +10685,7 @@ func _homm3_terrain_relation_payload(tile: Vector2i, terrain_id: String) -> Dict
 	var cardinal_keys: Array[String] = []
 	var corner_keys: Array[String] = []
 	var selection_kind := "interior"
-	if _session == null or not _tile_in_bounds(tile) or not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
+	if _session == null or not _tile_in_bounds(tile) or not _fog_explored(tile.x, tile.y):
 		return {
 			"selection_kind": selection_kind,
 			"mask_key": "",
@@ -10835,7 +10882,7 @@ func _homm3_relation_source_for_neighbor(tile: Vector2i, receiver_terrain: Strin
 	var neighbor := tile + offset
 	if direction == "" or not _tile_in_bounds(neighbor):
 		return {}
-	if _session == null or not OverworldRulesScript.is_tile_explored(_session, neighbor.x, neighbor.y, _level):
+	if _session == null or not _fog_explored(neighbor.x, neighbor.y):
 		return {}
 	var neighbor_terrain := _terrain_at(neighbor)
 	if neighbor_terrain == "":
@@ -11022,7 +11069,7 @@ func _terrain_generic_transition_payload(tile: Vector2i) -> Dictionary:
 		"source_terrain_ids": [],
 		"source_groups": [],
 	}
-	if _session == null or not _tile_in_bounds(tile) or not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
+	if _session == null or not _tile_in_bounds(tile) or not _fog_explored(tile.x, tile.y):
 		return payload
 	var cardinal_sources: Array = []
 	var corner_sources: Array = []
@@ -11060,7 +11107,7 @@ func _terrain_transition_source_for_neighbor(tile: Vector2i, receiver_terrain: S
 	var neighbor := tile + offset
 	if direction == "" or not _tile_in_bounds(neighbor):
 		return {}
-	if not OverworldRulesScript.is_tile_explored(_session, neighbor.x, neighbor.y, _level):
+	if not _fog_explored(neighbor.x, neighbor.y):
 		return {}
 	var neighbor_terrain := _terrain_at(neighbor)
 	if neighbor_terrain == "":
@@ -11103,7 +11150,7 @@ func _terrain_diagonal_transition_checks() -> Array:
 func _tile_has_explored_terrain_group(tile: Vector2i, terrain_group: String) -> bool:
 	if terrain_group == "" or _session == null or not _tile_in_bounds(tile):
 		return false
-	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
+	if not _fog_explored(tile.x, tile.y):
 		return false
 	return _terrain_group(_terrain_at(tile)) == terrain_group
 

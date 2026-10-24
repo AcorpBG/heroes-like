@@ -4,6 +4,7 @@
 #include "aurelion_rules/port/save_service.hpp"
 
 #include "aurelion_rules/port/overworld_rules.hpp"
+#include "aurelion_rules/port/overworld_rules_panels.hpp"
 #include "aurelion_rules/port/scenario_select_rules_setup.hpp"
 #include "aurelion_rules/port/scenario_select_rules_turn.hpp"
 #include "aurelion_rules/port/session_state_store.hpp"
@@ -97,11 +98,6 @@ bool no_active_expedition(State &state, const Value &session) {
 	}
 	const DictRef view = gd::object_view(state, session);
 	return gd::to_string(gd::index(state, view, gd::str(key::scenario_id))) == key::empty;
-}
-
-// The session object a host call takes.
-Value session_object(State &state, const Value &session) {
-	return session.kind == Kind::Dict ? gd::view_object(state, session.ref) : session;
 }
 
 // ScenarioSelectRulesScript.launch_mode_label(String(summary.get("launch_mode", "campaign"))).
@@ -224,13 +220,12 @@ Atom _describe_summary_resume_recap_with_context(State &state, DictRef summary, 
 		return key::saved_state_this_save_cannot_be;
 	}
 	overworld_rules::normalize_overworld_state(state, gd::object_view(state, session));
-	const Value object = session_object(state, session);
-	gd::call_static(state, key::overworld_rules_script, key::begin_normalized_read_scope, {object});
+	overworld_rules::begin_normalized_read_scope(state, gd::object_view(state, session));
 	town_rules::begin_read_scope(state, gd::object_view(state, session));
 	const DictRef recap_context = _session_save_recap_context(state, session, summary, key::empty, false, state.new_dict());
 	const Atom result = _session_save_resume_recap_from_context(state, session, summary, recap_context);
 	town_rules::end_read_scope(state, gd::object_view(state, session));
-	gd::call_static(state, key::overworld_rules_script, key::end_normalized_read_scope, {object});
+	overworld_rules::end_normalized_read_scope(state, gd::object_view(state, session));
 	profile_add(state, profile, key::context_build_count, 1);
 	profile_add(state, profile, key::context_reuse_count, 3);
 	if (!gd::is_empty(state, cached)) {

@@ -12,6 +12,7 @@ extends RefCounted
 
 const Levels = preload("res://scripts/core/OverworldLevelRules.gd")
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 
 const BOATS_KEY := "boats"
 const HERO_BOAT_KEY := "boat_id"
@@ -21,6 +22,16 @@ const WHIRLPOOL_SITE_ID := "site_whirlpool"
 const NEIGHBORS := [Vector2i(0, 1), Vector2i(-1, 0), Vector2i(1, 0), Vector2i(0, -1), Vector2i(-1, 1), Vector2i(1, 1), Vector2i(-1, -1), Vector2i(1, -1)]
 
 static func boats(session) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return boats__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"WaterTravelRules.boats", [session])
+	var before := HumanEngine.before_writing(&"WaterTravelRules.boats", [session])
+	var result = boats__gd(session)
+	HumanEngine.check_writing(&"WaterTravelRules.boats", before, [session], result)
+	return result
+
+static func boats__gd(session) -> Array:
 	if session == null:
 		return []
 	var value: Variant = session.overworld.get(BOATS_KEY, [])
@@ -63,6 +74,16 @@ static func any_boat_at(session, tile: Vector2i, level: int) -> bool:
 	return false
 
 static func free_boats(session, level: int) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return free_boats__gd(session, level)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"WaterTravelRules.free_boats", [session, level])
+	var before := HumanEngine.before_writing(&"WaterTravelRules.free_boats", [session, level])
+	var result = free_boats__gd(session, level)
+	HumanEngine.check_writing(&"WaterTravelRules.free_boats", before, [session, level], result)
+	return result
+
+static func free_boats__gd(session, level: int) -> Array:
 	var result := []
 	for boat in boats(session):
 		if boat is Dictionary and String(boat.get("hero_id", "")) == "" and int(boat.get("level", 0)) == level:

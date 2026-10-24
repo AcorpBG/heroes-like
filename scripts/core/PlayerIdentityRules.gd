@@ -1,5 +1,8 @@
 extends RefCounted
 
+const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
+
 
 # Player/controller identity is mutable world ownership. Faction identity is an
 # immutable content reference. Legacy authored scenarios keep faction-keyed
@@ -9,6 +12,16 @@ static func controller_id(record: Dictionary, fallback: String = "") -> String:
 	return player_id if player_id != "" else String(record.get("faction_id", fallback))
 
 static func town_controller_id(town: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return town_controller_id__gd(town)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"PlayerIdentityRules.town_controller_id", [town])
+	var before := HumanEngine.before_writing(&"PlayerIdentityRules.town_controller_id", [town])
+	var result = town_controller_id__gd(town)
+	HumanEngine.check_writing(&"PlayerIdentityRules.town_controller_id", before, [town], result)
+	return result
+
+static func town_controller_id__gd(town: Dictionary) -> String:
 	var player_id := String(town.get("controlling_player_id", ""))
 	if player_id != "":
 		return player_id
@@ -16,6 +29,16 @@ static func town_controller_id(town: Dictionary) -> String:
 	return faction if faction != "" else String(town.get("faction_id", ContentService.get_town(String(town.get("town_id", ""))).get("faction_id", "")))
 
 static func raid_controller_id(raid: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return raid_controller_id__gd(raid)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"PlayerIdentityRules.raid_controller_id", [raid])
+	var before := HumanEngine.before_writing(&"PlayerIdentityRules.raid_controller_id", [raid])
+	var result = raid_controller_id__gd(raid)
+	HumanEngine.check_writing(&"PlayerIdentityRules.raid_controller_id", before, [raid], result)
+	return result
+
+static func raid_controller_id__gd(raid: Dictionary) -> String:
 	var player_id := String(raid.get("spawned_by_player_id", ""))
 	return player_id if player_id != "" else String(raid.get("spawned_by_faction_id", ""))
 
@@ -24,6 +47,16 @@ static func contesting_controller_id(encounter: Dictionary) -> String:
 	return player_id if player_id != "" else String(encounter.get("contested_by_faction_id", ""))
 
 static func resource_controller_id(node: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return resource_controller_id__gd(node)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"PlayerIdentityRules.resource_controller_id", [node])
+	var before := HumanEngine.before_writing(&"PlayerIdentityRules.resource_controller_id", [node])
+	var result = resource_controller_id__gd(node)
+	HumanEngine.check_writing(&"PlayerIdentityRules.resource_controller_id", before, [node], result)
+	return result
+
+static func resource_controller_id__gd(node: Dictionary) -> String:
 	var player_id := String(node.get("collected_by_player_id", ""))
 	return player_id if player_id != "" else String(node.get("collected_by_faction_id", ""))
 
@@ -49,6 +82,16 @@ static func set_resource_controller(node: Dictionary, session, controller: Strin
 		node["collected_by_player_id"] = controller
 
 static func player(session, player_id: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return player__gd(session, player_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"PlayerIdentityRules.player", [session, player_id])
+	var before := HumanEngine.before_writing(&"PlayerIdentityRules.player", [session, player_id])
+	var result = player__gd(session, player_id)
+	HumanEngine.check_writing(&"PlayerIdentityRules.player", before, [session, player_id], result)
+	return result
+
+static func player__gd(session, player_id: String) -> Dictionary:
 	if session == null or player_id == "":
 		return {}
 	for record in session.overworld.get("players", []):

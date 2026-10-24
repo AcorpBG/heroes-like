@@ -3,6 +3,7 @@
 // and the runtime save profile, with ProfileLog's two clock helpers.
 
 #include "aurelion_rules/port/save_service.hpp"
+#include "aurelion_rules/port/overworld_rules_panels.hpp"
 
 #include "aurelion_rules/port/session_state_store.hpp"
 #include "aurelion_rules/port/town_rules_actions.hpp"
@@ -431,7 +432,7 @@ bool _can_use_trusted_live_autosave_payload(State &state, const Value &session, 
 	if (gd::is_empty(state, gd::content_row(state, state::ContentTable::Scenario, string_of(state, payload, key::scenario_id, key::empty)))) {
 		return false;
 	}
-	if (!gd::truthy(state, gd::call_static(state, key::overworld_rules_script, key::is_runtime_session_normalized, { session_object(state, session) }))) {
+	if (session.kind == Kind::Nil || !overworld_rules::is_runtime_session_normalized(state, gd::object_view(state, session))) {
 		return false;
 	}
 	const Atom resume_target = _resume_target_for_session(state, session);

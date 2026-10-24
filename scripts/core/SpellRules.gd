@@ -5,6 +5,7 @@ const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRu
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 const CONTEXT_OVERWORLD := "overworld"
 const CONTEXT_BATTLE := "battle"
 const COMMON_RESOURCE_IDS := ["gold", "wood", "ore"]
@@ -31,6 +32,15 @@ const SPELL_PRIMARY_ROLES := [
 ]
 
 static func spell_id_for_action(action_id: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return spell_id_for_action__gd(action_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"SpellRules.spell_id_for_action", [action_id])
+	var result = spell_id_for_action__gd(action_id)
+	HumanEngine.check(&"SpellRules.spell_id_for_action", [action_id], result)
+	return result
+
+static func spell_id_for_action__gd(action_id: String) -> String:
 	var spell_id := ""
 	if action_id.begins_with("cast_spell:"):
 		spell_id = action_id.trim_prefix("cast_spell:")
@@ -84,6 +94,16 @@ static func adjusted_spell_mana_cost(hero_state: Dictionary, spell: Variant) -> 
 	return BattleEngine.native_writing(&"SpellRules.adjusted_spell_mana_cost", [hero_state, spell])
 
 static func knows_spell(hero_state: Dictionary, spell_id: String) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return knows_spell__gd(hero_state, spell_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"SpellRules.knows_spell", [hero_state, spell_id])
+	var before := HumanEngine.before_writing(&"SpellRules.knows_spell", [hero_state, spell_id])
+	var result = knows_spell__gd(hero_state, spell_id)
+	HumanEngine.check_writing(&"SpellRules.knows_spell", before, [hero_state, spell_id], result)
+	return result
+
+static func knows_spell__gd(hero_state: Dictionary, spell_id: String) -> bool:
 	# The list ensure_hero_spellbook gives a copy of the hero, read in place:
 	# without a template it is the stored list, normalized, or none.
 	var spellbook = hero_state.get("spellbook", {})
@@ -116,6 +136,16 @@ static func known_spells(hero_state: Dictionary, context_filter: String = "") ->
 	return BattleEngine.native_writing(&"SpellRules.known_spells", [hero_state, context_filter])
 
 static func describe_spellbook(hero_state: Dictionary, context_filter: String = "") -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_spellbook__gd(hero_state, context_filter)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"SpellRules.describe_spellbook", [hero_state, context_filter])
+	var before := HumanEngine.before_writing(&"SpellRules.describe_spellbook", [hero_state, context_filter])
+	var result = describe_spellbook__gd(hero_state, context_filter)
+	HumanEngine.check_writing(&"SpellRules.describe_spellbook", before, [hero_state, context_filter], result)
+	return result
+
+static func describe_spellbook__gd(hero_state: Dictionary, context_filter: String = "") -> String:
 	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
 	var mana: Dictionary = hero.get("spellbook", {}).get("mana", {})
 	var label := "Spellbook"

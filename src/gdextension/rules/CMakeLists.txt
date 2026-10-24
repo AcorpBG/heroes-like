@@ -156,6 +156,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/ai_registry.cpp
 	core/port/artifact_rules.cpp
 	core/port/artifact_rules_management.cpp
+	core/port/artifact_rules_panels.cpp
 	core/port/artifact_rules_shared.cpp
 	core/port/artifact_rules_text.cpp
 	core/port/artifact_rules_turn.cpp
@@ -212,6 +213,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/enemy_adventure_rules_turn.cpp
 	core/port/enemy_adventure_rules_turn_rare.cpp
 	core/port/enemy_orders.cpp
+	core/port/enemy_rules_panels.cpp
 	core/port/enemy_states.cpp
 	core/port/enemy_turn.cpp
 	core/port/enemy_turn_rules.cpp
@@ -231,8 +233,10 @@ add_library(aurelion_rules_core STATIC
 	core/port/hero_commit.cpp
 	core/port/hero_progression_rules.cpp
 	core/port/hero_progression_rules_shared.cpp
+	core/port/hero_rules_panels.cpp
 	core/port/hero_rules_turn.cpp
 	core/port/human_registry.cpp
+	core/port/map_view_rules.cpp
 	core/port/mine_rules.cpp
 	core/port/mine_rules_ai.cpp
 	core/port/move_orders.cpp
@@ -260,6 +264,10 @@ add_library(aurelion_rules_core STATIC
 	core/port/overworld_rules_hero_choices.cpp
 	core/port/overworld_rules_heroes.cpp
 	core/port/overworld_rules_move.cpp
+	core/port/overworld_rules_panel_feed.cpp
+	core/port/overworld_rules_panel_forecast.cpp
+	core/port/overworld_rules_panel_objectives.cpp
+	core/port/overworld_rules_panel_status.cpp
 	core/port/overworld_rules_recap.cpp
 	core/port/overworld_rules_routes.cpp
 	core/port/overworld_rules_shared.cpp
@@ -301,6 +309,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/scenario_objective_label.cpp
 	core/port/scenario_outcome.cpp
 	core/port/scenario_outcome_texts.cpp
+	core/port/scenario_rules_panels.cpp
 	core/port/scenario_select_catalog.cpp
 	core/port/scenario_select_maps_folder.cpp
 	core/port/scenario_select_options.cpp
@@ -312,6 +321,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/spell_rules.cpp
 	core/port/spell_rules_ai.cpp
 	core/port/spell_rules_overworld.cpp
+	core/port/spell_rules_panels.cpp
 	core/port/spell_rules_shared.cpp
 	core/port/spell_rules_town.cpp
 	core/port/spell_summaries.cpp
@@ -322,10 +332,13 @@ add_library(aurelion_rules_core STATIC
 	core/port/town_construction_board.cpp
 	core/port/town_development_rules_ai.cpp
 	core/port/town_development_rules_services.cpp
+	core/port/town_panel_boards.cpp
 	core/port/town_rules_ai.cpp
 	core/port/town_rules_build.cpp
+	core/port/town_rules_handoff.cpp
 	core/port/town_rules_heroes.cpp
 	core/port/town_rules_market.cpp
+	core/port/town_rules_panels.cpp
 	core/port/town_rules_recruit.cpp
 	core/port/town_rules_services.cpp
 	core/port/town_rules_shared.cpp

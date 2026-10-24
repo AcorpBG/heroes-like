@@ -123,10 +123,13 @@ DictRef town_front_state(State &state, DictRef session, DictRef town, DictRef pr
 	const Atom extra = gd::is_empty(state, precomputed_development_metrics)
 			? key::empty
 			: state.intern(compat::sha256_text(gd::json_stringify(state, dict_value(precomputed_development_metrics))));
-	// The read scope's cache: its key is "" outside a read scope, and
-	// _town_read_scope_cache_key throws inside one (the cache is not ported).
-	_town_read_scope_cache_key(state, session, key::front, town, extra);
-	return _town_front_state(state, session, town, precomputed_development_metrics);
+	const Atom cache_key = _town_read_scope_cache_key(state, session, key::front, town, extra);
+	if (_town_read_scope_cache_has(state, cache_key)) {
+		return gd::as_dict(_town_read_scope_cache_get(state, cache_key));
+	}
+	const DictRef result = _town_front_state(state, session, town, precomputed_development_metrics);
+	_town_read_scope_cache_store(state, cache_key, dict_value(result));
+	return result;
 }
 
 Atom capture_town_by_placement(State &state, DictRef session, Atom placement_id) {

@@ -8,6 +8,7 @@ const ARTIFACT_SOURCE_REWARD_SCHEMA_ID := "artifact_source_reward_v1"
 const NodePayload = preload("res://scripts/core/ResourceNodePayloadRules.gd")
 const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 const ARTIFACT_CLASSES := ["common", "crafted", "faction", "accord", "relic", "cursed", "set_piece", "old_measure", "scenario"]
 const ARTIFACT_RARITIES := ["common", "uncommon", "rare", "epic", "legendary", "scenario"]
 # The rarities each HoMM3 artifact class draws from on generated maps, in order:
@@ -126,6 +127,16 @@ static func normalize_artifact_nodes(nodes: Variant, scenario_id: String = "") -
 	return build_artifact_nodes(nodes, scenario_id)
 
 static func normalize_hero_artifacts(value: Variant) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return normalize_hero_artifacts__gd(value)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ArtifactRules.normalize_hero_artifacts", [value])
+	var before := HumanEngine.before_writing(&"ArtifactRules.normalize_hero_artifacts", [value])
+	var result = normalize_hero_artifacts__gd(value)
+	HumanEngine.check_writing(&"ArtifactRules.normalize_hero_artifacts", before, [value], result)
+	return result
+
+static func normalize_hero_artifacts__gd(value: Variant) -> Dictionary:
 	var equipped := _blank_equipped_slots()
 	var inventory := []
 	if value is Dictionary:
@@ -142,6 +153,16 @@ static func normalize_hero_artifacts(value: Variant) -> Dictionary:
 	return {"equipped": equipped, "inventory": inventory}
 
 static func owned_artifact_ids(hero_state: Dictionary) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return owned_artifact_ids__gd(hero_state)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ArtifactRules.owned_artifact_ids", [hero_state])
+	var before := HumanEngine.before_writing(&"ArtifactRules.owned_artifact_ids", [hero_state])
+	var result = owned_artifact_ids__gd(hero_state)
+	HumanEngine.check_writing(&"ArtifactRules.owned_artifact_ids", before, [hero_state], result)
+	return result
+
+static func owned_artifact_ids__gd(hero_state: Dictionary) -> Array:
 	var artifacts = normalize_hero_artifacts(hero_state.get("artifacts", {}))
 	var artifact_ids := []
 	for slot in EQUIPMENT_SLOTS:
@@ -158,6 +179,16 @@ static func has_artifact(hero_state: Dictionary, artifact_id: String) -> bool:
 	return String(locate_artifact(hero_state, artifact_id).get("location", "missing")) != "missing"
 
 static func locate_artifact(hero_state: Dictionary, artifact_id: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return locate_artifact__gd(hero_state, artifact_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ArtifactRules.locate_artifact", [hero_state, artifact_id])
+	var before := HumanEngine.before_writing(&"ArtifactRules.locate_artifact", [hero_state, artifact_id])
+	var result = locate_artifact__gd(hero_state, artifact_id)
+	HumanEngine.check_writing(&"ArtifactRules.locate_artifact", before, [hero_state, artifact_id], result)
+	return result
+
+static func locate_artifact__gd(hero_state: Dictionary, artifact_id: String) -> Dictionary:
 	var artifacts = normalize_hero_artifacts(hero_state.get("artifacts", {}))
 	if artifact_id == "":
 		return {"location": "missing", "slot": ""}
@@ -173,6 +204,16 @@ static func locate_artifact(hero_state: Dictionary, artifact_id: String) -> Dict
 	return {"location": "missing", "slot": ""}
 
 static func aggregate_bonuses(hero_state: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return aggregate_bonuses__gd(hero_state)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ArtifactRules.aggregate_bonuses", [hero_state])
+	var before := HumanEngine.before_writing(&"ArtifactRules.aggregate_bonuses", [hero_state])
+	var result = aggregate_bonuses__gd(hero_state)
+	HumanEngine.check_writing(&"ArtifactRules.aggregate_bonuses", before, [hero_state], result)
+	return result
+
+static func aggregate_bonuses__gd(hero_state: Dictionary) -> Dictionary:
 	hero_state = ensure_hero_artifacts(hero_state)
 	var totals := _blank_bonus_totals()
 
@@ -202,6 +243,16 @@ static func aggregate_bonuses(hero_state: Dictionary) -> Dictionary:
 	return totals
 
 static func artifact_set_runtime_state(hero_state: Dictionary) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return artifact_set_runtime_state__gd(hero_state)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ArtifactRules.artifact_set_runtime_state", [hero_state])
+	var before := HumanEngine.before_writing(&"ArtifactRules.artifact_set_runtime_state", [hero_state])
+	var result = artifact_set_runtime_state__gd(hero_state)
+	HumanEngine.check_writing(&"ArtifactRules.artifact_set_runtime_state", before, [hero_state], result)
+	return result
+
+static func artifact_set_runtime_state__gd(hero_state: Dictionary) -> Array:
 	# Normalizing reads the artifacts only, so the hero needs no copy.
 	return _set_states_for_equipped(normalize_hero_artifacts(hero_state.get("artifacts", {})).get("equipped", {}))
 
@@ -1121,6 +1172,16 @@ static func merge_hero_artifacts(base_artifacts: Variant, imported_artifacts: Va
 	return normalize_hero_artifacts(merged)
 
 static func equip_artifact(hero_state: Dictionary, artifact_id: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return equip_artifact__gd(hero_state, artifact_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ArtifactRules.equip_artifact", [hero_state, artifact_id])
+	var before := HumanEngine.before_writing(&"ArtifactRules.equip_artifact", [hero_state, artifact_id])
+	var result = equip_artifact__gd(hero_state, artifact_id)
+	HumanEngine.check_writing(&"ArtifactRules.equip_artifact", before, [hero_state, artifact_id], result)
+	return result
+
+static func equip_artifact__gd(hero_state: Dictionary, artifact_id: String) -> Dictionary:
 	var hero = ensure_hero_artifacts(hero_state.duplicate(true))
 	var artifact := ContentService.get_artifact(artifact_id)
 	if artifact.is_empty():
@@ -1295,6 +1356,16 @@ static func describe_bonus_summary(hero_state: Dictionary) -> String:
 	return "Bonuses: %s" % (", ".join(parts) if not parts.is_empty() else "none")
 
 static func describe_set_bonus_summary(hero_state: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_set_bonus_summary__gd(hero_state)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ArtifactRules.describe_set_bonus_summary", [hero_state])
+	var before := HumanEngine.before_writing(&"ArtifactRules.describe_set_bonus_summary", [hero_state])
+	var result = describe_set_bonus_summary__gd(hero_state)
+	HumanEngine.check_writing(&"ArtifactRules.describe_set_bonus_summary", before, [hero_state], result)
+	return result
+
+static func describe_set_bonus_summary__gd(hero_state: Dictionary) -> String:
 	var parts := []
 	for set_state_value in artifact_set_runtime_state(hero_state):
 		if not (set_state_value is Dictionary):
@@ -1325,6 +1396,16 @@ static func describe_set_bonus_summary(hero_state: Dictionary) -> String:
 	return "Sets: %s" % ("; ".join(parts) if not parts.is_empty() else "none active")
 
 static func describe_impact_summary(hero_state: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_impact_summary__gd(hero_state)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ArtifactRules.describe_impact_summary", [hero_state])
+	var before := HumanEngine.before_writing(&"ArtifactRules.describe_impact_summary", [hero_state])
+	var result = describe_impact_summary__gd(hero_state)
+	HumanEngine.check_writing(&"ArtifactRules.describe_impact_summary", before, [hero_state], result)
+	return result
+
+static func describe_impact_summary__gd(hero_state: Dictionary) -> String:
 	var sections := _bonus_impact_sections(aggregate_bonuses(hero_state), false)
 	var impact := "no equipped bonuses" if sections.is_empty() else " | ".join(sections)
 	return "Gear impact: %s" % impact
@@ -1341,6 +1422,16 @@ static func describe_battle_impact_summary(hero_state: Dictionary) -> String:
 	return "Command %s" % (", ".join(parts) if not parts.is_empty() else "no equipped battle bonuses")
 
 static func describe_collection_summary(hero_state: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_collection_summary__gd(hero_state)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ArtifactRules.describe_collection_summary", [hero_state])
+	var before := HumanEngine.before_writing(&"ArtifactRules.describe_collection_summary", [hero_state])
+	var result = describe_collection_summary__gd(hero_state)
+	HumanEngine.check_writing(&"ArtifactRules.describe_collection_summary", before, [hero_state], result)
+	return result
+
+static func describe_collection_summary__gd(hero_state: Dictionary) -> String:
 	var owned_count := owned_artifact_ids(hero_state).size()
 	var total_count := ContentService.get_content_ids(ContentService.ARTIFACTS_PATH).size()
 	if total_count <= 0:
@@ -1354,6 +1445,15 @@ static func get_management_actions(hero_state: Dictionary) -> Array:
 	return HumanEngine.native_writing(&"ArtifactRules.get_management_actions", [hero_state])
 
 static func artifact_name(artifact_id: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return artifact_name__gd(artifact_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"ArtifactRules.artifact_name", [artifact_id])
+	var result = artifact_name__gd(artifact_id)
+	HumanEngine.check(&"ArtifactRules.artifact_name", [artifact_id], result)
+	return result
+
+static func artifact_name__gd(artifact_id: String) -> String:
 	if artifact_id == "":
 		return "Artifact"
 	var artifact := ContentService.get_artifact(artifact_id)
@@ -1363,6 +1463,15 @@ static func artifact_id_for_management_action(hero_state: Dictionary, action_id:
 	return HumanEngine.native_writing(&"ArtifactRules.artifact_id_for_management_action", [hero_state, action_id])
 
 static func artifact_icon_path(artifact_id: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return artifact_icon_path__gd(artifact_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"ArtifactRules.artifact_icon_path", [artifact_id])
+	var result = artifact_icon_path__gd(artifact_id)
+	HumanEngine.check(&"ArtifactRules.artifact_icon_path", [artifact_id], result)
+	return result
+
+static func artifact_icon_path__gd(artifact_id: String) -> String:
 	var artifact := ContentService.get_artifact(artifact_id)
 	var ui: Dictionary = artifact.get("ui", {}) if artifact.get("ui", {}) is Dictionary else {}
 	var icon_path := String(ui.get("icon_path", "")).strip_edges()
@@ -1371,6 +1480,15 @@ static func artifact_icon_path(artifact_id: String) -> String:
 	return icon_path
 
 static func artifact_slot(artifact_id: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return artifact_slot__gd(artifact_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"ArtifactRules.artifact_slot", [artifact_id])
+	var result = artifact_slot__gd(artifact_id)
+	HumanEngine.check(&"ArtifactRules.artifact_slot", [artifact_id], result)
+	return result
+
+static func artifact_slot__gd(artifact_id: String) -> String:
 	if artifact_id == "":
 		return ""
 	var artifact := ContentService.get_artifact(artifact_id)
@@ -1378,6 +1496,15 @@ static func artifact_slot(artifact_id: String) -> String:
 	return slot if slot in ARTIFACT_SLOTS else ""
 
 static func artifact_slot_label(artifact_id: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return artifact_slot_label__gd(artifact_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"ArtifactRules.artifact_slot_label", [artifact_id])
+	var result = artifact_slot_label__gd(artifact_id)
+	HumanEngine.check(&"ArtifactRules.artifact_slot_label", [artifact_id], result)
+	return result
+
+static func artifact_slot_label__gd(artifact_id: String) -> String:
 	var slot := artifact_slot(artifact_id)
 	return slot.capitalize() if slot != "" else "Carry"
 
@@ -1398,9 +1525,27 @@ static func artifact_set_context(artifact_id: String) -> String:
 	return HumanEngine.native(&"ArtifactRules.artifact_set_context", [artifact_id])
 
 static func artifact_effect_summary(artifact_id: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return artifact_effect_summary__gd(artifact_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"ArtifactRules.artifact_effect_summary", [artifact_id])
+	var result = artifact_effect_summary__gd(artifact_id)
+	HumanEngine.check(&"ArtifactRules.artifact_effect_summary", [artifact_id], result)
+	return result
+
+static func artifact_effect_summary__gd(artifact_id: String) -> String:
 	return _artifact_effect_summary(ContentService.get_artifact(artifact_id))
 
 static func artifact_reward_role(artifact_id: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return artifact_reward_role__gd(artifact_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"ArtifactRules.artifact_reward_role", [artifact_id])
+	var result = artifact_reward_role__gd(artifact_id)
+	HumanEngine.check(&"ArtifactRules.artifact_reward_role", [artifact_id], result)
+	return result
+
+static func artifact_reward_role__gd(artifact_id: String) -> String:
 	var artifact := ContentService.get_artifact(artifact_id)
 	if artifact.is_empty():
 		return "Equipment reward"
@@ -1431,7 +1576,17 @@ static func artifact_decision_summary(hero_state: Dictionary, artifact_id: Strin
 static func describe_artifact_short(artifact_id: String) -> String:
 	return HumanEngine.native(&"ArtifactRules.describe_artifact_short", [artifact_id])
 
-static func describe_artifact_inspection(
+static func describe_artifact_inspection(hero_state: Dictionary, artifact_id: String, collected: bool = false, collected_by_faction_id: String = "") -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_artifact_inspection__gd(hero_state, artifact_id, collected, collected_by_faction_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ArtifactRules.describe_artifact_inspection", [hero_state, artifact_id, collected, collected_by_faction_id])
+	var before := HumanEngine.before_writing(&"ArtifactRules.describe_artifact_inspection", [hero_state, artifact_id, collected, collected_by_faction_id])
+	var result = describe_artifact_inspection__gd(hero_state, artifact_id, collected, collected_by_faction_id)
+	HumanEngine.check_writing(&"ArtifactRules.describe_artifact_inspection", before, [hero_state, artifact_id, collected, collected_by_faction_id], result)
+	return result
+
+static func describe_artifact_inspection__gd(
 	hero_state: Dictionary,
 	artifact_id: String,
 	collected: bool = false,
@@ -1457,6 +1612,15 @@ static func artifact_collection_state(hero_state: Dictionary, artifact_id: Strin
 	return HumanEngine.native_writing(&"ArtifactRules.artifact_collection_state", [hero_state, artifact_id, collected, collected_by_faction_id])
 
 static func describe_artifact(artifact_id: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_artifact__gd(artifact_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"ArtifactRules.describe_artifact", [artifact_id])
+	var result = describe_artifact__gd(artifact_id)
+	HumanEngine.check(&"ArtifactRules.describe_artifact", [artifact_id], result)
+	return result
+
+static func describe_artifact__gd(artifact_id: String) -> String:
 	var artifact := ContentService.get_artifact(artifact_id)
 	if artifact.is_empty():
 		return "Artifact cache"

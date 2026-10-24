@@ -31,6 +31,7 @@
 #include "aurelion_rules/compat/godot_string.hpp"
 
 #include <algorithm>
+#include <atomic>
 #include <cstddef>
 #include <string>
 #include <vector>
@@ -38,6 +39,15 @@
 namespace aurelion::rules::port {
 
 namespace {
+
+// A new SessionData's get_instance_id(): each projected view its own, -1, -2
+// and on, which no object's id is (an object's is positive, a RefCounted's
+// has bit 63 and a slot's validator above bit 24), so the read scopes' caches
+// keep its entries apart, as GDScript's keep the new SessionData's.
+int64_t projected_instance_id() {
+	static std::atomic<int64_t> last{ 0 };
+	return -(++last);
+}
 
 using gd::array_value;
 using gd::ArrayRef;
@@ -1178,7 +1188,8 @@ DictRef _project_player_town_at_daybreak(State &state, DictRef session, DictRef 
 	}
 
 	// SessionStateStore.SessionData.new() with its fields set: a new view, its
-	// fields in SessionData's order (DayEngine.SESSION_FIELDS), no metadata.
+	// fields in SessionData's order (DayEngine.SESSION_FIELDS), no metadata, and
+	// its own instance id.
 	const DictRef projected_session = state.new_dict();
 	state.set(projected_session, str(key::save_version), gd::index(state, session, str(key::save_version)));
 	state.set(projected_session, str(key::session_id), gd::index(state, session, str(key::session_id)));
@@ -1195,6 +1206,7 @@ DictRef _project_player_town_at_daybreak(State &state, DictRef session, DictRef 
 	state.set(projected_session, str(key::battle), dict_value(gd::duplicate_dict(state, gd::as_dict(gd::index(state, session, str(key::battle))))));
 	state.set(projected_session, str(key::flags), dict_value(gd::duplicate_dict(state, gd::as_dict(gd::index(state, session, str(key::flags))))));
 	state.set(projected_session, str(key::meta), dict_value(state.new_dict()));
+	state.set(projected_session, str(key::instance_id), int_value(projected_instance_id()));
 
 	const ArrayRef projected_towns = gd::duplicate_array(state, live_towns.ref);
 	DictRef projected_town = gd::deep_duplicate_dict(state, town);

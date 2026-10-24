@@ -43,6 +43,7 @@ const TOWN_VISION_RADIUS := 8
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const DayEngine = preload("res://scripts/core/DayEngine.gd")
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 const ACTIVE_TOWN_PLACEMENT_KEY := "active_town_placement_id"
 const COMMAND_BRIEFING_KEY := "command_briefing"
 const COMMAND_RISK_FORECAST_KEY := "command_risk_forecast"
@@ -403,6 +404,16 @@ static func _normalize_generated_runtime_materialization(session: SessionStateSt
 		session.flags[SessionStateStoreScript.GENERATED_RANDOM_MAP_MATERIALIZATION_FLAG] = identity.duplicate(true)
 
 static func begin_normalized_read_scope(session: SessionStateStoreScript.SessionData) -> void:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		begin_normalized_read_scope__gd(session)
+	elif _human_engine_mode == HumanEngine.NATIVE:
+		HumanEngine.native_writing(&"OverworldRules.begin_normalized_read_scope", [session])
+	else:
+		var before := HumanEngine.before_writing(&"OverworldRules.begin_normalized_read_scope", [session])
+		begin_normalized_read_scope__gd(session)
+		HumanEngine.check_writing(&"OverworldRules.begin_normalized_read_scope", before, [session], null)
+
+static func begin_normalized_read_scope__gd(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
 		return
 	if _normalized_read_scope_depth <= 0:
@@ -419,6 +430,16 @@ static func begin_normalized_read_scope(session: SessionStateStoreScript.Session
 	normalize_overworld_state_for_runtime(session)
 
 static func end_normalized_read_scope(session: SessionStateStoreScript.SessionData) -> void:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		end_normalized_read_scope__gd(session)
+	elif _human_engine_mode == HumanEngine.NATIVE:
+		HumanEngine.native_writing(&"OverworldRules.end_normalized_read_scope", [session])
+	else:
+		var before := HumanEngine.before_writing(&"OverworldRules.end_normalized_read_scope", [session])
+		end_normalized_read_scope__gd(session)
+		HumanEngine.check_writing(&"OverworldRules.end_normalized_read_scope", before, [session], null)
+
+static func end_normalized_read_scope__gd(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
 		return
 	if _normalized_read_scope_depth <= 0 or String(session.session_id) != _normalized_read_scope_session_id:
@@ -432,6 +453,15 @@ static func end_normalized_read_scope(session: SessionStateStoreScript.SessionDa
 		_normalized_read_scope_town_digests = []
 
 static func validation_last_normalized_read_scope_cache_profile() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return validation_last_normalized_read_scope_cache_profile__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"OverworldRules.validation_last_normalized_read_scope_cache_profile", [])
+	var result = validation_last_normalized_read_scope_cache_profile__gd()
+	HumanEngine.check(&"OverworldRules.validation_last_normalized_read_scope_cache_profile", [], result)
+	return result
+
+static func validation_last_normalized_read_scope_cache_profile__gd() -> Dictionary:
 	return _last_normalized_read_scope_cache_profile.duplicate(true)
 
 static func _town_read_scope_cache_key(
@@ -500,9 +530,28 @@ static func normalize_overworld_state_bridge(session) -> void:
 	normalize_overworld_state(session)
 
 static func validation_pathing_profile_snapshot() -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return validation_pathing_profile_snapshot__gd()
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"OverworldRules.validation_pathing_profile_snapshot", [])
+	var result = validation_pathing_profile_snapshot__gd()
+	HumanEngine.check(&"OverworldRules.validation_pathing_profile_snapshot", [], result)
+	return result
+
+static func validation_pathing_profile_snapshot__gd() -> Dictionary:
 	return _pathing_debug_profile.duplicate(true)
 
 static func validation_set_pathing_profile_capture_enabled(enabled: bool) -> void:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		validation_set_pathing_profile_capture_enabled__gd(enabled)
+	elif _human_engine_mode == HumanEngine.NATIVE:
+		HumanEngine.native_writing(&"OverworldRules.validation_set_pathing_profile_capture_enabled", [enabled])
+	else:
+		var before := HumanEngine.before_writing(&"OverworldRules.validation_set_pathing_profile_capture_enabled", [enabled])
+		validation_set_pathing_profile_capture_enabled__gd(enabled)
+		HumanEngine.check_writing(&"OverworldRules.validation_set_pathing_profile_capture_enabled", before, [enabled], null)
+
+static func validation_set_pathing_profile_capture_enabled__gd(enabled: bool) -> void:
 	_pathing_debug_profile["capture_enabled"] = enabled
 	if enabled:
 		_pathing_debug_profile["route_interaction_lookup_count"] = 0
@@ -533,16 +582,46 @@ static func held_site_vision_radius(site: Dictionary) -> int:
 	return max(0, int(site.get("vision_radius", 0)))
 
 static func is_tile_visible(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return is_tile_visible__gd(session, x, y, level)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.is_tile_visible", [session, x, y, level])
+	var before := HumanEngine.before_writing(&"OverworldRules.is_tile_visible", [session, x, y, level])
+	var result = is_tile_visible__gd(session, x, y, level)
+	HumanEngine.check_writing(&"OverworldRules.is_tile_visible", before, [session, x, y, level], result)
+	return result
+
+static func is_tile_visible__gd(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
 	if session == null:
 		return false
 	return _grid_cell(_fog_grids(session, level)[1], x, y)
 
 static func is_tile_explored(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return is_tile_explored__gd(session, x, y, level)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.is_tile_explored", [session, x, y, level])
+	var before := HumanEngine.before_writing(&"OverworldRules.is_tile_explored", [session, x, y, level])
+	var result = is_tile_explored__gd(session, x, y, level)
+	HumanEngine.check_writing(&"OverworldRules.is_tile_explored", before, [session, x, y, level], result)
+	return result
+
+static func is_tile_explored__gd(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
 	if session == null:
 		return false
 	return _grid_cell(_fog_grids(session, level)[0], x, y)
 
 static func fog_for_level(session: SessionStateStoreScript.SessionData, level: int = -1) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return fog_for_level__gd(session, level)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.fog_for_level", [session, level])
+	var before := HumanEngine.before_writing(&"OverworldRules.fog_for_level", [session, level])
+	var result = fog_for_level__gd(session, level)
+	HumanEngine.check_writing(&"OverworldRules.fog_for_level", before, [session, level], result)
+	return result
+
+static func fog_for_level__gd(session: SessionStateStoreScript.SessionData, level: int = -1) -> Dictionary:
 	if session == null:
 		return {}
 	level = OverworldLevelRulesScript.query_level(session, level)
@@ -602,6 +681,16 @@ static func _fog_grids(session: SessionStateStoreScript.SessionData, level: int)
 	return _fog_grids_uncached(session, level)
 
 static func _fog_grids_uncached(session: SessionStateStoreScript.SessionData, level: int) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _fog_grids_uncached__gd(session, level)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules._fog_grids_uncached", [session, level])
+	var before := HumanEngine.before_writing(&"OverworldRules._fog_grids_uncached", [session, level])
+	var result = _fog_grids_uncached__gd(session, level)
+	HumanEngine.check_writing(&"OverworldRules._fog_grids_uncached", before, [session, level], result)
+	return result
+
+static func _fog_grids_uncached__gd(session: SessionStateStoreScript.SessionData, level: int) -> Array:
 	if not _fog_state_ready(session):
 		normalize_overworld_state(session)
 	var fog = fog_for_level(session, level)
@@ -611,6 +700,16 @@ static func _store_level_fog(session: SessionStateStoreScript.SessionData, paylo
 	HumanEngine.native_writing(&"OverworldRules._store_level_fog", [session, payload, level])
 
 static func describe_visibility(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_visibility__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_visibility", [session])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_visibility", [session])
+	var result = describe_visibility__gd(session)
+	HumanEngine.check_writing(&"OverworldRules.describe_visibility", before, [session], result)
+	return result
+
+static func describe_visibility__gd(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null:
 		return "Explored 0/0 | Visible 0"
 	if not _fog_state_ready(session):
@@ -848,6 +947,16 @@ static func perform_context_action(session: SessionStateStoreScript.SessionData,
 	return HumanEngine.native_writing(&"OverworldRules.perform_context_action", [session, action_id])
 
 static func set_active_town_visit(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return set_active_town_visit__gd(session, placement_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.set_active_town_visit", [session, placement_id])
+	var before := HumanEngine.before_writing(&"OverworldRules.set_active_town_visit", [session, placement_id])
+	var result = set_active_town_visit__gd(session, placement_id)
+	HumanEngine.check_writing(&"OverworldRules.set_active_town_visit", before, [session, placement_id], result)
+	return result
+
+static func set_active_town_visit__gd(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
 	normalize_overworld_state_for_runtime(session)
 	if session == null or placement_id == "":
 		return {"ok": false, "message": "No town was selected.", "town": {}}
@@ -975,14 +1084,34 @@ static func transition_town_control(
 		"town": town,
 	}
 
-static func describe_encounter_pressure(
+static func describe_encounter_pressure(session: SessionStateStoreScript.SessionData, encounter: Dictionary, for_battle_prompt: bool = false) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_encounter_pressure__gd(session, encounter, for_battle_prompt)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_encounter_pressure", [session, encounter, for_battle_prompt])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_encounter_pressure", [session, encounter, for_battle_prompt])
+	var result = describe_encounter_pressure__gd(session, encounter, for_battle_prompt)
+	HumanEngine.check_writing(&"OverworldRules.describe_encounter_pressure", before, [session, encounter, for_battle_prompt], result)
+	return result
+
+static func describe_encounter_pressure__gd(
 	session: SessionStateStoreScript.SessionData,
 	encounter: Dictionary,
 	for_battle_prompt: bool = false
 ) -> String:
 	return _encounter_pressure_summary(session, encounter, for_battle_prompt)
 
-static func describe_encounter_readability_surface(
+static func describe_encounter_readability_surface(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_encounter_readability_surface__gd(session, encounter)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_encounter_readability_surface", [session, encounter])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_encounter_readability_surface", [session, encounter])
+	var result = describe_encounter_readability_surface__gd(session, encounter)
+	HumanEngine.check_writing(&"OverworldRules.describe_encounter_readability_surface", before, [session, encounter], result)
+	return result
+
+static func describe_encounter_readability_surface__gd(
 	session: SessionStateStoreScript.SessionData,
 	encounter: Dictionary
 ) -> String:
@@ -1021,7 +1150,17 @@ static func describe_encounter_compact_readability(session: SessionStateStoreScr
 static func describe_encounter_battle_cue(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> String:
 	return HumanEngine.native_writing(&"OverworldRules.describe_encounter_battle_cue", [session, encounter])
 
-static func describe_encounter_guard_link_surface(
+static func describe_encounter_guard_link_surface(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_encounter_guard_link_surface__gd(session, encounter)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_encounter_guard_link_surface", [session, encounter])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_encounter_guard_link_surface", [session, encounter])
+	var result = describe_encounter_guard_link_surface__gd(session, encounter)
+	HumanEngine.check_writing(&"OverworldRules.describe_encounter_guard_link_surface", before, [session, encounter], result)
+	return result
+
+static func describe_encounter_guard_link_surface__gd(
 	session: SessionStateStoreScript.SessionData,
 	encounter: Dictionary
 ) -> String:
@@ -1135,6 +1274,16 @@ static func encounter_commander_threat_label(encounter: Dictionary) -> String:
 	return "%s (%s)" % [commander_name, "; ".join(parts)]
 
 static func encounter_display_name(encounter: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return encounter_display_name__gd(encounter)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.encounter_display_name", [encounter])
+	var before := HumanEngine.before_writing(&"OverworldRules.encounter_display_name", [encounter])
+	var result = encounter_display_name__gd(encounter)
+	HumanEngine.check_writing(&"OverworldRules.encounter_display_name", before, [encounter], result)
+	return result
+
+static func encounter_display_name__gd(encounter: Dictionary) -> String:
 	if encounter.is_empty():
 		return "Hostile contact"
 	if String(encounter.get("spawned_by_faction_id", "")) != "":
@@ -1145,6 +1294,16 @@ static func encounter_display_name(encounter: Dictionary) -> String:
 	return String(encounter_def.get("name", encounter.get("placement_id", "Hostile contact")))
 
 static func is_encounter_resolved(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return is_encounter_resolved__gd(session, encounter)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.is_encounter_resolved", [session, encounter])
+	var before := HumanEngine.before_writing(&"OverworldRules.is_encounter_resolved", [session, encounter])
+	var result = is_encounter_resolved__gd(session, encounter)
+	HumanEngine.check_writing(&"OverworldRules.is_encounter_resolved", before, [session, encounter], result)
+	return result
+
+static func is_encounter_resolved__gd(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> bool:
 	var resolved = session.overworld.get("resolved_encounters", [])
 	if not (resolved is Array):
 		return false
@@ -1178,6 +1337,16 @@ static func _resolved_lookup_entry(session: SessionStateStoreScript.SessionData)
 	return cached
 
 static func encounter_key(encounter: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return encounter_key__gd(encounter)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.encounter_key", [encounter])
+	var before := HumanEngine.before_writing(&"OverworldRules.encounter_key", [encounter])
+	var result = encounter_key__gd(encounter)
+	HumanEngine.check_writing(&"OverworldRules.encounter_key", before, [encounter], result)
+	return result
+
+static func encounter_key__gd(encounter: Dictionary) -> String:
 	var placement_id := String(encounter.get("placement_id", ""))
 	if placement_id != "":
 		return placement_id
@@ -1188,6 +1357,16 @@ static func encounter_key(encounter: Dictionary) -> String:
 	]
 
 static func hero_position(session: SessionStateStoreScript.SessionData) -> Vector2i:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return hero_position__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.hero_position", [session])
+	var before := HumanEngine.before_writing(&"OverworldRules.hero_position", [session])
+	var result = hero_position__gd(session)
+	HumanEngine.check_writing(&"OverworldRules.hero_position", before, [session], result)
+	return result
+
+static func hero_position__gd(session: SessionStateStoreScript.SessionData) -> Vector2i:
 	var pos = session.overworld.get("hero_position", {"x": 0, "y": 0})
 	return Vector2i(int(pos.get("x", 0)), int(pos.get("y", 0)))
 
@@ -1198,6 +1377,16 @@ static func map_for_level(session: SessionStateStoreScript.SessionData, level: i
 	return OverworldLevelRulesScript.terrain_rows(session, level)
 
 static func derive_map_size(session: SessionStateStoreScript.SessionData) -> Vector2i:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return derive_map_size__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.derive_map_size", [session])
+	var before := HumanEngine.before_writing(&"OverworldRules.derive_map_size", [session])
+	var result = derive_map_size__gd(session)
+	HumanEngine.check_writing(&"OverworldRules.derive_map_size", before, [session], result)
+	return result
+
+static func derive_map_size__gd(session: SessionStateStoreScript.SessionData) -> Vector2i:
 	var stored_size = session.overworld.get("map_size", {})
 	if stored_size is Dictionary:
 		var width := int(stored_size.get("width", 0))
@@ -1212,7 +1401,17 @@ static func derive_map_size(session: SessionStateStoreScript.SessionData) -> Vec
 		width_from_map = map_data[0].size()
 	return Vector2i(max(width_from_map, 1), max(height_from_map, 1))
 
-static func overworld_object_placement_pathing_surface(
+static func overworld_object_placement_pathing_surface(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return overworld_object_placement_pathing_surface__gd(session, placement_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.overworld_object_placement_pathing_surface", [session, placement_id])
+	var before := HumanEngine.before_writing(&"OverworldRules.overworld_object_placement_pathing_surface", [session, placement_id])
+	var result = overworld_object_placement_pathing_surface__gd(session, placement_id)
+	HumanEngine.check_writing(&"OverworldRules.overworld_object_placement_pathing_surface", before, [session, placement_id], result)
+	return result
+
+static func overworld_object_placement_pathing_surface__gd(
 	session: SessionStateStoreScript.SessionData,
 	placement_id: String
 ) -> Dictionary:
@@ -1267,6 +1466,15 @@ static func tile_is_blocked(session: SessionStateStoreScript.SessionData, x: int
 	return HumanEngine.native_writing(&"OverworldRules.tile_is_blocked", [session, x, y, level])
 
 static func terrain_id_is_passable(terrain_id: String) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return terrain_id_is_passable__gd(terrain_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"OverworldRules.terrain_id_is_passable", [terrain_id])
+	var result = terrain_id_is_passable__gd(terrain_id)
+	HumanEngine.check(&"OverworldRules.terrain_id_is_passable", [terrain_id], result)
+	return result
+
+static func terrain_id_is_passable__gd(terrain_id: String) -> bool:
 	# Route searches ask this for every neighbour; the biome table only changes
 	# when content is reloaded, so remember each terrain id's answer until then.
 	var revision := ContentService.get_content_revision()
@@ -1686,6 +1894,16 @@ static func _append_generated_body_tiles_to_blocked_index(index: Dictionary, pla
 
 ## Every tile a town stands on: its blocking body and its entrance.
 static func town_footprint_tiles(town: Dictionary) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return town_footprint_tiles__gd(town)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.town_footprint_tiles", [town])
+	var before := HumanEngine.before_writing(&"OverworldRules.town_footprint_tiles", [town])
+	var result = town_footprint_tiles__gd(town)
+	HumanEngine.check_writing(&"OverworldRules.town_footprint_tiles", before, [town], result)
+	return result
+
+static func town_footprint_tiles__gd(town: Dictionary) -> Array:
 	var tiles := _generated_body_tiles_for_placement(town, true)
 	var entrance := OverworldLevelRulesScript.town_entrance(town)
 	var entrance_tile := Vector2i(int(entrance.get("x", -1)), int(entrance.get("y", -1)))
@@ -1699,6 +1917,16 @@ static func town_built_today(town: Dictionary, day: int) -> bool:
 
 ## True when the player's hero has used today's overworld spell.
 static func hero_cast_spell_today(session: SessionStateStoreScript.SessionData, hero_id: String) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return hero_cast_spell_today__gd(session, hero_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.hero_cast_spell_today", [session, hero_id])
+	var before := HumanEngine.before_writing(&"OverworldRules.hero_cast_spell_today", [session, hero_id])
+	var result = hero_cast_spell_today__gd(session, hero_id)
+	HumanEngine.check_writing(&"OverworldRules.hero_cast_spell_today", before, [session, hero_id], result)
+	return result
+
+static func hero_cast_spell_today__gd(session: SessionStateStoreScript.SessionData, hero_id: String) -> bool:
 	if session == null or hero_id == "":
 		return false
 	var hero: Dictionary = session.overworld.get("hero", {}) if hero_id == String(session.overworld.get("active_hero_id", "")) else HeroCommandRulesScript.hero_by_id(session, hero_id)
@@ -1706,6 +1934,16 @@ static func hero_cast_spell_today(session: SessionStateStoreScript.SessionData, 
 
 ## Every tile a mine stands on: its body and its entrance. Empty if the node is not a mine.
 static func mine_footprint_tiles(node: Dictionary) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return mine_footprint_tiles__gd(node)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.mine_footprint_tiles", [node])
+	var before := HumanEngine.before_writing(&"OverworldRules.mine_footprint_tiles", [node])
+	var result = mine_footprint_tiles__gd(node)
+	HumanEngine.check_writing(&"OverworldRules.mine_footprint_tiles", before, [node], result)
+	return result
+
+static func mine_footprint_tiles__gd(node: Dictionary) -> Array:
 	if String(node.get("kind", "")) == "reward_reference":
 		return []
 	if not Mines.resource(node).is_empty():
@@ -1891,6 +2129,16 @@ static func describe_resource_stockpile(resources: Variant, include_zero_rare: b
 	return HumanEngine.native_writing(&"OverworldRules.describe_resource_stockpile", [resources, include_zero_rare])
 
 static func describe_status(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_status__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_status", [session])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_status", [session])
+	var result = describe_status__gd(session)
+	HumanEngine.check_writing(&"OverworldRules.describe_status", before, [session], result)
+	return result
+
+static func describe_status__gd(session: SessionStateStoreScript.SessionData) -> String:
 	normalize_overworld_state(session)
 	var pos := hero_position(session)
 	var movement = session.overworld.get("movement", {})
@@ -1912,6 +2160,16 @@ static func describe_objective_brief(session: SessionStateStoreScript.SessionDat
 	return _describe_objective_brief_from_surface(_objective_stakes_surface(session))
 
 static func describe_objective_header_surfaces(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_objective_header_surfaces__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_objective_header_surfaces", [session])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_objective_header_surfaces", [session])
+	var result = describe_objective_header_surfaces__gd(session)
+	HumanEngine.check_writing(&"OverworldRules.describe_objective_header_surfaces", before, [session], result)
+	return result
+
+static func describe_objective_header_surfaces__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var surface := _objective_stakes_surface(session)
 	var progress_recap := ""
 	if not surface.is_empty():
@@ -1923,6 +2181,16 @@ static func describe_objective_header_surfaces(session: SessionStateStoreScript.
 	}
 
 static func _describe_objective_brief_from_surface(surface: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _describe_objective_brief_from_surface__gd(surface)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules._describe_objective_brief_from_surface", [surface])
+	var before := HumanEngine.before_writing(&"OverworldRules._describe_objective_brief_from_surface", [surface])
+	var result = _describe_objective_brief_from_surface__gd(surface)
+	HumanEngine.check_writing(&"OverworldRules._describe_objective_brief_from_surface", before, [surface], result)
+	return result
+
+static func _describe_objective_brief_from_surface__gd(surface: Dictionary) -> String:
 	if surface.is_empty():
 		return "Objectives unavailable"
 
@@ -1942,6 +2210,16 @@ static func _describe_objective_brief_from_surface(surface: Dictionary) -> Strin
 	return line
 
 static func describe_objective_stakes_board(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_objective_stakes_board__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_objective_stakes_board", [session])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_objective_stakes_board", [session])
+	var result = describe_objective_stakes_board__gd(session)
+	HumanEngine.check_writing(&"OverworldRules.describe_objective_stakes_board", before, [session], result)
+	return result
+
+static func describe_objective_stakes_board__gd(session: SessionStateStoreScript.SessionData) -> String:
 	return _describe_objective_stakes_board_from_surface(session, _objective_stakes_surface(session))
 
 static func _describe_objective_stakes_board_from_surface(
@@ -2012,6 +2290,16 @@ static func _overworld_hero_line(hero: Dictionary) -> String:
 	]
 
 static func describe_heroes(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_heroes__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_heroes", [session])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_heroes", [session])
+	var result = describe_heroes__gd(session)
+	HumanEngine.check_writing(&"OverworldRules.describe_heroes", before, [session], result)
+	return result
+
+static func describe_heroes__gd(session: SessionStateStoreScript.SessionData) -> String:
 	normalize_overworld_state(session)
 	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
 	var lines := ["Command Wing"]
@@ -2051,9 +2339,27 @@ static func days_until_next_weekly_growth(day: int) -> int:
 	return WEEKLY_GROWTH_INTERVAL - ((max(day, 1) - 1) % WEEKLY_GROWTH_INTERVAL)
 
 static func next_weekly_growth_day(day: int) -> int:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return next_weekly_growth_day__gd(day)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"OverworldRules.next_weekly_growth_day", [day])
+	var result = next_weekly_growth_day__gd(day)
+	HumanEngine.check(&"OverworldRules.next_weekly_growth_day", [day], result)
+	return result
+
+static func next_weekly_growth_day__gd(day: int) -> int:
 	return max(day, 1) + days_until_next_weekly_growth(day)
 
 static func town_control_label(owner: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return town_control_label__gd(owner)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"OverworldRules.town_control_label", [owner])
+	var result = town_control_label__gd(owner)
+	HumanEngine.check(&"OverworldRules.town_control_label", [owner], result)
+	return result
+
+static func town_control_label__gd(owner: String) -> String:
 	match owner.strip_edges().to_lower():
 		"player":
 			return "Your Control"
@@ -2065,6 +2371,16 @@ static func town_control_label(owner: String) -> String:
 			return "Unknown Control"
 
 static func describe_town_context(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_town_context__gd(town, session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_town_context", [town, session])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_town_context", [town, session])
+	var result = describe_town_context__gd(town, session)
+	HumanEngine.check_writing(&"OverworldRules.describe_town_context", before, [town, session], result)
+	return result
+
+static func describe_town_context__gd(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> String:
 	var income := _describe_resource_delta(_calculate_town_income(town, session))
 	var weekly_growth := _describe_recruit_delta(town_weekly_growth(town, session))
 	var defense := _town_defense_summary(town)
@@ -2155,6 +2471,16 @@ static func describe_visibility_panel(session: SessionStateStoreScript.SessionDa
 	return "\n".join(lines)
 
 static func describe_context(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_context__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_context", [session])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_context", [session])
+	var result = describe_context__gd(session)
+	HumanEngine.check_writing(&"OverworldRules.describe_context", before, [session], result)
+	return result
+
+static func describe_context__gd(session: SessionStateStoreScript.SessionData) -> String:
 	var context := get_active_context(session)
 	var pos := hero_position(session)
 	var terrain := _terrain_name_at(session, pos.x, pos.y)
@@ -2253,9 +2579,29 @@ static func describe_objective_board(session: SessionStateStoreScript.SessionDat
 	]
 
 static func describe_objectives(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_objectives__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_objectives", [session])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_objectives", [session])
+	var result = describe_objectives__gd(session)
+	HumanEngine.check_writing(&"OverworldRules.describe_objectives", before, [session], result)
+	return result
+
+static func describe_objectives__gd(session: SessionStateStoreScript.SessionData) -> String:
 	return describe_objective_board(session)
 
 static func _objective_stakes_surface(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _objective_stakes_surface__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules._objective_stakes_surface", [session])
+	var before := HumanEngine.before_writing(&"OverworldRules._objective_stakes_surface", [session])
+	var result = _objective_stakes_surface__gd(session)
+	HumanEngine.check_writing(&"OverworldRules._objective_stakes_surface", before, [session], result)
+	return result
+
+static func _objective_stakes_surface__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	normalize_overworld_state(session)
 	if session == null or session.scenario_id == "":
 		return {}
@@ -2373,6 +2719,16 @@ static func _short_player_text(text: String, max_chars: int) -> String:
 	return "%s..." % compact.left(max(1, max_chars - 3)).strip_edges()
 
 static func describe_frontier_threats(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_frontier_threats__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_frontier_threats", [session])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_frontier_threats", [session])
+	var result = describe_frontier_threats__gd(session)
+	HumanEngine.check_writing(&"OverworldRules.describe_frontier_threats", before, [session], result)
+	return result
+
+static func describe_frontier_threats__gd(session: SessionStateStoreScript.SessionData) -> String:
 	normalize_overworld_state(session)
 	var lines := ["Frontier Watch"]
 	var global_threats: String = _describe_enemy_threats(session)
@@ -2390,6 +2746,16 @@ static func describe_frontier_threats(session: SessionStateStoreScript.SessionDa
 	return "\n".join(lines)
 
 static func describe_defense_readiness_warnings(session: SessionStateStoreScript.SessionData, limit: int = 2) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_defense_readiness_warnings__gd(session, limit)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_defense_readiness_warnings", [session, limit])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_defense_readiness_warnings", [session, limit])
+	var result = describe_defense_readiness_warnings__gd(session, limit)
+	HumanEngine.check_writing(&"OverworldRules.describe_defense_readiness_warnings", before, [session, limit], result)
+	return result
+
+static func describe_defense_readiness_warnings__gd(session: SessionStateStoreScript.SessionData, limit: int = 2) -> String:
 	normalize_overworld_state(session)
 	var items := _defense_readiness_warning_items(session)
 	if items.is_empty():
@@ -2411,7 +2777,17 @@ static func describe_defense_readiness_warnings(session: SessionStateStoreScript
 		])
 	return " | ".join(fragments)
 
-static func describe_town_defense_readiness_warning(
+static func describe_town_defense_readiness_warning(session: SessionStateStoreScript.SessionData, town: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_town_defense_readiness_warning__gd(session, town)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_town_defense_readiness_warning", [session, town])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_town_defense_readiness_warning", [session, town])
+	var result = describe_town_defense_readiness_warning__gd(session, town)
+	HumanEngine.check_writing(&"OverworldRules.describe_town_defense_readiness_warning", before, [session, town], result)
+	return result
+
+static func describe_town_defense_readiness_warning__gd(
 	session: SessionStateStoreScript.SessionData,
 	town: Dictionary
 ) -> String:
@@ -2626,6 +3002,16 @@ static func _defense_readiness_next_step(
 	return "Hold the watch; build or recruit only if it improves the next defense turn."
 
 static func _local_visible_threat_summary(session: SessionStateStoreScript.SessionData, fallback: String = "") -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _local_visible_threat_summary__gd(session, fallback)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules._local_visible_threat_summary", [session, fallback])
+	var before := HumanEngine.before_writing(&"OverworldRules._local_visible_threat_summary", [session, fallback])
+	var result = _local_visible_threat_summary__gd(session, fallback)
+	HumanEngine.check_writing(&"OverworldRules._local_visible_threat_summary", before, [session, fallback], result)
+	return result
+
+static func _local_visible_threat_summary__gd(session: SessionStateStoreScript.SessionData, fallback: String = "") -> String:
 	var pos := hero_position(session)
 	var visible_contacts := 0
 	var local_contacts := 0
@@ -2739,6 +3125,16 @@ static func describe_enemy_threats(session: SessionStateStoreScript.SessionData)
 	return describe_frontier_threats(session)
 
 static func describe_spellbook(session: SessionStateStoreScript.SessionData, context_filter: String = "") -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_spellbook__gd(session, context_filter)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_spellbook", [session, context_filter])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_spellbook", [session, context_filter])
+	var result = describe_spellbook__gd(session, context_filter)
+	HumanEngine.check_writing(&"OverworldRules.describe_spellbook", before, [session, context_filter], result)
+	return result
+
+static func describe_spellbook__gd(session: SessionStateStoreScript.SessionData, context_filter: String = "") -> String:
 	if context_filter == SpellRulesScript.CONTEXT_OVERWORLD:
 		return SpellRulesScript.describe_overworld_spellbook(
 			session.overworld.get("hero", {}),
@@ -2747,6 +3143,16 @@ static func describe_spellbook(session: SessionStateStoreScript.SessionData, con
 	return SpellRulesScript.describe_spellbook(session.overworld.get("hero", {}), context_filter)
 
 static func describe_spellbook_rail(session: SessionStateStoreScript.SessionData, context_filter: String = "") -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_spellbook_rail__gd(session, context_filter)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_spellbook_rail", [session, context_filter])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_spellbook_rail", [session, context_filter])
+	var result = describe_spellbook_rail__gd(session, context_filter)
+	HumanEngine.check_writing(&"OverworldRules.describe_spellbook_rail", before, [session, context_filter], result)
+	return result
+
+static func describe_spellbook_rail__gd(session: SessionStateStoreScript.SessionData, context_filter: String = "") -> String:
 	if context_filter == SpellRulesScript.CONTEXT_OVERWORLD:
 		return SpellRulesScript.describe_overworld_spell_rail(
 			session.overworld.get("hero", {}),
@@ -2755,10 +3161,30 @@ static func describe_spellbook_rail(session: SessionStateStoreScript.SessionData
 	return SpellRulesScript.describe_spellbook(session.overworld.get("hero", {}), context_filter)
 
 static func describe_specialties(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_specialties__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_specialties", [session])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_specialties", [session])
+	var result = describe_specialties__gd(session)
+	HumanEngine.check_writing(&"OverworldRules.describe_specialties", before, [session], result)
+	return result
+
+static func describe_specialties__gd(session: SessionStateStoreScript.SessionData) -> String:
 	normalize_overworld_state(session)
 	return HeroProgressionRulesScript.describe_specialties(session.overworld.get("hero", {}))
 
 static func describe_artifacts(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_artifacts__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_artifacts", [session])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_artifacts", [session])
+	var result = describe_artifacts__gd(session)
+	HumanEngine.check_writing(&"OverworldRules.describe_artifacts", before, [session], result)
+	return result
+
+static func describe_artifacts__gd(session: SessionStateStoreScript.SessionData) -> String:
 	var hero = session.overworld.get("hero", {})
 	return ArtifactRulesScript.describe_management(hero)
 
@@ -2769,6 +3195,16 @@ static func describe_command_briefing(session: SessionStateStoreScript.SessionDa
 	return "\n".join(_command_briefing_lines(session))
 
 static func consume_command_briefing(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return consume_command_briefing__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.consume_command_briefing", [session])
+	var before := HumanEngine.before_writing(&"OverworldRules.consume_command_briefing", [session])
+	var result = consume_command_briefing__gd(session)
+	HumanEngine.check_writing(&"OverworldRules.consume_command_briefing", before, [session], result)
+	return result
+
+static func consume_command_briefing__gd(session: SessionStateStoreScript.SessionData) -> String:
 	var briefing_text := describe_command_briefing(session)
 	if briefing_text == "":
 		return ""
@@ -2793,6 +3229,16 @@ static func describe_command_risk_summary_from_normalized_session(session: Sessi
 	return String(reduction.get("summary", ""))
 
 static func _refresh_watch_observation_context(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _refresh_watch_observation_context__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules._refresh_watch_observation_context", [session])
+	var before := HumanEngine.before_writing(&"OverworldRules._refresh_watch_observation_context", [session])
+	var result = _refresh_watch_observation_context__gd(session)
+	HumanEngine.check_writing(&"OverworldRules._refresh_watch_observation_context", before, [session], result)
+	return result
+
+static func _refresh_watch_observation_context__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	normalize_overworld_state(session)
 	return _refresh_watch_observation_context_from_normalized_session(session)
 
@@ -2807,7 +3253,17 @@ static func _refresh_watch_observation_context_from_normalized_session(
 		"management_watch": _describe_management_watch_from_normalized_session(session),
 	}.duplicate(true)
 
-static func describe_commitment_board(
+static func describe_commitment_board(session: SessionStateStoreScript.SessionData, refresh_watch_context: Dictionary = {}) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_commitment_board__gd(session, refresh_watch_context)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_commitment_board", [session, refresh_watch_context])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_commitment_board", [session, refresh_watch_context])
+	var result = describe_commitment_board__gd(session, refresh_watch_context)
+	HumanEngine.check_writing(&"OverworldRules.describe_commitment_board", before, [session, refresh_watch_context], result)
+	return result
+
+static func describe_commitment_board__gd(
 	session: SessionStateStoreScript.SessionData,
 	refresh_watch_context: Dictionary = {}
 ) -> String:
@@ -2830,6 +3286,16 @@ static func describe_command_risk_forecast(session: SessionStateStoreScript.Sess
 	return String(describe_command_risk_surfaces(session).get("forecast", ""))
 
 static func describe_end_turn_forecast(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_end_turn_forecast__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_end_turn_forecast", [session])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_end_turn_forecast", [session])
+	var result = describe_end_turn_forecast__gd(session)
+	HumanEngine.check_writing(&"OverworldRules.describe_end_turn_forecast", before, [session], result)
+	return result
+
+static func describe_end_turn_forecast__gd(session: SessionStateStoreScript.SessionData) -> String:
 	normalize_overworld_state(session)
 	var next_day := session.day + 1
 	var lines := [
@@ -2849,6 +3315,16 @@ static func describe_end_turn_forecast(session: SessionStateStoreScript.SessionD
 	return "\n".join(lines)
 
 static func describe_end_turn_forecast_compact(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_end_turn_forecast_compact__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_end_turn_forecast_compact", [session])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_end_turn_forecast_compact", [session])
+	var result = describe_end_turn_forecast_compact__gd(session)
+	HumanEngine.check_writing(&"OverworldRules.describe_end_turn_forecast_compact", before, [session], result)
+	return result
+
+static func describe_end_turn_forecast_compact__gd(session: SessionStateStoreScript.SessionData) -> String:
 	normalize_overworld_state(session)
 	var next_day := session.day + 1
 	var parts := [
@@ -2861,7 +3337,17 @@ static func describe_end_turn_forecast_compact(session: SessionStateStoreScript.
 		parts.append(risk_line)
 	return " | ".join(parts)
 
-static func describe_end_turn_forecast_surfaces(
+static func describe_end_turn_forecast_surfaces(session: SessionStateStoreScript.SessionData, refresh_watch_context: Dictionary = {}) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_end_turn_forecast_surfaces__gd(session, refresh_watch_context)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_end_turn_forecast_surfaces", [session, refresh_watch_context])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_end_turn_forecast_surfaces", [session, refresh_watch_context])
+	var result = describe_end_turn_forecast_surfaces__gd(session, refresh_watch_context)
+	HumanEngine.check_writing(&"OverworldRules.describe_end_turn_forecast_surfaces", before, [session, refresh_watch_context], result)
+	return result
+
+static func describe_end_turn_forecast_surfaces__gd(
 	session: SessionStateStoreScript.SessionData,
 	refresh_watch_context: Dictionary = {}
 ) -> Dictionary:
@@ -2900,10 +3386,30 @@ static func describe_end_turn_forecast_surfaces(
 	}
 
 static func describe_command_risk_surfaces(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_command_risk_surfaces__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_command_risk_surfaces", [session])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_command_risk_surfaces", [session])
+	var result = describe_command_risk_surfaces__gd(session)
+	HumanEngine.check_writing(&"OverworldRules.describe_command_risk_surfaces", before, [session], result)
+	return result
+
+static func describe_command_risk_surfaces__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	normalize_overworld_state(session)
 	return _command_risk_surfaces_from_forecast(_command_risk_forecast(session))
 
 static func _command_risk_surfaces_from_forecast(forecast: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _command_risk_surfaces_from_forecast__gd(forecast)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules._command_risk_surfaces_from_forecast", [forecast])
+	var before := HumanEngine.before_writing(&"OverworldRules._command_risk_surfaces_from_forecast", [forecast])
+	var result = _command_risk_surfaces_from_forecast__gd(forecast)
+	HumanEngine.check_writing(&"OverworldRules._command_risk_surfaces_from_forecast", before, [forecast], result)
+	return result
+
+static func _command_risk_surfaces_from_forecast__gd(forecast: Dictionary) -> Dictionary:
 	if not bool(forecast.get("has_risk", false)):
 		return {
 			"risk": "Command Risk\nSteady watch | No concrete next-day break is signaled from the current frontier watch.",
@@ -2917,6 +3423,16 @@ static func _command_risk_surfaces_from_forecast(forecast: Dictionary) -> Dictio
 	}
 
 static func consume_command_risk_forecast(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return consume_command_risk_forecast__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.consume_command_risk_forecast", [session])
+	var before := HumanEngine.before_writing(&"OverworldRules.consume_command_risk_forecast", [session])
+	var result = consume_command_risk_forecast__gd(session)
+	HumanEngine.check_writing(&"OverworldRules.consume_command_risk_forecast", before, [session], result)
+	return result
+
+static func consume_command_risk_forecast__gd(session: SessionStateStoreScript.SessionData) -> String:
 	var forecast_text := describe_command_risk_forecast(session)
 	if forecast_text == "" or not _should_surface_command_risk_forecast(session):
 		return ""
@@ -2929,6 +3445,16 @@ static func consume_command_risk_forecast(session: SessionStateStoreScript.Sessi
 	return forecast_text
 
 static func describe_dispatch(session: SessionStateStoreScript.SessionData, last_message: String = "") -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_dispatch__gd(session, last_message)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_dispatch", [session, last_message])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_dispatch", [session, last_message])
+	var result = describe_dispatch__gd(session, last_message)
+	HumanEngine.check_writing(&"OverworldRules.describe_dispatch", before, [session, last_message], result)
+	return result
+
+static func describe_dispatch__gd(session: SessionStateStoreScript.SessionData, last_message: String = "") -> String:
 	normalize_overworld_state(session)
 	return _describe_dispatch_from_observation_context(session, last_message, _event_dispatch_observation_context(session))
 
@@ -2960,7 +3486,17 @@ static func _describe_dispatch_from_observation_context(
 		lines.append("- Outcome pending: %s" % session.scenario_summary)
 	return "\n".join(lines)
 
-static func describe_event_dispatch_surfaces(
+static func describe_event_dispatch_surfaces(session: SessionStateStoreScript.SessionData, last_message: String = "", turn_resolution_summary: String = "", enemy_activity_summary: String = "", enemy_activity_events_value: Variant = [], action_recap_value: Variant = {}, refresh_watch_context: Dictionary = {}) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_event_dispatch_surfaces__gd(session, last_message, turn_resolution_summary, enemy_activity_summary, enemy_activity_events_value, action_recap_value, refresh_watch_context)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_event_dispatch_surfaces", [session, last_message, turn_resolution_summary, enemy_activity_summary, enemy_activity_events_value, action_recap_value, refresh_watch_context])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_event_dispatch_surfaces", [session, last_message, turn_resolution_summary, enemy_activity_summary, enemy_activity_events_value, action_recap_value, refresh_watch_context])
+	var result = describe_event_dispatch_surfaces__gd(session, last_message, turn_resolution_summary, enemy_activity_summary, enemy_activity_events_value, action_recap_value, refresh_watch_context)
+	HumanEngine.check_writing(&"OverworldRules.describe_event_dispatch_surfaces", before, [session, last_message, turn_resolution_summary, enemy_activity_summary, enemy_activity_events_value, action_recap_value, refresh_watch_context], result)
+	return result
+
+static func describe_event_dispatch_surfaces__gd(
 	session: SessionStateStoreScript.SessionData,
 	last_message: String = "",
 	turn_resolution_summary: String = "",
@@ -3006,7 +3542,17 @@ static func _event_dispatch_observation_context(
 		"dispatch_context": _dispatch_context_brief(session),
 	}
 
-static func describe_event_feed_surface(
+static func describe_event_feed_surface(session: SessionStateStoreScript.SessionData, last_message: String = "", turn_resolution_summary: String = "", enemy_activity_summary: String = "", enemy_activity_events_value: Variant = [], action_recap_value: Variant = {}) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_event_feed_surface__gd(session, last_message, turn_resolution_summary, enemy_activity_summary, enemy_activity_events_value, action_recap_value)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_event_feed_surface", [session, last_message, turn_resolution_summary, enemy_activity_summary, enemy_activity_events_value, action_recap_value])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_event_feed_surface", [session, last_message, turn_resolution_summary, enemy_activity_summary, enemy_activity_events_value, action_recap_value])
+	var result = describe_event_feed_surface__gd(session, last_message, turn_resolution_summary, enemy_activity_summary, enemy_activity_events_value, action_recap_value)
+	HumanEngine.check_writing(&"OverworldRules.describe_event_feed_surface", before, [session, last_message, turn_resolution_summary, enemy_activity_summary, enemy_activity_events_value, action_recap_value], result)
+	return result
+
+static func describe_event_feed_surface__gd(
 	session: SessionStateStoreScript.SessionData,
 	last_message: String = "",
 	turn_resolution_summary: String = "",
@@ -3285,6 +3831,16 @@ static func _event_feed_watch_line(session: SessionStateStoreScript.SessionData)
 	})
 
 static func _event_feed_watch_line_from_observation_context(observation_context: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _event_feed_watch_line_from_observation_context__gd(observation_context)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules._event_feed_watch_line_from_observation_context", [observation_context])
+	var before := HumanEngine.before_writing(&"OverworldRules._event_feed_watch_line_from_observation_context", [observation_context])
+	var result = _event_feed_watch_line_from_observation_context__gd(observation_context)
+	HumanEngine.check_writing(&"OverworldRules._event_feed_watch_line_from_observation_context", before, [observation_context], result)
+	return result
+
+static func _event_feed_watch_line_from_observation_context__gd(observation_context: Dictionary) -> String:
 	var parts := []
 	var route_pressure: Dictionary = observation_context.get("route_pressure", {}) if observation_context.get("route_pressure", {}) is Dictionary else {}
 	if bool(route_pressure.get("active", false)):
@@ -3302,7 +3858,17 @@ static func _event_feed_watch_line_from_observation_context(observation_context:
 		return "No urgent enemy, convoy, or town-management warning is visible."
 	return " | ".join(parts.slice(0, min(3, parts.size())))
 
-static func describe_route_interception_surface(
+static func describe_route_interception_surface(session: SessionStateStoreScript.SessionData, destination_x: int = -1, destination_y: int = -1, route_steps: int = 0, include_global_fallback: bool = true) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_route_interception_surface__gd(session, destination_x, destination_y, route_steps, include_global_fallback)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_route_interception_surface", [session, destination_x, destination_y, route_steps, include_global_fallback])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_route_interception_surface", [session, destination_x, destination_y, route_steps, include_global_fallback])
+	var result = describe_route_interception_surface__gd(session, destination_x, destination_y, route_steps, include_global_fallback)
+	HumanEngine.check_writing(&"OverworldRules.describe_route_interception_surface", before, [session, destination_x, destination_y, route_steps, include_global_fallback], result)
+	return result
+
+static func describe_route_interception_surface__gd(
 	session: SessionStateStoreScript.SessionData,
 	destination_x: int = -1,
 	destination_y: int = -1,
@@ -3621,6 +4187,16 @@ static func _dispatch_context_brief(session: SessionStateStoreScript.SessionData
 			return "Open ground at %d,%d on %s" % [pos.x, pos.y, terrain]
 
 static func town_weekly_growth(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return town_weekly_growth__gd(town, session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.town_weekly_growth", [town, session])
+	var before := HumanEngine.before_writing(&"OverworldRules.town_weekly_growth", [town, session])
+	var result = town_weekly_growth__gd(town, session)
+	HumanEngine.check_writing(&"OverworldRules.town_weekly_growth", before, [town, session], result)
+	return result
+
+static func town_weekly_growth__gd(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
 	# Without a session the growth is the town's seeded growth alone.
 	var cache_key := _town_read_scope_cache_key(session, "weekly_growth", town) if session != null else _town_content_read_scope_key("seeded_weekly_growth", town)
 	if _town_read_scope_cache_has(cache_key):
@@ -3630,6 +4206,16 @@ static func town_weekly_growth(town: Dictionary, session: SessionStateStoreScrip
 	return result
 
 static func town_income(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return town_income__gd(town, session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.town_income", [town, session])
+	var before := HumanEngine.before_writing(&"OverworldRules.town_income", [town, session])
+	var result = town_income__gd(town, session)
+	HumanEngine.check_writing(&"OverworldRules.town_income", before, [town, session], result)
+	return result
+
+static func town_income__gd(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
 	return _calculate_town_income(town, session)
 
 static func town_reinforcement_quality(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> int:
@@ -3669,6 +4255,16 @@ static func town_development_metrics(town: Dictionary, session: SessionStateStor
 	return result
 
 static func town_strategic_role(town: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return town_strategic_role__gd(town)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.town_strategic_role", [town])
+	var before := HumanEngine.before_writing(&"OverworldRules.town_strategic_role", [town])
+	var result = town_strategic_role__gd(town)
+	HumanEngine.check_writing(&"OverworldRules.town_strategic_role", before, [town], result)
+	return result
+
+static func town_strategic_role__gd(town: Dictionary) -> String:
 	return _town_strategic_role(town)
 
 static func town_strategic_summary(town: Dictionary) -> String:
@@ -3678,6 +4274,16 @@ static func describe_faction_identity_surface(faction_id: String) -> String:
 	return _faction_identity_surface(faction_id)
 
 static func describe_town_identity_surface(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_town_identity_surface__gd(town, session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_town_identity_surface", [town, session])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_town_identity_surface", [town, session])
+	var result = describe_town_identity_surface__gd(town, session)
+	HumanEngine.check_writing(&"OverworldRules.describe_town_identity_surface", before, [town, session], result)
+	return result
+
+static func describe_town_identity_surface__gd(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> String:
 	return _town_identity_surface(town, session)
 
 static func town_capital_project_state(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
@@ -3692,6 +4298,16 @@ static func town_logistics_state(session: SessionStateStoreScript.SessionData, t
 	return HumanEngine.native_writing(&"OverworldRules.town_logistics_state", [session, town])
 
 static func town_recovery_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return town_recovery_state__gd(session, town)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.town_recovery_state", [session, town])
+	var before := HumanEngine.before_writing(&"OverworldRules.town_recovery_state", [session, town])
+	var result = town_recovery_state__gd(session, town)
+	HumanEngine.check_writing(&"OverworldRules.town_recovery_state", before, [session, town], result)
+	return result
+
+static func town_recovery_state__gd(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
 	var cache_key := _town_read_scope_cache_key(session, "recovery", town)
 	if _town_read_scope_cache_has(cache_key):
 		return _town_read_scope_cache_get(cache_key)
@@ -3700,6 +4316,16 @@ static func town_recovery_state(session: SessionStateStoreScript.SessionData, to
 	return result
 
 static func town_public_threat_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return town_public_threat_state__gd(session, town)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.town_public_threat_state", [session, town])
+	var before := HumanEngine.before_writing(&"OverworldRules.town_public_threat_state", [session, town])
+	var result = town_public_threat_state__gd(session, town)
+	HumanEngine.check_writing(&"OverworldRules.town_public_threat_state", before, [session, town], result)
+	return result
+
+static func town_public_threat_state__gd(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
 	var cache_key := _town_read_scope_cache_key(session, "public_threat", town)
 	if _town_read_scope_cache_has(cache_key):
 		return _town_read_scope_cache_get(cache_key)
@@ -3710,7 +4336,17 @@ static func town_public_threat_state(session: SessionStateStoreScript.SessionDat
 static func town_battlefront_profile(town: Dictionary) -> Dictionary:
 	return _town_battlefront_profile(town)
 
-static func town_front_state(
+static func town_front_state(session: SessionStateStoreScript.SessionData, town: Dictionary, precomputed_development_metrics: Dictionary = {}) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return town_front_state__gd(session, town, precomputed_development_metrics)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.town_front_state", [session, town, precomputed_development_metrics])
+	var before := HumanEngine.before_writing(&"OverworldRules.town_front_state", [session, town, precomputed_development_metrics])
+	var result = town_front_state__gd(session, town, precomputed_development_metrics)
+	HumanEngine.check_writing(&"OverworldRules.town_front_state", before, [session, town, precomputed_development_metrics], result)
+	return result
+
+static func town_front_state__gd(
 	session: SessionStateStoreScript.SessionData,
 	town: Dictionary,
 	precomputed_development_metrics: Dictionary = {}
@@ -3724,6 +4360,16 @@ static func town_front_state(
 	return result
 
 static func town_occupation_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return town_occupation_state__gd(session, town)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.town_occupation_state", [session, town])
+	var before := HumanEngine.before_writing(&"OverworldRules.town_occupation_state", [session, town])
+	var result = town_occupation_state__gd(session, town)
+	HumanEngine.check_writing(&"OverworldRules.town_occupation_state", before, [session, town], result)
+	return result
+
+static func town_occupation_state__gd(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
 	var cache_key := _town_read_scope_cache_key(session, "occupation", town)
 	if _town_read_scope_cache_has(cache_key):
 		return _town_read_scope_cache_get(cache_key)
@@ -3740,7 +4386,17 @@ static func describe_town_market(session: SessionStateStoreScript.SessionData, t
 static func describe_town_response_panel(session: SessionStateStoreScript.SessionData, town: Dictionary) -> String:
 	return "\n".join(_town_response_panel_lines(session, town))
 
-static func controlled_resource_site_income(
+static func controlled_resource_site_income(session: SessionStateStoreScript.SessionData, controller_id: String, income_day: int = -1) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return controlled_resource_site_income__gd(session, controller_id, income_day)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.controlled_resource_site_income", [session, controller_id, income_day])
+	var before := HumanEngine.before_writing(&"OverworldRules.controlled_resource_site_income", [session, controller_id, income_day])
+	var result = controlled_resource_site_income__gd(session, controller_id, income_day)
+	HumanEngine.check_writing(&"OverworldRules.controlled_resource_site_income", before, [session, controller_id, income_day], result)
+	return result
+
+static func controlled_resource_site_income__gd(
 	session: SessionStateStoreScript.SessionData,
 	controller_id: String,
 	income_day: int = -1
@@ -3769,6 +4425,16 @@ static func _resource_site_income_cadence_label(site: Dictionary) -> String:
 ## Resources the player receives at the next daybreak: the same projection as
 ## the end-turn income forecast (towns, hero artifacts/specialties, sites).
 static func player_daily_income(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return player_daily_income__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.player_daily_income", [session])
+	var before := HumanEngine.before_writing(&"OverworldRules.player_daily_income", [session])
+	var result = player_daily_income__gd(session)
+	HumanEngine.check_writing(&"OverworldRules.player_daily_income", before, [session], result)
+	return result
+
+static func player_daily_income__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null:
 		return _empty_live_resource_stockpile()
 	return _player_daily_income_projection(session, int(session.day) + 1)
@@ -4032,6 +4698,16 @@ static func controlled_resource_site_count(
 	return count
 
 static func describe_management_watch(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_management_watch__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_management_watch", [session])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_management_watch", [session])
+	var result = describe_management_watch__gd(session)
+	HumanEngine.check_writing(&"OverworldRules.describe_management_watch", before, [session], result)
+	return result
+
+static func describe_management_watch__gd(session: SessionStateStoreScript.SessionData) -> String:
 	normalize_overworld_state(session)
 	return _describe_management_watch_from_normalized_session(session)
 
@@ -4570,6 +5246,16 @@ static func _find_context_resource_node(session: SessionStateStoreScript.Session
 	return HumanEngine.native_writing(&"OverworldRules._find_context_resource_node", [session])
 
 static func _find_resource_node_by_placement(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _find_resource_node_by_placement__gd(session, placement_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules._find_resource_node_by_placement", [session, placement_id])
+	var before := HumanEngine.before_writing(&"OverworldRules._find_resource_node_by_placement", [session, placement_id])
+	var result = _find_resource_node_by_placement__gd(session, placement_id)
+	HumanEngine.check_writing(&"OverworldRules._find_resource_node_by_placement", before, [session, placement_id], result)
+	return result
+
+static func _find_resource_node_by_placement__gd(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
 	if session == null or placement_id == "":
 		return {"index": -1, "node": {}}
 	var lookup_started_usec := _rules_profile_timer()
@@ -4634,9 +5320,29 @@ static func _find_active_artifact_node(session: SessionStateStoreScript.SessionD
 	return HumanEngine.native_writing(&"OverworldRules._find_active_artifact_node", [session])
 
 static func _resource_site_is_persistent(site: Dictionary) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _resource_site_is_persistent__gd(site)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules._resource_site_is_persistent", [site])
+	var before := HumanEngine.before_writing(&"OverworldRules._resource_site_is_persistent", [site])
+	var result = _resource_site_is_persistent__gd(site)
+	HumanEngine.check_writing(&"OverworldRules._resource_site_is_persistent", before, [site], result)
+	return result
+
+static func _resource_site_is_persistent__gd(site: Dictionary) -> bool:
 	return bool(site.get("persistent_control", false))
 
 static func resource_node_is_present(node: Dictionary, site: Dictionary = {}) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return resource_node_is_present__gd(node, site)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.resource_node_is_present", [node, site])
+	var before := HumanEngine.before_writing(&"OverworldRules.resource_node_is_present", [node, site])
+	var result = resource_node_is_present__gd(node, site)
+	HumanEngine.check_writing(&"OverworldRules.resource_node_is_present", before, [node, site], result)
+	return result
+
+static func resource_node_is_present__gd(node: Dictionary, site: Dictionary = {}) -> bool:
 	# Shared by collision, route/context queries and the map renderer. Ownership
 	# and cooldowns do not consume a permanent service or a native passage.
 	if not bool(node.get("collected", false)) or NativeTransit.is_native(node):
@@ -4653,6 +5359,16 @@ static func _resource_node_matches_controller(node: Dictionary, controller_id: S
 	return PlayerRules.resource_controller_id(node) == controller_id
 
 static func _resource_site_is_repeatable(site: Dictionary) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _resource_site_is_repeatable__gd(site)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules._resource_site_is_repeatable", [site])
+	var before := HumanEngine.before_writing(&"OverworldRules._resource_site_is_repeatable", [site])
+	var result = _resource_site_is_repeatable__gd(site)
+	HumanEngine.check_writing(&"OverworldRules._resource_site_is_repeatable", before, [site], result)
+	return result
+
+static func _resource_site_is_repeatable__gd(site: Dictionary) -> bool:
 	return bool(site.get("repeatable", false)) or String(site.get("family", "")) == "repeatable_service"
 
 static func _resource_site_visit_cost(site: Dictionary) -> Dictionary:
@@ -4726,7 +5442,17 @@ static func _resource_site_weekly_recruits(site: Dictionary) -> Dictionary:
 static func resource_site_is_recruit_source(site: Dictionary) -> bool:
 	return HumanEngine.native(&"OverworldRules.resource_site_is_recruit_source", [site])
 
-static func describe_recruit_source_compact(
+static func describe_recruit_source_compact(session: SessionStateStoreScript.SessionData, node: Dictionary, site: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_recruit_source_compact__gd(session, node, site)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_recruit_source_compact", [session, node, site])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_recruit_source_compact", [session, node, site])
+	var result = describe_recruit_source_compact__gd(session, node, site)
+	HumanEngine.check_writing(&"OverworldRules.describe_recruit_source_compact", before, [session, node, site], result)
+	return result
+
+static func describe_recruit_source_compact__gd(
 	session: SessionStateStoreScript.SessionData,
 	node: Dictionary,
 	site: Dictionary
@@ -4751,7 +5477,17 @@ static func describe_recruit_source_inspection(session: SessionStateStoreScript.
 static func describe_resource_site_surface(session: SessionStateStoreScript.SessionData, node: Dictionary, site: Dictionary) -> String:
 	return HumanEngine.native_writing(&"OverworldRules.describe_resource_site_surface", [session, node, site])
 
-static func describe_resource_site_control_summary(
+static func describe_resource_site_control_summary(session: SessionStateStoreScript.SessionData, node: Dictionary, site: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_resource_site_control_summary__gd(session, node, site)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_resource_site_control_summary", [session, node, site])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_resource_site_control_summary", [session, node, site])
+	var result = describe_resource_site_control_summary__gd(session, node, site)
+	HumanEngine.check_writing(&"OverworldRules.describe_resource_site_control_summary", before, [session, node, site], result)
+	return result
+
+static func describe_resource_site_control_summary__gd(
 	session: SessionStateStoreScript.SessionData,
 	node: Dictionary,
 	site: Dictionary
@@ -4775,6 +5511,16 @@ static func describe_resource_site_interaction_surface(node: Dictionary, site: D
 	return HumanEngine.native(&"OverworldRules.describe_resource_site_interaction_surface", [node, site])
 
 static func describe_encounter_object_surface(encounter: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_encounter_object_surface__gd(encounter)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.describe_encounter_object_surface", [encounter])
+	var before := HumanEngine.before_writing(&"OverworldRules.describe_encounter_object_surface", [encounter])
+	var result = describe_encounter_object_surface__gd(encounter)
+	HumanEngine.check_writing(&"OverworldRules.describe_encounter_object_surface", before, [encounter], result)
+	return result
+
+static func describe_encounter_object_surface__gd(encounter: Dictionary) -> String:
 	var map_object := ContentService.get_map_object(String(encounter.get("object_id", "")))
 	var neutral_metadata = encounter.get("neutral_encounter", {})
 	var primary_class := String(map_object.get("primary_class", encounter.get("primary_class", ""))).strip_edges()
@@ -4828,7 +5574,17 @@ static func _resource_site_guard_blocks_node(encounter: Dictionary, node: Dictio
 	return HumanEngine.native(&"OverworldRules._resource_site_guard_blocks_node", [encounter, node])
 
 ## positions: see _resource_site_guard_encounter.
-static func resource_site_blocking_guard(
+static func resource_site_blocking_guard(session: SessionStateStoreScript.SessionData, node: Dictionary, site: Dictionary, positions: Variant = null) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return resource_site_blocking_guard__gd(session, node, site, positions)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules.resource_site_blocking_guard", [session, node, site, positions])
+	var before := HumanEngine.before_writing(&"OverworldRules.resource_site_blocking_guard", [session, node, site, positions])
+	var result = resource_site_blocking_guard__gd(session, node, site, positions)
+	HumanEngine.check_writing(&"OverworldRules.resource_site_blocking_guard", before, [session, node, site, positions], result)
+	return result
+
+static func resource_site_blocking_guard__gd(
 	session: SessionStateStoreScript.SessionData,
 	node: Dictionary,
 	site: Dictionary,
@@ -5069,7 +5825,17 @@ static func _route_security_rating_for_hero(hero: Dictionary) -> int:
 	var level_bonus = max(0, int(hero.get("level", 1)) - 1)
 	return clamp(1 + int(floor(float(command_total + level_bonus) / 4.0)), 1, 5)
 
-static func _resource_site_response_state(
+static func _resource_site_response_state(session: SessionStateStoreScript.SessionData, node: Dictionary, site: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _resource_site_response_state__gd(session, node, site)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules._resource_site_response_state", [session, node, site])
+	var before := HumanEngine.before_writing(&"OverworldRules._resource_site_response_state", [session, node, site])
+	var result = _resource_site_response_state__gd(session, node, site)
+	HumanEngine.check_writing(&"OverworldRules._resource_site_response_state", before, [session, node, site], result)
+	return result
+
+static func _resource_site_response_state__gd(
 	session: SessionStateStoreScript.SessionData,
 	node: Dictionary,
 	site: Dictionary
@@ -5157,7 +5923,17 @@ static func _resource_site_delivery_target_label(
 		_:
 			return "frontline"
 
-static func _resource_site_delivery_state(
+static func _resource_site_delivery_state(session: SessionStateStoreScript.SessionData, node: Dictionary, _site: Dictionary = {}) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _resource_site_delivery_state__gd(session, node, _site)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules._resource_site_delivery_state", [session, node, _site])
+	var before := HumanEngine.before_writing(&"OverworldRules._resource_site_delivery_state", [session, node, _site])
+	var result = _resource_site_delivery_state__gd(session, node, _site)
+	HumanEngine.check_writing(&"OverworldRules._resource_site_delivery_state", before, [session, node, _site], result)
+	return result
+
+static func _resource_site_delivery_state__gd(
 	session: SessionStateStoreScript.SessionData,
 	node: Dictionary,
 	_site: Dictionary = {}
@@ -5231,7 +6007,17 @@ static func _delivery_encounter_matches_node(
 		_:
 			return false
 
-static func _resource_site_delivery_interception(
+static func _resource_site_delivery_interception(session: SessionStateStoreScript.SessionData, node: Dictionary, site: Dictionary = {}) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _resource_site_delivery_interception__gd(session, node, site)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules._resource_site_delivery_interception", [session, node, site])
+	var before := HumanEngine.before_writing(&"OverworldRules._resource_site_delivery_interception", [session, node, site])
+	var result = _resource_site_delivery_interception__gd(session, node, site)
+	HumanEngine.check_writing(&"OverworldRules._resource_site_delivery_interception", before, [session, node, site], result)
+	return result
+
+static func _resource_site_delivery_interception__gd(
 	session: SessionStateStoreScript.SessionData,
 	node: Dictionary,
 	site: Dictionary = {}
@@ -5726,6 +6512,16 @@ static func _return_reinforcements_to_source(
 	return _town_name(town)
 
 static func _army_strength_value(stacks: Variant) -> int:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _army_strength_value__gd(stacks)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules._army_strength_value", [stacks])
+	var before := HumanEngine.before_writing(&"OverworldRules._army_strength_value", [stacks])
+	var result = _army_strength_value__gd(stacks)
+	HumanEngine.check_writing(&"OverworldRules._army_strength_value", before, [stacks], result)
+	return result
+
+static func _army_strength_value__gd(stacks: Variant) -> int:
 	var total_strength := 0
 	if not (stacks is Array):
 		return total_strength
@@ -8010,6 +8806,15 @@ static func _normalize_resource_dict(value: Variant) -> Dictionary:
 	return normalized
 
 static func resource_definition(resource_id: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return resource_definition__gd(resource_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"OverworldRules.resource_definition", [resource_id])
+	var result = resource_definition__gd(resource_id)
+	HumanEngine.check(&"OverworldRules.resource_definition", [resource_id], result)
+	return result
+
+static func resource_definition__gd(resource_id: String) -> Dictionary:
 	var normalized_id := resource_id.strip_edges()
 	if normalized_id not in LIVE_STOCKPILE_RESOURCE_KEYS:
 		return {}
@@ -8082,6 +8887,16 @@ static func _recruit_payload_total(value: Variant) -> int:
 	return total
 
 static func _describe_resource_delta(delta: Variant) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _describe_resource_delta__gd(delta)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldRules._describe_resource_delta", [delta])
+	var before := HumanEngine.before_writing(&"OverworldRules._describe_resource_delta", [delta])
+	var result = _describe_resource_delta__gd(delta)
+	HumanEngine.check_writing(&"OverworldRules._describe_resource_delta", before, [delta], result)
+	return result
+
+static func _describe_resource_delta__gd(delta: Variant) -> String:
 	if not (delta is Dictionary):
 		return ""
 	var parts := []

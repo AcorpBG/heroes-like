@@ -2113,6 +2113,36 @@ bool is_timing(const state::State &state, const Value &key) {
 	return text.size() > 3 && text.compare(text.size() - 3, 3, "_ms") == 0;
 }
 
+// A read scope's cache key that names a session the call made itself (a
+// projection, OverworldRules._project_player_town_at_daybreak) by its id:
+// native numbers such a session -1, -2 and on (overworld_forecast.cpp), and
+// GDScript's new SessionData has its own object id, so the keys agree only
+// from their first "|" on.
+bool same_projected_key(const state::State &state, const Value &native, const Variant &gdscript) {
+	if (native.kind != Kind::String || gdscript.get_type() != Variant::STRING) {
+		return false;
+	}
+	const std::string &text = state.text(native.ref);
+	const std::string other = utf8_of(static_cast<String>(gdscript));
+	const auto id_end = [](const std::string &key) -> size_t {
+		const size_t bar = key.find('|');
+		if (bar == std::string::npos || bar < 2 || key[0] != '-') {
+			return std::string::npos;
+		}
+		for (size_t index = 1; index < bar; ++index) {
+			if (key[index] < '0' || key[index] > '9') {
+				return std::string::npos;
+			}
+		}
+		return bar;
+	};
+	const size_t bar = id_end(text);
+	const size_t other_bar = id_end(other);
+	// A projected id has at most 9 digits; an object's has more.
+	return bar != std::string::npos && bar <= 10 && other_bar != std::string::npos && other_bar > 10
+			&& text.compare(bar, std::string::npos, other, other_bar, std::string::npos) == 0;
+}
+
 } // namespace
 
 void PortBridge::diff_array_items(const state::ArrayNode &node, const Array &array, std::string &path, std::string &out) {
@@ -2140,7 +2170,9 @@ void PortBridge::diff_dict_items(const state::DictNode &node, const Dictionary &
 	for (size_t index = 0; index < node.keys.size() && out.empty(); ++index) {
 		const Variant key = keys[static_cast<int64_t>(index)];
 		path += ".keys()[" + compat::itos(static_cast<int64_t>(index)) + "]";
-		diff_value(node.keys[index], key, path, out);
+		if (!same_projected_key(state_, node.keys[index], key)) {
+			diff_value(node.keys[index], key, path, out);
+		}
 		path.resize(length);
 		if (!out.empty()) {
 			break;

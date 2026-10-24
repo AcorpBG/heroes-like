@@ -12,6 +12,7 @@ const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 static var EnemyAdventureRulesScript: Variant = load("res://scripts/core/EnemyAdventureRules.gd")
 static var ScenarioRulesScript: Variant = load("res://scripts/core/ScenarioRules.gd")
 
@@ -38,6 +39,15 @@ static func building_icon_path(building_id: String, faction_id: String = "") -> 
 	return HumanEngine.native(&"TownRules.building_icon_path", [building_id, faction_id])
 
 static func faction_crest_icon_path(faction_id: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return faction_crest_icon_path__gd(faction_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"TownRules.faction_crest_icon_path", [faction_id])
+	var result = faction_crest_icon_path__gd(faction_id)
+	HumanEngine.check(&"TownRules.faction_crest_icon_path", [faction_id], result)
+	return result
+
+static func faction_crest_icon_path__gd(faction_id: String) -> String:
 	var normalized_faction_id := faction_id.strip_edges()
 	if ContentService.get_faction(normalized_faction_id).is_empty():
 		return ""
@@ -67,6 +77,16 @@ static func get_active_town(session: SessionStateStoreScript.SessionData) -> Dic
 	return HumanEngine.native_writing(&"TownRules.get_active_town", [session])
 
 static func describe_status(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_status__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules.describe_status", [session])
+	var before := HumanEngine.before_writing(&"TownRules.describe_status", [session])
+	var result = describe_status__gd(session)
+	HumanEngine.check_writing(&"TownRules.describe_status", before, [session], result)
+	return result
+
+static func describe_status__gd(session: SessionStateStoreScript.SessionData) -> String:
 	var pos: Vector2i = OverworldRulesScript.hero_position(session)
 	var days_until_growth: int = OverworldRulesScript.days_until_next_weekly_growth(session.day)
 	var week := _week_of_day(session.day)
@@ -85,6 +105,16 @@ static func describe_status(session: SessionStateStoreScript.SessionData) -> Str
 	]
 
 static func describe_header(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_header__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules.describe_header", [session])
+	var before := HumanEngine.before_writing(&"TownRules.describe_header", [session])
+	var result = describe_header__gd(session)
+	HumanEngine.check_writing(&"TownRules.describe_header", before, [session], result)
+	return result
+
+static func describe_header__gd(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "No town is under command."
@@ -108,6 +138,16 @@ static func town_control_label(owner: String) -> String:
 	return OverworldRulesScript.town_control_label(owner)
 
 static func describe_summary(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_summary__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules.describe_summary", [session])
+	var before := HumanEngine.before_writing(&"TownRules.describe_summary", [session])
+	var result = describe_summary__gd(session)
+	HumanEngine.check_writing(&"TownRules.describe_summary", before, [session], result)
+	return result
+
+static func describe_summary__gd(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "No active town."
@@ -198,6 +238,16 @@ static func describe_summary(session: SessionStateStoreScript.SessionData) -> St
 	return "\n".join(parts)
 
 static func describe_production_overview(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_production_overview__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules.describe_production_overview", [session])
+	var before := HumanEngine.before_writing(&"TownRules.describe_production_overview", [session])
+	var result = describe_production_overview__gd(session)
+	HumanEngine.check_writing(&"TownRules.describe_production_overview", before, [session], result)
+	return result
+
+static func describe_production_overview__gd(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "Production Overview\n- No active town."
@@ -245,6 +295,16 @@ static func describe_production_overview(session: SessionStateStoreScript.Sessio
 	)
 
 static func describe_outlook_board(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_outlook_board__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules.describe_outlook_board", [session])
+	var before := HumanEngine.before_writing(&"TownRules.describe_outlook_board", [session])
+	var result = describe_outlook_board__gd(session)
+	HumanEngine.check_writing(&"TownRules.describe_outlook_board", before, [session], result)
+	return result
+
+static func describe_outlook_board__gd(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "Defense Outlook\n- No active town."
@@ -296,6 +356,16 @@ static func describe_outlook_board(session: SessionStateStoreScript.SessionData)
 	return "\n".join(lines)
 
 static func describe_command_ledger(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_command_ledger__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules.describe_command_ledger", [session])
+	var before := HumanEngine.before_writing(&"TownRules.describe_command_ledger", [session])
+	var result = describe_command_ledger__gd(session)
+	HumanEngine.check_writing(&"TownRules.describe_command_ledger", before, [session], result)
+	return result
+
+static func describe_command_ledger__gd(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "Order Ledger\n- No active town."
@@ -309,6 +379,16 @@ static func describe_command_ledger(session: SessionStateStoreScript.SessionData
 	return "\n".join(lines)
 
 static func describe_defense(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_defense__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules.describe_defense", [session])
+	var before := HumanEngine.before_writing(&"TownRules.describe_defense", [session])
+	var result = describe_defense__gd(session)
+	HumanEngine.check_writing(&"TownRules.describe_defense", before, [session], result)
+	return result
+
+static func describe_defense__gd(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	var headline := _defense_headline_for_town(town)
 	if town.is_empty():
@@ -359,6 +439,16 @@ static func _defense_headline_for_town(town: Dictionary) -> String:
 	return "Defense unavailable." if town.is_empty() else "Defense Posture"
 
 static func describe_threats(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_threats__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules.describe_threats", [session])
+	var before := HumanEngine.before_writing(&"TownRules.describe_threats", [session])
+	var result = describe_threats__gd(session)
+	HumanEngine.check_writing(&"TownRules.describe_threats", before, [session], result)
+	return result
+
+static func describe_threats__gd(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "Threat watch unavailable."
@@ -408,7 +498,17 @@ static func describe_threats(session: SessionStateStoreScript.SessionData) -> St
 		lines.append("- Capital watch: %s" % _project_watch_summary(capital_project))
 	return "\n".join(lines)
 
-static func describe_event_feed(
+static func describe_event_feed(session: SessionStateStoreScript.SessionData, last_message: String = "", action_recap: Dictionary = {}) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_event_feed__gd(session, last_message, action_recap)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules.describe_event_feed", [session, last_message, action_recap])
+	var before := HumanEngine.before_writing(&"TownRules.describe_event_feed", [session, last_message, action_recap])
+	var result = describe_event_feed__gd(session, last_message, action_recap)
+	HumanEngine.check_writing(&"TownRules.describe_event_feed", before, [session, last_message, action_recap], result)
+	return result
+
+static func describe_event_feed__gd(
 	session: SessionStateStoreScript.SessionData,
 	last_message: String = "",
 	action_recap: Dictionary = {}
@@ -451,6 +551,16 @@ static func describe_event_feed(
 	return "\n".join(lines)
 
 static func town_handoff_recap(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return town_handoff_recap__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules.town_handoff_recap", [session])
+	var before := HumanEngine.before_writing(&"TownRules.town_handoff_recap", [session])
+	var result = town_handoff_recap__gd(session)
+	HumanEngine.check_writing(&"TownRules.town_handoff_recap", before, [session], result)
+	return result
+
+static func town_handoff_recap__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return {
@@ -497,6 +607,16 @@ static func town_handoff_recap(session: SessionStateStoreScript.SessionData) -> 
 	}
 
 static func town_departure_confirmation(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return town_departure_confirmation__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules.town_departure_confirmation", [session])
+	var before := HumanEngine.before_writing(&"TownRules.town_departure_confirmation", [session])
+	var result = town_departure_confirmation__gd(session)
+	HumanEngine.check_writing(&"TownRules.town_departure_confirmation", before, [session], result)
+	return result
+
+static func town_departure_confirmation__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return {
@@ -542,6 +662,16 @@ static func town_departure_confirmation(session: SessionStateStoreScript.Session
 	}
 
 static func town_order_target_handoff(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return town_order_target_handoff__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules.town_order_target_handoff", [session])
+	var before := HumanEngine.before_writing(&"TownRules.town_order_target_handoff", [session])
+	var result = town_order_target_handoff__gd(session)
+	HumanEngine.check_writing(&"TownRules.town_order_target_handoff", before, [session], result)
+	return result
+
+static func town_order_target_handoff__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return {
@@ -601,6 +731,16 @@ static func town_order_target_handoff(session: SessionStateStoreScript.SessionDa
 	}
 
 static func town_action_consequence_signature(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return town_action_consequence_signature__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules.town_action_consequence_signature", [session])
+	var before := HumanEngine.before_writing(&"TownRules.town_action_consequence_signature", [session])
+	var result = town_action_consequence_signature__gd(session)
+	HumanEngine.check_writing(&"TownRules.town_action_consequence_signature", before, [session], result)
+	return result
+
+static func town_action_consequence_signature__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return {}
@@ -634,7 +774,17 @@ static func town_action_consequence_signature(session: SessionStateStoreScript.S
 		"artifact_ids": ArtifactRulesScript.owned_artifact_ids(session.overworld.get("hero", {})),
 	}
 
-static func build_town_action_recap(
+static func build_town_action_recap(session: SessionStateStoreScript.SessionData, lane: String, action_id: String, action: Dictionary, result: Dictionary, before: Dictionary, after_signature: Dictionary = {}) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return build_town_action_recap__gd(session, lane, action_id, action, result, before, after_signature)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules.build_town_action_recap", [session, lane, action_id, action, result, before, after_signature])
+	var switch_before := HumanEngine.before_writing(&"TownRules.build_town_action_recap", [session, lane, action_id, action, result, before, after_signature])
+	var switch_result = build_town_action_recap__gd(session, lane, action_id, action, result, before, after_signature)
+	HumanEngine.check_writing(&"TownRules.build_town_action_recap", switch_before, [session, lane, action_id, action, result, before, after_signature], switch_result)
+	return switch_result
+
+static func build_town_action_recap__gd(
 	session: SessionStateStoreScript.SessionData,
 	lane: String,
 	action_id: String,
@@ -687,6 +837,16 @@ static func build_town_action_recap(
 	}
 
 static func describe_buildings(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_buildings__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules.describe_buildings", [session])
+	var before := HumanEngine.before_writing(&"TownRules.describe_buildings", [session])
+	var result = describe_buildings__gd(session)
+	HumanEngine.check_writing(&"TownRules.describe_buildings", before, [session], result)
+	return result
+
+static func describe_buildings__gd(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "Buildings unavailable."
@@ -736,6 +896,16 @@ static func describe_buildings(session: SessionStateStoreScript.SessionData) -> 
 	return "\n".join(parts)
 
 static func describe_recruitment(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_recruitment__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules.describe_recruitment", [session])
+	var before := HumanEngine.before_writing(&"TownRules.describe_recruitment", [session])
+	var result = describe_recruitment__gd(session)
+	HumanEngine.check_writing(&"TownRules.describe_recruitment", before, [session], result)
+	return result
+
+static func describe_recruitment__gd(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "Recruitment unavailable."
@@ -809,12 +979,32 @@ static func describe_recruitment(session: SessionStateStoreScript.SessionData) -
 	]
 
 static func describe_market(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_market__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules.describe_market", [session])
+	var before := HumanEngine.before_writing(&"TownRules.describe_market", [session])
+	var result = describe_market__gd(session)
+	HumanEngine.check_writing(&"TownRules.describe_market", before, [session], result)
+	return result
+
+static func describe_market__gd(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "Exchange Hall\n- No active town."
 	return OverworldRulesScript.describe_town_market(session, town)
 
 static func describe_spell_access(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_spell_access__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules.describe_spell_access", [session])
+	var before := HumanEngine.before_writing(&"TownRules.describe_spell_access", [session])
+	var result = describe_spell_access__gd(session)
+	HumanEngine.check_writing(&"TownRules.describe_spell_access", before, [session], result)
+	return result
+
+static func describe_spell_access__gd(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "Spell study unavailable."
@@ -843,9 +1033,29 @@ static func describe_spell_access(session: SessionStateStoreScript.SessionData) 
 	]
 
 static func describe_artifacts(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_artifacts__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules.describe_artifacts", [session])
+	var before := HumanEngine.before_writing(&"TownRules.describe_artifacts", [session])
+	var result = describe_artifacts__gd(session)
+	HumanEngine.check_writing(&"TownRules.describe_artifacts", before, [session], result)
+	return result
+
+static func describe_artifacts__gd(session: SessionStateStoreScript.SessionData) -> String:
 	return ArtifactRulesScript.describe_management(session.overworld.get("hero", {}))
 
 static func describe_heroes(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_heroes__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules.describe_heroes", [session])
+	var before := HumanEngine.before_writing(&"TownRules.describe_heroes", [session])
+	var result = describe_heroes__gd(session)
+	HumanEngine.check_writing(&"TownRules.describe_heroes", before, [session], result)
+	return result
+
+static func describe_heroes__gd(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "Command\n- No active town."
@@ -875,21 +1085,61 @@ static func describe_heroes(session: SessionStateStoreScript.SessionData) -> Str
 	return "\n".join(lines)
 
 static func describe_specialties(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_specialties__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules.describe_specialties", [session])
+	var before := HumanEngine.before_writing(&"TownRules.describe_specialties", [session])
+	var result = describe_specialties__gd(session)
+	HumanEngine.check_writing(&"TownRules.describe_specialties", before, [session], result)
+	return result
+
+static func describe_specialties__gd(session: SessionStateStoreScript.SessionData) -> String:
 	return HeroProgressionRulesScript.describe_specialties(session.overworld.get("hero", {}))
 
 static func describe_tavern(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_tavern__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules.describe_tavern", [session])
+	var before := HumanEngine.before_writing(&"TownRules.describe_tavern", [session])
+	var result = describe_tavern__gd(session)
+	HumanEngine.check_writing(&"TownRules.describe_tavern", before, [session], result)
+	return result
+
+static func describe_tavern__gd(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "Wayfarers Hall\n- No active town."
 	return HeroCommandRulesScript.describe_tavern(session, town)
 
 static func describe_transfer(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_transfer__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules.describe_transfer", [session])
+	var before := HumanEngine.before_writing(&"TownRules.describe_transfer", [session])
+	var result = describe_transfer__gd(session)
+	HumanEngine.check_writing(&"TownRules.describe_transfer", before, [session], result)
+	return result
+
+static func describe_transfer__gd(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "Transfer\n- No active town."
 	return HeroCommandRulesScript.describe_town_transfer(session, town)
 
 static func describe_responses(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_responses__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules.describe_responses", [session])
+	var before := HumanEngine.before_writing(&"TownRules.describe_responses", [session])
+	var result = describe_responses__gd(session)
+	HumanEngine.check_writing(&"TownRules.describe_responses", before, [session], result)
+	return result
+
+static func describe_responses__gd(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "Strategic Response\n- No active town."
@@ -1181,6 +1431,16 @@ static func learn_spell_at_active_town(session: SessionStateStoreScript.SessionD
 	return HumanEngine.native_writing(&"TownRules.learn_spell_at_active_town", [session, spell_id])
 
 static func teach_visiting_heroes(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return teach_visiting_heroes__gd(session, town)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules.teach_visiting_heroes", [session, town])
+	var before := HumanEngine.before_writing(&"TownRules.teach_visiting_heroes", [session, town])
+	var result = teach_visiting_heroes__gd(session, town)
+	HumanEngine.check_writing(&"TownRules.teach_visiting_heroes", before, [session, town], result)
+	return result
+
+static func teach_visiting_heroes__gd(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
 	# Explicit arrival/build mutation, never a UI/read-cache side effect. Town
 	# archives define eligibility; learning has no mana, gold or mastery cost.
 	var learned := {}
@@ -1222,6 +1482,16 @@ static func choose_specialty_at_active_town(session: SessionStateStoreScript.Ses
 	return HumanEngine.native_writing(&"TownRules.choose_specialty_at_active_town", [session, specialty_id])
 
 static func current_spell_tier(town: Dictionary) -> int:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return current_spell_tier__gd(town)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules.current_spell_tier", [town])
+	var before := HumanEngine.before_writing(&"TownRules.current_spell_tier", [town])
+	var result = current_spell_tier__gd(town)
+	HumanEngine.check_writing(&"TownRules.current_spell_tier", before, [town], result)
+	return result
+
+static func current_spell_tier__gd(town: Dictionary) -> int:
 	var highest_tier := 0
 	for building_id_value in town.get("built_buildings", []):
 		var building := ContentService.get_building(String(building_id_value))
@@ -1229,6 +1499,16 @@ static func current_spell_tier(town: Dictionary) -> int:
 	return highest_tier
 
 static func accessible_spell_ids(town: Dictionary) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return accessible_spell_ids__gd(town)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules.accessible_spell_ids", [town])
+	var before := HumanEngine.before_writing(&"TownRules.accessible_spell_ids", [town])
+	var result = accessible_spell_ids__gd(town)
+	HumanEngine.check_writing(&"TownRules.accessible_spell_ids", before, [town], result)
+	return result
+
+static func accessible_spell_ids__gd(town: Dictionary) -> Array:
 	return spell_ids_through_tier(town, current_spell_tier(town))
 
 ## Library and school spells this town teaches once its guild reaches `tier`.
@@ -1635,6 +1915,16 @@ static func _town_order_next_step(action: Dictionary, lane: String, label: Strin
 	return "Press %s in %s, or leave when town orders are set." % [label, where]
 
 static func _town_build_recommendation_score(town: Dictionary, action: Dictionary) -> int:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _town_build_recommendation_score__gd(town, action)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules._town_build_recommendation_score", [town, action])
+	var before := HumanEngine.before_writing(&"TownRules._town_build_recommendation_score", [town, action])
+	var result = _town_build_recommendation_score__gd(town, action)
+	HumanEngine.check_writing(&"TownRules._town_build_recommendation_score", before, [town, action], result)
+	return result
+
+static func _town_build_recommendation_score__gd(town: Dictionary, action: Dictionary) -> int:
 	var building_id := String(action.get("id", "")).trim_prefix("build:")
 	var building := ContentService.get_building(building_id)
 	var score := 0
@@ -1671,6 +1961,16 @@ static func _town_build_recommendation_score(town: Dictionary, action: Dictionar
 	return score
 
 static func _town_recruit_recommendation_score(action: Dictionary) -> int:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _town_recruit_recommendation_score__gd(action)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules._town_recruit_recommendation_score", [action])
+	var before := HumanEngine.before_writing(&"TownRules._town_recruit_recommendation_score", [action])
+	var result = _town_recruit_recommendation_score__gd(action)
+	HumanEngine.check_writing(&"TownRules._town_recruit_recommendation_score", before, [action], result)
+	return result
+
+static func _town_recruit_recommendation_score__gd(action: Dictionary) -> int:
 	var ready_count := int(action.get("direct_affordable_count", 0))
 	var market_count := int(action.get("market_affordable_count", 0))
 	var unit_id := String(action.get("id", "")).trim_prefix("recruit:")
@@ -1699,6 +1999,16 @@ static func _signed_int(value: int) -> String:
 	return HumanEngine.native(&"TownRules._signed_int", [value])
 
 static func _next_town_action_line(session: SessionStateStoreScript.SessionData, town: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _next_town_action_line__gd(session, town)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules._next_town_action_line", [session, town])
+	var before := HumanEngine.before_writing(&"TownRules._next_town_action_line", [session, town])
+	var result = _next_town_action_line__gd(session, town)
+	HumanEngine.check_writing(&"TownRules._next_town_action_line", before, [session, town], result)
+	return result
+
+static func _next_town_action_line__gd(session: SessionStateStoreScript.SessionData, town: Dictionary) -> String:
 	var build_actions := get_build_actions(session)
 	for action in build_actions:
 		if not (action is Dictionary) or bool(action.get("disabled", false)):
@@ -1761,7 +2071,17 @@ static func _first_ready_action(actions: Array) -> Dictionary:
 			return action
 	return {}
 
-static func _town_handoff_affected_line(
+static func _town_handoff_affected_line(town_name: String, front: Dictionary, occupation: Dictionary, logistics: Dictionary, ready_response: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _town_handoff_affected_line__gd(town_name, front, occupation, logistics, ready_response)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules._town_handoff_affected_line", [town_name, front, occupation, logistics, ready_response])
+	var before := HumanEngine.before_writing(&"TownRules._town_handoff_affected_line", [town_name, front, occupation, logistics, ready_response])
+	var result = _town_handoff_affected_line__gd(town_name, front, occupation, logistics, ready_response)
+	HumanEngine.check_writing(&"TownRules._town_handoff_affected_line", before, [town_name, front, occupation, logistics, ready_response], result)
+	return result
+
+static func _town_handoff_affected_line__gd(
 	town_name: String,
 	front: Dictionary,
 	occupation: Dictionary,
@@ -1784,7 +2104,17 @@ static func _town_handoff_affected_line(
 		return "%s frontier support chain" % town_name
 	return "%s town order queue and return route" % town_name
 
-static func _town_handoff_why_line(
+static func _town_handoff_why_line(town: Dictionary, front: Dictionary, occupation: Dictionary, logistics: Dictionary, recovery: Dictionary, ready_response: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _town_handoff_why_line__gd(town, front, occupation, logistics, recovery, ready_response)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules._town_handoff_why_line", [town, front, occupation, logistics, recovery, ready_response])
+	var before := HumanEngine.before_writing(&"TownRules._town_handoff_why_line", [town, front, occupation, logistics, recovery, ready_response])
+	var result = _town_handoff_why_line__gd(town, front, occupation, logistics, recovery, ready_response)
+	HumanEngine.check_writing(&"TownRules._town_handoff_why_line", before, [town, front, occupation, logistics, recovery, ready_response], result)
+	return result
+
+static func _town_handoff_why_line__gd(
 	town: Dictionary,
 	front: Dictionary,
 	occupation: Dictionary,
@@ -1828,12 +2158,31 @@ static func _town_handoff_next_line(
 	]
 
 static func _short_town_handoff_text(text: String, max_chars: int) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _short_town_handoff_text__gd(text, max_chars)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"TownRules._short_town_handoff_text", [text, max_chars])
+	var result = _short_town_handoff_text__gd(text, max_chars)
+	HumanEngine.check(&"TownRules._short_town_handoff_text", [text, max_chars], result)
+	return result
+
+static func _short_town_handoff_text__gd(text: String, max_chars: int) -> String:
 	var trimmed := text.strip_edges().replace("\n", " ")
 	if max_chars <= 3 or trimmed.length() <= max_chars:
 		return trimmed
 	return "%s..." % trimmed.left(max_chars - 3)
 
 static func _short_action_label(action: Dictionary, fallback: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _short_action_label__gd(action, fallback)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules._short_action_label", [action, fallback])
+	var before := HumanEngine.before_writing(&"TownRules._short_action_label", [action, fallback])
+	var result = _short_action_label__gd(action, fallback)
+	HumanEngine.check_writing(&"TownRules._short_action_label", before, [action, fallback], result)
+	return result
+
+static func _short_action_label__gd(action: Dictionary, fallback: String) -> String:
 	var label := String(action.get("label", fallback))
 	for prefix in ["Build ", "Recruit ", "Learn "]:
 		if label.begins_with(prefix):
@@ -1841,6 +2190,16 @@ static func _short_action_label(action: Dictionary, fallback: String) -> String:
 	return label
 
 static func _action_projection_line(action: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _action_projection_line__gd(action)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules._action_projection_line", [action])
+	var before := HumanEngine.before_writing(&"TownRules._action_projection_line", [action])
+	var result = _action_projection_line__gd(action)
+	HumanEngine.check_writing(&"TownRules._action_projection_line", before, [action], result)
+	return result
+
+static func _action_projection_line__gd(action: Dictionary) -> String:
 	var summary_lines := String(action.get("summary", "")).split("\n", false)
 	for line_value in summary_lines:
 		var line := String(line_value).strip_edges()
@@ -2700,6 +3059,16 @@ static func _resource_keys_for_payload(value: Variant) -> Array:
 	return HumanEngine.native_writing(&"TownRules._resource_keys_for_payload", [value])
 
 static func _describe_recruit_delta(delta: Variant) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _describe_recruit_delta__gd(delta)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownRules._describe_recruit_delta", [delta])
+	var before := HumanEngine.before_writing(&"TownRules._describe_recruit_delta", [delta])
+	var result = _describe_recruit_delta__gd(delta)
+	HumanEngine.check_writing(&"TownRules._describe_recruit_delta", before, [delta], result)
+	return result
+
+static func _describe_recruit_delta__gd(delta: Variant) -> String:
 	if not (delta is Dictionary):
 		return "none"
 	var parts := []

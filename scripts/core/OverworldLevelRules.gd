@@ -1,11 +1,24 @@
 extends RefCounted
 
+const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
+
 # A local Vector2i is meaningful only together with a level. Keep world records
 # global; callers select a level for terrain, occupancy and presentation queries.
 # Missing level fields in authored content / legacy saves mean surface (zero).
 static var _terrain_rows: Dictionary = {}
 
 static func level_of(value: Variant) -> int:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return level_of__gd(value)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldLevelRules.level_of", [value])
+	var before := HumanEngine.before_writing(&"OverworldLevelRules.level_of", [value])
+	var result = level_of__gd(value)
+	HumanEngine.check_writing(&"OverworldLevelRules.level_of", before, [value], result)
+	return result
+
+static func level_of__gd(value: Variant) -> int:
 	if value is Dictionary:
 		# Hero.level is experience rank; its spatial level lives in position.
 		if value.get("position") is Dictionary:
@@ -20,14 +33,44 @@ static func level_of(value: Variant) -> int:
 	return 0
 
 static func hero_level(session) -> int:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return hero_level__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldLevelRules.hero_level", [session])
+	var before := HumanEngine.before_writing(&"OverworldLevelRules.hero_level", [session])
+	var result = hero_level__gd(session)
+	HumanEngine.check_writing(&"OverworldLevelRules.hero_level", before, [session], result)
+	return result
+
+static func hero_level__gd(session) -> int:
 	return level_of(session.overworld.get("hero_position", {})) if session != null else 0
 
 static func level_count(session) -> int:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return level_count__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldLevelRules.level_count", [session])
+	var before := HumanEngine.before_writing(&"OverworldLevelRules.level_count", [session])
+	var result = level_count__gd(session)
+	HumanEngine.check_writing(&"OverworldLevelRules.level_count", before, [session], result)
+	return result
+
+static func level_count__gd(session) -> int:
 	if session == null:
 		return 1
 	return maxi(1, int(session.overworld.get("map_size", {}).get("level_count", 1)))
 
 static func view_level(session) -> int:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return view_level__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldLevelRules.view_level", [session])
+	var before := HumanEngine.before_writing(&"OverworldLevelRules.view_level", [session])
+	var result = view_level__gd(session)
+	HumanEngine.check_writing(&"OverworldLevelRules.view_level", before, [session], result)
+	return result
+
+static func view_level__gd(session) -> int:
 	if session == null:
 		return 0
 	return clampi(int(session.overworld.get("view_level", hero_level(session))), 0, level_count(session) - 1)
@@ -39,9 +82,29 @@ static func same_level(a: Variant, b: Variant) -> bool:
 	return level_of(a) == level_of(b)
 
 static func on_level(value: Variant, level: int) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return on_level__gd(value, level)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldLevelRules.on_level", [value, level])
+	var before := HumanEngine.before_writing(&"OverworldLevelRules.on_level", [value, level])
+	var result = on_level__gd(value, level)
+	HumanEngine.check_writing(&"OverworldLevelRules.on_level", before, [value, level], result)
+	return result
+
+static func on_level__gd(value: Variant, level: int) -> bool:
 	return level_of(value) == level
 
 static func position(value: Variant) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return position__gd(value)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldLevelRules.position", [value])
+	var before := HumanEngine.before_writing(&"OverworldLevelRules.position", [value])
+	var result = position__gd(value)
+	HumanEngine.check_writing(&"OverworldLevelRules.position", before, [value], result)
+	return result
+
+static func position__gd(value: Variant) -> Dictionary:
 	if value is Dictionary:
 		var result := {"x": int(value.get("x", 0)), "y": int(value.get("y", 0))}
 		if int(value.get("level", 0)) != 0:
@@ -62,6 +125,16 @@ static func canonical_spatial_records(owned_records: Array) -> Array:
 	return owned_records
 
 static func town_entrance(town: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return town_entrance__gd(town)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldLevelRules.town_entrance", [town])
+	var before := HumanEngine.before_writing(&"OverworldLevelRules.town_entrance", [town])
+	var result = town_entrance__gd(town)
+	HumanEngine.check_writing(&"OverworldLevelRules.town_entrance", before, [town], result)
+	return result
+
+static func town_entrance__gd(town: Dictionary) -> Dictionary:
 	var tile: Dictionary = town.get("visit_tile", {}) if town.get("visit_tile") is Dictionary else {}
 	if tile.is_empty():
 		var visits: Array = town.get("package_visit_tiles", [])
@@ -72,6 +145,16 @@ static func town_entrance(town: Dictionary) -> Dictionary:
 	return result
 
 static func terrain_rows(session, requested: int = -1) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return terrain_rows__gd(session, requested)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"OverworldLevelRules.terrain_rows", [session, requested])
+	var before := HumanEngine.before_writing(&"OverworldLevelRules.terrain_rows", [session, requested])
+	var result = terrain_rows__gd(session, requested)
+	HumanEngine.check_writing(&"OverworldLevelRules.terrain_rows", before, [session, requested], result)
+	return result
+
+static func terrain_rows__gd(session, requested: int = -1) -> Array:
 	if session == null:
 		return []
 	var level := query_level(session, requested)

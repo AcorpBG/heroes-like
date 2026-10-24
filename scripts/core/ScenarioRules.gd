@@ -11,6 +11,7 @@ const GeneratedObjectives = preload("res://scripts/core/GeneratedScenarioObjecti
 const TownDevelopmentRulesScript = preload("res://scripts/core/TownDevelopmentRules.gd")
 const DayEngine = preload("res://scripts/core/DayEngine.gd")
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 
 static var _scenario_dependency_metadata_cache: Dictionary = {}
 
@@ -72,7 +73,17 @@ static func _scenario_objective_dependency(objective: Dictionary, objective_inde
 static func clear_dependency_metadata_cache() -> void:
 	_scenario_dependency_metadata_cache.clear()
 
-static func is_objective_met(
+static func is_objective_met(session: SessionStateStoreScript.SessionData, objective_id: String, bucket: String = "") -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return is_objective_met__gd(session, objective_id, bucket)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ScenarioRules.is_objective_met", [session, objective_id, bucket])
+	var before := HumanEngine.before_writing(&"ScenarioRules.is_objective_met", [session, objective_id, bucket])
+	var result = is_objective_met__gd(session, objective_id, bucket)
+	HumanEngine.check_writing(&"ScenarioRules.is_objective_met", before, [session, objective_id, bucket], result)
+	return result
+
+static func is_objective_met__gd(
 	session: SessionStateStoreScript.SessionData,
 	objective_id: String,
 	bucket: String = ""
@@ -374,6 +385,16 @@ static func _operational_terrain_summary(session: SessionStateStoreScript.Sessio
 	]
 
 static func _enemy_operational_lines(session: SessionStateStoreScript.SessionData, scenario: Dictionary) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _enemy_operational_lines__gd(session, scenario)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ScenarioRules._enemy_operational_lines", [session, scenario])
+	var before := HumanEngine.before_writing(&"ScenarioRules._enemy_operational_lines", [session, scenario])
+	var result = _enemy_operational_lines__gd(session, scenario)
+	HumanEngine.check_writing(&"ScenarioRules._enemy_operational_lines", before, [session, scenario], result)
+	return result
+
+static func _enemy_operational_lines__gd(session: SessionStateStoreScript.SessionData, scenario: Dictionary) -> Array:
 	var lines := []
 	for config in scenario.get("enemy_factions", []):
 		if not (config is Dictionary):
@@ -394,6 +415,16 @@ static func _enemy_operational_lines(session: SessionStateStoreScript.SessionDat
 	return lines
 
 static func _opening_objective_summary(session: SessionStateStoreScript.SessionData, scenario: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _opening_objective_summary__gd(session, scenario)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ScenarioRules._opening_objective_summary", [session, scenario])
+	var before := HumanEngine.before_writing(&"ScenarioRules._opening_objective_summary", [session, scenario])
+	var result = _opening_objective_summary__gd(session, scenario)
+	HumanEngine.check_writing(&"ScenarioRules._opening_objective_summary", before, [session, scenario], result)
+	return result
+
+static func _opening_objective_summary__gd(session: SessionStateStoreScript.SessionData, scenario: Dictionary) -> String:
 	var objectives = objective_definitions(scenario)
 	if not (objectives is Dictionary):
 		return ""
@@ -407,6 +438,16 @@ static func _opening_objective_summary(session: SessionStateStoreScript.SessionD
 	return "\n".join(lines)
 
 static func _first_contact_summary(scenario: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _first_contact_summary__gd(scenario)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ScenarioRules._first_contact_summary", [scenario])
+	var before := HumanEngine.before_writing(&"ScenarioRules._first_contact_summary", [scenario])
+	var result = _first_contact_summary__gd(scenario)
+	HumanEngine.check_writing(&"ScenarioRules._first_contact_summary", before, [scenario], result)
+	return result
+
+static func _first_contact_summary__gd(scenario: Dictionary) -> String:
 	var contacts := _nearest_encounter_placements(scenario, 3)
 	if contacts.is_empty():
 		return ""
@@ -491,6 +532,16 @@ static func _reinforcement_risk_summary(scenario: Dictionary) -> String:
 	return " | ".join(parts)
 
 static func _objective_labels_from_bucket(session: SessionStateStoreScript.SessionData, bucket: Variant, limit: int) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _objective_labels_from_bucket__gd(session, bucket, limit)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ScenarioRules._objective_labels_from_bucket", [session, bucket, limit])
+	var before := HumanEngine.before_writing(&"ScenarioRules._objective_labels_from_bucket", [session, bucket, limit])
+	var result = _objective_labels_from_bucket__gd(session, bucket, limit)
+	HumanEngine.check_writing(&"ScenarioRules._objective_labels_from_bucket", before, [session, bucket, limit], result)
+	return result
+
+static func _objective_labels_from_bucket__gd(session: SessionStateStoreScript.SessionData, bucket: Variant, limit: int) -> Array:
 	var labels := []
 	if not (bucket is Array):
 		return labels
@@ -559,6 +610,15 @@ static func _map_tile_id(map_data: Variant, x: int, y: int) -> String:
 	return String(row[x])
 
 static func _terrain_label(terrain_id: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _terrain_label__gd(terrain_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"ScenarioRules._terrain_label", [terrain_id])
+	var result = _terrain_label__gd(terrain_id)
+	HumanEngine.check(&"ScenarioRules._terrain_label", [terrain_id], result)
+	return result
+
+static func _terrain_label__gd(terrain_id: String) -> String:
 	var biome := ContentService.get_biome_for_terrain(terrain_id)
 	if not biome.is_empty():
 		return String(biome.get("name", _titleize_token(terrain_id)))

@@ -17,6 +17,7 @@ const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRu
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const Board = preload("res://scripts/core/TownConstructionBoard.gd")
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 
 const KIND_DWELLING := "dwelling"
 const KIND_GUILD := "guild"
@@ -34,10 +35,30 @@ static func build(session, building_id: String, options: Dictionary = {}) -> Dic
 ## The built market building whose popout trades for this town (its highest
 ## stage), or "" without a market.
 static func market_building_id(town: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return market_building_id__gd(town)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownBuildingPanel.market_building_id", [town])
+	var before := HumanEngine.before_writing(&"TownBuildingPanel.market_building_id", [town])
+	var result = market_building_id__gd(town)
+	HumanEngine.check_writing(&"TownBuildingPanel.market_building_id", before, [town], result)
+	return result
+
+static func market_building_id__gd(town: Dictionary) -> String:
 	return String(OverworldRulesScript.town_market_state(town).get("building_id", "")) if not town.is_empty() else ""
 
 ## The built magic guild stage whose popout shows this town's spells, or "".
 static func guild_building_id(town: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return guild_building_id__gd(town)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownBuildingPanel.guild_building_id", [town])
+	var before := HumanEngine.before_writing(&"TownBuildingPanel.guild_building_id", [town])
+	var result = guild_building_id__gd(town)
+	HumanEngine.check_writing(&"TownBuildingPanel.guild_building_id", before, [town], result)
+	return result
+
+static func guild_building_id__gd(town: Dictionary) -> String:
 	var best_id := ""
 	var best_tier := 0
 	for building_id_value in town.get("built_buildings", []):

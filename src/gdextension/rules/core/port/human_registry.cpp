@@ -1,19 +1,49 @@
 #include "aurelion_rules/port/registry.hpp"
 
+#include "aurelion_rules/port/artifact_rules.hpp"
+#include "aurelion_rules/port/artifact_rules_turn.hpp"
+#include "aurelion_rules/port/battle_ends.hpp"
+#include "aurelion_rules/port/battle_payload.hpp"
+#include "aurelion_rules/port/enemy_states.hpp"
 #include "aurelion_rules/port/generated_reward_rules.hpp"
 #include "aurelion_rules/port/hero_command_rules.hpp"
+#include "aurelion_rules/port/hero_command_rules_ai.hpp"
+#include "aurelion_rules/port/hero_command_rules_turn.hpp"
 #include "aurelion_rules/port/hero_progression_rules.hpp"
+#include "aurelion_rules/port/hero_progression_rules_turn.hpp"
+#include "aurelion_rules/port/mine_rules.hpp"
 #include "aurelion_rules/port/native_random_map_package_session_bridge.hpp"
+#include "aurelion_rules/port/native_transit_rules_ai.hpp"
+#include "aurelion_rules/port/overworld_level_rules.hpp"
+#include "aurelion_rules/port/overworld_level_rules_ai.hpp"
+#include "aurelion_rules/port/overworld_level_rules_turn.hpp"
+#include "aurelion_rules/port/overworld_rules.hpp"
+#include "aurelion_rules/port/overworld_rules_ai.hpp"
 #include "aurelion_rules/port/overworld_rules_context.hpp"
 #include "aurelion_rules/port/overworld_rules_human.hpp"
 #include "aurelion_rules/port/overworld_rules_move.hpp"
+#include "aurelion_rules/port/overworld_rules_panels.hpp"
+#include "aurelion_rules/port/overworld_rules_turn.hpp"
+#include "aurelion_rules/port/player_identity_rules.hpp"
+#include "aurelion_rules/port/player_identity_rules_ai.hpp"
 #include "aurelion_rules/port/random_map_generator_rules.hpp"
 #include "aurelion_rules/port/save_service.hpp"
 #include "aurelion_rules/port/scenario_outcome.hpp"
 #include "aurelion_rules/port/scenario_select_rules_setup.hpp"
 #include "aurelion_rules/port/session_state_store.hpp"
+#include "aurelion_rules/port/spell_rules_ai.hpp"
+#include "aurelion_rules/port/town_rules.hpp"
+#include "aurelion_rules/port/water_travel_rules_ai.hpp"
 
 namespace aurelion::rules::port {
+
+// 7.8: functions only .cpp files declare (enemy_states.cpp defines them).
+namespace hero_progression_rules {
+DictRef current_pending_choice(State &state, DictRef hero_state);
+int64_t specialty_rank(State &state, DictRef hero_state, Atom specialty_id);
+Value specialties(State &state);
+DictRef specialty_definition(State &state, Atom specialty_id);
+} // namespace hero_progression_rules
 
 namespace {
 
@@ -1128,6 +1158,490 @@ const Function kFunctions[] = {
 			return gd::array_value(town_development::service_actions(s, a[0], D(a, 1)))),
 	NATIVE(TownDevelopmentRules, perform_service, 3, true,
 			return gd::dict_value(town_development::perform_service(s, a[0], D(a, 1), S(a, 2)))),
+	// 7.8, the panels: the texts, boards, forecasts and feeds the overworld,
+	// town and hero screens show and the queries they read, and the two-copy
+	// functions the screens call.
+	PORT(ArtifactRules, describe_set_bonus_summary, 1, true,
+			return gd::str(artifact_rules::describe_set_bonus_summary(s, D(a, 0)))),
+	PORT(ArtifactRules, describe_impact_summary, 1, true,
+			return gd::str(artifact_rules::describe_impact_summary(s, D(a, 0)))),
+	PORT(ArtifactRules, describe_collection_summary, 1, true,
+			return gd::str(artifact_rules::describe_collection_summary(s, D(a, 0)))),
+	PORT(ArtifactRules, artifact_icon_path, 1, false,
+			return gd::str(artifact_rules::artifact_icon_path(s, S(a, 0)))),
+	PORT(ArtifactRules, describe_artifact_inspection, 4, true,
+			return gd::str(artifact_rules::describe_artifact_inspection(s, D(a, 0), S(a, 1), B(a, 2), S(a, 3)))),
+	PORT(HeroCommandRules, town_garrison_holder_id, 2, true,
+			no_null(a, 0);
+			return gd::str(hero_command_rules::town_garrison_holder_id(s, D(a, 0), D(a, 1)))),
+	PORT(HeroCommandRules, describe_town_defense_force, 2, true,
+			no_null(a, 0);
+			return gd::str(hero_command_rules::describe_town_defense_force(s, D(a, 0), D(a, 1)))),
+	PORT(HeroCommandRules, empty_owned_towns, 1, true,
+			if (nil(a, 0)) return gd::array_value(s.new_array());
+			return gd::array_value(hero_command_rules::empty_owned_towns(s, D(a, 0)))),
+	PORT(HeroCommandRules, hero_positions, 1, true,
+			if (nil(a, 0)) return gd::array_value(s.new_array());
+			return gd::array_value(hero_command_rules::hero_positions(s, D(a, 0)))),
+	PORT(HeroProgressionRules, specialty_id_for_action, 1, false,
+			return gd::str(hero_progression_rules::specialty_id_for_action(s, S(a, 0)))),
+	PORT(HeroProgressionRules, specialty_insignia_description, 1, false,
+			return gd::str(hero_progression_rules::specialty_insignia_description(s, S(a, 0)))),
+	PORT(MineRules, asset_id, 1, true,
+			return gd::str(mine_rules::asset_id(s, D(a, 0)))),
+	PORT(OverworldGainFeed, snapshot, 1, true,
+			return gd::dict_value(overworld_gain_feed::snapshot(s, a[0]))),
+	PORT(OverworldGainFeed, gains, 3, true,
+			return gd::array_value(overworld_gain_feed::gains(s, D(a, 0), D(a, 1), I(a, 2)))),
+	PORT(OverworldRules, begin_normalized_read_scope, 1, true,
+			if (nil(a, 0)) return Value();
+			overworld_rules::begin_normalized_read_scope(s, D(a, 0)); return Value()),
+	PORT(OverworldRules, end_normalized_read_scope, 1, true,
+			if (nil(a, 0)) return Value();
+			overworld_rules::end_normalized_read_scope(s, D(a, 0)); return Value()),
+	PORT(OverworldRules, validation_last_normalized_read_scope_cache_profile, 0, false,
+			return gd::dict_value(overworld_rules::validation_last_normalized_read_scope_cache_profile(s))),
+	PORT(OverworldRules, validation_pathing_profile_snapshot, 0, false,
+			return gd::dict_value(overworld_rules::validation_pathing_profile_snapshot(s))),
+	PORT(OverworldRules, validation_set_pathing_profile_capture_enabled, 1, true,
+			overworld_rules::validation_set_pathing_profile_capture_enabled(s, B(a, 0)); return Value()),
+	PORT(OverworldRules, describe_visibility, 1, true,
+			no_null(a, 0);
+			return gd::str(overworld_rules::describe_visibility(s, D(a, 0)))),
+	PORT(OverworldRules, set_active_town_visit, 2, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld_rules::set_active_town_visit(s, D(a, 0), S(a, 1)))),
+	PORT(OverworldRules, describe_encounter_pressure, 3, true,
+			no_null(a, 0);
+			return gd::str(overworld_rules::describe_encounter_pressure(s, D(a, 0), D(a, 1), B(a, 2)))),
+	PORT(OverworldRules, describe_encounter_readability_surface, 2, true,
+			no_null(a, 0);
+			return gd::str(overworld_rules::describe_encounter_readability_surface(s, D(a, 0), D(a, 1)))),
+	PORT(OverworldRules, describe_encounter_guard_link_surface, 2, true,
+			no_null(a, 0);
+			return gd::str(overworld_rules::describe_encounter_guard_link_surface(s, D(a, 0), D(a, 1)))),
+	PORT(OverworldRules, overworld_object_placement_pathing_surface, 2, true,
+			if (nil(a, 0)) return gd::dict_value(s.new_dict());
+			return gd::dict_value(overworld_rules::overworld_object_placement_pathing_surface(s, D(a, 0), S(a, 1)))),
+	PORT(OverworldRules, town_footprint_tiles, 1, true,
+			return gd::array_value(overworld_rules::town_footprint_tiles(s, D(a, 0)))),
+	PORT(OverworldRules, hero_cast_spell_today, 2, true,
+			if (nil(a, 0)) return gd::bool_value(false);
+			return gd::bool_value(overworld_rules::hero_cast_spell_today(s, D(a, 0), S(a, 1)))),
+	PORT(OverworldRules, mine_footprint_tiles, 1, true,
+			return gd::array_value(overworld_rules::mine_footprint_tiles(s, D(a, 0)))),
+	PORT(OverworldRules, describe_status, 1, true,
+			no_null(a, 0);
+			return gd::str(overworld_rules::describe_status(s, D(a, 0)))),
+	PORT(OverworldRules, describe_objective_header_surfaces, 1, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld_rules::describe_objective_header_surfaces(s, D(a, 0)))),
+	PORT(OverworldRules, _describe_objective_brief_from_surface, 1, true,
+			return gd::str(overworld_rules::_describe_objective_brief_from_surface(s, D(a, 0)))),
+	PORT(OverworldRules, describe_objective_stakes_board, 1, true,
+			no_null(a, 0);
+			return gd::str(overworld_rules::describe_objective_stakes_board(s, D(a, 0)))),
+	PORT(OverworldRules, describe_heroes, 1, true,
+			no_null(a, 0);
+			return gd::str(overworld_rules::describe_heroes(s, D(a, 0)))),
+	PORT(OverworldRules, next_weekly_growth_day, 1, false,
+			return gd::int_value(overworld_rules::next_weekly_growth_day(s, I(a, 0)))),
+	PORT(OverworldRules, town_control_label, 1, false,
+			return gd::str(overworld_rules::town_control_label(s, S(a, 0)))),
+	PORT(OverworldRules, describe_town_context, 2, true,
+			return gd::str(overworld_rules::describe_town_context(s, D(a, 0), a[1]))),
+	PORT(OverworldRules, describe_context, 1, true,
+			no_null(a, 0);
+			return gd::str(overworld_rules::describe_context(s, D(a, 0)))),
+	PORT(OverworldRules, describe_objectives, 1, true,
+			no_null(a, 0);
+			return gd::str(overworld_rules::describe_objectives(s, D(a, 0)))),
+	PORT(OverworldRules, _objective_stakes_surface, 1, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld_rules::_objective_stakes_surface(s, D(a, 0)))),
+	PORT(OverworldRules, describe_frontier_threats, 1, true,
+			no_null(a, 0);
+			return gd::str(overworld_rules::describe_frontier_threats(s, D(a, 0)))),
+	PORT(OverworldRules, describe_defense_readiness_warnings, 2, true,
+			no_null(a, 0);
+			return gd::str(overworld_rules::describe_defense_readiness_warnings(s, D(a, 0), I(a, 1)))),
+	PORT(OverworldRules, describe_town_defense_readiness_warning, 2, true,
+			no_null(a, 0);
+			return gd::str(overworld_rules::describe_town_defense_readiness_warning(s, D(a, 0), D(a, 1)))),
+	PORT(OverworldRules, _local_visible_threat_summary, 2, true,
+			no_null(a, 0);
+			return gd::str(overworld_rules::_local_visible_threat_summary(s, D(a, 0), S(a, 1)))),
+	PORT(OverworldRules, describe_spellbook, 2, true,
+			no_null(a, 0);
+			return gd::str(overworld_rules::describe_spellbook(s, D(a, 0), S(a, 1)))),
+	PORT(OverworldRules, describe_spellbook_rail, 2, true,
+			no_null(a, 0);
+			return gd::str(overworld_rules::describe_spellbook_rail(s, D(a, 0), S(a, 1)))),
+	PORT(OverworldRules, describe_specialties, 1, true,
+			no_null(a, 0);
+			return gd::str(overworld_rules::describe_specialties(s, D(a, 0)))),
+	PORT(OverworldRules, describe_artifacts, 1, true,
+			no_null(a, 0);
+			return gd::str(overworld_rules::describe_artifacts(s, D(a, 0)))),
+	PORT(OverworldRules, consume_command_briefing, 1, true,
+			no_null(a, 0);
+			return gd::str(overworld_rules::consume_command_briefing(s, D(a, 0)))),
+	PORT(OverworldRules, _refresh_watch_observation_context, 1, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld_rules::_refresh_watch_observation_context(s, D(a, 0)))),
+	PORT(OverworldRules, describe_commitment_board, 2, true,
+			no_null(a, 0);
+			return gd::str(overworld_rules::describe_commitment_board(s, D(a, 0), D(a, 1)))),
+	PORT(OverworldRules, describe_end_turn_forecast, 1, true,
+			no_null(a, 0);
+			return gd::str(overworld_rules::describe_end_turn_forecast(s, D(a, 0)))),
+	PORT(OverworldRules, describe_end_turn_forecast_compact, 1, true,
+			no_null(a, 0);
+			return gd::str(overworld_rules::describe_end_turn_forecast_compact(s, D(a, 0)))),
+	PORT(OverworldRules, describe_end_turn_forecast_surfaces, 2, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld_rules::describe_end_turn_forecast_surfaces(s, D(a, 0), D(a, 1)))),
+	PORT(OverworldRules, describe_command_risk_surfaces, 1, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld_rules::describe_command_risk_surfaces(s, D(a, 0)))),
+	PORT(OverworldRules, _command_risk_surfaces_from_forecast, 1, true,
+			return gd::dict_value(overworld_rules::_command_risk_surfaces_from_forecast(s, D(a, 0)))),
+	PORT(OverworldRules, consume_command_risk_forecast, 1, true,
+			no_null(a, 0);
+			return gd::str(overworld_rules::consume_command_risk_forecast(s, D(a, 0)))),
+	PORT(OverworldRules, describe_dispatch, 2, true,
+			no_null(a, 0);
+			return gd::str(overworld_rules::describe_dispatch(s, D(a, 0), S(a, 1)))),
+	PORT(OverworldRules, describe_event_dispatch_surfaces, 7, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld_rules::describe_event_dispatch_surfaces(s, D(a, 0), S(a, 1), S(a, 2), S(a, 3), a[4], a[5], D(a, 6)))),
+	PORT(OverworldRules, describe_event_feed_surface, 6, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld_rules::describe_event_feed_surface(s, D(a, 0), S(a, 1), S(a, 2), S(a, 3), a[4], a[5]))),
+	PORT(OverworldRules, _event_feed_watch_line_from_observation_context, 1, true,
+			return gd::str(overworld_rules::_event_feed_watch_line_from_observation_context(s, D(a, 0)))),
+	PORT(OverworldRules, describe_route_interception_surface, 5, true,
+			if (nil(a, 0)) return gd::dict_value(overworld_rules::_route_interception_empty_surface(s));
+			return gd::dict_value(overworld_rules::describe_route_interception_surface(s, D(a, 0), I(a, 1), I(a, 2), I(a, 3), B(a, 4)))),
+	PORT(OverworldRules, describe_town_identity_surface, 2, true,
+			return gd::str(overworld_rules::describe_town_identity_surface(s, D(a, 0), a[1]))),
+	PORT(OverworldRules, town_public_threat_state, 2, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld_rules::town_public_threat_state(s, D(a, 0), D(a, 1)))),
+	PORT(OverworldRules, town_occupation_state, 2, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld_rules::town_occupation_state(s, D(a, 0), D(a, 1)))),
+	PORT(OverworldRules, player_daily_income, 1, true,
+			if (nil(a, 0)) return gd::dict_value(overworld_rules::_empty_live_resource_stockpile(s));
+			return gd::dict_value(overworld_rules::player_daily_income(s, D(a, 0)))),
+	PORT(OverworldRules, describe_management_watch, 1, true,
+			no_null(a, 0);
+			return gd::str(overworld_rules::describe_management_watch(s, D(a, 0)))),
+	PORT(OverworldRules, describe_recruit_source_compact, 3, true,
+			no_null(a, 0);
+			return gd::str(overworld_rules::describe_recruit_source_compact(s, D(a, 0), D(a, 1), D(a, 2)))),
+	PORT(OverworldRules, describe_resource_site_control_summary, 3, true,
+			no_null(a, 0);
+			return gd::str(overworld_rules::describe_resource_site_control_summary(s, D(a, 0), D(a, 1), D(a, 2)))),
+	PORT(OverworldRules, describe_encounter_object_surface, 1, true,
+			return gd::str(overworld_rules::describe_encounter_object_surface(s, D(a, 0)))),
+	PORT(ScenarioRules, is_objective_met, 3, true,
+			no_null(a, 0);
+			return gd::bool_value(scenario_rules::is_objective_met(s, D(a, 0), S(a, 1), S(a, 2)))),
+	PORT(ScenarioRules, _enemy_operational_lines, 2, true,
+			no_null(a, 0);
+			return gd::array_value(scenario_rules::_enemy_operational_lines(s, D(a, 0), D(a, 1)))),
+	PORT(ScenarioRules, _opening_objective_summary, 2, true,
+			no_null(a, 0);
+			return gd::str(scenario_rules::_opening_objective_summary(s, D(a, 0), D(a, 1)))),
+	PORT(ScenarioRules, _first_contact_summary, 1, true,
+			return gd::str(scenario_rules::_first_contact_summary(s, D(a, 0)))),
+	PORT(ScenarioRules, _objective_labels_from_bucket, 3, true,
+			no_null(a, 0);
+			return gd::array_value(scenario_rules::_objective_labels_from_bucket(s, D(a, 0), a[1], I(a, 2)))),
+	PORT(ScenarioRules, _terrain_label, 1, false,
+			return gd::str(scenario_rules::_terrain_label(s, S(a, 0)))),
+	PORT(SpellRules, spell_id_for_action, 1, false,
+			return gd::str(spell_rules::spell_id_for_action(s, S(a, 0)))),
+	PORT(SpellRules, describe_spellbook, 2, true,
+			return gd::str(spell_rules::describe_spellbook(s, D(a, 0), S(a, 1)))),
+	PORT(TownBiomeArtRules, resolve, 3, true,
+			return gd::dict_value(town_biome_art_rules::resolve(s, S(a, 0), S(a, 1), D(a, 2)))),
+	PORT(TownBuildingPanel, market_building_id, 1, true,
+			return gd::str(town_building_panel::market_building_id(s, D(a, 0)))),
+	PORT(TownBuildingPanel, guild_building_id, 1, true,
+			return gd::str(town_building_panel::guild_building_id(s, D(a, 0)))),
+	PORT(TownConstructionBoard, slot_by_id, 2, true,
+			return gd::dict_value(town_construction_board::slot_by_id(s, D(a, 0), S(a, 1)))),
+	PORT(TownConstructionBoard, ordered_slots, 1, true,
+			return gd::array_value(town_construction_board::ordered_slots(s, D(a, 0)))),
+	PORT(TownRules, faction_crest_icon_path, 1, false,
+			return gd::str(town_rules::faction_crest_icon_path(s, S(a, 0)))),
+	PORT(TownRules, describe_status, 1, true,
+			no_null(a, 0);
+			return gd::str(town_rules::describe_status(s, D(a, 0)))),
+	PORT(TownRules, describe_header, 1, true,
+			no_null(a, 0);
+			return gd::str(town_rules::describe_header(s, D(a, 0)))),
+	PORT(TownRules, describe_summary, 1, true,
+			no_null(a, 0);
+			return gd::str(town_rules::describe_summary(s, D(a, 0)))),
+	PORT(TownRules, describe_production_overview, 1, true,
+			no_null(a, 0);
+			return gd::str(town_rules::describe_production_overview(s, D(a, 0)))),
+	PORT(TownRules, describe_outlook_board, 1, true,
+			no_null(a, 0);
+			return gd::str(town_rules::describe_outlook_board(s, D(a, 0)))),
+	PORT(TownRules, describe_command_ledger, 1, true,
+			no_null(a, 0);
+			return gd::str(town_rules::describe_command_ledger(s, D(a, 0)))),
+	PORT(TownRules, describe_defense, 1, true,
+			no_null(a, 0);
+			return gd::str(town_rules::describe_defense(s, D(a, 0)))),
+	PORT(TownRules, describe_threats, 1, true,
+			no_null(a, 0);
+			return gd::str(town_rules::describe_threats(s, D(a, 0)))),
+	PORT(TownRules, describe_event_feed, 3, true,
+			no_null(a, 0);
+			return gd::str(town_rules::describe_event_feed(s, D(a, 0), S(a, 1), D(a, 2)))),
+	PORT(TownRules, town_handoff_recap, 1, true,
+			no_null(a, 0);
+			return gd::dict_value(town_rules::town_handoff_recap(s, D(a, 0)))),
+	PORT(TownRules, town_departure_confirmation, 1, true,
+			no_null(a, 0);
+			return gd::dict_value(town_rules::town_departure_confirmation(s, D(a, 0)))),
+	PORT(TownRules, town_order_target_handoff, 1, true,
+			no_null(a, 0);
+			return gd::dict_value(town_rules::town_order_target_handoff(s, D(a, 0)))),
+	PORT(TownRules, town_action_consequence_signature, 1, true,
+			no_null(a, 0);
+			return gd::dict_value(town_rules::town_action_consequence_signature(s, D(a, 0)))),
+	PORT(TownRules, build_town_action_recap, 7, true,
+			no_null(a, 0);
+			return gd::dict_value(town_rules::build_town_action_recap(s, D(a, 0), S(a, 1), S(a, 2), D(a, 3), D(a, 4), D(a, 5), D(a, 6)))),
+	PORT(TownRules, describe_buildings, 1, true,
+			no_null(a, 0);
+			return gd::str(town_rules::describe_buildings(s, D(a, 0)))),
+	PORT(TownRules, describe_recruitment, 1, true,
+			no_null(a, 0);
+			return gd::str(town_rules::describe_recruitment(s, D(a, 0)))),
+	PORT(TownRules, describe_market, 1, true,
+			no_null(a, 0);
+			return gd::str(town_rules::describe_market(s, D(a, 0)))),
+	PORT(TownRules, describe_spell_access, 1, true,
+			no_null(a, 0);
+			return gd::str(town_rules::describe_spell_access(s, D(a, 0)))),
+	PORT(TownRules, describe_artifacts, 1, true,
+			no_null(a, 0);
+			return gd::str(town_rules::describe_artifacts(s, D(a, 0)))),
+	PORT(TownRules, describe_heroes, 1, true,
+			no_null(a, 0);
+			return gd::str(town_rules::describe_heroes(s, D(a, 0)))),
+	PORT(TownRules, describe_specialties, 1, true,
+			no_null(a, 0);
+			return gd::str(town_rules::describe_specialties(s, D(a, 0)))),
+	PORT(TownRules, describe_tavern, 1, true,
+			no_null(a, 0);
+			return gd::str(town_rules::describe_tavern(s, D(a, 0)))),
+	PORT(TownRules, describe_transfer, 1, true,
+			no_null(a, 0);
+			return gd::str(town_rules::describe_transfer(s, D(a, 0)))),
+	PORT(TownRules, describe_responses, 1, true,
+			no_null(a, 0);
+			return gd::str(town_rules::describe_responses(s, D(a, 0)))),
+	PORT(TownRules, _town_build_recommendation_score, 2, true,
+			return gd::int_value(town_rules::_town_build_recommendation_score(s, D(a, 0), D(a, 1)))),
+	PORT(TownRules, _town_recruit_recommendation_score, 1, true,
+			return gd::int_value(town_rules::_town_recruit_recommendation_score(s, D(a, 0)))),
+	PORT(TownRules, _next_town_action_line, 2, true,
+			no_null(a, 0);
+			return gd::str(town_rules::_next_town_action_line(s, D(a, 0), D(a, 1)))),
+	PORT(TownRules, _town_handoff_affected_line, 5, true,
+			return gd::str(town_rules::_town_handoff_affected_line(s, S(a, 0), D(a, 1), D(a, 2), D(a, 3), D(a, 4)))),
+	PORT(TownRules, _town_handoff_why_line, 6, true,
+			return gd::str(town_rules::_town_handoff_why_line(s, D(a, 0), D(a, 1), D(a, 2), D(a, 3), D(a, 4), D(a, 5)))),
+	PORT(TownRules, _short_town_handoff_text, 2, false,
+			return gd::str(town_rules::_short_town_handoff_text(s, S(a, 0), I(a, 1)))),
+	PORT(TownRules, _short_action_label, 2, true,
+			return gd::str(town_rules::_short_action_label(s, D(a, 0), S(a, 1)))),
+	PORT(TownRules, _action_projection_line, 1, true,
+			return gd::str(town_rules::_action_projection_line(s, D(a, 0)))),
+	PORT(TownRules, _describe_recruit_delta, 1, true,
+			return gd::str(town_rules::_describe_recruit_delta(s, a[0]))),
+	PORT(WaterTravelRules, free_boats, 2, true,
+			return gd::array_value(water_travel_rules::free_boats(s, a[0], I(a, 1)))),
+	PORT(ArtifactRules, normalize_hero_artifacts, 1, true,
+			return gd::dict_value(artifact_rules::normalize_hero_artifacts(s, a[0]))),
+	PORT(ArtifactRules, owned_artifact_ids, 1, true,
+			return gd::array_value(artifact_rules::owned_artifact_ids(s, D(a, 0)))),
+	PORT(ArtifactRules, locate_artifact, 2, true,
+			return gd::dict_value(artifact_rules::locate_artifact(s, D(a, 0), S(a, 1)))),
+	PORT(ArtifactRules, aggregate_bonuses, 1, true,
+			return gd::dict_value(artifact_rules::aggregate_bonuses(s, D(a, 0)))),
+	PORT(ArtifactRules, artifact_set_runtime_state, 1, true,
+			return gd::array_value(artifact_rules::artifact_set_runtime_state(s, D(a, 0)))),
+	PORT(ArtifactRules, equip_artifact, 2, true,
+			return gd::dict_value(artifact_rules::equip_artifact(s, D(a, 0), S(a, 1)))),
+	PORT(ArtifactRules, artifact_name, 1, false,
+			return gd::str(artifact_rules::artifact_name(s, S(a, 0)))),
+	PORT(ArtifactRules, artifact_slot, 1, false,
+			return gd::str(artifact_rules::artifact_slot(s, S(a, 0)))),
+	PORT(ArtifactRules, artifact_slot_label, 1, false,
+			return gd::str(artifact_rules::artifact_slot_label(s, S(a, 0)))),
+	PORT(ArtifactRules, artifact_effect_summary, 1, false,
+			return gd::str(artifact_rules::artifact_effect_summary(s, S(a, 0)))),
+	PORT(ArtifactRules, artifact_reward_role, 1, false,
+			return gd::str(artifact_rules::artifact_reward_role(s, S(a, 0)))),
+	PORT(ArtifactRules, describe_artifact, 1, false,
+			return gd::str(artifact_rules::describe_artifact(s, S(a, 0)))),
+	PORT(HeroCommandRules, scouting_radius_for_hero, 1, true,
+			return gd::int_value(hero_command_rules::scouting_radius_for_hero(s, D(a, 0)))),
+	PORT(HeroCommandRules, hero_by_id, 2, true,
+			if (nil(a, 0)) return gd::dict_value(s.new_dict());
+			return gd::dict_value(hero_command_rules::hero_by_id(s, D(a, 0), S(a, 1)))),
+	PORT(HeroCommandRules, stationed_heroes, 2, true,
+			if (nil(a, 0)) return gd::array_value(s.new_array());
+			return gd::array_value(hero_command_rules::stationed_heroes(s, D(a, 0), D(a, 1)))),
+	PORT(HeroCommandRules, town_garrison_hero, 2, true,
+			if (nil(a, 0)) return gd::dict_value(s.new_dict());
+			return gd::dict_value(hero_command_rules::town_garrison_hero(s, D(a, 0), D(a, 1)))),
+	PORT(HeroCommandRules, town_defense_force, 3, true,
+			no_null(a, 0);
+			return gd::dict_value(hero_command_rules::town_defense_force(s, D(a, 0), D(a, 1), S(a, 2)))),
+	PORT(HeroCommandRules, army_addition_plan, 2, true,
+			return gd::dict_value(hero_command_rules::army_addition_plan(s, a[0], D(a, 1)))),
+	PORT(HeroCommandRules, hero_recruit_cost, 1, true,
+			return gd::dict_value(hero_command_rules::hero_recruit_cost(s, D(a, 0)))),
+	PORT(HeroProgressionRules, ensure_hero_progression, 1, true,
+			return gd::dict_value(hero_progression_rules::ensure_hero_progression(s, D(a, 0)))),
+	PORT(HeroProgressionRules, pending_choices_remaining, 1, true,
+			return gd::int_value(hero_progression_rules::pending_choices_remaining(s, D(a, 0)))),
+	PORT(HeroProgressionRules, current_pending_choice, 1, true,
+			return gd::dict_value(hero_progression_rules::current_pending_choice(s, D(a, 0)))),
+	PORT(HeroProgressionRules, pending_choice_summary, 1, true,
+			return gd::str(hero_progression_rules::pending_choice_summary(s, D(a, 0)))),
+	PORT(HeroProgressionRules, specialty_rank, 2, true,
+			return gd::int_value(hero_progression_rules::specialty_rank(s, D(a, 0), S(a, 1)))),
+	PORT(HeroProgressionRules, specialties, 0, false,
+			return hero_progression_rules::specialties(s)),
+	PORT(HeroProgressionRules, specialty_definition, 1, false,
+			return gd::dict_value(hero_progression_rules::specialty_definition(s, S(a, 0)))),
+	PORT(HeroProgressionRules, rank_label, 1, false,
+			return gd::str(hero_progression_rules::rank_label(s, I(a, 0)))),
+	PORT(MineRules, resource, 1, true,
+			return gd::str(mine_rules::resource(s, D(a, 0)))),
+	PORT(MineRules, origin, 1, true,
+			const Vector2i p = mine_rules::origin(s, D(a, 0)); return Value::of_vector2i(p.x, p.y)),
+	PORT(NativeTransitRules, portal_kind, 1, true,
+			return gd::str(native_transit_rules::portal_kind(s, D(a, 0)))),
+	PORT(OverworldLevelRules, level_of, 1, true,
+			return gd::int_value(overworld_level_rules::level_of(s, a[0]))),
+	PORT(OverworldLevelRules, hero_level, 1, true,
+			no_null(a, 0);
+			return gd::int_value(overworld_level_rules::hero_level(s, D(a, 0)))),
+	PORT(OverworldLevelRules, level_count, 1, true,
+			if (nil(a, 0)) return gd::int_value(1);
+			return gd::int_value(overworld_level_rules::level_count(s, D(a, 0)))),
+	PORT(OverworldLevelRules, view_level, 1, true,
+			return gd::int_value(overworld_level_rules::view_level(s, a[0]))),
+	PORT(OverworldLevelRules, on_level, 2, true,
+			return gd::bool_value(overworld_level_rules::on_level(s, a[0], I(a, 1)))),
+	PORT(OverworldLevelRules, position, 1, true,
+			return gd::dict_value(overworld_level_rules::position(s, D(a, 0)))),
+	PORT(OverworldLevelRules, town_entrance, 1, true,
+			return gd::dict_value(overworld_level_rules::town_entrance(s, D(a, 0)))),
+	PORT(OverworldLevelRules, terrain_rows, 2, true,
+			return gd::array_value(overworld_level_rules::terrain_rows(s, a[0], I(a, 1)))),
+	PORT(OverworldRules, is_tile_visible, 4, true,
+			if (nil(a, 0)) return gd::bool_value(false);
+			return gd::bool_value(overworld_rules::is_tile_visible(s, D(a, 0), I(a, 1), I(a, 2), I(a, 3)))),
+	PORT(OverworldRules, is_tile_explored, 4, true,
+			if (nil(a, 0)) return gd::bool_value(false);
+			return gd::bool_value(overworld_rules::is_tile_explored(s, D(a, 0), I(a, 1), I(a, 2), I(a, 3)))),
+	PORT(OverworldRules, fog_for_level, 2, true,
+			if (nil(a, 0)) return gd::dict_value(s.new_dict());
+			return gd::dict_value(overworld_rules::fog_for_level(s, D(a, 0), I(a, 1)))),
+	PORT(OverworldRules, encounter_display_name, 1, true,
+			return gd::str(overworld_rules::encounter_display_name(s, D(a, 0)))),
+	PORT(OverworldRules, is_encounter_resolved, 2, true,
+			no_null(a, 0);
+			return gd::bool_value(overworld_rules::is_encounter_resolved(s, D(a, 0), D(a, 1)))),
+	PORT(OverworldRules, encounter_key, 1, true,
+			return gd::str(overworld_rules::encounter_key(s, D(a, 0)))),
+	PORT(OverworldRules, hero_position, 1, true,
+			no_null(a, 0);
+			const Vector2i p = overworld_rules::hero_position(s, D(a, 0)); return Value::of_vector2i(p.x, p.y)),
+	PORT(OverworldRules, derive_map_size, 1, true,
+			no_null(a, 0);
+			const Vector2i p = overworld_rules::derive_map_size(s, D(a, 0)); return Value::of_vector2i(p.x, p.y)),
+	PORT(OverworldRules, terrain_id_is_passable, 1, false,
+			return gd::bool_value(overworld_rules::terrain_id_is_passable(s, S(a, 0)))),
+	PORT(OverworldRules, town_weekly_growth, 2, true,
+			return gd::dict_value(overworld_rules::town_weekly_growth(s, D(a, 0), a[1]))),
+	PORT(OverworldRules, town_income, 2, true,
+			return gd::dict_value(overworld_rules::town_income(s, D(a, 0), a[1]))),
+	PORT(OverworldRules, town_strategic_role, 1, true,
+			return gd::str(overworld_rules::town_strategic_role(s, D(a, 0)))),
+	PORT(OverworldRules, town_recovery_state, 2, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld_rules::town_recovery_state(s, D(a, 0), D(a, 1)))),
+	PORT(OverworldRules, town_front_state, 3, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld_rules::town_front_state(s, D(a, 0), D(a, 1), D(a, 2)))),
+	PORT(OverworldRules, controlled_resource_site_income, 3, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld_rules::controlled_resource_site_income(s, D(a, 0), S(a, 1), I(a, 2)))),
+	PORT(OverworldRules, _find_resource_node_by_placement, 2, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld_rules::_find_resource_node_by_placement(s, D(a, 0), S(a, 1)))),
+	PORT(OverworldRules, _resource_site_is_persistent, 1, true,
+			return gd::bool_value(overworld_rules::_resource_site_is_persistent(s, D(a, 0)))),
+	PORT(OverworldRules, resource_node_is_present, 2, true,
+			return gd::bool_value(overworld_rules::resource_node_is_present(s, D(a, 0), D(a, 1)))),
+	PORT(OverworldRules, _resource_site_is_repeatable, 1, true,
+			return gd::bool_value(overworld_rules::_resource_site_is_repeatable(s, D(a, 0)))),
+	PORT(OverworldRules, resource_site_blocking_guard, 4, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld_rules::resource_site_blocking_guard(s, D(a, 0), D(a, 1), D(a, 2), a[3]))),
+	PORT(OverworldRules, _resource_site_response_state, 3, true,
+			return gd::dict_value(overworld_rules::_resource_site_response_state(s, a[0], D(a, 1), D(a, 2)))),
+	PORT(OverworldRules, _resource_site_delivery_state, 3, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld_rules::_resource_site_delivery_state(s, D(a, 0), D(a, 1), D(a, 2)))),
+	PORT(OverworldRules, _resource_site_delivery_interception, 3, true,
+			no_null(a, 0);
+			return gd::dict_value(overworld_rules::_resource_site_delivery_interception(s, D(a, 0), D(a, 1), D(a, 2)))),
+	PORT(OverworldRules, _army_strength_value, 1, true,
+			return gd::int_value(overworld_rules::_army_strength_value(s, a[0]))),
+	PORT(OverworldRules, resource_definition, 1, false,
+			return gd::dict_value(overworld_rules::resource_definition(s, S(a, 0)))),
+	PORT(OverworldRules, _describe_resource_delta, 1, true,
+			return gd::str(overworld_rules::_describe_resource_delta(s, a[0]))),
+	PORT(PlayerIdentityRules, town_controller_id, 1, true,
+			return gd::str(player_identity_rules::town_controller_id(s, D(a, 0)))),
+	PORT(PlayerIdentityRules, raid_controller_id, 1, true,
+			return gd::str(player_identity_rules::raid_controller_id(s, D(a, 0)))),
+	PORT(PlayerIdentityRules, resource_controller_id, 1, true,
+			return gd::str(player_identity_rules::resource_controller_id(s, D(a, 0)))),
+	PORT(PlayerIdentityRules, player, 2, true,
+			if (nil(a, 0)) return gd::dict_value(s.new_dict());
+			return gd::dict_value(player_identity_rules::player(s, D(a, 0), S(a, 1)))),
+	PORT(SessionStateStore, normalize_launch_mode, 1, true,
+			return gd::str(session_state_store::normalize_launch_mode(s, a[0]))),
+	PORT(SpellRules, knows_spell, 2, true,
+			return gd::bool_value(spell_rules::knows_spell(s, D(a, 0), S(a, 1)))),
+	PORT(TownRules, teach_visiting_heroes, 2, true,
+			no_null(a, 0);
+			return gd::dict_value(town_rules::teach_visiting_heroes(s, D(a, 0), D(a, 1)))),
+	PORT(TownRules, current_spell_tier, 1, true,
+			return gd::int_value(town_rules::current_spell_tier(s, D(a, 0)))),
+	PORT(TownRules, accessible_spell_ids, 1, true,
+			return gd::array_value(town_rules::accessible_spell_ids(s, D(a, 0)))),
+	PORT(WaterTravelRules, boats, 1, true,
+			return gd::array_value(water_travel_rules::boats(s, a[0]))),
+	PORT(OverworldRules, _fog_grids_uncached, 2, true,
+			no_null(a, 0);
+			return gd::array_value(overworld_rules::_fog_grids_uncached(s, D(a, 0), I(a, 1)))),
 };
 
 // The host calls of a merged slice's functions (gd::call_static), as HOST
@@ -1150,17 +1664,8 @@ constexpr Host kHosts[] = {
 	NATIVE_HOST(ProfileLog, general_log_snapshot, 0),
 	NATIVE_HOST(ProfileLog, last_general_records, 1),
 	NATIVE_HOST(CampaignRules, get_campaign_id_for_scenario, 1),
-	// The screens' texts a summary quotes and the read scopes they run in,
-	// GDScript until their slices port them. They normalize the session.
-	NATIVE_HOST_WRITING(OverworldRules, begin_normalized_read_scope, 1),
-	NATIVE_HOST_WRITING(OverworldRules, end_normalized_read_scope, 1),
-	NATIVE_HOST_WRITING(OverworldRules, is_runtime_session_normalized, 1),
-	NATIVE_HOST_WRITING(OverworldRules, describe_command_risk, 1),
-	NATIVE_HOST_WRITING(OverworldRules, describe_command_risk_summary_from_normalized_session, 1),
-	NATIVE_HOST_WRITING(OverworldRules, describe_frontier_threats, 1),
-	NATIVE_HOST_WRITING(OverworldRules, describe_management_watch, 1),
-	NATIVE_HOST_WRITING(TownRules, describe_defense, 1),
-	NATIVE_HOST_WRITING(TownRules, describe_defense_headline, 1),
+	// The battle screen's risk board a summary quotes, GDScript until 7.9
+	// ports it. It normalizes the session.
 	NATIVE_HOST_WRITING(BattleRules, describe_risk_readiness_board, 1),
 };
 

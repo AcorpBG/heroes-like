@@ -33,6 +33,12 @@ const KEYBOARD_CURSOR_COLOR := Color("fff4bd")
 
 var _level: int = 0
 var _session = null
+
+# Phase 7, D-c: while a layer redraws, the fog comes from one native snapshot of
+# the level's [explored, visible] grids, taken at the first read; outside a
+# redraw each query asks the rules.
+var _fog_snapshot_depth := 0
+var _fog_snapshot := {}
 var _map_data: Array = []
 var _map_size := Vector2i.ONE
 var _selected_tile := Vector2i.ZERO
@@ -78,6 +84,7 @@ func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, size), Color("091012"), true)
 	draw_rect(field, Color("162021"), true)
 	var cell := field.size / Vector2(float(_map_size.x), float(_map_size.y))
+	_begin_fog_snapshot()
 	draw_texture_rect(_terrain_texture_for_state(), field, false)
 	if cell.x >= 5.0 and cell.y >= 5.0:
 		for x in range(1, _map_size.x):
@@ -89,6 +96,7 @@ func _draw() -> void:
 	_draw_mines(field, cell)
 	_draw_towns(field, cell)
 	_draw_heroes(field, cell)
+	_end_fog_snapshot()
 	_draw_viewport(field, cell)
 	if has_focus():
 		var cursor_rect := _tile_rect(field, cell, _keyboard_tile).grow(-maxf(1.0, minf(cell.x, cell.y) * 0.12))
@@ -167,7 +175,7 @@ func _terrain_texture_for_state() -> ImageTexture:
 	var pixels := PackedByteArray()
 	pixels.resize(_map_size.x * _map_size.y * 4)
 	var offset := 0
-	OverworldRulesScript.begin_fog_read_scope(_session)
+	_begin_fog_snapshot()
 	for y in range(_map_size.y):
 		for x in range(_map_size.x):
 			var color := _tile_color(Vector2i(x, y))
@@ -176,7 +184,7 @@ func _terrain_texture_for_state() -> ImageTexture:
 			pixels[offset + 2] = color.b8
 			pixels[offset + 3] = color.a8
 			offset += 4
-	OverworldRulesScript.end_fog_read_scope(_session)
+	_end_fog_snapshot()
 	var image := Image.create_from_data(_map_size.x, _map_size.y, false, Image.FORMAT_RGBA8, pixels)
 	if _terrain_texture == null or _terrain_texture.get_size() != Vector2(_map_size):
 		_terrain_texture = ImageTexture.create_from_image(image)
@@ -185,12 +193,58 @@ func _terrain_texture_for_state() -> ImageTexture:
 	return _terrain_texture
 
 
+func _begin_fog_snapshot() -> void:
+	if _session == null:
+		return
+	if _fog_snapshot_depth == 0:
+		_fog_snapshot = {}
+	_fog_snapshot_depth += 1
+
+
+func _end_fog_snapshot() -> void:
+	if _fog_snapshot_depth <= 0:
+		return
+	_fog_snapshot_depth -= 1
+	if _fog_snapshot_depth == 0:
+		_fog_snapshot = {}
+
+
+func _fog_explored(x: int, y: int) -> bool:
+	if _session == null:
+		return false
+	if _fog_snapshot_depth > 0:
+		return _fog_snapshot_cell(0, x, y)
+	return OverworldRulesScript.is_tile_explored(_session, x, y, _level)
+
+
+func _fog_visible(x: int, y: int) -> bool:
+	if _session == null:
+		return false
+	if _fog_snapshot_depth > 0:
+		return _fog_snapshot_cell(1, x, y)
+	return OverworldRulesScript.is_tile_visible(_session, x, y, _level)
+
+
+func _fog_snapshot_cell(index: int, x: int, y: int) -> bool:
+	var grids = _fog_snapshot.get(_level)
+	if grids == null:
+		grids = OverworldRulesScript._fog_grids_uncached(_session, _level)
+		_fog_snapshot[_level] = grids
+	var grid = grids[index]
+	if not (grid is Array) or y < 0 or y >= grid.size():
+		return false
+	var row = grid[y]
+	if not (row is Array) or x < 0 or x >= row.size():
+		return false
+	return bool(row[x])
+
+
 func _tile_color(tile: Vector2i) -> Color:
-	if _session == null or not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
+	if _session == null or not _fog_explored(tile.x, tile.y):
 		return UNEXPLORED_COLOR
 	var terrain := _terrain_at(tile)
 	var color: Color = TERRAIN_COLORS.get(terrain, Color("59634e"))
-	if not OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y, _level):
+	if not _fog_visible(tile.x, tile.y):
 		color = color.darkened(0.24)
 	return color
 
@@ -230,7 +284,7 @@ func _draw_mines(field: Rect2, cell: Vector2) -> void:
 func _draw_footprint(field: Rect2, cell: Vector2, tiles: Array, color: Color) -> void:
 	var rects: Array[Rect2] = []
 	for tile in tiles:
-		if _tile_in_bounds(tile) and OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
+		if _tile_in_bounds(tile) and _fog_explored(tile.x, tile.y):
 			rects.append(_tile_rect(field, cell, tile))
 	# Outline the whole footprint first so inner tile edges stay filled.
 	for rect in rects:
@@ -279,7 +333,7 @@ func _draw_heroes(field: Rect2, cell: Vector2) -> void:
 		if _tile_in_bounds(tile) and tile not in hero_tiles:
 			hero_tiles.append(tile)
 	for tile in hero_tiles:
-		if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
+		if not _fog_explored(tile.x, tile.y):
 			continue
 		var center := _tile_rect(field, cell, tile).get_center()
 		var radius := clampf(minf(cell.x, cell.y) * 0.34, 2.5, 6.0)
@@ -327,12 +381,14 @@ func _clamped_bounds(bounds: Rect2i) -> Rect2i:
 func validation_snapshot() -> Dictionary:
 	var explored_count := 0
 	var visible_count := 0
+	_begin_fog_snapshot()
 	for y in range(_map_size.y):
 		for x in range(_map_size.x):
-			if _session != null and OverworldRulesScript.is_tile_explored(_session, x, y, _level):
+			if _session != null and _fog_explored(x, y):
 				explored_count += 1
-			if _session != null and OverworldRulesScript.is_tile_visible(_session, x, y, _level):
+			if _session != null and _fog_visible(x, y):
 				visible_count += 1
+	_end_fog_snapshot()
 	var total_tiles := _map_size.x * _map_size.y
 	return {
 		"level": _level,
@@ -365,8 +421,8 @@ func validation_snapshot() -> Dictionary:
 func validation_tile_presentation(tile: Vector2i) -> Dictionary:
 	if not _tile_in_bounds(tile):
 		return {"valid": false}
-	var explored := _session != null and OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level)
-	var visible := _session != null and OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y, _level)
+	var explored := _session != null and _fog_explored(tile.x, tile.y)
+	var visible := _session != null and _fog_visible(tile.x, tile.y)
 	var color := _tile_color(tile)
 	return {
 		"valid": true,

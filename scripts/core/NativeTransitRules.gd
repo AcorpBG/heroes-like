@@ -1,6 +1,8 @@
 extends RefCounted
 
 const Levels = preload("res://scripts/core/OverworldLevelRules.gd")
+const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 const NAVIGATION_DELTAS := [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1), Vector2i(1, 1), Vector2i(1, -1), Vector2i(-1, 1), Vector2i(-1, -1)]
 
 # Package connectivity is separate from the original artwork's authored local
@@ -54,6 +56,16 @@ const NETWORK_COLOURS := [
 ## two_way_portal, one_way_entrance or one_way_exit for a native monolith;
 ## "" for subterranean gates and everything else.
 static func portal_kind(node: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return portal_kind__gd(node)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"NativeTransitRules.portal_kind", [node])
+	var before := HumanEngine.before_writing(&"NativeTransitRules.portal_kind", [node])
+	var result = portal_kind__gd(node)
+	HumanEngine.check_writing(&"NativeTransitRules.portal_kind", before, [node], result)
+	return result
+
+static func portal_kind__gd(node: Dictionary) -> String:
 	var kind := String(link_of(node).get("kind", ""))
 	if kind in PORTAL_KIND_BY_TYPE.values():
 		return kind
