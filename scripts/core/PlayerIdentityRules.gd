@@ -1,229 +1,39 @@
 extends RefCounted
 
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
-static var _human_engine_mode: int = HumanEngine.mode
 
 
 # Player/controller identity is mutable world ownership. Faction identity is an
 # immutable content reference. Legacy authored scenarios keep faction-keyed
 # controllers; generated packages supply explicit player ids and source teams.
 static func controller_id(record: Dictionary, fallback: String = "") -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return controller_id__gd(record, fallback)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"PlayerIdentityRules.controller_id", [record, fallback])
-	var result = controller_id__gd(record, fallback)
-	HumanEngine.check(&"PlayerIdentityRules.controller_id", [record, fallback], result)
-	return result
-
-static func controller_id__gd(record: Dictionary, fallback: String = "") -> String:
-	var player_id := String(record.get("player_id", ""))
-	return player_id if player_id != "" else String(record.get("faction_id", fallback))
+	return HumanEngine.native(&"PlayerIdentityRules.controller_id", [record, fallback])
 
 static func town_controller_id(town: Dictionary) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return town_controller_id__gd(town)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"PlayerIdentityRules.town_controller_id", [town])
-	var before := HumanEngine.before_writing(&"PlayerIdentityRules.town_controller_id", [town])
-	var result = town_controller_id__gd(town)
-	HumanEngine.check_writing(&"PlayerIdentityRules.town_controller_id", before, [town], result)
-	return result
-
-static func town_controller_id__gd(town: Dictionary) -> String:
-	var player_id := String(town.get("controlling_player_id", ""))
-	if player_id != "":
-		return player_id
-	var faction := String(town.get("controlling_faction_id", ""))
-	return faction if faction != "" else String(town.get("faction_id", ContentService.get_town(String(town.get("town_id", ""))).get("faction_id", "")))
+	return HumanEngine.native_writing(&"PlayerIdentityRules.town_controller_id", [town])
 
 static func raid_controller_id(raid: Dictionary) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return raid_controller_id__gd(raid)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"PlayerIdentityRules.raid_controller_id", [raid])
-	var before := HumanEngine.before_writing(&"PlayerIdentityRules.raid_controller_id", [raid])
-	var result = raid_controller_id__gd(raid)
-	HumanEngine.check_writing(&"PlayerIdentityRules.raid_controller_id", before, [raid], result)
-	return result
-
-static func raid_controller_id__gd(raid: Dictionary) -> String:
-	var player_id := String(raid.get("spawned_by_player_id", ""))
-	return player_id if player_id != "" else String(raid.get("spawned_by_faction_id", ""))
+	return HumanEngine.native_writing(&"PlayerIdentityRules.raid_controller_id", [raid])
 
 static func contesting_controller_id(encounter: Dictionary) -> String:
 	var player_id := String(encounter.get("contested_by_player_id", ""))
 	return player_id if player_id != "" else String(encounter.get("contested_by_faction_id", ""))
 
 static func resource_controller_id(node: Dictionary) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return resource_controller_id__gd(node)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"PlayerIdentityRules.resource_controller_id", [node])
-	var before := HumanEngine.before_writing(&"PlayerIdentityRules.resource_controller_id", [node])
-	var result = resource_controller_id__gd(node)
-	HumanEngine.check_writing(&"PlayerIdentityRules.resource_controller_id", before, [node], result)
-	return result
-
-static func resource_controller_id__gd(node: Dictionary) -> String:
-	var player_id := String(node.get("collected_by_player_id", ""))
-	return player_id if player_id != "" else String(node.get("collected_by_faction_id", ""))
-
-static func defender_controller_id(record: Dictionary) -> String:
-	var player_id := String(record.get("ai_defended_by_player_id", ""))
-	var commander: Dictionary = record.get("ai_defender_commander_state", {}) if record.get("ai_defender_commander_state", {}) is Dictionary else {}
-	if player_id == "":
-		player_id = String(commander.get("player_id", ""))
-	if player_id != "":
-		return player_id
-	var faction := String(record.get("ai_defended_by_faction_id", ""))
-	return faction if faction != "" else String(commander.get("faction_id", ""))
+	return HumanEngine.native_writing(&"PlayerIdentityRules.resource_controller_id", [node])
 
 static func task_controller_id(task: Dictionary, fallback: String = "") -> String:
 	var player_id := String(task.get("owner_player_id", ""))
 	return player_id if player_id != "" else String(task.get("owner_faction_id", fallback))
 
-static func set_resource_controller(node: Dictionary, session, controller: String) -> void:
-	node["collected_by_faction_id"] = faction_id(session, controller)
-	if player(session, controller).is_empty():
-		node.erase("collected_by_player_id")
-	else:
-		node["collected_by_player_id"] = controller
-
 static func player(session, player_id: String) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return player__gd(session, player_id)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"PlayerIdentityRules.player", [session, player_id])
-	var before := HumanEngine.before_writing(&"PlayerIdentityRules.player", [session, player_id])
-	var result = player__gd(session, player_id)
-	HumanEngine.check_writing(&"PlayerIdentityRules.player", before, [session, player_id], result)
-	return result
-
-static func player__gd(session, player_id: String) -> Dictionary:
-	if session == null or player_id == "":
-		return {}
-	for record in session.overworld.get("players", []):
-		if record is Dictionary and String(record.get("player_id", "")) == player_id:
-			return record
-	return {}
+	return HumanEngine.native_writing(&"PlayerIdentityRules.player", [session, player_id])
 
 static func faction_id(session, controller: String) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return faction_id__gd(session, controller)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"PlayerIdentityRules.faction_id", [session, controller])
-	var before := HumanEngine.before_writing(&"PlayerIdentityRules.faction_id", [session, controller])
-	var result = faction_id__gd(session, controller)
-	HumanEngine.check_writing(&"PlayerIdentityRules.faction_id", before, [session, controller], result)
-	return result
+	return HumanEngine.native_writing(&"PlayerIdentityRules.faction_id", [session, controller])
 
-static func faction_id__gd(session, controller: String) -> String:
-	var record := player(session, controller)
-	return String(record.get("faction_id", controller))
-
-static func identity_fields(session, controller: String) -> Dictionary:
-	var record := player(session, controller)
-	var result := {"faction_id": faction_id(session, controller)}
-	if not record.is_empty():
-		result["player_id"] = controller
-		result["team_id"] = String(record.get("team_id", ""))
-	return result
-
-## Whether a person plays this session. A session whose every seat was handed
-## to the computer (AiSeatRules) has none, and so no human heroes.
 static func has_human_seat(session) -> bool:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return has_human_seat__gd(session)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"PlayerIdentityRules.has_human_seat", [session])
-	var before := HumanEngine.before_writing(&"PlayerIdentityRules.has_human_seat", [session])
-	var result = has_human_seat__gd(session)
-	HumanEngine.check_writing(&"PlayerIdentityRules.has_human_seat", before, [session], result)
-	return result
-
-static func has_human_seat__gd(session) -> bool:
-	if session == null:
-		return false
-	var players = session.overworld.get("players", [])
-	if not (players is Array) or players.is_empty():
-		return true
-	for record in players:
-		if record is Dictionary and bool(record.get("human", false)):
-			return true
-	return false
-
-static func config_for_controller(session, controller: String) -> Dictionary:
-	var result := identity_fields(session, controller)
-	result["label"] = String(ContentService.get_faction(String(result.faction_id)).get("name", result.faction_id))
-	return result
+	return HumanEngine.native_writing(&"PlayerIdentityRules.has_human_seat", [session])
 
 static func allied(session, first: String, second: String) -> bool:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return allied__gd(session, first, second)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"PlayerIdentityRules.allied", [session, first, second])
-	var before := HumanEngine.before_writing(&"PlayerIdentityRules.allied", [session, first, second])
-	var result = allied__gd(session, first, second)
-	HumanEngine.check_writing(&"PlayerIdentityRules.allied", before, [session, first, second], result)
-	return result
-
-static func allied__gd(session, first: String, second: String) -> bool:
-	# The one-human runtime retains "player" in legacy interaction APIs.
-	if session != null:
-		if first == "player":
-			first = String(session.overworld.get("active_player_id", first))
-		if second == "player":
-			second = String(session.overworld.get("active_player_id", second))
-	if first == "" or second == "":
-		return false
-	if first == second:
-		return true
-	var first_player := player(session, first)
-	var second_player := player(session, second)
-	var team := String(first_player.get("team_id", ""))
-	return team != "" and team == String(second_player.get("team_id", ""))
-
-static func normalize_compatibility(session) -> void:
-	if session == null or not session.overworld.get("players", []).is_empty():
-		return
-	if bool(session.flags.get("generated_random_map", false)):
-		# Pre-player-identity saves already pooled same-faction controllers.
-		# Preserve their actual treasury, captures and commander history; source
-		# starting slots cannot recover ownership lost during previous play.
-		session.overworld["player_identity_version"] = 0
-		session.overworld["player_identity_mode"] = "legacy_generated_faction_v0"
-
-static func from_slots(slots: Array) -> Array:
-	var result := []
-	for value in slots:
-		if not (value is Dictionary):
-			continue
-		var slot := int(value.get("slot", 0))
-		if slot <= 0:
-			continue
-		var record: Dictionary = value.duplicate(true)
-		var id := String(record.get("player_id", ""))
-		if id == "":
-			id = "player_%d" % slot
-		record["player_id"] = id
-		if String(record.get("team_id", "")) == "":
-			# Older packages did not carry teams. Do not invent alliances from
-			# faction equality or the requested (not source-assigned) team count.
-			record["team_id"] = id
-		result.append(record)
-	return result
-
-static func enemy_configs(players: Array) -> Array:
-	var result := []
-	for record in players:
-		if not (record is Dictionary) or not bool(record.get("computer", false)) or bool(record.get("human", false)):
-			continue
-		result.append({
-			"player_id": String(record.get("player_id", "")),
-			"player_slot": int(record.get("slot", 0)),
-			"team_id": String(record.get("team_id", "")),
-			"faction_id": String(record.get("faction_id", "")),
-			"generated_package_town_config": true,
-		})
-	return result
+	return HumanEngine.native_writing(&"PlayerIdentityRules.allied", [session, first, second])

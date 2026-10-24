@@ -2,7 +2,6 @@ class_name SessionStateStore
 extends RefCounted
 
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
-static var _human_engine_mode: int = HumanEngine.mode
 
 const SAVE_VERSION := 9
 const SUPPORTED_GAME_STATES := ["overworld", "town", "battle", "outcome"]
@@ -97,18 +96,7 @@ static func normalize_payload(value: Variant) -> Dictionary:
 	return HumanEngine.native_writing(&"SessionStateStore.normalize_payload", [value])
 
 static func normalize_launch_mode(value: Variant) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return normalize_launch_mode__gd(value)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"SessionStateStore.normalize_launch_mode", [value])
-	var before := HumanEngine.before_writing(&"SessionStateStore.normalize_launch_mode", [value])
-	var result = normalize_launch_mode__gd(value)
-	HumanEngine.check_writing(&"SessionStateStore.normalize_launch_mode", before, [value], result)
-	return result
-
-static func normalize_launch_mode__gd(value: Variant) -> String:
-	var launch_mode := String(value)
-	return launch_mode if launch_mode in SUPPORTED_LAUNCH_MODES else LAUNCH_MODE_CAMPAIGN
+	return HumanEngine.native_writing(&"SessionStateStore.normalize_launch_mode", [value])
 
 static func new_session_data(
 	session_id: String = "",

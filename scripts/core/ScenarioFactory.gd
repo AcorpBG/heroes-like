@@ -25,7 +25,6 @@ const ScenarioScriptRulesScript = preload("res://scripts/core/ScenarioScriptRule
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
-static var _human_engine_mode: int = HumanEngine.mode
 
 static func create_session(
 	scenario_id: String,
@@ -101,105 +100,11 @@ static func create_session(
 	session.flags = {}
 	return session
 
-static func _build_hero_state(hero_template: Dictionary) -> Dictionary:
-	var command = hero_template.get("command", {})
-	return HeroProgressionRulesScript.ensure_hero_progression(
-		{
-			"id": String(hero_template.get("id", "")),
-			"name": String(hero_template.get("name", "Wandering Captain")),
-			"level": 1,
-			"experience": 0,
-			"next_level_experience": 250,
-			"base_movement": max(1, int(hero_template.get("base_movement", 10))),
-			"command": {
-				"attack": int(command.get("attack", 0)),
-				"defense": int(command.get("defense", 0)),
-				"power": int(command.get("power", 0)),
-				"knowledge": int(command.get("knowledge", 0)),
-			},
-			"spellbook": SpellRulesScript.build_spellbook(hero_template),
-			"artifacts": ArtifactRulesScript.normalize_hero_artifacts({}),
-			"specialties": [],
-			"battle_traits": hero_template.get("battle_traits", []).duplicate(true) if hero_template.get("battle_traits", []) is Array else [],
-			"pending_specialty_choices": [],
-		}
-	)
-
 static func _build_army_state(army_template: Dictionary) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _build_army_state__gd(army_template)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"ScenarioFactory._build_army_state", [army_template])
-	var before := HumanEngine.before_writing(&"ScenarioFactory._build_army_state", [army_template])
-	var result = _build_army_state__gd(army_template)
-	HumanEngine.check_writing(&"ScenarioFactory._build_army_state", before, [army_template], result)
-	return result
-
-static func _build_army_state__gd(army_template: Dictionary) -> Dictionary:
-	var stacks := []
-	for stack in army_template.get("stacks", []):
-		if not (stack is Dictionary):
-			continue
-		stacks.append(
-			{
-				"unit_id": String(stack.get("unit_id", "")),
-				"count": max(0, int(stack.get("count", 0))),
-			}
-		)
-
-	return {
-		"id": String(army_template.get("id", "")),
-		"name": String(army_template.get("name", "Field Army")),
-		"stacks": stacks,
-	}
+	return HumanEngine.native_writing(&"ScenarioFactory._build_army_state", [army_template])
 
 static func _build_town_states(placements: Variant) -> Array:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _build_town_states__gd(placements)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"ScenarioFactory._build_town_states", [placements])
-	var before := HumanEngine.before_writing(&"ScenarioFactory._build_town_states", [placements])
-	var result = _build_town_states__gd(placements)
-	HumanEngine.check_writing(&"ScenarioFactory._build_town_states", before, [placements], result)
-	return result
-
-static func _build_town_states__gd(placements: Variant) -> Array:
-	var towns := []
-	if not (placements is Array):
-		return towns
-
-	for placement in placements:
-		if not (placement is Dictionary):
-			continue
-		var town_template := ContentService.get_town(String(placement.get("town_id", "")))
-		var built_buildings := _duplicate_array(town_template.get("starting_building_ids", []))
-		var authored_buildings = placement.get("built_buildings", [])
-		if authored_buildings is Array:
-			for building_id_value in authored_buildings:
-				var building_id := String(building_id_value)
-				if building_id != "" and building_id not in built_buildings:
-					built_buildings.append(building_id)
-		var town_state := {
-			"placement_id": String(placement.get("placement_id", "")),
-			"town_id": String(placement.get("town_id", "")),
-			"x": int(placement.get("x", 0)),
-			"y": int(placement.get("y", 0)),
-			"owner": String(placement.get("owner", "neutral")),
-			"controlling_faction_id": String(placement.get("controlling_faction_id", "")),
-			"built_buildings": built_buildings,
-			"available_recruits": {},
-			"garrison": _duplicate_array(town_template.get("garrison", [])),
-			"recovery": _duplicate_dict(placement.get("recovery", {})),
-			"front": _duplicate_dict(placement.get("front", {})),
-			"occupation": _duplicate_dict(placement.get("occupation", {})),
-			"last_build_day": max(0, int(placement.get("last_build_day", 0))),
-		}
-		TownDevelopment.migrate_town(town_state)
-		town_state["available_recruits"] = _seed_recruits_for_town_state(town_state)
-		towns.append(
-			town_state
-		)
-	return towns
+	return HumanEngine.native_writing(&"ScenarioFactory._build_town_states", [placements])
 
 static func _seed_enemy_town_starting_treasuries(enemy_states: Array, town_states: Array) -> void:
 	for town_value in town_states:
@@ -385,133 +290,7 @@ static func _add_resource_sets(left: Dictionary, right: Dictionary) -> Dictionar
 	return result
 
 static func _build_resource_states(placements: Variant) -> Array:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _build_resource_states__gd(placements)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"ScenarioFactory._build_resource_states", [placements])
-	var before := HumanEngine.before_writing(&"ScenarioFactory._build_resource_states", [placements])
-	var result = _build_resource_states__gd(placements)
-	HumanEngine.check_writing(&"ScenarioFactory._build_resource_states", before, [placements], result)
-	return result
-
-static func _build_resource_states__gd(placements: Variant) -> Array:
-	var nodes := []
-	if not (placements is Array):
-		return nodes
-
-	for placement in placements:
-		if not (placement is Dictionary):
-			continue
-		var node := {
-			"placement_id": String(placement.get("placement_id", "")),
-			"site_id": String(placement.get("site_id", "")),
-			"x": int(placement.get("x", 0)),
-			"y": int(placement.get("y", 0)),
-			"collected": bool(placement.get("collected", false)),
-			"collected_by_faction_id": String(placement.get("collected_by_faction_id", "")),
-			"collected_day": max(0, int(placement.get("collected_day", 0))),
-			"response_origin": String(placement.get("response_origin", "")),
-			"response_source_town_id": String(placement.get("response_source_town_id", "")),
-			"response_last_day": max(0, int(placement.get("response_last_day", 0))),
-			"response_until_day": max(0, int(placement.get("response_until_day", 0))),
-		}
-		_copy_resource_runtime_metadata(node, placement)
-		nodes.append(node)
-	return nodes
-
-static func _copy_resource_runtime_metadata(target: Dictionary, source: Dictionary) -> void:
-	for key in [
-		"content_batch_id",
-		"object_id",
-		"zone_id",
-		"owner",
-		"player_slot",
-		"player_type",
-		"team_id",
-		"kind",
-		"generated_kind",
-		"original_resource_category_id",
-		"resource_id",
-		"neutral_dwelling_family_id",
-		"guard_pressure",
-		"guard_front_id",
-		"body_tiles",
-		"blocking_body",
-		"approach_tiles",
-		"visit_tile",
-		"pathing_status",
-		"object_footprint_catalog_ref",
-		"footprint",
-		"runtime_footprint",
-		"body_mask",
-		"runtime_body_mask",
-		"visit_mask",
-		"approach_mask",
-		"passability_mask",
-		"action_mask",
-		"terrain_restrictions",
-		"placement_predicates",
-		"placement_predicate_results",
-		"footprint_deferred",
-		"development_source_support",
-		"source_support_town_placement_id",
-		"source_support_faction_id",
-		"source_support_missing_resource_ids",
-		"artifact_reward_id",
-		"artifact_reward_table_id",
-		"artifact_reward_source_key",
-		"artifact_reward_claimed_by_faction_id",
-		"artifact_reward_claimed_day",
-	]:
-		if source.has(key):
-			target[key] = source[key].duplicate(true) if source[key] is Array or source[key] is Dictionary else source[key]
-
-static func _seed_recruits(built_buildings: Array) -> Dictionary:
-	var recruits := {}
-	var growth_bonus := {}
-	for building_id_value in built_buildings:
-		var building := ContentService.get_building(String(building_id_value))
-		if building.is_empty():
-			continue
-		var unlock_unit_id := String(building.get("unlock_unit_id", ""))
-		if unlock_unit_id != "":
-			recruits[unlock_unit_id] = _unit_growth(unlock_unit_id)
-		var building_growth_bonus = building.get("growth_bonus", {})
-		if building_growth_bonus is Dictionary:
-			for unit_id in building_growth_bonus.keys():
-				growth_bonus[String(unit_id)] = int(growth_bonus.get(String(unit_id), 0)) + int(building_growth_bonus[unit_id])
-
-	for unit_id in growth_bonus.keys():
-		recruits[unit_id] = int(recruits.get(unit_id, _unit_growth(unit_id))) + int(growth_bonus[unit_id])
-	return recruits
-
-static func _seed_recruits_for_town_state(town: Dictionary) -> Dictionary:
-	if TownDevelopment.is_current(town):
-		return TownDevelopment.growth(town)
-	var recruits := _seed_recruits(_duplicate_array(town.get("built_buildings", [])))
-	var town_template := ContentService.get_town(String(town.get("town_id", "")))
-	recruits = _apply_growth_profile(recruits, town_template.get("recruitment", {}))
-	var faction := ContentService.get_faction(String(town_template.get("faction_id", "")))
-	recruits = _apply_growth_profile(recruits, faction.get("recruitment", {}))
-	return recruits
-
-static func _apply_growth_profile(recruits: Dictionary, profile: Variant) -> Dictionary:
-	var merged := recruits.duplicate(true)
-	if not (profile is Dictionary):
-		return merged
-	var growth_bonus = profile.get("growth_bonus", {})
-	if not (growth_bonus is Dictionary):
-		return merged
-	for unit_id_value in growth_bonus.keys():
-		var unit_id := String(unit_id_value)
-		if unit_id == "" or not merged.has(unit_id):
-			continue
-		merged[unit_id] = int(merged.get(unit_id, 0)) + max(0, int(growth_bonus[unit_id]))
-	return merged
-
-static func _unit_growth(unit_id: String) -> int:
-	var unit := ContentService.get_unit(unit_id)
-	return max(0, int(unit.get("growth", 0)))
+	return HumanEngine.native_writing(&"ScenarioFactory._build_resource_states", [placements])
 
 static func _normalize_position(value: Variant) -> Dictionary:
 	if value is Dictionary:
@@ -521,46 +300,10 @@ static func _normalize_position(value: Variant) -> Dictionary:
 	return {"x": 0, "y": 0}
 
 static func _normalize_resources(value: Variant) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _normalize_resources__gd(value)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"ScenarioFactory._normalize_resources", [value])
-	var result = _normalize_resources__gd(value)
-	HumanEngine.check(&"ScenarioFactory._normalize_resources", [value], result)
-	return result
-
-static func _normalize_resources__gd(value: Variant) -> Dictionary:
-	var resources := {}
-	for resource_key in LIVE_STOCKPILE_RESOURCE_KEYS:
-		resources[resource_key] = 0
-	if value is Dictionary:
-		for key in value.keys():
-			var resource_key := String(key)
-			if resource_key == "experience" or resource_key == "":
-				continue
-			resources[resource_key] = max(0, int(value.get(key, 0)))
-	return resources
+	return HumanEngine.native(&"ScenarioFactory._normalize_resources", [value])
 
 static func _duplicate_array(value: Variant) -> Array:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _duplicate_array__gd(value)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"ScenarioFactory._duplicate_array", [value])
-	var result = _duplicate_array__gd(value)
-	HumanEngine.check(&"ScenarioFactory._duplicate_array", [value], result)
-	return result
-
-static func _duplicate_array__gd(value: Variant) -> Array:
-	return value.duplicate(true) if value is Array else []
+	return HumanEngine.native(&"ScenarioFactory._duplicate_array", [value])
 
 static func _duplicate_dict(value: Variant) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return _duplicate_dict__gd(value)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"ScenarioFactory._duplicate_dict", [value])
-	var result = _duplicate_dict__gd(value)
-	HumanEngine.check(&"ScenarioFactory._duplicate_dict", [value], result)
-	return result
-
-static func _duplicate_dict__gd(value: Variant) -> Dictionary:
-	return value.duplicate(true) if value is Dictionary else {}
+	return HumanEngine.native(&"ScenarioFactory._duplicate_dict", [value])

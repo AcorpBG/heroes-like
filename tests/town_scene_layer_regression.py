@@ -726,12 +726,12 @@ func prepare_late_court_supply() -> bool:
 	for attempt in range(6):
 		var field=get_tree().current_scene
 		if not field.scene_file_path.ends_with("OverworldShell.tscn"): break
-		if OverworldRules._resource_node_matches_controller(source[0],"player"): break
+		if load("res://scripts/core/PlayerIdentityRules.gd").resource_controller_id(source[0])=="player": break
 		field._on_map_tile_pressed(tile)
 		await resolve_late_court_guard()
 		session=SessionState.ensure_active_session()
 		source=session.overworld.resource_nodes.filter(func(n):return n.placement_id==source_id)
-	var captured: bool=OverworldRules._resource_node_matches_controller(source[0],"player")
+	var captured: bool=load("res://scripts/core/PlayerIdentityRules.gd").resource_controller_id(source[0])=="player"
 	check(captured and session.scenario_status=="in_progress" and session.day==day_before,"normal guarded supply capture failed or changed the day")
 	if not captured or session.scenario_status!="in_progress": return false
 	check(rows.any(func(r):return r.label=="ordinary_late_court_supply_battle") and rows.any(func(r):return r.label=="ordinary_late_court_supply_battle_report"),"guarded cache did not require battle and casualty report")

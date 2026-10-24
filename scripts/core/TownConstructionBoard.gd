@@ -11,7 +11,6 @@ const SCHEMA := "town_construction_board_v1"
 const TownRulesScript = preload("res://scripts/core/TownRules.gd")
 const TownDevelopment = preload("res://scripts/core/TownDevelopmentRules.gd")
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
-static var _human_engine_mode: int = HumanEngine.mode
 
 const STATUS_COMPLETE := "complete"
 const STATUS_READY := "ready"
@@ -32,37 +31,10 @@ static func slot_for_building(board: Dictionary, building_id: String) -> Diction
 	return HumanEngine.native_writing(&"TownConstructionBoard.slot_for_building", [board, building_id])
 
 static func slot_by_id(board: Dictionary, slot_id: String) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return slot_by_id__gd(board, slot_id)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"TownConstructionBoard.slot_by_id", [board, slot_id])
-	var before := HumanEngine.before_writing(&"TownConstructionBoard.slot_by_id", [board, slot_id])
-	var result = slot_by_id__gd(board, slot_id)
-	HumanEngine.check_writing(&"TownConstructionBoard.slot_by_id", before, [board, slot_id], result)
-	return result
-
-static func slot_by_id__gd(board: Dictionary, slot_id: String) -> Dictionary:
-	for row in board.get("rows", []):
-		for slot in row.get("slots", []):
-			if String(slot.get("id", "")) == slot_id:
-				return slot
-	return {}
+	return HumanEngine.native_writing(&"TownConstructionBoard.slot_by_id", [board, slot_id])
 
 static func ordered_slots(board: Dictionary) -> Array:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return ordered_slots__gd(board)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"TownConstructionBoard.ordered_slots", [board])
-	var before := HumanEngine.before_writing(&"TownConstructionBoard.ordered_slots", [board])
-	var result = ordered_slots__gd(board)
-	HumanEngine.check_writing(&"TownConstructionBoard.ordered_slots", before, [board], result)
-	return result
-
-static func ordered_slots__gd(board: Dictionary) -> Array:
-	var slots := []
-	for row in board.get("rows", []):
-		slots.append_array(row.get("slots", []))
-	return slots
+	return HumanEngine.native_writing(&"TownConstructionBoard.ordered_slots", [board])
 
 static func format_amount(value: int) -> String:
 	return HumanEngine.native(&"TownConstructionBoard.format_amount", [value])

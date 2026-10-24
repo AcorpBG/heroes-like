@@ -15,7 +15,6 @@ const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const DayEngine = preload("res://scripts/core/DayEngine.gd")
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
-static var _human_engine_mode: int = HumanEngine.mode
 
 const TOWNLESS_DAYS := 7
 const NATIVE_SESSION_FLAG := "native_random_map_package_session_adoption"
@@ -23,42 +22,8 @@ const NATIVE_SESSION_FLAG := "native_random_map_package_session_adoption"
 const TOWNLESS_SINCE_KEY := "townless_since"
 
 static func applies(session: SessionStateStoreScript.SessionData) -> bool:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return applies__gd(session)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"PlayerEliminationRules.applies", [session])
-	var before := HumanEngine.before_writing(&"PlayerEliminationRules.applies", [session])
-	var result = applies__gd(session)
-	HumanEngine.check_writing(&"PlayerEliminationRules.applies", before, [session], result)
-	return result
+	return HumanEngine.native_writing(&"PlayerEliminationRules.applies", [session])
 
-static func applies__gd(session: SessionStateStoreScript.SessionData) -> bool:
-	return session != null and bool(session.flags.get(NATIVE_SESSION_FLAG, false))
-
-## Towns a player holds: the human's are owner "player", a computer player's
-## owner "enemy" under its id.
-static func towns_held(session: SessionStateStoreScript.SessionData, player: Dictionary) -> int:
-	var player_id := String(player.get("player_id", ""))
-	var count := 0
-	for town in session.overworld.get("towns", []):
-		if not (town is Dictionary):
-			continue
-		var owner := String(town.get("owner", "neutral"))
-		if bool(player.get("human", false)):
-			if owner == "player":
-				count += 1
-		elif owner == "enemy" and PlayerRules.town_controller_id(town) == player_id:
-			count += 1
-	return count
-
-static func heroes_held(session: SessionStateStoreScript.SessionData, player: Dictionary) -> int:
-	if bool(player.get("human", false)):
-		return (session.overworld.get("player_heroes", []) as Array).size()
-	return _ai_heroes().active_hero_count(session, String(player.get("player_id", "")))
-
-## Runs once a day, after every player has moved. Counts the days each player
-## has gone without a town, removes computer players whose time is up and ends
-## the game for the human whose time is up. Returns messages for the human.
 static func apply_daily(session: SessionStateStoreScript.SessionData) -> Array:
 	return DayEngine.native_writing(&"PlayerEliminationRules.apply_daily", [session])
 

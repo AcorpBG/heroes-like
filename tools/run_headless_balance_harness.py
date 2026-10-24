@@ -29,12 +29,6 @@ SUITES = {
             "scene": "res://tests/balance_regression_report_suite.tscn",
             "timeout": 180,
         },
-        {
-            "id": "headless_simulation_harness",
-            "marker": "HEADLESS_SIMULATION_HARNESS_REPORT",
-            "scene": "res://tests/headless_simulation_harness_report.tscn",
-            "timeout": 240,
-        },
     ],
     "full": [
         {
@@ -60,12 +54,6 @@ SUITES = {
             "marker": "BALANCE_REGRESSION_REPORT_SUITE",
             "scene": "res://tests/balance_regression_report_suite.tscn",
             "timeout": 180,
-        },
-        {
-            "id": "headless_simulation_harness",
-            "marker": "HEADLESS_SIMULATION_HARNESS_REPORT",
-            "scene": "res://tests/headless_simulation_harness_report.tscn",
-            "timeout": 240,
         },
     ],
 }

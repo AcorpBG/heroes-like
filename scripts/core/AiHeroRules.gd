@@ -22,7 +22,6 @@ const WaterTravel = preload("res://scripts/core/WaterTravelRules.gd")
 const AiEngine = preload("res://scripts/core/AiEngine.gd")
 const TurnEngine = preload("res://scripts/core/TurnEngine.gd")
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
-static var _human_engine_mode: int = HumanEngine.mode
 
 const AI_HERO_KEY := "ai_hero"
 # Battle settings (terrain, length, rewards) for fights against an AI hero. The
@@ -383,22 +382,8 @@ static var _weight_sets: Dictionary = {}
 static func _use_weights(state: Dictionary) -> void:
 	TurnEngine.native_writing(&"AiHeroRules._use_weights", [state])
 
-static func _turn_rules() -> Variant:
-	return load("res://scripts/core/EnemyTurnRules.gd")
-
-# --- Identity -----------------------------------------------------------------
-
 static func is_ai_hero(entry: Variant) -> bool:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return is_ai_hero__gd(entry)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"AiHeroRules.is_ai_hero", [entry])
-	var result = is_ai_hero__gd(entry)
-	HumanEngine.check(&"AiHeroRules.is_ai_hero", [entry], result)
-	return result
-
-static func is_ai_hero__gd(entry: Variant) -> bool:
-	return entry is Dictionary and entry.get(AI_HERO_KEY, null) is Dictionary
+	return HumanEngine.native(&"AiHeroRules.is_ai_hero", [entry])
 
 static func hero_name(entry: Dictionary) -> String:
 	return TurnEngine.native_writing(&"AiHeroRules.hero_name", [entry])
@@ -407,17 +392,7 @@ static func active_hero_entries(session: SessionStateStoreScript.SessionData, co
 	return AiEngine.native_writing(&"AiHeroRules.active_hero_entries", [session, controller])
 
 static func active_hero_count(session: SessionStateStoreScript.SessionData, controller: String) -> int:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return active_hero_count__gd(session, controller)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"AiHeroRules.active_hero_count", [session, controller])
-	var before := HumanEngine.before_writing(&"AiHeroRules.active_hero_count", [session, controller])
-	var result = active_hero_count__gd(session, controller)
-	HumanEngine.check_writing(&"AiHeroRules.active_hero_count", before, [session, controller], result)
-	return result
-
-static func active_hero_count__gd(session: SessionStateStoreScript.SessionData, controller: String) -> int:
-	return active_hero_entries(session, controller).size()
+	return HumanEngine.native_writing(&"AiHeroRules.active_hero_count", [session, controller])
 
 # Tiles this faction's towns and heroes have seen on one map level.
 static func explored_tile_count(state: Dictionary, level: int = 0) -> int:
@@ -450,88 +425,6 @@ const MIGRATION_VERSION := 1
 ## A commanderless column this close to one of its side's heroes joins it.
 const COLUMN_JOIN_RADIUS := 3
 
-## Save migration, once per session: raid hosts from older saves become heroes.
-static func migrate_legacy_raids(session: SessionStateStoreScript.SessionData) -> void:
-	if session == null or int(session.overworld.get(MIGRATION_KEY, 0)) >= MIGRATION_VERSION or not session.battle.is_empty():
-		return
-	normalize_ai_heroes(session)
-	session.overworld[MIGRATION_KEY] = MIGRATION_VERSION
-
-## Legacy raid hosts become heroes. A commanderless column is disbanded: its
-## troops join a hero of its controller standing close by, the rest return to
-## the controller's nearest town. Runs once per save and again for any host a
-## scenario script places later (`controller`).
-static func normalize_ai_heroes(session: SessionStateStoreScript.SessionData, only_controller: String = "") -> Dictionary:
-	var report := {"converted": 0, "disbanded": 0, "joined_hero": 0}
-	# A battle in progress still refers to its armies as they are.
-	if session == null or not session.battle.is_empty():
-		return report
-	var encounters: Array = session.overworld.get("encounters", []) if session.overworld.get("encounters", []) is Array else []
-	# A copy: heroes this pass resolves are added to it.
-	var resolved := _resolved_lookup(session).duplicate()
-	var changed := false
-	var columns := []
-	for index in range(encounters.size()):
-		var entry = encounters[index]
-		if not (entry is Dictionary):
-			continue
-		var controller := PlayerRules.raid_controller_id(entry)
-		if controller == "" or (only_controller != "" and controller != only_controller):
-			continue
-		var placement_id := String(entry.get("placement_id", ""))
-		if resolved.has(placement_id) or bool(entry.get("raid_retired_to_rebuild", false)):
-			continue
-		if is_ai_hero(entry):
-			var block: Dictionary = entry.get(AI_HERO_KEY, {})
-			if not (block.get("movement", {}) is Dictionary):
-				block["movement"] = {"current": 0, "max": _movement_max(entry)}
-				entry[AI_HERO_KEY] = block
-				encounters[index] = entry
-				changed = true
-			continue
-		var commander: Dictionary = entry.get("enemy_commander_state", {}) if entry.get("enemy_commander_state", {}) is Dictionary else {}
-		var hero_id := String(commander.get("roster_hero_id", ""))
-		if hero_id == "" or bool(entry.get("commanderless_support_column", false)):
-			columns.append(index)
-			continue
-		encounters[index] = _convert_legacy_host(session, entry, controller)
-		report["converted"] = int(report.converted) + 1
-		changed = true
-	for index in columns:
-		var entry: Dictionary = encounters[index]
-		var controller := PlayerRules.raid_controller_id(entry)
-		var placement_id := String(entry.get("placement_id", ""))
-		var stacks: Array = entry.get("enemy_army", {}).get("stacks", []) if entry.get("enemy_army", {}) is Dictionary else []
-		var hero_index := _nearest_hero_index(encounters, resolved, controller, entry, COLUMN_JOIN_RADIUS)
-		if hero_index >= 0:
-			var hero: Dictionary = encounters[hero_index]
-			var army: Dictionary = hero.get("enemy_army", {}) if hero.get("enemy_army", {}) is Dictionary else {}
-			var merged := _merge_stacks_into(army.get("stacks", []), stacks)
-			if merged.stacks != army.get("stacks", []):
-				army["stacks"] = merged.stacks
-				hero["enemy_army"] = army
-				var commander: Dictionary = hero.get("enemy_commander_state", {}) if hero.get("enemy_commander_state", {}) is Dictionary else {}
-				if not commander.is_empty():
-					hero["enemy_commander_state"] = AdventureRules.sync_commander_army_continuity(commander, army, AI_HERO_ENCOUNTER_ID)
-				hero["joined_column_placement_id"] = placement_id
-				encounters[hero_index] = hero
-				entry["ai_joined_hero_placement_id"] = String(hero.get("placement_id", ""))
-				report["joined_hero"] = int(report.joined_hero) + 1
-			stacks = merged.left
-		var leftover := entry.duplicate(true)
-		leftover["enemy_army"] = {"stacks": stacks}
-		_return_troops_to_nearest_town(session, leftover, controller)
-		_mark_resolved(session, placement_id)
-		resolved[placement_id] = true
-		entry["ai_disbanded_day"] = int(session.day)
-		encounters[index] = entry
-		report["disbanded"] = int(report.disbanded) + 1
-		changed = true
-	if changed:
-		session.overworld["encounters"] = encounters
-	return report
-
-## The closest hero of this controller within `radius` tiles of a column.
 static func _nearest_hero_index(encounters: Array, resolved: Dictionary, controller: String, column: Dictionary, radius: int) -> int:
 	return TurnEngine.native_writing(&"AiHeroRules._nearest_hero_index", [encounters, resolved, controller, column, radius])
 
@@ -596,12 +489,6 @@ static func _ensure_starting_hero(session: SessionStateStoreScript.SessionData, 
 ## lacks heroes, one hire, one build per town, then troops with what is left.
 static func _govern_towns(session: SessionStateStoreScript.SessionData, context: Dictionary) -> Dictionary:
 	return TurnEngine.native_writing(&"AiHeroRules._govern_towns", [session, context])
-
-## A main hero plus a collector, one more with a second town, and a fourth
-## once the second week is under way.
-static func desired_hero_count(session: SessionStateStoreScript.SessionData, controller: String) -> int:
-	_use_weights(_turn_rules()._find_state(session.overworld.get("enemy_states", []), controller))
-	return _desired_hero_count(session, controller)
 
 static func _desired_hero_count(session: SessionStateStoreScript.SessionData, controller: String) -> int:
 	return TurnEngine.native_writing(&"AiHeroRules._desired_hero_count", [session, controller])

@@ -5,7 +5,6 @@ const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRu
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
-static var _human_engine_mode: int = HumanEngine.mode
 const CONTEXT_OVERWORLD := "overworld"
 const CONTEXT_BATTLE := "battle"
 const COMMON_RESOURCE_IDS := ["gold", "wood", "ore"]
@@ -32,37 +31,13 @@ const SPELL_PRIMARY_ROLES := [
 ]
 
 static func spell_id_for_action(action_id: String) -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return spell_id_for_action__gd(action_id)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"SpellRules.spell_id_for_action", [action_id])
-	var result = spell_id_for_action__gd(action_id)
-	HumanEngine.check(&"SpellRules.spell_id_for_action", [action_id], result)
-	return result
-
-static func spell_id_for_action__gd(action_id: String) -> String:
-	var spell_id := ""
-	if action_id.begins_with("cast_spell:"):
-		spell_id = action_id.trim_prefix("cast_spell:")
-	elif action_id.begins_with("learn_spell:"):
-		spell_id = action_id.trim_prefix("learn_spell:")
-	return spell_id if not ContentService.get_spell(spell_id).is_empty() else ""
+	return HumanEngine.native(&"SpellRules.spell_id_for_action", [action_id])
 
 static func spell_school_icon_path(spell_id: String) -> String:
 	return HumanEngine.native(&"SpellRules.spell_school_icon_path", [spell_id])
 
 static func spell_icon_path(spell_id: String) -> String:
 	return HumanEngine.native(&"SpellRules.spell_icon_path", [spell_id])
-
-static func build_spellbook(hero_template: Dictionary) -> Dictionary:
-	var mana_max := mana_max_from_command(hero_template.get("command", {}))
-	return {
-		"known_spell_ids": _normalize_spell_ids(hero_template.get("starting_spell_ids", [])),
-		"mana": {
-			"current": mana_max,
-			"max": mana_max,
-		},
-	}
 
 static func ensure_hero_spellbook(hero_state: Dictionary, hero_template: Dictionary = {}) -> Dictionary:
 	return BattleEngine.native_writing(&"SpellRules.ensure_hero_spellbook", [hero_state, hero_template])
@@ -78,115 +53,19 @@ static func cast_overworld_spell_on_day(hero: Dictionary, day: int) -> bool:
 	return HumanEngine.native_writing(&"SpellRules.cast_overworld_spell_on_day", [hero, day])
 
 static func refresh_daily_mana(hero_state: Dictionary) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return refresh_daily_mana__gd(hero_state)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"SpellRules.refresh_daily_mana", [hero_state])
-	var result = refresh_daily_mana__gd(hero_state)
-	HumanEngine.check(&"SpellRules.refresh_daily_mana", [hero_state], result)
-	return result
-
-static func refresh_daily_mana__gd(hero_state: Dictionary) -> Dictionary:
-	var hero: Dictionary = ensure_hero_spellbook(hero_state.duplicate(true))
-	var spellbook = hero.get("spellbook", {})
-	var mana = spellbook.get("mana", {})
-	mana["current"] = int(mana.get("max", 0))
-	spellbook["mana"] = mana
-	hero["spellbook"] = spellbook
-	return hero
-
-static func mana_state(hero_state: Dictionary) -> Dictionary:
-	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
-	return hero.get("spellbook", {}).get("mana", {})
+	return HumanEngine.native(&"SpellRules.refresh_daily_mana", [hero_state])
 
 static func adjusted_spell_mana_cost(hero_state: Dictionary, spell: Variant) -> int:
 	return BattleEngine.native_writing(&"SpellRules.adjusted_spell_mana_cost", [hero_state, spell])
 
 static func knows_spell(hero_state: Dictionary, spell_id: String) -> bool:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return knows_spell__gd(hero_state, spell_id)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"SpellRules.knows_spell", [hero_state, spell_id])
-	var before := HumanEngine.before_writing(&"SpellRules.knows_spell", [hero_state, spell_id])
-	var result = knows_spell__gd(hero_state, spell_id)
-	HumanEngine.check_writing(&"SpellRules.knows_spell", before, [hero_state, spell_id], result)
-	return result
-
-static func knows_spell__gd(hero_state: Dictionary, spell_id: String) -> bool:
-	# The list ensure_hero_spellbook gives a copy of the hero, read in place:
-	# without a template it is the stored list, normalized, or none.
-	var spellbook = hero_state.get("spellbook", {})
-	if not (spellbook is Dictionary) or not spellbook.has("known_spell_ids"):
-		return false
-	return _normalize_spell_ids(spellbook["known_spell_ids"]).has(spell_id)
-
-static func learn_spell(hero_state: Dictionary, spell_id: String) -> Dictionary:
-	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
-	var spell := ContentService.get_spell(spell_id)
-	if spell.is_empty():
-		return {"ok": false, "hero": hero, "message": "That spell is not known to the archives."}
-	if _knows_spell(hero, spell_id):
-		return {"ok": false, "hero": hero, "message": "%s already knows %s." % [String(hero.get("name", "The hero")), String(spell.get("name", spell_id))]}
-
-	var spellbook = hero.get("spellbook", {})
-	var known_spell_ids: Array = spellbook.get("known_spell_ids", [])
-	if not (known_spell_ids is Array):
-		known_spell_ids = []
-	known_spell_ids.append(spell_id)
-	spellbook["known_spell_ids"] = _normalize_spell_ids(known_spell_ids)
-	hero["spellbook"] = spellbook
-	return {
-		"ok": true,
-		"hero": hero,
-		"message": "%s learns %s." % [String(hero.get("name", "The hero")), String(spell.get("name", spell_id))],
-	}
+	return HumanEngine.native_writing(&"SpellRules.knows_spell", [hero_state, spell_id])
 
 static func known_spells(hero_state: Dictionary, context_filter: String = "") -> Array:
 	return BattleEngine.native_writing(&"SpellRules.known_spells", [hero_state, context_filter])
 
 static func describe_spellbook(hero_state: Dictionary, context_filter: String = "") -> String:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return describe_spellbook__gd(hero_state, context_filter)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"SpellRules.describe_spellbook", [hero_state, context_filter])
-	var before := HumanEngine.before_writing(&"SpellRules.describe_spellbook", [hero_state, context_filter])
-	var result = describe_spellbook__gd(hero_state, context_filter)
-	HumanEngine.check_writing(&"SpellRules.describe_spellbook", before, [hero_state, context_filter], result)
-	return result
-
-static func describe_spellbook__gd(hero_state: Dictionary, context_filter: String = "") -> String:
-	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
-	var mana: Dictionary = hero.get("spellbook", {}).get("mana", {})
-	var label := "Spellbook"
-	if context_filter == CONTEXT_OVERWORLD:
-		label = "Field Spells"
-	elif context_filter == CONTEXT_BATTLE:
-		label = "Battle Spells"
-	var lines := [
-		"%s | Mana %d/%d" % [
-			label,
-			int(mana.get("current", 0)),
-			int(mana.get("max", 0)),
-		]
-	]
-	var spell_lines := []
-	for spell in known_spells(hero, context_filter):
-		var mana_cost: int = adjusted_spell_mana_cost(hero, spell)
-		spell_lines.append(
-			"- %s | %s | Cost %d | %s | %s | Use: %s" % [
-				String(spell.get("name", spell.get("id", "Spell"))),
-				spell_category_label(spell),
-				mana_cost,
-				_mana_readiness_label(hero, mana_cost),
-				_spell_effect_summary(spell, hero),
-				_best_use_line(spell),
-			]
-		)
-	if spell_lines.is_empty():
-		lines.append("- No known spells")
-	else:
-		lines.append_array(spell_lines)
-	return "\n".join(lines)
+	return HumanEngine.native_writing(&"SpellRules.describe_spellbook", [hero_state, context_filter])
 
 static func spell_category_label(spell: Dictionary) -> String:
 	return HumanEngine.native_writing(&"SpellRules.spell_category_label", [spell])
@@ -478,55 +357,6 @@ static func describe_battle_spellbook(hero_state: Dictionary, battle: Dictionary
 		lines.append_array(spell_lines)
 	return "\n".join(lines)
 
-static func describe_overworld_spellbook(hero_state: Dictionary, movement_state: Dictionary) -> String:
-	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
-	var mana: Dictionary = hero.get("spellbook", {}).get("mana", {})
-	var lines := [
-		"Field Spells | Mana %d/%d" % [
-			int(mana.get("current", 0)),
-			int(mana.get("max", 0)),
-		]
-	]
-	var spell_lines := []
-	for spell in known_spells(hero, CONTEXT_OVERWORLD):
-		var validation := validate_overworld_spell(hero, movement_state, spell)
-		var mana_cost: int = adjusted_spell_mana_cost(hero, spell)
-		spell_lines.append("- %s" % _overworld_spell_readability_line(hero, movement_state, spell, validation, mana_cost))
-	if spell_lines.is_empty():
-		lines.append("- No field spells known")
-	else:
-		lines.append_array(spell_lines)
-	return "\n".join(lines)
-
-static func describe_overworld_spell_rail(hero_state: Dictionary, movement_state: Dictionary) -> String:
-	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
-	var mana: Dictionary = hero.get("spellbook", {}).get("mana", {})
-	var actions := get_overworld_actions(hero, movement_state)
-	if actions.is_empty():
-		return "Field Magic | Mana %d/%d | No field spells known" % [
-			int(mana.get("current", 0)),
-			int(mana.get("max", 0)),
-		]
-	var focus: Dictionary = {}
-	for action_value in actions:
-		if not (action_value is Dictionary):
-			continue
-		var action: Dictionary = action_value
-		if not bool(action.get("disabled", false)):
-			focus = action
-			break
-	if focus.is_empty():
-		focus = actions[0]
-	var state := "Ready" if not bool(focus.get("disabled", false)) else "Blocked"
-	return "Field Magic | Mana %d/%d | %s: %s | %s | %s" % [
-		int(mana.get("current", 0)),
-		int(mana.get("max", 0)),
-		state,
-		String(focus.get("spell_name", focus.get("label", "Spell"))),
-		String(focus.get("target_requirement", focus.get("target", ""))),
-		String(focus.get("consequence", focus.get("effect", ""))),
-	]
-
 static func _mana_readiness_label(hero_state: Dictionary, mana_cost: int) -> String:
 	return HumanEngine.native_writing(&"SpellRules._mana_readiness_label", [hero_state, mana_cost])
 
@@ -545,38 +375,6 @@ static func get_overworld_actions(hero_state: Dictionary, movement_state: Dictio
 
 static func cast_overworld_spell(hero_state: Dictionary, movement_state: Dictionary, spell_id: String, today: int = 0) -> Dictionary:
 	return HumanEngine.native(&"SpellRules.cast_overworld_spell", [hero_state, movement_state, spell_id, today])
-
-static func get_battle_actions(hero_state: Dictionary, battle: Dictionary, active_stack: Dictionary, target_stack: Dictionary) -> Array:
-	var actions := []
-	for spell in known_spells(hero_state, CONTEXT_BATTLE):
-		var validation := validate_battle_spell(hero_state, battle, active_stack, target_stack, spell)
-		var mana_cost: int = adjusted_spell_mana_cost(hero_state, spell)
-		var summary := _battle_spell_action_summary(hero_state, battle, active_stack, target_stack, spell)
-		var validation_message := String(validation.get("message", ""))
-		if validation_message != "":
-			summary = "%s Blocked: %s" % [summary, validation_message]
-		summary = "%s | Cost %d mana | Target %s | %s %s" % [
-			spell_category_label(spell),
-			mana_cost,
-			_target_mode_label(String(spell.get("target_mode", "self"))),
-			"Ready." if bool(validation.get("ok", false)) else "",
-			summary.strip_edges(),
-		]
-		actions.append(
-			{
-				"id": "cast_spell:%s" % String(spell.get("id", "")),
-				"label": "Cast %s (%d)" % [String(spell.get("name", "Spell")), mana_cost],
-				"disabled": not bool(validation.get("ok", false)),
-				"summary": summary.strip_edges(),
-				"cost": mana_cost,
-				"category": spell_category_label(spell),
-				"effect": _battle_spell_effect_summary(hero_state, spell, battle, active_stack, target_stack),
-				"readiness": "Ready" if bool(validation.get("ok", false)) else "Blocked: %s" % validation_message,
-				"target": _target_mode_label(String(spell.get("target_mode", "self"))),
-				"best_use": _best_use_line(spell, battle, active_stack, target_stack),
-			}
-		)
-	return actions
 
 static func resolve_battle_spell(hero_state: Dictionary, battle: Dictionary, active_stack: Dictionary, target_stack: Dictionary, spell_id: String, acting_side: String = "player") -> Dictionary:
 	return BattleEngine.native_writing(&"SpellRules.resolve_battle_spell", [hero_state, battle, active_stack, target_stack, spell_id, acting_side])
@@ -644,133 +442,8 @@ static func _turns_label(turns: int) -> String:
 static func battle_spell_modifiers(spell: Dictionary) -> Dictionary:
 	return BattleEngine.native(&"SpellRules.battle_spell_modifiers", [spell])
 
-static func _battle_spell_action_summary(
-	hero_state: Dictionary,
-	battle: Dictionary,
-	active_stack: Dictionary,
-	target_stack: Dictionary,
-	spell: Dictionary
-) -> String:
-	var timing_hint := battle_spell_timing_summary(hero_state, battle, active_stack, target_stack, spell)
-	var effect = spell.get("effect", {})
-	match String(effect.get("type", "")):
-		"damage_enemy":
-			var damage_projection := battle_spell_damage_projection(hero_state, battle, target_stack, spell)
-			var summary := "Projected %d damage to %s." % [
-				int(damage_projection.get("final_damage", 0)),
-				String(target_stack.get("name", "the selected enemy")),
-			]
-			if int(damage_projection.get("resistance_pct", 0)) > 0:
-				summary += " Resistance reduces raw %d by %d%%." % [
-					int(damage_projection.get("raw_damage", 0)),
-					int(damage_projection.get("resistance_pct", 0)),
-				]
-			var status_effect: Dictionary = effect.get("status_effect", {})
-			if status_effect is Dictionary and not status_effect.is_empty():
-				var status_payload := _status_effect_from_spell_effect(spell, battle, hero_state)
-				var control_pct := control_resistance_pct(battle, target_stack, spell)
-				summary += " Leaves it %s (%s) for %s." % [
-					String(status_effect.get("label", "a battle effect")),
-					_status_terms(status_effect),
-					_turns_label(spell_duration_rounds(hero_state, status_effect.get("duration_rounds", 1), spell, "debuff")),
-				]
-				if target_is_immune_to_status(target_stack, battle, String(status_payload.get("effect_id", ""))):
-					summary += " Target is immune to that rider."
-				elif control_pct > 0:
-					summary += " Rider success chance %d%%." % max(0, 100 - control_pct)
-			if timing_hint != "":
-				summary += " Timing: %s" % timing_hint
-			return summary
-		"control_enemy":
-			var control_effect: Dictionary = effect.get("status_effect", {})
-			var summary := "Leave %s %s (%s) for %s." % [
-				String(target_stack.get("name", "the selected enemy")),
-				String(control_effect.get("label", "control")),
-				_status_terms(control_effect),
-				_turns_label(spell_duration_rounds(hero_state, control_effect.get("duration_rounds", 1), spell, "debuff")),
-			]
-			var control_payload := _status_effect_from_spell_effect(spell, battle, hero_state)
-			var control_pct := control_resistance_pct(battle, target_stack, spell)
-			if target_is_immune_to_status(target_stack, battle, String(control_payload.get("effect_id", ""))):
-				summary += " Target is immune."
-			elif control_pct > 0:
-				summary += " Success chance %d%%." % max(0, 100 - control_pct)
-			if timing_hint != "":
-				summary += " Timing: %s" % timing_hint
-			return summary
-		"recover_ally":
-			var recovery_summary := "Restore up to %d health to surviving creatures in %s; fallen creatures are not restored." % [
-				_battle_spell_recovery_amount(hero_state, spell),
-				String(active_stack.get("name", "the active stack")),
-			]
-			var recovery_modifiers := battle_spell_modifiers(spell)
-			if not recovery_modifiers.is_empty():
-				recovery_summary += " Grant %s for %s." % [
-					_modifier_summary(recovery_modifiers),
-					_turns_label(spell_duration_rounds(hero_state, effect.get("duration_rounds", 1), spell, "buff")),
-				]
-			if timing_hint != "":
-				recovery_summary += " Timing: %s" % timing_hint
-			return recovery_summary
-		"cleanse_ally":
-			var cleanse_summary := "Cleanse %s from %s." % [
-				", ".join(_cleanse_labels(effect)),
-				String(active_stack.get("name", "the active stack")),
-			]
-			var cleanse_modifiers := battle_spell_modifiers(spell)
-			if not cleanse_modifiers.is_empty():
-				cleanse_summary += " Grant %s for %s." % [
-					_modifier_summary(cleanse_modifiers),
-					_turns_label(spell_duration_rounds(hero_state, effect.get("duration_rounds", 1), spell, "buff")),
-				]
-			if timing_hint != "":
-				cleanse_summary += " Timing: %s" % timing_hint
-			return cleanse_summary
-		"defense_buff":
-			var summary := "Grant %s to %s for %s." % [
-				_modifier_summary(battle_spell_modifiers(spell)),
-				String(active_stack.get("name", "the active stack")),
-				_turns_label(spell_duration_rounds(hero_state, effect.get("duration_rounds", 1), spell, "buff")),
-			]
-			if timing_hint != "":
-				summary += " Timing: %s" % timing_hint
-			return summary
-		"initiative_buff", "attack_buff":
-			var summary := "Grant %s to %s for %s." % [
-				_modifier_summary(battle_spell_modifiers(spell)),
-				String(active_stack.get("name", "the active stack")),
-				_turns_label(spell_duration_rounds(hero_state, effect.get("duration_rounds", 1), spell, "buff")),
-			]
-			if timing_hint != "":
-				summary += " Timing: %s" % timing_hint
-			return summary
-		_:
-			return "No authored battle summary is available for this spell."
-
 static func battle_spell_timing_summary(hero_state: Dictionary, battle: Dictionary, active_stack: Dictionary, target_stack: Dictionary, spell: Dictionary) -> String:
 	return HumanEngine.native_writing(&"SpellRules.battle_spell_timing_summary", [hero_state, battle, active_stack, target_stack, spell])
-
-static func _overworld_spell_readability_line(
-	hero_state: Dictionary,
-	movement_state: Dictionary,
-	spell: Dictionary,
-	validation: Dictionary,
-	mana_cost: int
-) -> String:
-	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
-	var mana: Dictionary = hero.get("spellbook", {}).get("mana", {})
-	var readiness := "Ready" if bool(validation.get("ok", false)) else "Blocked: %s" % String(validation.get("message", "cannot cast now"))
-	return "%s | %s | %s | Mana %d/%d, need %d | %s | Consequence: %s | Why: %s" % [
-		String(spell.get("name", "Spell")),
-		spell_category_label(spell),
-		readiness,
-		int(mana.get("current", 0)),
-		int(mana.get("max", 0)),
-		mana_cost,
-		_overworld_target_requirement(spell),
-		_overworld_spell_effect_summary(spell, movement_state, hero),
-		_best_use_line(spell, movement_state),
-	]
 
 static func _overworld_spell_effect_summary(spell: Dictionary, movement_state: Dictionary, hero_state: Dictionary = {}) -> String:
 	return HumanEngine.native_writing(&"SpellRules._overworld_spell_effect_summary", [spell, movement_state, hero_state])
@@ -888,15 +561,6 @@ static func _filtered_resource_delta(value: Variant, allowed_ids: Array) -> Dict
 		result[resource_id] = amount
 	return result
 
-static func _normalize_spell_ids(value: Variant) -> Array:
-	var ids := []
-	if value is Array:
-		for spell_id_value in value:
-			var spell_id := String(spell_id_value)
-			if spell_id != "":
-				ids.append(spell_id)
-	return ids
-
 static func _status_effect_from_spell_effect(spell: Dictionary, battle: Dictionary, hero_state: Dictionary = {}) -> Dictionary:
 	return BattleEngine.native_writing(&"SpellRules._status_effect_from_spell_effect", [spell, battle, hero_state])
 
@@ -922,31 +586,6 @@ static func _consume_mana(hero_state: Dictionary, cost: int) -> Dictionary:
 static func _knows_spell(hero_state: Dictionary, spell_id: String) -> bool:
 	return BattleEngine.native(&"SpellRules._knows_spell", [hero_state, spell_id])
 
-static func _ability_by_id(stack: Dictionary, ability_id: String) -> Dictionary:
-	if ability_id == "":
-		return {}
-	for ability in stack.get("abilities", []):
-		if ability is Dictionary and String(ability.get("id", "")) == ability_id:
-			return ability
-	return {}
-
-static func _has_ability(stack: Dictionary, ability_id: String) -> bool:
-	return not _ability_by_id(stack, ability_id).is_empty()
-
-static func _alive_stacks_for_side(battle: Dictionary, side: String) -> Array:
-	var stacks := []
-	for stack in battle.get("stacks", []):
-		if not (stack is Dictionary):
-			continue
-		if String(stack.get("side", "")) != side:
-			continue
-		if _alive_count(stack) <= 0:
-			continue
-		stacks.append(stack)
-	return stacks
-
-## Living creatures in a battle stack, as BattleRules._alive_count: battle
-## stacks keep base_count, unit_hp and total_health, not an army "count".
 static func _alive_count(stack: Dictionary) -> int:
 	return BattleEngine.native(&"SpellRules._alive_count", [stack])
 

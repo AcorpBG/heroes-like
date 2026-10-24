@@ -20,17 +20,14 @@ SCENES = [
     "battle_quick_resolve_runtime_report",
     "battle_withdrawal_confirmation_runtime_report",
     "battle_deterministic_rng_state_report",
-    "battle_controller_board_navigation_smoke",
     "overworld_gameplay_movement_input_ownership_regression",
     "overworld_full_route_movement_regression",
     "fog_of_war_homm_style_regression",
     "save_transactional_commit_regression",
     "save_summary_deferred_payload_report",
     "application_battle_entry_autosave_failure_regression",
-    "battle_resolution_autosave_failure_route_safety_regression",
     "overworld_end_turn_autosave_failure_regression",
     "application_safe_close_autosave_regression",
-    "campaign_completion_persistence_atomicity_regression",
     "campaign_replay_progress_preservation_regression",
     "campaign_progression_semantic_storage_fail_closed_regression",
     "scenario_outcome_new_session_confirmation_safe_cancel_regression",
@@ -48,19 +45,15 @@ SCENES = [
     "town_building_skyline_progression_report",
     "army_stack_management_bar_runtime_report",
     "hero_field_rendezvous_army_transfer_report",
-    "hero_exchange_screen_report",
     "town_army_transfer_completion_feedback_report",
     "town_recruitment_ui_surface_report",
     "town_recruitment_cue_playback_report",
     "town_route_response_dispatch_feedback_report",
-    "town_capital_project_identity_runtime_report",
-    "town_development_runtime_balance_report",
 ]
 RENDERED_SCENES = ["active_play_keyboard_focus_smoke", "custom_mouse_cursor_runtime_report"]
 # These reports observe an actual drawn frame, not a headless timing surrogate.
 REQUIRES_RENDERED = {"active_play_load_resumed_cue_playback_report", "scenario_outcome_new_session_confirmation_safe_cancel_regression", "scenario_outcome_normal_entry_focus_regression"}
 RMG_SCENES = [
-    "native_rmg_end_to_end_runtime_boundary_report",
     "native_random_map_homm3_re_object_table_proxy_report",
     "random_map_generated_density_distribution_report",
     "overworld_map_object_sprite_asset_report",
@@ -75,11 +68,6 @@ RMG_SCENES = [
     "fog_of_war_homm_style_regression",
     "save_transactional_commit_regression",
     "save_summary_deferred_payload_report",
-    "ai_known_world_memory_report",
-    "ai_player_rules_report",
-    "ai_hero_task_live_turn_execution_report",
-    "ai_hero_task_state_normalizer_preservation_report",
-    "ai_raid_assault_grouping_report",
 ]
 # These existing tests deliberately make the authoritative writer fail and
 # assert rollback/retry/route safety. Only their exact domain issue is expected;
@@ -90,7 +78,6 @@ EXPECTED_INJECTED_ISSUES = {
     "scenario_outcome_new_session_confirmation_safe_cancel_regression": "ERROR: scenario_outcome_autosave_failed:",
     "generated_opening_autosave_failure_retry_regression": ("ERROR: generated_opening_autosave_failed:", "ERROR: end_turn_autosave_failed:"),
     "application_battle_entry_autosave_failure_regression": "ERROR: battle_entry_autosave_failed:",
-    "battle_resolution_autosave_failure_route_safety_regression": "ERROR: battle_resolution_autosave_failed:",
     "overworld_end_turn_autosave_failure_regression": "ERROR: end_turn_autosave_failed:",
     "application_safe_close_autosave_regression": "ERROR: safe_quit_autosave_failed:",
     "settings_transactional_persistence_regression": "ERROR: ConfigFile parse error at user://config/settings.cfg:0: Unexpected EOF while parsing simple tag.",
@@ -229,7 +216,6 @@ def main() -> int:
             "town_recruitment_ui_surface_report": "TOWN_RECRUITMENT_UI_SURFACE_REPORT",
             "town_recruitment_cue_playback_report": "TOWN_RECRUITMENT_CUE_PLAYBACK_REPORT",
             "town_route_response_dispatch_feedback_report": "TOWN_ROUTE_RESPONSE_DISPATCH_FEEDBACK_REPORT",
-            "town_development_runtime_balance_report": "TOWN_DEVELOPMENT_RUNTIME_BALANCE_REPORT",
         }
         marker = match.group(1) if match else explicit_markers.get(name, "")
         if not marker or marker not in source:

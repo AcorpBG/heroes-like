@@ -96,7 +96,7 @@ func run() -> void:
             check(normalized({"tiles":placement.get("package_"+key,[])}) == normalized({"tiles":spec[key]}), "exact native "+key)
     check(placement.get("runtime_footprint",null)==null, "no injected visual footprint")
     check(bool(placement.get("collected",false))==bool(spec.claimed), "earned collection state")
-    check(OverworldRules._resource_node_matches_controller(placement,"player")==bool(spec.claimed), "canonical earned controller state")
+    check((load("res://scripts/core/PlayerIdentityRules.gd").resource_controller_id(placement)=="player")==bool(spec.claimed), "canonical earned controller state")
     check(OverworldRules.is_tile_visible(session,int(spec.x),int(spec.y),0), "target legitimately explored without fog injection")
     var view = get_tree().current_scene._map_view
     view.focus_on_tile(Vector2i(int(spec.x),int(spec.y)))

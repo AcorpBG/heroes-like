@@ -3133,6 +3133,41 @@ Checks:
   `battle_ai_flow_report`, `battle_deterministic_rng_state_report`, `player_elimination_rules_report`,
   `generated_start_hero_growth_seed_report`; all pass): 276,677 checks on 74 functions. 0 mismatches in both.
 
+**Merge 4** (7.8, 7.9, 7.13 and 7.15, 2026-10-24): merged to main after main was tagged `pre-native-phase7-merge-4`
+(D10). Main 6ef5ae55c was merged into the branch first.
+- The 416 entries of 7.8 (192), 7.9 (61), 7.13 (104) and 7.15 (59) are NATIVE: their GDScript functions are thin
+  wrappers over `HumanEngine.native`, and their 416 `__gd` bodies (12,871 lines) are gone. The human registry has no
+  PORT entry left.
+- 1,320 other GDScript functions (23,734 lines) that only each other and the tests reached are deleted: 402 in
+  `OverworldRules`, 166 in `MapEditorShell`, 120 each in `BattleRules` and `EnemyAdventureRules`, 74 in `TownRules`,
+  67 in `TerrainPlacementRules`, 66 in `ArtifactRules` and 305 in 26 other scripts. The 43 scripts the merge touches
+  have 63,152 lines on main and 30,111 after.
+- 166 tests and the harness `tests/support/HeadlessSimulationHarnessRules.gd` are retired (D-e,
+  `docs/one-copy-test-retirement.md`): 113 tests and the harness called deleted bodies, and the others load, run or
+  list one of them. Two tests read a site's controller through the public `PlayerIdentityRules.resource_controller_id`
+  instead, which keeps the 21 tests and three tools that run on them. Seven tests' packaged modes stay broken.
+- Rules with only a GDScript copy (345 functions, 5,786 lines): the campaign (`CampaignRules`, 115, D-f); the
+  skirmish browser and setup (`ScenarioSelectRules`, 31); `ScenarioFactory.create_session` and its 12 helpers; the
+  briefing and operational boards (`ScenarioRules`, 13); the battle screen's header, status, pressure, commander,
+  initiative, effect and dispatch texts and its cue payloads (`BattleRules`, 20); `AnimationCueCatalog` (22) and
+  `ProfileLog` (18); the overworld's getters, fog read scope and small accessors (`OverworldRules`, 20); the spell and
+  artifact reports with `describe_battle_spellbook` and `describe_loadout`; `AiSeatRules`, the field transfers
+  (`HeroCommandRules`) and the engines' view helpers.
+- Checks of the merged code against main 6ef5ae55c:
+  - the `--human` check identical on the eight seeds, 1,896 action digests and the records;
+  - the `--editor` check on its three seeds: the state identical at every step main runs, and the panels too once
+    main's "Export intent" line (the authored export, deleted by D-h) is left out of their hash. That covers the first
+    116 of the 121 steps. On main 6ef5ae55c, step 117 (Save Copy) fails:
+    `ScenarioSelectRules.load_maps_folder_package_session_from_entry` stops on `String(float) is not ported`, so
+    the saved pair is not adopted. On the branch, Save Copy and the steps after it run clean;
+  - the six seeds identical, 443 daily digests and the match records, and the same six through the match runner
+    (`--runner-b`);
+  - core suite 17/17.
+- UI speed, screen time per action in ms, main | branch (the eight seeds, six runs at once): opening a town 73.5 |
+  56.4, town actions 239 | 219, end of turn 1,244 | 1,227, battle 577 | 573, leaving a town 7.5 | 7.5. Slower on
+  the branch: arming a move 38.4 | 53.7, hero 74.9 | 88.2, dialogs 95.1 | 109.1, move 190 |
+  200, hover 1.4 | 4.6.
+
 ### Phase 8: a match runner without Godot
 
 Wanted, not optional (owner decision 2026-10-22, D7). The same core as a command-line tool, `match_sim_cli` beside

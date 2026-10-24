@@ -1,7 +1,6 @@
 extends RefCounted
 
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
-static var _human_engine_mode: int = HumanEngine.mode
 
 # Original-game presentation of recovered nonvisitable bodies. This never
 # invents placements or masks. Versioned appearance selection also works on reload.
@@ -27,51 +26,7 @@ static func drawn_asset_candidates(object: Dictionary, biome_id: String, terrain
 	return _drawn_candidates[memo_key]
 
 static func asset_candidates(object: Dictionary, biome_id: String, terrain_id: String = "") -> Array:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return asset_candidates__gd(object, biome_id, terrain_id)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native_writing(&"NativeSceneryRules.asset_candidates", [object, biome_id, terrain_id])
-	var before := HumanEngine.before_writing(&"NativeSceneryRules.asset_candidates", [object, biome_id, terrain_id])
-	var result = asset_candidates__gd(object, biome_id, terrain_id)
-	HumanEngine.check_writing(&"NativeSceneryRules.asset_candidates", before, [object, biome_id, terrain_id], result)
-	return result
-
-static func asset_candidates__gd(object: Dictionary, biome_id: String, terrain_id: String = "") -> Array:
-	var version := int(object.get("native_scenery_art_version", 0))
-	if version < 1: return []
-	var cache_key := "%d|%s|%s|%s" % [version, object.get("h3m_type_id", -1), biome_id, terrain_id]
-	if _candidate_cache.has(cache_key): return _candidate_cache[cache_key]
-	var manifest := ContentService.load_json(MANIFEST)
-	var entry := policy(object)
-	if version >= PRESENTATION_VERSION:
-		var family := String(entry.get("landscape_family", entry.get("variation_family", "")))
-		if family != "":
-			var terrain_pool: Array = manifest.get("terrain_component_palettes", {}).get(terrain_id, {}).get(family, [])
-			if not entry.has("variation_biome") and not terrain_pool.is_empty():
-				_candidate_cache[cache_key] = terrain_pool
-				return terrain_pool
-			var art_biome := String(entry.get("variation_biome", biome_id))
-			# Production component palettes replace the old few-source clusters.
-			# Every family now owns independently painted source silhouettes.
-			var components: Array = manifest.get("component_palettes", {}).get(family, {}).get(art_biome, [])
-			if not components.is_empty():
-				_candidate_cache[cache_key] = components
-				return components
-			var seeds: Array = manifest.get("landscape_palettes", {}).get(family, {}).get(art_biome, [])
-			var candidates: Array = entry.get("asset_ids", []).duplicate()
-			var additions: Array = seeds.duplicate()
-			additions.append_array(manifest.get("library_palettes", {}).get(family, {}).get(art_biome, []))
-			# Harsh-biome woods intentionally use their native dead trees. Include
-			# the assembled deadwood too, rather than repeating the lone master.
-			for asset in seeds:
-				if String(asset).begins_with("cohesive_library_") and String(asset).ends_with("_000"):
-					additions.append_array(manifest.get("library_palettes", {}).get("deadwood", {}).get(art_biome, []))
-					break
-			for asset in additions:
-				if asset not in candidates: candidates.append(asset)
-			_candidate_cache[cache_key] = candidates
-			return candidates
-	return entry.get("asset_ids", [])
+	return HumanEngine.native_writing(&"NativeSceneryRules.asset_candidates", [object, biome_id, terrain_id])
 
 static func mountain_candidates(object: Dictionary, biome_id: String, terrain_id: String) -> Array:
 	var manifest := ContentService.load_json(MANIFEST)
@@ -83,16 +38,7 @@ static func mountain_candidates(object: Dictionary, biome_id: String, terrain_id
 	return manifest.get("mountain_palettes", {}).get(art_biome, [])
 
 static func policy(object: Dictionary) -> Dictionary:
-	if _human_engine_mode == HumanEngine.GDSCRIPT:
-		return policy__gd(object)
-	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"NativeSceneryRules.policy", [object])
-	var result = policy__gd(object)
-	HumanEngine.check(&"NativeSceneryRules.policy", [object], result)
-	return result
-
-static func policy__gd(object: Dictionary) -> Dictionary:
-	return ContentService.load_json(MANIFEST).get("source_types", {}).get(str(int(object.get("h3m_type_id", -1))), {})
+	return HumanEngine.native(&"NativeSceneryRules.policy", [object])
 
 static func vegetation_candidates(object: Dictionary, biome_id: String, terrain_id: String, family: String = "") -> Array:
 	var manifest := ContentService.load_json(MANIFEST)
