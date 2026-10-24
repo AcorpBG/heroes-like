@@ -129,9 +129,9 @@ Atom join_non_empty(State &state, Atom separator, const std::vector<Atom> &parts
 	return join_array(state, separator, overworld_rules::_non_empty_strings(state, string_list(state, parts)));
 }
 
-// ContentService.get_neutral_dwelling(id): no content table holds them.
+// ContentService.get_neutral_dwelling(id).
 DictRef neutral_dwelling_row(State &state, Atom dwelling_id) {
-	return gd::as_dict(gd::call_method(state, gd::autoload(state, key::ContentService), key::get_neutral_dwelling, { str(dwelling_id) }));
+	return gd::content_row(state, ContentTable::NeutralDwelling, dwelling_id);
 }
 
 } // namespace

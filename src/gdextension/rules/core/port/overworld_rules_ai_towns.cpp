@@ -388,12 +388,20 @@ DictRef _normalize_town_occupation_state(State &state, const Value &value) {
 }
 
 DictRef _town_occupation_state(State &state, DictRef session, DictRef town) {
+	return _town_occupation_state(state, dict_value(session), town);
+}
+
+// A null session has no players: PlayerIdentityRules.player(null, id) is {},
+// so a controller's faction is its own id and its identity only that faction.
+DictRef _town_occupation_state(State &state, const Value &session_value, DictRef town) {
+	const bool has_session = session_value.kind != Kind::Nil;
 	const DictRef occupation = _normalize_town_occupation_state(state, dict_or_new(state, town, key::occupation));
 	const Atom faction_id = player_identity_rules::controller_id(state, occupation, key::empty);
 	const int64_t pressure = compat::engine_max<int64_t>(0, gd::int_field(state, occupation, key::pressure, 0));
 	Atom enemy_label = key::empty;
 	if (faction_id != key::empty) {
-		const DictRef faction = gd::content_row(state, ContentTable::Faction, player_identity_rules::faction_id(state, session, faction_id));
+		const Atom faction_of = has_session ? player_identity_rules::faction_id(state, gd::as_dict(session_value), faction_id) : faction_id;
+		const DictRef faction = gd::content_row(state, ContentTable::Faction, faction_of);
 		enemy_label = gd::stringify(state, state.get(faction, str(key::name), str(faction_id)));
 	}
 	const int64_t initial_pressure = compat::engine_max<int64_t>(pressure, gd::int_field(state, occupation, key::initial_pressure, 0));
@@ -420,8 +428,19 @@ DictRef _town_occupation_state(State &state, DictRef session, DictRef town) {
 	state.set(result, str(key::public_clause), str(key::empty));
 	state.set(result, str(key::target_bonus), int_value(0));
 	state.set(result, str(key::state), dict_value(occupation));
-	gd::merge(state, result, player_identity_rules::identity_fields(state, session, faction_id), true);
+	DictRef identity;
+	if (has_session) {
+		identity = player_identity_rules::identity_fields(state, gd::as_dict(session_value), faction_id);
+	} else {
+		identity = state.new_dict();
+		state.set(identity, str(key::faction_id), str(faction_id));
+	}
+	gd::merge(state, result, identity, true);
 	state.set(result, str(key::locked_headcount), int_value(_recruit_payload_total(state, dict_or_new(state, result, key::locked_recruits))));
+	if (!has_session) {
+		return result;
+	}
+	const DictRef session = gd::as_dict(session_value);
 	if (gd::stringify(state, gd::field_or(state, town, key::owner, str(key::neutral))) != key::player) {
 		return result;
 	}

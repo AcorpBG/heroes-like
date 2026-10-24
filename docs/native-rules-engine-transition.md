@@ -2906,6 +2906,62 @@ into the branch first, at 95804319f (Phase 8's P8-8).
   battle 597 | 600, move 197 | 196, opening a town 88 | 79, dialogs 137 | 136; every other kind within 3 ms either way.
 - Coverage: the 7.2 entry above.
 
+**Slice 7.3, context and site actions** (2026-10-24, branch `native-phase7-human`): the map's context and what it
+offers run in C++.
+- Ported to the human registry (header `overworld_rules_context.hpp`, six files `overworld_rules_context.cpp`,
+  `overworld_rules_site_response.cpp`, `overworld_rules_site_text.cpp`, `overworld_rules_town_actions.cpp`,
+  `overworld_rules_hero_choices.cpp` and `artifact_rules_text.cpp`; 101 functions, 4,160 lines): the context and its
+  actions, a site's response order and reserve delivery, the resource sites' surfaces, building and recruiting in the
+  visited town from the map, the reward choice, dwelling hire, site recruits, level-up, specialties, army slots and the
+  artifact texts.
+- 59 entries: what the overworld and town screens, the map editor, the other rules scripts and the tests call. The
+  site texts and the response state and yield line take a session that may be Nil, for the map editor before a map is
+  loaded.
+Checks:
+- Human shadow on the eight `--human` seeds, with a scratch copy of the runner that also presses the context's build,
+  recruit and response actions, hires at dwellings and asks the site and artifact texts: 244,759 checks on 56 of the
+  59 entries, 0 mismatches and 0 errors. Not reached: `_consume_recruit_payload`, `take_site_recruits_by_dismissing`
+  and `leave_site_recruits` (recruits beyond the army's room). The day still left to GDScript a player town's weekly
+  growth and a townless human's warning and defeat, which 7.7 ports.
+
+**Slices 7.4 to 7.7, spells, heroes, town actions, the day's human paths and the outcome screen** (2026-10-24, branch
+`native-phase7-human`, ported together): what the human player does on the map, with heroes, in towns and on the
+outcome screen runs in C++, and so do the day's human paths.
+- Ported to the human registry (four headers, 20 files, 9,663 lines; 289 functions):
+  - 7.4, `overworld_rules_spells.hpp` (`overworld_rules_spells.cpp`, `spell_rules_overworld.cpp`; 23 functions):
+    casting a spell on the map, the spell actions, the target contract, the preview and their texts.
+  - 7.5, `overworld_rules_heroes.hpp` (`overworld_rules_heroes.cpp`, `hero_command_rules_army.cpp`,
+    `hero_command_rules_field.cpp`, `hero_command_rules_town.cpp`, `town_rules_heroes.cpp`,
+    `artifact_rules_management.cpp`; 92 functions): switching heroes, rendezvous and the field exchange, army slots,
+    town transfers, the garrison, artifact management, with TownRules' read cache.
+  - 7.6, `town_rules_actions.hpp` (`town_rules_build.cpp`, `town_rules_recruit.cpp`, `town_rules_market.cpp`,
+    `town_rules_services.cpp`, `town_development_rules_services.cpp`, `spell_rules_town.cpp`,
+    `hero_command_rules_tavern.cpp`, `town_building_panel.cpp`, `town_construction_board.cpp`,
+    `overworld_rules_town_wrappers.cpp`; 135 functions): building, recruiting, the market, responses, spell learning,
+    the town's services and tavern hire, the building panel and the construction board, their action lists, and the
+    town's readiness, pressure and reinforcement ratings.
+  - 7.7, `scenario_outcome.hpp` (`scenario_outcome.cpp`, `scenario_outcome_texts.cpp`; 39 functions): the outcome
+    model, its actions and texts, and the progress recap. The campaign's branches stay out (D-f) and refuse, as an
+    authored skirmish (archived) does; a maps-folder package starts as the setup port starts it.
+- The day's human paths, in the day's C++ (`day_economy.cpp`, `overworld_state_normalize.cpp`,
+  `overworld_towns_normalize.cpp`, `player_elimination.cpp`): a player town's weekly growth, a player convoy's
+  arrival and follow-up, a human defeat for holding no town and the townless warning, a session rebuilt without towns
+  or resource nodes, an artifact placement drawn from its reward table, a missing primary hero rebuilt from its
+  template and the garrison hero migration. What the day still refuses no generated game reaches: authored
+  objectives and script hooks, the campaign, old saves' fields, and values GDScript would reject too.
+- 136 entries: what the overworld, town and outcome screens, the other rules scripts and the tests call. The town's
+  ratings, its recovery and occupation states take a session that may be Nil, as their GDScript does.
+- The ports read eleven more native content tables: unit, hero and building art, unit animations, neutral
+  dwellings, spell, spell school and building category icons, faction crests, biomes and campaigns.
+Checks:
+- Human shadow on the eight `--human` seeds, with a scratch copy of the runner that also casts spells, manages
+  artifacts and army slots, meets heroes, trades at the market, takes responses, buys artifacts and specialties,
+  sets the garrison, opens the building panel and the construction board, uses the town's services and asks the
+  recap, the outcome model and the field exchange's texts: 1,374,553 checks on 130 of the 136 entries, 0 mismatches and 0
+  errors. Not reached: `SpellRules.effect_summary` (the battle screen's spell text), `OverworldRules.perform_rendezvous_action` (no two heroes met), and TownRules' `switch_active_hero_at_town`, `learn_spell_at_active_town`, `choose_specialty_at_active_town` and `_describe_vulnerability_penalties`.
+- Day shadow in the same run: 20,450 checks on the 12 day entries (`end_turn` 105), 0 mismatches, 0 errors and no path
+  left to GDScript.
+
 ### Phase 8: a match runner without Godot
 
 Wanted, not optional (owner decision 2026-10-22, D7). The same core as a command-line tool, `match_sim_cli` beside

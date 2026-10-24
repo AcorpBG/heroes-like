@@ -143,6 +143,8 @@ int64_t _town_capital_project_recovery_relief(State &state, DictRef town);
 ArrayRef _project_dependency_ids(State &state, Atom project_id);
 DictRef _blank_project_vulnerability_penalties(State &state);
 int64_t _town_recovery_relief_rating(State &state, DictRef session, DictRef town, DictRef logistics_state);
+// A session that may be null: GDScript reads it only without a logistics state.
+int64_t _town_recovery_relief_rating(State &state, const Value &session, DictRef town, DictRef logistics_state);
 int64_t _town_building_bonus_total(State &state, DictRef town, Atom bonus_key);
 DictRef _nearest_town_for_controller(State &state, DictRef session, Atom controller_id, int64_t x, int64_t y, int64_t level = -1);
 bool _town_matches_controller(State &state, DictRef town, Atom controller_id);

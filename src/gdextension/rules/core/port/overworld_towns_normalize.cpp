@@ -5,12 +5,9 @@
 // difficulty, launch mode, player identity compatibility and player heroes
 // (DifficultyRules, SessionStateStore, PlayerIdentityRules, HeroCommandRules).
 //
-// Left to GDScript (state::NotPorted): a human player's primary hero rebuilt
-// from its template (HeroCommandRules.build_hero_from_template), the once per
-// save garrison hero migration of a town holding two of the player's heroes
-// (merge_stacks_into_army, _holder_stacks, _set_holder_stacks), and the
-// GDScript runtime errors of odd values (built_buildings or available_recruits
-// of the wrong type in TownDevelopmentRules).
+// Left to GDScript (state::NotPorted): the GDScript runtime errors of odd
+// values (built_buildings or available_recruits of the wrong type in
+// TownDevelopmentRules).
 
 #include "aurelion_rules/port/overworld_rules.hpp"
 
@@ -20,6 +17,8 @@
 #include "aurelion_rules/port/hero_command_rules.hpp"
 #include "aurelion_rules/port/hero_command_rules_ai.hpp"
 #include "aurelion_rules/port/hero_commit.hpp"
+#include "aurelion_rules/port/battle_ends.hpp"
+#include "aurelion_rules/port/hero_command_rules_turn.hpp"
 #include "aurelion_rules/port/overworld_rules_ai.hpp"
 #include "aurelion_rules/port/player_identity_rules.hpp"
 #include "aurelion_rules/port/session_state_store.hpp"
@@ -458,8 +457,13 @@ void normalize_session(State &state, DictRef session, Atom primary_hero_id, Dict
 	}
 
 	if (resolved_primary_id != key::empty && !has_seen(resolved_primary_id)) {
-		// ContentService.get_hero(resolved_primary_id) and build_hero_from_template(...).
-		not_ported("HeroCommandRules.build_hero_from_template (a human primary hero missing from the roster)");
+		const DictRef primary_template = gd::content_row(state, ContentTable::Hero, resolved_primary_id);
+		const DictRef primary_hero = build_hero_from_template(state, primary_template, legacy_position, legacy_army, dict_value(session));
+		if (!gd::is_empty(state, primary_hero)) {
+			state.set(primary_hero, str(key::is_primary), bool_value(true));
+			state.append(normalized_heroes, dict_value(primary_hero));
+			seen.push_back(resolved_primary_id);
+		}
 	}
 
 	if (resolved_primary_id == key::empty && state.array_size(normalized_heroes) > 0) {
@@ -523,8 +527,27 @@ void _normalize_town_garrison_heroes(State &state, DictRef session) {
 		if (state.array_size(stationed) < 2) {
 			continue;
 		}
-		// The candidate loop merges the garrison into a hero's army.
-		not_ported("HeroCommandRules._normalize_town_garrison_heroes migration (merge_stacks_into_army, _holder_stacks, _set_holder_stacks)");
+		const Atom active_hero_id = text(state, overworld, key::active_hero_id, key::empty);
+		for (const Value &hero : gd::items(state, array_value(stationed))) {
+			const Atom candidate_id = text(state, gd::as_dict(hero), key::id, key::empty);
+			if (candidate_id == active_hero_id) {
+				continue;
+			}
+			const Value garrison = state.get(town, str(key::garrison), array_value(state.new_array()));
+			const ArrayRef town_stacks = gd::is_array(garrison) ? garrison.ref : state.new_array();
+			const ArrayRef merged = merge_stacks_into_army(state, _holder_stacks(state, session, town, candidate_id), town_stacks);
+			// _valid_stack_count reads only: one count serves both tests.
+			const int64_t valid_stacks = _valid_stack_count(state, array_value(town_stacks));
+			if (gd::is_empty(state, merged) && valid_stacks > 0) {
+				continue;
+			}
+			if (valid_stacks > 0) {
+				_set_holder_stacks(state, session, town, candidate_id, merged);
+				_set_holder_stacks(state, session, town, key::garrison, state.new_array());
+			}
+			state.set(town, str(key::garrison_hero_id), str(candidate_id));
+			break;
+		}
 	}
 	state.set(overworld, str(key::town_garrison_heroes_version), int_value(kTownGarrisonHeroesVersion));
 }

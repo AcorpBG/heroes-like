@@ -1210,6 +1210,15 @@ static func equip_artifact(hero_state: Dictionary, artifact_id: String) -> Dicti
 	}
 
 static func equipment_slot_accepts(slot: String, artifact_id: String) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return equipment_slot_accepts__gd(slot, artifact_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"ArtifactRules.equipment_slot_accepts", [slot, artifact_id])
+	var result = equipment_slot_accepts__gd(slot, artifact_id)
+	HumanEngine.check(&"ArtifactRules.equipment_slot_accepts", [slot, artifact_id], result)
+	return result
+
+static func equipment_slot_accepts__gd(slot: String, artifact_id: String) -> bool:
 	return slot in _compatible_equipment_slots(artifact_slot(artifact_id))
 
 static func equip_artifact_in_slot(hero_state: Dictionary, artifact_id: String, slot: String) -> Dictionary:
@@ -1256,6 +1265,16 @@ static func equip_artifact_in_slot(hero_state: Dictionary, artifact_id: String, 
 	}
 
 static func unequip_artifact(hero_state: Dictionary, slot: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return unequip_artifact__gd(hero_state, slot)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ArtifactRules.unequip_artifact", [hero_state, slot])
+	var before := HumanEngine.before_writing(&"ArtifactRules.unequip_artifact", [hero_state, slot])
+	var result = unequip_artifact__gd(hero_state, slot)
+	HumanEngine.check_writing(&"ArtifactRules.unequip_artifact", before, [hero_state, slot], result)
+	return result
+
+static func unequip_artifact__gd(hero_state: Dictionary, slot: String) -> Dictionary:
 	var hero = ensure_hero_artifacts(hero_state.duplicate(true))
 	if slot not in EQUIPMENT_SLOTS:
 		return {"ok": false, "hero": hero, "message": "That equipment slot does not exist."}
@@ -1449,6 +1468,16 @@ static func describe_single_artifact_impact__gd(artifact_id: String) -> String:
 	return "Impact %s" % ("no direct stat change" if sections.is_empty() else " | ".join(sections))
 
 static func get_management_actions(hero_state: Dictionary) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return get_management_actions__gd(hero_state)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ArtifactRules.get_management_actions", [hero_state])
+	var before := HumanEngine.before_writing(&"ArtifactRules.get_management_actions", [hero_state])
+	var result = get_management_actions__gd(hero_state)
+	HumanEngine.check_writing(&"ArtifactRules.get_management_actions", before, [hero_state], result)
+	return result
+
+static func get_management_actions__gd(hero_state: Dictionary) -> Array:
 	hero_state = ensure_hero_artifacts(hero_state.duplicate(true))
 	var actions := []
 	var artifacts = hero_state.get("artifacts", {})
@@ -1518,6 +1547,16 @@ static func artifact_name(artifact_id: String) -> String:
 	return String(artifact.get("name", artifact_id))
 
 static func artifact_id_for_management_action(hero_state: Dictionary, action_id: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return artifact_id_for_management_action__gd(hero_state, action_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ArtifactRules.artifact_id_for_management_action", [hero_state, action_id])
+	var before := HumanEngine.before_writing(&"ArtifactRules.artifact_id_for_management_action", [hero_state, action_id])
+	var result = artifact_id_for_management_action__gd(hero_state, action_id)
+	HumanEngine.check_writing(&"ArtifactRules.artifact_id_for_management_action", before, [hero_state, action_id], result)
+	return result
+
+static func artifact_id_for_management_action__gd(hero_state: Dictionary, action_id: String) -> String:
 	if action_id.begins_with("equip_artifact:"):
 		var inventory_artifact_id := action_id.trim_prefix("equip_artifact:")
 		return inventory_artifact_id if String(locate_artifact(hero_state, inventory_artifact_id).get("location", "missing")) == "inventory" else ""
@@ -1562,6 +1601,15 @@ static func artifact_type_label(artifact_id: String) -> String:
 			return "Carry item"
 
 static func artifact_set_context(artifact_id: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return artifact_set_context__gd(artifact_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"ArtifactRules.artifact_set_context", [artifact_id])
+	var result = artifact_set_context__gd(artifact_id)
+	HumanEngine.check(&"ArtifactRules.artifact_set_context", [artifact_id], result)
+	return result
+
+static func artifact_set_context__gd(artifact_id: String) -> String:
 	var artifact := ContentService.get_artifact(artifact_id)
 	if artifact.is_empty():
 		return "Set unknown"
@@ -1599,6 +1647,16 @@ static func artifact_reward_role(artifact_id: String) -> String:
 	return "Equipment reward"
 
 static func artifact_decision_summary(hero_state: Dictionary, artifact_id: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return artifact_decision_summary__gd(hero_state, artifact_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ArtifactRules.artifact_decision_summary", [hero_state, artifact_id])
+	var before := HumanEngine.before_writing(&"ArtifactRules.artifact_decision_summary", [hero_state, artifact_id])
+	var result = artifact_decision_summary__gd(hero_state, artifact_id)
+	HumanEngine.check_writing(&"ArtifactRules.artifact_decision_summary", before, [hero_state, artifact_id], result)
+	return result
+
+static func artifact_decision_summary__gd(hero_state: Dictionary, artifact_id: String) -> String:
 	var artifact := ContentService.get_artifact(artifact_id)
 	if artifact.is_empty():
 		return "Cannot equip"

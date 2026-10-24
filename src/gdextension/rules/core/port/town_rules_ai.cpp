@@ -267,12 +267,17 @@ Atom _market_pair_reason(State &state, DictRef market, Atom give_id, Atom receiv
 }
 
 Atom _market_ratio_text(State &state, double value) {
-	// ("%.1f" % value).trim_suffix(".0"): a whole number below 2^53 prints as its digits on any C runtime. A
-	// fraction is float text (String::num, the C runtime's snprintf), and -0.0, nan and inf are left to GDScript.
-	if (!std::isfinite(value) || value != compat::godot_floor(value) || std::fabs(value) >= 9007199254740992.0 || (value == 0.0 && std::signbit(value))) {
-		throw state::NotPorted("TownRules._market_ratio_text: \"%.1f\" % value of a fraction (float text)");
+	// ("%.1f" % value).trim_suffix(".0"). A whole number below 2^53 prints as its digits and ".0" on any C
+	// runtime, so its text is its digits; a fraction, -0.0, nan and inf are the engine's text (String::num).
+	if (std::isfinite(value) && value == compat::godot_floor(value) && std::fabs(value) < 9007199254740992.0 && !(value == 0.0 && std::signbit(value))) {
+		return state.intern(compat::itos(static_cast<int64_t>(value)));
 	}
-	return state.intern(compat::itos(static_cast<int64_t>(value)));
+	const Atom text = gd::engine_format(state, key::n1f, {gd::float_value(value)});
+	if (!gd::ends_with(state, text, key::n0)) {
+		return text;
+	}
+	const std::string source = state.text(text);
+	return state.intern(source.substr(0, source.size() - state.text(key::n0).size()));
 }
 
 Atom _market_limit_reason(State &state, Atom action_type, Atom resource_id, DictRef cap, int64_t reset_day) {

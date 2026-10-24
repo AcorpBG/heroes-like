@@ -110,9 +110,9 @@ Atom game_state(State &state, DictRef session) {
 	return gd::to_string(gd::index(state, session, str(key::game_state)));
 }
 
-// ContentService.get_unit_art(unit_id): no content table holds unit art.
+// ContentService.get_unit_art(unit_id).
 Value unit_art(State &state, Atom unit_id) {
-	return gd::call_method(state, gd::autoload(state, key::ContentService), key::get_unit_art, {str(unit_id)});
+	return gd::dict_value(gd::content_row(state, ContentTable::UnitArt, unit_id));
 }
 
 // a.sort() of an Array of Strings: Godot compares Strings by code points, the

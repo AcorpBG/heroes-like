@@ -4,12 +4,6 @@
 // artifact nodes, the scenario's map copies, transit, the blocked-tile index,
 // fog, the command briefing and risk forecast, the scenario state), then its
 // runtime signature recorded in OverworldRules._runtime_normalized_signatures.
-//
-// The paths AI matches never run are left to GDScript (state::NotPorted): a
-// session without towns or resource nodes (built from the scenario by
-// ScenarioFactory._build_town_states / _build_resource_states) and an artifact
-// placement still to be drawn from a reward table
-// (ArtifactRules.select_live_source_reward).
 
 #include "aurelion_rules/port/overworld_rules.hpp"
 
@@ -19,6 +13,7 @@
 #include "aurelion_rules/port/native_transit_rules.hpp"
 #include "aurelion_rules/port/overworld_level_rules.hpp"
 #include "aurelion_rules/port/overworld_rules_ai.hpp"
+#include "aurelion_rules/port/overworld_rules_turn.hpp"
 #include "aurelion_rules/port/player_identity_rules.hpp"
 #include "aurelion_rules/port/scenario_evaluation.hpp"
 #include "aurelion_rules/port/scenario_factory.hpp"
@@ -48,10 +43,6 @@ using state::ContentTable;
 using state::State;
 using state::Value;
 namespace key = state::key;
-
-[[noreturn]] void not_ported(const char *path) {
-	throw state::NotPorted(std::string("left to GDScript: ") + path);
-}
 
 // String(d.get(key, fallback)).
 Atom text(State &state, DictRef dict, Atom field, Atom fallback) {
@@ -170,8 +161,7 @@ void normalize_overworld_state(State &state, DictRef session) {
 	state.set(session_view::overworld(state, session), str(key::resources), dict_value(stockpile));
 
 	if (lacks_array(state, session_view::overworld(state, session), key::towns)) {
-		// ScenarioFactory._build_town_states(scenario.get("towns", [])).
-		not_ported("OverworldRules._build_scenario_town_states (a session without towns)");
+		state.set(session_view::overworld(state, session), str(key::towns), array_value(overworld_rules::_build_scenario_town_states(state, state.get(scenario, str(key::towns), array_value(state.new_array())))));
 	} else {
 		const DictRef overworld = session_view::overworld(state, session);
 		const ArrayRef towns = _normalize_towns(state, gd::as_array(gd::field(state, overworld, key::towns)), gd::to_int(state, gd::field(state, session, key::day)));
@@ -180,8 +170,7 @@ void normalize_overworld_state(State &state, DictRef session) {
 	_normalize_active_town_visit_context(state, session);
 
 	if (lacks_array(state, session_view::overworld(state, session), key::resource_nodes)) {
-		// ScenarioFactory._build_resource_states(scenario.get("resource_nodes", [])).
-		not_ported("OverworldRules._build_scenario_resource_states (a session without resource nodes)");
+		state.set(session_view::overworld(state, session), str(key::resource_nodes), array_value(overworld_rules::_build_scenario_resource_states(state, state.get(scenario, str(key::resource_nodes), array_value(state.new_array())))));
 	} else {
 		const DictRef overworld = session_view::overworld(state, session);
 		const ArrayRef nodes = _normalize_resource_nodes(state, gd::as_array(gd::field(state, overworld, key::resource_nodes)));
@@ -428,8 +417,6 @@ DictRef _normalize_resources(State &state, const Value &value) {
 namespace artifact_rules {
 
 ArrayRef build_artifact_nodes(State &state, const Value &placements, Atom scenario_id) {
-	// scenario_id names the reward-table draw's source key only, which is left to GDScript.
-	(void)scenario_id;
 	const ArrayRef nodes = state.new_array();
 	if (!gd::is_array(placements)) {
 		return nodes;
@@ -441,13 +428,28 @@ ArrayRef build_artifact_nodes(State &state, const Value &placements, Atom scenar
 		}
 		const DictRef placement = placement_value.ref;
 		const Atom placement_id = text(state, placement, key::placement_id, key::empty);
-		const Atom artifact_id = text(state, placement, key::artifact_id, key::empty);
+		Atom artifact_id = text(state, placement, key::artifact_id, key::empty);
 		const Atom table_id = gd::strip_edges(state, text(state, placement, key::artifact_reward_table_id, key::empty));
-		const Atom source_key = gd::strip_edges(state, text(state, placement, key::artifact_reward_source_key, key::empty));
-		const bool materialized = gd::bool_field(state, placement, key::artifact_source_materialized, false);
+		Atom source_key = gd::strip_edges(state, text(state, placement, key::artifact_reward_source_key, key::empty));
+		bool materialized = gd::bool_field(state, placement, key::artifact_source_materialized, false);
 		if (table_id != key::empty && !materialized) {
-			// select_live_source_reward("pickup", source_record, source_key).
-			not_ported("ArtifactRules.select_live_source_reward (an artifact placement still to be drawn from a reward table)");
+			if (source_key == key::empty) {
+				source_key = gd::format(state, key::s_s_pickup, {str(scenario_id), str(placement_id)});
+			}
+			const DictRef contract = state.new_dict();
+			state.set(contract, str(key::source_tag), str(key::pickup));
+			state.set(contract, str(key::artifact_reward_table_id), str(table_id));
+			const DictRef boundary = state.new_dict();
+			state.set(boundary, str(key::artifact_reward_execution), bool_value(true));
+			const DictRef source_record = state.new_dict();
+			state.set(source_record, str(key::family), str(key::one_shot_pickup));
+			state.set(source_record, str(key::artifact_reward_contract), dict_value(contract));
+			state.set(source_record, str(key::runtime_boundary), dict_value(boundary));
+			const DictRef selection = select_live_source_reward(state, key::pickup, source_record, source_key, key::empty, state.new_array());
+			if (gd::bool_field(state, selection, key::ok, false)) {
+				artifact_id = text(state, selection, key::artifact_id, artifact_id);
+				materialized = true;
+			}
 		}
 
 		const DictRef node = state.new_dict();

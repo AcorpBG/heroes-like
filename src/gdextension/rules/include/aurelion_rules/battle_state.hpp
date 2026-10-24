@@ -214,6 +214,19 @@ enum class ContentTable : uint8_t {
 	BiomeForTerrain,
 	// get_terrain_layers_for_scenario: a new deep copy on every call.
 	TerrainLayersForScenario,
+	// get_unit_art, get_hero_art and get_unit_animation: by the unit or hero id.
+	UnitArt,
+	NeutralDwelling,
+	HeroArt,
+	UnitAnimation,
+	BuildingArt,
+	SpellIcon,
+	SpellSchoolIcon,
+	BuildingCategoryIcon,
+	FactionCrest,
+	Biome,
+	// get_campaign: the archived campaigns, by id.
+	Campaign,
 };
 
 bool same_key(const Value &a, const Value &b);

@@ -122,15 +122,6 @@ DictRef logistics_state_for(State &state, const Value &session, DictRef town) {
 	return overworld_rules::_town_logistics_state(state, gd::as_dict(session), town);
 }
 
-// _town_recovery_state(session, town, logistics) and _town_occupation_state(session, town):
-// their ports take a session.
-DictRef session_or_not_ported(const Value &session, const char *where) {
-	if (session.kind == Kind::Nil) {
-		throw state::NotPorted(std::string(where) + ": a null session (the town recovery and occupation ports take a session)");
-	}
-	return gd::as_dict(session);
-}
-
 // {"key": item_key, "severity": severity, "gate": true, "summary": summary}.
 DictRef risk_item(State &state, Atom item_key, int64_t severity, Atom summary) {
 	const DictRef item = state.new_dict();
@@ -236,16 +227,15 @@ Atom _terrain_name_at(State &state, DictRef session, int64_t x, int64_t y) {
 }
 
 DictRef town_development_metrics(State &state, DictRef town, const Value &session) {
-	// A null session: the read scope key is "" (no cache), then _town_recovery_state(null, ...).
-	const DictRef view = session_or_not_ported(session, "OverworldRules.town_development_metrics");
-	const Atom cache_key = _town_read_scope_cache_key(state, view, key::development_metrics, town);
+	// A null session: the read scope key is "" (no cache), the empty logistics state.
+	const Atom cache_key = session.kind == Kind::Nil ? key::empty : _town_read_scope_cache_key(state, gd::as_dict(session), key::development_metrics, town);
 	if (_town_read_scope_cache_has(state, cache_key)) {
 		return gd::as_dict(_town_read_scope_cache_get(state, cache_key));
 	}
-	const DictRef logistics = _town_logistics_state(state, view, town);
-	const DictRef recovery = _town_recovery_state(state, view, town, logistics);
+	const DictRef logistics = logistics_state_for(state, session, town);
+	const DictRef recovery = _town_recovery_state(state, session, town, logistics);
 	const DictRef capital_project = _town_capital_project_state(state, town, session, logistics, recovery);
-	const DictRef occupation = _town_occupation_state(state, view, town);
+	const DictRef occupation = _town_occupation_state(state, session, town);
 	const DictRef context = state.new_dict();
 	state.set(context, str(key::logistics), dict_value(logistics));
 	state.set(context, str(key::recovery), dict_value(recovery));
@@ -540,7 +530,7 @@ int64_t _town_pressure_output(State &state, DictRef town, const Value &session, 
 	pressure = gd::sub(pressure, gd::int_field(state, logistics, key::gap_pressure_penalty, 0));
 	DictRef recovery = context_dict(state, metric_context, key::recovery);
 	if (gd::is_empty(state, recovery)) {
-		recovery = _town_recovery_state(state, session_or_not_ported(session, "OverworldRules._town_pressure_output"), town, logistics);
+		recovery = _town_recovery_state(state, session, town, logistics);
 	}
 	pressure = gd::sub(pressure, gd::int_field(state, recovery, key::pressure_penalty, 0));
 	DictRef capital_project = context_dict(state, metric_context, key::capital_project);
@@ -551,7 +541,7 @@ int64_t _town_pressure_output(State &state, DictRef town, const Value &session, 
 	pressure = gd::sub(pressure, gd::int_field(state, capital_project, key::pressure_penalty, 0));
 	DictRef occupation = context_dict(state, metric_context, key::occupation);
 	if (gd::is_empty(state, occupation)) {
-		occupation = _town_occupation_state(state, session_or_not_ported(session, "OverworldRules._town_pressure_output"), town);
+		occupation = _town_occupation_state(state, session, town);
 	}
 	pressure = gd::sub(pressure, gd::int_field(state, occupation, key::pressure_penalty, 0));
 	return vmax(0, pressure);

@@ -35,6 +35,20 @@ const CONTENT_TABLES := {
 	"Encounter": ["get_encounter", "res://content/encounters.json"],
 	"ArmyGroup": ["get_army_group", "res://content/army_groups.json"],
 	"Resource": ["get_resource", "res://content/resources.json"],
+	"NeutralDwelling": ["get_neutral_dwelling", "res://content/neutral_dwellings.json"],
+	"BuildingArt": ["get_building_art", "res://content/building_art_manifest.json"],
+	"SpellIcon": ["get_spell_icon", "res://content/spell_icons.json"],
+	"SpellSchoolIcon": ["get_spell_school_icon", "res://content/spell_school_icons.json"],
+	"BuildingCategoryIcon": ["get_building_category_icon", "res://content/building_category_icons.json"],
+	"FactionCrest": ["get_faction_crest", "res://content/faction_crests.json"],
+	"Biome": ["get_biome", "res://content/biomes.json"],
+	"Campaign": ["get_campaign", "res://archive/authored-scenarios-2026-10-08/campaigns.json"],
+}
+# The art rows found by the unit or hero id their items name.
+const INDEXED_TABLES := {
+	"UnitArt": ["get_unit_art", "res://content/unit_art_manifest.json", "unit_id"],
+	"HeroArt": ["get_hero_art", "res://content/hero_art_manifest.json", "hero_id"],
+	"UnitAnimation": ["get_unit_animation", "res://content/unit_animation_manifest.json", "unit_id"],
 }
 const GENERATED_COMPANIES_PATH := "res://content/generated_neutral_companies.json"
 
@@ -85,6 +99,17 @@ static func content_snapshot(content) -> Dictionary:
 				if not row.is_empty():
 					by_terrain[terrain] = row
 	tables["BiomeForTerrain"] = by_terrain
+	for table in INDEXED_TABLES:
+		var getter := String(INDEXED_TABLES[table][0])
+		var field := String(INDEXED_TABLES[table][2])
+		var rows := {}
+		for item in content._items_from_raw(content.load_json(String(INDEXED_TABLES[table][1]))):
+			var id := String(item.get(field, "")) if item is Dictionary else ""
+			if not rows.has(id):
+				var row: Dictionary = content.call(getter, id)
+				if not row.is_empty():
+					rows[id] = row
+		tables[table] = rows
 	return {"files": files, "tables": tables, "statics": static_vars(), "revision": content.get_content_revision()}
 
 

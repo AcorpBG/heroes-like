@@ -155,6 +155,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/ai_port.cpp
 	core/port/ai_registry.cpp
 	core/port/artifact_rules.cpp
+	core/port/artifact_rules_management.cpp
 	core/port/artifact_rules_shared.cpp
 	core/port/artifact_rules_text.cpp
 	core/port/artifact_rules_turn.cpp
@@ -223,6 +224,10 @@ add_library(aurelion_rules_core STATIC
 	core/port/generated_reward_rules.cpp
 	core/port/hero_command_rules.cpp
 	core/port/hero_command_rules_ai.cpp
+	core/port/hero_command_rules_army.cpp
+	core/port/hero_command_rules_field.cpp
+	core/port/hero_command_rules_tavern.cpp
+	core/port/hero_command_rules_town.cpp
 	core/port/hero_commit.cpp
 	core/port/hero_progression_rules.cpp
 	core/port/hero_progression_rules_shared.cpp
@@ -253,6 +258,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/overworld_rules_context.cpp
 	core/port/overworld_rules_encounter_text.cpp
 	core/port/overworld_rules_hero_choices.cpp
+	core/port/overworld_rules_heroes.cpp
 	core/port/overworld_rules_move.cpp
 	core/port/overworld_rules_recap.cpp
 	core/port/overworld_rules_routes.cpp
@@ -262,7 +268,9 @@ add_library(aurelion_rules_core STATIC
 	core/port/overworld_rules_site_response.cpp
 	core/port/overworld_rules_site_rewards.cpp
 	core/port/overworld_rules_site_text.cpp
+	core/port/overworld_rules_spells.cpp
 	core/port/overworld_rules_town_actions.cpp
+	core/port/overworld_rules_town_wrappers.cpp
 	core/port/overworld_rules_turn.cpp
 	core/port/overworld_rules_turn_rare.cpp
 	core/port/overworld_state_normalize.cpp
@@ -291,6 +299,8 @@ add_library(aurelion_rules_core STATIC
 	core/port/scenario_event_check.cpp
 	core/port/scenario_factory_ai.cpp
 	core/port/scenario_objective_label.cpp
+	core/port/scenario_outcome.cpp
+	core/port/scenario_outcome_texts.cpp
 	core/port/scenario_select_catalog.cpp
 	core/port/scenario_select_maps_folder.cpp
 	core/port/scenario_select_options.cpp
@@ -301,13 +311,23 @@ add_library(aurelion_rules_core STATIC
 	core/port/spell_events.cpp
 	core/port/spell_rules.cpp
 	core/port/spell_rules_ai.cpp
+	core/port/spell_rules_overworld.cpp
 	core/port/spell_rules_shared.cpp
+	core/port/spell_rules_town.cpp
 	core/port/spell_summaries.cpp
 	core/port/stack_effects.cpp
 	core/port/stat_totals.cpp
 	core/port/target_selection.cpp
+	core/port/town_building_panel.cpp
+	core/port/town_construction_board.cpp
 	core/port/town_development_rules_ai.cpp
+	core/port/town_development_rules_services.cpp
 	core/port/town_rules_ai.cpp
+	core/port/town_rules_build.cpp
+	core/port/town_rules_heroes.cpp
+	core/port/town_rules_market.cpp
+	core/port/town_rules_recruit.cpp
+	core/port/town_rules_services.cpp
 	core/port/town_rules_shared.cpp
 	core/port/turn_forecast.cpp
 	core/port/turn_order.cpp

@@ -101,19 +101,14 @@ DictRef logistics_for(State &state, const Value &session, DictRef town) {
 }
 
 // _town_recovery_state(session, town, logistics) and _town_occupation_state(
-// session, town) of a session that may be null. No caller passes null.
-DictRef recovery_for(State &state, const Value &session, DictRef town, DictRef logistics, const char *where) {
-	if (session.kind == Kind::Nil) {
-		throw state::NotPorted(std::string(where) + ": _town_recovery_state of a null session");
-	}
-	return overworld_rules::_town_recovery_state(state, gd::as_dict(session), town, logistics);
+// session, town) of a session that may be null: a town's base readiness and
+// quality (town_battle_readiness(town) and the others without a session).
+DictRef recovery_for(State &state, const Value &session, DictRef town, DictRef logistics) {
+	return overworld_rules::_town_recovery_state(state, session, town, logistics);
 }
 
-DictRef occupation_for(State &state, const Value &session, DictRef town, const char *where) {
-	if (session.kind == Kind::Nil) {
-		throw state::NotPorted(std::string(where) + ": _town_occupation_state of a null session");
-	}
-	return overworld_rules::_town_occupation_state(state, gd::as_dict(session), town);
+DictRef occupation_for(State &state, const Value &session, DictRef town) {
+	return overworld_rules::_town_occupation_state(state, session, town);
 }
 
 } // namespace
@@ -180,7 +175,7 @@ int64_t _town_reinforcement_quality(State &state, DictRef town, const Value &ses
 	quality = gd::sub(quality, gd::int_field(state, logistics, key::gap_quality_penalty, 0));
 	DictRef recovery = typed_dict_field(state, metric_context, key::recovery);
 	if (gd::is_empty(state, recovery)) {
-		recovery = recovery_for(state, session, town, logistics, where);
+		recovery = recovery_for(state, session, town, logistics);
 	}
 	quality = gd::sub(quality, gd::int_field(state, recovery, key::quality_penalty, 0));
 	DictRef capital_project = typed_dict_field(state, metric_context, key::capital_project);
@@ -191,7 +186,7 @@ int64_t _town_reinforcement_quality(State &state, DictRef town, const Value &ses
 	quality = gd::sub(quality, gd::int_field(state, capital_project, key::quality_penalty, 0));
 	DictRef occupation = typed_dict_field(state, metric_context, key::occupation);
 	if (gd::is_empty(state, occupation)) {
-		occupation = occupation_for(state, session, town, where);
+		occupation = occupation_for(state, session, town);
 	}
 	quality = gd::sub(quality, gd::int_field(state, occupation, key::quality_penalty, 0));
 	return compat::engine_max<int64_t>(0, quality);
@@ -218,7 +213,7 @@ int64_t _town_battle_readiness(State &state, DictRef town, const Value &session,
 	readiness = gd::sub(readiness, gd::int_field(state, logistics, key::gap_readiness_penalty, 0));
 	DictRef recovery = typed_dict_field(state, metric_context, key::recovery);
 	if (gd::is_empty(state, recovery)) {
-		recovery = recovery_for(state, session, town, logistics, where);
+		recovery = recovery_for(state, session, town, logistics);
 	}
 	readiness = gd::sub(readiness, gd::int_field(state, recovery, key::readiness_penalty, 0));
 	DictRef capital_project = typed_dict_field(state, metric_context, key::capital_project);
@@ -229,7 +224,7 @@ int64_t _town_battle_readiness(State &state, DictRef town, const Value &session,
 	readiness = gd::sub(readiness, gd::int_field(state, capital_project, key::readiness_penalty, 0));
 	DictRef occupation = typed_dict_field(state, metric_context, key::occupation);
 	if (gd::is_empty(state, occupation)) {
-		occupation = occupation_for(state, session, town, where);
+		occupation = occupation_for(state, session, town);
 	}
 	readiness = gd::sub(readiness, gd::int_field(state, occupation, key::readiness_penalty, 0));
 	return compat::engine_max<int64_t>(0, readiness);

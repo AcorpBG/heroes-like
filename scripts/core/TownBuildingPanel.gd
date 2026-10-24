@@ -16,6 +16,8 @@ const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const Board = preload("res://scripts/core/TownConstructionBoard.gd")
+const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 
 const KIND_DWELLING := "dwelling"
 const KIND_GUILD := "guild"
@@ -28,6 +30,16 @@ const KIND_BUILDING := "building"
 ## `options.market_need` is a cost the player opened the market to cover; the
 ## market desk then suggests the trade for its first missing resource.
 static func build(session, building_id: String, options: Dictionary = {}) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return build__gd(session, building_id, options)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownBuildingPanel.build", [session, building_id, options])
+	var before := HumanEngine.before_writing(&"TownBuildingPanel.build", [session, building_id, options])
+	var result = build__gd(session, building_id, options)
+	HumanEngine.check_writing(&"TownBuildingPanel.build", before, [session, building_id, options], result)
+	return result
+
+static func build__gd(session, building_id: String, options: Dictionary = {}) -> Dictionary:
 	if session == null:
 		return {}
 	var town: Dictionary = TownRulesScript.get_active_town(session)
@@ -245,6 +257,16 @@ static func muster(session) -> Dictionary:
 ## One muster catalog row as a recruit card: the creature's battle profile
 ## plus reserve, growth, price and what the stores can pay for now.
 static func recruit_card(row: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return recruit_card__gd(row)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownBuildingPanel.recruit_card", [row])
+	var before := HumanEngine.before_writing(&"TownBuildingPanel.recruit_card", [row])
+	var result = recruit_card__gd(row)
+	HumanEngine.check_writing(&"TownBuildingPanel.recruit_card", before, [row], result)
+	return result
+
+static func recruit_card__gd(row: Dictionary) -> Dictionary:
 	var unit_id := String(row.get("unit_id", ""))
 	var direct := int(row.get("direct_affordable_count", 0))
 	return unit_card(unit_id).merged({
@@ -458,6 +480,16 @@ static func _building_services(session, building_id: String, kind: String) -> Ar
 	return services
 
 static func _action_entry(action: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _action_entry__gd(action)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownBuildingPanel._action_entry", [action])
+	var before := HumanEngine.before_writing(&"TownBuildingPanel._action_entry", [action])
+	var result = _action_entry__gd(action)
+	HumanEngine.check_writing(&"TownBuildingPanel._action_entry", before, [action], result)
+	return result
+
+static func _action_entry__gd(action: Dictionary) -> Dictionary:
 	return {
 		"id": String(action.get("id", "")),
 		"label": String(action.get("label", action.get("id", ""))),

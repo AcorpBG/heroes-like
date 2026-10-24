@@ -843,6 +843,39 @@ Value PortBridge::content_row(state::State &state, state::ContentTable table, ui
 			case state::ContentTable::BiomeForTerrain:
 				native = store.biome_for_terrain(text, messages);
 				break;
+			case state::ContentTable::UnitArt:
+				native = store.indexed_row(content::kUnitArtPath, text, "items", "unit_id", messages);
+				break;
+			case state::ContentTable::NeutralDwelling:
+				native = by_id(content::kNeutralDwellingsPath);
+				break;
+			case state::ContentTable::HeroArt:
+				native = store.indexed_row(content::kHeroArtPath, text, "items", "hero_id", messages);
+				break;
+			case state::ContentTable::UnitAnimation:
+				native = store.indexed_row(content::kUnitAnimationPath, text, "items", "unit_id", messages);
+				break;
+			case state::ContentTable::BuildingArt:
+				native = by_id(content::kBuildingArtPath);
+				break;
+			case state::ContentTable::SpellIcon:
+				native = by_id(content::kSpellIconsPath);
+				break;
+			case state::ContentTable::SpellSchoolIcon:
+				native = by_id(content::kSpellSchoolIconsPath);
+				break;
+			case state::ContentTable::BuildingCategoryIcon:
+				native = by_id(content::kBuildingCategoryIconsPath);
+				break;
+			case state::ContentTable::FactionCrest:
+				native = by_id(content::kFactionCrestsPath);
+				break;
+			case state::ContentTable::Biome:
+				native = by_id(content::kBiomesPath);
+				break;
+			case state::ContentTable::Campaign:
+				native = by_id(content::kCampaignsPath);
+				break;
 			case state::ContentTable::Scenario:
 			case state::ContentTable::TerrainLayersForScenario:
 				break;

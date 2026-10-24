@@ -114,9 +114,20 @@ inline constexpr const char *kTableNames[] = {
 	"MapObjectForResourceSite",
 	"BiomeForTerrain",
 	"TerrainLayersForScenario",
+	"UnitArt",
+	"NeutralDwelling",
+	"HeroArt",
+	"UnitAnimation",
+	"BuildingArt",
+	"SpellIcon",
+	"SpellSchoolIcon",
+	"BuildingCategoryIcon",
+	"FactionCrest",
+	"Biome",
+	"Campaign",
 };
 inline constexpr size_t kTableCount = sizeof(kTableNames) / sizeof(kTableNames[0]);
-static_assert(static_cast<size_t>(st::ContentTable::TerrainLayersForScenario) + 1 == kTableCount, "a name per content table");
+static_assert(static_cast<size_t>(st::ContentTable::Campaign) + 1 == kTableCount, "a name per content table");
 
 // The content snapshot: {files: {path: data}, tables: {name: {id: row}},
 // statics: {script path: {name: value}}, revision}.

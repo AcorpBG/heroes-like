@@ -262,6 +262,16 @@ static func brief_summary(hero_state: Dictionary) -> String:
 	return HumanEngine.native_writing(&"HeroProgressionRules.brief_summary", [hero_state])
 
 static func summarize_specialty_ids(specialty_ids: Variant, use_short_names: bool = true) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return summarize_specialty_ids__gd(specialty_ids, use_short_names)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"HeroProgressionRules.summarize_specialty_ids", [specialty_ids, use_short_names])
+	var before := HumanEngine.before_writing(&"HeroProgressionRules.summarize_specialty_ids", [specialty_ids, use_short_names])
+	var result = summarize_specialty_ids__gd(specialty_ids, use_short_names)
+	HumanEngine.check_writing(&"HeroProgressionRules.summarize_specialty_ids", before, [specialty_ids, use_short_names], result)
+	return result
+
+static func summarize_specialty_ids__gd(specialty_ids: Variant, use_short_names: bool = true) -> String:
 	var normalized := _normalize_specialty_id_list(specialty_ids)
 	var names := []
 	for specialty_id in normalized:

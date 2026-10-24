@@ -10,6 +10,8 @@ const LAYOUT_PATH := "res://content/town_construction_layout.json"
 const SCHEMA := "town_construction_board_v1"
 const TownRulesScript = preload("res://scripts/core/TownRules.gd")
 const TownDevelopment = preload("res://scripts/core/TownDevelopmentRules.gd")
+const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 
 const STATUS_COMPLETE := "complete"
 const STATUS_READY := "ready"
@@ -37,6 +39,16 @@ static func build_for_active_town(session) -> Dictionary:
 	return build(town, int(session.day), resources, rows_by_building)
 
 static func build(town: Dictionary, day: int, resources: Dictionary, catalog_by_building: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return build__gd(town, day, resources, catalog_by_building)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownConstructionBoard.build", [town, day, resources, catalog_by_building])
+	var before := HumanEngine.before_writing(&"TownConstructionBoard.build", [town, day, resources, catalog_by_building])
+	var result = build__gd(town, day, resources, catalog_by_building)
+	HumanEngine.check_writing(&"TownConstructionBoard.build", before, [town, day, resources, catalog_by_building], result)
+	return result
+
+static func build__gd(town: Dictionary, day: int, resources: Dictionary, catalog_by_building: Dictionary) -> Dictionary:
 	var template := ContentService.get_town(String(town.get("town_id", "")))
 	var faction_id := String(template.get("faction_id", ""))
 	var town_ids := town_building_ids(template)
@@ -105,6 +117,16 @@ static func town_building_ids(template: Dictionary) -> Array:
 	return ids
 
 static func slot_for_building(board: Dictionary, building_id: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return slot_for_building__gd(board, building_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"TownConstructionBoard.slot_for_building", [board, building_id])
+	var before := HumanEngine.before_writing(&"TownConstructionBoard.slot_for_building", [board, building_id])
+	var result = slot_for_building__gd(board, building_id)
+	HumanEngine.check_writing(&"TownConstructionBoard.slot_for_building", before, [board, building_id], result)
+	return result
+
+static func slot_for_building__gd(board: Dictionary, building_id: String) -> Dictionary:
 	for row in board.get("rows", []):
 		for slot in row.get("slots", []):
 			if building_id in slot.get("building_ids", []):
@@ -125,6 +147,15 @@ static func ordered_slots(board: Dictionary) -> Array:
 	return slots
 
 static func format_amount(value: int) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return format_amount__gd(value)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"TownConstructionBoard.format_amount", [value])
+	var result = format_amount__gd(value)
+	HumanEngine.check(&"TownConstructionBoard.format_amount", [value], result)
+	return result
+
+static func format_amount__gd(value: int) -> String:
 	var digits := str(absi(value))
 	var grouped := ""
 	while digits.length() > 3:
@@ -133,9 +164,27 @@ static func format_amount(value: int) -> String:
 	return ("-" if value < 0 else "") + digits + grouped
 
 static func resource_name(resource_id: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return resource_name__gd(resource_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"TownConstructionBoard.resource_name", [resource_id])
+	var result = resource_name__gd(resource_id)
+	HumanEngine.check(&"TownConstructionBoard.resource_name", [resource_id], result)
+	return result
+
+static func resource_name__gd(resource_id: String) -> String:
 	return resource_id.replace("_", " ")
 
 static func roman(tier: int) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return roman__gd(tier)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"TownConstructionBoard.roman", [tier])
+	var result = roman__gd(tier)
+	HumanEngine.check(&"TownConstructionBoard.roman", [tier], result)
+	return result
+
+static func roman__gd(tier: int) -> String:
 	return ROMAN[tier] if tier > 0 and tier < ROMAN.size() else str(tier)
 
 # --- slot construction ---------------------------------------------------------

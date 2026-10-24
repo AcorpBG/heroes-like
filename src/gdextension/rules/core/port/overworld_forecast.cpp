@@ -1451,8 +1451,16 @@ DictRef _blank_project_vulnerability_penalties(State &state) {
 }
 
 int64_t _town_recovery_relief_rating(State &state, DictRef session, DictRef town, DictRef logistics_state) {
+	return _town_recovery_relief_rating(state, dict_value(session), town, logistics_state);
+}
+
+int64_t _town_recovery_relief_rating(State &state, const Value &session, DictRef town, DictRef logistics_state) {
 	int64_t relief = gd::int_field(state, _town_logistics_plan(state, town), key::recovery_relief, 0);
-	const DictRef logistics = !gd::is_empty(state, logistics_state) ? logistics_state : _town_logistics_state(state, session, town);
+	if (gd::is_empty(state, logistics_state) && session.kind == state::Kind::Nil) {
+		// _town_logistics_state(null, town): no caller passes a null session without its logistics.
+		throw state::NotPorted("OverworldRules._town_recovery_relief_rating: a null session without a logistics state");
+	}
+	const DictRef logistics = !gd::is_empty(state, logistics_state) ? logistics_state : _town_logistics_state(state, gd::as_dict(session), town);
 	relief = gd::add(relief, _town_building_bonus_total(state, town, key::recovery_relief));
 	relief = gd::add(relief, gd::int_field(state, logistics, key::recovery_relief_bonus, 0));
 	relief = gd::add(relief, gd::int_field(state, logistics, key::response_recovery_relief_bonus, 0));

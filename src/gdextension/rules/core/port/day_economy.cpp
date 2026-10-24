@@ -6,12 +6,7 @@
 // scaling.
 //
 // The paths whose callees no port has yet throw state::NotPorted where they
-// start, so the GDScript body runs instead; AI matches reach none of them (no
-// town, hero or site belongs to "player" there):
-// - a player town's weekly growth (OverworldRules._growth_tick_town);
-// - a player convoy that reaches its arrival day
-//   (OverworldRules._resource_site_delivery_interception, _delivery_army_admission,
-//   _resolve_player_reserve_delivery, _queue_followup_reserve_delivery);
+// start, so the GDScript body runs instead:
 // - the debug rules profile recording (OverworldRules._movement_rules_profile_active);
 // - towns or resource nodes held in something other than an Array, and
 //   x.duplicate(true) or String(x) of a value that is not a container or a text.
@@ -19,6 +14,7 @@
 // Not in the group's list, ported here under their GDScript names because no
 // port has them in a named namespace: OverworldRules._add_recruit_growth
 // (overworld_forecast.cpp has an anonymous copy), _clear_resource_site_delivery,
+// _delivery_army_admission, _queue_followup_reserve_delivery,
 // _find_encounter_by_placement (overworld_rules_ai_sites.cpp has an anonymous
 // copy), SpellRules.refresh_daily_mana and HeroProgressionRules.daily_income_bonus.
 // OverworldRules._movement_max_from_hero is inlined: it is
@@ -37,6 +33,8 @@
 #include "aurelion_rules/port/hero_progression_rules.hpp"
 #include "aurelion_rules/port/overworld_level_rules.hpp"
 #include "aurelion_rules/port/overworld_rules_ai.hpp"
+#include "aurelion_rules/port/overworld_rules_context.hpp"
+#include "aurelion_rules/port/overworld_rules_turn.hpp"
 #include "aurelion_rules/port/player_identity_rules_ai.hpp"
 #include "aurelion_rules/port/session_view.hpp"
 #include "aurelion_rules/port/spell_rules.hpp"
@@ -194,6 +192,13 @@ void resource_keys(State &state, const Value &value, std::vector<Atom> &keys) {
 
 namespace overworld_rules {
 
+// A player town's weekly growth, added to its recruits.
+DictRef _growth_tick_town(State &state, DictRef session, DictRef town) {
+	const DictRef weekly_growth = _effective_player_town_weekly_growth(state, session, town);
+	state.set(town, str(key::available_recruits), dict_value(_add_recruit_growth(state, state.get(town, str(key::available_recruits), dict_value(state.new_dict())), dict_value(weekly_growth))));
+	return weekly_growth;
+}
+
 DictRef _end_turn_open_day(State &state, DictRef session) {
 	// _rules_profile_*: recorded only while the debug capture is on.
 	if (gd::truthy(state, gd::static_var(state, key::overworld_rules_script, key::_movement_rules_profile_active))) {
@@ -222,7 +227,10 @@ DictRef _end_turn_open_day(State &state, DictRef session) {
 		const DictRef income = difficulty_rules::scale_income_resources(state, session, dict_value(town_base_income));
 		town_income = _add_resource_sets(state, dict_value(town_income), dict_value(income));
 		if (should_apply_weekly_growth) {
-			not_ported("OverworldRules._growth_tick_town (a player town's weekly growth)");
+			const Atom growth_summary = _describe_recruit_delta(state, dict_value(_growth_tick_town(state, session, town.ref)));
+			if (growth_summary != key::empty) {
+				state.append(weekly_growth_messages, str(gd::format(state, key::phrase_with_steps_text, {str(_town_name(state, town.ref)), str(growth_summary)})));
+			}
 		}
 		state.set_at(towns, index, town);
 	}
@@ -548,6 +556,84 @@ void _refresh_all_player_heroes_for_new_day(State &state, DictRef session) {
 	state.set(overworld, str(key::hero_position), deep_duplicate_field(state, active_hero, key::position));
 }
 
+DictRef _delivery_army_admission(State &state, DictRef session, DictRef delivery_state) {
+	const Atom target_id = text(state, delivery_state, key::target_id, key::empty);
+	Value stacks = array_value(state.new_array());
+	const Atom target_kind = text(state, delivery_state, key::target_kind, key::empty);
+	if (target_kind == key::hero) {
+		const DictRef hero = hero_command_rules::hero_by_id(state, session, target_id);
+		if (gd::is_empty(state, hero)) {
+			// Existing return/loss rules own missing targets.
+			const DictRef ok = state.new_dict();
+			state.set(ok, str(key::ok), bool_value(true));
+			return ok;
+		}
+		stacks = ai::vget(state, field_or_new_dict(state, hero, key::army), key::stacks, array_value(state.new_array()));
+	} else if (target_kind == key::town) {
+		const DictRef town = gd::as_dict(field_or_new_dict(state, _find_town_by_placement(state, session, target_id), key::town));
+		if (gd::is_empty(state, town) || text(state, town, key::owner, key::neutral) != key::player) {
+			const DictRef ok = state.new_dict();
+			state.set(ok, str(key::ok), bool_value(true));
+			return ok;
+		}
+		stacks = field_or_new_array(state, town, key::garrison);
+	}
+	return hero_command_rules::army_addition_plan(state, stacks, gd::as_dict(field_or_new_dict(state, delivery_state, key::manifest)));
+}
+
+DictRef _queue_followup_reserve_delivery(State &state, DictRef session, DictRef node, DictRef site) {
+	// session == null cannot happen: a session is its view.
+	const DictRef result = state.new_dict();
+	state.set(result, str(key::node), dict_value(node));
+	state.set(result, str(key::message), str(key::empty));
+	if (gd::is_empty(state, node) || gd::is_empty(state, site)) {
+		return result;
+	}
+	if (text(state, node, key::collected_by_faction_id, key::empty) != key::player) {
+		return result;
+	}
+	const DictRef response_state = _resource_site_response_state(state, session, node, site);
+	if (!gd::bool_field(state, response_state, key::active, false)) {
+		return result;
+	}
+	if (gd::bool_field(state, _resource_site_delivery_state(state, session, node, site), key::active, false)) {
+		return result;
+	}
+	const DictRef linked_town_result = _resource_node_linked_town(state, session, node, key::player);
+	const int64_t town_index = gd::int_field(state, linked_town_result, key::index, -1);
+	if (town_index < 0) {
+		return result;
+	}
+	const DictRef source_town = gd::as_dict(field_or_new_dict(state, linked_town_result, key::town));
+	const DictRef delivery_plan = _player_reserve_delivery_plan(state, session, source_town, response_state);
+	if (gd::is_empty(state, delivery_plan)) {
+		return result;
+	}
+	const DictRef overworld = session_view::overworld(state, session);
+	const ArrayRef towns = indexed_array_field(state, overworld, key::towns, "towns");
+	state.set(source_town, str(key::available_recruits), dict_value(_consume_recruit_payload(state, field_or_new_dict(state, source_town, key::available_recruits), field_or_new_dict(state, delivery_plan, key::manifest))));
+	state.set_at(towns, town_index, dict_value(source_town));
+	state.set(overworld, str(key::towns), array_value(towns));
+	const DictRef queued = gd::deep_duplicate_dict(state, node);
+	const int64_t eta_days = gd::int_field(state, delivery_plan, key::eta_days, 1);
+	state.set(queued, str(key::delivery_controller_id), str(key::player));
+	state.set(queued, str(key::delivery_origin_town_id), str(text(state, source_town, key::placement_id, key::empty)));
+	state.set(queued, str(key::delivery_target_kind), str(text(state, delivery_plan, key::target_kind, key::empty)));
+	state.set(queued, str(key::delivery_target_id), str(text(state, delivery_plan, key::target_id, key::empty)));
+	state.set(queued, str(key::delivery_target_label), str(text(state, delivery_plan, key::target_label, key::empty)));
+	state.set(queued, str(key::delivery_arrival_day), int_value(session_day(state, session) + std::max<int64_t>(1, eta_days)));
+	state.set(queued, str(key::delivery_manifest), dict_value(_normalize_recruit_payload(state, field_or_new_dict(state, delivery_plan, key::manifest))));
+	state.set(result, str(key::node), dict_value(queued));
+	state.set(result, str(key::message), str(gd::format(state, key::s_loads_a_follow_up_convoy, {
+		str(text(state, site, key::name, key::the_route)),
+		str(text(state, delivery_plan, key::target_label, key::the_front)),
+		str(_describe_recruit_delta(state, field_or_new_dict(state, delivery_plan, key::manifest))),
+		int_value(eta_days),
+		str(eta_days == 1 ? key::empty : key::s),
+	})));
+	return result;
+}
+
 ArrayRef _advance_player_reserve_deliveries(State &state, DictRef session) {
 	// session == null cannot happen: a session is its view.
 	const ArrayRef messages = state.new_array();
@@ -579,8 +665,30 @@ ArrayRef _advance_player_reserve_deliveries(State &state, DictRef session) {
 		if (session_day(state, session) < gd::int_field(state, delivery_state, key::arrival_day, 0)) {
 			continue;
 		}
-		not_ported("OverworldRules._resource_site_delivery_interception, _delivery_army_admission, "
-				   "_resolve_player_reserve_delivery and _queue_followup_reserve_delivery (a player convoy arrives)");
+		const DictRef site = gd::content_row(state, ContentTable::ResourceSite, text(state, node.ref, key::site_id, key::empty));
+		const DictRef interception_state = _resource_site_delivery_interception(state, session, node.ref, site);
+		if (gd::bool_field(state, interception_state, key::blocks_delivery, false)) {
+			continue;
+		}
+		const DictRef admission = _delivery_army_admission(state, session, delivery_state);
+		if (!gd::bool_field(state, admission, key::ok, false)) {
+			// Keep the existing convoy manifest and receipt untouched. The army may
+			// fill after dispatch; waiting is not a failed/lost delivery.
+			state.append(messages, str(gd::format(state, key::s_convoy_waits_for_army_space, {str(text(state, site, key::name, key::the_route)), str(text(state, delivery_state, key::target_label, key::its_destination))})));
+			continue;
+		}
+		const Atom message = _resolve_player_reserve_delivery(state, session, site, delivery_state, node.ref);
+		const DictRef cleared = _clear_resource_site_delivery(state, node.ref);
+		const DictRef followup_result = _queue_followup_reserve_delivery(state, session, cleared, site);
+		state.set_at(nodes, index, state.get(followup_result, str(key::node), dict_value(cleared)));
+		changed = true;
+		if (message != key::empty) {
+			state.append(messages, str(message));
+		}
+		const Atom followup_message = text(state, followup_result, key::message, key::empty);
+		if (followup_message != key::empty) {
+			state.append(messages, str(followup_message));
+		}
 	}
 	if (changed) {
 		state.set(session_view::overworld(state, session), str(key::resource_nodes), array_value(nodes));

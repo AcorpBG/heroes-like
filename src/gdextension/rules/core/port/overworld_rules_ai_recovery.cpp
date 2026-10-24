@@ -75,6 +75,10 @@ DictRef _resource_node_linked_town(State &state, DictRef session, DictRef node, 
 }
 
 DictRef _town_recovery_state(State &state, DictRef session, DictRef town, DictRef logistics_state) {
+	return _town_recovery_state(state, dict_value(session), town, logistics_state);
+}
+
+DictRef _town_recovery_state(State &state, const Value &session, DictRef town, DictRef logistics_state) {
 	const DictRef recovery = _normalize_town_recovery_state(state, dict_or_new(state, town, key::recovery));
 	const int64_t pressure = compat::engine_max<int64_t>(0, gd::int_field(state, recovery, key::pressure, 0));
 	const int64_t relief_rating = _town_recovery_relief_rating(state, session, town, logistics_state);

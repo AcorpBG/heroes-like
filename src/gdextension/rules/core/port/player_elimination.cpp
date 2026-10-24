@@ -1,7 +1,7 @@
 // PlayerEliminationRules.apply_daily: the days each player has gone without a
-// town, counted once a day after every player has moved, and a computer player
-// removed when its time is up. The human player's townless warnings and defeat
-// are left to GDScript (state::NotPorted).
+// town, counted once a day after every player has moved, a computer player
+// removed when its time is up, and the human player's townless warnings and
+// defeat.
 
 #include "aurelion_rules/port/ai_hero_rules.hpp"
 #include "aurelion_rules/port/ai_hero_rules_turn.hpp"
@@ -51,6 +51,15 @@ void _remove_computer_player(State &state, DictRef session, Atom player_id) {
 		const DictRef entry = gd::as_dict(state.at(entries, index));
 		ai_hero_rules::_mark_resolved(state, session, text(state, entry, key::placement_id, key::empty));
 		ai_hero_rules::_record_hero_defeat(state, session, player_id, entry);
+	}
+}
+
+// The human's defeat: the session's status and its summary, if it has none.
+void _defeat_human(State &state, DictRef session, Atom summary) {
+	state.set(gd::as_dict(gd::field(state, session, key::flags)), str(key::campaign), str(key::defeat));
+	state.set(session, str(key::scenario_status), str(key::defeat));
+	if (gd::to_string(gd::field(state, session, key::scenario_summary)) == key::empty) {
+		state.set(session, str(key::scenario_summary), str(summary));
 	}
 }
 
@@ -116,8 +125,7 @@ ArrayRef apply_daily(State &state, DictRef session) {
 		if (heroes_held(state, session, player.ref) == 0) {
 			state.erase(since, str(player_id));
 			if (human && text(state, session, key::scenario_status, key::empty) == key::in_progress) {
-				// _defeat_human.
-				not_ported("a human with no town and no hero");
+				_defeat_human(state, session, key::your_realm_has_no_town_and);
 			}
 			continue;
 		}
@@ -127,15 +135,14 @@ ArrayRef apply_daily(State &state, DictRef session) {
 		const int64_t left = gd::sub(kTownlessDays, gd::sub(day, gd::to_int(state, gd::index(state, since, str(player_id)))));
 		if (left > 0) {
 			if (human) {
-				// The townless warning.
-				not_ported("a townless human's warning");
+				state.append(messages, str(gd::format(state, key::you_hold_no_town_take_one, { int_value(left), str(left == 1 ? key::empty : key::s) })));
 			}
 			continue;
 		}
 		state.erase(since, str(player_id));
 		if (human) {
-			// _defeat_human.
-			not_ported("a human whose townless days are up");
+			_defeat_human(state, session, gd::format(state, key::your_realm_has_held_no_town, { int_value(kTownlessDays) }));
+			continue;
 		}
 		if (!rosters_settled) {
 			// The enemy turn leaves its rosters to the scenario check after this.

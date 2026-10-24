@@ -77,6 +77,8 @@ ArrayRef _resource_site_spell_ids(State &state, DictRef site);
 DictRef _calculate_town_income(State &state, DictRef town, const Value &session = Value());
 DictRef _normalize_town_occupation_state(State &state, const Value &value);
 DictRef _town_occupation_state(State &state, DictRef session, DictRef town);
+// A session that may be null: the occupation's own fields.
+DictRef _town_occupation_state(State &state, const Value &session, DictRef town);
 
 // Town recruits seeding, economy income, building categories, read-scope caches (overworld_rules_ai_economy.cpp).
 DictRef _seed_scenario_recruits_for_town_state(State &state, DictRef town);
@@ -109,6 +111,8 @@ DictRef _town_logistics_gap_penalties(State &state, DictRef town, int64_t suppor
 // Town recovery, occupation pressure and linked sites under threat (overworld_rules_ai_recovery.cpp).
 DictRef _resource_node_linked_town(State &state, DictRef session, DictRef node, Atom controller_id);
 DictRef _town_recovery_state(State &state, DictRef session, DictRef town, DictRef logistics_state);
+// A session that may be null (the relief rating reads it only without a logistics state).
+DictRef _town_recovery_state(State &state, const Value &session, DictRef town, DictRef logistics_state);
 DictRef _town_occupation_front_proxy(State &state, DictRef session, DictRef town, Atom faction_id);
 int64_t _town_occupation_relief_per_day(State &state, DictRef session, DictRef town, DictRef logistics, DictRef recovery, DictRef front);
 bool _resource_site_under_threat(State &state, DictRef session, DictRef node, Atom controller_id);

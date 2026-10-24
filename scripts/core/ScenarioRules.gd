@@ -11,6 +11,7 @@ const GeneratedObjectives = preload("res://scripts/core/GeneratedScenarioObjecti
 const TownDevelopmentRulesScript = preload("res://scripts/core/TownDevelopmentRules.gd")
 const DayEngine = preload("res://scripts/core/DayEngine.gd")
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 static var _day_engine_mode: int = DayEngine.mode
 
 static var _scenario_dependency_metadata_cache: Dictionary = {}
@@ -257,7 +258,17 @@ static func describe_scenario_launch_preview(
 	)
 	return "\n".join(lines)
 
-static func describe_session_progress_recap(
+static func describe_session_progress_recap(session: SessionStateStoreScript.SessionData, include_header: bool = true) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_session_progress_recap__gd(session, include_header)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ScenarioRules.describe_session_progress_recap", [session, include_header])
+	var before := HumanEngine.before_writing(&"ScenarioRules.describe_session_progress_recap", [session, include_header])
+	var result = describe_session_progress_recap__gd(session, include_header)
+	HumanEngine.check_writing(&"ScenarioRules.describe_session_progress_recap", before, [session, include_header], result)
+	return result
+
+static func describe_session_progress_recap__gd(
 	session: SessionStateStoreScript.SessionData,
 	include_header: bool = true
 ) -> String:
@@ -267,7 +278,17 @@ static func describe_session_progress_recap(
 	normalize_scenario_state(session)
 	return describe_session_progress_recap_from_normalized_session(session, include_header)
 
-static func describe_session_progress_recap_from_normalized_session(
+static func describe_session_progress_recap_from_normalized_session(session: SessionStateStoreScript.SessionData, include_header: bool = true, preloaded_objective_surface: Dictionary = {}) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_session_progress_recap_from_normalized_session__gd(session, include_header, preloaded_objective_surface)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ScenarioRules.describe_session_progress_recap_from_normalized_session", [session, include_header, preloaded_objective_surface])
+	var before := HumanEngine.before_writing(&"ScenarioRules.describe_session_progress_recap_from_normalized_session", [session, include_header, preloaded_objective_surface])
+	var result = describe_session_progress_recap_from_normalized_session__gd(session, include_header, preloaded_objective_surface)
+	HumanEngine.check_writing(&"ScenarioRules.describe_session_progress_recap_from_normalized_session", before, [session, include_header, preloaded_objective_surface], result)
+	return result
+
+static func describe_session_progress_recap_from_normalized_session__gd(
 	session: SessionStateStoreScript.SessionData,
 	include_header: bool = true,
 	preloaded_objective_surface: Dictionary = {}
@@ -335,6 +356,16 @@ static func describe_session_operational_board(session: SessionStateStoreScript.
 	return "\n".join(lines)
 
 static func build_outcome_model(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return build_outcome_model__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ScenarioRules.build_outcome_model", [session])
+	var before := HumanEngine.before_writing(&"ScenarioRules.build_outcome_model", [session])
+	var result = build_outcome_model__gd(session)
+	HumanEngine.check_writing(&"ScenarioRules.build_outcome_model", before, [session], result)
+	return result
+
+static func build_outcome_model__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	normalize_scenario_state(session)
 	if session == null or session.scenario_id == "":
 		return {
@@ -429,6 +460,16 @@ static func build_outcome_model(session: SessionStateStoreScript.SessionData) ->
 	return model
 
 static func perform_outcome_action(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return perform_outcome_action__gd(session, action_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ScenarioRules.perform_outcome_action", [session, action_id])
+	var before := HumanEngine.before_writing(&"ScenarioRules.perform_outcome_action", [session, action_id])
+	var result = perform_outcome_action__gd(session, action_id)
+	HumanEngine.check_writing(&"ScenarioRules.perform_outcome_action", before, [session, action_id], result)
+	return result
+
+static func perform_outcome_action__gd(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
 	if action_id == "" or action_id == "return_to_menu":
 		return {"ok": true, "route": "main_menu", "message": ""}
 
@@ -635,7 +676,17 @@ static func _progress_recap_context_line(session: SessionStateStoreScript.Sessio
 		session.day,
 	]
 
-static func _progress_recap_status_line(
+static func _progress_recap_status_line(session: SessionStateStoreScript.SessionData, preloaded_objective_surface: Dictionary = {}) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _progress_recap_status_line__gd(session, preloaded_objective_surface)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ScenarioRules._progress_recap_status_line", [session, preloaded_objective_surface])
+	var before := HumanEngine.before_writing(&"ScenarioRules._progress_recap_status_line", [session, preloaded_objective_surface])
+	var result = _progress_recap_status_line__gd(session, preloaded_objective_surface)
+	HumanEngine.check_writing(&"ScenarioRules._progress_recap_status_line", before, [session, preloaded_objective_surface], result)
+	return result
+
+static func _progress_recap_status_line__gd(
 	session: SessionStateStoreScript.SessionData,
 	preloaded_objective_surface: Dictionary = {}
 ) -> String:
@@ -680,7 +731,17 @@ static func _progress_recap_recent_line(
 		return "Recently resolved: %s" % "; ".join(completed)
 	return ""
 
-static func _progress_recap_next_step_line(
+static func _progress_recap_next_step_line(session: SessionStateStoreScript.SessionData, scenario: Dictionary, preloaded_objective_surface: Dictionary = {}) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _progress_recap_next_step_line__gd(session, scenario, preloaded_objective_surface)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ScenarioRules._progress_recap_next_step_line", [session, scenario, preloaded_objective_surface])
+	var before := HumanEngine.before_writing(&"ScenarioRules._progress_recap_next_step_line", [session, scenario, preloaded_objective_surface])
+	var result = _progress_recap_next_step_line__gd(session, scenario, preloaded_objective_surface)
+	HumanEngine.check_writing(&"ScenarioRules._progress_recap_next_step_line", before, [session, scenario, preloaded_objective_surface], result)
+	return result
+
+static func _progress_recap_next_step_line__gd(
 	session: SessionStateStoreScript.SessionData,
 	scenario: Dictionary,
 	preloaded_objective_surface: Dictionary = {}

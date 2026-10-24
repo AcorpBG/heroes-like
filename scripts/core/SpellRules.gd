@@ -4,6 +4,8 @@ extends RefCounted
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
+const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 const CONTEXT_OVERWORLD := "overworld"
 const CONTEXT_BATTLE := "battle"
 const COMMON_RESOURCE_IDS := ["gold", "wood", "ore"]
@@ -53,6 +55,15 @@ static func spell_school_icon_path(spell_id: String) -> String:
 	return icon_path
 
 static func spell_icon_path(spell_id: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return spell_icon_path__gd(spell_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"SpellRules.spell_icon_path", [spell_id])
+	var result = spell_icon_path__gd(spell_id)
+	HumanEngine.check(&"SpellRules.spell_icon_path", [spell_id], result)
+	return result
+
+static func spell_icon_path__gd(spell_id: String) -> String:
 	var spell := ContentService.get_spell(spell_id)
 	if spell.is_empty():
 		return ""
@@ -91,6 +102,16 @@ static func mana_max_from_command(command: Variant) -> int:
 
 ## A hero casts at most one overworld spell per day.
 static func cast_overworld_spell_on_day(hero: Dictionary, day: int) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return cast_overworld_spell_on_day__gd(hero, day)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"SpellRules.cast_overworld_spell_on_day", [hero, day])
+	var before := HumanEngine.before_writing(&"SpellRules.cast_overworld_spell_on_day", [hero, day])
+	var result = cast_overworld_spell_on_day__gd(hero, day)
+	HumanEngine.check_writing(&"SpellRules.cast_overworld_spell_on_day", before, [hero, day], result)
+	return result
+
+static func cast_overworld_spell_on_day__gd(hero: Dictionary, day: int) -> bool:
 	return day > 0 and int(hero.get(OVERWORLD_SPELL_CAST_DAY_KEY, 0)) == day
 
 static func refresh_daily_mana(hero_state: Dictionary) -> Dictionary:
@@ -176,6 +197,16 @@ static func describe_spellbook(hero_state: Dictionary, context_filter: String = 
 	return "\n".join(lines)
 
 static func spell_category_label(spell: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return spell_category_label__gd(spell)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"SpellRules.spell_category_label", [spell])
+	var before := HumanEngine.before_writing(&"SpellRules.spell_category_label", [spell])
+	var result = spell_category_label__gd(spell)
+	HumanEngine.check_writing(&"SpellRules.spell_category_label", before, [spell], result)
+	return result
+
+static func spell_category_label__gd(spell: Dictionary) -> String:
 	var context := String(spell.get("context", ""))
 	var effect = spell.get("effect", {})
 	var effect_type := String(effect.get("type", ""))
@@ -358,6 +389,16 @@ static func adventure_spell_target_contract(hero_state: Dictionary, movement_sta
 	}
 
 static func adventure_spell_consequence_preview(hero_state: Dictionary, movement_state: Dictionary, spell: Variant) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return adventure_spell_consequence_preview__gd(hero_state, movement_state, spell)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"SpellRules.adventure_spell_consequence_preview", [hero_state, movement_state, spell])
+	var before := HumanEngine.before_writing(&"SpellRules.adventure_spell_consequence_preview", [hero_state, movement_state, spell])
+	var result = adventure_spell_consequence_preview__gd(hero_state, movement_state, spell)
+	HumanEngine.check_writing(&"SpellRules.adventure_spell_consequence_preview", before, [hero_state, movement_state, spell], result)
+	return result
+
+static func adventure_spell_consequence_preview__gd(hero_state: Dictionary, movement_state: Dictionary, spell: Variant) -> Dictionary:
 	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
 	var spell_dict: Dictionary = spell if spell is Dictionary else ContentService.get_spell(String(spell))
 	if spell_dict.is_empty():
@@ -536,6 +577,16 @@ static func magic_artifact_economy_integration_report(
 	}
 
 static func describe_spell_inspection_line(hero_state: Dictionary, spell: Dictionary, context_state: Dictionary = {}) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_spell_inspection_line__gd(hero_state, spell, context_state)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"SpellRules.describe_spell_inspection_line", [hero_state, spell, context_state])
+	var before := HumanEngine.before_writing(&"SpellRules.describe_spell_inspection_line", [hero_state, spell, context_state])
+	var result = describe_spell_inspection_line__gd(hero_state, spell, context_state)
+	HumanEngine.check_writing(&"SpellRules.describe_spell_inspection_line", before, [hero_state, spell, context_state], result)
+	return result
+
+static func describe_spell_inspection_line__gd(hero_state: Dictionary, spell: Dictionary, context_state: Dictionary = {}) -> String:
 	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
 	var mana_cost: int = adjusted_spell_mana_cost(hero, spell)
 	var readiness := _mana_readiness_label(hero, mana_cost)
@@ -655,12 +706,32 @@ static func describe_overworld_spell_rail(hero_state: Dictionary, movement_state
 	]
 
 static func _mana_readiness_label(hero_state: Dictionary, mana_cost: int) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _mana_readiness_label__gd(hero_state, mana_cost)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"SpellRules._mana_readiness_label", [hero_state, mana_cost])
+	var before := HumanEngine.before_writing(&"SpellRules._mana_readiness_label", [hero_state, mana_cost])
+	var result = _mana_readiness_label__gd(hero_state, mana_cost)
+	HumanEngine.check_writing(&"SpellRules._mana_readiness_label", before, [hero_state, mana_cost], result)
+	return result
+
+static func _mana_readiness_label__gd(hero_state: Dictionary, mana_cost: int) -> String:
 	var current_mana := int(hero_state.get("spellbook", {}).get("mana", {}).get("current", 0))
 	if current_mana >= max(0, mana_cost):
 		return "Ready mana"
 	return "Need %d mana" % max(0, mana_cost - current_mana)
 
 static func _spell_effect_summary(spell: Dictionary, hero_state: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _spell_effect_summary__gd(spell, hero_state)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"SpellRules._spell_effect_summary", [spell, hero_state])
+	var before := HumanEngine.before_writing(&"SpellRules._spell_effect_summary", [spell, hero_state])
+	var result = _spell_effect_summary__gd(spell, hero_state)
+	HumanEngine.check_writing(&"SpellRules._spell_effect_summary", before, [spell, hero_state], result)
+	return result
+
+static func _spell_effect_summary__gd(spell: Dictionary, hero_state: Dictionary) -> String:
 	match String(spell.get("context", "")):
 		CONTEXT_OVERWORLD:
 			return _overworld_spell_effect_summary(spell, {})
@@ -672,7 +743,17 @@ static func _spell_effect_summary(spell: Dictionary, hero_state: Dictionary) -> 
 static func _battle_spell_effect_summary(hero_state: Dictionary, spell: Dictionary, battle: Dictionary = {}, active_stack: Dictionary = {}, target_stack: Dictionary = {}) -> String:
 	return BattleEngine.native_writing(&"SpellRules._battle_spell_effect_summary", [hero_state, spell, battle, active_stack, target_stack])
 
-static func _best_use_line(
+static func _best_use_line(spell: Dictionary, context: Dictionary = {}, active_stack: Dictionary = {}, target_stack: Dictionary = {}) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _best_use_line__gd(spell, context, active_stack, target_stack)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"SpellRules._best_use_line", [spell, context, active_stack, target_stack])
+	var before := HumanEngine.before_writing(&"SpellRules._best_use_line", [spell, context, active_stack, target_stack])
+	var result = _best_use_line__gd(spell, context, active_stack, target_stack)
+	HumanEngine.check_writing(&"SpellRules._best_use_line", before, [spell, context, active_stack, target_stack], result)
+	return result
+
+static func _best_use_line__gd(
 	spell: Dictionary,
 	context: Dictionary = {},
 	active_stack: Dictionary = {},
@@ -713,6 +794,16 @@ static func _best_use_line(
 
 ## `today` > 0 applies the one-overworld-spell-per-day limit for that day.
 static func get_overworld_actions(hero_state: Dictionary, movement_state: Dictionary, today: int = 0) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return get_overworld_actions__gd(hero_state, movement_state, today)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"SpellRules.get_overworld_actions", [hero_state, movement_state, today])
+	var before := HumanEngine.before_writing(&"SpellRules.get_overworld_actions", [hero_state, movement_state, today])
+	var result = get_overworld_actions__gd(hero_state, movement_state, today)
+	HumanEngine.check_writing(&"SpellRules.get_overworld_actions", before, [hero_state, movement_state, today], result)
+	return result
+
+static func get_overworld_actions__gd(hero_state: Dictionary, movement_state: Dictionary, today: int = 0) -> Array:
 	var actions := []
 	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
 	for spell in known_spells(hero, CONTEXT_OVERWORLD):
@@ -857,6 +948,16 @@ static func resolve_battle_spell(hero_state: Dictionary, battle: Dictionary, act
 	return BattleEngine.native_writing(&"SpellRules.resolve_battle_spell", [hero_state, battle, active_stack, target_stack, spell_id, acting_side])
 
 static func validate_overworld_spell(hero_state: Dictionary, movement_state: Dictionary, spell: Variant, today: int = 0) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return validate_overworld_spell__gd(hero_state, movement_state, spell, today)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"SpellRules.validate_overworld_spell", [hero_state, movement_state, spell, today])
+	var before := HumanEngine.before_writing(&"SpellRules.validate_overworld_spell", [hero_state, movement_state, spell, today])
+	var result = validate_overworld_spell__gd(hero_state, movement_state, spell, today)
+	HumanEngine.check_writing(&"SpellRules.validate_overworld_spell", before, [hero_state, movement_state, spell, today], result)
+	return result
+
+static func validate_overworld_spell__gd(hero_state: Dictionary, movement_state: Dictionary, spell: Variant, today: int = 0) -> Dictionary:
 	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
 	var spell_dict: Dictionary = spell if spell is Dictionary else ContentService.get_spell(String(spell))
 	if spell_dict.is_empty():
@@ -921,6 +1022,16 @@ static func active_effects_for_round(stack: Dictionary, round_number: int) -> Ar
 	return BattleEngine.native(&"SpellRules.active_effects_for_round", [stack, round_number])
 
 static func effect_summary(stack: Dictionary, battle: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return effect_summary__gd(stack, battle)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"SpellRules.effect_summary", [stack, battle])
+	var before := HumanEngine.before_writing(&"SpellRules.effect_summary", [stack, battle])
+	var result = effect_summary__gd(stack, battle)
+	HumanEngine.check_writing(&"SpellRules.effect_summary", before, [stack, battle], result)
+	return result
+
+static func effect_summary__gd(stack: Dictionary, battle: Dictionary) -> String:
 	var tags := []
 	var current_round := int(battle.get("round", 1))
 	for effect in active_effects_for_round(stack, current_round):
@@ -1063,7 +1174,17 @@ static func _battle_spell_action_summary(
 		_:
 			return "No authored battle summary is available for this spell."
 
-static func battle_spell_timing_summary(
+static func battle_spell_timing_summary(hero_state: Dictionary, battle: Dictionary, active_stack: Dictionary, target_stack: Dictionary, spell: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return battle_spell_timing_summary__gd(hero_state, battle, active_stack, target_stack, spell)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"SpellRules.battle_spell_timing_summary", [hero_state, battle, active_stack, target_stack, spell])
+	var before := HumanEngine.before_writing(&"SpellRules.battle_spell_timing_summary", [hero_state, battle, active_stack, target_stack, spell])
+	var result = battle_spell_timing_summary__gd(hero_state, battle, active_stack, target_stack, spell)
+	HumanEngine.check_writing(&"SpellRules.battle_spell_timing_summary", before, [hero_state, battle, active_stack, target_stack, spell], result)
+	return result
+
+static func battle_spell_timing_summary__gd(
 	hero_state: Dictionary,
 	battle: Dictionary,
 	active_stack: Dictionary,
@@ -1191,6 +1312,16 @@ static func _movement_restore_preview(movement_state: Dictionary, spell: Diction
 	}
 
 static func _overworld_spell_effect_summary(spell: Dictionary, movement_state: Dictionary, hero_state: Dictionary = {}) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _overworld_spell_effect_summary__gd(spell, movement_state, hero_state)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"SpellRules._overworld_spell_effect_summary", [spell, movement_state, hero_state])
+	var before := HumanEngine.before_writing(&"SpellRules._overworld_spell_effect_summary", [spell, movement_state, hero_state])
+	var result = _overworld_spell_effect_summary__gd(spell, movement_state, hero_state)
+	HumanEngine.check_writing(&"SpellRules._overworld_spell_effect_summary", before, [spell, movement_state, hero_state], result)
+	return result
+
+static func _overworld_spell_effect_summary__gd(spell: Dictionary, movement_state: Dictionary, hero_state: Dictionary = {}) -> String:
 	var effect = spell.get("effect", {})
 	match String(effect.get("type", "")):
 		"restore_movement":
@@ -1205,6 +1336,16 @@ static func _overworld_spell_effect_summary(spell: Dictionary, movement_state: D
 			return "No supported overworld effect"
 
 static func _overworld_target_requirement(spell: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _overworld_target_requirement__gd(spell)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"SpellRules._overworld_target_requirement", [spell])
+	var before := HumanEngine.before_writing(&"SpellRules._overworld_target_requirement", [spell])
+	var result = _overworld_target_requirement__gd(spell)
+	HumanEngine.check_writing(&"SpellRules._overworld_target_requirement", before, [spell], result)
+	return result
+
+static func _overworld_target_requirement__gd(spell: Dictionary) -> String:
 	match String(spell.get("target_mode", "self")):
 		"self":
 			return "No map target; affects active hero"
@@ -1212,6 +1353,15 @@ static func _overworld_target_requirement(spell: Dictionary) -> String:
 			return "Choose %s before casting" % _target_mode_label(String(spell.get("target_mode", "")))
 
 static func _target_mode_label(target_mode: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _target_mode_label__gd(target_mode)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"SpellRules._target_mode_label", [target_mode])
+	var result = _target_mode_label__gd(target_mode)
+	HumanEngine.check(&"SpellRules._target_mode_label", [target_mode], result)
+	return result
+
+static func _target_mode_label__gd(target_mode: String) -> String:
 	match target_mode:
 		"self":
 			return "active hero"
