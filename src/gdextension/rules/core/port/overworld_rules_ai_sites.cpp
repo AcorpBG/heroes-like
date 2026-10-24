@@ -597,23 +597,28 @@ ArrayRef _map_object_world_interaction_tiles(State &state, DictRef map_object, D
 }
 
 DictRef _resource_site_response_state(State &state, DictRef session, DictRef node, DictRef site) {
+	return _resource_site_response_state(state, dict_value(session), node, site);
+}
+
+DictRef _resource_site_response_state(State &state, const Value &session, DictRef node, DictRef site) {
 	const DictRef profile = _resource_site_response_profile(state, site);
 	bool active = false;
 	int64_t remaining_days = 0;
 	const Atom commander_id = ai::string_or_empty(state, node, key::response_commander_id);
 	Atom commander_name = key::empty;
 	int64_t security_rating = max0(gd::int_field(state, node, key::response_security_rating, 0));
-	if (ai::string_or_empty(state, node, key::collected_by_faction_id) == key::player) {
+	if (session.kind != Kind::Nil && ai::string_or_empty(state, node, key::collected_by_faction_id) == key::player) {
+		const DictRef view = gd::as_dict(session);
 		const int64_t response_until_day = max0(gd::int_field(state, node, key::response_until_day, 0));
-		active = response_until_day >= ai::session_int(state, session, key::day) && gd::int_field(state, profile, key::watch_days, 0) > 0;
+		active = response_until_day >= ai::session_int(state, view, key::day) && gd::int_field(state, profile, key::watch_days, 0) > 0;
 		if (active) {
-			remaining_days = vmax(1, gd::add(gd::sub(response_until_day, ai::session_int(state, session, key::day)), 1));
+			remaining_days = vmax(1, gd::add(gd::sub(response_until_day, ai::session_int(state, view, key::day)), 1));
 		}
 		if (commander_id != key::empty) {
-			commander_name = ai::string_or_empty(state, hero_command_rules::hero_by_id(state, session, commander_id), key::name);
+			commander_name = ai::string_or_empty(state, hero_command_rules::hero_by_id(state, view, commander_id), key::name);
 		}
 		if (security_rating <= 0) {
-			const DictRef preview_hero = active_hero(state, session);
+			const DictRef preview_hero = active_hero(state, view);
 			security_rating = _route_security_rating_for_hero(state, preview_hero);
 			if (commander_name == key::empty) {
 				commander_name = ai::string_or_empty(state, preview_hero, key::name);

@@ -116648,15 +116648,15 @@
     {
       "id": "native-rules-phase7-03-context-actions-20261023",
       "title": "Phase 7.3: context and site actions",
-      "status": "pending",
+      "status": "in_progress",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Transition doc, Phase 7, Slices.",
-      "updatedAt": "2026-10-23T14:30:00Z"
+      "notes": "Started 2026-10-24 on branch native-phase7-human: 101 GDScript functions (2,426 lines) declared in src/gdextension/rules/include/aurelion_rules/port/overworld_rules_context.hpp move to C++ through the human registry: the context and its actions, a site's response order and reserve delivery, the resource sites' surfaces, building and recruiting in the visited town from the map, the reward choice, dwelling hire, site recruits, level-up, specialties, army slots and artifact texts. Frozen until it merges: the functions that header declares.",
+      "updatedAt": "2026-10-24T05:30:00Z"
     },
     {
       "id": "native-rules-phase7-04-overworld-spells-20261023",

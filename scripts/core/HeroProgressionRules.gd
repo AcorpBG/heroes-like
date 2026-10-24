@@ -3,6 +3,7 @@ extends RefCounted
 
 const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
 const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 const NativeRules = preload("res://scripts/core/NativeRules.gd")
 const CHOICE_SIZE := 3
 const SPECIALTY_INSIGNIA_ATLAS_PATH := "res://art/heroes/runtime/specialties/hero_specialty_insignia_atlas.png"
@@ -49,6 +50,16 @@ static func ensure_hero_progression(hero_state: Dictionary) -> Dictionary:
 	return hero
 
 static func level_up_summary(hero_state: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return level_up_summary__gd(hero_state)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"HeroProgressionRules.level_up_summary", [hero_state])
+	var before := HumanEngine.before_writing(&"HeroProgressionRules.level_up_summary", [hero_state])
+	var result = level_up_summary__gd(hero_state)
+	HumanEngine.check_writing(&"HeroProgressionRules.level_up_summary", before, [hero_state], result)
+	return result
+
+static func level_up_summary__gd(hero_state: Dictionary) -> Dictionary:
 	var hero := ensure_hero_progression(hero_state.duplicate(true))
 	var previous := int(hero["level_up_presented"])
 	var level := int(hero["level"])
@@ -177,6 +188,16 @@ static func choose_specialty(hero_state: Dictionary, specialty_id: String) -> Di
 	return {"ok": true, "hero": hero, "message": message}
 
 static func get_choice_actions(hero_state: Dictionary) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return get_choice_actions__gd(hero_state)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"HeroProgressionRules.get_choice_actions", [hero_state])
+	var before := HumanEngine.before_writing(&"HeroProgressionRules.get_choice_actions", [hero_state])
+	var result = get_choice_actions__gd(hero_state)
+	HumanEngine.check_writing(&"HeroProgressionRules.get_choice_actions", before, [hero_state], result)
+	return result
+
+static func get_choice_actions__gd(hero_state: Dictionary) -> Array:
 	var hero := ensure_hero_progression(hero_state.duplicate(true))
 	var pending_choice := current_pending_choice(hero)
 	if pending_choice.is_empty():
@@ -296,6 +317,15 @@ static func specialty_definition(specialty_id: String) -> Dictionary:
 
 ## What `specialty_id` gives at `rank` (1-based), as shown to the player.
 static func rank_text(specialty_id: String, rank: int) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return rank_text__gd(specialty_id, rank)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"HeroProgressionRules.rank_text", [specialty_id, rank])
+	var result = rank_text__gd(specialty_id, rank)
+	HumanEngine.check(&"HeroProgressionRules.rank_text", [specialty_id, rank], result)
+	return result
+
+static func rank_text__gd(specialty_id: String, rank: int) -> String:
 	var ranks: Array = _specialty_row(specialty_id).get("ranks", [])
 	if rank < 1 or rank > ranks.size():
 		return ""

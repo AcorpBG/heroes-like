@@ -156,6 +156,7 @@ add_library(aurelion_rules_core STATIC
 	core/port/ai_registry.cpp
 	core/port/artifact_rules.cpp
 	core/port/artifact_rules_shared.cpp
+	core/port/artifact_rules_text.cpp
 	core/port/artifact_rules_turn.cpp
 	core/port/attack_effects.cpp
 	core/port/attack_events.cpp
@@ -249,14 +250,19 @@ add_library(aurelion_rules_core STATIC
 	core/port/overworld_rules_ai_towns.cpp
 	core/port/overworld_rules_arrival.cpp
 	core/port/overworld_rules_collect.cpp
+	core/port/overworld_rules_context.cpp
 	core/port/overworld_rules_encounter_text.cpp
+	core/port/overworld_rules_hero_choices.cpp
 	core/port/overworld_rules_move.cpp
 	core/port/overworld_rules_recap.cpp
 	core/port/overworld_rules_routes.cpp
 	core/port/overworld_rules_shared.cpp
 	core/port/overworld_rules_site_effects.cpp
 	core/port/overworld_rules_site_queries.cpp
+	core/port/overworld_rules_site_response.cpp
 	core/port/overworld_rules_site_rewards.cpp
+	core/port/overworld_rules_site_text.cpp
+	core/port/overworld_rules_town_actions.cpp
 	core/port/overworld_rules_turn.cpp
 	core/port/overworld_rules_turn_rare.cpp
 	core/port/overworld_state_normalize.cpp

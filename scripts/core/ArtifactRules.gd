@@ -7,6 +7,8 @@ const ARTIFACT_SCHEMA_ID := "artifact_taxonomy_v1"
 const ARTIFACT_SOURCE_REWARD_SCHEMA_ID := "artifact_source_reward_v1"
 const NodePayload = preload("res://scripts/core/ResourceNodePayloadRules.gd")
 const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
+const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 const ARTIFACT_CLASSES := ["common", "crafted", "faction", "accord", "relic", "cursed", "set_piece", "old_measure", "scenario"]
 const ARTIFACT_RARITIES := ["common", "uncommon", "rare", "epic", "legendary", "scenario"]
 # The rarities each HoMM3 artifact class draws from on generated maps, in order:
@@ -1433,6 +1435,15 @@ static func describe_collection_summary(hero_state: Dictionary) -> String:
 	return "Collection: %d/%d known relics owned" % [owned_count, total_count]
 
 static func describe_single_artifact_impact(artifact_id: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_single_artifact_impact__gd(artifact_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"ArtifactRules.describe_single_artifact_impact", [artifact_id])
+	var result = describe_single_artifact_impact__gd(artifact_id)
+	HumanEngine.check(&"ArtifactRules.describe_single_artifact_impact", [artifact_id], result)
+	return result
+
+static func describe_single_artifact_impact__gd(artifact_id: String) -> String:
 	var artifact := ContentService.get_artifact(artifact_id)
 	var sections := _bonus_impact_sections(_artifact_bonus_totals(artifact), true)
 	return "Impact %s" % ("no direct stat change" if sections.is_empty() else " | ".join(sections))
@@ -1613,6 +1624,15 @@ static func artifact_decision_summary(hero_state: Dictionary, artifact_id: Strin
 			return "Will enter pack; can swap with %s" % artifact_name(equipped_id)
 
 static func describe_artifact_short(artifact_id: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_artifact_short__gd(artifact_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"ArtifactRules.describe_artifact_short", [artifact_id])
+	var result = describe_artifact_short__gd(artifact_id)
+	HumanEngine.check(&"ArtifactRules.describe_artifact_short", [artifact_id], result)
+	return result
+
+static func describe_artifact_short__gd(artifact_id: String) -> String:
 	if ContentService.get_artifact(artifact_id).is_empty():
 		return "Artifact cache"
 	return "%s | %s | %s | %s | %s" % [
@@ -1645,7 +1665,17 @@ static func describe_artifact_inspection(
 		state,
 	]
 
-static func artifact_collection_state(
+static func artifact_collection_state(hero_state: Dictionary, artifact_id: String, collected: bool = false, collected_by_faction_id: String = "") -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return artifact_collection_state__gd(hero_state, artifact_id, collected, collected_by_faction_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"ArtifactRules.artifact_collection_state", [hero_state, artifact_id, collected, collected_by_faction_id])
+	var before := HumanEngine.before_writing(&"ArtifactRules.artifact_collection_state", [hero_state, artifact_id, collected, collected_by_faction_id])
+	var result = artifact_collection_state__gd(hero_state, artifact_id, collected, collected_by_faction_id)
+	HumanEngine.check_writing(&"ArtifactRules.artifact_collection_state", before, [hero_state, artifact_id, collected, collected_by_faction_id], result)
+	return result
+
+static func artifact_collection_state__gd(
 	hero_state: Dictionary,
 	artifact_id: String,
 	collected: bool = false,
@@ -1891,6 +1921,15 @@ static func _artifact_bonus_totals(artifact: Dictionary) -> Dictionary:
 	return totals
 
 static func _bonus_impact_sections(totals: Dictionary, include_empty_sections: bool) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _bonus_impact_sections__gd(totals, include_empty_sections)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"ArtifactRules._bonus_impact_sections", [totals, include_empty_sections])
+	var result = _bonus_impact_sections__gd(totals, include_empty_sections)
+	HumanEngine.check(&"ArtifactRules._bonus_impact_sections", [totals, include_empty_sections], result)
+	return result
+
+static func _bonus_impact_sections__gd(totals: Dictionary, include_empty_sections: bool) -> Array:
 	var sections := []
 	var field_parts := []
 	if int(totals.get("overworld_movement", 0)) > 0:

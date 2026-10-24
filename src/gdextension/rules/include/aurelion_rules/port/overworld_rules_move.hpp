@@ -105,6 +105,8 @@ bool hero_is_visiting_resource_site(State &state, DictRef session, DictRef node)
 bool resource_site_is_recruit_source(State &state, DictRef site);
 Atom _resource_site_claim_message(State &state, DictRef site, Atom previous_controller);
 Atom _resource_site_yield_line(State &state, DictRef session, DictRef node, DictRef site);
+// session: a view, or Nil.
+Atom _resource_site_yield_line(State &state, const Value &session, DictRef node, DictRef site);
 Atom _resource_site_income_cadence_label(State &state, DictRef site);
 // positions: as GDScript gets it (null when the caller passes none).
 DictRef _resource_site_guard_encounter(State &state, DictRef session, DictRef node, DictRef site, const Value &positions);

@@ -119,6 +119,8 @@ Atom _town_pressure_label(State &state, DictRef town);
 // Resource site response and delivery, town support and interaction tiles (overworld_rules_ai_sites.cpp).
 ArrayRef _map_object_world_interaction_tiles(State &state, DictRef map_object, DictRef placement);
 DictRef _resource_site_response_state(State &state, DictRef session, DictRef node, DictRef site);
+// session: a view, or Nil.
+DictRef _resource_site_response_state(State &state, const Value &session, DictRef node, DictRef site);
 DictRef _resource_site_delivery_state(State &state, DictRef session, DictRef node, DictRef _site);
 Atom _resource_site_delivery_line(State &state, DictRef session, DictRef node, DictRef site);
 DictRef _resource_site_town_support(State &state, DictRef site);

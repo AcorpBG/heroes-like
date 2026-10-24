@@ -336,21 +336,28 @@ Atom _resource_site_claim_message(State &state, DictRef site, Atom previous_cont
 }
 
 Atom _resource_site_yield_line(State &state, DictRef session, DictRef node, DictRef site) {
+	return _resource_site_yield_line(state, dict_value(session), node, site);
+}
+
+Atom _resource_site_yield_line(State &state, const Value &session, DictRef node, DictRef site) {
 	site = resource_node_payload_rules::site_for_node(state, node, site);
 	if (visit_building_rules::is_visit_building(state, site)) {
 		const ArrayRef visit_parts = state.new_array();
 		state.append(visit_parts, str(visit_building_rules::summary(state, site)));
-		const Atom visitor_key = ai::string_or_empty(state, session_view::overworld(state, session), key::active_hero_id);
-		const int64_t day = ai::session_int(state, session, key::day);
-		const Atom side = visit_building_rules::side_key(state, dict_value(session));
-		state.append(visit_parts, str(visit_building_rules::status_line(state, node, site, visitor_key, day, side)));
+		if (session.kind != Kind::Nil) {
+			const DictRef view = gd::as_dict(session);
+			const Atom visitor_key = ai::string_or_empty(state, session_view::overworld(state, view), key::active_hero_id);
+			const int64_t day = ai::session_int(state, view, key::day);
+			const Atom side = visit_building_rules::side_key(state, session);
+			state.append(visit_parts, str(visit_building_rules::status_line(state, node, site, visitor_key, day, side)));
+		}
 		return join_items(state, key::space_bar_space, _non_empty_strings(state, visit_parts));
 	}
 	if (creature_dwelling_rules::is_dwelling(state, site)) {
-		const int64_t day = ai::session_int(state, session, key::day);
+		const int64_t day = session.kind != Kind::Nil ? ai::session_int(state, gd::as_dict(session), key::day) : 1;
 		const ArrayRef dwelling_parts = state.new_array();
 		state.append(dwelling_parts, str(creature_dwelling_rules::summary(state, node, site, day)));
-		if (player_identity_rules::resource_controller_id(state, node) == key::player) {
+		if (session.kind != Kind::Nil && player_identity_rules::resource_controller_id(state, node) == key::player) {
 			const Atom population = _describe_recruit_delta(state, dict_value(creature_dwelling_rules::population(state, node, site, day)));
 			state.append(dwelling_parts, str(gd::format(state, key::s_left_this_week, {str(population)})));
 		}
@@ -394,7 +401,8 @@ Atom _resource_site_yield_line(State &state, DictRef session, DictRef node, Dict
 		if (cost_summary != key::empty) {
 			state.append(parts, str(gd::format(state, key::service_cost_s, {str(cost_summary)})));
 		}
-		if (_resource_site_repeat_ready(state, session, node, site)) {
+		// _resource_site_repeat_ready(session, node, site), whose session may be null here.
+		if (repeat_ready(state, session, node, site)) {
 			state.append(parts, str(key::service_ready));
 		} else if (gd::bool_field(state, node, key::collected, false)) {
 			state.append(parts, str(gd::format(state, key::next_service_day_d, {int_value(_resource_site_next_visit_day(state, node, site))})));
