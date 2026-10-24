@@ -889,6 +889,20 @@ public:
 	};
 	static constexpr uint32_t kDropped = UINT32_MAX;
 	Compaction compact(const std::vector<Value> &roots, size_t opaque_count);
+	// Where the node pools end; settle() resets the nodes made after it.
+	struct NodeMark {
+		size_t arrays = 0;
+		size_t dicts = 0;
+		size_t packeds = 0;
+	};
+	NodeMark node_mark() const { return { arrays_.size(), dicts_.size(), packeds_.size() }; }
+	// The marks compact() leaves on every node, without dropping or moving
+	// any: the nodes made since the mark are watched, not frozen and clean,
+	// and the memo and the root go. The nodes made before it are watched
+	// already when the mark was taken right after a compact() or settle(),
+	// so none of them was frozen since (a memo answer holds no watched node).
+	// Their dirty marks, which only the Godot adapters read, stay.
+	void settle(const NodeMark &mark);
 
 	uint32_t intern(std::string_view text);
 	// The atom of a text already interned, or false.

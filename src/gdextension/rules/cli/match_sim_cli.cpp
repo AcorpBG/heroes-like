@@ -1,7 +1,7 @@
 // match_sim_cli: the AI match runner without Godot (Phase 8, P8-3, P8-4, P8-7
 // and P8-8; docs/native-rules-engine-transition.md).
 //
-//   match_sim_cli [--threads N]
+//   match_sim_cli [--threads N] [--compact-every DAYS]
 //
 // It plays the matches of the match runner scene
 // (tests/ai_versus_ai_match_report.gd) as the scene does. A match's map is
@@ -60,7 +60,10 @@
 // pow, exp and log are the core's portable ones, as in the game. The session
 // stays one State across the days, as the game's kept session does (P6-4):
 // between days only the scene's own changes reach it, and the State drops
-// what nothing holds any more after each day. A day answers no host call: a
+// what nothing holds any more before every --compact-every-th day
+// (State::compact). Before the other days it only marks the nodes the day
+// before made as a compaction marks every node (State::settle), so the days
+// play the same either way. A day answers no host call: a
 // host call, or a path the native port leaves to GDScript (a NATIVE FALLBACK
 // in the game), fails the match.
 
@@ -145,6 +148,8 @@ using Clock = std::chrono::steady_clock;
 constexpr const char *kReportId = "AI_VERSUS_AI_MATCH_REPORT";
 constexpr const char *kBeginId = "AI_VERSUS_AI_MATCH_BEGIN";
 constexpr int64_t kDefaultMaxDays = 320;
+// compact() before every kCompactEvery-th day of a match (--compact-every).
+constexpr int64_t kCompactEvery = 1;
 constexpr const char *kDefaultOut = "ai_versus_ai_match.json";
 // ScenarioSelectRules._generated_map_package_dir() in the editor, as the
 // scene's map keys name it.
@@ -578,6 +583,9 @@ public:
 	}
 
 	Counts counts;
+	// compact() before every DAYS-th day of a match, from its first; settle()
+	// before the others.
+	int64_t compact_every = kCompactEvery;
 
 	// The match's lines, as the scene prints them; false when it failed.
 	bool play(const Settings &settings, std::string &lines) {
@@ -1024,8 +1032,13 @@ private:
 		// session.set_meta(OverworldRules.SESSION_UNTOUCHED_BETWEEN_DAYS_META, true)
 		state_.set(object_meta_.ref, gd::name_value(names_.untouched_meta), gd::bool_value(true));
 		digest_day();
+		int64_t played = 0;
 		while (day() < max_days) {
-			compact();
+			if (played++ % compact_every == 0) {
+				compact();
+			} else {
+				settle();
+			}
 			const Clock::time_point day_started = Clock::now();
 			const Value turn = call_with_view(calls_.end_turn, {});
 			ai_ms_max = std::max<int64_t>(ai_ms_max, std::chrono::duration_cast<std::chrono::milliseconds>(Clock::now() - day_started).count());
@@ -1890,6 +1903,15 @@ private:
 		}
 		opaques_.resize(kept);
 		view_node_ = ~0u;
+		settled_ = state_.node_mark();
+	}
+
+	// Each node as compact() leaves it, with nothing dropped: the day's
+	// garbage stays until the next compact(), and the game plays the same.
+	void settle() {
+		state_.settle(settled_);
+		settled_ = state_.node_mark();
+		view_node_ = ~0u;
 	}
 
 	static void renumber_sources(std::vector<Source> &sources, const std::vector<uint32_t> &map, size_t count) {
@@ -2566,6 +2588,8 @@ private:
 	Value object_meta_;
 	Value instance_id_;
 	uint32_t view_node_ = ~0u;
+	// Where the nodes compact() or settle() last left ended.
+	st::State::NodeMark settled_;
 	// The match: the record's setup and handover, the seats, what the notes
 	// and the ledger keep.
 	Value setup_;
@@ -2618,7 +2642,7 @@ std::string counts_json(const Counts &counts, double seconds, unsigned threads) 
 [[noreturn]] void usage(const std::string &problem) {
 	std::fprintf(stderr,
 			"match_sim_cli: %s\n"
-			"usage: match_sim_cli [--threads N]\n"
+			"usage: match_sim_cli [--threads N] [--compact-every DAYS]\n"
 			"       (settings: HEROES_AI_MATCH_* or HEROES_AI_MATCH_LIST, as tests/ai_versus_ai_match_report.gd takes them)\n",
 			problem.c_str());
 	std::exit(2);
@@ -2626,10 +2650,13 @@ std::string counts_json(const Counts &counts, double seconds, unsigned threads) 
 
 int run(int argc, char **argv) {
 	unsigned threads = 0;
+	int64_t compact_every = kCompactEvery;
 	for (int index = 1; index < argc; ++index) {
 		const std::string arg = argv[index];
 		if (arg == "--threads" && index + 1 < argc) {
 			threads = static_cast<unsigned>(std::stoul(argv[++index]));
+		} else if (arg == "--compact-every" && index + 1 < argc) {
+			compact_every = std::max<int64_t>(1, std::stoll(argv[++index]));
 		} else {
 			usage("unknown argument " + arg);
 		}
@@ -2654,6 +2681,7 @@ int run(int argc, char **argv) {
 	std::vector<std::unique_ptr<Worker>> workers;
 	for (unsigned index = 0; index < threads; ++index) {
 		workers.push_back(std::make_unique<Worker>(contents, types, calls));
+		workers.back()->compact_every = compact_every;
 	}
 	std::atomic<size_t> next{ 0 };
 	std::atomic<bool> all_ok{ true };

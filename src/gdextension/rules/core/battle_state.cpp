@@ -491,6 +491,23 @@ State::Compaction State::compact(const std::vector<Value> &roots, size_t opaque_
 	return maps;
 }
 
+void State::settle(const NodeMark &mark) {
+	for (size_t index = mark.arrays; index < arrays_.size(); ++index) {
+		arrays_[index].guard = kWatched;
+		arrays_[index].dirty = false;
+	}
+	for (size_t index = mark.dicts; index < dicts_.size(); ++index) {
+		dicts_[index].guard = kWatched;
+		dicts_[index].dirty = false;
+	}
+	for (size_t index = mark.packeds; index < packeds_.size(); ++index) {
+		packeds_[index].guard = kWatched;
+		packeds_[index].dirty = false;
+	}
+	root = Value();
+	drop_memo();
+}
+
 bool State::memo_find(const MemoKey &key, std::initializer_list<Value> roots, Value &answer, uint64_t &since) {
 	for (const Value &from : roots) {
 		watch(from);
