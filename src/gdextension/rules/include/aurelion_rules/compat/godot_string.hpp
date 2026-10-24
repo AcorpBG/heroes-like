@@ -24,6 +24,11 @@ std::string itos(int64_t value);
 // half to even).
 std::string num(double value, int decimals = -1);
 
+// String::num_real(value, trailing), which str(float) and a float's %s call
+// (Variant::stringify): a whole value as its int and, with trailing, ".0";
+// else num(value, 14 less the integer digits past the first).
+std::string num_real(double value, bool trailing = true);
+
 // JSON.stringify(value) of a float (JSON::_stringify): "0.0" for either zero,
 // 1e99999 and -1e99999 for the infinities, null for NaN (the engine also warns
 // once; this does not), else num(value, max(1, 14 - floor(log10(|value|)))),

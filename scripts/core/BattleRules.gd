@@ -17,6 +17,8 @@ const ActionPlayback = preload("res://scripts/core/BattleActionPlayback.gd")
 const Footprint = preload("res://scripts/core/BattleFootprint.gd")
 const ScenarioRulesScript = preload("res://scripts/core/ScenarioRules.gd")
 const BattleEngine = preload("res://scripts/core/BattleEngine.gd")
+const HumanEngine = preload("res://scripts/core/HumanEngine.gd")
+static var _human_engine_mode: int = HumanEngine.mode
 
 # One immutable battle snapshot, bounded target/action entries. Never saved;
 # repeated hover and the legacy summaries share the same exact exchange.
@@ -26,13 +28,6 @@ static var _consequence_cache: Dictionary = {}
 # compare equal. Building one deep-copies and re-normalizes the commander, and
 # every trait, initiative and damage check asks for it. Never saved.
 static var _hero_payload_cache: Dictionary = {}
-# Board reads memoized inside a board read scope; see begin_board_read_scope().
-# Never saved.
-static var _board_read_scope_depth := 0
-static var _board_read_scope_battle: Dictionary = {}
-static var _board_read_scope_cache: Dictionary = {}
-static var _validation_board_read_cache_disabled := false
-static var _board_read_cache_hits := 0
 # The presentation queue _append_presentation_event stored last, never changed
 # in place afterwards: all its entries but the last are normalized, so the next
 # append onto it normalizes only that one. Never saved.
@@ -341,6 +336,16 @@ static func _enemy_withdrawal_allowed(
 	return _enemy_state_exists(session, PlayerRules.raid_controller_id(encounter_placement))
 
 static func _withdrawal_pressure_label(battle: Dictionary, allowed: bool) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _withdrawal_pressure_label__gd(battle, allowed)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules._withdrawal_pressure_label", [battle, allowed])
+	var before := HumanEngine.before_writing(&"BattleRules._withdrawal_pressure_label", [battle, allowed])
+	var result = _withdrawal_pressure_label__gd(battle, allowed)
+	HumanEngine.check_writing(&"BattleRules._withdrawal_pressure_label", before, [battle, allowed], result)
+	return result
+
+static func _withdrawal_pressure_label__gd(battle: Dictionary, allowed: bool) -> String:
 	if not allowed:
 		return "Locked"
 	var active_stack := get_active_stack(battle)
@@ -379,6 +384,16 @@ static func select_target(session: SessionStateStoreScript.SessionData, battle_i
 	return BattleEngine.native_writing(&"BattleRules.select_target", [session, battle_id])
 
 static func battle_occupancy_map(battle: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return battle_occupancy_map__gd(battle)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.battle_occupancy_map", [battle])
+	var before := HumanEngine.before_writing(&"BattleRules.battle_occupancy_map", [battle])
+	var result = battle_occupancy_map__gd(battle)
+	HumanEngine.check_writing(&"BattleRules.battle_occupancy_map", before, [battle], result)
+	return result
+
+static func battle_occupancy_map__gd(battle: Dictionary) -> Dictionary:
 	if battle.is_empty():
 		return {}
 	return _build_occupancy_map(battle)
@@ -389,35 +404,20 @@ static func legal_destinations_for_active_stack(battle: Dictionary) -> Array:
 static func legal_destinations_for_stack(battle: Dictionary, battle_id: String) -> Array:
 	return BattleEngine.native_writing(&"BattleRules.legal_destinations_for_stack", [battle, battle_id])
 
-## Opens a scope in which the caller does not move, add, remove or change any
-## stack, field objective or town defense of `battle`, as while describing one
-## board state. Board reads repeated inside it (reachable hexes per stack) are
-## computed once. Target-selection bookkeeping may still change: those reads do
-## not depend on it. Scopes nest; only the outermost battle is memoized. Every
-## begin needs its end_board_read_scope().
-static func begin_board_read_scope(battle: Dictionary) -> void:
-	if _board_read_scope_depth == 0:
-		_board_read_scope_battle = battle
-		_board_read_scope_cache = {}
-	_board_read_scope_depth += 1
-
-static func end_board_read_scope() -> void:
-	_board_read_scope_depth = maxi(0, _board_read_scope_depth - 1)
-	if _board_read_scope_depth == 0:
-		_board_read_scope_battle = {}
-		_board_read_scope_cache = {}
-
-## Reports compare board reads with and without the scope memo.
-static func validation_set_board_read_cache_enabled(enabled: bool) -> void:
-	_validation_board_read_cache_disabled = not enabled
-
-static func validation_board_read_cache_hits() -> int:
-	return _board_read_cache_hits
-
 static func legal_attack_targets_for_active_stack(battle: Dictionary, ranged: bool = false) -> Array:
 	return BattleEngine.native_writing(&"BattleRules.legal_attack_targets_for_active_stack", [battle, ranged])
 
 static func legal_attack_target_ids_for_active_stack(battle: Dictionary) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return legal_attack_target_ids_for_active_stack__gd(battle)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.legal_attack_target_ids_for_active_stack", [battle])
+	var before := HumanEngine.before_writing(&"BattleRules.legal_attack_target_ids_for_active_stack", [battle])
+	var result = legal_attack_target_ids_for_active_stack__gd(battle)
+	HumanEngine.check_writing(&"BattleRules.legal_attack_target_ids_for_active_stack", before, [battle], result)
+	return result
+
+static func legal_attack_target_ids_for_active_stack__gd(battle: Dictionary) -> Array:
 	return _legal_attack_target_ids_for_active_stack(battle)
 
 static func selected_target_legality(battle: Dictionary) -> Dictionary:
@@ -434,7 +434,17 @@ static func selected_target_continuity_context(battle: Dictionary) -> Dictionary
 static func selected_target_closing_context(battle: Dictionary, clear_stale: bool = true) -> Dictionary:
 	return BattleEngine.native_writing(&"BattleRules.selected_target_closing_context", [battle, clear_stale])
 
-static func active_movement_board_click_intent(
+static func active_movement_board_click_intent(battle: Dictionary, preloaded_legal_destinations: Variant = null) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return active_movement_board_click_intent__gd(battle, preloaded_legal_destinations)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.active_movement_board_click_intent", [battle, preloaded_legal_destinations])
+	var before := HumanEngine.before_writing(&"BattleRules.active_movement_board_click_intent", [battle, preloaded_legal_destinations])
+	var result = active_movement_board_click_intent__gd(battle, preloaded_legal_destinations)
+	HumanEngine.check_writing(&"BattleRules.active_movement_board_click_intent", before, [battle, preloaded_legal_destinations], result)
+	return result
+
+static func active_movement_board_click_intent__gd(
 	battle: Dictionary,
 	preloaded_legal_destinations: Variant = null
 ) -> Dictionary:
@@ -474,8 +484,6 @@ static func legal_movement_intents_for_active_stack(
 	preloaded_legal_destinations: Variant = null
 ) -> Array:
 	var intents := []
-	# Every destination's intent re-reads the same board; read it once.
-	begin_board_read_scope(battle)
 	var destinations: Array = (
 		preloaded_legal_destinations
 		if preloaded_legal_destinations is Array
@@ -490,7 +498,6 @@ static func legal_movement_intents_for_active_stack(
 			int(destination.get("r", -1)),
 			destinations
 		))
-	end_board_read_scope()
 	return intents
 
 static func board_click_attack_intent_for_target(battle: Dictionary, battle_id: String) -> Dictionary:
@@ -536,6 +543,16 @@ static func _attack_legality_for_target(active_stack: Dictionary, target: Dictio
 	return BattleEngine.native_writing(&"BattleRules._attack_legality_for_target", [active_stack, target, battle])
 
 static func battle_hex_state_summary(battle: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return battle_hex_state_summary__gd(battle)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.battle_hex_state_summary", [battle])
+	var before := HumanEngine.before_writing(&"BattleRules.battle_hex_state_summary", [battle])
+	var result = battle_hex_state_summary__gd(battle)
+	HumanEngine.check_writing(&"BattleRules.battle_hex_state_summary", before, [battle], result)
+	return result
+
+static func battle_hex_state_summary__gd(battle: Dictionary) -> Dictionary:
 	var active_stack = get_active_stack(battle)
 	var active_hex := _stack_hex(active_stack)
 	var legal_destinations := legal_destinations_for_active_stack(battle)
@@ -577,6 +594,16 @@ static func target_cycle_ids(battle: Dictionary) -> Array:
 	return ids
 
 static func cycle_target(session: SessionStateStoreScript.SessionData, direction: int) -> void:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		cycle_target__gd(session, direction)
+	elif _human_engine_mode == HumanEngine.NATIVE:
+		HumanEngine.native_writing(&"BattleRules.cycle_target", [session, direction])
+	else:
+		var before := HumanEngine.before_writing(&"BattleRules.cycle_target", [session, direction])
+		cycle_target__gd(session, direction)
+		HumanEngine.check_writing(&"BattleRules.cycle_target", before, [session, direction], null)
+
+static func cycle_target__gd(session: SessionStateStoreScript.SessionData, direction: int) -> void:
 	if session == null or session.battle.is_empty():
 		return
 	var active_stack = get_active_stack(session.battle)
@@ -599,6 +626,16 @@ static func cycle_target(session: SessionStateStoreScript.SessionData, direction
 	_set_selected_target(session.battle, String(candidates[index]), true)
 
 static func spell_target_ids(session: SessionStateStoreScript.SessionData, spell_id: String) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return spell_target_ids__gd(session, spell_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.spell_target_ids", [session, spell_id])
+	var before := HumanEngine.before_writing(&"BattleRules.spell_target_ids", [session, spell_id])
+	var result = spell_target_ids__gd(session, spell_id)
+	HumanEngine.check_writing(&"BattleRules.spell_target_ids", before, [session, spell_id], result)
+	return result
+
+static func spell_target_ids__gd(session: SessionStateStoreScript.SessionData, spell_id: String) -> Array:
 	var ids := []
 	if session == null or session.battle.is_empty(): return ids
 	for stack in session.battle.get("stacks", []):
@@ -627,6 +664,16 @@ static func _player_input_locked_summary() -> String:
 	return BattleEngine.native(&"BattleRules._player_input_locked_summary", [])
 
 static func get_spell_actions(session: SessionStateStoreScript.SessionData) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return get_spell_actions__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.get_spell_actions", [session])
+	var before := HumanEngine.before_writing(&"BattleRules.get_spell_actions", [session])
+	var result = get_spell_actions__gd(session)
+	HumanEngine.check_writing(&"BattleRules.get_spell_actions", before, [session], result)
+	return result
+
+static func get_spell_actions__gd(session: SessionStateStoreScript.SessionData) -> Array:
 	if session == null or session.battle.is_empty():
 		return []
 	var active_stack := get_active_stack(session.battle)
@@ -666,6 +713,16 @@ static func describe_status(session: SessionStateStoreScript.SessionData) -> Str
 	return status
 
 static func describe_entry_context(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_entry_context__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.describe_entry_context", [session])
+	var before := HumanEngine.before_writing(&"BattleRules.describe_entry_context", [session])
+	var result = describe_entry_context__gd(session)
+	HumanEngine.check_writing(&"BattleRules.describe_entry_context", before, [session], result)
+	return result
+
+static func describe_entry_context__gd(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "Battle context unavailable."
 	var battle = session.battle
@@ -850,6 +907,16 @@ static func describe_tactical_briefing(session: SessionStateStoreScript.SessionD
 	return "\n".join(_tactical_briefing_lines(session))
 
 static func consume_tactical_briefing(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return consume_tactical_briefing__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.consume_tactical_briefing", [session])
+	var before := HumanEngine.before_writing(&"BattleRules.consume_tactical_briefing", [session])
+	var result = consume_tactical_briefing__gd(session)
+	HumanEngine.check_writing(&"BattleRules.consume_tactical_briefing", before, [session], result)
+	return result
+
+static func consume_tactical_briefing__gd(session: SessionStateStoreScript.SessionData) -> String:
 	var briefing_text = describe_tactical_briefing(session)
 	if briefing_text == "":
 		return ""
@@ -980,6 +1047,16 @@ static func describe_active_context(session: SessionStateStoreScript.SessionData
 	return _stack_focus_summary(get_active_stack(session.battle), session.battle, true)
 
 static func active_consequence_payload(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return active_consequence_payload__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.active_consequence_payload", [session])
+	var before := HumanEngine.before_writing(&"BattleRules.active_consequence_payload", [session])
+	var result = active_consequence_payload__gd(session)
+	HumanEngine.check_writing(&"BattleRules.active_consequence_payload", before, [session], result)
+	return result
+
+static func active_consequence_payload__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {
 			"active_ability_role": "No battle is active.",
@@ -1007,6 +1084,16 @@ static func active_consequence_payload(session: SessionStateStoreScript.SessionD
 	}
 
 static func post_action_recap_context(session: SessionStateStoreScript.SessionData, action_id: String = "") -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return post_action_recap_context__gd(session, action_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.post_action_recap_context", [session, action_id])
+	var before := HumanEngine.before_writing(&"BattleRules.post_action_recap_context", [session, action_id])
+	var result = post_action_recap_context__gd(session, action_id)
+	HumanEngine.check_writing(&"BattleRules.post_action_recap_context", before, [session, action_id], result)
+	return result
+
+static func post_action_recap_context__gd(session: SessionStateStoreScript.SessionData, action_id: String = "") -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {}
 	var battle = session.battle
@@ -1030,7 +1117,17 @@ static func post_action_recap_context(session: SessionStateStoreScript.SessionDa
 		"target_status_before": _stack_status_pressure_short(target, battle) if not target.is_empty() else "",
 	}
 
-static func post_action_recap_payload(
+static func post_action_recap_payload(session: SessionStateStoreScript.SessionData, result: Dictionary, action_id: String = "", context: Dictionary = {}) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return post_action_recap_payload__gd(session, result, action_id, context)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.post_action_recap_payload", [session, result, action_id, context])
+	var before := HumanEngine.before_writing(&"BattleRules.post_action_recap_payload", [session, result, action_id, context])
+	var switch_result = post_action_recap_payload__gd(session, result, action_id, context)
+	HumanEngine.check_writing(&"BattleRules.post_action_recap_payload", before, [session, result, action_id, context], switch_result)
+	return switch_result
+
+static func post_action_recap_payload__gd(
 	session: SessionStateStoreScript.SessionData,
 	result: Dictionary,
 	action_id: String = "",
@@ -1073,6 +1170,16 @@ static func post_action_recap_payload(
 	}
 
 static func describe_target_context(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_target_context__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.describe_target_context", [session])
+	var before := HumanEngine.before_writing(&"BattleRules.describe_target_context", [session])
+	var result = describe_target_context__gd(session)
+	HumanEngine.check_writing(&"BattleRules.describe_target_context", before, [session], result)
+	return result
+
+static func describe_target_context__gd(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "No target selected."
 	var battle = session.battle
@@ -1124,6 +1231,16 @@ static func describe_dispatch(session: SessionStateStoreScript.SessionData, last
 	return "\n".join(lines)
 
 static func describe_action_surface(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_action_surface__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.describe_action_surface", [session])
+	var before := HumanEngine.before_writing(&"BattleRules.describe_action_surface", [session])
+	var result = describe_action_surface__gd(session)
+	HumanEngine.check_writing(&"BattleRules.describe_action_surface", before, [session], result)
+	return result
+
+static func describe_action_surface__gd(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "No battle orders are available."
 	var battle = session.battle
@@ -1390,9 +1507,29 @@ static func action_readiness_confirmation_payload(session: SessionStateStoreScri
 	}
 
 static func describe_action_readiness_confirmation(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return describe_action_readiness_confirmation__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.describe_action_readiness_confirmation", [session])
+	var before := HumanEngine.before_writing(&"BattleRules.describe_action_readiness_confirmation", [session])
+	var result = describe_action_readiness_confirmation__gd(session)
+	HumanEngine.check_writing(&"BattleRules.describe_action_readiness_confirmation", before, [session], result)
+	return result
+
+static func describe_action_readiness_confirmation__gd(session: SessionStateStoreScript.SessionData) -> String:
 	return String(action_readiness_confirmation_payload(session).get("visible_text", "Ready check unavailable."))
 
 static func intent_forecast_payload(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return intent_forecast_payload__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.intent_forecast_payload", [session])
+	var before := HumanEngine.before_writing(&"BattleRules.intent_forecast_payload", [session])
+	var result = intent_forecast_payload__gd(session)
+	HumanEngine.check_writing(&"BattleRules.intent_forecast_payload", before, [session], result)
+	return result
+
+static func intent_forecast_payload__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {
 			"visible_text": "Suggested order unavailable.",
@@ -1752,7 +1889,17 @@ static func _spell_window_line(
 		return "Retarget first; the damage spells need a legal enemy stack before the window opens."
 	return "No legal spell window is open from this posture; stabilize or change the exchange first."
 
-static func _preferred_spell_timing_action(
+static func _preferred_spell_timing_action(session: SessionStateStoreScript.SessionData, battle: Dictionary, active_stack: Dictionary, target: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _preferred_spell_timing_action__gd(session, battle, active_stack, target)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules._preferred_spell_timing_action", [session, battle, active_stack, target])
+	var before := HumanEngine.before_writing(&"BattleRules._preferred_spell_timing_action", [session, battle, active_stack, target])
+	var result = _preferred_spell_timing_action__gd(session, battle, active_stack, target)
+	HumanEngine.check_writing(&"BattleRules._preferred_spell_timing_action", before, [session, battle, active_stack, target], result)
+	return result
+
+static func _preferred_spell_timing_action__gd(
 	session: SessionStateStoreScript.SessionData,
 	battle: Dictionary,
 	active_stack: Dictionary,
@@ -2099,6 +2246,16 @@ static func _first_stack_with_any_ability(battle: Dictionary, side: String, abil
 	return {}
 
 static func _preferred_player_action_id(surface: Dictionary, active_stack: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _preferred_player_action_id__gd(surface, active_stack)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules._preferred_player_action_id", [surface, active_stack])
+	var before := HumanEngine.before_writing(&"BattleRules._preferred_player_action_id", [surface, active_stack])
+	var result = _preferred_player_action_id__gd(surface, active_stack)
+	HumanEngine.check_writing(&"BattleRules._preferred_player_action_id", before, [surface, active_stack], result)
+	return result
+
+static func _preferred_player_action_id__gd(surface: Dictionary, active_stack: Dictionary) -> String:
 	if not bool(surface.get("shoot", {}).get("disabled", true)) and bool(active_stack.get("ranged", false)):
 		return "shoot"
 	if not bool(surface.get("strike", {}).get("disabled", true)):
@@ -2158,6 +2315,16 @@ static func _enemy_reply_line(session: SessionStateStoreScript.SessionData, batt
 	return _enemy_action_preview_summary(battle, reply_stack, action)
 
 static func _next_enemy_reply_stack(battle: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _next_enemy_reply_stack__gd(battle)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules._next_enemy_reply_stack", [battle])
+	var before := HumanEngine.before_writing(&"BattleRules._next_enemy_reply_stack", [battle])
+	var result = _next_enemy_reply_stack__gd(battle)
+	HumanEngine.check_writing(&"BattleRules._next_enemy_reply_stack", before, [battle], result)
+	return result
+
+static func _next_enemy_reply_stack__gd(battle: Dictionary) -> Dictionary:
 	var turn_order = battle.get("turn_order", [])
 	if turn_order is Array:
 		for index in range(int(battle.get("turn_index", 0)) + 1, turn_order.size()):
@@ -2170,6 +2337,16 @@ static func _next_enemy_reply_stack(battle: Dictionary) -> Dictionary:
 	return {}
 
 static func _enemy_action_preview_summary(battle: Dictionary, enemy_stack: Dictionary, action: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _enemy_action_preview_summary__gd(battle, enemy_stack, action)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules._enemy_action_preview_summary", [battle, enemy_stack, action])
+	var before := HumanEngine.before_writing(&"BattleRules._enemy_action_preview_summary", [battle, enemy_stack, action])
+	var result = _enemy_action_preview_summary__gd(battle, enemy_stack, action)
+	HumanEngine.check_writing(&"BattleRules._enemy_action_preview_summary", before, [battle, enemy_stack, action], result)
+	return result
+
+static func _enemy_action_preview_summary__gd(battle: Dictionary, enemy_stack: Dictionary, action: Dictionary) -> String:
 	if enemy_stack.is_empty():
 		return "Hostile reply is unclear."
 	var action_id = String(action.get("action", ""))
@@ -2448,6 +2625,16 @@ static func _preview_defend_cohesion_gain(stack: Dictionary, battle: Dictionary)
 	return max(0, cohesion_gain)
 
 static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary, target: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _active_ability_window_summary__gd(stack, battle, target)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules._active_ability_window_summary", [stack, battle, target])
+	var before := HumanEngine.before_writing(&"BattleRules._active_ability_window_summary", [stack, battle, target])
+	var result = _active_ability_window_summary__gd(stack, battle, target)
+	HumanEngine.check_writing(&"BattleRules._active_ability_window_summary", before, [stack, battle, target], result)
+	return result
+
+static func _active_ability_window_summary__gd(stack: Dictionary, battle: Dictionary, target: Dictionary) -> String:
 	if stack.is_empty():
 		return ""
 	var charter_brace := _ability_by_id(stack, "brace")
@@ -2885,6 +3072,16 @@ static func _target_range_readiness_line(active_stack: Dictionary, target: Dicti
 	]
 
 static func _field_objective_action_preview(battle: Dictionary, action_context: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _field_objective_action_preview__gd(battle, action_context)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules._field_objective_action_preview", [battle, action_context])
+	var before := HumanEngine.before_writing(&"BattleRules._field_objective_action_preview", [battle, action_context])
+	var result = _field_objective_action_preview__gd(battle, action_context)
+	HumanEngine.check_writing(&"BattleRules._field_objective_action_preview", before, [battle, action_context], result)
+	return result
+
+static func _field_objective_action_preview__gd(battle: Dictionary, action_context: Dictionary) -> String:
 	var acting_side = String(action_context.get("side", ""))
 	if acting_side not in ["player", "enemy"]:
 		return ""
@@ -3397,6 +3594,16 @@ static func _battle_trait_labels(traits: Array) -> Array:
 	return labels
 
 static func _encounter_objective_for_battle(session: SessionStateStoreScript.SessionData, battle: Dictionary, scenario: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _encounter_objective_for_battle__gd(session, battle, scenario)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules._encounter_objective_for_battle", [session, battle, scenario])
+	var before := HumanEngine.before_writing(&"BattleRules._encounter_objective_for_battle", [session, battle, scenario])
+	var result = _encounter_objective_for_battle__gd(session, battle, scenario)
+	HumanEngine.check_writing(&"BattleRules._encounter_objective_for_battle", before, [session, battle, scenario], result)
+	return result
+
+static func _encounter_objective_for_battle__gd(session: SessionStateStoreScript.SessionData, battle: Dictionary, scenario: Dictionary) -> Dictionary:
 	if scenario.is_empty():
 		return {}
 	var encounter_placement = _current_battle_encounter_placement(session)
@@ -3416,6 +3623,16 @@ static func _current_battle_encounter_placement(session: SessionStateStoreScript
 	return BattleEngine.native_writing(&"BattleRules._current_battle_encounter_placement", [session])
 
 static func _priority_enemy_stack_for_briefing(battle: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _priority_enemy_stack_for_briefing__gd(battle)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules._priority_enemy_stack_for_briefing", [battle])
+	var before := HumanEngine.before_writing(&"BattleRules._priority_enemy_stack_for_briefing", [battle])
+	var result = _priority_enemy_stack_for_briefing__gd(battle)
+	HumanEngine.check_writing(&"BattleRules._priority_enemy_stack_for_briefing", before, [battle], result)
+	return result
+
+static func _priority_enemy_stack_for_briefing__gd(battle: Dictionary) -> Dictionary:
 	var best = {}
 	var best_score = -99999
 	for stack in _alive_stacks_for_side(battle, "enemy"):
@@ -3466,6 +3683,16 @@ static func _priority_target_reason(stack: Dictionary, battle: Dictionary) -> St
 	return "breaking it will soften the enemy line before reserves matter"
 
 static func get_action_surface(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return get_action_surface__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.get_action_surface", [session])
+	var before := HumanEngine.before_writing(&"BattleRules.get_action_surface", [session])
+	var result = get_action_surface__gd(session)
+	HumanEngine.check_writing(&"BattleRules.get_action_surface", before, [session], result)
+	return result
+
+static func get_action_surface__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var surface = {}
 	if session == null or session.battle.is_empty():
 		return surface
@@ -3925,17 +4152,57 @@ static func animation_event_states(battle: Dictionary) -> Dictionary:
 	return normalized
 
 static func animation_event_queue(battle: Dictionary) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return animation_event_queue__gd(battle)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.animation_event_queue", [battle])
+	var before := HumanEngine.before_writing(&"BattleRules.animation_event_queue", [battle])
+	var result = animation_event_queue__gd(battle)
+	HumanEngine.check_writing(&"BattleRules.animation_event_queue", before, [battle], result)
+	return result
+
+static func animation_event_queue__gd(battle: Dictionary) -> Array:
 	return _normalize_animation_event_queue(battle.get(ANIMATION_EVENT_QUEUE_KEY, []))
 
 static func battle_presentation_event_stream(battle: Dictionary) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return battle_presentation_event_stream__gd(battle)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.battle_presentation_event_stream", [battle])
+	var before := HumanEngine.before_writing(&"BattleRules.battle_presentation_event_stream", [battle])
+	var result = battle_presentation_event_stream__gd(battle)
+	HumanEngine.check_writing(&"BattleRules.battle_presentation_event_stream", before, [battle], result)
+	return result
+
+static func battle_presentation_event_stream__gd(battle: Dictionary) -> Array:
 	return _normalize_presentation_event_queue(battle.get(PRESENTATION_EVENT_QUEUE_KEY, []))
 
 static func battle_presentation_speed(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return battle_presentation_speed__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.battle_presentation_speed", [session])
+	var before := HumanEngine.before_writing(&"BattleRules.battle_presentation_speed", [session])
+	var result = battle_presentation_speed__gd(session)
+	HumanEngine.check_writing(&"BattleRules.battle_presentation_speed", before, [session], result)
+	return result
+
+static func battle_presentation_speed__gd(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return PRESENTATION_SPEED_NORMAL
 	return _normalize_presentation_speed(String(session.battle.get(PRESENTATION_SPEED_KEY, PRESENTATION_SPEED_NORMAL)))
 
 static func set_battle_presentation_speed(session: SessionStateStoreScript.SessionData, speed: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return set_battle_presentation_speed__gd(session, speed)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.set_battle_presentation_speed", [session, speed])
+	var before := HumanEngine.before_writing(&"BattleRules.set_battle_presentation_speed", [session, speed])
+	var result = set_battle_presentation_speed__gd(session, speed)
+	HumanEngine.check_writing(&"BattleRules.set_battle_presentation_speed", before, [session, speed], result)
+	return result
+
+static func set_battle_presentation_speed__gd(session: SessionStateStoreScript.SessionData, speed: String) -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {"ok": false, "speed": PRESENTATION_SPEED_NORMAL, "message": "No battle is active."}
 	var normalized := _normalize_presentation_speed(speed)
@@ -3947,6 +4214,16 @@ static func set_battle_presentation_speed(session: SessionStateStoreScript.Sessi
 	}
 
 static func battle_presentation_playback_msec(battle: Dictionary) -> int:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return battle_presentation_playback_msec__gd(battle)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.battle_presentation_playback_msec", [battle])
+	var before := HumanEngine.before_writing(&"BattleRules.battle_presentation_playback_msec", [battle])
+	var result = battle_presentation_playback_msec__gd(battle)
+	HumanEngine.check_writing(&"BattleRules.battle_presentation_playback_msec", before, [battle], result)
+	return result
+
+static func battle_presentation_playback_msec__gd(battle: Dictionary) -> int:
 	var speed := _normalize_presentation_speed(String(battle.get(PRESENTATION_SPEED_KEY, PRESENTATION_SPEED_NORMAL)))
 	match speed:
 		PRESENTATION_SPEED_FAST:
@@ -3979,6 +4256,16 @@ static func latest_battle_presentation_event_payload(session: SessionStateStoreS
 	return events[events.size() - 1].duplicate(true)
 
 static func latest_animation_event_presentation_payload(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return latest_animation_event_presentation_payload__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.latest_animation_event_presentation_payload", [session])
+	var before := HumanEngine.before_writing(&"BattleRules.latest_animation_event_presentation_payload", [session])
+	var result = latest_animation_event_presentation_payload__gd(session)
+	HumanEngine.check_writing(&"BattleRules.latest_animation_event_presentation_payload", before, [session], result)
+	return result
+
+static func latest_animation_event_presentation_payload__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {}
 	var event := _latest_animation_event(session.battle)
@@ -4034,6 +4321,16 @@ static func move_active_stack_to_hex(session: SessionStateStoreScript.SessionDat
 	return BattleEngine.native_writing(&"BattleRules.move_active_stack_to_hex", [session, q, r])
 
 static func perform_presented_action(session: SessionStateStoreScript.SessionData, action: String, destination: Dictionary = {}) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return perform_presented_action__gd(session, action, destination)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.perform_presented_action", [session, action, destination])
+	var before := HumanEngine.before_writing(&"BattleRules.perform_presented_action", [session, action, destination])
+	var result = perform_presented_action__gd(session, action, destination)
+	HumanEngine.check_writing(&"BattleRules.perform_presented_action", before, [session, action, destination], result)
+	return result
+
+static func perform_presented_action__gd(session: SessionStateStoreScript.SessionData, action: String, destination: Dictionary = {}) -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {"ok": false, "state": "invalid", "message": "No battle is active."}
 	var original_battle := session.battle
@@ -4057,11 +4354,31 @@ static func perform_presented_action(session: SessionStateStoreScript.SessionDat
 ## hero's cast) once it was carried out. Quick Resolve is offered only before
 ## the first one (player_has_given_orders).
 static func record_player_order(battle: Dictionary, result: Dictionary) -> void:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		record_player_order__gd(battle, result)
+	elif _human_engine_mode == HumanEngine.NATIVE:
+		HumanEngine.native_writing(&"BattleRules.record_player_order", [battle, result])
+	else:
+		var before := HumanEngine.before_writing(&"BattleRules.record_player_order", [battle, result])
+		record_player_order__gd(battle, result)
+		HumanEngine.check_writing(&"BattleRules.record_player_order", before, [battle, result], null)
+
+static func record_player_order__gd(battle: Dictionary, result: Dictionary) -> void:
 	if battle.is_empty() or String(result.get("state", "invalid")) == "invalid":
 		return
 	battle[PLAYER_ORDERS_KEY] = maxi(0, int(battle.get(PLAYER_ORDERS_KEY, 0))) + 1
 
 static func player_has_given_orders(battle: Dictionary) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return player_has_given_orders__gd(battle)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.player_has_given_orders", [battle])
+	var before := HumanEngine.before_writing(&"BattleRules.player_has_given_orders", [battle])
+	var result = player_has_given_orders__gd(battle)
+	HumanEngine.check_writing(&"BattleRules.player_has_given_orders", before, [battle], result)
+	return result
+
+static func player_has_given_orders__gd(battle: Dictionary) -> bool:
 	return int(battle.get(PLAYER_ORDERS_KEY, 0)) > 0
 
 ## What the battle screen shows for a side's hero, or {} when no commander
@@ -4069,6 +4386,16 @@ static func player_has_given_orders(battle: Dictionary) -> bool:
 ## (has_figure); a town captain or a guard's commander has no figure. mana is
 ## the commander's spellbook mana, which its casts spend.
 static func hero_presentation(battle: Dictionary, side: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return hero_presentation__gd(battle, side)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.hero_presentation", [battle, side])
+	var before := HumanEngine.before_writing(&"BattleRules.hero_presentation", [battle, side])
+	var result = hero_presentation__gd(battle, side)
+	HumanEngine.check_writing(&"BattleRules.hero_presentation", before, [battle, side], result)
+	return result
+
+static func hero_presentation__gd(battle: Dictionary, side: String) -> Dictionary:
 	if battle.is_empty() or side not in ["player", "enemy"]:
 		return {}
 	var state_value: Variant = _commander_state_for_side(battle, side)
@@ -4116,6 +4443,16 @@ static func hero_presentation(battle: Dictionary, side: String) -> Dictionary:
 ## it orders turns. Each stat carries the unit's own value as "base", so the
 ## card can show what changed it. {} for a stack that is not in the battle.
 static func stack_details(battle: Dictionary, battle_id: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return stack_details__gd(battle, battle_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.stack_details", [battle, battle_id])
+	var before := HumanEngine.before_writing(&"BattleRules.stack_details", [battle, battle_id])
+	var result = stack_details__gd(battle, battle_id)
+	HumanEngine.check_writing(&"BattleRules.stack_details", before, [battle, battle_id], result)
+	return result
+
+static func stack_details__gd(battle: Dictionary, battle_id: String) -> Dictionary:
 	var stack := _get_stack_by_id(battle, battle_id)
 	if stack.is_empty():
 		return {}
@@ -4183,6 +4520,16 @@ static func stack_strike_backs(battle: Dictionary, stack: Dictionary) -> Diction
 ## The stack waited this round and has yet to act: it is in the waiting part
 ## of the turn order, after the stacks still to act at their own speed.
 static func stack_is_waiting(battle: Dictionary, battle_id: String) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return stack_is_waiting__gd(battle, battle_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.stack_is_waiting", [battle, battle_id])
+	var before := HumanEngine.before_writing(&"BattleRules.stack_is_waiting", [battle, battle_id])
+	var result = stack_is_waiting__gd(battle, battle_id)
+	HumanEngine.check_writing(&"BattleRules.stack_is_waiting", before, [battle, battle_id], result)
+	return result
+
+static func stack_is_waiting__gd(battle: Dictionary, battle_id: String) -> bool:
 	var active_id := String(battle.get("active_stack_id", ""))
 	if battle_id == "" or battle_id == active_id or not stack_has_waited(battle, battle_id):
 		return false
@@ -4246,6 +4593,16 @@ static func _effect_modifier_phrase(effect: Dictionary) -> String:
 ## ("harmful"): a status with rules beyond its numbers, or any lowered
 ## number, hinders; a raised number or a ward against statuses helps.
 static func effect_polarity(effect: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return effect_polarity__gd(effect)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.effect_polarity", [effect])
+	var before := HumanEngine.before_writing(&"BattleRules.effect_polarity", [effect])
+	var result = effect_polarity__gd(effect)
+	HumanEngine.check_writing(&"BattleRules.effect_polarity", before, [effect], result)
+	return result
+
+static func effect_polarity__gd(effect: Dictionary) -> String:
 	if SpellRulesScript.status_rules_text(String(effect.get("effect_id", ""))) != "":
 		return "harmful"
 	var modifiers: Dictionary = effect.get("modifiers", {}) if effect.get("modifiers", {}) is Dictionary else {}
@@ -4265,6 +4622,16 @@ static func effect_polarity(effect: Dictionary) -> String:
 ## faction and class, its specialties with their ranks, and its battle
 ## spells at what they cost it. {} for a side without a commander.
 static func hero_details(battle: Dictionary, side: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return hero_details__gd(battle, side)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.hero_details", [battle, side])
+	var before := HumanEngine.before_writing(&"BattleRules.hero_details", [battle, side])
+	var result = hero_details__gd(battle, side)
+	HumanEngine.check_writing(&"BattleRules.hero_details", before, [battle, side], result)
+	return result
+
+static func hero_details__gd(battle: Dictionary, side: String) -> Dictionary:
 	var details := hero_presentation(battle, side)
 	if details.is_empty():
 		return {}
@@ -4321,6 +4688,16 @@ static func perform_player_action(session: SessionStateStoreScript.SessionData, 
 	return BattleEngine.native_writing(&"BattleRules.perform_player_action", [session, action, approach])
 
 static func roster_lines(battle: Dictionary, side: String) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return roster_lines__gd(battle, side)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.roster_lines", [battle, side])
+	var before := HumanEngine.before_writing(&"BattleRules.roster_lines", [battle, side])
+	var result = roster_lines__gd(battle, side)
+	HumanEngine.check_writing(&"BattleRules.roster_lines", before, [battle, side], result)
+	return result
+
+static func roster_lines__gd(battle: Dictionary, side: String) -> Array:
 	var lines = []
 	for stack in battle.get("stacks", []):
 		if not (stack is Dictionary) or String(stack.get("side", "")) != side:
@@ -4393,6 +4770,16 @@ static func _add_enemy_treasury_resources(session: SessionStateStoreScript.Sessi
 	BattleEngine.native_writing(&"BattleRules._add_enemy_treasury_resources", [session, faction_id, delta])
 
 static func pending_battle_report(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return pending_battle_report__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.pending_battle_report", [session])
+	var before := HumanEngine.before_writing(&"BattleRules.pending_battle_report", [session])
+	var result = pending_battle_report__gd(session)
+	HumanEngine.check_writing(&"BattleRules.pending_battle_report", before, [session], result)
+	return result
+
+static func pending_battle_report__gd(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null or not session.battle.is_empty():
 		return {}
 	var value: Variant = session.flags.get("last_battle_aftermath", {})
@@ -4496,6 +4883,15 @@ static func hero_actor_id(side: String) -> String:
 	return BattleEngine.native(&"BattleRules.hero_actor_id", [side])
 
 static func is_hero_actor_id(actor_id: String) -> bool:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return is_hero_actor_id__gd(actor_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"BattleRules.is_hero_actor_id", [actor_id])
+	var result = is_hero_actor_id__gd(actor_id)
+	HumanEngine.check(&"BattleRules.is_hero_actor_id", [actor_id], result)
+	return result
+
+static func is_hero_actor_id__gd(actor_id: String) -> bool:
 	return actor_id.begins_with(HERO_ACTOR_PREFIX)
 
 static func hero_actor_side(actor_id: String) -> String:
@@ -4511,12 +4907,32 @@ static func _hero_caster(battle: Dictionary, side: String) -> Dictionary:
 
 ## The label of an event's actor: a stack's name or the casting hero's.
 static func battle_actor_label(battle: Dictionary, actor_id: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return battle_actor_label__gd(battle, actor_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.battle_actor_label", [battle, actor_id])
+	var before := HumanEngine.before_writing(&"BattleRules.battle_actor_label", [battle, actor_id])
+	var result = battle_actor_label__gd(battle, actor_id)
+	HumanEngine.check_writing(&"BattleRules.battle_actor_label", before, [battle, actor_id], result)
+	return result
+
+static func battle_actor_label__gd(battle: Dictionary, actor_id: String) -> String:
 	if is_hero_actor_id(actor_id):
 		return String(_hero_caster(battle, hero_actor_side(actor_id)).get("name", ""))
 	return _stack_label(_get_stack_by_id(battle, actor_id))
 
 ## The side of an event's actor, stack or hero.
 static func battle_actor_side(battle: Dictionary, actor_id: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return battle_actor_side__gd(battle, actor_id)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.battle_actor_side", [battle, actor_id])
+	var before := HumanEngine.before_writing(&"BattleRules.battle_actor_side", [battle, actor_id])
+	var result = battle_actor_side__gd(battle, actor_id)
+	HumanEngine.check_writing(&"BattleRules.battle_actor_side", before, [battle, actor_id], result)
+	return result
+
+static func battle_actor_side__gd(battle: Dictionary, actor_id: String) -> String:
 	if is_hero_actor_id(actor_id):
 		return hero_actor_side(actor_id)
 	return String(_get_stack_by_id(battle, actor_id).get("side", ""))
@@ -4526,17 +4942,47 @@ static func _ensure_battle_hex_state(battle: Dictionary) -> void:
 
 ## The cell a stack deploys on; the board draws a stack without a saved hex there.
 static func default_deployment_hex(side: String, index: int, stack_count: int, stack: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return default_deployment_hex__gd(side, index, stack_count, stack)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.default_deployment_hex", [side, index, stack_count, stack])
+	var before := HumanEngine.before_writing(&"BattleRules.default_deployment_hex", [side, index, stack_count, stack])
+	var result = default_deployment_hex__gd(side, index, stack_count, stack)
+	HumanEngine.check_writing(&"BattleRules.default_deployment_hex", before, [side, index, stack_count, stack], result)
+	return result
+
+static func default_deployment_hex__gd(side: String, index: int, stack_count: int, stack: Dictionary) -> Dictionary:
 	return _default_stack_hex(side, index, stack_count, stack)
 
 static func _default_stack_hex(side: String, index: int, stack_count: int, stack: Dictionary) -> Dictionary:
 	return BattleEngine.native(&"BattleRules._default_stack_hex", [side, index, stack_count, stack])
 
 static func battle_obstacles(battle: Dictionary) -> Array:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return battle_obstacles__gd(battle)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.battle_obstacles", [battle])
+	var before := HumanEngine.before_writing(&"BattleRules.battle_obstacles", [battle])
+	var result = battle_obstacles__gd(battle)
+	HumanEngine.check_writing(&"BattleRules.battle_obstacles", before, [battle], result)
+	return result
+
+static func battle_obstacles__gd(battle: Dictionary) -> Array:
 	var obstacles: Variant = battle.get(OBSTACLES_KEY, [])
 	return obstacles.duplicate(true) if obstacles is Array else []
 
 ## "q,r" -> "obstacle:<id>" for every obstacle cell.
 static func battle_obstacle_cells(battle: Dictionary) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return battle_obstacle_cells__gd(battle)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules.battle_obstacle_cells", [battle])
+	var before := HumanEngine.before_writing(&"BattleRules.battle_obstacle_cells", [battle])
+	var result = battle_obstacle_cells__gd(battle)
+	HumanEngine.check_writing(&"BattleRules.battle_obstacle_cells", before, [battle], result)
+	return result
+
+static func battle_obstacle_cells__gd(battle: Dictionary) -> Dictionary:
 	return _obstacle_cell_map(battle)
 
 static func _obstacle_cell_map(battle: Dictionary) -> Dictionary:
@@ -5096,6 +5542,16 @@ static func _army_totals(battle: Dictionary, side: String) -> Dictionary:
 	return BattleEngine.native_writing(&"BattleRules._army_totals", [battle, side])
 
 static func _battle_context_label(session: SessionStateStoreScript.SessionData, context: Variant) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _battle_context_label__gd(session, context)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules._battle_context_label", [session, context])
+	var before := HumanEngine.before_writing(&"BattleRules._battle_context_label", [session, context])
+	var result = _battle_context_label__gd(session, context)
+	HumanEngine.check_writing(&"BattleRules._battle_context_label", before, [session, context], result)
+	return result
+
+static func _battle_context_label__gd(session: SessionStateStoreScript.SessionData, context: Variant) -> String:
 	if not (context is Dictionary):
 		return "Field engagement"
 	if _has_delivery_context(context):
@@ -5129,6 +5585,16 @@ static func _battle_context_label(session: SessionStateStoreScript.SessionData, 
 			return "Town defense at %s" % (town_name if town_name != "" else "the walls")
 
 static func _battlefield_identity_summary(battle: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _battlefield_identity_summary__gd(battle)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules._battlefield_identity_summary", [battle])
+	var before := HumanEngine.before_writing(&"BattleRules._battlefield_identity_summary", [battle])
+	var result = _battlefield_identity_summary__gd(battle)
+	HumanEngine.check_writing(&"BattleRules._battlefield_identity_summary", before, [battle], result)
+	return result
+
+static func _battlefield_identity_summary__gd(battle: Dictionary) -> String:
 	var parts = []
 	if _has_delivery_context(battle.get("context", {})):
 		parts.append("the fight is sitting on a live reinforcement route")
@@ -5151,6 +5617,15 @@ static func _battlefield_identity_summary(battle: Dictionary) -> String:
 	return ", ".join(parts)
 
 static func _distance_label(distance: int) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _distance_label__gd(distance)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native(&"BattleRules._distance_label", [distance])
+	var result = _distance_label__gd(distance)
+	HumanEngine.check(&"BattleRules._distance_label", [distance], result)
+	return result
+
+static func _distance_label__gd(distance: int) -> String:
 	match max(0, distance):
 		0:
 			return "Lines engaged"
@@ -5163,11 +5638,31 @@ static func _side_label(side: String) -> String:
 	return BattleEngine.native(&"BattleRules._side_label", [side])
 
 static func _commander_state_for_side(battle: Dictionary, side: String) -> Dictionary:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _commander_state_for_side__gd(battle, side)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules._commander_state_for_side", [battle, side])
+	var before := HumanEngine.before_writing(&"BattleRules._commander_state_for_side", [battle, side])
+	var result = _commander_state_for_side__gd(battle, side)
+	HumanEngine.check_writing(&"BattleRules._commander_state_for_side", before, [battle, side], result)
+	return result
+
+static func _commander_state_for_side__gd(battle: Dictionary, side: String) -> Dictionary:
 	if side == "enemy":
 		return battle.get("enemy_hero", {})
 	return battle.get("player_commander_state", {})
 
 static func _commander_role_label(battle: Dictionary, side: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _commander_role_label__gd(battle, side)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules._commander_role_label", [battle, side])
+	var before := HumanEngine.before_writing(&"BattleRules._commander_role_label", [battle, side])
+	var result = _commander_role_label__gd(battle, side)
+	HumanEngine.check_writing(&"BattleRules._commander_role_label", before, [battle, side], result)
+	return result
+
+static func _commander_role_label__gd(battle: Dictionary, side: String) -> String:
 	if side == "enemy":
 		return "Enemy commander" if not _commander_state_for_side(battle, side).is_empty() else "Uncommanded host"
 	var source = battle.get("player_commander_source", {})
@@ -5182,6 +5677,16 @@ static func _commander_role_label(battle: Dictionary, side: String) -> String:
 			return "Commander"
 
 static func _pressure_brief(session: SessionStateStoreScript.SessionData) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _pressure_brief__gd(session)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules._pressure_brief", [session])
+	var before := HumanEngine.before_writing(&"BattleRules._pressure_brief", [session])
+	var result = _pressure_brief__gd(session)
+	HumanEngine.check_writing(&"BattleRules._pressure_brief", before, [session], result)
+	return result
+
+static func _pressure_brief__gd(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "No pressure data."
 	var battle = session.battle
@@ -5244,6 +5749,16 @@ static func _engagement_preview(active_stack: Dictionary, target: Dictionary, ba
 	return "%s is threatening %s." % [_stack_label(active_stack), _stack_label(target)]
 
 static func _stack_focus_summary(stack: Dictionary, battle: Dictionary, is_active: bool) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _stack_focus_summary__gd(stack, battle, is_active)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules._stack_focus_summary", [stack, battle, is_active])
+	var before := HumanEngine.before_writing(&"BattleRules._stack_focus_summary", [stack, battle, is_active])
+	var result = _stack_focus_summary__gd(stack, battle, is_active)
+	HumanEngine.check_writing(&"BattleRules._stack_focus_summary", before, [stack, battle, is_active], result)
+	return result
+
+static func _stack_focus_summary__gd(stack: Dictionary, battle: Dictionary, is_active: bool) -> String:
 	if stack.is_empty():
 		return "No stack is selected."
 	var side = String(stack.get("side", ""))
@@ -5374,6 +5889,16 @@ static func _enemy_wounded_count(battle: Dictionary, side: String) -> int:
 	return BattleEngine.native(&"BattleRules._enemy_wounded_count", [battle, side])
 
 static func _side_doctrine_summary(battle: Dictionary, side: String) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _side_doctrine_summary__gd(battle, side)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules._side_doctrine_summary", [battle, side])
+	var before := HumanEngine.before_writing(&"BattleRules._side_doctrine_summary", [battle, side])
+	var result = _side_doctrine_summary__gd(battle, side)
+	HumanEngine.check_writing(&"BattleRules._side_doctrine_summary", before, [battle, side], result)
+	return result
+
+static func _side_doctrine_summary__gd(battle: Dictionary, side: String) -> String:
 	var faction_id = _side_faction_id(battle, side)
 	match faction_id:
 		"faction_embercourt":
@@ -5491,6 +6016,16 @@ static func _field_objective_short_status(objective: Dictionary) -> String:
 	return "%s %s" % [_field_objective_label(objective), _field_objective_progress_text(objective)]
 
 static func _field_objective_status_brief(battle: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _field_objective_status_brief__gd(battle)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules._field_objective_status_brief", [battle])
+	var before := HumanEngine.before_writing(&"BattleRules._field_objective_status_brief", [battle])
+	var result = _field_objective_status_brief__gd(battle)
+	HumanEngine.check_writing(&"BattleRules._field_objective_status_brief", before, [battle], result)
+	return result
+
+static func _field_objective_status_brief__gd(battle: Dictionary) -> String:
 	var objectives = _field_objectives(battle)
 	if objectives.is_empty():
 		return ""
@@ -5500,6 +6035,16 @@ static func _field_objective_status_brief(battle: Dictionary) -> String:
 	return ""
 
 static func _field_objective_pressure_summary(battle: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _field_objective_pressure_summary__gd(battle)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules._field_objective_pressure_summary", [battle])
+	var before := HumanEngine.before_writing(&"BattleRules._field_objective_pressure_summary", [battle])
+	var result = _field_objective_pressure_summary__gd(battle)
+	HumanEngine.check_writing(&"BattleRules._field_objective_pressure_summary", before, [battle], result)
+	return result
+
+static func _field_objective_pressure_summary__gd(battle: Dictionary) -> String:
 	var parts = []
 	for objective in _field_objectives(battle):
 		if not (objective is Dictionary):
@@ -5510,6 +6055,16 @@ static func _field_objective_pressure_summary(battle: Dictionary) -> String:
 	return " ; ".join(parts)
 
 static func _field_objective_pressure_brief(battle: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _field_objective_pressure_brief__gd(battle)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules._field_objective_pressure_brief", [battle])
+	var before := HumanEngine.before_writing(&"BattleRules._field_objective_pressure_brief", [battle])
+	var result = _field_objective_pressure_brief__gd(battle)
+	HumanEngine.check_writing(&"BattleRules._field_objective_pressure_brief", before, [battle], result)
+	return result
+
+static func _field_objective_pressure_brief__gd(battle: Dictionary) -> String:
 	for objective in _field_objectives(battle):
 		if not (objective is Dictionary):
 			continue
@@ -5558,6 +6113,16 @@ static func _field_objective_pressure_brief(battle: Dictionary) -> String:
 	return ""
 
 static func _field_objective_urgency_summary(session: SessionStateStoreScript.SessionData, battle: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _field_objective_urgency_summary__gd(session, battle)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules._field_objective_urgency_summary", [session, battle])
+	var before := HumanEngine.before_writing(&"BattleRules._field_objective_urgency_summary", [session, battle])
+	var result = _field_objective_urgency_summary__gd(session, battle)
+	HumanEngine.check_writing(&"BattleRules._field_objective_urgency_summary", before, [session, battle], result)
+	return result
+
+static func _field_objective_urgency_summary__gd(session: SessionStateStoreScript.SessionData, battle: Dictionary) -> String:
 	var parts = []
 	var urgent = []
 	for objective in _field_objectives(battle):
@@ -5627,6 +6192,16 @@ static func _reserve_wave_is_active_for_side(battle: Dictionary, side: String) -
 	return BattleEngine.native(&"BattleRules._reserve_wave_is_active_for_side", [battle, side])
 
 static func _terrain_effect_brief(battle: Dictionary) -> String:
+	if _human_engine_mode == HumanEngine.GDSCRIPT:
+		return _terrain_effect_brief__gd(battle)
+	if _human_engine_mode == HumanEngine.NATIVE:
+		return HumanEngine.native_writing(&"BattleRules._terrain_effect_brief", [battle])
+	var before := HumanEngine.before_writing(&"BattleRules._terrain_effect_brief", [battle])
+	var result = _terrain_effect_brief__gd(battle)
+	HumanEngine.check_writing(&"BattleRules._terrain_effect_brief", before, [battle], result)
+	return result
+
+static func _terrain_effect_brief__gd(battle: Dictionary) -> String:
 	if battle.is_empty():
 		return ""
 	var parts = []

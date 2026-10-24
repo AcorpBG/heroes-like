@@ -1469,9 +1469,10 @@ static func terrain_id_is_passable(terrain_id: String) -> bool:
 	if _human_engine_mode == HumanEngine.GDSCRIPT:
 		return terrain_id_is_passable__gd(terrain_id)
 	if _human_engine_mode == HumanEngine.NATIVE:
-		return HumanEngine.native(&"OverworldRules.terrain_id_is_passable", [terrain_id])
+		return HumanEngine.native_writing(&"OverworldRules.terrain_id_is_passable", [terrain_id])
+	var before := HumanEngine.before_writing(&"OverworldRules.terrain_id_is_passable", [terrain_id])
 	var result = terrain_id_is_passable__gd(terrain_id)
-	HumanEngine.check(&"OverworldRules.terrain_id_is_passable", [terrain_id], result)
+	HumanEngine.check_writing(&"OverworldRules.terrain_id_is_passable", before, [terrain_id], result)
 	return result
 
 static func terrain_id_is_passable__gd(terrain_id: String) -> bool:

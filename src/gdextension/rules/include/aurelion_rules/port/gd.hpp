@@ -362,8 +362,9 @@ Atom stringify_or_fallback(State &state, const Value &value);
 // x.is_valid_int() and int(x) of a String.
 bool is_valid_int(const State &state, Atom text);
 // pattern % values (String::sprintf) with the conversions the ported code
-// uses: %s is String(value) as stringify() converts it, %d an int or a float
-// truncated, %% a percent sign. Flags, widths and the other conversions throw
+// uses: %s is String(value) as stringify() converts it and a float as str()
+// prints it (compat::num_real), %d an int or a float truncated, %% a percent
+// sign. Flags, widths and the other conversions throw
 // "not ported". A format error (a missing, extra or non-number value) prints
 // "String formatting error" and answers the pattern, as Godot's validated
 // operator does.

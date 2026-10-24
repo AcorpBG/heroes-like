@@ -190,6 +190,14 @@ add_library(aurelion_rules_core STATIC
 	core/port/battle_resume.cpp
 	core/port/battle_rules.cpp
 	core/port/battle_rules_ai.cpp
+	core/port/battle_screen_abilities.cpp
+	core/port/battle_screen_actions.cpp
+	core/port/battle_screen_context.cpp
+	core/port/battle_screen_details.cpp
+	core/port/battle_screen_entry.cpp
+	core/port/battle_screen_forecast.cpp
+	core/port/battle_screen_risk.cpp
+	core/port/battle_screen_surface.cpp
 	core/port/battle_stacks.cpp
 	core/port/board_setup.cpp
 	core/port/commander_payload.cpp

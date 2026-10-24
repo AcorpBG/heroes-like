@@ -2685,8 +2685,6 @@ func _refresh() -> void:
 		_normalized_battle_session = _session
 		_normalized_battle_snapshot = _session.battle.duplicate(true)
 	buckets["normalize_battle"] = ProfileLogScript.elapsed_ms(section_started)
-	# The rest of the refresh only describes this board; read it once.
-	BattleRules.begin_board_read_scope(_session.battle)
 	section_started = ProfileLogScript.begin_usec()
 	_refresh_command_bar()
 	_refresh_speed_buttons()
@@ -2710,7 +2708,6 @@ func _refresh() -> void:
 	if _spellbook_popover.visible:
 		_rebuild_spellbook()
 	buckets["surface_and_board"] = ProfileLogScript.elapsed_ms(section_started)
-	BattleRules.end_board_read_scope()
 	_refresh_log_line()
 	_announce_round()
 	if _briefing_consumption_autosave_failure_pending:

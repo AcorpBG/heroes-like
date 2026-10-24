@@ -1268,7 +1268,8 @@ Atom format(State &state, Atom pattern, std::initializer_list<Value> values) {
 				problem = "not enough arguments for format string";
 				break;
 			}
-			formatted += state.text(stringify(state, values.begin()[value_index]));
+			const Value &value = values.begin()[value_index];
+			formatted += value.kind == Kind::Float ? compat::num_real(value.f) : state.text(stringify(state, value));
 			++value_index;
 		} else {
 			fail(std::string("String format %") + c + " is not ported");

@@ -3010,8 +3010,31 @@ Checks:
   defense warnings, spellbook rail, specialties, artifacts, the commitment board, the end-turn forecast and its
   surfaces, dispatch and event feed, the management watch), the operational board's lines, the pending choice
   texts, specialty and spell action ids, the construction board's slots, artifact location and equipping,
-  `army_addition_plan`, `_resource_site_delivery_interception` and the pathing profile's validation functions. A
-  probe for them runs after Phase 8's timing pause.
+  `army_addition_plan`, `_resource_site_delivery_interception` and the pathing profile's validation functions.
+- The same eight seeds with a scratch copy of the runner that also asks for those after each move and in each town:
+  37,746,798 checks on all 192 entries, 0 mismatches and 0 errors.
+- `OverworldRules.terrain_id_is_passable` fills OverworldRules' terrain cache, a static var, so its entry writes. As a
+  read-only entry, native mode refused it in the map editor, which calls it while drawing; shadow mode does not see
+  such a write.
+
+**Slice 7.9, the battle screen** (2026-10-24, branch `native-phase7-human`): the battle screen's texts, its action
+surface, the forecasts and recaps, the presentation reads and the board reads it draws run in C++.
+- Ported to the human registry (header `battle_screen.hpp`, 8 files `battle_screen_entry.cpp`,
+  `battle_screen_forecast.cpp`, `battle_screen_actions.cpp`, `battle_screen_abilities.cpp`, `battle_screen_risk.cpp`,
+  `battle_screen_surface.cpp`, `battle_screen_details.cpp` and `battle_screen_context.cpp`; 167 functions of
+  `BattleRules`, `SpellRules`, `TownBattleRules` and `BattleActionPlayback`, 5,926 lines): the entry and tactical
+  briefings, the intent forecast and the enemy's reply, the action surface and the presented action, the ability and
+  spell timing texts, the risk board, the stack, hero and roster details, the field objectives' texts and the board's
+  occupancy, legal targets and hex states.
+- 61 entries: what the battle screen, the board view, the other rules scripts and the tests call.
+- The board read scope and its memo are deleted: since the battle port nothing read the memo. Its test is retired
+  (`docs/battle-entry-transition.md`).
+- The save service builds the battle's risk board in C++; its host entry is gone.
+Checks:
+- Human shadow on the eight `--human` seeds: 22,610 checks on 26 of the 61 entries, 0 mismatches and 0 errors. The
+  runner's battles never open the details panel, the tooltips or the board's hover reads.
+- h-s2, sv-v5 and sv-m1 with a scratch copy of the runner that asks for them before each order: 28,123 checks on 60
+  entries, 0 mismatches and 0 errors. With the first run every entry is checked.
 
 ### Phase 8: a match runner without Godot
 

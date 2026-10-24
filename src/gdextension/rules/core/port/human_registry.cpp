@@ -4,6 +4,7 @@
 #include "aurelion_rules/port/artifact_rules_turn.hpp"
 #include "aurelion_rules/port/battle_ends.hpp"
 #include "aurelion_rules/port/battle_payload.hpp"
+#include "aurelion_rules/port/battle_screen.hpp"
 #include "aurelion_rules/port/enemy_states.hpp"
 #include "aurelion_rules/port/generated_reward_rules.hpp"
 #include "aurelion_rules/port/hero_command_rules.hpp"
@@ -107,6 +108,14 @@ void no_null(const Value *args, int index) {
 	if (nil(args, index)) {
 		throw state::NotPorted("a null session");
 	}
+}
+
+// A null session where GDScript answers it as a session with no battle
+// ("session == null or session.battle.is_empty()").
+gd::DictRef no_battle_session(State &s) {
+	const gd::DictRef session = s.new_dict();
+	s.set(session, gd::str(state::key::battle), gd::dict_value(s.new_dict()));
+	return session;
 }
 
 #define PORT(script, fn, arity, mutates, body) \
@@ -1574,7 +1583,7 @@ const Function kFunctions[] = {
 	PORT(OverworldRules, derive_map_size, 1, true,
 			no_null(a, 0);
 			const Vector2i p = overworld_rules::derive_map_size(s, D(a, 0)); return Value::of_vector2i(p.x, p.y)),
-	PORT(OverworldRules, terrain_id_is_passable, 1, false,
+	PORT(OverworldRules, terrain_id_is_passable, 1, true,
 			return gd::bool_value(overworld_rules::terrain_id_is_passable(s, S(a, 0)))),
 	PORT(OverworldRules, town_weekly_growth, 2, true,
 			return gd::dict_value(overworld_rules::town_weekly_growth(s, D(a, 0), a[1]))),
@@ -1642,6 +1651,141 @@ const Function kFunctions[] = {
 	PORT(OverworldRules, _fog_grids_uncached, 2, true,
 			no_null(a, 0);
 			return gd::array_value(overworld_rules::_fog_grids_uncached(s, D(a, 0), I(a, 1)))),
+	// 7.9, the battle screen: the battle's texts, the action surface,
+	// forecasts and recaps, the presentation reads and the board reads the
+	// screen draws.
+	PORT(BattleRules, _withdrawal_pressure_label, 2, true,
+			return gd::str(battle_rules::_withdrawal_pressure_label(s, D(a, 0), B(a, 1)))),
+	PORT(BattleRules, battle_occupancy_map, 1, true,
+			return gd::dict_value(battle_rules::battle_occupancy_map(s, D(a, 0)))),
+	PORT(BattleRules, legal_attack_target_ids_for_active_stack, 1, true,
+			return gd::array_value(battle_rules::legal_attack_target_ids_for_active_stack(s, D(a, 0)))),
+	PORT(BattleRules, active_movement_board_click_intent, 2, true,
+			return gd::dict_value(battle_rules::active_movement_board_click_intent(s, D(a, 0), a[1]))),
+	PORT(BattleRules, battle_hex_state_summary, 1, true,
+			return gd::dict_value(battle_rules::battle_hex_state_summary(s, D(a, 0)))),
+	PORT(BattleRules, cycle_target, 2, true,
+			if (nil(a, 0)) return Value();
+			battle_rules::cycle_target(s, D(a, 0), I(a, 1)); return Value()),
+	PORT(BattleRules, spell_target_ids, 2, true,
+			if (nil(a, 0)) return gd::array_value(s.new_array());
+			return gd::array_value(battle_rules::spell_target_ids(s, D(a, 0), S(a, 1)))),
+	PORT(BattleRules, get_spell_actions, 1, true,
+			if (nil(a, 0)) return gd::array_value(s.new_array());
+			return gd::array_value(battle_rules::get_spell_actions(s, D(a, 0)))),
+	PORT(BattleRules, describe_entry_context, 1, true,
+			return gd::str(battle_rules::describe_entry_context(s, nil(a, 0) ? no_battle_session(s) : D(a, 0)))),
+	PORT(BattleRules, consume_tactical_briefing, 1, true,
+			no_null(a, 0);
+			return gd::str(battle_rules::consume_tactical_briefing(s, D(a, 0)))),
+	PORT(BattleRules, active_consequence_payload, 1, true,
+			return gd::dict_value(battle_rules::active_consequence_payload(s, nil(a, 0) ? no_battle_session(s) : D(a, 0)))),
+	PORT(BattleRules, post_action_recap_context, 2, true,
+			return gd::dict_value(battle_rules::post_action_recap_context(s, nil(a, 0) ? no_battle_session(s) : D(a, 0), S(a, 1)))),
+	PORT(BattleRules, post_action_recap_payload, 4, true,
+			return gd::dict_value(battle_rules::post_action_recap_payload(s, nil(a, 0) ? no_battle_session(s) : D(a, 0), D(a, 1), S(a, 2), D(a, 3)))),
+	PORT(BattleRules, describe_target_context, 1, true,
+			return gd::str(battle_rules::describe_target_context(s, nil(a, 0) ? no_battle_session(s) : D(a, 0)))),
+	PORT(BattleRules, describe_action_surface, 1, true,
+			return gd::str(battle_rules::describe_action_surface(s, nil(a, 0) ? no_battle_session(s) : D(a, 0)))),
+	PORT(BattleRules, describe_action_readiness_confirmation, 1, true,
+			no_null(a, 0);
+			return gd::str(battle_rules::describe_action_readiness_confirmation(s, D(a, 0)))),
+	PORT(BattleRules, intent_forecast_payload, 1, true,
+			return gd::dict_value(battle_rules::intent_forecast_payload(s, nil(a, 0) ? no_battle_session(s) : D(a, 0)))),
+	PORT(BattleRules, _preferred_spell_timing_action, 4, true,
+			no_null(a, 0);
+			return gd::dict_value(battle_rules::_preferred_spell_timing_action(s, D(a, 0), D(a, 1), D(a, 2), D(a, 3)))),
+	PORT(BattleRules, _preferred_player_action_id, 2, true,
+			return gd::str(battle_rules::_preferred_player_action_id(s, D(a, 0), D(a, 1)))),
+	PORT(BattleRules, _next_enemy_reply_stack, 1, true,
+			return gd::dict_value(battle_rules::_next_enemy_reply_stack(s, D(a, 0)))),
+	PORT(BattleRules, _enemy_action_preview_summary, 3, true,
+			return gd::str(battle_rules::_enemy_action_preview_summary(s, D(a, 0), D(a, 1), D(a, 2)))),
+	PORT(BattleRules, _active_ability_window_summary, 3, true,
+			return gd::str(battle_rules::_active_ability_window_summary(s, D(a, 0), D(a, 1), D(a, 2)))),
+	PORT(BattleRules, _field_objective_action_preview, 2, true,
+			return gd::str(battle_rules::_field_objective_action_preview(s, D(a, 0), D(a, 1)))),
+	PORT(BattleRules, _encounter_objective_for_battle, 3, true,
+			no_null(a, 0);
+			return gd::dict_value(battle_rules::_encounter_objective_for_battle(s, D(a, 0), D(a, 1), D(a, 2)))),
+	PORT(BattleRules, _priority_enemy_stack_for_briefing, 1, true,
+			return gd::dict_value(battle_rules::_priority_enemy_stack_for_briefing(s, D(a, 0)))),
+	PORT(BattleRules, get_action_surface, 1, true,
+			return gd::dict_value(battle_rules::get_action_surface(s, nil(a, 0) ? no_battle_session(s) : D(a, 0)))),
+	PORT(BattleRules, animation_event_queue, 1, true,
+			return gd::array_value(battle_rules::animation_event_queue(s, D(a, 0)))),
+	PORT(BattleRules, battle_presentation_event_stream, 1, true,
+			return gd::array_value(battle_rules::battle_presentation_event_stream(s, D(a, 0)))),
+	PORT(BattleRules, battle_presentation_speed, 1, true,
+			return gd::str(battle_rules::battle_presentation_speed(s, nil(a, 0) ? no_battle_session(s) : D(a, 0)))),
+	PORT(BattleRules, set_battle_presentation_speed, 2, true,
+			return gd::dict_value(battle_rules::set_battle_presentation_speed(s, nil(a, 0) ? no_battle_session(s) : D(a, 0), S(a, 1)))),
+	PORT(BattleRules, battle_presentation_playback_msec, 1, true,
+			return gd::int_value(battle_rules::battle_presentation_playback_msec(s, D(a, 0)))),
+	PORT(BattleRules, latest_animation_event_presentation_payload, 1, true,
+			return gd::dict_value(battle_rules::latest_animation_event_presentation_payload(s, nil(a, 0) ? no_battle_session(s) : D(a, 0)))),
+	PORT(BattleRules, perform_presented_action, 3, true,
+			return gd::dict_value(battle_rules::perform_presented_action(s, nil(a, 0) ? no_battle_session(s) : D(a, 0), S(a, 1), D(a, 2)))),
+	PORT(BattleRules, record_player_order, 2, true,
+			battle_rules::record_player_order(s, D(a, 0), D(a, 1)); return Value()),
+	PORT(BattleRules, player_has_given_orders, 1, true,
+			return gd::bool_value(battle_rules::player_has_given_orders(s, D(a, 0)))),
+	PORT(BattleRules, hero_presentation, 2, true,
+			return gd::dict_value(battle_rules::hero_presentation(s, D(a, 0), S(a, 1)))),
+	PORT(BattleRules, stack_details, 2, true,
+			return gd::dict_value(battle_rules::stack_details(s, D(a, 0), S(a, 1)))),
+	PORT(BattleRules, stack_is_waiting, 2, true,
+			return gd::bool_value(battle_rules::stack_is_waiting(s, D(a, 0), S(a, 1)))),
+	PORT(BattleRules, effect_polarity, 1, true,
+			return gd::str(battle_rules::effect_polarity(s, D(a, 0)))),
+	PORT(BattleRules, hero_details, 2, true,
+			return gd::dict_value(battle_rules::hero_details(s, D(a, 0), S(a, 1)))),
+	PORT(BattleRules, roster_lines, 2, true,
+			return gd::array_value(battle_rules::roster_lines(s, D(a, 0), S(a, 1)))),
+	PORT(BattleRules, pending_battle_report, 1, true,
+			if (nil(a, 0)) return gd::dict_value(s.new_dict());
+			return gd::dict_value(battle_rules::pending_battle_report(s, D(a, 0)))),
+	PORT(BattleRules, is_hero_actor_id, 1, false,
+			return gd::bool_value(battle_rules::is_hero_actor_id(s, S(a, 0)))),
+	PORT(BattleRules, battle_actor_label, 2, true,
+			return gd::str(battle_rules::battle_actor_label(s, D(a, 0), S(a, 1)))),
+	PORT(BattleRules, battle_actor_side, 2, true,
+			return gd::str(battle_rules::battle_actor_side(s, D(a, 0), S(a, 1)))),
+	PORT(BattleRules, default_deployment_hex, 4, true,
+			return gd::dict_value(battle_rules::default_deployment_hex(s, S(a, 0), I(a, 1), I(a, 2), D(a, 3)))),
+	PORT(BattleRules, battle_obstacles, 1, true,
+			return gd::array_value(battle_rules::battle_obstacles(s, D(a, 0)))),
+	PORT(BattleRules, battle_obstacle_cells, 1, true,
+			return gd::dict_value(battle_rules::battle_obstacle_cells(s, D(a, 0)))),
+	PORT(BattleRules, _battle_context_label, 2, true,
+			no_null(a, 0);
+			return gd::str(battle_rules::_battle_context_label(s, D(a, 0), a[1]))),
+	PORT(BattleRules, _battlefield_identity_summary, 1, true,
+			return gd::str(battle_rules::_battlefield_identity_summary(s, D(a, 0)))),
+	PORT(BattleRules, _distance_label, 1, false,
+			return gd::str(battle_rules::_distance_label(s, I(a, 0)))),
+	PORT(BattleRules, _commander_state_for_side, 2, true,
+			return gd::dict_value(battle_rules::_commander_state_for_side(s, D(a, 0), S(a, 1)))),
+	PORT(BattleRules, _commander_role_label, 2, true,
+			return gd::str(battle_rules::_commander_role_label(s, D(a, 0), S(a, 1)))),
+	PORT(BattleRules, _pressure_brief, 1, true,
+			return gd::str(battle_rules::_pressure_brief(s, nil(a, 0) ? no_battle_session(s) : D(a, 0)))),
+	PORT(BattleRules, _stack_focus_summary, 3, true,
+			return gd::str(battle_rules::_stack_focus_summary(s, D(a, 0), D(a, 1), B(a, 2)))),
+	PORT(BattleRules, _side_doctrine_summary, 2, true,
+			return gd::str(battle_rules::_side_doctrine_summary(s, D(a, 0), S(a, 1)))),
+	PORT(BattleRules, _field_objective_status_brief, 1, true,
+			return gd::str(battle_rules::_field_objective_status_brief(s, D(a, 0)))),
+	PORT(BattleRules, _field_objective_pressure_summary, 1, true,
+			return gd::str(battle_rules::_field_objective_pressure_summary(s, D(a, 0)))),
+	PORT(BattleRules, _field_objective_pressure_brief, 1, true,
+			return gd::str(battle_rules::_field_objective_pressure_brief(s, D(a, 0)))),
+	PORT(BattleRules, _field_objective_urgency_summary, 2, true,
+			no_null(a, 0);
+			return gd::str(battle_rules::_field_objective_urgency_summary(s, D(a, 0), D(a, 1)))),
+	PORT(BattleRules, _terrain_effect_brief, 1, true,
+			return gd::str(battle_rules::_terrain_effect_brief(s, D(a, 0)))),
 };
 
 // The host calls of a merged slice's functions (gd::call_static), as HOST
@@ -1664,9 +1808,6 @@ constexpr Host kHosts[] = {
 	NATIVE_HOST(ProfileLog, general_log_snapshot, 0),
 	NATIVE_HOST(ProfileLog, last_general_records, 1),
 	NATIVE_HOST(CampaignRules, get_campaign_id_for_scenario, 1),
-	// The battle screen's risk board a summary quotes, GDScript until 7.9
-	// ports it. It normalizes the session.
-	NATIVE_HOST_WRITING(BattleRules, describe_risk_readiness_board, 1),
 };
 
 #undef NATIVE_HOST_WRITING

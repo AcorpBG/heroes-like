@@ -4,6 +4,8 @@
 
 #include "aurelion_rules/port/save_service.hpp"
 
+#include "aurelion_rules/port/battle_screen.hpp"
+
 #include "aurelion_rules/port/overworld_rules.hpp"
 #include "aurelion_rules/port/overworld_rules_panels.hpp"
 #include "aurelion_rules/port/scenario_evaluation.hpp"
@@ -75,14 +77,9 @@ bool no_scenario(State &state, const Value &session) {
 	return session.kind == Kind::Nil || session_scenario_id(state, session) == key::empty;
 }
 
-// The session a host call takes: the object (a view stands for it).
-Value session_object(State &state, const Value &session) {
-	return session.kind == Kind::Dict ? gd::view_object(state, session.ref) : session;
-}
-
-// Script.function(session), a host's String answer.
-Atom host_text(State &state, Atom script, Atom function, const Value &session) {
-	return gd::to_string(gd::call_static(state, script, function, { session_object(state, session) }));
+// BattleRules.describe_risk_readiness_board(session): a null session has no board.
+Atom risk_board_of(State &state, const Value &session) {
+	return session.kind == Kind::Dict ? battle_rules::describe_risk_readiness_board(state, session.ref) : key::outlook_tactical_risk_board_unavailable;
 }
 
 // ScenarioRules.describe_session_progress_recap(session, include_header).
@@ -621,7 +618,7 @@ Atom _summary_play_check_state_line(State &state, const Value &session, DictRef 
 	}
 	const Atom resume_target = string_get(state, summary, key::resume_target, key::overworld);
 	if (resume_target == key::battle) {
-		const Atom battle_risk = host_text(state, key::battle_rules_script, key::describe_risk_readiness_board, session);
+		const Atom battle_risk = risk_board_of(state, session);
 		const Atom outlook = _line_with_prefix(state, battle_risk, key::outlook);
 		if (outlook != key::empty) {
 			return _safe_player_text(state, gd::format(state, key::battle_s, { gd::str(trimmed(state, outlook, key::outlook)) }), 72);
@@ -691,7 +688,7 @@ Atom _summary_play_check_state_line_from_context(State &state, const Value &sess
 Atom _summary_watch_state_line(State &state, const Value &session, DictRef summary, bool trusted_normalized_session, Atom preloaded_progress_recap, DictRef refresh_watch_context) {
 	const Atom resume_target = string_get(state, summary, key::resume_target, key::overworld);
 	if (resume_target == key::battle) {
-		const Atom battle_risk = host_text(state, key::battle_rules_script, key::describe_risk_readiness_board, session);
+		const Atom battle_risk = risk_board_of(state, session);
 		const Atom outlook = _line_with_prefix(state, battle_risk, key::outlook);
 		if (outlook != key::empty) {
 			return gd::format(state, key::risk_watch_s, { gd::str(trimmed(state, outlook, key::outlook)) });

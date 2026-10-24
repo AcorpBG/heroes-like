@@ -116720,21 +116720,21 @@
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Transition doc, Phase 7, Slice 7.8. Ported on branch native-phase7-human (2026-10-24): 294 functions in 13 files (header overworld_rules_panels.hpp), 192 human-registry entries, nine save-service host entries gone, the map views' fog snapshot per redraw. Human shadow on the eight --human seeds: 16,781,929 checks on 152 of 192 entries, 0 mismatches, 0 errors; a probe for the 40 unreached entries is due. Merges at the end of Phase 7.",
-      "updatedAt": "2026-10-24T05:02:51Z"
+      "notes": "Transition doc, Phase 7, Slice 7.8. Ported on branch native-phase7-human (2026-10-24): 294 functions in 13 files (header overworld_rules_panels.hpp), 192 human-registry entries, nine save-service host entries gone, the map views' fog snapshot per redraw. Human shadow on the eight --human seeds, with a probe for the panels the runner never opens: 37,746,798 checks on all 192 entries, 0 mismatches, 0 errors. terrain_id_is_passable's entry writes (the terrain cache). Merges at the end of Phase 7.",
+      "updatedAt": "2026-10-24T07:10:00Z"
     },
     {
       "id": "native-rules-phase7-09-battle-screen-20261023",
       "title": "Phase 7.9: the battle screen",
-      "status": "pending",
+      "status": "in_progress",
       "classification": "runtime_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/native-rules-engine-transition.md"
       ],
-      "notes": "Transition doc, Phase 7, Slices.",
-      "updatedAt": "2026-10-23T14:30:00Z"
+      "notes": "Transition doc, Phase 7, Slice 7.9. Ported on branch native-phase7-human (2026-10-24): 167 functions in eight battle_screen_*.cpp files (header battle_screen.hpp), 61 human-registry entries; the board read scope and its dead memo deleted, its test retired. Human shadow on the eight --human seeds (22,610 checks on 26 entries) and a probe for the details and tooltips on three (28,123 checks on 60): every entry checked, 0 mismatches, 0 errors. Merges at the end of Phase 7.",
+      "updatedAt": "2026-10-24T07:10:00Z"
     },
     {
       "id": "native-rules-phase7-10-content-20261023",

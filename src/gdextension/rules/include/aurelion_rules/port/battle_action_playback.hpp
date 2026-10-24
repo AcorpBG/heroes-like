@@ -2,8 +2,8 @@
 
 // scripts/core/BattleActionPlayback.gd, ported under the GDScript names
 // (docs/native-rules-engine-transition.md, Phase 1, slice 10): capture, the
-// render snapshot of one event of a presented action. begin and finish stay
-// GDScript (perform_presented_action calls them).
+// render snapshot of one event of a presented action. begin and finish, which
+// perform_presented_action calls, are in battle_screen.hpp (Phase 7, slice 7.9).
 
 #include "aurelion_rules/port/gd.hpp"
 

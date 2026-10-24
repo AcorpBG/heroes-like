@@ -61,6 +61,6 @@ then builds in the next frame, so the gray frame stayed on screen for that whole
   shell's first frame did not build the save surface, that hovering Save builds it,
   and that opening Tactical Details builds the sidebar without changing the battle
   state. In windowed runs, `--shots=<dir>` saves the battle-entry frames.
-- `tests/battle_board_read_scope_report.tscn` plays several turns of 17 fixture
-  battles and compares every memoized board read with an uncached run. The answers
-  and the battle state the reads leave behind must be identical.
+- `tests/battle_board_read_scope_report.tscn`, which compared the board read scope's
+  memoized reads with uncached ones, is retired (2026-10-24, Phase 7 slice 7.9): since
+  the battle port nothing read the memo, and 7.9 deleted the scope.

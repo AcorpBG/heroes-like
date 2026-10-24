@@ -177,6 +177,18 @@ std::string num(double value, int decimals) {
 	return text;
 }
 
+std::string num_real(double value, bool trailing) {
+	if (value == static_cast<double>(static_cast<int64_t>(value))) {
+		return itos(static_cast<int64_t>(value)) + (trailing ? ".0" : "");
+	}
+	int decimals = 14;
+	const double magnitude = std::fabs(value);
+	if (magnitude > 10) {
+		decimals -= static_cast<int>(std::floor(engine_log10(magnitude)));
+	}
+	return num(value, decimals);
+}
+
 std::string json_float(double value, bool full_precision) {
 	if (!std::isfinite(value)) {
 		if (std::isnan(value)) {
