@@ -3256,6 +3256,11 @@ rounds, the runner's own seconds.
   a 119-day game at 3.1 and 4.3 GB instead of 2.5 GB at every second and fourth day. Records identical at every
   interval. The option (`--compact-every`, with `State::settle` marking the day's new nodes as a compaction would)
   is on branch `native-phase8-compact`.
+- D after P8-12, still not merged: with the node buffers freed, compacting less often no longer pays. The 320-day
+  game alone: 1.36, 2.11 and 3.37 GB and 258.9, 273.3 and 294.8 s at every 1, 2 and 4 days. 16 games at once
+  (seeds `p8mem-0` to `p8mem-15`): every day, the peaks sum to 15.3 GB, at most 12.7 GB in use at once. Both builds
+  side by side, 8 + 8 games, two rounds: every second day 2,803.9 s against 2,827.9 s (-0.85%; -1.7% and 0.0%) for
+  about 30% more memory. Records identical at every interval (16/16). N stays 1.
 
 **P8-12, node buffers freed on reset** (`native-rules-phase8-12-buffers-20261024`, branch `native-phase8-buffers`):
 - Cause: `NodePool` reuses node slots after each compaction, and `ArrayNode`, `DictNode` and `PackedNode::reset()`
