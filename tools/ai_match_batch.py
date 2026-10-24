@@ -13,13 +13,14 @@ kept in runner.log); its full record is OUT/<run>.json, and its log is kept only
 printed script errors. summary.md comes last: a per-faction table (finishing places 3-2-1-0 and
 wins against a fair share, with the noise band) and the per-match table.
 
-Matches run headless with tests/ai_versus_ai_match_report.tscn, --slots Godot processes at a time
-(default 16; lowered when other Godot processes are already running) from one refilling queue:
+Matches run from one refilling queue, --slots processes at a time (default 16, --desktop 8;
+lowered when other games or simulation workers are running):
 two-level maps first, then larger maps, then more players. Each process plays up to --per-process
-matches in a row (default 4, HEROES_AI_MATCH_LIST), fewer when the queue is short enough that more
+matches in a row (native default 32, Godot 4, HEROES_AI_MATCH_LIST), fewer when the queue is short enough that more
 would leave slots idle at the end; a match plays as it would in a process of its own, and only the
-first one pays Godot's start-up. Each process gets a throwaway user profile (APPDATA on Windows,
-XDG_DATA_HOME on Linux) and a timeout, the sum of its matches'. A match the process never began
+first one pays the process's start-up. Godot processes get a throwaway user profile (APPDATA on
+Windows, XDG_DATA_HOME on Linux) and a timeout, the sum of their matches'. Native workers run one
+thread each and time out the current match individually. A match the process never began
 because an earlier one crashed or timed out goes back into the queue. Two matches with the same
 seed never run at once, because both would write the same map package under res://maps; the
 package each match writes is deleted when it ends.
@@ -54,11 +55,13 @@ plays run one after another, and one on the map and line-up of the match before 
 setup and seat factions) starts from a copy of the session that match adopted.
 
 --runner plays the matches outside Godot (docs/native-rules-engine-transition.md, Phase 8): one Godot process
-writes the content snapshot into OUT/snapshots (HEROES_AI_MATCH_CONTENT_SNAPSHOT), then one bin/match_sim_cli
-process generates each match's map from it as the scene does and plays the match, biggest first, on --slots
-threads, and writes the record and report line the scene would; each row is written as its match ends. A
+writes the content snapshot into OUT/snapshots (HEROES_AI_MATCH_CONTENT_SNAPSHOT), then a pool of
+bin/match_sim_cli processes generates and plays the matches, biggest first, one thread per process.
+Each worker exits after its bounded match list, releasing its RAM, and the pool refills while work
+remains. Whole rotation groups stay together, even when a group exceeds an explicit --per-process
+limit. Rows are written as matches end; worker PIDs are kept in inflight.json for safe resume. A
 match with a --map-corpus or a .json weight set is set up in Godot instead (map, adoption, handover) and
-written as a snapshot there (HEROES_AI_MATCH_PREPARE), which the same process plays and then deletes. The
+written as a snapshot there (HEROES_AI_MATCH_PREPARE), which a native worker plays and then deletes. The
 games are the same as without --runner (tools/rules_parity.py --runner-b checks it). --runner needs a built
 bin/match_sim_cli and no --release.
 
@@ -87,8 +90,9 @@ import sys
 import tempfile
 import time
 from collections import Counter, defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
+from queue import Empty, Queue
 import threading
 from typing import IO
 
@@ -294,6 +298,14 @@ def rotated_plan(args: argparse.Namespace, groups: list[tuple[int, str, int]], i
     return plan_record(args, groups, plan_seed, matches_out)
 
 
+def execution_options(args: argparse.Namespace, runner: bool, saved: dict | None = None) -> dict:
+    saved = saved or {}
+    return {
+        "processes": args.slots if args.slots is not None else (8 if args.desktop else saved.get("processes", 16)),
+        "matches_per_process": args.per_process if args.per_process is not None else saved.get("matches_per_process", 32 if runner else 4),
+    }
+
+
 def plan_record(args: argparse.Namespace, groups: list[tuple[int, str, int]], plan_seed: int, matches_out: list[dict]) -> dict:
     return {
         "schema": "ai_match_batch_plan_v1",
@@ -303,6 +315,7 @@ def plan_record(args: argparse.Namespace, groups: list[tuple[int, str, int]], pl
         "plan_seed": plan_seed,
         "days": args.days,
         "build": "release" if args.release else "runner" if args.runner else "editor",
+        "execution": execution_options(args, args.runner),
         "lineups": "fixed" if args.lineup else args.lineups,
         "rotate": bool(args.rotate),
         "groups": [{"players": p, "size": s, "matches": n} for p, s, n in groups],
@@ -323,19 +336,19 @@ def plan_digest(plan: dict) -> str:
 
 # ---------------------------------------------------------------- processes
 
-def godot_processes() -> dict[int, str]:
-    """Running Godot processes, pid -> image name."""
+def simulation_processes() -> dict[int, str]:
+    """Running Godot and native simulation processes, pid -> image name."""
     found: dict[int, str] = {}
     if IS_WINDOWS:
         out = subprocess.run(["tasklist", "/FO", "CSV", "/NH"], capture_output=True, text=True, errors="replace").stdout
         for row in csv.reader(io.StringIO(out)):
-            if len(row) > 1 and row[0].lower().startswith(("godot", "heroes-like")) and row[1].isdigit():
+            if len(row) > 1 and row[0].lower().startswith(("godot", "heroes-like", "match_sim_cli")) and row[1].isdigit():
                 found[int(row[1])] = row[0]
     else:
         out = subprocess.run(["ps", "-eo", "pid=,comm="], capture_output=True, text=True, errors="replace").stdout
         for line in out.splitlines():
             pid, _, name = line.strip().partition(" ")
-            if pid.isdigit() and ("godot" in name.lower() or name.lower().startswith("heroes-like")):
+            if pid.isdigit() and ("godot" in name.lower() or name.lower().startswith(("heroes-like", "match_sim_cli"))):
                 found[int(pid)] = name.strip()
     return found
 
@@ -369,6 +382,28 @@ class Running:
     profile: str
     started: float
     deadline: float
+
+
+@dataclass
+class NativeRunning:
+    jobs: list[dict]
+    proc: subprocess.Popen
+    reader: threading.Thread
+    list_path: Path
+    started: float
+    deadline: float
+    index: int = 0
+    eof: bool = False
+    timed_out: bool = False
+    error: str = ""
+    block: list[str] = field(default_factory=list)
+    tail: list[str] = field(default_factory=list)
+
+
+def write_inflight(path: Path, assignments: dict[str, int]) -> None:
+    temporary = path.with_name(path.name + ".tmp")
+    temporary.write_text(json.dumps(assignments), encoding="utf-8")
+    temporary.replace(path)
 
 
 def export_batch_game(godot: str, dest: Path, templates: str | None) -> str:
@@ -674,10 +709,11 @@ def run_batch(out: Path, plan: dict, godot: str, slots: int, timeout_override: f
                 prepared.append({"m": m, "snapshot": None, "text": "", "seconds": 0.0, "process": ""})
     total = len(plan["matches"])
     finished = len(done)
-    others = count_games(godot_processes())
+    setup_per_process = min(per_process, 4) if runner else per_process
+    others = count_games(simulation_processes())
     if others:
         lowered = max(1, slots - others)
-        say(f"WARNING: {others} other Godot games or editors are running; using {lowered} slots instead of {slots}")
+        say(f"WARNING: {others} other games, editors or native workers are running; using {lowered} slots instead of {slots}")
         slots = lowered
     keep_maps = set(plan.get("maps_before", []))
     running: dict[str, Running] = {}
@@ -685,11 +721,11 @@ def run_batch(out: Path, plan: dict, godot: str, slots: int, timeout_override: f
     started = time.time()
     say(f"START {len(queue) + len(prepared)} of {total} matches on {plan['commit'][:9]}{' (dirty tree)' if plan.get('dirty') else ''}, "
         f"{slots} processes at a time, up to {per_process} matches each{' on the release build' if game else ''}"
-        f"{f', played in bin/match_sim_cli on {slots} threads ({len(queue)} set up in Godot first)' if runner else ''}, "
+        f"{f', native pool with one thread per process ({len(queue)} set up in Godot first)' if runner else ''}, "
         f"at {time.strftime('%H:%M:%S')}")
 
     def save_inflight() -> None:
-        inflight_path.write_text(json.dumps({m["run"]: x.proc.pid for x in running.values() for m in x.matches}), encoding="utf-8")
+        write_inflight(inflight_path, {m["run"]: x.proc.pid for x in running.values() if x.proc.poll() is None for m in x.matches})
 
     def on_term(signum, frame):
         raise KeyboardInterrupt
@@ -702,7 +738,7 @@ def run_batch(out: Path, plan: dict, godot: str, slots: int, timeout_override: f
                 # takes as many matches as spread what is left evenly over the slots, up to per_process,
                 # in whole seeds (all the queued matches of a seed, one after another, so a rotated map
                 # is generated once), and always at least one seed.
-                want = min(per_process, max(1, math.ceil(len(queue) / slots)))
+                want = min(setup_per_process, max(1, math.ceil(len(queue) / slots)))
                 by_seed: dict[str, list[dict]] = {}
                 for m in queue:
                     if m["seed"] not in seeds:
@@ -744,17 +780,25 @@ def run_batch(out: Path, plan: dict, godot: str, slots: int, timeout_override: f
                 if unplayed:
                     say(f"  {len(unplayed)} matches of that process were never begun, back in the queue: {', '.join(m['run'] for m in unplayed)}")
                 save_inflight()
-        if snapshots and prepared:
-            finished = play_prepared(out, plan, godot, prepared, slots, timeout_override, keep_maps, say, finished, total)
+        if snapshots:
+            if prepared:
+                try:
+                    finished = play_prepared(out, plan, godot, prepared, slots, timeout_override, keep_maps, say, finished, total, per_process)
+                except OSError as error:
+                    say(f"ERROR: native worker pool: {error}; finish with --resume (same commit)")
+                    write_summary(out, plan)
+                    return 1
             shutil.rmtree(snapshots, ignore_errors=True)
     except KeyboardInterrupt:
         for x in running.values():
             kill(x.proc)
             x.log.close()
-            shutil.rmtree(x.profile, ignore_errors=True)
-            (out / f"{x.matches[0]['run']}.list.json").unlink(missing_ok=True)
-        save_inflight()
-        say(f"INTERRUPTED with {len(running)} matches in flight; finish with --resume (same commit)")
+            if x.proc.poll() is not None:
+                shutil.rmtree(x.profile, ignore_errors=True)
+                (out / f"{x.matches[0]['run']}.list.json").unlink(missing_ok=True)
+        if running:
+            save_inflight()
+        say("INTERRUPTED; finish with --resume (same commit; refuses while workers remain)")
         write_summary(out, plan)
         return 130
     inflight_path.unlink(missing_ok=True)
@@ -776,35 +820,48 @@ def write_row(out: Path, row: dict, slots: int, say, progress: str) -> None:
     say(f"{match_text(row)} -> {result_text(row)} ({row['minutes']} min) [{progress}]")
 
 
-def write_content_snapshot(godot: str, path: Path) -> str:
-    """--runner: the Godot match runner writes the content snapshot match_sim_cli generates the maps from
-    (HEROES_AI_MATCH_CONTENT_SNAPSHOT); "" when written, else the end of its output."""
+def write_content_snapshot(godot: str, path: Path, inflight_path: Path | None = None) -> str:
+    """Write content once with an isolated profile; stop the exporter on interruption."""
     profile = tempfile.mkdtemp(prefix="heroes-ai-content-")
     env = {k: v for k, v in os.environ.items() if not k.startswith("HEROES_AI_MATCH_")}
     env.update({"APPDATA": profile, "XDG_DATA_HOME": profile, "XDG_CONFIG_HOME": profile,
                 "HEROES_AI_MATCH_CONTENT_SNAPSHOT": path.as_posix()})
-    proc = subprocess.run([godot, "--headless", "--path", str(ROOT), "--audio-driver", "Dummy", SCENE], env=env,
-                          stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL, text=True, encoding="utf-8", errors="replace")
-    shutil.rmtree(profile, ignore_errors=True)
-    if proc.returncode == 0 and path.exists() and report_of(proc.stdout).get("ok"):
+    proc = None
+    extra = {"creationflags": subprocess.CREATE_NO_WINDOW} if IS_WINDOWS else {"start_new_session": True}
+    try:
+        proc = subprocess.Popen([godot, "--headless", "--path", str(ROOT), "--audio-driver", "Dummy", SCENE],
+                                env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL,
+                                text=True, encoding="utf-8", errors="replace", **extra)
+        if inflight_path is not None:
+            write_inflight(inflight_path, {"content": proc.pid})
+        stdout, _ = proc.communicate()
+    finally:
+        if proc is not None:
+            kill(proc)
+        if proc is None or proc.poll() is not None:
+            if proc is not None:
+                proc.stdout.close()
+            shutil.rmtree(profile, ignore_errors=True)
+            if inflight_path is not None:
+                write_inflight(inflight_path, {})
+    if proc.returncode == 0 and path.exists() and report_of(stdout).get("ok"):
         return ""
-    return f"the content snapshot was not written (exit {proc.returncode}): " + " | ".join(proc.stdout.splitlines()[-3:])
+    return f"the content snapshot was not written (exit {proc.returncode}): " + " | ".join(stdout.splitlines()[-3:])
 
 
-def play_prepared(out: Path, plan: dict, godot: str, prepared: list[dict], threads: int, timeout_override: float | None,
-                  keep_maps: set[str], say, finished: int, total: int) -> int:
-    """--runner: one bin/match_sim_cli process generates the matches without a snapshot from the content
-    snapshot and plays them and the prepared ones, biggest first, on threads threads; each match's row is
-    written as it ends (its log: the prepare's part and the play's). Returns the finished count."""
-    order = sorted(prepared, key=lambda p: expected_cost(p["m"]), reverse=True)
+def play_prepared(out: Path, plan: dict, godot: str, prepared: list[dict], slots: int, timeout_override: float | None,
+                  keep_maps: set[str], say, finished: int, total: int, per_process: int = 32) -> int:
+    """Refill single-threaded native processes with bounded lists of whole seed groups."""
+    pending = sorted(prepared, key=lambda p: expected_cost(p["m"]), reverse=True)
+    inflight_path = out / "inflight.json"
     env = {k: v for k, v in os.environ.items() if not k.startswith("HEROES_AI_MATCH_")}
-    if any(p["snapshot"] is None for p in order):
+    if any(p["snapshot"] is None for p in pending):
         content = out / "snapshots" / "content.snap"
         say(f"CONTENT snapshot for bin/match_sim_cli at {time.strftime('%H:%M:%S')}")
-        error = write_content_snapshot(godot, content)
+        error = write_content_snapshot(godot, content, inflight_path)
         if error:
             say(f"ERROR: {error}")
-            for p in order:
+            for p in pending:
                 if p["snapshot"] is None:
                     m = p["m"]
                     text = f"{REPORT_ID} " + json.dumps({"ok": False, "out": (out / f"{m['run']}.json").as_posix(), "error": error}) + "\n"
@@ -813,80 +870,179 @@ def play_prepared(out: Path, plan: dict, godot: str, prepared: list[dict], threa
                     row = match_row(out, m, text, Running([m], subprocess.CompletedProcess([], 1), None, out / f"{m['run']}.log", "", now, now), False, now, now, keep_maps)
                     row["process"] = m["run"]
                     finished += 1
-                    write_row(out, row, threads, say, f"{finished}/{total}")
-            order = [p for p in order if p["snapshot"] is not None]
-            if not order:
+                    write_row(out, row, slots, say, f"{finished}/{total}")
+            pending = [p for p in pending if p["snapshot"] is not None]
+            if not pending:
                 return finished
         else:
             env["HEROES_AI_MATCH_CONTENT"] = content.as_posix()
-    by_out = {(out / f"{p['m']['run']}.json").as_posix(): p for p in order}
-    list_path = out / "play.list.json"
-    list_path.write_text(json.dumps([{**match_settings(out, p["m"], plan["days"]),
-                                      **({"HEROES_AI_MATCH_SNAPSHOT": p["snapshot"].as_posix()} if p["snapshot"] else {})}
-                                     for p in order], indent=1), encoding="utf-8")
-    for p in order:
-        (out / f"{p['m']['run']}.json").unlink(missing_ok=True)
-    env["HEROES_AI_MATCH_LIST"] = str(list_path)
-    threads = max(1, min(threads, len(order)))
-    say(f"PLAY {len(order)} matches in bin/match_sim_cli on {threads} threads at {time.strftime('%H:%M:%S')}")
-    timeouts = [timeout_override or TIMEOUT_MIN[p["m"]["size"]] for p in order]
-    limit = (sum(timeouts) / threads + max(timeouts)) * 60
-    extra = {} if IS_WINDOWS else {"start_new_session": True}
-    proc = subprocess.Popen([str(MATCH_CLI), "--threads", str(threads)], env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                            stdin=subprocess.DEVNULL, text=True, encoding="utf-8", errors="replace", **extra)
-    fired = threading.Event()
-    timer = threading.Timer(limit, lambda: (fired.set(), kill(proc)))
-    timer.start()
-    reported: set[str] = set()
-    block: list[str] = []
-    current = None
-    tail: list[str] = []
-    try:
-        for line in proc.stdout:
-            line = line.rstrip("\n")
-            if line.startswith(BEGIN_ID + " "):
-                try:
-                    current = by_out.get(str(json.loads(line[len(BEGIN_ID) + 1:]).get("out", "")))
-                except ValueError:
-                    current = None
-                block = [line]
-                continue
-            block.append(line)
-            if current is None:
-                tail.append(line)
-                continue
-            if line.startswith(REPORT_ID + " "):
-                m = current["m"]
-                text = current["text"] + "\n".join(block) + "\n"
-                (out / f"{m['run']}.log").write_text(text, encoding="utf-8")
-                ended = time.time()
-                started = ended - current["seconds"] - float(report_of(line).get("seconds") or 0.0)
-                run = Running([m], proc, None, out / f"{m['run']}.log", "", started, ended)
-                row = match_row(out, m, text, run, False, started, ended, keep_maps)
-                row["process"] = current["process"] or m["run"]
-                finished += 1
-                reported.add(m["run"])
-                write_row(out, row, threads, say, f"{finished}/{total}, {len(order) - len(reported)} playing")
-                if current["snapshot"]:
-                    current["snapshot"].unlink(missing_ok=True)
-                current = None
-    finally:
-        timer.cancel()
-        proc.wait()
-        list_path.unlink(missing_ok=True)
-    timed_out = fired.is_set()
-    for p in order:
+
+    events: Queue = Queue()
+    workers: dict[str, NativeRunning] = {}
+    launches = 0
+    say(f"PLAY {len(pending)} matches in bin/match_sim_cli on up to {slots} processes, one thread each, "
+        f"recycling after up to {per_process} matches (whole seed groups) at {time.strftime('%H:%M:%S')}")
+
+    def save_inflight() -> None:
+        write_inflight(inflight_path, {p["m"]["run"]: w.proc.pid for w in workers.values()
+                                      if w.proc.poll() is None for p in w.jobs[w.index:]})
+
+    def timeout(m: dict) -> float:
+        return 60 * (timeout_override if timeout_override is not None else TIMEOUT_MIN[m["size"]])
+
+    def read_output(name: str, proc: subprocess.Popen) -> None:
+        try:
+            for line in proc.stdout:
+                events.put((name, line.rstrip("\r\n")))
+        except OSError as error:
+            events.put((name, f"ERROR: native worker output stream: {error}"))
+        finally:
+            proc.stdout.close()
+            events.put((name, None))
+
+    def launch_worker(chain: list[dict]) -> NativeRunning:
+        name = chain[0]["m"]["run"]
+        listing = out / f"{name}.native.list.json"
+        settings = []
+        for p in chain:
+            m = p["m"]
+            row = match_settings(out, m, plan["days"])
+            if p["snapshot"] is not None:
+                row["HEROES_AI_MATCH_SNAPSHOT"] = p["snapshot"].as_posix()
+            settings.append(row)
+            (out / f"{m['run']}.json").unlink(missing_ok=True)
+        listing.write_text(json.dumps(settings, indent=1), encoding="utf-8")
+        extra = {"creationflags": subprocess.CREATE_NO_WINDOW} if IS_WINDOWS else {"start_new_session": True}
+        try:
+            proc = subprocess.Popen([str(MATCH_CLI), "--threads", "1"],
+                                    env={**env, "HEROES_AI_MATCH_LIST": str(listing)},
+                                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL,
+                                    text=True, encoding="utf-8", errors="replace", **extra)
+        except OSError:
+            listing.unlink(missing_ok=True)
+            raise
+        now = time.time()
+        reader = threading.Thread(target=read_output, args=(name, proc), daemon=True)
+        worker = NativeRunning(chain, proc, reader, listing, now, now + timeout(chain[0]["m"]))
+        workers[name] = worker
+        # Publish before another invocation can resume while the worker writes records.
+        save_inflight()
+        reader.start()
+        say(f"WORKER {name} pid {proc.pid}: {len(chain)} matches, one thread")
+        return worker
+
+    def record(worker: NativeRunning, text: str, timed_out: bool, seconds: float | None = None) -> None:
+        nonlocal finished
+        p = worker.jobs[worker.index]
         m = p["m"]
-        if m["run"] in reported:
-            continue
-        text = p["text"] + "\n".join(tail[-3:]) + "\n"
+        text = p["text"] + text
         (out / f"{m['run']}.log").write_text(text, encoding="utf-8")
-        run = Running([m], proc, None, out / f"{m['run']}.log", "", time.time() - limit, time.time())
-        row = match_row(out, m, text, run, timed_out, run.started, run.deadline, keep_maps)
+        ended = time.time()
+        started = ended - p["seconds"] - seconds if seconds is not None else worker.started - p["seconds"]
+        run = Running([m], worker.proc, None, out / f"{m['run']}.log", "", started, worker.deadline)
+        row = match_row(out, m, text, run, timed_out, started, ended, keep_maps)
         row["process"] = p["process"] or m["run"]
+        row["worker_pid"] = worker.proc.pid
         finished += 1
-        write_row(out, row, threads, say, f"{finished}/{total}")
-    say(f"PLAYED in bin/match_sim_cli: {' '.join(line for line in tail if line.startswith('MATCH_SIM_CLI '))[:400]}")
+        write_row(out, row, slots, say, f"{finished}/{total}, {len(workers)} workers, {len(pending)} queued")
+        worker.index += 1
+        worker.block.clear()
+        if p["snapshot"] is not None:
+            p["snapshot"].unlink(missing_ok=True)
+        worker.started = time.time()
+        # A worker that has reported every game only needs time to flush its footer and exit.
+        worker.deadline = worker.started + (timeout(worker.jobs[worker.index]["m"]) if worker.index < len(worker.jobs) else 30)
+        save_inflight()
+
+    try:
+        while pending or workers:
+            seeds = {p["m"]["seed"] for w in workers.values() for p in w.jobs}
+            while pending and len(workers) < slots:
+                want = min(per_process, max(1, math.ceil(len(pending) / slots)))
+                by_seed: dict[str, list[dict]] = {}
+                for p in pending:
+                    if p["m"]["seed"] not in seeds:
+                        by_seed.setdefault(p["m"]["seed"], []).append(p)
+                chain: list[dict] = []
+                for group in by_seed.values():
+                    if chain and len(chain) + len(group) > want:
+                        continue
+                    chain += group
+                    if len(chain) >= want:
+                        break
+                if not chain:
+                    break
+                for p in chain:
+                    pending.remove(p)
+                launch_worker(chain)
+                launches += 1
+                seeds.update(p["m"]["seed"] for p in chain)
+
+            try:
+                event = events.get(timeout=0.1)
+            except Empty:
+                event = None
+            while event is not None:
+                name, line = event
+                worker = workers.get(name)
+                if worker is not None:
+                    if line is None:
+                        worker.eof = True
+                        if worker.index < len(worker.jobs) and worker.proc.poll() is None:
+                            worker.error = "native worker closed its output before completing the match list"
+                            kill(worker.proc)
+                    elif not worker.error:
+                        if worker.index < len(worker.jobs):
+                            worker.block.append(line)
+                            if line.startswith(REPORT_ID + " "):
+                                report = report_of(line)
+                                expected = (out / f"{worker.jobs[worker.index]['m']['run']}.json").as_posix()
+                                if report.get("out") != expected:
+                                    worker.error = "native worker returned an invalid or out-of-order report"
+                                    kill(worker.proc)
+                                else:
+                                    record(worker, "\n".join(worker.block) + "\n", False, float(report.get("seconds") or 0))
+                        else:
+                            worker.tail.append(line)
+                            worker.tail = worker.tail[-20:]
+                try:
+                    event = events.get_nowait()
+                except Empty:
+                    event = None
+
+            for name, worker in list(workers.items()):
+                if worker.proc.poll() is None and time.time() > worker.deadline:
+                    worker.timed_out = True
+                    kill(worker.proc)
+                # EOF follows all this worker's report events; drain them before deciding what failed.
+                if worker.proc.poll() is None or not worker.eof:
+                    continue
+                worker.reader.join()
+                if worker.index < len(worker.jobs):
+                    m = worker.jobs[worker.index]["m"]
+                    failure = {"ok": False, "out": (out / f"{m['run']}.json").as_posix()}
+                    if not worker.timed_out:
+                        failure["error"] = worker.error or f"native worker exited {worker.proc.returncode} before reporting {m['run']}"
+                    text = "\n".join(worker.block + worker.tail) + "\n" + REPORT_ID + " " + json.dumps(failure) + "\n"
+                    record(worker, text, worker.timed_out)
+                    unplayed = worker.jobs[worker.index:]
+                    pending = sorted(pending + unplayed, key=lambda p: expected_cost(p["m"]), reverse=True)
+                    if unplayed:
+                        say(f"  {len(unplayed)} native matches were never begun, back in the queue: "
+                            + ", ".join(p["m"]["run"] for p in unplayed))
+                del workers[name]
+                worker.list_path.unlink(missing_ok=True)
+                save_inflight()
+    finally:
+        for worker in workers.values():
+            kill(worker.proc)
+            if worker.proc.poll() is not None:
+                if worker.reader.ident is not None:
+                    worker.reader.join(timeout=5)
+                worker.list_path.unlink(missing_ok=True)
+        # Keep any worker that could not be stopped visible to the resume guard.
+        save_inflight()
+    say(f"PLAYED in bin/match_sim_cli: {launches} worker processes, one thread each")
     return finished
 
 
@@ -972,6 +1128,10 @@ def write_summary(out: Path, plan: dict) -> None:
         wall = (max(r["ended"] for r in rows) - min(r["started"] for r in rows)) / 60
         lines.append(f"Wall {duration(wall)} (from the first start to the last end) at {rows[-1].get('slots', '?')} slots; "
                      f"{duration(sum(r['minutes'] for r in rows))} of match time.")
+    if plan.get("build") == "runner" and plan.get("execution"):
+        execution = plan["execution"]
+        lines.append(f"Native pool: up to {execution['processes']} processes, one thread each; "
+                     f"worker batches up to {execution['matches_per_process']} matches, keeping whole seed groups together.")
     lines += ["", "## Factions", "",
               "Place points by elimination order (3-2-1-0 with four players; ties share) and wins in decided games, "
               "each against a fair share, ±1 sd if all factions were equal; * marks a gap beyond 2 sd. "
@@ -1084,6 +1244,13 @@ def csv_choice(values: tuple[str, ...]):
     return parse
 
 
+def positive_int(text: str) -> int:
+    value = int(text)
+    if value < 1:
+        raise argparse.ArgumentTypeError("must be at least 1")
+    return value
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("out", type=Path, help="batch folder (plan.json, results.jsonl, records, summary.md)")
@@ -1100,8 +1267,9 @@ def main() -> int:
     parser.add_argument("--rotate", action="store_true", help="play each map with its line-up rotated through every seat (matches rounded up to a multiple of players)")
     parser.add_argument("--seed", type=int, help="plan seed (default random); the same seed and options give the same plan")
     parser.add_argument("--weights", metavar="W1,W2,...", help="overworld AI weight set per seat: default, a set name or a .json file")
-    parser.add_argument("--slots", type=int, default=16, help="Godot processes at once (default 16)")
-    parser.add_argument("--per-process", type=int, default=4, help="most matches one Godot process plays in a row (default 4)")
+    parser.add_argument("--slots", type=positive_int, help="worker processes at once (default 16, or 8 with --desktop)")
+    parser.add_argument("--desktop", action="store_true", help="use 8 worker processes for desktop use unless --slots is given")
+    parser.add_argument("--per-process", type=positive_int, help="maximum matches per worker batch (default: native 32, Godot 4; whole seed groups stay together)")
     parser.add_argument("--map-corpus", type=Path, help="folder of generated map packages kept for batches on the same plan (one commit)")
     parser.add_argument("--timeout-min", type=float, help="per-match timeout in minutes (default by size: %s)" % ", ".join(f"{short_size(k)} {v}" for k, v in TIMEOUT_MIN.items()))
     parser.add_argument("--godot", help="Godot editor binary")
@@ -1130,7 +1298,7 @@ def main() -> int:
         if plan["commit"] != head:
             sys.exit(f"plan.json was made on {plan['commit'][:9]} but HEAD is {head[:9]}; a resumed batch must run on the same commit")
         inflight_path = out / "inflight.json"
-        alive = godot_processes()
+        alive = simulation_processes()
         if inflight_path.exists():
             leftover = {r: p for r, p in json.loads(inflight_path.read_text(encoding="utf-8")).items() if p in alive}
             if leftover:
@@ -1168,7 +1336,13 @@ def main() -> int:
     runner = plan.get("build") == "runner"
     if runner and not MATCH_CLI.exists():
         sys.exit(f"--runner needs {MATCH_CLI} (python tools/build_native.py windows --part rules)")
-    code = run_batch(out, plan, godot, max(1, args.slots), args.timeout_min, game, max(1, args.per_process), corpus, runner)
+    execution = execution_options(args, runner, plan.get("execution"))
+    if plan.get("execution") != execution:
+        plan["execution"] = execution
+        temporary = plan_path.with_name(plan_path.name + ".tmp")
+        temporary.write_text(json.dumps(plan, indent=1), encoding="utf-8")
+        temporary.replace(plan_path)
+    code = run_batch(out, plan, godot, execution["processes"], args.timeout_min, game, execution["matches_per_process"], corpus, runner)
     if game and code == 0:
         shutil.rmtree(out / "game", ignore_errors=True)  # about 5 GB; an interrupted batch keeps it for --resume
     return code

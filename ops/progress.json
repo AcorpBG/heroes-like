@@ -22302,6 +22302,17 @@
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
+      "id": "ai-match-native-process-pool-20261024",
+      "title": "Native AI batch process pool with desktop preset and worker recycling",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "tooling_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["PLAN.md", "docs/ai-plays-by-player-rules.md"],
+      "notes": "Implemented the refilling native process pool: 16 single-threaded workers, --desktop 8, --per-process 32 with whole rotation groups, adaptive tail batches, saved execution settings, native/content-exporter PID resume guards, per-game timeout and unstarted-game requeue. Godot preparation stays capped at four games or one rotation group. Existing rows, records and prepared inputs remain compatible. Windows checks: 36 direct/prepared generated-record comparisons with the old runner identical apart from timing; recycling, concurrency, crashes, timeouts, exporter/startup cleanup, CLI interrupt/resume and legacy/desktop settings pass; skill validator passes; core suite 17/17. No native builds or Linux checks.",
+      "updatedAt": "2026-10-24"
+    },
+    {
       "id": "tooling-repo-hygiene-20261004",
       "title": "Repair post-cleanup working tree, native binaries and source-test workflow",
       "status": "completed",

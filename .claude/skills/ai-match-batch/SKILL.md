@@ -43,18 +43,25 @@ Take these from the request; use the defaults for anything not given. Do not ask
 | water | land (as a new game) | `--water land,normal_water,islands` |
 | levels | 1 (as a new game) | `--levels 1,2` (2 adds the underground) |
 | day cap | 320 | `--days N` (160 before 2026-10-16) |
-| matches at once | 16 | `--slots N`: the runner's threads, or Godot processes without `--runner`; lowered by itself when other Godot processes are running |
-| matches per Godot process | 4 | `--per-process N` (without `--runner`) |
+| worker processes at once | 16 | `--slots N`; each native worker has one thread; lowered when other games or native workers are running |
+| desktop use | | `--desktop` selects 8 worker processes; an explicit `--slots N` takes precedence |
+| matches before recycling a process | native 32, Godot 4 | `--per-process N`; whole rotation groups stay together, so one group can exceed a smaller explicit limit |
 | timeout per match | small 30, medium 90, large 180, xl 360 min | `--timeout-min N` |
 | plan seed | random | `--seed N`: the same seed and options give the same plan |
 | kept maps | | `--map-corpus DIR`: keeps each generated map so another batch on the same plan and commit skips generation (to compare weight sets on the same maps) |
 | only plan, or only summarize | | `--plan-only` writes `plan.json` and stops; `--summarize` rewrites `summary.md` from `results.jsonl` |
 
 - **Pass `--runner`** unless the owner asks for games in Godot or a release build.
-  - **How it runs:** one Godot process writes the content snapshot into `<out>/snapshots`. One
-    `bin/match_sim_cli` process then generates each map and plays every match on `--slots`
-    threads, biggest first. Matches from a `--map-corpus` or with a `.json` weight set are set up in
-    Godot first.
+  - **How it runs:** one Godot process writes the content snapshot into `<out>/snapshots`. A
+    refilling pool of **16 `bin/match_sim_cli` processes, one thread each**, generates and plays
+    the matches, biggest first. Use **`--desktop` for 8 processes**. Each process exits after a
+    bounded list (up to 32 games by default), releasing its accumulated RAM; a replacement takes
+    more queued work. Lists are shorter near the end so more workers can stay busy. A map's
+    rotations run together in one process. Matches from a `--map-corpus` or with a `.json` weight
+    set are set up in Godot first, in batches of at most four games (whole rotation groups).
+  - **Controls:** `--slots` counts processes, not threads. `--per-process` controls recycling,
+    not concurrent games. Queueing more games keeps workers supplied. The execution settings
+    are saved in the plan and reused on resume; explicit flags override them.
   - **What you get:** the same games as in Godot (`tools/rules_parity.py --runner-b` checks it), and
     the same records, rows and summary.
   - **Why:** each game is faster and lighter than in Godot (see the times below).
@@ -73,24 +80,25 @@ Take these from the request; use the defaults for anything not given. Do not ask
   factions is 30 games for 2P, 60 for 3P (30 balances too), 60 for 4P, 30 for 5P and 6 for 6P.
   Batches meant to measure balance should be whole cycles.
 
-Time and memory, measured 2026-10-24 on the owner's 16-core, 64 GB machine (main 0f400b130 on):
-- **`--runner`:** 16 extra large 6P games at once (land, normal guards, half on two levels, cap 320)
-  took 371 s. Each game took 1-6 min (2.8 on average) and peaked at 1.4 GB; all 16 together used
-  at most 12.7 GB.
-- **In Godot:** one of those 320-day games alone took 281 s (258.9 s on the runner alone) and
-  peaked at 2.3 GB.
-- **Not re-measured since the AI turn went native (2026-10-21 to 10-23):** medium and large
-  batches. The 2026-10-19 figures (60 large 4P games in about 21-23 match-hours, 0.85 GB per
-  Godot process) predate it and no longer hold.
+Windows measurements before pool integration, 2026-10-24, Ryzen 9 5950X (16 cores / 32 logical processors), 64 GB,
+build `9b2fd219d`, large 3P two-level maps, land/normal water and normal/strong guards:
+- On the same 96 games stopped at day 60, one process with 16 threads took 18m 57s;
+  16 single-threaded processes took 2m 24s, with identical records apart from timing.
+- On 288 games stopped at day 20, 16 / 24 / 32 single-threaded processes took 138 / 136 / 135 s
+  and peaked at 9.5 / 13.4 / 17.1 GiB private RAM. Sixteen processes with two threads took 148 s
+  and 17.0 GiB. Keep one thread per process; higher CPU percentages did not improve throughput
+  enough to justify the extra RAM. Eight single-threaded processes took 189 s and 5.2 GiB.
+- In a ten-minute queued-work run, 16 single-threaded workers reached 13.6 GiB and memory was
+  still growing by about 0.5 GiB/minute. Recycling controls this retained history; the measurements
+  do not establish a long-run RAM ceiling. Full-game wall time varies with seeds and endgame tails.
 - **Never run extra large batches on commits before 0f400b130.** The native rules leaked memory
   there: an extra large game grew to about 13 GB by day 320, and 16 at once overcommitted the
   machine.
 
 ## 2. Prepare
 
-1. The worktree must be current with `origin/main` (the owner changes balance and content often).
-   In an app-made worktree use the `sync_with_base_branch` tool; otherwise
-   `git fetch && git status`. Commit or set aside your own edits first: `plan.json` records the
+1. The checkout must be current with `origin/main` (the owner changes balance and content often).
+   Use `git fetch` and `git status`, following the repository's checkout rules. Commit or set aside your own edits first: `plan.json` records the
    commit, and a dirty tree means the batch does not match it.
 2. Choose an output folder that outlives this session, in the main checkout's `.artifacts/`
    (ignored by git), e.g. `D:/Games/godot/heroes-like/.artifacts/ai_batch_<yyyymmdd>_<label>`.
@@ -98,24 +106,28 @@ Time and memory, measured 2026-10-24 on the owner's 16-core, 64 GB machine (main
 
 ## 3. Run
 
-Start the runner with the Bash tool and `run_in_background: true` (never in the foreground):
+Start the runner in the background with the available command tool and retain its execution
+handle so it can be waited on or stopped:
 
 ```
 python tools/ai_match_batch.py <out> --runner --players 4 --size large --matches 60 --guards weak,normal,strong --levels 1,2
 ```
 
+Add `--desktop` to use 8 processes while the owner uses the PC. The native default is 16
+processes with one thread each and recycling after up to 32 games; no extra flags are needed.
+
 It prints, in order:
 
 - `PLAN`: games per faction, first seats and setups, as soon as `plan.json` is written;
 - `START`: the commit and how many run at once, with a warning first if it lowered the slots;
-- with `--runner`, `CONTENT` while Godot writes the content snapshot, then `PLAY`: how many
-  matches `bin/match_sim_cli` plays on how many threads;
+- with `--runner`, `CONTENT` while Godot writes the content snapshot, then `PLAY`: the process
+  limit and recycling batch size; `WORKER` identifies each launched process and its match count;
 - one line per finished match: run, setup, line-up, `-> winner day N` (or `no winner by day N`,
   `FAILED: ...`, `TIMEOUT: ...`), minutes and `[done/total, running]`;
 - `DONE` with the path of `summary.md`.
 
-Tell the owner the plan line and the expected wall time. Then wait: you are notified when the
-background command exits, so do not poll or sleep. When the owner asks how it is going, or you
+Tell the owner the plan line and the expected wall time. Wait using the host's background
+execution mechanism. When the owner asks how it is going, or you
 have a natural moment, read the last lines of its output (the same lines are in
 `<out>/runner.log`) and relay the new finished matches in a line or two. Do not open the match
 records while it runs.
@@ -123,9 +135,11 @@ records while it runs.
 If the run was cut off (the session ended, the machine restarted), rerun with
 `python tools/ai_match_batch.py <out> --resume`. It plays only the matches `results.jsonl` lacks,
 from the start with their planned seeds, in Godot or on the runner as the plan says. It refuses a
-different commit, and refuses while Godot processes of the interrupted run are still going. It
-does not check for a leftover `match_sim_cli`: after an interrupted `--runner` batch, make sure none
-is still running before you resume.
+different commit, and refuses while recorded Godot or native workers of the interrupted run are
+still running. Normal interruption stops the workers; a forced parent termination can leave
+workers alive, which the resume guard detects. Never start two drivers for the same folder.
+Completed rows stay complete; games a crashed or timed-out worker never began go back into the
+queue. A timeout fails its active game and stops that worker.
 
 ## 4. Report
 
@@ -154,9 +168,9 @@ Then add a few bullets:
 - anything that needs a closer look, by match seed.
 
 Diagnosing a stalled or odd game is your job. Read that match's record `<out>/<run>.json` first;
-it is written with full tracing on, so a replay is rarely needed:
+it holds the daily state, economy, battles and town history:
 
-- `ledger[day].decisions`: every hero decision of the day: player, hero, position, strength,
+- When decision tracing was enabled, `ledger[day].decisions`: every hero decision of the day: player, hero, position, strength,
   movement left, the plan taken (`[kind, id, value, distance]`) and the best alternatives it
   scored (`[score, kind, id, value, distance]`). Why an army did not attack a town, chased a
   courier or stood still is answered here.
@@ -192,8 +206,9 @@ finished match names, they come from a failed match or from someone else's game.
 can be the owner's saves: compare their mtimes with the failed match's times and list running
 Godot processes before deleting any.
 
-Keep the batch folder while a follow-up may need it (a replay, a report page, comparing with the
-next round). Then delete the whole folder. Never run a match on the owner's real game profile;
+Keep interrupted batches for resume. After reporting and any requested diagnosis, follow
+AGENTS.md's retention and cleanup rules; retain completed generated outputs only when the owner
+requests it. Never run a match on the owner's real game profile;
 the runner and `run_match.sh` both isolate it.
 
 ## Notes
