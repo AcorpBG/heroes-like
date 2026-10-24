@@ -3245,6 +3245,18 @@ rounds, the runner's own seconds.
   17/17.
 - Timing: 599.0 s to 584.0 s (-2.5%), per game -0.2% to -4.3%. Records identical. Windows only.
 
+**C and D, not merged.**
+- C, the day close's second enemy-state normalize skipped: dropped, since it cannot be shown to rebuild identical
+  states. On the eight games it never changed a value in 1,406 day closes. But between the two calls
+  `normalize_overworld_state` rewrites session fields, towns, resource nodes and heroes that the normalize reads, and
+  the State's watch counts every write, so an exact guard needs the normalize's whole read set audited.
+- D, the runner compacting every N days: N stays 1. With 16 extra large 6P games at once and a compaction every day,
+  the runner's peaks sum to 92 GB (2.5 GB to 12.8 GB per game) on a 64 GB machine; the machine restarted during the
+  run at every fourth day. Alone, a 320-day game peaks at 15.6 GB instead of 12.8 GB at every second day (-8.8% time),
+  a 119-day game at 3.1 and 4.3 GB instead of 2.5 GB at every second and fourth day. Records identical at every
+  interval. The option (`--compact-every`, with `State::settle` marking the day's new nodes as a compaction would)
+  is on branch `native-phase8-compact`.
+
 ### Totals
 
 Sizes are the proposal's unmeasured agent-day guesses, useful only to compare phases (see section 6).
