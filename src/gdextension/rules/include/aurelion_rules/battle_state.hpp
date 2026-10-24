@@ -981,7 +981,8 @@ public:
 
 	// The atom of "q,r" ("%d,%d" % [q, r], BattleRules._hex_key_from_coords).
 	// The board's cells have fixed atoms, made with the known keys, so they need
-	// no formatting or hashing; any other pair is interned.
+	// no formatting or hashing; any other pair is interned once and kept by its
+	// numbers (the overworld's tile keys).
 	uint32_t pair_atom(int64_t q, int64_t r);
 
 	// The memo: native answers kept by what they were asked (slice 04c, the
@@ -1069,6 +1070,8 @@ private:
 	std::unordered_map<std::string_view, uint32_t> atom_ids_;
 	// joined_atom's atoms: (prefix << 32 | atom) -> atom of the joined text.
 	std::unordered_map<uint64_t, uint32_t> joined_;
+	// pair_atom's interned atoms: (q << 32 | r) -> atom, for q and r that fit 32 bits.
+	std::unordered_map<uint64_t, uint32_t> pairs_;
 	NodePool<ArrayNode> arrays_;
 	NodePool<DictNode> dicts_;
 	NodePool<PackedNode> packeds_;

@@ -336,6 +336,7 @@ void State::clear() {
 	// first.
 	atom_ids_.clear();
 	joined_.clear();
+	pairs_.clear();
 	atoms_.clear();
 	atom_bytes_ = 0;
 	for (std::string_view text : kKnownKeys) {
@@ -692,7 +693,17 @@ uint32_t State::pair_atom(int64_t q, int64_t r) {
 	if (q >= 0 && q < battle_hex::kColumns && r >= 0 && r < battle_hex::kRows) {
 		return kBoardAtoms + static_cast<uint32_t>(q * battle_hex::kRows + r);
 	}
-	return intern(pair_text(q, r));
+	if (q < INT32_MIN || q > INT32_MAX || r < INT32_MIN || r > INT32_MAX) {
+		return intern(pair_text(q, r));
+	}
+	const uint64_t pair = (static_cast<uint64_t>(static_cast<uint32_t>(q)) << 32) | static_cast<uint32_t>(r);
+	const auto found = pairs_.find(pair);
+	if (found != pairs_.end()) {
+		return found->second;
+	}
+	const uint32_t atom = intern(pair_text(q, r));
+	pairs_.emplace(pair, atom);
+	return atom;
 }
 
 void State::fill_array(uint32_t node) const {
