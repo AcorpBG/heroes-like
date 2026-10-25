@@ -117089,6 +117089,18 @@
       ],
       "notes": "Owner-requested paired rerun completed on ab7715702 with HP pass 505f5c797, against baseline e8a0983f4. Identical 720 plan entries and actual setup records (map/scenario ids, actual 108x108 two-level maps, faction arrangements, starting towns/resources and roll seeds); native executable unchanged, content differs only in 54 HP fields. 30 maps x 24 arrangements; each faction 480 games on the same 20 maps. Completed in 53.5 min: 696 decided, 24 capped versus baseline 703/17; zero failures/timeouts/script errors/fallbacks; 30 single-threaded worker lifetimes. Place points, fair 720: Sunvault 761.5->757 (-0.6 pp), Thornwake 756.5->751.5 (-0.7), Mireclaw 668.5->740 (+9.9), Embercourt 691.5->729 (+5.2), Veilmourn 737->680 (-7.9), Brasshollow 705->662.5 (-5.9). Paired whole-map 100000-resample 95% intervals for change: Mireclaw +1.8..+18.1 pp, Embercourt -0.9..+10.5, Veilmourn -13.2..-2.5, Brasshollow -12.4..+0.6, Sunvault -7.5..+5.7, Thornwake -6.0..+4.2. Wins: Mireclaw 94->127, Embercourt 105->108, Sunvault 136->133, Thornwake 136->120, Veilmourn 121->105, Brasshollow 111->103. Primary analysis retains all games. Excluding entire maps capped in either condition, sensitivity changes remain +11.1 pp Mireclaw (13 maps) and +7.3 Embercourt (13 maps); not a corrected estimator. All caps had combat days 315-320; 23 had town captures days 315-320. m155 is a defended-last-town/split-army stalemate: Sunvault 5 towns and 235k hero power in four armies, largest 80.9k versus Thornwake main 68.4k plus 13.8k garrison. Comparison appended to the rerun summary. No further balance changes or probes; disposable worker inputs/profiles cleaned by the runner. Requested baseline and rerun retained for comparison; previous data untouched.",
       "updatedAt": "2026-10-25"
+    },
+    {
+      "id": "balance-half-hp-buffs-sunvault-thornwake-nerf-20261025",
+      "title": "Halve Mireclaw/Embercourt HP buffs and reduce Sunvault/Thornwake HP",
+      "status": "completed",
+      "classification": "balance",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md"
+      ],
+      "notes": "Owner-requested HP adjustment completed. Replaced full prior buffs using pre-buff e8a0983f4 HP values: Mireclaw ranged +5%, melee +3.5%, Embercourt +2.5%; Sunvault and Thornwake -5%. Applies to base, upgraded and auxiliary faction definitions. Nearest whole HP, half up, no forced minimum change (minimum final HP 1); small changes can round away. Compared with the previous full-buff state, exactly 83 definitions changed, HP fields only: Mireclaw 21, Embercourt 21, Sunvault 20, Thornwake 21. Other stats, costs, growth and abilities unchanged. Windows core 17/17 passed, including content validation; no native rebuild or AI evaluation. Core removed its 32 generated map files and disposable profiles; no task-created probes or reports remain.",
+      "updatedAt": "2026-10-25"
     }
   ],
   "project": "heroes-like",

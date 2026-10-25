@@ -26,7 +26,10 @@ Rules:
 
 `content-authored-scenarios-obsolete-20261005` (paused, owner decision 2026-10-05): every authored map, scenario and campaign (`content/scenarios.json`, `content/campaigns.json`, `tools/author_*.py`) is obsolete and will be redone completely once the owner selects that rework. Until then put no effort into them: no new authored scenarios or campaigns, fixes, retuning, art or validation work, and no chasing failures in the authored-scenario checks listed in `docs/authored-scenarios-obsolete.md`. Every authored-scenario and campaign section below is history, not work to continue. Generated maps, shared content definitions and the scenario/campaign runtime are not covered.
 
-### Mireclaw and Embercourt HP buffs
+### Faction HP balance
+
+`balance-half-hp-buffs-sunvault-thornwake-nerf-20261025` (completed, owner request): replaced the full boosts with Mireclaw ranged +5%, melee +3.5%, Embercourt +2.5% from the pre-buff HP values; Sunvault and Thornwake -5% HP. Includes base, upgraded and auxiliary units. Rounded half up to whole HP with no forced minimum change. Exactly 83 HP fields changed (Mireclaw 21, Embercourt 21, Sunvault 20, Thornwake 21); other content unchanged. Windows core 17/17, including content validation. No AI evaluation.
+
 
 `balance-mireclaw-embercourt-hp-20261025` (completed, owner request): 8 Mireclaw ranged definitions gain 10% HP, 19 melee definitions gain 7%; 27 Embercourt definitions gain 5%. Includes base, upgraded and auxiliary units, rounded half up to whole HP with minimum +1. Exactly 54 HP fields changed; all other content unchanged. Windows core 17/17, including content validation. No native rebuild or AI evaluation.
 
