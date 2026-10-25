@@ -22304,14 +22304,14 @@
     {
       "id": "balance-mireclaw-ranged-cover-round10-20261025",
       "title": "Balance round 10: Reed Cover for Mireclaw's two ranged lines",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "balance",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         "docs/common-town-building-template.md"
       ],
-      "notes": "Added personal Reed Cover to Mudglass Slingers/Mireglass Reedcasters (ranged damage x0.80) and their upgrades Shattermire Slingers/Mireglass Dissonants (x0.75). Scope check confirms exactly four ability additions and no other unit changes. Focused native combat/AI checks 16/16, Windows core 17/17. Content only; no native rebuild, Linux checks paused. Owner-requested identical round-9 plan of 300 large 4P two-level rotated-start matches remains to run.",
+      "notes": "Added personal Reed Cover to Mudglass Slingers/Mireglass Reedcasters (ranged damage x0.80) and their upgrades Shattermire Slingers/Mireglass Dissonants (x0.75). Exactly four ability additions, no other unit changes. Focused native combat/AI checks 16/16, Windows core 17/17. Content only; no native rebuild, Linux checks paused. Owner-requested identical round-9 300-match plan completed on 9445d0702 in 25.1 minutes: 292 decided, eight capped, no failures/timeouts/script errors/native fallbacks; all actual maps have two levels. Mireclaw place points 256.5 to 299.5 (fair 300 +/-15.81); paired map SE of +43 is 15.52, wins 30 to 40 (fair 48.2). New points: Brasshollow 321, Thornwake 301, Mireclaw 299.5, Embercourt 295.5, Veilmourn 293.5, Sunvault 289.5. Four caps repeat known navigation stall ai-match-1115718573, no captures after days 138/169/142/201 or hostile plans after day 270; other four caps are active wars with 131-199 captures since day 250 and last capture day 320. Decided days 41-310, median 155.5; 17,651 of 42,169 captures undefended; winner gold median 325,741; slowest AI day 1,516ms.",
       "updatedAt": "2026-10-25",
       "validatedAt": "2026-10-25"
     },

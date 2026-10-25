@@ -445,7 +445,7 @@ Owner decision, 2026-10-20: the rules move from GDScript to C++ inside the game,
 
 ### Balance round 10: Reed Cover for Mireclaw's ranged lines
 
-`balance-mireclaw-ranged-cover-round10-20261025` (in progress, owner request): Mudglass Slingers and Mireglass Reedcasters now take ranged damage x0.80 through Reed Cover; Shattermire Slingers and Mireglass Dissonants use x0.75. No other content or rules change. Checks: 16 focused native combat/AI checks passed (including unchanged melee damage), Windows core 17/17. Content only; no native rebuild. Next: the identical round-9 plan of 300 large 4P two-level games with rotated seats, land/normal water and weak/strong guards.
+`balance-mireclaw-ranged-cover-round10-20261025` (completed, owner request): Mudglass Slingers and Mireglass Reedcasters now take ranged damage x0.80 through Reed Cover; Shattermire Slingers and Mireglass Dissonants use x0.75. No other content or rules change. Checks: 16 focused native combat/AI checks passed (including unchanged melee damage), Windows core 17/17. Content only; no native rebuild. The identical round-9 plan of 300 large 4P two-level games completed on `9445d0702` in 25.1 minutes: 292 decided, eight capped, no failures/timeouts/errors/fallbacks. Mireclaw rose from 256.5 to 299.5 place points (fair 300; paired map SE of the +43 change 15.52), wins 30 to 40 (fair 48.2). New place points: Brasshollow 321, Thornwake 301, Mireclaw 299.5, Embercourt 295.5, Veilmourn 293.5, Sunvault 289.5; every faction within two equal-faction standard deviations. Four caps repeat the known navigation stall on `ai-match-1115718573`; four active wars captured towns on day 320. Linux checks remain paused.
 
 ### Balance round 9: Mireclaw snare payoff, T3 choices and Sunvault ranged prices
 
