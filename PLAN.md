@@ -30,6 +30,8 @@ Rules:
 
 `balance-mireclaw-embercourt-hp-20261025` (completed, owner request): 8 Mireclaw ranged definitions gain 10% HP, 19 melee definitions gain 7%; 27 Embercourt definitions gain 5%. Includes base, upgraded and auxiliary units, rounded half up to whole HP with minimum +1. Exactly 54 HP fields changed; all other content unchanged. Windows core 17/17, including content validation. No native rebuild or AI evaluation.
 
+`evaluation-mireclaw-embercourt-hp-paired-720-20261025` (in progress, owner-requested evaluation): rerun the frozen 720-game plan (seed 2026102502, all arrangements and fixed hero/army rolls) with the HP buffs and compare against the `e8a0983f4` baseline using paired whole-map differences. No further balance changes.
+
 ### Controlled AI balance baseline
 
 `ai-match-all-arrangements-fixed-rolls-20261025` (completed, owner request): the batch tool and skill play every faction permutation per map and pin hero offers, hire levels, starting armies and growth per map/faction. Reports include whole-map bootstrap intervals. Checks: 24 native arrangements, 288 weekly offer comparisons, four direct/prepared Godot/native record comparisons, six seeds unchanged from main, Windows core 17/17, skill valid. The new baseline on `e8a0983f4` completed 720 Large 4P two-level games (30 fresh maps, all 24 arrangements), weak/strong guards and land/normal water: 703 decided, 17 active-war caps, no execution failures, 57.8 minutes. Scores relative to fair: Sunvault 105.8%, Thornwake 105.1%, Veilmourn 102.4%, Brasshollow 97.9%, Embercourt 96.0%, Mireclaw 92.8%; each faction appears on 20 maps and every marginal 95% map-bootstrap interval includes 100%. No balance changes; Linux builds/checks remain paused.

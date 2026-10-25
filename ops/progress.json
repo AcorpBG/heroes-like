@@ -117076,6 +117076,19 @@
       ],
       "notes": "Owner-requested HP-only buff applied to all base, upgraded and auxiliary faction definitions: 8 Mireclaw ranged units +10%, 19 Mireclaw melee units +7%, 27 Embercourt units +5%. Rounded half up to whole HP with minimum +1. Verified exactly 54 changed definitions and only hp fields differ; every other stat, ability, cost and growth is unchanged. Windows core suite 17/17 passed (including content validation). No native rebuild or AI evaluations. Core removed its 32 generated map files and disposable profiles; no task-created probes/reports remain.",
       "updatedAt": "2026-10-25"
+    },
+    {
+      "id": "evaluation-mireclaw-embercourt-hp-paired-720-20261025",
+      "title": "Paired 720-game HP buff comparison against controlled baseline",
+      "status": "in_progress",
+      "classification": "owner_requested_evaluation",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        ".claude/skills/ai-match-batch/SKILL.md"
+      ],
+      "notes": "Owner requested the identical 720-game baseline plan (seed 2026102502, 30 Large 4P two-level maps, all 24 faction arrangements, fixed per-map/faction hero and army rolls) with the Mireclaw/Embercourt HP buffs from 505f5c797. Compare place points and wins with the baseline on e8a0983f4, using paired whole-map bootstrap intervals. No additional balance or runtime changes.",
+      "updatedAt": "2026-10-25"
     }
   ],
   "project": "heroes-like",
