@@ -32,6 +32,8 @@ Rules:
 
 ### Faction HP balance
 
+`balance-veilmourn-brasshollow-hp-2pct-20261025` (completed, owner request): applied nominal +2% HP to all 27 Veilmourn and 27 Brasshollow definitions, including upgrades and auxiliary units, using nearest whole HP with half-up rounding and no forced minimum increment. Exactly 12 HP fields per faction changed; 15 per faction round unchanged. All other fields and factions, including Sunvault, unchanged. Windows core 17/17 passed in 30 seconds; its 32 generated map files and disposable profiles were cleaned. No native rebuild or AI evaluation.
+
 `balance-mireclaw-melee-hp-revert-20261025` (completed, owner request): all 19 Mireclaw melee forms restored to pre-HP-buff values; exactly 15 HP fields changed. Mireclaw ranged +5%, Embercourt +2.5%, Sunvault/Thornwake -5% and all other content unchanged. Windows core 17/17, including content validation; no native rebuild.
 
 `evaluation-mireclaw-ranged-only-hp-720-20261025` (completed, owner-requested evaluation): on `5cc326ea2`, all 720 actual setups match the three controls. 696 decided / 24 capped (21 late wars, three quiet endgame-planning stalls), zero failures/errors/fallbacks, 54.8 min. Mireclaw 103.75% -> 100.35% (-3.40 pp; paired map-bootstrap 95% interval -10.69..+3.61), wins 120 -> 114. Other scores: Thornwake 102.78%, Sunvault 101.46%, Veilmourn 100.00%, Embercourt 97.92%, Brasshollow 97.50%. Same 20 maps per faction, all arrangements and fixed rolls; no further balance or AI changes.
