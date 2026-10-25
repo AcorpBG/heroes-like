@@ -36,6 +36,8 @@ DictRef build_recruited_hero(State &state, DictRef hero_template, DictRef positi
 DictRef hero_recruit_cost(State &state, DictRef hero_template);
 int64_t scout_row_half_width(State &state, int64_t dy, int64_t radius);
 DictRef starting_army_for_hero(State &state, DictRef hero_template, Atom seed_key);
+// Optional owner evaluation stream; ordinary games keep their existing seeds.
+Atom fixed_match_roll_seed(State &state, DictRef session);
 DictRef tavern_offer(State &state, DictRef session, Atom hero_id, int64_t week = -1);
 int64_t tavern_week(State &state, DictRef session);
 bool town_has_hall(State &state, DictRef town);

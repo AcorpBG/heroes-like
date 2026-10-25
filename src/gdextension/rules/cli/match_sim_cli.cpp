@@ -1196,7 +1196,7 @@ private:
 
 		start_session(import_deep(match_deep_, setup));
 		const uint32_t plan = state_.new_dict();
-		for (const char *name : { "match_seed", "map_seed", "swapped", "seat_factions", "player_count", "guards", "water", "levels", "seat_weights", "map" }) {
+		for (const char *name : { "match_seed", "map_seed", "swapped", "seat_factions", "player_count", "guards", "water", "levels", "seat_weights", "map", "roll_seed" }) {
 			state_.set(plan, state_.string(name), import_deep(match_deep_, store.get(root, name)));
 		}
 		return gd::dict_value(plan);
@@ -1339,6 +1339,7 @@ private:
 		put("match_seed", state_.string(match_seed));
 		put("map_seed", state_.string(map_seed));
 		put("swapped", gd::bool_value(swapped));
+		put("roll_seed", state_.string(strip(settings.get("HEROES_AI_MATCH_ROLL_SEED"))));
 		put("seat_factions", seat_list);
 		put("player_count", gd::int_value(player_count));
 		put("size_class", state_.string(size_class));
@@ -1551,6 +1552,10 @@ private:
 	// sets, the handover's check and the record's setup.
 	void hand_over(const Value &plan, const std::string &match_seed, const std::string &map_seed) {
 		const auto setting = [&](const char *name) { return get(plan, state_.intern(name)); };
+		const std::string roll_seed = text_of(setting("roll_seed"));
+		if (!roll_seed.empty()) {
+			state_.set(gd::as_dict(field(kFlags)), state_.string("ai_match_roll_seed"), state_.string(roll_seed));
+		}
 		const int64_t player_count = gd::to_int(state_, setting("player_count"));
 		const Value seat_factions = setting("seat_factions");
 		const Value seat_weights = setting("seat_weights");
@@ -1593,6 +1598,9 @@ private:
 		put(record, "water", setting("water"));
 		put(record, "levels", setting("levels"));
 		put(record, "start_treasury", live_resources(start_treasury));
+		if (!roll_seed.empty()) {
+			put(record, "roll_seed", state_.string(roll_seed));
+		}
 		const uint32_t seat_rows = state_.new_array();
 		put(record, "seats", gd::array_value(seat_rows));
 		for (size_t index = 0; index < seats_.size(); ++index) {

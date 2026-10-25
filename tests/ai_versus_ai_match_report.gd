@@ -312,11 +312,15 @@ func _play() -> void:
 			"water": water,
 			"levels": levels,
 			"seat_weights": seat_weights,
+			"roll_seed": _env("HEROES_AI_MATCH_ROLL_SEED").strip_edges(),
 		})
 		return
 	var session = _start_session(map_seed, seat_factions, player_count, size_class, guards, water, levels)
 	if session == null:
 		return
+	var roll_seed := _env("HEROES_AI_MATCH_ROLL_SEED").strip_edges()
+	if roll_seed != "":
+		session.flags["ai_match_roll_seed"] = roll_seed
 	var seats := []
 	for record in session.overworld.get("players", []):
 		seats.append(String(record.get("player_id", "")))
@@ -349,6 +353,8 @@ func _play() -> void:
 		"start_treasury": _live_resources(start_treasury),
 		"seats": [],
 	}
+	if roll_seed != "":
+		setup["roll_seed"] = roll_seed
 	for seat in seats:
 		var faction := ContentService.get_faction(PlayerRules.faction_id(session, seat))
 		var capitals := []

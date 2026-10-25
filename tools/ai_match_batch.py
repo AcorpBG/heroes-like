@@ -25,6 +25,11 @@ because an earlier one crashed or timed out goes back into the queue. Two matche
 seed never run at once, because both would write the same map package under res://maps; the
 package each match writes is deleted when it ends.
 
+Controlled balance: --all-arrangements plays every faction permutation on each map (24 for 4P),
+fixing hero offers, hire levels, starting armies and growth per map/faction. Balanced plans round
+up to complete faction-set cycles (600 requested 4P games becomes 720). --rotate retains only
+cyclic rotations; --fixed-rolls can pin their hero/army rolls without adding arrangements.
+
 Line-ups (--lineups): balanced (default) plays sets of factions in every seat rotation, each set
 once before any repeats, picked so every faction gets an even share; random draws distinct sets;
 mirrors lets a faction appear twice; --lineup fixes them. Guards, levels and water are crossed over
@@ -234,7 +239,7 @@ def make_plan(args: argparse.Namespace, groups: list[tuple[int, str, int]]) -> d
     plan_seed = args.seed if args.seed is not None else random.SystemRandom().randrange(1, 2**31)
     rng = random.Random(plan_seed)
     combos = list(itertools.product(args.guards, args.levels, args.water))
-    if args.rotate:
+    if args.rotate or args.all_arrangements:
         return rotated_plan(args, groups, ids, plan_seed, rng, combos)
     rows = []
     for players, size, matches in groups:
@@ -270,7 +275,11 @@ def rotated_plan(args: argparse.Namespace, groups: list[tuple[int, str, int]], i
     gives each seat its faction on the same terrain and objects."""
     maps = []
     for players, size, matches in groups:
-        count = math.ceil(matches / players)
+        arrangements = math.factorial(players) if args.all_arrangements else players
+        if args.all_arrangements and args.lineups == "mirrors":
+            sys.exit("--all-arrangements needs distinct factions, not --lineups mirrors")
+        cycle = math.comb(len(ids), players) if args.all_arrangements and not args.lineup and args.lineups == "balanced" else 1
+        count = math.ceil(matches / (arrangements * cycle)) * cycle
         if args.lineup:
             lineups = fixed_lineups(args.lineup, ids, players, count)
         elif args.lineups == "balanced":
@@ -280,11 +289,15 @@ def rotated_plan(args: argparse.Namespace, groups: list[tuple[int, str, int]], i
             lineups = random_lineups(ids, players, count, rng, args.lineups == "mirrors")
         offset = rng.randrange(len(combos))
         for k, lineup in enumerate(lineups):
+            if args.all_arrangements and len(set(lineup)) != players:
+                sys.exit("--all-arrangements needs distinct factions in every line-up")
             guards, levels, water = combos[(k + offset) % len(combos)]
             row = {"players": players, "size": size, "guards": guards, "levels": levels, "water": water}
             if args.weights:
                 row["weights"] = args.weights
-            maps.append([dict(row, factions=lineup[r:] + lineup[:r], rotation=r) for r in range(players)])
+            orders = itertools.permutations(lineup) if args.all_arrangements else (lineup[r:] + lineup[:r] for r in range(players))
+            maps.append([dict(row, factions=list(order), **({"arrangement": r} if args.all_arrangements else {"rotation": r}))
+                         for r, order in enumerate(orders)])
     rng.shuffle(maps)
     seeds: set[str] = set()
     matches_out = []
@@ -294,7 +307,8 @@ def rotated_plan(args: argparse.Namespace, groups: list[tuple[int, str, int]], i
             seed = f"ai-match-{rng.randrange(1, 2**32)}"
         seeds.add(seed)
         for row in rows:
-            matches_out.append({"run": f"m{len(matches_out) + 1:03d}", "seed": seed, **row})
+            matches_out.append({"run": f"m{len(matches_out) + 1:03d}", "seed": seed, **row,
+                                **({"roll_seed": seed + ":hero-army-v1"} if args.all_arrangements or args.fixed_rolls else {})})
     return plan_record(args, groups, plan_seed, matches_out)
 
 
@@ -318,6 +332,8 @@ def plan_record(args: argparse.Namespace, groups: list[tuple[int, str, int]], pl
         "execution": execution_options(args, args.runner),
         "lineups": "fixed" if args.lineup else args.lineups,
         "rotate": bool(args.rotate),
+        "all_arrangements": bool(args.all_arrangements),
+        "fixed_rolls": bool(args.fixed_rolls or args.all_arrangements),
         "groups": [{"players": p, "size": s, "matches": n} for p, s, n in groups],
         # Map packages already there are never deleted, even if a match writes the same name.
         "maps_before": sorted(p.name for p in MAPS_DIR.iterdir()) if MAPS_DIR.is_dir() else [],
@@ -450,6 +466,8 @@ def match_settings(out: Path, m: dict, days: int) -> dict[str, str]:
     }
     if m.get("weights"):
         settings["HEROES_AI_MATCH_WEIGHTS"] = ",".join(m["weights"])
+    if m.get("roll_seed"):
+        settings["HEROES_AI_MATCH_ROLL_SEED"] = m["roll_seed"]
     return settings
 
 
@@ -619,6 +637,8 @@ def match_row(out: Path, m: dict, text: str, run: Running, timed_out: bool, star
     if report.get("ok") and record_path.exists():
         try:
             record = json.loads(record_path.read_text(encoding="utf-8"))
+            if m.get("roll_seed") and record["setup"].get("roll_seed") != m["roll_seed"]:
+                raise ValueError("runner did not apply the planned fixed hero/army roll seed")
             summary = summarize_record(record)
             removed = remove_match_maps(str(record["setup"].get("scenario_id", "")), run.started, keep_maps)
         except (ValueError, KeyError, IndexError) as exc:
@@ -1106,6 +1126,34 @@ def duration(minutes: float) -> str:
     return f"{minutes:.0f} min" if minutes < 90 else f"{minutes / 60:.1f} h"
 
 
+def map_score_table(rows: list[dict]) -> list[str]:
+    """Resample whole maps, keeping their arrangements together; never count seats as maps."""
+    blocks: dict[str, dict[str, list[float]]] = defaultdict(lambda: defaultdict(lambda: [0.0, 0.0]))
+    for row in rows:
+        s = row["summary"]
+        points = place_points(s)
+        for pid, fid in s["faction_ids"].items():
+            block = blocks[short(fid)][row["seed"]]
+            block[0] += points[pid]
+            block[1] += (len(s["faction_ids"]) - 1) / 2
+    lines = ["| Faction | Maps | Score / fair | 95% map-bootstrap interval |", "|---|---:|---:|---:|"]
+    for faction, maps in sorted(blocks.items(), key=lambda kv: -sum(v[0] for v in kv[1].values()) / sum(v[1] for v in kv[1].values())):
+        values = [maps[seed] for seed in sorted(maps)]
+        score = sum(v[0] for v in values) / sum(v[1] for v in values)
+        if len(values) < 2:
+            interval = "insufficient maps"
+        else:
+            rng = random.Random("ai-map-bootstrap-v1:" + faction)
+            samples = []
+            for _ in range(10000):
+                sample = rng.choices(values, k=len(values))
+                samples.append(sum(v[0] for v in sample) / sum(v[1] for v in sample))
+            samples.sort()
+            interval = f"{samples[249]:.1%}–{samples[9749]:.1%}"
+        lines.append(f"| {faction} | {len(values)} | {score:.1%} | {interval} |")
+    return lines
+
+
 def write_summary(out: Path, plan: dict) -> None:
     rows = read_results(out)
     by_run = {row["run"]: row for row in rows}
@@ -1132,11 +1180,22 @@ def write_summary(out: Path, plan: dict) -> None:
         execution = plan["execution"]
         lines.append(f"Native pool: up to {execution['processes']} processes, one thread each; "
                      f"worker batches up to {execution['matches_per_process']} matches, keeping whole seed groups together.")
+    maps = {m["seed"] for m in plan["matches"]}
+    if plan.get("all_arrangements"):
+        lines.append(f"Design: {len(maps)} maps, all faction arrangements per map; hero offers, hire levels, "
+                     "starting armies and growth rolls fixed per map/faction. Rolls vary between maps. "
+                     "Faction-specific dwellings follow faction placement.")
     lines += ["", "## Factions", "",
               "Place points by elimination order (3-2-1-0 with four players; ties share) and wins in decided games, "
               "each against a fair share, ±1 sd if all factions were equal; * marks a gap beyond 2 sd. "
-              "Call a shift between batches real only beyond about 2 sd or when it repeats.", ""]
+              "These are an independent-game equal-faction reference, not confidence intervals for a fresh map bank "
+              "and not a test of changes between batches.", ""]
     lines += faction_table(ok) if ok else ["No finished matches."]
+    if ok:
+        lines += ["", "Score uncertainty across maps (10,000 bootstrap resamples of whole maps, with all their "
+                  "arrangements kept together). This describes the sampled bank; few maps and a reused tuning bank "
+                  "limit generalization. Compare balance changes on the identical frozen plan and confirm on untouched maps.", ""]
+        lines += map_score_table(ok)
     if len(plan["groups"]) > 1:
         for g in plan["groups"]:
             part = [r for r in ok if r["players"] == g["players"] and r["size"] == g["size"]]
@@ -1264,7 +1323,10 @@ def main() -> int:
     parser.add_argument("--days", type=int, default=320, help="day cap (default 320)")
     parser.add_argument("--lineups", choices=("balanced", "random", "mirrors"), default="balanced")
     parser.add_argument("--lineup", action="append", metavar="F1,F2,...", help="fixed line-up, seat order; repeat for several (cycled)")
-    parser.add_argument("--rotate", action="store_true", help="play each map with its line-up rotated through every seat (matches rounded up to a multiple of players)")
+    arrangements = parser.add_mutually_exclusive_group()
+    arrangements.add_argument("--rotate", action="store_true", help="play each map with its line-up rotated through every seat (legacy cyclic rotations only)")
+    arrangements.add_argument("--all-arrangements", action="store_true", help="play every faction permutation on each map, fixing faction hero/army rolls; balanced plans round up to complete faction-set cycles")
+    parser.add_argument("--fixed-rolls", action="store_true", help="fix hero offers, hire levels and starting armies per map/faction across rotations (implied by --all-arrangements)")
     parser.add_argument("--seed", type=int, help="plan seed (default random); the same seed and options give the same plan")
     parser.add_argument("--weights", metavar="W1,W2,...", help="overworld AI weight set per seat: default, a set name or a .json file")
     parser.add_argument("--slots", type=positive_int, help="worker processes at once (default 16, or 8 with --desktop)")
@@ -1281,6 +1343,8 @@ def main() -> int:
     parser.add_argument("--plan-only", action="store_true", help="write plan.json and stop")
     args = parser.parse_args()
     args.levels = [int(x) for x in args.levels]
+    if args.fixed_rolls and not (args.rotate or args.all_arrangements):
+        parser.error("--fixed-rolls needs --rotate or --all-arrangements")
     if args.runner and args.release:
         sys.exit("--runner takes its content from the editor's match runner; it takes no --release")
 

@@ -1,6 +1,6 @@
 ---
 name: ai-match-batch
-description: Owner-requested evaluation only. Runs a batch of headless AI-vs-AI matches on random generated maps with tools/ai_match_batch.py (many at once, balanced line-ups) and reports its summary. Use only when the owner explicitly asks for AI matches in this conversation, e.g. "run N AI matches", "test the AI on medium/large maps", "AI vs AI with 3/4 players", "how does the AI do now". Never use it on your own initiative to validate a code, AI, balance or content change; that is what tools/core_suite.py is for.
+description: Run owner-requested AI-vs-AI evaluation on generated maps and report balance, including full faction arrangements and fixed hero/army rolls. Use only for explicit match requests, never as regression validation.
 ---
 
 # AI match batch
@@ -37,7 +37,8 @@ Take these from the request; use the defaults for anything not given. Do not ask
 | size | medium | `--size small`, `medium`, `large`, `xl` |
 | several setups in one queue | | `--group 3:medium:30 --group 4:large:30` (players:size:matches) |
 | line-ups | balanced | `--lineups random` (distinct sets), `mirrors` (a faction may repeat), or `--lineup a,b,c` per line-up in seat order |
-| seat rotations on one map | | `--rotate`: each map is played with its line-up in every seat rotation; matches are rounded up to a multiple of the players |
+| faction arrangements on one map | all for balance checks | `--all-arrangements`: every permutation (24 for 4P), with fixed faction hero/army rolls; balanced counts round up to complete faction-set cycles |
+| legacy cyclic rotations | | `--rotate`: only cyclic rotations; `--fixed-rolls` pins hero/army rolls but does not add the missing arrangements |
 | AI weight sets | default | `--weights W1,W2,...` per seat: `default`, a set in `content/ai_hero_weights.json` or a `.json` file of changed values |
 | guards | normal (as a new game) | `--guards weak,normal,strong` |
 | water | land (as a new game) | `--water land,normal_water,islands` |
@@ -76,9 +77,7 @@ Take these from the request; use the defaults for anything not given. Do not ask
 - **Lists are crossed.** `--guards weak,normal,strong --levels 1,2` spreads the line-ups evenly
   over all six setups, so consecutive seat rotations of one faction set get different setups.
 - **Balanced line-ups** play each set of factions in every seat rotation, each set once before
-  any set repeats, so every faction gets the same games and first seats. A full cycle of the six
-  factions is 30 games for 2P, 60 for 3P (30 balances too), 60 for 4P, 30 for 5P and 6 for 6P.
-  Batches meant to measure balance should be whole cycles.
+  any set repeats, so every faction gets the same games and first seats. For balance checks, pass **`--all-arrangements`**: a full cycle with six factions is 30 games for 2P, 120 for 3P, 360 for 4P, 720 for 5P and 720 for 6P. Counts round up to full cycles (about 600 4P games becomes 720). Each map uses all permutations of one faction set; the tool balances faction sets and starting slots. `--rotate` covers only cyclic orders and must not be described as all arrangements.
 
 Windows measurements before pool integration, 2026-10-24, Ryzen 9 5950X (16 cores / 32 logical processors), 64 GB,
 build `9b2fd219d`, large 3P two-level maps, land/normal water and normal/strong guards:
@@ -95,6 +94,10 @@ build `9b2fd219d`, large 3P two-level maps, land/normal water and normal/strong 
   there: an extra large game grew to about 13 GB by day 320, and 16 at once overcommitted the
   machine.
 
+**Controlled balance design.** All-arrangements plans save a roll seed for each map. Hero offers, hire levels, starting armies and growth rolls use that seed and faction/hero identity, independently of slot, session hash or hire day. Weekly offer priority is rolled before filtering unavailable heroes; actual hiring can still differ because of survival, money and decisions. Different maps get different rolls. Normal games and old plans keep their original RNG behavior. Faction-specific dwellings still follow faction placement. Reuse the frozen plan for before/after comparisons, then confirm on untouched maps; do not tune repeatedly on the validation bank.
+
+All permutations trade map breadth for stronger within-map control: 720 4P games are only 30 maps, and each faction sees 20. Report map counts explicitly. Do not call 24 arrangements independent maps.
+
 ## 2. Prepare
 
 1. The checkout must be current with `origin/main` (the owner changes balance and content often).
@@ -110,7 +113,7 @@ Start the runner in the background with the available command tool and retain it
 handle so it can be waited on or stopped:
 
 ```
-python tools/ai_match_batch.py <out> --runner --players 4 --size large --matches 60 --guards weak,normal,strong --levels 1,2
+python tools/ai_match_batch.py <out> --runner --players 4 --size large --matches 720 --all-arrangements --guards weak,strong --water land,normal_water --levels 2
 ```
 
 Add `--desktop` to use 8 processes while the owner uses the PC. The native default is 16
@@ -146,10 +149,7 @@ queue. A timeout fails its active game and stops that worker.
 When the runner prints `DONE`, read `<out>/summary.md`, not the match records. It holds:
 
 - **Factions**: place points by elimination order (3-2-1-0 with four players, ties share) and wins
-  in decided games, each against a fair share with the ±1 sd band for equal factions. A `*` marks a
-  gap beyond 2 sd. Place points are the main figure: wins alone swing 0.3-0.8 between two batches
-  of the same code (owner, 2026-10-19). Show the raw counts and the band. Call a shift between
-  batches real only beyond about 2 sd, or when it repeats.
+  in decided games, each against a fair share. The legacy ±1 sd bands and stars assume independent equal-faction games: they are not fresh-map confidence intervals or a test between batches. Report the map-bootstrap score intervals and number of maps, keeping every map's arrangements together. Few maps and repeated tuning limit the inference; do not assert balance or dominance from a single bank.
 - **Look closer**: the day range of decided games, every capped, failed or timed-out match and every
   match with script errors (by seed), AI days over 10 s, captures without a defender, the winners'
   unspent gold, and minutes per setup.

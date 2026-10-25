@@ -571,9 +571,20 @@ ArrayRef ai_tavern_offer_ids(State &state, DictRef session, DictRef state_, Atom
 		}
 		return kept;
 	}
-	const ArrayRef candidates = gd::duplicate_array(state, pool);
-	const Atom session_id = gd::stringify(state, gd::index(state, session, str(key::session_id)));
-	const Atom seed_text = gd::format(state, key::s_s_ai_tavern_d, { str(session_id), str(controller), int_value(week) });
+	const Atom fixed_seed = hero_command_rules::fixed_match_roll_seed(state, session);
+	const ArrayRef candidates = fixed_seed != key::empty ? state.new_array() : gd::duplicate_array(state, pool);
+	if (fixed_seed != key::empty) {
+		// Roll the full roster first, then filter availability. A fallen/hired hero
+		// must not reshuffle every other hero's underlying weekly roll.
+		const DictRef faction = gd::content_row(state, ContentTable::Faction, player_identity_rules::faction_id(state, session, controller));
+		for (const Value &id : gd::field_items(state, faction, str(key::hero_ids))) {
+			state.append(candidates, id);
+		}
+		gd::sort_custom(state, candidates, [&state](const Value &a, const Value &b) { return gd::text(state, a) < gd::text(state, b); });
+	}
+	const Atom session_id = fixed_seed != key::empty ? fixed_seed : gd::stringify(state, gd::index(state, session, str(key::session_id)));
+	const Atom roll_owner = fixed_seed != key::empty ? player_identity_rules::faction_id(state, session, controller) : controller;
+	const Atom seed_text = gd::format(state, key::s_s_ai_tavern_d, { str(session_id), str(roll_owner), int_value(week) });
 	const Value rng = turn::seeded_rng(state, gd::hash(state, str(seed_text)));
 	for (int64_t index = state.array_size(candidates) - 1; index > 0; --index) {
 		const int64_t swap = gd::rng_randi_range(state, rng, 0, index);
@@ -581,7 +592,13 @@ ArrayRef ai_tavern_offer_ids(State &state, DictRef session, DictRef state_, Atom
 		state.set_at(candidates, index, state.at(candidates, swap));
 		state.set_at(candidates, swap, held);
 	}
-	const ArrayRef offer = gd::slice(state, candidates, 0, compat::engine_min<int64_t>(kTavernOfferSize, state.array_size(candidates)));
+	const ArrayRef available = state.new_array();
+	for (const Value &id : gd::items(state, array_value(candidates))) {
+		if (gd::array_has(state, pool, id)) {
+			state.append(available, id);
+		}
+	}
+	const ArrayRef offer = gd::slice(state, available, 0, compat::engine_min<int64_t>(kTavernOfferSize, state.array_size(available)));
 	const DictRef tavern = state.new_dict();
 	state.set(tavern, str(key::week), int_value(week));
 	state.set(tavern, str(key::hero_ids), array_value(gd::duplicate_array(state, offer)));
@@ -708,7 +725,10 @@ DictRef _create_hero(State &state, DictRef session, DictRef context, DictRef tow
 	// Level-up rolls come from the hero's growth seed: seed it from the session,
 	// as the human's hires are, so the same game plays out the same way.
 	const Atom seed_key = gd::format(state, key::s_s_d, { str(controller), str(hero_id), int_value(ai::session_int(state, session, key::day)) });
-	const Atom growth_seed = hero_command_rules::new_growth_seed(state, seed_key, session);
+	const Atom fixed_seed = hero_command_rules::fixed_match_roll_seed(state, session);
+	const Atom growth_seed = fixed_seed != key::empty
+			? state.intern(state.text(fixed_seed) + ":growth:" + state.text(hero_id))
+			: hero_command_rules::new_growth_seed(state, seed_key, session);
 	DictRef hero;
 	if (state.array_size(start_stacks) != 0) {
 		const DictRef army = state.new_dict();

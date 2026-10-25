@@ -349,14 +349,22 @@ int64_t tavern_week(State &state, DictRef session) {
 	return compat::engine_max<int64_t>(0, compat::int_div(gd::sub(ai::session_int(state, session, key::day), 1), 7));
 }
 
+Atom fixed_match_roll_seed(State &state, DictRef session) {
+	const Value flags = gd::field(state, session, key::flags);
+	Value seed;
+	return gd::is_dict(flags) && state.lookup(flags.ref, str(state.intern("ai_match_roll_seed")), seed)
+			? gd::stringify(state, seed) : key::empty;
+}
+
 DictRef tavern_offer(State &state, DictRef session, Atom hero_id, int64_t week) {
 	const DictRef hero_template = gd::content_row(state, state::ContentTable::Hero, hero_id);
 	if (gd::is_empty(state, hero_template)) {
 		return state.new_dict();
 	}
 	const int64_t offer_week = week >= 0 ? week : tavern_week(state, session);
-	const Atom session_id = gd::stringify(state, gd::index(state, session, str(key::session_id)));
-	const Atom scenario_id = gd::stringify(state, gd::index(state, session, str(key::scenario_id)));
+	const Atom fixed_seed = fixed_match_roll_seed(state, session);
+	const Atom session_id = fixed_seed != key::empty ? fixed_seed : gd::stringify(state, gd::index(state, session, str(key::session_id)));
+	const Atom scenario_id = fixed_seed != key::empty ? gd::stringify(state, gd::field(state, hero_template, key::faction_id)) : gd::stringify(state, gd::index(state, session, str(key::scenario_id)));
 	const Atom seed_key = gd::format(state, key::s_s_tavern_offer_d_s, { str(session_id), str(scenario_id), int_value(offer_week), str(hero_id) });
 	const int64_t roll = gd::rng_randi_range(state, _seeded_rng(state, gd::format(state, key::s_level, { str(seed_key) })), 0, 99);
 	// TAVERN_LEVEL_THREE_PERCENT, then TAVERN_LEVEL_TWO_PERCENT more.

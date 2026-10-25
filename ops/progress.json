@@ -117051,6 +117051,19 @@
       "notes": "Owner decision 2026-10-24 (\"A. Aurora Relay off both Ballista forms + Harriers' harries off (Glare Splinters, Glarewing Pursuit) implement this only, don't run any balance simulations or arenas after the change\"). content/units.json: formation_guard removed from unit_aurora_ballista(_veteran), harry removed from unit_prism_adept(_veteran). Arena prediction before the change (round 7 notes): attack 1.089 -> 1.015, defend 0.990 -> 0.966. Validation: content check and core suite; no AI matches or arena runs after the change, by the owner's instruction.",
       "updatedAt": "2026-10-24T19:08:39Z",
       "validatedAt": "2026-10-24T19:08:39Z"
+    },
+    {
+      "id": "ai-match-all-arrangements-fixed-rolls-20261025",
+      "title": "AI batch full faction arrangements and fixed hero/army rolls",
+      "status": "in_progress",
+      "classification": "tooling_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/ai-plays-by-player-rules.md"
+      ],
+      "notes": "Implemented --all-arrangements (complete faction-set cycles), --fixed-rolls and map-bootstrap reporting. Native evaluation flag fixes weekly full-roster offer priority, hire level, starting armies and growth by map/faction/hero; defaults unchanged. Skill and docs updated. Windows: six seeds identical to original main runner (476 daily digests and records), 17/17 core, 24 native arrangements with identical opening hero selections and first-decision powers, 288 weekly offer comparisons, three direct Godot/native and one prepared/native full-record comparisons identical apart from timing; skill validator passes. Windows binaries rebuilt; Linux checks/builds paused. New 720-game baseline pending.",
+      "updatedAt": "2026-10-25"
     }
   ],
   "project": "heroes-like",
