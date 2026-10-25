@@ -117064,6 +117064,18 @@
       ],
       "notes": "Implemented --all-arrangements (complete faction-set cycles), --fixed-rolls and whole-map bootstrap score intervals. Native evaluation seeds fix weekly full-roster offer priority, hire level, starting armies and growth by map/faction/hero; ordinary game behavior unchanged. Skill/docs updated; Windows binaries rebuilt, Linux builds/checks paused. Checks: six original-main seeds identical (476 daily digests plus full records), Windows core 17/17, 24 arrangement opening-hero/power checks, 288 weekly offer comparisons, three direct Godot/native and one prepared/native record comparisons identical apart from timing; skill valid. Owner baseline on e8a0983f4, plan seed 2026102502: 720 games, 30 fresh maps x 24 arrangements, 15 faction sets twice, 480 games/20 maps/120 first seats per faction, weak/strong guards, land/normal water, all actual 108x108 two-level setups. 703 decided, 17 active-war caps (last captures day 319-320), zero failures/timeouts/script errors/fallbacks, 57.8 min, 30 single-threaded worker lifetimes. Place points (fair 720): Sunvault 761.5, Thornwake 756.5, Veilmourn 737, Brasshollow 705, Embercourt 691.5, Mireclaw 668.5. All marginal 95% map-bootstrap intervals include 100%; this is a baseline, not a conclusion that factions are balanced. Removed 600110717 bytes of disposable validation data; requested baseline retained (4174152020 bytes before final report-label edit), old batches untouched. No balance changes.",
       "updatedAt": "2026-10-25"
+    },
+    {
+      "id": "balance-mireclaw-embercourt-hp-20261025",
+      "title": "Mireclaw ranged/melee and Embercourt HP buffs",
+      "status": "completed",
+      "classification": "balance",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md"
+      ],
+      "notes": "Owner-requested HP-only buff applied to all base, upgraded and auxiliary faction definitions: 8 Mireclaw ranged units +10%, 19 Mireclaw melee units +7%, 27 Embercourt units +5%. Rounded half up to whole HP with minimum +1. Verified exactly 54 changed definitions and only hp fields differ; every other stat, ability, cost and growth is unchanged. Windows core suite 17/17 passed (including content validation). No native rebuild or AI evaluations. Core removed its 32 generated map files and disposable profiles; no task-created probes/reports remain.",
+      "updatedAt": "2026-10-25"
     }
   ],
   "project": "heroes-like",
