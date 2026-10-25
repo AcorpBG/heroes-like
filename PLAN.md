@@ -28,6 +28,8 @@ Rules:
 
 ### Faction HP balance
 
+`evaluation-half-hp-buffs-sun-thorn-720-20261025` (in progress, owner-requested evaluation): rerun the frozen 720-game plan with the reduced Mireclaw/Embercourt HP buffs and Sunvault/Thornwake HP nerfs, then compare against the original baseline and full HP-buff run using paired whole-map differences. Same maps, all arrangements and fixed hero/army rolls; no further balance changes.
+
 `balance-half-hp-buffs-sunvault-thornwake-nerf-20261025` (completed, owner request): replaced the full boosts with Mireclaw ranged +5%, melee +3.5%, Embercourt +2.5% from the pre-buff HP values; Sunvault and Thornwake -5% HP. Includes base, upgraded and auxiliary units. Rounded half up to whole HP with no forced minimum change. Exactly 83 HP fields changed (Mireclaw 21, Embercourt 21, Sunvault 20, Thornwake 21); other content unchanged. Windows core 17/17, including content validation. No AI evaluation.
 
 
