@@ -117105,14 +117105,14 @@
     {
       "id": "evaluation-half-hp-buffs-sun-thorn-720-20261025",
       "title": "720-game reduced-buff and Sunvault/Thornwake nerf comparison",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "owner_requested_evaluation",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         ".claude/skills/ai-match-batch/SKILL.md"
       ],
-      "notes": "Owner requests the same frozen 720-game plan, seed 2026102502: 30 Large 4P two-level maps, all 24 arrangements and fixed hero/army rolls. Run content from 7c5835416 (Mireclaw ranged +5%, melee +3.5%; Embercourt +2.5%; Sunvault/Thornwake -5%, rounded to whole HP with no forced minimum change). Compare with original e8a0983f4 baseline and full HP pass on ab7715702 using paired whole-map changes. Native executable unchanged; content differs only in HP. No additional balance changes.",
+      "notes": "Owner-requested three-way evaluation completed on 279bff2a3 with content from 7c5835416. All 720 plan entries AND actual setup records matched original e8a0983f4 and full-buff ab7715702: map/scenario identities, actual 108x108 two-level maps, faction arrangements, starting towns/resources and hero/army roll seeds. Same executable; only HP differs. 30 maps x 24 arrangements, 480 games/20 maps per faction. Latest 705 decided, 15 capped, zero failures/timeouts/script errors/fallbacks, 56.5 min, 30 single-threaded worker lifetimes. Points original/full/latest (fair 720): Mireclaw 668.5/740/747 (92.85/102.78/103.75%); Veilmourn 737/680/723.5 (102.36/94.44/100.49%); Thornwake 756.5/751.5/717 (105.07/104.38/99.58%); Embercourt 691.5/729/713.5 (96.04/101.25/99.10%); Sunvault 761.5/757/711 (105.76/105.14/98.75%); Brasshollow 705/662.5/708 (97.92/92.01/98.33%). Score spread 12.92/13.13/5.42 pp; descriptive on this reused bank. Latest minus original / minus full: Mireclaw +10.90/+0.97 pp, Veilmourn -1.88/+6.04, Thornwake -5.49/-4.79, Embercourt +3.06/-2.15, Sunvault -7.01/-6.39, Brasshollow +0.42/+6.32. Paired 100000 whole-map bootstrap 95% intervals (vs original; vs full): Mireclaw +3.68..+18.13; -8.54..+10.69. Veilmourn -8.75..+4.72; -1.11..+13.40. Thornwake -11.04..+0.21; -10.90..+1.60. Embercourt -3.40..+9.10; -10.35..+5.83. Sunvault -14.17..+0.21; -14.17..+1.18. Brasshollow -7.22..+8.33; +1.25..+11.53. All three conditions resampled together; all games retained in primary analysis. Wins original/full/latest: Mireclaw 94/127/120, Veilmourn 121/105/127, Thornwake 136/120/120, Embercourt 105/108/105, Sunvault 136/133/125, Brasshollow 111/103/108. Fourteen caps had combat/captures days 315-320. m167 had last capture78/battle151; Sunvault kept selecting gates/resources/own towns while Thornwake held the last town, an endgame-planning failure with moving heroes, not a frozen simulation. Full three-way comparison and cap activity in the latest summary; no additional balance or AI changes. Worker inputs/profiles automatically cleaned; no disposable probes/reports remain. Requested comparison records retained; older data untouched.",
       "updatedAt": "2026-10-25"
     }
   ],
