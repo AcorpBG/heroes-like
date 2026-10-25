@@ -270,11 +270,12 @@ def make_plan(args: argparse.Namespace, groups: list[tuple[int, str, int]]) -> d
 
 def rotated_plan(args: argparse.Namespace, groups: list[tuple[int, str, int]], ids: list[str], plan_seed: int,
                  rng: random.Random, combos: list[tuple]) -> dict:
-    """--rotate: one map per line-up, played once with the line-up in every seat rotation (seat 1
-    first, then seat 2 first, ...): the matches of a map share its seed and setup, and the generator
-    gives each seat its faction on the same terrain and objects."""
+    """One map per faction set, with every permutation or legacy cyclic rotations.
+    Matches of a map share its seed/setup; faction-specific dwellings follow placement."""
     maps = []
     for players, size, matches in groups:
+        if args.all_arrangements and players > len(ids):
+            sys.exit(f"--all-arrangements needs distinct factions: {players} players but only {len(ids)} factions")
         arrangements = math.factorial(players) if args.all_arrangements else players
         if args.all_arrangements and args.lineups == "mirrors":
             sys.exit("--all-arrangements needs distinct factions, not --lineups mirrors")
@@ -1161,7 +1162,7 @@ def write_summary(out: Path, plan: dict) -> None:
     decided = [row for row in ok if row["summary"]["winner"] in row["summary"]["faction_ids"]]
     capped = [row for row in ok if row not in decided]
     failed = [row for row in rows if not row["summary"]]
-    groups = ", ".join(f"{g['players']}P {short_size(g['size'])} x{g['matches']}" for g in plan["groups"])
+    groups = ", ".join(f"{g['players']}P {short_size(g['size'])}, requested {g['matches']} games" for g in plan["groups"])
     lines = [
         f"# AI match batch {out.name}",
         "",
@@ -1193,8 +1194,9 @@ def write_summary(out: Path, plan: dict) -> None:
     lines += faction_table(ok) if ok else ["No finished matches."]
     if ok:
         lines += ["", "Score uncertainty across maps (10,000 bootstrap resamples of whole maps, with all their "
-                  "arrangements kept together). This describes the sampled bank; few maps and a reused tuning bank "
-                  "limit generalization. Compare balance changes on the identical frozen plan and confirm on untouched maps.", ""]
+                  "arrangements kept together). This describes the sampled bank; few maps limit precision, and reusing "
+                  "a bank for tuning also limits generalization. Compare balance changes on the identical frozen plan "
+                  "and confirm on untouched maps.", ""]
         lines += map_score_table(ok)
     if len(plan["groups"]) > 1:
         for g in plan["groups"]:
