@@ -26,6 +26,10 @@ Rules:
 
 `content-authored-scenarios-obsolete-20261005` (paused, owner decision 2026-10-05): every authored map, scenario and campaign (`content/scenarios.json`, `content/campaigns.json`, `tools/author_*.py`) is obsolete and will be redone completely once the owner selects that rework. Until then put no effort into them: no new authored scenarios or campaigns, fixes, retuning, art or validation work, and no chasing failures in the authored-scenario checks listed in `docs/authored-scenarios-obsolete.md`. Every authored-scenario and campaign section below is history, not work to continue. Generated maps, shared content definitions and the scenario/campaign runtime are not covered.
 
+### Fresh-map six-player balance check
+
+`evaluation-large6p-land-strong-fresh720-20261025` (in progress, owner-requested evaluation): 720 fresh Large two-level land maps with six distinct factions and strong guards, one game per map. All 720 six-faction seat permutations occur once across the batch, giving each faction 720 games/maps and 120 starts per seat. Plan seed 2026102503; 320-day cap; default AI weights; 16 single-threaded processes with recycling after up to 32 games. Keep current balance unchanged. This maximizes map breadth within the preceding 720-game budget and evaluates the owner-requested Large 6P setting.
+
 ### Faction HP balance
 
 `balance-mireclaw-melee-hp-revert-20261025` (completed, owner request): all 19 Mireclaw melee forms restored to pre-HP-buff values; exactly 15 HP fields changed. Mireclaw ranged +5%, Embercourt +2.5%, Sunvault/Thornwake -5% and all other content unchanged. Windows core 17/17, including content validation; no native rebuild.
