@@ -1,14 +1,18 @@
 #pragma once
 
-// The content snapshot without Godot, for the rules tools outside it
-// (match_sim_cli --write-content, the battle AI arena's native setup): what
-// tools/rules_snapshot/rules_snapshot.gd's content_snapshot writes, in its
-// order, from the project folder. The files are the content::Store's (the
-// game's ContentService loads them so, slice 7.10), the tables its lookups by
-// id, the rules scripts' static vars their declarations' values read from the
-// .gd files, then AiHeroRules.army_power([], {}) run natively as the arena's
-// worker ran it before the capture, so the AI weights are in them. A static
-// var initializer it cannot read is an error, not a guess.
+// The content snapshot the rules tools outside Godot read (battle_sim_cli,
+// match_sim_cli), written by match_sim_cli --write-content for the battle AI
+// arena and the AI match runner scene (tests/ai_versus_ai_match_report.gd):
+// {files, tables, statics, revision, project}, from the project folder. The
+// files are the content::Store's (the game's ContentService loads them so,
+// slice 7.10), the tables its lookups by id as ContentService's getters answer
+// them, the rules scripts' static vars as a game starts: their declarations'
+// values read from the .gd files, then AiHeroRules.army_power([], {}) run
+// natively, which applies the AI weights as a game's first call does. A static
+// var initializer it cannot read is an error, not a guess. It replaced the
+// GDScript capture (rules_snapshot.gd's content_snapshot) and writes the same
+// snapshot, but for the engine object NativeRules._api, which no native code
+// reads (checked 2026-10-25).
 
 #include "aurelion_rules/battle_state.hpp"
 #include "aurelion_rules/content_store.hpp"
@@ -43,7 +47,12 @@ using st::Kind;
 using st::State;
 using st::Value;
 
-// rules_snapshot.gd's ART_FILES, RULES_DIRS, CONTENT_TABLES and INDEXED_TABLES.
+// The art files game setup reads through ContentService.load_json, the
+// folders of the scripts whose static vars the native rules read (the rules,
+// and the generated map adoption's), the tables (state::ContentTable) with the
+// file whose ids each is asked for, and the art rows found by the unit or hero
+// id their items name. A generated map's session registers no scenario draft,
+// so the scenario and terrain layers tables are left out: their lookups answer {}.
 inline constexpr const char *kArtFiles[] = {
 	"res://art/overworld/manifest.json",
 	"res://art/overworld/creature_idle.json",
@@ -718,7 +727,7 @@ inline std::vector<uint8_t> build_content_snapshot(const std::filesystem::path &
 	}
 	host.report(messages);
 
-	// rules_snapshot.gd's static_vars(), each script's by its path.
+	// Each rules script's static vars, by its path and their names.
 	const uint32_t statics = state.new_dict();
 	std::vector<std::string> opaques;
 	for (const char *dir : kRulesDirs) {

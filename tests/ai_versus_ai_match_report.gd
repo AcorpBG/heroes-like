@@ -100,6 +100,8 @@ extends Node
 #                          from it and plays them as this scene would
 #                          (HEROES_AI_MATCH_CONTENT; tools/ai_match_batch.py
 #                          --runner, tools/rules_parity.py --runner-b).
+# A content snapshot comes from this tree's bin/match_sim_cli --write-content,
+# which reads the content and the rules scripts from the project folder.
 #
 # The match fails at once when the native rules library is not registered:
 # without it every battle hex search errors and battles play out wrong.
@@ -111,8 +113,10 @@ const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const NativeRulesScript = preload("res://scripts/core/NativeRules.gd")
 const DayEngineScript = preload("res://scripts/core/DayEngine.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
-# The prepare mode's snapshots; loaded only there (tools/ is not exported).
+# The prepare mode's setup snapshots; loaded only there (tools/ is not exported).
 const RULES_SNAPSHOT_PATH := "res://tools/rules_snapshot/rules_snapshot.gd"
+# Writes the content snapshots (--write-content).
+const MATCH_SIM_CLI := "res://bin/match_sim_cli"
 const REPORT_ID := "AI_VERSUS_AI_MATCH_REPORT"
 const BEGIN_ID := "AI_VERSUS_AI_MATCH_BEGIN"
 const DEFAULT_MAX_DAYS := 320
@@ -138,8 +142,6 @@ var _list_mode := false
 var _kept_map_key := ""
 var _kept_map_session = null
 var _kept_prepared := {}
-# The content snapshot for HEROES_AI_MATCH_PREPARE, taken before any match.
-var _cold_content := {}
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -151,8 +153,7 @@ func _run() -> void:
 		return
 	var content_only := OS.get_environment("HEROES_AI_MATCH_CONTENT_SNAPSHOT").strip_edges()
 	if content_only != "":
-		if not load(RULES_SNAPSHOT_PATH).write(content_only, _content_snapshot()):
-			_fail("The content snapshot %s cannot be written." % content_only)
+		if not _write_content_snapshot(content_only):
 			get_tree().quit(1)
 			return
 		print("%s %s" % [REPORT_ID, JSON.stringify({"ok": true, "content": ProjectSettings.globalize_path(content_only)})])
@@ -168,14 +169,6 @@ func _run() -> void:
 			return
 		matches = parsed
 		_list_mode = true
-	# A prepared match's content snapshot holds the static vars as a game
-	# starts, so it is taken before any match plays.
-	for entry in matches:
-		_settings = entry
-		var prepare := _env("HEROES_AI_MATCH_PREPARE").strip_edges()
-		if prepare != "" and not FileAccess.file_exists(prepare.get_base_dir().path_join("content.snap")):
-			_cold_content = _content_snapshot()
-			break
 	var all_ok := true
 	for entry in matches:
 		_begin_match(entry)
@@ -186,13 +179,22 @@ func _run() -> void:
 		all_ok = all_ok and not _failed
 	get_tree().quit(0 if all_ok else 1)
 
-## The content and the rules scripts' static vars as a game starts, and the
-## project folder whose files match_sim_cli reads (the content catalogs the map
-## generation reads, the art the packages name).
-func _content_snapshot() -> Dictionary:
-	var content: Dictionary = load(RULES_SNAPSHOT_PATH).content_snapshot(ContentService)
-	content["project"] = ProjectSettings.globalize_path("res://")
-	return content
+## The content snapshot at path, from bin/match_sim_cli --write-content: the
+## content and the rules scripts' static vars as a game starts, read from the
+## project folder, and that folder, whose files match_sim_cli reads (the content
+## catalogs the map generation reads, the art the packages name). False, with
+## the failure reported, when it is not written.
+func _write_content_snapshot(path: String) -> bool:
+	var cli := ProjectSettings.globalize_path(MATCH_SIM_CLI + (".exe" if OS.has_feature("windows") else ""))
+	if not FileAccess.file_exists(cli):
+		_fail("The content snapshot %s cannot be written: %s is missing (python tools/build_native.py windows builds it)." % [path, cli])
+		return false
+	var output := []
+	var code := OS.execute(cli, ["--write-content", ProjectSettings.globalize_path(path), "--project", ProjectSettings.globalize_path("res://")], output, true)
+	if code != 0 or not FileAccess.file_exists(path):
+		_fail("The content snapshot %s cannot be written: match_sim_cli --write-content exited with %d: %s" % [path, code, "".join(output).strip_edges().right(400)])
+		return false
+	return true
 
 ## A match setting: the match list's entry, else the environment.
 func _env(name: String) -> String:
@@ -463,8 +465,7 @@ func _play() -> void:
 func _prepare(path: String, plan: Dictionary) -> void:
 	var snapshots = load(RULES_SNAPSHOT_PATH)
 	var content_path := path.get_base_dir().path_join("content.snap")
-	if not FileAccess.file_exists(content_path) and (_cold_content.is_empty() or not snapshots.write(content_path, _cold_content)):
-		_fail("The content snapshot %s cannot be written." % content_path)
+	if not FileAccess.file_exists(content_path) and not _write_content_snapshot(content_path):
 		return
 	var seat_factions: Array = plan.seat_factions
 	var key := _map_key(String(plan.map_seed), seat_factions, int(plan.player_count), String(plan.size_class), String(plan.guards), String(plan.water), int(plan.levels))

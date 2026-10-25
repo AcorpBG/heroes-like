@@ -7,8 +7,8 @@
 //   match_sim_cli --arena-setup <job.json> <results.jsonl> [--threads N]
 //
 // --write-content writes the content snapshot of the project folder
-// (content_snapshot.hpp), as the scenes write it with
-// tools/rules_snapshot/rules_snapshot.gd. --arena-setup runs a setup job of
+// (content_snapshot.hpp), for the arena and the match runner scene, whose
+// HEROES_AI_MATCH_CONTENT_SNAPSHOT runs it. --arena-setup runs a setup job of
 // the battle AI arena (tools/battle_ai_arena: arena.py, tune.py), as its
 // Godot setup workers ran it before (worker.gd): each group's map generated as
 // below, each battle's session built up to its payload, and the map's battles

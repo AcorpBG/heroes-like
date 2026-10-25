@@ -2,9 +2,8 @@
 
 // What the rules tools outside Godot share (battle_sim_cli, match_sim_cli): a
 // decoded snapshot (aurelion_rules/snapshot.hpp), the type registry their
-// workers' States share, and the content snapshot the game writes for them
-// (tools/rules_snapshot/rules_snapshot.gd) or match_sim_cli writes
-// (content_snapshot.hpp).
+// workers' States share, and the content snapshot match_sim_cli writes for
+// them (content_snapshot.hpp).
 
 #include "aurelion_rules/battle_state.hpp"
 #include "aurelion_rules/snapshot.hpp"
@@ -16,6 +15,7 @@
 #include <iterator>
 #include <memory>
 #include <mutex>
+#include <random>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -38,11 +38,15 @@ inline std::vector<uint8_t> read_file(const std::filesystem::path &path) {
 	return std::vector<uint8_t>(std::istreambuf_iterator<char>(in), std::istreambuf_iterator<char>());
 }
 
-// bytes as the file at path, written under another name first and renamed
-// when whole, so a reader never sees half a file. False when it cannot be.
+// bytes as the file at path, written under a name of its own first and
+// renamed when whole, so a reader never sees half a file and processes writing
+// the same file (the same content snapshot) do not mix. False when it cannot
+// be written; true when the rename fails but the file is there (another
+// process wrote it).
 inline bool write_whole(const std::filesystem::path &path, const std::vector<uint8_t> &bytes) {
+	std::random_device random;
 	std::filesystem::path part = path;
-	part += ".part";
+	part += "." + std::to_string(random()) + std::to_string(random()) + ".part";
 	{
 		std::ofstream out(part, std::ios::binary | std::ios::trunc);
 		if (!out) {
@@ -50,14 +54,18 @@ inline bool write_whole(const std::filesystem::path &path, const std::vector<uin
 		}
 		out.write(reinterpret_cast<const char *>(bytes.data()), static_cast<std::streamsize>(bytes.size()));
 		if (!out) {
+			out.close();
+			std::error_code ignored;
+			std::filesystem::remove(part, ignored);
 			return false;
 		}
 	}
 	std::error_code error;
 	std::filesystem::rename(part, path, error);
 	if (error) {
-		std::filesystem::remove(part, error);
-		return false;
+		std::error_code ignored;
+		std::filesystem::remove(part, ignored);
+		return std::filesystem::exists(path, ignored);
 	}
 	return true;
 }
@@ -129,7 +137,7 @@ inline std::unique_ptr<Store> load_store(const std::filesystem::path &path, Type
 }
 
 // The ContentService getters' tables, as the content snapshot names them
-// (tools/rules_snapshot/rules_snapshot.gd, CONTENT_TABLES), in ContentTable's order.
+// (content_snapshot.hpp), in ContentTable's order.
 inline constexpr const char *kTableNames[] = {
 	"Unit",
 	"Hero",
