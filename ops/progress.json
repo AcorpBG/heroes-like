@@ -117164,6 +117164,18 @@
       ],
       "notes": "Owner-selected nominal 2% HP buff applied from aa9dfe304 current content to Veilmourn and Brasshollow, instead of the suggested Sunvault relay nerf. All 27 definitions per faction considered, including base, upgraded and auxiliary forms. Formula (old_hp*102+50)//100, nearest whole HP with half-up rounding, without a forced minimum increment. Exactly 24 HP fields changed: 12 Veilmourn and12 Brasshollow; 15 definitions per faction round unchanged. No HP below25 changes; existing25HP becomes26. Veilmourn examples: Fogbound Leviathan100->102, Mourningdeep Sovereign120->122; Brasshollow Foundry Saint96->98, Saint of the Last Furnace116->118. Inline before/after JSON check proved every changed field is HP in the two requested factions and every other field/unit is identical. Sunvault and its relay, Mireclaw, Embercourt and Thornwake unchanged. Windows core suite17/17 passed in30seconds, including content validation. No native source/library change or rebuild; Linux checks remain paused. Core automatically removed its32 generated map files and disposable profiles; no temporary probes or new batch outputs were created. No AI evaluation requested or launched; balance impact remains unmeasured.",
       "updatedAt": "2026-10-25"
+    },
+    {
+      "id": "balance-dwelling-pair-growth-gold-20261025",
+      "title": "Even five same-role dwelling pairs with growth and gold",
+      "status": "completed",
+      "classification": "balance",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md"
+      ],
+      "notes": "Owner-selected option 3 of the unit strength pass, growth and gold only. Pass: 47,628 battles in battle_sim_cli, every town-roster unit's week of growth against every other unit of its tier (base and upgraded pools, T1-T7), alone and with an identical neutral escort, three count scales, six maps with the same level-1 hero (no mana) on both sides; strength fitted as a count multiplier. Five same-role pairs changed, base and upgrade together (20 fields, growth and cost only): Prism Adepts g6->10 gold100->120, Lattice Conjurers 140->170; Shard Wardens g9->13 gold70->45, Mirrorback Wardens 95->63; Maskglass Corsairs g5->7 gold190->105, Shattermask Duelists 240->150; Fordhook Cadets g13->17 gold65->40, Chainford Marshals 85->60; Reedsnare Kin g13->15 gold50->35, Knotroot Trappers 70->55. Verification re-run (T1-T3 pools, 2 maps, 8,160 battles): pair ratios Adepts 1.75->1.03, Conjurers 1.66->1.06, Wardens 1.44->1.01, Mirrorback 1.39->0.91, Corsairs 1.45->1.09, Shattermask 1.43->1.02, Cadets 1.33->1.07, Marshals 1.24->1.04; Reedsnare Kin measured at growth 16 (1.10 base, 0.83 upgrade) and set to 15 to split the base/upgrade disagreement. Open finding not acted on: ranged dwellings beat melee in 23 of 24 mixed pairs (often 2-3.6x), and army_power underrates shooters. Windows core 17/17. No native change. Scratch scripts in .artifacts/unit_pass, removed after the handoff.",
+      "updatedAt": "2026-10-25"
     }
   ],
   "project": "heroes-like",
