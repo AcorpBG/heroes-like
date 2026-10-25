@@ -22302,6 +22302,20 @@
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
+      "id": "balance-mireclaw-ranged-cover-round10-20261025",
+      "title": "Balance round 10: Reed Cover for Mireclaw's two ranged lines",
+      "status": "in_progress",
+      "classification": "balance",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/common-town-building-template.md"
+      ],
+      "notes": "Added personal Reed Cover to Mudglass Slingers/Mireglass Reedcasters (ranged damage x0.80) and their upgrades Shattermire Slingers/Mireglass Dissonants (x0.75). Scope check confirms exactly four ability additions and no other unit changes. Focused native combat/AI checks 16/16, Windows core 17/17. Content only; no native rebuild, Linux checks paused. Owner-requested identical round-9 plan of 300 large 4P two-level rotated-start matches remains to run.",
+      "updatedAt": "2026-10-25",
+      "validatedAt": "2026-10-25"
+    },
+    {
       "id": "balance-mireclaw-snare-t3-sunvault-cost-round9-20261024",
       "title": "Balance round 9: Mireclaw snare payoff and viable T3 choices; Sunvault ranged prices",
       "status": "completed",
