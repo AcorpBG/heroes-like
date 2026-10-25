@@ -3,8 +3,10 @@ extends RefCounted
 ## battle_sim_cli, match_sim_cli): the content snapshot, which holds the content
 ## files, the content tables by id as ContentService's getters answer, and the
 ## rules scripts' static vars, and the snapshot file format (NativeRules
-## snapshot_encode). The battle AI arena's worker and the AI match runner scene
-## write them; nothing here is loaded by the game.
+## snapshot_encode). The AI match runner scene writes them; nothing here is
+## loaded by the game. match_sim_cli --write-content writes the same content
+## snapshot without Godot (src/gdextension/rules/cli/content_snapshot.hpp):
+## keep the two in step.
 ##
 ## Static funcs only, given the ContentService autoload: a -s script compiles
 ## before autoloads exist.

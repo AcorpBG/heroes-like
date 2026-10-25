@@ -1,7 +1,19 @@
 // match_sim_cli: the AI match runner without Godot (Phase 8, P8-3, P8-4, P8-7
-// and P8-8; docs/native-rules-engine-transition.md).
+// and P8-8; docs/native-rules-engine-transition.md), and the battle AI arena's
+// setup without Godot.
 //
 //   match_sim_cli [--threads N]
+//   match_sim_cli --write-content <content.snap> [--project <dir>]
+//   match_sim_cli --arena-setup <job.json> <results.jsonl> [--threads N]
+//
+// --write-content writes the content snapshot of the project folder
+// (content_snapshot.hpp), as the scenes write it with
+// tools/rules_snapshot/rules_snapshot.gd. --arena-setup runs a setup job of
+// the battle AI arena (tools/battle_ai_arena: arena.py, tune.py), as its
+// Godot setup workers ran it before (worker.gd): each group's map generated as
+// below, each battle's session built up to its payload, and the map's battles
+// written as a snapshot for battle_sim_cli; run_arena_setup says how. The rest
+// of this comment is the match runner's.
 //
 // It plays the matches of the match runner scene
 // (tests/ai_versus_ai_match_report.gd) as the scene does. A match's map is
@@ -82,6 +94,7 @@
 #include "aurelion_rules/port/registry.hpp"
 #include "aurelion_rules/port/turn_port.hpp"
 #include "aurelion_rules/snapshot.hpp"
+#include "content_snapshot.hpp"
 #include "snapshot_store.hpp"
 
 #include <algorithm>
@@ -95,6 +108,8 @@
 #include <exception>
 #include <filesystem>
 #include <fstream>
+#include <functional>
+#include <limits>
 #include <map>
 #include <memory>
 #include <mutex>
@@ -562,6 +577,20 @@ struct Calls {
 			skirmish_setup(find("ScenarioSelectRules.build_random_map_skirmish_setup_with_retry", 3)) {}
 };
 
+// The native functions the battle AI arena's setup job calls
+// (tools/battle_ai_arena/worker.gd), beside Calls'.
+struct ArenaCalls {
+	const port::Function *normalize_payload = Calls::find("SessionStateStore.normalize_payload", 1);
+	const port::Function *commit_active_hero = Calls::find("HeroCommandRules.commit_active_hero", 1);
+	const port::Function *encounter_key = Calls::find("OverworldRules.encounter_key", 1);
+	const port::Function *neutral_army = Calls::find("AiHeroRules._neutral_army", 1);
+	const port::Function *advance_to_level = Calls::find("HeroProgressionRules.advance_to_level", 2);
+	const port::Function *ensure_hero_spellbook = Calls::find("SpellRules.ensure_hero_spellbook", 2);
+	const port::Function *mana_max_from_hero = Calls::find("SpellRules.mana_max_from_hero", 1);
+	const port::Function *build_roster_commander_state = Calls::find("EnemyAdventureRules.build_roster_commander_state", 4);
+	const port::Function *town_faction_id = Calls::find("TownDevelopmentRules.faction_id", 1);
+};
+
 // The match failed: the scene's _fail, which ends the match.
 struct MatchFailed {
 	std::string message;
@@ -615,6 +644,53 @@ public:
 		counts.most_atoms = std::max(counts.most_atoms, state_.atom_count());
 		lines_ = nullptr;
 		return ok;
+	}
+
+	// ------------------------------------------- the battle AI arena's setup
+
+	// One group of a setup job of the battle AI arena (tools/battle_ai_arena):
+	// worker.gd's _play_group with a corpus folder, as its Godot setup workers
+	// ran it. The map is generated as the skirmish menu makes it, each battle's
+	// session is built as a game builds it up to the battle payload, and the
+	// map's battles go into one snapshot for battle_sim_cli. emit takes each
+	// result line (worker.gd's _emit). False when the group failed.
+	bool arena_group(const Content &content, const ArenaCalls &arena, const State &job, const Value &group_value, const Value &orders_value,
+			const std::string &corpus_dir, const std::function<void(const std::string &)> &emit) {
+		begin_match(content, nullptr);
+		const Store &content_store = *content.store;
+		const std::string project = content_store.text(content_store.get(content_store.decoded.root, "project"));
+		const Value revision = content_store.get(content_store.decoded.root, "revision");
+		content_revision_ = revision.kind == Kind::Int ? revision.i : 0;
+		files_ = Value();
+		const Value group = copy_in(job, group_value);
+		const Value orders = copy_in(job, orders_value);
+		const Value group_id = get(group, atom_of("group_id"), state_.string(""));
+		std::string error;
+		try {
+			if (project.empty()) {
+				throw MatchFailed{ "the content snapshot names no project folder" };
+			}
+			disk_ = std::make_unique<aurelion::rules::content::DiskFiles>(project, true);
+			arena_play_group(arena, group, orders, corpus_dir, emit);
+		} catch (const MatchFailed &failed) {
+			error = failed.message;
+		} catch (const st::ScriptError &script_error) {
+			error = std::string("native script error: ") + script_error.what();
+		} catch (const st::NotPorted &not_ported) {
+			error = std::string("a path the port leaves to GDScript: ") + not_ported.what();
+		} catch (const st::Suspend &suspend) {
+			error = "a host call: " + state_.text(suspend.script) + "." + state_.text(suspend.function);
+		} catch (const std::exception &other) {
+			error = other.what();
+		}
+		++counts.matches;
+		counts.most_atoms = std::max(counts.most_atoms, state_.atom_count());
+		if (!error.empty()) {
+			++counts.failed;
+			emit_row(emit, { { "kind", state_.string("group_error") }, { "group_id", group_id }, { "error", state_.string(error) } });
+		}
+		emit_row(emit, { { "kind", state_.string("group_done") }, { "group_id", group_id }, { "tag", get(group, atom_of("tag"), state_.string("")) } });
+		return error.empty();
 	}
 
 	// Backing: the stores' nodes, read one value at a time until filled.
@@ -2304,6 +2380,459 @@ private:
 		return true;
 	}
 
+	// ------------------------------------- the battle AI arena's setup (2)
+
+	// A guard as worker.gd's _play_group lists them: its encounter key and the
+	// game's estimate of its strength.
+	struct ArenaGuard {
+		std::string key;
+		double power = 0.0;
+	};
+
+	// worker.gd's _play_group, setup job: the map, then each battle's session
+	// into the corpus.
+	void arena_play_group(const ArenaCalls &arena, const Value &group, const Value &orders, const std::string &corpus_dir,
+			const std::function<void(const std::string &)> &emit) {
+		const Clock::time_point started = Clock::now();
+		const Value group_id = get(group, atom_of("group_id"), state_.string(""));
+		const auto text = [&](const Value &dict, const char *name, const char *fallback) {
+			return gd::str(string_of(get(dict, atom_of(name), state_.string(fallback))));
+		};
+
+		const Value config = call(calls_.player_config,
+				{
+						text(group, "map_seed", "arena"),
+						state_.string(""),
+						state_.string(""),
+						gd::int_value(gd::to_int(state_, get(group, atom_of("player_count"), gd::int_value(2)))),
+						state_.string("land"),
+						gd::bool_value(false),
+						text(group, "map_size", "homm3_small"),
+						// ScenarioSelectRules.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO.
+						state_.string("native_catalog_auto"),
+						text(group, "player_faction", ""),
+						text(group, "player_hero_id", ""),
+						text(group, "monster_strength", "normal"),
+						gd::array_value(state_.new_array()),
+				});
+		// ScenarioSelectRules.RANDOM_MAP_PLAYER_RETRY_POLICY.
+		const uint32_t policy = state_.new_dict();
+		state_.set(policy, state_.string("max_attempts"), gd::int_value(5));
+		state_.set(policy, state_.string("mode"), state_.string("seed_salt"));
+		const Value setup = call(calls_.skirmish_setup, { config, state_.string("normal"), gd::dict_value(policy) });
+		if (!gd::to_bool(get(setup, key::ok, gd::bool_value(false)))) {
+			emit_row(emit, { { "kind", state_.string("group_error") }, { "group_id", group_id }, { "error", state_.string("map setup failed") } });
+			return;
+		}
+		scenario_id_ = text_of(get(get(get(setup, atom_of("package_startup")), atom_of("session_boundary_record")), atom_of("scenario_id")));
+		// The packages stay in memory (disk_): none to remove.
+		start_session(setup);
+		const Value scenario_id = gd::str(string_of(field(2)));
+		std::string ai_controller;
+		for (const Value &entry : gd::items(state_, overworld_list(names_.enemy_states))) {
+			ai_controller = state_.text(string_of(get(entry, names_.player_id, get(entry, names_.faction_id, state_.string("")))));
+			break;
+		}
+		// Guards as the generator placed them, with the game's estimate of their strength.
+		std::vector<ArenaGuard> guards;
+		for (const Value &encounter : gd::items(state_, overworld_list(names_.encounters))) {
+			if (encounter.kind != Kind::Dict || state_.has(encounter.ref, gd::str(names_.ai_hero))) {
+				continue;
+			}
+			const Value stacks = get(call(arena.neutral_army, { encounter }), names_.stacks, gd::array_value(state_.new_array()));
+			if (stacks.kind == Kind::Array && state_.array_size(stacks.ref) != 0) {
+				ArenaGuard guard;
+				guard.key = state_.text(string_of(call(arena.encounter_key, { encounter })));
+				guard.power = gd::to_float(call(calls_.army_power, { stacks, gd::dict_value(state_.new_dict()) }));
+				guards.push_back(guard);
+			}
+		}
+		std::vector<std::string> towns;
+		for (const Value &town : gd::items(state_, overworld_list(names_.towns))) {
+			if (town.kind == Kind::Dict && string_of(get(town, names_.owner, state_.string(""))) == names_.enemy) {
+				towns.push_back(state_.text(string_of(get(town, names_.placement_id, state_.string("")))));
+			}
+		}
+		// session.to_dict().duplicate(true).
+		const uint32_t base = state_.new_dict();
+		for (size_t index = 0; index < kFieldCount; ++index) {
+			const Value value = field(index);
+			state_.set(base, gd::str(names_.fields[index]), value.kind == Kind::Dict ? gd::dict_value(gd::deep_duplicate_dict(state_, value.ref)) : value);
+		}
+		const double setup_ms = std::chrono::duration<double, std::milli>(Clock::now() - started).count();
+		emit_row(emit, { { "kind", state_.string("group_ready") }, { "group_id", group_id }, { "setup_ms", gd::float_value(setup_ms) },
+							   { "guards", gd::int_value(static_cast<int64_t>(guards.size())) }, { "towns", gd::int_value(static_cast<int64_t>(towns.size())) } });
+
+		std::set<std::string> used;
+		const uint32_t corpus = state_.new_array();
+		const int64_t order_count = orders.kind == Kind::Array ? state_.array_size(orders.ref) : 2;
+		const Value battles = get(group, atom_of("battles"), gd::array_value(state_.new_array()));
+		for (const Value &battle : gd::items(state_, battles)) {
+			const std::string kind = state_.text(text(battle, "type", "").ref);
+			if (guards.empty() || (kind == "siege" && towns.empty())) {
+				emit_row(emit, { { "kind", state_.string("game_error") }, { "battle_id", get(battle, atom_of("battle_id"), state_.string("")) },
+									   { "error", state_.string("no guard or town for this battle") } });
+				continue;
+			}
+			// Both orders fight over the same ground: choose it once. The probe
+			// is the session a game builds: one build serves both.
+			arena_player_session(arena, base, battle);
+			const Value army = get(overworld_value(), atom_of("army"), gd::dict_value(state_.new_dict()));
+			const double player_power = gd::to_float(call(calls_.army_power,
+					{ get(army, names_.stacks, gd::array_value(state_.new_array())), get(overworld_value(), names_.hero, gd::dict_value(state_.new_dict())) }));
+			const int64_t site_index = gd::to_int(state_, get(battle, atom_of("site_index"), gd::int_value(0)));
+			// guards[site_index % size], a negative index from the end as GDScript's.
+			const auto pick = [&](size_t size) {
+				const int64_t index = site_index % static_cast<int64_t>(size);
+				return static_cast<size_t>(index < 0 ? index + static_cast<int64_t>(size) : index);
+			};
+			const ArenaGuard *guard = nullptr;
+			std::string town;
+			if (kind == "guard") {
+				guard = &guard_for(guards, used, player_power * gd::to_float(get(battle, atom_of("guard_ratio"), gd::float_value(1.0))));
+			} else if (kind == "siege") {
+				town = towns[pick(towns.size())];
+			} else {
+				guard = &guards[pick(guards.size())];
+			}
+			const Value entry = arena_corpus_battle(arena, group, battle, kind, player_power, guard, town, ai_controller, order_count, emit);
+			if (entry.kind == Kind::Dict) {
+				state_.append(corpus, entry);
+			}
+		}
+		arena_write_corpus(corpus_dir, group, scenario_id, gd::array_value(corpus), emit);
+	}
+
+	// A result line, as worker.gd's _emit writes it (JSON.stringify).
+	void emit_row(const std::function<void(const std::string &)> &emit, std::initializer_list<std::pair<const char *, Value>> fields) {
+		const uint32_t row = state_.new_dict();
+		for (const auto &[name, value] : fields) {
+			state_.set(row, state_.string(name), value);
+		}
+		emit(Json{ state_, "", true, false }.text(gd::dict_value(row)));
+	}
+
+	// _guard_for: the guard whose strength is nearest the wanted strength (by
+	// ratio), a fresh one if close.
+	const ArenaGuard &guard_for(const std::vector<ArenaGuard> &guards, std::set<std::string> &used, double wanted) {
+		const ArenaGuard *best = &guards.front();
+		double best_gap = std::numeric_limits<double>::infinity();
+		for (const ArenaGuard &guard : guards) {
+			double gap = std::fabs(std::log(std::max(1.0, guard.power) / std::max(1.0, wanted)));
+			if (used.count(guard.key) != 0) {
+				gap += 0.3;
+			}
+			if (gap < best_gap) {
+				best = &guard;
+				best_gap = gap;
+			}
+		}
+		used.insert(best->key);
+		return *best;
+	}
+
+	// _player_session: a new session from the group's (base), with the
+	// battle's player hero and army; it becomes the session object.
+	void arena_player_session(const ArenaCalls &arena, gd::DictRef base, const Value &battle) {
+		// SessionData.new(), then from_dict(base.duplicate(true)).
+		const Value normalized = call(arena.normalize_payload, { gd::dict_value(gd::deep_duplicate_dict(state_, base)) });
+		const auto take = [&](size_t index, const Value &fallback) { return get(normalized, names_.fields[index], fallback); };
+		const auto as_text = [&](const Value &value) { return gd::str(string_of(value)); };
+		const Value values[kFieldCount] = {
+			gd::int_value(gd::to_int(state_, take(0, gd::int_value(9)))),
+			as_text(take(1, state_.string(compat::itos(gd::engine_ticks_msec(state_))))),
+			as_text(take(2, state_.string(""))),
+			as_text(take(3, state_.string(""))),
+			gd::int_value(gd::to_int(state_, take(4, gd::int_value(1)))),
+			as_text(take(5, state_.string("normal"))),
+			as_text(take(6, state_.string("campaign"))),
+			as_text(take(7, state_.string("overworld"))),
+			as_text(take(8, state_.string("in_progress"))),
+			as_text(take(9, state_.string(""))),
+			take(10, Value()),
+			take(11, Value()),
+			take(12, Value()),
+		};
+		object_ = gd::dict_value(state_.new_dict());
+		for (size_t index = 0; index < kFieldCount; ++index) {
+			if (kFieldTypes[index] == 'd' && values[index].kind != Kind::Dict) {
+				throw st::ScriptError(std::string("SessionData.from_dict: the normalized payload's ") + kSessionFields[index] + " is no Dictionary");
+			}
+			state_.set(object_.ref, gd::str(names_.fields[index]), values[index]);
+		}
+		object_meta_ = gd::dict_value(state_.new_dict());
+		// Each SessionData.new() is an object of its own.
+		instance_id_ = gd::int_value(++sessions_made_);
+		view_node_ = ~0u;
+
+		const Value hero = arena_with_spec(arena, get(overworld_value(), names_.hero, gd::dict_value(state_.new_dict())),
+				get(battle, atom_of("player_hero"), gd::dict_value(state_.new_dict())));
+		const Value army = get(overworld_value(), atom_of("army"), gd::dict_value(state_.new_dict()));
+		state_.set(gd::as_dict(army), gd::str(names_.stacks), arena_stacks(get(battle, atom_of("player_army"), gd::array_value(state_.new_array()))));
+		state_.set(gd::as_dict(hero), state_.string("army"), army);
+		state_.set(overworld(), gd::str(names_.hero), hero);
+		state_.set(overworld(), state_.string("army"), army);
+		// The hero roster is the source of truth: normalising reloads the
+		// active hero and army from it.
+		call_with_view(arena.commit_active_hero, {});
+		call_with_view(calls_.normalize, {});
+	}
+
+	// _prepare_game for a corpus (_corpus_battle): the record so far, the
+	// probe's session made ready for the payload, and its entry: {battle_id,
+	// kind, town, dice, prefix, session, site}, or Nil when the battle is
+	// outside the group's odds (each order's skipped line emitted).
+	Value arena_corpus_battle(const ArenaCalls &arena, const Value &group, const Value &battle, const std::string &kind, double player_power,
+			const ArenaGuard *guard, const std::string &town_id, const std::string &ai_controller, int64_t order_count,
+			const std::function<void(const std::string &)> &emit) {
+		const auto from = [&](const Value &dict, const char *name, const Value &fallback) { return get(dict, atom_of(name), fallback); };
+		const uint32_t row = state_.new_dict();
+		const auto put = [&](const char *name, const Value &value) { state_.set(row, state_.string(name), value); };
+		put("kind", state_.string("game"));
+		put("group_id", from(group, "group_id", state_.string("")));
+		put("battle_id", from(battle, "battle_id", state_.string("")));
+		put("monster_strength", from(group, "monster_strength", state_.string("")));
+		put("map_size", from(group, "map_size", state_.string("")));
+		put("player_faction", from(group, "player_faction", state_.string("")));
+		put("enemy_faction", from(battle, "enemy_faction", state_.string("")));
+		// worker.gd's ECHO_KEYS.
+		for (const char *name : { "type", "week", "player_doctrine", "enemy_doctrine", "enemy_week", "guard_ratio", "fort_level", "faction_defense" }) {
+			Value value;
+			if (state_.lookup(gd::as_dict(battle), state_.string(name), value)) {
+				put(name, value);
+			}
+		}
+		const auto empty_dict = [&] { return gd::dict_value(state_.new_dict()); };
+		const auto roster_commander = [&](const Value &spec, const Value &faction) {
+			const Value commander = call(arena.build_roster_commander_state,
+					{ gd::str(string_of(from(spec, "hero_id", state_.string("")))), faction, empty_dict(), empty_dict() });
+			return arena_with_spec(arena, commander, spec);
+		};
+		double enemy_power = 0.0;
+		Value site = empty_dict();
+		if (kind == "siege") {
+			Value town = empty_dict();
+			for (const Value &placed : gd::items(state_, overworld_list(names_.towns))) {
+				if (placed.kind == Kind::Dict && state_.text(string_of(get(placed, names_.placement_id, state_.string("")))) == town_id) {
+					town = placed;
+					break;
+				}
+			}
+			const Value town_faction = gd::str(string_of(call(arena.town_faction_id, { town })));
+			put("enemy_faction", town_faction);
+			const Value garrison = arena_stacks(get(from(battle, "garrison_by_faction", empty_dict()), town_faction.ref, gd::array_value(state_.new_array())));
+			state_.set(town.ref, gd::str(names_.garrison), garrison);
+			Value defender = empty_dict();
+			const Value defender_spec = get(from(battle, "defender_by_faction", empty_dict()), town_faction.ref, empty_dict());
+			if (!gd::is_empty(state_, gd::as_dict(defender_spec))) {
+				defender = roster_commander(defender_spec, town_faction);
+			}
+			state_.set(town.ref, state_.string("ai_defender_commander_state"), defender);
+			const gd::ArrayRef built = gd::duplicate_array(state_, gd::as_array(get(town, names_.built_buildings, gd::array_value(state_.new_array()))));
+			// worker.gd's FORT_BUILDINGS up to the fort level, and FACTION_DEFENSE.
+			std::vector<std::string> wanted = { "building_dev_fort_1", "building_dev_fort_2", "building_dev_fort_3" };
+			wanted.resize(static_cast<size_t>(std::clamp<int64_t>(gd::to_int(state_, from(battle, "fort_level", gd::int_value(0))), 0, 3)));
+			static const std::map<std::string, std::string> defenses = {
+				{ "faction_embercourt", "building_dev_embercourt_unique_2" },
+				{ "faction_mireclaw", "building_dev_mireclaw_unique_2" },
+				{ "faction_sunvault", "building_dev_sunvault_unique_3" },
+				{ "faction_thornwake", "building_dev_thornwake_unique_2" },
+				{ "faction_brasshollow", "building_dev_brasshollow_unique_3" },
+				{ "faction_veilmourn", "building_dev_veilmourn_unique_3" },
+			};
+			const auto defense = defenses.find(state_.text(town_faction.ref));
+			if (gd::to_bool(from(battle, "faction_defense", gd::bool_value(false))) && defense != defenses.end()) {
+				wanted.push_back("building_dev_hall_2");
+				wanted.push_back(defense->second);
+			}
+			for (const std::string &building_id : wanted) {
+				const Value building = state_.string(building_id);
+				bool has = false;
+				for (const Value &item : gd::items(state_, gd::array_value(built))) {
+					has = has || gd::equal(state_, item, building);
+				}
+				if (!has) {
+					state_.append(built, building);
+				}
+			}
+			state_.set(town.ref, gd::str(names_.built_buildings), gd::array_value(built));
+			put("enemy_hero", gd::bool_value(!gd::is_empty(state_, gd::as_dict(defender))));
+			enemy_power = gd::to_float(call(calls_.army_power, { garrison, defender }));
+		} else {
+			for (const Value &placed : gd::items(state_, overworld_list(names_.encounters))) {
+				if (placed.kind == Kind::Dict && state_.text(string_of(call(arena.encounter_key, { placed }))) == guard->key) {
+					site = placed;
+				}
+			}
+			if (kind == "hero") {
+				const Value faction = gd::str(string_of(from(battle, "enemy_faction", state_.string(""))));
+				const Value commander = roster_commander(from(battle, "enemy_hero", empty_dict()), faction);
+				const Value stacks = arena_stacks(from(battle, "enemy_army", gd::array_value(state_.new_array())));
+				const uint32_t enemy_army = state_.new_dict();
+				state_.set(enemy_army, gd::str(names_.id), state_.string("arena_host"));
+				state_.set(enemy_army, gd::str(names_.name), state_.string("Arena Host"));
+				state_.set(enemy_army, gd::str(names_.faction_id), faction);
+				state_.set(enemy_army, gd::str(names_.stacks), stacks);
+				state_.set(site.ref, state_.string("enemy_army"), gd::dict_value(enemy_army));
+				state_.set(site.ref, gd::str(names_.enemy_commander_state), commander);
+				// An AI player's hero, as on the map: it may withdraw.
+				state_.set(site.ref, state_.string("spawned_by_player_id"), state_.string(ai_controller));
+				enemy_power = gd::to_float(call(calls_.army_power, { stacks, commander }));
+			} else {
+				enemy_power = guard->power;
+			}
+		}
+		put("player_power", gd::float_value(compat::snappedf(player_power, 0.1)));
+		put("enemy_power", gd::float_value(compat::snappedf(enemy_power, 0.1)));
+		const Value battle_id = state_.get(row, state_.string("battle_id"), Value());
+		// A contested run plays only the battles whose odds fall in its band;
+		// a skipped battle is skipped in every order.
+		const Value odds = from(group, "odds", gd::array_value(state_.new_array()));
+		if (odds.kind == Kind::Array && state_.array_size(odds.ref) == 2) {
+			const double ratio = player_power / std::max(1.0, enemy_power);
+			if (ratio < gd::to_float(state_.at(odds.ref, 0)) || ratio > gd::to_float(state_.at(odds.ref, 1))) {
+				for (int64_t order = 0; order < order_count; ++order) {
+					emit_row(emit, { { "kind", state_.string("skipped") }, { "battle_id", battle_id } });
+				}
+				return Value();
+			}
+		}
+		const std::string record = Json{ state_, "", true, false }.text(gd::dict_value(row));
+		const uint32_t entry = state_.new_dict();
+		state_.set(entry, state_.string("battle_id"), gd::str(string_of(battle_id)));
+		state_.set(entry, state_.string("kind"), state_.string(kind));
+		state_.set(entry, state_.string("town"), state_.string(town_id));
+		state_.set(entry, state_.string("dice"), gd::int_value(gd::to_int(state_, from(group, "dice", gd::int_value(0)))));
+		// The record without its closing brace: battle_sim_cli adds the rest.
+		state_.set(entry, state_.string("prefix"), state_.string(record.substr(0, record.size() - 1)));
+		state_.set(entry, state_.string("session"), session_view());
+		state_.set(entry, state_.string("site"), site);
+		return gd::dict_value(entry);
+	}
+
+	// _session_view: the session as the native rules see an object, its script
+	// variables in property list order, then its metadata under "meta".
+	Value session_view() {
+		const uint32_t view = state_.new_dict();
+		for (size_t index = 0; index < kFieldCount; ++index) {
+			state_.set(view, gd::str(names_.fields[index]), field(index));
+		}
+		const uint32_t meta = state_.new_dict();
+		const st::ValueList keys = state_.dict(object_meta_.ref).keys.list();
+		const st::ValueList values = state_.dict(object_meta_.ref).values;
+		for (size_t index = 0; index < keys.size(); ++index) {
+			state_.set(meta, keys[index], values[index]);
+		}
+		state_.set(view, gd::str(names_.meta), gd::dict_value(meta));
+		return gd::dict_value(view);
+	}
+
+	// _write_corpus: the map's battles for battle_sim_cli, with the generated
+	// scenario they read (a generated map registers no scenario draft: {}).
+	void arena_write_corpus(const std::string &corpus_dir, const Value &group, const Value &scenario_id, const Value &battles,
+			const std::function<void(const std::string &)> &emit) {
+		const Value group_id = get(group, atom_of("group_id"), state_.string(""));
+		const uint32_t header = state_.new_dict();
+		state_.set(header, state_.string("scenario_id"), scenario_id);
+		state_.set(header, state_.string("scenario"), gd::dict_value(state_.new_dict()));
+		state_.set(header, state_.string("terrain_layers"), gd::dict_value(state_.new_dict()));
+		state_.set(header, state_.string("content_revision"), gd::int_value(content_revision_));
+		const uint32_t corpus = state_.new_dict();
+		state_.set(corpus, state_.string("group"), gd::dict_value(header));
+		state_.set(corpus, state_.string("battles"), battles);
+		const Value file = get(group, atom_of("corpus_file"), Value());
+		const std::string name = file.kind != Kind::Nil ? state_.text(string_of(file)) : "group_" + state_.text(string_of(group_id)) + ".snap";
+		const fs::path path = fs::u8path(corpus_dir) / fs::u8path(name);
+		snap::EncodeHooks hooks;
+		hooks.type = [&](TypeRef type) { return types_.info(type); };
+		hooks.opaque = [&](uint32_t slot) -> std::pair<uint8_t, std::string> {
+			throw st::ScriptError("the corpus holds an opaque value, a " + opaques_.at(slot).what);
+		};
+		if (!cli::write_whole(path, snap::encode(state_, gd::dict_value(corpus), hooks))) {
+			emit_row(emit, { { "kind", state_.string("group_error") }, { "group_id", group_id }, { "error", state_.string("cannot write " + path.u8string()) } });
+			return;
+		}
+		emit_row(emit, { { "kind", state_.string("corpus") }, { "group_id", group_id }, { "battles", gd::int_value(state_.array_size(battles.ref)) } });
+	}
+
+	// _stacks: the spec's stacks, each counted at least once, in slot order.
+	Value arena_stacks(const Value &spec) {
+		const uint32_t stacks = state_.new_array();
+		int64_t index = 0;
+		for (const Value &item : gd::items(state_, spec)) {
+			const uint32_t stack = state_.new_dict();
+			state_.set(stack, gd::str(names_.unit_id), gd::str(string_of(get(item, names_.unit_id, state_.string("")))));
+			state_.set(stack, gd::str(names_.count), gd::int_value(std::max<int64_t>(1, gd::to_int(state_, get(item, names_.count, gd::int_value(1))))));
+			state_.set(stack, state_.string("slot_index"), gd::int_value(index++));
+			state_.append(stacks, gd::dict_value(stack));
+		}
+		return gd::array_value(stacks);
+	}
+
+	// _with_spec: a hero at the spec's level, knowing its spells, with its
+	// share of its mana.
+	Value arena_with_spec(const ArenaCalls &arena, const Value &hero, const Value &spec) {
+		Value veteran = call(arena.advance_to_level, { hero, gd::int_value(gd::to_int(state_, get(spec, names_.level, gd::int_value(1)))) });
+		const Value held = get(veteran, atom_of("spellbook"), gd::dict_value(state_.new_dict()));
+		const Value spellbook = held.kind == Kind::Dict ? held : gd::dict_value(state_.new_dict());
+		const gd::ArrayRef known = gd::duplicate_array(state_, gd::as_array(get(spellbook, atom_of("known_spell_ids"), gd::array_value(state_.new_array()))));
+		for (const Value &spell_id : gd::items(state_, get(spec, atom_of("spell_ids"), gd::array_value(state_.new_array())))) {
+			bool has = false;
+			for (const Value &item : gd::items(state_, gd::array_value(known))) {
+				has = has || gd::equal(state_, item, spell_id);
+			}
+			if (!has) {
+				state_.append(known, spell_id);
+			}
+		}
+		state_.set(spellbook.ref, state_.string("known_spell_ids"), gd::array_value(known));
+		state_.set(spellbook.ref, state_.string("mana"), gd::dict_value(state_.new_dict()));
+		state_.set(gd::as_dict(veteran), state_.string("spellbook"), spellbook);
+		veteran = call(arena.ensure_hero_spellbook, { veteran, gd::dict_value(state_.new_dict()) });
+		const int64_t maximum = gd::to_int(state_, call(arena.mana_max_from_hero, { veteran }));
+		const double share = gd::to_float(get(spec, atom_of("mana"), gd::float_value(1.0)));
+		const uint32_t mana = state_.new_dict();
+		state_.set(mana, state_.string("current"), gd::int_value(static_cast<int64_t>(std::round(static_cast<double>(maximum) * share))));
+		state_.set(mana, state_.string("max"), gd::int_value(maximum));
+		state_.set(gd::as_dict(get(veteran, atom_of("spellbook"))), state_.string("mana"), gd::dict_value(mana));
+		return call(arena.ensure_hero_spellbook, { veteran, gd::dict_value(state_.new_dict()) });
+	}
+
+	uint32_t atom_of(const char *name) { return state_.intern(name); }
+	const Value &overworld_value() const { return field(kOverworld); }
+
+	// A value of the job's State, copied into the worker's.
+	Value copy_in(const State &from, const Value &value) {
+		switch (value.kind) {
+			case Kind::String:
+			case Kind::StringName:
+				return Value::of_ref(value.kind, state_.intern(from.text(value.ref)));
+			case Kind::Array: {
+				const uint32_t made = state_.new_array();
+				for (const Value &item : from.array(value.ref).items) {
+					state_.append(made, copy_in(from, item));
+				}
+				return gd::array_value(made);
+			}
+			case Kind::Dict: {
+				const uint32_t made = state_.new_dict();
+				const st::DictNode &node = from.dict(value.ref);
+				const st::ValueList &keys = node.keys.list();
+				for (size_t index = 0; index < keys.size(); ++index) {
+					state_.set(made, copy_in(from, keys[index]), copy_in(from, node.values[index]));
+				}
+				return gd::dict_value(made);
+			}
+			case Kind::Nil:
+			case Kind::Bool:
+			case Kind::Int:
+			case Kind::Float:
+				return value;
+			default:
+				throw st::ScriptError(std::string("the arena job holds a ") + gd::type_name(value));
+		}
+	}
+
 	// ------------------------------------------------------ the stores
 
 	Value miss(st::ContentTable table, uint32_t id) {
@@ -2568,6 +3097,9 @@ private:
 	map_generation::GeneratorCache generator_cache_;
 	std::string kept_map_key_;
 	int64_t content_revision_ = 0;
+	// The arena's sessions made so far, each SessionData.new() an object (an
+	// instance id) of its own.
+	int64_t sessions_made_ = 1;
 	// The session object: its fields (kSessionFields' order), its metadata and
 	// its instance id; the view of the native call in progress.
 	Value object_;
@@ -2627,20 +3159,159 @@ std::string counts_json(const Counts &counts, double seconds, unsigned threads) 
 	std::fprintf(stderr,
 			"match_sim_cli: %s\n"
 			"usage: match_sim_cli [--threads N]\n"
-			"       (settings: HEROES_AI_MATCH_* or HEROES_AI_MATCH_LIST, as tests/ai_versus_ai_match_report.gd takes them)\n",
+			"       (settings: HEROES_AI_MATCH_* or HEROES_AI_MATCH_LIST, as tests/ai_versus_ai_match_report.gd takes them)\n"
+			"       match_sim_cli --write-content <content.snap> [--project <dir>]\n"
+			"       match_sim_cli --arena-setup <job.json> <results.jsonl> [--threads N]\n",
 			problem.c_str());
 	std::exit(2);
 }
 
+// The value of a JSON object's key, Nil when it has none.
+Value json_get(const State &state, const Value &dict, const char *name) {
+	uint32_t atom = 0;
+	Value found;
+	if (dict.kind == Kind::Dict && state.find_atom(name, atom) && state.lookup(dict.ref, Value::str(atom), found)) {
+		return found;
+	}
+	return Value();
+}
+
+std::string json_text(const State &state, const Value &value) {
+	return value.is_string_like() ? state.text(value.ref) : std::string();
+}
+
+// --write-content: the content snapshot of the project folder.
+int run_write_content(const std::string &path, const std::string &project) {
+	Types types;
+	if (!cli::write_whole(fs::u8path(path), cli::build_content_snapshot(fs::u8path(project), types))) {
+		fail("cannot write " + path);
+	}
+	return 0;
+}
+
+// --arena-setup: a setup job of the battle AI arena (tools/battle_ai_arena),
+// as its Godot setup workers ran it (worker.gd): {groups, orders, setup:
+// {corpus_dir, content, write_content (default true), project (default
+// .)}}. The content snapshot is written first unless write_content is false;
+// each group's corpus snapshot goes into its corpus_dir (else the setup's),
+// and the result lines into results. The groups run on --threads threads, one
+// group per thread at a time; a group with a wait_for waits for that file.
+int run_arena_setup(const std::string &job_path, const std::string &results_path, unsigned threads) {
+	const Clock::time_point started = Clock::now();
+	const std::vector<uint8_t> bytes = cli::read_file(fs::u8path(job_path));
+	State job;
+	const compat::JsonParse parsed = compat::json_parse(job, std::string_view(reinterpret_cast<const char *>(bytes.data()), bytes.size()));
+	if (parsed.error != 0 || parsed.data.kind != Kind::Dict) {
+		fail(job_path + " holds no JSON object");
+	}
+	const Value root = parsed.data;
+	const Value setup = json_get(job, root, "setup");
+	const std::string content_path = json_text(job, json_get(job, setup, "content"));
+	if (content_path.empty()) {
+		fail(job_path + " names no setup.content, the content snapshot");
+	}
+	const Value write_content = json_get(job, setup, "write_content");
+	std::string project = json_text(job, json_get(job, setup, "project"));
+	if (project.empty()) {
+		project = ".";
+	}
+	const std::string corpus_dir = json_text(job, json_get(job, setup, "corpus_dir"));
+	const Value orders = json_get(job, root, "orders");
+	const Value groups_value = json_get(job, root, "groups");
+	const st::ValueList groups = groups_value.kind == Kind::Array ? job.array(groups_value.ref).items : st::ValueList();
+	// The workers read the job at once: every lookup table built first.
+	for (size_t node = 0; node < job.dict_count(); ++node) {
+		job.dict_node(static_cast<uint32_t>(node)).keys.prepare_index();
+	}
+
+	Types types;
+	if (write_content.kind != Kind::Bool || write_content.b) {
+		if (!cli::write_whole(fs::u8path(content_path), cli::build_content_snapshot(fs::u8path(project), types))) {
+			fail("cannot write " + content_path);
+		}
+	}
+	Contents contents(types);
+	const Content &content = contents.get(fs::u8path(content_path));
+	const Calls calls;
+	const ArenaCalls arena;
+	std::ofstream results(fs::u8path(results_path), std::ios::binary | std::ios::trunc);
+	if (!results) {
+		fail("cannot write " + results_path);
+	}
+	std::mutex results_mutex;
+	const std::function<void(const std::string &)> emit = [&](const std::string &line) {
+		const std::lock_guard<std::mutex> lock(results_mutex);
+		results << line << '\n';
+		results.flush();
+	};
+	if (threads == 0) {
+		threads = std::max(1u, std::thread::hardware_concurrency());
+	}
+	threads = static_cast<unsigned>(std::max<size_t>(1, std::min<size_t>(threads, groups.size())));
+	std::vector<std::unique_ptr<Worker>> workers;
+	for (unsigned index = 0; index < threads; ++index) {
+		workers.push_back(std::make_unique<Worker>(contents, types, calls));
+	}
+	std::atomic<size_t> next{ 0 };
+	std::atomic<bool> all_ok{ true };
+	std::vector<std::thread> pool;
+	for (unsigned index = 0; index < threads; ++index) {
+		pool.emplace_back([&, index] {
+			Worker &worker = *workers[index];
+			for (size_t at = next++; at < groups.size(); at = next++) {
+				const Value group = groups[at];
+				const std::string wait_for = json_text(job, json_get(job, group, "wait_for"));
+				while (!wait_for.empty() && !fs::exists(fs::u8path(wait_for))) {
+					std::this_thread::sleep_for(std::chrono::milliseconds(100));
+				}
+				const std::string group_corpus = json_text(job, json_get(job, group, "corpus_dir"));
+				if (!worker.arena_group(content, arena, job, group, orders, group_corpus.empty() ? corpus_dir : group_corpus, emit)) {
+					all_ok = false;
+				}
+			}
+		});
+	}
+	for (std::thread &thread : pool) {
+		thread.join();
+	}
+	results.close();
+	Counts counts;
+	for (const auto &worker : workers) {
+		counts.add(worker->counts);
+	}
+	const double seconds = std::chrono::duration<double>(Clock::now() - started).count();
+	std::fprintf(stdout, "MATCH_SIM_CLI %s\n", counts_json(counts, seconds, threads).c_str());
+	std::fflush(stdout);
+	std::fflush(stderr);
+	std::_Exit(all_ok ? 0 : 1);
+}
+
 int run(int argc, char **argv) {
 	unsigned threads = 0;
+	std::string write_content;
+	std::string project = ".";
+	std::string arena_job;
+	std::string arena_results;
 	for (int index = 1; index < argc; ++index) {
 		const std::string arg = argv[index];
 		if (arg == "--threads" && index + 1 < argc) {
 			threads = static_cast<unsigned>(std::stoul(argv[++index]));
+		} else if (arg == "--write-content" && index + 1 < argc) {
+			write_content = argv[++index];
+		} else if (arg == "--project" && index + 1 < argc) {
+			project = argv[++index];
+		} else if (arg == "--arena-setup" && index + 2 < argc) {
+			arena_job = argv[++index];
+			arena_results = argv[++index];
 		} else {
 			usage("unknown argument " + arg);
 		}
+	}
+	if (!write_content.empty()) {
+		return run_write_content(write_content, project);
+	}
+	if (!arena_job.empty()) {
+		return run_arena_setup(arena_job, arena_results, threads);
 	}
 	const Clock::time_point started = Clock::now();
 	std::vector<Settings> matches;

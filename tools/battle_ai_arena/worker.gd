@@ -5,14 +5,10 @@ extends SceneTree
 ## generated maps) with Quick Resolve (BattleAutoResolveRules), the game's own
 ## battle AI and weights on both sides, and writes one JSON line per game
 ## (arena.py --backend godot --plain). Nothing here is loaded by the game or the
-## test suites. Games with each side's own weights play in battle_sim_cli.
-##
-## A setup job ("setup": {"corpus_dir", "content"}) plays nothing: it builds each
-## battle's session as a game does up to the battle payload, which every order
-## shares, and writes each map's battles as a snapshot into corpus_dir for
-## battle_sim_cli (src/gdextension/rules/cli), which plays the orders outside
-## Godot (arena.py --backend cli). With "content", it first writes the content
-## and the rules scripts' static vars that battle_sim_cli reads to that path.
+## test suites. The default backend runs no Godot: match_sim_cli --arena-setup
+## builds each battle up to its payload as _prepare_game does (its C++ port,
+## src/gdextension/rules/cli/match_sim_cli.cpp), and battle_sim_cli plays the
+## orders from there, each side with its own weights.
 ##
 ## Game scripts are loaded at runtime: a -s script compiles before autoloads exist.
 
@@ -27,11 +23,8 @@ const FACTION_DEFENSE := {
 	"faction_veilmourn": "building_dev_veilmourn_unique_3",
 }
 const ECHO_KEYS := ["type", "week", "player_doctrine", "enemy_doctrine", "enemy_week", "guard_ratio", "fort_level", "faction_defense"]
-# The content snapshot and the snapshot files battle_sim_cli reads.
-const RulesSnapshot = preload("res://tools/rules_snapshot/rules_snapshot.gd")
 
 var _started := false
-var _content  # the ContentService autoload; untyped, so its script's methods resolve at runtime
 var _scenario_select: Script
 var _session_store: Script
 var _auto_resolve: Script
@@ -73,7 +66,6 @@ func _run() -> int:
 	if _out == null:
 		printerr("ARENA cannot write %s" % args[1])
 		return 2
-	_content = root.get_node("ContentService")
 	_scenario_select = load("res://scripts/core/ScenarioSelectRules.gd")
 	_session_store = load("res://scripts/core/SessionStateStore.gd")
 	_auto_resolve = load("res://scripts/core/BattleAutoResolveRules.gd")
@@ -85,30 +77,14 @@ func _run() -> int:
 	_hero_command = load("res://scripts/core/HeroCommandRules.gd")
 	_ai_heroes = load("res://scripts/core/AiHeroRules.gd")
 	_town_development = load("res://scripts/core/TownDevelopmentRules.gd")
-	var setup: Dictionary = job.get("setup", {}) if job.get("setup", {}) is Dictionary else {}
-	# Before any map: the static vars as a game starts. army_power applies its
-	# terms from the content at its first call, which every game's setup has
-	# made before its record reads them (_commander_features).
-	if String(setup.get("content", "")) != "":
-		_ai_heroes.army_power([], {})
-	if String(setup.get("content", "")) != "" and not RulesSnapshot.write(String(setup.content), RulesSnapshot.content_snapshot(_content)):
-		printerr("ARENA cannot write the content snapshot %s" % setup.content)
-		return 2
 	_emit({"kind": "worker_ready", "boot_ms": Time.get_ticks_msec()})
 	for group in job.get("groups", []):
-		# A setup job may run ahead of its caller (tune.py): a group waits for its go.
-		var wait_for := String(group.get("wait_for", ""))
-		while wait_for != "" and not FileAccess.file_exists(wait_for):
-			OS.delay_msec(100)
-		_play_group(group, job.get("orders", [["A", "B"], ["B", "A"]]), String(group.get("corpus_dir", setup.get("corpus_dir", ""))))
-		if not setup.is_empty():
-			_emit({"kind": "group_done", "group_id": group.get("group_id", ""), "tag": group.get("tag", "")})
+		_play_group(group, job.get("orders", [["A", "B"], ["B", "A"]]))
 	return 0
 
 
-## One generated map, made as the skirmish menu makes it, and its battles: played,
-## or, in a setup job (corpus_dir), written for battle_sim_cli.
-func _play_group(group: Dictionary, orders: Array, corpus_dir: String) -> void:
+## One generated map, made as the skirmish menu makes it, and its battles.
+func _play_group(group: Dictionary, orders: Array) -> void:
 	var started := Time.get_ticks_usec()
 	var config = _scenario_select.build_random_map_player_config(
 		String(group.get("map_seed", "arena")), "", "", int(group.get("player_count", 2)), "land", false,
@@ -140,7 +116,6 @@ func _play_group(group: Dictionary, orders: Array, corpus_dir: String) -> void:
 	var base: Dictionary = session.to_dict().duplicate(true)
 	_emit({"kind": "group_ready", "group_id": group.get("group_id", ""), "setup_ms": (Time.get_ticks_usec() - started) / 1000.0, "guards": guards.size(), "towns": towns.size()})
 	var used := {}
-	var corpus := []
 	for battle in group.get("battles", []):
 		var kind := String(battle.get("type", ""))
 		if guards.is_empty() or (kind == "siege" and towns.is_empty()):
@@ -156,16 +131,8 @@ func _play_group(group: Dictionary, orders: Array, corpus_dir: String) -> void:
 			ground["town"] = towns[int(battle.get("site_index", 0)) % towns.size()]
 		else:
 			ground["guard"] = guards[int(battle.get("site_index", 0)) % guards.size()]
-		if corpus_dir != "":
-			# The probe is the session a game builds: one build serves both.
-			var entry := _corpus_battle(base, group, battle, ground, orders, ai_controller, probe)
-			if not entry.is_empty():
-				corpus.append(entry)
-			continue
 		for order in orders:
 			_play_game(base, group, battle, ground, String(order[0]), String(order[1]), ai_controller)
-	if corpus_dir != "":
-		_write_corpus(corpus_dir, group, String(session.scenario_id), corpus)
 
 
 ## The guard whose strength is nearest the wanted strength (by ratio), a fresh one if close.
@@ -253,8 +220,8 @@ func _play_game(base: Dictionary, group: Dictionary, battle: Dictionary, ground:
 
 ## A game up to its battle payload, the same for every order: {row (the record
 ## so far, without the variants), session, site, skipped (outside the group's
-## odds)}. The session is built from base unless one built so is given.
-func _prepare_game(base: Dictionary, group: Dictionary, battle: Dictionary, ground: Dictionary, ai_controller: String, probe = null) -> Dictionary:
+## odds)}.
+func _prepare_game(base: Dictionary, group: Dictionary, battle: Dictionary, ground: Dictionary, ai_controller: String) -> Dictionary:
 	var row := {
 		"kind": "game",
 		"group_id": group.get("group_id", ""),
@@ -267,7 +234,7 @@ func _prepare_game(base: Dictionary, group: Dictionary, battle: Dictionary, grou
 	for key in ECHO_KEYS:
 		if battle.has(key):
 			row[key] = battle[key]
-	var session = probe if probe != null else _player_session(base, battle)
+	var session = _player_session(base, battle)
 	var kind := String(battle.get("type", ""))
 	var enemy_power := 0.0
 	var site := {}
@@ -319,61 +286,6 @@ func _prepare_game(base: Dictionary, group: Dictionary, battle: Dictionary, grou
 		var ratio := float(ground.get("player_power", 0.0)) / maxf(1.0, enemy_power)
 		skipped = ratio < float(odds[0]) or ratio > float(odds[1])
 	return {"row": row, "session": session, "site": site, "skipped": skipped}
-
-
-## A battle for battle_sim_cli (a setup job): its session as a game holds it
-## before the payload, with the record so far. A skipped battle is skipped in
-## every order here, and leaves nothing to play.
-func _corpus_battle(base: Dictionary, group: Dictionary, battle: Dictionary, ground: Dictionary, orders: Array, ai_controller: String, probe) -> Dictionary:
-	var game := _prepare_game(base, group, battle, ground, ai_controller, probe)
-	var row: Dictionary = game.row
-	if bool(game.skipped):
-		for order in orders:
-			_emit({"kind": "skipped", "battle_id": row.battle_id})
-		return {}
-	var record := JSON.stringify(row)
-	return {
-		"battle_id": String(row.battle_id),
-		"kind": String(battle.get("type", "")),
-		"town": String(ground.get("town", "")),
-		"dice": int(group.get("dice", 0)),
-		# The record without its closing brace: battle_sim_cli adds the rest.
-		"prefix": record.substr(0, record.length() - 1),
-		"session": _session_view(game.session),
-		"site": game.site,
-	}
-
-
-## A map's battles for battle_sim_cli, with the generated scenario they read.
-func _write_corpus(corpus_dir: String, group: Dictionary, scenario_id: String, battles: Array) -> void:
-	var corpus := {
-		"group": {
-			"scenario_id": scenario_id,
-			"scenario": _content.get_scenario_readonly(scenario_id),
-			"terrain_layers": _content.get_terrain_layers_for_scenario(scenario_id),
-			"content_revision": _content.get_content_revision(),
-		},
-		"battles": battles,
-	}
-	var path := corpus_dir.path_join(String(group.get("corpus_file", "group_%s.snap" % group.get("group_id", ""))))
-	if not RulesSnapshot.write(path, corpus):
-		_emit({"kind": "group_error", "group_id": group.get("group_id", ""), "error": "cannot write %s" % path})
-		return
-	_emit({"kind": "corpus", "group_id": group.get("group_id", ""), "battles": battles.size()})
-
-
-## The session as the native rules see an object (PortBridge::object_view): its
-## script variables in property list order, then its metadata under "meta".
-func _session_view(session) -> Dictionary:
-	var view := {}
-	for property in session.get_property_list():
-		if int(property.get("usage", 0)) & PROPERTY_USAGE_SCRIPT_VARIABLE:
-			view[String(property.name)] = session.get(property.name)
-	var meta := {}
-	for name in session.get_meta_list():
-		meta[name] = session.get_meta(name)
-	view["meta"] = meta
-	return view
 
 
 func _town(session, placement_id: String) -> Dictionary:

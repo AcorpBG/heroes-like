@@ -3,6 +3,7 @@
 #include <cstring>
 #include <stdexcept>
 #include <string_view>
+#include <unordered_map>
 
 namespace aurelion::rules::snapshot {
 
@@ -264,6 +265,226 @@ private:
 	std::vector<Value> packeds_;
 };
 
+// The Godot adapter's Encoder over a State: the same tags in the same order,
+// a node's identity standing for the container's.
+class Encoder {
+public:
+	Encoder(const State &state, const EncodeHooks &hooks) :
+			state_(state), hooks_(hooks) {}
+
+	std::vector<uint8_t> encode(const Value &value) {
+		out_.insert(out_.end(), kMagic, kMagic + sizeof(kMagic));
+		write(value, 0);
+		return std::move(out_);
+	}
+
+private:
+	void u8(uint8_t value) { out_.push_back(value); }
+	void u32(uint32_t value) {
+		for (int shift = 0; shift < 32; shift += 8) {
+			out_.push_back(static_cast<uint8_t>(value >> shift));
+		}
+	}
+	void u64(uint64_t value) {
+		for (int shift = 0; shift < 64; shift += 8) {
+			out_.push_back(static_cast<uint8_t>(value >> shift));
+		}
+	}
+
+	void text(const std::string &value) {
+		const auto found = texts_.find(value);
+		if (found != texts_.end()) {
+			u32(found->second);
+			return;
+		}
+		texts_.emplace(value, static_cast<uint32_t>(texts_.size()));
+		u32(kNewText);
+		u32(static_cast<uint32_t>(value.size()));
+		out_.insert(out_.end(), value.begin(), value.end());
+	}
+
+	// The type's id, defined first (a kType) when it is new; 0 untyped.
+	uint32_t type_of(TypeRef type) {
+		if (type == 0) {
+			return 0;
+		}
+		if (!hooks_.type) {
+			throw std::runtime_error("snapshot encode: a typed container and no type hook");
+		}
+		const TypeInfo info = hooks_.type(type);
+		for (size_t index = 0; index < types_.size(); ++index) {
+			if (types_[index] == info) {
+				return static_cast<uint32_t>(index + 1);
+			}
+		}
+		types_.push_back(info);
+		const uint32_t id = static_cast<uint32_t>(types_.size());
+		u8(kType);
+		u32(id);
+		u8(info.builtin);
+		text(info.class_name);
+		text(info.script);
+		return id;
+	}
+
+	void write(const Value &value, int depth) {
+		if (depth > kMaxDepth) {
+			throw std::runtime_error("snapshot encode: data nested deeper than " + std::to_string(kMaxDepth));
+		}
+		switch (value.kind) {
+			case Kind::Nil:
+				u8(kNil);
+				return;
+			case Kind::Bool:
+				u8(value.b ? kTrue : kFalse);
+				return;
+			case Kind::Int:
+				u8(kInt);
+				u64(static_cast<uint64_t>(value.i));
+				return;
+			case Kind::Float: {
+				uint64_t bits = 0;
+				std::memcpy(&bits, &value.f, sizeof(bits));
+				u8(kFloat);
+				u64(bits);
+				return;
+			}
+			case Kind::String:
+				u8(kString);
+				text(state_.text(value.ref));
+				return;
+			case Kind::StringName:
+				u8(kStringName);
+				text(state_.text(value.ref));
+				return;
+			case Kind::Vector2i:
+				u8(kVector2i);
+				u32(static_cast<uint32_t>(static_cast<int32_t>(value.i)));
+				u32(static_cast<uint32_t>(static_cast<int32_t>(value.i >> 32)));
+				return;
+			case Kind::Vector3i:
+				u8(kVector3i);
+				u32(static_cast<uint32_t>(static_cast<int32_t>(value.i)));
+				u32(static_cast<uint32_t>(static_cast<int32_t>(value.i >> 32)));
+				u32(static_cast<uint32_t>(value.z));
+				return;
+			case Kind::Array:
+				array(value.ref, depth);
+				return;
+			case Kind::Dict:
+				dict(value.ref, depth);
+				return;
+			case Kind::PackedByte:
+			case Kind::PackedInt32:
+			case Kind::PackedString:
+				packed(value);
+				return;
+			case Kind::Opaque: {
+				if (!hooks_.opaque) {
+					throw std::runtime_error("snapshot encode: an opaque value and no opaque hook");
+				}
+				const std::pair<uint8_t, std::string> described = hooks_.opaque(value.ref);
+				u8(kUnsupported);
+				u8(described.first);
+				text(described.second);
+				return;
+			}
+		}
+		throw std::runtime_error("snapshot encode: a value of an unknown kind");
+	}
+
+	void array(uint32_t node, int depth) {
+		const auto found = arrays_.find(node);
+		if (found != arrays_.end()) {
+			u8(kContainer);
+			u32(found->second);
+			return;
+		}
+		const state::ArrayNode &array = state_.array(node);
+		const uint32_t type = type_of(array.element_type);
+		arrays_.emplace(node, next_container_++);
+		u8(kArray);
+		u8(array.read_only ? kReadOnly : 0);
+		u32(type);
+		u32(static_cast<uint32_t>(array.items.size()));
+		// The node's buffer may move while its items are written (a backed
+		// node met below fills, adding nodes): by index, through the State.
+		const size_t size = array.items.size();
+		for (size_t index = 0; index < size; ++index) {
+			write(state_.array(node).items[index], depth + 1);
+		}
+	}
+
+	void dict(uint32_t node, int depth) {
+		const auto found = dicts_.find(node);
+		if (found != dicts_.end()) {
+			u8(kContainer);
+			u32(found->second);
+			return;
+		}
+		const state::DictNode &dict = state_.dict(node);
+		const uint32_t key_type = type_of(dict.key_type);
+		const uint32_t value_type = type_of(dict.value_type);
+		dicts_.emplace(node, next_container_++);
+		const state::ValueList keys = state_.dict(node).keys.list();
+		const state::ValueList values = state_.dict(node).values;
+		u8(kDict);
+		u8(state_.dict(node).read_only ? kReadOnly : 0);
+		u32(key_type);
+		u32(value_type);
+		u32(static_cast<uint32_t>(keys.size()));
+		for (size_t index = 0; index < keys.size(); ++index) {
+			write(keys[index], depth + 1);
+			write(values[index], depth + 1);
+		}
+	}
+
+	void packed(const Value &value) {
+		const auto found = packeds_.find(value.ref);
+		if (found != packeds_.end()) {
+			u8(kPacked);
+			u32(found->second);
+			return;
+		}
+		packeds_.emplace(value.ref, next_packed_++);
+		const state::PackedNode &node = state_.packed(value.ref);
+		switch (value.kind) {
+			case Kind::PackedByte:
+				u8(kPackedByte);
+				u32(static_cast<uint32_t>(node.bytes.size()));
+				out_.insert(out_.end(), node.bytes.begin(), node.bytes.end());
+				return;
+			case Kind::PackedInt32:
+				u8(kPackedInt32);
+				u32(static_cast<uint32_t>(node.ints.size()));
+				for (const int32_t item : node.ints) {
+					u32(static_cast<uint32_t>(item));
+				}
+				return;
+			default: {
+				const std::vector<uint32_t> atoms = node.atoms;
+				u8(kPackedString);
+				u32(static_cast<uint32_t>(atoms.size()));
+				for (const uint32_t atom : atoms) {
+					text(state_.text(atom));
+				}
+				return;
+			}
+		}
+	}
+
+	const State &state_;
+	const EncodeHooks &hooks_;
+	std::vector<uint8_t> out_;
+	std::unordered_map<std::string, uint32_t> texts_;
+	std::vector<TypeInfo> types_;
+	std::unordered_map<uint32_t, uint32_t> arrays_;
+	std::unordered_map<uint32_t, uint32_t> dicts_;
+	std::unordered_map<uint32_t, uint32_t> packeds_;
+	uint32_t next_container_ = 0;
+	uint32_t next_packed_ = 0;
+};
+
 } // namespace
 
 Decoded decode(State &state, const uint8_t *data, size_t size) {
@@ -282,6 +503,11 @@ Decoded decode(State &state, const uint8_t *data, size_t size) {
 		state.dict_node(static_cast<uint32_t>(node)).keys.prepare_index();
 	}
 	return out;
+}
+
+std::vector<uint8_t> encode(const State &state, const Value &value, const EncodeHooks &hooks) {
+	Encoder encoder(state, hooks);
+	return encoder.encode(value);
 }
 
 } // namespace aurelion::rules::snapshot

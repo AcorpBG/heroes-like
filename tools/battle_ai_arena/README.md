@@ -26,13 +26,13 @@ working tree's battle AI, the native port: Phase 2d deleted the GDScript `Battle
 each other. Score a code change against the code before it from two runs of the same suite
 instead, or by building a second `battle_sim_cli`.
 
-Godot comes from `--godot`, `$GODOT_BIN`, `godot4`/`godot` on PATH, or the owner's Windows
-install, as for the core suite. Every worker gets a throwaway user profile. Results go to
-`.artifacts/battle_ai_arena/<time>-<suite>/` (`summary.json`, `games.jsonl`). Worker logs are
-kept only when something went wrong, or with `--keep-logs`. The battles are played by
-`battle_sim_cli` outside Godot (`--backend cli`, the default; see "Battles outside Godot");
-`--backend godot --plain` plays every game in Godot workers, the game's own weights on both
-sides.
+The arena runs no Godot (`--backend cli`, the default; see "Battles outside Godot"). Results
+go to `.artifacts/battle_ai_arena/<time>-<suite>/` (`summary.json`, `games.jsonl`). Jobs and
+logs are kept only when something went wrong, or with `--keep-logs`. `--backend godot --plain`
+plays every game in Godot workers instead (`worker.gd`), the game's own weights on both sides,
+with the same records. Godot comes from `--godot`, `$GODOT_BIN`, `godot4`/`godot` on PATH, or
+the owner's Windows install, as for the core suite, and every worker gets a throwaway user
+profile.
 
 ## Tuning the weights
 
@@ -95,7 +95,7 @@ heroes. The battle AI plays both: the enemy side in the game, and the player sid
 Resolve and every computer player's own fights.
 
 Contested battles (`--odds 0.6,1.7`): most realistic battles are mismatches whose winner is
-fixed, which squeezes the score. With `--odds` the worker plays only the battles whose odds
+fixed, which squeezes the score. With `--odds` the arena plays only the battles whose odds
 (the player's strength over the enemy's) fall in the band, from twice as many generated, and
 guards are sampled near even. No army is rescaled: they are the same realistic battles, only
 the ones the AI can swing. On `standard` that keeps 333 of 480; switching off hero spells
@@ -105,7 +105,7 @@ AI instead of 5 to 7%. `tune.py` trains on contested battles by default.
 ## Fitting the strength estimate
 
 ```
-python tools/battle_ai_arena/power_fit.py                 # 7,200 battles, about 25 minutes
+python tools/battle_ai_arena/power_fit.py                 # 7,200 battles
 python tools/battle_ai_arena/power_fit.py --ceiling 3     # also replays 720 battles with other dice
 python tools/battle_ai_arena/power_fit.py --games <run>/games.jsonl
 ```
@@ -117,8 +117,8 @@ the estimate's terms to who won, with a logistic fit on the log strength ratio. 
 terms and how often the game's current estimate and the refitted one call the winner of the
 battles left out of the fit. Copy the terms into `content/ai_hero_weights.json` (`army_power`),
 then rebuild the company catalog with `tools/build_generated_neutral_companies.py`, which reads
-them from there. The worker
-records each side's hero (`player_commander`, `enemy_commander`), and a group's `dice`
+them from there. The record
+holds each side's hero (`player_commander`, `enemy_commander`), and a group's `dice`
 replays its battles with other damage rolls.
 
 The 2026-10-16 fit, tested on 2,400 battles the fit never saw:
@@ -165,26 +165,36 @@ engine's parity and timing checks use it, and it is the only mode of `--backend 
 
 ## Battles outside Godot
 
-`battle_sim_cli` (`src/gdextension/rules/cli`, built into `bin/` with the rules library by
-`python tools/build_native.py windows`) plays the battles with the native rules core, outside
-Godot (docs/native-rules-engine-transition.md, Phase 2c). A battle's setup, the map and the
-session up to the battle payload, is the same in every order and does not depend on the
-weights, so Godot workers build it once (`worker.gd`, a setup job) and write it as snapshots
-(`aurelion_rules/snapshot.hpp`): `content.snap` holds the content files, the content tables
-by id and the rules scripts' static vars as a game starts, and one `group_<n>.snap` per map
-holds its battles (each one's session as the native rules see it, its site and its record so
-far) and the generated scenario. `battle_sim_cli` then plays every order of every battle from
-there, a game per thread, as `worker.gd` goes on from the payload, and writes the same record.
+Two tools of the native rules core (`src/gdextension/rules/cli`, built into `bin/` with the
+rules library by `python tools/build_native.py windows`) run the arena without Godot. A
+battle's setup, the map and the session up to the battle payload, is the same in every order
+and does not depend on the weights, so it is built once and written as snapshots
+(`aurelion_rules/snapshot.hpp`):
 
-- `battle_sim_cli` runs the native port of the working tree's code. Rebuild it after a battle
-  rules change, as the library.
+- `match_sim_cli --write-content` writes `content.snap` from the working tree: the content
+  files, the content tables by id and the rules scripts' static vars as a game starts, read
+  from their declarations, with the AI weights the first `army_power` call applies.
+- `match_sim_cli --arena-setup` generates each map as the skirmish menu does and builds each
+  battle's session as a game does (the C++ port of `worker.gd`'s `_prepare_game`), a map per
+  thread. It writes one `group_<n>.snap` per map: its battles (each one's session as the
+  native rules see it, its site and its record so far) and the generated scenario.
+- `battle_sim_cli` (docs/native-rules-engine-transition.md, Phase 2c) then plays every order of
+  every battle from there, a game per thread, as `worker.gd` goes on from the payload, and
+  writes the same record.
+
+- Both tools run the native port of the working tree's code. Rebuild them after a rules
+  change, as the library.
+- The native setup was checked against the Godot setup it replaced (2026-10-25): on `standard`
+  all 48 map snapshots were byte for byte the same, and so were the 480 records `battle_sim_cli`
+  played from them, but for `ms`. The content snapshot's only differences were its `project`
+  key and the engine object `NativeRules._api`, which no native code reads.
 - At a battle end over a site's guards, the site's visit (`OverworldRules._collect_resource_node_result`)
   answers nothing: the record reads nothing it changes. `pow`, `exp` and `log` are the tool's
   C runtime's, not the engine's (decision D4). `summary.json` counts both
   (`battle_sim_cli.host_calls`, `math_calls`).
-- `tune.py`'s setup workers boot once for the run and build each generation's battles one
-  generation ahead of the one being played. Each generation's line and `history.jsonl` record
-  give the seconds spent waiting for them (`setup_wait`) and `battle_sim_cli`'s own.
+- `tune.py` builds each generation's battles one generation ahead of the one being played
+  (`--setup-threads`, while `battle_sim_cli` plays). Each generation's line and `history.jsonl`
+  record give the seconds spent waiting for the setup (`setup_wait`) and `battle_sim_cli`'s own.
 - The records are the Godot backend's, checked game for game (transition doc, Phase 2c).
   Godot workers no longer count `ai_calls`.
 

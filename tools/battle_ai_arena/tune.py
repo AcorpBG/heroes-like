@@ -22,9 +22,9 @@ Results go to .artifacts/battle_ai_arena/tune-<time>/: state.json (resumable), h
 (one line per generation) and weights.json (the current mean, the run's recommendation).
 Check it with `arena.py --b-weights <dir>/weights.json` on `standard` and `holdout`.
 
-battle_sim_cli plays the games (arena.py's README): Godot setup workers, booted once for the
-whole run, build each generation's battles up to their payloads, one generation ahead of the
-one being played, since the battles do not depend on the weights.
+No Godot runs (arena.py's README): match_sim_cli --arena-setup builds each generation's
+battles up to their payloads, one generation ahead of the one being played, since the battles
+do not depend on the weights, and battle_sim_cli plays the games.
 """
 from __future__ import annotations
 
@@ -34,6 +34,7 @@ import math
 import os
 import shutil
 import statistics
+import subprocess
 import sys
 import time
 from datetime import datetime
@@ -118,111 +119,63 @@ def training_groups(seed: int, generation: int, groups: int, battles: int, odds:
 
 
 class SetupAhead:
-    """Godot setup workers (worker.gd setup jobs) for the generations of a run, booted once: each
-    builds its share of every generation's battles into gen_<n>/corpus, a generation's maps
-    starting once release(n) is called. wait(n) returns that generation's setup rows when all its
-    maps are done."""
+    """The native setup (match_sim_cli --arena-setup) of the generations of a run: release(n) starts building
+    generation n's battles into gen_<n>/corpus, while the generation before plays; wait(n) returns that
+    generation's setup rows when it is done. The content snapshot is written once, for the whole run."""
 
-    def __init__(self, godot: str, run_dir: Path, schedule: list[tuple[int, list[dict]]], workers: int, orders: list[list[str]]):
+    def __init__(self, run_dir: Path, schedule: list[tuple[int, list[dict]]], threads: int, orders: list[list[str]]):
+        self.run_dir = run_dir
         self.dir = run_dir / "setup"
         shutil.rmtree(self.dir, ignore_errors=True)
         self.dir.mkdir(parents=True)
         self.content = self.dir / "content.snap"
-        self.expected: dict[str, int] = {}
-        self.done: dict[str, list[dict]] = {}
-        self.profiles: list[str] = []
-        self.procs = []
-        self.read = {}
-        jobs: list[list[dict]] = [[] for _ in range(workers)]
-        for gen, groups in schedule:
-            gen_dir = run_dir / f"gen_{gen:03d}"
-            shutil.rmtree(gen_dir, ignore_errors=True)
-            (gen_dir / "corpus").mkdir(parents=True)
-            self.expected[str(gen)] = len(groups)
-            self.done[str(gen)] = []
-            for index, group in enumerate(groups):
-                jobs[index % workers].append(dict(
-                    group, tag=str(gen), corpus_dir=str(gen_dir / "corpus"), corpus_file=f"group_{index:05d}.snap",
-                    wait_for=str(gen_dir / "go"),
-                ))
-        for index, chunk in enumerate(jobs):
-            if not chunk:
-                continue
-            job = self.dir / f"job_{index}.json"
-            job.write_text(json.dumps({
-                "plain": True, "orders": orders, "groups": chunk,
-                # The first worker writes the content snapshot as it boots.
-                "setup": {"content": str(self.content) if index == 0 else ""},
-            }), encoding="utf-8")
-            self.procs.append(arena.start_worker(godot, self.dir, index, job, self.profiles))
-            self.read[index] = (0, [])  # bytes read, rows of the map in progress
+        arena.write_content(self.content)
+        self.groups = dict(schedule)
+        self.threads = threads
+        self.orders = orders
+        self.procs: dict[int, tuple[subprocess.Popen, Path, object]] = {}
 
     def release(self, gen: int) -> None:
-        if str(gen) in self.expected:
-            (self.dir.parent / f"gen_{gen:03d}" / "go").write_text("", encoding="utf-8")
-
-    def _poll(self) -> None:
-        """Takes the workers' new rows: a map's rows end with its group_done."""
-        for index, _proc, out, _log in self.procs:
-            offset, group_rows = self.read[index]
-            if not out.exists():
-                continue
-            with out.open("rb") as handle:
-                handle.seek(offset)
-                data = handle.read()
-            end = data.rfind(b"\n") + 1
-            for line in data[:end].decode("utf-8").splitlines():
-                if not line.strip():
-                    continue
-                row = json.loads(line)
-                if row.get("kind") == "worker_ready":
-                    continue
-                if row.get("kind") == "group_done":
-                    self.done.setdefault(str(row.get("tag", "")), []).extend(group_rows + [row])
-                    group_rows = []
-                else:
-                    group_rows.append(row)
-            self.read[index] = (offset + end, group_rows)
+        if gen not in self.groups or gen in self.procs:
+            return
+        gen_dir = self.run_dir / f"gen_{gen:03d}"
+        shutil.rmtree(gen_dir, ignore_errors=True)
+        (gen_dir / "corpus").mkdir(parents=True)
+        groups = [dict(group, tag=str(gen), corpus_file=f"group_{index:05d}.snap") for index, group in enumerate(self.groups[gen])]
+        job = self.dir / f"job_{gen:03d}.json"
+        arena.setup_job(job, groups, self.orders, self.content, gen_dir / "corpus")
+        results = self.dir / f"results_{gen:03d}.jsonl"
+        log = (self.dir / f"setup_{gen:03d}.log").open("w", encoding="utf-8")
+        cmd = [str(arena.SETUP_CLI), "--arena-setup", str(job), str(results)] + (["--threads", str(self.threads)] if self.threads else [])
+        self.procs[gen] = (subprocess.Popen(cmd, stdout=log, stderr=subprocess.STDOUT), results, log)
 
     def wait(self, gen: int, timeout: int) -> tuple[list[dict], list[str]]:
         """The generation's setup rows once all its maps are done, and problems."""
-        deadline = time.monotonic() + timeout
-        tag = str(gen)
-        while True:
-            # Whether any worker is still going, before reading: a worker that ends has written all its rows.
-            failed = any(proc.poll() not in (None, 0) for _index, proc, _out, _log in self.procs)
-            alive = any(proc.poll() is None for _index, proc, _out, _log in self.procs)
-            timed_out = time.monotonic() > deadline
-            self._poll()
-            finished = sum(1 for row in self.done[tag] if row.get("kind") == "group_done")
-            if finished >= self.expected[tag]:
-                return self.done[tag], self.problems()
-            if failed or not alive or timed_out:
-                problems = self.problems()
-                if not failed:
-                    problems.append(f"generation {gen}'s setup {'timed out' if timed_out else 'ended'} with {finished} of {self.expected[tag]} maps done")
-                return self.done[tag], problems
-            time.sleep(0.2)
-
-    def problems(self) -> list[str]:
-        found = []
-        for index, proc, _out, _log in self.procs:
-            log = self.dir / f"worker_{index}.log"
-            errors = log.read_text(encoding="utf-8", errors="replace").count("SCRIPT ERROR") if log.exists() else 0
-            if errors:
-                found.append(f"setup worker {index}: {errors} script errors (see {log})")
-            if proc.poll() not in (None, 0):
-                found.append(f"setup worker {index} exited with {proc.returncode}")
-        return found
+        self.release(gen)
+        proc, results, log = self.procs.pop(gen)
+        problems = []
+        try:
+            proc.wait(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            proc.wait()
+            problems.append(f"generation {gen}'s setup timed out")
+        log.close()
+        if proc.returncode not in (0, None):
+            problems.append(f"generation {gen}'s setup exited with {proc.returncode} (see {self.dir / f'setup_{gen:03d}.log'})")
+        rows = [json.loads(line) for line in results.read_text(encoding="utf-8").splitlines() if line.strip()] if results.exists() else []
+        done = sum(1 for row in rows if row.get("kind") == "group_done")
+        if done < len(self.groups[gen]) and not problems:
+            problems.append(f"generation {gen}'s setup ended with {done} of {len(self.groups[gen])} maps done")
+        return rows, problems
 
     def close(self, keep: bool) -> None:
-        for _index, proc, _out, log in self.procs:
+        for proc, _results, log in self.procs.values():
             if proc.poll() is None:
                 proc.kill()
             proc.wait()
             log.close()
-        for profile in self.profiles:
-            shutil.rmtree(profile, ignore_errors=True)
+        self.procs.clear()
         if not keep:
             shutil.rmtree(self.dir, ignore_errors=True)
 
@@ -257,21 +210,20 @@ def main() -> int:
     parser.add_argument("--generations", type=int, default=30)
     parser.add_argument("--population", type=int, default=16, help="weight sets per generation (default 16)")
     parser.add_argument("--sigma", type=float, default=0.5, help="initial step, in powers of two (default 0.5)")
-    parser.add_argument("--maps", type=int, default=48, help="generated maps each generation (default 48; several per worker even out the load)")
+    parser.add_argument("--maps", type=int, default=48, help="generated maps each generation (default 48)")
     parser.add_argument("--battles", type=int, default=3, help="battles generated per map (default 3)")
     parser.add_argument("--odds", default="0.6,1.7", help="play only battles whose odds fall in LOW,HIGH (default 0.6,1.7, about half); '' plays all")
-    parser.add_argument("--workers", type=int, default=max(1, (os.cpu_count() or 2) * 3 // 4))
-    parser.add_argument("--godot", help="Godot binary")
+    parser.add_argument("--setup-threads", type=int, default=max(1, (os.cpu_count() or 2) // 4),
+                        help="threads of the next generation's setup, which runs while battle_sim_cli plays (default: a quarter of the cores)")
     parser.add_argument("--out", help="run directory (default .artifacts/battle_ai_arena/tune-<time>)")
     parser.add_argument("--resume", help="a run directory to continue")
     parser.add_argument("--base-weights", help="weights to search around and play against, for example an earlier run's weights.json (default: the game's)")
     parser.add_argument("--seed", type=int, default=1)
-    parser.add_argument("--timeout", type=int, default=3600, help="seconds before a generation's workers are stopped")
+    parser.add_argument("--timeout", type=int, default=3600, help="seconds before a generation's setup or games are stopped")
     parser.add_argument("--keep-logs", action="store_true", help="keep each generation's jobs, logs and raw results")
     parser.add_argument("--threads", type=int, default=0, help="battle_sim_cli's threads (default: one per core)")
     args = parser.parse_args()
 
-    godot = arena.find_godot(args.godot)
     base = arena.load_weights(args.base_weights)
     if args.resume:
         run_dir = Path(args.resume)
@@ -291,7 +243,7 @@ def main() -> int:
     orders = [order for name in names for order in ([name, "base"], ["base", name])]
     odds = arena.parse_odds(settings.get("odds", ""))
     schedule = [(gen, training_groups(settings["seed"], gen, settings["maps"], settings["battles"], odds)) for gen in range(cma.gen, args.generations)]
-    ahead = SetupAhead(godot, run_dir, schedule, max(1, min(args.workers, settings["maps"])), orders)
+    ahead = SetupAhead(run_dir, schedule, args.setup_threads, orders)
     ahead.release(cma.gen)
     print(f"Tuning {len(keys)} weights, population {settings['population']}, {settings['battles'] * settings['maps']} battles generated a generation (odds {settings.get('odds') or 'any'}) -> {run_dir}")
     code = 1
@@ -299,7 +251,7 @@ def main() -> int:
         code = tune(args, run_dir, cma, rng, keys, base, settings, values, names, orders, ahead)
         return code
     finally:
-        # A failed run keeps the setup workers' logs.
+        # A failed run keeps the setup's jobs and logs.
         ahead.close(args.keep_logs or code != 0)
 
 
@@ -349,7 +301,7 @@ def tune(args, run_dir: Path, cma: SepCMA, rng, keys: list[str], base: dict[str,
             "sigma": round(cma.sigma, 4),
             "battles": len(scores["mean"]),
             "games": games_played,
-            # The seconds spent waiting for the Godot setup workers, and battle_sim_cli's own.
+            # The seconds spent waiting for the setup, and battle_sim_cli's own.
             **split,
             "multipliers": {key: round(2.0 ** float(np.clip(v, -SEARCH_LIMIT, SEARCH_LIMIT)), 3) for key, v in zip(keys, cma.mean)},
         }

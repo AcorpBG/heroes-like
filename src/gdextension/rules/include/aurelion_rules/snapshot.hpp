@@ -1,12 +1,13 @@
 #pragma once
 
 // A snapshot: GDScript data the game writes (AurelionRules.snapshot_encode, the
-// battle AI arena's setup worker) and the battle tool reads outside Godot
-// (battle_sim_cli, Phase 2c), keeping what the State models of it: key order,
-// int and float, String and StringName, typed and read-only containers, and
-// identity (a container reached from two places is one node). A Variant the
-// State does not model (a Vector2, an Object, a PackedFloat32Array) is kept by
-// its type name, as an opaque value that is an error where it is read.
+// AI match runner scene) or a rules tool writes (encode: the battle AI arena's
+// native setup), and the tools outside Godot read (battle_sim_cli, Phase 2c;
+// match_sim_cli), keeping what the State models of it: key order, int and
+// float, String and StringName, typed and read-only containers, and identity
+// (a container reached from two places is one node). A Variant the State does
+// not model (a Vector2, an Object, a PackedFloat32Array) is kept by its type
+// name, as an opaque value that is an error where it is read.
 //
 // Little-endian: the magic, then one value. A value is a tag byte and, by tag:
 //   kNil, kFalse, kTrue: nothing
@@ -32,7 +33,9 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <functional>
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace aurelion::rules::snapshot {
@@ -86,5 +89,19 @@ struct Decoded {
 // read the nodes at once while nothing writes them. Bad input throws
 // std::runtime_error.
 Decoded decode(state::State &state, const uint8_t *data, size_t size);
+
+// What encode asks of the caller: a typed container's type by its TypeRef, and
+// an opaque value's Variant type and type name (written as kUnsupported).
+struct EncodeHooks {
+	std::function<TypeInfo(state::TypeRef)> type;
+	std::function<std::pair<uint8_t, std::string>(uint32_t)> opaque;
+};
+
+// A value of state as a snapshot, as the Godot adapter's encoder
+// (gdextension/snapshot_encoder.cpp) writes the same data: a container or
+// packed node reached twice is written once, and a backed node is filled
+// first. For the rules tools outside Godot (the battle AI arena's native
+// setup, cli/match_sim_cli.cpp).
+std::vector<uint8_t> encode(const state::State &state, const state::Value &value, const EncodeHooks &hooks);
 
 } // namespace aurelion::rules::snapshot

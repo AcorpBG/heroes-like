@@ -3,7 +3,8 @@
 // What the rules tools outside Godot share (battle_sim_cli, match_sim_cli): a
 // decoded snapshot (aurelion_rules/snapshot.hpp), the type registry their
 // workers' States share, and the content snapshot the game writes for them
-// (tools/rules_snapshot/rules_snapshot.gd).
+// (tools/rules_snapshot/rules_snapshot.gd) or match_sim_cli writes
+// (content_snapshot.hpp).
 
 #include "aurelion_rules/battle_state.hpp"
 #include "aurelion_rules/snapshot.hpp"
@@ -37,6 +38,30 @@ inline std::vector<uint8_t> read_file(const std::filesystem::path &path) {
 	return std::vector<uint8_t>(std::istreambuf_iterator<char>(in), std::istreambuf_iterator<char>());
 }
 
+// bytes as the file at path, written under another name first and renamed
+// when whole, so a reader never sees half a file. False when it cannot be.
+inline bool write_whole(const std::filesystem::path &path, const std::vector<uint8_t> &bytes) {
+	std::filesystem::path part = path;
+	part += ".part";
+	{
+		std::ofstream out(part, std::ios::binary | std::ios::trunc);
+		if (!out) {
+			return false;
+		}
+		out.write(reinterpret_cast<const char *>(bytes.data()), static_cast<std::streamsize>(bytes.size()));
+		if (!out) {
+			return false;
+		}
+	}
+	std::error_code error;
+	std::filesystem::rename(part, path, error);
+	if (error) {
+		std::filesystem::remove(part, error);
+		return false;
+	}
+	return true;
+}
+
 // Every type the stores and the ported code name, one TypeRef each, shared by
 // the workers' States.
 class Types {
@@ -50,6 +75,14 @@ public:
 		}
 		types_.push_back(info);
 		return static_cast<st::TypeRef>(types_.size());
+	}
+	// The type of a TypeRef ref() gave.
+	snap::TypeInfo info(st::TypeRef type) const {
+		const std::lock_guard<std::mutex> lock(mutex_);
+		if (type == 0 || type > types_.size()) {
+			fail("a type the registry does not hold");
+		}
+		return types_[type - 1];
 	}
 	// Registers in state the types it does not know yet (known: how many it does).
 	void sync(st::State &state, size_t &known) const {

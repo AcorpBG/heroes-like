@@ -16,11 +16,11 @@ a weight set of content/battle_ai_weights.json: the working tree's (current), a 
 working tree's battle AI, the native port (docs/native-rules-engine-transition.md: Phase 2d
 deleted its GDScript copy). Results go to .artifacts/battle_ai_arena/<time>-<suite>/.
 
-battle_sim_cli (bin/, built with the rules library by tools/build_native.py) plays the
-battles outside Godot: Godot workers build each battle up to its payload once (worker.gd, a
-setup job), and battle_sim_cli plays every order from there, each side with its variant's
-weights, through the native router. --backend godot --plain plays every game in Godot
-instead, the game's own weights on both sides, with the same records.
+The arena runs without Godot: match_sim_cli --arena-setup (bin/, built with the rules library
+by tools/build_native.py) generates the maps and builds each battle up to its payload once,
+and battle_sim_cli plays every order from there, each side with its variant's weights, through
+the native router. --backend godot --plain plays every game in Godot workers instead
+(worker.gd), the game's own weights on both sides, with the same records.
 """
 from __future__ import annotations
 
@@ -48,6 +48,7 @@ from core_suite import find_godot  # noqa: E402
 WEIGHTS_FILE = ROOT / "content" / "battle_ai_weights.json"
 MAPS_DIR = ROOT / "maps"
 CLI = ROOT / "bin" / ("battle_sim_cli.exe" if os.name == "nt" else "battle_sim_cli")
+SETUP_CLI = ROOT / "bin" / ("match_sim_cli.exe" if os.name == "nt" else "match_sim_cli")
 
 # Suites of realistic battles (scenarios.py): generated maps, battles on each.
 SUITES = {
@@ -188,11 +189,9 @@ def run_workers(
     workers: int,
     timeout: int,
     orders: list[list[str]] | None = None,
-    setup: dict | None = None,
 ) -> tuple[list[dict], list[str]]:
-    """Plays every battle of groups once per order ([player variant, enemy variant]), the game's own weights on
-    both sides (--plain). With setup ({corpus_dir, content}) the workers play nothing and write the battles for
-    battle_sim_cli instead (run_cli)."""
+    """Plays every battle of groups once per order ([player variant, enemy variant]) in Godot workers, the game's
+    own weights on both sides (--backend godot --plain)."""
     chunks = [groups[i::workers] for i in range(workers)]
     procs = []
     profiles = []
@@ -200,12 +199,7 @@ def run_workers(
         if not chunk:
             continue
         job = run_dir / f"job_{index}.json"
-        job.write_text(json.dumps({
-            "orders": orders or [["A", "B"], ["B", "A"]],
-            "groups": chunk,
-            # The first worker also writes the content snapshot.
-            **({"setup": {"corpus_dir": setup["corpus_dir"], "content": setup["content"] if index == 0 else ""}} if setup else {}),
-        }), encoding="utf-8")
+        job.write_text(json.dumps({"orders": orders or [["A", "B"], ["B", "A"]], "groups": chunk}), encoding="utf-8")
         procs.append(start_worker(godot, run_dir, index, job, profiles))
     problems = []
     deadline = time.monotonic() + timeout
@@ -246,20 +240,55 @@ def start_worker(godot: str, run_dir: Path, index: int, job: Path, profiles: lis
     return (index, subprocess.Popen(cmd, env=env, stdout=log, stderr=subprocess.STDOUT), out, log)
 
 
+def write_content(path: Path) -> None:
+    """The content snapshot battle_sim_cli and the setup read, from the working tree (match_sim_cli
+    --write-content)."""
+    if not SETUP_CLI.exists():
+        sys.exit(f"{SETUP_CLI} is missing: build it with python tools/build_native.py windows")
+    proc = subprocess.run([str(SETUP_CLI), "--write-content", str(path), "--project", str(ROOT)],
+                          capture_output=True, text=True, encoding="utf-8")
+    if proc.returncode != 0:
+        sys.exit(f"match_sim_cli --write-content failed: {proc.stderr.strip()[-400:]}")
+
+
+def setup_job(job: Path, groups: list[dict], orders: list[list[str]], content: Path, corpus: Path) -> None:
+    """A setup job for match_sim_cli --arena-setup: each group's battles built up to their payloads into corpus,
+    over the content snapshot written before (write_content)."""
+    job.write_text(json.dumps({
+        "orders": orders,
+        "groups": groups,
+        "setup": {"corpus_dir": str(corpus), "content": str(content), "write_content": False, "project": str(ROOT)},
+    }), encoding="utf-8")
+
+
+def run_setup(job: Path, results: Path, timeout: int, threads: int = 0) -> tuple[list[dict], list[str]]:
+    """match_sim_cli --arena-setup on a setup job (setup_job): its result rows and problems."""
+    if not SETUP_CLI.exists():
+        sys.exit(f"{SETUP_CLI} is missing: build it with python tools/build_native.py windows")
+    cmd = [str(SETUP_CLI), "--arena-setup", str(job), str(results)] + (["--threads", str(threads)] if threads else [])
+    problems = []
+    try:
+        proc = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=timeout)
+        if proc.returncode != 0:
+            problems.append(f"match_sim_cli --arena-setup exited with {proc.returncode}: {proc.stderr.strip()[-400:]}")
+    except subprocess.TimeoutExpired:
+        problems.append("match_sim_cli --arena-setup timed out")
+    rows = [json.loads(line) for line in results.read_text(encoding="utf-8").splitlines() if line.strip()] if results.exists() else []
+    return rows, problems
+
+
 def run_cli(
-    godot: str,
     run_dir: Path,
     groups: list[dict],
-    workers: int,
     variants: dict[str, dict[str, float] | None] | None,
     timeout: int,
     orders: list[list[str]] | None = None,
     default_variant: str = "A",
     threads: int = 0,
 ) -> tuple[list[dict], list[str], dict]:
-    """run_workers' games played by battle_sim_cli, with the same records: Godot workers build each battle up to
-    its payload once (worker.gd, a setup job), and battle_sim_cli plays every order from there. variants: each
-    label's weights (variant_weights), None for a plain run. Also returns battle_sim_cli's counts."""
+    """Plays every battle of groups once per order without Godot: match_sim_cli --arena-setup builds each battle
+    up to its payload once, and battle_sim_cli plays every order from there. variants: each label's weights
+    (variant_weights), None for a plain run. Also returns battle_sim_cli's counts."""
     orders = orders or [["A", "B"], ["B", "A"]]
     corpus = run_dir / "corpus"
     shutil.rmtree(corpus, ignore_errors=True)
@@ -267,8 +296,9 @@ def run_cli(
     content = run_dir / "content.snap"
     numbered = [dict(group, corpus_file=f"group_{index:05d}.snap") for index, group in enumerate(groups)]
     started = time.monotonic()
-    rows, problems = run_workers(godot, run_dir, numbered, workers, timeout, orders,
-                                 setup={"corpus_dir": str(corpus), "content": str(content)})
+    write_content(content)
+    setup_job(run_dir / "setup_job.json", numbered, orders, content, corpus)
+    rows, problems = run_setup(run_dir / "setup_job.json", run_dir / "setup_results.jsonl", timeout, threads)
     games, cli_problems, stats = play_cli(run_dir, content, corpus, variants, orders, default_variant,
                                           max(1, int(timeout - (time.monotonic() - started))), threads)
     shutil.rmtree(corpus, ignore_errors=True)
@@ -463,23 +493,22 @@ def main() -> int:
     parser.add_argument("--a-weights", help="weights file for A, over the game's content/battle_ai_weights.json")
     parser.add_argument("--b-weights", help="weights file for B, for example a tune.py result")
     parser.add_argument("--suite", choices=sorted(SUITES), default="standard")
-    parser.add_argument("--workers", type=int, default=max(1, (os.cpu_count() or 2) * 3 // 4))
-    parser.add_argument("--godot", help="Godot binary")
+    parser.add_argument("--workers", type=int, default=max(1, (os.cpu_count() or 2) * 3 // 4), help="Godot workers of --backend godot")
+    parser.add_argument("--godot", help="Godot binary, for --backend godot")
     parser.add_argument("--out", help="results directory (default .artifacts/battle_ai_arena/<time>-<suite>)")
     parser.add_argument("--timeout", type=int, default=3600, help="seconds before workers are stopped")
     parser.add_argument("--odds", help="contested battles only: LOW,HIGH band of the player's strength over the enemy's, e.g. 0.6,1.7")
     parser.add_argument("--roles", action="store_true", help="also play A against A, to split B's gain into its play as player and as enemy")
-    parser.add_argument("--keep-logs", action="store_true", help="keep worker jobs, logs and raw results")
+    parser.add_argument("--keep-logs", action="store_true", help="keep jobs, logs and raw results")
     parser.add_argument("--plain", action="store_true", help="the game's own weights on both sides, no router or variants (--a and --b unused)")
-    parser.add_argument("--backend", choices=("cli", "godot"), default="cli", help="cli: battle_sim_cli plays the battles (default); godot: Godot workers play every game, with --plain only")
-    parser.add_argument("--threads", type=int, default=0, help="battle_sim_cli's threads (default: one per core)")
+    parser.add_argument("--backend", choices=("cli", "godot"), default="cli", help="cli: the native setup and battle_sim_cli, no Godot (default); godot: Godot workers play every game, with --plain only")
+    parser.add_argument("--threads", type=int, default=0, help="the native setup's and battle_sim_cli's threads (default: one per core)")
     args = parser.parse_args()
     if args.plain and (args.a_weights or args.b_weights):
         parser.error("--plain plays the game's own weights")
     if args.backend == "godot" and not args.plain:
         parser.error("--backend godot plays the game's own weights only: add --plain")
 
-    godot = find_godot(args.godot)
     run_dir = Path(args.out) if args.out else ROOT / ".artifacts" / "battle_ai_arena" / f"{datetime.now():%Y%m%d-%H%M%S}-{args.suite}"
     run_dir.mkdir(parents=True, exist_ok=True)
     cli_variants = None
@@ -490,20 +519,21 @@ def main() -> int:
     orders = [["A", "B"], ["B", "A"]] + ([["A", "A"]] if args.roles else [])
     workers = max(1, min(args.workers, len(groups)))
     maps_before = set(MAPS_DIR.iterdir()) if MAPS_DIR.exists() else set()
-    print(f"Arena: {sum(len(g['battles']) for g in groups)} battles x {len(orders)} games on {len(groups)} maps, {workers} workers ...")
+    print(f"Arena: {sum(len(g['battles']) for g in groups)} battles x {len(orders)} games on {len(groups)} maps"
+          + (f", {workers} Godot workers ..." if args.backend == "godot" else " ..."))
     started = time.monotonic()
     cli_stats = None
     if args.backend == "cli":
-        rows, problems, cli_stats = run_cli(godot, run_dir, groups, workers, cli_variants, args.timeout, orders, "A", args.threads)
+        rows, problems, cli_stats = run_cli(run_dir, groups, cli_variants, args.timeout, orders, "A", args.threads)
     else:
-        rows, problems = run_workers(godot, run_dir, groups, workers, args.timeout, orders)
+        rows, problems = run_workers(find_godot(args.godot), run_dir, groups, workers, args.timeout, orders)
     wall = time.monotonic() - started
     summary, game_problems = summarize(rows, unit_values(), args.plain)
     problems = problems + game_problems
     leftovers = sorted(p.name for p in (set(MAPS_DIR.iterdir()) if MAPS_DIR.exists() else set()) - maps_before)
     if leftovers:
-        problems.append(f"maps/ gained {len(leftovers)} files during the run (workers remove their own): {leftovers[:6]}")
-    summary.update({"suite": args.suite, "odds": args.odds, "skipped": sum(1 for row in rows if row.get("kind") == "skipped") // max(1, len(orders)), "a": args.a, "b": args.b, "plain": args.plain, "backend": args.backend, "workers": workers, "wall_seconds": round(wall, 1), "problems": problems})
+        problems.append(f"maps/ gained {len(leftovers)} files during the run (the setup writes none, Godot workers remove their own): {leftovers[:6]}")
+    summary.update({"suite": args.suite, "odds": args.odds, "skipped": sum(1 for row in rows if row.get("kind") == "skipped") // max(1, len(orders)), "a": args.a, "b": args.b, "plain": args.plain, "backend": args.backend, "workers": workers if args.backend == "godot" else 0, "wall_seconds": round(wall, 1), "problems": problems})
     if cli_stats is not None:
         summary["battle_sim_cli"] = cli_stats
     (run_dir / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
@@ -518,7 +548,9 @@ def main() -> int:
                     line["kept"] = {side: round(share, 6) for side, share in scored["kept"].items()}
                 handle.write(json.dumps(line) + "\n")
     if not args.keep_logs and not problems:
-        for path in list(run_dir.glob("job_*.json")) + list(run_dir.glob("results_*.jsonl")) + list(run_dir.glob("worker_*.log")) + list(run_dir.glob("cli_games.jsonl")) + list(run_dir.glob("variants.txt")):
+        for path in (list(run_dir.glob("job_*.json")) + list(run_dir.glob("results_*.jsonl")) + list(run_dir.glob("worker_*.log"))
+                     + list(run_dir.glob("setup_job.json")) + list(run_dir.glob("setup_results.jsonl"))
+                     + list(run_dir.glob("cli_games.jsonl")) + list(run_dir.glob("variants.txt"))):
             path.unlink()
     print_report(summary, problems, args, wall, run_dir)
     return 1 if problems else 0

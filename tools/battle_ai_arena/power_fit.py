@@ -8,7 +8,7 @@ winner on battles the fit never saw. Copy the terms into content/ai_hero_weights
 ("army_power": power_*, ranged_power, hero_*), then rebuild the generated company catalog
 with tools/build_generated_neutral_companies.py, which reads them from there.
 
-    python tools/battle_ai_arena/power_fit.py                    # 30 maps of battles, ~25 min
+    python tools/battle_ai_arena/power_fit.py                    # 30 seeds of battles
     python tools/battle_ai_arena/power_fit.py --games <run>/games.jsonl   # refit played battles
     python tools/battle_ai_arena/power_fit.py --ceiling 3        # also: how much is luck
 
@@ -43,17 +43,16 @@ TERMS = {"health": ARMY_POWER["power_health"], "damage": ARMY_POWER["power_damag
          "hero_command": ARMY_POWER["hero_command_power"], "hero_spell": ARMY_POWER["hero_spell_power"]}
 
 
-def play(out: Path, first: int, seeds: int, dice: list[int], workers: int) -> Path:
+def play(out: Path, first: int, seeds: int, dice: list[int]) -> Path:
     """Plays the battles of seeds first.. once each (and once per dice value), the game's own AI on both sides,
     in battle_sim_cli."""
     out.mkdir(parents=True, exist_ok=True)
-    godot = arena.find_godot(None)
     games = out / "games.jsonl"
     for seed in range(first, first + seeds):
         groups = [dict(group, dice=d) for d in dice for group in scenarios.build_suite("power", f"power-{seed}", 48, 5, None)]
         run = out / f"seed_{seed}"
         run.mkdir(exist_ok=True)
-        rows, problems, _stats = arena.run_cli(godot, run, groups, workers, None, 7200, [["A", "A"]], "A")
+        rows, problems, _stats = arena.run_cli(run, groups, None, 7200, [["A", "A"]], "A")
         with games.open("a", encoding="utf-8") as f:
             for row in rows:
                 if row.get("kind") == "game":
@@ -164,7 +163,6 @@ def main() -> int:
     parser.add_argument("--games", help="games.jsonl of an earlier run: refit without playing")
     parser.add_argument("--seeds", type=int, default=30, help="maps of 5 battles to play (default 30)")
     parser.add_argument("--ceiling", type=int, default=0, help="also replay this many maps with 8 other dice")
-    parser.add_argument("--workers", type=int, default=24)
     args = parser.parse_args()
     started = time.monotonic()
     out = arena.ROOT / ".artifacts" / "battle_ai_arena" / (time.strftime("%Y%m%d-%H%M%S") + "-power")
@@ -172,9 +170,9 @@ def main() -> int:
         games_path = Path(args.games)
     else:
         print(f"Playing {args.seeds * 240} battles (current battle AI on both sides) -> {out}")
-        games_path = play(out, 1, args.seeds, [0], args.workers)
+        games_path = play(out, 1, args.seeds, [0])
         if args.ceiling:
-            play(out, CEILING_FIRST_SEED, args.ceiling, list(range(9)), args.workers)
+            play(out, CEILING_FIRST_SEED, args.ceiling, list(range(9)))
     units = arena.load_items("units.json")
     ua = unit_arrays(units)
     plain, replays = load(games_path, arena.unit_values())
