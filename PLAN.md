@@ -28,7 +28,7 @@ Rules:
 
 ### Fresh-map six-player balance check
 
-`evaluation-large6p-land-strong-fresh720-20261025` (in progress, owner-requested evaluation): 720 fresh Large two-level land maps with six distinct factions and strong guards, one game per map. All 720 six-faction seat permutations occur once across the batch, giving each faction 720 games/maps and 120 starts per seat. Plan seed 2026102503; 320-day cap; default AI weights; 16 single-threaded processes with recycling after up to 32 games. Keep current balance unchanged. This maximizes map breadth within the preceding 720-game budget and evaluates the owner-requested Large 6P setting.
+`evaluation-large6p-land-strong-fresh720-20261025` (completed, owner-requested evaluation): on `f72252e59`, 720 actual distinct Large two-level land maps, six factions, strong guards, one game per map; all 720 seat orders occur once across maps, 120 starts per faction per seat. 689 decided / 31 capped (29 late wars, two planning stalls), zero failures/errors/fallbacks, 83.8 min. Scores: Sunvault 108.86% (95% map-bootstrap 103.6..113.9; 165 wins), Thornwake 100.42%, Embercourt 100.08%, Mireclaw 98.72%, Veilmourn 96.06%, Brasshollow 95.86%. Current balance unchanged; fresh-bank 6P evaluation, with no paired 4P comparison or further balance/AI changes.
 
 ### Faction HP balance
 
