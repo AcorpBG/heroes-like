@@ -117130,14 +117130,14 @@
     {
       "id": "evaluation-mireclaw-ranged-only-hp-720-20261025",
       "title": "Frozen 720-game rerun after removing Mireclaw melee HP buff",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "owner_requested_evaluation",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         ".claude/skills/ai-match-batch/SKILL.md"
       ],
-      "notes": "Owner requested test again: same frozen 720-game plan, seed 2026102502; 30 Large 4P two-level maps, all 24 arrangements and fixed hero/army rolls. Primary paired comparison against prior reduced-buff/nerf run 279bff2a3 isolates removal of Mireclaw melee HP; original e8a0983f4 baseline retained for context. No other balance or runtime changes.",
+      "notes": "Owner-requested evaluation on 5cc326ea2 completed: frozen plan seed 2026102502, 720 games = 30 Large 4P two-level maps x 24 arrangements, fixed hero/army rolls, weak/strong guards and land/normal water. All 720 actual setup dictionaries match original e8a0983f4, full-buff ab7715702 and previous 279bff2a3; native executable unchanged. Only 15 Mireclaw melee HP fields differ from previous. 696 decided, 24 capped, zero failures/timeouts/script errors/native fallbacks; 54.8 minutes, 16 one-thread slots, 30 worker lifetimes. Scores previous -> new: Mireclaw 103.75 -> 100.3472 (points 747 -> 722.5; wins 120 -> 114), Thornwake 99.5833 -> 102.7778, Sunvault 98.75 -> 101.4583, Veilmourn 100.4861 -> 100, Embercourt 99.0972 -> 97.9167, Brasshollow 98.3333 -> 97.5. Mireclaw paired map-bootstrap change -3.4028 pp, 95% interval -10.6944..+3.6111; versus original +7.5 pp, +0.2778..+14.375. 100,000 paired whole-map samples, seed mire-melee-revert-v1:<faction_id>; 20 maps/faction; all caps retained in primary scores. Other previous-to-new marginal change intervals also include zero; all absolute score intervals include 100. Bank reused for tuning, not fresh-map validation. Twenty-one caps still captured/fought on days 315-320. Quiet m156/m158/m161 on ai-match-844842385: five-town leader continued gate/resource/own-town plans and moving armies while opponent held its last town; last capture/battle days 170/285,129/217,141/231. No execution freeze or AI fix. Cap-free-map sensitivity Mireclaw -4.1667 pp on 14 maps (nonrandom subset). Captures 100370, undefended 42260, winner gold median 250469, max AI day 1378 ms. Summary and comparison records: .artifacts/ai_batch_20261025_large4p_L2_720_mire_melee_hp_reverted/summary.md; disposable worker inputs/profile/snapshot files auto-cleaned, comparison outputs retained under owner cleanup deferral. Content core suite already 17/17 this turn; no extra evaluation or balance changes.",
       "updatedAt": "2026-10-25"
     }
   ],
