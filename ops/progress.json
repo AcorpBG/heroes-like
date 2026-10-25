@@ -117176,6 +117176,19 @@
       ],
       "notes": "Owner-selected option 3 of the unit strength pass, growth and gold only. Pass: 47,628 battles in battle_sim_cli, every town-roster unit's week of growth against every other unit of its tier (base and upgraded pools, T1-T7), alone and with an identical neutral escort, three count scales, six maps with the same level-1 hero (no mana) on both sides; strength fitted as a count multiplier. Five same-role pairs changed, base and upgrade together (20 fields, growth and cost only): Prism Adepts g6->10 gold100->120, Lattice Conjurers 140->170; Shard Wardens g9->13 gold70->45, Mirrorback Wardens 95->63; Maskglass Corsairs g5->7 gold190->105, Shattermask Duelists 240->150; Fordhook Cadets g13->17 gold65->40, Chainford Marshals 85->60; Reedsnare Kin g13->15 gold50->35, Knotroot Trappers 70->55. Verification re-run (T1-T3 pools, 2 maps, 8,160 battles): pair ratios Adepts 1.75->1.03, Conjurers 1.66->1.06, Wardens 1.44->1.01, Mirrorback 1.39->0.91, Corsairs 1.45->1.09, Shattermask 1.43->1.02, Cadets 1.33->1.07, Marshals 1.24->1.04; Reedsnare Kin measured at growth 16 (1.10 base, 0.83 upgrade) and set to 15 to split the base/upgrade disagreement. Open finding not acted on: ranged dwellings beat melee in 23 of 24 mixed pairs (often 2-3.6x), and army_power underrates shooters. Windows core 17/17. No native change. Scratch scripts in .artifacts/unit_pass, removed after the handoff.",
       "updatedAt": "2026-10-25"
+    },
+    {
+      "id": "evaluation-large6p-hp-growth-paired720-20261025",
+      "title": "Paired 720-map six-player rerun with HP and dwelling growth/gold changes",
+      "status": "in_progress",
+      "classification": "owner_requested_evaluation",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        ".claude/skills/ai-match-batch/SKILL.md"
+      ],
+      "notes": "Owner requests the same720 six-player matches/maps/starting arrangements after HP buffs, then explicitly asks to first verify latest main after growth changes. Fetched origin and verified clean main==origin/main==9c95cc2d4. Latest content compared with previous f72252e59 run:24 HP fields (12 Veilmourn,12 Brasshollow),10 growth fields and10 gold-cost fields across five base/upgrade dwelling pairs (Sunvault2 pairs, Veilmourn/Embercourt/Mireclaw1 each). Only units/PLAN/ops changed; native binary/source and generator unchanged. Replay frozen seed2026102503,720 distinct Large108x108 two-level land maps,strong guards,one game/map,all720 faction orders once across maps,120 starts/faction/seat,day cap320. Preserve ordinary per-game hero/army RNG from prior plan; growth may change starting counts. Paired comparison measures the combined HP/growth/gold package, not HP alone. Default16 one-thread processes,max32matches before recycling. Output .artifacts/ai_batch_20261025_large6p_L2_land_strong_720_hp_growth_paired.",
+      "updatedAt": "2026-10-25"
     }
   ],
   "project": "heroes-like",

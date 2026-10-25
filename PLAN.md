@@ -32,6 +32,8 @@ Rules:
 
 ### Fresh-map six-player balance check
 
+`evaluation-large6p-hp-growth-paired720-20261025` (in progress, owner-requested evaluation): replay all 720 matches of the preceding Large 6P two-level land/strong bank, with identical map seeds and faction arrangements, using latest main content `9c95cc2d4`: Veilmourn/Brasshollow nominal +2% HP plus the five dwelling-pair growth/gold changes. Compare paired map results with `f72252e59`. Preserve the original ordinary hero/army RNG mode; this measures the combined content pass. Native executable unchanged; default 16 one-thread processes, recycling after up to 32 games.
+
 `evaluation-large6p-land-strong-fresh720-20261025` (completed, owner-requested evaluation): on `f72252e59`, 720 actual distinct Large two-level land maps, six factions, strong guards, one game per map; all 720 seat orders occur once across maps, 120 starts per faction per seat. 689 decided / 31 capped (29 late wars, two planning stalls), zero failures/errors/fallbacks, 83.8 min. Scores: Sunvault 108.86% (95% map-bootstrap 103.6..113.9; 165 wins), Thornwake 100.42%, Embercourt 100.08%, Mireclaw 98.72%, Veilmourn 96.06%, Brasshollow 95.86%. Current balance unchanged; fresh-bank 6P evaluation, with no paired 4P comparison or further balance/AI changes.
 
 ### Faction HP balance
