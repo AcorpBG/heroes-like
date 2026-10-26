@@ -22,6 +22,8 @@ Rules:
 
 ## Current Tactical State
 
+`evaluation-xl6p-water-strong-fresh120-20261026` (in_progress, owner-requested evaluation): exactly120 fresh XL6P maps, two levels, normal water, strong guards, one game per map; balanced faction seats20each, ordinary rolls,320-day cap. Native16one-thread processes, recycling after at most32games. Preserve current balance; report actual setup checks, map-bootstrap uncertainty and any capped games. This is a fresh setting sample, not a paired comparison with the Large land bank.
+
 ### Authored maps, scenarios and campaigns are obsolete
 
 `content-authored-scenarios-obsolete-20261005` (paused, owner decision 2026-10-05): every authored map, scenario and campaign (`content/scenarios.json`, `content/campaigns.json`, `tools/author_*.py`) is obsolete and will be redone completely once the owner selects that rework. Until then put no effort into them: no new authored scenarios or campaigns, fixes, retuning, art or validation work, and no chasing failures in the authored-scenario checks listed in `docs/authored-scenarios-obsolete.md`. Every authored-scenario and campaign section below is history, not work to continue. Generated maps, shared content definitions and the scenario/campaign runtime are not covered.
