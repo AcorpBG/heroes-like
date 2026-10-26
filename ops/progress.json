@@ -117239,6 +117239,32 @@
       ],
       "notes": "Completed 312 paired arena evaluations: four captured real fights (m339[639],m021[277],m136[178],m474[413]) x original+12 alternate damage seeds x6conditions. Original-content recovery reproduces640/280/179/414 battle prefixes and setups; original arena survivor lists match. Traced/untraced baselines match all common fields except timing. Live content/units.json SHA unchanged; no game balance or AI weights changed. Initial ablations: baseline Sun50/52wins,42.160% troop-goldloss; relay initiative off51/52,41.534%; ambush bonus suppression50->25%50/52,42.424%; allowFogbound50/52,41.905%. All three original-dice m339 casualty ledgers unchanged. Full trace shows no positive Sun buffs and no linked Prism units in m339, so relay inactive; Veil Duelists die before primary strike, Sovereigns only retaliate, Revenants hit unmarked Corona, so ambush counter is not the original cause. R1 RivetClause141+Arbiters79 kills11Keelbreakers before action; Sunline37+Choir107 leaves2of6Registrars for a24damage shot;Colossus killsremaining2. All17Veil ranged goneR1. Whole fight Sun damage1107 (hero263,ranged742,Corona102);Veil287 (hero95,Registrar24,melee168). Shield-targeting theory unsupported becauseKeelbreakersneveract. Adaptive tempo follow-ups: choir-line base initiative-1 Sun44/52wins,51.903%loss; allSunranged initiative-1 Sun45/52,49.849%. Choir narrow variant changes3definitioninitiativefields in snapshots only. Original-dice m339 fiveRegistrars shoot69beforeChoir,kill3; choirshot107->61, later casts/targets change. Sunstillwins but6rounds with1Colossus,86.831%loss vs3rounds/15survivors/26.986%. Across13dice,m339Sun13->7wins;other3cases37/39unchanged,soeffectlocalized,notunbiasedglobalbalanceproof. Candidate is choir-line-1; no nerf shipped and no full batch. Important correction: match action_counts covers attacking/player side only; earlier288/466no-Sun-strike statistic did not prove Veil defenders neverstruck. Corrected existing report and documented counter scope in README. Tooling: optional battle_sim_cli --trace uses existing native playback, --dice alternate rolls; match_sim_cli --write-content --content-overrides manifest uses validated native store without live writes. Windows debug/release and CLIs built; selftest645vectors/13helpers passes; six Godot/native match seeds identical90/70/85/31/80/100daily digests and records; core17/17passed,auto-removed32testmaps/profiles. Linux binaries unchanged per pause. Details appended to existing paired summary. Task scratch cleanup measured before handoff; original match banks preserved. Cleanup completed after all task processes exited: removed 248 task-owned capture/snapshot/trace/replay/parity files, 178273456 bytes (170.01 MiB). These are rebuildable; original match banks, existing summary and caches preserved.",
       "updatedAt": "2026-10-26"
+    },
+    {
+      "id": "balance-sunvault-choir-initiative-20261026",
+      "title": "Sunvault choir-line base initiative reduction",
+      "status": "completed",
+      "classification": "owner_requested_balance",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        ".claude/skills/ai-match-batch/SKILL.md"
+      ],
+      "notes": "Implemented exactly3initiative fields against6d50d5f90: Resonant Choristers7->6, Heliograph Ballistae8->7, Harmonic Precentors7->6. All other content fields unchanged, including the effective Veilmourn HP fix. Structural diff verified. Windows core17/17passed in25s;32generated test map files and disposable profiles auto-cleaned. No native changes/rebuild or extra evaluation.",
+      "updatedAt": "2026-10-26"
+    },
+    {
+      "id": "evaluation-large6p-choir-init-paired720-20261026",
+      "title": "Paired 720 six-player Large two-level strong-guard choir rerun",
+      "status": "in_progress",
+      "classification": "owner_requested_evaluation",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        ".claude/skills/ai-match-batch/SKILL.md"
+      ],
+      "notes": "Owner explicitly requests full720 6P Large2Level strong guards after choir nerf. Reuse all720 plan entries from .artifacts/ai_batch_20261025_large6p_L2_land_strong_720_hp_growth_paired/plan.json, land/no water and same seeds/arrangements; ordinary RNG behavior preserved, no switch to fixed rolls/all arrangements per map.720distinctmaps,all720seatorders acrossbank,120starts/faction/seat. Daycap320;16processes x1thread,recycle32. Baseline4ab93d593 precedes effective Veil HP correction, so compare combined19HP+3initiative content fields rather than claiming choir-only effect. Verify actual setup equality after completion, paired whole-map score change intervals, caps/failures and cleanup. New run folder .artifacts/ai_batch_20261026_large6p_L2_land_strong_720_choir_init_paired. No extra full batch or native build/parity during batch. Structural comparison against4ab93d593 verifies22unit fields total:19effectiveVeilHP plus3choirinitiative. Skill defaults deliberately overridden only by retaining the old frozen plan design; do not reinterpret it as720arrangements on eachmap or enablefixedrolls now.",
+      "updatedAt": "2026-10-26"
     }
   ],
   "project": "heroes-like",
