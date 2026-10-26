@@ -17,8 +17,8 @@ then runs bin/rules_selftest.exe.
 `linux` copies the working tree's sources (tracked and new, not ignored) and the pinned
 godot-cpp to a dated /tmp directory on the build server (HEROES_LINUX_BUILD_HOST,
 default root@pleyc.com; never its stale /root/dev checkout), builds there with GCC at
-nice 19, runs the self-tests (rules_selftest also as a MinGW build under Wine, which must
-print the same sweep digest), splits the debug info off every ELF output and strips it,
+nice 19, runs the self-tests (with --mingw, rules_selftest also as a MinGW build under Wine,
+which must print the same sweep digest), splits the debug info off every ELF output and strips it,
 copies bin/ back, checks every file's sha256 and deletes the remote directory.
 
 Debug info never goes into git: PDBs and the Linux debug files are archived per build id
@@ -557,7 +557,7 @@ def main() -> int:
 	parser.add_argument("--host", default=os.environ.get("HEROES_LINUX_BUILD_HOST", DEFAULT_HOST))
 	parser.add_argument("--symbols-dir", default=None, help="symbol store (default: HEROES_NATIVE_SYMBOLS or heroes-like-native-symbols next to the main checkout)")
 	parser.add_argument("--keep-remote", action="store_true", help="leave the remote build directory")
-	parser.add_argument("--no-mingw", action="store_true", help="skip the MinGW/Wine self-test on Linux")
+	parser.add_argument("--mingw", action="store_true", help="also build rules_selftest with MinGW on Linux and run it under Wine")
 	parser.add_argument("--remote-timeout", type=int, default=120, metavar="MINUTES", help="stop the remote Linux build after this long (default 120)")
 	parser.add_argument("--no-selftest", action="store_true", help="skip bin/rules_selftest.exe on Windows")
 	args = parser.parse_args()
@@ -567,7 +567,7 @@ def main() -> int:
 	if args.system == "windows":
 		build_windows(parts, flavours, args.jobs, store, not args.no_selftest)
 	else:
-		build_linux(parts, flavours, args.host, store, args.keep_remote, not args.no_mingw, args.remote_timeout)
+		build_linux(parts, flavours, args.host, store, args.keep_remote, args.mingw, args.remote_timeout)
 	prune_symbols(store)
 	return 0
 

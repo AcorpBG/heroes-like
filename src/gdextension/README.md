@@ -208,7 +208,8 @@ change never rebuilds the map generator:
   packed arrays at the boundary and calls the core.
 - `selftest/`: `rules_selftest`, which runs the core without Godot against golden
   vectors that carry their own inputs and against a pinned sweep digest. The same
-  digest must come out of MSVC, GCC and MinGW (run under Wine).
+  digest must come out of MSVC and GCC, and of MinGW (run under Wine) when the Linux
+  build is asked for it with `--mingw`.
 
 `AurelionRules.get_build_info()` returns `api`, `source_tree` (the git tree id of
 `src/gdextension/rules` the binary was built from; it equals
@@ -227,7 +228,7 @@ template it links. Build both with:
 
 ```sh
 python tools/build_native.py windows            # MSVC here, then bin/rules_selftest.exe
-python tools/build_native.py linux              # GCC and MinGW on the Linux build server
+python tools/build_native.py linux              # GCC on the Linux build server (--mingw adds MinGW)
 python tools/build_native.py linux --part all   # also rebuild and strip the map library
 ```
 

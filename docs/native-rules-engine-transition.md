@@ -280,7 +280,7 @@ another project's Godot processes (1-3) ran during the profile, not during the e
 `rules_selftest`, so rules commits never rebuild the map generator. Both flavours use `/O2 /Ob2 /fp:precise` or
 `-O2 -ffp-contract=off`. Other pieces:
 - `tools/build_native.py windows|linux` builds here with MSVC, or on the Linux server in a fresh `/tmp` directory at
-  nice 19 (GCC 13.3, plus the self-test built with MinGW and run under Wine). Every file comes back sha256-checked, and
+  nice 19 (GCC 13.3; with `--mingw` also the self-test built with MinGW and run under Wine). Every file comes back sha256-checked, and
   PDBs and Linux debug files are archived per build id outside git (`heroes-like-native-symbols/`). The remote build
   has a deadline (`--remote-timeout`, 120 min) and says whether stopping it worked. Each poll ends within a minute
   (keep-alives and a timeout); a build that dies without an exit code, a removed directory or a host that does not
