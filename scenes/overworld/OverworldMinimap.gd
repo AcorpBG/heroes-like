@@ -19,7 +19,8 @@ const TERRAIN_COLORS := {
 	"rough": Color("695f50"),
 	"lava": Color("6d3328"),
 	"water": Color("284f66"),
-	"subterranean": Color("3b353b"),
+	"underground": Color("5c5468"),
+	"rock": Color("24201f"),
 }
 const UNEXPLORED_COLOR := Color("11181a")
 const GRID_COLOR := Color(0.04, 0.06, 0.06, 0.20)
