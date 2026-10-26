@@ -117390,6 +117390,19 @@
       ],
       "notes": "Implemented native adventure_services shared by human visits and AI secure-target actions. Dedicated generated type95 Wayfarer Lodge: existing shared weekly roster, native cost/level/army, four-command cap, consumes only hired slot. Type62 Captive Stockade: one successful free level-one own-faction commander rescue per placement; deterministic available-roster choice; failed/capped/blocked rescues unspent. Type97 Whisper Exchange: free dated kingdom army-strength ranks, towns/mines/commanders/creatures/gold and same-level town anchor/entrance knowledge for human and AI; AI refreshes at most weekly. Native unique live/recovering hero checks, safe adjacent land spawning, stale/insufficient-funds refusal, commander movement/progression builders. Save normalizers preserve rescue/report state and AI knowledge; fixed shared human tavern candidate lookup to use generated runtime scenario record. Three content/object definitions reuse existing original art; vertical offer/army previews and scrollable report popup. Dedicated services excluded from generic fallback pool. Reference has69original types,97illustrated sites,70mapped,27content-only. Windows debug/release libraries and CLIs rebuilt;64focused generated-two-level human/AI checks including exact price, weekly slot preservation, duplicate/cap/blocked spawn, save/load, AI knowledge/movement passed; real game dialogs inspected. Core17/17in27s; Godot/CLI6/6 identical456daily digests and match records in1minute. Compact intelligence stores only x/y/level, with a focused four-position normalized save roundtrip verified; final core17/17 and Godot/CLI6/6 checks repeated after this storage change. Removed125owned scratch/probe/save/screenshot/log/record/mapfiles,125521611bytes(119.71MiB); core cleaned32testmaps/profiles per run; caches/original art/saves/RMG recovery preserved. No authored-scenario work, generator-core change, balance sweep or Linux build; Linux binaries require later rebuild. Existing saved fallback placements retain their site identities.",
       "updatedAt": "2026-10-26"
+    },
+    {
+      "id": "native-rmg-river-post-pass-vector-walk-20261026",
+      "title": "River post-pass object walk follows H3MapEd's 0x4ac4ae index loop (XL 8P seed 72136 crash)",
+      "status": "completed",
+      "classification": "native_rmg_fix",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/rmg-river-post-pass-vector-walk.md",
+        "docs/lessons-learned.md"
+      ],
+      "notes": "river_object_post_pass_0x4ac4ae walked state.object_records_0xec4_ecc with a range-for while 0x4abd5f's river-mouth commit appends to it; reallocation left the iterator in freed memory (access violation on XL 8P normal-water two-level seed 72136). H3MapEd 0x4ac4c9..0x4ac548 walks by index and re-reads begin +0xec8 / end +0xecc each pass (cdb listing in .artifacts/rmg_recovery/cdb_4ac4ae_object_loop_disasm_20261026); the port now does the same. Checks: seed 72136 generates and starts a session; 72-reference sweep 64/72 with all 72 payloads byte-identical to before; 90 further configurations byte-identical; core selftest, six-seed runner-b parity and core suite 17/17 on Windows. Linux binaries not rebuilt.",
+      "updatedAt": "2026-10-26T20:30:00Z"
     }
   ],
   "project": "heroes-like",

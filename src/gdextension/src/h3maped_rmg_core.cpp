@@ -25578,7 +25578,12 @@ static bool river_object_post_pass_0x4ac4ae(
 
 	(void)config;
 
-	for (const ObjectRecordReference4a54a7 &object_record : state.object_records_0xec4_ecc) {
+	// 0x4ac4c9..0x4ac548 walks the object vector by index and re-reads its begin
+	// (+0xec8) and end (+0xecc) on every pass: 0x4abd5f's river mouths append to
+	// it during the walk, which may reallocate it, and are visited too. So no
+	// iterator or reference into the vector may live across the two calls.
+	for (size_t object_index = 0; object_index < state.object_records_0xec4_ecc.size(); ++object_index) {
+		const ObjectRecordReference4a54a7 &object_record = state.object_records_0xec4_ecc[object_index];
 		const int32_t source_type = object_record.copied_source_record_carried
 				? object_record.source_record_copy.type_id_0x1c
 				: object_record.descriptor_type_0x1c;
