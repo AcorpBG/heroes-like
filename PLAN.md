@@ -22,6 +22,8 @@ Rules:
 
 ## Current Tactical State
 
+`art-unit-icon-style-consistency-20261026` (completed, owner-reported visual defect): 160 older units now use 480 clean transparent portraits/battle/map icons, matching upgrades without baked labels, faction frames or tier pips. The exporter follows the same layout and can refresh only these surfaces directly from SHA-256-verified archived originals (`--icons-only --archive-dir`). Live generated Embercourt Overworld/Town screenshots inspected, Windows core 17/17; 35 disposable task files removed (12.4 MiB), plus the core suite's 32 generated map files. Content names, gameplay, animations and provenance unchanged; no native rebuild or Linux run.
+
 `evaluation-xl6p-water-strong-fresh120-20261026` (in_progress, owner-requested evaluation): exactly120 fresh XL6P maps, two levels, normal water, strong guards, one game per map; balanced faction seats20each, ordinary rolls,320-day cap. Native16one-thread processes, recycling after at most32games. Preserve current balance; report actual setup checks, map-bootstrap uncertainty and any capped games. This is a fresh setting sample, not a paired comparison with the Large land bank.
 
 ### Authored maps, scenarios and campaigns are obsolete

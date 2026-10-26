@@ -117278,6 +117278,19 @@
       ],
       "notes": "Owner requests120games. Exactly120fresh maps,6P,XL,twolevels,normalwater,strongguards;20starts per faction per seat, ordinary rolls,320-daycap. Do not expand to720all-arrangements games. Native16one-thread processes,max32games before recycling. No content/AIchanges. Newsettingbank,notpairedwithLarge/no-water. Plannedoutput .artifacts/ai_batch_20261026_xl6p_L2_water_strong_120_fresh.",
       "updatedAt": "2026-10-26"
+    },
+    {
+      "id": "art-unit-icon-style-consistency-20261026",
+      "title": "Consistent clean creature icons for older base units",
+      "status": "completed",
+      "classification": "owner_reported_visual_defect",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md"
+      ],
+      "notes": "Re-exported exactly480 PNGs: portrait, battle_icon and overworld_icon for160 curated base units, uniformly fitted on transparent backgrounds like upgrades. Removed baked nameplates, faction frames and tier pips. Existing exporter uses the clean layout; --icons-only --archive-dir reads SHA-256-verified originals directly from the source archive without restoring media or touching72upgrades, standees, animations, content or manifests. Imported successfully; inspected18-unit cross-faction/neutral contact sheet and live generated Embercourt Overworld/Town screenshots at1280x720. Windows core17/17 passed in37s;32core-test map files auto-cleaned. Removed35 disposable task files (13023914bytes,12.4MiB), including the verified live-test map pair and throwaway profile. No native build/parity or Linux run; owner AI batch left running.",
+      "updatedAt": "2026-10-26",
+      "completedAt": "2026-10-26"
     }
   ],
   "project": "heroes-like",

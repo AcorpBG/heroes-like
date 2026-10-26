@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import argparse
+from contextlib import ExitStack
 import hashlib
+import io
 import json
 import math
 from pathlib import Path
+import zipfile
 
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
@@ -303,6 +307,14 @@ PALETTES = {
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description="Export unit art from original character cutouts.")
+    parser.add_argument("--icons-only", action="store_true", help="Refresh only older curated portraits and icons; preserve upgrades, standees, animations and manifests")
+    parser.add_argument("--archive-dir", type=Path, help="Verified source archive snapshot (including its base chain); used with --icons-only")
+    args = parser.parse_args()
+    if args.icons_only:
+        return refresh_static_icons(args.archive_dir)
+    if args.archive_dir:
+        parser.error("--archive-dir requires --icons-only")
     units = json.loads(UNITS_PATH.read_text(encoding="utf-8")).get("items", [])
     for subdir in ("portraits", "battle_icons", "battle_standees", "overworld_icons"):
         (ART_ROOT / subdir).mkdir(parents=True, exist_ok=True)
@@ -421,6 +433,65 @@ def main() -> int:
 
 def to_res_path(path: Path) -> str:
     return "res://" + path.relative_to(ROOT).as_posix()
+
+
+def static_surface(source: Image.Image, size: tuple[int, int]) -> Image.Image:
+    """The upgrade export's clean, uniformly fitted, bottom-aligned cutout."""
+    bounds = source.getchannel("A").getbbox()
+    if bounds is None:
+        raise ValueError("Unit source has no visible pixels")
+    figure = source.crop(bounds)
+    scale = min((size[0] - 12) / figure.width, (size[1] - 12) / figure.height)
+    figure = figure.resize((max(1, round(figure.width * scale)), max(1, round(figure.height * scale))), Image.Resampling.LANCZOS)
+    image = Image.new("RGBA", size)
+    image.paste(figure, ((size[0] - figure.width) // 2, size[1] - 6 - figure.height))
+    return image
+
+
+def refresh_static_icons(archive_dir: Path | None) -> int:
+    """Read archived originals directly; never restore or change source media."""
+    records = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))["items"]
+    records = [row for row in records if row.get("art_source_kind") == "curated_original_character_v1"]
+    archived = {}
+    if archive_dir:
+        from restore_archived_source_material import load_index
+        archived = load_index(archive_dir)
+    surfaces = (("portrait", PORTRAIT_SIZE), ("battle_icon", BATTLE_ICON_SIZE), ("overworld_icon", OVERWORLD_ICON_SIZE))
+    originals = []
+    with ExitStack() as stack:
+        archives = {}
+        # Check every original and destination before replacing any runtime file.
+        for row in records:
+            name = row["curated_source"].removeprefix("res://")
+            local = (ROOT / name).resolve()
+            if not local.is_relative_to(CURATED_SOURCE_ROOT.resolve()):
+                raise ValueError(f"Not a curated original source: {name}")
+            if local.is_file():
+                payload = local.read_bytes()
+            else:
+                entry = archived.get(name)
+                if entry is None:
+                    raise FileNotFoundError(f"Missing original {name}; pass --archive-dir with its source snapshot")
+                archive = entry["archive"]
+                if archive not in archives:
+                    archives[archive] = stack.enter_context(zipfile.ZipFile(archive))
+                payload = archives[archive].read(name)
+            if hashlib.sha256(payload).hexdigest() != row["curated_source_sha256"]:
+                raise ValueError(f"Original source SHA-256 differs for {row['unit_id']}")
+            with Image.open(io.BytesIO(payload)) as original:
+                source = original.convert("RGBA")
+            if source.size != (512, 512) or source.getchannel("A").getextrema() != (0, 255):
+                raise ValueError(f"Expected original 512x512 transparent cutout for {row['unit_id']}")
+            for surface, _ in surfaces:
+                expected = runtime_asset_path(row["unit_id"], surface)
+                if row[surface] != to_res_path(expected) or not expected.is_file():
+                    raise ValueError(f"Unexpected {surface} destination for {row['unit_id']}")
+            originals.append((row, source))
+    for row, source in originals:
+        for surface, size in surfaces:
+            static_surface(source, size).save(runtime_asset_path(row["unit_id"], surface), optimize=True)
+    print(f"Refreshed {len(originals) * len(surfaces)} clean icon surfaces for {len(originals)} units from SHA-256-verified originals; sources and manifests unchanged")
+    return 0
 
 
 def optimize_runtime_palette(path: Path, colors: int = 32) -> None:
@@ -637,23 +708,7 @@ def draw_portrait(unit: dict, palette: dict, motif: str, initials: str, path: Pa
 
 
 def draw_curated_portrait(unit: dict, palette: dict, source: Image.Image, path: Path) -> None:
-    image, draw = canvas(PORTRAIT_SIZE)
-    primary = palette["primary"]
-    shadow = palette["shadow"]
-    metal = palette["metal"]
-    draw_gradient(draw, PORTRAIT_SIZE, scale_color(primary, 0.42), scale_color(shadow, 0.74))
-    draw_hash_marks(draw, str(unit["id"]), PORTRAIT_SIZE, metal, 30)
-    draw.rectangle([20, 20, 364, 492], outline=with_alpha(metal, 235), width=5)
-    draw.rectangle([30, 30, 354, 482], outline=with_alpha(scale_color(shadow, 0.72), 235), width=3)
-    draw.ellipse([54, 306, 330, 390], fill=with_alpha(scale_color(shadow, 0.48), 105))
-    figure = _fit_curated_source(source, (314, 342))
-    image.alpha_composite(figure, ((PORTRAIT_SIZE[0] - figure.width) // 2, 382 - figure.height))
-    draw.rectangle([42, 392, 342, 460], fill=with_alpha(scale_color(shadow, 0.72), 225), outline=with_alpha(metal, 190), width=2)
-    draw_centered_text(draw, str(unit.get("name", unit["id"]))[:28], (48, 400, 336, 430), font(24, True), (245, 238, 218, 245))
-    subtitle = f"T{int(unit.get('tier', 1))} {str(unit.get('role', '')).upper()}"
-    draw_centered_text(draw, subtitle, (48, 430, 336, 458), font(17), (218, 224, 219, 230))
-    draw_tier_pips(draw, int(unit.get("tier", 1)), (54, 62), metal, 5)
-    image.save(path)
+    static_surface(source, PORTRAIT_SIZE).save(path, optimize=True)
 
 
 def draw_battle_icon(unit: dict, palette: dict, motif: str, initials: str, path: Path) -> None:
@@ -674,22 +729,7 @@ def draw_battle_icon(unit: dict, palette: dict, motif: str, initials: str, path:
 
 
 def draw_curated_battle_icon(unit: dict, palette: dict, source: Image.Image, path: Path) -> None:
-    image, draw = canvas(BATTLE_ICON_SIZE)
-    primary = palette["primary"]
-    shadow = palette["shadow"]
-    metal = palette["metal"]
-    draw.ellipse(
-        [7, 7, 153, 153],
-        fill=with_alpha(scale_color(shadow, 0.78), 232),
-        outline=with_alpha(metal, 238),
-        width=4,
-    )
-    draw.ellipse([16, 16, 144, 144], fill=with_alpha(scale_color(primary, 0.72), 165))
-    draw.ellipse([31, 132, 129, 151], fill=with_alpha(scale_color(shadow, 0.48), 105))
-    figure = _fit_curated_source(source, (146, 146))
-    image.alpha_composite(figure, ((160 - figure.width) // 2, 7 + (146 - figure.height)))
-    draw_tier_pips(draw, int(unit.get("tier", 1)), (22, 142), metal, 3)
-    image.save(path)
+    static_surface(source, BATTLE_ICON_SIZE).save(path, optimize=True)
 
 
 def draw_battle_standee(unit: dict, palette: dict, motif: str, initials: str, path: Path) -> None:
@@ -747,21 +787,7 @@ def draw_overworld_icon(unit: dict, palette: dict, motif: str, initials: str, pa
 
 
 def draw_curated_overworld_icon(unit: dict, palette: dict, source: Image.Image, path: Path) -> None:
-    image, draw = canvas(OVERWORLD_ICON_SIZE)
-    primary = palette["primary"]
-    shadow = palette["shadow"]
-    metal = palette["metal"]
-    draw.polygon(
-        [(48, 3), (90, 27), (83, 89), (13, 89), (6, 27)],
-        fill=with_alpha(scale_color(shadow, 0.72), 244),
-        outline=with_alpha(metal, 235),
-    )
-    draw.polygon([(48, 10), (82, 31), (76, 80), (20, 80), (14, 31)], fill=with_alpha(scale_color(primary, 0.72), 205))
-    draw.ellipse([16, 68, 80, 86], fill=with_alpha(scale_color(shadow, 0.45), 98))
-    figure = _fit_curated_source(source, (82, 76))
-    image.alpha_composite(figure, ((OVERWORLD_ICON_SIZE[0] - figure.width) // 2, 85 - figure.height))
-    draw_tier_pips(draw, int(unit.get("tier", 1)), (17, 84), metal, 2)
-    image.save(path)
+    static_surface(source, OVERWORLD_ICON_SIZE).save(path, optimize=True)
 
 
 def draw_battle_troop_animation_sheet(unit: dict, palette: dict, motif: str, initials: str, path: Path) -> None:
