@@ -48,8 +48,7 @@ using state::Value;
 namespace key = state::key;
 
 constexpr Atom kScript = key::ai_hero_rules_script;
-// HeroCommandRules.HERO_LIMIT and TAVERN_OFFER_SIZE.
-constexpr int64_t kHeroLimit = 4;
+// HeroCommandRules.TAVERN_OFFER_SIZE.
 constexpr int64_t kTavernOfferSize = 2;
 
 // d.get(k, {}) / d.get(k, []) whose result is kept: a new container when the
@@ -270,7 +269,7 @@ int64_t _desired_hero_count(State &state, DictRef session, Atom controller) {
 	const int64_t towns = enemy_turn_rules::_owned_town_count(state, session, controller);
 	const int64_t base = gd::add(1, compat::engine_min<int64_t>(towns, ai::static_int(state, kScript, key::HERO_COUNT_TOWN_MAX)));
 	const int64_t extra = ai::session_int(state, session, key::day) >= ai::static_int(state, kScript, key::EXTRA_HERO_DAY) ? 1 : 0;
-	return compat::engine_clamp<int64_t>(gd::add(base, extra), 1, kHeroLimit);
+	return compat::engine_max<int64_t>(gd::add(base, extra), 1);
 }
 
 bool _faction_has_tavern(State &state, ArrayRef town_entries) {
@@ -647,9 +646,6 @@ DictRef _hire_hero(State &state, DictRef session, DictRef context) {
 	const DictRef state_ = context_state(state, context);
 	const Atom controller = context_controller(state, context);
 	const DictRef treasury = gd::as_dict(gd::index(state, state_, str(key::treasury)));
-	if (active_hero_count(state, session, controller) >= kHeroLimit) {
-		return state.new_dict();
-	}
 	const ArrayRef offer = ai_tavern_offer_ids(state, session, state_, controller);
 	if (state.array_size(offer) == 0) {
 		return state.new_dict();

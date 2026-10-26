@@ -425,7 +425,7 @@ func _build_tavern() -> void:
 	var heroes: Array = tavern.get("heroes", [])
 	var days := int(tavern.get("days_until_rotation", 7))
 	var arrival := "tomorrow" if days == 1 else "in %d days" % days
-	var section := _section("This week's heroes", "Command %d of %d · new heroes arrive %s (day %d)." % [int(tavern.get("hero_count", 0)), int(tavern.get("hero_limit", 0)), arrival, int(tavern.get("next_rotation_day", 0))])
+	var section := _section("This week's heroes", "%d in command · new heroes arrive %s (day %d)." % [int(tavern.get("hero_count", 0)), arrival, int(tavern.get("next_rotation_day", 0))])
 	section.name = "Heroes"
 	_hero_grid = GridContainer.new()
 	_hero_grid.name = "HeroGrid"

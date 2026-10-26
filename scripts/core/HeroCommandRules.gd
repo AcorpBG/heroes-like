@@ -13,7 +13,6 @@ static var DifficultyRulesScript: Variant = load("res://scripts/core/DifficultyR
 
 const HALL_BUILDING_ID := "building_wayfarers_hall"
 const HOLDER_GARRISON := "garrison"
-const HERO_LIMIT := 4
 const TAVERN_OFFER_SIZE := 2
 const TAVERN_ROTATION_KEY := "tavern_rotation"
 const ARMY_SLOT_COUNT := 7

@@ -40,8 +40,7 @@ using state::State;
 using state::Value;
 namespace key = state::key;
 
-// HeroCommandRules.HERO_LIMIT and TAVERN_OFFER_SIZE.
-constexpr int64_t kHeroLimit = 4;
+// HeroCommandRules.TAVERN_OFFER_SIZE.
 constexpr int64_t kTavernOfferSize = 2;
 
 // TownConstructionBoard.RESOURCE_ORDER, read only.
@@ -283,7 +282,7 @@ ArrayRef effect_lines(State &state, DictRef building, DictRef town, const Value 
 		append_text(state, lines, key::artifact_trade_offers_refresh_weekly);
 	}
 	if (text_of(state, building, key::id) == key::building_wayfarers_hall) {
-		append_text(state, lines, gd::format(state, key::hire_heroes_up_to_d_in, {int_value(kHeroLimit)}));
+		append_text(state, lines, key::hire_heroes_for_your_command);
 	}
 	const DictRef growth_bonus = dict_field_or_new(state, building, key::growth_bonus);
 	for (const Value &unit_id : gd::items(state, dict_value(growth_bonus))) {
@@ -506,7 +505,6 @@ DictRef spell_entry(State &state, Atom spell_id, DictRef visitor) {
 DictRef _tavern(State &state, const Value &session, DictRef resources) {
 	const DictRef view = gd::as_dict(session);
 	const int64_t count = hero_command_rules::player_hero_count(state, view);
-	const int64_t limit = kHeroLimit;
 	const DictRef actions = state.new_dict();
 	for (const Value &action : gd::items(state, array_value(town_rules::get_tavern_actions(state, view)))) {
 		state.set(actions, str(string_of(state, ai::vget(state, action, key::id, str(key::empty)))), action);
@@ -522,9 +520,7 @@ DictRef _tavern(State &state, const Value &session, DictRef resources) {
 		const Atom action_id = gd::format(state, key::hire_hero_s, {str(hero_id)});
 		const DictRef shortfall = town_construction_board::_shortfall(state, gd::as_dict(gd::index(state, card, str(key::cost))), resources);
 		Atom reason = key::empty;
-		if (count >= limit) {
-			reason = gd::format(state, key::command_is_full_d_of_d, {int_value(count), int_value(limit)});
-		} else if (!gd::is_empty(state, shortfall)) {
+		if (!gd::is_empty(state, shortfall)) {
 			reason = gd::format(state, key::short_s, {str(_resource_text(state, dict_value(shortfall)))});
 		} else if (!state.has(actions, str(action_id))) {
 			reason = key::not_available_for_hire_here;
@@ -544,7 +540,6 @@ DictRef _tavern(State &state, const Value &session, DictRef resources) {
 	const int64_t days = hero_command_rules::days_until_tavern_rotation(state, view);
 	const DictRef result = state.new_dict();
 	state.set(result, str(key::hero_count), int_value(count));
-	state.set(result, str(key::hero_limit), int_value(limit));
 	state.set(result, str(key::heroes), array_value(heroes));
 	state.set(result, str(key::offer_size), int_value(kTavernOfferSize));
 	state.set(result, str(key::days_until_rotation), int_value(days));

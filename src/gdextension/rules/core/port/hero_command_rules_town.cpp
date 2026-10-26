@@ -38,9 +38,6 @@ using state::State;
 using state::Value;
 namespace key = state::key;
 
-// HeroCommandRules.HERO_LIMIT.
-constexpr int64_t kHeroLimit = 4;
-
 // String(x) of any value: the engine's text for a float, a vector or a container.
 Atom string_of(State &state, const Value &value) {
 	switch (value.kind) {
@@ -281,10 +278,6 @@ ArrayRef get_tavern_actions(State &state, DictRef session, DictRef town) {
 	if (gd::is_empty(state, town) || !town_has_hall(state, town)) {
 		return actions;
 	}
-	if (player_hero_count(state, session) >= kHeroLimit) {
-		return actions;
-	}
-
 	const ArrayRef offer_ids = tavern_offer_ids(state, session);
 	for (const Value &hero_id_value : gd::items(state, array_value(offer_ids))) {
 		const Atom hero_id = gd::to_string(hero_id_value);
@@ -327,9 +320,6 @@ DictRef recruit_hero_at_town(State &state, DictRef session, DictRef town, Atom h
 	const ArrayRef offer = tavern_offer_ids(state, session);
 	if (!gd::array_has(state, offer, str(hero_id))) {
 		return refusal(state, key::that_commander_is_not_in_this);
-	}
-	if (player_hero_count(state, session) >= kHeroLimit) {
-		return refusal(state, key::the_command_limit_has_already_been);
 	}
 
 	const DictRef template_row = gd::content_row(state, ContentTable::Hero, hero_id);

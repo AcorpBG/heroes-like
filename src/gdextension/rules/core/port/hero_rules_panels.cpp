@@ -43,9 +43,6 @@ using state::State;
 using state::Value;
 namespace key = state::key;
 
-// HeroCommandRules.HERO_LIMIT.
-constexpr int64_t kHeroLimit = 4;
-
 // String(x) of any value: the engine's text for a float, a vector or a container.
 Atom string_of(State &state, const Value &value) {
 	switch (value.kind) {
@@ -172,10 +169,6 @@ Atom describe_tavern(State &state, DictRef session, DictRef town) {
 	state.append(lines, str(hall_name));
 	if (!town_has_hall(state, town)) {
 		state.append(lines, str(gd::format(state, key::build_s_to_recruit_additional_commanders, {str(hall_name)})));
-		return join_array(state, key::newline, lines);
-	}
-	if (player_hero_count(state, session) >= kHeroLimit) {
-		state.append(lines, str(key::the_command_roster_is_already_full));
 		return join_array(state, key::newline, lines);
 	}
 	if (state.array_size(recruitable_hero_ids(state, session)) == 0) {
