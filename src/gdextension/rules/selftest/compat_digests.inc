@@ -9,9 +9,9 @@
 // MinGW build of the self-test under Wine checks the Windows one.
 //
 // Their float text differs too: the Windows build prints through msvcrt.dll,
-// the Linux build through glibc (godot_string.hpp, num). json_float has the
-// Windows digest (captured 2026-10-23, Windows 10); the Linux one is captured
-// in the Linux pass, and until then the Linux self-test reports it missing.
+// the Linux build through glibc (godot_string.hpp, num), so json_float has one
+// digest per platform (Windows captured 2026-10-23, Windows 10; Linux captured
+// 2026-10-26, Ubuntu 24.04).
 //
 // json_parse (captured 2026-10-23, Windows 10) is plain double arithmetic in
 // the engine's own strtod, so both platforms share its digest.
@@ -44,6 +44,8 @@ constexpr CompatExpected kCompatExpected[] = {
 	{ "sort", "42d87a139039f1a35597a10bfc40d827fef650d51328872dbf937f7d8bf601ef" },
 #ifdef _WIN32
 	{ "json_float", "4666bda411d8a7292df57b30b27644aad906b6b11d4677180d43063e4f6df669" },
+#else
+	{ "json_float", "6c134f499dc9dece2b9b748730a61df5dd0c1bc360b9d3c4b2ff5dbdba0bb041" },
 #endif
 	{ "json_parse", "ba995e47e94d2eef67b588ffd573047bd81d6f48771d9312e52e62a409a6d218" },
 	{ "portable_math", "103a007b8c1148c6853233d64162f3d72d82a2a16be250ca4d6807644faa6bad" },
