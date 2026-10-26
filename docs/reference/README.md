@@ -1,7 +1,7 @@
 # Illustrated hero-support and transit reference
 
 Open `hero-support-transit.html` in a browser. It is a self-contained offline page:
-all 94 structure thumbnails, the comparison data, filters and detail views are embedded.
+all 97 structure thumbnails, the comparison data, filters and detail views are embedded.
 
 The two views compare 69 original HoMM3 object types with our generated-map adapter,
 and list each general structure individually. Direct mappings, shared pools, generic

@@ -117355,6 +117355,18 @@
       ],
       "notes": "Completed: seven general scouting_structure rows10->18; nine general faction_landmark rows doubled (1/2/3/4 to2/4/6/8); three faction_outpost rows2/2/3->4/4/6. Six scouting and three outpost explicit town_support overrides preserve the old native family-derived quality/readiness/pressure/growth/recovery/disruption values; Watchtower existing override retained. No response cost/duration/bonus or other content fields changed. Reference builder honors outpost overrides and excludes disruption from positive support text; original comparison updated to radius18 and offline HTML rebuilt against the committed content. Windows generated Medium72 two-level live fog probe:19/19 exact reveal boundaries, no cross-level leakage, visible/explored aliases consistent; radius18 reveals1085tiles at interior position. Content structural check confirms exactly19changed rows with only radius/support fields. Windows core17/17 in25s,32generated maps/profiles auto-cleaned. Removed task-only probe,case snapshot and disposable profile (6files,13617bytes), no probe map files remained. No authored-scenario use, native rules/generator edits, builds, AI evaluation or Linux work.",
       "updatedAt": "2026-10-26"
+    },
+    {
+      "id": "world-services-tavern-prison-intelligence-20261026",
+      "title": "Implement field Tavern, Prison rescue and kingdom intelligence",
+      "status": "completed",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/visit-buildings.md",
+        "docs/lessons-learned.md"
+      ],
+      "notes": "Implemented native adventure_services shared by human visits and AI secure-target actions. Dedicated generated type95 Wayfarer Lodge: existing shared weekly roster, native cost/level/army, four-command cap, consumes only hired slot. Type62 Captive Stockade: one successful free level-one own-faction commander rescue per placement; deterministic available-roster choice; failed/capped/blocked rescues unspent. Type97 Whisper Exchange: free dated kingdom army-strength ranks, towns/mines/commanders/creatures/gold and same-level town anchor/entrance knowledge for human and AI; AI refreshes at most weekly. Native unique live/recovering hero checks, safe adjacent land spawning, stale/insufficient-funds refusal, commander movement/progression builders. Save normalizers preserve rescue/report state and AI knowledge; fixed shared human tavern candidate lookup to use generated runtime scenario record. Three content/object definitions reuse existing original art; vertical offer/army previews and scrollable report popup. Dedicated services excluded from generic fallback pool. Reference has69original types,97illustrated sites,70mapped,27content-only. Windows debug/release libraries and CLIs rebuilt;64focused generated-two-level human/AI checks including exact price, weekly slot preservation, duplicate/cap/blocked spawn, save/load, AI knowledge/movement passed; real game dialogs inspected. Core17/17in27s; Godot/CLI6/6 identical456daily digests and match records in1minute. Compact intelligence stores only x/y/level, with a focused four-position normalized save roundtrip verified; final core17/17 and Godot/CLI6/6 checks repeated after this storage change. Removed125owned scratch/probe/save/screenshot/log/record/mapfiles,125521611bytes(119.71MiB); core cleaned32testmaps/profiles per run; caches/original art/saves/RMG recovery preserved. No authored-scenario work, generator-core change, balance sweep or Linux build; Linux binaries require later rebuild. Existing saved fallback placements retain their site identities.",
+      "updatedAt": "2026-10-26"
     }
   ],
   "project": "heroes-like",

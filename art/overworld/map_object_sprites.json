@@ -2291,6 +2291,24 @@
       "assignment_source": "new_distinct_map_object_sprite",
       "family": "pickup",
       "source_batch": "creature_banks_20261009"
+    },
+    "object_wayfarer_lodge": {
+      "asset_id": "mapobj_market_caravanserai",
+      "fit": "Original field-service art.",
+      "assignment_source": "field_services_20261026",
+      "family": "repeatable_service"
+    },
+    "object_captive_stockade": {
+      "asset_id": "mapobj_rootwarden_stockade",
+      "fit": "Original field-service art.",
+      "assignment_source": "field_services_20261026",
+      "family": "repeatable_service"
+    },
+    "object_whisper_exchange": {
+      "asset_id": "resource_site_frontier_treasury_veilmourn_ledger",
+      "fit": "Original field-service art.",
+      "assignment_source": "field_services_20261026",
+      "family": "repeatable_service"
     }
   }
 }

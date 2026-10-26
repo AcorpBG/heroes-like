@@ -44140,6 +44140,18 @@
     "site_hushlock_casket": {
       "asset_id": "mapobj_hushlock_casket",
       "fit": "One-time sealed casket holding experience, gold, spells or troops."
+    },
+    "site_wayfarer_lodge": {
+      "asset_id": "mapobj_market_caravanserai",
+      "fit": "Existing original art reused for the Wayfarer Lodge field service."
+    },
+    "site_captive_stockade": {
+      "asset_id": "mapobj_rootwarden_stockade",
+      "fit": "Existing original art reused for the Captive Stockade field service."
+    },
+    "site_whisper_exchange": {
+      "asset_id": "resource_site_frontier_treasury_veilmourn_ledger",
+      "fit": "Existing original art reused for the Whisper Exchange field service."
     }
   },
   "artifact_default_sprite": {

@@ -4,7 +4,7 @@ Owner direction 2026-10-06: visit buildings were the largest gap against HoMM3. 
 
 Owner decisions taken with the plan:
 
-- Phase 1 (hero growth) and Phase 2 (field boosts and map services) are built. Phase 3 (systems the game does not have yet) needs its own designs first.
+- Phase 1 (hero growth) and Phase 2 (field boosts and map services) are built. Tavern, Prison and Den of Thieves were implemented on 2026-10-26 (below); the remaining Phase 3 systems need their own designs.
 - Momentum stands in for luck. The game has no luck stat, so HoMM3 luck buildings grant momentum.
 - Paid experience is retired. No site sells experience.
 
@@ -12,7 +12,7 @@ Plan id: `content-visit-buildings-20261006`.
 
 ## Rules
 
-A visit building is a resource site with family `visit_building` and a `visit` block. Rules live in `scripts/core/VisitBuildingRules.gd`. The building is never captured and has no owner; it remembers who visited.
+A visit building is a resource site with family `visit_building` and a `visit` block. Rules live in the native `visit_building_rules_*.cpp` and `overworld_rules_site_effects.cpp` ports; the GDScript entry points are thin wrappers. The building is never captured and has no owner; it remembers who visited.
 
 | Cadence | Meaning |
 | --- | --- |
@@ -81,12 +81,43 @@ The old services' gold-for-experience trades, town recovery and pressure relief,
 
 ## Random maps
 
-`scripts/persistence/GeneratedRewardRules.gd` maps HoMM3 object types to these buildings by meaning (`VISIT_SITE_BY_TYPE`, `SPELL_SHRINE_BY_TYPE`). Lighthouses, Redwood Observatories and Pillars of Fire become scouting structures, Signs and Ocean Bottles become signs, Obelisks become faction landmarks. Witch Huts, Universities and Scholars become a stat, experience or tier 1 spell building until skill teaching exists. Any other HoMM3 visit type falls back to a stable pick among the built buildings.
+`src/gdextension/rules/core/port/generated_reward_rules.cpp` maps HoMM3 object types to these buildings by meaning (`kVisitSites`, `kSpellShrines`, `kAdventureServices`). Lighthouses, Redwood Observatories and Pillars of Fire become scouting structures, Signs and Ocean Bottles become signs, Obelisks become faction landmarks. Witch Huts, Universities and Scholars become a stat, experience or tier 1 spell building until skill teaching exists. Tavern, Prison and Den of Thieves have dedicated services below. Other eligible interactable types fall back to a stable pick among the generic visit buildings; dedicated field services do not enter that fallback pool.
 
-## Phase 3 (not built)
+## Remaining Phase 3 systems
 
 These need their own designs before any work:
 
-- Field creature upgrades and trades: Hill Fort, Black Market, War Machine Factory, Freelancer's Guild, Tavern.
+- Field creature upgrades and trades: Hill Fort, Black Market, War Machine Factory, Freelancer's Guild.
 - Skill teaching: Witch Hut, University, Scholar. The game has specialties instead of secondary skills.
-- Quests and special sites: Seer's Hut, Prison, Sanctuary, Altar of Sacrifice, Sirens, Den of Thieves.
+- Quests and special sites: Seer's Hut, Sanctuary, Altar of Sacrifice, Sirens.
+
+
+## Field recruitment, rescue and intelligence (2026-10-26)
+
+The owner selected Tavern, Prison and Den of Thieves for live implementation.
+Their native rules are `adventure_services.cpp`, shared by human visits and AI
+adventure actions. These three source types now have dedicated mappings, outside
+of the generic fallback pool. The generator's placements and masks are unchanged.
+Previously saved fallback placements keep their original site identities.
+
+- **Wayfarer Lodge (Tavern 95):** hires from the same weekly roster as town
+  taverns at the same content-defined price and starting level/army. No town hall
+  is required. Hiring spends that roster slot until the next weekly draw.
+- **Captive Stockade (Prison 62):** one successful rescue for the entire
+  placement, free. It grants one currently available commander of the visiting
+  faction, at level one with a starting army. Selection is deterministic against
+  placement/player identity and the available roster; it reworks the original
+  map-configured prisoner. Failed attempts do not spend the rescue.
+- **Whisper Exchange (Den of Thieves 97):** a free kingdom report ranks current
+  field armies and garrisons, showing towns, mines, commanders, creature totals
+  and gold. It reveals town anchors and entrances on their actual levels. The
+  report is a dated snapshot; revisit to refresh it. AI players acquire the same
+  map knowledge and refresh at most weekly. Public reports show ranks, not raw
+  internal army-power scores.
+
+Both paid and free recruitment enforce the existing four-command cap, globally
+unique live roster heroes, current funds and safe adjacent land spawning on the
+site's level. Human heroes and AI commanders use their existing native creation
+and progression builders. Visiting never changes ownership of these buildings.
+Node rescue/visit/report state and AI intelligence locations use the ordinary
+session save payload. Existing original sprites are reused for all three sites.

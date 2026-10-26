@@ -75,6 +75,9 @@ def mapping_tables(source: str):
         "kGateSites", "kWaterWheelSites", "kWindmillSites",
     ]}
     fallback = sorted(set(visits.values()) | set(shrines.values()))
+    services = re.search(r"kAdventureServices\[\]\s*=\s*\{(.*?)\};", source, re.S)
+    if services:
+        visits.update({int(n): sid for n, sid in re.findall(r'\{(\d+),\s*"(site_\w+)"\}', services.group(1))})
     return visits, shrines, pools, fallback
 
 
@@ -129,7 +132,19 @@ def describe_site(site: dict) -> tuple[list[str], str, dict]:
     visit = site.get("visit", {})
     cadence = CADENCES.get(visit.get("cadence"), "Persistent control" if site.get("persistent_control") else "")
     response = site.get("response_profile", {})
-    if visit:
+    service = site.get("adventure_service")
+    if service:
+        details.append(site["public_text"])
+        if service == "tavern":
+            cadence = "Repeatable; shared weekly town/field roster"
+            details.append("Standard hero recruitment price from hero content; no town hall required. Rechecks funds, unique hero availability, the four-command cap and a legal same-level spawn before charging.")
+        elif service == "prison":
+            cadence = "One successful rescue for the whole placement"
+            details.append("The first successful visitor gets one currently available commander of their own faction, selected deterministically for the placement. A failed rescue or full roster does not spend the prisoner.")
+        else:
+            cadence = "Free report; revisit to refresh"
+            details.append("Human and AI receive the same town-location knowledge. Computer players refresh a Den report at most once per week; the map knowledge and visit-time snapshot persist in saves.")
+    elif visit:
         details += effect_lines(visit.get("effects", {}))
         if visit.get("cost") and not visit.get("choices"):
             details.append("Visit cost: " + resources(visit["cost"]) + ".")

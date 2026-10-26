@@ -1,3 +1,4 @@
+#include "aurelion_rules/port/adventure_services.hpp"
 // OverworldRules for the human seat's arrival (Phase 7, slice 7.2): resource
 // site and artifact lookups, claims, guards and their texts, and the artifact
 // pickup.
@@ -341,6 +342,10 @@ Atom _resource_site_yield_line(State &state, DictRef session, DictRef node, Dict
 
 Atom _resource_site_yield_line(State &state, const Value &session, DictRef node, DictRef site) {
 	site = resource_node_payload_rules::site_for_node(state, node, site);
+    if (adventure_services::handles(state, site)) {
+        if (gd::bool_field(state, node, state.intern("prison_released"), false)) return state.intern("Empty stockade: its commander has already been rescued.");
+        return ai::string_or_empty(state, site, key::public_text);
+    }
 	if (visit_building_rules::is_visit_building(state, site)) {
 		const ArrayRef visit_parts = state.new_array();
 		state.append(visit_parts, str(visit_building_rules::summary(state, site)));

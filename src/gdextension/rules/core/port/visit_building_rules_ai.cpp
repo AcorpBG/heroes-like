@@ -1,3 +1,4 @@
+#include "aurelion_rules/port/adventure_services.hpp"
 // VisitBuildingRules: the functions the AI targets reach (Phase 3), ported under
 // their GDScript names.
 
@@ -141,6 +142,7 @@ DictRef readiness(State &state, DictRef node, DictRef site, Atom visitor_key, in
 }
 
 int64_t ai_value(State &state, DictRef site) {
+	if (adventure_services::handles(state, site)) return gd::stringify(state, gd::field(state, site, state.intern("adventure_service"))) == state.intern("intelligence") ? 350 : 900;
 	if (!ai::static_bool(state, key::visit_building_rules_script, key::_ai_weights_ready)) {
 		apply_ai_weights(state, content_service::default_ai_hero_weights(state));
 	}

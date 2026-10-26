@@ -48848,6 +48848,297 @@
         "scenario_placement_migration": false,
         "random_map_placement": "homm3_type_meaning_only"
       }
+    },
+    {
+      "id": "object_wayfarer_lodge",
+      "name": "Wayfarer Lodge",
+      "family": "repeatable_service",
+      "schema_version": 1,
+      "primary_class": "interactable_site",
+      "secondary_tags": [
+        "visit_building",
+        "adventure_service"
+      ],
+      "resource_site_id": "site_wayfarer_lodge",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_highland_ridge",
+        "biome_mire_fen",
+        "biome_rough_badlands",
+        "biome_snow_frost_marches",
+        "biome_coast_archipelago",
+        "biome_ash_lava_wastes",
+        "biome_subterranean_underways"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "micro"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "hero_support"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "on_visit",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "service_specific"
+      },
+      "guard_expectation": {
+        "tier": "light",
+        "visible_cue": "site approach is readable before visit",
+        "event_expectation": "Service becomes available after its existing placement guard is cleared."
+      },
+      "runtime_boundary": {
+        "status": "adventure_service_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "animation_cues": [
+        "object_batch003_idle_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true
+      },
+      "ai_hints": {
+        "strategic_value": 4,
+        "risk_tier": "light",
+        "placement_role": "adventure_service"
+      }
+    },
+    {
+      "id": "object_captive_stockade",
+      "name": "Captive Stockade",
+      "family": "repeatable_service",
+      "schema_version": 1,
+      "primary_class": "interactable_site",
+      "secondary_tags": [
+        "visit_building",
+        "adventure_service"
+      ],
+      "resource_site_id": "site_captive_stockade",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_highland_ridge",
+        "biome_mire_fen",
+        "biome_rough_badlands",
+        "biome_snow_frost_marches",
+        "biome_coast_archipelago",
+        "biome_ash_lava_wastes",
+        "biome_subterranean_underways"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "micro"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "hero_support"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "on_visit",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "service_specific"
+      },
+      "guard_expectation": {
+        "tier": "light",
+        "visible_cue": "site approach is readable before visit",
+        "event_expectation": "Service becomes available after its existing placement guard is cleared."
+      },
+      "runtime_boundary": {
+        "status": "adventure_service_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "animation_cues": [
+        "object_batch003_idle_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true
+      },
+      "ai_hints": {
+        "strategic_value": 4,
+        "risk_tier": "light",
+        "placement_role": "adventure_service"
+      }
+    },
+    {
+      "id": "object_whisper_exchange",
+      "name": "Whisper Exchange",
+      "family": "repeatable_service",
+      "schema_version": 1,
+      "primary_class": "interactable_site",
+      "secondary_tags": [
+        "visit_building",
+        "adventure_service"
+      ],
+      "resource_site_id": "site_whisper_exchange",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_highland_ridge",
+        "biome_mire_fen",
+        "biome_rough_badlands",
+        "biome_snow_frost_marches",
+        "biome_coast_archipelago",
+        "biome_ash_lava_wastes",
+        "biome_subterranean_underways"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "micro"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "hero_support"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "on_visit",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "service_specific"
+      },
+      "guard_expectation": {
+        "tier": "light",
+        "visible_cue": "site approach is readable before visit",
+        "event_expectation": "Service becomes available after its existing placement guard is cleared."
+      },
+      "runtime_boundary": {
+        "status": "adventure_service_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "animation_cues": [
+        "object_batch003_idle_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true
+      },
+      "ai_hints": {
+        "strategic_value": 4,
+        "risk_tier": "light",
+        "placement_role": "adventure_service"
+      }
     }
   ]
 }

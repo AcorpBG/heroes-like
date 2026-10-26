@@ -1,3 +1,4 @@
+#include "aurelion_rules/port/adventure_services.hpp"
 // EnemyAdventureRules: the functions the computer players' day runs (Phase 4): commander records and rosters,
 // the AI event records, and what a raid does at a resource site, ported under their GDScript names.
 
@@ -671,6 +672,11 @@ DictRef _secure_resource_target(State &state, DictRef session, DictRef raid, Dic
 
 DictRef _visit_building_by_raid(State &state, DictRef session, DictRef raid, DictRef state_, Atom faction_id, DictRef node_result, DictRef site, DictRef _config) {
 	(void)_config;
+	if (adventure_services::handles(state, site)) {
+		auto result = adventure_services::visit_ai(state, session, raid, state_, faction_id, node_result, site);
+		_ai_hero_task_finish_live_assignment(state, session, faction_id, raid, key::completed, key::valid);
+		return result;
+	}
 	const ArrayRef nodes = gd::as_array(get_or_new_array(state, session_view::overworld(state, session), key::resource_nodes));
 	const int64_t index = gd::int_field(state, node_result, key::index, -1);
 	if (index < 0 || index >= state.array_size(nodes)) {

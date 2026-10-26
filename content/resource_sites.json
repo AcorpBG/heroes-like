@@ -17378,6 +17378,48 @@
       "rewards": {
         "gold": 5000
       }
+    },
+    {
+      "id": "site_wayfarer_lodge",
+      "name": "Wayfarer Lodge",
+      "family": "visit_building",
+      "content_batch_id": "overworld-object-field-services-20261026",
+      "action_label": "Recruit commander",
+      "overworld_sprite_asset_id": "mapobj_market_caravanserai",
+      "adventure_service": "tavern",
+      "public_text": "Hire an available commander from your weekly tavern roster at the standard recruitment price. The commander arrives with the displayed starting army on a safe adjacent land tile. Town and field recruitment share the same roster and four-command limit.",
+      "visit": {
+        "role": "field_tavern",
+        "cadence": "always"
+      }
+    },
+    {
+      "id": "site_captive_stockade",
+      "name": "Captive Stockade",
+      "family": "visit_building",
+      "content_batch_id": "overworld-object-field-services-20261026",
+      "action_label": "Rescue commander",
+      "overworld_sprite_asset_id": "mapobj_rootwarden_stockade",
+      "adventure_service": "prison",
+      "public_text": "Free one available commander of your faction at no recruitment cost. The level-one commander joins with a starting army on a safe adjacent land tile. Only the first successful rescue uses this stockade; the four-command limit still applies.",
+      "visit": {
+        "role": "prison_rescue",
+        "cadence": "always"
+      }
+    },
+    {
+      "id": "site_whisper_exchange",
+      "name": "Whisper Exchange",
+      "family": "visit_building",
+      "content_batch_id": "overworld-object-field-services-20261026",
+      "action_label": "Read kingdom intelligence",
+      "overworld_sprite_asset_id": "resource_site_frontier_treasury_veilmourn_ledger",
+      "adventure_service": "intelligence",
+      "public_text": "Read a free snapshot ranking kingdoms by army strength, with their towns, mines, commanders, creature totals and gold. Town locations on both levels are marked on your map. Revisit to refresh the report.",
+      "visit": {
+        "role": "kingdom_intelligence",
+        "cadence": "always"
+      }
     }
   ]
 }

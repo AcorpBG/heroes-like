@@ -1,3 +1,4 @@
+#include "aurelion_rules/port/adventure_services.hpp"
 // AiHeroRules: what a computer player knows of the map (the explored tiles)
 // and the site-pass memo its searches read for every site stop.
 
@@ -35,7 +36,9 @@ PackedRef _explored(State &state, DictRef session, DictRef context, int64_t leve
 	Value found;
 	const DictRef maps = state.lookup(context, str(key::explored), found) ? gd::as_dict(found) : state.new_dict();
 	if (state.lookup(maps, int_value(level), found)) {
-		return gd::as_bytes(found);
+		auto known = gd::as_bytes(found);
+		adventure_services::apply_intelligence(state, context, known, level);
+		return known;
 	}
 	const Value size = gd::index(state, context, str(key::map_size));
 	if (!gd::is_vector2i(size)) {
@@ -59,6 +62,7 @@ PackedRef _explored(State &state, DictRef session, DictRef context, int64_t leve
 			}
 		}
 	}
+	adventure_services::apply_intelligence(state, context, tiles, level);
 	state.set(maps, int_value(level), gd::bytes_value(tiles));
 	state.set(context, str(key::explored), dict_value(maps));
 	return tiles;

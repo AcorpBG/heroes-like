@@ -1,3 +1,4 @@
+#include "aurelion_rules/port/adventure_services.hpp"
 // EnemyAdventureRules: the functions the AI targets reach (Phase 3), ported under
 // their GDScript names.
 
@@ -128,6 +129,7 @@ bool _resource_node_contestable_by_faction(State &state, DictRef node, DictRef s
 	if (native_transit_rules::is_native(state, node)) {
 		return state.array_size(native_transit_rules::destinations(state, node)) != 0;
 	}
+	if (adventure_services::handles(state, site)) return session.kind != Kind::Nil && adventure_services::available(state, gd::as_dict(session), node, site, faction_id);
 	if (visit_building_rules::is_visit_building(state, site)) {
 		return session.kind != Kind::Nil
 				&& visit_building_rules::cadence(state, site) != key::always

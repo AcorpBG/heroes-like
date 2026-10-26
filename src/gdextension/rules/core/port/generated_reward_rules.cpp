@@ -248,6 +248,10 @@ constexpr VisitSite kVisitSites[] = {
 	{110, key::site_ash_cooler_kitchen},
 	{221, key::site_market_caravanserai},
 };
+struct AdventureService { int64_t type; const char *site; };
+constexpr AdventureService kAdventureServices[] = {
+	{95, "site_wayfarer_lodge"}, {62, "site_captive_stockade"}, {97, "site_whisper_exchange"},
+};
 struct SpellShrine {
 	int64_t type;
 	Atom site;
@@ -708,6 +712,7 @@ DictRef resolve(State &state, DictRef object, ArrayRef towns, ArrayRef terrain_r
 }
 
 DictRef _visit_building(State &state, DictRef object, Atom key_text, int64_t type_id) {
+	for (const auto &service : kAdventureServices) if (service.type == type_id) return _node(state, object, state.intern(service.site), key::resource_site, state.new_dict());
 	for (const SpellShrine &shrine : kSpellShrines) {
 		if (shrine.type == type_id) {
 			const Atom spell_id = _tier_spell_id(state, key_text, shrine.tier);

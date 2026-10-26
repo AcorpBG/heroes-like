@@ -3182,6 +3182,9 @@ func _open_resource_reward_dialog(prompt: Dictionary) -> void:
 	add_child(_resource_reward_dialog)
 	FrontierVisualKit.apply_confirmation_dialog(_resource_reward_dialog)
 	_resource_reward_dialog.get_ok_button().hide()
+	var field_service := bool(prompt.get("field_service", false))
+	var intelligence_report := bool(prompt.get("intelligence_report", false))
+	if intelligence_report: _resource_reward_dialog.get_cancel_button().hide()
 	var content := VBoxContainer.new()
 	content.custom_minimum_size = Vector2(460, 220)
 	content.add_theme_constant_override("separation", 12)
@@ -3189,7 +3192,7 @@ func _open_resource_reward_dialog(prompt: Dictionary) -> void:
 	picture.texture = _map_view.call("_object_texture_for_asset", String(prompt.get("asset_id", "")))
 	picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	picture.custom_minimum_size = Vector2(180, 170)
+	picture.custom_minimum_size = Vector2(180, 100 if intelligence_report else 170)
 	content.add_child(picture)
 	var instruction := Label.new()
 	instruction.text = String(prompt.get("instruction", "Choose one reward for the visiting hero.\nThe chest is collected only after you choose."))
@@ -3197,12 +3200,40 @@ func _open_resource_reward_dialog(prompt: Dictionary) -> void:
 	instruction.custom_minimum_size.x = 440
 	instruction.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	FrontierVisualKit.apply_label(instruction, "body", 16)
-	content.add_child(instruction)
+	if intelligence_report:
+		instruction.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		instruction.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		var report_scroll := ScrollContainer.new()
+		report_scroll.name = "KingdomIntelligenceReport"
+		report_scroll.custom_minimum_size = Vector2(560, 250)
+		report_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		report_scroll.add_child(instruction)
+		content.add_child(report_scroll)
+	else:
+		content.add_child(instruction)
 	_resource_reward_dialog.add_child(content)
 	var first_button: Button
 	for choice in prompt.get("choices", []):
-		var button := _resource_reward_dialog.add_button(String(choice.get("label", "Choose")), false, String(choice.get("id", "")))
-		FrontierVisualKit.apply_button(button, "primary", 190, 42, 16)
+		var button: Button
+		if field_service:
+			button = Button.new()
+			button.text = String(choice.get("label", "Choose"))
+			button.tooltip_text = button.text
+			button.clip_text = true
+			button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			var field_choice := StringName(choice.get("id", ""))
+			button.pressed.connect(_on_resource_reward_selected.bind(field_choice))
+			content.add_child(button)
+			if not String(choice.get("summary", "")).is_empty():
+				var choice_summary := Label.new()
+				choice_summary.text = String(choice.get("summary", ""))
+				choice_summary.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+				choice_summary.custom_minimum_size.x = 540
+				FrontierVisualKit.apply_label(choice_summary, "muted", 14)
+				content.add_child(choice_summary)
+		else:
+			button = _resource_reward_dialog.add_button(String(choice.get("label", "Choose")), false, String(choice.get("id", "")))
+		FrontierVisualKit.apply_button(button, "primary", 560 if field_service else 190, 42, 16)
 		if first_button == null: first_button = button
 	_resource_reward_dialog.custom_action.connect(_on_resource_reward_selected)
 	_resource_reward_dialog.canceled.connect(_on_resource_reward_canceled)

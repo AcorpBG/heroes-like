@@ -131,6 +131,7 @@ add_library(aurelion_rules_core STATIC
 	core/disk_files.cpp
 	core/map_packages.cpp
 	core/port/ability_helpers.cpp
+	core/port/adventure_services.cpp
 	core/port/action_playback.cpp
 	core/port/action_pressure.cpp
 	core/port/ai_battle_preview.cpp

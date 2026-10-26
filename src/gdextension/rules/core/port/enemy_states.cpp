@@ -424,6 +424,10 @@ void _normalize_enemy_states_body(State &state, DictRef session) {
 		if (state.has(existing_state, str(key::hero_task_state))) {
 			not_ported("a hero task board");
 		}
+		Value intelligence_positions;
+        const Atom intelligence_key = state.intern("intelligence_town_positions");
+        if (state.lookup(existing_state, str(intelligence_key), intelligence_positions) && gd::is_array(intelligence_positions))
+            state.set(normalized_state, str(intelligence_key), gd::duplicate_value(state, intelligence_positions, true));
 		for (const Atom state_key : kAiPlayerStateKeys) {
 			Value kept;
 			if (state.lookup(existing_state, str(state_key), kept)) {

@@ -1,3 +1,4 @@
+#include "aurelion_rules/port/adventure_services.hpp"
 // OverworldRules for the human seat's arrival (Phase 7, slice 7.2): dwellings,
 // visit buildings and the site effects, with CreatureDwellingRules' and
 // VisitBuildingRules' texts and bonuses.
@@ -349,6 +350,7 @@ DictRef _apply_shrine_command_bonus(State &state, DictRef session, DictRef site)
 }
 
 DictRef _visit_building_result(State &state, DictRef session, DictRef node_result, DictRef site, bool refresh_fog_after_action, Atom choice_id) {
+	if (adventure_services::handles(state, site)) return adventure_services::visit(state, session, node_result, site, refresh_fog_after_action, choice_id);
 	const int64_t index = gd::int_field(state, node_result, key::index, -1);
 	const ArrayRef nodes = typed_array_field(state, session_view::overworld(state, session), key::resource_nodes);
 	if (index < 0 || index >= state.array_size(nodes)) {

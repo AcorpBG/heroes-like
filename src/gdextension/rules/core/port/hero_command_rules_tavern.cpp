@@ -6,6 +6,7 @@
 #include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/hero_command_rules_turn.hpp"
 #include "aurelion_rules/port/session_view.hpp"
+#include "aurelion_rules/port/scenario_evaluation.hpp"
 #include "aurelion_rules/port/turn_port.hpp"
 
 namespace aurelion::rules::port {
@@ -133,7 +134,7 @@ ArrayRef recruitable_hero_ids(State &state, DictRef session) {
 ArrayRef _tavern_candidate_ids(State &state, DictRef session) {
 	const ArrayRef recruitable = state.new_array();
 	// session == null: a view is never null.
-	const DictRef scenario = gd::content_row(state, ContentTable::Scenario, gd::to_string(gd::index(state, session, str(key::scenario_id))));
+	const DictRef scenario = scenario_rules::scenario_record_for_session(state, session);
 	const DictRef player_faction = gd::content_row(state, ContentTable::Faction, ai::string_or_empty(state, scenario, key::player_faction_id));
 	for (const Value &hero_id_value : gd::field_items(state, player_faction, str(key::hero_ids))) {
 		const Atom hero_id = gd::stringify(state, hero_id_value);
