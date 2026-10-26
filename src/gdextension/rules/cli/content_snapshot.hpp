@@ -15,6 +15,7 @@
 // reads (checked 2026-10-25).
 
 #include "aurelion_rules/battle_state.hpp"
+#include "aurelion_rules/compat/godot_json.hpp"
 #include "aurelion_rules/content_store.hpp"
 #include "aurelion_rules/disk_files.hpp"
 #include "aurelion_rules/port/content_service_ai.hpp"
@@ -604,7 +605,8 @@ inline bool read_statics(State &state, Host &host, const fs::path &file, const s
 // The content snapshot of the project folder: {files, tables, statics,
 // revision, project}, encoded. types: the registry the typed containers'
 // types go into.
-inline std::vector<uint8_t> build_content_snapshot(const std::filesystem::path &project, Types &types) {
+inline std::vector<uint8_t> build_content_snapshot(const std::filesystem::path &project, Types &types,
+		const std::filesystem::path &overrides = {}) {
 	using namespace content_snapshot_detail;
 	fs::path root = fs::absolute(project).lexically_normal();
 	if (!root.has_filename()) {
@@ -615,8 +617,32 @@ inline std::vector<uint8_t> build_content_snapshot(const std::filesystem::path &
 	}
 	content::Store store(std::make_shared<content::DiskFiles>(root.generic_u8string(), true));
 	State &state = store.scratch();
-	Host host(store, types);
 	std::vector<content::Message> messages;
+	if (!overrides.empty()) {
+		State manifest;
+		const compat::JsonParse parsed = compat::json_parse(manifest, read_text(overrides));
+		if (parsed.error != 0 || parsed.data.kind != Kind::Dict) {
+			fail("content overrides must map res:// content paths to JSON file paths");
+		}
+		for (const Value &key : gd::items(manifest, parsed.data)) {
+			const Value source = manifest.get(parsed.data.ref, key, Value());
+			if (!source.is_string_like()) {
+				fail("each content override must name a JSON file");
+			}
+			const std::string path = manifest.text(key.ref);
+			const compat::JsonParse document = compat::json_parse(state, read_text(fs::u8path(manifest.text(source.ref))));
+			if (document.error != 0 || document.data.kind != Kind::Dict || !store.set_override(path, document.data, messages)) {
+				fail("content override refused: " + path);
+			}
+		}
+		store.validate(messages);
+		for (const content::Message &message : messages) {
+			if (message.error) {
+				fail(message.text);
+			}
+		}
+	}
+	Host host(store, types);
 	const auto file = [&](const std::string &path) {
 		const Value data = store.load_json(path, messages);
 		return data.kind == Kind::Dict ? data : gd::dict_value(state.new_dict());

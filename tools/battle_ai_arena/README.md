@@ -65,6 +65,30 @@ reproduced, report that limitation; a reconstruction from summary fields is not 
 exact replay. Capture output is generated evaluation material, subject to the
 repository's cleanup rules.
 
+### Isolated content experiments and action traces
+
+`match_sim_cli --write-content variant.snap --project . --content-overrides manifest.json`
+uses the native content store's overrides without changing live files. The manifest maps
+content paths to replacement JSON files, for example
+`{"res://content/units.json":"D:/scratch/variant_units.json"}`. Replacement documents
+must be complete, valid content documents. Both the file and id-lookup snapshot tables
+use the replacement. The manifest is only accepted with `--write-content`.
+
+For a captured corpus, `battle_sim_cli --plain --orders A:A --content variant.snap
+--corpus-dir corpus --out trace.jsonl --trace --threads 1` includes `trace_frames`:
+the existing native action playback events, round/turn, stack HP, statuses and
+commander state at each event. It also includes attacking/player-side `action_counts`,
+matching the native auto-resolver; enemy actions appear in the playback frames. Tracing
+is opt-in and can produce large records; compare the result with tracing disabled
+to verify observation did not change the fight.
+
+`--dice N` applies the same alternate-dice hash as a group's `dice` to every battle.
+Zero keeps the corpus's original dice; nonzero values replace them. Use the same
+values for every content condition and report the number of distinct source battles
+separately from repeated dice. These are paired observations of selected fights,
+not independent full-game balance samples. Keep original armies, commanders and
+side assignment when testing a mechanic.
+
 ## Tuning the weights
 
 ```

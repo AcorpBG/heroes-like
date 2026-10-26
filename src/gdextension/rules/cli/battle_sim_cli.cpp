@@ -271,6 +271,8 @@ struct Options {
 	std::string default_label;
 	std::vector<Order> orders;
 	bool plain = false;
+	bool trace = false;
+	int64_t dice = 0;
 	unsigned threads = 0;
 };
 
@@ -671,15 +673,16 @@ private:
 		}
 		std::string out;
 		// The same battle with other dice (a group's "dice").
-		if (battle.dice != 0) {
+		const int64_t dice = options_.dice != 0 ? options_.dice : battle.dice;
+		if (dice != 0) {
 			const uint32_t pair = state_.new_array();
 			state_.append(pair, gd::int_value(gd::to_int(state_, state_.get(payload.ref, gd::str(key::combat_seed), gd::int_value(0)))));
-			state_.append(pair, gd::int_value(battle.dice));
+			state_.append(pair, gd::int_value(dice));
 			state_.set(payload.ref, gd::str(key::combat_seed), gd::int_value(gd::hash(state_, gd::array_value(pair))));
 			for (const uint32_t erased : { key::damage_rng_version, key::damage_rng_state, key::damage_rng_roll_count, key::damage_rng_integrity }) {
 				state_.erase(payload.ref, gd::str(erased));
 			}
-			out += ",\"dice\":" + std::to_string(battle.dice);
+			out += ",\"dice\":" + std::to_string(dice);
 		}
 		gd::set_member(state_, session, key::battle, payload);
 		gd::set_member(state_, session, key::game_state, state_.string("battle"));
@@ -712,7 +715,26 @@ private:
 			out += ",\"enemy_hero\":";
 			out += non_empty(enemy_commander) && battle.kind == "hero" ? "true" : "false";
 		}
+		const uint32_t trace_frames = state_.new_array();
+		if (options_.trace) {
+			state_.set(battle_state.ref, gd::str(key::_live_action_playback_capture), gd::array_value(trace_frames));
+		}
 		const Value resolution = call("BattleAutoResolveRules.resolve_active_battle", { session, gd::int_value(kStepLimit), gd::int_value(0) });
+		if (options_.trace) {
+			const uint32_t compact = state_.new_array();
+			for (const Value &frame : gd::items(state_, gd::array_value(trace_frames))) {
+				const uint32_t row = state_.new_dict();
+				for (const char *name : { "round", "turn_index", "active_stack_id", "selected_target_id", "playback_event", "stacks", "recent_events", "battlefield_tags", "player_commander_state", "enemy_hero" }) {
+					const Value name_value = state_.string(name);
+					state_.set(row, name_value, state_.get(frame.ref, name_value, Value()));
+				}
+				state_.append(compact, gd::dict_value(row));
+			}
+			out += ",\"trace_frames\":";
+			append_json(out, gd::array_value(compact));
+			out += ",\"action_counts\":";
+			append_json(out, field(resolution, key::action_counts));
+		}
 		const Value flags = gd::member(state_, session, key::flags);
 		const Value report = flags.kind == Kind::Dict ? state_.get(flags.ref, gd::str(key::last_battle_aftermath), gd::dict_value(state_.new_dict())) : Value();
 		const bool has_report = report.kind == Kind::Dict;
@@ -1156,7 +1178,7 @@ private:
 	std::fprintf(stderr,
 			"battle_sim_cli: %s\n"
 			"usage: battle_sim_cli --content <content.snap> --corpus-dir <dir> --out <games.jsonl>\n"
-			"       [--variants <variants.txt> --default <label> | --plain] [--orders A:B,B:A] [--threads N]\n",
+			"       [--variants <variants.txt> --default <label> | --plain] [--orders A:B,B:A] [--threads N] [--dice N] [--trace]\n",
 			problem.c_str());
 	std::exit(2);
 }
@@ -1186,6 +1208,10 @@ Options parse(int argc, char **argv) {
 			orders = value();
 		} else if (arg == "--plain") {
 			options.plain = true;
+		} else if (arg == "--trace") {
+			options.trace = true;
+		} else if (arg == "--dice") {
+			options.dice = std::stoll(value());
 		} else if (arg == "--threads") {
 			options.threads = static_cast<unsigned>(std::stoul(value()));
 		} else {

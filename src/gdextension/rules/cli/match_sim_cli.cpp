@@ -3224,7 +3224,7 @@ std::string counts_json(const Counts &counts, double seconds, unsigned threads) 
 			"match_sim_cli: %s\n"
 			"usage: match_sim_cli [--threads N]\n"
 			"       (settings: HEROES_AI_MATCH_* or HEROES_AI_MATCH_LIST, as tests/ai_versus_ai_match_report.gd takes them)\n"
-			"       match_sim_cli --write-content <content.snap> [--project <dir>]\n"
+			"       match_sim_cli --write-content <content.snap> [--project <dir>] [--content-overrides <manifest.json>]\n"
 			"       match_sim_cli --arena-setup <job.json> <results.jsonl> [--threads N]\n",
 			problem.c_str());
 	std::exit(2);
@@ -3245,9 +3245,9 @@ std::string json_text(const State &state, const Value &value) {
 }
 
 // --write-content: the content snapshot of the project folder.
-int run_write_content(const std::string &path, const std::string &project) {
+int run_write_content(const std::string &path, const std::string &project, const std::string &overrides) {
 	Types types;
-	if (!cli::write_whole(fs::u8path(path), cli::build_content_snapshot(fs::u8path(project), types))) {
+	if (!cli::write_whole(fs::u8path(path), cli::build_content_snapshot(fs::u8path(project), types, fs::u8path(overrides)))) {
 		fail("cannot write " + path);
 	}
 	return 0;
@@ -3353,6 +3353,7 @@ int run_arena_setup(const std::string &job_path, const std::string &results_path
 int run(int argc, char **argv) {
 	unsigned threads = 0;
 	std::string write_content;
+	std::string content_overrides;
 	std::string project = ".";
 	std::string arena_job;
 	std::string arena_results;
@@ -3362,6 +3363,8 @@ int run(int argc, char **argv) {
 			threads = static_cast<unsigned>(std::stoul(argv[++index]));
 		} else if (arg == "--write-content" && index + 1 < argc) {
 			write_content = argv[++index];
+		} else if (arg == "--content-overrides" && index + 1 < argc) {
+			content_overrides = argv[++index];
 		} else if (arg == "--project" && index + 1 < argc) {
 			project = argv[++index];
 		} else if (arg == "--arena-setup" && index + 2 < argc) {
@@ -3372,7 +3375,10 @@ int run(int argc, char **argv) {
 		}
 	}
 	if (!write_content.empty()) {
-		return run_write_content(write_content, project);
+		return run_write_content(write_content, project, content_overrides);
+	}
+	if (!content_overrides.empty()) {
+		usage("--content-overrides requires --write-content");
 	}
 	if (!arena_job.empty()) {
 		return run_arena_setup(arena_job, arena_results, threads);
