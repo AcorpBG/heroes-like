@@ -767,7 +767,7 @@
       "name": "Ember Signal Post",
       "family": "faction_outpost",
       "persistent_control": true,
-      "vision_radius": 2,
+      "vision_radius": 4,
       "pressure_guard": 1,
       "response_profile": {
         "action_label": "Repair Outpost",
@@ -781,6 +781,11 @@
         "readiness_bonus": 3,
         "pressure_bonus": 1,
         "recovery_relief": 1
+      },
+      "town_support": {
+        "readiness_bonus": 4,
+        "recovery_relief": 1,
+        "disruption_pressure": 1
       }
     },
     {
@@ -788,7 +793,7 @@
       "name": "Bog Drum Outpost",
       "family": "faction_outpost",
       "persistent_control": true,
-      "vision_radius": 2,
+      "vision_radius": 4,
       "pressure_guard": 1,
       "pressure_bonus": 1,
       "response_profile": {
@@ -803,6 +808,12 @@
         "readiness_bonus": 2,
         "pressure_bonus": 2,
         "recovery_relief": 1
+      },
+      "town_support": {
+        "readiness_bonus": 4,
+        "pressure_bonus": 1,
+        "recovery_relief": 1,
+        "disruption_pressure": 1
       }
     },
     {
@@ -810,7 +821,7 @@
       "name": "Prism Watch Relay",
       "family": "faction_outpost",
       "persistent_control": true,
-      "vision_radius": 3,
+      "vision_radius": 6,
       "pressure_guard": 1,
       "response_profile": {
         "action_label": "Repair Outpost",
@@ -825,6 +836,11 @@
         "readiness_bonus": 2,
         "pressure_bonus": 1,
         "recovery_relief": 1
+      },
+      "town_support": {
+        "readiness_bonus": 6,
+        "recovery_relief": 1,
+        "disruption_pressure": 1
       }
     },
     {
@@ -1169,7 +1185,7 @@
       "name": "Watchtower Beacon",
       "family": "scouting_structure",
       "persistent_control": true,
-      "vision_radius": 10,
+      "vision_radius": 18,
       "pressure_guard": 1,
       "town_support": {
         "readiness_bonus": 1
@@ -1192,7 +1208,7 @@
       "name": "Mist Lighthouse",
       "family": "scouting_structure",
       "persistent_control": true,
-      "vision_radius": 10,
+      "vision_radius": 18,
       "pressure_guard": 1,
       "response_profile": {
         "action_label": "Trim Lighthouse Watch",
@@ -1205,6 +1221,11 @@
         "watch_days": 4,
         "readiness_bonus": 1,
         "pressure_guard_bonus": 2
+      },
+      "town_support": {
+        "readiness_bonus": 10,
+        "pressure_bonus": 1,
+        "disruption_pressure": 1
       }
     },
     {
@@ -3435,7 +3456,12 @@
       "action_label": "Light Signal Nest",
       "summary": "A high watch basket can carry a cold signal flame across the ridge roads.",
       "persistent_control": true,
-      "vision_radius": 10
+      "vision_radius": 18,
+      "town_support": {
+        "readiness_bonus": 10,
+        "pressure_bonus": 1,
+        "disruption_pressure": 1
+      }
     },
     {
       "id": "site_marsh_listener_post",
@@ -3463,7 +3489,12 @@
       "action_label": "Tune Listener Post",
       "summary": "Reed horns turn distant movement into a readable warning across the fen.",
       "persistent_control": true,
-      "vision_radius": 10
+      "vision_radius": 18,
+      "town_support": {
+        "readiness_bonus": 10,
+        "pressure_bonus": 1,
+        "disruption_pressure": 1
+      }
     },
     {
       "id": "site_prism_survey_frame",
@@ -3491,7 +3522,12 @@
       "action_label": "Align Survey Frame",
       "summary": "A suspended prism fixes the frontier against a bright measured meridian.",
       "persistent_control": true,
-      "vision_radius": 10
+      "vision_radius": 18,
+      "town_support": {
+        "readiness_bonus": 10,
+        "pressure_bonus": 1,
+        "disruption_pressure": 1
+      }
     },
     {
       "id": "site_underway_echo_well",
@@ -3519,7 +3555,12 @@
       "action_label": "Sound Echo Well",
       "summary": "Brass receivers read footfalls and water echoes through the buried roads.",
       "persistent_control": true,
-      "vision_radius": 10
+      "vision_radius": 18,
+      "town_support": {
+        "readiness_bonus": 10,
+        "pressure_bonus": 1,
+        "disruption_pressure": 1
+      }
     },
     {
       "id": "site_coast_bell_watch",
@@ -3547,7 +3588,12 @@
       "action_label": "Ring Coast Watch",
       "summary": "A harbor bell and signal lamp trace safe water and approaching sails.",
       "persistent_control": true,
-      "vision_radius": 10
+      "vision_radius": 18,
+      "town_support": {
+        "readiness_bonus": 10,
+        "pressure_bonus": 1,
+        "disruption_pressure": 1
+      }
     },
     {
       "id": "site_mile_writ_sign",
@@ -8377,7 +8423,7 @@
       "name": "Ember Signal Brazier",
       "family": "faction_landmark",
       "persistent_control": true,
-      "vision_radius": 3,
+      "vision_radius": 6,
       "pressure_guard": 1,
       "response_profile": {
         "action_label": "Relight Signal",
@@ -8438,7 +8484,7 @@
       "name": "Bog Drum Totem",
       "family": "faction_landmark",
       "persistent_control": true,
-      "vision_radius": 2,
+      "vision_radius": 4,
       "pressure_bonus": 1,
       "response_profile": {
         "action_label": "Sound Ambush Drum",
@@ -8499,7 +8545,7 @@
       "name": "Prism Relay Lens",
       "family": "faction_landmark",
       "persistent_control": true,
-      "vision_radius": 4,
+      "vision_radius": 8,
       "response_profile": {
         "action_label": "Align Relay",
         "summary": "Lenswrights align the relay vanes and restore the long sightline.",
@@ -8559,7 +8605,7 @@
       "name": "Thornwake Graft Arch",
       "family": "faction_landmark",
       "persistent_control": true,
-      "vision_radius": 2,
+      "vision_radius": 4,
       "pressure_guard": 1,
       "response_profile": {
         "action_label": "Bind Living Route",
@@ -8621,7 +8667,7 @@
       "name": "Brasshollow Gauge Shrine",
       "family": "faction_landmark",
       "persistent_control": true,
-      "vision_radius": 1,
+      "vision_radius": 2,
       "pressure_bonus": 1,
       "response_profile": {
         "action_label": "Recalibrate Gauges",
@@ -8683,7 +8729,7 @@
       "name": "Veilmourn Bell Mast",
       "family": "faction_landmark",
       "persistent_control": true,
-      "vision_radius": 3,
+      "vision_radius": 6,
       "pressure_guard": 1,
       "response_profile": {
         "action_label": "Ring Fog Watch",
@@ -8785,7 +8831,7 @@
         "public_text_panel_required": false
       },
       "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184",
-      "vision_radius": 3,
+      "vision_radius": 6,
       "action_label": "Secure Exchange",
       "summary": "The roadward company secures the grain locks and reopens the exchange ledger."
     },
@@ -8834,7 +8880,7 @@
         "public_text_panel_required": false
       },
       "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184",
-      "vision_radius": 3,
+      "vision_radius": 6,
       "action_label": "Bind Blackwater Shrine",
       "summary": "The company lights the reed lanterns and binds the low shrine to its supply line."
     },
@@ -8883,7 +8929,7 @@
         "public_text_panel_required": false
       },
       "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184",
-      "vision_radius": 4,
+      "vision_radius": 8,
       "action_label": "Raise Prism Standard",
       "summary": "The company aligns the yard prism and raises a clear standard over the crystal works."
     },

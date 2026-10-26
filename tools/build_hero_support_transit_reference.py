@@ -146,7 +146,7 @@ def describe_site(site: dict) -> tuple[list[str], str, dict]:
         if support:
             details.append("Linked-town support (explicit override): " + ", ".join(
                 f"+{value} {key.replace('_bonus', '').replace('_', ' ')}"
-                for key, value in support.items() if value) + ".")
+                for key, value in support.items() if value and key != "disruption_pressure") + ".")
         else:
             details.append(f"Linked-town support: +{max(1, radius)} readiness and +1 pressure rating.")
     elif family == "faction_landmark":
@@ -154,8 +154,13 @@ def describe_site(site: dict) -> tuple[list[str], str, dict]:
         details.append("Any faction may claim it; its faction identity is a theme, not an eligibility restriction.")
     elif family == "faction_outpost":
         details.append(f"Held vision: radius {site.get('vision_radius', 0)}.")
-        details.append(f"Linked-town support: +{max(2, 2 * site.get('vision_radius', 0))} readiness, "
-                       f"+{site.get('pressure_bonus', 0)} pressure, +1 recovery relief.")
+        support = site.get("town_support") or {
+            "readiness_bonus": max(2, 2 * site.get("vision_radius", 0)),
+            "pressure_bonus": site.get("pressure_bonus", 0), "recovery_relief": 1,
+        }
+        details.append("Linked-town support: " + ", ".join(
+            f"+{value} {key.replace('_bonus', '').replace('_', ' ')}"
+            for key, value in support.items() if value and key != "disruption_pressure") + ".")
     elif family in {"frontier_shrine", "shrine"}:
         details.append("A persistent shrine; configured claim rewards/spells are listed below.")
         if family == "frontier_shrine":

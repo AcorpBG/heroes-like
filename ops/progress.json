@@ -117343,6 +117343,18 @@
       ],
       "notes": "Completed illustrated offline HTML reference: 69 original HoMM3 object types and 94 general structures with all 94 existing-art thumbnails, 67 mapped structures and 27 explicitly content-only entries. Two searchable/filterable tables, complete pool/detail popups, costs/cadences, generated Tree/Fortune/Windmill overrides, native-route precedence and linked implementation/original-rule references. Original effects use the 1999 manual plus pinned VCMI compatibility source; no source-recovery or generator-parity claim. Reproducible builder reads current mapping/content/art; existing assets unchanged. Windows core17/17; HTML inventory/art validation and rendered search/view/category/status/pool/detail checks passed. No gameplay/native/content/RMG edits, simulations, builds, parity or Linux run. Requested delivery, curated source data and builder retained; downloaded reference copies and task scratch removed after inspection. Unrelated selftest digest edits preserved.",
       "updatedAt": "2026-10-26"
+    },
+    {
+      "id": "balance-scouting-landmark-vision-20261026",
+      "title": "Increase scouting and faction-site vision",
+      "status": "completed",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/lessons-learned.md",
+        "docs/reference/README.md"
+      ],
+      "notes": "Completed: seven general scouting_structure rows10->18; nine general faction_landmark rows doubled (1/2/3/4 to2/4/6/8); three faction_outpost rows2/2/3->4/4/6. Six scouting and three outpost explicit town_support overrides preserve the old native family-derived quality/readiness/pressure/growth/recovery/disruption values; Watchtower existing override retained. No response cost/duration/bonus or other content fields changed. Reference builder honors outpost overrides and excludes disruption from positive support text; original comparison updated to radius18 and offline HTML rebuilt against the committed content. Windows generated Medium72 two-level live fog probe:19/19 exact reveal boundaries, no cross-level leakage, visible/explored aliases consistent; radius18 reveals1085tiles at interior position. Content structural check confirms exactly19changed rows with only radius/support fields. Windows core17/17 in25s,32generated maps/profiles auto-cleaned. Removed task-only probe,case snapshot and disposable profile (6files,13617bytes), no probe map files remained. No authored-scenario use, native rules/generator edits, builds, AI evaluation or Linux work.",
+      "updatedAt": "2026-10-26"
     }
   ],
   "project": "heroes-like",
