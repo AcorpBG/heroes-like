@@ -87,7 +87,7 @@ The old services' gold-for-experience trades, town recovery and pressure relief,
 
 These need their own designs before any work:
 
-- Field creature upgrades and trades: Hill Fort, Black Market, War Machine Factory, Freelancer's Guild.
+- War Machine Factory: purchasing war machines needs a separate system.
 - Skill teaching: Witch Hut, University, Scholar. The game has specialties instead of secondary skills.
 - Quests and special sites: Seer's Hut, Sanctuary, Altar of Sacrifice, Sirens.
 
@@ -121,3 +121,40 @@ site's level. Human heroes and AI commanders use their existing native creation
 and progression builders. Visiting never changes ownership of these buildings.
 Node rescue/visit/report state and AI intelligence locations use the ordinary
 session save payload. Existing original sprites are reused for all three sites.
+
+## Field upgrades, artifact market and creature sales (2026-10-26)
+
+Owner-selected slice `world-services-field-economy-20261026`. Native
+`field_economy_services.cpp`, reached through `adventure_services`, owns human and
+AI quotes and transactions. The screens display those quotes and submit choices.
+Dedicated generated mappings replace the generic fallbacks for Hill Fort (35),
+Black Market (7) and Freelancer's Guild (213), without changing generator rules.
+Existing saves keep previously adopted fallback identities.
+
+- **Muster Foundry:** upgrades creatures in the visiting commander's army through
+  their content-defined `upgrade_to`, without a dwelling. Tier 1 is free; tiers
+  2/3/4 cost 25/50/75% of the town upgrade price; tiers 5–7 cost 100%. The normal
+  price is the positive difference in each recruit resource cost, multiplied by
+  the chosen count and tier percentage, then rounded up. Partial upgrades merge
+  into an existing upgraded stack or need a free army slot; otherwise only the
+  whole stack can be upgraded. No creature count is lost.
+- **Veiled Bazaar:** five common/uncommon/rare/epic artifacts at standard town
+  artifact prices (1,500/2,500/4,000/6,500 gold). The placement and week determine
+  its stock; purchased offers stay sold for every visitor that week. The next
+  week has fresh stock. `field_market_stock` persists the current week's offers
+  and sold ids. Quest items, scenario/relic-class items and scenario objective
+  artifacts are excluded. A hero cannot buy a duplicate artifact they own.
+  Human purchases enter inventory, with normal equipment controls; AI buys only
+  an equipment improvement and equips it through existing equipment rules.
+- **Free Company Exchange:** sells a chosen number of creatures from the visiting
+  army for 50% of their recruit gold cost, rounded down per creature. No rare
+  resources are refunded. At least one creature remains with the commander.
+
+All actions rebuild their quotes before applying. Changed stack identity/count,
+invalid quantities, spent stock, changed week, duplicate artifacts and insufficient
+funds refuse without spending or granting anything. Paid AI transactions retain
+1,000 gold. AI sales require less than 1,500 gold and a redundant base stack or
+foreign-faction stack worth at most 10% of the army; another stack must remain.
+These policies and service prices live in each site's `field_economy` content.
+Quantity controls show exact costs/proceeds; repeat transactions keep the service
+open. Existing original barracks, caravanserai and scribe-booth art is reused.

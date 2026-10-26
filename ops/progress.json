@@ -22302,6 +22302,18 @@
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
+      "id": "world-services-field-economy-20261026",
+      "title": "Implement Hill Fort, Black Market and Freelancer Guild field services",
+      "status": "completed",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/visit-buildings.md",
+        "docs/lessons-learned.md"
+      ],
+      "notes": "Implemented dedicated native field economy services and mappings: type35 Muster Foundry upgrades existing troops through upgrade_to without a town dwelling, tier cost percentages0/25/50/75/100/100/100 applied to normal multi-resource cost deltas with aggregate round-up; chosen quantities, merging and seven-slot capacity preserved. Type7 Veiled Bazaar sells five common-to-epic artifacts at standard town prices; deterministic placement/week offers and shared sold stock persist under field_market_stock, excludes quest/scenario/relic/objective rewards, rejects duplicates and stale weeks. Type213 Free Company Exchange sells chosen creatures at50% recruit gold rounded down per creature, no rare refund, keeps at least one creature. Human/AI share rebuilt quotes and atomic transactions; AI buys equipment improvements and affordable upgrades while reserving1000gold, only sells weak obsolete/foreign stacks at most10% army power when under1500gold. Existing original sprites reused; quantity controls with exact costs/proceeds, artifact/unit icons, scrollable offers and repeat transactions implemented in the real overworld dialog. Illustrated reference now100sites/73mapped/27content-only, native economy source linked. Windows debug/release libraries and CLIs rebuilt;70focused generated-two-level checks including live UI buttons, all7upgrade tiers, exact costs, partial/whole/merged/full-army cases, stale/invalid/unaffordable refusals, last-creature safety, weekly/duplicate stock and save/load, AI purchases/upgrades/sales passed. Core17/17 in26s; Godot/CLI6/6 identical456daily digests and records. Prechange main comparison: six match records unchanged, state digests differ fromday1 with new content/mappings; no balance sweep. Removed89scratch files and2verified generated map files,76288274bytes(72.75MiB); suite also removed32testmap files. Caches, art/provenance, saves and RMG reverse-engineering material preserved. Concurrent hero-limit source changes committed separately by their owner before finalizing this slice. Linux binaries require later rebuild; existing saved fallback identities retained.",
+      "updatedAt": "2026-10-26"
+    },
+    {
       "id": "balance-mireclaw-ranged-cover-round10-20261025",
       "title": "Balance round 10: Reed Cover for Mireclaw's two ranged lines",
       "status": "completed",

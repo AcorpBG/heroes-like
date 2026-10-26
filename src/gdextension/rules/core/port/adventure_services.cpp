@@ -1,6 +1,7 @@
 // Field recruitment, prisoner rescue and kingdom intelligence. Human and AI
 // callers share availability, transactions and persistent placement state.
 #include "aurelion_rules/port/adventure_services.hpp"
+#include "aurelion_rules/port/field_economy_services.hpp"
 #include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/ai_hero_rules.hpp"
 #include "aurelion_rules/port/ai_hero_rules_ai.hpp"
@@ -312,8 +313,9 @@ void apply_intelligence(State &s,DictRef context,PackedRef tiles,int64_t level) 
     }
 }
 
-bool handles(State &s,DictRef site) {auto k=kind(s,site);return k==atom(s,"tavern")||k==atom(s,"prison")||k==atom(s,"intelligence");}
-bool available(State &s,DictRef session,DictRef node,DictRef site,Atom owner) {
+bool handles(State &s,DictRef site) {auto k=kind(s,site);return field_economy_services::handles(s,site)||k==atom(s,"tavern")||k==atom(s,"prison")||k==atom(s,"intelligence");}
+bool available(State &s,DictRef session,DictRef node,DictRef site,Atom owner,DictRef visitor) {
+    if(field_economy_services::handles(s,site))return field_economy_services::available(s,session,node,site,owner,visitor);
     if(kind(s,site)==atom(s,"intelligence")) {
         auto visits=sub(s,node,atom(s,"intelligence_visits"));Value day;
         return !s.lookup(visits,str(owner),day)||ai::session_int(s,session,key::day)-to_int(s,day)>=7;
@@ -327,6 +329,7 @@ bool available(State &s,DictRef session,DictRef node,DictRef site,Atom owner) {
     return false;
 }
 DictRef visit(State &s,DictRef session,DictRef node_result,DictRef site,bool refresh,Atom choice) {
+    if(field_economy_services::handles(s,site))return field_economy_services::visit(s,session,node_result,site,refresh,choice);
     auto nodes=list(s,session_view::overworld(s,session),key::resource_nodes);auto index=int_field(s,node_result,key::index,-1);
     if(index<0||index>=s.array_size(nodes))return outcome(s,false,"No service is here.");
     auto node=gd::as_dict(s.at(nodes,index));auto service=kind(s,site);
@@ -352,6 +355,7 @@ DictRef visit(State &s,DictRef session,DictRef node_result,DictRef site,bool ref
     s.set(final,str(key::hero_id),str(choice));return final;
 }
 DictRef visit_ai(State &s,DictRef session,DictRef raid,DictRef empire,Atom owner,DictRef node_result,DictRef site) {
+    if(field_economy_services::handles(s,site))return field_economy_services::visit_ai(s,session,raid,empire,owner,node_result,site);
     auto node=sub(s,node_result,key::node);auto result=outcome(s,false,"No service is available.");
     if(available(s,session,node,site,owner)) {
         if(kind(s,site)==atom(s,"intelligence")) {intelligence(s,session,node,owner);result=outcome(s,true,"The commander gathers kingdom intelligence.");}

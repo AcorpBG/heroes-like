@@ -44152,6 +44152,18 @@
     "site_whisper_exchange": {
       "asset_id": "resource_site_frontier_treasury_veilmourn_ledger",
       "fit": "Existing original art reused for the Whisper Exchange field service."
+    },
+    "site_muster_foundry": {
+      "asset_id": "mapobj_mirror_bound_barracks",
+      "fit": "Existing original art reused for the Muster Foundry field service."
+    },
+    "site_veiled_bazaar": {
+      "asset_id": "mapobj_market_caravanserai",
+      "fit": "Existing original art reused for the Veiled Bazaar field service."
+    },
+    "site_free_company_exchange": {
+      "asset_id": "mapobj_contract_scribe_booth",
+      "fit": "Existing original art reused for the Free Company Exchange field service."
     }
   },
   "artifact_default_sprite": {

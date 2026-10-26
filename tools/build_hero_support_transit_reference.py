@@ -141,9 +141,18 @@ def describe_site(site: dict) -> tuple[list[str], str, dict]:
         elif service == "prison":
             cadence = "One successful rescue for the whole placement"
             details.append("The first successful visitor gets one currently available commander of their own faction, selected deterministically for the placement. A failed rescue or full roster does not spend the prisoner.")
-        else:
+        elif service == "intelligence":
             cadence = "Free report; revisit to refresh"
             details.append("Human and AI receive the same town-location knowledge. Computer players refresh a Den report at most once per week; the map knowledge and visit-time snapshot persist in saves.")
+        elif service == "hill_fort":
+            cadence = "Repeatable; quantity chosen per visiting-army stack"
+            details.append("Uses each unit's real upgrade target and the difference in recruit costs. Tier cost percentages: " + ", ".join(str(n) + "%" for n in site["field_economy"]["cost_percent_by_tier"]) + ". Costs round up after multiplying by quantity; no town dwelling is required. Existing upgraded stacks merge; splitting an upgrade requires a free army slot.")
+        elif service == "black_market":
+            cadence = "Shared placement stock; rotates weekly"
+            details.append("Five deterministic common-to-epic offers at the town's artifact prices. Each offer can be bought once per market per week across all players; purchases and stock persist in saves. Quest, scenario, relic and objective items are excluded. AI buys useful equipment while keeping a gold reserve.")
+        elif service == "freelancer_guild":
+            cadence = "Repeatable; quantity chosen per visiting-army stack"
+            details.append("Pays half the unit's recruit gold cost, rounded down per creature; rare resources are not refunded. At least one creature must remain. AI only sells weak obsolete or foreign stacks when short of gold; it does not liquidate its main army.")
     elif visit:
         details += effect_lines(visit.get("effects", {}))
         if visit.get("cost") and not visit.get("choices"):
@@ -365,7 +374,8 @@ def build() -> dict:
     inputs = ["content/resource_sites.json", "content/map_objects.json",
               "content/random_map_object_eligibility.json",
               "art/overworld/manifest.json", "art/overworld/map_object_sprites.json",
-              "src/gdextension/rules/core/port/generated_reward_rules.cpp"]
+              "src/gdextension/rules/core/port/generated_reward_rules.cpp",
+              "src/gdextension/rules/core/port/field_economy_services.cpp"]
     payload = {
         "title": reference["title"], "scope": reference["scope"],
         "boundary": reference["evidence_boundary"], "revision": revision,
@@ -379,6 +389,7 @@ def build() -> dict:
                 ("Generated object mapping", "src/gdextension/rules/core/port/generated_reward_rules.cpp"),
                 ("Native transit", "src/gdextension/rules/core/port/native_transit_rules.cpp"),
                 ("Visit effects", "src/gdextension/rules/core/port/overworld_rules_site_effects.cpp"),
+                ("Field economy services", "src/gdextension/rules/core/port/field_economy_services.cpp"),
                 ("Held town-support ratings", "src/gdextension/rules/core/port/overworld_rules_ai_sites.cpp"),
                 ("Town support and response", "src/gdextension/rules/core/port/overworld_rules_site_response.cpp"),
                 ("Follow-up reserve deliveries", "src/gdextension/rules/core/port/day_economy.cpp"),

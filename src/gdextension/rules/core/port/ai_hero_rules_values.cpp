@@ -118,7 +118,7 @@ DictRef _resource_candidate(State &state, DictRef session, Atom controller, Dict
 		const int64_t week = creature_dwelling_rules::week_value(state, node, site, ai::session_int(state, session, key::day));
 		value = tunable(state, key::DWELLING_BASE_VALUE) + static_cast<double>(week) * tunable(state, key::DWELLING_WEEK_SHARE);
 	} else if (visit_building_rules::is_visit_building(state, site)) {
-		if (adventure_services::handles(state, site) && !adventure_services::available(state, session, node, site, controller)) return state.new_dict();
+		if (adventure_services::handles(state, site) && !adventure_services::available(state, session, node, site, controller, entry)) return state.new_dict();
 		Value commander;
 		const Value level = state.lookup(entry, str(key::enemy_commander_state), commander) ? ai::vget(state, commander, key::level, int_value(1)) : int_value(1);
 		if (gd::to_int(state, level) < visit_building_rules::required_level(state, site)) {

@@ -2309,6 +2309,24 @@
       "fit": "Original field-service art.",
       "assignment_source": "field_services_20261026",
       "family": "repeatable_service"
+    },
+    "object_muster_foundry": {
+      "asset_id": "mapobj_mirror_bound_barracks",
+      "fit": "Original field-service art.",
+      "assignment_source": "field_economy_20261026",
+      "family": "repeatable_service"
+    },
+    "object_veiled_bazaar": {
+      "asset_id": "mapobj_market_caravanserai",
+      "fit": "Original field-service art.",
+      "assignment_source": "field_economy_20261026",
+      "family": "repeatable_service"
+    },
+    "object_free_company_exchange": {
+      "asset_id": "mapobj_contract_scribe_booth",
+      "fit": "Original field-service art.",
+      "assignment_source": "field_economy_20261026",
+      "family": "repeatable_service"
     }
   }
 }

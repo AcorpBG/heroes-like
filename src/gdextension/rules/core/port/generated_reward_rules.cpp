@@ -251,6 +251,7 @@ constexpr VisitSite kVisitSites[] = {
 struct AdventureService { int64_t type; const char *site; };
 constexpr AdventureService kAdventureServices[] = {
 	{95, "site_wayfarer_lodge"}, {62, "site_captive_stockade"}, {97, "site_whisper_exchange"},
+	{35, "site_muster_foundry"}, {7, "site_veiled_bazaar"}, {213, "site_free_company_exchange"},
 };
 struct SpellShrine {
 	int64_t type;

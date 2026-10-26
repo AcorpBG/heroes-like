@@ -166,7 +166,7 @@ ArrayRef _normalize_resource_nodes(State &state, ArrayRef nodes) {
 
 void _copy_resource_runtime_metadata(State &state, DictRef target, DictRef source) {
     // Field-service state is part of the placement, including across saves.
-    for (const char *name : {"prison_released", "released_hero_id", "intelligence_visits", "intelligence_reports"}) {
+    for (const char *name : {"prison_released", "released_hero_id", "intelligence_visits", "intelligence_reports", "field_market_stock"}) {
         const Atom field = state.intern(name);
         Value value;
         if (state.lookup(source, str(field), value)) state.set(target, str(field), value.is_container() ? gd::duplicate_value(state, value, true) : value);

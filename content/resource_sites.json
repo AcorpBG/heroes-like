@@ -17420,6 +17420,76 @@
         "role": "kingdom_intelligence",
         "cadence": "always"
       }
+    },
+    {
+      "id": "site_muster_foundry",
+      "name": "Muster Foundry",
+      "family": "visit_building",
+      "content_batch_id": "overworld-object-field-economy-20261026",
+      "action_label": "Upgrade troops",
+      "overworld_sprite_asset_id": "mapobj_mirror_bound_barracks",
+      "adventure_service": "hill_fort",
+      "field_economy": {
+        "cost_percent_by_tier": [
+          0,
+          25,
+          50,
+          75,
+          100,
+          100,
+          100
+        ],
+        "ai_gold_reserve": 1000
+      },
+      "public_text": "Upgrade the visiting army without a town dwelling. Pay 0%, 25%, 50%, 75% or 100% of the normal upgrade cost for tiers 1, 2, 3, 4 or 5–7. Choose a quantity; partial upgrades need an army slot or an existing upgraded stack.",
+      "visit": {
+        "role": "hill_fort",
+        "cadence": "always"
+      }
+    },
+    {
+      "id": "site_veiled_bazaar",
+      "name": "Veiled Bazaar",
+      "family": "visit_building",
+      "content_batch_id": "overworld-object-field-economy-20261026",
+      "action_label": "Browse artifacts",
+      "overworld_sprite_asset_id": "mapobj_market_caravanserai",
+      "adventure_service": "black_market",
+      "field_economy": {
+        "stock_size": 5,
+        "artifact_rarities": [
+          "common",
+          "uncommon",
+          "rare",
+          "epic"
+        ],
+        "price_percent": 100,
+        "ai_gold_reserve": 1000
+      },
+      "public_text": "Buy artifacts for your visiting commander at standard artifact prices. Five offers rotate each week; each can be bought once per market per week, shared by all players. Purchased items enter your inventory.",
+      "visit": {
+        "role": "black_market",
+        "cadence": "always"
+      }
+    },
+    {
+      "id": "site_free_company_exchange",
+      "name": "Free Company Exchange",
+      "family": "visit_building",
+      "content_batch_id": "overworld-object-field-economy-20261026",
+      "action_label": "Sell creatures",
+      "overworld_sprite_asset_id": "mapobj_contract_scribe_booth",
+      "adventure_service": "freelancer_guild",
+      "field_economy": {
+        "sale_percent": 50,
+        "ai_gold_target": 1500,
+        "ai_sale_power_share": 0.1
+      },
+      "public_text": "Sell any chosen number of creatures for 50% of their recruit gold cost, rounded down per creature. Rare resources are not refunded. At least one creature must remain with the commander.",
+      "visit": {
+        "role": "freelancer_guild",
+        "cadence": "always"
+      }
     }
   ]
 }

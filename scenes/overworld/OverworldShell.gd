@@ -3184,6 +3184,7 @@ func _open_resource_reward_dialog(prompt: Dictionary) -> void:
 	_resource_reward_dialog.get_ok_button().hide()
 	var field_service := bool(prompt.get("field_service", false))
 	var intelligence_report := bool(prompt.get("intelligence_report", false))
+	var economy_service := bool(prompt.get("economy_service", false))
 	if intelligence_report: _resource_reward_dialog.get_cancel_button().hide()
 	var content := VBoxContainer.new()
 	content.custom_minimum_size = Vector2(460, 220)
@@ -3192,7 +3193,7 @@ func _open_resource_reward_dialog(prompt: Dictionary) -> void:
 	picture.texture = _map_view.call("_object_texture_for_asset", String(prompt.get("asset_id", "")))
 	picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	picture.custom_minimum_size = Vector2(180, 100 if intelligence_report else 170)
+	picture.custom_minimum_size = Vector2(180, 100 if intelligence_report or economy_service else 170)
 	content.add_child(picture)
 	var instruction := Label.new()
 	instruction.text = String(prompt.get("instruction", "Choose one reward for the visiting hero.\nThe chest is collected only after you choose."))
@@ -3213,7 +3214,9 @@ func _open_resource_reward_dialog(prompt: Dictionary) -> void:
 		content.add_child(instruction)
 	_resource_reward_dialog.add_child(content)
 	var first_button: Button
-	for choice in prompt.get("choices", []):
+	if economy_service:
+		first_button = _add_field_economy_choices(content, prompt)
+	for choice in ([] if economy_service else prompt.get("choices", [])):
 		var button: Button
 		if field_service:
 			button = Button.new()
@@ -3242,6 +3245,88 @@ func _open_resource_reward_dialog(prompt: Dictionary) -> void:
 	_resource_reward_dialog.popup_centered(Vector2i(640, 340))
 	if first_button != null: first_button.grab_focus()
 
+func _add_field_economy_choices(content: VBoxContainer, prompt: Dictionary) -> Button:
+	var scroll := ScrollContainer.new()
+	scroll.custom_minimum_size = Vector2(630, 290)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	content.add_child(scroll)
+	var offers := VBoxContainer.new()
+	offers.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	offers.add_theme_constant_override("separation", 14)
+	scroll.add_child(offers)
+	var first_button: Button
+	for entry in prompt.get("choices", []):
+		var choice: Dictionary = entry
+		var offer := VBoxContainer.new()
+		offers.add_child(offer)
+		var title := Label.new()
+		title.text = String(choice.get("label", "Field service"))
+		title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		title.custom_minimum_size.x = 590
+		FrontierVisualKit.apply_label(title, "body", 16)
+		offer.add_child(title)
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 10)
+		offer.add_child(row)
+		var portrait := TextureRect.new()
+		portrait.custom_minimum_size = Vector2(48, 48)
+		portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		if choice.has("unit_id"):
+			portrait.texture = UnitPortraits.for_unit(String(choice["unit_id"]), "portrait")
+		elif choice.has("artifact_id"):
+			var icon_path := ArtifactRules.artifact_icon_path(String(choice["artifact_id"]))
+			if ResourceLoader.exists(icon_path): portrait.texture = load(icon_path)
+		row.add_child(portrait)
+		var details := Label.new()
+		details.text = String(choice.get("summary", ""))
+		details.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		details.custom_minimum_size.x = 220
+		details.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		FrontierVisualKit.apply_label(details, "muted", 13)
+		row.add_child(details)
+		var button := Button.new()
+		if choice.has("quantity_max"):
+			var quantity := SpinBox.new()
+			quantity.min_value = int(choice.get("quantity_min", 1))
+			quantity.max_value = int(choice["quantity_max"])
+			quantity.step = 1
+			quantity.value = int(choice.get("quantity_default", quantity.min_value))
+			quantity.custom_minimum_size.x = 105
+			quantity.tooltip_text = "Choose how many creatures"
+			row.add_child(quantity)
+			quantity.value_changed.connect(func(_amount: float) -> void:
+				_update_field_economy_button(button, quantity, choice, prompt.get("available_resources", {})))
+			_update_field_economy_button(button, quantity, choice, prompt.get("available_resources", {}))
+			button.pressed.connect(func() -> void:
+				quantity.apply()
+				_on_resource_reward_selected(StringName("%s:%d" % [String(choice["id"]), int(quantity.value)])))
+		else:
+			button.text = "Buy · %d gold" % int(choice.get("cost", {}).get("gold", 0))
+			button.disabled = bool(choice.get("disabled", false))
+			button.pressed.connect(_on_resource_reward_selected.bind(StringName(choice["id"])))
+		FrontierVisualKit.apply_button(button, "primary", 180, 42, 14)
+		row.add_child(button)
+		if first_button == null and not button.disabled: first_button = button
+	return first_button
+
+func _update_field_economy_button(button: Button, quantity: SpinBox, choice: Dictionary, resources: Dictionary) -> void:
+	var amount := int(quantity.value)
+	var costs: Dictionary = choice.get("quantity_cost", {})
+	var rewards: Dictionary = choice.get("quantity_reward", {})
+	var parts: Array[String] = []
+	var affordable := true
+	for resource in costs:
+		var total := int(ceil(float(int(costs[resource]) * amount * int(choice.get("cost_percent", 100))) / 100.0))
+		if total > 0: parts.append("%d %s" % [total, String(resource).replace("_", " ")])
+		if total > int(resources.get(resource, 0)): affordable = false
+	if not rewards.is_empty():
+		button.text = "Sell · +%d gold" % (int(rewards.get("gold", 0)) * amount)
+	else:
+		button.text = "Upgrade · %s" % (", ".join(parts) if not parts.is_empty() else "free")
+	button.tooltip_text = button.text
+	button.disabled = not affordable or bool(choice.get("disabled", false))
+
 func _on_resource_reward_canceled() -> void:
 	FrontierVisualKit.hide_exclusive_dialog(_resource_reward_dialog)
 	_resource_reward_context.clear()
@@ -3260,6 +3345,7 @@ func _on_resource_reward_selected(choice_id: StringName) -> void:
 	if bool(_handle_session_resolution().get("handled", false)): return
 	_refresh()
 	_record_resource_delta_presentation(result, "collect_resource", before)
+	_sync_resource_reward_presentation(result)
 
 ## Troops a claimed site offered that did not fit the army: pick a stack to
 ## dismiss for them, or leave them behind. The offer lives in the session, so
