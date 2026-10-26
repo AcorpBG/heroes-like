@@ -685,6 +685,18 @@ private:
 		gd::set_member(state_, session, key::game_state, state_.string("battle"));
 		call("BattleRules.normalize_battle_state", { session });
 		const Value battle_state = gd::member(state_, session, key::battle);
+		out += ",\"combat_seed\":";
+		append_json(out, field(battle_state, key::combat_seed));
+		const uint32_t start_health = state_.new_array();
+		for (const Value &stack : gd::items(state_, field(battle_state, key::stacks))) {
+			const uint32_t health = state_.new_dict();
+			for (const uint32_t name : { key::side, key::unit_id, key::base_count, key::unit_hp, key::total_health }) {
+				state_.set(health, gd::str(name), field(stack, name));
+			}
+			state_.append(start_health, gd::dict_value(health));
+		}
+		out += ",\"start_health\":";
+		append_json(out, gd::array_value(start_health));
 		out += ",\"start_ledger\":";
 		append_json(out, call("BattleRules._battle_report_casualty_ledger", { battle_state }));
 		between_calls();

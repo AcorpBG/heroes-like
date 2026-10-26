@@ -754,6 +754,10 @@ public:
 	virtual Value content_file(State &state, uint32_t path);
 	// ContentService.get_content_revision(): it moves on each content reload.
 	virtual int64_t content_revision(State &state);
+	// Optional evaluator observation of an AI fight's complete pre-payload setup.
+	// Hosts must not mutate it. The game does nothing; the match CLI can export
+	// a selected fight to the battle arena without reconstructing partial logs.
+	virtual void observe_ai_battle(State &, const Value &, const Value &, const Value &, int64_t) {}
 	// A GDScript static var, by its script's res:// path and its name: its
 	// value, the same node on every read of the call, and an assignment, which
 	// the host applies with the call's write-back (so a call that writes

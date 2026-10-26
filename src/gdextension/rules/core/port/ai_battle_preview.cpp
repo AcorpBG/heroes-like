@@ -146,6 +146,7 @@ DictRef _simulate_battle_on_day(State &state, int64_t day, DictRef entry, DictRe
 	const Atom session_id = gd::format(state, key::ai_battle_s_d, { str(string_of(state, entry, key::placement_id)), int_value(battle_number) });
 	const DictRef scratch = new_scratch_session(state, session_id, hero_id, day, overworld_state);
 	const Value scratch_value = dict_value(scratch);
+	state.host().observe_ai_battle(state, scratch_value, dict_value(defender_copy), dict_value(entry), stop_below_creatures);
 	const DictRef payload = battle_rules::create_battle_payload(state, scratch_value, defender_copy);
 	if (gd::is_empty(state, payload)) {
 		const DictRef failed = state.new_dict();

@@ -612,6 +612,11 @@ public:
 	bool play(const Settings &settings, std::string &lines) {
 		started_ = Clock::now();
 		lines_ = &lines;
+		capture_dir_ = strip(settings.get("HEROES_AI_MATCH_BATTLE_CAPTURE"));
+		capture_hero_ = strip(settings.get("HEROES_AI_MATCH_BATTLE_CAPTURE_HERO"));
+		capture_defender_ = strip(settings.get("HEROES_AI_MATCH_BATTLE_CAPTURE_DEFENDER"));
+		capture_day_ = compat::to_int(settings.get("HEROES_AI_MATCH_BATTLE_CAPTURE_DAY"));
+		captured_ = false;
 		out_path_ = strip(settings.get("HEROES_AI_MATCH_OUT"));
 		if (out_path_.empty()) {
 			out_path_ = kDefaultOut;
@@ -1004,6 +1009,56 @@ public:
 		throw st::ScriptError(name + ": a host call the match runner does not answer");
 	}
 
+	void observe_ai_battle(State &, const Value &session, const Value &site, const Value &entry, int64_t stop_below) override {
+		if (capture_dir_.empty() || captured_ || stop_below != 0) {
+			return;
+		}
+		if (capture_hero_.empty() || capture_defender_.empty() || capture_day_ <= 0) {
+			throw MatchFailed{ "Battle capture requires HERO, DEFENDER and DAY selectors." };
+		}
+		const Value commander = get(site, names_.enemy_commander_state, gd::dict_value(state_.new_dict()));
+		std::string defender_name = text_of(get(commander, atom_of("name"), state_.string("")));
+		if (defender_name.empty()) {
+			const Value roster_id = get(commander, atom_of("roster_hero_id"), state_.string(""));
+			const Value roster = content_row(state_, st::ContentTable::Hero, string_of(roster_id));
+			defender_name = text_of(get(roster, atom_of("name"), state_.string("")));
+		}
+		if (int_of(session, names_.day, 0) != capture_day_ ||
+				text_of(get(entry, names_.placement_id)) != capture_hero_ ||
+				defender_name != capture_defender_) {
+			return;
+		}
+		const fs::path destination = fs::u8path(capture_dir_);
+		fs::create_directories(destination);
+		if (fs::exists(destination / "group_capture.snap")) {
+			throw MatchFailed{ "Battle capture would overwrite group_capture.snap." };
+		}
+		const uint32_t row = state_.new_dict();
+		state_.set(row, state_.string("kind"), state_.string("game"));
+		state_.set(row, state_.string("group_id"), state_.string("capture"));
+		state_.set(row, state_.string("battle_id"), get(session, atom_of("session_id")));
+		state_.set(row, state_.string("day"), gd::int_value(capture_day_));
+		const std::string record = Json{ state_, "", true, false }.text(gd::dict_value(row));
+		const uint32_t battle = state_.new_dict();
+		state_.set(battle, state_.string("battle_id"), get(session, atom_of("session_id")));
+		state_.set(battle, state_.string("kind"), state_.string("hero"));
+		state_.set(battle, state_.string("dice"), gd::int_value(0));
+		state_.set(battle, state_.string("prefix"), state_.string(record.substr(0, record.size() - 1)));
+		state_.set(battle, state_.string("session"), session);
+		state_.set(battle, state_.string("site"), site);
+		const uint32_t battles = state_.new_array();
+		state_.append(battles, gd::dict_value(battle));
+		const uint32_t group = state_.new_dict();
+		state_.set(group, state_.string("group_id"), state_.string("capture"));
+		state_.set(group, state_.string("corpus_file"), state_.string("group_capture.snap"));
+		arena_write_corpus(capture_dir_, gd::dict_value(group), state_.string(""), gd::array_value(battles),
+				[&](const std::string &line) { *lines_ += line + "\n"; });
+		if (!fs::exists(destination / "group_capture.snap")) {
+			throw MatchFailed{ "Could not write battle capture." };
+		}
+		captured_ = true;
+	}
+
 	TypeRef builtin_type(uint8_t builtin) override {
 		TypeRef &type = builtin_types_[builtin];
 		if (type == 0) {
@@ -1038,11 +1093,17 @@ public:
 	}
 
 private:
+	std::string capture_dir_, capture_hero_, capture_defender_;
+	int64_t capture_day_ = 0;
+	bool captured_ = false;
 	// ------------------------------------------------------- the match
 
 	// The scene's _play: the match's session from a setup snapshot the scene
 	// prepared, else on a map generated here, then the match.
 	void match(const Settings &settings) {
+		if (!capture_dir_.empty() && (capture_hero_.empty() || capture_defender_.empty() || capture_day_ <= 0)) {
+			throw MatchFailed{ "Battle capture requires HERO, DEFENDER and DAY selectors." };
+		}
 		std::unique_ptr<Store> match_store;
 		const Value plan = strip(settings.get("HEROES_AI_MATCH_SNAPSHOT")).empty() ? start_generated(settings) : start_prepared(settings, match_store);
 		const std::string match_seed = text_of(get(plan, state_.intern("match_seed")));
@@ -1143,6 +1204,9 @@ private:
 			}
 		}
 
+		if (!capture_dir_.empty() && !captured_) {
+			throw MatchFailed{ "No battle matched the requested arena capture selectors." };
+		}
 		const Value battles = state_.get(gd::as_dict(field(kFlags)), gd::str(names_.battle_log), gd::array_value(state_.new_array()));
 		const uint32_t heroes = state_.new_array();
 		for (const Value &value : state_.dict(heroes_seen_.ref).values) {

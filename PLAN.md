@@ -40,6 +40,8 @@ Rules:
 
 ### Faction HP balance
 
+`balance-veilmourn-effective-hp-arena-20261026` (completed, owner request): Veilmourn HP now ceil(pre-buff * 1.02), all 27 forms increased over f72252e59 (19 additional current fields); low-HP increases can reach 14.3%. Added opt-in native exact-fight arena capture and initialized HP/seed output. Unchanged m339 replay reproduces all 640 battles through day 144. Fixed captured fight/seed: Veil HP 1081->1107, Sun 774; Sun still wins in three rounds with identical survivors and 26.986% troop-value losses. No other stats/AI changed or full batch run. Windows rebuilt, six-seed Godot/CLI identical, core 17/17; Linux rebuild deferred per owner pause.
+
 `balance-veilmourn-brasshollow-hp-2pct-20261025` (completed, owner request): applied nominal +2% HP to all 27 Veilmourn and 27 Brasshollow definitions, including upgrades and auxiliary units, using nearest whole HP with half-up rounding and no forced minimum increment. Exactly 12 HP fields per faction changed; 15 per faction round unchanged. All other fields and factions, including Sunvault, unchanged. Windows core 17/17 passed in 30 seconds; its 32 generated map files and disposable profiles were cleaned. No native rebuild or AI evaluation.
 
 `balance-mireclaw-melee-hp-revert-20261025` (completed, owner request): all 19 Mireclaw melee forms restored to pre-HP-buff values; exactly 15 HP fields changed. Mireclaw ranged +5%, Embercourt +2.5%, Sunvault/Thornwake -5% and all other content unchanged. Windows core 17/17, including content validation; no native rebuild.

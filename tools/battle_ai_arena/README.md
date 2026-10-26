@@ -34,6 +34,37 @@ with the same records. Godot comes from `--godot`, `$GODOT_BIN`, `godot4`/`godot
 the owner's Windows install, as for the core suite, and every worker gets a throwaway user
 profile.
 
+## Replay an actual AI-match battle
+
+The match record is a summary, not a complete replay: it omits the combat seed,
+specialties, artifacts and other commander state. Recover an exact arena input by
+replaying the original match with its original content and these match-runner settings:
+
+- `HEROES_AI_MATCH_BATTLE_CAPTURE`: a new corpus directory.
+- `HEROES_AI_MATCH_BATTLE_CAPTURE_DAY`: the fight's day.
+- `HEROES_AI_MATCH_BATTLE_CAPTURE_HERO`: the attacking hero's placement id.
+- `HEROES_AI_MATCH_BATTLE_CAPTURE_DEFENDER`: the defending commander's name.
+
+The optional observer exports the complete scratch session and defender immediately
+before payload construction, including the original session identity used for the
+combat seed. It ignores partial-loss previews and captures the first matching full
+simulation. The runner fails if no simulation matches or the capture file exists.
+Ordinary games and runs without these settings perform no capture.
+
+Run `battle_sim_cli --content original.snap --corpus-dir <capture> --plain
+--orders A:A --out before.jsonl --threads 1` and check its commanders, casualty
+ledgers and outcome against the recorded fight before changing content. The same
+corpus can then be played with a changed content snapshot to isolate a content
+change while keeping armies, commanders, spell books, mana and seed fixed. A saved
+pre-payload session resolves unit stats from the selected content snapshot.
+Records include the combat seed and initialized per-stack HP under `start_health`,
+so a content comparison can verify the new stats actually reached the battle.
+
+If the original content/code is unavailable or the original result cannot be
+reproduced, report that limitation; a reconstruction from summary fields is not an
+exact replay. Capture output is generated evaluation material, subject to the
+repository's cleanup rules.
+
 ## Tuning the weights
 
 ```

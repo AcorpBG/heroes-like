@@ -199,6 +199,13 @@ func _play_game(base: Dictionary, group: Dictionary, battle: Dictionary, ground:
 	session.battle = payload
 	session.game_state = "battle"
 	_battle_rules.normalize_battle_state(session)
+	row["combat_seed"] = session.battle.get("combat_seed", 0)
+	row["start_health"] = []
+	for stack in session.battle.get("stacks", []):
+		var health := {}
+		for key in ["side", "unit_id", "base_count", "unit_hp", "total_health"]:
+			health[key] = stack.get(key)
+		row["start_health"].append(health)
 	row["start_ledger"] = _battle_rules.battle_report_casualty_ledger_bridge(session.battle)
 	row["player_commander"] = _commander_features(session.battle.get("player_commander_state", {}))
 	row["enemy_commander"] = _commander_features(session.battle.get("enemy_hero", {}))
