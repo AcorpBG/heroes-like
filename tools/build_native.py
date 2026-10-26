@@ -24,7 +24,8 @@ copies bin/ back, checks every file's sha256 and deletes the remote directory.
 Debug info never goes into git: PDBs and the Linux debug files are archived per build id
 under the symbol store (HEROES_NATIVE_SYMBOLS, default heroes-like-native-symbols next to
 the main checkout): windows/<pdb>/<GUID><age>/<pdb> as a Microsoft symbol store and
-linux/.build-id/xx/<rest>.debug for gdb's debug-file-directory, with index.jsonl.
+linux/.build-id/xx/<rest>.debug for gdb's debug-file-directory, with index.jsonl. Each
+build prunes the store to the last five builds per binary.
 
 Committed binaries conflict between branches: build and commit them one slice at a time.
 Never build while an owner AI batch or a timing run is going (AGENTS.md).
@@ -53,6 +54,7 @@ ROOT = Path(__file__).resolve().parents[1]
 BIN = ROOT / "bin"
 DEFAULT_HOST = "root@pleyc.com"
 RULES_DIR = "src/gdextension/rules"
+SYMBOLS_KEPT = 5  # builds per binary kept in the symbol store
 
 PARTS = {
 	"rules": {
@@ -252,6 +254,33 @@ def archive_symbol(store: Path, record: dict, debug_file: Path, relative: Path) 
 	with (store / "index.jsonl").open("a", encoding="utf-8") as index:
 		index.write(json.dumps(record, sort_keys=True) + "\n")
 	print(f"symbols: {relative.as_posix()}")
+
+
+def prune_symbols(store: Path, keep: int = SYMBOLS_KEPT) -> None:
+	"""Keep the debug files of each binary's last `keep` builds; drop older ones and their index lines."""
+	index = store / "index.jsonl"
+	if not index.exists():
+		return
+	records = [json.loads(line) for line in index.read_text(encoding="utf-8").splitlines() if line.strip()]
+	newest: dict[tuple[str, str], list[str]] = {}
+	for record in sorted(records, key=lambda record: record["time"], reverse=True):
+		files = newest.setdefault((record["platform"], record["binary"]), [])
+		if record["debug_file"] not in files and len(files) < keep:
+			files.append(record["debug_file"])
+	kept = {name for files in newest.values() for name in files}
+	freed = 0
+	for name in {record["debug_file"] for record in records} - kept:
+		target = store / name
+		if target.exists():
+			freed += target.stat().st_size
+			target.unlink()
+		parent = target.parent
+		while parent != store and parent.exists() and not any(parent.iterdir()):
+			parent.rmdir()
+			parent = parent.parent
+	index.write_text("".join(json.dumps(record, sort_keys=True) + "\n" for record in records if record["debug_file"] in kept), encoding="utf-8")
+	if freed:
+		print(f"symbols: pruned {freed // (1 << 20)} MB of builds older than the last {keep} per binary")
 
 
 def archive_windows_symbols(store: Path, outputs: list[Path], source_tree: str) -> None:
@@ -539,6 +568,7 @@ def main() -> int:
 		build_windows(parts, flavours, args.jobs, store, not args.no_selftest)
 	else:
 		build_linux(parts, flavours, args.host, store, args.keep_remote, not args.no_mingw, args.remote_timeout)
+	prune_symbols(store)
 	return 0
 
 

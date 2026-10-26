@@ -239,7 +239,7 @@ files go into the symbol store per build id: `HEROES_NATIVE_SYMBOLS`, by default
 `heroes-like-native-symbols` next to the main checkout. That holds
 `windows/<pdb>/<GUID><age>/<pdb>` (a Microsoft symbol store),
 `linux/.build-id/xx/<rest>.debug` (point gdb's `debug-file-directory` at `linux/`),
-and `index.jsonl`.
+and `index.jsonl`. Each build prunes the store to the last five builds per binary.
 
 Exports leave out the debug libraries, PDBs, `rules_selftest` and the rules sources
 (`export_presets.cfg`).
