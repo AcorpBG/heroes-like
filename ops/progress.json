@@ -22302,6 +22302,17 @@
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
+      "id": "ai-hero-hiring-entry-defense-20261026",
+      "title": "AI hero hiring by gold and exploration; town entry defenders fight with the garrison",
+      "status": "completed",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/ai-plays-by-player-rules.md"
+      ],
+      "notes": "Hiring: wanted heroes 1 + towns + 1 from extra_hero_day, plus tiles_per_explorer (1500) explorers, hero_count_max 8; hires keep hire_reserve_days (2) of gold income, explorers explorer_reserve_days (5); field_army_max and hero_count_town_max removed. Entry defense: entry_defense_plan / split_entry_defense (hero_command_rules_ai.cpp); _attack_town combines AI-vs-AI, town_defense_force merges for human towns (fits=false gives a hero intercept), create_entry_defense_assault_payload for human assaults with the after-assault split in _sync_enemy_force_from_battle; _entry_town_index sends hero plans on an entry defender to _attack_town and drops their lone-hero candidates.",
+      "validation": "Windows: scratch probes of every path, no SCRIPT ERROR; core_suite 17/17; rules_parity six seeds native vs main: all complete without error, differ from day 8 as expected. No AI batches. Linux libraries not rebuilt (Linux paused)."
+    },
+    {
       "id": "world-services-field-economy-20261026",
       "title": "Implement Hill Fort, Black Market and Freelancer Guild field services",
       "status": "completed",

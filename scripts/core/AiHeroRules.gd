@@ -108,11 +108,9 @@ static var TOWN_HORIZON_WEEKS: float
 ## twenty times its own while the winner cleared guards and mines.
 static var ELIMINATION_VALUE: float
 ## Lesser heroes that keep an army of their own (`_field_hero_ids`): one per
-## town held beyond the first, at most this many. They take garrisons along,
-## defend towns and take what they can beat instead of handing their troops to
-## the main hero; captured towns of other factions muster creatures the main
-## army has no slot for.
-static var FIELD_ARMY_MAX: int
+## town held beyond the first. They take garrisons along, defend towns and take
+## what they can beat instead of handing their troops to the main hero; captured
+## towns of other factions muster creatures the main army has no slot for.
 ## Leaving a defender (`_leave_defense`). A hero leaving one of its towns keeps
 ## enough troops there to stop the hostile heroes that could reach it within
 ## DEFENSE_HORIZON_DAYS (they need TOWN_ATTACK_RATIO over the garrison), or,
@@ -308,10 +306,16 @@ static var RESOURCE_VALUES: Dictionary = {}
 const WEIGHTS_PATH := "res://content/ai_hero_weights.json"
 const WEIGHT_SET_KEY := "ai_weight_set"
 const DEFAULT_WEIGHT_SET := "default"
-## desired_hero_count: a main hero, one more per town up to
-## HERO_COUNT_TOWN_MAX towns, and one more from day EXTRA_HERO_DAY.
-static var HERO_COUNT_TOWN_MAX: int
+## Wanted heroes (`_desired_hero_count`, `_govern_towns`): a main hero, one per
+## town and one more from day EXTRA_HERO_DAY, then one explorer per
+## TILES_PER_EXPLORER unexplored land tiles, HERO_COUNT_MAX in all. A hire must
+## leave HIRE_RESERVE_DAYS of gold income in the treasury, an explorer's
+## EXPLORER_RESERVE_DAYS.
 static var EXTRA_HERO_DAY: int
+static var HERO_COUNT_MAX: int
+static var TILES_PER_EXPLORER: int
+static var HIRE_RESERVE_DAYS: int
+static var EXPLORER_RESERVE_DAYS: int
 ## Town building (`_build_choice`, `_upgrade_value`): new troops count this
 ## much more in a town mustering under STARVED_TOWN_WEEKLY_TROOPS a week; a
 ## mage guild level is worth a base plus a share per spell tier; each point of

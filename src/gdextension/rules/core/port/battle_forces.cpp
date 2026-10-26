@@ -3,6 +3,7 @@
 // withdrawal's losses, a fallen hero's removal and the enemy commander's memory, record and task.
 
 #include "aurelion_rules/port/battle_rules.hpp"
+#include "aurelion_rules/port/overworld_rules.hpp"
 
 #include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/artifact_rules.hpp"
@@ -15,6 +16,7 @@
 
 #include "aurelion_rules/compat/godot_math.hpp"
 
+#include <algorithm>
 #include <string>
 
 namespace aurelion::rules::port::battle_rules {
@@ -488,6 +490,48 @@ Atom _apply_active_hero_aftermath_losses(State &state, const Value &session, int
 	return gd::format(state, key::pursuit_scatters_d_troop_s_s, { int_value(applied_losses), str(applied_losses == 1 ? key::empty : key::s), str(company_clause) });
 }
 
+// Moves the garrison's share of each merged kind out of the hero's survivors
+// (latest stacks first) into returned.
+void _return_merged_garrison(State &state, ArrayRef hero_stacks, const Value &merged, ArrayRef returned) {
+	if (!gd::is_array(merged)) {
+		return;
+	}
+	for (const Value &entry : gd::items(state, merged)) {
+		if (!gd::is_dict(entry)) {
+			continue;
+		}
+		const Atom unit = text_field(state, entry.ref, key::unit_id);
+		int64_t survived = 0;
+		for (const Value &stack : gd::items(state, array_value(hero_stacks))) {
+			if (text_field(state, stack.ref, key::unit_id) == unit) {
+				survived = gd::add(survived, gd::int_field(state, stack.ref, key::count, 0));
+			}
+		}
+		int64_t move = survived - hero_command_rules::entry_hero_share(survived, gd::int_field(state, entry.ref, key::hero_count, 0), gd::int_field(state, entry.ref, key::garrison_count, 0));
+		if (move <= 0) {
+			continue;
+		}
+		const DictRef back = state.new_dict();
+		state.set(back, str(key::unit_id), str(unit));
+		state.set(back, str(key::count), int_value(move));
+		state.append(returned, dict_value(back));
+		for (int64_t at = state.array_size(hero_stacks) - 1; at >= 0 && move > 0; --at) {
+			const DictRef stack = gd::as_dict(state.at(hero_stacks, at));
+			if (text_field(state, stack, key::unit_id) != unit) {
+				continue;
+			}
+			const int64_t count = gd::int_field(state, stack, key::count, 0);
+			const int64_t take = std::min(count, move);
+			move -= take;
+			if (take == count) {
+				gd::remove_at(state, hero_stacks, at);
+			} else {
+				state.set(stack, str(key::count), int_value(count - take));
+			}
+		}
+	}
+}
+
 void _sync_player_force_from_battle(State &state, const Value &session) {
 	if (no_battle(state, session)) {
 		return;
@@ -496,6 +540,9 @@ void _sync_player_force_from_battle(State &state, const Value &session) {
 	const Value commander_source = get_or_new_dict(state, session_battle(state, session), key::player_commander_source);
 	const Atom commander_type = vtext(state, commander_source, key::type, str(key::empty));
 	const DictRef commander_state = gd::deep_duplicate_dict(state, _player_commander_state(state, session));
+	// Garrison creatures merged into the hero's stacks (town_defense_force): their
+	// share of the survivors goes back to the garrison.
+	const ArrayRef back_to_garrison = state.new_array();
 	if (is_hero_commander(commander_type)) {
 		// "%s_army" % String(commander_state.get("id", "")), evaluated before the get that falls back to it.
 		const Value id_fallback = str(gd::format(state, key::s_army, { str(text_field(state, commander_state, key::id)) }));
@@ -503,6 +550,9 @@ void _sync_player_force_from_battle(State &state, const Value &session) {
 		const Atom army_name = gd::stringify(state, nested_get(state, commander_state, key::army, key::name, str(key::field_army)));
 		const DictRef filter = survivor_filter(state, key::hero_army, key::hero_id, vtext(state, commander_source, key::hero_id, str(key::empty)));
 		const ArrayRef stacks = _battle_survivor_stacks(state, session, key::player, filter);
+		if (_is_town_defense_context(state, context)) {
+			_return_merged_garrison(state, stacks, state.get(context.ref, str(key::merged_garrison), Value()), back_to_garrison);
+		}
 		state.set(commander_state, str(key::army), dict_value(army_payload(state, army_id, army_name, stacks)));
 		_set_player_hero_state(state, session, commander_state, vtext(state, commander_source, key::hero_id, str(key::empty)));
 	}
@@ -514,7 +564,21 @@ void _sync_player_force_from_battle(State &state, const Value &session) {
 			const Value towns = get_or_new_array(state, session_overworld(state, session), key::towns);
 			const DictRef town = gd::as_dict(get_or_new_dict(state, town_result, key::town));
 			const DictRef filter = survivor_filter(state, key::town_garrison, key::town_placement_id, vtext(state, context, key::town_placement_id, str(key::empty)));
-			state.set(town, str(key::garrison), array_value(_battle_survivor_stacks(state, session, key::player, filter)));
+			const ArrayRef garrison = _battle_survivor_stacks(state, session, key::player, filter);
+			for (const Value &returned : gd::items(state, array_value(back_to_garrison))) {
+				bool joined = false;
+				for (const Value &stack : gd::items(state, array_value(garrison))) {
+					if (text_field(state, stack.ref, key::unit_id) == text_field(state, returned.ref, key::unit_id)) {
+						state.set(stack.ref, str(key::count), int_value(gd::add(gd::int_field(state, stack.ref, key::count, 0), gd::int_field(state, returned.ref, key::count, 0))));
+						joined = true;
+						break;
+					}
+				}
+				if (!joined) {
+					state.append(garrison, returned);
+				}
+			}
+			state.set(town, str(key::garrison), array_value(garrison));
 			set_index(state, towns, gd::int_field(state, town_result, key::index, -1), dict_value(town));
 			state.set(session_overworld(state, session), str(key::towns), towns);
 			if (is_hero_commander(commander_type)) {
@@ -529,6 +593,71 @@ void _sync_player_force_from_battle(State &state, const Value &session) {
 	const DictRef filter = survivor_filter(state, key::hero_army, key::hero_id, vtext(state, commander_source, key::hero_id, active_hero_id));
 	state.set(army, str(key::stacks), array_value(_battle_survivor_stacks(state, session, key::player, filter)));
 	state.set(session_overworld(state, session), str(key::army), dict_value(army));
+}
+
+// A computer hero on the entry led this assault with the garrison
+// (create_entry_defense_assault_payload): the town gets its own commander back,
+// and the hero falls with the town or takes its share of the survivors.
+void _apply_entry_defense_after_assault(State &state, const Value &session, const Value &context, Atom town_placement_id, DictRef synced_commander, bool encounter_resolved) {
+	const Value record = state.get(context.ref, str(key::entry_defense), Value());
+	if (!gd::is_dict(record)) {
+		return;
+	}
+	const DictRef town_result = _find_town_by_placement(state, session, town_placement_id);
+	if (gd::int_field(state, town_result, key::index, -1) < 0) {
+		return;
+	}
+	const Value towns = get_or_new_array(state, session_overworld(state, session), key::towns);
+	const DictRef town = gd::as_dict(get_or_new_dict(state, town_result, key::town));
+	if (text_field(state, town, key::owner, key::neutral) == key::enemy) {
+		const Value town_commander = state.get(record.ref, str(key::town_commander), Value());
+		if (gd::is_dict(town_commander) && !gd::is_empty(state, town_commander.ref)) {
+			state.set(town, str(key::ai_defender_commander_state), gd::duplicate_value(state, town_commander, true));
+			state.set(town, str(key::ai_defender_roster_hero_id), state.get(record.ref, str(key::town_roster_hero_id), str(key::empty)));
+		} else {
+			state.erase(town, str(key::ai_defender_commander_state));
+			state.erase(town, str(key::ai_defender_roster_hero_id));
+		}
+	}
+	const Atom resolved_key = text_field(state, record.ref, key::resolved_key);
+	if (encounter_resolved) {
+		_mark_resolved_encounter(state, session, resolved_key);
+		set_index(state, towns, gd::int_field(state, town_result, key::index, -1), dict_value(town));
+		state.set(session_overworld(state, session), str(key::towns), towns);
+		return;
+	}
+	const DictRef split = hero_command_rules::split_entry_defense(state, state.get(record.ref, str(key::hero_stacks), Value()), state.get(record.ref, str(key::garrison), Value()), state.get(town, str(key::garrison), Value()));
+	state.set(town, str(key::garrison), gd::index(state, split, str(key::garrison)));
+	set_index(state, towns, gd::int_field(state, town_result, key::index, -1), dict_value(town));
+	state.set(session_overworld(state, session), str(key::towns), towns);
+	const Atom hero_placement = text_field(state, record.ref, key::placement_id);
+	const Value encounters = get_or_new_array(state, session_overworld(state, session), key::encounters);
+	for (int64_t at = 0; at < state.array_size(encounters.ref); ++at) {
+		const Value encounter = state.at(encounters.ref, at);
+		if (!gd::is_dict(encounter) || text_field(state, encounter.ref, key::placement_id) != hero_placement) {
+			continue;
+		}
+		const ArrayRef hero_stacks = gd::as_array(gd::index(state, split, str(key::hero)));
+		if (state.array_size(hero_stacks) == 0) {
+			_mark_resolved_encounter(state, session, resolved_key);
+			break;
+		}
+		const DictRef army = gd::as_dict(get_or_new_dict(state, encounter.ref, key::enemy_army));
+		state.set(army, str(key::stacks), array_value(hero_stacks));
+		state.set(encounter.ref, str(key::enemy_army), dict_value(army));
+		// The assault's commander lost the hero's identity (its roster id): the
+		// hero's own record takes the battle's changes.
+		const DictRef commander = gd::deep_duplicate_dict(state, gd::as_dict(get_or_new_dict(state, encounter.ref, key::enemy_commander_state)));
+		const Atom roster_hero_id = text_field(state, commander, key::roster_hero_id);
+		gd::merge(state, commander, gd::deep_duplicate_dict(state, synced_commander), true);
+		if (roster_hero_id != key::empty) {
+			state.set(commander, str(key::roster_hero_id), str(roster_hero_id));
+		}
+		state.set(encounter.ref, str(key::enemy_commander_state), dict_value(enemy_adventure_rules::sync_commander_army_continuity(state, commander, dict_value(army), key::encounter_mire_raid)));
+		set_index(state, encounters, at, encounter);
+		state.set(session_overworld(state, session), str(key::encounters), encounters);
+		break;
+	}
 }
 
 void _sync_enemy_force_from_battle(State &state, const Value &session, bool encounter_resolved) {
@@ -561,6 +690,7 @@ void _sync_enemy_force_from_battle(State &state, const Value &session, bool enco
 		}
 		set_index(state, towns, gd::int_field(state, town_result, key::index, -1), dict_value(town));
 		state.set(session_overworld(state, session), str(key::towns), towns);
+		_apply_entry_defense_after_assault(state, session, context, town_placement_id, synced_enemy_commander_state, encounter_resolved);
 		return;
 	}
 	if (_is_resource_assault_context(state, context)) {

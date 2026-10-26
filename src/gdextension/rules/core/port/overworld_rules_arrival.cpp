@@ -11,6 +11,7 @@
 #include "aurelion_rules/port/hero_command_rules_ai.hpp"
 #include "aurelion_rules/port/hero_commit.hpp"
 #include "aurelion_rules/port/native_transit_rules.hpp"
+#include "aurelion_rules/port/overworld_level_rules.hpp"
 #include "aurelion_rules/port/player_identity_rules_ai.hpp"
 #include "aurelion_rules/port/session_view.hpp"
 
@@ -122,6 +123,35 @@ void set_battle(State &state, DictRef session, DictRef payload) {
 
 namespace overworld_rules {
 
+// A computer hero on the entry of its town fights with the garrison in one
+// assault when every stack fits the battle's seven slots; {} otherwise.
+DictRef _begin_entry_defense_assault(State &state, DictRef session, DictRef encounter) {
+	if (!state.has(encounter, str(key::ai_hero))) {
+		return state.new_dict();
+	}
+	// The town is the one whose entry the hero holds, wherever the attacker stands.
+	DictRef town = 0;
+	const Value at = dict_value(overworld_level_rules::position(state, encounter));
+	for (const Value &candidate : gd::field_items(state, session_view::overworld(state, session), str(key::towns))) {
+		if (gd::is_dict(candidate) && gd::equal(state, dict_value(overworld_level_rules::town_entrance(state, candidate.ref)), at)
+				&& player_identity_rules::town_controller_id(state, candidate.ref) == player_identity_rules::raid_controller_id(state, encounter)) {
+			town = candidate.ref;
+			break;
+		}
+	}
+	if (town == 0 || !_town_requires_assault(state, town)) {
+		return state.new_dict();
+	}
+	const DictRef payload = battle_rules::create_entry_defense_assault_payload(state, dict_value(session), ai::string_or_empty(state, town, key::placement_id), encounter);
+	if (gd::is_empty(state, payload)) {
+		return payload;
+	}
+	set_battle(state, session, payload);
+	const DictRef result = route_result(state, true, gd::format(state, key::the_assault_on_s_begins, {str(_town_name(state, town))}), key::battle);
+	state.set(result, str(key::scenario_status), gd::field(state, session, key::scenario_status));
+	return result;
+}
+
 DictRef _resolve_post_move_interaction(State &state, DictRef session) {
 	{
 		const DictRef profile = ai::static_dict(state, kScript, key::_pathing_debug_profile);
@@ -132,6 +162,10 @@ DictRef _resolve_post_move_interaction(State &state, DictRef session) {
 	}
 	const DictRef encounter = get_active_encounter(state, session);
 	if (!gd::is_empty(state, encounter)) {
+		const DictRef assault = _begin_entry_defense_assault(state, session, encounter);
+		if (!gd::is_empty(state, assault)) {
+			return assault;
+		}
 		const DictRef battle_payload = battle_rules::create_battle_payload(state, dict_value(session), encounter);
 		if (gd::is_empty(state, battle_payload)) {
 			return route_result(state, false, key::the_enemy_blocks_the_lane_but, key::empty);
@@ -212,6 +246,10 @@ DictRef _resolve_destination_descriptor_interaction(State &state, DictRef sessio
 		const DictRef encounter = sub_dict(state, encounter_result, key::encounter);
 		if (gd::int_field(state, encounter_result, key::index, -1) < 0 || gd::is_empty(state, encounter) || is_encounter_resolved(state, session, encounter)) {
 			return route_result(state, true, key::empty, key::empty);
+		}
+		const DictRef assault = _begin_entry_defense_assault(state, session, encounter);
+		if (!gd::is_empty(state, assault)) {
+			return assault;
 		}
 		const DictRef battle_payload = battle_rules::create_battle_payload(state, dict_value(session), encounter);
 		if (gd::is_empty(state, battle_payload)) {

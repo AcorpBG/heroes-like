@@ -457,6 +457,41 @@ int64_t _town_hero_defender_index(State &state, DictRef session, DictRef town, A
 	return -1;
 }
 
+// The town whose entry a hero of the plan's kind (a human hero or a computer
+// one) holds for its own side, or -1.
+int64_t _entry_town_index(State &state, DictRef session, Atom kind, int64_t hero_index) {
+	const DictRef overworld = session_view::overworld(state, session);
+	const Value heroes = state.get(overworld, str(kind == key::hero ? key::player_heroes : key::encounters), Value());
+	if (!gd::is_array(heroes) || hero_index < 0 || hero_index >= state.array_size(heroes.ref) || !gd::is_dict(state.at(heroes.ref, hero_index))) {
+		return -1;
+	}
+	const DictRef hero = state.at(heroes.ref, hero_index).ref;
+	const Value position = kind == key::hero ? state.get(hero, str(key::position), Value()) : dict_value(hero);
+	if (!gd::is_dict(position)) {
+		return -1;
+	}
+	const Value towns = state.get(overworld, str(key::towns), Value());
+	if (!gd::is_array(towns)) {
+		return -1;
+	}
+	for (int64_t at = 0; at < state.array_size(towns.ref); ++at) {
+		const Value town = state.at(towns.ref, at);
+		if (!gd::is_dict(town)) {
+			continue;
+		}
+		const Atom owner = gd::stringify(state, state.get(town.ref, str(key::owner), str(key::neutral)));
+		const bool own = kind == key::hero ? owner == key::player
+										   : owner == key::enemy && player_identity_rules::town_controller_id(state, town.ref) == player_identity_rules::raid_controller_id(state, hero);
+		const DictRef entrance = level_rules::town_entrance(state, town.ref);
+		if (own && gd::int_field(state, entrance, key::x, -1) == gd::int_field(state, position.ref, key::x, -2)
+				&& gd::int_field(state, entrance, key::y, -1) == gd::int_field(state, position.ref, key::y, -2)
+				&& level_rules::level_of(state, dict_value(entrance)) == level_rules::level_of(state, position)) {
+			return at;
+		}
+	}
+	return -1;
+}
+
 bool _town_entrance_free(State &state, DictRef session, DictRef town, Atom own_controller) {
 	const DictRef entrance = level_rules::town_entrance(state, town);
 	const DictRef resolved = _resolved_lookup(state, session);

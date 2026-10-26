@@ -4,6 +4,7 @@
 // the encounter placement and hands it to create_battle_payload.
 
 #include "aurelion_rules/port/battle_payload.hpp"
+#include "aurelion_rules/port/hero_command_rules_ai.hpp"
 
 #include "aurelion_rules/port/battle_ends.hpp"
 #include "aurelion_rules/port/battle_rules.hpp"
@@ -100,6 +101,54 @@ DictRef create_town_assault_payload(State &state, const Value &session, Atom tow
 		state.set(placement, str(key::battle_context), dict_value(battle_context));
 	}
 	return create_battle_payload(state, session, placement);
+}
+
+DictRef create_entry_defense_assault_payload(State &state, const Value &session, Atom town_placement_id, DictRef hero_encounter) {
+	const DictRef town_result = _find_town_by_placement(state, session, town_placement_id);
+	if (gd::int_field(state, town_result, key::index, -1) < 0) {
+		return state.new_dict();
+	}
+	DictRef town = gd::as_dict(field_or_new_dict(state, town_result, key::town));
+	const Value commander = state.get(hero_encounter, str(key::enemy_commander_state), Value());
+	if (!gd::is_dict(commander) || gd::is_empty(state, commander.ref)) {
+		return state.new_dict();
+	}
+	const Value hero_army = state.get(hero_encounter, str(key::enemy_army), Value());
+	const Value hero_stacks = gd::duplicate_value(state, gd::is_dict(hero_army) ? state.get(hero_army.ref, str(key::stacks), array_value(state.new_array())) : array_value(state.new_array()), true);
+	const Value garrison = gd::duplicate_value(state, state.get(town, str(key::garrison), array_value(state.new_array())), true);
+	const DictRef plan = hero_command_rules::entry_defense_plan(state, hero_stacks, garrison);
+	if (!gd::bool_field(state, plan, key::fits, false)) {
+		return state.new_dict();
+	}
+	// The town holds the hero's and the garrison's stacks and the hero as its
+	// commander only while the ordinary assault payload reads them.
+	const Value town_commander = gd::duplicate_value(state, state.get(town, str(key::ai_defender_commander_state), dict_value(state.new_dict())), true);
+	const Value town_roster_hero = state.get(town, str(key::ai_defender_roster_hero_id), str(key::empty));
+	state.set(town, str(key::garrison), gd::index(state, plan, str(key::stacks)));
+	state.set(town, str(key::ai_defender_commander_state), gd::duplicate_value(state, commander, true));
+	const DictRef payload = create_town_assault_payload(state, session, town_placement_id);
+	town = gd::as_dict(field_or_new_dict(state, _find_town_by_placement(state, session, town_placement_id), key::town));
+	state.set(town, str(key::garrison), garrison);
+	if (gd::is_dict(town_commander) && !gd::is_empty(state, town_commander.ref)) {
+		state.set(town, str(key::ai_defender_commander_state), town_commander);
+	} else {
+		state.erase(town, str(key::ai_defender_commander_state));
+	}
+	if (gd::is_empty(state, payload)) {
+		return payload;
+	}
+	const DictRef record = state.new_dict();
+	state.set(record, str(key::placement_id), str(string_of(state, hero_encounter, key::placement_id)));
+	state.set(record, str(key::resolved_key), str(overworld_rules::encounter_key(state, hero_encounter)));
+	state.set(record, str(key::hero_stacks), hero_stacks);
+	state.set(record, str(key::garrison), garrison);
+	state.set(record, str(key::town_commander), town_commander);
+	state.set(record, str(key::town_roster_hero_id), town_roster_hero);
+	const Value payload_context = state.get(payload, str(key::context), Value());
+	if (gd::is_dict(payload_context)) {
+		state.set(payload_context.ref, str(key::entry_defense), dict_value(record));
+	}
+	return payload;
 }
 
 DictRef _town_assault_enemy_commander_state(State &state, DictRef town) {

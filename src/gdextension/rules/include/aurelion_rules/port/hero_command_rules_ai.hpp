@@ -36,6 +36,15 @@ ArrayRef stationed_heroes(State &state, DictRef session, DictRef town);
 DictRef town_defending_hero(State &state, DictRef session, DictRef town, Atom preferred_hero_id = state::key::empty);
 DictRef town_garrison_hero(State &state, DictRef session, DictRef town);
 DictRef town_defense_force(State &state, DictRef session, DictRef town, Atom preferred_hero_id = state::key::empty);
+// A hero on a town's entry and the garrison in one battle: {fits, stacks, merged}.
+// fits when every stack has one of the battle's seven slots, after stacks of one
+// kind merge if needed; merged lists the kinds the garrison added to the hero's
+// stacks ({unit_id, hero_count, garrison_count}).
+DictRef entry_defense_plan(State &state, const Value &hero_stacks, const Value &garrison);
+// The survivors of such a battle back to {hero, garrison}, each kind split by
+// what each side brought.
+DictRef split_entry_defense(State &state, const Value &hero_stacks, const Value &garrison, const Value &survivors);
+int64_t entry_hero_share(int64_t survivors, int64_t hero_count, int64_t garrison_count);
 bool _hero_is_stationed_at_town(State &state, DictRef hero, DictRef town);
 
 } // namespace aurelion::rules::port::hero_command_rules

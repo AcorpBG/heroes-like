@@ -495,6 +495,11 @@ DictRef _candidate(State &state, DictRef session, DictRef context, DictRef entry
 			if (!_player_hero_seen(state, session, context, hero)) {
 				return state.new_dict();
 			}
+			// On its own town's entry it fights with the garrison: the town's candidate
+			// weighs both.
+			if (_entry_town_index(state, session, key::hero, ref_index()) >= 0) {
+				return state.new_dict();
+			}
 			const Value stacks = nested_list(state, hero, key::army, key::stacks);
 			const double hero_power_value = army_power(state, stacks, dict_value(hero));
 			const double burst = _burst_share(state, entry, dict_value(hero));
@@ -529,6 +534,9 @@ DictRef _candidate(State &state, DictRef session, DictRef context, DictRef entry
 			}
 			const DictRef position = level_rules::position(state, other);
 			if (!_position_seen(state, session, context, position)) {
+				return state.new_dict();
+			}
+			if (_entry_town_index(state, session, key::ai_hero, ref_index()) >= 0) {
 				return state.new_dict();
 			}
 			const double other_power = hero_power(state, other);

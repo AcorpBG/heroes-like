@@ -71,6 +71,9 @@ double _build_value(State &state, DictRef payload);
 bool _market_cover(State &state, DictRef session, DictRef town, DictRef pool, DictRef cost, bool apply, const Value &market_memo = Value());
 bool _market_trade(State &state, DictRef quote, DictRef stock, DictRef usage);
 int64_t _town_hero_defender_index(State &state, DictRef session, DictRef town, Atom controller);
+// The town whose entry a hero (kind hero: player_heroes[index]; ai_hero:
+// encounters[index]) holds for its own side, or -1.
+int64_t _entry_town_index(State &state, DictRef session, Atom kind, int64_t hero_index);
 bool _town_entrance_free(State &state, DictRef session, DictRef town, Atom own_controller = state::key::empty);
 DictRef _garrison_pickup(State &state, ArrayRef stacks, ArrayRef garrison);
 bool _ferries_from(State &state, DictRef session, DictRef context, DictRef town, Atom main_id);

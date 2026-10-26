@@ -17,6 +17,7 @@
 #include "aurelion_rules/port/town_development_rules_ai.hpp"
 #include "aurelion_rules/port/turn_port.hpp"
 
+#include <algorithm>
 #include <string>
 
 namespace aurelion::rules::port {
@@ -223,7 +224,10 @@ DictRef _govern_towns(State &state, DictRef session, DictRef context) {
 		const DictRef surface = _level_surface(state, session, context, 0);
 		held = _hold_back(state, treasury, gd::as_dict(field_or_new_dict(state, surface, key::boat_cost)));
 	}
-	const int64_t wanted = _desired_hero_count(state, session, controller);
+	// Town heroes first, then explorers while unexplored land remains; every hire
+	// leaves a gold reserve, a larger one for explorers.
+	const int64_t town_heroes = _desired_hero_count(state, session, controller);
+	const int64_t wanted = compat::engine_min<int64_t>(ai::static_int(state, kScript, key::HERO_COUNT_MAX), gd::add(town_heroes, _wanted_explorers(state, session, context)));
 	const int64_t heroes = active_hero_count(state, session, controller);
 	if (heroes < wanted && !_faction_has_tavern(state, town_entries)) {
 		const DictRef tavern_result = _build_tavern(state, session, context, town_entries);
@@ -231,7 +235,8 @@ DictRef _govern_towns(State &state, DictRef session, DictRef context) {
 		_append_all(state, events, gd::field(state, tavern_result, key::events));
 	}
 	if (heroes < wanted) {
-		const DictRef hire_result = _hire_hero(state, session, context);
+		const double reserve = _hire_reserve(state, session, controller, heroes < town_heroes ? key::HIRE_RESERVE_DAYS : key::EXPLORER_RESERVE_DAYS);
+		const DictRef hire_result = _hire_hero(state, session, context, reserve);
 		_append_all(state, events, gd::field(state, hire_result, key::events));
 		_append_all(state, messages, gd::field(state, hire_result, key::messages));
 	}
@@ -267,9 +272,46 @@ DictRef _hold_back(State &state, DictRef treasury, DictRef amounts) {
 
 int64_t _desired_hero_count(State &state, DictRef session, Atom controller) {
 	const int64_t towns = enemy_turn_rules::_owned_town_count(state, session, controller);
-	const int64_t base = gd::add(1, compat::engine_min<int64_t>(towns, ai::static_int(state, kScript, key::HERO_COUNT_TOWN_MAX)));
 	const int64_t extra = ai::session_int(state, session, key::day) >= ai::static_int(state, kScript, key::EXTRA_HERO_DAY) ? 1 : 0;
-	return compat::engine_max<int64_t>(gd::add(base, extra), 1);
+	return compat::engine_max<int64_t>(gd::add(gd::add(1, towns), extra), 1);
+}
+
+// Land tiles (passable, not water) this player has not explored, on every level.
+int64_t _unexplored_land(State &state, DictRef session, DictRef context) {
+	int64_t unexplored = 0;
+	const int64_t levels = overworld_level_rules::level_count(state, session);
+	for (int64_t level = 0; level < levels; ++level) {
+		const DictRef surface = _level_surface(state, session, context, level);
+		const PackedRef blocked = gd::as_bytes(gd::index(state, surface, str(key::blocked)));
+		const PackedRef water = gd::as_bytes(gd::index(state, surface, str(key::water)));
+		const PackedRef explored = _explored(state, session, context, level);
+		const int64_t count = std::min({gd::packed_size(state, blocked), gd::packed_size(state, water), gd::packed_size(state, explored)});
+		const uint8_t *blocked_bytes = gd::packed_bytes(state, blocked);
+		const uint8_t *water_bytes = gd::packed_bytes(state, water);
+		const uint8_t *explored_bytes = gd::packed_bytes(state, explored);
+		for (int64_t index = 0; index < count; ++index) {
+			if (blocked_bytes[index] == 0 && water_bytes[index] == 0 && explored_bytes[index] == 0) {
+				unexplored += 1;
+			}
+		}
+	}
+	return unexplored;
+}
+
+// Explorers on top of the town heroes: one per TILES_PER_EXPLORER unexplored land tiles.
+int64_t _wanted_explorers(State &state, DictRef session, DictRef context) {
+	const int64_t per_explorer = ai::static_int(state, kScript, key::TILES_PER_EXPLORER);
+	if (per_explorer <= 0) {
+		return 0;
+	}
+	return _unexplored_land(state, session, context) / per_explorer;
+}
+
+// The gold a hire must leave in the treasury: some days of the player's gold income.
+double _hire_reserve(State &state, DictRef session, Atom controller, Atom days_name) {
+	const DictRef income = faction_daily_income(state, session, controller);
+	const double gold = gd::to_float(state.get(income, str(key::gold), int_value(0)));
+	return compat::engine_max(0.0, gold) * static_cast<double>(ai::static_int(state, kScript, days_name));
 }
 
 bool _faction_has_tavern(State &state, ArrayRef town_entries) {
@@ -642,7 +684,7 @@ ArrayRef _tavern_pool(State &state, DictRef session, DictRef state_, Atom contro
 	return pool;
 }
 
-DictRef _hire_hero(State &state, DictRef session, DictRef context) {
+DictRef _hire_hero(State &state, DictRef session, DictRef context, double reserve) {
 	const DictRef state_ = context_state(state, context);
 	const Atom controller = context_controller(state, context);
 	const DictRef treasury = gd::as_dict(gd::index(state, state_, str(key::treasury)));
@@ -675,7 +717,8 @@ DictRef _hire_hero(State &state, DictRef session, DictRef context) {
 	for (int64_t at = 0; at < state.array_size(offer); ++at) {
 		const Value hero_id = state.at(offer, at);
 		const DictRef cost = hero_command_rules::hero_recruit_cost(state, gd::content_row(state, ContentTable::Hero, gd::stringify(state, hero_id)));
-		if (_can_afford(state, treasury, cost)) {
+		const double gold_left = gd::float_field(state, treasury, key::gold, 0.0) - gd::float_field(state, cost, key::gold, 0.0);
+		if (_can_afford(state, treasury, cost) && gold_left >= reserve) {
 			choice = gd::stringify(state, hero_id);
 			break;
 		}

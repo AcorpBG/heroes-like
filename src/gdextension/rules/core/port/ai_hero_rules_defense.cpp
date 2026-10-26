@@ -113,9 +113,8 @@ int64_t threat_distance(State &state, const Value &threat, DictRef entrance) {
 namespace ai_hero_rules {
 
 ArrayRef _field_hero_ids(State &state, DictRef session, Atom controller) {
-	const int64_t field_army_max = tunable_int(state, key::FIELD_ARMY_MAX);
 	const int64_t towns = state.array_size(enemy_turn_rules::_owned_town_entries(state, session, controller));
-	const int64_t slots = compat::engine_min<int64_t>(field_army_max, gd::sub(towns, 1));
+	const int64_t slots = gd::sub(towns, 1);
 	if (slots <= 0) {
 		return state.new_array();
 	}

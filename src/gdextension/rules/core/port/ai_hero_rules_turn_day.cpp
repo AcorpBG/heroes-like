@@ -782,6 +782,17 @@ DictRef _interact(State &state, DictRef session, DictRef context, int64_t index,
 	if (kind == key::town_neutral || kind == key::town_hostile) {
 		return _attack_town(state, session, context, index, plan);
 	}
+	if (kind == key::hero || kind == key::ai_hero) {
+		// A hero holding its own town's entry defends with the garrison: the fight
+		// is the town's (_attack_town), however the attacker came to it.
+		const int64_t town_index = _entry_town_index(state, session, kind, gd::int_field(state, plan, key::index, -1));
+		if (town_index >= 0) {
+			const DictRef town_plan = state.new_dict();
+			state.set(town_plan, str(key::kind), str(key::town_hostile));
+			state.set(town_plan, str(key::index), int_value(town_index));
+			return _attack_town(state, session, context, index, town_plan);
+		}
+	}
 	if (kind == key::hero) {
 		return _attack_player_hero(state, session, context, index, plan);
 	}

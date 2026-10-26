@@ -78,6 +78,9 @@ ArrayRef _default_field_objective_pressure_tags(State &state, Atom objective_typ
 // Slice 2b: the payloads of a town assault, a defended resource site and a
 // dwelling's guard (battle_payload_callers.cpp).
 DictRef create_town_assault_payload(State &state, const Value &session, Atom town_placement_id);
+// A town assault where the computer hero on the entry commands its army and the
+// garrison together; {} when they need more than the battle's seven slots.
+DictRef create_entry_defense_assault_payload(State &state, const Value &session, Atom town_placement_id, DictRef hero_encounter);
 DictRef _town_assault_enemy_commander_state(State &state, DictRef town);
 DictRef create_resource_defense_payload(State &state, const Value &session, Atom resource_placement_id);
 DictRef create_dwelling_guard_payload(State &state, const Value &session, Atom resource_placement_id);

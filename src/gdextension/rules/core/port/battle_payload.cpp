@@ -525,6 +525,12 @@ DictRef _player_setup_for_battle(State &state, const Value &session, DictRef enc
 	const DictRef defense_force = hero_command_rules::town_defense_force(state, gd::object_view(state, session), gd::as_dict(town),
 			string_of(state, battle_context, key::defending_hero_id));
 	const DictRef defending_hero = gd::as_dict(gd::index(state, defense_force, str(key::hero)));
+	// Garrison creatures merged into the hero's stacks go back to the garrison after
+	// the battle (_sync_player_force_from_battle).
+	const Value merged_garrison = state.get(defense_force, str(key::merged_garrison), array_value(state.new_array()));
+	if (gd::is_array(merged_garrison) && state.array_size(merged_garrison.ref) > 0) {
+		state.set(battle_context, str(key::merged_garrison), merged_garrison);
+	}
 	const DictRef commander_state = !gd::is_empty(state, defending_hero) ? defending_hero : _town_captain_state(state, gd::as_dict(town));
 	const DictRef commander_source = state.new_dict();
 	state.set(commander_source, str(key::type), str(!gd::is_empty(state, defending_hero) ? key::town_hero : key::town_captain_2));

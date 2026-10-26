@@ -1153,6 +1153,19 @@ DictRef _attack_town(State &state, DictRef session, DictRef context, int64_t ind
 	const Atom owner = gd::stringify(state, state.get(town, str(key::owner), str(key::neutral)));
 	if (owner == key::player) {
 		const DictRef force = hero_command_rules::town_defense_force(state, session, town);
+		const DictRef entry_hero = gd::as_dict(gd::index(state, force, str(key::hero)));
+		if (!gd::bool_field(state, force, key::fits, true) && !gd::is_empty(state, entry_hero)) {
+			// The hero on the entry and the garrison need more than the battle's seven
+			// slots: the hero is fought first, the garrison on a later attack.
+			const ArrayRef heroes = array_field(state, session_view::overworld(state, session), key::player_heroes);
+			for (int64_t at = 0; at < state.array_size(heroes); ++at) {
+				if (ai::string_or_empty(state, gd::as_dict(state.at(heroes, at)), key::id) == ai::string_or_empty(state, entry_hero, key::id)) {
+					const DictRef hero_plan = state.new_dict();
+					state.set(hero_plan, str(key::index), int_value(at));
+					return _attack_player_hero(state, session, context, index, hero_plan);
+				}
+			}
+		}
 		if (gd::int_field(state, force, key::troops, 0) > 0) {
 			const DictRef battle_context = state.new_dict();
 			state.set(battle_context, str(key::type), str(key::town_defense));
@@ -1169,16 +1182,53 @@ DictRef _attack_town(State &state, DictRef session, DictRef context, int64_t ind
 		}
 	}
 	const ArrayRef events = state.new_array();
-	// A hero standing in the town defends it: beat that hero first.
+	// A hero standing in the town defends it. With the garrison in one battle when
+	// every stack fits the battle's seven slots (stacks of one kind merging if
+	// needed), else that hero first and the garrison after.
 	const int64_t defender_index = _town_hero_defender_index(state, session, town, controller);
 	double defender_power = 0.0;
 	if (defender_index >= 0) {
 		defender_power = hero_power(state, encounter_at(state, session, defender_index));
+		ArrayRef encounters = array_field(state, session_view::overworld(state, session), key::encounters);
+		DictRef defender = gd::as_dict(state.at(encounters, defender_index));
+		const Value hero_stacks = gd::duplicate_value(state, list_field(state, dict_field(state, defender, key::enemy_army), key::stacks), true);
+		const Value garrison_before = array_value(gd::deep_duplicate_array(state, array_field_if(state, town, key::garrison)));
+		const DictRef together = hero_command_rules::entry_defense_plan(state, hero_stacks, garrison_before);
+		const bool combined = gd::bool_field(state, together, key::fits, false) && empty_commander_power(state, garrison_before) > 0.0;
+		if (combined) {
+			const DictRef army = dict_field(state, defender, key::enemy_army);
+			state.set(army, str(key::stacks), gd::index(state, together, str(key::stacks)));
+			state.set(defender, str(key::enemy_army), dict_value(army));
+			state.set_at(encounters, defender_index, dict_value(defender));
+			state.set(session_view::overworld(state, session), str(key::encounters), array_value(encounters));
+			state.set(town, str(key::garrison), array_value(state.new_array()));
+			state.set_at(towns, town_index, dict_value(town));
+			state.set(session_view::overworld(state, session), str(key::towns), array_value(towns));
+		}
 		const DictRef duel_plan = state.new_dict();
 		state.set(duel_plan, str(key::index), int_value(defender_index));
 		const DictRef duel = _fight_ai_hero(state, session, context, index, duel_plan);
 		ai::append_array(state, events, gd::as_array(list_field(state, duel, key::events)));
-		if (_is_resolved(state, session, ai::string_or_empty(state, encounter_at(state, session, index), key::placement_id)) || !_is_resolved(state, session, ai::string_or_empty(state, encounter_at(state, session, defender_index), key::placement_id))) {
+		const bool defender_beaten = _is_resolved(state, session, ai::string_or_empty(state, encounter_at(state, session, defender_index), key::placement_id));
+		if (combined && !defender_beaten) {
+			// The town held: the survivors go back to the hero and the garrison.
+			encounters = array_field(state, session_view::overworld(state, session), key::encounters);
+			defender = gd::as_dict(state.at(encounters, defender_index));
+			const DictRef army = dict_field(state, defender, key::enemy_army);
+			const DictRef split = hero_command_rules::split_entry_defense(state, hero_stacks, garrison_before, list_field(state, army, key::stacks));
+			state.set(army, str(key::stacks), gd::index(state, split, str(key::hero)));
+			state.set(defender, str(key::enemy_army), dict_value(army));
+			const DictRef commander = dict_field(state, defender, key::enemy_commander_state);
+			state.set(defender, str(key::enemy_commander_state), dict_value(enemy_adventure_rules::sync_commander_army_continuity(state, commander, dict_value(army), key::encounter_mire_raid)));
+			state.set_at(encounters, defender_index, dict_value(defender));
+			state.set(session_view::overworld(state, session), str(key::encounters), array_value(encounters));
+			towns = array_field(state, session_view::overworld(state, session), key::towns);
+			town = gd::as_dict(state.at(towns, town_index));
+			state.set(town, str(key::garrison), gd::index(state, split, str(key::garrison)));
+			state.set_at(towns, town_index, dict_value(town));
+			state.set(session_view::overworld(state, session), str(key::towns), array_value(towns));
+		}
+		if (_is_resolved(state, session, ai::string_or_empty(state, encounter_at(state, session, index), key::placement_id)) || !defender_beaten) {
 			return arrived_events(state, array_value(events));
 		}
 		towns = array_field(state, session_view::overworld(state, session), key::towns);

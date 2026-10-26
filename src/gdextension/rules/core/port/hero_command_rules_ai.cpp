@@ -11,7 +11,10 @@
 #include "aurelion_rules/port/overworld_level_rules_ai.hpp"
 #include "aurelion_rules/port/session_view.hpp"
 
+#include <algorithm>
 #include <string>
+#include <unordered_map>
+#include <vector>
 
 namespace aurelion::rules::port {
 
@@ -291,7 +294,7 @@ DictRef town_garrison_hero(State &state, DictRef session, DictRef town) {
 
 DictRef town_defense_force(State &state, DictRef session, DictRef town, Atom preferred_hero_id) {
 	const DictRef hero = town_defending_hero(state, session, town, preferred_hero_id);
-	const ArrayRef stacks = state.new_array();
+	ArrayRef stacks = state.new_array();
 	int64_t garrison_troops = 0;
 	int64_t garrison_stacks = 0;
 	int64_t hero_troops = 0;
@@ -349,9 +352,48 @@ DictRef town_defense_force(State &state, DictRef session, DictRef town, Atom pre
 			}
 		}
 	}
+	// The hero and the garrison share the battle's seven slots: stacks of one kind
+	// merge when they would not fit (the garrison's into the hero's first stack of
+	// that kind, its other kinds one stack each). When even that does not fit,
+	// fits is false and the attacker fights the hero first.
+	bool fits = true;
+	ArrayRef merged_garrison = state.new_array();
+	if (state.array_size(stacks) > kArmySlotCount && !gd::is_empty(state, hero)) {
+		const Value hero_army = state.get(hero, str(key::army), dict_value(state.new_dict()));
+		const Value hero_rows = gd::is_dict(hero_army) ? state.get(hero_army.ref, str(key::stacks), array_value(state.new_array())) : array_value(state.new_array());
+		const DictRef plan = entry_defense_plan(state, hero_rows, state.get(town, str(key::garrison), array_value(state.new_array())));
+		fits = gd::bool_field(state, plan, key::fits, false);
+		if (fits) {
+			const ArrayRef rebuilt = state.new_array();
+			std::unordered_map<Atom, int64_t> first_at;
+			for (const bool hero_side : {true, false}) {
+				for (const Value &descriptor : gd::items(state, array_value(stacks))) {
+					const DictRef source = gd::as_dict(state.get(descriptor.ref, str(key::source), dict_value(state.new_dict())));
+					if ((ai::string_or_empty(state, source, key::source_type) == key::hero_army) != hero_side) {
+						continue;
+					}
+					const Atom unit = ai::string_or_empty(state, descriptor.ref, key::unit_id);
+					const auto found = first_at.find(unit);
+					if (hero_side || found == first_at.end()) {
+						if (found == first_at.end()) {
+							first_at[unit] = state.array_size(rebuilt);
+						}
+						state.append(rebuilt, dict_value(gd::deep_duplicate_dict(state, descriptor.ref)));
+						continue;
+					}
+					const DictRef target = gd::as_dict(state.at(rebuilt, found->second));
+					state.set(target, str(key::count), int_value(gd::add(gd::int_field(state, target, key::count, 0), gd::int_field(state, descriptor.ref, key::count, 0))));
+				}
+			}
+			stacks = rebuilt;
+			merged_garrison = gd::as_array(gd::index(state, plan, str(key::merged)));
+		}
+	}
 	const DictRef force = state.new_dict();
 	state.set(force, str(key::hero), dict_value(hero));
 	state.set(force, str(key::stacks), array_value(stacks));
+	state.set(force, str(key::fits), bool_value(fits));
+	state.set(force, str(key::merged_garrison), array_value(merged_garrison));
 	state.set(force, str(key::troops), int_value(gd::add(garrison_troops, hero_troops)));
 	state.set(force, str(key::stack_count), int_value(state.array_size(stacks)));
 	state.set(force, str(key::garrison_troops), int_value(garrison_troops));
@@ -359,6 +401,187 @@ DictRef town_defense_force(State &state, DictRef session, DictRef town, Atom pre
 	state.set(force, str(key::hero_troops), int_value(hero_troops));
 	state.set(force, str(key::hero_stacks), int_value(hero_stacks));
 	return force;
+}
+
+// --- A hero on a town's entry fighting together with the garrison ---
+
+namespace {
+
+// The rows of an army list with a unit and a positive count.
+std::vector<DictRef> live_rows(State &state, const Value &stacks) {
+	std::vector<DictRef> rows;
+	if (!gd::is_array(stacks)) {
+		return rows;
+	}
+	for (const Value &row : gd::items(state, stacks)) {
+		if (gd::is_dict(row) && gd::int_field(state, row.ref, key::count, 0) > 0 && ai::string_or_empty(state, row.ref, key::unit_id) != key::empty) {
+			rows.push_back(row.ref);
+		}
+	}
+	return rows;
+}
+
+std::unordered_map<Atom, int64_t> unit_totals(State &state, const std::vector<DictRef> &rows) {
+	std::unordered_map<Atom, int64_t> totals;
+	for (const DictRef row : rows) {
+		totals[ai::string_or_empty(state, row, key::unit_id)] += gd::int_field(state, row, key::count, 0);
+	}
+	return totals;
+}
+
+DictRef row_with_count(State &state, DictRef row, int64_t count, bool keep_slot) {
+	const DictRef copy = gd::deep_duplicate_dict(state, row);
+	state.set(copy, str(key::count), int_value(count));
+	if (!keep_slot) {
+		state.erase(copy, str(key::slot_index));
+	}
+	return copy;
+}
+
+} // namespace
+
+DictRef entry_defense_plan(State &state, const Value &hero_stacks, const Value &garrison) {
+	const std::vector<DictRef> hero_rows = live_rows(state, hero_stacks);
+	const std::vector<DictRef> garrison_rows = live_rows(state, garrison);
+	const ArrayRef stacks = state.new_array();
+	const ArrayRef merged = state.new_array();
+	bool fits = static_cast<int64_t>(hero_rows.size() + garrison_rows.size()) <= kArmySlotCount;
+	if (fits) {
+		// Every stack keeps its own slot in the battle.
+		for (const DictRef row : hero_rows) {
+			state.append(stacks, dict_value(row_with_count(state, row, gd::int_field(state, row, key::count, 0), true)));
+		}
+		for (const DictRef row : garrison_rows) {
+			state.append(stacks, dict_value(row_with_count(state, row, gd::int_field(state, row, key::count, 0), true)));
+		}
+	} else {
+		// Stacks of one kind merge: the garrison's join the hero's first stack of
+		// that kind, its other kinds take one stack each.
+		std::unordered_map<Atom, int64_t> first_at;
+		std::unordered_map<Atom, int64_t> from_garrison;
+		std::vector<Atom> merged_order;
+		for (const DictRef row : hero_rows) {
+			const Atom unit = ai::string_or_empty(state, row, key::unit_id);
+			if (first_at.find(unit) == first_at.end()) {
+				first_at[unit] = state.array_size(stacks);
+			}
+			state.append(stacks, dict_value(row_with_count(state, row, gd::int_field(state, row, key::count, 0), true)));
+		}
+		const int64_t hero_slots = state.array_size(stacks);
+		for (const DictRef row : garrison_rows) {
+			const Atom unit = ai::string_or_empty(state, row, key::unit_id);
+			const int64_t count = gd::int_field(state, row, key::count, 0);
+			const auto found = first_at.find(unit);
+			if (found == first_at.end()) {
+				first_at[unit] = state.array_size(stacks);
+				state.append(stacks, dict_value(row_with_count(state, row, count, false)));
+				continue;
+			}
+			const DictRef stack = gd::as_dict(state.at(stacks, found->second));
+			state.set(stack, str(key::count), int_value(gd::add(gd::int_field(state, stack, key::count, 0), count)));
+			if (found->second < hero_slots) {
+				if (from_garrison.find(unit) == from_garrison.end()) {
+					merged_order.push_back(unit);
+				}
+				from_garrison[unit] += count;
+			}
+		}
+		fits = state.array_size(stacks) <= kArmySlotCount;
+		const std::unordered_map<Atom, int64_t> hero_totals = unit_totals(state, hero_rows);
+		for (const Atom unit : merged_order) {
+			const DictRef entry = state.new_dict();
+			state.set(entry, str(key::unit_id), str(unit));
+			state.set(entry, str(key::hero_count), int_value(hero_totals.at(unit)));
+			state.set(entry, str(key::garrison_count), int_value(from_garrison[unit]));
+			state.append(merged, dict_value(entry));
+		}
+	}
+	const DictRef plan = state.new_dict();
+	state.set(plan, str(key::fits), bool_value(fits));
+	state.set(plan, str(key::stacks), array_value(fits ? stacks : state.new_array()));
+	state.set(plan, str(key::merged), array_value(fits ? merged : state.new_array()));
+	return plan;
+}
+
+int64_t entry_hero_share(int64_t survivors, int64_t hero_count, int64_t garrison_count) {
+	if (survivors <= 0 || hero_count <= 0) {
+		return 0;
+	}
+	if (garrison_count <= 0) {
+		return survivors;
+	}
+	const int64_t total = hero_count + garrison_count;
+	// Survivors split by what each side brought, rounded half up.
+	const int64_t share = (survivors * hero_count * 2 + total) / (total * 2);
+	return std::min({share, hero_count, survivors});
+}
+
+DictRef split_entry_defense(State &state, const Value &hero_stacks, const Value &garrison, const Value &survivors) {
+	const std::vector<DictRef> hero_rows = live_rows(state, hero_stacks);
+	const std::vector<DictRef> garrison_rows = live_rows(state, garrison);
+	const std::unordered_map<Atom, int64_t> hero_totals = unit_totals(state, hero_rows);
+	const std::unordered_map<Atom, int64_t> garrison_totals = unit_totals(state, garrison_rows);
+	const std::vector<DictRef> survivor_rows = live_rows(state, survivors);
+	std::unordered_map<Atom, int64_t> survived = unit_totals(state, survivor_rows);
+	std::unordered_map<Atom, int64_t> hero_left;
+	std::unordered_map<Atom, int64_t> garrison_left;
+	std::vector<Atom> survivor_order;
+	for (const DictRef row : survivor_rows) {
+		const Atom unit = ai::string_or_empty(state, row, key::unit_id);
+		if (hero_left.find(unit) != hero_left.end()) {
+			continue;
+		}
+		survivor_order.push_back(unit);
+		const auto hero_total = hero_totals.find(unit);
+		const auto garrison_total = garrison_totals.find(unit);
+		const int64_t share = entry_hero_share(survived[unit], hero_total == hero_totals.end() ? 0 : hero_total->second, garrison_total == garrison_totals.end() ? 0 : garrison_total->second);
+		hero_left[unit] = share;
+		garrison_left[unit] = survived[unit] - share;
+	}
+	const ArrayRef hero_after = state.new_array();
+	for (const DictRef row : hero_rows) {
+		const Atom unit = ai::string_or_empty(state, row, key::unit_id);
+		const int64_t take = std::min(gd::int_field(state, row, key::count, 0), hero_left[unit]);
+		if (take > 0) {
+			state.append(hero_after, dict_value(row_with_count(state, row, take, true)));
+			hero_left[unit] -= take;
+		}
+	}
+	const ArrayRef garrison_after = state.new_array();
+	for (const DictRef row : garrison_rows) {
+		const Atom unit = ai::string_or_empty(state, row, key::unit_id);
+		const int64_t take = std::min(gd::int_field(state, row, key::count, 0), garrison_left[unit]);
+		if (take > 0) {
+			state.append(garrison_after, dict_value(row_with_count(state, row, take, true)));
+			garrison_left[unit] -= take;
+		}
+	}
+	// Survivors no row can take (more than went in) stay in the garrison.
+	for (const Atom unit : survivor_order) {
+		const int64_t rest = hero_left[unit] + garrison_left[unit];
+		if (rest > 0) {
+			const DictRef row = state.new_dict();
+			state.set(row, str(key::unit_id), str(unit));
+			state.set(row, str(key::count), int_value(rest));
+			state.append(garrison_after, dict_value(row));
+		}
+	}
+	// A hero that brought troops keeps one creature, as a human hero keeps one
+	// from the garrison (keep_hero_troop_from_garrison).
+	if (state.array_size(hero_after) == 0 && !hero_rows.empty() && state.array_size(garrison_after) > 0) {
+		const DictRef first = gd::as_dict(state.at(garrison_after, 0));
+		const int64_t count = gd::int_field(state, first, key::count, 0);
+		state.append(hero_after, dict_value(row_with_count(state, first, 1, false)));
+		if (count > 1) {
+			state.set(first, str(key::count), int_value(count - 1));
+		} else {
+			gd::remove_at(state, garrison_after, 0);
+		}
+	}
+	const DictRef split = state.new_dict();
+	state.set(split, str(key::hero), array_value(hero_after));
+	state.set(split, str(key::garrison), array_value(garrison_after));
+	return split;
 }
 
 bool _hero_is_stationed_at_town(State &state, DictRef hero, DictRef town) {

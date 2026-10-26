@@ -372,6 +372,13 @@ DictRef _normalized_battle_context_fields(State &state, const Value &session, co
 	state.set(result, str(key::battlefront_summary), str(battlefront_summary));
 	state.set(result, str(key::battlefront_tags), battlefront_tags);
 	set_delivery_fields(state, result, delivery);
+	// A hero on the entry fighting with the garrison: what each side brought.
+	for (const Atom field : {key::merged_garrison, key::entry_defense}) {
+		const Value record = state.get(context, str(field), Value());
+		if (gd::is_array(record) || gd::is_dict(record)) {
+			state.set(result, str(field), gd::duplicate_value(state, record, true));
+		}
+	}
 	return result;
 }
 
