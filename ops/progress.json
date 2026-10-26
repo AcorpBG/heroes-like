@@ -117401,7 +117401,7 @@
         "docs/rmg-river-post-pass-vector-walk.md",
         "docs/lessons-learned.md"
       ],
-      "notes": "river_object_post_pass_0x4ac4ae walked state.object_records_0xec4_ecc with a range-for while 0x4abd5f's river-mouth commit appends to it; reallocation left the iterator in freed memory (access violation on XL 8P normal-water two-level seed 72136). H3MapEd 0x4ac4c9..0x4ac548 walks by index and re-reads begin +0xec8 / end +0xecc each pass (cdb listing in .artifacts/rmg_recovery/cdb_4ac4ae_object_loop_disasm_20261026); the port now does the same. Checks: seed 72136 generates and starts a session; 72-reference sweep 64/72 with all 72 payloads byte-identical to before; 90 further configurations byte-identical; core selftest, six-seed runner-b parity and core suite 17/17 on Windows. Linux binaries not rebuilt.",
+      "notes": "river_object_post_pass_0x4ac4ae walked state.object_records_0xec4_ecc with a range-for while 0x4abd5f's river-mouth commit appends to it; reallocation left the iterator in freed memory (access violation on XL 8P normal-water two-level seed 72136). H3MapEd 0x4ac4c9..0x4ac548 walks by index and re-reads begin +0xec8 / end +0xecc each pass (cdb listing in .artifacts/rmg_recovery/cdb_4ac4ae_object_loop_disasm_20261026); the port now does the same. Checks: seed 72136 generates and starts a session; 72-reference sweep 64/72 with all 72 payloads byte-identical to before; 90 further configurations byte-identical; core selftest, six-seed runner-b parity and core suite 17/17 on Windows. Linux binaries rebuilt from the same source on the build server (GCC 13.3): both selftests, core suite 17/17 and seed 72136 pass on Linux.",
       "updatedAt": "2026-10-26T20:30:00Z"
     }
   ],

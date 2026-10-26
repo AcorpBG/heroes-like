@@ -43,5 +43,8 @@ record reference is taken per pass and not used after the two writeback calls.
   and Islands, 2 to 8 players, the three monster strengths): byte-identical, none failed.
 - `h3maped_rmg_core_selftest` and `rules_selftest` pass; six seeds game against the match
   runner (`rules_parity.py check . . --runner-b`) identical; `tools/core_suite.py` 17/17.
-- Windows only: the map library, `match_sim_cli`, `rmg_native_batch_export_cli` and the core
-  selftest are rebuilt; the Linux binaries in `bin/` are not.
+- Windows: the map library, `match_sim_cli`, `rmg_native_batch_export_cli` and the core
+  selftest are rebuilt.
+- Linux (GCC 13.3, the build server, every Linux binary in `bin/` from this source): both
+  selftests pass, `tools/core_suite.py` 17/17, and seed 72136 generates and starts, with the
+  same scenario id as on Windows.
