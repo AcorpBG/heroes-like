@@ -1,4 +1,6 @@
 extends PanelContainer
+
+const UnitPortraits := preload("res://scripts/ui/UnitPortraitTexture.gd")
 ## Town screen army panel, HoMM style (docs/town-garrison-rows.md): the town's
 ## command squares (Build, Muster, Tavern / Market, Mage Guild, Intelligence
 ## Report), then the garrison row
@@ -113,7 +115,7 @@ func configure(state: Dictionary) -> void:
 			var slot: Dictionary = slots[index] if index < slots.size() and slots[index] is Dictionary else {}
 			cell.disabled = String(row.get("holder_id", "")) == ""
 			if bool(slot.get("occupied", false)):
-				cell.show_item(String(slot.get("unit_id", "")), _texture(String(slot.get("portrait", ""))), int(slot.get("count", 0)), "", "%s x%d\nClick, then click a slot to move, merge or swap. Shift splits." % [String(slot.get("unit_name", "")), int(slot.get("count", 0))])
+				cell.show_item(String(slot.get("unit_id", "")), UnitPortraits.for_unit(String(slot.get("unit_id", "")), "portrait"), int(slot.get("count", 0)), "", "%s x%d\nClick, then click a slot to move, merge or swap. Shift splits." % [String(slot.get("unit_name", "")), int(slot.get("count", 0))])
 			else:
 				cell.show_item("", null, 0, "", "Empty slot")
 	_sync_marks()

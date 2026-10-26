@@ -1,5 +1,7 @@
 extends Control
 
+const UnitPortraits := preload("res://scripts/ui/UnitPortraitTexture.gd")
+
 func _make_custom_tooltip(for_text: String) -> Object:
 	return get_node("/root/ContextualHelp").make_hover_card(self, for_text)
 
@@ -3271,7 +3273,7 @@ func _open_site_recruit_dialog(prompt: Dictionary) -> void:
 	waiting_row.alignment = BoxContainer.ALIGNMENT_CENTER
 	waiting_row.add_theme_constant_override("separation", 8)
 	for entry in waiting:
-		var cell := _site_recruit_cell(String(entry.get("portrait", "")), int(entry.get("count", 0)), "%d %s wait to join." % [int(entry.get("count", 0)), String(entry.get("unit_name", ""))])
+		var cell := _site_recruit_cell(String(entry.get("unit_id", "")), int(entry.get("count", 0)), "%d %s wait to join." % [int(entry.get("count", 0)), String(entry.get("unit_name", ""))])
 		cell.disabled = true
 		waiting_row.add_child(cell)
 	content.add_child(waiting_row)
@@ -3290,7 +3292,7 @@ func _open_site_recruit_dialog(prompt: Dictionary) -> void:
 		if not bool(slot.get("occupied", false)):
 			continue
 		var slot_index := int(slot.get("slot_index", -1))
-		var cell := _site_recruit_cell(String(slot.get("portrait", "")), int(slot.get("count", 0)), "Dismiss %d %s." % [int(slot.get("count", 0)), String(slot.get("unit_name", ""))])
+		var cell := _site_recruit_cell(String(slot.get("unit_id", "")), int(slot.get("count", 0)), "Dismiss %d %s." % [int(slot.get("count", 0)), String(slot.get("unit_name", ""))])
 		cell.name = "SiteRecruitSlot%d" % slot_index
 		cell.toggle_mode = true
 		cell.button_group = group
@@ -3309,7 +3311,7 @@ func _open_site_recruit_dialog(prompt: Dictionary) -> void:
 	if first_cell != null:
 		first_cell.grab_focus()
 
-func _site_recruit_cell(portrait_path: String, count: int, tip: String) -> Button:
+func _site_recruit_cell(unit_id: String, count: int, tip: String) -> Button:
 	var cell := Button.new()
 	cell.custom_minimum_size = Vector2(76, 76)
 	cell.clip_contents = true
@@ -3325,7 +3327,7 @@ func _site_recruit_cell(portrait_path: String, count: int, tip: String) -> Butto
 			style.bg_color = Color(0, 0, 0, 0)
 		cell.add_theme_stylebox_override(state, style)
 	var art := TextureRect.new()
-	art.texture = _load_roster_icon(portrait_path)
+	art.texture = UnitPortraits.for_unit(unit_id, "portrait")
 	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	art.mouse_filter = Control.MOUSE_FILTER_IGNORE

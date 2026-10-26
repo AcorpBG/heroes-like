@@ -1,4 +1,6 @@
 extends Control
+
+const UnitPortraits := preload("res://scripts/ui/UnitPortraitTexture.gd")
 ## HoMM-style meeting screen for two friendly commanders sharing a field tile.
 ## The heroes face each other: portrait and primary stats, the seven army
 ## slots, worn and carried artifacts and the spells one can teach the other.
@@ -602,7 +604,7 @@ func _update_army(side: String, hero: Dictionary) -> void:
 		if bool(slot.get("occupied", false)):
 			item.show_item(
 				String(slot.get("unit_id", "")),
-				_texture(String(slot.get("battle_icon", ""))),
+				UnitPortraits.for_unit(String(slot.get("unit_id", ""))),
 				int(slot.get("count", 0)),
 				"",
 				"%s × %d\nTier %d %s" % [String(slot.get("unit_name", "")), int(slot.get("count", 0)), int(slot.get("tier", 1)), String(slot.get("role", "")).capitalize()]
@@ -789,7 +791,7 @@ func _open_split_popup(source_side: String, source_slot: int, target_side: Strin
 	_split_slider.min_value = 1
 	_split_slider.max_value = count - 1
 	_split_slider.set_value_no_signal(maxi(1, count / 2))
-	_split_icon.texture = _texture(String(source.get("battle_icon", "")))
+	_split_icon.texture = UnitPortraits.for_unit(String(source.get("unit_id", "")))
 	_split_title.text = "Split %s" % String(source.get("unit_name", ""))
 	_update_split_labels()
 	_set_status("Split %s → %s slot %d · set the amount, then Split · Escape cancels" % [

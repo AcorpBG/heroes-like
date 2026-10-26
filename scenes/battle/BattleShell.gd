@@ -1,4 +1,6 @@
 extends Control
+
+const UnitPortraits := preload("res://scripts/ui/UnitPortraitTexture.gd")
 ## The battle screen. The field fills the window and the heroes stand beside
 ## their armies with their plates below them; the board draws the turn ribbon
 ## along the top. A command bar along the bottom holds the orders that are not
@@ -1022,8 +1024,7 @@ func _fill_details_card(kind: String, id: String) -> bool:
 		return false
 	for effect in stack.get("effects", []):
 		effect["icon"] = _battle_board_view.effect_icon_path(String(effect.get("effect_id", "")), String(effect.get("spell_id", "")))
-	var icon_path := String(ContentService.get_unit_art(String(stack.get("unit_id", ""))).get("battle_icon", ""))
-	var icon: Texture2D = load(icon_path) as Texture2D if icon_path != "" and ResourceLoader.exists(icon_path) else null
+	var icon := UnitPortraits.for_unit(String(stack.get("unit_id", "")), "battle_icon", true)
 	_details_card.show_stack(stack, icon, _hud_scale)
 	return true
 
@@ -3400,9 +3401,7 @@ func _loss_icon(row: Dictionary, lost: int, k: float) -> Control:
 	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	var icon_path := String(ContentService.get_unit_art(unit_id).get("battle_icon", ""))
-	if icon_path != "" and ResourceLoader.exists(icon_path):
-		icon.texture = load(icon_path) as Texture2D
+	icon.texture = UnitPortraits.for_unit(unit_id, "battle_icon", true)
 	holder.add_child(icon)
 	var badge := Label.new()
 	badge.text = "-%d" % lost

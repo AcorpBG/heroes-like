@@ -332,6 +332,10 @@ def main() -> int:
         },
         "items": [],
     }
+    if MANIFEST_PATH.exists():
+        backgrounds = json.loads(MANIFEST_PATH.read_text(encoding="utf-8")).get("ui_faction_backgrounds")
+        if backgrounds:
+            manifest["ui_faction_backgrounds"] = backgrounds
     animation_manifest = {
         "schema_id": "unit_animation_manifest_v1",
         "generator": "deterministic_unit_animation_assets_v1",

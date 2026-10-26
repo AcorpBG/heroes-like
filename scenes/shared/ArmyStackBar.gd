@@ -1,6 +1,8 @@
 class_name ArmyStackBar
 extends VBoxContainer
 
+const UnitPortraits := preload("res://scripts/ui/UnitPortraitTexture.gd")
+
 signal operation_requested(source_holder_id: String, source_slot_index: int, target_holder_id: String, target_slot_index: int, amount_token: String)
 signal selection_changed(snapshot: Dictionary)
 
@@ -245,7 +247,7 @@ func _make_slot_button(holder_id: String, slot_index: int, slot: Dictionary) -> 
 	button.tooltip_text = _slot_tooltip(slot, slot_index)
 	button.accessibility_name = button.tooltip_text
 	if occupied:
-		button.icon = _texture(String(slot.get("battle_icon", "")))
+		button.icon = UnitPortraits.for_unit(String(slot.get("unit_id", "")))
 	button.set_meta("occupied", occupied)
 	button.set_meta("holder_id", holder_id)
 	button.set_meta("slot_index", slot_index)

@@ -1,5 +1,7 @@
 extends AcceptDialog
 
+const UnitPortraits := preload("res://scripts/ui/UnitPortraitTexture.gd")
+
 const VisualKit := preload("res://scripts/ui/FrontierVisualKit.gd")
 var snapshot: Dictionary = {}
 var _content: VBoxContainer
@@ -46,11 +48,10 @@ func open_report(report: Dictionary, viewport_size: Vector2, hold_button := MOUS
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 8)
 		_content.add_child(row)
-		var art := ContentService.get_unit_art(String(stack.get("unit_id", "")))
-		var path := String(art.get("battle_icon", ""))
-		if not path.is_empty() and ResourceLoader.exists(path):
+		var unit_texture := UnitPortraits.for_unit(String(stack.get("unit_id", "")))
+		if unit_texture != null:
 			var icon := TextureRect.new()
-			icon.texture = load(path) as Texture2D
+			icon.texture = unit_texture
 			icon.custom_minimum_size = Vector2(36, 36)
 			icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 			icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED

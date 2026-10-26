@@ -1,6 +1,8 @@
 class_name TownRecruitCard
 extends PanelContainer
 
+const UnitPortraits := preload("res://scripts/ui/UnitPortraitTexture.gd")
+
 ## One creature's recruitment card, shared by the dwelling popouts and the
 ## Muster Hall: portrait, tier and melee/ranged badge, battle stats and
 ## abilities, reserve and weekly growth, cost, an amount slider with Max and a
@@ -53,7 +55,7 @@ func configure(card: Dictionary, resources: Dictionary, compact: bool = false, p
 	portrait.custom_minimum_size = Vector2(72, 96) if compact else Vector2(80, 104)
 	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	portrait.texture = Widgets.texture(String(card.get("portrait_path", "")))
+	portrait.texture = UnitPortraits.for_unit(unit_id, "portrait")
 	portrait.tooltip_text = portrait_tooltip
 	portrait.mouse_filter = Control.MOUSE_FILTER_PASS if portrait_tooltip != "" else Control.MOUSE_FILTER_IGNORE
 	row.add_child(portrait)

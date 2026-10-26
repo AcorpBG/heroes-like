@@ -1,4 +1,6 @@
 extends Control
+
+const UnitPortraits := preload("res://scripts/ui/UnitPortraitTexture.gd")
 ## Owned-commander dossier. Read-only unless opened with `orders`; then it asks
 ## its owning screen to cast spells, manage artifacts and stacks, choose
 ## specialties and meet heroes. It never changes the session itself.
@@ -269,7 +271,7 @@ func _build_army(box: VBoxContainer) -> void:
 		button.set_meta("count", count)
 		button.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		button.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
-		button.icon = _texture(String(ContentService.get_unit_art(unit_id).get("portrait", ""))) if unit_id != "" else null
+		button.icon = UnitPortraits.for_unit(unit_id, "portrait") if unit_id != "" else null
 		button.disabled = unit_id == ""
 		if unit_id != "":
 			var description := _unit_description(unit, count)

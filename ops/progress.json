@@ -117291,6 +117291,19 @@
       "notes": "Re-exported exactly480 PNGs: portrait, battle_icon and overworld_icon for160 curated base units, uniformly fitted on transparent backgrounds like upgrades. Removed baked nameplates, faction frames and tier pips. Existing exporter uses the clean layout; --icons-only --archive-dir reads SHA-256-verified originals directly from the source archive without restoring media or touching72upgrades, standees, animations, content or manifests. Imported successfully; inspected18-unit cross-faction/neutral contact sheet and live generated Embercourt Overworld/Town screenshots at1280x720. Windows core17/17 passed in37s;32core-test map files auto-cleaned. Removed35 disposable task files (13023914bytes,12.4MiB), including the verified live-test map pair and throwaway profile. No native build/parity or Linux run; owner AI batch left running.",
       "updatedAt": "2026-10-26",
       "completedAt": "2026-10-26"
+    },
+    {
+      "id": "art-faction-unit-backgrounds-20261026",
+      "title": "Shared faction scenery behind unit portraits and UI icons",
+      "status": "completed",
+      "classification": "owner_approved_art_integration",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md"
+      ],
+      "notes": "Integrated the six accepted background PNGs byte-for-byte with prompt/hash provenance. One UI-only Texture2D composition shares imported foreground/background layers, covers portrait aspect ratios and preserves round battle medallions; metadata maps faction IDs to six assets. All162faction unit forms, including72upgrades, use the background in army/garrison/transfer/split, recruitment/construction, hero-sheet/scouting and battle UI/ribbon.70neutral units retain cutouts. Original232art records, all foreground PNGs/animations, mechanics and saves unchanged. Six imports limited to512px with mipmaps; exporter preserves the mapping. Focused check resolved324layered+140neutral surfaces using exactly6shared background resources; live generated Embercourt Overworld/Town/Muster screenshots inspected. Windows core17/17passed in25s after final code changes. Removed42disposable task files (8263666bytes,7.9MiB), including the verified generated map pair and throwaway profile; core suite auto-removed32map files. No native build/parity or Linux run. Preserved concurrent AI-evaluation planning edits.",
+      "updatedAt": "2026-10-26",
+      "completedAt": "2026-10-26"
     }
   ],
   "project": "heroes-like",

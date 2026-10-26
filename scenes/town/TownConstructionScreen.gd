@@ -1,6 +1,8 @@
 class_name TownConstructionScreen
 extends Control
 
+const UnitPortraits := preload("res://scripts/ui/UnitPortraitTexture.gd")
+
 ## Full-screen Town construction board. Presents the fixed slot board from
 ## TownConstructionBoard and emits intents; TownShell owns every rule call,
 ## construction commit, market hand-off and scenic preview.
@@ -1649,7 +1651,7 @@ func _portrait(unit_id: String, dim: bool) -> TextureRect:
 	portrait.name = "Portrait"
 	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	portrait.texture = _texture(String(ContentService.get_unit_art(unit_id).get("portrait", "")))
+	portrait.texture = UnitPortraits.for_unit(unit_id, "portrait")
 	portrait.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	if dim:
 		portrait.modulate = Color(0.55, 0.55, 0.57, 0.95)

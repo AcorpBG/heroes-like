@@ -4,6 +4,8 @@
 # freed together, and then reports leaked scripts.
 extends Control
 
+const UnitPortraits := preload("res://scripts/ui/UnitPortraitTexture.gd")
+
 signal stack_focus_requested(battle_id: String)
 # A click on an enemy, or Enter on it, with the order the cursor showed:
 # {"action": "strike" or "shoot", "approach": the hex to strike from}.
@@ -6541,6 +6543,10 @@ func _draw_ribbon_chip(entry: Dictionary, k: float, alpha: float, highlighted: b
 	if active:
 		draw_texture_rect(_soft_glow(), Rect2(center - Vector2(radius, radius) * 1.5, Vector2(radius, radius) * 3.0), false, Color(UI_ACTIVE, 0.45 * alpha))
 	draw_circle(center, radius, Color(0.086, 0.071, 0.047, alpha))
+	var background_path := UnitPortraits.background_path(String(stack.get("unit_id", "")))
+	var backdrop := _unit_battle_icon_texture(background_path) if background_path != "" else null
+	if backdrop != null:
+		_draw_circle_texture(backdrop, center, radius - ring_width * 0.5, UnitPortraits.BACKGROUND_TINT * Color(1.0, 1.0, 1.0, alpha))
 	var texture := _unit_battle_icon_for_stack(stack)
 	if texture != null:
 		_draw_circle_texture(texture, center, radius - ring_width * 0.5, Color(1.0, 1.0, 1.0, alpha))
