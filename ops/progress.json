@@ -117317,6 +117317,19 @@
       ],
       "notes": "Completed owner-requested1200games on67a496f39with unrelated ongoingart/UIchanges(dirtytree recorded).600fresh distinct36x36Small2P maps,onelevel,land/no-water,320daycap;alltwofactionarrangements/map,fixedhero/armyrollseed.300maps/600gamesperguard(normal,strong);each15pair20mapsperguard;eachfaction400games,200perguard,100perguard/seat. All1200actualsettings/rollseeds/pairedtownpositionsverified;600actualmapseeds;zero priorseedoverlap. All non-art contentJSON/nativeCLI/batchtool hashes unchanged before/after.1198decided/2caps,zeroexecutionfailures/timeouts/script-errors/native-fallbacks,3.0minutes.16one-threadworkers,max32games/list. Combined points/fair200(scores):Ember233(116.5%),Veil226(113%),Sun211(105.5%),Brass198(99%),Mire170(85%),Thorn162(81%). Wins233,225,211,198,169,162.95%whole-mapbootstrap10kCI:Ember107..126,Veil102.5..123,Sun95.5..115.5,Brass89..109,Mire75..95,Thorn71.5..90.5. Normal600/600decided scores:Veil116,Ember115,Sun104,Brass96,Mire89,Thorn80. Strong598/600decided:Ember118,Veil110,Sun107,Brass102,Thorn82,Mire81. Guard banks use differentmaps; no matchedguard-effect/crossmodebalance-effect claim. Decidedday2..129median27(normal25,strong28),253/1198byday14;earlygamepressure vsXLmedian215.5. Capsm663/m664sameai-match-800277445/nativemap1631551765:Veil/Mirebothstarts,zeroPvPever,lastneutralcapture40/38,lastguardbattle52/45,all210final30daydecisionspergameemptywithnoalternatives;left1town,right2townsregardlessfaction. Repeatedmap-specificlackofactionableplans;no demonstratedterrain/routecause,extraRMGgeneration,replayorfix. MaxAI236ms,captures11915,undefended3800,winnergoldmedian698. Windowscore17/17in25s,32testmapfiles/profilesautocleaned. No nativebuild/Linuxrun. Completedbankabout457MiBretainedunderownerexistingcleanupdeferral;workerintermediatesautocleaned,previousbanks/caches/saves/RMGrecoverypreserved. Results/guardCIs/matchupmatrix/capdiagnosis in .artifacts/ai_batch_20261026_small2p_L1_land_normal_strong_1200_fresh/summary.md. Only this evaluation metadata is committed;ongoingart/UIeditsstayuncommitted.",
       "updatedAt": "2026-10-26"
+    },
+    {
+      "id": "evaluation-medium2p-land-strong1200-20261026",
+      "title": "1200 Medium2P land strong-guard games",
+      "status": "in_progress",
+      "classification": "owner_requested_evaluation",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        ".claude/skills/ai-match-batch/SKILL.md"
+      ],
+      "notes": "Owner requests2PMediumstrongguardsnext; carry forward1200games,no-water,onelevel,320daycap.600fresh maps,both faction start arrangements/map,fixedhero/armyrollseed. All15pairs40maps each; every faction400games/200perseat. Native16one-threadprocesses,32game recyclingceiling. No balance/AI/nativechanges. Output .artifacts/ai_batch_20261026_medium2p_L1_land_strong_1200_fresh. Verify allactualsetups and inputhashes; report scores/wins,map-bootstrapCI,caps,anddescriptivemodecomparisononly.",
+      "updatedAt": "2026-10-26"
     }
   ],
   "project": "heroes-like",
