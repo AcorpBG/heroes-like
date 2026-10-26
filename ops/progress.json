@@ -117321,14 +117321,14 @@
     {
       "id": "evaluation-medium2p-land-strong1200-20261026",
       "title": "1200 Medium2P land strong-guard games",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "owner_requested_evaluation",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         ".claude/skills/ai-match-batch/SKILL.md"
       ],
-      "notes": "Owner requests2PMediumstrongguardsnext; carry forward1200games,no-water,onelevel,320daycap.600fresh maps,both faction start arrangements/map,fixedhero/armyrollseed. All15pairs40maps each; every faction400games/200perseat. Native16one-threadprocesses,32game recyclingceiling. No balance/AI/nativechanges. Output .artifacts/ai_batch_20261026_medium2p_L1_land_strong_1200_fresh. Verify allactualsetups and inputhashes; report scores/wins,map-bootstrapCI,caps,anddescriptivemodecomparisononly.",
+      "notes": "Completed on b6c9cdc18:1,200games on600fresh distinct72x72Medium2P maps, strong guards,land/no-water,onelevel,320-daycap. Both faction start arrangements and fixed hero/army roll seed per map;all15pairs40maps each,every faction400games/200perseat across200maps. All1200actualsettings/rollseeds/pairedstarttownpositions/treasuries verified against plan,600actualmapseeds;zero earlier-plan seed overlap. All non-art contentJSON/nativeCLI/batchtool hashes unchanged before/after and match preceding Smallrun.1200decided,0caps,0executionfailures/timeouts/script-errors/native-fallbacks,11.6minutes.16single-threadedprocesses,32-game recycling ceiling. Points/fair200(scores)/wins:Ember224(112%),Sun208(104%),Mire197(98.5%),Veil195(97.5%),Thorn191(95.5%),Brass185(92.5%).95%whole-mapbootstrap10kCI:Ember102.5..121,Sun95.5..112.5,Mire89..108,Veil88.5..107,Thorn86..105,Brass83.5..101.5. Only Ember interval above100;others include100. Decideddays5..165median61;24byday14. PreviousSmallstrong600games/300maps scoresEmber118,Veil110,Sun107,Brass102,Thorn82,Mire81,median28;descriptive comparison because different sizes/freshmaps/samplecounts,not matched-map effect or balance-change estimate. Medium observed score spread19.5pp vs37pp Smallstrong. Seat1wins646,seat2wins554;equal faction-seat exposure preserved. MaxAI406ms,captures27865,undefended9595,winnergoldmedian2326,max326007. Summary includes faction map-bootstrap CIs,Smallstrong comparison,matchup matrix,full1200matchtable. No extra replay,RMGgeneration,balance/AI/nativecode/build orLinuxrun. Windowscore17/17in25s beforestart,32testmapfiles/profilesautocleaned. Completion inspection found no taskworkerlists/snapshots/inflight/profiles/probes/generatedmapfiles; no further safely disposable task files needed manual removal. Retainedcompletedbank about1.35GiB under ownerexistingcleanupdeferral;earlierbanks,caches,saves,RMG recovery untouched. Output .artifacts/ai_batch_20261026_medium2p_L1_land_strong_1200_fresh/summary.md.",
       "updatedAt": "2026-10-26"
     }
   ],
