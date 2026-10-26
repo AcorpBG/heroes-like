@@ -117269,14 +117269,14 @@
     {
       "id": "evaluation-xl6p-water-strong-fresh120-20261026",
       "title": "Fresh120 six-player XL two-level normal-water strong-guard evaluation",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "owner_requested_evaluation",
       "source": "PLAN.md",
       "sourceDocs": [
         "PLAN.md",
         ".claude/skills/ai-match-batch/SKILL.md"
       ],
-      "notes": "Owner requests120games. Exactly120fresh maps,6P,XL,twolevels,normalwater,strongguards;20starts per faction per seat, ordinary rolls,320-daycap. Do not expand to720all-arrangements games. Native16one-thread processes,max32games before recycling. No content/AIchanges. Newsettingbank,notpairedwithLarge/no-water. Plannedoutput .artifacts/ai_batch_20261026_xl6p_L2_water_strong_120_fresh.",
+      "notes": "Completed on39e727633:exactly120fresh distinct144x144XL6Pmaps,twolevels,normalwater,strongguards;all120actualsetups/seatsverifiedagainstplan,20starts/faction/seat,108differentordersacrossmaps,onegamepermap,ordinaryrolls,320daycap,noseedoverlapwithprevioussavedplans. Unit/AIweight/matchrunnerhashesunchangedbefore/after; no balance/AIchanges.106decided14caps,zeroexecutionfailures/timeouts/script-errors/native-fallbacks,24.4minutes.16one-threadprocesses,42workerlifetimes,max8games/list,32recyclingceiling. Placepoints/fair300:Thorn316=105.333%,Brass309.5=103.167%,Ember301.5=100.5%,Veil297=99%,Sun297=99%,Mire279=93%. Wins17/20/13/19/22/15 respectively,fair17.667of106.95%whole-mapbootstrap10k intervals:Thorn92.7..117.5,Brass90.7..115.7,Ember89.3..111.5,Veil87.0..111.0,Sun86.2..111.3,Mire81.3..104.7;allinclude100. NotpairedwithLarge/landbankbecausechangedsize/water/freshmaps.13caps stilltrade40..113towns/final30dayswith24..80PvPfights,lastcaptures319/320; m030 strategicclosurestall:Brass5towns/245580fieldpower vsMire1/63501,lastcapture163,lastPvP207,nohostiletownplansfinal30days;guardfightscontinue320. No demonstratedwater/pathfindingcause. MaxAIturn4430ms,captures35084,undefended15828,winnergoldmedian735884,decideddays103..320median215.5. Results/capdetails/uncertainty/fullmatchtable in .artifacts/ai_batch_20261026_xl6p_L2_water_strong_120_fresh/summary.md. Windowscore17/17passedbeforestart,32testmaps/profilesautomaticallyremoved. Nativeworkerintermediatesautocleaned;taskanalysisintermediateremovedafterincorporation. Retainedactualrecords/plan/results/summary/provenanceabout1.30GiBunderownerexistingcleanupdeferral. No nativechange/build,Linuxunchanged. Completion cleanup verified no simulation/Godot processes, no worker lists/snapshots/inflight/taskprofiles left; removed only the rebuildable intermediate analysis.json after folding findings into summary. Pre-existing20261025tempfolder,leftuntouched. Concurrent art commit97dd0a5e8 changed onlyart,artexporterandplanningfiles; verified unit/AI/native-runner hashes unchanged and preserved its PLAN/opsentries.",
       "updatedAt": "2026-10-26"
     },
     {
