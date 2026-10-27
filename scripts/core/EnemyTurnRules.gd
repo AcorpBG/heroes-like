@@ -100,9 +100,6 @@ static func _owned_town_entries(session: SessionStateStoreScript.SessionData, fa
 static func _faction_capital_state(session: SessionStateStoreScript.SessionData, faction_id: String) -> Dictionary:
 	return TurnEngine.native_writing(&"EnemyTurnRules._faction_capital_state", [session, faction_id])
 
-static func _raid_threshold_for_strategy(session: SessionStateStoreScript.SessionData, config: Dictionary, faction_id: String, launch_policy_context: Dictionary = {}) -> int:
-	return TurnEngine.native_writing(&"EnemyTurnRules._raid_threshold_for_strategy", [session, config, faction_id, launch_policy_context])
-
 static func _max_active_raids_for_strategy(session: SessionStateStoreScript.SessionData, config: Dictionary, faction_id: String, launch_policy_context: Dictionary = {}) -> int:
 	return TurnEngine.native_writing(&"EnemyTurnRules._max_active_raids_for_strategy", [session, config, faction_id, launch_policy_context])
 

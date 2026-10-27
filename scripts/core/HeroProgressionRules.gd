@@ -121,11 +121,6 @@ static func aggregate_bonuses(hero_state: Dictionary) -> Dictionary:
 static func adjusted_mana_cost(hero_state: Dictionary, base_cost: int, school_id: String = "") -> int:
 	return BattleEngine.native_writing(&"HeroProgressionRules.adjusted_mana_cost", [hero_state, base_cost, school_id])
 
-static func scale_raid_pillage(hero_state: Dictionary, losses: Variant) -> Dictionary:
-	var bonuses := aggregate_bonuses(hero_state)
-	var multiplier := clampf(1.0 - float(bonuses.get("raid_pillage_resistance", 0.0)), 0.3, 1.0)
-	return _scale_resource_payload(losses, multiplier)
-
 static func rank_label(rank: int) -> String:
 	return HumanEngine.native(&"HeroProgressionRules.rank_label", [rank])
 
@@ -134,17 +129,3 @@ static func _normalize_specialties_in(catalog: Dictionary, value: Variant) -> Ar
 
 static func command_gain_stat(hero_state: Dictionary, level_number: int) -> String:
 	return HumanEngine.native_writing(&"HeroProgressionRules.command_gain_stat", [hero_state, level_number])
-
-static func _scale_resource_payload(payload: Variant, multiplier: float) -> Dictionary:
-	var scaled := {}
-	if not (payload is Dictionary):
-		return scaled
-	for key in payload.keys():
-		var amount := int(payload[key])
-		if amount <= 0:
-			continue
-		var adjusted := int(floor(float(amount) * multiplier))
-		if adjusted <= 0:
-			adjusted = 1
-		scaled[String(key)] = adjusted
-	return scaled

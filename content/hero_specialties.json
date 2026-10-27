@@ -59,34 +59,30 @@
       "group": "adventure",
       "path": "any",
       "max_rank": 4,
-      "summary": "+1 scouting radius, raids take 10% less",
+      "summary": "+1 scouting radius",
       "ranks": [
         {
-          "text": "+1 scouting radius, raids take 10% less",
+          "text": "+1 scouting radius",
           "bonuses": {
-            "scouting_radius": 1,
-            "raid_pillage_resistance": 0.1
+            "scouting_radius": 1
           }
         },
         {
-          "text": "+2 scouting radius, raids take 20% less",
+          "text": "+2 scouting radius",
           "bonuses": {
-            "scouting_radius": 2,
-            "raid_pillage_resistance": 0.2
+            "scouting_radius": 2
           }
         },
         {
-          "text": "+3 scouting radius, raids take 30% less",
+          "text": "+3 scouting radius",
           "bonuses": {
-            "scouting_radius": 3,
-            "raid_pillage_resistance": 0.3
+            "scouting_radius": 3
           }
         },
         {
-          "text": "+4 scouting radius, raids take 40% less",
+          "text": "+4 scouting radius",
           "bonuses": {
-            "scouting_radius": 4,
-            "raid_pillage_resistance": 0.4
+            "scouting_radius": 4
           }
         }
       ],

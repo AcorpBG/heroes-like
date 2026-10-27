@@ -130,7 +130,6 @@ const Function kFunctions[] = {
 	CHECK(EnemyTurnRules, _faction_capital_state, 2, true, return gd::dict_value(enemy_turn_rules::_faction_capital_state(s, D(a, 0), S(a, 1)))),
 	CHECK(EnemyTurnRules, _faction_front_state, 2, true, return gd::dict_value(enemy_turn_rules::_faction_front_state(s, D(a, 0), S(a, 1)))),
 	CHECK(EnemyTurnRules, _max_active_raids_for_strategy, 4, true, return gd::int_value(enemy_turn_rules::_max_active_raids_for_strategy(s, D(a, 0), D(a, 1), S(a, 2), D(a, 3)))),
-	CHECK(EnemyTurnRules, _raid_threshold_for_strategy, 4, true, return gd::int_value(enemy_turn_rules::_raid_threshold_for_strategy(s, D(a, 0), D(a, 1), S(a, 2), D(a, 3)))),
 	CHECK(EnemyTurnRules, _valid_enemy_faction_configs, 1, true, return gd::array_value(enemy_turn_rules::_valid_enemy_faction_configs(s, A(a, 0)))),
 	CHECK(EnemyTurnRules, active_raid_count, 2, true, return gd::int_value(enemy_turn_rules::active_raid_count(s, D(a, 0), S(a, 1)))),
 	CHECK(EnemyTurnRules, get_pressure, 2, true, return gd::int_value(enemy_turn_rules::get_pressure(s, D(a, 0), S(a, 1)))),

@@ -93,7 +93,6 @@ DictRef aggregate_bonuses(State &state, DictRef hero_state) {
 	state.set(bonuses, str(key::battle_initiative), int_value(0));
 	state.set(bonuses, str(key::recruit_growth_multiplier), gd::float_value(0.0));
 	state.set(bonuses, str(key::recruit_cost_delta), gd::float_value(0.0));
-	state.set(bonuses, str(key::raid_pillage_resistance), gd::float_value(0.0));
 	const Value raw_specialty_ids = get_or_new_array(state, hero_state, key::specialties);
 	if (!gd::is_array(raw_specialty_ids) || state.array_size(raw_specialty_ids.ref) == 0) {
 		return bonuses;

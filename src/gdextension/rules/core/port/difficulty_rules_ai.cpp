@@ -20,18 +20,15 @@ struct DifficultyProfile {
 	int64_t movement_bonus;
 	double income_multiplier;
 	double reward_multiplier;
-	int64_t enemy_pressure_bonus;
-	int64_t raid_threshold_offset;
-	double raid_pillage_multiplier;
 	double player_damage_multiplier;
 	double enemy_damage_multiplier;
 	int64_t player_initiative_bonus;
 	int64_t enemy_initiative_bonus;
 };
 const DifficultyProfile kDifficultyProfiles[3] = {
-	{ 2, 1.25, 1.25, -1, 1, 0.75, 1.1, 0.9, 1, 0 },
-	{ 0, 1.0, 1.0, 0, 0, 1.0, 1.0, 1.0, 0, 0 },
-	{ -1, 0.85, 0.85, 1, -1, 1.25, 0.95, 1.05, 0, 1 },
+	{ 2, 1.25, 1.25, 1.1, 0.9, 1, 0 },
+	{ 0, 1.0, 1.0, 1.0, 1.0, 0, 0 },
+	{ -1, 0.85, 0.85, 0.95, 1.05, 0, 1 },
 };
 // The DIFFICULTY_PROFILES row of an id, -1 when it has none.
 int difficulty_row(Atom id) {
@@ -53,9 +50,6 @@ DictRef new_difficulty_profile(State &state, int row) {
 	state.set(result, str(key::movement_bonus), int_value(profile.movement_bonus));
 	state.set(result, str(key::income_multiplier), float_value(profile.income_multiplier));
 	state.set(result, str(key::reward_multiplier), float_value(profile.reward_multiplier));
-	state.set(result, str(key::enemy_pressure_bonus), int_value(profile.enemy_pressure_bonus));
-	state.set(result, str(key::raid_threshold_offset), int_value(profile.raid_threshold_offset));
-	state.set(result, str(key::raid_pillage_multiplier), float_value(profile.raid_pillage_multiplier));
 	state.set(result, str(key::player_damage_multiplier), float_value(profile.player_damage_multiplier));
 	state.set(result, str(key::enemy_damage_multiplier), float_value(profile.enemy_damage_multiplier));
 	state.set(result, str(key::player_initiative_bonus), int_value(profile.player_initiative_bonus));

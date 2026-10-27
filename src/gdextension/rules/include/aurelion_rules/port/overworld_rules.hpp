@@ -127,7 +127,6 @@ ArrayRef _command_risk_player_town_daybreak_contexts(State &state, DictRef sessi
 ArrayRef _command_risk_town_items(State &state, DictRef session, ArrayRef daybreak_contexts, bool include_details = true);
 ArrayRef _command_risk_logistics_items(State &state, DictRef session, DictRef pressured_town_ids, ArrayRef daybreak_contexts, bool include_details = true);
 ArrayRef _command_risk_objective_items(State &state, DictRef session, DictRef pressured_town_ids, bool include_details = true);
-ArrayRef _command_risk_posture_items(State &state, DictRef session, bool include_details = true);
 DictRef _command_risk_field_item(State &state, DictRef session, bool include_details = true);
 Atom _command_risk_grade_label(State &state, int64_t severity);
 DictRef _town_command_risk_state(State &state, DictRef session, DictRef town, bool include_front = true);

@@ -5,7 +5,6 @@
 
 #include "aurelion_rules/port/ai_port.hpp"
 #include "aurelion_rules/port/battle_ends.hpp"
-#include "aurelion_rules/port/difficulty_rules_turn.hpp"
 #include "aurelion_rules/port/enemy_adventure_rules_turn.hpp"
 #include "aurelion_rules/port/overworld_rules_turn.hpp"
 #include "aurelion_rules/port/player_identity_rules.hpp"
@@ -334,22 +333,6 @@ DictRef _faction_capital_state_from_towns(State &state, DictRef session, ArrayRe
 	return capital_state;
 }
 
-int64_t _raid_threshold_for_strategy(State &state, DictRef session, DictRef config, Atom faction_id, DictRef launch_policy_context) {
-	const DictRef strategy = enemy_adventure_rules::enemy_strategy(state, config, faction_id);
-	const int64_t base_threshold = difficulty_rules::adjust_raid_threshold(state, session, imax(1, gd::int_field(state, config, key::raid_threshold, 1)));
-	const compat::Number scale = compat::Number::of_float(enemy_adventure_rules::strategy_scalar(state, strategy, key::raid, key::threshold_scale, 1.0));
-	// clamp() of three floats: a float.
-	const double threshold_scale = compat::variant_clamp(scale, compat::Number::of_float(0.65), compat::Number::of_float(1.5)).f;
-	int64_t threshold = imax(1, compat::float_to_int(compat::godot_round(static_cast<double>(base_threshold) * threshold_scale)));
-	const DictRef capital_state = _launch_policy_capital_state(state, session, faction_id, launch_policy_context);
-	threshold = gd::sub(threshold, gd::int_field(state, capital_state, key::raid_threshold_reduction, 0));
-	threshold = gd::sub(threshold, gd::int_field(state, _launch_policy_front_state(state, session, faction_id, launch_policy_context), key::threshold_reduction, 0));
-	if (ai::session_int(state, session, key::day) >= 5 && gd::int_field(state, capital_state, key::active_projects, 0) > 0) {
-		threshold = gd::sub(threshold, 1);
-	}
-	return imax(1, threshold);
-}
-
 int64_t _max_active_raids_for_strategy(State &state, DictRef session, DictRef config, Atom faction_id, DictRef launch_policy_context) {
 	const DictRef strategy = enemy_adventure_rules::enemy_strategy(state, config, faction_id);
 	const DictRef capital_state = _launch_policy_capital_state(state, session, faction_id, launch_policy_context);
@@ -365,16 +348,6 @@ DictRef _launch_policy_capital_state(State &state, DictRef session, Atom faction
 	}
 	const DictRef loaded = _faction_capital_state(state, session, faction_id);
 	state.set(launch_policy_context, str(key::capital_state), dict_value(loaded));
-	return loaded;
-}
-
-DictRef _launch_policy_front_state(State &state, DictRef session, Atom faction_id, DictRef launch_policy_context) {
-	const Value cached = state.get(launch_policy_context, str(key::front_state), Value());
-	if (gd::is_dict(cached)) {
-		return cached.ref;
-	}
-	const DictRef loaded = _faction_front_state(state, session, faction_id);
-	state.set(launch_policy_context, str(key::front_state), dict_value(loaded));
 	return loaded;
 }
 

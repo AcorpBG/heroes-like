@@ -1,14 +1,12 @@
 // OverworldRules' command risk forecast (Phase 5 slice 06b, group "forecast"):
 // the next-day risk items of the player's towns, their logistics, the defeat
-// objectives, the computer players' postures and the active command's field
-// position, reduced to the forecast whose signature gates the end of a turn;
+// objectives and the active command's field position, reduced to the forecast whose signature gates the end of a turn;
 // the daybreak projection of a player town (occupation and recovery relief),
 // a town's capital project state, the fog grid reads it needs, and the
 // EnemyAdventureRules / ScenarioRules helpers on those paths.
 //
-// A player town under threat, a raid on it, a town front, the computer players'
-// raid limits and the authored enemy_pressure_at_least and encounter_resolved
-// defeat objectives call the AI turn's ports (Phase 4 slice 4.4). Those two
+// A player town under threat, a raid on it, a town front and the authored
+// enemy_pressure_at_least and encounter_resolved defeat objectives call the AI turn's ports (Phase 4 slice 4.4). Those two
 // objective types belong to the archived authored scenarios alone, and
 // ScenarioRules._objective_met leaves them to GDScript. An open fog read scope
 // throws state::NotPorted, so the GDScript body runs instead.
@@ -551,7 +549,6 @@ ArrayRef _command_risk_items(State &state, DictRef session, bool include_details
 	}
 	append_all(state, items, _command_risk_logistics_items(state, session, pressured_town_ids, daybreak_contexts, include_details));
 	append_all(state, items, _command_risk_objective_items(state, session, pressured_town_ids, include_details));
-	append_all(state, items, _command_risk_posture_items(state, session, include_details));
 	const DictRef field_item = _command_risk_field_item(state, session, include_details);
 	if (!gd::is_empty(state, field_item)) {
 		state.append(items, dict_value(field_item));
@@ -814,45 +811,6 @@ ArrayRef _command_risk_objective_items(State &state, DictRef session, DictRef pr
 				state.append(items, dict_value(item));
 			}
 		}
-	}
-	return items;
-}
-
-ArrayRef _command_risk_posture_items(State &state, DictRef session, bool include_details) {
-	const ArrayRef items = state.new_array();
-	const DictRef scenario = session_scenario(state, session);
-	for (const Value &config : gd::field_items(state, scenario, str(key::enemy_factions))) {
-		if (!gd::is_dict(config)) {
-			continue;
-		}
-		const Atom faction_id = text(state, config.ref, key::faction_id);
-		const DictRef enemy_state = overworld_rules::_enemy_state_for_faction(state, session, faction_id);
-		const int64_t current_pressure = gd::int_field(state, enemy_state, key::pressure, 0);
-		const int64_t threshold = _enemy_raid_threshold_for_strategy(state, session, config.ref, faction_id);
-		const int64_t active_raids = _enemy_active_raids(state, session, faction_id);
-		const int64_t max_raids = _enemy_max_active_raids_for_strategy(state, session, config.ref, faction_id);
-		const Atom posture = text(state, enemy_state, key::posture, key::probing);
-		if (active_raids >= max_raids) {
-			continue;
-		}
-		if (current_pressure < compat::engine_max<int64_t>(1, gd::sub(threshold, 1)) && posture != key::massing && posture != key::raiding) {
-			continue;
-		}
-		// config.get("label", ContentService.get_faction(faction_id).get("name", faction_id)).
-		const Value faction_name = state.get(gd::content_row(state, ContentTable::Faction, faction_id), str(key::name), str(faction_id));
-		const Atom label = gd::stringify_or_fallback(state, state.get(config.ref, str(key::label), faction_name));
-		int64_t severity = 2;
-		if (posture == key::raiding || current_pressure >= threshold) {
-			severity = 4;
-		} else if (posture == key::massing || gd::add(current_pressure, overworld_rules::_public_enemy_pressure_gain(state, session, config.ref)) >= threshold) {
-			severity = 3;
-		}
-		const DictRef item = new_item(state, gd::format(state, key::posture_s, {str(faction_id)}), severity, false,
-				gd::format(state, key::s_is_gathering_strength, {str(label)}));
-		if (include_details) {
-			state.set(item, str(key::detail), str(gd::format(state, key::s_sits_at_d_d_pressure, {str(label), int_value(current_pressure), int_value(threshold), int_value(active_raids), int_value(max_raids), str(overworld_rules::_posture_label(state, posture))})));
-		}
-		state.append(items, dict_value(item));
 	}
 	return items;
 }

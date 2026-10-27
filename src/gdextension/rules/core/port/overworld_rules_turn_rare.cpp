@@ -4,7 +4,6 @@
 #include "aurelion_rules/port/overworld_rules_turn.hpp"
 
 #include "aurelion_rules/port/ai_port.hpp"
-#include "aurelion_rules/port/difficulty_rules_turn.hpp"
 #include "aurelion_rules/port/enemy_adventure_rules_turn.hpp"
 #include "aurelion_rules/port/enemy_turn_rules_turn.hpp"
 #include "aurelion_rules/port/player_identity_rules.hpp"
@@ -150,18 +149,6 @@ bool _scenario_objective_met(State &state, DictRef session, DictRef objective) {
 
 int64_t _enemy_pressure(State &state, DictRef session, Atom faction_id) {
 	return enemy_turn_rules::get_pressure(state, session, faction_id);
-}
-
-int64_t _enemy_active_raids(State &state, DictRef session, Atom faction_id) {
-	return enemy_turn_rules::active_raid_count(state, session, faction_id);
-}
-
-int64_t _enemy_raid_threshold_for_strategy(State &state, DictRef session, DictRef config, Atom faction_id) {
-	return enemy_turn_rules::_raid_threshold_for_strategy(state, session, config, faction_id, state.new_dict());
-}
-
-int64_t _enemy_max_active_raids_for_strategy(State &state, DictRef session, DictRef config, Atom faction_id) {
-	return enemy_turn_rules::_max_active_raids_for_strategy(state, session, config, faction_id, state.new_dict());
 }
 
 bool _raid_target_is_objective_anchor(State &state, DictRef session, Atom target_kind, Atom placement_id) {
@@ -599,9 +586,8 @@ DictRef _command_risk_pressure_objective_item(State &state, DictRef session, Dic
 	}
 	const int64_t current_pressure = _enemy_pressure(state, session, faction_id);
 	const int64_t threshold = gd::int_field(state, objective, key::threshold, 0);
-	const int64_t gain = _public_enemy_pressure_gain(state, session, config);
 	const Atom posture = text(state, _enemy_state_for_faction(state, session, faction_id), key::posture, key::probing);
-	if (gd::add(current_pressure, gain) < threshold && !(posture == key::massing && gd::sub(threshold, current_pressure) <= 2)) {
+	if (current_pressure < threshold && !(posture == key::massing && gd::sub(threshold, current_pressure) <= 2)) {
 		return state.new_dict();
 	}
 	const Value id_fallback = state.get(objective, str(key::id), str(key::pressure_objective));
@@ -613,7 +599,7 @@ DictRef _command_risk_pressure_objective_item(State &state, DictRef session, Dic
 		const DictRef faction = gd::content_row(state, ContentTable::Faction, faction_id);
 		const Value name_fallback = state.get(faction, str(key::name), str(faction_id));
 		const Atom faction_label = text_or(state, config, key::label, name_fallback);
-		const Atom detail = gd::format(state, key::s_sits_at_d_d_pressure_2, {str(faction_label), int_value(current_pressure), int_value(threshold), str(_posture_label(state, posture)), int_value(gain), str(label)});
+		const Atom detail = gd::format(state, key::s_sits_at_d_d_pressure_2, {str(faction_label), int_value(current_pressure), int_value(threshold), str(_posture_label(state, posture)), str(label)});
 		state.set(item, str(key::detail), str(detail));
 	}
 	return item;
@@ -692,11 +678,6 @@ Atom _town_command_risk_consequence(State &state, DictRef town, int64_t readines
 		return key::this_lane_also_sits_on_an;
 	}
 	return key::another_quiet_day_leaves_the_front;
-}
-
-int64_t _public_enemy_pressure_gain(State &state, DictRef session, DictRef config) {
-	const int64_t base_gain = vmax(0, gd::add(gd::int_field(state, config, key::pressure_per_day, 0), gd::int_field(state, config, key::pressure_per_enemy_town, 0)));
-	return vmax(1, difficulty_rules::adjust_enemy_pressure_gain(state, session, base_gain));
 }
 
 DictRef _enemy_config_for_faction(State &state, DictRef scenario, Atom faction_id) {

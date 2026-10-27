@@ -4,7 +4,6 @@
 
 #include "aurelion_rules/port/ai_hero_rules_turn.hpp"
 #include "aurelion_rules/port/artifact_rules_turn.hpp"
-#include "aurelion_rules/port/difficulty_rules_turn.hpp"
 #include "aurelion_rules/port/enemy_town_services_turn.hpp"
 #include "aurelion_rules/port/hero_command_rules_turn.hpp"
 #include "aurelion_rules/port/overworld_level_rules_turn.hpp"
@@ -312,22 +311,6 @@ DictRef remove_owned_artifact(State &state, DictRef hero_state, Atom artifact_id
 }
 
 } // namespace artifact_rules
-
-// DifficultyRules.
-
-namespace difficulty_rules {
-
-int64_t adjust_enemy_pressure_gain(State &state, DictRef session, int64_t base_gain) {
-	const DictRef profile = profile_for_session(state, dict_value(session));
-	return compat::engine_max<int64_t>(0, gd::add(base_gain, gd::int_field(state, profile, key::enemy_pressure_bonus, 0)));
-}
-
-int64_t adjust_raid_threshold(State &state, DictRef session, int64_t base_threshold) {
-	const DictRef profile = profile_for_session(state, dict_value(session));
-	return compat::engine_max<int64_t>(1, gd::add(base_threshold, gd::int_field(state, profile, key::raid_threshold_offset, 0)));
-}
-
-} // namespace difficulty_rules
 
 // EnemyTownServices.
 
