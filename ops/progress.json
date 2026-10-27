@@ -3,10 +3,10 @@
  "taskId": "10236",
  "status": "in_progress",
  "currentPhase": "phase-6-production-alpha-layer",
- "currentSliceId": "ai-inert-raid-leftovers-20261027",
- "currentSliceTitle": "Remove the inert raid leftovers",
+ "currentSliceId": "native-rules-gdscript-only-rules-20261027",
+ "currentSliceTitle": "Port the game rules left with only a GDScript copy",
  "currentSliceStatus": "pending",
- "updatedAt": "2026-10-27T19:40:10Z",
+ "updatedAt": "2026-10-27T19:43:09Z",
  "rules": "AGENTS.md, \"Project files\"; python tools/progress.py",
  "archives": {
   "plan": "docs/plan-history/",
@@ -17,6 +17,16 @@
   ]
  },
  "plannedSlices": [
+  {
+   "id": "native-rules-gdscript-only-rules-20261027",
+   "title": "Port the game rules left with only a GDScript copy",
+   "status": "pending",
+   "goal": "Owner request 2026-10-27. Port to C++ the game rules that merge 4 left with only a GDScript copy: the skirmish browser and setup (`ScenarioSelectRules`), `ScenarioFactory.create_session` and its helpers, the field transfers (`HeroCommandRules`) and `AiSeatRules` (then one copy with `match_sim_cli`'s seats). Texts, reports, boards, cue payloads, `AnimationCueCatalog`, `ProfileLog`, getters and view helpers stay GDScript; the campaign waits for D-f. The port rules apply: freeze, shadow and `--human` on the seeds, then NATIVE entries.",
+   "docs": [
+    "docs/native-rules-engine-transition.md"
+   ],
+   "updatedAt": "2026-10-27"
+  },
   {
    "id": "ai-inert-raid-leftovers-20261027",
    "title": "Remove the inert raid leftovers",

@@ -2775,7 +2775,8 @@ Checks:
   players, land, normal water and Islands, one and two levels, the three monster strengths and difficulties), each
   with its setup, session, summary and maps-folder entry, seven loaded again from the maps folder and four restarted;
   plus the menu's option lists. 28 of 28 identical, apart from the packages' file times. An Extra Large 8-player
-  normal-water two-level setup (seed 72136) crashes main's native generator as well as the branch's.
+  normal-water two-level setup (seed 72136) crashes main's native generator as well as the branch's. Fixed on
+  2026-10-26 by `84b035204` (`native-rmg-river-post-pass-vector-walk-20261026`).
 - Core tests covering setup: 5 of 5.
 
 **Slice 7.12, saves** (2026-10-23, branch `native-phase7-human`): saves are written, read, summarized and restored in
@@ -3153,6 +3154,10 @@ Checks:
   `ProfileLog` (18); the overworld's getters, fog read scope and small accessors (`OverworldRules`, 20); the spell and
   artifact reports with `describe_battle_spellbook` and `describe_loadout`; `AiSeatRules`, the field transfers
   (`HeroCommandRules`) and the engines' view helpers.
+  Follow-up (owner request 2026-10-27, pending slice `native-rules-gdscript-only-rules-20261027`): the game rules
+  among them move to C++: the skirmish browser and setup, `ScenarioFactory.create_session` and its helpers, the
+  field transfers and `AiSeatRules`. The texts, reports, boards, cue payloads, `AnimationCueCatalog`, `ProfileLog`,
+  the getters and the view helpers stay GDScript.
 - Checks of the merged code against main 6ef5ae55c:
   - the `--human` check identical on the eight seeds, 1,896 action digests and the records;
   - the `--editor` check on its three seeds: the state identical at every step main runs, and the panels too once
@@ -3383,7 +3388,8 @@ after Phase 7's merge 1b):
     two levels.
   - A two-match `ai_match_batch.py --runner` smoke run. Core suite 17/17.
   - Not run: the generator crash Phase 7 found on main (extra large, 8 players, normal water, two levels, seed
-    72136). It is a task of its own.
+    72136). It was a task of its own, fixed on 2026-10-26 by `84b035204`
+    (`native-rmg-river-post-pass-vector-walk-20261026`).
   - Windows only: the Linux libraries in `bin/` are not rebuilt and the Linux `match_sim_cli` is not built.
 
 **P8-9, one copy of the package code** (`native-rules-phase8-09-fold-20261024`, branch `native-phase8-fold`):
