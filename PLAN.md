@@ -27,6 +27,7 @@ The executable plan derived from `project.md`: the owner's decisions in force, t
 - 2026-10-23 (D-f): The campaign runtime is ported with the campaign rework.
 - 2026-10-27: The project files are edited in place and kept within their budgets (`AGENTS.md`, "Project files").
 - 2026-10-27: Generated maps follow H3MapEd's File menu and Wine runs: no Keymaster's Tents; the Ctrl+N variant is not modelled (`docs/h3maped-parity-basis-windows-wine.md`).
+- 2026-10-27: `ScenarioFactory.create_session` and its helpers and `ScenarioSelectRules`' authored skirmish browser and setup stay GDScript until the authored-scenario rework: only the archived scenarios and the campaign reach them.
 
 ## Questions for the owner
 
@@ -34,7 +35,6 @@ None open.
 
 ## Open work
 
-- `native-rules-gdscript-only-rules-20261027` (pending): Owner request 2026-10-27. Port to C++ the game rules that merge 4 left with only a GDScript copy: the skirmish browser and setup (`ScenarioSelectRules`), `ScenarioFactory.create_session` and its helpers, the field transfers (`HeroCommandRules`) and `AiSeatRules` (then one copy with `match_sim_cli`'s seats). Texts, reports, boards, cue payloads, `AnimationCueCatalog`, `ProfileLog`, getters and view helpers stay GDScript; the campaign waits for D-f. The port rules apply: freeze, shadow and `--human` on the seeds, then NATIVE entries. See `docs/native-rules-engine-transition.md`.
 - `ai-army-concentration-20261009` (in progress): field armies join the main army, a boxed-in main army calls for help, unseen rivals are worth hunting. In: `FIELD_SHARE_MAX` 0.35, `blocked_need` on the main hero, `HUNT_EXPLORE_VALUE`. Left on 2026-10-09: large and extra large games where the leader keeps its strength in garrisons against a lone rival hero (ai-match-724865121, ai-match-1103018058). Not rechecked since the later AI work. See `docs/ai-plays-by-player-rules.md`.
 - `content-validator-findings-20261004` (in progress): real defects the updated tests report. Left: `test_registered_clips_resolve_real_frames` reports ground-line anchor mismatches for all 232 creatures, not investigated yet. The authored-scenario findings are dropped (2026-10-05). See `docs/source-material-storage-map.md`.
 - `tooling-native-smoke-list-refresh-20261004` (pending): the `native_random_map_*` smokes that `scripts/build_map_persistence_windows.bat --require-test` runs check capabilities retired on 2026-06-19 and fail on every build. Replace them with checks of current native behavior, per `docs/lessons-learned.md` for RMG assertions. See `src/gdextension/README.md`.
@@ -47,6 +47,7 @@ None open.
 
 ## Recently completed
 
+- 2026-10-27 `native-rules-gdscript-only-rules-20261027` (48a58abda): AiSeatRules is native (ai_seat_rules.cpp), one copy with match_sim_cli; the unused field-transfer list and its test are deleted; create_session and the authored browser wait for the scenario rework. Six seeds identical to main.
 - 2026-10-27 `ai-inert-raid-leftovers-20261027` (7ecff2279): Border Warden gives only scouting radius; the knobs enemy_pressure_bonus, raid_threshold_offset and raid_pillage_multiplier, scale_raid_pillage, the raid threshold forecast and the posture risk items are gone. Six seeds identical to main.
 - 2026-10-27 `tooling-project-files-cleanup-20261027`: AGENTS.md rewritten to about half its size; PLAN.md and progress.json restarted within budgets, the old ones archived; `tools/progress.py` replaces the server skill; the core suite checks the budgets.
 - 2026-10-26 `world-services-tavern-prison-intelligence-20261026`: Implement field Tavern, Prison rescue and kingdom intelligence.
